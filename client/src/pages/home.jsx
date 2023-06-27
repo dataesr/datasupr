@@ -1,5 +1,6 @@
-import { Container, Text, Title } from '@dataesr/react-dsfr';
+import { Container, Text } from '@dataesr/react-dsfr';
 import { useQuery } from '@tanstack/react-query';
+import Title from '../components/title/index.jsx';
 
 async function getHello() {
   return fetch('/api/hello').then((response) => {
@@ -12,8 +13,18 @@ export default function Home() {
   const { data, isLoading } = useQuery({ queryKey: ['hello'], queryFn: getHello });
   return (
     <Container className="fr-my-15w">
-      <Title as="h1">Doadify</Title>
+      <Title
+        as='h1'
+        look='h1'
+        title='Doadify'
+        subTitle= 'Ceci est un sous-titre'
+      />
       <Text>{isLoading ? 'Chargement...' : data?.hello}</Text>
+      <Title
+        as='h2'
+        look='h2'
+        title='Premier Graph'
+      />
     </Container>
   );
 }
