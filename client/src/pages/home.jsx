@@ -1,6 +1,7 @@
 import { Container, Text } from '@dataesr/react-dsfr';
 import { useQuery } from '@tanstack/react-query';
 import Title from '../components/title/index.jsx';
+import Prototype from '../components/graphs/prototype';
 
 async function getHello() {
   return fetch('/api/hello').then((response) => {
@@ -25,6 +26,7 @@ export default function Home() {
         look='h2'
         title='Premier Graph'
       />
+      <Prototype />
     </Container>
   );
 }
