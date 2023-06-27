@@ -1,0 +1,33 @@
+[
+  {
+    "label": "Nombre de projets signés",
+    "code_indic": "proj_number_signed",
+    "value_type": " projets",
+    "data": [
+      {
+        "country_code": "DE",
+        "country_name": "Allemagne",
+        "value": 363,
+        "year": 2021
+      },
+       {
+        "country_code": "DE",
+        "country_name": "Allemagne",
+        "value": 533,
+        "year": 2022
+      },
+      {
+        "country_code": "FR",
+        "country_name": "France",
+        "value": 233,
+        "year": 2021
+      },
+       {
+        "country_code": "FR",
+        "country_name": "France",
+        "value": 433,
+        "year": 2022
+      }
+    ]
+  }
+]
