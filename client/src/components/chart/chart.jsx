@@ -1,49 +1,61 @@
-import React from 'react';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
+import React from "react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
-import data from '../../assets/data/all_treso.json';
+import data from "../../assets/data/all_treso.json";
 
-export default function FinanceGraph () {
-    const id_paysage = 's3t8T'
-    const etablissement = data?.map((el) => el.etablissement)?.[0]
-    const filteredData = data?.filter((el) => el.id_paysage === id_paysage)?.[0].data
-        .filter((el) => el.code_indic === 'TR')
-        
-    console.log('filteredData',filteredData);
-    
-    const seriesData = filteredData.map((item) => ({
-        etab: etablissement,
-        source: item.source,
-        year: item.year,
-        value: item.value
-    }));
+export default function FinanceGraph() {
+  const id_paysage = "s3t8T";
+  const etablissement = data?.map((el) => el.etablissement)?.[0];
+  const filteredData = data
+    ?.filter((el) => el.id_paysage === id_paysage)?.[0]
+    .data.filter((el) => el.code_indic === "TR");
 
-    const years = [...new Set(seriesData.map((item) => item.year))];
+  let seriesData = filteredData.map((item) => ({
+    source: item.source,
+    name: item.year,
+    y: item.value,
+  }));
 
-    console.log(seriesData);
+  seriesData = seriesData.sort((a, b) => a.name - b.name);
 
-    const options = {
-        chart: {
-            type: 'column',
-        },
-        title: {
-           text: null,
-        },
-        xAxis : years,
-        legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle',
-        },
-        series: seriesData,
-    };
+  const years = [...new Set(seriesData.map((item) => item.name))];
 
-    return (
-        <div>
-            <HighchartsReact highcharts={Highcharts} options={options} />
-        </div>
-    );
-    
+  const options = {
+    chart: {
+      type: "column",
+    },
+    title: {
+      text: "Evolution de la trésorerie",
+      align: "left",
+    },
+    xAxis: {
+      categories: years,
+    },
+    yAxis: {
+      title: {
+        text: "Valeur en M€",
+      },
+    },
+    tooltip: {
+      formatter() {
+        const year = this.series.year;
+        const value = this.point.y;
+        return `${etablissement} : ${value}€`;
+      },
+    },
+    series: [
+      {
+        name: "Trésorerie",
+        colorByPoint: true,
+        data: seriesData,
+      },
+    ],
+  };
 
+  return (
+    <div>
+      <HighchartsReact highcharts={Highcharts} options={options} />
+    </div>
+  );
 }

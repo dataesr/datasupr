@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types';
-import Prototype from '../../components/graphs/prototype';
+import Indic from '../../components/chart/chart';
 
 export default function Financial({ query }) {
 
     return (
         <div>
             <h1>Tableau de bord financier</h1>
-            <Prototype />
+            <Indic />
         </div>
     );
 }
