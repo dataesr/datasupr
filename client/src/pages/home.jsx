@@ -5,32 +5,33 @@ import FinanceGraph from '../components/chart/chart.jsx';
 import Prototype from '../components/graphs/prototype';
 import EvolutionFundingSigned from '../components/graphs/evolution-funding-signed.jsx';
 
-async function getHello() {
-  return fetch('/api/hello').then((response) => {
+async function getInitialOptions() {
+  return fetch('/api/init').then((response) => {
     if (response.ok) return response.json();
-    return "Oops... La requète à l'API n'a pas fonctionné";
+    return "Oops... La requète d'initialiation n'a pas fonctionné";
   });
 }
 
 export default function Home() {
-  const { data, isLoading } = useQuery({ queryKey: ['hello'], queryFn: getHello });
+  const { data, isLoading } = useQuery({ queryKey: ['init'], queryFn: getInitialOptions });
   return (
     <Container className="fr-my-15w">
       <Title
         as='h1'
         look='h1'
         title='Doadify'
-        subTitle= 'Ceci est un sous-titre'
+        subTitle='Ceci est un sous-titre'
       />
-      <Text>{isLoading ? 'Chargement...' : data?.hello}</Text>
       <Title
         as='h2'
         look='h2'
         title='Premier Graph'
       />
-      <FinanceGraph/>
+      <FinanceGraph />
       <Prototype />
-      <EvolutionFundingSigned/>
+      <EvolutionFundingSigned />
+      <Title as="h1">Doadify</Title>
+      {/* <Text>{isLoading ? 'Chargement...' : data?.options.description}</Text> */}
     </Container>
   );
 }
