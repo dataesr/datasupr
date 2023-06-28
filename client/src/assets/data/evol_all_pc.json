@@ -1,0 +1,2423 @@
+[
+    "code_indic": "proj_number_signed",
+    "label": "Nombre de projets sign\u00e9s",
+    {
+        "country_code": "AT",
+        "country_name": "Autriche",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "year": "2002",
+                "value": 401
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 218
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 360
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 309
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 15
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 437
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 270
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 366
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 343
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 392
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 422
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 249
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 476
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 434
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 425
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 466
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 595
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 553
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 556
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 539
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 330
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2023",
+                "mixte_periode_HE": "2023",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2023",
+                "value": 1
+            }
+        ]
+    },
+    {
+        "country_code": "BE",
+        "country_name": "Belgique",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2002",
+                "value": 566
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 337
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 501
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 416
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 41
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 626
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 409
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 567
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 482
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 577
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 678
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 385
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 671
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 624
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 764
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 771
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 1005
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 999
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 861
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 870
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 615
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2023",
+                "mixte_periode_HE": "2023",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2023",
+                "value": 5
+            }
+        ]
+    },
+    {
+        "country_code": "CH",
+        "country_name": "Suisse",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2002",
+                "value": 419
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 239
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 403
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 339
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 24
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 518
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 406
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 556
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 432
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 504
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 586
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 358
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 451
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 536
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 600
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 631
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 753
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 856
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 648
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 410
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 289
+            }
+        ]
+    },
+    {
+        "country_code": "DE",
+        "country_name": "Allemagne",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2002",
+                "value": 1365
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 767
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 1226
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 958
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 65
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 1495
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 968
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 1393
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 1168
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 1398
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 1588
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 911
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 1736
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 1473
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 1647
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 1572
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 1826
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 1990
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 1527
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 1613
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 945
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2023",
+                "mixte_periode_HE": "2023",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2023",
+                "value": 4
+            }
+        ]
+    },
+    {
+        "country_code": "EL",
+        "country_name": "Gr\u00e8ce",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2002",
+                "value": 515
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 240
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 423
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 305
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 18
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 485
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 281
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 432
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 303
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 379
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 397
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 239
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 401
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 300
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 416
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 380
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 459
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 490
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 510
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 544
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 415
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2023",
+                "mixte_periode_HE": "2023",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2023",
+                "value": 1
+            }
+        ]
+    },
+    {
+        "country_code": "ES",
+        "country_name": "Espagne",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2002",
+                "value": 909
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 477
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 782
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 596
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 45
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 940
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 651
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 983
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 880
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 1078
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 1191
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 726
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 1364
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 1179
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 1444
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 1391
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 1565
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 1739
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 1410
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 1277
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 926
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2023",
+                "mixte_periode_HE": "2023",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2023",
+                "value": 4
+            }
+        ]
+    },
+    {
+        "country_code": "FR",
+        "country_name": "France",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2002",
+                "value": 1210
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 634
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 1029
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 837
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 60
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 1259
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 838
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 1155
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 930
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 1113
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 1228
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 747
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 1321
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 1121
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 1303
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 1280
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 1460
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 1585
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 1207
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 1158
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 777
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2023",
+                "mixte_periode_HE": "2023",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2023",
+                "value": 4
+            }
+        ]
+    },
+    {
+        "country_code": "IT",
+        "country_name": "Italie",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2002",
+                "value": 1045
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 582
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 865
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 690
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 39
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 1095
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 701
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 1028
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 851
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 964
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 1034
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 647
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 1165
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 1126
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 1220
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 1225
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 1371
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 1490
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 1305
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 1236
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 852
+            }
+        ]
+    },
+    {
+        "country_code": "NL",
+        "country_name": "Pays-Bas",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2002",
+                "value": 784
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 420
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 688
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 562
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 37
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 841
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 573
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 725
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 673
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 820
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 909
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 573
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 1193
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 965
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 1079
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 978
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 1243
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 1340
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 990
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 1036
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 665
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2023",
+                "mixte_periode_HE": "2023",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2023",
+                "value": 6
+            }
+        ]
+    },
+    {
+        "country_code": "NO",
+        "country_name": "Norv\u00e8ge",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2002",
+                "value": 263
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 134
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 231
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 198
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 19
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 239
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 179
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 240
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 214
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 217
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 262
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 153
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 261
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 250
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 296
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 303
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 362
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 396
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 376
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 393
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 261
+            }
+        ]
+    },
+    {
+        "country_code": "SE",
+        "country_name": "Su\u00e8de",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2002",
+                "value": 532
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 323
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 467
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 361
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 34
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 592
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 375
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 453
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 419
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 474
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 527
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 298
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 657
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 607
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 646
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 655
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 719
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 773
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 541
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 515
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 320
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2023",
+                "mixte_periode_HE": "2023",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2023",
+                "value": 2
+            }
+        ]
+    },
+    {
+        "country_code": "UK",
+        "country_name": "Royaume-Uni",
+        "data": [
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2002",
+                "value": 1499
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2003",
+                "value": 697
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2004",
+                "value": 1274
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2005",
+                "value": 1039
+            },
+            {
+                "framework": "FP6",
+                "mixte_periode_H": "FP6",
+                "mixte_periode_HE": "FP6",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2006",
+                "value": 51
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2007",
+                "value": 1569
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2008",
+                "value": 1141
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2009",
+                "value": 1546
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2010",
+                "value": 1397
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2011",
+                "value": 1635
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2012",
+                "value": 1967
+            },
+            {
+                "framework": "FP7",
+                "mixte_periode_H": "FP7",
+                "mixte_periode_HE": "FP7",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2013",
+                "value": 1295
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2014",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2014",
+                "value": 1998
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2015",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2015",
+                "value": 1747
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2016",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2016",
+                "value": 1790
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2017",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2017",
+                "value": 1585
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2018",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2018",
+                "value": 1667
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2019",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2019",
+                "value": 1548
+            },
+            {
+                "framework": "H2020",
+                "mixte_periode_H": "2020",
+                "mixte_periode_HE": "H2020",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2020",
+                "value": 1257
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2021",
+                "mixte_periode_HE": "2021",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2021",
+                "value": 809
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2022",
+                "mixte_periode_HE": "2022",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2022",
+                "value": 692
+            },
+            {
+                "framework": "HE",
+                "mixte_periode_H": "2023",
+                "mixte_periode_HE": "2023",
+                "code_indic": "proj_number_signed",
+                "label": "Nombre de projets sign\u00e9s",
+                "year": "2023",
+                "value": 1
+            }
+        ]
+    }
+]
