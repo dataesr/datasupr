@@ -1,7 +1,7 @@
 import { Container, Text } from "@dataesr/react-dsfr";
 import { useQuery } from "@tanstack/react-query";
 import Title from "../components/title/index.jsx";
-import FinanceGraph from "../components/chart/chart.jsx";
+import FinanceGraph from "../components/graphs/evolution-financial-indicator.jsx";
 import Prototype from "../components/graphs/prototype";
 import EvolutionFundingSigned from "../components/graphs/evolution-funding-signed.jsx";
 
