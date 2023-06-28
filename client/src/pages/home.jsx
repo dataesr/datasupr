@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import Title from '../components/title/index.jsx';
 import FinanceGraph from '../components/chart/chart.jsx';
 import Prototype from '../components/graphs/prototype';
+import EvolutionFundingSigned from '../components/graphs/evolution-funding-signed.jsx';
 
 async function getHello() {
   return fetch('/api/hello').then((response) => {
@@ -29,6 +30,7 @@ export default function Home() {
       />
       <FinanceGraph/>
       <Prototype />
+      <EvolutionFundingSigned/>
     </Container>
   );
 }
