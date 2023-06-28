@@ -44,6 +44,22 @@ export default function FinanceGraph() {
         return `${etablissement} : ${value}€`;
       },
     },
+    legend: {
+      enabled: false,
+    },
+    credits: {
+      enabled: false,
+    },
+    plotOptions: {
+      column: {
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            if (this.point.source === "Budget") return this.point.source;
+          },
+        },
+      },
+    },
     series: [
       {
         name: "Trésorerie",
