@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import {
-  Button, Col, Container, Row,
+  Button,
+  Col,
+  Container,
+  Row,
   TextInput,
-  Card, CardTitle, CardDescription,
-  TagGroup, Tag,
+  Card,
+  CardTitle,
+  CardDescription,
+  TagGroup,
+  Tag,
 } from "@dataesr/react-dsfr";
 import { Link } from "react-router-dom";
 
@@ -14,7 +20,8 @@ export default function Search() {
   const [selected, setSelected] = useState({});
 
   const search = () => {
-    console.log('search: appel API paysage avec query');
+    console.log("search: appel API paysage avec query");
+    console.log("search: appel API paysage avec query");
     setTableaux([]);
     setResults([
       {
@@ -39,12 +46,29 @@ export default function Search() {
   };
 
   const onItemSelect = (item) => {
-    console.log('onItemSelect: appel APIs sources pour récupérer les ids des tableaux', item);
+    console.log(
+      "onItemSelect: appel APIs sources pour récupérer les ids des tableaux",
+      item
+    );
+    console.log(
+      "onItemSelect: appel APIs sources pour récupérer les ids des tableaux",
+      item
+    );
     setResults([]);
     setSelected(item);
     setTableaux([
-      { label: "Projets européens", id: "european-projects", description: "description du tableau de bord desprojets européens", tags: ["Recherche"] },
-      { label: "tableau de bord financier", id: "tableau-de-bord-financier", description: "description du tableau de bord financier", tags: ["Enseignement supérieur"] },
+      {
+        label: "Projets européens",
+        id: "european-projects",
+        description: "description du tableau de bord desprojets européens",
+        tags: ["Recherche"],
+      },
+      {
+        label: "tableau de bord financier",
+        id: "tableau-de-bord-financier",
+        description: "description du tableau de bord financier",
+        tags: ["Enseignement supérieur"],
+      },
     ]);
   };
 
@@ -77,15 +101,13 @@ export default function Search() {
             </Col>
           ))}
       </Row>
-      {
-        selected.id && (
-          <Row>
-            <Col n="12">
-              <h2>{`Liste des tableaux de bord correspondants à "${selected.label}"`}</h2>
-            </Col>
-          </Row>
-        )
-      }
+      {selected.id && (
+        <Row>
+          <Col n="12">
+            <h2>{`Liste des tableaux de bord correspondants à "${selected.label}"`}</h2>
+          </Col>
+        </Row>
+      )}
       <Row gutters>
         {tableaux &&
           tableaux.map((tableau) => (
@@ -94,7 +116,9 @@ export default function Search() {
                 <CardTitle>{tableau.label}</CardTitle>
                 <CardDescription>
                   <TagGroup>
-                    {tableau.tags.map((tag) => (<Tag>{tag}</Tag>))}
+                    {tableau.tags.map((tag) => (
+                      <Tag>{tag}</Tag>
+                    ))}
                   </TagGroup>
                 </CardDescription>
               </Card>

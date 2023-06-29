@@ -1,5 +1,11 @@
 import { Link } from "react-router-dom";
-import { Title, Row, Container } from "@dataesr/react-dsfr";
+import {
+  Title,
+  Row,
+  Container,
+  Breadcrumb,
+  BreadcrumbItem,
+} from "@dataesr/react-dsfr";
 
 export default function Tableaux() {
   return (
@@ -9,6 +15,9 @@ export default function Tableaux() {
           Liste des Tableaux
         </Title>
       </Row>
+      <Breadcrumb>
+        <BreadcrumbItem href="/">Page d'accueil</BreadcrumbItem>
+      </Breadcrumb>
       <Row className="fr-mt-3w">
         <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
           <div className={`fr-card__body`}>

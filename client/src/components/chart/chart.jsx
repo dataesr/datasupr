@@ -23,8 +23,6 @@ export default function FinanceGraph() {
     data: seriesData.filter((el) => el.year === year).map((el) => el.value),
   }));
 
-  console.log(series);
-
   const options = {
     chart: {
       type: "column",
