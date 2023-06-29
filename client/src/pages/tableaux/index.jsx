@@ -27,7 +27,7 @@ export default function Tableaux() {
           <div className={`fr-card__body`}>
             <div className="fr-card__content">
               <p className={`fr-card__title`}>
-                <Link to="/tableaux/tableau-de-bord-financie">
+                <Link to="/tableaux/tableau-de-bord-financier">
                   Tableaux de bord financier
                 </Link>
               </p>
