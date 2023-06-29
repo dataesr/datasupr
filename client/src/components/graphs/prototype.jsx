@@ -1,7 +1,7 @@
-import React from 'react';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-import graphData from '../../assets/data/prototype_graph.json';
+import React from "react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import graphData from "../../assets/data/prototype_graph.json";
 
 export default function PrototypeGraph() {
   const data = graphData;
@@ -17,21 +17,21 @@ export default function PrototypeGraph() {
 
   const options = {
     chart: {
-      type: 'bar',
+      type: "bar",
     },
     title: {
       text: data[0].label,
-      align: 'left',
+      align: "left",
     },
     xAxis: {
       categories: uniqueCountries,
       title: {
-        text: 'Pays',
+        text: "Pays",
       },
     },
     yAxis: {
       title: {
-        text: 'Valeur',
+        text: "Valeur",
       },
     },
     tooltip: {
@@ -42,15 +42,17 @@ export default function PrototypeGraph() {
       },
     },
     legend: {
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle',
+      layout: "vertical",
+      align: "right",
+      verticalAlign: "middle",
     },
     series: uniqueYears.map((year) => ({
       name: year.toString(),
-      data: uniqueCountries.map((country) => seriesData
-        .filter((item) => item.year === year && item.country === country)
-        .map((item) => item.value)),
+      data: uniqueCountries.map((country) =>
+        seriesData
+          .filter((item) => item.year === year && item.country === country)
+          .map((item) => item.value)
+      ),
     })),
   };
 

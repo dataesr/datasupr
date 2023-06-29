@@ -22,6 +22,19 @@ export default function Tableaux() {
           </div>
         </div>
       </Row>
+      <Row className="fr-mt-3w">
+        <div className="fr-card fr-card--xs fr-card--grey fr-card--no-border">
+          <div className={`fr-card__body`}>
+            <div className="fr-card__content">
+              <p className={`fr-card__title`}>
+                <Link to="/tableaux/tableau-de-bord-financie">
+                  Tableaux de bord financier
+                </Link>
+              </p>
+            </div>
+          </div>
+        </div>
+      </Row>
     </Container>
   );
 }
