@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+
 import {
   Button,
   Col,
@@ -11,65 +13,44 @@ import {
   TagGroup,
   Tag,
 } from "@dataesr/react-dsfr";
-import { Link } from "react-router-dom";
+
+async function searchFromPaysageAPI(query) {
+  return fetch(`/api/search?q=${query}`).then((response) => {
+    if (response.ok) {
+      return response.json()
+    };
+    return "Oops... La requète de récupération des objets Paysage n'a pas fonctionné";
+  });
+}
+
+async function searchFromTableauxAPI(idPaysage) {
+  return fetch(`/api/tableaux?q=${idPaysage}`).then((response) => {
+    if (response.ok) {
+      return response.json()
+    };
+    return "Oops... La requète de récupération des tableaux associés n'a pas fonctionné";
+  });
+}
 
 export default function Search() {
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState([]);
-  const [tableaux, setTableaux] = useState([]);
   const [selected, setSelected] = useState({});
 
-  const search = () => {
-    console.log("search: appel API paysage avec query");
-    console.log("search: appel API paysage avec query");
-    setTableaux([]);
-    setResults([
-      {
-        label: "Université Paris-Saclay",
-        active: true,
-        id: "G2qA7",
-        type: "structure",
-      },
-      {
-        label: "CEA Paris-Saclay - Etablissement de Saclay",
-        active: true,
-        id: "hg15O",
-        type: "structure",
-      },
-      {
-        label: "Campus Paris Saclay",
-        active: true,
-        id: "APN3L",
-        type: "structure",
-      },
-    ]);
-  };
+  const { data: results, refetch: refetchPaysageAPI } = useQuery({
+    queryKey: ["paysageQuery", query],
+    queryFn: () => searchFromPaysageAPI(query),
+    enabled: false,
+  });
+
+  const { data: tableaux, refetch: refetchTableau } = useQuery({
+    queryKey: ["tableauxQuery", selected.id],
+    queryFn: () => searchFromTableauxAPI(selected.id),
+    enabled: false
+  });
 
   const onItemSelect = (item) => {
-    console.log(
-      "onItemSelect: appel APIs sources pour récupérer les ids des tableaux",
-      item
-    );
-    console.log(
-      "onItemSelect: appel APIs sources pour récupérer les ids des tableaux",
-      item
-    );
-    setResults([]);
     setSelected(item);
-    setTableaux([
-      {
-        label: "Projets européens",
-        id: "european-projects",
-        description: "description du tableau de bord desprojets européens",
-        tags: ["Recherche"],
-      },
-      {
-        label: "tableau de bord financier",
-        id: "tableau-de-bord-financier",
-        description: "description du tableau de bord financier",
-        tags: ["Enseignement supérieur"],
-      },
-    ]);
+    refetchTableau();
   };
 
   return (
@@ -83,14 +64,14 @@ export default function Search() {
           />
         </Col>
         <Col n="2">
-          <Button onClick={() => search()}>Rechercher</Button>
+          <Button onClick={() => refetchPaysageAPI()()}>Rechercher</Button>
         </Col>
       </Row>
       <Row gutters>
         {results &&
           results.map((result) => (
             <Col n="4">
-              <Card onClick={() => onItemSelect(result)}>
+              <Card onClick={() => onItemSelect(result)} href="#">
                 <CardTitle>{result.label}</CardTitle>
                 <CardDescription>
                   <TagGroup>
