@@ -1,6 +1,5 @@
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
-import graphData from "../../../../assets/data/evol_all_pc_funding_SIGNED (1).json";
 import {
   Col,
   Row,
@@ -8,18 +7,12 @@ import {
   Breadcrumb,
   BreadcrumbItem,
 } from "@dataesr/react-dsfr";
-import { useParams } from "react-router-dom";
 
-export default function EvolutionFundingSigned() {
-  const { structureID } = useParams();
-
-  console.log(structureID);
-
-  const data = graphData;
-
+export default function EvolutionFundingSigned({ data, title }) {
   if (data.length === 0) {
     return <p>Pas encore de donnée</p>;
   }
+  console.log(title);
 
   const seriesData = data.slice(1).map((item) => ({
     country: item.country_name,
@@ -35,7 +28,7 @@ export default function EvolutionFundingSigned() {
       type: "line",
     },
     title: {
-      text: "Evolution des financements signés",
+      text: title,
       align: "left",
     },
     xAxis: {
@@ -76,13 +69,6 @@ export default function EvolutionFundingSigned() {
 
   return (
     <Container>
-      <Breadcrumb>
-        <BreadcrumbItem href="/">Page d'accueil</BreadcrumbItem>
-        <BreadcrumbItem href="/tableaux">Vers les tableaux</BreadcrumbItem>
-        <BreadcrumbItem href="/tableaux/european-projects/">
-          `Vers les projets européen {structureID}`
-        </BreadcrumbItem>
-      </Breadcrumb>
       <Row gutters>
         <Col n="12">
           <HighchartsReact highcharts={Highcharts} options={options} />
