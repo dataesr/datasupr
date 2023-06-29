@@ -49,7 +49,7 @@ export default function EuropeanProjects() {
       <Breadcrumb>
         <BreadcrumbItem href="/">Page d'accueil</BreadcrumbItem>
         <BreadcrumbItem href="/search">Rechercher</BreadcrumbItem>
-        <BreadcrumbItem href={`/tableaux?structureId=${structureID}`}>
+        <BreadcrumbItem href={`/tableaux?structureID=${structureID}`}>
           Vers les tableaux
         </BreadcrumbItem>
       </Breadcrumb>
@@ -59,7 +59,7 @@ export default function EuropeanProjects() {
         </Col>
       </Row>
       <Row>
-        {!structureID ? (
+        {structureID === null ? (
           <>
             <Col n="3">
               <SideMenu title="Liste de projets européens">

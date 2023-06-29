@@ -17,8 +17,8 @@ import {
 async function searchFromPaysageAPI(query) {
   return fetch(`/api/search?q=${query}`).then((response) => {
     if (response.ok) {
-      return response.json()
-    };
+      return response.json();
+    }
     return "Oops... La requète de récupération des objets Paysage n'a pas fonctionné";
   });
 }
@@ -26,8 +26,8 @@ async function searchFromPaysageAPI(query) {
 async function searchFromTableauxAPI(idPaysage) {
   return fetch(`/api/tableaux?q=${idPaysage}`).then((response) => {
     if (response.ok) {
-      return response.json()
-    };
+      return response.json();
+    }
     return "Oops... La requète de récupération des tableaux associés n'a pas fonctionné";
   });
 }
@@ -45,7 +45,7 @@ export default function Search() {
   const { data: tableaux, refetch: refetchTableau } = useQuery({
     queryKey: ["tableauxQuery", selected.id],
     queryFn: () => searchFromTableauxAPI(selected.id),
-    enabled: false
+    enabled: false,
   });
 
   const onItemSelect = (item) => {

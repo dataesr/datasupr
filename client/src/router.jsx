@@ -8,6 +8,8 @@ import Financial from "./pages/tableaux/financial";
 import Swagger from "./pages/swagger";
 import EuropeanProjects from "./pages/tableaux/europrojects";
 import EvolutionFundingSignedChart from "./pages/tableaux/europrojects/tabs/evolution-funding-signed";
+import ERC from "./pages/tableaux/ERC";
+import MSCA from "./pages/tableaux/MSCA";
 
 export default function Router() {
   return (
@@ -20,6 +22,8 @@ export default function Router() {
           path="/tableaux/european-projects"
           element={<EuropeanProjects />}
         />
+        <Route path="/tableaux/erc" element={<ERC />} />
+        <Route path="/tableaux/msca" element={<MSCA />} />
         <Route
           path="/tableaux/european-projects/evolution-funding-signed"
           element={<EvolutionFundingSignedChart />}
