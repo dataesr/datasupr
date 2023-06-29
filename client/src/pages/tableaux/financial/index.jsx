@@ -6,10 +6,11 @@ import {
   Breadcrumb,
   BreadcrumbItem,
 } from "@dataesr/react-dsfr";
-import Title from "../../components/title/index";
 
-import Histogram from "../../components/graphs/evolution-financial-indicator";
-import Dispersion from "../../components/graphs/dispersion-financial";
+import Title from "../../../components/title/index";
+
+import Histogram from "../../../components/graphs/evolution-financial-indicator";
+import Dispersion from "../../../components/graphs/dispersion-financial";
 
 export default function Financial({ query }) {
   return (
