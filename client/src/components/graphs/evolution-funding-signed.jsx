@@ -1,61 +1,52 @@
+import React from "react";
+import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import Highcharts from 'highcharts';
-import graphData from '../../assets/data/evol_all_pc_funding_SIGNED (1).json'
+import data from "../../assets/data/all_treso.json";
 
-export default function EvolutionFundingSigned() {
-const data = graphData;
+export default function FinanceGraph() {
+  const id_paysage = "s3t8T";
+  const etablissement = data?.[0]?.etablissement;
+  const filteredData = data
+    ?.find((el) => el.id_paysage === id_paysage)
+    ?.data.filter((el) => el.code_indic === "TR");
 
-  const seriesData = data.slice(1).map((item) => ({
-    country: item.country_name,
-    year: item.data.map((dataItem) => dataItem.year),
-    value: item.data.map((dataItem) => dataItem.value),
+  const seriesData = filteredData.map((item) => ({
+    etab: etablissement,
+    source: item.source,
+    year: item.year,
+    value: item.value,
   }));
 
-  const uniqueCountries = [...new Set(seriesData.map((item) => item.country))];
-  const uniqueYears = [...new Set(seriesData.flatMap((item) => item.year))];
-
-  console.log(seriesData)
+  const years = [...new Set(seriesData.map((item) => item.year))];
+  const series = years.map((year) => ({
+    name: year,
+    data: seriesData.filter((el) => el.year === year).map((el) => el.value),
+  }));
 
   const options = {
     chart: {
-      type: 'line',
+      type: "column",
     },
     title: {
-      text: 'Evolution des financements signés',
-      align: 'left',
+      text: null,
     },
     xAxis: {
-      categories: uniqueYears,
       title: {
-        text: 'Année',
+        text: "Année",
       },
+      categories: years,
     },
     yAxis: {
       title: {
-        text: 'Valeur',
-      },
-    },
-    tooltip: {
-      formatter() {
-        const country = this.series.name;
-        const year = this.x;
-        const value = this.y;
-        return `En ${year}, ${country} a perçu pour ${value} € de financement `;
+        text: "Valeur",
       },
     },
     legend: {
-      layout: 'vertical',
-      align: 'right',
-      verticalAlign: 'middle',
+      layout: "vertical",
+      align: "right",
+      verticalAlign: "middle",
     },
-    series: uniqueCountries.map((country) => ({
-      name: country,
-      data: uniqueYears.map((year) => {
-        const matchingData = seriesData.find((item) => item.country === country);
-        const dataIndex = matchingData.year.indexOf(year);
-        return matchingData.value[dataIndex];
-      }),
-    })),
+    series: series,
   };
 
   return (
