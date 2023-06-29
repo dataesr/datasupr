@@ -9,17 +9,17 @@ import {
 
 import Title from "../../../components/title/index";
 
-import Histogram from "../../../components/graphs/evolution-financial-indicator";
-import Dispersion from "../../../components/graphs/dispersion-financial";
+import Histogram from "../financial/tabs/tab1";
+import Dispersion from "../financial/tabs/tab2";
 
 export default function Financial({ query }) {
   return (
     <Container className="fr-mb-3w">
       <Row>
-        <Title as="h1" look="h1" title="Tableau de bord financier" />
+        <TitleComponent as="h1" look="h1" title="Tableau de bord financier" />
       </Row>
       <Row>
-        <Histogram /> {/* doit prendre comme props id_paysage OU code_uai */}
+        <Histogram />
       </Row>
       <Row>
         <Dispersion />

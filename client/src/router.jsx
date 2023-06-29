@@ -4,9 +4,9 @@ import Layout from "./layout";
 import Home from "./pages/home";
 import Search from "./pages/search";
 import Tableaux from "./pages/tableaux";
-import EvolutionFundingSigned from "./pages/tableaux/EvolutionFundingSigned";
 import Financial from "./pages/tableaux/financial";
 import Swagger from "./pages/swagger";
+import EvolutionFundingSigned from "./pages/tableaux/europrojects";
 
 export default function Router() {
   return (
