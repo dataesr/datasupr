@@ -1,52 +1,35 @@
 import PropTypes from "prop-types";
 import {
-  Col,
   Container,
   Row,
-  Breadcrumb,
-  BreadcrumbItem,
+  Col,
   SideMenu,
   SideMenuLink,
+  Breadcrumb,
+  BreadcrumbItem,
 } from "@dataesr/react-dsfr";
+import TitleComponent from "../../../components/title";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
 
-import Dispersion from "../financial/tabs/tab2";
-import financialData from "../../../assets/data/all_treso.json";
-import FinanceGraph from "../financial/tabs/tab1";
-
-export default function Financial() {
+export default function ERC() {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const structureID = query.get("structureID");
   const tab = query.get("tab");
-  const data = financialData;
-  console.log(data);
 
   const [selectedTab, setSelectedTab] = useState("");
 
   const renderTab = () => {
     switch (selectedTab) {
-      case "tableau-de-bord-financier":
-        return <FinanceGraph data={data} />;
-        break;
-
-      case "dispersion":
-        return <Dispersion data={data} />;
-        break;
-
       default:
-        return (
-          <div>
-            Ici on fait un composant qui synthésise les données financières
-          </div>
-        );
+        return null;
         break;
     }
   };
 
   return (
-    <Container className="fr-mb-3w">
+    <Container>
       <Breadcrumb>
         <BreadcrumbItem href="/">Page d'accueil</BreadcrumbItem>
         <BreadcrumbItem href="/search">Rechercher</BreadcrumbItem>
@@ -54,18 +37,21 @@ export default function Financial() {
           Vers les tableaux
         </BreadcrumbItem>
       </Breadcrumb>
+      <Row className="fr-mb-3w" gutters>
+        <Col n="12">
+          <TitleComponent as="h1" look="h1" title="Les projets ERC" />
+        </Col>
+      </Row>
       <Row>
         {structureID === null ? (
           <>
             <Col n="3">
-              <SideMenu title="Tableau de bord financier">
+              <SideMenu title="Liste de projets ERC">
                 <SideMenuLink onClick={() => setSelectedTab("")}>
-                  Retour à la synthese des finances
+                  Retour à la synthese des ERC
                 </SideMenuLink>
-                <SideMenuLink
-                  onClick={() => setSelectedTab("tableau-de-bord-financier")}
-                >
-                  Evolution de la trésorerie synthèse des structures/pays
+                <SideMenuLink onClick={() => setSelectedTab("")}>
+                  coucou ERC
                 </SideMenuLink>
               </SideMenu>
             </Col>
@@ -74,13 +60,11 @@ export default function Financial() {
         ) : (
           <>
             <Col n="3">
-              <SideMenu title={`Liste de projets européens de ${structureID}`}>
+              <SideMenu title={`Liste de projets ERC de ${structureID}`}>
                 <SideMenuLink onClick={() => setSelectedTab("")}>
                   Retour à la synthese de {structureID}
                 </SideMenuLink>
-                <SideMenuLink
-                  onClick={() => setSelectedTab("tableau-de-bord-financier")}
-                >
+                <SideMenuLink onClick={() => setSelectedTab("")}>
                   Nom du tableau de {structureID} qu'on veut afficher
                 </SideMenuLink>
               </SideMenu>
@@ -93,9 +77,9 @@ export default function Financial() {
   );
 }
 
-Financial.propTypes = {
+ERC.propTypes = {
   query: PropTypes.object,
 };
-Financial.defaultProps = {
+ERC.defaultProps = {
   query: {},
 };

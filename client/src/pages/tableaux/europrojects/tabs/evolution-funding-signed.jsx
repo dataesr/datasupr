@@ -47,7 +47,18 @@ export default function EvolutionFundingSigned({ data, title }) {
         const country = this.series.name;
         const year = this.x;
         const value = this.y;
-        return `En ${year}, ${country} a perçu pour ${value} € de financement `;
+        return `En ${year}, ${country} a perçu pour ${value} € de financement, cliquez pour arriver sur la fiche pays de ${country}`;
+      },
+    },
+    plotOptions: {
+      series: {
+        events: {
+          click: function () {
+            const country = this.name;
+            const countryLink = `/tableaux/european-projects?structureID=FRA`;
+            window.location.href = countryLink;
+          },
+        },
       },
     },
     legend: {
@@ -73,6 +84,7 @@ export default function EvolutionFundingSigned({ data, title }) {
         <Col n="12">
           <HighchartsReact highcharts={Highcharts} options={options} />
         </Col>
+        <Col>Cliquez sur le ligne d'un pays pour visiter sa fiche</Col>
       </Row>
     </Container>
   );
