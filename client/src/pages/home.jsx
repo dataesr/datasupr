@@ -1,7 +1,12 @@
-import { Container, Text } from "@dataesr/react-dsfr";
+import {
+  Container, Row, Col,
+  Card, CardTitle, CardDescription,
+  TagGroup, Tag,
+} from "@dataesr/react-dsfr";
 import { useQuery } from "@tanstack/react-query";
 import Title from "../components/title/index.jsx";
-import FinanceGraph from "../components/graphs/evolution-financial-indicator.jsx";
+
+import { Link } from "react-router-dom";
 
 async function getInitialOptions() {
   return fetch("/api/init").then((response) => {
@@ -20,12 +25,48 @@ export default function Home() {
       <Title
         as="h1"
         look="h1"
-        title="Doadify"
-        subTitle="Ceci est un sous-titre"
+        title="dataSupR"
+        subTitle="Annuaire des données de la recherche et de l'enseignement supérieur"
       />
-      <Title as="h2" look="h2" title="Premier Graph" />
-      <FinanceGraph />
-      <Title as="h1">Doadify</Title>
+      <Row>
+        <Col className="text-center">
+          <Link to="/search">Rechercher</Link>
+        </Col>
+      </Row>
+      <Row gutters>
+        <Col n="6">
+          <Card href="/tableaux/tableau-de-bord-financier">
+            <CardTitle>
+              Tableau de bord financier
+            </CardTitle>
+            <CardDescription>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Uenim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              <TagGroup>
+                <Tag>
+                  Enseignement Supérieur
+                </Tag>
+              </TagGroup>
+            </CardDescription>
+          </Card>
+
+        </Col>
+        <Col n="6">
+          <Card href="/tableaux/european-projects">
+            <CardTitle>
+              Projets européens
+            </CardTitle>
+            <CardDescription>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Uenim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              <TagGroup>
+                <Tag>
+                  Recherche
+                </Tag>
+              </TagGroup>
+            </CardDescription>
+          </Card>
+        </Col>
+      </Row>
+
       {/* <Text>{isLoading ? 'Chargement...' : data?.options.description}</Text> */}
     </Container>
   );

@@ -6,7 +6,7 @@ import Search from "./pages/search";
 import Tableaux from "./pages/tableaux";
 import Financial from "./pages/tableaux/financial";
 import Swagger from "./pages/swagger";
-import EvolutionFundingSigned from "./pages/tableaux/europrojects";
+import EuropeanProjects from "./pages/tableaux/europrojects";
 
 export default function Router() {
   return (
@@ -18,8 +18,8 @@ export default function Router() {
 
         <Route path="/tableaux" element={<Tableaux />} />
         <Route
-          path="/tableaux/evolution-funding-signed"
-          element={<EvolutionFundingSigned />}
+          path="/tableaux/european-projects"
+          element={<EuropeanProjects />}
         />
         <Route
           path="/tableaux/tableau-de-bord-financier"
