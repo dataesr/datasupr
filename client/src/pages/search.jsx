@@ -9,7 +9,7 @@ export default function Search() {
   const [selected, setSelected] = useState({});
 
   const search = () => {
-    console.log("search");
+    console.log('search: appel API paysage avec query');
     setResults([
       {
         label: "Université Paris-Saclay",
@@ -33,7 +33,7 @@ export default function Search() {
   };
 
   const onItemSelect = (item) => {
-    console.log("onItemSelect", item);
+    console.log('onItemSelect: appel APIs sources pour récupérer les ids des tableaux', item);
     setSelected(item);
     setTableaux([
       { label: "evolution funding signed", id: "evolution-funding-signed" },
