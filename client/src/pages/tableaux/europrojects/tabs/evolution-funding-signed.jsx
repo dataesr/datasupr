@@ -1,9 +1,25 @@
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import graphData from "../../../../assets/data/evol_all_pc_funding_SIGNED (1).json";
+import {
+  Col,
+  Row,
+  Container,
+  Breadcrumb,
+  BreadcrumbItem,
+} from "@dataesr/react-dsfr";
+import { useParams } from "react-router-dom";
 
 export default function EvolutionFundingSigned() {
+  const { structureID } = useParams();
+
+  console.log(structureID);
+
   const data = graphData;
+
+  if (data.length === 0) {
+    return <p>Pas encore de donnée</p>;
+  }
 
   const seriesData = data.slice(1).map((item) => ({
     country: item.country_name,
@@ -59,8 +75,19 @@ export default function EvolutionFundingSigned() {
   };
 
   return (
-    <div>
-      <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
+    <Container>
+      <Breadcrumb>
+        <BreadcrumbItem href="/">Page d'accueil</BreadcrumbItem>
+        <BreadcrumbItem href="/tableaux">Vers les tableaux</BreadcrumbItem>
+        <BreadcrumbItem href="/tableaux/european-projects/">
+          `Vers les projets européen {structureID}`
+        </BreadcrumbItem>
+      </Breadcrumb>
+      <Row gutters>
+        <Col n="12">
+          <HighchartsReact highcharts={Highcharts} options={options} />
+        </Col>
+      </Row>
+    </Container>
   );
 }

@@ -7,10 +7,8 @@ import tresorerie from "../../assets/data/all_treso.json";
 export default function DispersionFinance() {
   const id_paysage = "s3t8T";
   const etablissement = tresorerie?.map((el) => el.etablissement)?.[0];
-  console.log(tresorerie[0]);
 
   const filteredData = tresorerie.map((el) => el.data);
-  console.log("filtré", filteredData);
   const test = filteredData.map((el) =>
     el.filter((item) => item.code_indic === "TR")
   );
@@ -32,8 +30,6 @@ export default function DispersionFinance() {
     name: item.etablissement,
     y: item.value,
   }));
-
-  console.log("series", seriesData);
 
   // seriesData = seriesData.sort((a, b) => a.name - b.name);
 

@@ -1,7 +1,12 @@
 import {
-  Container, Row, Col,
-  Card, CardTitle, CardDescription,
-  TagGroup, Tag,
+  Container,
+  Row,
+  Col,
+  Card,
+  CardTitle,
+  CardDescription,
+  TagGroup,
+  Tag,
 } from "@dataesr/react-dsfr";
 import { useQuery } from "@tanstack/react-query";
 import Title from "../components/title/index.jsx";
@@ -36,36 +41,33 @@ export default function Home() {
       <Row gutters>
         <Col n="6">
           <Card href="/tableaux/tableau-de-bord-financier">
-            <CardTitle>
-              Tableau de bord financier
-            </CardTitle>
+            <CardTitle>Tableau de bord financier</CardTitle>
             <CardDescription>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Uenim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Uenim
+              ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+              aliquip ex ea commodo consequat.
               <TagGroup>
-                <Tag>
-                  Enseignement Supérieur
-                </Tag>
+                <Tag>Enseignement Supérieur</Tag>
               </TagGroup>
             </CardDescription>
           </Card>
         </Col>
         <Col n="6">
           <Card href="/tableaux/european-projects">
-            <CardTitle>
-              Projets européens
-            </CardTitle>
+            <CardTitle>Projets européens</CardTitle>
             <CardDescription>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Uenim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua. Uenim
+              ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
+              aliquip ex ea commodo consequat.
               <TagGroup>
-                <Tag>
-                  Recherche
-                </Tag>
+                <Tag>Recherche</Tag>
               </TagGroup>
             </CardDescription>
           </Card>
         </Col>
       </Row>
-
       {/* <Text>{isLoading ? 'Chargement...' : data?.options.description}</Text> */}
     </Container>
   );

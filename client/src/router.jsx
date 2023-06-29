@@ -7,25 +7,27 @@ import Tableaux from "./pages/tableaux";
 import Financial from "./pages/tableaux/financial";
 import Swagger from "./pages/swagger";
 import EuropeanProjects from "./pages/tableaux/europrojects";
+import EvolutionFundingSignedChart from "./pages/tableaux/europrojects/tabs/evolution-funding-signed";
 
 export default function Router() {
   return (
     <Routes>
-      <Route element={<Layout />}>
+      <Route path="/" element={<Layout />}>
         <Route path="/" element={<Home />} />
-
         <Route path="/search" element={<Search />} />
-
         <Route path="/tableaux" element={<Tableaux />} />
         <Route
           path="/tableaux/european-projects"
           element={<EuropeanProjects />}
         />
         <Route
+          path="/tableaux/european-projects/evolution-funding-signed"
+          element={<EvolutionFundingSignedChart />}
+        />
+        <Route
           path="/tableaux/tableau-de-bord-financier"
           element={<Financial />}
         />
-
         <Route path="/swagger" element={<Swagger />} />
       </Route>
     </Routes>
