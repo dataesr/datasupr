@@ -14,7 +14,7 @@ export default function Tableaux() {
           <div className={`fr-card__body`}>
             <div className="fr-card__content">
               <p className={`fr-card__title`}>
-                <Link to="/tableaux/evolution-funding-signed">
+                <Link to="/tableaux/european-projects">
                   Evolution des financements
                 </Link>
               </p>

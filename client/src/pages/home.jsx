@@ -48,7 +48,6 @@ export default function Home() {
               </TagGroup>
             </CardDescription>
           </Card>
-
         </Col>
         <Col n="6">
           <Card href="/tableaux/european-projects">
