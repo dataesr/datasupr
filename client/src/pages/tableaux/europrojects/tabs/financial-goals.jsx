@@ -14,7 +14,6 @@ const FinancialGoals = ({ data }) => {
   const values = sortedData.map((item) => item.value_signed);
   const percentages = sortedData.map((item) => item.share_signed);
   const pillierName = sortedData.map((item) => item.pilier_name_fr);
-  console.log(pillierName)
 
  const getColorByPillierName = (name) => {
   if (name === "Science d'excellence") {

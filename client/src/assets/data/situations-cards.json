@@ -1,0 +1,52 @@
+{
+    "FR": [
+        {
+            "code_indic": "project",
+            "data": [
+                {
+                    "value_eligible": 8874.0,
+                    "value_signed": 1939.0,
+                    "share_eligible": 21.2,
+                    "share_signed": 28.4,
+                    "success": 21.850349335136354
+                }
+            ]
+        },
+        {
+            "code_indic": "participant",
+            "data": [
+                {
+                    "value_eligible": 16202.0,
+                    "value_signed": 4212.0,
+                    "share_eligible": 7.7,
+                    "share_signed": 8.9,
+                    "success": 25.99679051968893
+                }
+            ]
+        },
+        {
+            "code_indic": "coordination",
+            "data": [
+                {
+                    "value_eligible": 3485.0,
+                    "value_signed": 695.0,
+                    "share_eligible": 8.3,
+                    "share_signed": 10.0,
+                    "success": 19.94261119081779
+                }
+            ]
+        },
+        {
+            "code_indic": "funding",
+            "data": [
+                {
+                    "value_eligible": 7068140863.63,
+                    "value_signed": 1964786917.83,
+                    "share_eligible": 7.9,
+                    "share_signed": 10.3,
+                    "success": 27.79778948577632
+                }
+            ]
+        }
+    ]
+}
