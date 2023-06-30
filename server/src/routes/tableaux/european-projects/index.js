@@ -9,8 +9,8 @@ import evol_all_pc_participant_SIGNED from './data/evol_all_pc_participant_SIGNE
 
 import evol_all_pc_project_EVAL from './data/evol_all_pc_project_EVAL.json' assert { type: "json" };
 import evol_all_pc_project_SIGNED from './data/evol_all_pc_project_SIGNED.json' assert { type: "json" };
-// import funding_participant_share_actions from './data/funding_participant_share_actions.json' assert { type: "json" };
-// import funding_programme from './data/funding_programme.json' assert { type: "json" };
+import funding_participant_share_actions from './data/funding_participant_share_actions.json' assert { type: "json" };
+import funding_programme from './data/funding_programme.json' assert { type: "json" };
 
 
 
@@ -30,6 +30,8 @@ router.route('/european-projects')
             allData['evol_all_pc_participant_SIGNED'] = evol_all_pc_participant_SIGNED.data.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
             allData['evol_all_pc_project_EVAL'] = evol_all_pc_project_EVAL.data.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
             allData['evol_all_pc_project_SIGNED'] = evol_all_pc_project_SIGNED.data.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
+            allData['funding_participant_share_actions'] = funding_participant_share_actions.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
+            allData['funding_programme'] = funding_programme.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
         } else {
             allData['evol_all_pc_coordination_EVAL'] = evol_all_pc_coordination_EVAL.data;
             allData['evol_all_pc_coordination_SIGNED'] = evol_all_pc_coordination_SIGNED.data;
@@ -39,6 +41,8 @@ router.route('/european-projects')
             allData['evol_all_pc_participant_SIGNED'] = evol_all_pc_participant_SIGNED.data;
             allData['evol_all_pc_project_EVAL'] = evol_all_pc_project_EVAL.data;
             allData['evol_all_pc_project_SIGNED'] = evol_all_pc_project_SIGNED.data;
+            allData['funding_participant_share_actions'] = funding_participant_share_actions;
+            allData['funding_programme'] = funding_programme;
         }
         console.log(req.query);
 
