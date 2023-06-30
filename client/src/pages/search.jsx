@@ -64,7 +64,7 @@ export default function Search() {
           />
         </Col>
         <Col n="2">
-          <Button onClick={() => refetchPaysageAPI()()}>Rechercher</Button>
+          <Button onClick={() => refetchPaysageAPI()}>Rechercher</Button>
         </Col>
       </Row>
       <Row gutters>
