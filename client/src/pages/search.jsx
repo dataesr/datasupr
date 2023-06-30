@@ -53,6 +53,19 @@ export default function Search() {
     refetchTableau();
   };
 
+  const getParams = () => {
+    console.log(tableau);
+    if (!selected) return ('');
+
+    if (selected.type === 'structure') {
+      return `structureId=${selected.id}`
+    }
+    if (selected.type === 'country') {
+      return `countryCode=${selected.iso2}`
+    }
+    return '';
+  }
+
   return (
     <Container>
       <Row alignItems="bottom" className="fr-mb-5w">
@@ -82,7 +95,7 @@ export default function Search() {
             </Col>
           ))}
       </Row>
-      {selected.id && (
+      {selected?.id && (
         <Row>
           <Col n="12">
             <h2>{`Liste des tableaux de bord correspondants à "${selected.label}"`}</h2>
@@ -93,7 +106,7 @@ export default function Search() {
         {tableaux &&
           tableaux.map((tableau) => (
             <Col n="6">
-              <Card href={`/tableaux/${tableau.id}?structureID=${selected.id}`}>
+              <Card href={`/tableaux/${tableau.id}?${getParams()}`}>
                 <CardTitle>{tableau.label}</CardTitle>
                 <CardDescription>
                   <TagGroup>
