@@ -7,8 +7,7 @@ const FinancialGoals = ({ data }) => {
     return <p>Pas encore de donnée</p>;
   }
 
-  const countryData = data.filter((el) => el.country_code === "FR");
-  const sortedData = countryData[0].data.sort((a, b) => b.share_signed - a.share_signed);
+  const sortedData = data[0].data.sort((a, b) => b.share_signed - a.share_signed);
 
   const categories = sortedData.map((item) => item.programme_name_fr);
   const values = sortedData.map((item) => item.value_signed);
