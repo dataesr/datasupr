@@ -10,6 +10,7 @@ import EuropeanProjects from "./pages/tableaux/europrojects";
 import EvolutionFundingSignedChart from "./pages/tableaux/europrojects/tabs/evolution-funding-signed";
 import ERC from "./pages/tableaux/ERC";
 import MSCA from "./pages/tableaux/MSCA";
+import FinancialGoals from "./pages/tableaux/europrojects/tabs/financial-goals";
 
 export default function Router() {
   return (
@@ -27,6 +28,10 @@ export default function Router() {
         <Route
           path="/tableaux/european-projects/evolution-funding-signed"
           element={<EvolutionFundingSignedChart />}
+        />
+          <Route
+          path="/tableaux/european-projects/financial-goals"
+          element={<FinancialGoals />}
         />
         <Route
           path="/tableaux/tableau-de-bord-financier"
