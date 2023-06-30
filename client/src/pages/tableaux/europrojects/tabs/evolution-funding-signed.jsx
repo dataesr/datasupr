@@ -7,12 +7,15 @@ import {
 } from "@dataesr/react-dsfr";
 
 export default function EvolutionFundingSigned({ data }) {
-
+  
+  
   if (data.length === 0) {
     return <p>Pas encore de donnée</p>;
   }
+const countryCode = data[0].country_code
+  // const countryCode = data.map((code) => Array.isArray(code.country_code) ? code.country_code.join() : "");
 
-  const seriesData = data.slice(1).map((item) => ({
+  const seriesData = data.map((item) => ({
     country: item.country_name,
     year: item.data.map((dataItem) => dataItem.year),
     value: item.data.map((dataItem) => dataItem.value),
@@ -53,7 +56,7 @@ export default function EvolutionFundingSigned({ data }) {
         events: {
           click: function () {
             const country = this.name;
-            const countryLink = `/tableaux/european-projects?structureID=FRA`;
+            const countryLink = `/tableaux/european-projects?countryCode=${countryCode}`;
             window.location.href = countryLink;
           },
         },
@@ -82,7 +85,6 @@ export default function EvolutionFundingSigned({ data }) {
         <Col n="12">
           <HighchartsReact highcharts={Highcharts} options={options} />
         </Col>
-        <Col>Cliquez sur le ligne d'un pays pour visiter sa fiche</Col>
       </Row>
     </Container>
   );

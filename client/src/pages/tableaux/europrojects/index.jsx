@@ -69,7 +69,7 @@ export default function EuropeanProjects() {
       <Breadcrumb>
         <BreadcrumbItem href="/">Page d'accueil</BreadcrumbItem>
         <BreadcrumbItem href="/search">Rechercher</BreadcrumbItem>
-        <BreadcrumbItem href={`/tableaux?structureID=${structureID}`}>
+        <BreadcrumbItem href={`/tableaux?structureID=${structureID}?countryCode=${countryCode}`}>
           Vers les tableaux
         </BreadcrumbItem>
       </Breadcrumb>
