@@ -4,15 +4,12 @@ import {
   Col,
   Row,
   Container,
-  Breadcrumb,
-  BreadcrumbItem,
 } from "@dataesr/react-dsfr";
 
 export default function EvolutionFundingSigned({ data, title }) {
   if (data.length === 0) {
     return <p>Pas encore de donnée</p>;
   }
-  console.log(title);
 
   const seriesData = data.slice(1).map((item) => ({
     country: item.country_name,

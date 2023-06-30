@@ -9,22 +9,27 @@ import {
   BreadcrumbItem,
   SideMenuItem,
 } from "@dataesr/react-dsfr";
+import { useLocation } from "react-router-dom";
+import { useState } from "react";
 import TitleComponent from "../../../components/title";
 import RandomIdProject from "./tabs/randomIdProject";
 import ProjectSynthesis from "./tabs/projects-synthesis";
-import { useLocation } from "react-router-dom";
 import EvolutionFundingSigned from "./tabs/evolution-funding-signed";
 import graphData from "../../../assets/data/evol_all_pc_funding_SIGNED (1).json";
+import financialGoalsData from "../../../assets/data/funding_programme.json";
 
-import { useState } from "react";
+import FinancialGoals from "./tabs/financial-goals";
 
 export default function EuropeanProjects() {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const structureID = query.get("structureID");
   const tab = query.get("tab");
+  
   const data = graphData;
   const title = data[0].label;
+
+  const financialData = financialGoalsData
 
   const [selectedTab, setSelectedTab] = useState("");
 
@@ -34,9 +39,10 @@ export default function EuropeanProjects() {
         return <EvolutionFundingSigned data={data} title={title} />;
         break;
 
-      case "projectIdevolution":
-        return <RandomIdProject />;
-        break;
+     case "financial-goals":
+       return <FinancialGoals data={financialData} />;
+       break;
+
 
       default:
         return <ProjectSynthesis />;
@@ -82,10 +88,10 @@ export default function EuropeanProjects() {
                 <SideMenuLink onClick={() => setSelectedTab("")}>
                   Retour à la synthese de {structureID}
                 </SideMenuLink>
-                <SideMenuLink
-                  onClick={() => setSelectedTab("projectIdevolution")}
+                  <SideMenuLink
+                  onClick={() => setSelectedTab("financial-goals")}
                 >
-                  Nom du tableau de {structureID} qu'on veut afficher
+                  Objectifs financés
                 </SideMenuLink>
               </SideMenu>
             </Col>
