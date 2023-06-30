@@ -17,15 +17,16 @@ import ProjectSynthesis from "./tabs/projects-synthesis";
 import EvolutionFundingSigned from "./tabs/evolution-funding-signed";
 import graphData from "../../../assets/data/evol_all_pc_funding_SIGNED (1).json";
 import financialGoalsData from "../../../assets/data/funding_programme.json";
-
 import FinancialGoals from "./tabs/financial-goals";
+import situationData from "../../../assets/data/situations-cards.json"
+import SituationCard from "./tabs/situations-cards";
 
 export default function EuropeanProjects() {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
   const structureID = query.get("structureID");
   const tab = query.get("tab");
-  
+  const situation = situationData
   const data = graphData;
   const title = data[0].label;
 
@@ -42,7 +43,9 @@ export default function EuropeanProjects() {
      case "financial-goals":
        return <FinancialGoals data={financialData} />;
        break;
-
+ case "situation-cards":
+       return <SituationCard data={situation} />;
+       break;
 
       default:
         return <ProjectSynthesis />;
@@ -92,6 +95,11 @@ export default function EuropeanProjects() {
                   onClick={() => setSelectedTab("financial-goals")}
                 >
                   Objectifs financés
+                </SideMenuLink>
+                   <SideMenuLink
+                  onClick={() => setSelectedTab("situation-cards")}
+                >
+                  Situations
                 </SideMenuLink>
               </SideMenu>
             </Col>
