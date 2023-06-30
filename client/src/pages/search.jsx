@@ -54,7 +54,6 @@ export default function Search() {
   };
 
   const getParams = () => {
-    console.log(tableau);
     if (!selected) return ('');
 
     if (selected.type === 'structure') {
