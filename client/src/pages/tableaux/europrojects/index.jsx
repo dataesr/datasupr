@@ -30,22 +30,20 @@ if (countryCode) {
   });
 }
 
+
 export default function EuropeanProjects() {
-const location = useLocation();
+  const location = useLocation();
   const query = new URLSearchParams(location.search);
   const structureID = query.get("structureID");
   const tab = query.get("tab");
-  const countryCode = query.get("countryCode")
+  const countryCode = query.get("countryCode");
 
-  const { data : graphData, isLoading } = useQuery({
-    queryKey: ["european-projects",countryCode],
-    queryFn: getData(countryCode),
+  const { data: graphData, isLoading } = useQuery({
+    queryKey: ["european-projects", countryCode],
+    queryFn: () => getData(countryCode), 
   });
 
-  if (isLoading) return (<>chargement</>)
-  
-  const situation = situationData
-
+  const situation = situationData;
   const [selectedTab, setSelectedTab] = useState("");
 
   const renderTab = () => {
@@ -58,7 +56,7 @@ const location = useLocation();
         break;
  case "situation-cards":
         return <SituationCard data={situation} />;
-        break;
+       break;
 
       default:
         return <ProjectSynthesis />;
