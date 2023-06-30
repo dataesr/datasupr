@@ -7,45 +7,58 @@ import {
   SideMenuLink,
   Breadcrumb,
   BreadcrumbItem,
-  SideMenuItem,
 } from "@dataesr/react-dsfr";
 import { useLocation } from "react-router-dom";
 import { useState } from "react";
-import TitleComponent from "../../../components/title";
-import RandomIdProject from "./tabs/randomIdProject";
 import ProjectSynthesis from "./tabs/projects-synthesis";
 import EvolutionFundingSigned from "./tabs/evolution-funding-signed";
-import graphData from "../../../assets/data/evol_all_pc_funding_SIGNED (1).json";
-import financialGoalsData from "../../../assets/data/funding_programme.json";
 import FinancialGoals from "./tabs/financial-goals";
 import situationData from "../../../assets/data/situations-cards.json"
 import SituationCard from "./tabs/situations-cards";
+import TitleComponent from "../../../components/title/index"
+import { useQuery } from "@tanstack/react-query";
+
+
+async function getData(countryCode) {
+let url = "/api/european-projects"
+if (countryCode) {
+  url += `?countryCode=${countryCode}`
+}
+  return fetch(url).then((response) => {
+    if (response.ok) return response.json();
+    return "Oops... La requète d'initialiation n'a pas fonctionné";
+  });
+}
 
 export default function EuropeanProjects() {
-  const location = useLocation();
+const location = useLocation();
   const query = new URLSearchParams(location.search);
   const structureID = query.get("structureID");
   const tab = query.get("tab");
-  const situation = situationData
-  const data = graphData;
-  const title = data[0].label;
+  const countryCode = query.get("countryCode")
 
-  const financialData = financialGoalsData
+  const { data : graphData, isLoading } = useQuery({
+    queryKey: ["european-projects",countryCode],
+    queryFn: getData(countryCode),
+  });
+
+  if (isLoading) return (<>chargement</>)
+  
+  const situation = situationData
 
   const [selectedTab, setSelectedTab] = useState("");
 
   const renderTab = () => {
     switch (selectedTab) {
       case "evolution-funding-signed":
-        return <EvolutionFundingSigned data={data} title={title} />;
+        return <EvolutionFundingSigned data={graphData["evol_all_pc_funding_SIGNED"]}  />;
         break;
-
      case "financial-goals":
-       return <FinancialGoals data={financialData} />;
-       break;
+        return <FinancialGoals data={graphData["funding_programme"]} />;
+        break;
  case "situation-cards":
-       return <SituationCard data={situation} />;
-       break;
+        return <SituationCard data={situation} />;
+        break;
 
       default:
         return <ProjectSynthesis />;
@@ -68,24 +81,6 @@ export default function EuropeanProjects() {
         </Col>
       </Row>
       <Row>
-        {structureID === null ? (
-          <>
-            <Col n="3">
-              <SideMenu title="Liste de projets européens">
-                <SideMenuLink onClick={() => setSelectedTab("")}>
-                  Retour à la synthese des projets européens
-                </SideMenuLink>
-                <SideMenuLink
-                  onClick={() => setSelectedTab("evolution-funding-signed")}
-                >
-                  {title}
-                </SideMenuLink>
-              </SideMenu>
-            </Col>
-            <Col n="9">{renderTab()}</Col>
-          </>
-        ) : (
-          <>
             <Col n="3">
               <SideMenu title={`Liste de projets européens de ${structureID}`}>
                 <SideMenuLink onClick={() => setSelectedTab("")}>
@@ -101,11 +96,14 @@ export default function EuropeanProjects() {
                 >
                   Situations
                 </SideMenuLink>
+                    <SideMenuLink
+                  onClick={() => setSelectedTab("evolution-funding-signed")}
+                >
+                  "Evolution funding signed"
+                </SideMenuLink>
               </SideMenu>
             </Col>
             <Col n="9">{renderTab()}</Col>
-          </>
-        )}
       </Row>
     </Container>
   );

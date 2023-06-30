@@ -6,7 +6,8 @@ import {
   Container,
 } from "@dataesr/react-dsfr";
 
-export default function EvolutionFundingSigned({ data, title }) {
+export default function EvolutionFundingSigned({ data }) {
+
   if (data.length === 0) {
     return <p>Pas encore de donnée</p>;
   }
@@ -25,7 +26,7 @@ export default function EvolutionFundingSigned({ data, title }) {
       type: "line",
     },
     title: {
-      text: title,
+      text: "",
       align: "left",
     },
     xAxis: {
