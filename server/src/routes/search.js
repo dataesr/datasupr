@@ -41,6 +41,7 @@ router.route('/search')
   .get((req, res) => {
     let data = [];
     if (req.query?.q) {
+      console.log('API search', req.query.q);
       data = allData.filter((el) => el.label.toLowerCase().indexOf(req.query.q.toLowerCase()) !== -1)
     }
 
