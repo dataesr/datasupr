@@ -1,0 +1,26 @@
+####################################################################################
+https://public.tableau.com/app/profile/data.esr/viz/Horizon-Europe/Analyses/ + Synthèse France
+
+cards -> Chiffres-clés
+
+funding_programme -> Objectifs financés
+
+funding_participant_share_actions -> Types de projets financés
+
+entities_indicators -> graphique n'existe pas mais données structurées comme pour Objectifs financés mais pour une structure identifiée par un ID paysage 
+
+##################################################################################
+https://public.tableau.com/app/profile/data.esr/viz/Horizon-Europe/Analyses/ + Evolution
+
+evol_all_pc_coordination_SIGNED et/ou evol_all_pc_coordination_EVAL -> 
+Evolution annuelle des parts de coordinations des projets signés (dernier graphique de la page)
+
+evol_all_pc_funding_SIGNED ->
+Evolution annuelle des parts captées (premier graphique de la page)
+
+evol_all_pc_funding_EVAL ->
+Evolution annuelle de subventions demandées (2eme graphique de la page)
+
+evol_all_pc_participant_SIGNED / evol_all_pc_participant_EVAL / evol_all_pc_project_EVAL / evol_all_pc_project_SIGNED ->
+graphiques n'existent pas dans tableau mais les données sont structurées comme celles de evol_all_pc_funding_SIGNED
+Idée d'un graphique qu'on filtre sur un indicateur
