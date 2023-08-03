@@ -73,10 +73,15 @@ export default function Search() {
             label="Rechercher"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                refetchPaysageAPI();
+              }
+            }}
           />
         </Col>
         <Col n="2">
-          <Button onClick={() => refetchPaysageAPI()}>Rechercher</Button>
+          <Button onClick={() => refetchPaysageAPI()} icon="ri-search-line">Rechercher</Button>
         </Col>
       </Row>
       <Row gutters>
@@ -94,16 +99,16 @@ export default function Search() {
             </Col>
           ))}
       </Row>
-      {selected?.id && (
-        <Row>
+      {selected?.id && tableaux && tableaux.length > 0 && (
+        <Row className="fr-mt-5w">
           <Col n="12">
             <h2>{`Liste des tableaux de bord correspondants à "${selected.label}"`}</h2>
           </Col>
         </Row>
       )}
-      <Row gutters>
-        {tableaux &&
-          tableaux.map((tableau) => (
+      {tableaux && tableaux.length > 0 && (
+        <Row gutters>
+          {tableaux.map((tableau) => (
             <Col n="6">
               <Card href={`/tableaux/${tableau.id}?${getParams()}`}>
                 <CardTitle>{tableau.label}</CardTitle>
@@ -117,7 +122,8 @@ export default function Search() {
               </Card>
             </Col>
           ))}
-      </Row>
+        </Row>
+      )}
     </Container>
   );
 }

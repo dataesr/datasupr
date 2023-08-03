@@ -20,10 +20,10 @@ import { useQuery } from "@tanstack/react-query";
 
 
 async function getData(countryCode) {
-let url = "/api/european-projects"
-if (countryCode) {
-  url += `?countryCode=${countryCode}`
-}
+  let url = "/api/european-projects"
+  if (countryCode) {
+    url += `?countryCode=${countryCode}`
+  }
   return fetch(url).then((response) => {
     if (response.ok) return response.json();
     return "Oops... La requète d'initialiation n'a pas fonctionné";
@@ -34,13 +34,13 @@ if (countryCode) {
 export default function EuropeanProjects() {
   const location = useLocation();
   const query = new URLSearchParams(location.search);
-  const structureID = query.get("structureID");
-  const tab = query.get("tab");
+  const structureID = query.get("structureId");
+  // const tab = query.get("tab");
   const countryCode = query.get("countryCode");
 
   const { data: graphData, isLoading } = useQuery({
     queryKey: ["european-projects", countryCode],
-    queryFn: () => getData(countryCode), 
+    queryFn: () => getData(countryCode),
   });
 
   const situation = situationData;
@@ -49,14 +49,14 @@ export default function EuropeanProjects() {
   const renderTab = () => {
     switch (selectedTab) {
       case "evolution-funding-signed":
-        return <EvolutionFundingSigned data={graphData["evol_all_pc_funding_SIGNED"]}  />;
+        return <EvolutionFundingSigned data={graphData["evol_all_pc_funding_SIGNED"]} />;
         break;
-     case "financial-goals":
+      case "financial-goals":
         return <FinancialGoals data={graphData["funding_programme"]} />;
         break;
- case "situation-cards":
+      case "situation-cards":
         return <SituationCard data={situation} />;
-       break;
+        break;
 
       default:
         return <ProjectSynthesis />;
@@ -79,29 +79,29 @@ export default function EuropeanProjects() {
         </Col>
       </Row>
       <Row>
-            <Col n="3">
-              <SideMenu title={`Liste de projets européens de ${structureID}`}>
-                <SideMenuLink onClick={() => setSelectedTab("")}>
-                  Retour à la synthese de {structureID}
-                </SideMenuLink>
-                  <SideMenuLink
-                  onClick={() => setSelectedTab("financial-goals")}
-                >
-                  Objectifs financés
-                </SideMenuLink>
-                   <SideMenuLink
-                  onClick={() => setSelectedTab("situation-cards")}
-                >
-                  Situations
-                </SideMenuLink>
-                    <SideMenuLink
-                  onClick={() => setSelectedTab("evolution-funding-signed")}
-                >
-                  "Evolution funding signed"
-                </SideMenuLink>
-              </SideMenu>
-            </Col>
-            <Col n="9">{renderTab()}</Col>
+        <Col n="3">
+          <SideMenu title={`Liste de projets européens de ${structureID}`}>
+            <SideMenuLink onClick={() => setSelectedTab("")}>
+              Retour à la synthese de {structureID}
+            </SideMenuLink>
+            <SideMenuLink
+              onClick={() => setSelectedTab("financial-goals")}
+            >
+              Objectifs financés
+            </SideMenuLink>
+            <SideMenuLink
+              onClick={() => setSelectedTab("situation-cards")}
+            >
+              Situations
+            </SideMenuLink>
+            <SideMenuLink
+              onClick={() => setSelectedTab("evolution-funding-signed")}
+            >
+              "Evolution funding signed"
+            </SideMenuLink>
+          </SideMenu>
+        </Col>
+        <Col n="9">{renderTab()}</Col>
       </Row>
     </Container>
   );

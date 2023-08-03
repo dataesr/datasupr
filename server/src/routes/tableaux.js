@@ -17,11 +17,12 @@ const allTabs = [
 
 router.route('/tableaux')
   .get((req, res) => {
+    console.log(req.query.q);
     let tabs = [];
     let data = [];
-    if (req.query?.q) {
+    if (req.query?.q && req.query.q !== 'undefined') {
+      console.log('API tableaux', req.query.q);
       tabs = allData.find((el) => el.idPaysage === req.query.q);
-      console.log(tabs);
       data = allTabs.filter((el) => tabs.tableauxIds.includes(el.id));
     }
 
