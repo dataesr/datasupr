@@ -12,6 +12,8 @@ import Evolutions from "./tabs/evolutions";
 import ProjectSynthesis from "./tabs/projects-synthesis";
 import TitleComponent from "../../../components/title/index"
 // import { useQuery } from "@tanstack/react-query";
+import getCountryName from '../../../utils/getCountryName';
+
 
 export default function EuropeanProjects() {
   const location = useLocation();
@@ -61,7 +63,6 @@ export default function EuropeanProjects() {
     window.location.href = `/tableaux/european-projects?tab=${selectedTab}`;
   };
 
-
   return (
     <Container as="section">
       <Breadcrumb className="fr-mb-0">
@@ -79,11 +80,12 @@ export default function EuropeanProjects() {
       {countryCode && (
         <Row>
           <Col n="12">
-            filre :
             <Tag
               closable
               onClick={() => resetFilters()}
-            >{countryCode}</Tag>
+            >
+              {getCountryName(countryCode)}
+            </Tag>
           </Col>
         </Row>
       )}
