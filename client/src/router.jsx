@@ -7,11 +7,8 @@ import Tableaux from "./pages/tableaux";
 import Financial from "./pages/tableaux/financial";
 import Swagger from "./pages/swagger";
 import EuropeanProjects from "./pages/tableaux/europrojects";
-import EvolutionFundingSignedChart from "./pages/tableaux/europrojects/tabs/evolution-funding-signed";
 import ERC from "./pages/tableaux/ERC";
 import MSCA from "./pages/tableaux/MSCA";
-import FinancialGoals from "./pages/tableaux/europrojects/tabs/financial-goals";
-import SituationCard from "./pages/tableaux/europrojects/tabs/situations-cards";
 
 export default function Router() {
   return (

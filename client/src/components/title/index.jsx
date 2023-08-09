@@ -5,8 +5,8 @@ export default function TitleComponent({ as, betaBadge, icon, look, subTitle, ti
   const spaces = ((subTitle) ? ('fr-mb-0') : ('fr-mb-3w'));
 
   return (
-    <Container fluid>
-      <Row>
+    <div>
+      <div>
         <Title as={as} look={look} className={spaces}>
           {
             (icon) ? (
@@ -18,13 +18,13 @@ export default function TitleComponent({ as, betaBadge, icon, look, subTitle, ti
             (betaBadge) && <Badge text="Version [bêta]" className="fr-ml-1w" colorFamily="green-menthe" />
           }
         </Title>
-      </Row>
+      </div>
       {
         (subTitle) ? (
-          <Row className="fr-mb-3w fr-card__detail">{subTitle}</Row>
+          <div className="fr-mb-3w fr-card__detail">{subTitle}</div>
         ) : null
       }
-    </Container>
+    </div>
   );
 }
 

@@ -1,30 +1,28 @@
-import React from "react";
+import PropTypes from "prop-types";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 const FinancialGoals = ({ data }) => {
-  if (data === 0) {
+  if (!data || data.length === 0) {
     return <p>Pas encore de donnée</p>;
   }
 
   const sortedData = data[0].data.sort((a, b) => b.share_signed - a.share_signed);
-
   const categories = sortedData.map((item) => item.programme_name_fr);
-  const values = sortedData.map((item) => item.value_signed);
   const percentages = sortedData.map((item) => item.share_signed);
   const pillierName = sortedData.map((item) => item.pilier_name_fr);
 
- const getColorByPillierName = (name) => {
-  if (name === "Science d'excellence") {
-    return "#9ef9be";
-  } else if (name === "Problématiques mondiales et compétitivité industrielle européenne") {
-    return "#4b5d67";
-  } else if (name === "Europe plus innovante") {
-    return "#87556f";
-  }  else {
-    return "#cecece";
-  }
-};
+  const getColorByPillierName = (name) => {
+    if (name === "Science d'excellence") {
+      return "#9ef9be";
+    } else if (name === "Problématiques mondiales et compétitivité industrielle européenne") {
+      return "#4b5d67";
+    } else if (name === "Europe plus innovante") {
+      return "#87556f";
+    } else {
+      return "#cecece";
+    }
+  };
 
   const pillierLegend = [
     { name: "Science d'excellence", color: getColorByPillierName("Science d'excellence") },
@@ -39,7 +37,7 @@ const FinancialGoals = ({ data }) => {
       height: 500,
     },
     title: {
-      text: "Objectifs financés",
+      text: "",
     },
     xAxis: {
       categories: categories,
@@ -61,7 +59,7 @@ const FinancialGoals = ({ data }) => {
     ],
     legend: {
       enabled: false,
- 
+
     },
     plotOptions: {
       series: {
@@ -91,8 +89,8 @@ const FinancialGoals = ({ data }) => {
 
   return (
     <div>
+      <HighchartsReact highcharts={Highcharts} options={options} />
       <div style={{ marginBottom: "20px" }}>
-        <h4>Légende des piliers :</h4>
         {pillierLegend.map((item) => (
           <div key={item.name} style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
             <div style={{ width: "20px", height: "20px", background: item.color, marginRight: "10px" }}></div>
@@ -100,9 +98,15 @@ const FinancialGoals = ({ data }) => {
           </div>
         ))}
       </div>
-      <HighchartsReact highcharts={Highcharts} options={options} />
     </div>
   );
 };
 
 export default FinancialGoals;
+
+FinancialGoals.propTypes = {
+  data: PropTypes.array,
+};
+FinancialGoals.defaultProps = {
+  data: [],
+};

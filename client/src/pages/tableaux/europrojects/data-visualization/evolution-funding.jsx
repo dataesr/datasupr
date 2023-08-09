@@ -1,19 +1,15 @@
+import PropTypes from "prop-types";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import {
-  Col,
-  Row,
-  Container,
+  Container, Row, Col,
 } from "@dataesr/react-dsfr";
 
-export default function EvolutionFundingSigned({ data }) {
-  
-  
+export default function EvolutionFunding({ data, title }) {
   if (data.length === 0) {
     return <p>Pas encore de donnée</p>;
   }
-const countryCode = data[0].country_code
-  // const countryCode = data.map((code) => Array.isArray(code.country_code) ? code.country_code.join() : "");
+  const countryCode = data[0].country_code
 
   const seriesData = data.map((item) => ({
     country: item.country_name,
@@ -29,7 +25,7 @@ const countryCode = data[0].country_code
       type: "line",
     },
     title: {
-      text: "",
+      text: title,
       align: "left",
     },
     xAxis: {
@@ -89,3 +85,8 @@ const countryCode = data[0].country_code
     </Container>
   );
 }
+
+EvolutionFunding.propTypes = {
+  data: PropTypes.array.isRequired,
+  title: PropTypes.string.isRequired,
+};
