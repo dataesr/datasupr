@@ -68,6 +68,7 @@ export default function Home() {
           </Card>
         </Col>
       </Row>
+      blahhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
       {/* <Text>{isLoading ? 'Chargement...' : data?.options.description}</Text> */}
     </Container>
   );
