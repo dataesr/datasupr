@@ -8,10 +8,7 @@
     "server"
   ],
   "dependencies": {
-    "concurrently": "^8.0.1",
-    "highcharts": "^11.1.0",
-    "highcharts-react-official": "^3.2.0",
-    "react-query": "^3.39.3"
+    "concurrently": "^8.0.1"
   },
   "scripts": {
     "server": "npm -w server run dev",

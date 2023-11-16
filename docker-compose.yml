@@ -3,26 +3,25 @@ services:
     image: mongo:5.0
     ports:
       - 27017:27017
-    restart: always
+    restart: on-failure
     volumes:
       - mongo-datasupr:/data/db
     networks:
       - datasupr
 
-  app:
+  server:
     build:
       dockerfile: Dockerfile-dev
-    command: npm run dev:docker
+    command: npm run server
     restart: always
     environment:
       - MONGO_URI=mongodb://mongodb:27017
     env_file:
       - ./server/.env
     volumes:
-      - .:/app
+      - .:/server
     ports:
       - 3000:3000
-      - 5173:5173
     networks:
       - datasupr
 networks:
