@@ -1,11 +1,33 @@
 import PropTypes from "prop-types";
+import { useLocation } from "react-router-dom";
+import { useState, useEffect } from "react";
 import {
   Container, Row, Col,
-  Title,
+  // Title,
 } from "@dataesr/react-dsfr";
 import TitleComponent from "../../../../components/title";
 
-export default function Evolutions({ data }) {
+export default function Evolutions() {
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const structureID = query.get("structureId");
+  const countryCode = query.get("countryCode");
+  const [graphData, setGraphData] = useState([]);
+
+  useEffect(() => {
+    async function getData() {
+      let url = "/api/atlas"
+      if (countryCode) {
+        url += `?countryCode=${countryCode}`
+      }
+      const response = await fetch(url);
+      const data = await response.json();
+      setGraphData(data);
+    }
+
+    getData(countryCode);
+  }, [])
+
   return (
     <Container as="section">
       <Row>

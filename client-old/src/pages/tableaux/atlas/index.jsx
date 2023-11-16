@@ -19,27 +19,27 @@ import getCountryName from '../../../utils/getCountryName';
 
 
 export default function Atlas() {
-  const location = useLocation();
+  // const location = useLocation();
   const query = new URLSearchParams(location.search);
   const structureID = query.get("structureId");
   const countryCode = query.get("countryCode");
   const tab = query.get("tab");
-  const [graphData, setGraphData] = useState([]);
+  // const [graphData, setGraphData] = useState([]);
   const [selectedTab, setSelectedTab] = useState(tab || "en-un-clin-d-oeil");
 
-  useEffect(() => {
-    async function getData() {
-      let url = "/api/european-projects"
-      if (countryCode) {
-        url += `?countryCode=${countryCode}`
-      }
-      const response = await fetch(url);
-      const data = await response.json();
-      setGraphData(data);
-    }
+  // useEffect(() => {
+  //   async function getData() {
+  //     let url = "/api/atlas"
+  //     if (countryCode) {
+  //       url += `?countryCode=${countryCode}`
+  //     }
+  //     const response = await fetch(url);
+  //     const data = await response.json();
+  //     setGraphData(data);
+  //   }
 
-    getData(countryCode);
-  }, [])
+  //   getData(countryCode);
+  // }, [])
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -51,16 +51,16 @@ export default function Atlas() {
 
     switch (selectedTab) {
       case "effectif-etudiants-inscrits-par-filliere":
-        return <EffectifEtudiantsInscritsParFilliere data={graphData} />
+        return <EffectifEtudiantsInscritsParFilliere />
       case "effectif-etudiants-insrits-par-secteur-d-etablissement":
-        return <EffectifEtudiantsInsritsParSecteurDEtablissement data={graphData} />
+        return <EffectifEtudiantsInsritsParSecteurDEtablissement />
       case "effectif-etudiants-inscrits-par-sexe":
-        return <EffectifEtudiantsInscritsParSexe data={graphData} />
+        return <EffectifEtudiantsInscritsParSexe />
       case "ressources":
-        return <Ressources data={graphData} />
+        return <Ressources />
 
       default:
-        return <EnUnClinDOeil data={graphData} />;
+        return <EnUnClinDOeil />;
     }
   };
 

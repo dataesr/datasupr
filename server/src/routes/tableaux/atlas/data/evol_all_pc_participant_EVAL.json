@@ -1,0 +1,1694 @@
+{
+    "code_indic": "participant_number",
+    "label": "Nombre de candidats",
+    "data": [
+        {
+            "country_code": "AT",
+            "country_name": "Autriche",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 2552,
+                    "%": 2.8
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 1463,
+                    "%": 2.7
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 1870,
+                    "%": 2.8
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 1519,
+                    "%": 2.7
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 1897,
+                    "%": 2.6
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 1817,
+                    "%": 2.5
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 1362,
+                    "%": 2.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 3295,
+                    "%": 2.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 3902,
+                    "%": 2.4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 3126,
+                    "%": 2.3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 4159,
+                    "%": 2.6
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 3568,
+                    "%": 2.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 4324,
+                    "%": 2.6
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 5954,
+                    "%": 2.7
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 3336,
+                    "%": 2.9
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 2474,
+                    "%": 2.7
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2023",
+                    "mixte_periode_HE": "2023",
+                    "year": "2023",
+                    "value": 6,
+                    "%": 3.3
+                }
+            ]
+        },
+        {
+            "country_code": "BE",
+            "country_name": "Belgique",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 3309,
+                    "%": 3.7
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 2005,
+                    "%": 3.7
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 2505,
+                    "%": 3.7
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 2165,
+                    "%": 3.9
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 2706,
+                    "%": 3.8
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 2723,
+                    "%": 3.8
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 1986,
+                    "%": 3.7
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 4628,
+                    "%": 3.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 5608,
+                    "%": 3.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 5241,
+                    "%": 3.8
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 6438,
+                    "%": 4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 5789,
+                    "%": 4.1
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 6656,
+                    "%": 4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 9179,
+                    "%": 4.2
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 5408,
+                    "%": 4.6
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 4234,
+                    "%": 4.6
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2023",
+                    "mixte_periode_HE": "2023",
+                    "year": "2023",
+                    "value": 7,
+                    "%": 3.8
+                }
+            ]
+        },
+        {
+            "country_code": "CH",
+            "country_name": "Suisse",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 2750,
+                    "%": 3
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 1653,
+                    "%": 3.1
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 2346,
+                    "%": 3.5
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 1610,
+                    "%": 2.9
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 2248,
+                    "%": 3.1
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 2253,
+                    "%": 3.1
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 1717,
+                    "%": 3.2
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 2195,
+                    "%": 1.7
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 3425,
+                    "%": 2.1
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 3300,
+                    "%": 2.4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 3977,
+                    "%": 2.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 3988,
+                    "%": 2.8
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 4844,
+                    "%": 2.9
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 6202,
+                    "%": 2.9
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 2504,
+                    "%": 2.1
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 1778,
+                    "%": 1.9
+                }
+            ]
+        },
+        {
+            "country_code": "DE",
+            "country_name": "Allemagne",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 9664,
+                    "%": 10.7
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 5437,
+                    "%": 10.2
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 7333,
+                    "%": 10.8
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 5574,
+                    "%": 10
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 7575,
+                    "%": 10.6
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 7415,
+                    "%": 10.3
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 5216,
+                    "%": 9.7
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 15334,
+                    "%": 11.7
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 17638,
+                    "%": 11.1
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 14739,
+                    "%": 10.7
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 16804,
+                    "%": 10.4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 14973,
+                    "%": 10.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 17179,
+                    "%": 10.4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 21572,
+                    "%": 10
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 12423,
+                    "%": 10.6
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 8542,
+                    "%": 9.2
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2023",
+                    "mixte_periode_HE": "2023",
+                    "year": "2023",
+                    "value": 9,
+                    "%": 4.9
+                }
+            ]
+        },
+        {
+            "country_code": "EL",
+            "country_name": "Grèce",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 3764,
+                    "%": 4.2
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 2194,
+                    "%": 4.1
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 2702,
+                    "%": 4
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 1763,
+                    "%": 3.2
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 2508,
+                    "%": 3.5
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 2193,
+                    "%": 3
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 1697,
+                    "%": 3.2
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 4249,
+                    "%": 3.2
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 4861,
+                    "%": 3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 4623,
+                    "%": 3.3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 5496,
+                    "%": 3.4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 5017,
+                    "%": 3.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 6055,
+                    "%": 3.7
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 9037,
+                    "%": 4.2
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 5244,
+                    "%": 4.5
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 5063,
+                    "%": 5.5
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2023",
+                    "mixte_periode_HE": "2023",
+                    "year": "2023",
+                    "value": 1,
+                    "%": 0.5
+                }
+            ]
+        },
+        {
+            "country_code": "ES",
+            "country_name": "Espagne",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 6267,
+                    "%": 6.9
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 4015,
+                    "%": 7.5
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 5673,
+                    "%": 8.4
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 4912,
+                    "%": 8.8
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 7021,
+                    "%": 9.8
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 7320,
+                    "%": 10.1
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 5529,
+                    "%": 10.3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 13867,
+                    "%": 10.6
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 16479,
+                    "%": 10.3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 15252,
+                    "%": 11
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 17868,
+                    "%": 11
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 16012,
+                    "%": 11.3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 19009,
+                    "%": 11.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 24901,
+                    "%": 11.5
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 13478,
+                    "%": 11.5
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 10573,
+                    "%": 11.4
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2023",
+                    "mixte_periode_HE": "2023",
+                    "year": "2023",
+                    "value": 6,
+                    "%": 3.3
+                }
+            ]
+        },
+        {
+            "country_code": "FR",
+            "country_name": "France",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 6902,
+                    "%": 7.6
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 4164,
+                    "%": 7.8
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 5198,
+                    "%": 7.7
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 3954,
+                    "%": 7.1
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 5462,
+                    "%": 7.6
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 5365,
+                    "%": 7.4
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 3987,
+                    "%": 7.4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 10013,
+                    "%": 7.6
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 11547,
+                    "%": 7.2
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 10600,
+                    "%": 7.7
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 12519,
+                    "%": 7.7
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 11345,
+                    "%": 8
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 12622,
+                    "%": 7.7
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 15842,
+                    "%": 7.3
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 9371,
+                    "%": 8
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 6825,
+                    "%": 7.4
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2023",
+                    "mixte_periode_HE": "2023",
+                    "year": "2023",
+                    "value": 6,
+                    "%": 3.3
+                }
+            ]
+        },
+        {
+            "country_code": "IT",
+            "country_name": "Italie",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 9383,
+                    "%": 10.4
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 5279,
+                    "%": 9.9
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 6428,
+                    "%": 9.5
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 5051,
+                    "%": 9.1
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 6451,
+                    "%": 9
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 6332,
+                    "%": 8.8
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 4526,
+                    "%": 8.4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 14168,
+                    "%": 10.8
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 18320,
+                    "%": 11.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 15537,
+                    "%": 11.2
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 17910,
+                    "%": 11.1
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 15031,
+                    "%": 10.6
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 17288,
+                    "%": 10.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 23962,
+                    "%": 11.1
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 12557,
+                    "%": 10.8
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 9906,
+                    "%": 10.7
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2023",
+                    "mixte_periode_HE": "2023",
+                    "year": "2023",
+                    "value": 4,
+                    "%": 2.2
+                }
+            ]
+        },
+        {
+            "country_code": "NL",
+            "country_name": "Pays-Bas",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 4312,
+                    "%": 4.8
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 2690,
+                    "%": 5
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 3257,
+                    "%": 4.8
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 2817,
+                    "%": 5.1
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 3889,
+                    "%": 5.4
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 4033,
+                    "%": 5.6
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 2873,
+                    "%": 5.3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 7588,
+                    "%": 5.8
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 8868,
+                    "%": 5.6
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 7405,
+                    "%": 5.4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 8999,
+                    "%": 5.6
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 7888,
+                    "%": 5.6
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 9090,
+                    "%": 5.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 11439,
+                    "%": 5.3
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 6718,
+                    "%": 5.8
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 4698,
+                    "%": 5.1
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2023",
+                    "mixte_periode_HE": "2023",
+                    "year": "2023",
+                    "value": 7,
+                    "%": 3.8
+                }
+            ]
+        },
+        {
+            "country_code": "NO",
+            "country_name": "Norvège",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 1418,
+                    "%": 1.6
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 903,
+                    "%": 1.7
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 1125,
+                    "%": 1.7
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 920,
+                    "%": 1.7
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 1103,
+                    "%": 1.5
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 1147,
+                    "%": 1.6
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 763,
+                    "%": 1.4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 1849,
+                    "%": 1.4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 2215,
+                    "%": 1.4
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 2159,
+                    "%": 1.6
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 2884,
+                    "%": 1.8
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 2789,
+                    "%": 2
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 3471,
+                    "%": 2.1
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 4253,
+                    "%": 2
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 2279,
+                    "%": 2
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 1770,
+                    "%": 1.9
+                }
+            ]
+        },
+        {
+            "country_code": "SE",
+            "country_name": "Suède",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 3361,
+                    "%": 3.7
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 1787,
+                    "%": 3.3
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 2138,
+                    "%": 3.2
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 1753,
+                    "%": 3.2
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 2392,
+                    "%": 3.3
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 2458,
+                    "%": 3.4
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 1581,
+                    "%": 2.9
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 3874,
+                    "%": 3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 4440,
+                    "%": 2.8
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 3931,
+                    "%": 2.8
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 4720,
+                    "%": 2.9
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 4319,
+                    "%": 3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 4969,
+                    "%": 3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 6116,
+                    "%": 2.8
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 3250,
+                    "%": 2.8
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 2428,
+                    "%": 2.6
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2023",
+                    "mixte_periode_HE": "2023",
+                    "year": "2023",
+                    "value": 3,
+                    "%": 1.6
+                }
+            ]
+        },
+        {
+            "country_code": "UK",
+            "country_name": "Royaume-Uni",
+            "data": [
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2007",
+                    "value": 9557,
+                    "%": 10.6
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2008",
+                    "value": 5951,
+                    "%": 11.1
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2009",
+                    "value": 7718,
+                    "%": 11.4
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2010",
+                    "value": 6680,
+                    "%": 12
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2011",
+                    "value": 9029,
+                    "%": 12.6
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2012",
+                    "value": 9556,
+                    "%": 13.2
+                },
+                {
+                    "framework": "FP7",
+                    "mixte_periode_H": "FP7",
+                    "mixte_periode_HE": "FP7",
+                    "year": "2013",
+                    "value": 7302,
+                    "%": 13.6
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2014",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2014",
+                    "value": 16337,
+                    "%": 12.5
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2015",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2015",
+                    "value": 19320,
+                    "%": 12.1
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2016",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2016",
+                    "value": 17042,
+                    "%": 12.3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2017",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2017",
+                    "value": 16508,
+                    "%": 10.2
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2018",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2018",
+                    "value": 13231,
+                    "%": 9.3
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2019",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2019",
+                    "value": 12652,
+                    "%": 7.7
+                },
+                {
+                    "framework": "H2020",
+                    "mixte_periode_H": "2020",
+                    "mixte_periode_HE": "H2020",
+                    "year": "2020",
+                    "value": 13350,
+                    "%": 6.2
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2021",
+                    "mixte_periode_HE": "2021",
+                    "year": "2021",
+                    "value": 7917,
+                    "%": 6.8
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2022",
+                    "mixte_periode_HE": "2022",
+                    "year": "2022",
+                    "value": 5299,
+                    "%": 5.7
+                },
+                {
+                    "framework": "HE",
+                    "mixte_periode_H": "2023",
+                    "mixte_periode_HE": "2023",
+                    "year": "2023",
+                    "value": 1,
+                    "%": 0.5
+                }
+            ]
+        }
+    ]
+}

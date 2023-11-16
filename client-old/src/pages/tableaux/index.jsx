@@ -22,6 +22,8 @@ export default function Tableaux() {
       path: "/tableaux/tableau-de-bord-financier",
       label: "Tableaux de bord financier",
     },
+    { path: "/tableaux/atlas", label: "Atlas" },
+
   ];
 
   return (
