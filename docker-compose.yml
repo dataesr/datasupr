@@ -9,21 +9,6 @@ services:
     networks:
       - datasupr
 
-  server:
-    build:
-      dockerfile: Dockerfile-dev
-    command: npm run server
-    restart: always
-    environment:
-      - MONGO_URI=mongodb://mongodb:27017
-    env_file:
-      - ./server/.env
-    volumes:
-      - .:/server
-    ports:
-      - 3000:3000
-    networks:
-      - datasupr
 networks:
   datasupr: {}
 

@@ -1,0 +1,25 @@
+.key-number {
+  /* font-size: 4rem;
+  font-weight: 600;
+  color: #bebebe;
+  display: block;
+  text-align: center; */
+
+  color: #fff;
+  font-size: 80px;
+  font-size: 5rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 80px;
+  line-height: 5rem;
+  text-shadow: 1px 0 #ce614a, -1px 0 #ce614a, 0 1px #ce614a, 0 -1px #ce614a, 1px 1px #ce614a, -1px -1px #ce614a, 1px -1px #ce614a, -1px 1px #ce614a, 2px 5px 0 #ce614a;
+}
+
+.selected-year-color-point {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ce614a;
+  display: inline-block;
+  margin-right: 10px;
+}

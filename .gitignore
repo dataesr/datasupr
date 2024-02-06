@@ -8,9 +8,16 @@ pnpm-debug.log*
 lerna-debug.log*
 
 node_modules
+client-old
+client/node_modules
 dist
 dist-ssr
 *.local
+server/duckDbData
+server/duckDbData.wal
+server/src/geo.json
+server/src/fr-esr-atlas_regional-effectifs-d-etudiants-inscrits.json
+client/src/assets/geo-*
 
 # Editor directories and files
 .vscode/*

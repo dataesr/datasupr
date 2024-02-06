@@ -11,18 +11,24 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@gouvfr/dsfr": "^1.9.3",
+    "@gouvfr/dsfr": "^1.10.2",
     "@highcharts/map-collection": "^2.1.0",
     "@tanstack/react-query": "^5.8.3",
     "@tanstack/react-query-devtools": "^5.8.3",
+    "@turf/turf": "^6.5.0",
     "highcharts": "^11.1.0",
     "highcharts-react-official": "^3.2.0",
+    "js-cookie": "^3.0.5",
+    "leaflet": "^1.9.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-leaflet": "^4.2.1",
     "react-router-dom": "^6.18.0",
+    "remixicon": "^3.5.0",
     "sass": "^1.62.1"
   },
   "devDependencies": {
+    "@types/leaflet": "^1.9.8",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

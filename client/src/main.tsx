@@ -18,13 +18,13 @@ const RouterLink = ({ href, replace, target, ...props }: RouterLinkProps) => {
   return <Link to={href} replace={replace} {...props} />
 }
 
-const ScrollToTop = (): ReactNode => {
-  const { pathname } = useLocation();
-  useLayoutEffect(() => {
-    document.documentElement.scrollTo(0, 0);
-  }, [pathname]);
-  return null;
-}
+// const ScrollToTop = (): ReactNode => {
+//   const { pathname } = useLocation();
+//   useLayoutEffect(() => {
+//     document.documentElement.scrollTo(0, 0);
+//   }, [pathname]);
+//   return null;
+// }
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,7 +39,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        <ScrollToTop />
+        {/* <ScrollToTop /> */}
         <DSFRConfig routerComponent={RouterLink} theme='light'>
           <Routes />
         </DSFRConfig>

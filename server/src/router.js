@@ -10,7 +10,6 @@ const router = new express.Router();
 
 router.use(helloRouter);
 router.use(initRouter);
-router.use(mainRouter);
 router.use(searchRouter);
 router.use(tableauxRouter);
 router.use(europeanProjectsRouter);

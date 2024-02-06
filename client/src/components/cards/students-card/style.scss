@@ -1,0 +1,26 @@
+.students-card {
+  .key-number {
+    color: #222;
+    font-size: 3rem;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 2rem;
+    display: inline-block;
+  }
+
+  .students-label {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #222;
+    display: inline-block;
+    padding: 0;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    ;
+    line-height: 18px;
+  }
+
+  .card-description {
+    font-size: 1.3rem;
+  }
+}
