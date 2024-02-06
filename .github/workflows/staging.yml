@@ -7,10 +7,10 @@ on:
 
 env:
   # Must match k8s deployment name
-  DEPLOYMENT: paysage-lab
-  DEPLOYMENT_NAMESPACE: paysage-lab
-  DEPLOYMENT_URL: https://paysage-lab.staging.dataesr.ovh
-  MM_NOTIFICATION_CHANNEL: 'paysage-bot'
+  DEPLOYMENT: datasupr
+  DEPLOYMENT_NAMESPACE: datasupr
+  DEPLOYMENT_URL: https://datasupr.staging.dataesr.ovh
+  MM_NOTIFICATION_CHANNEL: 'bots'
 
 jobs:
   publish-ghcr:
@@ -28,9 +28,8 @@ jobs:
       - name: copy client build to server
         run: cp -r client/build/ server/public/ && cd ..
 
-
       - name: Build image
-        run: docker build -f ./server/Dockerfile -t ${{ github.repository }} .
+        run: docker build -f ./Dockerfile -t ${{ github.repository }} .
 
       - name: Get Tag
         id: version
