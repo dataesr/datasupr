@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Link } from 'dsfr-plus';
+import { Link } from '@dataesr/dsfr-plus';
 
 export default function GenericCard({ description, image, title, to }: { description?: ReactNode, image?: ReactNode, title: string, to: string }) {
   return (

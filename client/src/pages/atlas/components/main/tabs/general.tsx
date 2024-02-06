@@ -7,7 +7,7 @@ import {
   Container, Row, Col,
   Title, Text,
   Link,
-} from 'dsfr-plus';
+} from '@dataesr/dsfr-plus';
 
 import {
   getNumberOfStudentsByYear,

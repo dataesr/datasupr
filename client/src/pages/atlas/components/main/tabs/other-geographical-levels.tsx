@@ -3,7 +3,7 @@ import { useSearchParams, useLocation } from "react-router-dom";
 
 import References from "../../references";
 import { getReferences } from '../../../../../api';
-import { Breadcrumb, Link, Title } from 'dsfr-plus';
+import { Breadcrumb, Link, Title } from '@dataesr/dsfr-plus';
 
 export function OtherGeographicalLevels() {
   const [searchParams] = useSearchParams();

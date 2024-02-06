@@ -1,4 +1,4 @@
-import { Accordion, AccordionGroup, Link } from 'dsfr-plus';
+import { Accordion, AccordionGroup, Link } from '@dataesr/dsfr-plus';
 import { useSearchParams, useLocation } from 'react-router-dom';
 
 type DataProps = {

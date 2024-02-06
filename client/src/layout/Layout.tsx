@@ -1,4 +1,4 @@
-import { Button, Header, Logo, Service, FastAccess } from 'dsfr-plus';
+import { Button, Header, Logo, Service, FastAccess } from '@dataesr/dsfr-plus';
 import {
   Outlet,
 } from 'react-router-dom';

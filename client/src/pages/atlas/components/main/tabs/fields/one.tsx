@@ -5,7 +5,7 @@ import {
   Col, Container, Row,
   Title, Text,
   Button, Badge
-} from 'dsfr-plus';
+} from '@dataesr/dsfr-plus';
 import Callout from "../../../../../../components/callout.tsx";
 import ColumnsChart from "../../../../charts/columns.tsx";
 import SectortsChart from "../../../../charts/sectors.tsx";

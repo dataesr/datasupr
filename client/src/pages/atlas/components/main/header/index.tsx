@@ -1,7 +1,7 @@
 import { Outlet, useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 
-import { Badge, BadgeGroup, Button, Container, Row, Col, Title } from 'dsfr-plus';
+import { Badge, BadgeGroup, Button, Container, Row, Col, Title } from '@dataesr/dsfr-plus';
 
 import { getNumberOfStudentsHistoricByLevel, getNumberOfStudentsMap } from '../../../../../api/atlas.ts';
 

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-import { Container, Row, Col, Title, Text, Badge, Button } from 'dsfr-plus';
+import { Container, Row, Col, Title, Text, Badge, Button } from '@dataesr/dsfr-plus';
 import SectortsChart from '../../../charts/sectors.tsx';
 import { getNumberOfStudents, getNumberOfStudentsByYear, getSimilarElements } from '../../../../../api/atlas.ts';
 import SectorStackedChart from '../../../charts/sector-stacked.tsx';

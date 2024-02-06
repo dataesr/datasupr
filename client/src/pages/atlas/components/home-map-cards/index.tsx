@@ -3,7 +3,7 @@ import {
   Button,
   Title, Text,
   Row, Col,
-} from 'dsfr-plus';
+} from '@dataesr/dsfr-plus';
 import GenericCard from '../../../../components/cards/generic-card.tsx';
 import { clearAllfavoriteIdsInCookie, getSortedfavoriteIdsInCookie } from '../../../../utils.tsx';
 

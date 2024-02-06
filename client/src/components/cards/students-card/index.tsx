@@ -1,4 +1,4 @@
-import { Container, Row, Col, TagGroup, Tag, Badge } from 'dsfr-plus';
+import { Container, Row, Col, TagGroup, Tag, Badge } from '@dataesr/dsfr-plus';
 
 import './style.scss';
 

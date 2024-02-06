@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
-import { Button, Breadcrumb, Container, Row, Col, Link } from 'dsfr-plus';
+import { Button, Breadcrumb, Container, Row, Col, Link } from '@dataesr/dsfr-plus';
 import { useTitle } from '../../../../hooks/usePageTitle.tsx';
 
 import { getFiltersValues } from '../../../../api/atlas.ts';

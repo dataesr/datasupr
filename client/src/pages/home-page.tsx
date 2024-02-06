@@ -3,7 +3,7 @@ import {
   Header, Logo, Service, FastAccess,
   Container, Row, Col,
   Title, Text,
-} from 'dsfr-plus';
+} from '@dataesr/dsfr-plus';
 
 import GenericCard from '../components/cards/generic-card.tsx';
 import atlasImg from '../assets/atlas.png';

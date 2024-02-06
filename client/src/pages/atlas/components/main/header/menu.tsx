@@ -1,6 +1,6 @@
 import { useLocation, useSearchParams } from "react-router-dom";
 
-import { Link } from 'dsfr-plus';
+import { Link } from '@dataesr/dsfr-plus';
 
 
 export default function Menu() {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 
-import { Button, Modal, ModalContent, ModalTitle } from 'dsfr-plus';
+import { Button, Modal, ModalContent, ModalTitle } from '@dataesr/dsfr-plus';
 import { getFiltersValues } from '../../../../../api/atlas.ts';
 
 export default function YearsModalButton() {

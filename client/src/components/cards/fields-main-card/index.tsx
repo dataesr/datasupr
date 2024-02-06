@@ -1,6 +1,6 @@
 import {
   Container, Row, Col, Link,
-} from 'dsfr-plus';
+} from '@dataesr/dsfr-plus';
 
 import './style.scss';
 

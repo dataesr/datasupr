@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams, } from "react-router-dom";
 
-import { Col, Container, Row, } from 'dsfr-plus';
+import { Col, Container, Row, } from '@dataesr/dsfr-plus';
 import FilieresSectorsChart from "../../../../charts/filieres-sectors.tsx";
 import {
   getNumberOfStudents,

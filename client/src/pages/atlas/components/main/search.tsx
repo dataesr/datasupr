@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useNavigate } from "react-router-dom";
 
-import { Button, Container, Row, Col } from 'dsfr-plus';
+import { Button, Container, Row, Col } from '@dataesr/dsfr-plus';
 import { getFiltersValues } from '../../../../api/atlas.ts';
 import HomeMapCards from '../home-map-cards/index.tsx';
 
