@@ -6,7 +6,7 @@ type SectorData = {
   y: number;
 }[];
 
-export default function SectortsChart({ data = [], isLoading = false, currentYear }: { data: SectorData, isLoading: boolean, currentYear: string }) {
+export default function SectortsChart({ data = [], isLoading = false }: { data: SectorData, isLoading: boolean }) {
   if (isLoading || !data || !data.length) {
     return (
       <div>Loader</div>

@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { Container, Row, Col, TagGroup, Tag, Badge } from '@dataesr/dsfr-plus';
+import { Container, Row, Col, TagGroup, Tag } from '@dataesr/dsfr-plus';
 
 import StudentsCard from "../cards/students-card/index.tsx";
 

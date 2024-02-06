@@ -6,7 +6,6 @@ type PolygonCoordinatesProps = {
   type: string,
   coordinates: []
 }
-const zoomLevel = 8;
 
 export default function Map({
   autoCenter = false,
@@ -27,7 +26,8 @@ export default function Map({
 
   if (polygonCoordinates) {
     if (polygonCoordinates?.type === 'MultiPolygon') {
-      polygons = polygonCoordinates.coordinates[0];
+      // @ts-expect-error description
+      polygons = polygonCoordinates.coordinates[0] || [];
     } else if (polygonCoordinates?.type === 'Polygon') {
       polygons = polygonCoordinates.coordinates;
     }
@@ -39,12 +39,12 @@ export default function Map({
   let center = [46.71109, 1.719103];
   if (autoCenter) {
     zoomLevel = 8;
-    center = calculateCenter?.geometry?.coordinates?.reverse();
+    center = (calculateCenter as turf.Feature<turf.Point>)?.geometry?.coordinates?.reverse();
   }
 
   return (
     <MapContainer
-      center={center}
+      center={[center[0], center[1]]}
       scrollWheelZoom={false}
       style={{ height, width }}
       zoom={zoomLevel}
@@ -56,6 +56,7 @@ export default function Map({
       />
       <GeoJSON
         style={{ color: 'var(--brown-caramel-sun-425-moon-901-active)' }}
+        // @ts-expect-error description
         data={polygonCoordinates}
       />
     </MapContainer>

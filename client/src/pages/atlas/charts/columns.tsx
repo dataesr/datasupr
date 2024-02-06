@@ -2,7 +2,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import type { DataByYear } from '../../../types/atlas';
 
-export default function ColumnsChart({ data, label, currentYear, noTitle }: { data: DataByYear[], label: string, currentYear: string, noTitle: boolean }) {
+export default function ColumnsChart({ data, label, currentYear }: { data: DataByYear[], label: string, currentYear: string }) {
   const filieresOptions = {
     chart: {
       type: 'column',

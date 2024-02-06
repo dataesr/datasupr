@@ -1,8 +1,8 @@
-import { useState } from "react";
-import { Button, TextInput } from "../../../../musical-octo-waddle/dist/index.js";
+// import { useState } from "react";
+import { Button } from "@dataesr/dsfr-plus";
 
-export default function QueriesCreator({ }) {
-  const [queries, setQueries] = useState({});
+export default function QueriesCreator() {
+  // const [queries, setQueries] = useState({});
 
 
   const addQuery = () => {

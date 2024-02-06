@@ -17,6 +17,10 @@ export function Search() {
     queryFn: () => getFiltersValues()
   })
 
+  if (isLoadingFiltersValues) {
+    return <div>Loading...</div>
+  }
+
   // Create a list of all territories (regions, departments, academies - without urban unities and cities)
   const territoiresList = Object.keys(filtersValues.geo_id).map((key) => {
     if (key !== 'communes' && key !== 'unites_urbaines') {
@@ -92,8 +96,8 @@ export function Search() {
       <hr className="fr-mt-3w" />
 
       <HomeMapCards
-        data={filtersValues}
-        isLoading={isLoadingFiltersValues}
+        // data={filtersValues}
+        // isLoading={isLoadingFiltersValues}
         territoiresList={territoiresList}
       />
     </Container>

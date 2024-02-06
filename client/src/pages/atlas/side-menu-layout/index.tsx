@@ -1,4 +1,4 @@
-import { SideMenu, Link, Container, Row, Col, SideMenuItem } from '../../../../../musical-octo-waddle/dist/index.js';
+import { SideMenu, Link, Container, Row, Col, SideMenuItem } from '@dataesr/dsfr-plus';
 import { Outlet, useLocation, useSearchParams, useParams } from 'react-router-dom';
 import './styles.scss';
 

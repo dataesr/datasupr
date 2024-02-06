@@ -98,7 +98,7 @@ export function Sectors() {
           </Row>
         </Col>
         <Col>
-          <SectortsChart data={dataSectors || []} isLoading={isLoading} currentYear={data?.annee_universitaire || ''} />
+          <SectortsChart data={dataSectors || []} isLoading={isLoading} />
         </Col>
       </Row>
       <Row className="fr-mt-5w">

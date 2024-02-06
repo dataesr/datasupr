@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Accordion, AccordionGroup, Button, Col, Container, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text, Title } from '../../../../musical-octo-waddle/dist/index.js';
+import { Accordion, AccordionGroup, Button, Col, Container, Modal, ModalContent, ModalTitle, Row, Tag, TagGroup, Text, Title } from '@dataesr/dsfr-plus';
 import { useSearchParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { getFiltersValues } from '../../api';

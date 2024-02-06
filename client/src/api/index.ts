@@ -1,1 +1,1 @@
-export * from './atlas'
+export * from './atlas.ts'

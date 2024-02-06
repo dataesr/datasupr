@@ -6,10 +6,7 @@ import {
   Title, Text,
   Button, Badge
 } from '@dataesr/dsfr-plus';
-import Callout from "../../../../../../components/callout.tsx";
 import ColumnsChart from "../../../../charts/columns.tsx";
-import SectortsChart from "../../../../charts/sectors.tsx";
-import GenderChart from "../../../../charts/gender.tsx";
 import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
 import { DataByYear } from "../../../../../../types/atlas.ts";
 import StudentsCard from "../../../../../../components/cards/students-card/index.tsx";
@@ -40,27 +37,27 @@ export default function OneField() {
     return <div>Loading...</div>
   }
 
-  const dataSectors = [
-    {
-      name: 'Secteur public',
-      y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pu || 0,
-    },
-    {
-      name: 'Secteur privé',
-      y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pr || 0,
-    }
-  ];
+  // const dataSectors = [
+  //   {
+  //     name: 'Secteur public',
+  //     y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pu || 0,
+  //   },
+  //   {
+  //     name: 'Secteur privé',
+  //     y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pr || 0,
+  //   }
+  // ];
 
-  const dataGender = [
-    {
-      name: 'Masculin',
-      y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_masculin || 0,
-    },
-    {
-      name: 'Féminin',
-      y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_feminin || 0,
-    }
-  ];
+  // const dataGender = [
+  //   {
+  //     name: 'Masculin',
+  //     y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_masculin || 0,
+  //   },
+  //   {
+  //     name: 'Féminin',
+  //     y: dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_feminin || 0,
+  //   }
+  // ];
 
   const effectifPU = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pu || 0;
   const effectifPR = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pr || 0;
@@ -146,7 +143,6 @@ export default function OneField() {
             <ColumnsChart
               data={dataByYear || []} label="effectif_total"
               currentYear={currentYear}
-              noTitle
             />
           </Col>
         </Row>

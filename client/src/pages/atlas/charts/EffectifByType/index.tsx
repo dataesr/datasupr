@@ -1,7 +1,7 @@
 import {
   Container, Row, Col,
   Text,
-} from '../../../../../../musical-octo-waddle/dist/index.js';
+} from '@dataesr/dsfr-plus';
 import ColumnsChart from '../columns';
 import './style.css';
 

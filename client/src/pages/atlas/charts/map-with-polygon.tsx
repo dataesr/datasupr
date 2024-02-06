@@ -10,7 +10,7 @@ export default function MapWithPolygon({
   width = '100%',
   zoomControl = true,
 }: {
-  autoCenter: boolean,
+  autoCenter?: boolean,
   id: string,
   height?: string,
   width?: string,
