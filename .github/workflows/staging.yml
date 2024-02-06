@@ -22,6 +22,9 @@ jobs:
       - name: Log into registry
         run: docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
       
+      - name: link dsfr-plus
+        run: cd dsfr-plus && npm link && cd .. && npm link @dataesr/dsfr-plus -w client
+
       - name: build client
         run: cd client && npm ci && npm run build && cd ..
 
