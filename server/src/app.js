@@ -21,7 +21,7 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static(path.join(path.resolve(), 'dist')));
 }
 
-app.use(express.static(path.join(path.resolve(), 'public')));
+// app.use(express.static(path.join(path.resolve(), 'public')));
 
 app.get('/api/docs/specs.json', (req, res) => { res.status(200).json(apiDocument); });
 
