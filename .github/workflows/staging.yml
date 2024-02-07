@@ -17,26 +17,24 @@ jobs:
     name: Publish docker image
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-
-      - name: Log into registry
-        run: docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
-      
-      - name: link dsfr-plus
-        run: cd dsfr-plus && npm link && cd .. && npm link @dataesr/dsfr-plus -w client
-
-      - name: build client
-        run: cd client && npm ci && npm run build && cd ..
-
-      - name: copy client build to server
-        run: cp -r client/build/ server/public/ && cd ..
-
-      - name: Build image
-        run: docker build -f ./Dockerfile -t ${{ github.repository }} .
+      - name: 🏁 Checkout
+        uses: actions/checkout@v3
 
       - name: Get Tag
         id: version
         run: echo "tag=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
+
+      - name: Log into registry
+        run: docker login ghcr.io -u ${{ github.actor }} -p ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npm ci --silent && npm run build --mode=staging
+
+      - name: 🐋 Build Docker image
+        run: docker build -t ${{ github.repository }} .
 
       - name: Push image
         run: |
