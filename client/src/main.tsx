@@ -40,8 +40,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <ScrollToTop />
-        <DSFRConfig routerComponent={RouterLink} theme='light'>
-          {/* <DSFRConfig routerComponent={RouterLink}> */}
+        {/* <DSFRConfig routerComponent={RouterLink} theme='light'> */}
+        <DSFRConfig routerComponent={RouterLink}>
           <Routes />
         </DSFRConfig>
         <ReactQueryDevtools initialIsOpen={false} />
