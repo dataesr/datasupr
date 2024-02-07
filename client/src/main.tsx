@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { ReactNode, useLayoutEffect } from 'react';
 import ReactDOM from 'react-dom/client'
 import Routes from './router.js'
-import { BrowserRouter, Link } from 'react-router-dom';
+import { BrowserRouter, Link, useLocation } from 'react-router-dom';
 import { DSFRConfig } from '@dataesr/dsfr-plus';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -18,13 +18,13 @@ const RouterLink = ({ href, replace, target, ...props }: RouterLinkProps) => {
   return <Link to={href} replace={replace} {...props} />
 }
 
-// const ScrollToTop = (): ReactNode => {
-//   const { pathname } = useLocation();
-//   useLayoutEffect(() => {
-//     document.documentElement.scrollTo(0, 0);
-//   }, [pathname]);
-//   return null;
-// }
+const ScrollToTop = (): ReactNode => {
+  const { pathname } = useLocation();
+  useLayoutEffect(() => {
+    document.documentElement.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -39,9 +39,9 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
-        {/* <ScrollToTop /> */}
-        {/* <DSFRConfig routerComponent={RouterLink} theme='light'> */}
-        <DSFRConfig routerComponent={RouterLink}>
+        <ScrollToTop />
+        <DSFRConfig routerComponent={RouterLink} theme='light'>
+          {/* <DSFRConfig routerComponent={RouterLink}> */}
           <Routes />
         </DSFRConfig>
         <ReactQueryDevtools initialIsOpen={false} />
