@@ -13,7 +13,7 @@ export default function HomePage() {
     <>
       <Header>
         <Logo text="Ministère de | l'enseignement supérieur | et de la recherche" />
-        <Service name="DataSupR" tagline="Ensemble de tableaux de bord de l'enseignement supérieur et de la recherche" />
+        <Service name="DataSupR" tagline="Ensemble de tableaux de bord de l'enseignement supérieur, de la recherche et de l'innovation" />
         <FastAccess>
           <Button as="a" href="https://github.com/dataesr/react-dsfr" target="_blank" rel="noreferer noopener" icon="github-fill" size="sm" variant="text">Github</Button>
           <Button as="a" href="https://www.systeme-de-design.gouv.fr" target="_blank" rel="noreferer noopener" icon="code-s-slash-line" size="sm" variant="text">Jeux de données</Button>
@@ -34,7 +34,7 @@ export default function HomePage() {
         <Row className="fr-mt-5w">
           <Col>
             <Title as="h3" look="h5" className="fr-mb-2w">
-              Rechercher un tableaux de bord
+              Rechercher un tableau de bord
             </Title>
           </Col>
         </Row>
