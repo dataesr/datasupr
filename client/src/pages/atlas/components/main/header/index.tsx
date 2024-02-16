@@ -43,10 +43,21 @@ export default function Header() {
   const getSubLevel = () => {
     if (!geoId) { return null; }
 
-    if (geoId.startsWith('R')) { return 'académies'; }
-    if (geoId.startsWith('D')) { return 'communes'; }
-    if (geoId.startsWith('A')) { return 'départements'; }
-    if (geoId.startsWith('U')) { return 'communes'; }
+    if (geoId.startsWith('R')) { return 'Liste des académies'; }
+    if (geoId.startsWith('D')) { return 'Liste des communes'; }
+    if (geoId.startsWith('A')) { return 'Liste des départements'; }
+    if (geoId.startsWith('U')) { return 'Liste des communes'; }
+  }
+
+  const getTitle = () => {
+    if (!geoId) { return 'Effectifs étudiants de la France'; }
+
+    if (geoId.startsWith('R')) { return 'Effectifs étudiants de la région'; }
+    if (geoId.startsWith('D')) { return 'Effectifs étudiants du département'; }
+    if (geoId.startsWith('A')) { return 'Effectifs étudiants de l\'académie'; }
+    if (geoId.startsWith('U')) { return 'Effectifs étudiants de l\'unité urbaine'; }
+
+    return 'Effectifs étudiants de la commune';
   }
 
   function ListTitle({ currentYear }: { currentYear: string }) {
@@ -55,14 +66,14 @@ export default function Header() {
         <Row>
           <Col>
             <Title as="h2" look="h5" className="fr-mb-0">
-              Effectifs étudiants de l'unité urbaine
+              {getTitle()}
             </Title>
           </Col>
         </Row>
         <Row style={{ width: "100%" }}>
           <div style={{ flexGrow: "1" }}>
             <strong>
-              <i>{`Liste des ${getSubLevel()}`}</i>
+              <i>{getSubLevel()}</i>
             </strong>
           </div>
           <div className="fr-mb-1w">
@@ -71,6 +82,46 @@ export default function Header() {
         </Row>
       </>
     )
+  }
+
+  function SubList({ data }) {
+    if (!data) {
+      return null;
+    }
+    return (
+      <Container fluid as="section">
+        <ListTitle currentYear={currentYear} />
+        <div style={{ height: '338px', overflow: 'auto' }}>
+          {
+            data.slice(0, 15).map((item) => (
+              <Row style={{ width: "100%", borderBottom: '1px solid #ddd' }}>
+                <div style={{ flexGrow: "1" }}>
+                  {item.geo_nom}
+                </div>
+                <div className="fr-mb-1w">
+                  <strong>
+                    {item.data.find((el) => el.annee_universitaire === currentYear)?.effectif.toLocaleString()}
+                  </strong>
+                  {
+                    (["R", "D", "A", "U"].includes(geoId?.charAt(0))) && (
+                      <Button
+                        size="sm"
+                        variant="text"
+                        className="fr-ml-1w"
+                        color="pink-tuile"
+                        onClick={() => navigate(`/atlas/general?geo_id=${item.geo_id}&annee_universitaire=${currentYear}`)}
+                      >
+                        Voir
+                      </Button>
+                    )
+                  }
+                </div>
+              </Row>
+            ))
+          }
+        </div>
+      </Container>
+    );
   }
 
   return (
@@ -84,61 +135,13 @@ export default function Header() {
           <Col md={7}>
             {!geoId && <FranceMap data={dataMap} isLoading={isLoadingMap} />}
             {geoId && <MapWithPolygon id={geoId || ''} />}
-            {/* {searchParams.get('geo_id')?.startsWith('R') && <MapWithPolygon id={searchParams.get('geo_id') || ''} />}
-              {searchParams.get('geo_id')?.startsWith('D') && (<div>Principales communes dans le département en cours. Carte points masse</div>)}
-              {searchParams.get('geo_id')?.startsWith('A') && (<div>Carte des des départements dans l'académie en cours</div>)} */}
           </Col>
           <Col md={5}>
-            <section style={{ height: '350px' }}>
-              <ListTitle
-                currentYear={currentYear}
-              />
-              {
-                dataHistoric.data.slice(0, 10).map((item) => (
-                  <Row style={{ width: "100%", borderBottom: '1px solid #eee' }}>
-                    <div style={{ flexGrow: "1" }}>
-                      {item.geo_nom}
-                    </div>
-                    <div className="fr-mb-1w">
-                      <strong>
-                        {item.data.find((el) => el.annee_universitaire === currentYear)?.effectif.toLocaleString()}
-                      </strong>
-                      {
-                        (["R", "D", "A", "U"].includes(geoId?.charAt(0))) && (
-                          <Button
-                            size="sm"
-                            variant="text"
-                            className="fr-ml-1w"
-                            color="pink-tuile"
-                            onClick={() => navigate(`/atlas/general?geo_id=${item.geo_id}&annee_universitaire=${currentYear}`)}
-                          >
-                            Voir
-                          </Button>
-                        )
-                      }
-                    </div>
-                  </Row>
-                ))
-              }
-              {
-                dataHistoric.data.length > 10 && (
-                  <Row>
-                    <Col>
-                      ...
-                    </Col>
-                  </Row>
-                )
-              }
-            </section>
+            <SubList data={dataHistoric.data} />
           </Col>
         </Row>
-        <Row>
+        <Row className="fr-pb-1w fr-mb-3w" style={{ borderBottom: '1px solid #ddd' }}>
           <Menu />
-        </Row>
-        <Row className="fr-mt-1w">
-          <Col>
-            <hr />
-          </Col>
         </Row>
       </Container>
       <Outlet />

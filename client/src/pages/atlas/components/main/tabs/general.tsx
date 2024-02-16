@@ -58,7 +58,7 @@ export function General() {
           <StudentsCardWithTrend
             descriptionNode={<Badge color="yellow-tournesol">{`Année universitaire ${currentYear}`}</Badge>}
             number={dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_total || 0}
-            label='Etudiantes inscrites'
+            label='Etudiants inscrits'
             trendGraph={<TrendCard color="#e18b76" data={dataByYear.map((item) => item.effectif_feminin)} />}
           />
         </Col>

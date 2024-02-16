@@ -3,7 +3,7 @@ import { MongoClient } from 'mongodb';
 import logger from './logger';
 
 const mongoDbName = process.env.MONGO_DB_NAME_PAYSAGE || 'datasupr';
-const mongoUri = process.env.MONGO_URI_PAYSAGE || 'mongodb://localhost:27017/';
+const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/';
 
 const clientPaysage = new MongoClient(mongoUri, { directConnection: true });
 

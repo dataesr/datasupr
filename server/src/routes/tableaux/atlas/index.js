@@ -27,10 +27,33 @@ const mappingRegion = [
 const filieresOrder = ['CPGE', 'STS', 'UNIV', 'GE', 'UT', 'INP', 'ENS', 'EPEU', 'ING_autres', 'EC_COM', 'EC_JUR', 'EC_ART', 'EC_PARAM', 'EC_autres', 'TOTAL'];
 
 router.route('/atlas/get-geo-polygons')
-  .get((req, res) => {
-    dbPaysage.collection('geographicalcategories').find(req.query).toArray().then((data) => {
-      res.json(data);
-    })
+  .get(async (req, res) => {
+    const geoId = req.query.originalId;
+
+    if (!geoId) {
+      res.status(400).send('geo_id is required');
+    }
+
+    if (['R', 'D', 'A', 'U'].includes(geoId[0])) {
+      // Query from paysage
+      dbPaysage.collection('geographicalcategories').find(req.query).toArray().then((data) => {
+        res.json(data);
+      })
+    }
+    else {
+      // Query from datasupR
+      db.collection('citiesPolygons').find({ "com_code": geoId }).toArray().then((data) => {
+        // Format object
+        const obj = {};
+        obj["_id"] = data[0]._id;
+        obj.originalId = data[0].com_code;
+        obj.geometry = data[0].geom.geometry;
+        obj.nameFr = data[0].com_nom;
+        obj.parentOriginalId = data[0].uucr_id;
+
+        res.json([obj]);
+      })
+    }
   });
 
 router.route('/atlas/number-of-students-map')
@@ -166,7 +189,6 @@ router.route('/atlas/number-of-students-by-gender-and-level')
     res.json(ret);
   }
   );
-
 
 router.route('/atlas/number-of-students')
   .get((req, res) => {

@@ -36,7 +36,6 @@ export default function MapWithPolygon({
       <Map
         autoCenter={autoCenter}
         height={height}
-        // markers={[]}
         polygonCoordinates={data[0].geometry}
         width={width}
         zoomControl={zoomControl}

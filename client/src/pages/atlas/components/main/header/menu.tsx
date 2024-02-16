@@ -9,7 +9,7 @@ export default function Menu() {
   const { pathname } = useLocation();
 
   return (
-    <nav className="fr-nav fr-mt-5w" id="main-nav" role="navigation" aria-label="Menu principal">
+    <nav className="fr-nav fr-mt-1w" id="main-nav" role="navigation" aria-label="Menu principal">
       <ul className="fr-nav__list">
         <li className="fr-nav__item">
           <Link

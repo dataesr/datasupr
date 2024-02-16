@@ -26,7 +26,7 @@ export async function getFiltersValues() {
 }
 
 export async function getNumberOfStudentsHistoricByLevel(geoId: string, currentYear: string) {
-    let level = 'niveau_geo=REGION';
+    let level = `niveau_geo=COMMUNE&geo_id=${geoId}`;
     if (geoId.startsWith('R')) { level = `niveau_geo=ACADEMIE&reg_id=${geoId}`; }
     if (geoId.startsWith('D')) { level = `niveau_geo=COMMUNE&dep_id=${geoId}`; }
     if (geoId.startsWith('A')) { level = `niveau_geo=DEPARTEMENT&aca_id=${geoId}`; }
@@ -52,7 +52,6 @@ export async function getNumberOfStudentsByGenderAndLevel(params: string) {
 export async function getGeoPolygon(geoId: string) {
     if (!geoId) return null;
     const url = `${VITE_APP_SERVER_URL}/atlas/get-geo-polygons?originalId=${geoId}`
-    console.log('getGeoPolygon', url);
     return fetch(url).then((response) => (response.json()))
 }
 
