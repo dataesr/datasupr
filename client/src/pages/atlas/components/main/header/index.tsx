@@ -9,6 +9,7 @@ import Menu from './menu.tsx';
 
 import FranceMap from '../../../charts/France-map.tsx';
 import MapWithPolygon from '../../../charts/map-with-polygon.tsx';
+import Template from "../../../../../components/template/index.tsx";
 
 export default function Header() {
   const [searchParams] = useSearchParams();
@@ -28,9 +29,9 @@ export default function Header() {
     queryFn: () => getNumberOfStudentsHistoricByLevel(geoId, currentYear)
   })
 
-  if (isLoadingHistoric || isLoadingMap) {
-    return <div>Loading...</div>
-  }
+  // if (isLoadingHistoric || isLoadingMap) {
+  //   return <div>Loading...</div>
+  // }
 
   const getBadgesGeo = () => {
     if (!geoId) { return null; }
@@ -85,6 +86,9 @@ export default function Header() {
   }
 
   function SubList({ data }) {
+    if (isLoadingHistoric) {
+      return <Template />;
+    }
     if (!data) {
       return null;
     }
@@ -133,11 +137,11 @@ export default function Header() {
       <Container as="section" fluid>
         <Row gutters>
           <Col md={7}>
-            {!geoId && <FranceMap data={dataMap} isLoading={isLoadingMap} />}
+            {!geoId && <FranceMap data={dataMap || []} isLoading={isLoadingMap} />}
             {geoId && <MapWithPolygon id={geoId || ''} />}
           </Col>
           <Col md={5}>
-            <SubList data={dataHistoric.data} />
+            <SubList data={dataHistoric?.data} />
           </Col>
         </Row>
         <Row className="fr-pb-1w fr-mb-3w" style={{ borderBottom: '1px solid #ddd' }}>

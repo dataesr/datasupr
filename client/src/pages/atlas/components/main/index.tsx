@@ -28,12 +28,20 @@ export default function AtlasHeader() {
   })
 
   if (isLoadingFiltersValues) {
-    return <div>Loading...</div>
+    return (
+      <Container as="main">
+        <Breadcrumb>
+          <Link href="/">Accueil</Link>
+          <Link href="/atlas">Atlas des effectifs étudiant-e-s</Link>
+          <Link>Chargement des filtres en cours ...</Link>
+        </Breadcrumb>
+      </Container>
+    );
   }
 
   let geoLabelFull = '';
   const geoId = searchParams.get('geo_id') || '';
-  const geoLabel = getGeoLabel(geoId, filtersValues.geo_id);
+  const geoLabel = getGeoLabel(geoId, filtersValues?.geo_id);
   switch (geoId?.charAt(0)) {
     case 'R':
       geoLabelFull = `Région ${geoLabel}`;
@@ -66,7 +74,9 @@ export default function AtlasHeader() {
       <Breadcrumb>
         <Link href="/">Accueil</Link>
         <Link href="/atlas">Atlas des effectifs étudiant-e-s</Link>
-        <Link>{geoLabelFull}</Link>
+        {
+          geoId && <Link>{geoLabelFull}</Link>
+        }
       </Breadcrumb>
 
       {(!geoId) ? <Search /> : <Header />}

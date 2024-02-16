@@ -1,6 +1,8 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
+import Template from "../../../components/template";
+
 type DataProps = {
   label: string;
   effectif_PU: number;
@@ -10,7 +12,7 @@ type DataProps = {
 export default function FilieresSectorsChart({ data, isLoading }: { data: DataProps[], isLoading: boolean }) {
   if (isLoading) {
     return (
-      <div>Loader</div>
+      <Template />
     );
   }
   const filieresOptions = {

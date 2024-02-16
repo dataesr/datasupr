@@ -2,6 +2,7 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import highchartsMap from "highcharts/modules/map";
 import mapDataIE from "../../../assets/regions.json";
+import Template from "../../../components/template";
 
 highchartsMap(Highcharts);
 
@@ -11,6 +12,12 @@ type DataProps = {
 }[]
 
 export default function FranceMap({ data, isLoading }: { data: DataProps, isLoading: boolean }) {
+  if (isLoading) {
+    return (
+      <Template />
+    );
+  }
+
   const mapOptions = {
     chart: {
       map: mapDataIE,
@@ -56,23 +63,6 @@ export default function FranceMap({ data, isLoading }: { data: DataProps, isLoad
         pointFormat: '{point.name}: {point.value} étudiants<br><span style="color:gray;font-size:11px">Cliquez pour plus de détails</span>'
       }
     }],
-    // plotOptions: {
-    //   series: {
-    //     point: {
-    //       events: {
-    //         click: function () {
-    //           location.href = './' + this.reg_id;
-    //         }
-    //       }
-    //     }
-    //   }
-    // },
-  }
-
-  if (isLoading) {
-    return (
-      <div>Map Loader</div>
-    );
   }
 
   return (
