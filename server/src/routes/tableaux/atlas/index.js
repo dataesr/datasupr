@@ -45,11 +45,10 @@ router.route('/atlas/get-geo-polygons')
       db.collection('citiesPolygons').find({ "com_code": geoId }).toArray().then((data) => {
         // Format object
         const obj = {};
-        obj["_id"] = data[0]._id;
-        obj.originalId = data[0].com_code;
-        obj.geometry = data[0].geom.geometry;
-        obj.nameFr = data[0].com_nom;
-        obj.parentOriginalId = data[0].uucr_id;
+        obj.originalId = data[0]?.com_code;
+        obj.geometry = data[0]?.geom?.geometry;
+        obj.nameFr = data[0]?.com_nom;
+        obj.parentOriginalId = data[0]?.uucr_id;
 
         res.json([obj]);
       })
