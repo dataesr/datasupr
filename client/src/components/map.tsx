@@ -36,7 +36,7 @@ export default function Map({
   }
 
   let zoomLevel = 4;
-  let center = [46.71109, 1.719103];
+  let center = [46.71109, 1.719103] as [number, number];
   if (autoCenter) {
     zoomLevel = 8;
     center = (calculateCenter as turf.Feature<turf.Point>)?.geometry?.coordinates?.reverse();
