@@ -28,7 +28,7 @@ export default function HomePage() {
   useEffect(() => {
     //Call API to get the list of dashboards
     const getData = async () => {
-      const response = await fetch('http://localhost:3000/api/tableaux?tag=' + searchText);
+      const response = await fetch('/api/tableaux?tag=' + searchText);
       const data = await response.json();
       setSearchResults(data);
     }
