@@ -32,6 +32,9 @@ export function Search() {
     }
   }).flat();
 
+  // Sort the list of territories by label
+  territoiresList.sort((a, b) => a.label.localeCompare(b.label));
+
   return (
     <Container as="section">
       <Row gutters>
@@ -57,8 +60,8 @@ export function Search() {
             <select className="fr-select" id="select" name="select" disabled={territoiresType === ''} onChange={(e) => setTerritoireId(e.target.value)}>
               <option value="" selected disabled hidden>Sélectionner un territoire</option>
               {
-                filtersValues.geo_id[territoiresType]?.map((item) => (
-                  <option value={item.geo_id} selected={territoireId === item.geo_id} >{item.geo_nom}</option>
+                territoiresList && territoiresList.filter((item) => item?.type === territoiresType).map((item) => (
+                  <option value={item?.id} selected={territoireId === item?.id} >{item?.label}</option>
                 ))
               }
             </select>
