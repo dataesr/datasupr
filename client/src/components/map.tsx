@@ -44,7 +44,7 @@ export default function Map({
 
   return (
     <MapContainer
-      center={[center[0], center[1]]}
+      center={autoCenter ? [center[0], center[1]] : center}
       scrollWheelZoom={false}
       style={{ height, width }}
       zoom={zoomLevel}

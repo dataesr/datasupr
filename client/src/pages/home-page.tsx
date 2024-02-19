@@ -28,8 +28,6 @@ export default function HomePage() {
     getData();
   }, [searchText]);
 
-  document.documentElement.setAttribute('data-fr-scheme', 'light');
-
   return (
     <>
       <Header>

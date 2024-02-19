@@ -31,6 +31,8 @@ export async function getNumberOfStudentsHistoricByLevel(geoId: string, currentY
     if (geoId.startsWith('D')) { level = `niveau_geo=COMMUNE&dep_id=${geoId}`; }
     if (geoId.startsWith('A')) { level = `niveau_geo=DEPARTEMENT&aca_id=${geoId}`; }
     if (geoId.startsWith('U')) { level = `niveau_geo=COMMUNE&uucr_id=${geoId}`; }
+    if (geoId === ('PAYS_100')) { level = `niveau_geo=REGION`; }
+
 
     const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-historic-by-level?${level}`
     const data = await fetch(url).then((response) => (response.json()));

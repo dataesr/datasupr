@@ -54,6 +54,8 @@ export default function AtlasHeader() {
       break;
   }
 
+  document.documentElement.setAttribute('data-fr-scheme', 'light');
+
   return (
     <Container as="main">
       <Row>

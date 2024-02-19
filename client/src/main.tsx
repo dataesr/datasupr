@@ -35,6 +35,8 @@ const queryClient = new QueryClient({
   },
 })
 
+document.documentElement.setAttribute('data-fr-scheme', 'light');
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>

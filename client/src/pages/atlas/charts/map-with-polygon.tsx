@@ -4,7 +4,7 @@ import Map from "../../../components/map.tsx";
 import { getGeoPolygon } from "../../../api/atlas.ts";
 
 export default function MapWithPolygon({
-  autoCenter = true,
+  autoCenter = false,
   id = '',
   height = '400px',
   width = '100%',

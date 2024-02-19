@@ -93,17 +93,12 @@ router.route('/atlas/number-of-students-historic-by-level')
     if (req.query.niveau_geo === "DEPARTEMENT") {
       filters.niveau_geo = "ACADEMIE";
     }
-    // if (req.query.niveau_geo === "UNITE_URBAINE") {
-    //   filters.niveau_geo = "DEPARTEMENT";
-    // }
     if (req.query.niveau_geo === "COMMUNE") {
       filters.niveau_geo = "DEPARTEMENT";
     }
 
-
     const response = await db.collection('atlas2023').findOne({ ...filters }, { projection: { "geo_nom": 1 } })
-    const levelName = response?.geo_nom;
-
+    const levelName = response?.geo_nom || "France";
     db.collection('atlas2023').find(
       req.query,
       {
@@ -132,7 +127,8 @@ router.route('/atlas/number-of-students-historic-by-level')
             data: years.map((year) => {
               return {
                 annee_universitaire: year,
-                effectif: data.filter((item) => item.annee_universitaire === year && item.geo_id === geo_id && item.regroupement === 'TOTAL')?.reduce((acc, item) => acc + item.effectif, 0)
+                effectif: data.filter((item) => item.annee_universitaire === year
+                  && item.geo_id === geo_id && item.regroupement === 'TOTAL')?.reduce((acc, item) => acc + item.effectif, 0)
               }
             })
           })
