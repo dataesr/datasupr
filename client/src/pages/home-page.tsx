@@ -1,14 +1,34 @@
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Button,
   Header, Logo, Service, FastAccess,
   Container, Row, Col,
-  Title, Text,
+  Title, Text, Badge,
 } from '@dataesr/dsfr-plus';
 
 import GenericCard from '../components/cards/generic-card.tsx';
 import atlasImg from '../assets/atlas.png';
 
+import './styles.scss';
+
 export default function HomePage() {
+  const [searchText, setSearchText] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    //Call API to get the list of dashboards
+    const getData = async () => {
+      const response = await fetch('http://localhost:3000/api/tableaux?tag=' + searchText);
+      const data = await response.json();
+      setSearchResults(data);
+    }
+
+    getData();
+  }, [searchText]);
+
+
   return (
     <>
       <Header>
@@ -41,14 +61,52 @@ export default function HomePage() {
         <Row>
           <Col md={10}>
             <label className="fr-label" htmlFor="text-input-text">
-              Rechercher dans tous les territoires disponibles
+              Saisissez un mot clé pour rechercher un tableau de bord. Par exemple : "étudiants", "atlas", "France", "recherche", "finances", etc ...
             </label>
-            <input className="fr-input" type="text" id="text-input-text" name="text-input-text" />
+            <div className='search'>
+              <input
+                className="fr-input search-input"
+                type="text"
+                id="text-input-text"
+                name="text-input-text"
+                onChange={(e) => setSearchText(e.target.value)}
+              />
+              {
+                (searchResults?.length > 0) ? (
+                  <ul className='search-results'>
+                    {searchResults.map((result) => (
+                      <li
+                        className='search-result'
+                        key={result.id}
+                      >
+                        <span onClick={() => { navigate(result.url) }}>
+                          <strong>{result.label}</strong>&nbsp;-&nbsp;<i>{result.searchDescription}</i>
+                        </span>
+                        <br />
+                        {result.tags.map((tag) => (
+                          <Badge
+                            className="fr-mx-1w"
+                            title={tag}
+                            key={tag}
+                            color='brown-cafe-creme'
+                            onClick={() => { setSearchText(tag) }} //TODO: did not work
+                          >
+                            {tag}
+                          </Badge>
+                        ))}
+                      </li>
+                    ))}
+                  </ul>
+                ) : null
+              }
+            </div>
           </Col>
           <Col md={2}>
             <Button
               className="fr-mt-4w"
-              color="pink-tuile">
+              color="pink-tuile"
+              onClick={() => { }}
+            >
               Rechercher
             </Button>
           </Col>
@@ -69,7 +127,61 @@ export default function HomePage() {
               to="/atlas" />
           </Col>
         </Row>
-      </Container >
+      </Container>
+      <footer className="fr-footer fr-mt-5w" role="contentinfo" id="footer">
+        <div className="fr-container">
+          <div className="fr-footer__body">
+            <div className="fr-footer__brand fr-enlarge-link">
+              <a href="/" title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
+                <p className="fr-logo">
+                  Intitulé
+                  <br />officiel
+                </p>
+              </a>
+            </div>
+            <div className="fr-footer__content">
+              <p className="fr-footer__content-desc">Lorem [...] elit ut.</p>
+              <ul className="fr-footer__content-list">
+                <li className="fr-footer__content-item">
+                  <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="[À MODIFIER - Intitulé] - nouvelle fenêtre" href="https://legifrance.gouv.fr">legifrance.gouv.fr</a>
+                </li>
+                <li className="fr-footer__content-item">
+                  <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="[À MODIFIER - Intitulé] - nouvelle fenêtre" href="https://gouvernement.fr">gouvernement.fr</a>
+                </li>
+                <li className="fr-footer__content-item">
+                  <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="[À MODIFIER - Intitulé] - nouvelle fenêtre" href="https://service-public.fr">service-public.fr</a>
+                </li>
+                <li className="fr-footer__content-item">
+                  <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="[À MODIFIER - Intitulé] - nouvelle fenêtre" href="https://data.gouv.fr">data.gouv.fr</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div className="fr-footer__bottom">
+            <ul className="fr-footer__bottom-list">
+              <li className="fr-footer__bottom-item">
+                <a className="fr-footer__bottom-link" href="#">Plan du site</a>
+              </li>
+              <li className="fr-footer__bottom-item">
+                <a className="fr-footer__bottom-link" href="#">Accessibilité : non/partiellement/totalement conforme</a>
+              </li>
+              <li className="fr-footer__bottom-item">
+                <a className="fr-footer__bottom-link" href="#">Mentions légales</a>
+              </li>
+              <li className="fr-footer__bottom-item">
+                <a className="fr-footer__bottom-link" href="#">Données personnelles</a>
+              </li>
+              <li className="fr-footer__bottom-item">
+                <a className="fr-footer__bottom-link" href="#">Gestion des cookies</a>
+              </li>
+            </ul>
+            <div className="fr-footer__bottom-copy">
+              <p>Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous <a href="https://github.com/etalab/licence-ouverte/blob/master/LO.md" target="_blank" rel="noopener external" title="[À MODIFIER - Intitulé] - nouvelle fenêtre">licence etalab-2.0</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </>
   )
 }

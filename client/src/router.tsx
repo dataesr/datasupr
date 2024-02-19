@@ -29,6 +29,7 @@ export default function Router() {
           <Route path="effectifs-par-genre" element={<Genders />} />
           <Route path="autres-niveaux-geographiques" element={<OtherGeographicalLevels />} />
         </Route>
+        <Route path="/open-alex" element={<div>Open Alex tab</div>} />
       </Route>
       <Route path="*" element={<NoMatch />} />
     </Routes>
