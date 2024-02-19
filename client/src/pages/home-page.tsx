@@ -12,6 +12,14 @@ import atlasImg from '../assets/atlas.png';
 
 import './styles.scss';
 
+type TDBDefinitionTypes = {
+  id: string,
+  label: string,
+  searchDescription: string,
+  tags: string[],
+  url: string,
+}
+
 export default function HomePage() {
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState([]);
@@ -73,7 +81,7 @@ export default function HomePage() {
               {
                 (searchResults?.length > 0) ? (
                   <ul className='search-results'>
-                    {searchResults.map((result) => (
+                    {searchResults.map((result: TDBDefinitionTypes) => (
                       <li
                         className='search-result'
                         key={result.id}
