@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+const { VITE_APP_SERVER_URL } = import.meta.env;
+
 import {
   Button,
   Header, Logo, Service, FastAccess,
@@ -28,7 +30,7 @@ export default function HomePage() {
   useEffect(() => {
     //Call API to get the list of dashboards
     const getData = async () => {
-      const response = await fetch('/api/tableaux?tag=' + searchText);
+      const response = await fetch(`${VITE_APP_SERVER_URL}/api/tableaux?tag=` + searchText);
       const data = await response.json();
       setSearchResults(data);
     }

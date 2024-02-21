@@ -2,13 +2,13 @@ import { useEffect } from 'react';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 import { Button, Breadcrumb, Container, Row, Col, Link } from '@dataesr/dsfr-plus';
-import { useTitle } from '../../../../hooks/usePageTitle.tsx';
+import { useTitle } from '../../hooks/usePageTitle.tsx';
 
-import { getFiltersValues } from '../../../../api/atlas.ts';
-import { getGeoLabel, setfavoriteIdsInCookie } from '../../../../utils.tsx';
-import { Search } from './search.tsx';
-import Header from './header/index.tsx';
-import YearsModalButton from './header/years-modal-button.tsx';
+import { getFiltersValues } from '../../api/atlas.ts';
+import { getGeoLabel, setfavoriteIdsInCookie } from '../../utils.tsx';
+import { Search } from './components/main/search.tsx';
+import Header from './components/main/header/index.tsx';
+import YearsModalButton from './components/main/header/years-modal-button.tsx';
 
 export default function AtlasHeader() {
   const [searchParams] = useSearchParams();

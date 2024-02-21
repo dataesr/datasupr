@@ -1,30 +1,13 @@
-import React, { ReactNode, useLayoutEffect } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom/client'
-import Routes from './router.js'
-import { BrowserRouter, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
 import { DSFRConfig } from '@dataesr/dsfr-plus';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
-type RouterLinkProps = {
-  href: string;
-  replace?: boolean;
-  target?: string;
-  children?: React.ReactNode;
-}
-
-const RouterLink = ({ href, replace, target, ...props }: RouterLinkProps) => {
-  if (target === "_blank") return <a href={href} target={target} {...props} />
-  return <Link to={href} replace={replace} {...props} />
-}
-
-const ScrollToTop = (): ReactNode => {
-  const { pathname } = useLocation();
-  useLayoutEffect(() => {
-    document.documentElement.scrollTo(0, 0);
-  }, [pathname]);
-  return null;
-}
+import AppRoutes from './router.js';
+import RouterLink from './components/router-link.js';
+import { ScrollToTop } from './components/scroll-to-top.js';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,16 +18,13 @@ const queryClient = new QueryClient({
   },
 })
 
-document.documentElement.setAttribute('data-fr-scheme', 'light');
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <ScrollToTop />
-        {/* <DSFRConfig routerComponent={RouterLink} theme='light'> */}
         <DSFRConfig routerComponent={RouterLink}>
-          <Routes />
+          <AppRoutes />
         </DSFRConfig>
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>
