@@ -1,14 +1,10 @@
 import { SideMenu, Link, Container, Row, Col, SideMenuItem } from '@dataesr/dsfr-plus';
-import { Outlet, useLocation, useSearchParams, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useSearchParams } from 'react-router-dom';
 import './styles.scss';
 
 export function AtlasSideMenu() {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
-  const { idFiliere } = useParams();
-
-  console.log('idFiliere', idFiliere);
-
 
   if (!pathname) return null;
   const filtersParams = searchParams.toString();
