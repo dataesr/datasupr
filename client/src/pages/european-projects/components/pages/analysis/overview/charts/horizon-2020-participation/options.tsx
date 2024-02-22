@@ -18,22 +18,12 @@ export default function Options(data) {
     }
   };
 
-  // const pillierLegend = [
-  //   { name: "Science d'excellence", color: getColorByPillierName("Science d'excellence") },
-  //   { name: "Problématiques mondiales et compétitivité industrielle européenne", color: getColorByPillierName("Problématiques mondiales et compétitivité industrielle européenne") },
-  //   { name: "Europe plus innovante", color: getColorByPillierName("Europe plus innovante") },
-  //   { name: "Élargir la participation et renforcer l'espace européen de la recherche", color: getColorByPillierName("Élargir la participation et renforcer l'espace européen de la recherche") },
-  // ];
-
   return {
     chart: {
       type: "bar",
       height: 500,
     },
-    title: {
-      text: "Objectifs financés par Horizon 2020 en France",
-      align: "left",
-    },
+    title: { text: "" },
     xAxis: {
       categories: categories,
       title: { text: "" }
@@ -42,6 +32,7 @@ export default function Options(data) {
       { title: { text: "" } },
     ],
     legend: { enabled: false },
+    credits: { enabled: false },
     plotOptions: {
       series: {
         pointWidth: 20,
