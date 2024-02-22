@@ -7,7 +7,7 @@ export default function CustomBreadcrumb({ pageKey }) {
   console.log('params', params);
 
   const pages = {
-    "main": {
+    "european-projects": {
       label: "Tableau de bord des projets européens - Horizon Europe",
       link: "/european-projects",
     },
@@ -91,13 +91,14 @@ export default function CustomBreadcrumb({ pageKey }) {
 
   const currentPage = pages[pageKey];
   const parents = currentPage.link.split('/').slice(1, -1);
+  console.log('parents', parents);
 
   return (
     <Breadcrumb>
       <Link href="/">Accueil</Link>
       {
         parents.map((parent, index) => {
-          return <Link key={index} href={parents.slice(0, index + 1).join('/')}>{parent}</Link>
+          return <Link key={index} href={pages[parent].link}>{pages[parent].label}</Link>
         }
         )}
       <Link>
