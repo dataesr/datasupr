@@ -4,7 +4,6 @@ import { Breadcrumb, Link } from "@dataesr/dsfr-plus";
 export default function CustomBreadcrumb({ pageKey }) {
   const [searchParams] = useSearchParams();
   const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join('&');
-  console.log('params', params);
 
   const pages = {
     "european-projects": {
@@ -91,14 +90,13 @@ export default function CustomBreadcrumb({ pageKey }) {
 
   const currentPage = pages[pageKey];
   const parents = currentPage.link.split('/').slice(1, -1);
-  console.log('parents', parents);
 
   return (
     <Breadcrumb>
       <Link href="/">Accueil</Link>
       {
         parents.map((parent, index) => {
-          return <Link key={index} href={pages[parent].link}>{pages[parent].label}</Link>
+          return <Link key={index} href={`${pages[parent].link}?${params}`}>{pages[parent].label}</Link>
         }
         )}
       <Link>
