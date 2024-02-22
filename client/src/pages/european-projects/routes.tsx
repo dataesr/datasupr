@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 
 import Main from './index.tsx';
 import AnalysisHomepage from './components/pages/analysis/index.tsx';
-import Overview from './components/pages/analysis/overview.tsx';
+import Overview from './components/pages/analysis/overview/index.tsx';
 
 export default function EuropeanProjectsRoutes() {
   return (

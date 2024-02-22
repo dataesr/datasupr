@@ -15,7 +15,7 @@ export default function CustomBreadcrumb({ pageKey }) {
       link: "/european-projects/analyse",
     },
     "synthese": {
-      label: "Synthèse",
+      label: "Synthèse Horizon Europe",
       link: "/european-projects/analyse/synthese",
     },
     "positionnement": {
