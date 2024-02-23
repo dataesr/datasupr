@@ -30,7 +30,7 @@ export default function HomePage() {
   useEffect(() => {
     //Call API to get the list of dashboards
     const getData = async () => {
-      const response = await fetch(`${VITE_APP_SERVER_URL}/api/tableaux?tag=` + searchText);
+      const response = await fetch(`${VITE_APP_SERVER_URL}/tableaux?tag=` + searchText);
       const data = await response.json();
       setSearchResults(data);
     }
@@ -141,6 +141,13 @@ export default function HomePage() {
               image={<img className="fr-responsive-img" src={atlasImg} alt="" />}
               title="Projets européens"
               to="/european-projects" />
+          </Col>
+          <Col md={4}>
+            <GenericCard
+              description="Open Alex"
+              image={<img className="fr-responsive-img" src={atlasImg} alt="" />}
+              title="Open Alex"
+              to="/open-alex" />
           </Col>
         </Row>
       </Container>
