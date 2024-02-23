@@ -42,15 +42,12 @@ router.route('/european-projects')
             allData['funding_participant_share_actions'] = funding_participant_share_actions;
             allData['funding_programme'] = funding_programme;
         }
-        console.log(req.query);
-
         res.json(allData);
     });
 
 router.route('/european-projects/funding_programme')
     .get((req, res) => {
         const iso2 = req.query.country_code || 'FR';
-        console.log(iso2);
         res.json(funding_programme.filter((item) =>
             item.country_code.toLowerCase() === iso2.toLowerCase())
         );

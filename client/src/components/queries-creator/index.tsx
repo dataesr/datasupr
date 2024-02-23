@@ -2,13 +2,7 @@
 import { Button } from "@dataesr/dsfr-plus";
 
 export default function QueriesCreator() {
-  // const [queries, setQueries] = useState({});
-
-
-  const addQuery = () => {
-    console.log('addQuery() click');
-
-  }
+  const addQuery = () => {}
 
   return (
     <>

@@ -465,7 +465,6 @@ router.route('/atlas/get-similar-elements')
 
     filters[req.query.needle] = { $gt: parseInt(req.query.gt), $lt: parseInt(req.query.lt) };
 
-    console.log(filters);
     db.collection('similar-elements').find(filters).toArray().then((data) => {
       res.json(data);
     })

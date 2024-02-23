@@ -46,8 +46,6 @@ async function run() {
         const result = await similarElementsCollection.insertOne(similarElement);
       };
     };
-    console.log('Done');
-
   } finally {
     await client.close();
   }
