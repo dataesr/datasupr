@@ -1,6 +1,6 @@
 import { Tag, TagGroup } from '@dataesr/dsfr-plus';
 import { useSearchParams } from 'react-router-dom';
-import { getFilterLabel } from '../../utils';
+import { getFilterLabel, getIso2Label } from '../../utils';
 
 export default function Filters() {
   const [searchParams] = useSearchParams();
@@ -11,7 +11,7 @@ export default function Filters() {
       {
         params.map(([key, value]) => (
           <Tag key={key} color='purple-glycine'>
-            {getFilterLabel(key)} : {value}
+            {getFilterLabel(key)} : {(key === 'country_code') ? getIso2Label(value) : value}
           </Tag>
         ))
       }
