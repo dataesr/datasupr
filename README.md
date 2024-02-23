@@ -2,7 +2,12 @@
 
 ## Development
 
-Doadify is fully functional in development. 
+Doadify is fully functional in development.
+
+Simply run : `npm start`
+
+And the project should be available via your favorite browser at http://localhost:5173/.
+
 
 ## Build for production
 
