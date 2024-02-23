@@ -4,6 +4,7 @@ import HomePage from './pages/home-page.tsx';
 import { Layout } from './layout/Layout.tsx';
 import AtlasRoutes from './pages/atlas/routes.tsx';
 import EuropeanProjectsRoutes from './pages/european-projects/routes.tsx';
+import Integration from './pages/integration/index.tsx';
 
 export default function Router() {
   return (
@@ -14,6 +15,7 @@ export default function Router() {
         <Route path="/open-alex/*" element={<div>Open Alex tab</div>} />
         <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
       </Route>
+      <Route path="/integration" element={<Integration />} />
       <Route path="*" element={<div>404 atlas</div>} />
     </Routes>
   );

@@ -13,6 +13,7 @@ import "../styles.scss";
 export default function Horizon2020Participation() {
   const [searchParams] = useSearchParams();
   const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join('&');
+  const iso2 = searchParams.get('country_code') || 'FR';
 
   const { data, isLoading } = useQuery({
     queryKey: ["european-projects", params],
@@ -49,7 +50,7 @@ export default function Horizon2020Participation() {
       <figure>
         <HighchartsReact
           highcharts={Highcharts}
-          options={options(data["funding_programme"].filter((item) => item.country_code === 'FR'))}
+          options={options(data["funding_programme"].filter((item) => item.country_code === iso2))}
         />
       </figure>
       <div className="graph-footer">

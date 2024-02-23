@@ -135,6 +135,13 @@ export default function HomePage() {
               title="Atlas des effecifs étudiants"
               to="/atlas" />
           </Col>
+          <Col md={4}>
+            <GenericCard
+              description="Projets europeens"
+              image={<img className="fr-responsive-img" src={atlasImg} alt="" />}
+              title="Projets europeens"
+              to="/european-projects" />
+          </Col>
         </Row>
       </Container>
       <footer className="fr-footer fr-mt-5w" role="contentinfo" id="footer">
