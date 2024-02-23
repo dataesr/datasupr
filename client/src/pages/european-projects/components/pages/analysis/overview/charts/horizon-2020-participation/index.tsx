@@ -10,10 +10,9 @@ import ChartWrapper from "../../../../../chart-wrapper";
 export default function Horizon2020Participation() {
   const [searchParams] = useSearchParams();
   const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join('&');
-  const iso2 = searchParams.get('country_code') || 'FR';
 
   const { data, isLoading } = useQuery({
-    queryKey: ["european-projects", params],
+    queryKey: ["GetHorizon2020Participation", params],
     queryFn: () => GetHorizon2020Participation(params)
   })
 
@@ -41,7 +40,7 @@ export default function Horizon2020Participation() {
   return (
     <ChartWrapper
       id="Horizon2020Participation"
-      options={options(data["funding_programme"].filter((item) => item.country_code === iso2))}
+      options={options(data)}
       legend={(
         <ul className="legend">
           {pillierLegend.map((item) => (

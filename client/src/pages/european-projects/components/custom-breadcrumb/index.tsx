@@ -92,13 +92,13 @@ export default function CustomBreadcrumb({ pageKey }) {
   const parents = currentPage.link.split('/').slice(1, -1);
 
   return (
-    <Breadcrumb>
+    <Breadcrumb className="fr-m-0 fr-mt-1w">
       <Link href="/">Accueil</Link>
       {
         parents.map((parent, index) => {
           return <Link key={index} href={`${pages[parent].link}?${params}`}>{pages[parent].label}</Link>
-        }
-        )}
+        })
+      }
       <Link>
         <strong>{currentPage.label}</strong>
       </Link>

@@ -7,3 +7,13 @@ export function getConfig(id) {
   }
   return chartConfig;
 }
+
+export function getFilterLabel(filterId) {
+  const filters = {
+    "country_code": "Pays",
+    // "theme": "Thème",
+    // "chart_id": "Graphique"
+  };
+
+  return filters[filterId] || filterId;
+}

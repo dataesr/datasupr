@@ -12,8 +12,6 @@ import evol_all_pc_project_SIGNED from './data/evol_all_pc_project_SIGNED.json' 
 import funding_participant_share_actions from './data/funding_participant_share_actions.json' assert { type: "json" };
 import funding_programme from './data/funding_programme.json' assert { type: "json" };
 
-
-
 const router = new express.Router();
 
 router.route('/european-projects')
@@ -47,6 +45,15 @@ router.route('/european-projects')
         console.log(req.query);
 
         res.json(allData);
+    });
+
+router.route('/european-projects/funding_programme')
+    .get((req, res) => {
+        const iso2 = req.query.country_code || 'FR';
+        console.log(iso2);
+        res.json(funding_programme.filter((item) =>
+            item.country_code.toLowerCase() === iso2.toLowerCase())
+        );
     });
 
 export default router;

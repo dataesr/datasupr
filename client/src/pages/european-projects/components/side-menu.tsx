@@ -2,7 +2,7 @@ import { SideMenu, Link, Container, Row, Col } from '@dataesr/dsfr-plus';
 import { Outlet, useLocation, useSearchParams } from 'react-router-dom';
 import './styles.scss';
 
-export function CustomSideMenu() {
+export default function CustomSideMenu() {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
 
