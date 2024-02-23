@@ -137,9 +137,9 @@ export default function HomePage() {
           </Col>
           <Col md={4}>
             <GenericCard
-              description="Projets europeens"
+              description="Projets européens"
               image={<img className="fr-responsive-img" src={atlasImg} alt="" />}
-              title="Projets europeens"
+              title="Projets européens"
               to="/european-projects" />
           </Col>
         </Row>
