@@ -1,14 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
 
 import Template from "./template";
 import { GetHorizon2020Participation } from "./query";
 import options from "./options";
-import { Title } from "@dataesr/dsfr-plus";
 
-import "../styles.scss";
+import ChartWrapper from "../../../../../chart-wrapper";
 
 export default function Horizon2020Participation() {
   const [searchParams] = useSearchParams();
@@ -42,18 +39,10 @@ export default function Horizon2020Participation() {
   ];
 
   return (
-    <>
-      <Title as="h2" look="h4" className="fr-mb-0">Objectifs financés par Horizon 2020 en France</Title>
-      <p className="sources">
-        Sources : Commission européenne, <a target="_blank" href="https://cordis.europa.eu/">Cordis</a>
-      </p>
-      <figure>
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={options(data["funding_programme"].filter((item) => item.country_code === iso2))}
-        />
-      </figure>
-      <div className="graph-footer">
+    <ChartWrapper
+      id="Horizon2020Participation"
+      options={options(data["funding_programme"].filter((item) => item.country_code === iso2))}
+      legend={(
         <ul className="legend">
           {pillierLegend.map((item) => (
             <li key={item.name} style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
@@ -62,13 +51,8 @@ export default function Horizon2020Participation() {
             </li>
           ))}
         </ul>
-        <div>
-          <p className="share">
-            Partage
-          </p>
-        </div>
-      </div>
-    </>
+      )}
+    />
   )
 
 }

@@ -127,7 +127,7 @@ export default function HomePage() {
             </Title>
           </Col>
         </Row>
-        <Row>
+        <Row gutters>
           <Col md={4}>
             <GenericCard
               description="L’Atlas des effectifs étudiants est un outil indispensable pour une bonne appréhension de la structuration territoriale de l’enseignement supérieur et pour l’élaboration de stratégies territoriales. Il présente, sous forme de cartes, de graphiques et de tableaux, la diversité du système français d’enseignement supérieur."
