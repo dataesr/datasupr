@@ -2,15 +2,15 @@ import { useQuery } from '@tanstack/react-query';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-export default function RetractedByCountryShare() {
+export default function RetractedFrenchByYearShare() {
   const { data: data1, isLoading: isLoading1 } = useQuery({
-    queryKey: ['OpenAlexRetractionsByCountry'],
-    queryFn: () => fetch('https://api.openalex.org/works?page=1&filter=is_retracted:true&group_by=authorships.countries').then((response) => response.json())
+    queryKey: ['OpenAlexFrenchRetractions'],
+    queryFn: () => fetch('https://api.openalex.org/works?page=1&filter=is_retracted:true,institutions.country_code:FR,publication_year:2000-&group_by=publication_year').then((response) => response.json())
   });
 
   const { data: data2, isLoading: isLoading2 } = useQuery({
-    queryKey: ['OpenAlexPublicationsByCountry'],
-    queryFn: () => fetch('https://api.openalex.org/works?page=1&group_by=authorships.countries').then((response) => response.json())
+    queryKey: ['OpenAlexFrenchPublications'],
+    queryFn: () => fetch('https://api.openalex.org/works?page=1&filter=institutions.country_code:FR,publication_year:2000-&group_by=publication_year').then((response) => response.json())
   });
 
   if (isLoading1 || isLoading2) {
@@ -31,11 +31,11 @@ export default function RetractedByCountryShare() {
   const options = {
     chart: { type: 'column' },
     legend: { enabled: false },
-    title: { text: 'Part of retracted publications by country in ‱ (top 20)' },
+    title: { text: 'Part of French retracted publications by publication year since 2000' },
     xAxis: { categories, title: { text: 'Country' } },
     yAxis: { title: { text: 'Part of retracted publications (‱)' } },
     series: [{ data: series }],
-    plotOptions: { column: { dataLabels: { enabled: true, format: '{y:.2f} ‱' } } }
+    plotOptions: { column: { dataLabels: { enabled: true, format: '{y:.2f} %' } } }
   };
 
   return (

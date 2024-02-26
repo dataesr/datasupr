@@ -4,7 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 export default function RetractedByCountry() {
   const { data, isLoading } = useQuery({
-    queryKey: ['GetOpeAlexRetractions'],
+    queryKey: ['OpenAlexRetractionsByCountry'],
     queryFn: () => fetch('https://api.openalex.org/works?page=1&filter=is_retracted:true&group_by=authorships.countries').then((response) => response.json())
   });
 

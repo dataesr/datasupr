@@ -1,11 +1,15 @@
 import RetractedByCountry from './charts/retracted-by-country';
-import RetractedByCountryShare from './charts/retracted-by-country-share'
+import RetractedByCountryShare from './charts/retracted-by-country-share';
+import RetractedFrenchByYear from './charts/retracted-french-by-year';
+import RetractedFrenchByYearShare from './charts/retracted-french-by-year-share';
 
 export default function Welcome() {
   return (
     <>
       <RetractedByCountry />
       <RetractedByCountryShare />
+      <RetractedFrenchByYear />
+      <RetractedFrenchByYearShare />
     </>
   );
 }
