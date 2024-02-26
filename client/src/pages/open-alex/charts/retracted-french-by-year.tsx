@@ -22,11 +22,11 @@ export default function RetractedFrenchByYear() {
   const options = {
     chart: { type: 'column' },
     legend: { enabled: false },
+    plotOptions: { column: { dataLabels: { enabled: true } } },
+    series: [{ data: series }],
     title: { text: 'Number of French retracted publications by publication year since 2000' },
     xAxis: { categories, title: { text: 'Publication year' } },
-    yAxis: { title: { text: 'Number of retracted French publications' } },
-    series: [{ data: series }],
-    plotOptions: { column: { dataLabels: { enabled: true } } }
+    yAxis: { title: { text: 'Number of retracted French publications' } }
   };
 
   return (

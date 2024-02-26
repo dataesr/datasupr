@@ -31,11 +31,11 @@ export default function RetractedFrenchByYearShare() {
   const options = {
     chart: { type: 'column' },
     legend: { enabled: false },
-    title: { text: 'Part of French retracted publications by publication year since 2000' },
-    xAxis: { categories, title: { text: 'Country' } },
-    yAxis: { title: { text: 'Part of retracted publications (‱)' } },
+    plotOptions: { column: { dataLabels: { enabled: true, format: '{y:.2f} ‱' } } },
     series: [{ data: series }],
-    plotOptions: { column: { dataLabels: { enabled: true, format: '{y:.2f} %' } } }
+    title: { text: 'Part of French retracted publications by publication year in ‱ since 2000' },
+    xAxis: { categories, title: { text: 'Country' } },
+    yAxis: { title: { text: 'Part of retracted publications (‱)' } }
   };
 
   return (

@@ -22,11 +22,11 @@ export default function RetractedByCountry() {
   const options = {
     chart: { type: 'column' },
     legend: { enabled: false },
+    plotOptions: { column: { dataLabels: { enabled: true } } },
+    series: [{ data: series }],
     title: { text: 'Number of retracted publications by country (top 20)' },
     xAxis: { categories, title: { text: 'Country' } },
-    yAxis: { title: { text: 'Number of retracted publications' } },
-    series: [{ data: series }],
-    plotOptions: { column: { dataLabels: { enabled: true } } }
+    yAxis: { title: { text: 'Number of retracted publications' } }
   };
 
   return (

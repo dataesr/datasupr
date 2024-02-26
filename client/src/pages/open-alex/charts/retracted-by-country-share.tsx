@@ -31,11 +31,11 @@ export default function RetractedByCountryShare() {
   const options = {
     chart: { type: 'column' },
     legend: { enabled: false },
+    plotOptions: { column: { dataLabels: { enabled: true, format: '{y:.2f} ‱' } } },
+    series: [{ data: series }],
     title: { text: 'Part of retracted publications by country in ‱ (top 20)' },
     xAxis: { categories, title: { text: 'Country' } },
-    yAxis: { title: { text: 'Part of retracted publications (‱)' } },
-    series: [{ data: series }],
-    plotOptions: { column: { dataLabels: { enabled: true, format: '{y:.2f} ‱' } } }
+    yAxis: { title: { text: 'Part of retracted publications (‱)' } }
   };
 
   return (
