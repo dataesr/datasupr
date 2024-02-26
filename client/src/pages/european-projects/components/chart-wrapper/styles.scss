@@ -8,6 +8,14 @@
   font-size: 12px;
   color: #333;
 
+  .share {
+    .title {
+      text-align: center;
+      border-bottom: 1px solid #ddd;
+    }
+
+    border: 1px solid #ddd;
+  }
 }
 
 .sources {
