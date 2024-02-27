@@ -6,32 +6,22 @@ import { GetHorizon2020Participation } from "./query";
 import options from "./options";
 
 import ChartWrapper from "../../../../../chart-wrapper";
+import { getColorByPillierName } from "./utils";
 
 export default function Horizon2020Participation() {
   const [searchParams] = useSearchParams();
-  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join('&');
-
+  let params = [...searchParams].map(([key, value]) => `${key}=${value}`).join('&');
+  params += '&stage=successful';
   const { data, isLoading } = useQuery({
     queryKey: ["GetHorizon2020Participation", params],
     queryFn: () => GetHorizon2020Participation(params)
   })
 
-  if (isLoading) return <Template />
+  if (isLoading || !data) return <Template />
 
-  const getColorByPillierName = (name) => {
-    if (name === "Science d'excellence") {
-      return "#9ef9be";
-    } else if (name === "Problématiques mondiales et compétitivité industrielle européenne") {
-      return "#4b5d67";
-    } else if (name === "Europe plus innovante") {
-      return "#87556f";
-    } else {
-      return "#cecece";
-    }
-  };
 
   const pillierLegend = [
-    { name: "Science d'excellence", color: getColorByPillierName("Science d'excellence") },
+    { name: "Excellence scientifique", color: getColorByPillierName("Excellence scientifique") },
     { name: "Problématiques mondiales et compétitivité industrielle européenne", color: getColorByPillierName("Problématiques mondiales et compétitivité industrielle européenne") },
     { name: "Europe plus innovante", color: getColorByPillierName("Europe plus innovante") },
     { name: "Élargir la participation et renforcer l'espace européen de la recherche", color: getColorByPillierName("Élargir la participation et renforcer l'espace européen de la recherche") },
