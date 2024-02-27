@@ -1,10 +1,10 @@
 [
   {
-    "id": "Horizon2020Participation",
-    "title": "Objectifs financés par Horizon 2020",
+    "id": "fundedObjectives",
+    "title": "Objectifs financés",
     "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
     "source": "Commission européenne, Cordis",
     "sourceURL": "https://cordis.europa.eu/",
-    "integrationURL": "./../european-projects/components/pages/analysis/overview/charts/horizon-2020-participation"
+    "integrationURL": "./../european-projects/components/pages/analysis/overview/charts/funded-objectives"
   }
 ]

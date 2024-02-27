@@ -18,7 +18,7 @@ export default function ChartWrapper({ id, options, legend }) {
   const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc="https://barometredelascienceouverte.esr.gouv.fr/integration/fr/publi.publishers.type-ouverture.chart-repartition-modeles"></iframe>`;
 
   return (
-    <>
+    <section>
       <Title as="h2" look="h4" className="fr-mb-0">{graphConfig.title}</Title>
       <p className="sources">
         Sources : <a href={graphConfig.sourceURL} target="_blank" rel="noreferrer noopener">{graphConfig.source}</a>
@@ -69,6 +69,6 @@ export default function ChartWrapper({ id, options, legend }) {
           </SyntaxHighlighter>
         </ModalContent>
       </Modal>
-    </>
+    </section>
   );
 }

@@ -2,19 +2,19 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import Template from "./template";
-import { GetHorizon2020Participation } from "./query";
+import { GetfundedObjectives } from "./query";
 import options from "./options";
 
 import ChartWrapper from "../../../../../chart-wrapper";
 import { getColorByPillierName } from "./utils";
 
-export default function Horizon2020Participation() {
+export default function FundedObjectives() {
   const [searchParams] = useSearchParams();
   let params = [...searchParams].map(([key, value]) => `${key}=${value}`).join('&');
   params += '&stage=successful';
   const { data, isLoading } = useQuery({
-    queryKey: ["GetHorizon2020Participation", params],
-    queryFn: () => GetHorizon2020Participation(params)
+    queryKey: ["fundedObjectives", params],
+    queryFn: () => GetfundedObjectives(params)
   })
 
   if (isLoading || !data) return <Template />
@@ -29,7 +29,7 @@ export default function Horizon2020Participation() {
 
   return (
     <ChartWrapper
-      id="Horizon2020Participation"
+      id="fundedObjectives"
       options={options(data)}
       legend={(
         <ul className="legend">
