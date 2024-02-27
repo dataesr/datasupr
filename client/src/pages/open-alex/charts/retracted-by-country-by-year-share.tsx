@@ -9,7 +9,7 @@ export default function RetractedByCountryByYearShare() {
   });
 
   const countries = (data1?.group_by?.slice(0, 20) ?? []).map((item) => ({ name: item.key_display_name, iso2: item.key }));
-  const retractionsByCountryByYear:{data:Array<object>, isLoading:boolean}[] = useQueries({
+  const retractionsByCountryByYear:{data:object, isLoading:boolean}[] = useQueries({
     queries: countries.map((country:{iso2:string,name:string}, index:number) => {
       return {
         queryKey: ['OpenAlexRetractionsByCountryByYear', country.iso2],
@@ -19,7 +19,7 @@ export default function RetractedByCountryByYearShare() {
       }
     }),
   });
-  const publicationsByCountryByYear:{data:Array<object>, isLoading:boolean}[] = useQueries({
+  const publicationsByCountryByYear:{data:object, isLoading:boolean}[] = useQueries({
     queries: countries.map((country:{iso2:string,name:string}, index:number) => {
       return {
         queryKey: ['OpenAlexPublicationsByCountryByYear', country.iso2],
