@@ -8,9 +8,9 @@ export default function RetractedByCountryByYear() {
     queryFn: () => fetch('https://api.openalex.org/works?page=1&filter=is_retracted:true&group_by=authorships.countries').then((response) => response.json())
   });
 
-  const countries = (data1?.group_by?.slice(0, 20) ?? []).map((item) => ({ name: item.key_display_name, iso2: item.key }));
+  const countries = (data1?.group_by?.slice(0, 20) ?? []).map((item) => ({ iso2: item.key, name: item.key_display_name }));
   const results = useQueries({
-    queries: countries.map((country: string, index: number) => {
+    queries: countries.map((country: { iso2:string, name:string }, index:number) => {
       return {
         queryKey: ['OpenAlexRetractionsByCountryByYear', country.iso2],
         queryFn: () => fetch(`https://api.openalex.org/works?page=1&filter=is_retracted:true,institutions.country_code:${country.iso2},publication_year:2000-&group_by=publication_year`).then((response) => response.json()),
@@ -25,7 +25,7 @@ export default function RetractedByCountryByYear() {
   }
 
   const years = [...Array(25).keys()].map((item) => item + 2000);
-  const series = results.map((result, index) => ({
+  const series = results.map((result: { data }, index:number) => ({
     ...countries[index],
     data: years.map((year) => (result?.data?.group_by ?? []).find((item) => item.key === year.toString())?.count ?? 0),
   }));
