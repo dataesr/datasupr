@@ -17,16 +17,16 @@ export default function RetractedFrenchByYearShare() {
     return <div>Loading...</div>;
   }
 
-  const series = (data1?.group_by?.slice(0, 20) ?? []).map((country) => {
-    const total = data2.group_by.find((item) => item.key === country.key).count;
+  const series = (data1?.group_by?.sort((a, b) => a.key - b.key) ?? []).map((item) => {
+    const total = data2.group_by.find((item) => item.key === item.key).count;
     return ({
-      color: country.key === 'FR' ? '#cc0000' : '#808080',
-      name: country.key_display_name,
+      color: '#808080',
+      name: item.key_display_name,
       total,
-      y: country.count / total * 10000,
-    })
-  }).sort((a, b) => b.y - a.y);
-  const categories = series.map((country) => country.name);
+      y: item.count / total * 10000,
+    });
+  });
+  const categories = series.map((item) => item.name);
 
   const options = {
     chart: { type: 'column' },
@@ -34,7 +34,7 @@ export default function RetractedFrenchByYearShare() {
     plotOptions: { column: { dataLabels: { enabled: true, format: '{y:.2f} ‱' } } },
     series: [{ data: series }],
     title: { text: 'Part of French retracted publications by publication year in ‱ since 2000' },
-    xAxis: { categories, title: { text: 'Country' } },
+    xAxis: { categories, title: { text: 'Publication year' } },
     yAxis: { title: { text: 'Part of retracted publications (‱)' } }
   };
 
