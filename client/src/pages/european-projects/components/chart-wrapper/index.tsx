@@ -1,14 +1,14 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { getConfig } from "../../utils";
-import { Button, Col, Modal, ModalContent, ModalTitle, Row, Text, Title } from "@dataesr/dsfr-plus";
+import { Button, Modal, ModalContent, ModalTitle, Text, Title } from "@dataesr/dsfr-plus";
 
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 import "./styles.scss";
 import { useState } from "react";
+import CopyButton from "../../../../components/copy-button";
 
 
 export default function ChartWrapper({ id, options, legend }) {
@@ -58,17 +58,12 @@ export default function ChartWrapper({ id, options, legend }) {
       <Text className="description">
         {graphConfig.description}
       </Text>
-      <Modal isOpen={isOpen} hide={() => setIsOpen(false)}>
+      <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg">
         <ModalTitle>Intégrer ce graphique dans un autre site</ModalTitle>
         <ModalContent>
-          <Row>
-            <Col className="text-right">
-              <CopyToClipboard text={integrationCode}>
-                <Button size="sm" icon="clipboard-line" color="beige-gris-galet">Copier</Button>
-              </CopyToClipboard>
-            </Col>
-          </Row>
-
+          <div className="text-right">
+            <CopyButton text={integrationCode} />
+          </div>
           <SyntaxHighlighter language="javascript" style={a11yDark}>
             {integrationCode}
           </SyntaxHighlighter>
