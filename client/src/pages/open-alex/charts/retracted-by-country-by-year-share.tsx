@@ -9,7 +9,7 @@ export default function RetractedByCountryByYearShare() {
   });
 
   const countries = (data1?.group_by?.slice(0, 20) ?? []).map((item) => ({ name: item.key_display_name, iso2: item.key }));
-  const retractionsByCountryByYear:{data:{group_by:Array<object>}, isLoading:boolean}[] = useQueries({
+  const retractionsByCountryByYear:{data:{group_by:{count:number, key:string}[]}, isLoading:boolean}[] = useQueries({
     queries: countries.map((country:{iso2:string,name:string}, index:number) => {
       return {
         queryKey: ['OpenAlexRetractionsByCountryByYear', country.iso2],
@@ -19,7 +19,7 @@ export default function RetractedByCountryByYearShare() {
       }
     }),
   });
-  const publicationsByCountryByYear:{data:{group_by:Array<object>}, isLoading:boolean}[] = useQueries({
+  const publicationsByCountryByYear:{data:{group_by:{count:number, key:string}[]}, isLoading:boolean}[] = useQueries({
     queries: countries.map((country:{iso2:string,name:string}, index:number) => {
       return {
         queryKey: ['OpenAlexPublicationsByCountryByYear', country.iso2],
@@ -53,6 +53,7 @@ export default function RetractedByCountryByYearShare() {
     plotOptions: { series: { label: { connectorAllowed: false } } },
     series,
     title: { text: 'Part of retracted publications by country by publication year in ‱ since 2000 (top 20)' },
+    tooltip: { format: '<b>{point.y:.2f} ‱</b> of the publications from <b>{series.name}</b> have been retracted in <b>{key}</b>' },
     xAxis: { categories: years, title: { text: 'Publication year' } },
     yAxis: { title: { text: 'Part of retracted publications (‱)' } }
   };

@@ -35,6 +35,7 @@ export default function RetractedByCountryByYear() {
     plotOptions: { series: { label: { connectorAllowed: false } } },
     series,
     title: { text: 'Number of retracted publications by country by publication year since 2000 (top 20)' },
+    tooltip: { format: '<b>{point.y}</b> publications from <b>{series.name}</b> have been retracted in <b>{key}</b>' },
     xAxis: { categories: years, title: { text: 'Publication year' } },
     yAxis: { title: { text: 'Number of retracted publications' } }
   };

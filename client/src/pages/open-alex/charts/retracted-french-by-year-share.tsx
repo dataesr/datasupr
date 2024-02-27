@@ -34,6 +34,7 @@ export default function RetractedFrenchByYearShare() {
     plotOptions: { column: { dataLabels: { enabled: true, format: '{y:.2f} ‱' } } },
     series: [{ data: series }],
     title: { text: 'Part of French retracted publications by publication year in ‱ since 2000' },
+    tooltip: { format: '<b>{point.y:.2f} ‱</b> of the French publications have been retracted in <b>{point.name}</b>' },
     xAxis: { categories, title: { text: 'Publication year' } },
     yAxis: { title: { text: 'Part of retracted publications (‱)' } }
   };

@@ -25,6 +25,7 @@ export default function RetractedFrenchByYear() {
     plotOptions: { column: { dataLabels: { enabled: true } } },
     series: [{ data: series }],
     title: { text: 'Number of French retracted publications by publication year since 2000' },
+    tooltip: { format: '<b>{point.y}</b> French publications have been retracted in <b>{point.name}</b>' },
     xAxis: { categories, title: { text: 'Publication year' } },
     yAxis: { title: { text: 'Number of retracted French publications' } }
   };

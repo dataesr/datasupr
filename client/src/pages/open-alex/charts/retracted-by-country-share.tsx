@@ -34,6 +34,7 @@ export default function RetractedByCountryShare() {
     plotOptions: { column: { dataLabels: { enabled: true, format: '{y:.2f} ‱' } } },
     series: [{ data: series }],
     title: { text: 'Part of retracted publications by country in ‱ (top 20)' },
+    tooltip: { format: '<b>{point.y:.2f} ‱</b> of the publications from <b>{point.name}</b> have been retracted' },
     xAxis: { categories, title: { text: 'Country' } },
     yAxis: { title: { text: 'Part of retracted publications (‱)' } }
   };

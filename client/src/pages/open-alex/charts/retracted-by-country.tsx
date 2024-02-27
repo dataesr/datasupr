@@ -25,6 +25,7 @@ export default function RetractedByCountry() {
     plotOptions: { column: { dataLabels: { enabled: true } } },
     series: [{ data: series }],
     title: { text: 'Number of retracted publications by country (top 20)' },
+    tooltip: { format: '<b>{point.y}</b> publications from <b>{point.name}</b> have been retracted' },
     xAxis: { categories, title: { text: 'Country' } },
     yAxis: { title: { text: 'Number of retracted publications' } }
   };
