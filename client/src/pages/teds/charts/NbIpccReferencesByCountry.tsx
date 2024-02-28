@@ -39,22 +39,28 @@ export default function NbIpccReferencesByCountry() {
   if (isLoading) {
     return <div>Loading...</div>;
   }
-
-  const series = (data?.group_by?.slice(0, 20) ?? []).map((country) => ({
-    color: country.key === 'FR' ? '#cc0000' : '#808080',
-    name: country.key_display_name,
-    y: country.count,
+  
+  const data_counts = {};
+  data.aggregations.by_countries.buckets.forEach((x: { key: string ; doc_count: number; }) => {
+    data_counts[x.key] = Math.round((x.doc_count * 100) / data.hits.total.value);
+  });
+  
+  const categories = Object.keys(data_counts).slice(0, 20);
+  
+  const series = categories.map((country) => ({
+    color: country === 'FR' ? '#cc0000' : '#808080',
+    name: country,
+    y: data_counts[country],
   }));
-  const categories = series.map((country) => country.name);
 
   const options = {
     chart: { type: 'column' },
     legend: { enabled: false },
     plotOptions: { column: { dataLabels: { enabled: true } } },
     series: [{ data: series }],
-    title: { text: 'Number of IPCC references in which France participated (top 20)' },
-    xAxis: { categories, title: { text: 'Country' } },
-    yAxis: { title: { text: 'Number of IPCC references' } }
+    title: { text: 'Percentage of IPCC references in which France participated' },
+    xAxis: { categories: categories, title: { text: 'Country' } },
+    yAxis: { title: { text: 'Percentage of IPCC references' } },
   };
 
   return (
