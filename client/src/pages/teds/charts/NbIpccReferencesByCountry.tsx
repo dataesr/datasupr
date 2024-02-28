@@ -4,6 +4,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 export default function NbIpccReferencesByCountry() {
   const config = require('./config.json')
+  console.log(config)
   const esLogin = console.log(config.ES_LOGIN_TEDS_BACK);
   const esPassword = console.log(config.ES_PASSWORD_TEDS_BACK);
   const authHeader = new Headers({'Authorization': 'Basic '+btoa(esLogin+':'+esPassword), });
