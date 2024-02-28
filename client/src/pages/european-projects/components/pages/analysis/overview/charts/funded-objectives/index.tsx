@@ -6,12 +6,12 @@ import { GetfundedObjectives } from "./query";
 import options from "./options";
 
 import ChartWrapper from "../../../../../chart-wrapper";
-import { getColorByPillierName } from "./utils";
+import { getDefaultParams, getColorByPillierName } from "./utils";
 
 export default function FundedObjectives() {
   const [searchParams] = useSearchParams();
-  let params = [...searchParams].map(([key, value]) => `${key}=${value}`).join('&');
-  params += '&stage=successful';
+  const params = getDefaultParams(searchParams);
+
   const { data, isLoading } = useQuery({
     queryKey: ["fundedObjectives", params],
     queryFn: () => GetfundedObjectives(params)
