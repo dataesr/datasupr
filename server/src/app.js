@@ -1,9 +1,9 @@
-import path from 'path';
-import YAML from 'yamljs';
+import cors from 'cors';
 import express from 'express';
 import 'express-async-errors';
-import cors from 'cors';
 import * as OAV from 'express-openapi-validator';
+import path from 'path';
+import YAML from 'yamljs';
 
 import { handleErrors } from './commons/middlewares/handle-errors';
 import router from './router';
@@ -21,8 +21,6 @@ if (process.env.NODE_ENV === 'development') {
   app.use(express.static(path.join(path.resolve(), 'dist')));
 }
 
-// app.use(express.static(path.join(path.resolve(), 'public')));
-
 app.get('/api/docs/specs.json', (req, res) => { res.status(200).json(apiDocument); });
 
 app.use(OAV.middleware({
@@ -35,5 +33,14 @@ app.use(OAV.middleware({
 app.use('/api', router);
 
 app.use(handleErrors);
+
+// https://ui.dev/react-router-cannot-get-url-refresh
+app.get('/*', function(_, res) {
+  res.sendFile(path.join(path.resolve(), 'dist', 'index.html'), function(err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  });
+});
 
 export default app;
