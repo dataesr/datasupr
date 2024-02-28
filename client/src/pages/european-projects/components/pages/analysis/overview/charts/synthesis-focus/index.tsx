@@ -12,7 +12,7 @@ function Tile({ value, description }: { value: string, description: string }) {
   return (
     <div className="fr-tile fr-tile--sm fr-enlarge-link">
       <div className="fr-tile__body">
-        <div className="fr-tile__content">
+        <div className="fr-tile__content fr-pb-0">
           <h2 className="fr-tile__title">{value}</h2>
           <p className="fr-tile__desc">{description}</p>
         </div>
