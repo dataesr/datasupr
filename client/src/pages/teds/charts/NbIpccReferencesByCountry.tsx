@@ -3,11 +3,8 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
 export default function NbIpccReferencesByCountry() {
-  const config = require('./config.json')
-  console.log(config)
-  const esLogin = console.log(config.ES_LOGIN_TEDS_BACK);
-  const esPassword = console.log(config.ES_PASSWORD_TEDS_BACK);
-  const authHeader = new Headers({'Authorization': 'Basic '+btoa(esLogin+':'+esPassword), });
+  const { VITE_ES_URL, VITE_ES_TOKEN } = import.meta.env;
+  const authHeader = new Headers({'Authorization': 'Basic '+VITE_ES_TOKEN, 'Content-Type':'application/json'});
   const query_elastic = {
     size : 0,
     query: {
@@ -33,8 +30,8 @@ export default function NbIpccReferencesByCountry() {
     }
 
   const { data, isLoading } = useQuery({
-    queryKey: ['IpccParticipationsByCountry'],
-    queryFn: () => fetch(console.log(config.ES_URL)+'teds-bibliography/_search', { method: 'POST', headers: authHeader , body: JSON.stringify({ query: query_elastic })}).then((response) => response.json())
+    queryKey: ['teds-bibliography'],
+    queryFn: () => fetch(VITE_ES_URL+'teds-bibliography/_search', { method: 'POST', headers: authHeader , body: JSON.stringify(query_elastic)}).then((response) => response.json())
   });
 
   if (isLoading) {

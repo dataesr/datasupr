@@ -30,5 +30,3 @@ client/src/assets/geo-*
 *.sln
 *.sw?
 
-#password
-*.json
