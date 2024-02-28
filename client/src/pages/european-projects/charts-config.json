@@ -6,5 +6,13 @@
     "source": "Commission européenne, Cordis",
     "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "./../european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "synthesisFocus",
+    "title": "Focus sur la participation du pays",
+    "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "./../european-projects/components/pages/analysis/overview/charts/synthesis-focus"
   }
 ]

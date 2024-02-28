@@ -1,7 +1,8 @@
 import { Container } from "@dataesr/dsfr-plus";
-import FundedObjectives from "./charts/funded-objectives";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
+import FundedObjectives from "./charts/funded-objectives";
+import SynthesisFocus from "./charts/synthesis-focus";
 
 export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,7 +15,8 @@ export default function Overview() {
 
   return (
     <Container as="main">
-      {/* <Focus /> */}
+      <SynthesisFocus />
+      <div className="fr-my-5w" />
       <FundedObjectives />
     </Container>
   );

@@ -107,4 +107,114 @@ router.route('/european-projects/analysis-synthese-funding_programme')
 
   });
 
+router.route('/european-projects/analysis-synthese-focus')
+  .get(async (req, res) => {
+    const dataSuccessful = await db.collection('EP-fr-esr-all-projects-synthese')
+      .aggregate([
+        { $match: { stage: "successful" } },
+        {
+          $group: {
+            _id: "$country_code",
+            total_fund_eur: { $sum: "$fund_eur" },
+            total_involved: { $sum: "$number_involved" },
+            total_coordination_number: { $sum: "$coordination_number" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            total_fund_eur: 1,
+            total_involved: 1,
+            total_coordination_number: 1,
+            country_code: "$_id",
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            total_fund_eur: { $sum: "$total_fund_eur" },
+            total_involved: { $sum: "$total_involved" },
+            total_coordination_number: { $sum: "$total_coordination_number" },
+            countries: { $push: "$$ROOT" }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            total_fund_eur: 1,
+            total_involved: 1,
+            total_coordination_number: 1,
+            countries: 1,
+          }
+        }
+      ]).toArray();
+
+    const dataEvaluated = await db.collection('EP-fr-esr-all-projects-synthese')
+      .aggregate([
+        { $match: { stage: "evaluated" } },
+        {
+          $group: {
+            _id: "$country_code",
+            total_fund_eur: { $sum: "$fund_eur" },
+            total_involved: { $sum: "$number_involved" },
+            total_coordination_number: { $sum: "$coordination_number" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            total_fund_eur: 1,
+            total_involved: 1,
+            total_coordination_number: 1,
+            country_code: "$_id",
+          }
+        },
+        {
+          $group: {
+            _id: null,
+            total_fund_eur: { $sum: "$total_fund_eur" },
+            total_involved: { $sum: "$total_involved" },
+            total_coordination_number: { $sum: "$total_coordination_number" },
+            countries: { $push: "$$ROOT" }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            total_fund_eur: 1,
+            total_involved: 1,
+            total_coordination_number: 1,
+            countries: 1,
+          }
+        }
+      ]).toArray();
+
+
+    if (req.query.country_code) {
+      res.json({
+        successful: {
+          total_fund_eur: dataSuccessful[0].total_fund_eur,
+          total_involved: dataSuccessful[0].total_involved,
+          total_coordination_number: dataSuccessful[0].total_coordination_number,
+          countries: dataSuccessful[0].countries.filter((el) => el.country_code.toLowerCase() === req.query.country_code.toLowerCase())
+        },
+        evaluated: {
+          total_fund_eur: dataEvaluated[0].total_fund_eur,
+          total_involved: dataEvaluated[0].total_involved,
+          total_coordination_number: dataEvaluated[0].total_coordination_number,
+          countries: dataEvaluated[0].countries.filter((el) => el.country_code.toLowerCase() === req.query.country_code.toLowerCase())
+        },
+      })
+    }
+    res.json({
+      successful: dataSuccessful[0],
+      evaluated: dataEvaluated[0],
+    });
+  });
+
+router.route('/european-projects/template')
+  .get(async (req, res) => {
+    return res.json([])
+  });
+
 export default router;
