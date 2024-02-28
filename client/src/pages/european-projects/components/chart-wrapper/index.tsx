@@ -3,6 +3,8 @@ import HighchartsReact from "highcharts-react-official";
 import { getConfig } from "../../utils";
 import { Button, Modal, ModalContent, ModalTitle, Text, Title } from "@dataesr/dsfr-plus";
 
+const { VITE_APP_URL } = import.meta.env;
+
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 
@@ -10,12 +12,11 @@ import "./styles.scss";
 import { useState } from "react";
 import CopyButton from "../../../../components/copy-button";
 
-
 export default function ChartWrapper({ id, options, legend }) {
   const [isOpen, setIsOpen] = useState(false);
   const graphConfig = getConfig(id);
 
-  const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc="https://barometredelascienceouverte.esr.gouv.fr/integration/fr/publi.publishers.type-ouverture.chart-repartition-modeles"></iframe>`;
+  const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc=${VITE_APP_URL}${graphConfig.integrationURL}></iframe>`;
 
   return (
     <section>
