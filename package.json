@@ -8,7 +8,11 @@
     "server"
   ],
   "dependencies": {
-    "concurrently": "^8.0.1"
+    "@tanstack/react-query": "^5.24.1",
+    "concurrently": "^8.0.1",
+    "highcharts": "^11.3.0",
+    "highcharts-react-official": "^3.2.1",
+    "react": "^18.2.0"
   },
   "scripts": {
     "build": "rm -rf server/dist && npm -w client run build -- --mode ${npm_config_mode} --emptyOutDir --outDir ../server/dist",

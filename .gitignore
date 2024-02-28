@@ -29,3 +29,6 @@ client/src/assets/geo-*
 *.njsproj
 *.sln
 *.sw?
+
+#password
+*.json
