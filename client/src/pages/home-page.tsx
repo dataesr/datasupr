@@ -149,6 +149,13 @@ export default function HomePage() {
               title="Open Alex"
               to="/open-alex" />
           </Col>
+          <Col md={4}>
+            <GenericCard
+              description="TEDS"
+              image={<img className="fr-responsive-img" src={atlasImg} alt="" />}
+              title="TEDS"
+              to="/teds" />
+          </Col>
         </Row>
       </Container>
       <footer className="fr-footer fr-mt-5w" role="contentinfo" id="footer">
