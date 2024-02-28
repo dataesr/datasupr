@@ -1,11 +1,11 @@
-import { Routes, Route } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
-import Welcome from './index.tsx';
+import Home from './index.tsx';
 
-export default function AtlasRoutes() {
+export default function OpenAlexRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<Welcome />} />
+      <Route path="/" element={<Home />} />
     </Routes>
   );
 }

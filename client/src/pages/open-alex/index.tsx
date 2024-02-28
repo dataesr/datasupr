@@ -5,7 +5,7 @@ import RetractedByCountryByYearShare from './charts/retracted-by-country-by-year
 import RetractedFrenchByYear from './charts/retracted-french-by-year';
 import RetractedFrenchByYearShare from './charts/retracted-french-by-year-share';
 
-export default function Welcome() {
+export default function Home() {
   return (
     <>
       <RetractedByCountry />
