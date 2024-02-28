@@ -1,9 +1,9 @@
-import RetractedByCountry from './charts/retracted-by-country';
+import NbIpccReferencesByCountry from './charts/NbIpccReferencesByCountry';
 
 export default function Welcome() {
     return (
       <>
-        <RetractedByCountry />
+        <NbIpccReferencesByCountry />
       </>
     );
   }

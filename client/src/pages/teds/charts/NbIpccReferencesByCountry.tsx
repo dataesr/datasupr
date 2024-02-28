@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-export default function RetractedByCountry() {
+export default function NbIpccReferencesByCountry() {
   const config = require('./config.json')
   const esLogin = console.log(config.ES_LOGIN_TEDS_BACK);
   const esPassword = console.log(config.ES_PASSWORD_TEDS_BACK);
@@ -32,7 +32,7 @@ export default function RetractedByCountry() {
     }
 
   const { data, isLoading } = useQuery({
-    queryKey: ['IpccRetractionsByCountry'],
+    queryKey: ['IpccParticipationsByCountry'],
     queryFn: () => fetch(console.log(config.ES_URL)+'teds-bibliography/_search', { method: 'POST', headers: authHeader , body: JSON.stringify({ query: query_elastic })}).then((response) => response.json())
   });
 
@@ -52,9 +52,9 @@ export default function RetractedByCountry() {
     legend: { enabled: false },
     plotOptions: { column: { dataLabels: { enabled: true } } },
     series: [{ data: series }],
-    title: { text: 'Number of retracted publications by country (top 20)' },
+    title: { text: 'Number of IPCC references in which France participated (top 20)' },
     xAxis: { categories, title: { text: 'Country' } },
-    yAxis: { title: { text: 'Number of retracted publications' } }
+    yAxis: { title: { text: 'Number of IPCC references' } }
   };
 
   return (
