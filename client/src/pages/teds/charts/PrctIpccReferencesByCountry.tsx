@@ -2,10 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-const { VITE_ES_TOKEN, VITE_ES_URL } = import.meta.env;
+const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function PrctIpccReferencesByCountry() {
-  const headers = new Headers({ 'Authorization': `Basic ${VITE_ES_TOKEN}`, 'Content-Type': 'application/json' });
   const queryElastic = {
     size: 0,
     query: {
@@ -38,7 +37,7 @@ export default function PrctIpccReferencesByCountry() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['ipcc-references'],
-    queryFn: () => fetch(`${VITE_ES_URL}teds-bibliography/_search`, { method: 'POST', headers, body: JSON.stringify(queryElastic) }).then((response) => response.json())
+    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=teds-bibliography`, { method: 'POST', body: JSON.stringify(queryElastic) }).then((response) => response.json())
   });
 
   if (isLoading) {
