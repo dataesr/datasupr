@@ -43,7 +43,6 @@ router.route('/search')
     if (req.query?.q) {
       data = allData.filter((el) => el.label.toLowerCase().indexOf(req.query.q.toLowerCase()) !== -1)
     }
-
     res.json(data);
   });
 
