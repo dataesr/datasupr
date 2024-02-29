@@ -5,7 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function PrctIpccReferencesByCountry() {
-  const queryElastic = {
+  const query = {
     size: 0,
     query: {
       bool: {
@@ -37,7 +37,11 @@ export default function PrctIpccReferencesByCountry() {
 
   const { data, isLoading } = useQuery({
     queryKey: ['ipcc-references'],
-    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=teds-bibliography`, { method: 'POST', body: JSON.stringify(queryElastic) }).then((response) => response.json())
+    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=teds-bibliography`, {
+      body: JSON.stringify(query),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    }).then((response) => response.json())
   });
 
   if (isLoading) {
