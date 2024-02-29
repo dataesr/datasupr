@@ -2,10 +2,9 @@ import { useQuery } from '@tanstack/react-query';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-const { VITE_ES_TOKEN, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function PrctIpccReferencesByCountry() {
-  const headers = new Headers({ 'Authorization': `Basic ${VITE_ES_TOKEN}`, 'Content-Type': 'application/json' });
   const query = {
     size: 0,
     query: {

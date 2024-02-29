@@ -2,12 +2,6 @@ import express from 'express';
 
 const router = new express.Router();
 
-// const allData = [
-//   { idPaysage: "G2qA7", tableauxIds: ["european-projects", "tableau-de-bord-financier", "erc", "msca"] },
-//   { idPaysage: "FRAFR", tableauxIds: ["european-projects", "tableau-de-bord-financier", "erc", "atlas"] },
-//   { idPaysage: "DEUDE", tableauxIds: ["european-projects"] },
-// ];
-
 const allTabs = [
   { label: "Projets européens", id: "european-projects", description: "description du tableau de bord desprojets européens", tags: ["Recherche"] },
   { label: "tableau de bord financier", id: "tableau-de-bord-financier", description: "description du tableau de bord financier", tags: ["Enseignement supérieur"] },
@@ -35,7 +29,6 @@ const allTabs = [
 
 router.route('/tableaux')
   .get((req, res) => {
-    let tabs = [];
     let data = [];
     if (req.query?.tag && req.query.tag !== 'undefined') {
       data = allTabs.filter((el) => el.tags.includes(req.query.tag));
