@@ -67,9 +67,9 @@ export default function PrctIpccReferencesByCountry() {
       },
     },
     series: [{ data: series }],
-    title: { text: 'Percentage of IPCC references for each country (top 20)' },
+    title: { text: 'Part of IPCC references for each country in % (top 20)' },
     xAxis: { categories: categories, title: { text: 'Country' } },
-    yAxis: { title: { text: 'Percentage of IPCC references' }, labels: {
+    yAxis: { title: { text: 'Part of IPCC references (%)' }, labels: {
       formatter(this: { value: number }) {
         return this.value + '%'; 
       },
