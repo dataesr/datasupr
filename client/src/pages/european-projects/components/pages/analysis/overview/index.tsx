@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import FundedObjectives from "./charts/funded-objectives";
 import SynthesisFocus from "./charts/synthesis-focus";
+import ProjectsTypes1 from "./charts/projects-types-1";
 
 export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -18,6 +19,8 @@ export default function Overview() {
       <SynthesisFocus />
       <div className="fr-my-5w" />
       <FundedObjectives />
+      <div className="fr-my-5w" />
+      <ProjectsTypes1 />
     </Container>
   );
 }
