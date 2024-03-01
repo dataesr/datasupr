@@ -2,15 +2,15 @@
   "country_code": {
     "label": "Pays",
     "icon": "earth-fill",
-    "modalTitle": "Sélectionner un pays",
+    "title": "Sélectionner un pays",
     "values": [
       {
-        "iso3": "DEU",
-        "name_fr": "Allemagne"
+        "id": "DEU",
+        "label": "Allemagne"
       },
       {
-        "iso3": "FRA",
-        "name_fr": "France"
+        "id": "FRA",
+        "label": "France"
       }
     ]
   }

@@ -1,68 +1,66 @@
+import { Button, ButtonGroup, Modal, ModalContent, ModalTitle } from '@dataesr/dsfr-plus';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Button, ButtonGroup, Modal, ModalContent, ModalTitle } from '@dataesr/dsfr-plus';
+
+import filtersConfig from './filters-config.json';
 
 type ItemProps = {
   id: string,
   label: string,
 }[]
 
-import filtersConfig from './filters-config.json';
-
 export default function Filters() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const params = [...searchParams];
-  const [modalTitle, setModalTitle] = useState();
-  const [modalItems, setModalItems] = useState<ItemProps>([]);
-  const [modalFilterId, setModalFilterId] = useState('');
+  const [filterId, setFilterId] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [title, setTitle] = useState();
+  const [values, setValues] = useState<ItemProps>([]);
 
-  const openModal = (key) => {
-    setModalTitle(filtersConfig[key].modalTitle);
-    setModalItems(filtersConfig[key].values.map((item) => ({ id: item.iso3, label: item.name_fr })));
-    setModalFilterId(key);
+  const openModal = (key:string) => {
+    setTitle(filtersConfig[key].modalTitle);
+    setValues(filtersConfig[key].values);
+    setFilterId(key);
     setIsOpen(true);
   }
 
-  function InitializeButton({ param }) {
-    const [key, value] = param;
-
-    return (
-      <Button
-        className="fr-mr-1w"
-        color='purple-glycine'
-        icon={filtersConfig[key].icon}
-        key={key}
-        onClick={() => openModal(key)}
-        size='sm'
-      >
-        {`${filtersConfig[key].label} : ${filtersConfig[key].values.find((item) => item.iso3 === value).name_fr}`}
-      </Button>
-    )
-  }
-
-  const selectItem = (item) => {
-    setSearchParams({ [modalFilterId]: item.id });
+  const selectItem = (item:{ id: string }) => {
+    setSearchParams({ [filterId]: item.id });
     setIsOpen(false);
   };
 
   return (
     <>
       {
-        params.map((param) => (<InitializeButton param={param} />))
+        [...searchParams].forEach((param) => {
+          const [key, value] = param;
+          const filter = filtersConfig[key];
+          return (
+            <Button
+              className="fr-mr-1w"
+              color='purple-glycine'
+              icon={filter.icon}
+              key={key}
+              onClick={() => openModal(key)}
+              size='sm'
+            >
+              {`${filter.label} : ${filter.values.find((item) => item.id === value).label}`}
+            </Button>
+          );
+        })
       }
 
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg">
-        <ModalTitle>{modalTitle}</ModalTitle>
+        <ModalTitle>{title}</ModalTitle>
         <ModalContent>
           <ButtonGroup>
             {
-              modalItems.map((item) => (
+              values.map((value) => (
                 <Button
                   color='purple-glycine'
-                  onClick={() => selectItem({ ...item })}
+                  key={value.id}
+                  onClick={() => selectItem({ ...value })}
                 >
-                  {item.label}
+                  {value.label}
                 </Button>
               ))
             }
