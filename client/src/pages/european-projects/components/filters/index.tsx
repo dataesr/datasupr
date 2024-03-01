@@ -16,14 +16,14 @@ export default function Filters() {
   const [title, setTitle] = useState();
   const [values, setValues] = useState<ItemProps>([]);
 
-  const openModal = (key:string) => {
+  const openModal = (key: string) => {
     setTitle(filtersConfig[key].modalTitle);
     setValues(filtersConfig[key].values);
     setFilterId(key);
     setIsOpen(true);
   }
 
-  const selectItem = (item:{ id: string }) => {
+  const selectItem = (item: { id: string }) => {
     setSearchParams({ [filterId]: item.id });
     setIsOpen(false);
   };
@@ -31,9 +31,10 @@ export default function Filters() {
   return (
     <>
       {
-        [...searchParams].forEach((param) => {
+        [...searchParams].map((param) => {
           const [key, value] = param;
           const filter = filtersConfig[key];
+          if (!filter) return null;
           return (
             <Button
               className="fr-mr-1w"
