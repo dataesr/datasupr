@@ -20,17 +20,20 @@ export default function ChartWrapper({ id, options, legend }) {
 
   return (
     <section>
-      <Title as="h2" look="h4" className="fr-mb-0">{graphConfig.title}</Title>
+      <Title as="h2" look="h4" className="fr-mb-1w">{graphConfig.title}</Title>
       <p className="sources">
         Sources : <a href={graphConfig.sourceURL} target="_blank" rel="noreferrer noopener">{graphConfig.source}</a>
       </p>
+      {
+        graphConfig.subtitle && <Title as="h3" look="h6" className="fr-mb-0">{graphConfig.subtitle}</Title>
+      }
       <figure>
         <HighchartsReact
           highcharts={Highcharts}
           options={options}
         />
       </figure>
-      <div className="graph-footer">
+      <div className="graph-footer fr-pt-1w">
         {legend}
         <div className="share">
           <div className="title">

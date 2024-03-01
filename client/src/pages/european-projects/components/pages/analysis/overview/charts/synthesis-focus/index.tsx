@@ -50,37 +50,37 @@ export default function SynthesisFocus() {
         <Col md={4}>
           <Tile
             description="part capté par les participants du pays"
-            value={`${((dataCurrentCountry_successful.total_fund_eur / dataSuccessful.total_fund_eur) * 100).toFixed(1)}%`}
+            value={`${((dataCurrentCountry_successful.total_fund_eur / dataSuccessful.total_fund_eur) * 100).toFixed(1)} %`}
           />
         </Col>
         <Col md={4}>
           <Tile
             description="part des participants lauréats du pays"
-            value={`${((dataCurrentCountry_successful.total_involved / dataSuccessful.total_involved) * 100).toFixed(1)}%`}
+            value={`${((dataCurrentCountry_successful.total_involved / dataSuccessful.total_involved) * 100).toFixed(1)} %`}
           />
         </Col>
         <Col md={4}>
           <Tile
             description="part des coordinations de projets du pays"
-            value={`${((dataCurrentCountry_successful.total_coordination_number / dataSuccessful.total_coordination_number) * 100).toFixed(1)}%`}
+            value={`${((dataCurrentCountry_successful.total_coordination_number / dataSuccessful.total_coordination_number) * 100).toFixed(1)} %`}
           />
         </Col>
         <Col md={4}>
           <Tile
             description="taux de succès sur les montants"
-            value={`${((dataCurrentCountry_successful.total_fund_eur / dataCurrentCountry_evaluated.total_fund_eur) * 100).toFixed(1)}%`}
+            value={`${((dataCurrentCountry_successful.total_fund_eur / dataCurrentCountry_evaluated.total_fund_eur) * 100).toFixed(1)} %`}
           />
         </Col>
         <Col md={4}>
           <Tile
             description="taux de succès individuel des participants du pays"
-            value={`${((dataCurrentCountry_successful.total_involved / dataCurrentCountry_evaluated.total_involved) * 100).toFixed(1)}%`}
+            value={`${((dataCurrentCountry_successful.total_involved / dataCurrentCountry_evaluated.total_involved) * 100).toFixed(1)} %`}
           />
         </Col>
         <Col md={4}>
           <Tile
             description="taux de succès sur le nombre de projets"
-            value={`${((dataCurrentCountry_successful.total_coordination_number / dataCurrentCountry_evaluated.total_coordination_number) * 100).toFixed(1)}%`}
+            value={`${((dataCurrentCountry_successful.total_coordination_number / dataCurrentCountry_evaluated.total_coordination_number) * 100).toFixed(1)} %`}
           />
         </Col>
       </Row>

@@ -1,6 +1,6 @@
-import { Button, ButtonGroup, Modal, ModalContent, ModalTitle } from '@dataesr/dsfr-plus';
-import { useSearchParams } from 'react-router-dom';
 import { useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
+import { Button, ButtonGroup, Modal, ModalContent, ModalTitle } from '@dataesr/dsfr-plus';
 
 type ItemProps = {
   id: string,
@@ -44,7 +44,6 @@ export default function Filters() {
   const selectItem = (item) => {
     setSearchParams({ [modalFilterId]: item.id });
     setIsOpen(false);
-
   };
 
   return (
