@@ -39,7 +39,7 @@ export default function PrctIpccReferencesByCountry() {
     queryKey: ['ipcc-references'],
     queryFn: () => fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=teds-bibliography`, {
       body: JSON.stringify(query),
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
       method: 'POST',
     }).then((response) => response.json())
   });

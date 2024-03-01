@@ -34,6 +34,12 @@ app.use('/api', router);
 
 app.use(handleErrors);
 
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 // https://ui.dev/react-router-cannot-get-url-refresh
 app.get('/*', function(_, res) {
   res.sendFile(path.join(path.resolve(), 'dist', 'index.html'), function(err) {

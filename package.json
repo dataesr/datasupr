@@ -19,9 +19,12 @@
     "client": "npm -w client run dev",
     "client:docker": "npm -w client run dev:docker",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
+    "dev-win": "concurrently \"npm run server-win\" \"npm run client\"",
     "dev:docker": "concurrently \"npm run server\" \"npm run client:docker\"",
     "preview": "npm run build --mode=${npm_config_mode} && npm -w server start",
     "server": "npm -w server run dev",
-    "start": "npm run dev"
+    "server-win": "npm -w server run dev-win",
+    "start": "npm run dev",
+    "start-win": "npm run dev-win"
   }
 }
