@@ -51,7 +51,7 @@ export default function PrctIpccReferencesByCountry() {
   const series = (data?.aggregations?.by_countries?.buckets ?? []).map((item: { key: string, doc_count: number }) => ({
     color: item.key === 'FR' ? '#cc0000' : '#808080',
     name: item.key,
-    y: Math.round(((item.doc_count * 100) / (data.hits.total.value))*100)/100,
+    y: item.doc_count / data.hits.total.value * 100,
   }));
   const categories = series.map((country) => country.name);
 
@@ -62,21 +62,15 @@ export default function PrctIpccReferencesByCountry() {
       column: {
         dataLabels: { 
           enabled: true,
-          format: '{point.y} %'
-        },
-        tooltip: {
-          pointFormat: '<b>{point.name}</b> is involved in <b>{point.y} %</b> of IPCC references',
+          format: '{point.y:.2f}%'
         },
       },
     },
+    tooltip: { format: '<b>{point.name}</b> is involved in <b>{point.y:.2f}%</b> of IPCC references' },
     series: [{ data: series }],
-    title: { text: 'Percentage of IPCC references for each country (top 20)' },
+    title: { text: 'Percentage of IPCC references by country (top 20)' },
     xAxis: { categories: categories, title: { text: 'Country' } },
-    yAxis: { title: { text: 'Percentage of IPCC references' }, labels: {
-      formatter(this: { value: number }) {
-        return this.value + '%'; 
-      },
-    },},
+    yAxis: { title: { text: 'Percentage of IPCC references' }, labels: { format: '{value}%' } },
   };
 
   return (
