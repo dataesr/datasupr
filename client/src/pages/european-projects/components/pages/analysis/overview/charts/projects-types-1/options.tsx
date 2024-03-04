@@ -1,8 +1,7 @@
-// import { getColorByPillierName } from "./utils";
-
 export default function Options(data) {
   if (!data) return null;
 
+  const filteredData = data.filter((el) => el.total_evaluated && el.total_successful);
 
   return {
     chart: {
@@ -14,7 +13,7 @@ export default function Options(data) {
     credits: { enabled: false },
 
     xAxis: {
-      categories: data.map((item) => item.id),
+      categories: filteredData.map((item) => item.id),
       crosshair: true,
       accessibility: {
         description: 'Actions'
@@ -37,15 +36,15 @@ export default function Options(data) {
     },
     series: [
       {
-        name: 'Projets lauréats',
-        data: data.map((item) => item.total_successful / 1000000),
-        color: "#233E41"
+        name: 'Projets évalués',
+        data: filteredData.map((item) => item.total_evaluated / 1000000),
+        color: "#009099"
       },
       {
-        name: 'Projets évalués',
-        data: data.map((item) => item.total_evaluated / 1000000),
-        color: "#009099"
-      }
+        name: 'Projets lauréats',
+        data: filteredData.map((item) => item.total_successful / 1000000),
+        color: "#233E41"
+      },
     ]
   };
 }

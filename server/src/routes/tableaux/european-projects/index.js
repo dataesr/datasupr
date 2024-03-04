@@ -276,6 +276,182 @@ router.route('/european-projects/analysis-synthese-projects-types-1')
     return res.json(ret)
   });
 
+router.route('/european-projects/analysis-synthese-projects-types-2')
+  .get(async (req, res) => {
+    if (!req.query.country_code) {
+      res.status(400).send('country_code is required');
+      return;
+    }
+    if (req.query.country_code) {
+      req.query.country_code = req.query.country_code.toUpperCase();
+    }
+    const dataSelectedCountry = await db.collection('EP-fr-esr-all-projects-synthese')
+      .aggregate([
+        { $match: { country_code: req.query.country_code } },
+        {
+          $group: {
+            _id: {
+              stage: "$stage",
+              action_id: "$action_id",
+              action_name: "$action_name",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            stage: "$_id.stage",
+            total_fund_eur: 1,
+            action_id: "$_id.action_id",
+            action_name: "$_id.action_name",
+          }
+        },
+        {
+          $group: {
+            _id: {
+              id: "$action_id",
+              name: "$action_name",
+            },
+            total_successful: { $sum: { $cond: [{ $eq: ["$stage", "successful"] }, "$total_fund_eur", 0] } },
+            total_evaluated: { $sum: { $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0] } },
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            id: "$_id.id",
+            name: "$_id.name",
+            total_successful: 1,
+            total_evaluated: 1,
+          }
+        },
+        { $sort: { id: 1 } }
+      ]).toArray();
+
+    const otherCountries = await db.collection('EP-fr-esr-all-projects-synthese')
+      .aggregate([
+        { $match: { country_association_code: "MEMBER-ASSOCIATED" } },
+        {
+          $group: {
+            _id: {
+              stage: "$stage",
+              action_id: "$action_id",
+              action_name: "$action_name",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            stage: "$_id.stage",
+            total_fund_eur: 1,
+            action_id: "$_id.action_id",
+            action_name: "$_id.action_name",
+          }
+        },
+        {
+          $group: {
+            _id: {
+              id: "$action_id",
+              name: "$action_name",
+            },
+            total_successful: { $sum: { $cond: [{ $eq: ["$stage", "successful"] }, "$total_fund_eur", 0] } },
+            total_evaluated: { $sum: { $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0] } },
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            id: "$_id.id",
+            name: "$_id.name",
+            total_successful: 1,
+            total_evaluated: 1,
+          }
+        },
+        { $sort: { id: 1 } }
+      ]).toArray();
+
+    // const data = await db.collection('EP-fr-esr-all-projects-synthese')
+    //   .aggregate([
+    //     { $match: { country_association_code: "MEMBER-ASSOCIATED" } },
+    //     {
+    //       $group: {
+    //         _id: {
+    //           stage: "$stage",
+    //           action_id: "$action_id",
+    //           action_name: "$action_name",
+    //           country_code: "$country_code",
+    //           country_association_code: "$country_association_code",
+    //         },
+    //         total_fund_eur: { $sum: "$fund_eur" },
+    //       },
+    //     },
+    //     {
+    //       $project: {
+    //         _id: 0,
+    //         stage: "$_id.stage",
+    //         total_fund_eur: 1,
+    //         action_id: "$_id.action_id",
+    //         action_name: "$_id.action_name",
+    //         country_code: "$_id.country_code",
+    //         country_association_code: "$_id.country_association_code",
+    //       }
+    //     },
+    //     {
+    //       $group: {
+    //         _id: null,
+    //         selectedCountry: {
+    //           $push: { $cond: [{ $eq: ["$country_code", req.query.country_code] }, "$$ROOT", null] }
+    //         },
+    //         otherCountries: {
+    //           $push: { $cond: [{ $ne: ["$country_code", req.query.country_code] }, "$$ROOT", null] }
+    //         },
+    //       },
+    //     },
+    //     {
+    //       $project: {
+    //         _id: 0,
+    //         selectedCountry: {
+    //           $filter:
+    //           {
+    //             input: "$selectedCountry",
+    //             as: "selectedCountryFiltered",
+    //             cond: { $ne: ["$$selectedCountryFiltered", null] },
+
+    //           }
+    //         },
+    //         otherCountries: {
+    //           $filter:
+    //           {
+    //             input: "$otherCountries",
+    //             as: "otherCountriesFiltered",
+    //             cond: { $ne: ["$$otherCountriesFiltered", null] },
+    //           }
+    //         },
+    //       }
+    //     },
+    //   ]).toArray();
+
+    const data = {
+      selectedCountry: dataSelectedCountry.map((el) => {
+        if (el.total_evaluated === 0) {
+          return { ...el, ratio: 0 }
+        }
+        return { ...el, ratio: el.total_successful / el.total_evaluated * 100 }
+      }),
+      otherCountries: otherCountries.map((el) => {
+        if (el.total_evaluated === 0) {
+          return { ...el, ratio: 0 }
+        }
+        return { ...el, ratio: el.total_successful / el.total_evaluated * 100 }
+      }),
+    };
+
+    return res.json(data)
+  });
+
 router.route('/european-projects/template')
   .get(async (req, res) => {
     return res.json([])

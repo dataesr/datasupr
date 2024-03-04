@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import FundedObjectives from "./charts/funded-objectives";
 import SynthesisFocus from "./charts/synthesis-focus";
 import ProjectsTypes1 from "./charts/projects-types-1";
+import ProjectsTypes2 from "./charts/projects-types-2";
 
 export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,6 +22,8 @@ export default function Overview() {
       <FundedObjectives />
       <div className="fr-my-5w" />
       <ProjectsTypes1 />
+      <div className="fr-my-5w" />
+      <ProjectsTypes2 />
     </Container>
   );
 }
