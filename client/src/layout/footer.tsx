@@ -6,8 +6,9 @@ export default function Footer() {
           <div className="fr-footer__brand fr-enlarge-link">
             <a href="/" title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
               <p className="fr-logo">
-                Intitulé
-                <br />officiel
+                Ministère de<br />
+                l'enseignement supérieur<br />
+                et de la recherche
               </p>
             </a>
           </div>
