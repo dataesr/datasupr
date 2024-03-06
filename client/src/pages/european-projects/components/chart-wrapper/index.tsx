@@ -41,10 +41,17 @@ export default function ChartWrapper({ id, options, legend }) {
       </figure>
       <div className="graph-footer fr-pt-1w">
         {legend}
-        <div className="share">
-          <div className="title">
-            Partager
+
+        <div className="fr-notice fr-notice--info fr-mt-1w">
+          <div className="fr-container">
+            <div className="fr-notice__body">
+              <Text className="description">
+                {graphConfig.description}
+              </Text>
+            </div>
           </div>
+        </div>
+        <div className="share">
           <Button
             color="beige-gris-galet"
             icon="twitter-x-fill"
@@ -53,7 +60,6 @@ export default function ChartWrapper({ id, options, legend }) {
           />
           <Button title="Linkedin" icon="linkedin-box-fill" variant="text" color="beige-gris-galet" />
           <Button title="Linkedin" icon="facebook-circle-fill" variant="text" color="beige-gris-galet" />
-          <br />
           <Button
             color="beige-gris-galet"
             icon="code-s-slash-line"
@@ -65,15 +71,7 @@ export default function ChartWrapper({ id, options, legend }) {
           </Button>
         </div>
       </div>
-      <div className="fr-notice fr-notice--info fr-mt-1w">
-        <div className="fr-container">
-          <div className="fr-notice__body">
-            <Text className="description">
-              {graphConfig.description}
-            </Text>
-          </div>
-        </div>
-      </div>
+
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg">
         <ModalTitle>Intégrer ce graphique dans un autre site</ModalTitle>
         <ModalContent>
