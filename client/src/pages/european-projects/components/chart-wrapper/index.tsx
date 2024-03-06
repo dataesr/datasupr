@@ -20,10 +20,16 @@ export default function ChartWrapper({ id, options, legend }) {
 
   return (
     <section>
-      <Title as="h2" look="h4" className="fr-mb-1w">{graphConfig.title}</Title>
-      <p className="sources">
-        Sources : <a href={graphConfig.sourceURL} target="_blank" rel="noreferrer noopener">{graphConfig.source}</a>
-      </p>
+      {
+        graphConfig.title && (
+          <>
+            <Title as="h2" look="h4" className="fr-mb-1w">{graphConfig.title}</Title>
+            <Text className="sources">
+              Sources : <a href={graphConfig.sourceURL} target="_blank" rel="noreferrer noopener">{graphConfig.source}</a>
+            </Text>
+          </>
+        )
+      }
       {
         graphConfig.subtitle && <Title as="h3" look="h6" className="fr-mb-0">{graphConfig.subtitle}</Title>
       }
@@ -59,9 +65,15 @@ export default function ChartWrapper({ id, options, legend }) {
           </Button>
         </div>
       </div>
-      <Text className="description">
-        {graphConfig.description}
-      </Text>
+      <div className="fr-notice fr-notice--info fr-mt-1w">
+        <div className="fr-container">
+          <div className="fr-notice__body">
+            <Text className="description">
+              {graphConfig.description}
+            </Text>
+          </div>
+        </div>
+      </div>
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg">
         <ModalTitle>Intégrer ce graphique dans un autre site</ModalTitle>
         <ModalContent>
