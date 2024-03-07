@@ -26,7 +26,7 @@ export default function Top10Beneficiaries() {
         <ul className="legend">
           <li style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
             <div style={{ width: "20px", height: "20px", background: "#233E41", marginRight: "10px" }}></div>
-            <span>Total des subventions (M €)</span>
+            <span>Total des subventions en euros €</span>
           </li>
           <li style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
             <div style={{ width: "20px", height: "20px", background: "#D75521", marginRight: "10px" }}></div>

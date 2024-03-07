@@ -529,7 +529,20 @@ router.route('/european-projects/analysis-positioning-top-10-beneficiaries')
         }
       ]).toArray();
 
-    return res.json(data.slice(0, 10))
+    let acc = 0;
+    const total_fund_eur = data.reduce((acc, el) => acc + el.total_fund_eur, 0);
+    const dataReturn = {
+      total_fund_eur,
+      top10: data.slice(0, 10).map((el) => {
+        acc += el.total_fund_eur;
+        return {
+          ...el,
+          influence: acc / total_fund_eur * 100,
+        }
+      })
+    }
+
+    return res.json(dataReturn)
   });
 
 
