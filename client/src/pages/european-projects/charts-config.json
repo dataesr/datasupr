@@ -23,5 +23,32 @@
     "source": "Commission européenne, Cordis",
     "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "projectsTypes2",
+    "title": "",
+    "subtitle": "Taux de succès sur le montants par type de financement",
+    "description": "Attention EIT",
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-2"
+  },
+  {
+    "id": "mainBeneficiaries",
+    "title": "",
+    "subtitle": "Principaux bénéficiaires qui concentrent 50 % des subventions allouées aux équipes",
+    "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries"
+  },
+  {
+    "id": "top10beneficiaries",
+    "title": "",
+    "subtitle": "Principaux pays bénéficiaires",
+    "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-beneficiaries"
   }
 ]

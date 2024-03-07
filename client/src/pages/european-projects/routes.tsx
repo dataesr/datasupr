@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import Main from './index.tsx';
 import AnalysisHomepage from './components/pages/analysis/index.tsx';
 import Overview from './components/pages/analysis/overview/index.tsx';
+import Positioning from './components/pages/analysis/positioning/index.tsx';
 
 export default function EuropeanProjectsRoutes() {
   return (
@@ -10,7 +11,7 @@ export default function EuropeanProjectsRoutes() {
       <Route path="/" element={<Main />}>
         <Route path="/analyse" element={<AnalysisHomepage />}>
           <Route path="synthese" element={<Overview />} />
-          <Route path="positionnement" element={<div>Positionnement</div>} />
+          <Route path="positionnement" element={<Positioning />} />
           <Route path="collaboration" element={<div>Collaboration</div>} />
           <Route path="evolution" element={<div>Evolution</div>} />
           <Route path="appel-a-projets" element={<div>Appel à projets</div>} />
