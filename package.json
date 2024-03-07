@@ -8,11 +8,7 @@
     "server"
   ],
   "dependencies": {
-    "@tanstack/react-query": "^5.24.1",
-    "concurrently": "^8.0.1",
-    "highcharts": "^11.3.0",
-    "highcharts-react-official": "^3.2.1",
-    "react": "^18.2.0"
+    "concurrently": "^8.0.1"
   },
   "scripts": {
     "build": "rm -rf server/dist && npm -w client run build -- --mode ${npm_config_mode} --emptyOutDir --outDir ../server/dist",
@@ -26,8 +22,5 @@
     "server-win": "npm -w server run dev-win",
     "start": "npm run dev",
     "start-win": "npm run dev-win"
-  },
-  "optionalDependencies": {
-    "win-node-env": "^0.6.1"
   }
 }
