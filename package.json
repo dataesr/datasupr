@@ -1,7 +1,7 @@
 {
   "name": "datasupr",
   "private": true,
-  "version": "1.0.0",  
+  "version": "1.0.0",
   "type": "module",
   "workspaces": [
     "client",
@@ -26,5 +26,8 @@
     "server-win": "npm -w server run dev-win",
     "start": "npm run dev",
     "start-win": "npm run dev-win"
+  },
+  "optionalDependencies": {
+    "win-node-env": "^0.6.1"
   }
 }
