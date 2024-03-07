@@ -11,7 +11,7 @@ export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    if (searchParams.get('country_code') === null) {
+    if (!searchParams.get('country_code')) {
       setSearchParams({ country_code: 'FRA' });
     }
   }, [searchParams, setSearchParams]);

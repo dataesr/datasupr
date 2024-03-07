@@ -41,5 +41,14 @@
     "source": "Commission européenne, Cordis",
     "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries"
+  },
+  {
+    "id": "top10beneficiaries",
+    "title": "",
+    "subtitle": "Principaux pays bénéficiaires",
+    "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-beneficiaries"
   }
 ]

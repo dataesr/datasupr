@@ -502,11 +502,55 @@ router.route('/european-projects/analysis-synthese-main-beneficiaries')
     return res.json({ total_fund_eur: total, list })
   });
 
+router.route('/european-projects/analysis-positioning-top-10-beneficiaries')
+  .get(async (req, res) => {
+    const data = await db.collection('EP-fr-esr-all-projects-entities')
+      .aggregate([
+        { $match: { framework: "Horizon Europe", country_code: { $nin: ["ZOE", "ZOI"] } } },
+        {
+          $group: {
+            _id: {
+              name_fr: "$country_name_fr",
+              id: "$country_code",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            name_fr: "$_id.name_fr",
+            id: "$_id.id",
+            total_fund_eur: 1,
+          }
+        },
+        {
+          $sort: { total_fund_eur: -1 }
+        }
+      ]).toArray();
+
+    let acc = 0;
+    const total_fund_eur = data.reduce((acc, el) => acc + el.total_fund_eur, 0);
+    const dataReturn = {
+      total_fund_eur,
+      top10: data.slice(0, 10).map((el) => {
+        acc += el.total_fund_eur;
+        return {
+          ...el,
+          influence: acc / total_fund_eur * 100,
+        }
+      })
+    }
+
+    return res.json(dataReturn)
+  });
+
+
+
 router.route('/european-projects/template')
   .get(async (req, res) => {
 
 
     return res.json([])
   });
-
 export default router;
