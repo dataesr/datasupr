@@ -20,7 +20,7 @@ export default function Top10Beneficiaries() {
   if (isLoading || !data) return <Template />
   return (
     <ChartWrapper
-      id="top10benefifiaries"
+      id="top10beneficiaries"
       options={options(data)}
       legend={(
         <ul className="legend">

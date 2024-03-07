@@ -21,7 +21,6 @@ export default function Options(data) {
     },
     yAxis: [
       {
-        // min: 0,
         title: {
           text: 'Total subventions en euros €'
         }
