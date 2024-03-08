@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Modal, ModalContent, ModalTitle } from '@dataesr/dsfr-plus';
+import { Button, Modal, ModalContent, ModalTitle } from '@dataesr/dsfr-plus';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
@@ -17,7 +17,7 @@ export default function Filters() {
   const [values, setValues] = useState<ItemProps>([]);
 
   const openModal = (key: string) => {
-    setTitle(filtersConfig[key].modalTitle);
+    setTitle(filtersConfig[key].title);
     setValues(filtersConfig[key].values);
     setFilterId(key);
     setIsOpen(true);
@@ -44,7 +44,7 @@ export default function Filters() {
               onClick={() => openModal(key)}
               size='sm'
             >
-              {`${filter.label} : ${filter.values.find((item) => item.id === value).label}`}
+              {`${filter.label} : ${filter.values.find((item) => item.id === value)?.label ?? 'inconnu'}`}
             </Button>
           );
         })
@@ -53,19 +53,23 @@ export default function Filters() {
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg">
         <ModalTitle>{title}</ModalTitle>
         <ModalContent>
-          <ButtonGroup>
+          <select
+            className="fr-select"
+            id="select"
+            name="select"
+            onChange={(e) => selectItem({ id: e.target.value })}
+          >
             {
               values.map((value) => (
-                <Button
-                  color='purple-glycine'
+                <option
                   key={value.id}
-                  onClick={() => selectItem({ ...value })}
+                  value={value.id}
                 >
                   {value.label}
-                </Button>
+                </option>
               ))
             }
-          </ButtonGroup>
+          </select>
         </ModalContent>
       </Modal>
     </>
