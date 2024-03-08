@@ -44,7 +44,7 @@ export default function Filters() {
               onClick={() => openModal(key)}
               size='sm'
             >
-              {`${filter.label} : ${filter.values.find((item) => item.id === value)?.label || 'inconnu'}`}
+              {`${filter.label} : ${filter.values.find((item) => item.id === value)?.label ?? 'inconnu'}`}
             </Button>
           );
         })
@@ -57,7 +57,7 @@ export default function Filters() {
             className="fr-select"
             id="select"
             name="select"
-            onChange={(e) => { selectItem({ id: e.target.value }) }}
+            onChange={(e) => selectItem({ id: e.target.value })}
           >
             {
               values.map((value) => (
