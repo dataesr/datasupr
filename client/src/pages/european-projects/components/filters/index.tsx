@@ -17,7 +17,7 @@ export default function Filters() {
   const [values, setValues] = useState<ItemProps>([]);
 
   const openModal = (key: string) => {
-    setTitle(filtersConfig[key].modalTitle);
+    setTitle(filtersConfig[key].title);
     setValues(filtersConfig[key].values);
     setFilterId(key);
     setIsOpen(true);
