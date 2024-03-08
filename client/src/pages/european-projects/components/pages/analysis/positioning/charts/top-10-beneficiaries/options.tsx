@@ -1,4 +1,4 @@
-export default function Options(data) {
+export default function Options(data, country_code) {
   if (!data) return null;
 
   return {
@@ -35,9 +35,12 @@ export default function Options(data) {
     series: [{
       name: 'Total subventions en euros',
       type: "column",
-      colors: ['#233E41'],
       colorByPoint: true,
-      data: data.top10.map((item) => [item.name_fr, item.total_fund_eur]),
+      data: data.top10.map((item) => ({
+        name: item.name_fr,
+        y: item.total_fund_eur,
+        color: (item.id == country_code) ? '#6E445A' : '#233E41'
+      })),
       tooltip: {
         pointFormat: 'Total des subventions : <b>{point.y:.1f} €</b>'
       },

@@ -21,7 +21,7 @@ export default function Top10Beneficiaries() {
   return (
     <ChartWrapper
       id="top10beneficiaries"
-      options={options(data)}
+      options={options(data, searchParams.get('country_code') ?? null)}
       legend={(
         <ul className="legend">
           <li style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
