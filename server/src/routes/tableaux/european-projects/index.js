@@ -545,11 +545,35 @@ router.route('/european-projects/analysis-positioning-top-10-beneficiaries')
     return res.json(dataReturn)
   });
 
+router.route('/european-projects/countries')
+  .get(async (req, res) => {
+    const data = await db.collection('EP-fr-esr-all-projects-synthese')
+      .aggregate([
+        {
+          $group: {
+            _id: {
+              id: "$country_code",
+              label: "$country_name_fr",
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: "$_id.id",
+            label: "$_id.label",
+          }
+        },
+        { $sort: { label: 1 } }
+      ]).toArray();
+
+    res.json(data);
+  });
 
 
+// TODO: remove this route
 router.route('/european-projects/template')
   .get(async (req, res) => {
-
 
     return res.json([])
   });
