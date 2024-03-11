@@ -55,7 +55,16 @@
     "id": "fundingRankingSub",
     "title": "",
     "subtitle": "Subventions demandées et obtenues (M€) par pays",
-    "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+    "description": null,
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "fundingRankingSubSuccessRate",
+    "title": "",
+    "subtitle": "Taux de succès sur les montants par pays",
+    "description": null,
     "source": "Commission européenne, Cordis",
     "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"

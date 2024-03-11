@@ -4,7 +4,7 @@ export default function Options(data) {
   return {
     chart: {
       type: "bar",
-      height: 500,
+      height: 400,
     },
     title: { text: "" },
     legend: { enabled: false },
