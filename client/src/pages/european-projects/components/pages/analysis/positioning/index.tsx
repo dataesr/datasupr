@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import Top10Beneficiaries from "./charts/top-10-beneficiaries";
 import Intro from "./charts/intro";
+import FundingRanking from "./charts/funding-ranking";
 
 export default function Positioning() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,6 +22,7 @@ export default function Positioning() {
       <div className="fr-my-5w" />
       <Top10Beneficiaries />
       <div className="fr-my-5w" />
+      <FundingRanking />
 
     </Container>
   );

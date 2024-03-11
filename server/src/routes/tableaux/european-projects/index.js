@@ -572,6 +572,76 @@ router.route('/european-projects/countries')
     res.json(data);
   });
 
+router.route('/european-projects/analysis-positioning-top-10-funding-ranking')
+  .get(async (req, res) => {
+    const data = await db.collection('EP-fr-esr-all-projects-synthese')
+      .aggregate([
+        { $match: { country_code: { $nin: ["ZOE", "ZOI"] } } },
+        {
+          $group: {
+            _id: {
+              id: "$country_code",
+              label: "$country_name_fr",
+              stage: "$stage",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: "$_id.id",
+            label: "$_id.label",
+            total_fund_eur: 1,
+            stage: "$_id.stage",
+          }
+        },
+        {
+          $group: {
+            _id: {
+              id: "$id",
+              name: "$label",
+            },
+            total_successful: { $sum: { $cond: [{ $eq: ["$stage", "successful"] }, "$total_fund_eur", 0] } },
+            total_evaluated: { $sum: { $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0] } },
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            id: "$_id.id",
+            name: "$_id.name",
+            total_successful: 1,
+            total_evaluated: 1,
+          }
+        },
+      ]).toArray();
+
+    const dataWithRatio = data.map((el) => {
+      if (el.total_evaluated === 0) {
+        return { ...el, ratio: 0 }
+      }
+      return { ...el, ratio: el.total_successful / el.total_evaluated * 100 }
+    });
+
+    // sort by total_sccessful
+    const dataSortedSuccessful = dataWithRatio.sort((a, b) => b.total_successful - a.total_successful);
+
+    // add successful rank to returned data
+    for (let i = 0; i < dataSortedSuccessful.length; i++) {
+      dataWithRatio.find((el) => el.id === dataSortedSuccessful[i].id).rank_successful = i + 1;
+    }
+
+    // sort by total_evaluated
+    const dataSortedEvaluated = dataWithRatio.sort((a, b) => b.total_evaluated - a.total_evaluated);
+
+    // add evaluated rank to returned data
+    for (let i = 0; i < dataSortedEvaluated.length; i++) {
+      dataWithRatio.find((el) => el.id === dataSortedEvaluated[i].id).rank_evaluated = i + 1;
+    }
+
+    return res.json(dataWithRatio)
+  });
 
 // TODO: remove this route
 router.route('/european-projects/template')
