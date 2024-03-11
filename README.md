@@ -1,10 +1,11 @@
-# DOADIFY
+# DATASUPR
 
 ## Development
 
-Doadify is fully functional in development.
+DatasupR is fully functional in development.
 
-Simply run : `npm start`
+To install it : `npm i`
+To run it locally : `npm start`
 
 And the project should be available via your favorite browser at http://localhost:5173/.
 
@@ -12,4 +13,4 @@ And the project should be available via your favorite browser at http://localhos
 ## Build for production
 
 The react client app is served by the node server in production.
-Vite build creates a build in `/dist` folder. This folder has to be moved to the `/server` folder.
+Vite build creates a build in `/dist` folder. This folder has to be moved into the `/server` folder.
