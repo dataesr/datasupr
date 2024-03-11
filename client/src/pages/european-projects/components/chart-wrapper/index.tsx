@@ -41,16 +41,17 @@ export default function ChartWrapper({ id, options, legend }) {
       </figure>
       <div className="graph-footer fr-pt-1w">
         {legend}
-
-        <div className="fr-notice fr-notice--info fr-mt-1w">
-          <div className="fr-container">
-            <div className="fr-notice__body">
-              <Text className="description">
-                {graphConfig.description}
-              </Text>
+        {graphConfig.description && (
+          <div className="fr-notice fr-notice--info fr-mt-1w">
+            <div className="fr-container">
+              <div className="fr-notice__body">
+                <Text className="description">
+                  {graphConfig.description}
+                </Text>
+              </div>
             </div>
           </div>
-        </div>
+        )}
         <div className="share">
           <Button
             color="beige-gris-galet"
