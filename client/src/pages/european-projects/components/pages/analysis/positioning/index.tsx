@@ -22,7 +22,8 @@ export default function Positioning() {
       <div className="fr-my-5w" />
       <Top10Beneficiaries />
       <div className="fr-my-5w" />
-      <FundingRanking />
+      <Title as="h2" look="h4">Focus sur les subventions</Title>
+      <FundingRanking indicateur="total_successful" />
 
     </Container>
   );
