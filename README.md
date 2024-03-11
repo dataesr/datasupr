@@ -1,10 +1,11 @@
-# DOADIFY
+# DATASUPR
 
 ## Development
 
-Doadify is fully functional in development.
+DatasupR is fully functional in development.
 
-Simply run : `npm start`
+To install it : `npm i`
+To run it locally : `npm start`
 
 And the project should be available via your favorite browser at http://localhost:5173/.
 
