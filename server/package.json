@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development nodemon --experimental-specifier-resolution=node index.js",
-    "start": "NODE_ENV=production node --experimental-specifier-resolution=node index.js",
+    "start": "NODE_ENV=production node --experimental-specifier-resolution=node index.js"
   },
   "author": "doad",
   "license": "MIT",
