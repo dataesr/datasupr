@@ -31,7 +31,13 @@ export default function ChartWrapper({ id, options, legend }) {
         )
       }
       {
-        graphConfig.subtitle && <Title as="h3" look="h6" className="fr-mb-0">{graphConfig.subtitle}</Title>
+        graphConfig.subtitle && (
+          <Title as={graphConfig.title ? "h3" : "h2"}
+            look="h6"
+            className="fr-mb-0">
+            {graphConfig.subtitle}
+          </Title>
+        )
       }
       <figure>
         <HighchartsReact

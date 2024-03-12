@@ -68,5 +68,41 @@
     "source": "Commission européenne, Cordis",
     "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "fundingRankingCoordination",
+    "title": "",
+    "subtitle": "Nombre de coordinations de projets déposés et lauréats",
+    "description": null,
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "fundingRankingCoordinationSuccessRate",
+    "title": "",
+    "subtitle": "Taux de succès sur le nombre de coordinations de projets lauréats",
+    "description": null,
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "fundingRankingInvolved",
+    "title": "",
+    "subtitle": "Nombre de candidats et de participants",
+    "description": null,
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "fundingRankingInvolvedSuccessRate",
+    "title": "",
+    "subtitle": "Taux de succès individuel des participants",
+    "description": null,
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
   }
 ]
