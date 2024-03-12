@@ -28,6 +28,7 @@
     "nodemon": "^2.0.20"
   },
   "optionalDependencies": {
+    "@esbuild/win32-x64": "^0.20.1",
     "win-node-env": "^0.6.1"
   }
 }
