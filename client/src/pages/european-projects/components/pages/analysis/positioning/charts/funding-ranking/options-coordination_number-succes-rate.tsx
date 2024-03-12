@@ -1,8 +1,8 @@
-export default function optionSuccessRate(data) {
+export default function optionCoordinationNumberSuccessRate(data) {
   if (!data) return null;
 
   // average ratio
-  const total = data.reduce((acc, el) => acc + el.ratio, 0);
+  const total = data.reduce((acc, el) => acc + el.ratio_coordination_number, 0);
   const average = total / data.length;
 
   return {
@@ -44,7 +44,7 @@ export default function optionSuccessRate(data) {
         groupPadding: 0,
         data: data.map((item) => ({
           name: item.name,
-          y: item.ratio,
+          y: item.ratio_coordination_number,
         })),
         dataLabels: [{
           align: 'right',

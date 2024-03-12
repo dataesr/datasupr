@@ -2,18 +2,47 @@ import { useQuery } from "@tanstack/react-query";
 
 import Template from "./template";
 import { GetData } from "./query";
-import options from "./options";
-import optionSuccessRate from "./options-succes-rate";
+import optionsSub from "./options";
+import optionSubSuccessRate from "./options-succes-rate";
+import optionsCoordinationNumber from "./options-coordination_number";
+import optionCoordinationNumberSuccessRate from "./options-coordination_number-succes-rate";
+import optionsNumberInvolved from "./options-number_involved";
+import optionNumberInvolvedSuccessRate from "./options-number_involved-succes-rate";
 import ChartWrapper from "../../../../../chart-wrapper";
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 
-export default function FundingRanking({ indicateur }) {
+export default function FundingRanking({ indicateurId }) {
   const { data, isLoading } = useQuery({
     queryKey: ["fundingRanking"],
     queryFn: () => GetData()
   })
 
   if (isLoading || !data) return <Template />
+
+  let successGraphId, sortIndicateur = "";
+  let optionsChart, optionChartSuccess;
+  switch (indicateurId) {
+    case "fundingRankingSub":
+      successGraphId = "fundingRankingSubSuccessRate";
+      sortIndicateur = "total_successful";
+      optionsChart = optionsSub;
+      optionChartSuccess = optionSubSuccessRate;
+      break;
+
+    case "fundingRankingCoordination":
+      successGraphId = "fundingRankingCoordinationSuccessRate";
+      sortIndicateur = "total_coordination_number_successful";
+      optionsChart = optionsCoordinationNumber;
+      optionChartSuccess = optionCoordinationNumberSuccessRate;
+      break;
+
+    case "fundingRankingInvolved":
+      successGraphId = "fundingRankingInvolvedSuccessRate";
+      sortIndicateur = "total_number_involved_successful";
+      optionsChart = optionsNumberInvolved;
+      optionChartSuccess = optionNumberInvolvedSuccessRate;
+      break;
+  }
 
   const prepareData = (data, sortKey) => {
     return data.sort((a, b) => b[sortKey] - a[sortKey]).slice(0, 10);
@@ -24,8 +53,8 @@ export default function FundingRanking({ indicateur }) {
       <Row>
         <Col>
           <ChartWrapper
-            id="fundingRankingSub"
-            options={options(prepareData(data, indicateur))}
+            id={indicateurId}
+            options={optionsChart(prepareData(data, sortIndicateur))}
             legend={(
               <ul className="legend">
                 <li style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
@@ -42,8 +71,8 @@ export default function FundingRanking({ indicateur }) {
         </Col>
         <Col>
           <ChartWrapper
-            id="fundingRankingSubSuccessRate"
-            options={optionSuccessRate(prepareData(data, indicateur))}
+            id={successGraphId}
+            options={optionChartSuccess(prepareData(data, sortIndicateur))}
             legend={(
               <ul className="legend">
                 <li style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
