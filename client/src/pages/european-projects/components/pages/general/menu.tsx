@@ -14,7 +14,7 @@ export default function Menu() {
         <li className="fr-nav__item">
           <Link
             className="fr-nav__link"
-            href={`/european-projects/analyse/synthese?${params}`}
+            href={`/european-projects/general/synthese?${params}`}
             aria-current={pathname.split('/')[2] === 'synthese' ? 'page' : undefined}
           >
             Synthèse
@@ -23,7 +23,7 @@ export default function Menu() {
         <li className="fr-nav__item">
           <Link
             className="fr-nav__link"
-            href={`/european-projects/analyse/positionnement?${params}`}
+            href={`/european-projects/general/positionnement?${params}`}
             aria-current={pathname.split('/')[2] === 'positionnement' ? 'page' : undefined}
           >
             Positionnement
@@ -32,7 +32,7 @@ export default function Menu() {
         <li className="fr-nav__item">
           <Link
             className="fr-nav__link"
-            href={`/european-projects/analyse/collaboration?${params}`}
+            href={`/european-projects/general/collaboration?${params}`}
             aria-current={pathname.split('/')[2] === 'collaboration' ? 'page' : undefined}
           >
             Collaboration
@@ -41,7 +41,7 @@ export default function Menu() {
         <li className="fr-nav__item">
           <Link
             className="fr-nav__link"
-            href={`/european-projects/analyse/evolution?${params}`}
+            href={`/european-projects/general/evolution?${params}`}
             aria-current={pathname.split('/')[2] === 'evolution' ? 'page' : undefined}
           >
             Evolution
@@ -50,7 +50,7 @@ export default function Menu() {
         <li className="fr-nav__item">
           <Link
             className="fr-nav__link"
-            href={`/european-projects/analyse/appel-a-projets?${params}`}
+            href={`/european-projects/general/appel-a-projets?${params}`}
             aria-current={pathname.split('/')[2] === 'appel-a-projets' ? 'page' : undefined}
           >
             Appel à projets
@@ -59,28 +59,10 @@ export default function Menu() {
         <li className="fr-nav__item">
           <Link
             className="fr-nav__link"
-            href={`/european-projects/analyse/beneficiaires?${params}`}
+            href={`/european-projects/general/beneficiaires?${params}`}
             aria-current={pathname.split('/')[2] === 'beneficiaires' ? 'page' : undefined}
           >
             Bénéficiaires
-          </Link>
-        </li>
-        <li className="fr-nav__item">
-          <Link
-            className="fr-nav__link"
-            href={`/european-projects/analyse/erc?${params}`}
-            aria-current={pathname.split('/')[2] === 'erc' ? 'page' : undefined}
-          >
-            ERC
-          </Link>
-        </li>
-        <li className="fr-nav__item">
-          <Link
-            className="fr-nav__link"
-            href={`/european-projects/analyse/msca?${params}`}
-            aria-current={pathname.split('/')[2] === 'msca' ? 'page' : undefined}
-          >
-            MSCA
           </Link>
         </li>
       </ul>
