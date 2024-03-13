@@ -16,71 +16,28 @@ export default function CustomSideMenu() {
         <Col xs={12} md={3} className="fr-pl-2w">
           <SideMenu title="" sticky fullHeight className="padded-sidemenu">
             <Link
-              current={is('/european-projects/analyse')}
-              href={`/european-projects/analyse?${filtersParams}`}
-            // aria-current={pathname.split('/')[2] === 'general' ? 'page' : undefined}
+              current={is('/european-projects/general')}
+              href={`/european-projects/general?${filtersParams}`}
             >
-              Analyse
+              Général
             </Link>
             <Link
-              current={is('/european-projects/liste-des-appels-a-projets')}
-              href={`/european-projects/liste-des-appels-a-projets?${filtersParams}`}
+              current={is('/european-projects/projets-collaboratifs')}
+              href={`/european-projects/projets-collaboratifs?${filtersParams}`}
             >
-              Liste des appels à projets
+              Projets collaboratifs
             </Link>
             <Link
-              current={is('/european-projects/chiffres-cles-tableau')}
-              href={`/european-projects/chiffres-cles-tableau?${filtersParams}`}
+              current={is('/european-projects/msca')}
+              href={`/european-projects/msca?${filtersParams}`}
             >
-              Chiffres-clés tableau
+              MSCA
             </Link>
             <Link
-              current={is('/european-projects/objectifs')}
-              href={`/european-projects/objectifs?${filtersParams}`}
+              current={is('/european-projects/erc')}
+              href={`/european-projects/erc?${filtersParams}`}
             >
-              Objectifs
-            </Link>
-            <Link
-              current={is('/european-projects/collaborations-chiffrees')}
-              href={`/european-projects/collaborations-chiffrees?${filtersParams}`}
-            >
-              Collaborations chiffrées
-            </Link>
-            <Link
-              current={is('/european-projects/pays')}
-              href={`/european-projects/pays?${filtersParams}`}
-            >
-              Pays
-            </Link>
-            <Link
-              current={is('/european-projects/pays-evolution')}
-              href={`/european-projects/pays-evolution?${filtersParams}`}
-            >
-              Pays évolution
-            </Link>
-            <Link
-              current={is('/european-projects/typologie-des-participants')}
-              href={`/european-projects/typologie-des-participants?${filtersParams}`}
-            >
-              Typologie des participants
-            </Link>
-            <Link
-              current={is('/european-projects/participants-francais')}
-              href={`/european-projects/participants-francais?${filtersParams}`}
-            >
-              Participants français
-            </Link>
-            <Link
-              current={is('/european-projects/participants-tous-pays')}
-              href={`/european-projects/participants-tous-pays?${filtersParams}`}
-            >
-              Participants tous pays
-            </Link>
-            <Link
-              current={is('/european-projects/participants-hors-pays')}
-              href={`/european-projects/participants-hors-pays?${filtersParams}`}
-            >
-              Participants hors pays
+              ERC
             </Link>
           </SideMenu>
         </Col>
