@@ -10,82 +10,46 @@ export default function CustomBreadcrumb({ pageKey }) {
       label: "Tableau de bord des projets européens - Horizon Europe",
       link: "/european-projects",
     },
-    "analyse": {
-      label: "Analyse",
-      link: "/european-projects/analyse",
+    "general": {
+      label: "General",
+      link: "/european-projects/general",
     },
     "synthese": {
       label: "Synthèse Horizon Europe",
-      link: "/european-projects/analyse/synthese",
+      link: "/european-projects/general/synthese",
     },
     "positionnement": {
       label: "Positionnement",
-      link: "/european-projects/analyse/positionnement",
+      link: "/european-projects/general/positionnement",
     },
     "collaboration": {
       label: "Collaboration",
-      link: "/european-projects/analyse/collaboration",
+      link: "/european-projects/general/collaboration",
     },
     "evolution": {
       label: "Evolution",
-      link: "/european-projects/analyse/evolution",
+      link: "/european-projects/general/evolution",
     },
     "appel-a-projets": {
       label: "Appel à projets",
-      link: "/european-projects/analyse/appel-a-projets",
+      link: "/european-projects/general/appel-a-projets",
     },
     "beneficiaires": {
       label: "Bénéficiaires",
-      link: "/european-projects/analyse/beneficiaires",
+      link: "/european-projects/general/beneficiaires",
     },
     "erc": {
       label: "ERC",
-      link: "/european-projects/analyse/erc",
+      link: "/european-projects/erc",
     },
     "msca": {
       label: "MSCA",
-      link: "/european-projects/analyse/msca",
+      link: "/european-projects/msca",
     },
-    "liste-des-appels-a-projets": {
-      label: "Liste des appels à projets",
-      link: "/european-projects/liste-des-appels-a-projets",
-    },
-    "chiffres-cles-tableau": {
-      label: "Chiffres-clés tableau",
-      link: "/european-projects/chiffres-cles-tableau",
-    },
-    "objectifs": {
-      label: "Objectifs",
-      link: "/european-projects/objectifs",
-    },
-    "collaborations-chiffrees": {
-      label: "Collaborations chiffrées",
-      link: "/european-projects/collaborations-chiffrees",
-    },
-    "pays": {
-      label: "Pays",
-      link: "/european-projects/pays",
-    },
-    "pays-evolution": {
-      label: "Pays évolution",
-      link: "/european-projects/pays-evolution",
-    },
-    "typologie-des-participants": {
-      label: "Typologie des participants",
-      link: "/european-projects/typologie-des-participants",
-    },
-    "participants-francais": {
-      label: "Participants français",
-      link: "/european-projects/participants-francais",
-    },
-    "participants-tous-pays": {
-      label: "Participants tous pays",
-      link: "/european-projects/participants-tous-pays",
-    },
-    "participants-hors-pays": {
-      label: "Participants hors pays",
-      link: "/european-projects/participants-hors-pays",
-    },
+    "projets-collaboratifs": {
+      label: "Projets collaboratifs",
+      link: "/european-projects/projets-collaboratifs",
+    }
   };
 
   const currentPage = pages[pageKey];
