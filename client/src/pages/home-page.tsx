@@ -156,6 +156,13 @@ export default function HomePage() {
               title="TEDS"
               to="/teds" />
           </Col>
+          <Col md={4}>
+            <GenericCard
+              description="Tableau de bord financier des universités"
+              image={<img className="fr-responsive-img" src={atlasImg} alt="" />}
+              title="Finance"
+              to="/finance-universite" />
+          </Col>
         </Row>
       </Container>
       <footer className="fr-footer fr-mt-5w" role="contentinfo" id="footer">
