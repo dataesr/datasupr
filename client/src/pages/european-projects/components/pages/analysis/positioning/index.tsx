@@ -33,9 +33,7 @@ export default function Positioning() {
         <option value="fundingRankingCoordination">Focus sur les coordinations de projets</option>
         <option value="fundingRankingInvolved">Focus sur les candidats et  participants</option>
       </select>
-      {selectedChart === 'fundingRankingSub' && <FundingRanking indicateurId="fundingRankingSub" />}
-      {selectedChart === 'fundingRankingCoordination' && <FundingRanking indicateurId="fundingRankingCoordination" />}
-      {selectedChart === 'fundingRankingInvolved' && <FundingRanking indicateurId="fundingRankingInvolved" />}
+      <FundingRanking indicateurId={selectedChart} />
     </Container>
   );
 }
