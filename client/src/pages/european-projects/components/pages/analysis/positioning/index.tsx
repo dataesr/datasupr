@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Container, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
@@ -8,6 +8,7 @@ import FundingRanking from "./charts/funding-ranking";
 
 export default function Positioning() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedChart, setSelectedChart] = useState('fundingRankingSub');
 
   useEffect(() => {
     if (!searchParams.get('country_code')) {
@@ -22,14 +23,19 @@ export default function Positioning() {
       <div className="fr-my-5w" />
       <Top10Beneficiaries />
       <div className="fr-my-5w" />
-      <Title as="h2" look="h4">Focus sur les subventions</Title>
-      <FundingRanking indicateurId="fundingRankingSub" />
-      <div className="fr-my-5w" />
-      <Title as="h2" look="h4">Focus sur les coordinations de projets</Title>
-      <FundingRanking indicateurId="fundingRankingCoordination" />
-      <div className="fr-my-5w" />
-      <Title as="h2" look="h4">Focus sur les candidats et  participants</Title>
-      <FundingRanking indicateurId="fundingRankingInvolved" />
+      <Title as="h2" look="h4">Top 10 par indicateur</Title>
+      <select
+        className="fr-select fr-mb-3w"
+        onChange={(e) => setSelectedChart(e.target.value)}
+        value={selectedChart}
+      >
+        <option value="fundingRankingSub">Focus sur les subventions</option>
+        <option value="fundingRankingCoordination">Focus sur les coordinations de projets</option>
+        <option value="fundingRankingInvolved">Focus sur les candidats et  participants</option>
+      </select>
+      {selectedChart === 'fundingRankingSub' && <FundingRanking indicateurId="fundingRankingSub" />}
+      {selectedChart === 'fundingRankingCoordination' && <FundingRanking indicateurId="fundingRankingCoordination" />}
+      {selectedChart === 'fundingRankingInvolved' && <FundingRanking indicateurId="fundingRankingInvolved" />}
     </Container>
   );
 }
