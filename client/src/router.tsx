@@ -7,6 +7,7 @@ import HomePage from './pages/home-page.tsx';
 import Integration from './pages/integration/index.tsx';
 import OpenAlexRoutes from './pages/open-alex/routes.tsx';
 import TedsRoutes from './pages/teds/routes.tsx';
+import FinanceUniversityRoutes from './pages/finance-university/routes.tsx';
 
 export default function Router() {
   return (
@@ -17,6 +18,7 @@ export default function Router() {
         <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
         <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
         <Route path="/teds/*" element={<TedsRoutes />} />
+        <Route path="/finance-universite/*" element={< FinanceUniversityRoutes />} />
       </Route>
       <Route path="/integration" element={<Integration />} />
       <Route path="*" element={<div>404 atlas</div>} />
