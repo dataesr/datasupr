@@ -13,7 +13,7 @@ export default function RetractedByCountry() {
   }
 
   const series = (data?.group_by?.slice(0, 20) ?? []).map((country) => ({
-    color: country.key === 'FR' ? '#cc0000' : '#808080',
+    color: country.key.slice(-2) === 'FR' ? '#cc0000' : '#808080',
     name: country.key_display_name,
     y: country.count,
   }));
