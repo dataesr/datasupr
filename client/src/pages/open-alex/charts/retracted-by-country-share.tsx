@@ -20,7 +20,7 @@ export default function RetractedByCountryShare() {
   const series = (data1?.group_by?.slice(0, 20) ?? []).map((country) => {
     const total = data2.group_by.find((item) => item.key === country.key).count;
     return ({
-      color: country.key === 'FR' ? '#cc0000' : '#808080',
+      color: country.key.slice(-2) === 'FR' ? '#cc0000' : '#808080',
       name: country.key_display_name,
       total,
       y: country.count / total * 10000,

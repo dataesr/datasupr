@@ -8,7 +8,7 @@ export default function RetractedByCountryByYear() {
     queryFn: () => fetch('https://api.openalex.org/works?page=1&filter=is_retracted:true&group_by=authorships.countries').then((response) => response.json())
   });
 
-  const countries = (data1?.group_by?.slice(0, 20) ?? []).map((item) => ({ iso2: item.key, name: item.key_display_name }));
+  const countries = (data1?.group_by?.slice(0, 20) ?? []).map((item) => ({ iso2: item.key.slice(-2), name: item.key_display_name }));
   const results = useQueries({
     queries: countries.map((country: { iso2:string, name:string }, index:number) => {
       return {
