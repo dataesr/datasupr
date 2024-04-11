@@ -5,8 +5,6 @@ import PrctIpccPublicationsByCountryByWg2 from './charts/PrctIpccPublicationsByC
 import PrctIpccPublicationsByCountryByWg2cross from './charts/PrctIpccPublicationsByCountryByWg2cross';
 import PrctIpccPublicationsByCountryByWg3 from './charts/PrctIpccPublicationsByCountryByWg3';
 
-import './gallery.css'
-
 export default function Welcome() {
   return (
     <>

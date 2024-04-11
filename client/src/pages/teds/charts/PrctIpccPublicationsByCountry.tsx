@@ -54,7 +54,7 @@ export default function PrctIpccReferencesByCountry() {
     y: item.doc_count / data.hits.total.value * 100,
     number: item.doc_count
   }));
-  const categories = series.map((country) => country.name +'<br>'+'('+country.number+')');
+  const categories = series.map((country) => `${country.name} <br> (${country.number})`);
 
   const options = {
     chart: { type: 'column' },
