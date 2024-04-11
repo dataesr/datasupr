@@ -50,6 +50,7 @@ export default function PrctIpccReferencesByCountry() {
 
   const series = (data?.aggregations?.by_countries?.buckets ?? []).map((item: { key: string, doc_count: number }) => ({
     color: item.key === 'France' ? '#cc0000' : '#808080',
+    name: item.key,
     y: item.doc_count / data.hits.total.value * 100,
     number: item.doc_count
   }));
@@ -70,7 +71,9 @@ export default function PrctIpccReferencesByCountry() {
     series: [{ data: series }],
     title: { text: 'Part of IPCC references by country (top 20)' },
     xAxis: { categories , title: { text: 'Country' } },
-    yAxis: { title: { text: 'Part of IPCC publications' }, labels: { format: '{text}%' } },
+    yAxis: { title: { text: 'Part of IPCC publications' }, labels: {
+      format: '{value}%'
+    },},
   };
 
   return (

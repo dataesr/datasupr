@@ -38,6 +38,7 @@ export default function PrctIpccReferencesByCountry() {
 
   const series = (data?.aggregations?.by_countries?.buckets ?? []).map((item: { key: string, doc_count: number }) => ({
     color: item.key === 'France' ? '#cc0000' : '#808080',
+    name: item.key,
     y: item.doc_count / data.hits.total.value * 100,
     number: item.doc_count
   }));
