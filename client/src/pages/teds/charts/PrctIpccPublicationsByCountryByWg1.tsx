@@ -58,11 +58,8 @@ export default function PrctIpccReferencesByCountry() {
     series: [{ data: series }],
     title: { text: 'Part of publications on Physical Sciences by country (WG1 - top 10)' },
     xAxis: { categories , title: { text: 'Country' } },
-    yAxis: { title: { text: 'Part of IPCC publications' }, labels: {
-      formatter(this: { value: number }) {
-        return this.value + '%'; 
-      },
-    },},
+    yAxis: { title: { text: 'Part of IPCC publications' }, labels: { format: '{text}%' }},
+  },
   };
 
   return (
