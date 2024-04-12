@@ -1,60 +1,30 @@
-import { useQuery } from '@tanstack/react-query';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import buildSeries from './utils/UseSeries.js';
+import QueryResponse from './utils/UseQueryResponse.js'
 
-const { VITE_APP_SERVER_URL } = import.meta.env;
+
 
 export default function PrctIpccReferencesByCountry() {
-  const query = {
-    size: 0,
-    query: {
-      bool: {
-        must: [
-          {
-            bool: {
-              should: [
-                { term: { 'ipcc.wg.keyword': '1' } },
-                { term: { 'ipcc.wg.keyword': '2' } },
-                { term: { 'ipcc.wg.keyword': '2_cross' } },
-                { term: { 'ipcc.wg.keyword': '3' } },
-              ],
-              minimum_should_match: 1,
-            },
-          },
-        ],
-      },
-    },
-    aggs: {
-      by_countries: {
-        terms: {
-          field: 'countries.keyword',
-          size: 20,
-        },
-      },
-    },
-    track_total_hits: true,
-  }
 
-  const { data, isLoading } = useQuery({
-    queryKey: ['ipcc-references'],
-    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=teds-bibliography`, {
-      body: JSON.stringify(query),
-      headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' },
-      method: 'POST',
-    }).then((response) => response.json())
-  });
+  const body = {
+    should: [
+      { term: { 'ipcc.wg.keyword': '1' } },
+      { term: { 'ipcc.wg.keyword': '2' } },
+      { term: { 'ipcc.wg.keyword': '2_cross' } },
+      { term: { 'ipcc.wg.keyword': '3' } },
+    ],
+    minimum_should_match: 1,
+  };
+
+  const {data, isLoading} = QueryResponse(body, 20, '')
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
 
-  const series = (data?.aggregations?.by_countries?.buckets ?? []).map((item: { key: string, doc_count: number }) => ({
-    color: item.key === 'France' ? '#cc0000' : '#808080',
-    name: item.key,
-    y: item.doc_count / data.hits.total.value * 100,
-    number: item.doc_count
-  }));
-  const categories = series.map((country) => `${country.name} <br> (${country.number})`);
+  const {series, categories}= buildSeries(data)
+
 
   const options = {
     chart: { type: 'column' },
