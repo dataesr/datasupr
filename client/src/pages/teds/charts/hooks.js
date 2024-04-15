@@ -77,6 +77,9 @@ function useOptions(series, categories, ip) {
         format: "{value}%",
       },
     },
+    credits: {
+      enabled: false,
+    },
   };
 }
 
