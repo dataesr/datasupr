@@ -9,10 +9,12 @@ import PrctIpccPublicationsByCountryByWg3 from './charts/PrctIpccPublicationsByC
 export default function Welcome() {
   return (
     <>
+    <Container>
     <Title as="h2" className="fr-mb-2w">
       Part de publications pour le rapport du GIEC par pays (top 20)
     </Title>
-    <PrctIpccPublicationsByCountry />
+      <PrctIpccPublicationsByCountry />
+    </Container>
     <Container>
       <Title as="h2" className="fr-mb-2w">
         Part de publications pour les différents groupes du rapport du GIEC par pays (top 10)
@@ -34,10 +36,12 @@ export default function Welcome() {
       </Col>
       </Row>
     </Container>
-    <Title as="h2" className="fr-mb-2w">
-      Part de publications pour le rapport de l'IPBES par pays (top 20)
-    </Title>
-    <PrctIpbesPublicationsByCountry />
+    <Container>
+      <Title as="h2" className="fr-mb-2w">
+        Part de publications pour le rapport de l'IPBES par pays (top 20)
+      </Title>
+      <PrctIpbesPublicationsByCountry />
+    </Container>
     </>
   );
 }
