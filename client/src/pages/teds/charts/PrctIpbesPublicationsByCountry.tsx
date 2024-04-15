@@ -30,7 +30,7 @@ export default function PrctIpbesPublicationsByCountry() {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const options = useOptions(series, categories, "IPBES");
-  options.title = { text: "Part of IPBES references by country (top 20)" };
+  options.title = { text: "Part of IPBES publications by country (top 20)" };
 
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 }

@@ -25,7 +25,7 @@ export default function PrctIpccReferencesByCountry() {
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const options = useOptions(series, categories, "IPCC");
-  options.title = { text: "Part of IPCC references by country (top 20)" };
+  options.title = { text: "Part of IPCC publications by country (top 20)" };
 
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 }
