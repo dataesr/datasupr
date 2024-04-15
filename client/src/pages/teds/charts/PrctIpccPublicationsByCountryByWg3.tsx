@@ -4,11 +4,11 @@ import HighchartsReact from "highcharts-react-official";
 import { useQueryResponse, useSeries, useOptions } from "./hooks";
 
 export default function PrctIpccReferencesByCountry() {
-  const body = {
+  const bool = {
     must: [{ match: { "ipcc.wg.keyword": "3" } }],
   };
 
-  const { data, isLoading } = useQueryResponse(body, 10, "3");
+  const { data, isLoading } = useQueryResponse(bool, 10, "3");
 
   if (isLoading) {
     return <div>Loading...</div>;

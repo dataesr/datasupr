@@ -4,7 +4,7 @@ import HighchartsReact from "highcharts-react-official";
 import { useQueryResponse, useSeries, useOptions } from "./hooks";
 
 export default function PrctIpbesPublicationsByCountry() {
-  const body = {
+  const bool = {
     should: [
       { term: { "ipbes.chapter.keyword": "1" } },
       { term: { "ipbes.chapter.keyword": "2.1_drivers" } },
@@ -19,7 +19,7 @@ export default function PrctIpbesPublicationsByCountry() {
     minimum_should_match: 1,
   };
 
-  const { data, isLoading } = useQueryResponse(body, 20, "IPBES");
+  const { data, isLoading } = useQueryResponse(bool, 20, "IPBES");
 
   if (isLoading) {
     return <div>Loading...</div>;

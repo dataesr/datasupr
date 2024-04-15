@@ -2,24 +2,22 @@ import { useQuery } from "@tanstack/react-query";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-function useBuildQuery(body, s) {
-  const query = {
+function useBuildQuery(bool, size) {
+  return {
     size: 0,
     query: {
-      bool: body,
+      bool,
     },
     aggs: {
       by_countries: {
         terms: {
           field: "countries.keyword",
-          size: s,
+          size,
         },
       },
     },
     track_total_hits: true,
   };
-
-  return query;
 }
 
 function useQueryResponse(body, s, i) {
@@ -57,7 +55,7 @@ function useSeries(data) {
 }
 
 function useOptions(series, categories, ip) {
-  const options = {
+  return {
     chart: { type: "column" },
     legend: { enabled: false },
     plotOptions: {
@@ -80,8 +78,6 @@ function useOptions(series, categories, ip) {
       },
     },
   };
-
-  return options;
 }
 
 export { useBuildQuery, useQueryResponse, useSeries, useOptions };

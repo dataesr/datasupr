@@ -4,7 +4,7 @@ import HighchartsReact from "highcharts-react-official";
 import { useQueryResponse, useSeries, useOptions } from "./hooks";
 
 export default function PrctIpccReferencesByCountry() {
-  const body = {
+  const bool = {
     should: [
       { term: { "ipcc.wg.keyword": "1" } },
       { term: { "ipcc.wg.keyword": "2" } },
@@ -14,7 +14,7 @@ export default function PrctIpccReferencesByCountry() {
     minimum_should_match: 1,
   };
 
-  const { data, isLoading } = useQueryResponse(body, 20, "");
+  const { data, isLoading } = useQueryResponse(bool, 20, "");
 
   if (isLoading) {
     return <div>Loading...</div>;
