@@ -1,5 +1,5 @@
-//import Highcharts from "highcharts";
-//import HighchartsReact from "highcharts-react-official";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 import { useQueryResponse } from "./hooks";
 
@@ -98,23 +98,26 @@ export default function PrctIpccReferencesFiveCountry() {
     "France",
     "China",
   ];
-  /* const tot = {
-    "United States": 19002,
-    "United Kingdom": 10400,
-    Germany: 6538,
-    France: 3925,
-    China: 4084,
-  }; */
 
-  for (let i = 0; i <= filters.length; i++) {
-    console.log(i);
+  const tot = [19002, 10400, 6538, 3925, 4084];
+
+  const datas = [
+    useQueryResponse(filters[0], 50, `filter_${0}`),
+    useQueryResponse(filters[1], 50, `filter_${1}`),
+    useQueryResponse(filters[2], 50, `filter_${2}`),
+    useQueryResponse(filters[3], 50, `filter_${3}`),
+    useQueryResponse(filters[4], 50, `filter_${4}`),
+    useQueryResponse(filters[5], 50, `filter_${5}`),
+    useQueryResponse(filters[6], 50, `filter_${6}`),
+  ];
+  const values = [];
+
+  for (let i = 0; i < filters.length; i++) {
     const value = { name: filters_names[i], data: {} };
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { data, isLoading } = useQueryResponse(filters[i], 50, `filter_${i}`);
+    const { data, isLoading } = datas[i];
     if (isLoading) {
       return <div>Loading...</div>;
     }
-
     const by_countries = data.aggregations.by_countries.buckets;
 
     for (let j = 0; j < by_countries.length; j++) {
@@ -125,54 +128,78 @@ export default function PrctIpccReferencesFiveCountry() {
         }
       }
     }
-    /* console.log(value);
-    if (i === 0) {
-      const values = {
-        name: filters_names[i],
-        data: [
-          value.data[groups[0]],
-          value.data[groups[1]],
-          value.data[groups[2]],
-          value.data[groups[3]],
-          value.data[groups[4]],
-        ],
-      };
-      console.log(values);
-    } else {
-      values.push({
-        name: filters_names[i],
-        data: [
-          value.data[groups[0]],
-          value.data[groups[1]],
-          value.data[groups[2]],
-          value.data[groups[3]],
-          value.data[groups[4]],
-        ],
-      });
-      console.log(values);
-    } */
+
+    values.push({
+      name: filters_names[i],
+      data: [
+        value.data[groups[0]],
+        value.data[groups[1]],
+        value.data[groups[2]],
+        value.data[groups[3]],
+        value.data[groups[4]],
+      ],
+    });
   }
-  /* const options = {
+
+  const sum_values = [];
+
+  for (let k = 0; k < 5; k++) {
+    sum_values.push(
+      tot[k] -
+        (values[0].data[k] +
+          values[1].data[k] +
+          values[2].data[k] +
+          values[3].data[k] +
+          values[4].data[k] +
+          values[5].data[k] +
+          values[6].data[k])
+    );
+  }
+
+  values.push({
+    name: "multi WG",
+    data: [
+      sum_values[0],
+      sum_values[1],
+      sum_values[2],
+      sum_values[3],
+      sum_values[4],
+    ],
+  });
+
+  const options = {
     chart: { type: "column" },
-    legend: { enabled: false },
+    title: { text: "Part of IPCC publications for five countries" },
+    legend: { enabled: true },
     plotOptions: {
       column: {
+        stacking: "percent",
         dataLabels: {
           enabled: true,
-          format: "{point.y:.1f}%",
+          format: "{point.percentage:.0f}%",
         },
       },
     },
-    series: [{ data: values }],
-    xAxis: { groups, title: { text: "Country" } },
+    tooltip: {
+      pointFormat:
+        '<span style="color:{series.color}">{series.name}</span>' +
+        ": <b>{point.y}</b> ({point.percentage:.0f}%)<br/>",
+      shared: true,
+    },
+    series: values,
+    xAxis: {
+      categories: groups,
+      title: { text: "Country" },
+    },
     yAxis: {
-      title: { text: `Part of IPCC publications` },
-      labels: {
-        format: "{value}%",
+      min: 0,
+      title: {
+        text: "Part of IPCC publications",
       },
     },
     credits: {
       enabled: false,
     },
-  }; */
+  };
+  return <HighchartsReact highcharts={Highcharts} options={options} />;
 }

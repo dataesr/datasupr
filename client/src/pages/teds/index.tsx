@@ -11,6 +11,11 @@ export default function Welcome() {
   return (
     <>
       <Container>
+        <Title as="h1" className="fr-mb-2w">
+          Rapport du GIEC
+        </Title>
+      </Container>
+      <Container>
         <Title as="h2" className="fr-mb-2w">
           Part de publications pour le rapport du GIEC par pays (top 20)
         </Title>
@@ -43,6 +48,11 @@ export default function Welcome() {
           Structures des contribitions pour cinq pays
         </Title>
         <PrctIpccPublicationsForFiveCountries />
+      </Container>
+      <Container>
+        <Title as="h1" className="fr-mb-2w">
+          Rapport de l'IPBES
+        </Title>
       </Container>
       <Container>
         <Title as="h2" className="fr-mb-2w">
