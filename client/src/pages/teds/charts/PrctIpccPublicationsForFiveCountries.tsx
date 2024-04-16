@@ -6,71 +6,106 @@ import { useQueryResponse } from "./hooks";
 export default function PrctIpccReferencesFiveCountry() {
   const list_wg = ["1", "2", "2_cross", "3"];
 
+  const filter0 = {
+    body: {
+      should: [
+        { term: { "ipcc.wg.keyword": "1" } },
+        { term: { "ipcc.wg.keyword": "2" } },
+        { term: { "ipcc.wg.keyword": "2_cross" } },
+        { term: { "ipcc.wg.keyword": "3" } },
+      ],
+      minimum_should_match: 1,
+    },
+    name: "all",
+  };
+
   const filter1 = {
-    must: [{ match: { "ipcc.wg.keyword": list_wg[0] } }],
-    must_not: [
-      { match: { "ipcc.wg.keyword": list_wg[1] } },
-      { match: { "ipcc.wg.keyword": list_wg[2] } },
-      { match: { "ipcc.wg.keyword": list_wg[3] } },
-    ],
+    body: {
+      must: [{ match: { "ipcc.wg.keyword": list_wg[0] } }],
+      must_not: [
+        { match: { "ipcc.wg.keyword": list_wg[1] } },
+        { match: { "ipcc.wg.keyword": list_wg[2] } },
+        { match: { "ipcc.wg.keyword": list_wg[3] } },
+      ],
+    },
+    name: "Sciences Physique (WG1)",
   };
   const filter2 = {
-    must: [{ match: { "ipcc.wg.keyword": list_wg[1] } }],
-    must_not: [
-      { match: { "ipcc.wg.keyword": list_wg[0] } },
-      { match: { "ipcc.wg.keyword": list_wg[2] } },
-      { match: { "ipcc.wg.keyword": list_wg[3] } },
-    ],
+    body: {
+      must: [{ match: { "ipcc.wg.keyword": list_wg[1] } }],
+      must_not: [
+        { match: { "ipcc.wg.keyword": list_wg[0] } },
+        { match: { "ipcc.wg.keyword": list_wg[2] } },
+        { match: { "ipcc.wg.keyword": list_wg[3] } },
+      ],
+    },
+    name: "Adaptations (WG2)",
   };
   const filter2cross = {
-    must: [{ match: { "ipcc.wg.keyword": list_wg[2] } }],
-    must_not: [
-      { match: { "ipcc.wg.keyword": list_wg[0] } },
-      { match: { "ipcc.wg.keyword": list_wg[1] } },
-      { match: { "ipcc.wg.keyword": list_wg[3] } },
-    ],
+    body: {
+      must: [{ match: { "ipcc.wg.keyword": list_wg[2] } }],
+      must_not: [
+        { match: { "ipcc.wg.keyword": list_wg[0] } },
+        { match: { "ipcc.wg.keyword": list_wg[1] } },
+        { match: { "ipcc.wg.keyword": list_wg[3] } },
+      ],
+    },
+    name: "Adaptations - risques locaux (WG2 cross)",
   };
   const filter3 = {
-    must: [{ match: { "ipcc.wg.keyword": list_wg[3] } }],
-    must_not: [
-      { match: { "ipcc.wg.keyword": list_wg[0] } },
-      { match: { "ipcc.wg.keyword": list_wg[1] } },
-      { match: { "ipcc.wg.keyword": list_wg[2] } },
-    ],
+    body: {
+      must: [{ match: { "ipcc.wg.keyword": list_wg[3] } }],
+      must_not: [
+        { match: { "ipcc.wg.keyword": list_wg[0] } },
+        { match: { "ipcc.wg.keyword": list_wg[1] } },
+        { match: { "ipcc.wg.keyword": list_wg[2] } },
+      ],
+    },
+    name: "Atténuations (WG3)",
   };
   const filter12 = {
-    must: [
-      { match: { "ipcc.wg.keyword": list_wg[0] } },
-      { match: { "ipcc.wg.keyword": list_wg[1] } },
-    ],
-    must_not: [
-      { match: { "ipcc.wg.keyword": list_wg[2] } },
-      { match: { "ipcc.wg.keyword": list_wg[3] } },
-    ],
+    body: {
+      must: [
+        { match: { "ipcc.wg.keyword": list_wg[0] } },
+        { match: { "ipcc.wg.keyword": list_wg[1] } },
+      ],
+      must_not: [
+        { match: { "ipcc.wg.keyword": list_wg[2] } },
+        { match: { "ipcc.wg.keyword": list_wg[3] } },
+      ],
+    },
+    name: "Sciences Physique et Adaptations",
   };
 
   const filter22cross = {
-    must: [
-      { match: { "ipcc.wg.keyword": list_wg[1] } },
-      { match: { "ipcc.wg.keyword": list_wg[2] } },
-    ],
-    must_not: [
-      { match: { "ipcc.wg.keyword": list_wg[0] } },
-      { match: { "ipcc.wg.keyword": list_wg[3] } },
-    ],
+    body: {
+      must: [
+        { match: { "ipcc.wg.keyword": list_wg[1] } },
+        { match: { "ipcc.wg.keyword": list_wg[2] } },
+      ],
+      must_not: [
+        { match: { "ipcc.wg.keyword": list_wg[0] } },
+        { match: { "ipcc.wg.keyword": list_wg[3] } },
+      ],
+    },
+    name: "Adaptations et Adaptations - risques locaux",
   };
   const filter23 = {
-    must: [
-      { match: { "ipcc.wg.keyword": list_wg[1] } },
-      { match: { "ipcc.wg.keyword": list_wg[3] } },
-    ],
-    must_not: [
-      { match: { "ipcc.wg.keyword": list_wg[0] } },
-      { match: { "ipcc.wg.keyword": list_wg[2] } },
-    ],
+    body: {
+      must: [
+        { match: { "ipcc.wg.keyword": list_wg[1] } },
+        { match: { "ipcc.wg.keyword": list_wg[3] } },
+      ],
+      must_not: [
+        { match: { "ipcc.wg.keyword": list_wg[0] } },
+        { match: { "ipcc.wg.keyword": list_wg[2] } },
+      ],
+    },
+    name: "Adaptation et Atténuation",
   };
 
   const filters = [
+    filter0,
     filter1,
     filter2,
     filter2cross,
@@ -80,18 +115,7 @@ export default function PrctIpccReferencesFiveCountry() {
     filter23,
   ];
 
-  const filters_names = [
-    "Sciences Physique (WG1)",
-    "Adaptations (WG2)",
-    "Adaptations - risques locaux (WG2 cross)",
-    "Atténuations (WG3)",
-    "Sciences Physique et Adaptations",
-    "Adaptations et Adaptations - risques locaux",
-    "Adaptation et Atténuation",
-    "Multi WG",
-  ];
-
-  const groups = [
+  const countries = [
     "United States",
     "United Kingdom",
     "Germany",
@@ -99,73 +123,46 @@ export default function PrctIpccReferencesFiveCountry() {
     "China",
   ];
 
-  const tot = [19002, 10400, 6538, 3925, 4084];
-
-  const datas = [
-    useQueryResponse(filters[0], 50, `filter_${0}`),
-    useQueryResponse(filters[1], 50, `filter_${1}`),
-    useQueryResponse(filters[2], 50, `filter_${2}`),
-    useQueryResponse(filters[3], 50, `filter_${3}`),
-    useQueryResponse(filters[4], 50, `filter_${4}`),
-    useQueryResponse(filters[5], 50, `filter_${5}`),
-    useQueryResponse(filters[6], 50, `filter_${6}`),
+  const responses = [
+    useQueryResponse(filter0.body, 50, "filter_7"),
+    useQueryResponse(filter1.body, 50, "filter_0"),
+    useQueryResponse(filter2.body, 50, "filter_1"),
+    useQueryResponse(filter2cross.body, 50, "filter_2"),
+    useQueryResponse(filter3.body, 50, "filter_3"),
+    useQueryResponse(filter12.body, 50, "filter_4"),
+    useQueryResponse(filter22cross.body, 50, "filter_5"),
+    useQueryResponse(filter23.body, 50, "filter_6"),
   ];
-  const values = [];
 
-  for (let i = 0; i < filters.length; i++) {
-    const value = { name: filters_names[i], data: {} };
-    const { data, isLoading } = datas[i];
-    if (isLoading) {
-      return <div>Loading...</div>;
-    }
-    const by_countries = data.aggregations.by_countries.buckets;
+  const loadings = responses.map((response) => response.isLoading);
+  const isLoad = (currentValue) => currentValue === true;
 
-    for (let j = 0; j < by_countries.length; j++) {
-      for (let k = 0; k < groups.length; k++) {
-        if (groups[k] === by_countries[j].key) {
-          value.data[groups[k]] = by_countries[j].doc_count;
-          break;
-        }
-      }
-    }
-
-    values.push({
-      name: filters_names[i],
-      data: [
-        value.data[groups[0]],
-        value.data[groups[1]],
-        value.data[groups[2]],
-        value.data[groups[3]],
-        value.data[groups[4]],
-      ],
-    });
+  if (loadings.some(isLoad)) {
+    return <div>Loading...</div>;
   }
 
-  const sum_values = [];
+  const total = countries.map(
+    (item) =>
+      responses[0].data.aggregations.by_countries.buckets.find(
+        (country) => country.key === item
+      ).doc_count
+  );
 
-  for (let k = 0; k < 5; k++) {
-    sum_values.push(
-      tot[k] -
-        (values[0].data[k] +
-          values[1].data[k] +
-          values[2].data[k] +
-          values[3].data[k] +
-          values[4].data[k] +
-          values[5].data[k] +
-          values[6].data[k])
-    );
-  }
+  const values = [{}, {}, {}, {}, {}, {}, {}];
+  const c = [];
+  const publicationNumber = [];
 
-  values.push({
-    name: "multi WG",
-    data: [
-      sum_values[0],
-      sum_values[1],
-      sum_values[2],
-      sum_values[3],
-      sum_values[4],
-    ],
-  });
+  //filters.map((filter, index) => (values[index]["name"] = filter[index].name));
+
+  responses.map((response) =>
+    publicationNumber.push(
+      response.data.aggregations.by_countries.buckets
+        .filter((country) => countries.includes(country.key))
+        .forEach((country) => (c[country.key] = country.doc_count))
+    )
+  );
+
+  console.log(c);
 
   const options = {
     chart: { type: "column" },
@@ -188,11 +185,10 @@ export default function PrctIpccReferencesFiveCountry() {
     },
     series: values,
     xAxis: {
-      categories: groups,
+      categories: countries,
       title: { text: "Country" },
     },
     yAxis: {
-      min: 0,
       title: {
         text: "Part of IPCC publications",
       },
