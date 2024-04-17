@@ -1,7 +1,7 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-import { useQueryResponse } from "./hooks";
+import { useQueryResponse, useOptions } from "./hooks";
 
 export default function PrctIpccReferencesFiveCountry() {
   const list_wg = ["1", "2", "2_cross", "3"];
@@ -9,10 +9,10 @@ export default function PrctIpccReferencesFiveCountry() {
   const filter0 = {
     body: {
       should: [
-        { term: { "ipcc.wg.keyword": "1" } },
-        { term: { "ipcc.wg.keyword": "2" } },
-        { term: { "ipcc.wg.keyword": "2_cross" } },
-        { term: { "ipcc.wg.keyword": "3" } },
+        { term: { "ipcc.wg.keyword": list_wg[0] } },
+        { term: { "ipcc.wg.keyword": list_wg[1] } },
+        { term: { "ipcc.wg.keyword": list_wg[2] } },
+        { term: { "ipcc.wg.keyword": list_wg[3] } },
       ],
       minimum_should_match: 1,
     },
@@ -105,7 +105,6 @@ export default function PrctIpccReferencesFiveCountry() {
   };
 
   const filters = [
-    filter0,
     filter1,
     filter2,
     filter2cross,
@@ -124,7 +123,6 @@ export default function PrctIpccReferencesFiveCountry() {
   ];
 
   const responses = [
-    useQueryResponse(filter0.body, 50, "filter_7"),
     useQueryResponse(filter1.body, 50, "filter_0"),
     useQueryResponse(filter2.body, 50, "filter_1"),
     useQueryResponse(filter2cross.body, 50, "filter_2"),
@@ -134,6 +132,8 @@ export default function PrctIpccReferencesFiveCountry() {
     useQueryResponse(filter23.body, 50, "filter_6"),
   ];
 
+  const response_total = useQueryResponse(filter0.body, 50, "filter_7");
+
   const loadings = responses.map((response) => response.isLoading);
   const isLoad = (currentValue) => currentValue === true;
 
@@ -141,33 +141,71 @@ export default function PrctIpccReferencesFiveCountry() {
     return <div>Loading...</div>;
   }
 
+  const values = [
+    { name: "", data: [] },
+    { name: "", data: [] },
+    { name: "", data: [] },
+    { name: "", data: [] },
+    { name: "", data: [] },
+    { name: "", data: [] },
+    { name: "", data: [] },
+  ];
+
+  const buckets = responses.map((response) =>
+    response.data.aggregations.by_countries.buckets.filter((country) =>
+      countries.includes(country.key)
+    )
+  );
+
+  values.map((value, index) => {
+    (value.name = filters[index].name),
+      (value.data = [
+        buckets[index].find((country) => country.key === countries[0])
+          .doc_count,
+        buckets[index].find((country) => country.key === countries[1])
+          .doc_count,
+        buckets[index].find((country) => country.key === countries[2])
+          .doc_count,
+        buckets[index].find((country) => country.key === countries[3])
+          .doc_count,
+        buckets[index].find((country) => country.key === countries[4])
+          .doc_count,
+      ]);
+  });
+
+  if (response_total.isLoading) {
+    return <div>Loading...</div>;
+  }
+
   const total = countries.map(
     (item) =>
-      responses[0].data.aggregations.by_countries.buckets.find(
+      response_total.data.aggregations.by_countries.buckets.find(
         (country) => country.key === item
       ).doc_count
   );
 
-  const values = [{}, {}, {}, {}, {}, {}, {}];
-  const c = [];
-  const publicationNumber = [];
-
-  //filters.map((filter, index) => (values[index]["name"] = filter[index].name));
-
-  responses.map((response) =>
-    publicationNumber.push(
-      response.data.aggregations.by_countries.buckets
-        .filter((country) => countries.includes(country.key))
-        .forEach((country) => (c[country.key] = country.doc_count))
-    )
+  const sum_publications = countries.map(
+    (item, index) =>
+      total[index] -
+      responses
+        .map(
+          (response) =>
+            response.data.aggregations.by_countries.buckets.find(
+              (country) => country.key === item
+            ).doc_count
+        )
+        .reduce((accumulator, currentValue) => accumulator + currentValue)
   );
 
-  console.log(c);
+  values.push({ name: "Multi WG", data: sum_publications });
 
-  const options = {
-    chart: { type: "column" },
-    title: { text: "Part of IPCC publications for five countries" },
+  console.log(values);
+
+  const options = useOptions(values, countries, "IPCC");
+
+  Object.assign(options, {
     legend: { enabled: true },
+    title: { text: "Part of IPCC publications for five countries" },
     plotOptions: {
       column: {
         stacking: "percent",
@@ -184,18 +222,6 @@ export default function PrctIpccReferencesFiveCountry() {
       shared: true,
     },
     series: values,
-    xAxis: {
-      categories: countries,
-      title: { text: "Country" },
-    },
-    yAxis: {
-      title: {
-        text: "Part of IPCC publications",
-      },
-    },
-    credits: {
-      enabled: false,
-    },
-  };
+  });
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 }
