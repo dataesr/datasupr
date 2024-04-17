@@ -1,4 +1,5 @@
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+
 import PrctIpccPublicationsByCountry from "./charts/PrctIpccPublicationsByCountry";
 import PrctIpbesPublicationsByCountry from "./charts/PrctIpbesPublicationsByCountry";
 import PrctIpccPublicationsByCountryByWg1 from "./charts/PrctIpccPublicationsByCountryByWg1";
