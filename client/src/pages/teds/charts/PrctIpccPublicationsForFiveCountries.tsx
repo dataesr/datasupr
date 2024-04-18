@@ -138,10 +138,10 @@ export default function PrctIpccReferencesFiveCountry() {
     filter_ipcc.name
   );
 
-  const loadings = responses.map((response) => response.isLoading);
-  const isLoad = (currentValue) => currentValue === true;
-
-  if (loadings.some(isLoad) || response_total.isLoading) {
+  if (
+    responses.map((response) => response.isLoading).some((item) => item) ||
+    response_total.isLoading
+  ) {
     return <div>Loading...</div>;
   }
 
