@@ -141,7 +141,7 @@ export default function PrctIpccReferencesFiveCountry() {
   const loadings = responses.map((response) => response.isLoading);
   const isLoad = (currentValue) => currentValue === true;
 
-  if (loadings.some(isLoad)) {
+  if (loadings.some(isLoad) || response_total.isLoading) {
     return <div>Loading...</div>;
   }
 
@@ -170,10 +170,6 @@ export default function PrctIpccReferencesFiveCountry() {
       ],
     });
   });
-
-  if (response_total.isLoading) {
-    return <div>Loading...</div>;
-  }
 
   values.push({
     name: "Multi WG",
