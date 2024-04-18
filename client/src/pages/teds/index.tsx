@@ -13,17 +13,20 @@ export default function Welcome() {
     <>
       <Container as="main">
         <Title as="h1" className="fr-mb-2w">
+          Transition écologique pour un développement soutenable
+        </Title>
+        <Title as="h2" className="fr-mb-2w">
           Rapport du GIEC
         </Title>
         <Row gutters>
           <Col md={12}>
-            <Title as="h2" className="fr-mb-2w">
+            <Title as="h3" className="fr-mb-2w">
               Part de publications pour le rapport du GIEC par pays (top 20)
             </Title>
             <PrctIpccPublicationsByCountry />
           </Col>
         </Row>
-        <Title as="h2" className="fr-mb-2w">
+        <Title as="h3" className="fr-mb-2w">
           Part de publications pour les différents groupes du rapport du GIEC
           par pays (top 10)
         </Title>
@@ -45,7 +48,7 @@ export default function Welcome() {
         </Row>
         <Row gutters>
           <Col md={12}>
-            <Title as="h2" className="fr-mb-2w">
+            <Title as="h3" className="fr-mb-2w">
               Structures des contribitions pour cinq pays
             </Title>
             <PrctIpccPublicationsForFiveCountries />
@@ -53,14 +56,14 @@ export default function Welcome() {
         </Row>
         <Row gutters>
           <Col md={12}>
-            <Title as="h1" className="fr-mb-2w">
+            <Title as="h2" className="fr-mb-2w">
               Rapport de l'IPBES
             </Title>
           </Col>
         </Row>
         <Row gutters>
           <Col md={12}>
-            <Title as="h2" className="fr-mb-2w">
+            <Title as="h3" className="fr-mb-2w">
               Part de publications pour le rapport de l'IPBES par pays (top 20)
             </Title>
             <PrctIpbesPublicationsByCountry />
