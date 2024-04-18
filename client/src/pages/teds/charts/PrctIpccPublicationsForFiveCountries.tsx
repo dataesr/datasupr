@@ -6,7 +6,7 @@ import { useQueryResponse, useOptions } from "./hooks";
 export default function PrctIpccReferencesFiveCountry() {
   const list_wg = ["1", "2", "2_cross", "3"];
 
-  const filter0 = {
+  const filter_ipcc = {
     body: {
       should: [
         { term: { "ipcc.wg.keyword": list_wg[0] } },
@@ -19,7 +19,7 @@ export default function PrctIpccReferencesFiveCountry() {
     name: "all",
   };
 
-  const filter1 = {
+  const filter_wg1 = {
     body: {
       must: [{ match: { "ipcc.wg.keyword": list_wg[0] } }],
       must_not: [
@@ -30,7 +30,7 @@ export default function PrctIpccReferencesFiveCountry() {
     },
     name: "Sciences Physique (WG1)",
   };
-  const filter2 = {
+  const filter_wg2 = {
     body: {
       must: [{ match: { "ipcc.wg.keyword": list_wg[1] } }],
       must_not: [
@@ -41,7 +41,7 @@ export default function PrctIpccReferencesFiveCountry() {
     },
     name: "Adaptations (WG2)",
   };
-  const filter2cross = {
+  const filter_wg2cross = {
     body: {
       must: [{ match: { "ipcc.wg.keyword": list_wg[2] } }],
       must_not: [
@@ -52,7 +52,7 @@ export default function PrctIpccReferencesFiveCountry() {
     },
     name: "Adaptations - risques locaux (WG2 cross)",
   };
-  const filter3 = {
+  const filter_wg3 = {
     body: {
       must: [{ match: { "ipcc.wg.keyword": list_wg[3] } }],
       must_not: [
@@ -63,7 +63,7 @@ export default function PrctIpccReferencesFiveCountry() {
     },
     name: "Atténuations (WG3)",
   };
-  const filter12 = {
+  const filter_wg1_and_wg2 = {
     body: {
       must: [
         { match: { "ipcc.wg.keyword": list_wg[0] } },
@@ -77,7 +77,7 @@ export default function PrctIpccReferencesFiveCountry() {
     name: "Sciences Physique et Adaptations",
   };
 
-  const filter22cross = {
+  const filter_wg2_and_wg2cross = {
     body: {
       must: [
         { match: { "ipcc.wg.keyword": list_wg[1] } },
@@ -90,7 +90,7 @@ export default function PrctIpccReferencesFiveCountry() {
     },
     name: "Adaptations et Adaptations - risques locaux",
   };
-  const filter23 = {
+  const filter_wg2_and_wg3 = {
     body: {
       must: [
         { match: { "ipcc.wg.keyword": list_wg[1] } },
@@ -105,13 +105,13 @@ export default function PrctIpccReferencesFiveCountry() {
   };
 
   const filters = [
-    filter1,
-    filter2,
-    filter2cross,
-    filter3,
-    filter12,
-    filter22cross,
-    filter23,
+    filter_wg1,
+    filter_wg2,
+    filter_wg2cross,
+    filter_wg3,
+    filter_wg1_and_wg2,
+    filter_wg2_and_wg2cross,
+    filter_wg2_and_wg3,
   ];
 
   const countries = [
@@ -123,16 +123,20 @@ export default function PrctIpccReferencesFiveCountry() {
   ];
 
   const responses = [
-    useQueryResponse(filter1.body, 50, "filter_0"),
-    useQueryResponse(filter2.body, 50, "filter_1"),
-    useQueryResponse(filter2cross.body, 50, "filter_2"),
-    useQueryResponse(filter3.body, 50, "filter_3"),
-    useQueryResponse(filter12.body, 50, "filter_4"),
-    useQueryResponse(filter22cross.body, 50, "filter_5"),
-    useQueryResponse(filter23.body, 50, "filter_6"),
+    useQueryResponse(filters[0].body, 50, filters[0].name),
+    useQueryResponse(filters[1].body, 50, filters[1].name),
+    useQueryResponse(filters[2].body, 50, filters[2].name),
+    useQueryResponse(filters[3].body, 50, filters[3].name),
+    useQueryResponse(filters[4].body, 50, filters[4].name),
+    useQueryResponse(filters[5].body, 50, filters[5].name),
+    useQueryResponse(filters[6].body, 50, filters[6].name),
   ];
 
-  const response_total = useQueryResponse(filter0.body, 50, "filter_7");
+  const response_total = useQueryResponse(
+    filter_ipcc.body,
+    50,
+    filter_ipcc.name
+  );
 
   const loadings = responses.map((response) => response.isLoading);
   const isLoad = (currentValue) => currentValue === true;
@@ -141,25 +145,18 @@ export default function PrctIpccReferencesFiveCountry() {
     return <div>Loading...</div>;
   }
 
-  const values = [
-    { name: "", data: [] },
-    { name: "", data: [] },
-    { name: "", data: [] },
-    { name: "", data: [] },
-    { name: "", data: [] },
-    { name: "", data: [] },
-    { name: "", data: [] },
-  ];
-
   const buckets = responses.map((response) =>
     response.data.aggregations.by_countries.buckets.filter((country) =>
       countries.includes(country.key)
     )
   );
 
-  values.map((value, index) => {
-    (value.name = filters[index].name),
-      (value.data = [
+  const values = [];
+
+  filters.map((filter, index) => {
+    values.push({
+      name: filter.name,
+      data: [
         buckets[index].find((country) => country.key === countries[0])
           .doc_count,
         buckets[index].find((country) => country.key === countries[1])
@@ -170,36 +167,31 @@ export default function PrctIpccReferencesFiveCountry() {
           .doc_count,
         buckets[index].find((country) => country.key === countries[4])
           .doc_count,
-      ]);
+      ],
+    });
   });
 
   if (response_total.isLoading) {
     return <div>Loading...</div>;
   }
 
-  const total = countries.map(
-    (item) =>
-      response_total.data.aggregations.by_countries.buckets.find(
-        (country) => country.key === item
-      ).doc_count
-  );
-
-  const sum_publications = countries.map(
-    (item, index) =>
-      total[index] -
-      responses
-        .map(
-          (response) =>
-            response.data.aggregations.by_countries.buckets.find(
-              (country) => country.key === item
-            ).doc_count
-        )
-        .reduce((accumulator, currentValue) => accumulator + currentValue)
-  );
-
-  values.push({ name: "Multi WG", data: sum_publications });
-
-  console.log(values);
+  values.push({
+    name: "Multi WG",
+    data: countries.map(
+      (item) =>
+        response_total.data.aggregations.by_countries.buckets.find(
+          (country) => country.key === item
+        ).doc_count -
+        responses
+          .map(
+            (response) =>
+              response.data.aggregations.by_countries.buckets.find(
+                (country) => country.key === item
+              ).doc_count
+          )
+          .reduce((accumulator, currentValue) => accumulator + currentValue)
+    ),
+  });
 
   const options = useOptions(values, countries, "IPCC");
 

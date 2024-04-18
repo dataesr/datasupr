@@ -11,55 +11,61 @@ import PrctIpccPublicationsForFiveCountries from "./charts/PrctIpccPublicationsF
 export default function Welcome() {
   return (
     <>
-      <Container>
+      <Container as="main">
         <Title as="h1" className="fr-mb-2w">
           Rapport du GIEC
         </Title>
-      </Container>
-      <Container>
-        <Title as="h2" className="fr-mb-2w">
-          Part de publications pour le rapport du GIEC par pays (top 20)
-        </Title>
-        <PrctIpccPublicationsByCountry />
-      </Container>
-      <Container>
+        <Row gutters>
+          <Col md={12}>
+            <Title as="h2" className="fr-mb-2w">
+              Part de publications pour le rapport du GIEC par pays (top 20)
+            </Title>
+            <PrctIpccPublicationsByCountry />
+          </Col>
+        </Row>
         <Title as="h2" className="fr-mb-2w">
           Part de publications pour les différents groupes du rapport du GIEC
           par pays (top 10)
         </Title>
         <Row>
-          <Col>
+          <Col md={6}>
             <PrctIpccPublicationsByCountryByWg1 />
           </Col>
-          <Col>
+          <Col md={6}>
             <PrctIpccPublicationsByCountryByWg2 />
           </Col>
         </Row>
         <Row>
-          <Col>
+          <Col md={6}>
             <PrctIpccPublicationsByCountryByWg2cross />
           </Col>
-          <Col>
+          <Col md={6}>
             <PrctIpccPublicationsByCountryByWg3 />
           </Col>
         </Row>
-      </Container>
-      <Container>
-        <Title as="h2" className="fr-mb-2w">
-          Structures des contribitions pour cinq pays
-        </Title>
-        <PrctIpccPublicationsForFiveCountries />
-      </Container>
-      <Container>
-        <Title as="h1" className="fr-mb-2w">
-          Rapport de l'IPBES
-        </Title>
-      </Container>
-      <Container>
-        <Title as="h2" className="fr-mb-2w">
-          Part de publications pour le rapport de l'IPBES par pays (top 20)
-        </Title>
-        <PrctIpbesPublicationsByCountry />
+        <Row gutters>
+          <Col md={12}>
+            <Title as="h2" className="fr-mb-2w">
+              Structures des contribitions pour cinq pays
+            </Title>
+            <PrctIpccPublicationsForFiveCountries />
+          </Col>
+        </Row>
+        <Row gutters>
+          <Col md={12}>
+            <Title as="h1" className="fr-mb-2w">
+              Rapport de l'IPBES
+            </Title>
+          </Col>
+        </Row>
+        <Row gutters>
+          <Col md={12}>
+            <Title as="h2" className="fr-mb-2w">
+              Part de publications pour le rapport de l'IPBES par pays (top 20)
+            </Title>
+            <PrctIpbesPublicationsByCountry />
+          </Col>
+        </Row>
       </Container>
     </>
   );
