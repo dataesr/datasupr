@@ -151,7 +151,8 @@ export default function PrctIpccReferencesFiveCountry() {
     )
   );
 
-  const values = [];
+
+  const values: { name: string; data: number[] }[] = [];
 
   filters.map((filter, index) => {
     values.push({
@@ -189,6 +190,8 @@ export default function PrctIpccReferencesFiveCountry() {
     ),
   });
 
+  // TODO: mettre cette fonction dans un fichier utils
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const options = useOptions(values, countries, "IPCC");
 
   Object.assign(options, {
