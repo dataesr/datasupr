@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@dataesr/dsfr-plus": "^0.3.2",
+    "@dataesr/dsfr-plus": "^0.4.0",
     "@gouvfr/dsfr": "^1.10.2",
     "@highcharts/map-collection": "^2.1.0",
     "@tanstack/react-query": "^5.24.1",
