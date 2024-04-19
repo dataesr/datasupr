@@ -73,9 +73,6 @@ function useOptions(series, categories, ip) {
     xAxis: { categories, title: { text: "Country" } },
     yAxis: {
       title: { text: `Part of ${ip} publications` },
-      labels: {
-        format: "{value}%",
-      },
     },
     credits: {
       enabled: false,
