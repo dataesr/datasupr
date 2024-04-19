@@ -1,8 +1,5 @@
 .graph-footer {
   align-items: center;
-  padding: 0 20px;
-  margin-top: 20px;
-  border-top: 1px solid #ddd;
   font-size: 12px;
 
   .description {
@@ -16,6 +13,22 @@
   .share {
     text-align: right;
     background-color: var(--background-open-blue-france);
+  }
+
+}
+
+.actions {
+  text-align: right;
+}
+
+.modal-actions {
+  & ul {
+    padding: 0;
+    margin: 0;
+
+    & li {
+      list-style: none;
+    }
   }
 }
 
