@@ -98,7 +98,7 @@ export default function Header() {
         <div style={{ height: '338px', overflow: 'auto' }}>
           {
             data.slice(0, 15).map((item) => (
-              <Row style={{ width: "100%", borderBottom: '1px solid #ddd' }}>
+              <Row style={{ width: "100%", borderBottom: '1px solid #ddd' }} key={item.geo_nom}>
                 <div style={{ flexGrow: "1" }}>
                   {item.geo_nom}
                 </div>

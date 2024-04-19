@@ -1,21 +1,79 @@
+import { useEffect } from 'react';
+import { Outlet, useSearchParams } from 'react-router-dom';
 import { Button, Header, Logo, Service, FastAccess } from '@dataesr/dsfr-plus';
-import { Outlet } from 'react-router-dom';
 
 import Footer from './footer';
 import SwitchTheme from '../components/switch-theme';
 
-export function Layout() {
+export function Layout({ languageSelector = false }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  useEffect(() => {
+    if (!searchParams.get('language') && languageSelector) {
+      searchParams.set("language", "FR"); // default value
+      setSearchParams(searchParams);
+    }
+  }, [searchParams, setSearchParams, languageSelector]);
+
+  const handleChange = (e) => {
+    searchParams.set("language", e.target.value);
+    setSearchParams(searchParams);
+  }
   return (
     <>
       <Header>
         <Logo text="Ministère de | l'enseignement supérieur | et de la recherche" />
         <Service name="dataSupR" tagline="Si c'était pas super ça s'appellerait juste data" />
         <FastAccess>
-          <Button as="a" href="/" icon="github-fill" size="sm" variant="text">Explorer d'autres tableaux de bord</Button>
-          <Button as="a" href="https://www.systeme-de-design.gouv.fr" target="_blank" rel="noreferer noopener" icon="code-s-slash-line" size="sm" variant="text">Jeux de données</Button>
-          <Button className="fr-btn fr-icon-theme-fill" aria-controls="fr-theme-modal" data-fr-opened="false">
-            Changer de thème
+          <Button
+            as="a"
+            href="/"
+            icon="github-fill"
+            size="sm"
+            variant="text"
+          >
+            {(searchParams.get('language') === 'FR') ? "Explorer d'autres tableaux de bord" : "Explore dashboards"}
           </Button>
+          <Button
+            as="a"
+            href="https://www.systeme-de-design.gouv.fr"
+            icon="code-s-slash-line"
+            rel="noreferer noopener"
+            size="sm"
+            target="_blank"
+            variant="text"
+          >
+            {(searchParams.get('language') === 'FR') ? "Jeux de données" : "Datasets"}
+          </Button>
+          <Button
+            aria-controls="fr-theme-modal"
+            className="fr-btn fr-icon-theme-fill"
+            data-fr-opened="false"
+          >
+            {(searchParams.get('language') === 'FR') ? "Changer de thème" : "Themes"}
+          </Button>
+          {
+            languageSelector && (
+              <select
+                className="fr-select fr-p-0 fr-pl-1w"
+                style={{ height: '25px', width: '55px' }}
+                onChange={handleChange}
+              >
+                <option
+                  selected={searchParams.get('language') === 'FR'}
+                  value="FR"
+                >
+                  Fr
+                </option>
+                <option
+                  selected={searchParams.get('language') === 'EN'}
+                  value="EN"
+                >
+                  En
+                </option>
+              </select>
+            )
+          }
         </FastAccess>
       </Header>
       <Outlet />
