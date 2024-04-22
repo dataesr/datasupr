@@ -19,6 +19,8 @@ export function Layout({ languageSelector = false }) {
     searchParams.set("language", e.target.value);
     setSearchParams(searchParams);
   }
+
+  // TODO: Add file for external translations
   return (
     <>
       <Header>
