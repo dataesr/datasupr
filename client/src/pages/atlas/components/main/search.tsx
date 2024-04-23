@@ -23,7 +23,7 @@ export function Search() {
 
   // Create a list of all territories (regions, departments, academies - without urban unities and cities)
   const territoiresList = Object.keys(filtersValues.geo_id).map((key) => {
-    if (key !== 'communes' && key !== 'unites_urbaines') {
+    if (key !== 'communes') {
       return filtersValues.geo_id[key].map((item) => ({
         id: item.geo_id,
         label: item.geo_nom,

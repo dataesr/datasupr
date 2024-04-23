@@ -16,15 +16,9 @@ export default function MapWithPolygon({
   width?: string,
   zoomControl?: boolean,
 }) {
-
-  let geoId = id;
-  if (id.substring(0, 2) === 'UU') {
-    geoId = id.substring(2);
-  }
-
   const { data, isLoading } = useQuery({
-    queryKey: ["atlas/get-geo-polygons", geoId],
-    queryFn: () => getGeoPolygon(geoId)
+    queryKey: ["atlas/get-geo-polygons", id],
+    queryFn: () => getGeoPolygon(id)
   })
 
   if (isLoading || !data || !data.length) {
@@ -36,7 +30,7 @@ export default function MapWithPolygon({
       <Map
         autoCenter={autoCenter}
         height={height}
-        polygonCoordinates={data[0].geometry}
+        polygonCoordinates={data.map((el) => el.geometry)}
         width={width}
         zoomControl={zoomControl}
       />
