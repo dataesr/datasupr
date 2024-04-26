@@ -9,7 +9,7 @@ import {
   Title, Text, Badge,
 } from '@dataesr/dsfr-plus';
 
-import GenericCard from '../components/cards/generic-card.tsx';
+import GenericCard from '../components/cards/generic-card/index.tsx';
 import atlasImg from '../assets/atlas.png';
 
 import './styles.scss';

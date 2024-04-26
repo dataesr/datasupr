@@ -26,31 +26,60 @@ const mappingRegion = [
 
 const filieresOrder = ['CPGE', 'STS', 'UNIV', 'GE', 'UT', 'INP', 'ENS', 'EPEU', 'ING_autres', 'EC_COM', 'EC_JUR', 'EC_ART', 'EC_PARAM', 'EC_autres', 'TOTAL'];
 
+router.route('/atlas/get-geo-ids-from-search')
+  .get((req, res) => {
+    db.collection('atlas2023').find(
+      { geo_nom: { "$regex": req.query.q, "$options": "i" } },
+      { projection: { "_id": 0, "geo_nom": 1, "geo_id": 1 } }).toArray().then((response) => {
+        const set = new Set();
+        const unique = [];
+        response.map((item) => {
+          if (!set.has(item.geo_id)) {
+            set.add(item.geo_id);
+            unique.push(item);
+          }
+        })
+        res.json(unique.slice(0, 25));
+      });
+  });
+
 router.route('/atlas/get-geo-polygons')
   .get(async (req, res) => {
-    const geoId = req.query.originalId;
+    let geoId = req.query.originalId;
 
     if (!geoId) {
       res.status(400).send('geo_id is required');
     }
 
-    if (['R', 'D', 'A', 'U'].includes(geoId[0])) {
+    if (['R', 'D', 'A'].includes(geoId[0]) || geoId === 'FRA' || geoId === 'PAYS_100') {
+      if (geoId === 'PAYS_100') {
+        geoId = 'FRA';
+      }
       // Query from paysage
-      dbPaysage.collection('geographicalcategories').find(req.query).toArray().then((data) => {
-        res.json(data);
+      dbPaysage.collection('geographicalcategories').find({ originalId: geoId }).toArray().then((data) => {
+        res.json([{
+          geometry: data[0].geometry,
+          groups: data[0].groups,
+          nameFr: data[0].nameFr,
+          originalId: geoId,
+        }]);
       })
     }
     else {
       // Query from datasupR
-      db.collection('citiesPolygons').find({ "com_code": geoId }).toArray().then((data) => {
-        // Format object
-        const obj = {};
-        obj.originalId = data[0]?.com_code;
-        obj.geometry = data[0]?.geom?.geometry;
-        obj.nameFr = data[0]?.com_nom;
-        obj.parentOriginalId = data[0]?.uucr_id;
+      let filter = { "com_code": geoId };
+      if (geoId.startsWith('UU')) {
+        filter = { "uu_id": geoId };
+      }
+      db.collection('citiesPolygons').find(filter).toArray().then((data) => {
+        const ret = data.map((item) => ({
+          geometry: item.geom?.geometry,
+          nameFr: item.com_nom,
+          originalId: item.com_code,
+          parentOriginalId: item.uucr_id,
+        }));
 
-        res.json([obj]);
+        res.json(ret);
       })
     }
   });

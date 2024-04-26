@@ -6,7 +6,7 @@ import { useTitle } from '../../hooks/usePageTitle.tsx';
 
 import { getFiltersValues } from '../../api/atlas.ts';
 import { getGeoLabel, setfavoriteIdsInCookie } from '../../utils.tsx';
-import { Search } from './components/main/search.tsx';
+import { Search } from './components/main/tabs/search/index.tsx';
 import Header from './components/main/header/index.tsx';
 import YearsModalButton from './components/main/header/years-modal-button.tsx';
 

@@ -29,10 +29,6 @@ export default function Header() {
     queryFn: () => getNumberOfStudentsHistoricByLevel(geoId, currentYear)
   })
 
-  // if (isLoadingHistoric || isLoadingMap) {
-  //   return <div>Loading...</div>
-  // }
-
   const getBadgesGeo = () => {
     if (!geoId) { return null; }
 
@@ -42,7 +38,7 @@ export default function Header() {
   }
 
   const getSubLevel = () => {
-    if (!geoId) { return null; }
+    if (!geoId || geoId === "PAYS_100") { return 'Liste des régions'; }
 
     if (geoId.startsWith('R')) { return 'Liste des académies'; }
     if (geoId.startsWith('D')) { return 'Liste des communes'; }
@@ -51,7 +47,7 @@ export default function Header() {
   }
 
   const getTitle = () => {
-    if (!geoId) { return 'Effectifs étudiants de la France'; }
+    if (!geoId || geoId === "PAYS_100") { return 'Effectifs étudiants de la France'; }
 
     if (geoId.startsWith('R')) { return 'Effectifs étudiants de la région'; }
     if (geoId.startsWith('D')) { return 'Effectifs étudiants du département'; }
@@ -107,7 +103,7 @@ export default function Header() {
                     {item.data.find((el) => el.annee_universitaire === currentYear)?.effectif.toLocaleString()}
                   </strong>
                   {
-                    (["R", "D", "A", "U"].includes(geoId?.charAt(0))) && (
+                    (["R", "D", "A", "U", "P"].includes(geoId?.charAt(0))) && (
                       <Button
                         size="sm"
                         variant="text"
@@ -138,7 +134,7 @@ export default function Header() {
         <Row gutters>
           <Col md={7}>
             {!geoId && <FranceMap data={dataMap || []} isLoading={isLoadingMap} />}
-            {geoId && <MapWithPolygon id={geoId || ''} />}
+            {geoId && <MapWithPolygon id={geoId || ''} autoCenter={!(geoId === 'PAYS_100')} />}
           </Col>
           <Col md={5}>
             <SubList data={dataHistoric?.data} />
