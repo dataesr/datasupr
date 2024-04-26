@@ -29,10 +29,6 @@ export default function Header() {
     queryFn: () => getNumberOfStudentsHistoricByLevel(geoId, currentYear)
   })
 
-  // if (isLoadingHistoric || isLoadingMap) {
-  //   return <div>Loading...</div>
-  // }
-
   const getBadgesGeo = () => {
     if (!geoId) { return null; }
 

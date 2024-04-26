@@ -74,3 +74,25 @@ export async function getSimilarElements({
     const url = `${VITE_APP_SERVER_URL}/atlas/get-similar-elements?niveau_geo=${niveau_geo}&needle=${needle}&gt=${gt}&lt=${lt}&annee_universitaire=${annee_universitaire}`
     return fetch(url).then((response) => (response.json()))
 }
+
+export async function getGeoIdsFromSearch(q: string) {
+    // const getData = async () => {
+    const url = `${VITE_APP_SERVER_URL}/atlas/get-geo-ids-from-search?q=${q}`;
+    // const response = await fetch(url);
+    // return response.json();
+    return fetch(url).then((response) => (response.json()))
+    // }
+
+    // function debounce() {
+    //     let timeoutId
+    //     return function () {
+    //         clearTimeout(timeoutId)
+    //         timeoutId = setTimeout(() => {
+    //             getData()
+    //         }, 500)
+    //     }
+    // }
+
+    // return debounce();
+
+}

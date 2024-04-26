@@ -26,6 +26,23 @@ const mappingRegion = [
 
 const filieresOrder = ['CPGE', 'STS', 'UNIV', 'GE', 'UT', 'INP', 'ENS', 'EPEU', 'ING_autres', 'EC_COM', 'EC_JUR', 'EC_ART', 'EC_PARAM', 'EC_autres', 'TOTAL'];
 
+router.route('/atlas/get-geo-ids-from-search')
+  .get((req, res) => {
+    db.collection('atlas2023').find(
+      { geo_nom: { "$regex": req.query.q, "$options": "i" } },
+      { projection: { "_id": 0, "geo_nom": 1, "geo_id": 1 } }).toArray().then((response) => {
+        const set = new Set();
+        const unique = [];
+        response.map((item) => {
+          if (!set.has(item.geo_id)) {
+            set.add(item.geo_id);
+            unique.push(item);
+          }
+        })
+        res.json(unique.slice(0, 25));
+      });
+  });
+
 router.route('/atlas/get-geo-polygons')
   .get(async (req, res) => {
     let geoId = req.query.originalId;
