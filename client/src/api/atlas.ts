@@ -76,23 +76,6 @@ export async function getSimilarElements({
 }
 
 export async function getGeoIdsFromSearch(q: string) {
-    // const getData = async () => {
     const url = `${VITE_APP_SERVER_URL}/atlas/get-geo-ids-from-search?q=${q}`;
-    // const response = await fetch(url);
-    // return response.json();
     return fetch(url).then((response) => (response.json()))
-    // }
-
-    // function debounce() {
-    //     let timeoutId
-    //     return function () {
-    //         clearTimeout(timeoutId)
-    //         timeoutId = setTimeout(() => {
-    //             getData()
-    //         }, 500)
-    //     }
-    // }
-
-    // return debounce();
-
 }
