@@ -1,0 +1,24 @@
+.results {
+  padding: 0;
+
+  .hint {
+    display: inline-block;
+    font-size: 0.9rem;
+    padding-top: 10px;
+  }
+
+  & li {
+    border-bottom: 1px solid #e0e0e0;
+    cursor: pointer;
+    list-style: none;
+    padding: 10px;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: #e8e8e8;
+    }
+  }
+}

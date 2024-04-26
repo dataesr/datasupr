@@ -56,6 +56,7 @@ export default function Map({
 
   return (
     <MapContainer
+      attributionControl={false}
       bounds={[[bbox[1], bbox[0]], [bbox[3], bbox[2]]]}
       center={autoCenter ? [center[0], center[1]] : center}
       scrollWheelZoom={false}
