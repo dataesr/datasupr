@@ -4,7 +4,7 @@ import * as turf from '@turf/turf';
 
 type PolygonCoordinatesProps = {
   type: string,
-  coordinates: []
+  coordinates: [number, number] | [number, number][]
 }[]
 
 export default function Map({
@@ -20,17 +20,16 @@ export default function Map({
   width: string,
   zoomControl: boolean,
 }) {
-  let polygons = [];
+  let poly;
   let calculateCenter = {};
   let bbox = [];
 
   if (polygonCoordinates) {
     if (polygonCoordinates[0]?.type === 'MultiPolygon') {
-      polygons = polygonCoordinates[0]?.coordinates[0] || [];
+      poly = turf.multiPolygon(polygonCoordinates[0]?.coordinates[0]);
     } else if (polygonCoordinates[0]?.type === 'Polygon') {
-      polygons = polygonCoordinates[0]?.coordinates || [];
+      poly = turf.polygon(polygonCoordinates[0]?.coordinates);
     }
-    const poly = turf.polygon(polygons);
     calculateCenter = turf.centerOfMass(poly);
     bbox = turf.bbox(poly);
   }
