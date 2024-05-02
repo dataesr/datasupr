@@ -494,7 +494,13 @@ router.route('/atlas/get-filieres')
 
 router.route('/atlas/get-filters-values')
   .get(async (req, res) => {
-    const annee_universitaire = await db.collection('atlas2023').distinct("annee_universitaire");
+    let filters = {};
+    if (req.query.geo_id) {
+      filters = { geo_id: req.query.geo_id };
+    }
+
+    const annees_universitaires_onlyData = await db.collection('atlas2023').distinct("annee_universitaire", filters);
+    const annees_universitaires_all = await db.collection('atlas2023').distinct("annee_universitaire");
     const temp = await db.collection('atlas2023').aggregate([
       {
         $group: {
@@ -517,7 +523,10 @@ router.route('/atlas/get-filters-values')
     }
 
     const data = {
-      annee_universitaire,
+      annees_universitaires: {
+        all: annees_universitaires_all,
+        onlyWithData: annees_universitaires_onlyData
+      },
       geo_id: geo,
     }
     res.json(data);

@@ -58,7 +58,7 @@ function getParentFromLevel(parents, geoId) {
     return { geo_nom: parents.aca_nom, geo_id: parents.aca_id };
   }
   if (geoId.startsWith('U')) {
-    return { geo_nom: parents.dep_nom, geo_id: parents.dep_id };
+    return { geo_nom: parents.reg_nom, geo_id: parents.reg_id };
   }
   return { geo_nom: parents.dep_nom, geo_id: parents.dep_id };
 }
