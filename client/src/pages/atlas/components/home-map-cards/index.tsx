@@ -60,7 +60,7 @@ export default function HomeMapCards({ territoiresList = [] }: { territoiresList
       />
       {
         territoires.map((territoire) => (
-          <div className='fr-py-1w'>
+          <div className='fr-py-1w' key={territoire.id}>
             <GenericCard
               title={territoire.label}
               to={`/atlas/general?geo_id=${territoire.id}&annee_universitaire=2022-23`}

@@ -26,10 +26,11 @@ export default function Map({
 
   if (polygonCoordinates) {
     if (polygonCoordinates[0]?.type === 'MultiPolygon') {
-      poly = turf.multiPolygon(polygonCoordinates[0]?.coordinates[0]);
+      poly = turf.multiPolygon(polygonCoordinates[0]?.coordinates);
     } else if (polygonCoordinates[0]?.type === 'Polygon') {
       poly = turf.polygon(polygonCoordinates[0]?.coordinates);
     }
+
     calculateCenter = turf.centerOfMass(poly);
     bbox = turf.bbox(poly);
   }

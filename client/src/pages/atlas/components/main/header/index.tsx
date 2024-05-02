@@ -10,6 +10,7 @@ import Menu from './menu.tsx';
 import FranceMap from '../../../charts/France-map.tsx';
 import MapWithPolygon from '../../../charts/map-with-polygon.tsx';
 import Template from "../../../../../components/template/index.tsx";
+import { GetLevelBadgeFromId } from "../../../utils/badges.tsx";
 
 export default function Header() {
   const [searchParams] = useSearchParams();
@@ -28,14 +29,6 @@ export default function Header() {
     queryKey: ["atlas/number-of-students-historic-by-level", geoId],
     queryFn: () => getNumberOfStudentsHistoricByLevel(geoId, currentYear)
   })
-
-  const getBadgesGeo = () => {
-    if (!geoId) { return null; }
-
-    if (geoId.startsWith('R')) { return <Badge color="blue-ecume">Région</Badge>; }
-    if (geoId.startsWith('D')) { return <Badge color="blue-ecume">Département</Badge>; }
-    if (geoId.startsWith('A')) { return <Badge color="blue-ecume">Académie</Badge>; }
-  }
 
   const getSubLevel = () => {
     if (!geoId || geoId === "PAYS_100") { return 'Liste des régions'; }
@@ -128,7 +121,7 @@ export default function Header() {
     <>
       <BadgeGroup>
         <Badge color="blue-ecume">France</Badge>
-        {getBadgesGeo()}
+        {GetLevelBadgeFromId({ id: geoId })}
       </BadgeGroup>
       <Container as="section" fluid>
         <Row gutters>
