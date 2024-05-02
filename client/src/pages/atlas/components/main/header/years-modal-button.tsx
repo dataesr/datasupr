@@ -18,11 +18,7 @@ export default function YearsModalButton() {
   })
 
   useEffect(() => {
-    if (!filtersValues?.annees_universitaires?.onlyWithData.includes(currentYear)) {
-      setShowAlertMessage(true);
-    } else {
-      setShowAlertMessage(false);
-    }
+    setShowAlertMessage(!filtersValues?.annees_universitaires?.onlyWithData.includes(currentYear));
   }, [currentYear, filtersValues]);
 
   if (isLoadingFiltersValues) {
