@@ -71,7 +71,7 @@ export default function YearsModalButton() {
       <Button
         className="button"
         color="pink-tuile"
-        icon='target-line'
+        icon='calendar-2-line'
         onClick={() => setIsOpen(true)}
         size="sm"
       >

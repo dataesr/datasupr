@@ -78,7 +78,7 @@ export default function AtlasHeader() {
               <Button
                 className="button"
                 color="pink-tuile"
-                icon='home-line'
+                icon='home-4-line'
                 onClick={() => navigate('/atlas')}
                 size="sm"
               >
