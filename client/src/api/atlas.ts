@@ -79,3 +79,8 @@ export async function getGeoIdsFromSearch(q: string) {
     const url = `${VITE_APP_SERVER_URL}/atlas/get-geo-ids-from-search?q=${q}`;
     return fetch(url).then((response) => (response.json()))
 }
+
+export async function getParentsFromGeoId(geoId: string) {
+    const url = `${VITE_APP_SERVER_URL}/atlas/get-parents-from-geo-id?geo_id=${geoId}`;
+    return fetch(url).then((response) => (response.json()))
+}

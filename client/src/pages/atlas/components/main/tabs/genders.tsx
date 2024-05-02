@@ -112,41 +112,44 @@ export function Genders() {
           <GenderStackedChart data={dataByYear} isLoading={isLoadingByYear} />
         </Col>
       </Row>
-
-      <Row className="fr-mt-5w">
-        <Col>
-          <Title as="h2" look="h5">
-            Liste des territoires similaires sur la répartition par genre pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>
-          </Title>
-          <Text>
-            Les territoires similaires sont ceux qui ont une répartition par genre du nombre d'étudiants inscrits proche du territoire sélectionné.
-            La tolérance maximum est de <strong>5%</strong>. Seuls les 5 premiers résutats sont affichés.
-            <br />
-            L'année universitaire sélectionnée est <Badge color="yellow-tournesol">{currentYear}</Badge>.
-            <br />Seuls les territoires ayant le même niveau géographique que le territoire sélectionné sont pris en compte (<Badge color="blue-ecume">{getLevel()}</Badge>).
-            <br />
-            <br />
-            <ul>
-              {
-                dataSimilarSorted?.slice(0, 6).filter((el: SimilarData) => el.geo_id !== searchParams.get('geo_id')).map((el: SimilarData) => (
-                  <li key={el.geo_id}>
-                    {el.geo_nom} (Féminin: <strong>{el.pctF.toFixed(2)}%</strong> - Masculin: <strong>{el.pctM.toFixed(2)}%</strong>)
-                    <Button
-                      size="sm"
-                      variant="text"
-                      className="fr-ml-1w"
-                      color="pink-tuile"
-                      onClick={() => navigate(`/atlas/general?geo_id=${el.geo_id}&annee_universitaire=${currentYear}`)}
-                    >
-                      Voir
-                    </Button>
-                  </li>
-                ))
-              }
-            </ul>
-          </Text>
-        </Col>
-      </Row>
+      {
+        dataSimilarSorted?.length > 0 && (
+          <Row className="fr-mt-5w">
+            <Col>
+              <Title as="h2" look="h5">
+                Liste des territoires similaires sur la répartition par genre pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>
+              </Title>
+              <Text>
+                Les territoires similaires sont ceux qui ont une répartition par genre du nombre d'étudiants inscrits proche du territoire sélectionné.
+                La tolérance maximum est de <strong>5%</strong>. Seuls les 5 premiers résutats sont affichés.
+                <br />
+                L'année universitaire sélectionnée est <Badge color="yellow-tournesol">{currentYear}</Badge>.
+                <br />Seuls les territoires ayant le même niveau géographique que le territoire sélectionné sont pris en compte (<Badge color="blue-ecume">{getLevel()}</Badge>).
+                <br />
+                <br />
+                <ul>
+                  {
+                    dataSimilarSorted?.slice(0, 6).filter((el: SimilarData) => el.geo_id !== searchParams.get('geo_id')).map((el: SimilarData) => (
+                      <li key={el.geo_id}>
+                        {el.geo_nom} (Féminin: <strong>{el.pctF.toFixed(2)}%</strong> - Masculin: <strong>{el.pctM.toFixed(2)}%</strong>)
+                        <Button
+                          size="sm"
+                          variant="text"
+                          className="fr-ml-1w"
+                          color="pink-tuile"
+                          onClick={() => navigate(`/atlas/general?geo_id=${el.geo_id}&annee_universitaire=${currentYear}`)}
+                        >
+                          Voir
+                        </Button>
+                      </li>
+                    ))
+                  }
+                </ul>
+              </Text>
+            </Col>
+          </Row>
+        )
+      }
     </Container>
   )
 }

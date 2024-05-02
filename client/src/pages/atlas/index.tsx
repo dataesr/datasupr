@@ -4,14 +4,18 @@ import { useQuery } from '@tanstack/react-query';
 import { Button, Breadcrumb, Container, Row, Col, Link } from '@dataesr/dsfr-plus';
 import { useTitle } from '../../hooks/usePageTitle.tsx';
 
-import { getFiltersValues } from '../../api/atlas.ts';
-import { getGeoLabel, setfavoriteIdsInCookie } from '../../utils.tsx';
+import { getFiltersValues, getParentsFromGeoId } from '../../api/atlas.ts';
+import { getGeoLabel, getParentFromLevel, setfavoriteIdsInCookie } from '../../utils.tsx';
 import { Search } from './components/main/tabs/search/index.tsx';
 import Header from './components/main/header/index.tsx';
 import YearsModalButton from './components/main/header/years-modal-button.tsx';
 
+import './styles.scss';
+
 export default function AtlasHeader() {
   const [searchParams] = useSearchParams();
+  const geoId = searchParams.get('geo_id') || '';
+  const currentYear = searchParams.get('annee_universitaire') || '2022-23';
   const navigate = useNavigate();
 
   useTitle('dataSupR - Atlas des effectifs étudiant-e-s');
@@ -27,6 +31,16 @@ export default function AtlasHeader() {
     queryFn: () => getFiltersValues()
   })
 
+  const { data: dataParents, isLoading: isLoadingParents } = useQuery({
+    queryKey: ["atlas/get-parents-from-geoId", geoId],
+    queryFn: () => getParentsFromGeoId(geoId)
+  })
+
+  let parent;
+  if (!isLoadingParents) {
+    parent = getParentFromLevel(dataParents, geoId);
+  }
+
   if (isLoadingFiltersValues) {
     return (
       <Container as="main">
@@ -40,7 +54,6 @@ export default function AtlasHeader() {
   }
 
   let geoLabelFull = '';
-  const geoId = searchParams.get('geo_id') || '';
   const geoLabel = getGeoLabel(geoId, filtersValues?.geo_id);
   switch (geoId?.charAt(0)) {
     case 'R':
@@ -57,18 +70,37 @@ export default function AtlasHeader() {
   document.documentElement.setAttribute('data-fr-scheme', 'light');
 
   return (
-    <Container as="main">
+    <Container as="main" className="atlas-header">
       <Row>
         <Col>
           {
             geoId && (
-              <Button size="sm" color="pink-tuile" onClick={() => navigate('/atlas')}>
+              <Button
+                className="button"
+                color="pink-tuile"
+                icon='home-line'
+                onClick={() => navigate('/atlas')}
+                size="sm"
+              >
                 Revenir à la page de sélection des territoires
               </Button>
             )
           }
+          {
+            geoId && !isLoadingParents && dataParents && parent && (
+              <Button
+                className="button"
+                color="pink-tuile"
+                icon='arrow-up-line'
+                onClick={() => navigate(`/atlas/general?geo_id=${parent.geo_id}&annee_universitaire=${currentYear}`)}
+                size="sm"
+              >
+                Revenir au territoire parent ({parent.geo_nom})
+              </Button>
+            )
+          }
         </Col>
-        <Col style={{ textAlign: 'right' }}>
+        <Col md={3} style={{ textAlign: 'right' }}>
           <YearsModalButton />
         </Col>
       </Row>
@@ -82,6 +114,6 @@ export default function AtlasHeader() {
       </Breadcrumb>
 
       {(!geoId) ? <Search /> : <Header />}
-    </Container>
+    </Container >
   )
 }
