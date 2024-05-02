@@ -21,11 +21,7 @@ export async function getNumberOfStudentsByYear(params: string) {
 }
 
 export async function getFiltersValues(geoId: string) {
-    let url = `${VITE_APP_SERVER_URL}/atlas/get-filters-values`;
-    if (geoId) {
-        url = `${VITE_APP_SERVER_URL}/atlas/get-filters-values?geo_id=${geoId}`;
-    }
-
+    const url = `${VITE_APP_SERVER_URL}/atlas/get-filters-values${geoId ? '?geo_id=' + geoId : ''}`;
     return fetch(url).then((response) => (response.json()))
 }
 
