@@ -41,6 +41,27 @@ function getGeoLabel(needle: string, haystack: GeoData) {
   return geo ? geo.geo_nom : ''
 }
 
+function getParentFromLevel(parents, geoId) {
+  if (!parents) {
+    return null;
+  }
+  if (geoId === 'PAYS_100') {
+    return null;
+  }
+  if (geoId.startsWith('R')) {
+    return { geo_nom: 'France', geo_id: 'PAYS_100' };
+  }
+  if (geoId.startsWith('A')) {
+    return { geo_nom: parents.reg_nom, geo_id: parents.reg_id };
+  }
+  if (geoId.startsWith('D')) {
+    return { geo_nom: parents.aca_nom, geo_id: parents.aca_id };
+  }
+  if (geoId.startsWith('U')) {
+    return { geo_nom: parents.dep_nom, geo_id: parents.dep_id };
+  }
+  return { geo_nom: parents.dep_nom, geo_id: parents.dep_id };
+}
 
 const getfavoriteIdsInCookie = () => {
   if (Cookies.get("favoriteIds")) {
@@ -77,9 +98,10 @@ const setfavoriteIdsInCookie = (id: string) => {
 };
 
 export {
-  getGeoLabel,
   clearAllfavoriteIdsInCookie,
-  setfavoriteIdsInCookie,
   getfavoriteIdsInCookie,
-  getSortedfavoriteIdsInCookie
+  getGeoLabel,
+  getParentFromLevel,
+  getSortedfavoriteIdsInCookie,
+  setfavoriteIdsInCookie,
 };

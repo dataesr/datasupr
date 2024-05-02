@@ -113,6 +113,120 @@ router.route('/atlas/number-of-students-map')
     });
   });
 
+router.route('/atlas/get-parents-from-geo-id')
+  .get(async (req, res) => {
+    const geoId = req.query.geo_id;
+    if (!geoId) {
+      res.status(400).send('geo_id is required');
+    }
+
+    const data = await db.collection('atlas2023').aggregate([
+      { $match: { "geo_id": geoId } },
+      { $limit: 1 },
+      {
+        $lookup:
+        {
+          from: "atlas2023",
+          localField: "aca_id",
+          foreignField: "geo_id",
+          as: "academie",
+        },
+      },
+      {
+        $project: {
+          "academie.geo_nom": 1,
+          aca_id: 1,
+          dep_id: 1,
+          geo_id: 1,
+          geo_nom: 1,
+          niveau_geo: 1,
+          reg_id: 1,
+          uucr_id: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "atlas2023",
+          localField: "reg_id",
+          foreignField: "geo_id",
+          as: "region",
+        },
+      },
+      {
+        $project: {
+          "academie.geo_nom": 1,
+          "region.geo_nom": 1,
+          aca_id: 1,
+          dep_id: 1,
+          geo_id: 1,
+          geo_nom: 1,
+          niveau_geo: 1,
+          reg_id: 1,
+          uucr_id: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "atlas2023",
+          localField: "dep_id",
+          foreignField: "geo_id",
+          as: "departement",
+        },
+      },
+      {
+        $project: {
+          "academie.geo_nom": 1,
+          "departement.geo_nom": 1,
+          "region.geo_nom": 1,
+          aca_id: 1,
+          dep_id: 1,
+          geo_id: 1,
+          geo_nom: 1,
+          niveau_geo: 1,
+          reg_id: 1,
+          uucr_id: 1,
+        },
+      },
+      {
+        $lookup: {
+          from: "atlas2023",
+          localField: "uucr_id",
+          foreignField: "geo_id",
+          as: "uu",
+        },
+      },
+      {
+        $project: {
+          "academie.geo_nom": 1,
+          "departement.geo_nom": 1,
+          "region.geo_nom": 1,
+          "uu.geo_nom": 1,
+          aca_id: 1,
+          dep_id: 1,
+          geo_id: 1,
+          geo_nom: 1,
+          niveau_geo: 1,
+          reg_id: 1,
+          uucr_id: 1,
+        },
+      },
+    ]).toArray();
+
+    res.json({
+      aca_id: data[0].aca_id,
+      aca_nom: data[0].academie[0]?.geo_nom,
+      dep_id: data[0].dep_id,
+      dep_nom: data[0].departement[0]?.geo_nom,
+      geo_id: data[0].geo_id,
+      geo_nom: data[0].geo_nom,
+      niveau_geo: data[0].niveau_geo,
+      reg_id: data[0].reg_id,
+      reg_nom: data[0].region[0]?.geo_nom,
+      uu_id: data[0].uucr_id,
+      uu_nom: data[0].uu[0]?.geo_nom,
+    });
+  });
+
 router.route('/atlas/number-of-students-historic-by-level')
   .get(async (req, res) => {
     const filters = { ...req.query };
@@ -125,7 +239,6 @@ router.route('/atlas/number-of-students-historic-by-level')
     if (req.query.niveau_geo === "COMMUNE") {
       filters.niveau_geo = "DEPARTEMENT";
     }
-
     const response = await db.collection('atlas2023').findOne({ ...filters }, { projection: { "geo_nom": 1 } })
     const levelName = response?.geo_nom || "France";
     db.collection('atlas2023').find(
@@ -243,24 +356,9 @@ router.route('/atlas/number-of-students')
         annee_universitaire: item.annee_universitaire,
       }));
 
-      // // si pas de geo_id, on renvoie le nombre total d'étudiants par région
-      // if (!req.query.geo_id) {
-      //   const data = [];
-      //   mappingRegion.map((regionObject) => {
-      //     const regionKey = Object.keys(regionObject)[0];
-      //     const regionData = allData?.data.filter((item) => item.geo_id === regionKey);
-      //     let effectif = 0;
-      //     regionData?.map((item) => {
-      //       effectif += item.effectif;
-      //     })
-
-      //     data.push([regionObject[regionKey], effectif]);
-      //   })
-      //   res.json(data);
-      // } else {
       const data = {};
       data.geo_id = req.query.geo_id || "FRA";
-      data.geo_nom = allData.data[0].geo_nom;
+      data.geo_nom = allData.data[0]?.geo_nom || "Unknown";
       data.annee_universitaire = filters.annee_universitaire;
 
       // Secteurs

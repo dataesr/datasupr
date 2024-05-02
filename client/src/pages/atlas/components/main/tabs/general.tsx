@@ -88,8 +88,8 @@ export function General() {
           <SectorsCard
             currentYear={currentYear}
             values={{
-              labels: data.secteurs.map((item) => item.label),
-              values: data.secteurs.map((item) => item.value)
+              labels: data?.secteurs?.map((item) => item.label) || [],
+              values: data?.secteurs?.map((item) => item.value) || []
             }}
           />
         </Col>
@@ -111,8 +111,8 @@ export function General() {
           <GendersCard
             currentYear={currentYear}
             values={{
-              labels: data.gender.map((item) => item.label),
-              values: data.gender.map((item) => item.value)
+              labels: data?.gender?.map((item) => item.label) || [],
+              values: data?.gender?.map((item) => item.value) || []
             }}
           />
         </Col>
