@@ -27,8 +27,8 @@ export default function AtlasHeader() {
   }, [searchParams]);
 
   const { data: filtersValues, isLoading: isLoadingFiltersValues } = useQuery({
-    queryKey: ["atlas/get-filters-values"],
-    queryFn: () => getFiltersValues()
+    queryKey: ["atlas/get-filters-values", geoId],
+    queryFn: () => getFiltersValues(geoId)
   })
 
   const { data: dataParents, isLoading: isLoadingParents } = useQuery({
@@ -78,7 +78,7 @@ export default function AtlasHeader() {
               <Button
                 className="button"
                 color="pink-tuile"
-                icon='home-line'
+                icon='home-4-line'
                 onClick={() => navigate('/atlas')}
                 size="sm"
               >
