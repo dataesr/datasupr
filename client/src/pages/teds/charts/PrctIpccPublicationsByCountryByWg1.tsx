@@ -1,9 +1,14 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { useSearchParams } from "react-router-dom";
 
-import { useQueryResponse, useSeries, useOptions } from "./hooks";
+import translations from "./translations.json";
+import { getSeries, getOptions, getLabel } from "./utils";
+import { useQueryResponse } from "./hooks";
 
 export default function PrctIpccReferencesByCountry() {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language");
   const bool = {
     must: [{ match: { "ipcc.wg.keyword": "1" } }],
   };
@@ -15,12 +20,12 @@ export default function PrctIpccReferencesByCountry() {
   }
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const { series, categories } = useSeries(data);
+  const { series, categories } = getSeries(data);
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const options = useOptions(series, categories, "IPCC");
+  const options = getOptions(series, categories, "IPCC");
   options.title = {
-    text: "Part of publications on Physical Sciences by country (WG1 - top 10)",
+    text: getLabel("wg1", translations, currentLang),
   };
 
   return <HighchartsReact highcharts={Highcharts} options={options} />;

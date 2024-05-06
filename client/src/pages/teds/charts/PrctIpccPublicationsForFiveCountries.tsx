@@ -1,9 +1,14 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import { useSearchParams } from "react-router-dom";
 
-import { useQueryResponse, useOptions } from "./hooks";
+import translations from "./translations.json";
+import { getOptions, getLabel } from "./utils";
+import { useQueryResponse } from "./hooks";
 
-export default function PrctIpccReferencesFiveCountry() {
+export default function PrctIpccReferencesByCountry() {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language");
   const list_wg = ["1", "2", "2_cross", "3"];
 
   const filter_ipcc = {
@@ -28,7 +33,7 @@ export default function PrctIpccReferencesFiveCountry() {
         { match: { "ipcc.wg.keyword": list_wg[3] } },
       ],
     },
-    name: "Sciences Physique (WG1)",
+    name: getLabel("wg1", translations, currentLang),
   };
   const filter_wg2 = {
     body: {
@@ -39,7 +44,7 @@ export default function PrctIpccReferencesFiveCountry() {
         { match: { "ipcc.wg.keyword": list_wg[3] } },
       ],
     },
-    name: "Adaptations (WG2)",
+    name: getLabel("wg2", translations, currentLang),
   };
   const filter_wg2cross = {
     body: {
@@ -50,7 +55,7 @@ export default function PrctIpccReferencesFiveCountry() {
         { match: { "ipcc.wg.keyword": list_wg[3] } },
       ],
     },
-    name: "Adaptations - risques locaux (WG2 cross)",
+    name: getLabel("wg2cross", translations, currentLang),
   };
   const filter_wg3 = {
     body: {
@@ -61,7 +66,7 @@ export default function PrctIpccReferencesFiveCountry() {
         { match: { "ipcc.wg.keyword": list_wg[2] } },
       ],
     },
-    name: "Atténuations (WG3)",
+    name: getLabel("wg3", translations, currentLang),
   };
   const filter_wg1_and_wg2 = {
     body: {
@@ -74,7 +79,7 @@ export default function PrctIpccReferencesFiveCountry() {
         { match: { "ipcc.wg.keyword": list_wg[3] } },
       ],
     },
-    name: "Sciences Physique et Adaptations",
+    name: getLabel("wg1_wg2", translations, currentLang),
   };
 
   const filter_wg2_and_wg2cross = {
@@ -88,7 +93,7 @@ export default function PrctIpccReferencesFiveCountry() {
         { match: { "ipcc.wg.keyword": list_wg[3] } },
       ],
     },
-    name: "Adaptations et Adaptations - risques locaux",
+    name: getLabel("wg2_wg2cross", translations, currentLang),
   };
   const filter_wg2_and_wg3 = {
     body: {
@@ -101,7 +106,7 @@ export default function PrctIpccReferencesFiveCountry() {
         { match: { "ipcc.wg.keyword": list_wg[2] } },
       ],
     },
-    name: "Adaptation et Atténuation",
+    name: getLabel("wg2_wg3", translations, currentLang),
   };
 
   const filters = [
@@ -183,13 +188,18 @@ export default function PrctIpccReferencesFiveCountry() {
     ),
   });
 
-  // TODO: mettre cette fonction dans un fichier utils
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const options = useOptions(values, countries, "IPCC");
+  const options = getOptions(values, countries, "IPCC");
 
   Object.assign(options, {
     legend: { enabled: true },
-    title: { text: "Part of IPCC publications for five countries" },
+    title: {
+      text: getLabel(
+        "publications_for_five_countries",
+        translations,
+        currentLang
+      ),
+    },
     plotOptions: {
       column: {
         stacking: "percent",

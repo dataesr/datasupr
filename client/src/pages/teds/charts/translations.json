@@ -1,0 +1,58 @@
+{
+  "title": {
+    "FR": "Transition écologique pour un développement soutenable",
+    "EN": "Ecological transition for sustainable development"
+  },
+  "ipcc": {
+    "FR": "Rapport du GIEC",
+    "EN": "IPCC report"
+  },
+  "ipbes": {
+    "FR": "Rapport de l'IPBES",
+    "EN": "IPBES report"
+  },
+  "all_publications_ipcc": {
+    "FR": "Part de publications pour le rapport du GIEC par pays (top 20)",
+    "EN": "Part of IPCC publications by country (top 20)"
+  },
+  "publications_by_group": {
+    "FR": "Part de publications pour les différents groupes du rapport du GIEC par pays (top 10)",
+    "EN": "Part of IPCC publications by country for each working group (top 10)"
+  },
+  "publications_for_five_countries": {
+    "FR": "Structures des contribitions pour cinq pays",
+    "EN": "Contribution structures for five countries"
+  },
+  "all_publications_ipbes": {
+    "FR": "Part de publications pour le rapport de l'IPBES par pays (top 20)",
+    "EN": "Part of IPBES publications by country (top 20)"
+  },
+  "wg1": {
+    "FR": "Sciences Physique (WG1)",
+    "EN": "Physical Sciences (WG1)"
+  },
+  "wg2": {
+    "FR": "Adaptations (WG2)",
+    "EN": "Adaptations (WG2)"
+  },
+  "wg2cross": {
+    "FR": "Adaptations - risques locaux (WG2 cross)",
+    "EN": "Adaptations - local risks (WG2 cross)"
+  },
+  "wg3": {
+    "FR": "Atténuations (WG3)",
+    "EN": "Mitigations (WG3)"
+  },
+  "wg1_wg2": {
+    "FR": "Sciences Physique et Adaptations",
+    "EN": "Physical Sciences and Adaptations"
+  },
+  "wg2_wg2cross": {
+    "FR": "Adaptations et Adaptations - risques locaux",
+    "EN": "Adaptations and Adaptations - local risks"
+  },
+  "wg2_wg3": {
+    "FR": "Adaptations et Atténuations",
+    "EN": "Adaptations and Mitigations"
+  }
+}
