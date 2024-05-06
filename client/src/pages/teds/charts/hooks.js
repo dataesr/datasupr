@@ -41,7 +41,7 @@ function useQueryResponse(body, s, i) {
 function useSeries(data) {
   const series = (data?.aggregations?.by_countries?.buckets ?? []).map(
     (item) => ({
-      color: item.key === "France" ? "#cc0000" : "#808080",
+      color: item.key === "FRA" ? "#cc0000" : "#808080",
       name: item.key,
       y: (item.doc_count / data.hits.total.value) * 100,
       number: item.doc_count,
