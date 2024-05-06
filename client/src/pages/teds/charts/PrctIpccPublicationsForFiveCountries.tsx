@@ -114,13 +114,7 @@ export default function PrctIpccReferencesFiveCountry() {
     filter_wg2_and_wg3,
   ];
 
-  const countries = [
-    "United States",
-    "United Kingdom",
-    "Germany",
-    "France",
-    "China",
-  ];
+  const countries = ["USA", "GBR", "DEU", "FRA", "CHN"];
 
   const responses = [
     useQueryResponse(filters[0].body, 50, filters[0].name),
@@ -150,7 +144,6 @@ export default function PrctIpccReferencesFiveCountry() {
       countries.includes(country.key)
     )
   );
-
 
   const values: { name: string; data: number[] }[] = [];
 
