@@ -1,0 +1,22 @@
+{
+  "ipcc_all": {
+    "description": {
+      "FR": "La base de données s'appuie sur le rapport du GIEC, puis biblio-glutton nous permet de retrouver les identifiants de publication et enfin la base est complétée grâce à OpenAlex.",
+      "EN": "The data is based on the IPCC report, then biblio-glutton allows us to find publication identifiers and finally the database is completed using OpenAlex."
+    },
+    "integrationURL": "/teds/charts/ipcc_all",
+    "source": {
+      "FR": "Rapport du GIEC - OpenAlex",
+      "EN": "IPCC report - OpenAlex"
+    },
+    "sourceURL": "https://www.ipcc.ch/",
+    "subtitle": {
+      "FR": "",
+      "EN": ""
+    },
+    "title": {
+      "FR": "Part de publications pour le rapport du GIEC par pays (top 20)",
+      "EN": "Part of IPCC publications by country (top 20)"
+    }
+  }
+}

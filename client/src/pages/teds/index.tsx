@@ -2,7 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { getLabel } from "./charts/utils";
 
-import PrctIpccPublicationsByCountry from "./charts/PrctIpccPublicationsByCountry";
+import IpccAll from "./charts/ipcc-all";
 import PrctIpbesPublicationsByCountry from "./charts/PrctIpbesPublicationsByCountry";
 import PrctIpccPublicationsByCountryByWg1 from "./charts/PrctIpccPublicationsByCountryByWg1";
 import PrctIpccPublicationsByCountryByWg2 from "./charts/PrctIpccPublicationsByCountryByWg2";
@@ -25,7 +25,7 @@ export default function Welcome() {
         </Title>
         <Row gutters>
           <Col md={12}>
-            <PrctIpccPublicationsByCountry />
+            <IpccAll />
           </Col>
         </Row>
         <Title as="h3" look="h6" className="text-center">
