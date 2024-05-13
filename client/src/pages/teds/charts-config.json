@@ -9,7 +9,7 @@
       "FR": "Rapport du GIEC - OpenAlex",
       "EN": "IPCC report - OpenAlex"
     },
-    "sourceURL": "https://www.ipcc.ch/",
+    "sourceURL": "https://www.ipcc.ch",
     "subtitle": {
       "FR": "",
       "EN": ""
@@ -17,6 +17,26 @@
     "title": {
       "FR": "Part de publications pour le rapport du GIEC par pays (top 20)",
       "EN": "Part of IPCC publications by country (top 20)"
+    }
+  },
+  "ipbes_all": {
+    "description": {
+      "FR": "La base de données s'appuie sur le rapport de l'IPBES, puis biblio-glutton nous permet de retrouver les identifiants de publication et enfin la base est complétée grâce à OpenAlex.",
+      "EN": "The data is based on the IPBES report, then biblio-glutton allows us to find publication identifiers and finally the database is completed using OpenAlex."
+    },
+    "integrationURL": "/teds/charts/ipbes_all",
+    "source": {
+      "FR": "Rapport de l'IPBES - OpenAlex",
+      "EN": "IPBES report - OpenAlex"
+    },
+    "sourceURL": "https://www.zotero.org/groups/2352922/ipbes_invasive_alien_species_assessment/collections/4E6HT33D",
+    "subtitle": {
+      "FR": "",
+      "EN": ""
+    },
+    "title": {
+      "FR": "Part de publications pour le rapport de l'IPBES par pays (top 20)",
+      "EN": "Part of IPBES publications by country (top 20)"
     }
   }
 }
