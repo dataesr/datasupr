@@ -4,13 +4,12 @@ import { getLabel } from "./charts/utils";
 
 import IpccAll from "./charts/ipcc-all";
 import IpbesAll from "./charts/ipbes-all";
-import PrctIpbesPublicationsByCountry from "./charts/PrctIpbesPublicationsByCountry";
-import PrctIpccPublicationsByCountryByWg1 from "./charts/PrctIpccPublicationsByCountryByWg1";
-import PrctIpccPublicationsByCountryByWg2 from "./charts/PrctIpccPublicationsByCountryByWg2";
-import PrctIpccPublicationsByCountryByWg2cross from "./charts/PrctIpccPublicationsByCountryByWg2cross";
-import PrctIpccPublicationsByCountryByWg3 from "./charts/PrctIpccPublicationsByCountryByWg3";
-import PrctIpccPublicationsForFiveCountries from "./charts/PrctIpccPublicationsForFiveCountries";
-import translations from "./charts/translations.json";
+import Ipcc5Countries from "./charts/ipcc-for-five-countries";
+import PrctIpccPublicationsByCountryByWg1 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg1";
+import PrctIpccPublicationsByCountryByWg2 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg2";
+import PrctIpccPublicationsByCountryByWg2cross from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg2cross";
+import PrctIpccPublicationsByCountryByWg3 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg3";
+import translations from "./charts-config.json";
 
 export default function Welcome() {
   const [searchParams] = useSearchParams();
@@ -50,7 +49,7 @@ export default function Welcome() {
         </Row>
         <Row gutters>
           <Col md={12}>
-            <PrctIpccPublicationsForFiveCountries />
+            <Ipcc5Countries />
           </Col>
         </Row>
         <Row gutters>

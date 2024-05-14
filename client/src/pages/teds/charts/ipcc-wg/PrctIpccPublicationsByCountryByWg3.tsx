@@ -2,9 +2,9 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useSearchParams } from "react-router-dom";
 
-import translations from "./translations.json";
+import translations from "../../charts-config.json";
 import { getSeries, getOptions, getLabel } from "./utils";
-import { useQueryResponse } from "./hooks";
+import { useQueryResponse } from "../hooks";
 
 export default function PrctIpccReferencesByCountry() {
   const [searchParams] = useSearchParams();
@@ -13,7 +13,7 @@ export default function PrctIpccReferencesByCountry() {
     must: [{ match: { "ipcc.wg.keyword": "3" } }],
   };
 
-  const { data, isLoading } = useQueryResponse(bool, 10, "3");
+  const { data, isLoading } = useQueryResponse(bool, 10, "1");
 
   if (isLoading) {
     return <div>Loading...</div>;
@@ -22,11 +22,17 @@ export default function PrctIpccReferencesByCountry() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { series, categories } = getSeries(data);
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const options = getOptions(series, categories, "IPCC");
-  options.title = {
-    text: getLabel("wg3", translations, currentLang),
-  };
+  const title = getLabel("ipcc_wg", "wg3", translations, currentLang);
+
+  const options = getOptions(
+    series,
+    categories,
+    title,
+    getLabel("ipcc_wg", "format1", translations, currentLang),
+    getLabel("ipcc_wg", "format2", translations, currentLang),
+    getLabel("ipcc_wg", "title_x_axis", translations, currentLang),
+    getLabel("ipcc_wg", "title_y_axis", translations, currentLang)
+  );
 
   return <HighchartsReact highcharts={Highcharts} options={options} />;
 }

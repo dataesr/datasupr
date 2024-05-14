@@ -14,11 +14,23 @@ function getSeries(data) {
   return { series, categories };
 }
 
-function getOptions(series, categories, ip, title) {
+function getOptions(
+  series,
+  categories,
+  title,
+  source,
+  description,
+  format1,
+  format2,
+  title_x_axis,
+  title_y_axis
+) {
   return {
     title: { text: title },
     chart: { type: "column" },
     legend: { enabled: false },
+    source,
+    description,
     plotOptions: {
       column: {
         dataLabels: {
@@ -28,12 +40,12 @@ function getOptions(series, categories, ip, title) {
       },
     },
     tooltip: {
-      format: `<b>{point.name}</b> is involved in <b>{point.y:.2f}%</b> of ${ip} publications`,
+      format: `<b>{point.name}</b> ${format1} <b>{point.y:.2f}%</b> ${format2}`,
     },
     series: [{ data: series }],
-    xAxis: { categories, title: { text: "Country" } },
+    xAxis: { categories, title: { text: title_x_axis } },
     yAxis: {
-      title: { text: `Part of ${ip} publications` },
+      title: { text: title_y_axis },
     },
     credits: {
       enabled: false,
