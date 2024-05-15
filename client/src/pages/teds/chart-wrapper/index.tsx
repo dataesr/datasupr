@@ -191,138 +191,78 @@ export default function ChartWrapper({ id, options, legend, display_title }) {
   const [searchParams] = useSearchParams();
   const currentLanguage = searchParams.get("language");
 
-  if (display_title === false) {
-    return (
-      <section>
-        {graphConfig.title[currentLanguage] && (
-          <>
-            <Title as="h2" look="h4" className="fr-mb-1w">
-              {graphConfig.title[currentLanguage]}
-            </Title>
-            <Text className="sources">
-              Sources :{" "}
-              <a
-                href={graphConfig.sourceURL}
-                target="_blank"
-                rel="noreferrer noopener"
-              >
-                {graphConfig.source[currentLanguage]}
-              </a>
-            </Text>
-          </>
-        )}
-        {graphConfig.subtitle && (
-          <Title
-            as={graphConfig.title ? "h3" : "h2"}
-            look="h6"
-            className="fr-mb-0"
-          >
-            {graphConfig.subtitle[currentLanguage]}
+  return (
+    <section>
+      {graphConfig.title[currentLanguage] && !display_title && (
+        <>
+          <Title as="h2" look="h4" className="fr-mb-1w">
+            {graphConfig.title[currentLanguage]}
           </Title>
-        )}
-        <div className="actions">
-          <Button
-            color="beige-gris-galet"
-            icon="settings-5-line"
-            onClick={() => setIsOpen(true)}
-            size="sm"
-            style={{ minHeight: "1rem", padding: "0 0.5rem" }}
-            variant="text"
-          />
-        </div>
-        {displayType === "data" && (
-          <pre>{JSON.stringify(options.series, null, 2)}</pre>
-        )}
-        {displayType === "chart" && (
-          <figure>
-            <HighchartsReact highcharts={Highcharts} options={options} />
-          </figure>
-        )}
-        <div className="graph-footer fr-pt-1w">
-          {legend}
-          {graphConfig.description && (
-            <div className="fr-notice fr-notice--info fr-mt-1w">
-              <div className="fr-container">
-                <div className="fr-notice__body">
-                  <Text className="description">
-                    {graphConfig.description[currentLanguage]}
-                  </Text>
-                </div>
+          <Text className="sources">
+            Sources :{" "}
+            <a
+              href={graphConfig.sourceURL}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              {graphConfig.source[currentLanguage]}
+            </a>
+          </Text>
+        </>
+      )}
+      {graphConfig.subtitle && (
+        <Title
+          as={graphConfig.title ? "h3" : "h2"}
+          look="h6"
+          className="fr-mb-0"
+        >
+          {graphConfig.subtitle[currentLanguage]}
+        </Title>
+      )}
+      <div className="actions">
+        <Button
+          color="beige-gris-galet"
+          icon="settings-5-line"
+          onClick={() => setIsOpen(true)}
+          size="sm"
+          style={{ minHeight: "1rem", padding: "0 0.5rem" }}
+          variant="text"
+        />
+      </div>
+      {displayType === "data" && (
+        <pre>{JSON.stringify(options.series, null, 2)}</pre>
+      )}
+      {displayType === "chart" && (
+        <figure>
+          <HighchartsReact highcharts={Highcharts} options={options} />
+        </figure>
+      )}
+      <div className="graph-footer fr-pt-1w">
+        {legend}
+        {graphConfig.description && (
+          <div className="fr-notice fr-notice--info fr-mt-1w">
+            <div className="fr-container">
+              <div className="fr-notice__body">
+                <Text className="description">
+                  {graphConfig.description[currentLanguage]}
+                </Text>
               </div>
             </div>
-          )}
-        </div>
-        <MenuModal
-          displayType={displayType}
-          isOpen={isOpen}
-          setDisplayType={setDisplayType}
-          setIsOpen={setIsOpen}
-          setIsOpenIntegration={setIsOpenIntegration}
-        />
-        <IntegrationModal
-          graphConfig={graphConfig}
-          isOpen={isOpenIntegration}
-          setIsOpen={setIsOpenIntegration}
-        />
-      </section>
-    );
-  } else {
-    return (
-      <section>
-        {graphConfig.subtitle && (
-          <Title
-            as={graphConfig.title ? "h3" : "h2"}
-            look="h6"
-            className="fr-mb-0"
-          >
-            {graphConfig.subtitle[currentLanguage]}
-          </Title>
+          </div>
         )}
-        <div className="actions">
-          <Button
-            color="beige-gris-galet"
-            icon="settings-5-line"
-            onClick={() => setIsOpen(true)}
-            size="sm"
-            style={{ minHeight: "1rem", padding: "0 0.5rem" }}
-            variant="text"
-          />
-        </div>
-        {displayType === "data" && (
-          <pre>{JSON.stringify(options.series, null, 2)}</pre>
-        )}
-        {displayType === "chart" && (
-          <figure>
-            <HighchartsReact highcharts={Highcharts} options={options} />
-          </figure>
-        )}
-        <div className="graph-footer fr-pt-1w">
-          {legend}
-          {graphConfig.description && (
-            <div className="fr-notice fr-notice--info fr-mt-1w">
-              <div className="fr-container">
-                <div className="fr-notice__body">
-                  <Text className="description">
-                    {graphConfig.description[currentLanguage]}
-                  </Text>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        <MenuModal
-          displayType={displayType}
-          isOpen={isOpen}
-          setDisplayType={setDisplayType}
-          setIsOpen={setIsOpen}
-          setIsOpenIntegration={setIsOpenIntegration}
-        />
-        <IntegrationModal
-          graphConfig={graphConfig}
-          isOpen={isOpenIntegration}
-          setIsOpen={setIsOpenIntegration}
-        />
-      </section>
-    );
-  }
+      </div>
+      <MenuModal
+        displayType={displayType}
+        isOpen={isOpen}
+        setDisplayType={setDisplayType}
+        setIsOpen={setIsOpen}
+        setIsOpenIntegration={setIsOpenIntegration}
+      />
+      <IntegrationModal
+        graphConfig={graphConfig}
+        isOpen={isOpenIntegration}
+        setIsOpen={setIsOpenIntegration}
+      />
+    </section>
+  );
 }
