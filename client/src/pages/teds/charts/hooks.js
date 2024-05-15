@@ -4,7 +4,6 @@ import { getBuildQuery } from "./utils";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-// eslint-disable-next-line no-redeclare
 function useQueryResponse(body, s, i) {
   const { data, isLoading } = useQuery({
     queryKey: [`ipcc-references_${i}`],

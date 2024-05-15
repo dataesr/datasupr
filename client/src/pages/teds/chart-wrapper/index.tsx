@@ -1,7 +1,10 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { getConfig } from "../utils";
 import { useSearchParams } from "react-router-dom";
+import { useState } from "react";
 import {
   Button,
   Container,
@@ -15,14 +18,10 @@ import {
   Radio,
 } from "@dataesr/dsfr-plus";
 
-const { VITE_APP_URL } = import.meta.env;
-
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
-
 import "./styles.scss";
-import { useState } from "react";
 import CopyButton from "../../../components/copy-button";
+
+const { VITE_APP_URL } = import.meta.env;
 
 function IntegrationModal({ isOpen, setIsOpen, graphConfig }) {
   const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc=${VITE_APP_URL}${graphConfig.integrationURL}></iframe>`;
@@ -73,18 +72,18 @@ function MenuModal({
           <div className="fr-fieldset__element">
             <Radio
               defaultChecked={displayType === "chart"}
-              id="radio-hint-1"
+              id="chart-element"
               label="Graphique"
-              name="radio-hint"
+              name="chart-name"
               onClick={() => setDisplayType("chart")}
             />
           </div>
           <div className="fr-fieldset__element">
             <Radio
               defaultChecked={displayType === "data"}
-              id="radio-hint-2"
+              id="data-element"
               label="Données"
-              name="radio-hint"
+              name="data-name"
               onClick={() => setDisplayType("data")}
             />
           </div>
@@ -150,7 +149,7 @@ function MenuModal({
                 <Button
                   color="beige-gris-galet"
                   icon="facebook-circle-fill"
-                  title="Linkedin"
+                  title="Facebook"
                   variant="text"
                   disabled
                 />
@@ -182,7 +181,7 @@ function MenuModal({
   );
 }
 
-export default function ChartWrapper({ id, options, legend, display_title }) {
+export default function ChartWrapper({ display_title, id, legend, options }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
@@ -190,6 +189,10 @@ export default function ChartWrapper({ id, options, legend, display_title }) {
 
   const [searchParams] = useSearchParams();
   const currentLanguage = searchParams.get("language");
+
+  if (!currentLanguage) {
+    currentLanguage == "FR";
+  }
 
   return (
     <section>

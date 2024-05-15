@@ -5,15 +5,20 @@ import { getLabel } from "./charts/utils";
 import IpccAll from "./charts/ipcc-all";
 import IpbesAll from "./charts/ipbes-all";
 import Ipcc5Countries from "./charts/ipcc-for-five-countries";
+import translations from "./charts-config.json";
 import PrctIpccPublicationsByCountryByWg1 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg1";
 import PrctIpccPublicationsByCountryByWg2 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg2";
 import PrctIpccPublicationsByCountryByWg2cross from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg2cross";
 import PrctIpccPublicationsByCountryByWg3 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg3";
-import translations from "./charts-config.json";
 
 export default function Welcome() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language");
+
+  if (!currentLang) {
+    currentLang == "FR";
+  }
+
   return (
     <>
       <Container as="main">

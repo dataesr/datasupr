@@ -35,7 +35,7 @@ export default function IpccAll() {
     responses.map((response) => response.isLoading).some((item) => item) ||
     response_total.isLoading
   ) {
-    return <div>Loading...</div>;
+    return <Template />;
   }
   const buckets = responses.map((response) =>
     response.data.aggregations.by_countries.buckets.filter((country) =>
@@ -109,11 +109,6 @@ export default function IpccAll() {
     series: values,
   });
 
-  if (
-    responses.map((response) => response.isLoading).some((item) => item) ||
-    response_total.isLoading
-  )
-    return <Template />;
   return (
     <ChartWrapper
       id="ipcc_wg"

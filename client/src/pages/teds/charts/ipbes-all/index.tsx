@@ -11,9 +11,7 @@ export default function IpccAll() {
   const { data, isLoading } = useQueryResponse(bool, 20, "");
   const currentLang = searchParams.get("language");
 
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
+  if (isLoading || !data) return <Template />;
 
   const { series, categories } = getSeries(data);
   const title = getLabel("ipbes_all", "title", translations, currentLang);
@@ -30,7 +28,6 @@ export default function IpccAll() {
     getLabel("ipbes_all", "title_y_axis", translations, currentLang)
   );
 
-  if (isLoading || !data) return <Template />;
   return (
     <ChartWrapper
       id="ipbes_all"

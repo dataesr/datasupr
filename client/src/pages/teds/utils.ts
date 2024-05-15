@@ -11,8 +11,8 @@ export function getConfig(id) {
 export function getFilterLabel(filterId) {
   const filters = {
     country_code: "Pays",
-    // "theme": "Thème",
-    // "chart_id": "Graphique"
+    theme: "Thème",
+    chart_id: "Graphique",
   };
 
   return filters[filterId] || filterId;
