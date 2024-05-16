@@ -10,7 +10,7 @@ import { useSearchParams } from "react-router-dom";
 export default function IpccAll() {
   const [searchParams] = useSearchParams();
   const { data, isLoading } = useQueryResponse(bool, 20, "");
-  const currentLang = searchParams.get("language");
+  const currentLang = searchParams.get("language") || "FR";
 
   if (isLoading || !data) return <Template />;
 

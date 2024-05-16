@@ -9,7 +9,7 @@ import { useSearchParams } from "react-router-dom";
 
 export default function IpccAll() {
   const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language");
+  const currentLang = searchParams.get("language") || "FR";
 
   const { filter_ipcc, filters } = useQuery(translations, currentLang);
 

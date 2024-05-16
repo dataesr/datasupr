@@ -12,11 +12,7 @@ import { useSearchParams } from "react-router-dom";
 
 export default function Welcome() {
   const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language");
-
-  if (!currentLang) {
-    currentLang == "FR";
-  }
+  const currentLang = searchParams.get("language") || "FR";
 
   return (
     <>

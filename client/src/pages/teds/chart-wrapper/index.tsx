@@ -189,11 +189,7 @@ export default function ChartWrapper({ display_title, id, legend, options }) {
   const graphConfig = getConfig(id);
 
   const [searchParams] = useSearchParams();
-  const currentLanguage = searchParams.get("language");
-
-  if (!currentLanguage) {
-    currentLanguage == "FR";
-  }
+  const currentLanguage = searchParams.get("language") || "FR";
 
   return (
     <section>
