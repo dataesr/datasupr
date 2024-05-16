@@ -1,3 +1,5 @@
+import translations from "../charts-config.json";
+
 function getBuildQuery(bool, size) {
   return {
     size: 0,
@@ -58,7 +60,7 @@ function getOptions(series, categories, ip) {
   };
 }
 
-function getLabel(id, translations, currentLang) {
+function getLabel(id, currentLang) {
   return translations[id] ? translations[id][currentLang] : id;
 }
 
