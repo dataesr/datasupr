@@ -1,3 +1,19 @@
+import "./styles.scss";
+
+import {
+  Button,
+  Col,
+  Container,
+  Modal,
+  ModalContent,
+  ModalTitle,
+  Radio,
+  Row,
+  Text,
+  Title,
+} from "@dataesr/dsfr-plus";
+
+import CopyButton from "../../../components/copy-button";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import SyntaxHighlighter from "react-syntax-highlighter";
@@ -5,21 +21,6 @@ import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { getConfig } from "../utils";
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import {
-  Button,
-  Container,
-  Row,
-  Col,
-  Modal,
-  ModalContent,
-  ModalTitle,
-  Title,
-  Text,
-  Radio,
-} from "@dataesr/dsfr-plus";
-
-import "./styles.scss";
-import CopyButton from "../../../components/copy-button";
 
 const { VITE_APP_URL } = import.meta.env;
 

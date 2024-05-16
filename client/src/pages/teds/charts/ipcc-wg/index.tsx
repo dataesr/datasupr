@@ -1,10 +1,11 @@
 import { getLabel, getOptions, getSeries } from "./utils";
-import { useQueryResponse } from "../hooks";
-import { useSearchParams } from "react-router-dom";
-import bool from "./query";
+
 import ChartWrapper from "../../chart-wrapper";
 import Template from "./template";
+import bool from "./query";
 import translations from "../../charts-config.json";
+import { useQueryResponse } from "../hooks";
+import { useSearchParams } from "react-router-dom";
 
 export default function IpccAll() {
   const [searchParams] = useSearchParams();
