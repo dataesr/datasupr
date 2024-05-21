@@ -80,12 +80,12 @@ export function Genders() {
 
   return (
     <Container as="section" fluid>
-      <Row className="fr-mt-5w" gutters>
+      <Row gutters>
         <Col>
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
-                descriptionNode={<Badge color="brown-cafe-creme">{`Année universitaire ${currentYear}`}</Badge>}
+                descriptionNode={<Badge color="brown-cafe-creme">{currentYear}</Badge>}
                 number={dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_feminin || 0}
                 label='Etudiantes inscrites'
                 trendGraph={<TrendCard color="#e18b76" data={dataByYear.map((item: DataByYear) => item.effectif_feminin)} />}
@@ -95,7 +95,7 @@ export function Genders() {
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
-                descriptionNode={<Badge color="brown-cafe-creme">{`Année universitaire ${currentYear}`}</Badge>}
+                descriptionNode={<Badge color="brown-cafe-creme">{currentYear}</Badge>}
                 number={dataByYear?.find((el: DataByYear) => el.annee_universitaire === data?.annee_universitaire)?.effectif_masculin || 0}
                 label='Etudiants inscrits'
                 trendGraph={<TrendCard color="#efcb3a" data={dataByYear.map((item: DataByYear) => item.effectif_masculin)} />}

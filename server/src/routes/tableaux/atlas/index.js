@@ -45,42 +45,63 @@ router.route('/atlas/get-geo-ids-from-search')
 
 router.route('/atlas/get-geo-polygons')
   .get(async (req, res) => {
-    let geoId = req.query.originalId;
-
+    const geoId = req.query.originalId;
     if (!geoId) {
       res.status(400).send('geo_id is required');
     }
 
-    if (['R', 'D', 'A'].includes(geoId[0]) || geoId === 'FRA' || geoId === 'PAYS_100') {
-      if (geoId === 'PAYS_100') {
-        geoId = 'FRA';
-      }
-      // Query from paysage
-      dbPaysage.collection('geographicalcategories').find({ originalId: geoId }).toArray().then((data) => {
-        res.json([{
-          geometry: data[0].geometry,
-          groups: data[0].groups,
-          nameFr: data[0].nameFr,
-          originalId: geoId,
-        }]);
-      })
+    const filters = {};
+    if (geoId[0] === 'R') { // Get all academies of a region
+      filters.reg_id = geoId;
+      filters.niveau_geo = "ACADEMIE";
     }
-    else {
-      // Query from datasupR
-      let filter = { "com_code": geoId };
-      if (geoId.startsWith('UU')) {
-        filter = { "uu_id": geoId };
-      }
-      db.collection('citiesPolygons').find(filter).toArray().then((data) => {
-        const ret = data.map((item) => ({
-          geometry: item.geom?.geometry,
-          nameFr: item.com_nom,
-          originalId: item.com_code,
-          parentOriginalId: item.uucr_id,
-        }));
+    if (geoId[0] === 'D') { // Get all communes of a departement
+      filters.dep_id = geoId;
+      filters.niveau_geo = "COMMUNE";
+    }
+    if (geoId[0] === 'U') { // Get all communes of a departement
+      filters.uucr_id = geoId;
+      filters.niveau_geo = "COMMUNE";
+    }
+    if (geoId[0] === 'A') { // Get all departements of an academy
+      filters.aca_id = geoId;
+      filters.niveau_geo = "DEPARTEMENT";
+    }
+    if (geoId === 'PAYS_100') { // Get all regions of France
+      filters.niveau_geo = "REGION";
+    }
 
-        res.json(ret);
-      })
+    if (geoId.startsWith('R') || geoId.startsWith('A') || geoId.startsWith('P')) {
+      const ids = await db.collection('atlas2023').distinct("geo_id", filters);
+      const polygons = [];
+      for (let i = 0; i < ids.length; i++) {
+        const polygon = await dbPaysage.collection('geographicalcategories').find({ originalId: ids[i] }).toArray();
+        if (polygon[0]) {
+          polygons.push(polygon[0]);
+        }
+      }
+      res.json(polygons);
+    } else {
+      const filter = {};
+      let code = geoId; // communes + uucr
+      let field = "com_code";
+      if (geoId.startsWith('D')) {
+        code = geoId.substring(1, 4);
+        code = code.startsWith('0') ? code.substring(1) : code;
+      }
+      if (geoId.startsWith('U')) {
+        field = "uucr_id";
+      }
+      code = `^${code}`;
+      filter[field] = { "$regex": code, "$options": "i" };
+      const allCities = await db.collection('citiesPolygons').find(filter).toArray();
+      const polygons = allCities.map((city) => ({
+        geometry: city.geom?.geometry,
+        nameFr: city.com_nom,
+        originalId: city.com_code,
+        parentOriginalId: city.uucr_id,
+      }));
+      res.json(polygons);
     }
   });
 
@@ -213,17 +234,17 @@ router.route('/atlas/get-parents-from-geo-id')
     ]).toArray();
 
     res.json({
-      aca_id: data[0].aca_id,
-      aca_nom: data[0].academie[0]?.geo_nom,
-      dep_id: data[0].dep_id,
-      dep_nom: data[0].departement[0]?.geo_nom,
-      geo_id: data[0].geo_id,
-      geo_nom: data[0].geo_nom,
-      niveau_geo: data[0].niveau_geo,
-      reg_id: data[0].reg_id,
-      reg_nom: data[0].region[0]?.geo_nom,
-      uu_id: data[0].uucr_id,
-      uu_nom: data[0].uu[0]?.geo_nom,
+      aca_id: data[0]?.aca_id,
+      aca_nom: data[0]?.academie[0]?.geo_nom,
+      dep_id: data[0]?.dep_id,
+      dep_nom: data[0]?.departement[0]?.geo_nom,
+      geo_id: data[0]?.geo_id,
+      geo_nom: data[0]?.geo_nom,
+      niveau_geo: data[0]?.niveau_geo,
+      reg_id: data[0]?.reg_id,
+      reg_nom: data[0]?.region[0]?.geo_nom,
+      uu_id: data[0]?.uucr_id,
+      uu_nom: data[0]?.uu[0]?.geo_nom,
     });
   });
 

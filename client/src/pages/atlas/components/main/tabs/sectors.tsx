@@ -74,7 +74,7 @@ export function Sectors() {
 
   return (
     <Container as="section" fluid>
-      <Row className="fr-mt-5w" gutters>
+      <Row gutters>
         <Col>
           <Row gutters>
             <Col>
