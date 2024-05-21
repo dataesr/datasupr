@@ -25,6 +25,9 @@ export default function MapWithPolygon({
     return <div>Loading...</div>
   }
 
+  // console.log('MapWithPolygon', data);
+
+
   return (
     <section>
       <Map
