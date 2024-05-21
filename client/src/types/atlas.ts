@@ -26,3 +26,15 @@ export type SimilarData = {
   pctM: number,
   distance: number,
 }
+
+export type MapBubbleDataProps = {
+  z: number,
+  name: string,
+  lat: number,
+  lon: number
+}[];
+
+export type PolygonsDataProps = {
+  type: string,
+  coordinates: [number, number] | [number, number][]
+}[];

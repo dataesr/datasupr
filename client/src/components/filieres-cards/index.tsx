@@ -33,8 +33,8 @@ export default function FilieresCards({ data, isLoading }: { data: DataProps[], 
                     number={(filiere.effectif_PR || 0) + (filiere.effectif_PU || 0)}
                     tagsNode={
                       <TagGroup>
-                        {filiere.effectif_PU > 0 && <Tag color="blue-cumulus">Secteur public</Tag>}
-                        {filiere.effectif_PR > 0 && <Tag color="yellow-moutarde">Secteur privé</Tag>}
+                        {filiere.effectif_PU > 0 && <Tag color="blue-cumulus" size="sm">Secteur public</Tag>}
+                        {filiere.effectif_PR > 0 && <Tag color="yellow-moutarde" size="sm">Secteur privé</Tag>}
                       </TagGroup>
                     }
                     to={`/atlas/effectifs-par-filiere/${filiere.id}?${params}`}

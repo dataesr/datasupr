@@ -13,7 +13,6 @@ export default function Footer() {
             </a>
           </div>
           <div className="fr-footer__content">
-            <p className="fr-footer__content-desc">Lorem [...] elit ut.</p>
             <ul className="fr-footer__content-list">
               <li className="fr-footer__content-item">
                 <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="[À MODIFIER - Intitulé] - nouvelle fenêtre" href="https://legifrance.gouv.fr">legifrance.gouv.fr</a>

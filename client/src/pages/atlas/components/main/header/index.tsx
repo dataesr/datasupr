@@ -11,6 +11,7 @@ import FranceMap from '../../../charts/France-map.tsx';
 import MapWithPolygon from '../../../charts/map-with-polygon.tsx';
 import Template from "../../../../../components/template/index.tsx";
 import { GetLevelBadgeFromId } from "../../../utils/badges.tsx";
+import AtlasMap from "../../../charts/atlas-map.tsx";
 
 export default function Header() {
   const [searchParams] = useSearchParams();
@@ -128,6 +129,7 @@ export default function Header() {
           <Col md={7}>
             {!geoId && <FranceMap data={dataMap || []} isLoading={isLoadingMap} />}
             {geoId && <MapWithPolygon id={geoId || ''} autoCenter={!(geoId === 'PAYS_100')} />}
+            <AtlasMap />
           </Col>
           <Col md={5}>
             <SubList data={dataHistoric?.data} />
