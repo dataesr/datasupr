@@ -18,8 +18,26 @@ function getBuildQuery(bool, size) {
   };
 }
 
-function getLabel(id, currentLang) {
-  return translations[id] ? translations[id][currentLang] : id;
+function getLabel(graph, id, currentLang) {
+  return translations[graph] ? translations[graph][id][currentLang] : id;
 }
 
-export { getBuildQuery, getLabel };
+function getGeneralOptions() {
+  return {
+    chart: { type: "column" },
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        dataLabels: {
+          enabled: true,
+          format: "{point.y:.1f}%",
+        },
+      },
+    },
+    credits: {
+      enabled: false,
+    },
+  };
+}
+
+export { getBuildQuery, getLabel, getGeneralOptions };

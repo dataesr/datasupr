@@ -1,14 +1,14 @@
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { useSearchParams } from "react-router-dom";
 
 import IpbesAll from "./charts/ipbes-all";
-import Ipcc5Countries from "./charts/ipcc-for-five-countries";
 import IpccAll from "./charts/ipcc-all";
+import Ipcc5Countries from "./charts/ipcc-for-five-countries";
 import PrctIpccPublicationsByCountryByWg1 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg1";
 import PrctIpccPublicationsByCountryByWg2 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg2";
 import PrctIpccPublicationsByCountryByWg2cross from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg2cross";
 import PrctIpccPublicationsByCountryByWg3 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg3";
 import { getLabel } from "./charts/utils";
-import { useSearchParams } from "react-router-dom";
 
 export default function Welcome() {
   const [searchParams] = useSearchParams();
@@ -18,10 +18,10 @@ export default function Welcome() {
     <>
       <Container as="main">
         <Title as="h1" className="fr-mb-2w">
-          {getLabel("title", currentLang)}
+          {getLabel("index", "title", currentLang)}
         </Title>
         <Title as="h2" className="fr-mb-2w">
-          {getLabel("ipcc", currentLang)}
+          {getLabel("index", "ipcc", currentLang)}
         </Title>
         <Row gutters>
           <Col md={12}>
@@ -29,7 +29,7 @@ export default function Welcome() {
           </Col>
         </Row>
         <Title as="h3" look="h6" className="text-center">
-          {getLabel("publications_by_group", currentLang)}
+          {getLabel("index", "publications_by_group", currentLang)}
         </Title>
         <Row>
           <Col md={6}>
@@ -55,7 +55,7 @@ export default function Welcome() {
         <Row gutters>
           <Col md={12}>
             <Title as="h2" className="fr-mb-2w">
-              {getLabel("ipbes", currentLang)}
+              {getLabel("index", "ipbes", currentLang)}
             </Title>
           </Col>
         </Row>

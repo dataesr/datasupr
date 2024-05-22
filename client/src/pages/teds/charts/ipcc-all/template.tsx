@@ -1,7 +1,5 @@
+import { Spinner } from "@dataesr/dsfr-plus";
+
 export default function Template() {
-  return (
-    <>
-      graph template
-    </>
-  );
+  return <> {Spinner} </>;
 }

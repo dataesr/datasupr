@@ -1,20 +1,21 @@
-import { getLabel, getOptions } from "./utils";
+import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../chart-wrapper";
-import Template from "./template";
-import translations from "../../charts-config.json";
-import useQuery from "./query";
 import { useQueryResponse } from "../hooks";
-import { useSearchParams } from "react-router-dom";
+import { getLabel } from "../utils";
+import useQuery from "./query";
+import Template from "./template";
+import { getOptions } from "./utils";
 
 export default function IpccAll() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "FR";
 
-  const { filter_ipcc, filters } = useQuery(translations, currentLang);
+  const { filter_ipcc, filters } = useQuery(currentLang);
 
   const countries = ["USA", "GBR", "DEU", "FRA", "CHN"];
 
+  // request the data from elasticsearch for each filter (ex: wg1, wg1 & wg2, etc...)
   const responses = [
     useQueryResponse(filters[0].body, 50, filters[0].name),
     useQueryResponse(filters[1].body, 50, filters[1].name),
@@ -25,26 +26,30 @@ export default function IpccAll() {
     useQueryResponse(filters[6].body, 50, filters[6].name),
   ];
 
+  //request without any filter (all ipcc publications)
   const response_total = useQueryResponse(
     filter_ipcc.body,
     50,
     filter_ipcc.name
   );
 
+  // tests all responses if loaded
   if (
     responses.map((response) => response.isLoading).some((item) => item) ||
     response_total.isLoading
   ) {
     return <Template />;
   }
+
+  // filter on countries for the five countries ('FR', 'US', 'UK', 'DE', 'CN')
   const buckets = responses.map((response) =>
     response.data.aggregations.by_countries.buckets.filter((country) =>
       countries.includes(country.key)
     )
   );
 
+  // count number of publications for each country and for each filter
   const values: { name: string; data: number[] }[] = [];
-
   filters.map((filter, index) => {
     values.push({
       name: filter.name,
@@ -81,37 +86,19 @@ export default function IpccAll() {
     ),
   });
 
+  const title = getLabel("ipcc_five_countries", "title", currentLang);
+
   const options = getOptions(
     values,
     countries,
-    getLabel("ipcc_wg", "title_structures", translations, currentLang),
-    getLabel("ipcc_wg", "title_x_axis", translations, currentLang),
-    getLabel("ipcc_wg", "title_y_axis", translations, currentLang)
+    title,
+    getLabel("ipcc_five_countries", "title_x_axis", currentLang),
+    getLabel("ipcc_five_countries", "title_y_axis", currentLang)
   );
-
-  Object.assign(options, {
-    legend: { enabled: true },
-    plotOptions: {
-      column: {
-        stacking: "percent",
-        dataLabels: {
-          enabled: true,
-          format: "{point.percentage:.0f}%",
-        },
-      },
-    },
-    tooltip: {
-      pointFormat:
-        '<span style="color:{series.color}">{series.name}</span>' +
-        ": <b>{point.y}</b> ({point.percentage:.0f}%)<br/>",
-      shared: true,
-    },
-    series: values,
-  });
 
   return (
     <ChartWrapper
-      id="ipcc_wg"
+      id="ipcc_five_countries"
       options={options}
       legend={<ul className="legend"></ul>}
       display_title={true}

@@ -1,32 +1,30 @@
-import { getLabel, getOptions, getSeries } from "./utils";
-
-import ChartWrapper from "../../chart-wrapper";
-import Template from "./template";
-import bool from "./query";
-import translations from "../../charts-config.json";
-import { useQueryResponse } from "../hooks";
 import { useSearchParams } from "react-router-dom";
 
-export default function IpccAll() {
+import ChartWrapper from "../../chart-wrapper";
+import { useQueryResponse } from "../hooks";
+import { getLabel } from "../utils";
+import bool from "./query";
+import Template from "./template";
+import { getOptions, getSeries } from "./utils";
+
+export default function IpbesAll() {
   const [searchParams] = useSearchParams();
-  const { data, isLoading } = useQueryResponse(bool, 20, "");
+  const { data, isLoading } = useQueryResponse(bool, 20, "ipbes");
   const currentLang = searchParams.get("language") || "FR";
 
   if (isLoading || !data) return <Template />;
 
   const { series, categories } = getSeries(data);
-  const title = getLabel("ipbes_all", "title", translations, currentLang);
+  const title = getLabel("ipbes_all", "title", currentLang);
 
   const options = getOptions(
     series,
     categories,
     title,
-    getLabel("ipbes_all", "description", translations, currentLang),
-    getLabel("ipbes_all", "source", translations, currentLang),
-    getLabel("ipbes_all", "format1", translations, currentLang),
-    getLabel("ipbes_all", "format2", translations, currentLang),
-    getLabel("ipbes_all", "title_x_axis", translations, currentLang),
-    getLabel("ipbes_all", "title_y_axis", translations, currentLang)
+    getLabel("ipbes_all", "format1", currentLang),
+    getLabel("ipbes_all", "format2", currentLang),
+    getLabel("ipbes_all", "title_x_axis", currentLang),
+    getLabel("ipbes_all", "title_y_axis", currentLang)
   );
 
   return (

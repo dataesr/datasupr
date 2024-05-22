@@ -1,6 +1,6 @@
-import { getLabel } from "./utils";
+import { getLabel } from "../utils";
 
-export default function useQuery(translations, currentLang) {
+export default function useQuery(currentLang) {
   const list_wg = ["1", "2", "2_cross", "3"];
 
   const filter_ipcc = {
@@ -25,7 +25,7 @@ export default function useQuery(translations, currentLang) {
         { match: { "ipcc.wg.keyword": list_wg[3] } },
       ],
     },
-    name: getLabel("ipcc_wg", "wg1", translations, currentLang),
+    name: getLabel("ipcc_five_countries", "wg1", currentLang),
   };
   const filter_wg2 = {
     body: {
@@ -36,7 +36,7 @@ export default function useQuery(translations, currentLang) {
         { match: { "ipcc.wg.keyword": list_wg[3] } },
       ],
     },
-    name: getLabel("ipcc_wg", "wg2", translations, currentLang),
+    name: getLabel("ipcc_five_countries", "wg2", currentLang),
   };
   const filter_wg2cross = {
     body: {
@@ -47,7 +47,7 @@ export default function useQuery(translations, currentLang) {
         { match: { "ipcc.wg.keyword": list_wg[3] } },
       ],
     },
-    name: getLabel("ipcc_wg", "wg2cross", translations, currentLang),
+    name: getLabel("ipcc_five_countries", "wg2cross", currentLang),
   };
   const filter_wg3 = {
     body: {
@@ -58,7 +58,7 @@ export default function useQuery(translations, currentLang) {
         { match: { "ipcc.wg.keyword": list_wg[2] } },
       ],
     },
-    name: getLabel("ipcc_wg", "wg3", translations, currentLang),
+    name: getLabel("ipcc_five_countries", "wg3", currentLang),
   };
   const filter_wg1_and_wg2 = {
     body: {
@@ -71,7 +71,7 @@ export default function useQuery(translations, currentLang) {
         { match: { "ipcc.wg.keyword": list_wg[3] } },
       ],
     },
-    name: getLabel("ipcc_wg", "wg1_wg2", translations, currentLang),
+    name: getLabel("ipcc_five_countries", "wg1_wg2", currentLang),
   };
 
   const filter_wg2_and_wg2cross = {
@@ -85,7 +85,7 @@ export default function useQuery(translations, currentLang) {
         { match: { "ipcc.wg.keyword": list_wg[3] } },
       ],
     },
-    name: getLabel("ipcc_wg", "wg2_wg2cross", translations, currentLang),
+    name: getLabel("ipcc_five_countries", "wg2_wg2cross", currentLang),
   };
   const filter_wg2_and_wg3 = {
     body: {
@@ -98,7 +98,7 @@ export default function useQuery(translations, currentLang) {
         { match: { "ipcc.wg.keyword": list_wg[2] } },
       ],
     },
-    name: getLabel("ipcc_wg", "wg2_wg3", translations, currentLang),
+    name: getLabel("ipcc_five_countries", "wg2_wg3", currentLang),
   };
 
   const filters = [

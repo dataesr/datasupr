@@ -1,11 +1,11 @@
-import { getLabel, getOptions, getSeries } from "./utils";
+import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../chart-wrapper";
-import Template from "./template";
-import bool from "./query";
-import translations from "../../charts-config.json";
 import { useQueryResponse } from "../hooks";
-import { useSearchParams } from "react-router-dom";
+import { getLabel } from "../utils";
+import bool from "./query";
+import Template from "./template";
+import { getOptions, getSeries } from "./utils";
 
 export default function IpccAll() {
   const [searchParams] = useSearchParams();
@@ -15,16 +15,16 @@ export default function IpccAll() {
   if (isLoading || !data) return <Template />;
 
   const { series, categories } = getSeries(data);
-  const title = getLabel("ipcc_all", "title", translations, currentLang);
+  const title = getLabel("ipcc_all", "title", currentLang);
 
   const options = getOptions(
     series,
     categories,
     title,
-    getLabel("ipcc_all", "format1", translations, currentLang),
-    getLabel("ipcc_all", "format2", translations, currentLang),
-    getLabel("ipcc_all", "title_x_axis", translations, currentLang),
-    getLabel("ipcc_all", "title_y_axis", translations, currentLang)
+    getLabel("ipcc_all", "format1", currentLang),
+    getLabel("ipcc_all", "format2", currentLang),
+    getLabel("ipcc_all", "title_x_axis", currentLang),
+    getLabel("ipcc_all", "title_y_axis", currentLang)
   );
 
   return (

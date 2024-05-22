@@ -1,3 +1,5 @@
+import { getGeneralOptions } from "../utils";
+
 function getSeries(data) {
   const series = (data?.aggregations?.by_countries?.buckets ?? []).map(
     (item) => ({
@@ -23,18 +25,11 @@ function getOptions(
   title_x_axis,
   title_y_axis
 ) {
+  const generalOptions = getGeneralOptions();
+
   return {
+    ...generalOptions,
     title: { text: title },
-    chart: { type: "column" },
-    legend: { enabled: false },
-    plotOptions: {
-      column: {
-        dataLabels: {
-          enabled: true,
-          format: "{point.y:.1f}%",
-        },
-      },
-    },
     tooltip: {
       format: `<b>{point.name}</b> ${format1} <b>{point.y:.2f}%</b> ${format2}`,
     },
@@ -43,14 +38,7 @@ function getOptions(
     yAxis: {
       title: { text: title_y_axis },
     },
-    credits: {
-      enabled: false,
-    },
   };
 }
 
-function getLabel(graph, id, translations, currentLang) {
-  return translations[graph] ? translations[graph][id][currentLang] : id;
-}
-
-export { getSeries, getOptions, getLabel };
+export { getSeries, getOptions };
