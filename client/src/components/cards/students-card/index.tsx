@@ -34,8 +34,8 @@ export default function StudentsCard({
               }
             </Col>
             {year && (
-              <Col style={{ textAlign: "right" }}>
-                <Badge color="yellow-tournesol">{year}</Badge>
+              <Col md={2} style={{ textAlign: "right" }}>
+                <Badge color="yellow-tournesol" size='sm'>{year}</Badge>
               </Col>
 
             )}
