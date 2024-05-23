@@ -12,7 +12,7 @@ import { getNumberOfStudentsHistoricByLevel, getGeoPolygon } from "../../../api/
 import { useQuery } from "@tanstack/react-query";
 import MapWithPolygonHighcharts from "./map-with-polygon-highcharts.tsx";
 import { MapBubbleDataProps } from "../../../types/atlas.ts";
-import MapWithPolygonHighchartsPie from "./map-with-polygon-highcharts-pie/index.tsx";
+import MapWithPolygonHighchartsPie from "./map-with-polygon-highcharts-pie/index.jsx";
 
 
 export default function AtlasMap() {
@@ -140,7 +140,10 @@ export default function AtlasMap() {
         );
       case 'effectifs-par-secteurs':
         return (
-          <MapWithPolygonHighchartsPie />
+          <MapWithPolygonHighchartsPie
+            mapbubbleData={mapbubbleData}
+            polygonsData={polygonsData}
+          />
         )
 
       default:
