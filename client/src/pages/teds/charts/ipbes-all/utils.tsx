@@ -25,19 +25,19 @@ function getOptions(
   title_x_axis,
   title_y_axis
 ) {
-  const generalOptions = getGeneralOptions();
+  const generalOptions = getGeneralOptions(
+    title,
+    categories,
+    title_x_axis,
+    title_y_axis
+  );
   return {
     ...generalOptions,
-    title: { text: title },
     legend: { enabled: false },
     tooltip: {
       format: `<b>{point.name}</b> ${format1} <b>{point.y:.2f}%</b> ${format2}`,
     },
     series: [{ data: series }],
-    xAxis: { categories, title: { text: title_x_axis } },
-    yAxis: {
-      title: { text: title_y_axis },
-    },
   };
 }
 

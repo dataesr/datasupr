@@ -19,11 +19,12 @@ function getBuildQuery(bool, size) {
 }
 
 function getLabel(graph, id, currentLang) {
-  return translations[graph] ? translations[graph][id][currentLang] : id;
+  return translations?.[graph]?.[id]?.[currentLang] ?? id;
 }
 
-function getGeneralOptions() {
+function getGeneralOptions(title, categories, title_x_axis, title_y_axis) {
   return {
+    title: { text: title },
     chart: { type: "column" },
     legend: { enabled: false },
     plotOptions: {
@@ -33,6 +34,10 @@ function getGeneralOptions() {
           format: "{point.y:.1f}%",
         },
       },
+    },
+    xAxis: { categories, title: { text: title_x_axis } },
+    yAxis: {
+      title: { text: title_y_axis },
     },
     credits: {
       enabled: false,

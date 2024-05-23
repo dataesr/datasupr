@@ -1,15 +1,15 @@
+import { getOptions, getSeries } from "./utils";
+
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { useSearchParams } from "react-router-dom";
-
-import { useQueryResponse } from "../hooks";
-import { getLabel } from "../utils";
 import Template from "./template";
-import { getOptions, getSeries } from "./utils";
+import { getLabel } from "../utils";
+import { useQueryResponse } from "../hooks";
+import { useSearchParams } from "react-router-dom";
 
 export default function PrctIpccReferencesByCountry() {
   const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language");
+  const currentLang = searchParams.get("language") || "FR";
   const bool = {
     must: [{ match: { "ipcc.wg.keyword": "1" } }],
   };

@@ -1,4 +1,9 @@
-import "./styles.scss";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 import {
   Button,
@@ -12,15 +17,10 @@ import {
   Text,
   Title,
 } from "@dataesr/dsfr-plus";
-
 import CopyButton from "../../../components/copy-button";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import { getConfig } from "../utils.ts";
-import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+
+import "./styles.scss";
 
 const { VITE_APP_URL } = import.meta.env;
 

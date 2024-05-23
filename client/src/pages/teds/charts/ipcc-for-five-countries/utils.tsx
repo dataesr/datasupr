@@ -1,16 +1,16 @@
 import { getGeneralOptions } from "../utils";
 
 function getOptions(series, categories, title, title_x_axis, title_y_axis) {
-  const generalOptions = getGeneralOptions();
+  const generalOptions = getGeneralOptions(
+    title,
+    categories,
+    title_x_axis,
+    title_y_axis
+  );
   return {
     ...generalOptions,
     legend: { enabled: true },
-    title: { text: title },
     series,
-    xAxis: { categories, title: { text: title_x_axis } },
-    yAxis: {
-      title: { text: title_y_axis },
-    },
     plotOptions: {
       column: {
         stacking: "percent",
