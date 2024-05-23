@@ -1,0 +1,202 @@
+{
+  "index": {
+    "title": {
+      "FR": "Transition écologique pour un développement soutenable",
+      "EN": "Ecological transition for sustainable development"
+    },
+    "ipcc": {
+      "FR": "Rapport du GIEC",
+      "EN": "IPCC report"
+    },
+    "ipbes": {
+      "FR": "Rapport de l'IPBES",
+      "EN": "IPBES report"
+    },
+    "publications_by_group": {
+      "FR": "Part de publications pour les différents groupes du rapport du GIEC par pays (top 10)",
+      "EN": "Part of IPCC publications by country for each working group (top 10)"
+    }
+  },
+  "ipcc_five_countries": {
+    "title": {
+      "FR": "Structures des contributions pour cinq pays",
+      "EN": "Contribution structures for five countries"
+    },
+    "integrationURL": "/teds/charts/ipcc_all",
+    "source": {
+      "FR": "Rapport du GIEC - OpenAlex",
+      "EN": "IPCC report - OpenAlex"
+    },
+    "sourceURL": "https://www.ipcc.ch",
+    "subtitle": {
+      "FR": "",
+      "EN": ""
+    },
+    "title_x_axis": {
+      "FR": "Pays",
+      "EN": "Countries"
+    },
+    "title_y_axis": {
+      "FR": "Part de publications du GIEC",
+      "EN": "Part of IPCC publications"
+    },
+    "wg1": {
+      "FR": "Sciences Physique (WG1)",
+      "EN": "Physical Sciences (WG1)"
+    },
+    "wg2": {
+      "FR": "Adaptations (WG2)",
+      "EN": "Adaptations (WG2)"
+    },
+    "wg2cross": {
+      "FR": "Adaptations - risques locaux (WG2 cross)",
+      "EN": "Adaptations - local risks (WG2 cross)"
+    },
+    "wg3": {
+      "FR": "Atténuations (WG3)",
+      "EN": "Mitigations (WG3)"
+    },
+    "wg1_wg2": {
+      "FR": "Sciences Physique et Adaptations",
+      "EN": "Physical Sciences and Adaptations"
+    },
+    "wg2_wg2cross": {
+      "FR": "Adaptations et Adaptations - risques locaux",
+      "EN": "Adaptations and Adaptations - local risks"
+    },
+    "wg2_wg3": {
+      "FR": "Adaptations et Atténuations",
+      "EN": "Adaptations and Mitigations"
+    },
+    "description": {
+      "FR": "La base de données s'appuie sur le rapport du GIEC, puis biblio-glutton nous permet de retrouver les identifiants de publication et enfin la base est complétée grâce à OpenAlex.",
+      "EN": "The data is based on the IPCC report, then biblio-glutton allows us to find publication identifiers and finally the database is completed using OpenAlex."
+    }
+  },
+  "ipcc_all": {
+    "description": {
+      "FR": "La base de données s'appuie sur le rapport du GIEC, puis biblio-glutton nous permet de retrouver les identifiants de publication et enfin la base est complétée grâce à OpenAlex.",
+      "EN": "The data is based on the IPCC report, then biblio-glutton allows us to find publication identifiers and finally the database is completed using OpenAlex."
+    },
+    "integrationURL": "/teds/charts/ipcc_all",
+    "source": {
+      "FR": "Rapport du GIEC - OpenAlex",
+      "EN": "IPCC report - OpenAlex"
+    },
+    "sourceURL": "https://www.ipcc.ch",
+    "subtitle": {
+      "FR": "",
+      "EN": ""
+    },
+    "title_x_axis": {
+      "FR": "Pays",
+      "EN": "Countries"
+    },
+    "title_y_axis": {
+      "FR": "Part de publications du GIEC",
+      "EN": "Part of IPCC publications"
+    },
+    "format1": {
+      "FR": "participe dans",
+      "EN": "is involved in"
+    },
+    "format2": {
+      "FR": "des publications du GIEC",
+      "EN": "of IPCC publications"
+    },
+    "title": {
+      "FR": "Part de publications pour le rapport du GIEC par pays (top 20)",
+      "EN": "Part of IPCC publications by country (top 20)"
+    }
+  },
+  "ipbes_all": {
+    "description": {
+      "FR": "La base de données s'appuie sur le rapport de l'IPBES, puis biblio-glutton nous permet de retrouver les identifiants de publication et enfin la base est complétée grâce à OpenAlex.",
+      "EN": "The data is based on the IPBES report, then biblio-glutton allows us to find publication identifiers and finally the database is completed using OpenAlex."
+    },
+    "integrationURL": "/teds/charts/ipbes_all",
+    "source": {
+      "FR": "Rapport de l'IPBES - OpenAlex",
+      "EN": "IPBES report - OpenAlex"
+    },
+    "sourceURL": "https://www.zotero.org/groups/2352922/ipbes_invasive_alien_species_assessment/collections/4E6HT33D",
+    "subtitle": {
+      "FR": "",
+      "EN": ""
+    },
+    "title_x_axis": {
+      "FR": "Pays",
+      "EN": "Countries"
+    },
+    "title_y_axis": {
+      "FR": "Part de publications du GIEC",
+      "EN": "Part of IPCC publications"
+    },
+    "format1": {
+      "FR": "participe dans",
+      "EN": "is involved in"
+    },
+    "format2": {
+      "FR": "des publications du GIEC",
+      "EN": "of IPCC publications"
+    },
+    "title": {
+      "FR": "Part de publications pour le rapport de l'IPBES par pays (top 20)",
+      "EN": "Part of IPBES publications by country (top 20)"
+    }
+  },
+  "ipcc_wg": {
+    "title": {
+      "FR": "Part de publications pour les différents groupes du rapport du GIEC (top 20)",
+      "EN": "Contribution structures for five countries"
+    },
+    "format1": {
+      "FR": "participe dans",
+      "EN": "is involved in"
+    },
+    "format2": {
+      "FR": "des publications du GIEC",
+      "EN": "of IPCC publications"
+    },
+    "title_x_axis": {
+      "FR": "Pays",
+      "EN": "Countries"
+    },
+    "title_y_axis": {
+      "FR": "Part de publications du GIEC",
+      "EN": "Part of IPCC publications"
+    },
+    "wg1": {
+      "FR": "Sciences Physique (WG1)",
+      "EN": "Physical Sciences (WG1)"
+    },
+    "wg2": {
+      "FR": "Adaptations (WG2)",
+      "EN": "Adaptations (WG2)"
+    },
+    "wg2cross": {
+      "FR": "Adaptations - risques locaux (WG2 cross)",
+      "EN": "Adaptations - local risks (WG2 cross)"
+    },
+    "wg3": {
+      "FR": "Atténuations (WG3)",
+      "EN": "Mitigations (WG3)"
+    },
+    "wg1_wg2": {
+      "FR": "Sciences Physique et Adaptations",
+      "EN": "Physical Sciences and Adaptations"
+    },
+    "wg2_wg2cross": {
+      "FR": "Adaptations et Adaptations - risques locaux",
+      "EN": "Adaptations and Adaptations - local risks"
+    },
+    "wg2_wg3": {
+      "FR": "Adaptations et Atténuations",
+      "EN": "Adaptations and Mitigations"
+    },
+    "description": {
+      "FR": "La base de données s'appuie sur le rapport du GIEC, puis biblio-glutton nous permet de retrouver les identifiants de publication et enfin la base est complétée grâce à OpenAlex.",
+      "EN": "The data is based on the IPCC report, then biblio-glutton allows us to find publication identifiers and finally the database is completed using OpenAlex."
+    }
+  }
+}
