@@ -1,19 +1,16 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-import React from "react";
-import HighchartsReact from "highcharts-react-official";
+import * as turf from '@turf/turf';
 import Highcharts from "highcharts";
 import mapModule from "highcharts/modules/map";
-import dataMap from "./mapData.json";
-import dataPie from "./data.json";
-// import proj4 from "proj4";
+import HighchartsReact from "highcharts-react-official";
+import React from "react";
+
+import data from "./data.json";
+import mapData from "./mapData.json";
 
 mapModule(Highcharts);
-// window.proj4 = window.proj4 || proj4;
 
-export default function MapWithPolygonHighchartsPie({
-  mapbubbleData,
-  polygonsData,
-}) {
+export default function MapWithPolygonHighchartsPie() {
   Highcharts.seriesType(
     "mappie",
     "pie",
@@ -81,7 +78,7 @@ export default function MapWithPolygonHighchartsPie({
 
   let maxVotes = 0;
   // Compute max votes to find relative sizes of bubbles
-  Highcharts.each(dataPie, function (row) {
+  Highcharts.each(data, function (row) {
     maxVotes = Math.max(maxVotes, row[3]);
   });
 
@@ -125,14 +122,17 @@ export default function MapWithPolygonHighchartsPie({
 
           // Add the pies after chart load, optionally with offset and connectors
           Highcharts.each(chart.series[0].points, function (state) {
-            console.log("state", state);
             if (!state.id) {
               return; // Skip points with no data, if any
             }
-
-            const pieOffset = state.pieOffset || {},
-              centerLat = parseFloat(state.properties.latitude),
-              centerLon = parseFloat(state.properties.longitude);
+            
+            let polygon;
+            if (state.geometry.type === 'Polygon') {
+              polygon = turf.polygon(state.geometry.coordinates);
+            } else if (state.geometry.type === 'MultiPolygon'){
+              polygon = turf.multiPolygon(state.geometry.coordinates);
+            }
+            const center = turf.centerOfMass(polygon);
 
             // Add the pie for this state
             chart.addSeries(
@@ -153,7 +153,7 @@ export default function MapWithPolygonHighchartsPie({
                       maxVotes
                   );
                 },
-
+                size: state.sumVotes * 70 / maxVotes,
                 data: [
                   {
                     name: "Democrats",
@@ -167,39 +167,12 @@ export default function MapWithPolygonHighchartsPie({
                   },
                 ],
                 center: {
-                  lat: centerLat + (pieOffset.lat || 0),
-                  lon: centerLon + (pieOffset.lon || 0),
+                  lat: center.geometry.coordinates[1],
+                  lon: center.geometry.coordinates[0],
                 },
               },
               false
             );
-
-            // Draw connector to state center if the pie has been offset
-            if (pieOffset.drawConnector !== false) {
-              const centerPoint = chart.fromLatLonToPoint({
-                  lat: centerLat,
-                  lon: centerLon,
-                }),
-                offsetPoint = chart.fromLatLonToPoint({
-                  lat: centerLat + (pieOffset.lat || 0),
-                  lon: centerLon + (pieOffset.lon || 0),
-                });
-              chart.series[2].addPoint(
-                {
-                  name: state.id,
-                  path:
-                    "M" +
-                    offsetPoint.x +
-                    " " +
-                    offsetPoint.y +
-                    "L" +
-                    centerPoint.x +
-                    " " +
-                    centerPoint.y,
-                },
-                false
-              );
-            }
           });
           chart.redraw();
         },
@@ -252,29 +225,13 @@ export default function MapWithPolygonHighchartsPie({
 
     series: [
       {
-        mapData: dataMap,
-        data: dataPie,
+        mapData,
+        data,
         name: "States",
         borderColor: "#FFF",
         showInLegend: false,
-        joinBy: ["name", "id"],
-        keys: ["id", "demVotes", "repVotes", "sumVotes", "value", "pieOffset"],
-      },
-      {
-        name: "Separators",
-        type: "mapline",
-        data: Highcharts.geojson(dataMap, "mapline"),
-        color: "#707070",
-        showInLegend: true,
-        enableMouseTracking: false,
-      },
-      {
-        name: "Connectors",
-        type: "mapline",
-        color: "rgba(130, 130, 130, 0.5)",
-        zIndex: 5,
-        showInLegend: false,
-        enableMouseTracking: false,
+        joinBy: "name",
+        keys: ["name", "demVotes", "repVotes", "sumVotes", "value", "pieOffset"],
       },
     ],
   };
