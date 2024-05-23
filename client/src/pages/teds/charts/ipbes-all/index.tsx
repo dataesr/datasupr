@@ -12,7 +12,7 @@ export default function IpbesAll() {
   const { data, isLoading } = useQueryResponse(bool, 20, "ipbes");
   const currentLang = searchParams.get("language") || "FR";
 
-  if (isLoading || !data) return <Template />;
+  if (isLoading || !data) return Template();
 
   const { series, categories } = getSeries(data);
   const title = getLabel("ipbes_all", "title", currentLang);

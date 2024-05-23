@@ -12,7 +12,7 @@ export default function IpccAll() {
   const { data, isLoading } = useQueryResponse(bool, 20, "");
   const currentLang = searchParams.get("language") || "FR";
 
-  if (isLoading || !data) return <Template />;
+  if (isLoading || !data) return Template();
 
   const { series, categories } = getSeries(data);
   const title = getLabel("ipcc_all", "title", currentLang);

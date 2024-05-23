@@ -38,7 +38,7 @@ export default function IpccAll() {
     responses.map((response) => response.isLoading).some((item) => item) ||
     response_total.isLoading
   ) {
-    return <Template />;
+    return Template();
   }
 
   // filter on countries for the five countries ('FR', 'US', 'UK', 'DE', 'CN')

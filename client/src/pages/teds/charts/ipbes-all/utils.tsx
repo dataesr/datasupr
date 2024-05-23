@@ -33,7 +33,6 @@ function getOptions(
   );
   return {
     ...generalOptions,
-    legend: { enabled: false },
     tooltip: {
       format: `<b>{point.name}</b> ${format1} <b>{point.y:.2f}%</b> ${format2}`,
     },

@@ -16,7 +16,7 @@ export default function PrctIpccReferencesByCountry() {
 
   const { data, isLoading } = useQueryResponse(bool, 10, "3");
 
-  if (isLoading || !data) return <Template />;
+  if (isLoading || !data) return Template();
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { series, categories } = getSeries(data);
