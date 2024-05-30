@@ -21,6 +21,7 @@ export default function MapWithPolygonHighcharts({
   if (isLoading) {
     return <MapSkeleton />;
   }
+
   const mapOptions = {
     chart: {
       map: "countries/ie/ie-all"

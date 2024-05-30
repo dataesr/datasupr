@@ -136,6 +136,7 @@ export default function AtlasMap() {
             });
           }
         });
+
         return (
           <MapWithPolygonHighcharts
             currentYear={currentYear}
