@@ -45,7 +45,7 @@ export default function Map({
 
   // union of polygons
   if (polygonCoordinates.length > 1) {
-    const union = polygonCoordinates.reduce((a, b) => turf.union(a, b), polygonCoordinates[0])
+    const union = polygonCoordinates.reduce((acc, curr) => curr ? turf.union(acc, curr) : acc, polygonCoordinates[0])
     bbox = turf.bbox(union);
   }
 
