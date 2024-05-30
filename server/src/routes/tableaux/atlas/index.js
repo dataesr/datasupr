@@ -233,7 +233,11 @@ router.route('/atlas/get-parents-from-geo-id')
       },
     ]).toArray();
 
-    res.json({
+    if (data.length === 0) {
+      res.status(404).json({});
+    }
+
+    res.status(200).json({
       aca_id: data[0]?.aca_id,
       aca_nom: data[0]?.academie[0]?.geo_nom,
       dep_id: data[0]?.dep_id,
