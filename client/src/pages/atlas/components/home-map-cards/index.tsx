@@ -56,7 +56,7 @@ export default function HomeMapCards({ territoiresList = [] }: { territoiresList
         title="France"
         to='/atlas/general?geo_id=PAYS_100&annee_universitaire=2022-23'
         description={<Badge color="blue-ecume">Pays</Badge>}
-        image={<MapWithPolygon id="FRA" height='100px' zoomControl={false} autoCenter={false} />}
+        image={<MapWithPolygon id="PAYS_100" height='100px' zoomControl={false} autoCenter={false} />}
       />
       {
         territoires.map((territoire) => (
