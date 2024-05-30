@@ -1,35 +1,36 @@
-import { Container, Row, Col, Button, Title, Badge } from "@dataesr/dsfr-plus";
+import { 
+  Badge,
+  Button, 
+  Container, Row, Col, 
+  Title, 
+} from "@dataesr/dsfr-plus";
 import {
-  useSearchParams,
+  useLocation,
   useNavigate,
-  useLocation
+  useSearchParams,
 } from "react-router-dom";
-
 import * as turf from '@turf/turf';
 
-import Template from "../../../components/template/index.tsx";
-import { getNumberOfStudentsHistoricByLevel, getGeoPolygon } from "../../../api/atlas.ts";
-import { useQuery } from "@tanstack/react-query";
-import MapWithPolygonHighcharts from "./map-with-polygon-highcharts.tsx";
+import { getNumberOfStudentsHistoricByLevel, getGeoPolygon, getNumberOfStudentsBySectorAndSublevel, getNumberOfStudentsByGenderAndSublevel } from "../../../api/atlas.ts";
 import { MapBubbleDataProps } from "../../../types/atlas.ts";
-import MapWithPolygonHighchartsPie from "./map-with-polygon-highcharts-pie/index.jsx";
-
+import { useQuery } from "@tanstack/react-query";
+import MapSkeleton from "./skeletons/map.tsx";
+import MapWithPolygonHighcharts from "./map-with-polygon-highcharts.tsx";
+import MapPieSectors from "./map-pie-sectors/index.jsx";
+import MapPieGender from "./map-pie-genders/index.jsx";
+import Template from "../../../components/template/index.tsx";
 
 export default function AtlasMap() {
   const location = useLocation();
   const path = location.pathname.split('/');
   const selectedTab = path[path.length - 1];
-
-  console.log('selectedTab', selectedTab);
-
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
   const geoId = searchParams.get('geo_id') || '';
   const currentYear = searchParams.get('annee_universitaire') || '2022-23';
 
   const { data: dataHistoric, isLoading: isLoadingHistoric } = useQuery({
-    queryKey: ["atlas/number-of-students-historic-by-level", geoId],
+    queryKey: ["atlas/number-of-students-historic-by-level", geoId, currentYear],
     queryFn: () => getNumberOfStudentsHistoricByLevel(geoId, currentYear)
   })
 
@@ -38,9 +39,19 @@ export default function AtlasMap() {
     queryFn: () => getGeoPolygon(geoId)
   })
 
+  const { data: dataSectors, isLoading: isLoadingDataSectors } = useQuery({
+    queryKey: ["atlas/get-number-of-students-by-sector-and-sublevel", geoId, currentYear],
+    queryFn: () => getNumberOfStudentsBySectorAndSublevel(geoId, currentYear)
+  })
+
+  const { data: dataGenders, isLoading: isLoadingDataGenders } = useQuery({
+    queryKey: ["atlas/get-number-of-students-by-gender-and-sublevel", geoId, currentYear],
+    queryFn: () => getNumberOfStudentsByGenderAndSublevel(geoId, currentYear)
+  })
+
   if (isLoadingPolygons || !polygonsData || !polygonsData.length
     || isLoadingHistoric || !dataHistoric?.data || !dataHistoric?.data.length) {
-    return <div>Loading...</div>
+    return <MapSkeleton />;
   }
 
   const getSubLevel = () => {
@@ -60,13 +71,10 @@ export default function AtlasMap() {
     return 'Effectifs étudiants de la commune';
   }
 
-  function SubList({ data }) {
-    if (isLoadingHistoric) {
-      return <Template />;
-    }
-    if (!data) {
-      return null;
-    }
+  function SubList() {
+    if (isLoadingHistoric) { return <Template height="338" />; }
+    if (!dataHistoric?.data) { return null; }
+
     return (
       <Container fluid as="section">
         <Row style={{ width: "100%" }}>
@@ -81,7 +89,7 @@ export default function AtlasMap() {
         </Row>
         <div style={{ height: '338px', overflow: 'auto' }}>
           {
-            data.slice(0, 15).map((item) => (
+            dataHistoric?.data.slice(0, 15).map((item) => (
               <Row style={{ width: "100%", borderBottom: '1px solid #ddd' }} key={item.geo_nom}>
                 <div style={{ flexGrow: "1" }}>
                   {item.geo_nom}
@@ -112,10 +120,8 @@ export default function AtlasMap() {
     );
   }
 
-
   function MapSelector() {
     const mapbubbleData: MapBubbleDataProps = [];
-
     switch (selectedTab) {
       case 'general':
         dataHistoric.data.forEach((item) => {
@@ -130,31 +136,39 @@ export default function AtlasMap() {
             });
           }
         });
-
         return (
           <MapWithPolygonHighcharts
             currentYear={currentYear}
+            isLoading={isLoadingHistoric}
             mapbubbleData={mapbubbleData}
             polygonsData={polygonsData}
           />
         );
+
       case 'effectifs-par-secteurs':
         return (
-          <MapWithPolygonHighchartsPie
-            mapbubbleData={mapbubbleData}
+          <MapPieSectors
+            currentYear={currentYear}
+            isLoading={isLoadingDataSectors}
+            mapPieData={dataSectors}
             polygonsData={polygonsData}
           />
-        )
+        );
+
+        case 'effectifs-par-genre':
+          return (
+            <MapPieGender
+              currentYear={currentYear}
+              isLoading={isLoadingDataGenders}
+              mapPieData={dataGenders}
+              polygonsData={polygonsData}
+            />
+          );
 
       default:
         break;
     }
-
-
-    // selectedTab
-
   }
-
 
   return (
     <Container as="section" fluid>
@@ -170,7 +184,7 @@ export default function AtlasMap() {
           <MapSelector />
         </Col>
         <Col md={5}>
-          <SubList data={dataHistoric?.data} />
+          <SubList />
         </Col>
       </Row>
     </Container>

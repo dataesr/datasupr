@@ -33,7 +33,6 @@ export async function getNumberOfStudentsHistoricByLevel(geoId: string, currentY
     if (geoId.startsWith('U')) { level = `niveau_geo=COMMUNE&uucr_id=${geoId}`; }
     if (geoId === ('PAYS_100')) { level = `niveau_geo=REGION`; }
 
-
     const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-historic-by-level?${level}`
     const data = await fetch(url).then((response) => (response.json()));
 
@@ -82,5 +81,29 @@ export async function getGeoIdsFromSearch(q: string) {
 
 export async function getParentsFromGeoId(geoId: string) {
     const url = `${VITE_APP_SERVER_URL}/atlas/get-parents-from-geo-id?geo_id=${geoId}`;
+    return fetch(url).then((response) => (response.json()))
+}
+
+export async function getNumberOfStudentsBySectorAndSublevel(geoId: string, currentYear: string) {
+    // ex: http://localhost:3000/api/atlas/number-of-students-by-sector-and-sublevel?aca_id=A11&niveau_geo=DEPARTEMENT
+    let params = `niveau_geo=COMMUNE&geo_id=${geoId}&annee_universitaire=${currentYear}`;
+    if (geoId.startsWith('R')) { params = `niveau_geo=ACADEMIE&reg_id=${geoId}`; }
+    if (geoId.startsWith('D')) { params = `niveau_geo=COMMUNE&dep_id=${geoId}`; }
+    if (geoId.startsWith('A')) { params = `niveau_geo=DEPARTEMENT&aca_id=${geoId}`; }
+    if (geoId.startsWith('U')) { params = `niveau_geo=COMMUNE&uucr_id=${geoId}`; }
+    if (geoId === ('PAYS_100')) { params = `niveau_geo=REGION`; }
+    const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-by-sector-and-sublevel?${params}`
+    return fetch(url).then((response) => (response.json()))
+}
+
+export async function getNumberOfStudentsByGenderAndSublevel(geoId: string, currentYear: string) {
+    // ex: http://localhost:3000/api/atlas/number-of-students-by-gender-and-sublevel?aca_id=A11&niveau_geo=DEPARTEMENT
+    let params = `niveau_geo=COMMUNE&geo_id=${geoId}&annee_universitaire=${currentYear}`;
+    if (geoId.startsWith('R')) { params = `niveau_geo=ACADEMIE&reg_id=${geoId}`; }
+    if (geoId.startsWith('D')) { params = `niveau_geo=COMMUNE&dep_id=${geoId}`; }
+    if (geoId.startsWith('A')) { params = `niveau_geo=DEPARTEMENT&aca_id=${geoId}`; }
+    if (geoId.startsWith('U')) { params = `niveau_geo=COMMUNE&uucr_id=${geoId}`; }
+    if (geoId === ('PAYS_100')) { params = `niveau_geo=REGION`; }
+    const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-by-gender-and-sublevel?${params}`
     return fetch(url).then((response) => (response.json()))
 }

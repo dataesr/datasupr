@@ -1,19 +1,30 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-import * as turf from "@turf/turf";
+import React from "react";
 import Highcharts from "highcharts";
 import mapModule from "highcharts/modules/map";
 import HighchartsReact from "highcharts-react-official";
-import React from "react";
+import * as turf from "@turf/turf";
 
-import data from "./data.json";
-import mapData from "./mapData.json";
+import MapSkeleton from "../skeletons/map";
 
 mapModule(Highcharts);
 
-export default function MapWithPolygonHighchartsPie({
-  mapbubbleData,
+export default function MapPieSectors({
+  currentYear,
+  isLoading,
+  mapPieData,
   polygonsData,
 }) {
+  if (isLoading) return <MapSkeleton />;
+
+  const data = mapPieData.map((item) => [
+    item.id,
+    item.effectif_secteur_public,
+    item.effectif_secteur_prive,
+    item.effectif_secteur_public > item.effectif_secteur_prive ? -1 : 1,
+    item.nom,
+  ]);
+
   Highcharts.seriesType(
     "mappie",
     "pie",
@@ -50,11 +61,7 @@ export default function MapWithPolygonHighchartsPie({
         if (options.center.lat !== undefined) {
           const projectedPos = chart.fromLatLonToPoint(options.center),
             pixelPos = chart.mapView.projectedUnitsToPixels(projectedPos);
-
-          options.center = [
-            pixelPos.x, // - chart.plotLeft,
-            pixelPos.y, //- chart.plotTop
-          ];
+          options.center = [pixelPos.x, pixelPos.y];
         }
         // Handle dynamic size
         if (options.sizeFormatter) {
@@ -76,53 +83,22 @@ export default function MapWithPolygonHighchartsPie({
     }
   );
 
-  const publicColor = "rgba(74,131,240,0.80)";
-  const privateColor = "rgba(220,71,71,0.80)";
-
   let maxVotes = 0;
   // Compute max votes to find relative sizes of bubbles
   Highcharts.each(data, function (row) {
-    maxVotes = Math.max(maxVotes, row[3]);
+    maxVotes = Math.max(maxVotes, row[2]);
   });
 
   // Build the chart
   const options = {
+    title: { text: "" },
+    credits: { enabled: false },
     chart: {
       animation: false,
+      mapNavigation: { enabled: false },
       events: {
         load: function () {
           const chart = this;
-
-          // When clicking legend items, also toggle connectors and pies
-          Highcharts.each(chart.legend.allItems, function (item) {
-            const setVisible = item.setVisible;
-            item.setVisible = function () {
-              const legendItem = this;
-              setVisible.call(legendItem);
-
-              Highcharts.each(chart.series[0].points, function (point) {
-                if (
-                  chart.colorAxis[0].dataClasses[point.dataClass].name ===
-                  legendItem.name
-                ) {
-                  // Find this state's pie and set visibility
-                  Highcharts.find(chart.series, function (item) {
-                    return item.name === point.id;
-                  }).setVisible(legendItem.visible, false);
-                  // Do the same for the connector point if it exists
-                  const connector = Highcharts.find(
-                    chart.series[2].points,
-                    (item) => item.name === point.id
-                  );
-                  if (connector) {
-                    connector.setVisible(legendItem.visible, false);
-                  }
-                }
-              });
-              chart.redraw();
-            };
-          });
-
           // Add the pies after chart load, optionally with offset and connectors
           Highcharts.each(chart.series[0].points, function (state) {
             if (!state.id) {
@@ -146,26 +122,57 @@ export default function MapWithPolygonHighchartsPie({
                 zIndex: 6, // Keep pies above connector lines
                 sizeFormatter: function () {
                   const zoomFactor = chart.mapView.zoom / chart.mapView.minZoom;
-
                   return Math.max(
                     (this.chart.chartWidth / 45) * zoomFactor, // Min size
-                    ((this.chart.chartWidth / 11) *
+                    ((this.chart.chartWidth / 14) *
                       zoomFactor *
-                      state.sumVotes) /
+                      (state.publicSector + state.privateSector)) /
                       maxVotes
                   );
                 },
-                size: (state.sumVotes * 70) / maxVotes,
+                tooltip: {
+                  pointFormatter: function () {
+                    return (
+                      this.territory +
+                      "<br /><b>Effectif étidiants " +
+                      currentYear +
+                      "</b><br/>" +
+                      Highcharts.map(
+                        [[this.name, this.y]].sort(function (a, b) {
+                          return b[1] - a[1];
+                        }),
+                        function (line) {
+                          return (
+                            '<span style="color:' +
+                            line[2] +
+                            '">\u25CF</span> ' +
+                            line[0] +
+                            ": " +
+                            Highcharts.numberFormat(line[1], 0) +
+                            "<br/>"
+                          );
+                        }
+                      ).join("") +
+                      "<hr/>Total: " +
+                      Highcharts.numberFormat(this.total, 0) +
+                      " étudiant(e)s"
+                    );
+                  },
+                },
+                size:
+                  ((state.publicSector + state.privateSector) * 70) / maxVotes,
                 data: [
                   {
-                    name: "Democrats",
-                    y: state.demVotes,
-                    color: publicColor,
+                    name: "Secteur public",
+                    y: state.publicSector,
+                    color: "rgba(116,140,192,0.8)",
+                    territory: state.territory,
                   },
                   {
-                    name: "Republicans",
-                    y: state.repVotes,
-                    color: privateColor,
+                    name: "Secteur privé",
+                    y: state.privateSector,
+                    color: "rgba(117,95,77,0.8)",
+                    territory: state.territory,
                   },
                 ],
                 center: {
@@ -180,11 +187,6 @@ export default function MapWithPolygonHighchartsPie({
         },
       },
     },
-
-    title: {
-      text: "",
-    },
-
     colorAxis: {
       dataClasses: [
         {
@@ -202,19 +204,8 @@ export default function MapWithPolygonHighchartsPie({
       ],
     },
 
-    mapNavigation: {
-      enabled: true,
-    },
-    // Limit zoom range
-    yAxis: {
-      minRange: 2300,
-    },
-
-    tooltip: {
-      useHTML: true,
-    },
-
-    // Default options for the pies
+    yAxis: { minRange: 2300 },
+    tooltip: { useHTML: true },
     plotOptions: {
       mappie: {
         borderColor: "rgba(255,255,255,0.4)",
@@ -224,23 +215,62 @@ export default function MapWithPolygonHighchartsPie({
         },
       },
     },
-
     series: [
       {
         mapData: polygonsData,
         data,
-        name: "States",
-        borderColor: "#FFF",
+        name: "Territoire",
+        borderColor: "#fff",
+        nullColor: "rgba(0, 0, 0, 0.3)",
         showInLegend: false,
         joinBy: "originalId",
         keys: [
           "originalId",
-          "demVotes",
-          "repVotes",
-          "sumVotes",
+          "publicSector",
+          "privateSector",
           "value",
-          // "pieOffset",
+          "territory",
         ],
+        tooltip: {
+          headerFormat: "",
+          pointFormatter: function () {
+            var hoverVotes = this.hoverVotes; // Used by pie only
+            return (
+              this.nameFr +
+              "<br /><b>Effectif étudiants " +
+              currentYear +
+              "</b><br/>" +
+              Highcharts.map(
+                [
+                  ["Secteur public", this.publicSector, "#748CCO"],
+                  ["Secteur privé", this.privateSector, "#755F4D"],
+                ].sort(function (a, b) {
+                  return b[1] - a[1]; // Sort tooltip by most votes
+                }),
+                function (line) {
+                  return (
+                    '<span style="color:' +
+                    line[2] +
+                    // Colorized bullet
+                    '">\u25CF</span> ' +
+                    (line[0] === hoverVotes ? "<b>" : "") +
+                    line[0] +
+                    ": " +
+                    Highcharts.numberFormat(line[1], 0) +
+                    (line[0] === hoverVotes ? "</b>" : "") +
+                    "<br/>"
+                  );
+                }
+              ).join("") +
+              "<hr/>Total: " +
+              Highcharts.numberFormat(
+                this.publicSector + this.privateSector,
+                0
+              ) +
+              " étudiant(e)s"
+            );
+          },
+        },
       },
     ],
   };
@@ -251,10 +281,8 @@ export default function MapWithPolygonHighchartsPie({
       options={options}
       containerProps={{
         style: {
-          maxWidth: "820px",
-          minWidth: "320px",
+          width: "100%",
           height: "500px",
-          margin: "1em auto",
         },
       }}
       constructorType={"mapChart"}
