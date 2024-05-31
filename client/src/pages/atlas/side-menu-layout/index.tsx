@@ -2,12 +2,13 @@ import {
   Container, Row, Col,
   Link,
   SideMenu,
+  Title,
 } from '@dataesr/dsfr-plus';
 import { Outlet, useLocation, useSearchParams } from 'react-router-dom';
 import AtlasMap from '../charts/atlas-map';
 import './styles.scss';
 
-export function AtlasSideMenu() {
+export function AtlasSideMenu({title}: {title: string}) {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
 
@@ -32,6 +33,10 @@ export function AtlasSideMenu() {
           </SideMenu>
         </Col>
         <Col xs={12} md={9}>
+          <Title as="h1" look='h3' className="fr-mb-5w">
+            <span className="fr-icon-map-pin-2-line fr-mr-1w" aria-hidden="true"></span>
+            {title}
+          </Title>
           <AtlasMap />
           <Outlet />
         </Col>

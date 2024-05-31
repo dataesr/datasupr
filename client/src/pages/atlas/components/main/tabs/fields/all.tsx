@@ -8,7 +8,6 @@ import {
   getNumberOfStudentsByGenderAndLevel,
 } from '../../../../../../api/atlas.ts';
 
-import FilieresCards from '../../../../../../components/filieres-cards/index.tsx';
 import FilieresGendersChart from '../../../../charts/filieres-genders.tsx';
 
 export default function AllFields() {
@@ -28,11 +27,6 @@ export default function AllFields() {
   return (
     <>
       <Container as="section" fluid>
-        <Row>
-          <Col>
-            <FilieresCards data={data?.filieres || []} isLoading={isLoading} />
-          </Col>
-        </Row>
         <Row className="fr-my-5w">
           <Col>
             <FilieresSectorsChart data={data?.filieres || []} isLoading={isLoading} />

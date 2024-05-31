@@ -2,7 +2,6 @@ import {
   Badge,
   Button, 
   Container, Row, Col, 
-  Title, 
 } from "@dataesr/dsfr-plus";
 import {
   useLocation,
@@ -19,6 +18,7 @@ import MapWithPolygonHighcharts from "./map-with-polygon-highcharts.tsx";
 import MapPieSectors from "./map-pie-sectors/index.jsx";
 import MapPieGender from "./map-pie-genders/index.jsx";
 import Template from "../../../components/template/index.tsx";
+import FilieresList from "../../../components/filieres-list/index.tsx";
 
 export default function AtlasMap() {
   const location = useLocation();
@@ -62,15 +62,6 @@ export default function AtlasMap() {
     if (geoId.startsWith('U')) { return 'Liste des communes'; }
   }
 
-  const getTitle = () => {
-    if (!geoId || geoId === "PAYS_100") { return 'Effectifs étudiants de la France'; }
-    if (geoId.startsWith('R')) { return 'Effectifs étudiants de la région'; }
-    if (geoId.startsWith('D')) { return 'Effectifs étudiants du département'; }
-    if (geoId.startsWith('A')) { return 'Effectifs étudiants de l\'académie'; }
-    if (geoId.startsWith('U')) { return 'Effectifs étudiants de l\'unité urbaine'; }
-    return 'Effectifs étudiants de la commune';
-  }
-
   function SubList() {
     if (isLoadingHistoric) { return <Template height="338" />; }
     if (!dataHistoric?.data) { return null; }
@@ -87,7 +78,7 @@ export default function AtlasMap() {
             <Badge color="yellow-tournesol">{currentYear}</Badge>
           </div>
         </Row>
-        <div style={{ height: '338px', overflow: 'auto' }}>
+        <div style={{ overflow: 'auto' }}>
           {
             dataHistoric?.data.slice(0, 15).map((item) => (
               <Row style={{ width: "100%", borderBottom: '1px solid #ddd' }} key={item.geo_nom}>
@@ -138,32 +129,56 @@ export default function AtlasMap() {
         });
 
         return (
-          <MapWithPolygonHighcharts
-            currentYear={currentYear}
-            isLoading={isLoadingHistoric}
-            mapbubbleData={mapbubbleData}
-            polygonsData={polygonsData}
-          />
+          <Row gutters>
+            <Col md={8}>
+              <MapWithPolygonHighcharts
+                currentYear={currentYear}
+                isLoading={isLoadingHistoric}
+                mapbubbleData={mapbubbleData}
+                polygonsData={polygonsData}
+              />
+            </Col>
+            <Col md={4}>
+              <SubList />
+            </Col>
+          </Row>
         );
+
+      case 'effectifs-par-filiere':
+          return (
+            <Row gutters>
+              <Col md={12}>
+                <FilieresList />
+              </Col>
+            </Row>
+          )
 
       case 'effectifs-par-secteurs':
         return (
-          <MapPieSectors
-            currentYear={currentYear}
-            isLoading={isLoadingDataSectors}
-            mapPieData={dataSectors}
-            polygonsData={polygonsData}
-          />
+          <Row gutters>
+            <Col md={12}>
+              <MapPieSectors
+                currentYear={currentYear}
+                isLoading={isLoadingDataSectors}
+                mapPieData={dataSectors}
+                polygonsData={polygonsData}
+              />
+            </Col>
+          </Row>
         );
 
         case 'effectifs-par-genre':
           return (
-            <MapPieGender
-              currentYear={currentYear}
-              isLoading={isLoadingDataGenders}
-              mapPieData={dataGenders}
-              polygonsData={polygonsData}
-            />
+            <Row gutters>
+              <Col md={12}>
+                <MapPieGender
+                  currentYear={currentYear}
+                  isLoading={isLoadingDataGenders}
+                  mapPieData={dataGenders}
+                  polygonsData={polygonsData}
+                />
+              </Col>
+            </Row>
           );
 
       default:
@@ -173,21 +188,7 @@ export default function AtlasMap() {
 
   return (
     <Container as="section" fluid>
-      <Row>
-        <Col>
-          <Title as="h2" look="h5" className="fr-mb-0">
-            {getTitle()}
-          </Title>
-        </Col>
-      </Row>
-      <Row gutters>
-        <Col md={7}>
-          <MapSelector />
-        </Col>
-        <Col md={5}>
-          <SubList />
-        </Col>
-      </Row>
+      <MapSelector />
     </Container>
   )
 }
