@@ -95,7 +95,7 @@ router.route('/atlas/get-geo-polygons')
       code = `^${code}`;
       filter[field] = { "$regex": code, "$options": "i" };
       const allCities = await db.collection('citiesPolygons').find(filter).toArray();
-      const polygons = allCities.map((city) => ({
+      const polygons = allCities.filter((city) => city.geom?.geometry).map((city) => ({
         geometry: city.geom?.geometry,
         nameFr: city.com_nom,
         originalId: city.com_code,
