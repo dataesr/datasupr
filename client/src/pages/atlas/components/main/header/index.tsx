@@ -1,7 +1,7 @@
 import { Outlet, useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 
-import { Badge, BadgeGroup, Button, Container, Row, Col, Title } from '@dataesr/dsfr-plus';
+import { Badge, BadgeGroup, Button, Container, Row, Col } from '@dataesr/dsfr-plus';
 
 import { getNumberOfStudentsHistoricByLevel, getNumberOfStudentsMap } from '../../../../../api/atlas.ts';
 
@@ -40,27 +40,9 @@ export default function Header() {
     if (geoId.startsWith('U')) { return 'Liste des communes'; }
   }
 
-  const getTitle = () => {
-    if (!geoId || geoId === "PAYS_100") { return 'Effectifs étudiants de la France'; }
-
-    if (geoId.startsWith('R')) { return 'Effectifs étudiants de la région'; }
-    if (geoId.startsWith('D')) { return 'Effectifs étudiants du département'; }
-    if (geoId.startsWith('A')) { return 'Effectifs étudiants de l\'académie'; }
-    if (geoId.startsWith('U')) { return 'Effectifs étudiants de l\'unité urbaine'; }
-
-    return 'Effectifs étudiants de la commune';
-  }
-
   function ListTitle({ currentYear }: { currentYear: string }) {
     return (
       <>
-        <Row>
-          <Col>
-            <Title as="h2" look="h5" className="fr-mb-0">
-              {getTitle()}
-            </Title>
-          </Col>
-        </Row>
         <Row style={{ width: "100%" }}>
           <div style={{ flexGrow: "1" }}>
             <strong>

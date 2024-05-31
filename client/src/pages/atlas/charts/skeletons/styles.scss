@@ -36,3 +36,27 @@
     background-position: 0% 50%;
   }
 }
+
+.filieres-list-skeleton {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .filieres-list-skeleton__title{
+    width: 100%;
+    height: 20px;
+    margin-bottom: 10px;
+    background-image: linear-gradient(-45deg, #e2e2e2 15%, #e2e2e2 25%, #e2e2e2 51%, #cecece 100%);
+    -webkit-animation: AnimateBG 20s ease infinite;
+    animation: AnimateBG 20s ease infinite;
+  }
+
+  .filieres-list-skeleton__item {
+    width: 70%;
+    height: 50px;
+    margin-bottom: 10px;
+    background-image: linear-gradient(-45deg, #e2e2e2 15%, #e2e2e2 25%, #e2e2e2 51%, #cecece 100%);
+    -webkit-animation: AnimateBG 20s ease infinite;
+    animation: AnimateBG 20s ease infinite;
+  }
+}

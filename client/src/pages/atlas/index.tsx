@@ -114,7 +114,7 @@ export default function AtlasHeader() {
         }
       </Breadcrumb>
 
-      {(!geoId) ? <Search /> : <AtlasSideMenu />}
+      {(!geoId) ? <Search /> : <AtlasSideMenu title={geoLabelFull} />}
     </Container >
   )
 }
