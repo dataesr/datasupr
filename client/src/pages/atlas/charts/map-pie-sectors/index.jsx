@@ -83,11 +83,17 @@ export default function MapPieSectors({
     }
   );
 
-  let maxVotes = 0;
-  // Compute max votes to find relative sizes of bubbles
+  // Compute min and max staff to find relative sizes of bubbles
+  let maxStaff = 0;
   Highcharts.each(data, function (row) {
-    maxVotes = Math.max(maxVotes,  row[1] + row[2]);
+    maxStaff = Math.max(maxStaff,  row[1] + row[2]);
   });
+  let minStaff = maxStaff;
+  Highcharts.each(data, function (row) {
+    minStaff = Math.min(minStaff,  row[1] + row[2]);
+  });
+  const a = 1 / (maxStaff - minStaff);
+  const b = - a * minStaff;
 
   // Build the chart
   const options = {
@@ -121,15 +127,9 @@ export default function MapPieSectors({
                 name: state.id,
                 zIndex: 6, // Keep pies above connector lines
                 sizeFormatter: function () {
-                  const zoomFactor = chart.mapView.zoom / chart.mapView.minZoom;
-                  const max = Math.max(
-                    (this.chart.chartWidth / 45) * zoomFactor, // Min size
-                    ((this.chart.chartWidth / 14) *
-                      zoomFactor *
-                      (state.publicSector + state.privateSector)) /
-                      maxVotes
-                  );
-                  return Math.log2(0.1 * max) * 50;
+                  const x = state.publicSector + state.privateSector;
+                  const y = a * x + b;
+                  return Math.log(y + 1.5) * 100;
                 },
                 tooltip: {
                   pointFormatter: function () {
@@ -161,7 +161,7 @@ export default function MapPieSectors({
                   },
                 },
                 size:
-                  ((state.publicSector + state.privateSector) * 70) / maxVotes,
+                  ((state.publicSector + state.privateSector) * 70) / maxStaff,
                 data: [
                   {
                     name: "Secteur public",
