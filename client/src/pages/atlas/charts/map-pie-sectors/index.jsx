@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-import React from "react";
+import * as turf from "@turf/turf";
 import Highcharts from "highcharts";
 import mapModule from "highcharts/modules/map";
 import HighchartsReact from "highcharts-react-official";
-import * as turf from "@turf/turf";
+import React from "react";
 
 import MapSkeleton from "../skeletons/map";
 
@@ -86,7 +86,7 @@ export default function MapPieSectors({
   let maxVotes = 0;
   // Compute max votes to find relative sizes of bubbles
   Highcharts.each(data, function (row) {
-    maxVotes = Math.max(maxVotes, row[2]);
+    maxVotes = Math.max(maxVotes,  row[1] + row[2]);
   });
 
   // Build the chart
@@ -122,13 +122,14 @@ export default function MapPieSectors({
                 zIndex: 6, // Keep pies above connector lines
                 sizeFormatter: function () {
                   const zoomFactor = chart.mapView.zoom / chart.mapView.minZoom;
-                  return Math.max(
+                  const max = Math.max(
                     (this.chart.chartWidth / 45) * zoomFactor, // Min size
                     ((this.chart.chartWidth / 14) *
                       zoomFactor *
                       (state.publicSector + state.privateSector)) /
                       maxVotes
                   );
+                  return Math.log2(0.1 * max) * 50;
                 },
                 tooltip: {
                   pointFormatter: function () {
