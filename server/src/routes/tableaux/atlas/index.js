@@ -618,7 +618,6 @@ router.route('/atlas/get-filters-values')
     if (req.query.geo_id) {
       filters = { geo_id: req.query.geo_id };
     }
-
     const annees_universitaires_onlyData = await db.collection('atlas2023').distinct("annee_universitaire", filters);
     const annees_universitaires_all = await db.collection('atlas2023').distinct("annee_universitaire");
     const temp = await db.collection('atlas2023').aggregate([

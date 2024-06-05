@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
-import { Button, Breadcrumb, Container, Row, Col, Link } from '@dataesr/dsfr-plus';
+import { Badge, Button, Breadcrumb, Container, Row, Col, Link } from '@dataesr/dsfr-plus';
 import { useTitle } from '../../hooks/usePageTitle.tsx';
 
 import { getFiltersValues, getParentsFromGeoId } from '../../api/atlas.ts';
@@ -54,7 +54,7 @@ export default function AtlasHeader() {
     );
   }
 
-  let geoLabelFull = '';
+  let geoLabelFull;
   const geoLabel = getGeoLabel(geoId, filtersValues?.geo_id);
   switch (geoId?.charAt(0)) {
     case 'R':
@@ -65,6 +65,9 @@ export default function AtlasHeader() {
       break;
     case 'A':
       geoLabelFull = `Académie "${geoLabel}"`;
+      break;
+    case 'U':
+      geoLabelFull = <>{geoLabel} <Badge>Unité urbaine</Badge></>;
       break;
   }
 
