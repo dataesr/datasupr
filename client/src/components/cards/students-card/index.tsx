@@ -1,14 +1,14 @@
-import { Row, Col, Badge } from '@dataesr/dsfr-plus';
+import { Row, Col, Badge } from "@dataesr/dsfr-plus";
 
-import './style.scss';
+import "./style.scss";
 
 type CardProps = {
-  descriptionNode?: JSX.Element,
-  label?: string,
-  number: number | string,
-  tagsNode?: JSX.Element,
-  to?: string,
-  year?: string,
+  descriptionNode?: JSX.Element;
+  label?: string;
+  number: number | string;
+  tagsNode?: JSX.Element;
+  to?: string;
+  year?: string;
 };
 
 export default function StudentsCard({
@@ -25,37 +25,49 @@ export default function StudentsCard({
         <div className="fr-card__content fr-pb-1w">
           <Row>
             <Col>
-              {
-                tagsNode && (
-                  <div className="fr-card__start">
-                    {tagsNode}
-                  </div>
-                )
-              }
+              {tagsNode && <div className="fr-card__start">{tagsNode}</div>}
             </Col>
             {year && (
               <Col md={2} style={{ textAlign: "right" }}>
-                <Badge color="yellow-tournesol" size='sm'>{year}</Badge>
+                <Badge color="yellow-tournesol" size="sm">
+                  {year}
+                </Badge>
               </Col>
-
             )}
           </Row>
-          <p className="fr-card__desc card-description">
-            {descriptionNode}
-          </p>
+          <p className="fr-card__desc card-description">{descriptionNode}</p>
           <h3 className="fr-card__title">
-            <a href={to} className="fr-card__link">
-              <div className="key-number">
-                {number.toLocaleString('fr-FR')}
-              </div>
-              {
-                label ? (
+            {to !== "#" ? (
+              <a href={to} className="fr-card__link">
+                <div className="key-number">
+                  {number.toLocaleString("fr-FR")}
+                </div>
+                {label ? (
                   <div className="students-label">{label}</div>
                 ) : (
-                  <div className="students-label">Etudiants<br />inscrits</div>
-                )
-              }
-            </a>
+                  <div className="students-label">
+                    Etudiants
+                    <br />
+                    inscrits
+                  </div>
+                )}
+              </a>
+            ) : (
+              <>
+                <div className="key-number">
+                  {number.toLocaleString("fr-FR")}
+                </div>
+                {label ? (
+                  <div className="students-label">{label}</div>
+                ) : (
+                  <div className="students-label">
+                    Etudiants
+                    <br />
+                    inscrits
+                  </div>
+                )}
+              </>
+            )}
           </h3>
         </div>
       </div>
