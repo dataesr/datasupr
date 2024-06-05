@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
-import React from "react";
+import * as turf from "@turf/turf";
 import Highcharts from "highcharts";
 import mapModule from "highcharts/modules/map";
 import HighchartsReact from "highcharts-react-official";
-import * as turf from "@turf/turf";
+import React from "react";
 
 import MapSkeleton from "../skeletons/map";
 
@@ -83,11 +83,17 @@ export default function MapPieSectors({
     }
   );
 
-  let maxVotes = 0;
-  // Compute max votes to find relative sizes of bubbles
+  // Compute min and max staff to find relative sizes of bubbles
+  let maxStaff = 0;
   Highcharts.each(data, function (row) {
-    maxVotes = Math.max(maxVotes, row[2]);
+    maxStaff = Math.max(maxStaff,  row[1] + row[2]);
   });
+  let minStaff = maxStaff;
+  Highcharts.each(data, function (row) {
+    minStaff = Math.min(minStaff,  row[1] + row[2]);
+  });
+  const a = 1 / (maxStaff - minStaff);
+  const b = - a * minStaff;
 
   // Build the chart
   const options = {
@@ -121,14 +127,9 @@ export default function MapPieSectors({
                 name: state.id,
                 zIndex: 6, // Keep pies above connector lines
                 sizeFormatter: function () {
-                  const zoomFactor = chart.mapView.zoom / chart.mapView.minZoom;
-                  return Math.max(
-                    (this.chart.chartWidth / 45) * zoomFactor, // Min size
-                    ((this.chart.chartWidth / 14) *
-                      zoomFactor *
-                      (state.publicSector + state.privateSector)) /
-                      maxVotes
-                  );
+                  const x = state.publicSector + state.privateSector;
+                  const y = a * x + b;
+                  return Math.log(y + 1.5) * 100;
                 },
                 tooltip: {
                   pointFormatter: function () {
@@ -160,7 +161,7 @@ export default function MapPieSectors({
                   },
                 },
                 size:
-                  ((state.publicSector + state.privateSector) * 70) / maxVotes,
+                  ((state.publicSector + state.privateSector) * 70) / maxStaff,
                 data: [
                   {
                     name: "Secteur public",
