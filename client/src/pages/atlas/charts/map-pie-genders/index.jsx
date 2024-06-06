@@ -83,11 +83,17 @@ export default function MapPieGenders({
     }
   );
 
-  let maxVotes = 0;
-  // Compute max votes to find relative sizes of bubbles
+  // Compute min and max staff to find relative sizes of bubbles
+  let maxStaff = 0;
   Highcharts.each(data, function (row) {
-    maxVotes = Math.max(maxVotes, row[2]);
+    maxStaff = Math.max(maxStaff, row[1] + row[2]);
   });
+  let minStaff = maxStaff;
+  Highcharts.each(data, function (row) {
+    minStaff = Math.min(minStaff, row[1] + row[2]);
+  });
+  const a = 1 / (maxStaff - minStaff);
+  const b = -a * minStaff;
 
   // Build the chart
   const options = {
@@ -121,14 +127,9 @@ export default function MapPieGenders({
                 name: state.id,
                 zIndex: 6, // Keep pies above connector lines
                 sizeFormatter: function () {
-                  const zoomFactor = chart.mapView.zoom / chart.mapView.minZoom;
-                  return Math.max(
-                    (this.chart.chartWidth / 45) * zoomFactor, // Min size
-                    ((this.chart.chartWidth / 14) *
-                      zoomFactor *
-                      (state.effectifFeminin + state.effectifMasculin)) /
-                      maxVotes
-                  );
+                  const x = state.effectifFeminin + state.effectifMasculin;
+                  const y = a * x + b;
+                  return Math.log(y + 1.5) * 100;
                 },
                 tooltip: {
                   pointFormatter: function () {
@@ -161,7 +162,7 @@ export default function MapPieGenders({
                 },
                 size:
                   ((state.effectifFeminin + state.effectifMasculin) * 70) /
-                  maxVotes,
+                  maxStaff,
                 data: [
                   {
                     name: "Effectif féminin",
