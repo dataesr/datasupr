@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
-  Badge,
   Button,
   Breadcrumb,
   Container,
