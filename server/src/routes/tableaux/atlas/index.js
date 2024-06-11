@@ -492,9 +492,6 @@ router
       filters.annee_universitaire = "2022-23";
     }
 
-    console.log("req.query", req.query);
-    // filters.regroupement = "TOTAL";
-
     const data = await db
       .collection("atlas2023")
       .aggregate([
