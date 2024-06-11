@@ -86,14 +86,14 @@ export default function MapPieSectors({
   // Compute min and max staff to find relative sizes of bubbles
   let maxStaff = 0;
   Highcharts.each(data, function (row) {
-    maxStaff = Math.max(maxStaff,  row[1] + row[2]);
+    maxStaff = Math.max(maxStaff, row[1] + row[2]);
   });
   let minStaff = maxStaff;
   Highcharts.each(data, function (row) {
-    minStaff = Math.min(minStaff,  row[1] + row[2]);
+    minStaff = Math.min(minStaff, row[1] + row[2]);
   });
   const a = 1 / (maxStaff - minStaff);
-  const b = - a * minStaff;
+  const b = -a * minStaff;
 
   // Build the chart
   const options = {
@@ -135,7 +135,7 @@ export default function MapPieSectors({
                   pointFormatter: function () {
                     return (
                       this.territory +
-                      "<br /><b>Effectif étidiants " +
+                      "<br /><b>Effectif étudiants " +
                       currentYear +
                       "</b><br/>" +
                       Highcharts.map(

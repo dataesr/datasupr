@@ -135,7 +135,7 @@ export default function MapPieGenders({
                   pointFormatter: function () {
                     return (
                       this.territory +
-                      "<br /><b>Effectif étidiants " +
+                      "<br /><b>Effectif étudiants " +
                       currentYear +
                       "</b><br/>" +
                       Highcharts.map(
