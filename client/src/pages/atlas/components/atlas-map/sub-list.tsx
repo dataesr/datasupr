@@ -45,6 +45,13 @@ export default function SubList() {
     }
   };
 
+  const maxValue = Math.max(
+    ...dataHistoric.data.map(
+      (ter) =>
+        ter.data.find((el) => el.annee_universitaire === currentYear)?.effectif
+    )
+  );
+
   return (
     <Container fluid as="section">
       <Row style={{ width: "100%" }}>
@@ -57,38 +64,50 @@ export default function SubList() {
           <Badge color="yellow-tournesol">{currentYear}</Badge>
         </div>
       </Row>
-      <div style={{ overflow: "auto" }}>
-        {dataHistoric?.data.slice(0, 15).map((item) => (
-          <Row
-            style={{ width: "100%", borderBottom: "1px solid #ddd" }}
-            key={item.geo_nom}
-          >
-            <div style={{ flexGrow: "1" }}>{item.geo_nom}</div>
-            <div className="fr-mb-1w">
-              <strong>
-                {item.data
-                  .find((el) => el.annee_universitaire === currentYear)
-                  ?.effectif.toLocaleString()}
-              </strong>
-              {["R", "D", "A", "U", "P"].includes(geoId?.charAt(0)) && (
-                <Button
-                  className="fr-ml-1w"
-                  color="pink-tuile"
-                  onClick={() =>
-                    navigate(
-                      `/atlas/general?geo_id=${item.geo_id}&annee_universitaire=${currentYear}`
-                    )
-                  }
-                  size="sm"
-                  variant="text"
-                >
-                  Voir
-                </Button>
-              )}
-            </div>
-          </Row>
-        ))}
-      </div>
+      <ul style={{ overflow: "auto", listStyle: "none", padding: 0 }}>
+        {dataHistoric?.data.slice(0, 15).map((item) => {
+          const size = Math.round((item.data[0].effectif / maxValue) * 100);
+          return (
+            <li>
+              <Row key={item.geo_nom} style={{ width: "100%" }}>
+                <div style={{ flexGrow: "1" }}>{item.geo_nom}</div>
+                <div>
+                  <strong>
+                    {item.data
+                      .find((el) => el.annee_universitaire === currentYear)
+                      ?.effectif.toLocaleString()}
+                  </strong>
+                  {["R", "D", "A", "U", "P"].includes(geoId?.charAt(0)) && (
+                    <Button
+                      className="fr-ml-1w"
+                      color="pink-tuile"
+                      onClick={() =>
+                        navigate(
+                          `/atlas/general?geo_id=${item.geo_id}&annee_universitaire=${currentYear}`
+                        )
+                      }
+                      size="sm"
+                      variant="text"
+                    >
+                      Voir
+                    </Button>
+                  )}
+                </div>
+              </Row>
+              <div
+                className="fr-mb-1w"
+                style={{
+                  width: `${size}%`,
+                  height: "8px",
+                  backgroundColor: "#D98281",
+                  borderTopRightRadius: "3px",
+                  borderBottomRightRadius: "3px",
+                }}
+              />
+            </li>
+          );
+        })}
+      </ul>
     </Container>
   );
 }
