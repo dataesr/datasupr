@@ -1,33 +1,33 @@
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Badge,
+  Button,
+  Col,
+  Container,
+  Row,
+  Text,
+  Title,
+} from "@dataesr/dsfr-plus";
+import * as turf from "@turf/turf";
+
+import GendersCard from "../../../../../../components/cards/genders-card/index.tsx";
+import MapSkeleton from "../../../../charts/skeletons/map.tsx";
+import MapWithPolygonAndBubbles from "../../../../charts/map-with-polygon-and-bubbles.tsx";
+import SectorsCard from "../../../../../../components/cards/sectors-card/index.tsx";
+import StudentsCard from "../../../../../../components/cards/students-card/index.tsx";
+import {
+  DataByYear,
+  MapBubbleDataProps,
+} from "../../../../../../types/atlas.ts";
+import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
+import ColumnsChart from "../../../../charts/columns.tsx";
 import {
   getNumberOfStudentsByYear,
   getNumberOfStudents,
   getGeoPolygon,
   getNumberOfStudentsByFieldAndSublevel,
 } from "../../../../../../api/atlas.ts";
-import { useQuery } from "@tanstack/react-query";
-import {
-  Col,
-  Container,
-  Row,
-  Title,
-  Text,
-  Button,
-  Badge,
-} from "@dataesr/dsfr-plus";
-import * as turf from "@turf/turf";
-
-import ColumnsChart from "../../../../charts/columns.tsx";
-import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
-import {
-  DataByYear,
-  MapBubbleDataProps,
-} from "../../../../../../types/atlas.ts";
-import StudentsCard from "../../../../../../components/cards/students-card/index.tsx";
-import SectorsCard from "../../../../../../components/cards/sectors-card/index.tsx";
-import GendersCard from "../../../../../../components/cards/genders-card/index.tsx";
-import MapSkeleton from "../../../../charts/skeletons/map.tsx";
-import MapWithPolygonAndBubbles from "../../../../charts/map-with-polygon-and-bubbles.tsx";
 
 export default function OneField() {
   const { idFiliere } = useParams();
@@ -78,7 +78,6 @@ export default function OneField() {
     ) {
       return <MapSkeleton />;
     }
-    console.log(fieldData);
 
     const mapbubbleData: MapBubbleDataProps = [];
     fieldData.forEach((item) => {
