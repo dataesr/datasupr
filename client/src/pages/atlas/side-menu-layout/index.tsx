@@ -1,6 +1,6 @@
 import { Container, Row, Col, Link, SideMenu, Title } from "@dataesr/dsfr-plus";
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
-import AtlasMap from "../charts/atlas-map";
+import AtlasMap from "../components/atlas-map";
 import "./styles.scss";
 import { ReactNode } from "react";
 

@@ -27,7 +27,7 @@ import StudentsCard from "../../../../../../components/cards/students-card/index
 import SectorsCard from "../../../../../../components/cards/sectors-card/index.tsx";
 import GendersCard from "../../../../../../components/cards/genders-card/index.tsx";
 import MapSkeleton from "../../../../charts/skeletons/map.tsx";
-import MapWithPolygonHighcharts from "../../../../charts/map-with-polygon-highcharts.tsx";
+import MapWithPolygonAndBubbles from "../../../../charts/map-with-polygon-and-bubbles.tsx";
 
 export default function OneField() {
   const { idFiliere } = useParams();
@@ -96,7 +96,7 @@ export default function OneField() {
     });
 
     return (
-      <MapWithPolygonHighcharts
+      <MapWithPolygonAndBubbles
         currentYear={currentYear}
         isLoading={false}
         mapbubbleData={mapbubbleData}

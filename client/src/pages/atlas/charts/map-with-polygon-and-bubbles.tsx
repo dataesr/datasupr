@@ -1,3 +1,4 @@
+import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import highchartsMap from "highcharts/modules/map";
@@ -6,38 +7,40 @@ import MapSkeleton from "./skeletons/map";
 
 highchartsMap(Highcharts);
 
-export default function MapWithPolygonHighcharts({
+export default function MapWithPolygonAndBubbles({
   currentYear,
   isLoading,
   mapbubbleData = [],
   polygonsData = [],
 }: {
-  currentYear: string,
-  isLoading: boolean,
-  mapbubbleData: MapBubbleDataProps,
-  polygonsData: PolygonsDataProps,
-}
-) {
+  currentYear: string;
+  isLoading: boolean;
+  mapbubbleData: MapBubbleDataProps;
+  polygonsData: PolygonsDataProps;
+}) {
+  const [searchParams] = useSearchParams();
+  const geoId = searchParams.get("geo_id") || "";
+
   if (isLoading) {
     return <MapSkeleton />;
   }
 
   const mapOptions = {
     chart: {
-      map: "countries/ie/ie-all"
+      map: "countries/ie/ie-all",
     },
     title: {
-      text: ""
+      text: "",
     },
     credits: {
-      enabled: false
+      enabled: false,
     },
     mapNavigation: {
-      enabled: false
+      enabled: false,
     },
     tooltip: {
       headerFormat: "Effectifs étudiants - " + currentYear + "<br>",
-      pointFormat: "<b>{point.name}</b> : {point.z} étudiants"
+      pointFormat: "<b>{point.name}</b> : {point.z} étudiants",
     },
     series: [
       {
@@ -45,7 +48,7 @@ export default function MapWithPolygonHighcharts({
         mapData: polygonsData,
         borderColor: "#A0A0A0",
         nullColor: "rgba(200, 200, 200, 0.3)",
-        showInLegend: false
+        showInLegend: false,
       },
       {
         type: "mapbubble",
@@ -53,23 +56,31 @@ export default function MapWithPolygonHighcharts({
         color: "#D5706F",
         data: mapbubbleData,
         cursor: "pointer",
-        point: {
-          events: {
-            click: function (e) {
-              console.log(e);
-            }
-          }
-        }
-      }
-    ]
+      },
+    ],
   };
+
+  // special case : Normandie - ignore St-Pierre-et-Miquelon
+  if (geoId === "R28") {
+    mapOptions["mapView"] = {
+      center: [-0.3, 49],
+      zoom: 7.5,
+    };
+  }
+
+  // special case : France - ignore DROM-COM
+  if (geoId === "PAYS_100") {
+    mapOptions["mapView"] = {
+      center: [2.5, 47],
+      zoom: 5.5,
+    };
+  }
+
   return (
-    <section>
-      <HighchartsReact
-        constructorType={"mapChart"}
-        highcharts={Highcharts}
-        options={mapOptions}
-      />
-    </section>
+    <HighchartsReact
+      constructorType={"mapChart"}
+      highcharts={Highcharts}
+      options={mapOptions}
+    />
   );
 }
