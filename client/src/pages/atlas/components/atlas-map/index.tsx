@@ -17,6 +17,8 @@ import MapPieGender from "../../charts/map-pie-genders/index.jsx";
 import FilieresList from "../../../../components/filieres-list/index.tsx";
 import SubList from "./sub-list.tsx";
 
+import "./styles.scss";
+
 export default function AtlasMap() {
   const location = useLocation();
   const path = location.pathname.split("/");
@@ -70,47 +72,102 @@ export default function AtlasMap() {
 
   function MapSelector() {
     const mapbubbleData: MapBubbleDataProps = [];
+    dataHistoric.data.forEach((item) => {
+      const polygon =
+        polygonsData.find((d) => d.originalId === item.geo_id)?.geometry ||
+        null;
+      if (polygon !== "undefined" && polygon !== null) {
+        const calculateCenter = turf.centerOfMass(polygon);
+        mapbubbleData.push({
+          z:
+            item.data.find((d) => d.annee_universitaire === currentYear)
+              ?.effectif || 0,
+          name: item.geo_nom,
+          lat: calculateCenter.geometry.coordinates[1],
+          lon: calculateCenter.geometry.coordinates[0],
+        });
+      }
+    });
+
+    // France case
+    if (geoId === "PAYS_100") {
+      return (
+        <div className="atlas-map fr-mb-5w">
+          <Row gutters>
+            <Col>
+              <div style={{ width: "100%", height: "100%" }}>
+                <MapWithPolygonAndBubbles
+                  currentYear={currentYear}
+                  isLoading={isLoadingHistoric}
+                  mapbubbleData={mapbubbleData}
+                  polygonsData={polygonsData}
+                />
+              </div>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <div className="drom-list">
+                <div className="drom-item">
+                  <MapWithPolygonAndBubbles
+                    currentYear={currentYear}
+                    idToFocus="R01"
+                    isLoading={isLoadingHistoric}
+                    mapbubbleData={mapbubbleData}
+                    polygonsData={polygonsData}
+                  />
+                </div>
+                <div className="drom-item">
+                  <MapWithPolygonAndBubbles
+                    currentYear={currentYear}
+                    idToFocus="R02"
+                    isLoading={isLoadingHistoric}
+                    mapbubbleData={mapbubbleData}
+                    polygonsData={polygonsData}
+                  />
+                </div>
+                <div className="drom-item">
+                  <MapWithPolygonAndBubbles
+                    currentYear={currentYear}
+                    idToFocus="R03"
+                    isLoading={isLoadingHistoric}
+                    mapbubbleData={mapbubbleData}
+                    polygonsData={polygonsData}
+                  />
+                </div>
+                <div className="drom-item">
+                  <MapWithPolygonAndBubbles
+                    currentYear={currentYear}
+                    idToFocus="R04"
+                    isLoading={isLoadingHistoric}
+                    mapbubbleData={mapbubbleData}
+                    polygonsData={polygonsData}
+                  />
+                </div>
+                <div className="drom-item">
+                  <MapWithPolygonAndBubbles
+                    currentYear={currentYear}
+                    idToFocus="R06"
+                    isLoading={isLoadingHistoric}
+                    mapbubbleData={mapbubbleData}
+                    polygonsData={polygonsData}
+                  />
+                </div>
+              </div>
+            </Col>
+          </Row>
+
+          <Row className="fr-mt-5w">
+            <Col>
+              <SubList />
+            </Col>
+          </Row>
+        </div>
+      );
+    }
+
     switch (selectedTab) {
       case "general":
-        dataHistoric.data.forEach((item) => {
-          /*
-            let calculateCenter;
-            console.log(polygon);
-
-            switch (geoId) {
-              case "R28": // special case : Normandie - ignore St-Pierre-et-Miquelon's coordinates [-56,..]
-                calculateCenter = turf.centerOfMass({
-                  coordinates: polygon.coordinates.filter(
-                    (el) => el.coordinates[0][0][0] > -2
-                  ),
-                  type: "MultiPolygon",
-                });
-                break;
-
-              case "PAYS_100": // special case : France - ignore DROM-COM' coordinates with ids
-                break;
-
-              default:
-                calculateCenter = turf.centerOfMass(polygon);
-            }
-*/
-
-          const polygon =
-            polygonsData.find((d) => d.originalId === item.geo_id)?.geometry ||
-            null;
-          if (polygon !== "undefined" && polygon !== null) {
-            const calculateCenter = turf.centerOfMass(polygon);
-            mapbubbleData.push({
-              z:
-                item.data.find((d) => d.annee_universitaire === currentYear)
-                  ?.effectif || 0,
-              name: item.geo_nom,
-              lat: calculateCenter.geometry.coordinates[1],
-              lon: calculateCenter.geometry.coordinates[0],
-            });
-          }
-        });
-
         return (
           <Row gutters>
             <Col md={8}>

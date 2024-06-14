@@ -9,11 +9,13 @@ highchartsMap(Highcharts);
 
 export default function MapWithPolygonAndBubbles({
   currentYear,
+  idToFocus,
   isLoading,
   mapbubbleData = [],
   polygonsData = [],
 }: {
   currentYear: string;
+  idToFocus?: string;
   isLoading: boolean;
   mapbubbleData: MapBubbleDataProps;
   polygonsData: PolygonsDataProps;
@@ -56,23 +58,66 @@ export default function MapWithPolygonAndBubbles({
         color: "#D5706F",
         data: mapbubbleData,
         cursor: "pointer",
+        showInLegend: false,
       },
     ],
   };
 
+  const currentId = idToFocus || geoId;
+
   // special case : Normandie - ignore St-Pierre-et-Miquelon
-  if (geoId === "R28") {
+  if (currentId === "R28") {
     mapOptions["mapView"] = {
       center: [-0.3, 49],
       zoom: 7.5,
     };
   }
 
-  // special case : France - ignore DROM-COM
-  if (geoId === "PAYS_100") {
+  // special case : France - centeringOnMetropolitanFrance
+  if (currentId === "PAYS_100") {
     mapOptions["mapView"] = {
       center: [2.5, 47],
-      zoom: 5.5,
+      zoom: 5.7,
+    };
+  }
+
+  // special case : France but idToFocus === Guadeloupe
+  if (geoId === "PAYS_100" && currentId === "R01") {
+    mapOptions["mapView"] = {
+      center: [-61.55, 15.35],
+      zoom: 8,
+    };
+  }
+
+  // special case : France but idToFocus === Martinique
+  if (geoId === "PAYS_100" && currentId === "R02") {
+    mapOptions["mapView"] = {
+      center: [-61, 13.8],
+      zoom: 8,
+    };
+  }
+
+  // special case : France but idToFocus === Guyanne
+  if (geoId === "PAYS_100" && currentId === "R03") {
+    mapOptions["mapView"] = {
+      center: [-53, -1.1],
+      zoom: 5.4,
+    };
+  }
+
+  // special case : France but idToFocus === La Réunion
+  if (geoId === "PAYS_100" && currentId === "R04") {
+    mapOptions["mapView"] = {
+      center: [55.55, -21.95],
+      zoom: 8,
+    };
+  }
+
+  // special case : France but idToFocus === Mayotte
+  if (geoId === "PAYS_100" && currentId === "R06") {
+    mapOptions["mapView"] = {
+      center: [45.1, -13.5],
+      zoom: 8.3,
     };
   }
 

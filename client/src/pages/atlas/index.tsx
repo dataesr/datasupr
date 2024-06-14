@@ -9,8 +9,8 @@ import {
   Col,
   Link,
 } from "@dataesr/dsfr-plus";
-import { useTitle } from "../../hooks/usePageTitle.tsx";
 
+import { useTitle } from "../../hooks/usePageTitle.tsx";
 import { getFiltersValues, getParentsFromGeoId } from "../../api/atlas.ts";
 import {
   getGeoLabel,
@@ -18,12 +18,11 @@ import {
   setfavoriteIdsInCookie,
 } from "../../utils.tsx";
 import { Search } from "./components/main/tabs/search/index.tsx";
-// import Header from './components/main/header/index.tsx';
 import YearsModalButton from "./components/main/header/years-modal-button.tsx";
-
-import "./styles.scss";
 import { AtlasSideMenu } from "./side-menu-layout/index.tsx";
 import { GetLevelBadgeFromId } from "./utils/badges.tsx";
+
+import "./styles.scss";
 
 export default function AtlasHeader() {
   const [searchParams] = useSearchParams();

@@ -1,0 +1,12 @@
+.atlas-map {
+  .drom-list {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    .drom-item {
+      width: 150px;
+      height: 160px;
+      overflow: hidden;
+    }
+  }
+}

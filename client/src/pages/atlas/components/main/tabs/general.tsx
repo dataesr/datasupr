@@ -126,7 +126,7 @@ export function General() {
           />
         </Col>
       </Row>
-      <Row className="fr-mt-5w">
+      <Row className="fr-mt-5w fr-mb-5w">
         <Col md={6}>
           <Title as="h3" look="h5">
             Répartition des étudiants par genre
