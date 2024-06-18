@@ -43,11 +43,33 @@ const filieresOrder = [
 ];
 
 router.route("/atlas/get-geo-ids-from-search").get((req, res) => {
+  if (
+    (!req.query.q || req.query?.q.length === 0) &&
+    (req.query.niveau_geo === "" || req.query.niveau_geo === "COMMUNE")
+  ) {
+    res.status(400).send("the query is required for this level");
+  }
+
+  const filters = {};
+  if (req.query.niveau_geo) {
+    filters.niveau_geo = req.query.niveau_geo;
+  }
+
+  if (req.query.niveau_geo === "ACADEMIE") {
+    filters.geo_id = { $ne: "A99" };
+  }
+
+  if (req.query.niveau_geo === "REGION") {
+    filters.geo_id = { $ne: "R99" };
+  }
+
+  filters.geo_nom = { $regex: req.query.q, $options: "i" };
+
   db.collection("atlas2023")
-    .find(
-      { geo_nom: { $regex: req.query.q, $options: "i" } },
-      { projection: { _id: 0, geo_nom: 1, geo_id: 1 } }
-    )
+    .find(filters, {
+      projection: { _id: 0, geo_nom: 1, geo_id: 1, niveau_geo: 1 },
+    })
+    .sort({ geo_nom: 1 })
     .toArray()
     .then((response) => {
       const set = new Set();
@@ -58,7 +80,12 @@ router.route("/atlas/get-geo-ids-from-search").get((req, res) => {
           unique.push(item);
         }
       });
-      res.json(unique.slice(0, 25));
+
+      if (req.query.niveau_geo === "COMMUNE") {
+        res.json(unique.slice(0, 500));
+      }
+
+      res.json(unique);
     });
 });
 

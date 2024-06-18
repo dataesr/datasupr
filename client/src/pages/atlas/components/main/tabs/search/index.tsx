@@ -1,14 +1,22 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
+import {
+  Button,
+  Container,
+  Row,
+  Col,
+  Spinner,
+  Text,
+  Title,
+} from "@dataesr/dsfr-plus";
 
-import { Button, Container, Row, Col, Spinner } from "@dataesr/dsfr-plus";
 import {
   getFiltersValues,
   getGeoIdsFromSearch,
 } from "../../../../../../api/atlas.js";
 import HomeMapCards from "../../../home-map-cards/index.js";
-import { GetLevelBadgeFromId } from "../../../../utils/badges.js";
+import { GetLevelBadgeFromItem } from "../../../../utils/badges.js";
 
 import "./styles.scss";
 
@@ -19,10 +27,7 @@ type SearchTypes = {
 
 export function Search() {
   const [territoiresType, setTerritoiresType] = useState("");
-  const [territoireId, setTerritoireId] = useState("");
-
   const [searchValue, setSearchValue] = useState("");
-
   const navigate = useNavigate();
 
   const { data: filtersValues, isLoading: isLoadingFiltersValues } = useQuery({
@@ -35,8 +40,8 @@ export function Search() {
     isLoading: isLoadingSearch,
     refetch,
   } = useQuery({
-    queryKey: ["atlas/search", searchValue],
-    queryFn: () => getGeoIdsFromSearch(searchValue),
+    queryKey: ["atlas/search", searchValue, territoiresType],
+    queryFn: () => getGeoIdsFromSearch(searchValue, territoiresType),
     enabled: false,
   });
 
@@ -45,7 +50,7 @@ export function Search() {
   };
 
   if (isLoadingFiltersValues) {
-    return <div>Loading...</div>;
+    return <Spinner />;
   }
 
   // Create a list of all territories (regions, departments, academies - without urban unities and cities)
@@ -66,99 +71,30 @@ export function Search() {
 
   return (
     <Container as="section">
-      <Row gutters>
-        <Col md={9}>
+      <Row>
+        <Col md={8}>
           <Container fluid>
-            <Row gutters>
-              <Col md={5}>
-                <div className="fr-select-group">
-                  <label className="fr-label" htmlFor="select">
-                    Type de territoire
-                  </label>
-                  <select
-                    className="fr-select"
-                    id="select"
-                    name="select"
-                    onChange={(e) => setTerritoiresType(e.target.value)}
-                  >
-                    <option value="" selected disabled hidden>
-                      Sélectionner un type de territoire
-                    </option>
-                    <option
-                      value="regions"
-                      selected={territoiresType === "regions"}
-                    >
-                      Régions
-                    </option>
-                    <option
-                      value="departements"
-                      selected={territoiresType === "departements"}
-                    >
-                      Départements
-                    </option>
-                    <option
-                      value="academies"
-                      selected={territoiresType === "academies"}
-                    >
-                      Académies
-                    </option>
-                    <option
-                      value="unites_urbaines"
-                      selected={territoiresType === "unites_urbaines"}
-                    >
-                      Unités urbaines
-                    </option>
-                  </select>
-                </div>
-              </Col>
-              <Col md={4}>
-                <div className="fr-select-group">
-                  <label className="fr-label" htmlFor="select">
-                    Choix du territoire
-                  </label>
-                  <select
-                    className="fr-select"
-                    id="select"
-                    name="select"
-                    disabled={territoiresType === ""}
-                    onChange={(e) => setTerritoireId(e.target.value)}
-                  >
-                    <option value="" selected disabled hidden>
-                      Sélectionner un territoire
-                    </option>
-                    {territoiresList &&
-                      territoiresList
-                        .filter((item) => item?.type === territoiresType)
-                        .map((item) => (
-                          <option
-                            value={item?.id}
-                            selected={territoireId === item?.id}
-                          >
-                            {item?.label}
-                          </option>
-                        ))}
-                  </select>
-                </div>
-              </Col>
-              <Col md={3}>
-                <Button
-                  className="fr-mt-4w"
-                  color="pink-tuile"
-                  onClick={() =>
-                    navigate(
-                      `/atlas/general?geo_id=${territoireId}&annee_universitaire=2022-23`
-                    )
-                  }
-                >
-                  Valider
-                </Button>
+            <Row>
+              <Col>
+                <Title as="h1" look="h1">
+                  Atlas des effectifs étudiants
+                </Title>
+                <Text>
+                  <i>
+                    L’Atlas des effectifs étudiants est un outil indispensable
+                    pour une bonne appréhension de la structuration territoriale
+                    de l’enseignement supérieur et pour l’élaboration de
+                    stratégies territoriales. Il présente, sous forme de cartes,
+                    de graphiques et de tableaux, la diversité du système
+                    français d’enseignement supérieur.
+                  </i>
+                </Text>
               </Col>
             </Row>
-            <hr className="fr-mt-3w" />
-            <Row gutters>
+            <Row className="fr-mt-5w">
               <Col md={9} className="search">
                 <label className="fr-label" htmlFor="text-input-text">
-                  Rechercher dans tous les territoires disponibles
+                  Rechercher un territoires
                 </label>
                 <input
                   className="fr-input"
@@ -171,21 +107,87 @@ export function Search() {
                   type="text"
                   value={searchValue}
                 />
+              </Col>
+              <Col md={3}>
+                <Button
+                  className="fr-mt-4w"
+                  color="pink-tuile"
+                  icon="search-line"
+                  onClick={handleClick}
+                >
+                  Rechercher
+                </Button>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <div className="territories-filter">
+                  <ul>
+                    <li className={territoiresType === "" ? "active" : ""}>
+                      <span onClick={() => setTerritoiresType("")}>Tous</span>
+                    </li>
+                    <li
+                      className={territoiresType === "REGION" ? "active" : ""}
+                    >
+                      <span onClick={() => setTerritoiresType("REGION")}>
+                        Régions
+                      </span>
+                    </li>
+                    <li
+                      className={
+                        territoiresType === "DEPARTEMENT" ? "active" : ""
+                      }
+                    >
+                      <span onClick={() => setTerritoiresType("DEPARTEMENT")}>
+                        Départements
+                      </span>
+                    </li>
+                    <li
+                      className={territoiresType === "ACADEMIE" ? "active" : ""}
+                    >
+                      <span onClick={() => setTerritoiresType("ACADEMIE")}>
+                        Académies
+                      </span>
+                    </li>
+                    <li
+                      className={
+                        territoiresType === "UNITE_URBAINE" ? "active" : ""
+                      }
+                    >
+                      <span onClick={() => setTerritoiresType("UNITE_URBAINE")}>
+                        Unités urbaines
+                      </span>
+                    </li>
+                    <li
+                      className={territoiresType === "COMMUNE" ? "active" : ""}
+                    >
+                      <span onClick={() => setTerritoiresType("COMMUNE")}>
+                        Communes
+                      </span>
+                    </li>
+                  </ul>
+                </div>
+
                 {isLoadingSearch && (
                   <div className="fr-pt-2w">
                     <Spinner />
                   </div>
                 )}
+
                 {!isLoadingSearch && dataSearch?.length === undefined && (
                   <div className="results">
                     <i className="hint">
                       Saisissez un mot clé pour rechercher un territoire Par
                       exemple : "Paris", "Bretagne", "Occitanie", etc ...
                       <br />
-                      Puis cliquez sur le bouton "Rechercher"
+                      Puis cliquez sur le bouton <strong>"Rechercher"</strong>
+                      <br />
+                      Vous pouvez limiter les résultats à un type de territoire
+                      en cliquant sur les boutons correspondants
                     </i>
                   </div>
                 )}
+
                 {dataSearch?.length > 0 ? (
                   <ul className="results">
                     {dataSearch.map((result: SearchTypes) => (
@@ -207,7 +209,7 @@ export function Search() {
                           </strong>
                           <div>
                             code : {result.geo_id}
-                            {GetLevelBadgeFromId({ id: result.geo_id })}
+                            {GetLevelBadgeFromItem(result)}
                           </div>
                         </span>
                       </li>
@@ -215,20 +217,10 @@ export function Search() {
                   </ul>
                 ) : null}
               </Col>
-              <Col md={3}>
-                <Button
-                  className="fr-mt-4w"
-                  color="pink-tuile"
-                  icon="search-line"
-                  onClick={handleClick}
-                >
-                  Rechercher
-                </Button>
-              </Col>
             </Row>
           </Container>
         </Col>
-        <Col md={3}>
+        <Col md={3} offsetMd={1}>
           <HomeMapCards territoiresList={territoiresList} />
         </Col>
       </Row>
