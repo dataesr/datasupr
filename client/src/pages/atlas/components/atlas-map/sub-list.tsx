@@ -45,9 +45,9 @@ export default function SubList() {
     }
   };
 
-  const maxValue = Math.max(
+  const maxValue: number = Math.max(
     ...dataHistoric.data.map(
-      (ter) =>
+      (ter: { data: { annee_universitaire: string; effectif: number }[] }) =>
         ter.data.find((el) => el.annee_universitaire === currentYear)?.effectif
     )
   );
@@ -65,8 +65,14 @@ export default function SubList() {
         </div>
       </Row>
       <ul style={{ overflow: "auto", listStyle: "none", padding: 0 }}>
-        {dataHistoric?.data.slice(0, 15).map((item) => {
-          const size = Math.round((item.data[0].effectif / maxValue) * 100);
+        {dataHistoric?.data.slice(0, 20).map((item) => {
+          const size = Math.round(
+            (item.data.find((el) => el.annee_universitaire === currentYear)
+              ?.effectif *
+              100) /
+              maxValue
+          );
+
           return (
             <li>
               <Row key={item.geo_nom} style={{ width: "100%" }}>
