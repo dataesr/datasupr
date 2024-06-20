@@ -204,7 +204,11 @@ export default function MapPieSectors({
         },
       ],
     },
-
+    mapView: {
+      projection: {
+        name: "WebMercator",
+      },
+    },
     yAxis: { minRange: 2300 },
     tooltip: { useHTML: true },
     plotOptions: {

@@ -40,6 +40,11 @@ export default function MapWithPolygonAndBubbles({
     mapNavigation: {
       enabled: false,
     },
+    mapView: {
+      projection: {
+        name: "WebMercator",
+      },
+    },
     tooltip: {
       headerFormat: "Effectifs étudiants - " + currentYear + "<br>",
       pointFormat: "<b>{point.name}</b> : {point.z} étudiants",
@@ -67,58 +72,44 @@ export default function MapWithPolygonAndBubbles({
 
   // special case : Normandie - ignore St-Pierre-et-Miquelon
   if (currentId === "R28") {
-    mapOptions["mapView"] = {
-      center: [-0.3, 49],
-      zoom: 7.5,
-    };
+    mapOptions.mapView["center"] = [-0.3, 49];
+    mapOptions.mapView["zoom"] = 7.2;
   }
 
   // special case : France - centeringOnMetropolitanFrance
   if (currentId === "PAYS_100") {
-    mapOptions["mapView"] = {
-      center: [2.5, 47],
-      zoom: 5.7,
-    };
+    mapOptions.mapView["center"] = [2.5, 47];
+    mapOptions.mapView["zoom"] = 5.05;
   }
 
   // special case : France but idToFocus === Guadeloupe
   if (geoId === "PAYS_100" && currentId === "R01") {
-    mapOptions["mapView"] = {
-      center: [-61.55, 15.35],
-      zoom: 8,
-    };
+    mapOptions.mapView["center"] = [-61.55, 15.35];
+    mapOptions.mapView["zoom"] = 7.7;
   }
 
   // special case : France but idToFocus === Martinique
   if (geoId === "PAYS_100" && currentId === "R02") {
-    mapOptions["mapView"] = {
-      center: [-61, 13.8],
-      zoom: 8,
-    };
+    mapOptions.mapView["center"] = [-61, 13.8];
+    mapOptions.mapView["zoom"] = 7.7;
   }
 
   // special case : France but idToFocus === Guyanne
   if (geoId === "PAYS_100" && currentId === "R03") {
-    mapOptions["mapView"] = {
-      center: [-53, -1.1],
-      zoom: 5.4,
-    };
+    mapOptions.mapView["center"] = [-53, -1.1];
+    mapOptions.mapView["zoom"] = 5.1;
   }
 
   // special case : France but idToFocus === La Réunion
   if (geoId === "PAYS_100" && currentId === "R04") {
-    mapOptions["mapView"] = {
-      center: [55.55, -21.95],
-      zoom: 8,
-    };
+    mapOptions.mapView["center"] = [55.55, -21.95];
+    mapOptions.mapView["zoom"] = 7.7;
   }
 
   // special case : France but idToFocus === Mayotte
   if (geoId === "PAYS_100" && currentId === "R06") {
-    mapOptions["mapView"] = {
-      center: [45.1, -13.5],
-      zoom: 8.3,
-    };
+    mapOptions.mapView["center"] = [45.1, -13.5];
+    mapOptions.mapView["zoom"] = 8;
   }
 
   return (

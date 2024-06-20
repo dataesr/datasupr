@@ -205,7 +205,11 @@ export default function MapPieGenders({
         },
       ],
     },
-
+    mapView: {
+      projection: {
+        name: "WebMercator",
+      },
+    },
     yAxis: { minRange: 2300 },
     tooltip: { useHTML: true },
     plotOptions: {
