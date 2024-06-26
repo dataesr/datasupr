@@ -89,101 +89,100 @@ export default function AtlasMap() {
       }
     });
 
-    // France case
-    if (geoId === "PAYS_100") {
-      return (
-        <div className="atlas-map fr-mb-5w">
-          <Row gutters>
-            <Col>
-              <div style={{ width: "100%", height: "100%" }}>
+    switch (selectedTab) {
+      case "general":
+        // France case
+        if (geoId === "PAYS_100") {
+          return (
+            <div className="atlas-map fr-mb-5w">
+              <Row gutters>
+                <Col>
+                  <div style={{ width: "100%", height: "100%" }}>
+                    <MapWithPolygonAndBubbles
+                      currentYear={currentYear}
+                      isLoading={isLoadingHistoric}
+                      mapbubbleData={mapbubbleData}
+                      polygonsData={polygonsData}
+                    />
+                  </div>
+                </Col>
+              </Row>
+              <Row>
+                <Col>
+                  <div className="drom-list">
+                    <div className="drom-item">
+                      <MapWithPolygonAndBubbles
+                        currentYear={currentYear}
+                        idToFocus="R01"
+                        isLoading={isLoadingHistoric}
+                        mapbubbleData={mapbubbleData}
+                        polygonsData={polygonsData}
+                      />
+                    </div>
+                    <div className="drom-item">
+                      <MapWithPolygonAndBubbles
+                        currentYear={currentYear}
+                        idToFocus="R02"
+                        isLoading={isLoadingHistoric}
+                        mapbubbleData={mapbubbleData}
+                        polygonsData={polygonsData}
+                      />
+                    </div>
+                    <div className="drom-item">
+                      <MapWithPolygonAndBubbles
+                        currentYear={currentYear}
+                        idToFocus="R03"
+                        isLoading={isLoadingHistoric}
+                        mapbubbleData={mapbubbleData}
+                        polygonsData={polygonsData}
+                      />
+                    </div>
+                    <div className="drom-item">
+                      <MapWithPolygonAndBubbles
+                        currentYear={currentYear}
+                        idToFocus="R04"
+                        isLoading={isLoadingHistoric}
+                        mapbubbleData={mapbubbleData}
+                        polygonsData={polygonsData}
+                      />
+                    </div>
+                    <div className="drom-item">
+                      <MapWithPolygonAndBubbles
+                        currentYear={currentYear}
+                        idToFocus="R06"
+                        isLoading={isLoadingHistoric}
+                        mapbubbleData={mapbubbleData}
+                        polygonsData={polygonsData}
+                      />
+                    </div>
+                  </div>
+                </Col>
+              </Row>
+
+              <Row className="fr-mt-5w">
+                <Col>
+                  <SubList />
+                </Col>
+              </Row>
+            </div>
+          );
+        } else {
+          return (
+            <Row gutters>
+              <Col md={8}>
                 <MapWithPolygonAndBubbles
                   currentYear={currentYear}
                   isLoading={isLoadingHistoric}
                   mapbubbleData={mapbubbleData}
                   polygonsData={polygonsData}
                 />
-              </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <div className="drom-list">
-                <div className="drom-item">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="R01"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                </div>
-                <div className="drom-item">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="R02"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                </div>
-                <div className="drom-item">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="R03"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                </div>
-                <div className="drom-item">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="R04"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                </div>
-                <div className="drom-item">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="R06"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                </div>
-              </div>
-            </Col>
-          </Row>
-
-          <Row className="fr-mt-5w">
-            <Col>
-              <SubList />
-            </Col>
-          </Row>
-        </div>
-      );
-    }
-
-    switch (selectedTab) {
-      case "general":
-        return (
-          <Row gutters>
-            <Col md={8}>
-              <MapWithPolygonAndBubbles
-                currentYear={currentYear}
-                isLoading={isLoadingHistoric}
-                mapbubbleData={mapbubbleData}
-                polygonsData={polygonsData}
-              />
-            </Col>
-            <Col md={4}>
-              <SubList />
-            </Col>
-          </Row>
-        );
-
+              </Col>
+              <Col md={4}>
+                <SubList />
+              </Col>
+            </Row>
+          );
+        }
       case "effectifs-par-filiere":
         return (
           <Row gutters>
