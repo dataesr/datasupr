@@ -1,15 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router-dom";
-import {
-  Container,
-  Row,
-  Col,
-  TagGroup,
-  Tag,
-  Text,
-  Title,
-  Badge,
-} from "@dataesr/dsfr-plus";
+import { Badge, Container, Row, Col, Text, Title } from "@dataesr/dsfr-plus";
 
 import ListSkeleton from "../../pages/atlas/charts/skeletons/list.tsx";
 import { getNumberOfStudents } from "../../api/atlas.ts";
@@ -62,18 +53,6 @@ export default function FilieresList() {
                       (filiere.effectif_PR || 0) + (filiere.effectif_PU || 0)
                     ).toLocaleString("fr-FR")}
                   </Text>
-                  <TagGroup>
-                    {filiere.effectif_PU > 0 && (
-                      <Tag color="blue-cumulus" size="sm">
-                        Secteur public
-                      </Tag>
-                    )}
-                    {filiere.effectif_PR > 0 && (
-                      <Tag color="yellow-moutarde" size="sm">
-                        Secteur privé
-                      </Tag>
-                    )}
-                  </TagGroup>
                   <hr />
                 </li>
               );
