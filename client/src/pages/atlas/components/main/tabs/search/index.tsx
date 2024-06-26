@@ -134,19 +134,19 @@ export function Search() {
                       </span>
                     </li>
                     <li
+                      className={territoiresType === "ACADEMIE" ? "active" : ""}
+                    >
+                      <span onClick={() => setTerritoiresType("ACADEMIE")}>
+                        Académies
+                      </span>
+                    </li>
+                    <li
                       className={
                         territoiresType === "DEPARTEMENT" ? "active" : ""
                       }
                     >
                       <span onClick={() => setTerritoiresType("DEPARTEMENT")}>
                         Départements
-                      </span>
-                    </li>
-                    <li
-                      className={territoiresType === "ACADEMIE" ? "active" : ""}
-                    >
-                      <span onClick={() => setTerritoiresType("ACADEMIE")}>
-                        Académies
                       </span>
                     </li>
                     <li
