@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useNavigate } from "react-router-dom";
-
 import {
   Container,
   Row,
@@ -10,6 +10,7 @@ import {
   Badge,
   Button,
 } from "@dataesr/dsfr-plus";
+
 import SectortsChart from "../../../charts/sectors.tsx";
 import {
   getNumberOfStudents,
@@ -17,12 +18,13 @@ import {
   getSimilarElements,
 } from "../../../../../api/atlas.ts";
 import SectorStackedChart from "../../../charts/sector-stacked.tsx";
-
 import { DataByYear, SimilarData } from "../../../../../types/atlas.ts";
 import StudentsCardWithTrend from "../../../../../components/cards/students-card-with-trend/index.tsx";
 import TrendCard from "../../../charts/trend.tsx";
 
 export function Sectors() {
+  const [chartView, setChartView] = useState<"basic" | "percentage">("basic");
+  const [chartType, setChartType] = useState<"column" | "line">("column");
   const [searchParams] = useSearchParams();
   const currentYear = searchParams.get("annee_universitaire") || "2022-23";
   const params = [...searchParams]
@@ -104,6 +106,22 @@ export function Sectors() {
     return <div>Loading...</div>;
   }
 
+  const toggleView = () => {
+    if (chartView === "basic") {
+      setChartView("percentage");
+    } else {
+      setChartView("basic");
+    }
+  };
+
+  const toggleType = () => {
+    if (chartType === "column") {
+      setChartType("line");
+    } else {
+      setChartType("column");
+    }
+  };
+
   return (
     <Container as="section" fluid>
       <Row gutters>
@@ -162,7 +180,33 @@ export function Sectors() {
             Données historiques depuis l'année universitaire{" "}
             <Badge color="yellow-tournesol">2001-02</Badge>
           </Title>
-          <SectorStackedChart data={dataByYear} isLoading={isLoadingByYear} />
+          <div className="text-right">
+            <Button onClick={() => toggleView()} size="sm" variant="text">
+              #
+              {chartView === "basic" ? (
+                <span className="fr-icon-arrow-right-s-fill" />
+              ) : (
+                <span className="fr-icon-arrow-left-s-fill" />
+              )}
+              %
+            </Button>
+            <Button onClick={() => toggleType()} size="sm" variant="text">
+              <span className="fr-icon-bar-chart-box-line" />
+              {chartType === "column" ? (
+                <span className="fr-icon-arrow-right-s-fill" />
+              ) : (
+                <span className="fr-icon-arrow-left-s-fill" />
+              )}
+
+              <span className="fr-icon-line-chart-line" />
+            </Button>
+          </div>
+          <SectorStackedChart
+            data={dataByYear}
+            isLoading={isLoadingByYear}
+            type={chartType}
+            view={chartView}
+          />
         </Col>
       </Row>
       {dataSimilarSorted?.length > 0 && (

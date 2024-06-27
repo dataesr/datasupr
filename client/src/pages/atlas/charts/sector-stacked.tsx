@@ -7,64 +7,111 @@ type HistoData = {
   effectif_pu: number;
 };
 
-export default function SectorStackedChart({ data = [], isLoading = true }: { data: HistoData[], isLoading: boolean }) {
+type SeriesData = {
+  name: string;
+  data: number[];
+  color: string;
+}[];
+
+export default function SectorStackedChart({
+  data = [],
+  isLoading = true,
+  type,
+  view,
+}: {
+  data: HistoData[];
+  isLoading: boolean;
+  type: "column" | "line";
+  view: "basic" | "percentage";
+}) {
   if (isLoading || !data || !data.length) {
-    return (
-      <div>Loader</div>
-    );
+    return <div>Loader</div>;
+  }
+
+  let series: SeriesData;
+  switch (view) {
+    case "basic":
+      series = [
+        {
+          name: "Secteur privé",
+          data: data.map((item) => item.effectif_pr),
+          color: "#755F4D",
+        },
+        {
+          name: "Secteur public",
+          data: data.map((item) => item.effectif_pu),
+          color: "#748CC0",
+        },
+      ];
+      break;
+    case "percentage":
+      series = [
+        {
+          name: "Secteur privé",
+          data: data.map(
+            (item) =>
+              (item.effectif_pr * 100) / (item.effectif_pr + item.effectif_pu)
+          ),
+          color: "#755F4D",
+        },
+        {
+          name: "Secteur public",
+          data: data.map(
+            (item) =>
+              (item.effectif_pu * 100) / (item.effectif_pr + item.effectif_pu)
+          ),
+          color: "#748CC0",
+        },
+      ];
+      break;
+    default:
+      series = [];
+      break;
   }
 
   const options = {
     chart: {
-      type: 'column'
+      type,
+      animation: {
+        duration: 500,
+      },
     },
     title: {
-      text: '',
+      text: "",
+    },
+    credits: {
+      enabled: false,
     },
     xAxis: {
-      categories: data.map((item) => item.annee_universitaire)
+      categories: data.map((item) => item.annee_universitaire),
     },
     yAxis: {
       min: 0,
       title: {
-        text: 'Count trophies'
+        text: "Count trophies",
       },
       stackLabels: {
-        enabled: true
-      }
+        enabled: true,
+      },
     },
     tooltip: {
-      headerFormat: '<b>{point.x}</b><br/>',
-      pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
+      headerFormat: "<b>{point.x}</b><br/>",
+      pointFormat: "{series.name}: {point.y}<br/>Total: {point.stackTotal}",
     },
     plotOptions: {
       column: {
-        stacking: 'normal',
+        stacking: "normal",
         dataLabels: {
-          enabled: false
-        }
-      }
+          enabled: false,
+        },
+      },
     },
-    credit: {
-      enabled: false
-    },
-    series: [{
-      name: 'Secteur privé',
-      data: data.map((item) => item.effectif_pr),
-      color: '#755F4D'
-    }, {
-      name: 'Secteur public',
-      data: data.map((item) => item.effectif_pu),
-      color: '#748CC0'
-    }]
-  }
+    series,
+  };
 
   return (
     <section>
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={options}
-      />
+      <HighchartsReact highcharts={Highcharts} options={options} />
     </section>
   );
 }
