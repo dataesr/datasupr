@@ -1,6 +1,6 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useNavigate } from "react-router-dom";
-
 import {
   Container,
   Row,
@@ -10,19 +10,21 @@ import {
   Badge,
   Button,
 } from "@dataesr/dsfr-plus";
-import GenderChart from "../../../charts/gender.tsx";
+
+import GenderChart from "../../../charts/genders-pie.tsx";
 import {
   getNumberOfStudents,
   getNumberOfStudentsByYear,
   getSimilarElements,
 } from "../../../../../api/atlas.ts";
-import GenderStackedChart from "../../../charts/gender-stacked.tsx";
-
+import GenderHistoChart from "../../../charts/genders-histo.tsx";
 import { DataByYear, SimilarData } from "../../../../../types/atlas.ts";
 import StudentsCardWithTrend from "../../../../../components/cards/students-card-with-trend/index.tsx";
 import TrendCard from "../../../charts/trend.tsx";
 
 export function Genders() {
+  const [chartView, setChartView] = useState<"basic" | "percentage">("basic");
+  const [chartType, setChartType] = useState<"column" | "line">("column");
   const [searchParams] = useSearchParams();
   const currentYear = searchParams.get("annee_universitaire") || "2022-23";
   const params = [...searchParams]
@@ -118,6 +120,22 @@ export function Genders() {
     return <div>Loading...</div>;
   }
 
+  const toggleView = () => {
+    if (chartView === "basic") {
+      setChartView("percentage");
+    } else {
+      setChartView("basic");
+    }
+  };
+
+  const toggleType = () => {
+    if (chartType === "column") {
+      setChartType("line");
+    } else {
+      setChartType("column");
+    }
+  };
+
   return (
     <Container as="section" fluid>
       <Row gutters>
@@ -181,7 +199,37 @@ export function Genders() {
       </Row>
       <Row className="fr-mt-5w">
         <Col>
-          <GenderStackedChart data={dataByYear} isLoading={isLoadingByYear} />
+          <Title as="h3" look="h5">
+            Données historiques depuis l'année universitaire{" "}
+            <Badge color="yellow-tournesol">2001-02</Badge>
+          </Title>
+          <div className="text-right">
+            <Button onClick={() => toggleView()} size="sm" variant="text">
+              #
+              {chartView === "basic" ? (
+                <span className="fr-icon-arrow-right-s-fill" />
+              ) : (
+                <span className="fr-icon-arrow-left-s-fill" />
+              )}
+              %
+            </Button>
+            <Button onClick={() => toggleType()} size="sm" variant="text">
+              <span className="fr-icon-bar-chart-box-line" />
+              {chartType === "column" ? (
+                <span className="fr-icon-arrow-right-s-fill" />
+              ) : (
+                <span className="fr-icon-arrow-left-s-fill" />
+              )}
+
+              <span className="fr-icon-line-chart-line" />
+            </Button>
+          </div>
+          <GenderHistoChart
+            data={dataByYear}
+            isLoading={isLoadingByYear}
+            type={chartType}
+            view={chartView}
+          />
         </Col>
       </Row>
       {dataSimilarSorted?.length > 0 && (

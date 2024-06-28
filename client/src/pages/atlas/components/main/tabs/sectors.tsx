@@ -11,13 +11,13 @@ import {
   Button,
 } from "@dataesr/dsfr-plus";
 
-import SectortsChart from "../../../charts/sectors.tsx";
+import SectortsChart from "../../../charts/sectors-pie.tsx";
 import {
   getNumberOfStudents,
   getNumberOfStudentsByYear,
   getSimilarElements,
 } from "../../../../../api/atlas.ts";
-import SectorStackedChart from "../../../charts/sector-stacked.tsx";
+import SectorHistoChart from "../../../charts/sectors-histo.tsx";
 import { DataByYear, SimilarData } from "../../../../../types/atlas.ts";
 import StudentsCardWithTrend from "../../../../../components/cards/students-card-with-trend/index.tsx";
 import TrendCard from "../../../charts/trend.tsx";
@@ -201,7 +201,7 @@ export function Sectors() {
               <span className="fr-icon-line-chart-line" />
             </Button>
           </div>
-          <SectorStackedChart
+          <SectorHistoChart
             data={dataByYear}
             isLoading={isLoadingByYear}
             type={chartType}

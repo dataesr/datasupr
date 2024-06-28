@@ -13,7 +13,7 @@ type SeriesData = {
   color: string;
 }[];
 
-export default function SectorStackedChart({
+export default function SectorsHistoChart({
   data = [],
   isLoading = true,
   type,
@@ -88,7 +88,7 @@ export default function SectorStackedChart({
     yAxis: {
       min: 0,
       title: {
-        text: "Count trophies",
+        text: "Nombre d'étudiants",
       },
       stackLabels: {
         enabled: true,
