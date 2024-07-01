@@ -243,7 +243,7 @@ export function Genders() {
         <Col>
           <Title as="h3" look="h5">
             <span
-              className="fr-icon-pie-chart-2-fill fr-mr-1w"
+              className="fr-icon-pie-chart-2-line fr-mr-1w"
               aria-hidden="true"
             />
             {`Répartition des étudiants par ${getSubLevelName()}`}
@@ -263,6 +263,10 @@ export function Genders() {
       <Row className="fr-mt-5w">
         <Col>
           <Title as="h3" look="h5">
+            <span
+              className="fr-icon-bar-chart-box-line fr-mr-1w"
+              aria-hidden="true"
+            />
             Données historiques depuis l'année universitaire{" "}
             <Badge color="yellow-tournesol">2001-02</Badge>
           </Title>
@@ -300,6 +304,10 @@ export function Genders() {
         <Row className="fr-mt-5w">
           <Col>
             <Title as="h2" look="h5">
+              <span
+                className="fr-icon-list-unordered fr-mr-1w"
+                aria-hidden="true"
+              />
               Liste des territoires similaires sur la répartition par genre pour
               l'année universitaire{" "}
               <Badge color="yellow-tournesol">{currentYear}</Badge>
