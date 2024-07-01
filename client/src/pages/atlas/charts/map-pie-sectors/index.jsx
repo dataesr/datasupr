@@ -24,7 +24,6 @@ export default function MapPieSectors({
     item.effectif_secteur_public > item.effectif_secteur_prive ? -1 : 1,
     item.nom,
   ]);
-
   Highcharts.seriesType(
     "mappie",
     "pie",

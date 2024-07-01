@@ -218,27 +218,31 @@ export function Sectors() {
           />
         </Col>
       </Row>
-      <Row className="fr-my-5w">
-        <Col>
-          <Title as="h3" look="h5">
-            <span
-              className="fr-icon-pie-chart-2-line fr-mr-1w"
-              aria-hidden="true"
-            />
-            {`Répartition des étudiants par ${getSubLevelName()}`}
-          </Title>
-        </Col>
-      </Row>
-      <Row gutters>
-        <Col md={12}>
-          <MapPieSectors
-            currentYear={currentYear}
-            isLoading={isLoadingDataSectorsMap}
-            mapPieData={dataSectorsMap}
-            polygonsData={polygonsData}
-          />
-        </Col>
-      </Row>
+      {polygonsData.length > 1 && (
+        <>
+          <Row className="fr-my-5w">
+            <Col>
+              <Title as="h3" look="h5">
+                <span
+                  className="fr-icon-pie-chart-2-line fr-mr-1w"
+                  aria-hidden="true"
+                />
+                {`Répartition des étudiants par ${getSubLevelName()}`}
+              </Title>
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col md={12}>
+              <MapPieSectors
+                currentYear={currentYear}
+                isLoading={isLoadingDataSectorsMap}
+                mapPieData={dataSectorsMap}
+                polygonsData={polygonsData}
+              />
+            </Col>
+          </Row>
+        </>
+      )}
       <Row className="fr-mt-5w">
         <Col>
           <Title as="h3" look="h5">

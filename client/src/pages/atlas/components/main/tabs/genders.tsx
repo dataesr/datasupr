@@ -12,7 +12,7 @@ import {
 } from "@dataesr/dsfr-plus";
 
 import GenderChart from "../../../charts/genders-pie.tsx";
-import MapPieGender from "../../../charts/map-pie-sectors/index.jsx";
+import MapPieGender from "../../../charts/map-pie-genders/index.jsx";
 import TrendCard from "../../../charts/trend.tsx";
 import {
   getGeoPolygon,
@@ -239,27 +239,31 @@ export function Genders() {
           />
         </Col>
       </Row>
-      <Row className="fr-my-5w">
-        <Col>
-          <Title as="h3" look="h5">
-            <span
-              className="fr-icon-pie-chart-2-line fr-mr-1w"
-              aria-hidden="true"
-            />
-            {`Répartition des étudiants par ${getSubLevelName()}`}
-          </Title>
-        </Col>
-      </Row>
-      <Row gutters>
-        <Col md={12}>
-          <MapPieGender
-            currentYear={currentYear}
-            isLoading={isLoadingDataGenders}
-            mapPieData={dataGenders}
-            polygonsData={polygonsData}
-          />
-        </Col>
-      </Row>
+      {polygonsData.length > 1 && (
+        <>
+          <Row className="fr-my-5w">
+            <Col>
+              <Title as="h3" look="h5">
+                <span
+                  className="fr-icon-pie-chart-2-line fr-mr-1w"
+                  aria-hidden="true"
+                />
+                {`Répartition des étudiants par ${getSubLevelName()}`}
+              </Title>
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col md={12}>
+              <MapPieGender
+                currentYear={currentYear}
+                isLoading={isLoadingDataGenders}
+                mapPieData={dataGenders}
+                polygonsData={polygonsData}
+              />
+            </Col>
+          </Row>
+        </>
+      )}
       <Row className="fr-mt-5w">
         <Col>
           <Title as="h3" look="h5">
