@@ -15,7 +15,7 @@ import MapWithPolygonAndBubbles from "../../charts/map-with-polygon-and-bubbles.
 import MapPieSectors from "../../charts/map-pie-sectors/index.jsx";
 import MapPieGender from "../../charts/map-pie-genders/index.jsx";
 import FilieresList from "../../../../components/filieres-list/index.tsx";
-import SubList from "./sub-list.tsx";
+import SubList from "../main/tabs/sub-list.tsx";
 
 import "./styles.scss";
 

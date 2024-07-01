@@ -11,22 +11,26 @@ import {
   Button,
 } from "@dataesr/dsfr-plus";
 
+import MapPieSectors from "../../../charts/map-pie-sectors/index.jsx";
 import SectortsChart from "../../../charts/sectors-pie.tsx";
+import SectorHistoChart from "../../../charts/sectors-histo.tsx";
+import TrendCard from "../../../charts/trend.tsx";
 import {
+  getGeoPolygon,
   getNumberOfStudents,
+  getNumberOfStudentsBySectorAndSublevel,
   getNumberOfStudentsByYear,
   getSimilarElements,
 } from "../../../../../api/atlas.ts";
-import SectorHistoChart from "../../../charts/sectors-histo.tsx";
 import { DataByYear, SimilarData } from "../../../../../types/atlas.ts";
 import StudentsCardWithTrend from "../../../../../components/cards/students-card-with-trend/index.tsx";
-import TrendCard from "../../../charts/trend.tsx";
 
 export function Sectors() {
   const [chartView, setChartView] = useState<"basic" | "percentage">("basic");
   const [chartType, setChartType] = useState<"column" | "line">("column");
   const [searchParams] = useSearchParams();
   const currentYear = searchParams.get("annee_universitaire") || "2022-23";
+  const geoId = searchParams.get("geo_id") || "";
   const params = [...searchParams]
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
@@ -87,6 +91,22 @@ export function Sectors() {
     queryFn: () => getSimilarElements(similarParams),
   });
 
+  const { data: dataSectorsMap, isLoading: isLoadingDataSectorsMap } = useQuery(
+    {
+      queryKey: [
+        "atlas/get-number-of-students-by-sector-and-sublevel",
+        geoId,
+        currentYear,
+      ],
+      queryFn: () => getNumberOfStudentsBySectorAndSublevel(geoId, currentYear),
+    }
+  );
+
+  const { data: polygonsData, isLoading: isLoadingPolygons } = useQuery({
+    queryKey: ["atlas/get-geo-polygons", geoId],
+    queryFn: () => getGeoPolygon(geoId),
+  });
+
   // order by distance
   const dataSimilarSorted = dataSimilar
     ?.map((el: SimilarData) => {
@@ -102,7 +122,13 @@ export function Sectors() {
     { name: "Secteur privé", y: effectifPR },
   ];
 
-  if (isLoading || isLoadingByYear || isLoadingSimilar) {
+  if (
+    isLoading ||
+    isLoadingByYear ||
+    isLoadingSimilar ||
+    isLoadingDataSectorsMap ||
+    isLoadingPolygons
+  ) {
     return <div>Loading...</div>;
   }
 
@@ -119,6 +145,24 @@ export function Sectors() {
       setChartType("line");
     } else {
       setChartType("column");
+    }
+  };
+
+  const getSubLevelName = () => {
+    if (!geoId || geoId === "PAYS_100") {
+      return "régions";
+    }
+    if (geoId.startsWith("R")) {
+      return "académies";
+    }
+    if (geoId.startsWith("D")) {
+      return "communes";
+    }
+    if (geoId.startsWith("A")) {
+      return "départements";
+    }
+    if (geoId.startsWith("U")) {
+      return "communes";
     }
   };
 
@@ -174,6 +218,27 @@ export function Sectors() {
           />
         </Col>
       </Row>
+      <Row className="fr-my-5w">
+        <Col>
+          <Title as="h3" look="h5">
+            <span
+              className="fr-icon-pie-chart-2-fill fr-mr-1w"
+              aria-hidden="true"
+            />
+            {`Répartition des étudiants par ${getSubLevelName()}`}
+          </Title>
+        </Col>
+      </Row>
+      <Row gutters>
+        <Col md={12}>
+          <MapPieSectors
+            currentYear={currentYear}
+            isLoading={isLoadingDataSectorsMap}
+            mapPieData={dataSectorsMap}
+            polygonsData={polygonsData}
+          />
+        </Col>
+      </Row>
       <Row className="fr-mt-5w">
         <Col>
           <Title as="h3" look="h5">
@@ -209,7 +274,8 @@ export function Sectors() {
           />
         </Col>
       </Row>
-      {dataSimilarSorted?.length > 0 && (
+      {dataSimilarSorted?.filter((el: SimilarData) => el.geo_id !== geoId)
+        .length > 0 && (
         <Row className="fr-mt-5w">
           <Col>
             <Title as="h2" look="h5">
@@ -233,11 +299,11 @@ export function Sectors() {
               <br />
               <ul>
                 {dataSimilarSorted
-                  ?.slice(0, 6)
-                  .filter(
+                  ?.filter(
                     (el: SimilarData) =>
                       el.geo_id !== searchParams.get("geo_id")
                   )
+                  .slice(0, 6)
                   .map((el: SimilarData) => (
                     <li key={el.geo_id}>
                       {el.geo_nom} (Secteur public:{" "}

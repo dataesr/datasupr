@@ -2,8 +2,8 @@ import { Badge, Button, Container, Row } from "@dataesr/dsfr-plus";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import Template from "../../../../components/template/index.tsx";
-import { getNumberOfStudentsHistoricByLevel } from "../../../../api";
+import Template from "../../../../../components/template/index.tsx";
+import { getNumberOfStudentsHistoricByLevel } from "../../../../../api/index.ts";
 
 export default function SubList() {
   const [searchParams] = useSearchParams();

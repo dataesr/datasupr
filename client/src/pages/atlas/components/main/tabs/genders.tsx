@@ -12,21 +12,25 @@ import {
 } from "@dataesr/dsfr-plus";
 
 import GenderChart from "../../../charts/genders-pie.tsx";
+import MapPieGender from "../../../charts/map-pie-sectors/index.jsx";
+import TrendCard from "../../../charts/trend.tsx";
 import {
+  getGeoPolygon,
   getNumberOfStudents,
+  getNumberOfStudentsByGenderAndSublevel,
   getNumberOfStudentsByYear,
   getSimilarElements,
 } from "../../../../../api/atlas.ts";
 import GenderHistoChart from "../../../charts/genders-histo.tsx";
 import { DataByYear, SimilarData } from "../../../../../types/atlas.ts";
 import StudentsCardWithTrend from "../../../../../components/cards/students-card-with-trend/index.tsx";
-import TrendCard from "../../../charts/trend.tsx";
 
 export function Genders() {
   const [chartView, setChartView] = useState<"basic" | "percentage">("basic");
   const [chartType, setChartType] = useState<"column" | "line">("column");
   const [searchParams] = useSearchParams();
   const currentYear = searchParams.get("annee_universitaire") || "2022-23";
+  const geoId = searchParams.get("geo_id") || "";
   const params = [...searchParams]
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
@@ -106,6 +110,20 @@ export function Genders() {
     queryFn: () => getSimilarElements(similarParams),
   });
 
+  const { data: polygonsData, isLoading: isLoadingPolygons } = useQuery({
+    queryKey: ["atlas/get-geo-polygons", geoId],
+    queryFn: () => getGeoPolygon(geoId),
+  });
+
+  const { data: dataGenders, isLoading: isLoadingDataGenders } = useQuery({
+    queryKey: [
+      "atlas/get-number-of-students-by-gender-and-sublevel",
+      geoId,
+      currentYear,
+    ],
+    queryFn: () => getNumberOfStudentsByGenderAndSublevel(geoId, currentYear),
+  });
+
   // order by distance
   const dataSimilarSorted = dataSimilar
     ?.map((el: SimilarData) => {
@@ -116,7 +134,13 @@ export function Genders() {
     })
     .sort((a: SimilarData, b: SimilarData) => a.distance - b.distance);
 
-  if (isLoading || isLoadingByYear || isLoadingSimilar) {
+  if (
+    isLoading ||
+    isLoadingByYear ||
+    isLoadingSimilar ||
+    isLoadingDataGenders ||
+    isLoadingPolygons
+  ) {
     return <div>Loading...</div>;
   }
 
@@ -133,6 +157,24 @@ export function Genders() {
       setChartType("line");
     } else {
       setChartType("column");
+    }
+  };
+
+  const getSubLevelName = () => {
+    if (!geoId || geoId === "PAYS_100") {
+      return "régions";
+    }
+    if (geoId.startsWith("R")) {
+      return "académies";
+    }
+    if (geoId.startsWith("D")) {
+      return "communes";
+    }
+    if (geoId.startsWith("A")) {
+      return "départements";
+    }
+    if (geoId.startsWith("U")) {
+      return "communes";
     }
   };
 
@@ -197,6 +239,27 @@ export function Genders() {
           />
         </Col>
       </Row>
+      <Row className="fr-my-5w">
+        <Col>
+          <Title as="h3" look="h5">
+            <span
+              className="fr-icon-pie-chart-2-fill fr-mr-1w"
+              aria-hidden="true"
+            />
+            {`Répartition des étudiants par ${getSubLevelName()}`}
+          </Title>
+        </Col>
+      </Row>
+      <Row gutters>
+        <Col md={12}>
+          <MapPieGender
+            currentYear={currentYear}
+            isLoading={isLoadingDataGenders}
+            mapPieData={dataGenders}
+            polygonsData={polygonsData}
+          />
+        </Col>
+      </Row>
       <Row className="fr-mt-5w">
         <Col>
           <Title as="h3" look="h5">
@@ -232,7 +295,8 @@ export function Genders() {
           />
         </Col>
       </Row>
-      {dataSimilarSorted?.length > 0 && (
+      {dataSimilarSorted?.filter((el: SimilarData) => el.geo_id !== geoId)
+        .length > 0 && (
         <Row className="fr-mt-5w">
           <Col>
             <Title as="h2" look="h5">
@@ -256,11 +320,8 @@ export function Genders() {
               <br />
               <ul>
                 {dataSimilarSorted
-                  ?.slice(0, 6)
-                  .filter(
-                    (el: SimilarData) =>
-                      el.geo_id !== searchParams.get("geo_id")
-                  )
+                  ?.filter((el: SimilarData) => el.geo_id !== geoId)
+                  .slice(0, 6)
                   .map((el: SimilarData) => (
                     <li key={el.geo_id}>
                       {el.geo_nom} (Féminin:{" "}

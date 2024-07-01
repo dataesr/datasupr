@@ -1,6 +1,5 @@
 import { Container, Row, Col, Link, SideMenu, Title } from "@dataesr/dsfr-plus";
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
-import AtlasMap from "../components/atlas-map";
 import "./styles.scss";
 import { ReactNode } from "react";
 
@@ -48,10 +47,9 @@ export function AtlasSideMenu({ title }: { title: ReactNode }) {
             <span
               className="fr-icon-map-pin-2-line fr-mr-1w"
               aria-hidden="true"
-            ></span>
+            />
             {title}
           </Title>
-          <AtlasMap />
           <Outlet />
         </Col>
       </Row>
