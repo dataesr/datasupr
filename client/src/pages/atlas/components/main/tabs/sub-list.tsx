@@ -74,7 +74,7 @@ export default function SubList() {
           );
 
           return (
-            <li>
+            <li key={item.geo_id}>
               <Row key={item.geo_nom} style={{ width: "100%" }}>
                 <div style={{ flexGrow: "1" }}>{item.geo_nom}</div>
                 <div>

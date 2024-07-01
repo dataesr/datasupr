@@ -682,35 +682,37 @@ router.route("/atlas/number-of-students").get((req, res) => {
           const datRegroupement = allData.data.filter(
             (item) => item.regroupement === regroupementId
           );
-          datRegroupement.map((item) => {
-            if (!data.filieres.find((el) => el.id === item.regroupement)) {
-              const obj = {
-                id: item.regroupement, // ex: CPGE
-                label: item.rgp_formations_ou_etablissements,
-              };
-              obj[`effectif_${item.secteur}`] = item.effectif;
+          datRegroupement
+            .filter((item) => item.regroupement !== "TOTAL")
+            .map((item) => {
+              if (!data.filieres.find((el) => el.id === item.regroupement)) {
+                const obj = {
+                  id: item.regroupement, // ex: CPGE
+                  label: item.rgp_formations_ou_etablissements,
+                };
+                obj[`effectif_${item.secteur}`] = item.effectif;
 
-              data.filieres.push(obj);
-            } else {
-              if (
-                data.filieres.find(
-                  (el) =>
-                    el.id === item.regroupement &&
-                    el[`effectif_${item.secteur}`]
-                )
-              ) {
-                data.filieres.find((el) => el.id === item.regroupement)[
-                  `effectif_${item.secteur}`
-                ] += item.effectif;
+                data.filieres.push(obj);
               } else {
-                data.filieres.find((el) => el.id === item.regroupement)[
-                  `effectif_${item.secteur}`
-                ] = item.effectif;
-              }
+                if (
+                  data.filieres.find(
+                    (el) =>
+                      el.id === item.regroupement &&
+                      el[`effectif_${item.secteur}`]
+                  )
+                ) {
+                  data.filieres.find((el) => el.id === item.regroupement)[
+                    `effectif_${item.secteur}`
+                  ] += item.effectif;
+                } else {
+                  data.filieres.find((el) => el.id === item.regroupement)[
+                    `effectif_${item.secteur}`
+                  ] = item.effectif;
+                }
 
-              data.filieres[item.regroupement] += item.effectif;
-            }
-          });
+                data.filieres[item.regroupement] += item.effectif;
+              }
+            });
         });
 
         // Gender

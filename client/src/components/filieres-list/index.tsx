@@ -21,6 +21,10 @@ export default function FilieresList() {
     return <ListSkeleton />;
   }
 
+  const maxValue: number = Math.max(
+    ...data.filieres.map((el) => (el.effectif_PU || 0) + (el.effectif_PR || 0))
+  );
+
   return (
     <Container fluid className="fr-my-1w">
       <Title as="h2" look="h5" className="fr-mb-0 fr-mb-3w">
@@ -39,8 +43,15 @@ export default function FilieresList() {
                 (filiere.effectif_PR || 0) + (filiere.effectif_PU || 0) !==
                 0
               ) {
+                const size =
+                  (((filiere.effectif_PR || 0) + (filiere.effectif_PU || 0)) *
+                    100) /
+                  maxValue;
+
+                console.log("size:", size);
+
                 return (
-                  <li style={{ listStyle: "none" }}>
+                  <li style={{ listStyle: "none" }} key={filiere.id}>
                     <Title as="h3" look="h6" className="fr-mb-0">
                       <Link
                         to={`/atlas/effectifs-par-filiere/${filiere.id}?${params}`}
@@ -58,7 +69,16 @@ export default function FilieresList() {
                         (filiere.effectif_PR || 0) + (filiere.effectif_PU || 0)
                       ).toLocaleString("fr-FR")}
                     </Text>
-                    <hr />
+                    <div
+                      className="fr-mb-1w"
+                      style={{
+                        width: `${size}%`,
+                        height: "8px",
+                        backgroundColor: "#D98281",
+                        borderTopRightRadius: "3px",
+                        borderBottomRightRadius: "3px",
+                      }}
+                    />
                   </li>
                 );
               }
