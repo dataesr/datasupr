@@ -328,6 +328,8 @@ router
     if (req.query.niveau_geo === "COMMUNE") {
       filters.niveau_geo = "DEPARTEMENT";
     }
+    req.query.geo_id = { $ne: "R99" }; // Etrangers
+
     const response = await db
       .collection("atlas2023")
       .findOne({ ...filters }, { projection: { geo_nom: 1 } });

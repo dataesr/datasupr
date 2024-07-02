@@ -106,12 +106,11 @@ export default function MapPieSectors({
           const chart = this;
           // Add the pies after chart load, optionally with offset and connectors
           Highcharts.each(chart.series[0].points, function (state) {
-            if (!state.id) {
+            if (!state.id || !state.geometry) {
               return; // Skip points with no data, if any
             }
-
             let polygon;
-            if (state.geometry.type === "Polygon") {
+            if (state.geometry?.type === "Polygon") {
               polygon = turf.polygon(state.geometry.coordinates);
             } else if (state.geometry.type === "MultiPolygon") {
               polygon = turf.multiPolygon(state.geometry.coordinates);
