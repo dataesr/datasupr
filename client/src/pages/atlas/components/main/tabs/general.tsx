@@ -142,7 +142,7 @@ export function General() {
                   className="fr-icon-pie-chart-2-fill fr-mr-1w"
                   aria-hidden="true"
                 />
-                {`Répartition des étudiants par ${getSubLevelName()}`}
+                {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
               </Title>
             </Col>
           </Row>
@@ -227,7 +227,7 @@ export function General() {
                   className="fr-icon-pie-chart-2-fill fr-mr-1w"
                   aria-hidden="true"
                 />
-                {`Répartition des étudiants par ${getSubLevelName()}`}
+                {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
               </Title>
             </Col>
           </Row>
@@ -291,7 +291,7 @@ export function General() {
       <Row className="fr-mt-5w">
         <Col md={6}>
           <Title as="h3" look="h5">
-            Répartition des étudiants par secteur
+            Répartition des effectifs étudiants par secteur
           </Title>
           <Text>
             Les effectifs étudiants sont répartis entre le secteur public et le
@@ -323,7 +323,7 @@ export function General() {
       <Row className="fr-mt-5w fr-mb-5w">
         <Col md={6}>
           <Title as="h3" look="h5">
-            Répartition des étudiants par genre
+            Répartition des effectifs étudiants par genre
           </Title>
           <Text>
             Les effectifs étudiants sont répartis entre les genres masculin et

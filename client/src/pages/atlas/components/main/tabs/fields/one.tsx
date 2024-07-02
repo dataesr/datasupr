@@ -180,7 +180,7 @@ export default function OneField() {
         <Row className="fr-mt-5w">
           <Col md={6}>
             <Title as="h3" look="h5">
-              Répartition des étudiants par secteur
+              Répartition des effectifs étudiants par secteur
             </Title>
             <Text>
               Les effectifs étudiants sont répartis entre le secteur public et
@@ -209,7 +209,7 @@ export default function OneField() {
         <Row className="fr-mt-5w">
           <Col md={6}>
             <Title as="h3" look="h5">
-              Répartition des étudiants par genre
+              Répartition des effectifs étudiants par genre
             </Title>
             <Text>
               Les effectifs étudiants sont répartis entre les genres masculin et

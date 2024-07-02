@@ -227,7 +227,7 @@ export function Sectors() {
                   className="fr-icon-pie-chart-2-line fr-mr-1w"
                   aria-hidden="true"
                 />
-                {`Répartition des étudiants par ${getSubLevelName()}`}
+                {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
               </Title>
             </Col>
           </Row>
