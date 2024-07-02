@@ -84,31 +84,31 @@ export default function MapWithPolygonAndBubbles({
 
   // special case : France but idToFocus === Guadeloupe
   if (geoId === "PAYS_100" && currentId === "R01") {
-    mapOptions.mapView["center"] = [-61.55, 15.35];
+    mapOptions.mapView["center"] = [-61.55, 15.45];
     mapOptions.mapView["zoom"] = 7.7;
   }
 
   // special case : France but idToFocus === Martinique
   if (geoId === "PAYS_100" && currentId === "R02") {
-    mapOptions.mapView["center"] = [-61, 13.8];
+    mapOptions.mapView["center"] = [-61, 13.9];
     mapOptions.mapView["zoom"] = 7.7;
   }
 
   // special case : France but idToFocus === Guyanne
   if (geoId === "PAYS_100" && currentId === "R03") {
-    mapOptions.mapView["center"] = [-53, -1.1];
+    mapOptions.mapView["center"] = [-53, -1];
     mapOptions.mapView["zoom"] = 5.1;
   }
 
   // special case : France but idToFocus === La Réunion
   if (geoId === "PAYS_100" && currentId === "R04") {
-    mapOptions.mapView["center"] = [55.55, -21.95];
+    mapOptions.mapView["center"] = [55.55, -21.85];
     mapOptions.mapView["zoom"] = 7.7;
   }
 
   // special case : France but idToFocus === Mayotte
   if (geoId === "PAYS_100" && currentId === "R06") {
-    mapOptions.mapView["center"] = [45.1, -13.5];
+    mapOptions.mapView["center"] = [45.1, -13.4];
     mapOptions.mapView["zoom"] = 8;
   }
 

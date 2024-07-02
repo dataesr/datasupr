@@ -169,6 +169,7 @@ export function General() {
                     mapbubbleData={mapbubbleData}
                     polygonsData={polygonsData}
                   />
+                  <div className="drom-item-label">Guadeloupe</div>
                 </div>
                 <div className="drom-item">
                   <MapWithPolygonAndBubbles
@@ -178,6 +179,7 @@ export function General() {
                     mapbubbleData={mapbubbleData}
                     polygonsData={polygonsData}
                   />
+                  <div className="drom-item-label">Martinique</div>
                 </div>
                 <div className="drom-item">
                   <MapWithPolygonAndBubbles
@@ -187,6 +189,7 @@ export function General() {
                     mapbubbleData={mapbubbleData}
                     polygonsData={polygonsData}
                   />
+                  <div className="drom-item-label">Guyane</div>
                 </div>
                 <div className="drom-item">
                   <MapWithPolygonAndBubbles
@@ -196,6 +199,7 @@ export function General() {
                     mapbubbleData={mapbubbleData}
                     polygonsData={polygonsData}
                   />
+                  <div className="drom-item-label">La Réunion</div>
                 </div>
                 <div className="drom-item">
                   <MapWithPolygonAndBubbles
@@ -205,6 +209,7 @@ export function General() {
                     mapbubbleData={mapbubbleData}
                     polygonsData={polygonsData}
                   />
+                  <div className="drom-item-label">Mayotte</div>
                 </div>
               </div>
             </Col>
