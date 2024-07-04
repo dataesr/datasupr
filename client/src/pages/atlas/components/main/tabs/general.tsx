@@ -113,29 +113,70 @@ export function General() {
     ) {
       return <MapSkeleton />;
     }
+    // console.log(dataHistoric.data);
+
     const mapbubbleData: MapBubbleDataProps = [];
-    dataHistoric.data.forEach((item) => {
-      const polygon =
-        polygonsData.find((d) => d.originalId === item.geo_id)?.geometry ||
-        null;
-      if (polygon !== "undefined" && polygon !== null) {
-        const calculateCenter = turf.centerOfMass(polygon);
-        mapbubbleData.push({
-          z:
-            item.data.find((d) => d.annee_universitaire === currentYear)
-              ?.effectif || 0,
-          name: item.geo_nom,
-          lat: calculateCenter.geometry.coordinates[1],
-          lon: calculateCenter.geometry.coordinates[0],
-        });
-      }
-    });
+    dataHistoric.data
+      .filter((item) => item.geo_id !== "R00")
+      .forEach((item) => {
+        let polygon;
+        switch (item.geo_id) {
+          case "D988":
+            mapbubbleData.push({
+              z:
+                item.data.find((d) => d.annee_universitaire === currentYear)
+                  ?.effectif || 0,
+              name: item.geo_nom,
+              lat: -21.7,
+              lon: 166,
+            });
+            break;
+
+          case "D987":
+            mapbubbleData.push({
+              z:
+                item.data.find((d) => d.annee_universitaire === currentYear)
+                  ?.effectif || 0,
+              name: item.geo_nom,
+              lat: -17.6,
+              lon: -149.5,
+            });
+            break;
+
+          case "978":
+            mapbubbleData.push({
+              z:
+                item.data.find((d) => d.annee_universitaire === currentYear)
+                  ?.effectif || 0,
+              name: item.geo_nom,
+              lat: 18.07,
+              lon: -63.1,
+            });
+            break;
+
+          default:
+            polygon =
+              polygonsData.find((d) => d.originalId === item.geo_id)
+                ?.geometry || null;
+            if (polygon !== "undefined" && polygon !== null) {
+              const calculateCenter = turf.centerOfMass(polygon);
+              mapbubbleData.push({
+                z:
+                  item.data.find((d) => d.annee_universitaire === currentYear)
+                    ?.effectif || 0,
+                name: item.geo_nom,
+                lat: calculateCenter.geometry.coordinates[1],
+                lon: calculateCenter.geometry.coordinates[0],
+              });
+            }
+        }
+      });
 
     // France case
     if (geoId === "PAYS_100") {
       return (
         <div className="atlas-map">
-          <Row className="fr-my-5w">
+          <Row className="fr-mt-5w">
             <Col>
               <Title as="h3" look="h5">
                 <span
@@ -146,75 +187,129 @@ export function General() {
               </Title>
             </Col>
           </Row>
-          <Row gutters>
-            <Col>
-              <div style={{ width: "100%", height: "100%" }}>
-                <MapWithPolygonAndBubbles
-                  currentYear={currentYear}
-                  isLoading={isLoadingHistoric}
-                  mapbubbleData={mapbubbleData}
-                  polygonsData={polygonsData}
-                />
+          <Row horizontalAlign="right">
+            <Col offsetMd={1} md={8}>
+              <MapWithPolygonAndBubbles
+                currentYear={currentYear}
+                isLoading={isLoadingHistoric}
+                mapbubbleData={mapbubbleData}
+                polygonsData={polygonsData}
+              />
+            </Col>
+            <Col md={3} className="text-right">
+              <div style={{ display: "inline-block" }}>
+                <div className="item ">
+                  <MapWithPolygonAndBubbles
+                    currentYear={currentYear}
+                    idToFocus="D988"
+                    isLoading={isLoadingHistoric}
+                    mapbubbleData={mapbubbleData}
+                    polygonsData={polygonsData}
+                  />
+                  <div className="item-label">Nouvelle-Calédonie</div>
+                </div>
+              </div>
+              <div style={{ display: "inline-block" }}>
+                <div className="item ">
+                  <MapWithPolygonAndBubbles
+                    currentYear={currentYear}
+                    idToFocus="D987"
+                    isLoading={isLoadingHistoric}
+                    mapbubbleData={mapbubbleData}
+                    polygonsData={polygonsData}
+                  />
+                  <div className="item-label">Polynésie française</div>
+                </div>
+              </div>
+              <div style={{ display: "inline-block" }}>
+                <div className="item ">
+                  <MapWithPolygonAndBubbles
+                    currentYear={currentYear}
+                    idToFocus="978"
+                    isLoading={isLoadingHistoric}
+                    mapbubbleData={mapbubbleData}
+                    polygonsData={polygonsData}
+                  />
+                  <div className="item-label">Saint-Martin</div>
+                </div>
+              </div>
+              <div style={{ display: "inline-block" }}>
+                <div className="item ">
+                  <MapWithPolygonAndBubbles
+                    currentYear={currentYear}
+                    idToFocus="D986"
+                    isLoading={isLoadingHistoric}
+                    mapbubbleData={mapbubbleData}
+                    polygonsData={polygonsData}
+                  />
+                  <div className="item-label">Wallis et Futuna</div>
+                </div>
               </div>
             </Col>
           </Row>
           <Row>
-            <Col>
-              <div className="drom-list">
-                <div className="drom-item">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="R01"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                  <div className="drom-item-label">Guadeloupe</div>
-                </div>
-                <div className="drom-item">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="R02"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                  <div className="drom-item-label">Martinique</div>
-                </div>
-                <div className="drom-item">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="R03"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                  <div className="drom-item-label">Guyane</div>
-                </div>
-                <div className="drom-item">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="R04"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                  <div className="drom-item-label">La Réunion</div>
-                </div>
-                <div className="drom-item">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="R06"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                  <div className="drom-item-label">Mayotte</div>
-                </div>
+            <div style={{ flexGrow: 1 }} />
+            <Col md={2} className="fr-mr-1w">
+              <div className="item">
+                <MapWithPolygonAndBubbles
+                  currentYear={currentYear}
+                  idToFocus="R01"
+                  isLoading={isLoadingHistoric}
+                  mapbubbleData={mapbubbleData}
+                  polygonsData={polygonsData}
+                />
+                <div className="item-label">Guadeloupe</div>
+              </div>
+            </Col>
+            <Col md={2} className="fr-mr-1w">
+              <div className="item">
+                <MapWithPolygonAndBubbles
+                  currentYear={currentYear}
+                  idToFocus="R02"
+                  isLoading={isLoadingHistoric}
+                  mapbubbleData={mapbubbleData}
+                  polygonsData={polygonsData}
+                />
+                <div className="item-label">Martinique</div>
+              </div>
+            </Col>
+            <Col md={2} className="fr-mr-1w">
+              <div className="item">
+                <MapWithPolygonAndBubbles
+                  currentYear={currentYear}
+                  idToFocus="R03"
+                  isLoading={isLoadingHistoric}
+                  mapbubbleData={mapbubbleData}
+                  polygonsData={polygonsData}
+                />
+                <div className="item-label">Guyane</div>
+              </div>
+            </Col>
+            <Col md={2} className="fr-mr-1w">
+              <div className="item">
+                <MapWithPolygonAndBubbles
+                  currentYear={currentYear}
+                  idToFocus="R04"
+                  isLoading={isLoadingHistoric}
+                  mapbubbleData={mapbubbleData}
+                  polygonsData={polygonsData}
+                />
+                <div className="item-label">La Réunion</div>
+              </div>
+            </Col>
+            <Col md={2} style={{ marginRight: "6px" }}>
+              <div className="item">
+                <MapWithPolygonAndBubbles
+                  currentYear={currentYear}
+                  idToFocus="R06"
+                  isLoading={isLoadingHistoric}
+                  mapbubbleData={mapbubbleData}
+                  polygonsData={polygonsData}
+                />
+                <div className="item-label">Mayotte</div>
               </div>
             </Col>
           </Row>
-
           <Row className="fr-mt-5w">
             <Col>
               <SubList />

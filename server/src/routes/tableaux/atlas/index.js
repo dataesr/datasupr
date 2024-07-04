@@ -120,9 +120,17 @@ router.route("/atlas/get-geo-polygons").get(async (req, res) => {
     // Get all regions of France
     filters.niveau_geo = "REGION";
   }
-
+  console.log(filters);
   if (geoId.startsWith("R") || geoId.startsWith("A") || geoId.startsWith("P")) {
     const ids = await db.collection("atlas2023").distinct("geo_id", filters);
+    if (geoId.startsWith("P")) {
+      ids.push("D988"); //Nouvelle-Caledonie
+      ids.push("D987"); //Polynesie-Francaise
+      ids.push("D986"); //Wallis-et-Futuna
+      ids.push("D985"); //Saint-Pierre-et-Miquelon
+      ids.push("D984"); //Saint-Barthelemy
+      ids.push("978"); //Saint-Martin
+    }
     const polygons = [];
     for (let i = 0; i < ids.length; i++) {
       const polygon = await dbPaysage
@@ -328,14 +336,25 @@ router
     if (req.query.niveau_geo === "COMMUNE") {
       filters.niveau_geo = "DEPARTEMENT";
     }
-    req.query.geo_id = { $ne: "R99" }; // Etrangers
 
     const response = await db
       .collection("atlas2023")
       .findOne({ ...filters }, { projection: { geo_nom: 1 } });
     const levelName = response?.geo_nom || "France";
+
+    const query = {
+      geo_id: { $ne: "R99" }, // français à l'etrangers
+      $or: [
+        { geo_id: "978" },
+        { geo_id: "D986" },
+        { geo_id: "D987" },
+        { geo_id: "D988" },
+        { niveau_geo: req.query.niveau_geo },
+      ],
+    };
+
     db.collection("atlas2023")
-      .find(req.query, {
+      .find(query, {
         projection: {
           effectif: 1,
           geo_id: 1,

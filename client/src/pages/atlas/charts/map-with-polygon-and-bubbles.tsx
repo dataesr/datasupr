@@ -2,6 +2,7 @@ import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import highchartsMap from "highcharts/modules/map";
+
 import { MapBubbleDataProps, PolygonsDataProps } from "../../../types/atlas";
 import MapSkeleton from "./skeletons/map";
 
@@ -30,6 +31,7 @@ export default function MapWithPolygonAndBubbles({
   const mapOptions = {
     chart: {
       map: "countries/ie/ie-all",
+      backgroundColor: "transparent",
     },
     title: {
       text: "",
@@ -53,9 +55,14 @@ export default function MapWithPolygonAndBubbles({
       {
         name: "Basemap",
         mapData: polygonsData,
-        borderColor: "#A0A0A0",
-        nullColor: "rgba(200, 200, 200, 0.3)",
+        borderColor: "var(--border-default-grey)",
+        nullColor: "var(--background-contrast-grey)",
         showInLegend: false,
+        states: {
+          inactive: {
+            opacity: 1,
+          },
+        },
       },
       {
         type: "mapbubble",
@@ -78,8 +85,9 @@ export default function MapWithPolygonAndBubbles({
 
   // special case : France - centeringOnMetropolitanFrance
   if (currentId === "PAYS_100") {
-    mapOptions.mapView["center"] = [2.5, 47];
-    mapOptions.mapView["zoom"] = 5.05;
+    mapOptions.mapView["center"] = [2.5, 46.5];
+    mapOptions.mapView["zoom"] = 5.7;
+    mapOptions.chart["height"] = "600px";
   }
 
   // special case : France but idToFocus === Guadeloupe
@@ -110,6 +118,38 @@ export default function MapWithPolygonAndBubbles({
   if (geoId === "PAYS_100" && currentId === "R06") {
     mapOptions.mapView["center"] = [45.1, -13.4];
     mapOptions.mapView["zoom"] = 8;
+  }
+
+  // special case : France but idToFocus === Nouvelle-Calédonie
+  if (geoId === "PAYS_100" && currentId === "D988") {
+    mapOptions.mapView["center"] = [165.7, -21];
+    mapOptions.mapView["zoom"] = 5.5;
+    mapOptions.chart["height"] = "150";
+    mapOptions.chart["width"] = "130";
+  }
+
+  // special case : France but idToFocus === Polynésie française
+  if (geoId === "PAYS_100" && currentId === "D987") {
+    mapOptions.mapView["center"] = [-149.5, -17.5];
+    mapOptions.mapView["zoom"] = 7;
+    mapOptions.chart["height"] = "150";
+    mapOptions.chart["width"] = "130";
+  }
+
+  // special case : France but idToFocus === Saint-Martin
+  if (geoId === "PAYS_100" && currentId === "978") {
+    mapOptions.mapView["center"] = [-63.1, 18.1];
+    mapOptions.mapView["zoom"] = 9;
+    mapOptions.chart["height"] = "150";
+    mapOptions.chart["width"] = "130";
+  }
+
+  // special case : France but idToFocus === Wallis et Futuna
+  if (geoId === "PAYS_100" && currentId === "D986") {
+    mapOptions.mapView["center"] = [-178, -13.3];
+    mapOptions.mapView["zoom"] = 9;
+    mapOptions.chart["height"] = "150";
+    mapOptions.chart["width"] = "130";
   }
 
   return (
