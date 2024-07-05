@@ -6,6 +6,7 @@
     border: 1px solid var(--border-default-grey);
     border-radius: 5px;
     position: relative;
+    margin-bottom: 8px;
     .item-label {
       position: absolute;
       padding: 2px;
@@ -19,5 +20,65 @@
       width: 100%;
       line-height: normal;
     }
+  }
+
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr;
+    gap: 0px 0px;
+    grid-auto-flow: row;
+    grid-template-areas:
+      "Map1 Map1 Map1 Map1 col1"
+      "Map1 Map1 Map1 Map1 col2"
+      "Map1 Map1 Map1 Map1 col3"
+      "Map1 Map1 Map1 Map1 col4"
+      "drom1 drom2 drom3 drom4 drom5";
+  }
+
+  .Map1 {
+    grid-area: Map1;
+  }
+
+  .col1 {
+    grid-area: col1;
+  }
+
+  .col2 {
+    grid-area: col2;
+  }
+
+  .col3 {
+    grid-area: col3;
+  }
+
+  .col4 {
+    grid-area: col4;
+  }
+
+  .drom1 {
+    grid-area: drom1;
+  }
+
+  .drom2 {
+    grid-area: drom2;
+  }
+
+  .drom3 {
+    grid-area: drom3;
+  }
+
+  .drom4 {
+    grid-area: drom4;
+  }
+
+  .drom5 {
+    grid-area: drom5;
+  }
+}
+
+@media (max-width: 768px) {
+  .atlas-map {
+    display: none;
   }
 }

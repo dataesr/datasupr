@@ -187,69 +187,64 @@ export function General() {
               </Title>
             </Col>
           </Row>
-          <Row horizontalAlign="right">
-            <Col offsetMd={1} md={8}>
+          <div className="container">
+            <div className="Map1">
               <MapWithPolygonAndBubbles
                 currentYear={currentYear}
                 isLoading={isLoadingHistoric}
                 mapbubbleData={mapbubbleData}
                 polygonsData={polygonsData}
               />
-            </Col>
-            <Col md={3} className="text-right">
-              <div style={{ display: "inline-block" }}>
-                <div className="item ">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="D988"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                  <div className="item-label">Nouvelle-Calédonie</div>
-                </div>
+            </div>
+            <div className="col1">
+              <div className="item ">
+                <MapWithPolygonAndBubbles
+                  currentYear={currentYear}
+                  idToFocus="D988"
+                  isLoading={isLoadingHistoric}
+                  mapbubbleData={mapbubbleData}
+                  polygonsData={polygonsData}
+                />
+                <div className="item-label">Nouvelle-Calédonie</div>
               </div>
-              <div style={{ display: "inline-block" }}>
-                <div className="item ">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="D987"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                  <div className="item-label">Polynésie française</div>
-                </div>
+            </div>
+            <div className="col2">
+              <div className="item ">
+                <MapWithPolygonAndBubbles
+                  currentYear={currentYear}
+                  idToFocus="D987"
+                  isLoading={isLoadingHistoric}
+                  mapbubbleData={mapbubbleData}
+                  polygonsData={polygonsData}
+                />
+                <div className="item-label">Polynésie française</div>
               </div>
-              <div style={{ display: "inline-block" }}>
-                <div className="item ">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="978"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                  <div className="item-label">Saint-Martin</div>
-                </div>
+            </div>
+            <div className="col3">
+              <div className="item ">
+                <MapWithPolygonAndBubbles
+                  currentYear={currentYear}
+                  idToFocus="978"
+                  isLoading={isLoadingHistoric}
+                  mapbubbleData={mapbubbleData}
+                  polygonsData={polygonsData}
+                />
+                <div className="item-label">Saint-Martin</div>
               </div>
-              <div style={{ display: "inline-block" }}>
-                <div className="item ">
-                  <MapWithPolygonAndBubbles
-                    currentYear={currentYear}
-                    idToFocus="D986"
-                    isLoading={isLoadingHistoric}
-                    mapbubbleData={mapbubbleData}
-                    polygonsData={polygonsData}
-                  />
-                  <div className="item-label">Wallis et Futuna</div>
-                </div>
+            </div>
+            <div className="col4">
+              <div className="item ">
+                <MapWithPolygonAndBubbles
+                  currentYear={currentYear}
+                  idToFocus="D986"
+                  isLoading={isLoadingHistoric}
+                  mapbubbleData={mapbubbleData}
+                  polygonsData={polygonsData}
+                />
+                <div className="item-label">Wallis et Futuna</div>
               </div>
-            </Col>
-          </Row>
-          <Row>
-            <div style={{ flexGrow: 1 }} />
-            <Col md={2} className="fr-mr-1w">
+            </div>
+            <div className="drom1">
               <div className="item">
                 <MapWithPolygonAndBubbles
                   currentYear={currentYear}
@@ -260,8 +255,8 @@ export function General() {
                 />
                 <div className="item-label">Guadeloupe</div>
               </div>
-            </Col>
-            <Col md={2} className="fr-mr-1w">
+            </div>
+            <div className="drom2">
               <div className="item">
                 <MapWithPolygonAndBubbles
                   currentYear={currentYear}
@@ -272,8 +267,8 @@ export function General() {
                 />
                 <div className="item-label">Martinique</div>
               </div>
-            </Col>
-            <Col md={2} className="fr-mr-1w">
+            </div>
+            <div className="drom3">
               <div className="item">
                 <MapWithPolygonAndBubbles
                   currentYear={currentYear}
@@ -284,8 +279,8 @@ export function General() {
                 />
                 <div className="item-label">Guyane</div>
               </div>
-            </Col>
-            <Col md={2} className="fr-mr-1w">
+            </div>
+            <div className="drom4">
               <div className="item">
                 <MapWithPolygonAndBubbles
                   currentYear={currentYear}
@@ -296,8 +291,8 @@ export function General() {
                 />
                 <div className="item-label">La Réunion</div>
               </div>
-            </Col>
-            <Col md={2} style={{ marginRight: "6px" }}>
+            </div>
+            <div className="drom5">
               <div className="item">
                 <MapWithPolygonAndBubbles
                   currentYear={currentYear}
@@ -308,8 +303,9 @@ export function General() {
                 />
                 <div className="item-label">Mayotte</div>
               </div>
-            </Col>
-          </Row>
+            </div>
+          </div>
+
           <Row className="fr-mt-5w">
             <Col>
               <SubList />
