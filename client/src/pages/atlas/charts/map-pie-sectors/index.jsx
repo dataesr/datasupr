@@ -100,6 +100,7 @@ export default function MapPieSectors({
     credits: { enabled: false },
     chart: {
       animation: false,
+      backgroundColor: "transparent",
       mapNavigation: { enabled: false },
       events: {
         load: function () {

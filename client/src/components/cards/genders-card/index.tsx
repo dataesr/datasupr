@@ -16,6 +16,7 @@ import "./style.scss";
 export default function GendersCard({ currentYear, values }: CardProps) {
   const secteursOptions = {
     chart: {
+      backgroundColor: "transparent",
       plotBackgroundColor: null,
       plotBorderWidth: 0,
       plotShadow: false,

@@ -18,100 +18,109 @@ export default function MapWithPolygonHighchartsPie() {
   // const maxVotes = data.reduce((max, row) => Math.max(max, row[5]), 0);
 
   const mapOptions = {
-
     chart: {
-      animation: false // Disable animation, especially for zooming
+      animation: false, // Disable animation, especially for zooming
+      backgroundColor: "transparent",
     },
 
     accessibility: {
-      description: 'Complex map demo showing voting results for US ' +
-        'states, where each state has a pie chart overlaid showing ' +
-        'the vote distribution.'
+      description:
+        "Complex map demo showing voting results for US " +
+        "states, where each state has a pie chart overlaid showing " +
+        "the vote distribution.",
     },
 
     colorAxis: {
-      dataClasses: [{
-        from: -1,
-        to: 0,
-        color: 'rgba(244,91,91,0.5)',
-        name: 'Republican'
-      }, {
-        from: 0,
-        to: 1,
-        color: 'rgba(124,181,236,0.5)',
-        name: 'Democrat'
-      }, {
-        from: 2,
-        to: 3,
-        name: 'Libertarian',
-        color: 'rgba(240, 190, 50, 0.80)'
-      }, {
-        from: 3,
-        to: 4,
-        name: 'Green',
-        color: 'rgba(90,200,90,0.80)'
-      }]
+      dataClasses: [
+        {
+          from: -1,
+          to: 0,
+          color: "rgba(244,91,91,0.5)",
+          name: "Republican",
+        },
+        {
+          from: 0,
+          to: 1,
+          color: "rgba(124,181,236,0.5)",
+          name: "Democrat",
+        },
+        {
+          from: 2,
+          to: 3,
+          name: "Libertarian",
+          color: "rgba(240, 190, 50, 0.80)",
+        },
+        {
+          from: 3,
+          to: 4,
+          name: "Green",
+          color: "rgba(90,200,90,0.80)",
+        },
+      ],
     },
 
     mapNavigation: {
-      enabled: true
+      enabled: true,
     },
 
     title: {
-      text: 'USA 2016 Presidential Election Results',
-      align: 'left'
+      text: "USA 2016 Presidential Election Results",
+      align: "left",
     },
 
     // Default options for the pies
     plotOptions: {
       pie: {
-        borderColor: 'rgba(255,255,255,0.4)',
+        borderColor: "rgba(255,255,255,0.4)",
         borderWidth: 1,
         clip: true,
         dataLabels: {
-          enabled: false
+          enabled: false,
         },
         states: {
           hover: {
             halo: {
-              size: 5
-            }
-          }
+              size: 5,
+            },
+          },
         },
         tooltip: {
-          headerFormat: ''
-        }
-      }
+          headerFormat: "",
+        },
+      },
     },
 
-    series: [{
-      mapData,
-      data: data,
-      name: 'States',
-      borderColor: '#FFF',
-      joinBy: ['name', 'id'],
-      keys: [
-        'id', 'demVotes', 'repVotes', 'libVotes', 'grnVotes',
-        'sumVotes', 'value', 'pieOffset'
-      ]
-
-    }, {
-      name: 'Connectors',
-      type: 'mapline',
-      color: 'rgba(130, 130, 130, 0.5)',
-      zIndex: 5,
-      showInLegend: false,
-      enableMouseTracking: false,
-      accessibility: {
-        enabled: false
-      }
-    }]
+    series: [
+      {
+        mapData,
+        data: data,
+        name: "States",
+        borderColor: "#FFF",
+        joinBy: ["name", "id"],
+        keys: [
+          "id",
+          "demVotes",
+          "repVotes",
+          "libVotes",
+          "grnVotes",
+          "sumVotes",
+          "value",
+          "pieOffset",
+        ],
+      },
+      {
+        name: "Connectors",
+        type: "mapline",
+        color: "rgba(130, 130, 130, 0.5)",
+        zIndex: 5,
+        showInLegend: false,
+        enableMouseTracking: false,
+        accessibility: {
+          enabled: false,
+        },
+      },
+    ],
   };
-
-
-
-
-
 
   return (
     <section>

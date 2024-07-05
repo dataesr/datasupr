@@ -75,6 +75,7 @@ export default function SectorsHistoChart({
       animation: {
         duration: 500,
       },
+      backgroundColor: "transparent",
     },
     title: {
       text: "",

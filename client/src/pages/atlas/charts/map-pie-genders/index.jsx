@@ -101,6 +101,7 @@ export default function MapPieGenders({
     credits: { enabled: false },
     chart: {
       animation: false,
+      backgroundColor: "transparent",
       mapNavigation: { enabled: false },
       events: {
         load: function () {

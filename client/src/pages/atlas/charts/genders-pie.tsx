@@ -22,6 +22,7 @@ export default function GenderChart({
     chart: {
       type: "pie",
       height: "80%",
+      backgroundColor: "transparent",
     },
     title: {
       text:

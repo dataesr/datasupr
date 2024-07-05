@@ -2,24 +2,24 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 type TrendGraphProps = {
-  color?: string,
-  data: number[],
+  color?: string;
+  data: number[];
 };
 
 export default function TrendGraph({
-  color = '#000',
+  color = "#000",
   data = [],
 }: TrendGraphProps) {
-
   const options = {
     chart: {
-      type: 'spline',
-      height: '90px',
+      backgroundColor: "transparent",
+      type: "spline",
+      height: "90px",
     },
     credits: { enabled: false },
     legend: { enabled: false },
     exporting: { enabled: false },
-    title: { text: '' },
+    title: { text: "" },
     yAxis: { visible: false },
     xAxis: { visible: false },
     plotOptions: {
@@ -27,39 +27,37 @@ export default function TrendGraph({
         lineWidth: 4,
         states: {
           hover: {
-            lineWidth: 5
-          }
+            lineWidth: 5,
+          },
         },
         marker: {
-          enabled: false
+          enabled: false,
         },
       },
       series: {
         label: {
-          connectorAllowed: false
+          connectorAllowed: false,
         },
-        pointStart: 2010
-      }
+        pointStart: 2010,
+      },
     },
     colors: [color],
-    series: [{
-      name: 'Effectif étudiants',
-      data
-    }],
-
-  }
+    series: [
+      {
+        name: "Effectif étudiants",
+        data,
+      },
+    ],
+  };
 
   return (
     <div className="highcharts-container">
       <figure className="highcharts-figure">
-        <HighchartsReact
-          highcharts={Highcharts}
-          options={options}
-        />
+        <HighchartsReact highcharts={Highcharts} options={options} />
       </figure>
       {/* <p className="fr-card__desc card-description fr-px-5w">
         Annee universitaire {currentYear}
       </p> */}
     </div>
-  )
+  );
 }

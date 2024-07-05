@@ -77,6 +77,7 @@ export default function GendersHistoChart({
       animation: {
         duration: 500,
       },
+      backgroundColor: "transparent",
     },
     title: { text: "" },
     credits: {
