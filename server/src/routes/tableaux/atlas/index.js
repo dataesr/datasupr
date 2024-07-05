@@ -342,16 +342,26 @@ router
       .findOne({ ...filters }, { projection: { geo_nom: 1 } });
     const levelName = response?.geo_nom || "France";
 
-    const query = {
-      geo_id: { $ne: "R99" }, // français à l'etrangers
-      $or: [
-        { geo_id: "978" },
-        { geo_id: "D986" },
-        { geo_id: "D987" },
-        { geo_id: "D988" },
-        { niveau_geo: req.query.niveau_geo },
-      ],
-    };
+    let query = req.query;
+    if (
+      !req.query.geo_id &&
+      !req.query.reg_id &&
+      !req.query.dep_id &&
+      !req.query.uucr_id &&
+      !req.query.aca_id
+    ) {
+      // cas PAYS_100
+      query = {
+        geo_id: { $ne: "R99" }, // français à l'etrangers
+        $or: [
+          { geo_id: "978" },
+          { geo_id: "D986" },
+          { geo_id: "D987" },
+          { geo_id: "D988" },
+          { niveau_geo: req.query.niveau_geo },
+        ],
+      };
+    }
 
     db.collection("atlas2023")
       .find(query, {
