@@ -53,7 +53,7 @@ export default function GendersCard({ currentYear, values }: CardProps) {
       {
         type: "pie",
         name: currentYear,
-        innerSize: "10%",
+        innerSize: "92%",
         data: values.labels.map((label, index) => [
           label,
           values.values[index],
