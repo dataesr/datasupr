@@ -29,6 +29,7 @@ import MapWithPolygonAndBubbles from "../../../charts/map-with-polygon-and-bubbl
 import MapSkeleton from "../../../charts/skeletons/map.tsx";
 
 import "./styles.scss";
+import ParisArrondissementsMap from "../../../charts/paris-arrondissements-map/index.tsx";
 
 export function General() {
   const [searchParams] = useSearchParams();
@@ -113,7 +114,6 @@ export function General() {
     ) {
       return <MapSkeleton />;
     }
-    // console.log(dataHistoric.data);
 
     const mapbubbleData: MapBubbleDataProps = [];
     dataHistoric.data
@@ -314,34 +314,71 @@ export function General() {
         </div>
       );
     } else {
-      return (
-        <>
+      // cas particuliers des arrondissements (Paris/Lyon/Marseille)
+      if (geoId === "D075") {
+        return (
+          <>
+            <Row className="fr-my-5w">
+              <Col>
+                <Title as="h3" look="h5">
+                  <span
+                    className="fr-icon-pie-chart-2-fill fr-mr-1w"
+                    aria-hidden="true"
+                  />
+                  {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
+                </Title>
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col md={8}>
+                <ParisArrondissementsMap />
+              </Col>
+              <Col md={4}>
+                <SubList />
+              </Col>
+            </Row>
+          </>
+        );
+      }
+
+      if (polygonsData.length > 1) {
+        return (
+          <>
+            <Row className="fr-my-5w">
+              <Col>
+                <Title as="h3" look="h5">
+                  <span
+                    className="fr-icon-pie-chart-2-fill fr-mr-1w"
+                    aria-hidden="true"
+                  />
+                  {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
+                </Title>
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col md={8}>
+                <MapWithPolygonAndBubbles
+                  currentYear={currentYear}
+                  isLoading={isLoadingHistoric}
+                  mapbubbleData={mapbubbleData}
+                  polygonsData={polygonsData}
+                />
+              </Col>
+              <Col md={4}>
+                <SubList />
+              </Col>
+            </Row>
+          </>
+        );
+      } else {
+        return (
           <Row className="fr-my-5w">
             <Col>
-              <Title as="h3" look="h5">
-                <span
-                  className="fr-icon-pie-chart-2-fill fr-mr-1w"
-                  aria-hidden="true"
-                />
-                {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
-              </Title>
-            </Col>
-          </Row>
-          <Row gutters>
-            <Col md={8}>
-              <MapWithPolygonAndBubbles
-                currentYear={currentYear}
-                isLoading={isLoadingHistoric}
-                mapbubbleData={mapbubbleData}
-                polygonsData={polygonsData}
-              />
-            </Col>
-            <Col md={4}>
               <SubList />
             </Col>
           </Row>
-        </>
-      );
+        );
+      }
     }
   }
 
