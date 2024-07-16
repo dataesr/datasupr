@@ -27,9 +27,9 @@ import TrendCard from "../../../charts/trend.tsx";
 import SubList from "./sub-list.tsx";
 import MapWithPolygonAndBubbles from "../../../charts/map-with-polygon-and-bubbles.tsx";
 import MapSkeleton from "../../../charts/skeletons/map.tsx";
+import ArrondissementsMap from "../../../charts/arrondissements-map/index.tsx";
 
 import "./styles.scss";
-import ParisArrondissementsMap from "../../../charts/paris-arrondissements-map/index.tsx";
 
 export function General() {
   const [searchParams] = useSearchParams();
@@ -325,13 +325,16 @@ export function General() {
                     className="fr-icon-pie-chart-2-fill fr-mr-1w"
                     aria-hidden="true"
                   />
-                  {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
+                  Répartition des effectifs étudiants à Paris
                 </Title>
               </Col>
             </Row>
             <Row gutters>
               <Col md={8}>
-                <ParisArrondissementsMap />
+                <Title as="h4" look="h6">
+                  Arrondissements de Lyon
+                </Title>
+                <ArrondissementsMap location="paris" />
               </Col>
               <Col md={4}>
                 <SubList />
@@ -363,6 +366,22 @@ export function General() {
                   mapbubbleData={mapbubbleData}
                   polygonsData={polygonsData}
                 />
+                {geoId === "D069" && (
+                  <>
+                    <Title as="h4" look="h6">
+                      Arrondissements de Lyon
+                    </Title>
+                    <ArrondissementsMap location="lyon" />
+                  </>
+                )}
+                {geoId === "D013" && (
+                  <>
+                    <Title as="h4" look="h6">
+                      Arrondissements de Marseille
+                    </Title>
+                    <ArrondissementsMap location="marseille" />
+                  </>
+                )}
               </Col>
               <Col md={4}>
                 <SubList />
