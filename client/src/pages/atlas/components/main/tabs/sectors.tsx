@@ -12,7 +12,7 @@ import {
 } from "@dataesr/dsfr-plus";
 
 import MapPieSectors from "../../../charts/map-pie-sectors/index.jsx";
-import SectortsChart from "../../../charts/sectors-pie.tsx";
+import SectortsChart from "../../../charts/sectors-pie/index.tsx";
 import SectorHistoChart from "../../../charts/sectors-histo.tsx";
 import TrendCard from "../../../charts/trend.tsx";
 import {
@@ -174,7 +174,7 @@ export function Sectors() {
             <Col>
               <StudentsCardWithTrend
                 descriptionNode={
-                  <Badge color="brown-cafe-creme">{`Année universitaire ${currentYear}`}</Badge>
+                  <Badge color="yellow-tournesol">{currentYear}</Badge>
                 }
                 number={effectifPU}
                 label="Etudiants inscrits dans le secteur public"
@@ -194,7 +194,7 @@ export function Sectors() {
             <Col>
               <StudentsCardWithTrend
                 descriptionNode={
-                  <Badge color="brown-cafe-creme">{`Année universitaire ${currentYear}`}</Badge>
+                  <Badge color="yellow-tournesol">{currentYear}</Badge>
                 }
                 number={effectifPR}
                 label="Etudiants inscrits dans le secteur privé"
@@ -211,11 +211,13 @@ export function Sectors() {
           </Row>
         </Col>
         <Col>
-          <SectortsChart
-            data={dataSectors || []}
-            isLoading={isLoading}
-            currentYear={data?.annee_universitaire || ""}
-          />
+          <Title as="h3" look="h6" className="fr-mx-5w">
+            Pourcentage d'étudiants inscrits regroupés par secteur
+            <Badge color="yellow-tournesol" className="fr-ml-1w">
+              {currentYear}
+            </Badge>
+          </Title>
+          <SectortsChart data={dataSectors || []} isLoading={isLoading} />
         </Col>
       </Row>
       {polygonsData.length > 1 && (

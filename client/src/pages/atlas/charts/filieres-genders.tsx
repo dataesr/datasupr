@@ -26,22 +26,14 @@ export default function FilieresGendersChart({
       height: "600",
     },
     title: {
-      text: "Nombre d'étudiants inscrits par fillière répartis par genre",
-      align: "left",
-    },
-    subtitle: {
-      text:
-        "Source: <a " +
-        'href="https://en.wikipedia.org/wiki/List_of_continents_and_continental_subregions_by_population"' +
-        'target="_blank">Source</a>',
-      align: "left",
+      text: "",
     },
     xAxis: {
       categories: data.map((filiere) => filiere.label),
       title: {
-        text: null,
+        text: "",
       },
-      gridLineWidth: 1,
+      gridLineWidth: 0.5,
       lineWidth: 0,
     },
     yAxis: {
@@ -60,23 +52,12 @@ export default function FilieresGendersChart({
     },
     plotOptions: {
       bar: {
-        borderRadius: "50%",
+        borderRadius: "20%",
         dataLabels: {
           enabled: true,
         },
         groupPadding: 0.1,
       },
-    },
-    legend: {
-      layout: "vertical",
-      align: "right",
-      verticalAlign: "top",
-      x: -40,
-      y: 80,
-      floating: true,
-      borderWidth: 1,
-      backgroundColor: "#FFFFFF",
-      shadow: true,
     },
     credits: {
       enabled: false,

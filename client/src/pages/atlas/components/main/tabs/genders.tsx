@@ -11,7 +11,7 @@ import {
   Button,
 } from "@dataesr/dsfr-plus";
 
-import GenderChart from "../../../charts/genders-pie.tsx";
+import GenderChart from "../../../charts/genders-pie/index.tsx";
 import MapPieGender from "../../../charts/map-pie-genders/index.jsx";
 import TrendCard from "../../../charts/trend.tsx";
 import {
@@ -186,7 +186,7 @@ export function Genders() {
             <Col>
               <StudentsCardWithTrend
                 descriptionNode={
-                  <Badge color="brown-cafe-creme">{currentYear}</Badge>
+                  <Badge color="yellow-tournesol">{currentYear}</Badge>
                 }
                 number={
                   dataByYear?.find(
@@ -210,7 +210,7 @@ export function Genders() {
             <Col>
               <StudentsCardWithTrend
                 descriptionNode={
-                  <Badge color="brown-cafe-creme">{currentYear}</Badge>
+                  <Badge color="yellow-tournesol">{currentYear}</Badge>
                 }
                 number={
                   dataByYear?.find(
@@ -232,11 +232,13 @@ export function Genders() {
           </Row>
         </Col>
         <Col>
-          <GenderChart
-            data={dataGender || []}
-            isLoading={isLoading}
-            currentYear={data?.annee_universitaire || ""}
-          />
+          <Title as="h3" look="h6" className="fr-mx-5w">
+            Pourcentage d'étudiants inscrits regroupés par genre
+            <Badge color="yellow-tournesol" className="fr-ml-1w">
+              {currentYear}
+            </Badge>
+          </Title>
+          <GenderChart data={dataGender || []} isLoading={isLoading} />
         </Col>
       </Row>
       {polygonsData.length > 1 && (

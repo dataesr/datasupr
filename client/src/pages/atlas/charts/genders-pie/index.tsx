@@ -9,11 +9,9 @@ type GenderData = {
 export default function GenderChart({
   data = [],
   isLoading,
-  currentYear,
 }: {
   data: GenderData;
   isLoading: boolean;
-  currentYear: string;
 }) {
   if (isLoading || !data || !data.length) {
     return <div>Loader</div>;
@@ -21,14 +19,11 @@ export default function GenderChart({
   const secteursOptions = {
     chart: {
       type: "pie",
-      height: "80%",
+      height: "60%",
       backgroundColor: "transparent",
     },
     title: {
-      text:
-        "Pourcentage d'étudiants inscrits regroupés par genre pour l'année universitaire " +
-        currentYear,
-      align: "center",
+      text: "",
     },
     credits: {
       enabled: false,

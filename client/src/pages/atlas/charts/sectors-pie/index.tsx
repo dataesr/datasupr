@@ -9,11 +9,9 @@ type SectorData = {
 export default function SectortsChart({
   data = [],
   isLoading = false,
-  currentYear,
 }: {
   data: SectorData;
   isLoading: boolean;
-  currentYear: string;
 }) {
   if (isLoading || !data || !data.length) {
     return <div>Loader</div>;
@@ -21,14 +19,11 @@ export default function SectortsChart({
   const secteursOptions = {
     chart: {
       type: "pie",
-      height: "80%",
+      height: "60%",
       backgroundColor: "transparent",
     },
     title: {
-      text:
-        "Pourcentage d'étudiants inscrits regroupés par secteur pour l'année universitaire " +
-        currentYear,
-      align: "center",
+      text: "",
     },
     credits: {
       enabled: false,

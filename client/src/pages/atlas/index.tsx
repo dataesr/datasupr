@@ -73,8 +73,6 @@ export default function AtlasHeader() {
     </>
   );
 
-  document.documentElement.setAttribute("data-fr-scheme", "light");
-
   return (
     <Container as="main" className="atlas-header">
       <Row>

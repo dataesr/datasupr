@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { Col, Container, Row } from "@dataesr/dsfr-plus";
+import { Badge, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import FilieresSectorsChart from "../../../../charts/filieres-sectors.tsx";
 import {
   getNumberOfStudents,
@@ -13,6 +13,7 @@ import FilieresList from "../../../../../../components/filieres-list/index.tsx";
 
 export default function AllFields() {
   const [searchParams] = useSearchParams();
+  const currentYear = searchParams.get("annee_universitaire") || "2022-23";
   const params = [...searchParams]
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
@@ -37,6 +38,12 @@ export default function AllFields() {
         </Row>
         <Row className="fr-my-5w">
           <Col>
+            <Title as="h3" look="h6">
+              Nombre d'étudiants inscrits par fillière répartis par secteur
+              <Badge color="yellow-tournesol" className="fr-ml-1w">
+                {currentYear}
+              </Badge>
+            </Title>
             <FilieresSectorsChart
               data={data?.filieres || []}
               isLoading={isLoading}
@@ -45,6 +52,12 @@ export default function AllFields() {
         </Row>
         <Row className="fr-my-5w">
           <Col>
+            <Title as="h3" look="h6">
+              Nombre d'étudiants inscrits par fillière répartis par genre
+              <Badge color="yellow-tournesol" className="fr-ml-1w">
+                {currentYear}
+              </Badge>
+            </Title>
             <FilieresGendersChart
               data={dataByGender || []}
               isLoading={isLoadinByGender}
