@@ -332,7 +332,7 @@ export function General() {
             <Row gutters>
               <Col md={8}>
                 <Title as="h4" look="h6">
-                  Arrondissements de Lyon
+                  Arrondissements de Paris
                 </Title>
                 <ArrondissementsMap location="paris" />
               </Col>
