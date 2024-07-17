@@ -128,7 +128,7 @@ export default function MapPieSectors({
                 sizeFormatter: function () {
                   const x = state.publicSector + state.privateSector;
                   const y = a * x + b;
-                  return Math.log(y + 1.5) * 100;
+                  return Math.sqrt(y + 1.5) * 100;
                 },
                 tooltip: {
                   pointFormatter: function () {
