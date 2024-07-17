@@ -5,28 +5,25 @@ import { getGeoPolygon } from "../../../api/atlas.ts";
 
 export default function MapWithPolygon({
   autoCenter = false,
-  id = '',
-  height = '400px',
-  width = '100%',
+  id = "",
+  height = "400px",
+  width = "100%",
   zoomControl = true,
 }: {
-  autoCenter?: boolean,
-  id: string,
-  height?: string,
-  width?: string,
-  zoomControl?: boolean,
+  autoCenter?: boolean;
+  id: string;
+  height?: string;
+  width?: string;
+  zoomControl?: boolean;
 }) {
   const { data, isLoading } = useQuery({
     queryKey: ["atlas/get-geo-polygons", id],
-    queryFn: () => getGeoPolygon(id)
-  })
+    queryFn: () => getGeoPolygon(id),
+  });
 
   if (isLoading || !data || !data.length) {
-    return <div>Loading...</div>
+    return <div>Loading...</div>;
   }
-
-  // console.log('MapWithPolygon', data);
-
 
   return (
     <section>

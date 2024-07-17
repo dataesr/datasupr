@@ -120,7 +120,6 @@ router.route("/atlas/get-geo-polygons").get(async (req, res) => {
     // Get all regions of France
     filters.niveau_geo = "REGION";
   }
-  console.log(filters);
   if (geoId.startsWith("R") || geoId.startsWith("A") || geoId.startsWith("P")) {
     const ids = await db.collection("atlas2023").distinct("geo_id", filters);
     if (geoId.startsWith("P")) {

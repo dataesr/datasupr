@@ -48,8 +48,6 @@ export default function FilieresList() {
                     100) /
                   maxValue;
 
-                console.log("size:", size);
-
                 return (
                   <li style={{ listStyle: "none" }} key={filiere.id}>
                     <Title as="h3" look="h6" className="fr-mb-0">
