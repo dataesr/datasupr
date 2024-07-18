@@ -16,7 +16,7 @@ export default function StudentsCardWithTrend({
   label,
   number,
   tagsNode,
-  to = "#",
+  to,
   trendGraph = <>trendGraph</>,
 }: CardProps) {
   return (
@@ -26,9 +26,25 @@ export default function StudentsCardWithTrend({
           <Container fluid>
             <Row>
               <Col>
-                {/* <h3 className="fr-card__title"> */}
-                <Title as="h3" className="fr-card__title">
-                  <a href={to} className="fr-card__link">
+                {to ? (
+                  <Title as="h3" className="fr-card__title">
+                    <a href={to} className="fr-card__link">
+                      {label ? (
+                        <div className="students-label">{label}</div>
+                      ) : (
+                        <div className="students-label">
+                          Etudiants
+                          <br />
+                          inscrits
+                        </div>
+                      )}
+                      <div className="key-number">
+                        {number.toLocaleString("fr-FR")}
+                      </div>
+                    </a>
+                  </Title>
+                ) : (
+                  <Title as="h3" className="fr-card__title">
                     {label ? (
                       <div className="students-label">{label}</div>
                     ) : (
@@ -41,9 +57,8 @@ export default function StudentsCardWithTrend({
                     <div className="key-number">
                       {number.toLocaleString("fr-FR")}
                     </div>
-                  </a>
-                </Title>
-                {/* </h3> */}
+                  </Title>
+                )}
               </Col>
               <Col style={{ height: "80px" }}>{trendGraph}</Col>
             </Row>
