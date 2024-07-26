@@ -1,10 +1,11 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route } from "react-router-dom";
 
-import Main from './index.tsx';
-import AnalysisHomepage from './components/pages/general/index.tsx';
-import Overview from './components/pages/general/overview/index.tsx';
-import Positioning from './components/pages/general/positioning/index.tsx';
-import { Layout } from '../../layout/Layout.tsx';
+import Main from "./index.tsx";
+import AnalysisHomepage from "./components/pages/general/index.tsx";
+import Overview from "./components/pages/general/overview/index.tsx";
+import Positioning from "./components/pages/general/positioning/index.tsx";
+import { Layout } from "../../layout/Layout.tsx";
+import ProjectsTypes from "./components/pages/general/projects-types/index.tsx";
 
 export default function EuropeanProjectsRoutes() {
   return (
@@ -14,12 +15,27 @@ export default function EuropeanProjectsRoutes() {
           <Route path="/general" element={<AnalysisHomepage />}>
             <Route path="synthese" element={<Overview />} />
             <Route path="positionnement" element={<Positioning />} />
-            <Route path="collaboration" element={<div>Collaboration</div>} />
             <Route path="evolution" element={<div>Evolution</div>} />
-            <Route path="appel-a-projets" element={<div>Appel à projets</div>} />
+            <Route path="objectifs-types-projets" element={<ProjectsTypes />} />
             <Route path="beneficiaires" element={<div>Bénéficiaires</div>} />
+            <Route
+              path="programme-mires"
+              element={<div>Programme MIRES</div>}
+            />
+            <Route
+              path="appel-a-projets"
+              element={<div>Appel à projets</div>}
+            />
+            <Route
+              path="donnees-reference"
+              element={<div>Données de référence</div>}
+            />
+            <Route path="informations" element={<div>Informations</div>} />
           </Route>
-          <Route path="/projets-collaboratifs" element={<div>Projets collaboratifs</div>} />
+          <Route
+            path="/horizon-europe"
+            element={<div>HE hors ERC & MSCA</div>}
+          />
           <Route path="/msca" element={<div>MSCA</div>} />
           <Route path="/erc" element={<div>ERC</div>} />
         </Route>
@@ -27,3 +43,15 @@ export default function EuropeanProjectsRoutes() {
     </Routes>
   );
 }
+
+/*
+Synthèse v
+Positionnement v
+Evolution v
+Objectifs & types de projets
+Bénéficiaires
+Programme MIRES
+Liste des appels à projets clôturés
+Données de référence
+Informations
+*/

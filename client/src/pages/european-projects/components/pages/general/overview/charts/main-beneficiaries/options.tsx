@@ -5,36 +5,39 @@ export default function Options(data) {
     chart: {
       type: "bar",
       height: 500,
+      backgroundColor: "transparent",
     },
     title: { text: "" },
     legend: { enabled: false },
     credits: { enabled: false },
 
     xAxis: {
-      type: 'category',
+      type: "category",
       labels: {
         autoRotation: [-45, -90],
         style: {
-          fontSize: '13px',
-          fontFamily: 'Verdana, sans-serif'
-        }
-      }
+          fontSize: "13px",
+          fontFamily: "Verdana, sans-serif",
+        },
+      },
     },
     yAxis: {
       min: 0,
       title: {
-        text: 'Euros € (millions)'
-      }
+        text: "Euros € (millions)",
+      },
     },
     tooltip: {
-      pointFormat: 'Total des subventions : <b>{point.y:.1f} €</b>'
+      pointFormat: "Total des subventions : <b>{point.y:.1f} €</b>",
     },
-    series: [{
-      name: 'Total subventions en euros',
-      colors: ['#1E3859'],
-      colorByPoint: true,
-      groupPadding: 0,
-      data: data.list.map((item) => [item.acronym, item.total_fund_eur]),
-    }]
+    series: [
+      {
+        name: "Total subventions en euros",
+        colors: ["#1E3859"],
+        colorByPoint: true,
+        groupPadding: 0,
+        data: data.list.map((item) => [item.acronym, item.total_fund_eur]),
+      },
+    ],
   };
 }

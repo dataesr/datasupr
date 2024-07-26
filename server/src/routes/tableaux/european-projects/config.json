@@ -1,0 +1,33 @@
+{
+  "label": "Tableau de bord des projets européens",
+  "description": "Description du tableau de bord des projets européens",
+  "data": [
+    {
+      "collections": [
+        {
+          "EP-fr-esr-all-projects-entities": [
+            {
+              "name": "EP-fr-esr-all-projects-entities",
+              "description": "",
+              "uploadDatetime": "2023-01-01T00:00:00Z"
+            }
+          ],
+          "EP-fr-esr-all-projects-synthese": [
+            {
+              "name": "EP-fr-esr-all-projects-synthese",
+              "description": "",
+              "uploadDatetime": "2023-01-01T00:00:00Z"
+            }
+          ],
+          "EP-fr-esr-erc-projects-entities": [
+            {
+              "name": "EP-fr-esr-erc-projects-entities",
+              "description": "",
+              "uploadDatetime": "2023-01-01T00:00:00Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

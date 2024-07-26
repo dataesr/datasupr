@@ -1,0 +1,20 @@
+{
+  "label": "Tableau de bord financier",
+  "description": "Description du tableau de bord financier",
+  "constants": [{ "current_year": "2023" }],
+  "data": [
+    {
+      "collections": [
+        {
+          "FINANCE-fr-esr-operateurs-indicateurs-financiers": [
+            {
+              "name": "FINANCE-fr-esr-operateurs-indicateurs-financiers",
+              "description": "Description de la collection finance",
+              "uploadDatetime": "2023-01-01T00:00:00Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

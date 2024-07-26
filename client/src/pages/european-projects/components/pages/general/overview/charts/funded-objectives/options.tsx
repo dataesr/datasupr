@@ -7,25 +7,24 @@ export default function Options(data) {
     chart: {
       type: "bar",
       height: 500,
+      backgroundColor: "transparent",
     },
     title: { text: "" },
     xAxis: {
       categories: data.map((item) => item.programme_name_fr),
       title: { text: "" },
-
     },
     yAxis: {
       title: { text: "" },
       endOnTick: false,
     },
 
-
     legend: { enabled: false },
     credits: { enabled: false },
     plotOptions: {
       series: {
         groupPadding: 0.1,
-        pointPadding: 0.1
+        pointPadding: 0.1,
       },
     },
     series: [
@@ -37,7 +36,6 @@ export default function Options(data) {
         })),
         dataLabels: {
           enabled: false,
-
         },
         yAxis: 0,
         showInLegend: false,

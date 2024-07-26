@@ -3,66 +3,82 @@ import { Breadcrumb, Link } from "@dataesr/dsfr-plus";
 
 export default function CustomBreadcrumb({ pageKey }) {
   const [searchParams] = useSearchParams();
-  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join('&');
+  const params = [...searchParams]
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&");
 
   const pages = {
     "european-projects": {
       label: "Tableau de bord des projets européens - Horizon Europe",
       link: "/european-projects",
     },
-    "general": {
+    general: {
       label: "General",
       link: "/european-projects/general",
     },
-    "synthese": {
+    synthese: {
       label: "Synthèse Horizon Europe",
       link: "/european-projects/general/synthese",
     },
-    "positionnement": {
+    positionnement: {
       label: "Positionnement",
       link: "/european-projects/general/positionnement",
     },
-    "collaboration": {
-      label: "Collaboration",
-      link: "/european-projects/general/collaboration",
-    },
-    "evolution": {
+    evolution: {
       label: "Evolution",
       link: "/european-projects/general/evolution",
+    },
+    "objectifs-types-projets": {
+      label: "Objectifs & types de projets",
+      link: "/european-projects/general/objectifs-types-projets",
+    },
+    beneficiaires: {
+      label: "Bénéficiaires",
+      link: "/european-projects/general/beneficiaires",
+    },
+    "programme-mires": {
+      label: "Programme MIRES",
+      link: "/european-projects/general/programme-mires",
     },
     "appel-a-projets": {
       label: "Appel à projets",
       link: "/european-projects/general/appel-a-projets",
     },
-    "beneficiaires": {
-      label: "Bénéficiaires",
-      link: "/european-projects/general/beneficiaires",
+    "donnees-reference": {
+      label: "Données de référence",
+      link: "/european-projects/general/donnees-reference",
     },
-    "erc": {
-      label: "ERC",
-      link: "/european-projects/erc",
+    informations: {
+      label: "Informations",
+      link: "/european-projects/general/informations",
     },
-    "msca": {
+    "horizon-europe": {
+      label: "HE hors ERC & MSCA",
+      link: "/european-projects/horizon-europe",
+    },
+    msca: {
       label: "MSCA",
       link: "/european-projects/msca",
     },
-    "projets-collaboratifs": {
-      label: "Projets collaboratifs",
-      link: "/european-projects/projets-collaboratifs",
-    }
+    erc: {
+      label: "ERC",
+      link: "/european-projects/erc",
+    },
   };
 
   const currentPage = pages[pageKey];
-  const parents = currentPage.link.split('/').slice(1, -1);
+  const parents = currentPage.link.split("/").slice(1, -1);
 
   return (
     <Breadcrumb className="fr-m-0 fr-mt-1w">
       <Link href="/">Accueil</Link>
-      {
-        parents.map((parent, index) => {
-          return <Link key={index} href={`${pages[parent].link}?${params}`}>{pages[parent].label}</Link>
-        })
-      }
+      {parents.map((parent, index) => {
+        return (
+          <Link key={index} href={`${pages[parent].link}?${params}`}>
+            {pages[parent].label}
+          </Link>
+        );
+      })}
       <Link>
         <strong>{currentPage.label}</strong>
       </Link>

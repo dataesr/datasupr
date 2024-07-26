@@ -1,17 +1,21 @@
 export function getColorByPillierName(name) {
   if (name === "Excellence scientifique") {
-    return "#CECECE";
-  } else if (name === "Problématiques mondiales et compétitivité industrielle européenne") {
-    return "#4B5D67";
+    return "#21AB8E";
+  } else if (
+    name === "Problématiques mondiales et compétitivité industrielle européenne"
+  ) {
+    return "#223F3A";
   } else if (name === "Europe plus innovante") {
-    return "#FFCA00";
+    return "#A558A0";
   } else {
-    return "#9EF9BE";
+    return "#E4794A";
   }
 }
 
 export function getDefaultParams(searchParams) {
-  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join('&');
+  const params = [...searchParams]
+    .map(([key, value]) => `${key}=${value}`)
+    .join("&");
 
-  return params + '&stage=successful';
+  return params + "&stage=successful";
 }

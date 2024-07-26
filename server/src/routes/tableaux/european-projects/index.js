@@ -1,81 +1,126 @@
 import express from "express";
 import { db } from "../../../services/mongo";
 
-import evol_all_pc_coordination_EVAL from './data/evol_all_pc_coordination_EVAL.json' assert { type: "json" };
-import evol_all_pc_coordination_SIGNED from './data/evol_all_pc_coordination_SIGNED.json' assert { type: "json" };
-import evol_all_pc_funding_EVAL from './data/evol_all_pc_funding_EVAL.json' assert { type: "json" };
-import evol_all_pc_funding_SIGNED from './data/evol_all_pc_funding_SIGNED.json' assert { type: "json" };
-import evol_all_pc_participant_EVAL from './data/evol_all_pc_participant_EVAL.json' assert { type: "json" };
-import evol_all_pc_participant_SIGNED from './data/evol_all_pc_participant_SIGNED.json' assert { type: "json" };
+import evol_all_pc_coordination_EVAL from "./data/evol_all_pc_coordination_EVAL.json" assert { type: "json" };
+import evol_all_pc_coordination_SIGNED from "./data/evol_all_pc_coordination_SIGNED.json" assert { type: "json" };
+import evol_all_pc_funding_EVAL from "./data/evol_all_pc_funding_EVAL.json" assert { type: "json" };
+import evol_all_pc_funding_SIGNED from "./data/evol_all_pc_funding_SIGNED.json" assert { type: "json" };
+import evol_all_pc_participant_EVAL from "./data/evol_all_pc_participant_EVAL.json" assert { type: "json" };
+import evol_all_pc_participant_SIGNED from "./data/evol_all_pc_participant_SIGNED.json" assert { type: "json" };
 
-import evol_all_pc_project_EVAL from './data/evol_all_pc_project_EVAL.json' assert { type: "json" };
-import evol_all_pc_project_SIGNED from './data/evol_all_pc_project_SIGNED.json' assert { type: "json" };
-import funding_participant_share_actions from './data/funding_participant_share_actions.json' assert { type: "json" };
-import funding_programme from './data/funding_programme.json' assert { type: "json" };
+import evol_all_pc_project_EVAL from "./data/evol_all_pc_project_EVAL.json" assert { type: "json" };
+import evol_all_pc_project_SIGNED from "./data/evol_all_pc_project_SIGNED.json" assert { type: "json" };
+import funding_participant_share_actions from "./data/funding_participant_share_actions.json" assert { type: "json" };
+import funding_programme from "./data/funding_programme.json" assert { type: "json" };
 
 const router = new express.Router();
 
-router.route('/european-projects')
-  .get((req, res) => {
-    const allData = {};
+router.route("/european-projects").get((req, res) => {
+  const allData = {};
 
-    if (req.query.countryCode) {
-      // filtre de toutes les data sur le pays
-      allData['evol_all_pc_coordination_EVAL'] = evol_all_pc_coordination_EVAL.data.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
-      allData['evol_all_pc_coordination_SIGNED'] = evol_all_pc_coordination_SIGNED.data.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
-      allData['evol_all_pc_funding_EVAL'] = evol_all_pc_funding_EVAL.data.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
-      allData['evol_all_pc_funding_SIGNED'] = evol_all_pc_funding_SIGNED.data.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
-      allData['evol_all_pc_participant_EVAL'] = evol_all_pc_participant_EVAL.data.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
-      allData['evol_all_pc_participant_SIGNED'] = evol_all_pc_participant_SIGNED.data.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
-      allData['evol_all_pc_project_EVAL'] = evol_all_pc_project_EVAL.data.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
-      allData['evol_all_pc_project_SIGNED'] = evol_all_pc_project_SIGNED.data.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
-      allData['funding_participant_share_actions'] = funding_participant_share_actions.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
-      allData['funding_programme'] = funding_programme.filter((el) => el.country_code.toLowerCase() === req.query.countryCode.toLowerCase());
-    } else {
-      allData['evol_all_pc_coordination_EVAL'] = evol_all_pc_coordination_EVAL.data;
-      allData['evol_all_pc_coordination_SIGNED'] = evol_all_pc_coordination_SIGNED.data;
-      allData['evol_all_pc_funding_EVAL'] = evol_all_pc_funding_EVAL.data;
-      allData['evol_all_pc_funding_SIGNED'] = evol_all_pc_funding_SIGNED.data;
-      allData['evol_all_pc_participant_EVAL'] = evol_all_pc_participant_EVAL.data;
-      allData['evol_all_pc_participant_SIGNED'] = evol_all_pc_participant_SIGNED.data;
-      allData['evol_all_pc_project_EVAL'] = evol_all_pc_project_EVAL.data;
-      allData['evol_all_pc_project_SIGNED'] = evol_all_pc_project_SIGNED.data;
-      allData['funding_participant_share_actions'] = funding_participant_share_actions;
-      allData['funding_programme'] = funding_programme;
-    }
-    res.json(allData);
-  });
-
-router.route('/european-projects/funding_programme')
-  .get((req, res) => {
-    const iso2 = req.query.country_code || 'FR';
-    res.json(funding_programme.filter((item) =>
-      item.country_code.toLowerCase() === iso2.toLowerCase())
+  if (req.query.countryCode) {
+    // filtre de toutes les data sur le pays
+    allData["evol_all_pc_coordination_EVAL"] =
+      evol_all_pc_coordination_EVAL.data.filter(
+        (el) =>
+          el.country_code.toLowerCase() === req.query.countryCode.toLowerCase()
+      );
+    allData["evol_all_pc_coordination_SIGNED"] =
+      evol_all_pc_coordination_SIGNED.data.filter(
+        (el) =>
+          el.country_code.toLowerCase() === req.query.countryCode.toLowerCase()
+      );
+    allData["evol_all_pc_funding_EVAL"] = evol_all_pc_funding_EVAL.data.filter(
+      (el) =>
+        el.country_code.toLowerCase() === req.query.countryCode.toLowerCase()
     );
-  });
+    allData["evol_all_pc_funding_SIGNED"] =
+      evol_all_pc_funding_SIGNED.data.filter(
+        (el) =>
+          el.country_code.toLowerCase() === req.query.countryCode.toLowerCase()
+      );
+    allData["evol_all_pc_participant_EVAL"] =
+      evol_all_pc_participant_EVAL.data.filter(
+        (el) =>
+          el.country_code.toLowerCase() === req.query.countryCode.toLowerCase()
+      );
+    allData["evol_all_pc_participant_SIGNED"] =
+      evol_all_pc_participant_SIGNED.data.filter(
+        (el) =>
+          el.country_code.toLowerCase() === req.query.countryCode.toLowerCase()
+      );
+    allData["evol_all_pc_project_EVAL"] = evol_all_pc_project_EVAL.data.filter(
+      (el) =>
+        el.country_code.toLowerCase() === req.query.countryCode.toLowerCase()
+    );
+    allData["evol_all_pc_project_SIGNED"] =
+      evol_all_pc_project_SIGNED.data.filter(
+        (el) =>
+          el.country_code.toLowerCase() === req.query.countryCode.toLowerCase()
+      );
+    allData["funding_participant_share_actions"] =
+      funding_participant_share_actions.filter(
+        (el) =>
+          el.country_code.toLowerCase() === req.query.countryCode.toLowerCase()
+      );
+    allData["funding_programme"] = funding_programme.filter(
+      (el) =>
+        el.country_code.toLowerCase() === req.query.countryCode.toLowerCase()
+    );
+  } else {
+    allData["evol_all_pc_coordination_EVAL"] =
+      evol_all_pc_coordination_EVAL.data;
+    allData["evol_all_pc_coordination_SIGNED"] =
+      evol_all_pc_coordination_SIGNED.data;
+    allData["evol_all_pc_funding_EVAL"] = evol_all_pc_funding_EVAL.data;
+    allData["evol_all_pc_funding_SIGNED"] = evol_all_pc_funding_SIGNED.data;
+    allData["evol_all_pc_participant_EVAL"] = evol_all_pc_participant_EVAL.data;
+    allData["evol_all_pc_participant_SIGNED"] =
+      evol_all_pc_participant_SIGNED.data;
+    allData["evol_all_pc_project_EVAL"] = evol_all_pc_project_EVAL.data;
+    allData["evol_all_pc_project_SIGNED"] = evol_all_pc_project_SIGNED.data;
+    allData["funding_participant_share_actions"] =
+      funding_participant_share_actions;
+    allData["funding_programme"] = funding_programme;
+  }
+  res.json(allData);
+});
 
-router.route('/european-projects/fr-esr-all-projects-synthese')
+router.route("/european-projects/funding_programme").get((req, res) => {
+  const iso2 = req.query.country_code || "FR";
+  res.json(
+    funding_programme.filter(
+      (item) => item.country_code.toLowerCase() === iso2.toLowerCase()
+    )
+  );
+});
+
+router
+  .route("/european-projects/fr-esr-all-projects-synthese")
   .get((req, res) => {
-
-    db.collection('EP-fr-esr-all-projects-synthese').distinct("stage").then((data) => {
-      res.json(data);
-    });
+    db.collection("fr-esr-all-projects-synthese")
+      .distinct("stage")
+      .then((data) => {
+        res.json(data);
+      });
   });
 
-router.route('/european-projects/analysis-synthese-funding_programme')
+router
+  .route("/european-projects/analysis-synthese-funding_programme")
   .get(async (req, res) => {
     if (!req.query.country_code) {
-      res.status(400).send('country_code is required');
+      res.status(400).send("country_code is required");
       return;
     }
     if (!req.query.stage) {
-      res.status(400).send('stage is required');
+      res.status(400).send("stage is required");
       return;
     }
     if (req.query.country_code) {
       req.query.country_code = req.query.country_code.toUpperCase();
     }
-    const data = await db.collection('EP-fr-esr-all-projects-synthese')
+    const data = await db
+      .collection("fr-esr-all-projects-synthese")
       .aggregate([
         { $match: req.query },
         // { $match: { stage: "successful", country_code: "FRA" } },
@@ -98,18 +143,19 @@ router.route('/european-projects/analysis-synthese-funding_programme')
             pilier_name_en: "$_id.pilier_name_en",
             pilier_name_fr: "$_id.pilier_name_fr",
             total_funding: 1,
-          }
-
+          },
         },
-        { $sort: { total_funding: -1 } }
-      ]).toArray();
+        { $sort: { total_funding: -1 } },
+      ])
+      .toArray();
     res.json(data);
-
   });
 
-router.route('/european-projects/analysis-synthese-focus')
+router
+  .route("/european-projects/analysis-synthese-focus")
   .get(async (req, res) => {
-    const dataSuccessful = await db.collection('EP-fr-esr-all-projects-synthese')
+    const dataSuccessful = await db
+      .collection("fr-esr-all-projects-synthese")
       .aggregate([
         { $match: { stage: "successful" } },
         {
@@ -127,7 +173,7 @@ router.route('/european-projects/analysis-synthese-focus')
             total_involved: 1,
             total_coordination_number: 1,
             country_code: "$_id",
-          }
+          },
         },
         {
           $group: {
@@ -135,8 +181,8 @@ router.route('/european-projects/analysis-synthese-focus')
             total_fund_eur: { $sum: "$total_fund_eur" },
             total_involved: { $sum: "$total_involved" },
             total_coordination_number: { $sum: "$total_coordination_number" },
-            countries: { $push: "$$ROOT" }
-          }
+            countries: { $push: "$$ROOT" },
+          },
         },
         {
           $project: {
@@ -145,11 +191,13 @@ router.route('/european-projects/analysis-synthese-focus')
             total_involved: 1,
             total_coordination_number: 1,
             countries: 1,
-          }
-        }
-      ]).toArray();
+          },
+        },
+      ])
+      .toArray();
 
-    const dataEvaluated = await db.collection('EP-fr-esr-all-projects-synthese')
+    const dataEvaluated = await db
+      .collection("fr-esr-all-projects-synthese")
       .aggregate([
         { $match: { stage: "evaluated" } },
         {
@@ -167,7 +215,7 @@ router.route('/european-projects/analysis-synthese-focus')
             total_involved: 1,
             total_coordination_number: 1,
             country_code: "$_id",
-          }
+          },
         },
         {
           $group: {
@@ -175,8 +223,8 @@ router.route('/european-projects/analysis-synthese-focus')
             total_fund_eur: { $sum: "$total_fund_eur" },
             total_involved: { $sum: "$total_involved" },
             total_coordination_number: { $sum: "$total_coordination_number" },
-            countries: { $push: "$$ROOT" }
-          }
+            countries: { $push: "$$ROOT" },
+          },
         },
         {
           $project: {
@@ -185,26 +233,35 @@ router.route('/european-projects/analysis-synthese-focus')
             total_involved: 1,
             total_coordination_number: 1,
             countries: 1,
-          }
-        }
-      ]).toArray();
-
+          },
+        },
+      ])
+      .toArray();
 
     if (req.query.country_code) {
       res.json({
         successful: {
           total_fund_eur: dataSuccessful[0].total_fund_eur,
           total_involved: dataSuccessful[0].total_involved,
-          total_coordination_number: dataSuccessful[0].total_coordination_number,
-          countries: dataSuccessful[0].countries.filter((el) => el.country_code.toLowerCase() === req.query.country_code.toLowerCase())
+          total_coordination_number:
+            dataSuccessful[0].total_coordination_number,
+          countries: dataSuccessful[0].countries.filter(
+            (el) =>
+              el.country_code.toLowerCase() ===
+              req.query.country_code.toLowerCase()
+          ),
         },
         evaluated: {
           total_fund_eur: dataEvaluated[0].total_fund_eur,
           total_involved: dataEvaluated[0].total_involved,
           total_coordination_number: dataEvaluated[0].total_coordination_number,
-          countries: dataEvaluated[0].countries.filter((el) => el.country_code.toLowerCase() === req.query.country_code.toLowerCase())
+          countries: dataEvaluated[0].countries.filter(
+            (el) =>
+              el.country_code.toLowerCase() ===
+              req.query.country_code.toLowerCase()
+          ),
         },
-      })
+      });
     }
     res.json({
       successful: dataSuccessful[0],
@@ -212,16 +269,18 @@ router.route('/european-projects/analysis-synthese-focus')
     });
   });
 
-router.route('/european-projects/analysis-synthese-projects-types-1')
+router
+  .route("/european-projects/analysis-synthese-projects-types-1")
   .get(async (req, res) => {
     if (!req.query.country_code) {
-      res.status(400).send('country_code is required');
+      res.status(400).send("country_code is required");
       return;
     }
     if (req.query.country_code) {
       req.query.country_code = req.query.country_code.toUpperCase();
     }
-    const data = await db.collection('EP-fr-esr-all-projects-synthese')
+    const data = await db
+      .collection("fr-esr-all-projects-synthese")
       .aggregate([
         { $match: { country_code: req.query.country_code } },
         {
@@ -241,7 +300,7 @@ router.route('/european-projects/analysis-synthese-projects-types-1')
             total_fund_eur: 1,
             action_id: "$_id.action_id",
             action_name: "$_id.action_name",
-          }
+          },
         },
         {
           $group: {
@@ -249,9 +308,21 @@ router.route('/european-projects/analysis-synthese-projects-types-1')
               id: "$action_id",
               name: "$action_name",
             },
-            total_successful: { $sum: { $cond: [{ $eq: ["$stage", "successful"] }, "$total_fund_eur", 0] } },
-            total_evaluated: { $sum: { $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0] } },
-          }
+            total_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_fund_eur",
+                  0,
+                ],
+              },
+            },
+            total_evaluated: {
+              $sum: {
+                $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
+              },
+            },
+          },
         },
         {
           $project: {
@@ -260,32 +331,35 @@ router.route('/european-projects/analysis-synthese-projects-types-1')
             name: "$_id.name",
             total_successful: 1,
             total_evaluated: 1,
-          }
+          },
         },
-        { $sort: { id: 1 } }
-      ]).toArray();
+        { $sort: { id: 1 } },
+      ])
+      .toArray();
 
     // remove empty data
     const ret = [];
     data.forEach((el) => {
       if (el.total_successful > 0 || el.total_evaluated > 0) {
-        ret.push(el)
+        ret.push(el);
       }
     });
 
-    return res.json(ret)
+    return res.json(ret);
   });
 
-router.route('/european-projects/analysis-synthese-projects-types-2')
+router
+  .route("/european-projects/analysis-synthese-projects-types-2")
   .get(async (req, res) => {
     if (!req.query.country_code) {
-      res.status(400).send('country_code is required');
+      res.status(400).send("country_code is required");
       return;
     }
     if (req.query.country_code) {
       req.query.country_code = req.query.country_code.toUpperCase();
     }
-    const dataSelectedCountry = await db.collection('EP-fr-esr-all-projects-synthese')
+    const dataSelectedCountry = await db
+      .collection("fr-esr-all-projects-synthese")
       .aggregate([
         { $match: { country_code: req.query.country_code } },
         {
@@ -305,7 +379,7 @@ router.route('/european-projects/analysis-synthese-projects-types-2')
             total_fund_eur: 1,
             action_id: "$_id.action_id",
             action_name: "$_id.action_name",
-          }
+          },
         },
         {
           $group: {
@@ -313,9 +387,21 @@ router.route('/european-projects/analysis-synthese-projects-types-2')
               id: "$action_id",
               name: "$action_name",
             },
-            total_successful: { $sum: { $cond: [{ $eq: ["$stage", "successful"] }, "$total_fund_eur", 0] } },
-            total_evaluated: { $sum: { $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0] } },
-          }
+            total_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_fund_eur",
+                  0,
+                ],
+              },
+            },
+            total_evaluated: {
+              $sum: {
+                $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
+              },
+            },
+          },
         },
         {
           $project: {
@@ -324,12 +410,14 @@ router.route('/european-projects/analysis-synthese-projects-types-2')
             name: "$_id.name",
             total_successful: 1,
             total_evaluated: 1,
-          }
+          },
         },
-        { $sort: { id: 1 } }
-      ]).toArray();
+        { $sort: { id: 1 } },
+      ])
+      .toArray();
 
-    const otherCountries = await db.collection('EP-fr-esr-all-projects-synthese')
+    const otherCountries = await db
+      .collection("fr-esr-all-projects-synthese")
       .aggregate([
         { $match: { country_association_code: "MEMBER-ASSOCIATED" } },
         {
@@ -349,7 +437,7 @@ router.route('/european-projects/analysis-synthese-projects-types-2')
             total_fund_eur: 1,
             action_id: "$_id.action_id",
             action_name: "$_id.action_name",
-          }
+          },
         },
         {
           $group: {
@@ -357,9 +445,21 @@ router.route('/european-projects/analysis-synthese-projects-types-2')
               id: "$action_id",
               name: "$action_name",
             },
-            total_successful: { $sum: { $cond: [{ $eq: ["$stage", "successful"] }, "$total_fund_eur", 0] } },
-            total_evaluated: { $sum: { $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0] } },
-          }
+            total_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_fund_eur",
+                  0,
+                ],
+              },
+            },
+            total_evaluated: {
+              $sum: {
+                $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
+              },
+            },
+          },
         },
         {
           $project: {
@@ -368,12 +468,13 @@ router.route('/european-projects/analysis-synthese-projects-types-2')
             name: "$_id.name",
             total_successful: 1,
             total_evaluated: 1,
-          }
+          },
         },
-        { $sort: { id: 1 } }
-      ]).toArray();
+        { $sort: { id: 1 } },
+      ])
+      .toArray();
 
-    // const data = await db.collection('EP-fr-esr-all-projects-synthese')
+    // const data = await db.collection('fr-esr-all-projects-synthese')
     //   .aggregate([
     //     { $match: { country_association_code: "MEMBER-ASSOCIATED" } },
     //     {
@@ -437,33 +538,46 @@ router.route('/european-projects/analysis-synthese-projects-types-2')
     const data = {
       selectedCountry: dataSelectedCountry.map((el) => {
         if (el.total_evaluated === 0) {
-          return { ...el, ratio: 0 }
+          return { ...el, ratio: 0 };
         }
-        return { ...el, ratio: el.total_successful / el.total_evaluated * 100 }
+        return {
+          ...el,
+          ratio: (el.total_successful / el.total_evaluated) * 100,
+        };
       }),
       otherCountries: otherCountries.map((el) => {
         if (el.total_evaluated === 0) {
-          return { ...el, ratio: 0 }
+          return { ...el, ratio: 0 };
         }
-        return { ...el, ratio: el.total_successful / el.total_evaluated * 100 }
+        return {
+          ...el,
+          ratio: (el.total_successful / el.total_evaluated) * 100,
+        };
       }),
     };
 
-    return res.json(data)
+    return res.json(data);
   });
 
-router.route('/european-projects/analysis-synthese-main-beneficiaries')
+router
+  .route("/european-projects/analysis-synthese-main-beneficiaries")
   .get(async (req, res) => {
     if (!req.query.country_code) {
-      res.status(400).send('country_code is required');
+      res.status(400).send("country_code is required");
       return;
     }
     if (req.query.country_code) {
       req.query.country_code = req.query.country_code.toUpperCase();
     }
-    const data = await db.collection('EP-fr-esr-all-projects-entities')
+    const data = await db
+      .collection("fr-esr-horizon-projects-entities")
       .aggregate([
-        { $match: { framework: "Horizon Europe", country_code: req.query.country_code } },
+        {
+          $match: {
+            framework: "Horizon Europe",
+            country_code: req.query.country_code,
+          },
+        },
         {
           $group: {
             _id: {
@@ -479,12 +593,13 @@ router.route('/european-projects/analysis-synthese-main-beneficiaries')
             name: "$_id.name",
             acronym: "$_id.acronym",
             total_fund_eur: 1,
-          }
+          },
         },
         {
-          $sort: { total_fund_eur: -1 }
-        }
-      ]).toArray();
+          $sort: { total_fund_eur: -1 },
+        },
+      ])
+      .toArray();
 
     const total = data.reduce((acc, el) => acc + el.total_fund_eur, 0);
     const half = total / 2;
@@ -499,12 +614,14 @@ router.route('/european-projects/analysis-synthese-main-beneficiaries')
       }
     }
 
-    return res.json({ total_fund_eur: total, list })
+    return res.json({ total_fund_eur: total, list });
   });
 
-router.route('/european-projects/analysis-positioning-top-10-beneficiaries')
+router
+  .route("/european-projects/analysis-positioning-top-10-beneficiaries")
   .get(async (req, res) => {
-    const data = await db.collection('EP-fr-esr-all-projects-entities')
+    const data = await db
+      .collection("fr-esr-horizon-projects-entities")
       .aggregate([
         { $match: { framework: "Horizon Europe" } },
         {
@@ -522,59 +639,66 @@ router.route('/european-projects/analysis-positioning-top-10-beneficiaries')
             name_fr: "$_id.name_fr",
             id: "$_id.id",
             total_fund_eur: 1,
-          }
+          },
         },
         {
-          $sort: { total_fund_eur: -1 }
-        }
-      ]).toArray();
+          $sort: { total_fund_eur: -1 },
+        },
+      ])
+      .toArray();
 
     let acc = 0;
     const total_fund_eur = data.reduce((acc, el) => acc + el.total_fund_eur, 0);
     const dataReturn = {
       total_fund_eur,
-      top10: data.map((el) => {
-        if (el.id !== 'ZOE' && el.id !== 'ZOI') {
-          acc += el.total_fund_eur;
-          return {
-            ...el,
-            influence: acc / total_fund_eur * 100,
+      top10: data
+        .map((el) => {
+          if (el.id !== "ZOE" && el.id !== "ZOI") {
+            acc += el.total_fund_eur;
+            return {
+              ...el,
+              influence: (acc / total_fund_eur) * 100,
+            };
           }
-        }
-      }).filter((el) => el).slice(0, 10)
-    }
+        })
+        .filter((el) => el)
+        .slice(0, 10),
+    };
 
-    return res.json(dataReturn)
+    return res.json(dataReturn);
   });
 
-router.route('/european-projects/countries')
-  .get(async (req, res) => {
-    const data = await db.collection('EP-fr-esr-all-projects-synthese')
-      .aggregate([
-        {
-          $group: {
-            _id: {
-              id: "$country_code",
-              label: "$country_name_fr",
-            },
+router.route("/european-projects/countries").get(async (req, res) => {
+  const data = await db
+    .collection("fr-esr-all-projects-synthese")
+    .aggregate([
+      {
+        $group: {
+          _id: {
+            id: "$country_code",
+            label: "$country_name_fr",
           },
         },
-        {
-          $project: {
-            _id: 0,
-            id: "$_id.id",
-            label: "$_id.label",
-          }
+      },
+      {
+        $project: {
+          _id: 0,
+          id: "$_id.id",
+          label: "$_id.label",
         },
-        { $sort: { label: 1 } }
-      ]).toArray();
+      },
+      { $sort: { label: 1 } },
+    ])
+    .toArray();
 
-    res.json(data);
-  });
+  res.json(data);
+});
 
-router.route('/european-projects/analysis-positioning-top-10-funding-ranking')
+router
+  .route("/european-projects/analysis-positioning-top-10-funding-ranking")
   .get(async (req, res) => {
-    const data = await db.collection('EP-fr-esr-all-projects-synthese')
+    const data = await db
+      .collection("fr-esr-all-projects-synthese")
       .aggregate([
         { $match: { country_code: { $nin: ["ZOE", "ZOI"] } } },
         {
@@ -598,7 +722,7 @@ router.route('/european-projects/analysis-positioning-top-10-funding-ranking')
             stage: "$_id.stage",
             total_coordination_number: 1,
             total_number_involved: 1,
-          }
+          },
         },
         {
           $group: {
@@ -606,13 +730,57 @@ router.route('/european-projects/analysis-positioning-top-10-funding-ranking')
               id: "$id",
               name: "$label",
             },
-            total_successful: { $sum: { $cond: [{ $eq: ["$stage", "successful"] }, "$total_fund_eur", 0] } },
-            total_evaluated: { $sum: { $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0] } },
-            total_coordination_number_successful: { $sum: { $cond: [{ $eq: ["$stage", "successful"] }, "$total_coordination_number", 0] } },
-            total_coordination_number_evaluated: { $sum: { $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_coordination_number", 0] } },
-            total_number_involved_successful: { $sum: { $cond: [{ $eq: ["$stage", "successful"] }, "$total_number_involved", 0] } },
-            total_number_involved_evaluated: { $sum: { $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_number_involved", 0] } },
-          }
+            total_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_fund_eur",
+                  0,
+                ],
+              },
+            },
+            total_evaluated: {
+              $sum: {
+                $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
+              },
+            },
+            total_coordination_number_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_coordination_number",
+                  0,
+                ],
+              },
+            },
+            total_coordination_number_evaluated: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "evaluated"] },
+                  "$total_coordination_number",
+                  0,
+                ],
+              },
+            },
+            total_number_involved_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_number_involved",
+                  0,
+                ],
+              },
+            },
+            total_number_involved_evaluated: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "evaluated"] },
+                  "$total_number_involved",
+                  0,
+                ],
+              },
+            },
+          },
         },
         {
           $project: {
@@ -625,65 +793,100 @@ router.route('/european-projects/analysis-positioning-top-10-funding-ranking')
             total_coordination_number_evaluated: 1,
             total_number_involved_successful: 1,
             total_number_involved_evaluated: 1,
-          }
+          },
         },
-      ]).toArray();
+      ])
+      .toArray();
 
     const dataWithRatio = data.map((el) => {
       if (el.total_evaluated === 0) {
-        return { ...el, ratio: 0 }
+        return { ...el, ratio: 0 };
       }
       return {
         ...el,
-        ratio: el.total_successful / el.total_evaluated * 100,
-        ratio_coordination_number: el.total_coordination_number_successful / el.total_coordination_number_evaluated * 100,
-        ratio_involved: el.total_number_involved_successful / el.total_number_involved_evaluated * 100,
-      }
+        ratio: (el.total_successful / el.total_evaluated) * 100,
+        ratio_coordination_number:
+          (el.total_coordination_number_successful /
+            el.total_coordination_number_evaluated) *
+          100,
+        ratio_involved:
+          (el.total_number_involved_successful /
+            el.total_number_involved_evaluated) *
+          100,
+      };
     });
 
     // add successful rank to returned data
-    const dataSortedSuccessful = dataWithRatio.sort((a, b) => b.total_successful - a.total_successful); // sort by total_sccessful
+    const dataSortedSuccessful = dataWithRatio.sort(
+      (a, b) => b.total_successful - a.total_successful
+    ); // sort by total_sccessful
     for (let i = 0; i < dataSortedSuccessful.length; i++) {
-      dataWithRatio.find((el) => el.id === dataSortedSuccessful[i].id).rank_successful = i + 1;
+      dataWithRatio.find(
+        (el) => el.id === dataSortedSuccessful[i].id
+      ).rank_successful = i + 1;
     }
 
     // add evaluated rank to returned data
-    const dataSortedEvaluated = dataWithRatio.sort((a, b) => b.total_evaluated - a.total_evaluated); // sort by total_evaluated
+    const dataSortedEvaluated = dataWithRatio.sort(
+      (a, b) => b.total_evaluated - a.total_evaluated
+    ); // sort by total_evaluated
     for (let i = 0; i < dataSortedEvaluated.length; i++) {
-      dataWithRatio.find((el) => el.id === dataSortedEvaluated[i].id).rank_evaluated = i + 1;
+      dataWithRatio.find(
+        (el) => el.id === dataSortedEvaluated[i].id
+      ).rank_evaluated = i + 1;
     }
 
     // add coordination_number_successful rank to returned data
-    const dataSortedCoordinationNumberSuccessful = dataWithRatio.sort((a, b) => b.total_coordination_number_successful - a.total_coordination_number_successful); // sort by total_coordination_number_successful
+    const dataSortedCoordinationNumberSuccessful = dataWithRatio.sort(
+      (a, b) =>
+        b.total_coordination_number_successful -
+        a.total_coordination_number_successful
+    ); // sort by total_coordination_number_successful
     for (let i = 0; i < dataSortedCoordinationNumberSuccessful.length; i++) {
-      dataWithRatio.find((el) => el.id === dataSortedCoordinationNumberSuccessful[i].id).rank_coordination_number_successful = i + 1;
+      dataWithRatio.find(
+        (el) => el.id === dataSortedCoordinationNumberSuccessful[i].id
+      ).rank_coordination_number_successful = i + 1;
     }
 
     // add coordination_number_evaluated rank to returned data
-    const dataSortedCoordinationNumberEvaluated = dataWithRatio.sort((a, b) => b.total_coordination_number_evaluated - a.total_coordination_number_evaluated); // sort by total_coordination_number_evaluated
+    const dataSortedCoordinationNumberEvaluated = dataWithRatio.sort(
+      (a, b) =>
+        b.total_coordination_number_evaluated -
+        a.total_coordination_number_evaluated
+    ); // sort by total_coordination_number_evaluated
     for (let i = 0; i < dataSortedCoordinationNumberEvaluated.length; i++) {
-      dataWithRatio.find((el) => el.id === dataSortedCoordinationNumberEvaluated[i].id).rank_coordination_number_evaluated = i + 1;
+      dataWithRatio.find(
+        (el) => el.id === dataSortedCoordinationNumberEvaluated[i].id
+      ).rank_coordination_number_evaluated = i + 1;
     }
 
     // add number_involved_successful rank to returned data
-    const dataSortedInvolvedSuccessful = dataWithRatio.sort((a, b) => b.total_number_involved_successful - a.total_number_involved_successful); // sort by total_number_involved_successful
+    const dataSortedInvolvedSuccessful = dataWithRatio.sort(
+      (a, b) =>
+        b.total_number_involved_successful - a.total_number_involved_successful
+    ); // sort by total_number_involved_successful
     for (let i = 0; i < dataSortedInvolvedSuccessful.length; i++) {
-      dataWithRatio.find((el) => el.id === dataSortedInvolvedSuccessful[i].id).rank_involved_successful = i + 1;
+      dataWithRatio.find(
+        (el) => el.id === dataSortedInvolvedSuccessful[i].id
+      ).rank_involved_successful = i + 1;
     }
 
     // add number_involved_evaluated rank to returned data
-    const dataSortedInvolvedEvaluated = dataWithRatio.sort((a, b) => b.total_number_involved_evaluated - a.total_number_involved_evaluated); // sort by total_number_involved_evaluated
+    const dataSortedInvolvedEvaluated = dataWithRatio.sort(
+      (a, b) =>
+        b.total_number_involved_evaluated - a.total_number_involved_evaluated
+    ); // sort by total_number_involved_evaluated
     for (let i = 0; i < dataSortedInvolvedEvaluated.length; i++) {
-      dataWithRatio.find((el) => el.id === dataSortedInvolvedEvaluated[i].id).rank_involved_evaluated = i + 1;
+      dataWithRatio.find(
+        (el) => el.id === dataSortedInvolvedEvaluated[i].id
+      ).rank_involved_evaluated = i + 1;
     }
 
-    return res.json(dataWithRatio)
+    return res.json(dataWithRatio);
   });
 
 // TODO: remove this route
-router.route('/european-projects/template')
-  .get(async (req, res) => {
-
-    return res.json([])
-  });
+router.route("/european-projects/template").get(async (req, res) => {
+  return res.json([]);
+});
 export default router;

@@ -1,0 +1,38 @@
+{
+  "label": "Atlas des effectifs étudiants",
+  "description": "Description de l'atlas des effectifs étudiants",
+  "constants": [{ "current_year": "2022-23" }],
+  "data": [
+    {
+      "key": "atlas",
+      "label": "Collection principale de l'atlas des effectifs étudiants",
+      "collections": [
+        {
+          "name": "atlas2022",
+          "description": "Description de la collection atlas2022",
+          "uploadDatetime": "2019-06-01"
+        },
+        {
+          "name": "atlas2023",
+          "description": "Description de la collection atlas2023",
+          "uploadDatetime": "2023-06-01"
+        }
+      ],
+      "type": "mongoDb"
+    },
+    {
+      "key": "similar-elements",
+      "label": "Collection des éléments similaires",
+      "collections": [
+        {
+          "name": "similar-elements",
+          "description": "Pré calcul des éléménts similaires",
+          "uploadDatetime": "2023-01-01T00:00:00Z"
+        }
+      ],
+      "script": "create-similar-elements.js",
+      "trigger": "atlas",
+      "type": "mongoDb"
+    }
+  ]
+}
