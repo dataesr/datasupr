@@ -43,6 +43,24 @@
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-2"
   },
   {
+    "id": "projectsTypesPiliers1",
+    "title": "",
+    "subtitle": "Subventions demandées et obtenues (M€)",
+    "description": "",
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "projectsTypesPiliers1Rates",
+    "title": "",
+    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "description": "",
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
     "id": "mainBeneficiaries",
     "title": "",
     "subtitle": "Principaux bénéficiaires qui concentrent 50 % des subventions allouées aux équipes",
