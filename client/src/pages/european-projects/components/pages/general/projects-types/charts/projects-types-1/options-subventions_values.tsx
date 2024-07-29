@@ -1,7 +1,7 @@
 export default function Options(data) {
   if (!data) return null;
 
-  const filteredData = data.filter(
+  const filteredData = data.country.filter(
     (el) => el.total_evaluated && el.total_successful
   );
 
@@ -33,7 +33,7 @@ export default function Options(data) {
     },
     plotOptions: {
       column: {
-        pointPadding: 0.2,
+        pointPadding: 0.1,
         borderWidth: 0,
       },
     },

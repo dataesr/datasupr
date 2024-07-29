@@ -3,10 +3,12 @@ import { useSearchParams } from "react-router-dom";
 
 import Template from "./template";
 import { GetData } from "./query";
-import options from "./options";
+import optionsSubventionsValues from "./options-subventions_values";
+import optionsSubventionsRates from "./options-subventions_rates";
 
 import ChartWrapper from "../../../../../chart-wrapper";
 import { getDefaultParams } from "./utils";
+import { Container, Row, Col } from "@dataesr/dsfr-plus";
 
 export default function ProjectsTypes1() {
   const [searchParams] = useSearchParams();
@@ -14,28 +16,66 @@ export default function ProjectsTypes1() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["projectsTypes1", params],
-    queryFn: () => GetData(params)
-  })
+    queryFn: () => GetData(params),
+  });
 
-  if (isLoading || !data) return <Template />
+  if (isLoading || !data) return <Template />;
 
   return (
-    <ChartWrapper
-      id="projectsTypes1"
-      options={options(data)}
-      legend={(
-        <ul className="legend">
-          <li style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-            <div style={{ width: "20px", height: "20px", background: "#233E41", marginRight: "10px" }}></div>
-            <span>Projets lauréats</span>
-          </li>
-          <li style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-            <div style={{ width: "20px", height: "20px", background: "#009099", marginRight: "10px" }}></div>
-            <span>Projets évalués</span>
-          </li>
-        </ul>
-      )}
-    />
-  )
-
+    <Container fluid>
+      <Row>
+        <Col>
+          <ChartWrapper
+            id="projectsTypes1"
+            options={optionsSubventionsValues(data)}
+            legend={
+              <ul className="legend">
+                <li
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      background: "#233E41",
+                      marginRight: "10px",
+                    }}
+                  ></div>
+                  <span>Projets lauréats</span>
+                </li>
+                <li
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      background: "#009099",
+                      marginRight: "10px",
+                    }}
+                  ></div>
+                  <span>Projets évalués</span>
+                </li>
+              </ul>
+            }
+          />
+        </Col>
+        <Col>
+          <ChartWrapper
+            id="projectsTypes1Rates"
+            options={optionsSubventionsRates(data)}
+            legend={null}
+          />
+        </Col>
+      </Row>
+    </Container>
+  );
 }

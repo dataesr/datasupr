@@ -43,15 +43,3 @@ export default function EuropeanProjectsRoutes() {
     </Routes>
   );
 }
-
-/*
-Synthèse v
-Positionnement v
-Evolution v
-Objectifs & types de projets
-Bénéficiaires
-Programme MIRES
-Liste des appels à projets clôturés
-Données de référence
-Informations
-*/

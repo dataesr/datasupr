@@ -279,7 +279,7 @@ router
     if (req.query.country_code) {
       req.query.country_code = req.query.country_code.toUpperCase();
     }
-    const data = await db
+    const data_country = await db
       .collection("fr-esr-all-projects-synthese")
       .aggregate([
         { $match: { country_code: req.query.country_code } },
@@ -337,15 +337,80 @@ router
       ])
       .toArray();
 
+    const data_all = await db
+      .collection("fr-esr-all-projects-synthese")
+      .aggregate([
+        // { $match: { country_code: req.query.country_code } },
+        {
+          $group: {
+            _id: {
+              stage: "$stage",
+              action_id: "$action_id",
+              action_name: "$action_name",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            stage: "$_id.stage",
+            total_fund_eur: 1,
+            action_id: "$_id.action_id",
+            action_name: "$_id.action_name",
+          },
+        },
+        {
+          $group: {
+            _id: {
+              id: "$action_id",
+              name: "$action_name",
+            },
+            total_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_fund_eur",
+                  0,
+                ],
+              },
+            },
+            total_evaluated: {
+              $sum: {
+                $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: "$_id.id",
+            name: "$_id.name",
+            total_successful: 1,
+            total_evaluated: 1,
+          },
+        },
+        { $sort: { id: 1 } },
+      ])
+      .toArray();
+
     // remove empty data
-    const ret = [];
-    data.forEach((el) => {
+    const country = [];
+    data_country.forEach((el) => {
       if (el.total_successful > 0 || el.total_evaluated > 0) {
-        ret.push(el);
+        country.push(el);
       }
     });
 
-    return res.json(ret);
+    const all = [];
+    data_all.forEach((el) => {
+      if (el.total_successful > 0 || el.total_evaluated > 0) {
+        all.push(el);
+      }
+    });
+
+    return res.json({ country, all });
   });
 
 router

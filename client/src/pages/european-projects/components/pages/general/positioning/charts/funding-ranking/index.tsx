@@ -14,12 +14,13 @@ import { Col, Container, Row } from "@dataesr/dsfr-plus";
 export default function FundingRanking({ indicateurId }) {
   const { data, isLoading } = useQuery({
     queryKey: ["fundingRanking"],
-    queryFn: () => GetData()
-  })
+    queryFn: () => GetData(),
+  });
 
-  if (isLoading || !data) return <Template />
+  if (isLoading || !data) return <Template />;
 
-  let successGraphId, sortIndicateur = "";
+  let successGraphId,
+    sortIndicateur = "";
   let optionsChart, optionChartSuccess;
   switch (indicateurId) {
     case "fundingRankingSub":
@@ -46,7 +47,7 @@ export default function FundingRanking({ indicateurId }) {
 
   const prepareData = (data, sortKey) => {
     return data.sort((a, b) => b[sortKey] - a[sortKey]).slice(0, 10);
-  }
+  };
 
   return (
     <Container fluid>
@@ -55,41 +56,91 @@ export default function FundingRanking({ indicateurId }) {
           <ChartWrapper
             id={indicateurId}
             options={optionsChart(prepareData(data, sortIndicateur))}
-            legend={(
+            legend={
               <ul className="legend">
-                <li style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-                  <div style={{ width: "20px", height: "20px", background: "#009099", marginRight: "10px" }} />
+                <li
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      background: "#009099",
+                      marginRight: "10px",
+                    }}
+                  />
                   <span>Projets évalués</span>
                 </li>
-                <li style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-                  <div style={{ width: "20px", height: "20px", background: "#233E41", marginRight: "10px" }} />
+                <li
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      background: "#233E41",
+                      marginRight: "10px",
+                    }}
+                  />
                   <span>Projets lauréats</span>
                 </li>
               </ul>
-            )}
+            }
           />
         </Col>
         <Col>
           <ChartWrapper
             id={successGraphId}
             options={optionChartSuccess(prepareData(data, sortIndicateur))}
-            legend={(
+            legend={
               <ul className="legend">
-                <li style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-                  <div style={{ width: "20px", height: "20px", background: "#27A658", marginRight: "10px" }} />
+                <li
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      background: "#27A658",
+                      marginRight: "10px",
+                    }}
+                  />
                   <span>Taux de réussite du pays</span>
                 </li>
-                <li style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}>
-                  <div style={{ width: "20px", height: "20px", background: "#D75521", marginRight: "10px" }} />
+                <li
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      background: "#D75521",
+                      marginRight: "10px",
+                    }}
+                  />
                   <span>Taux de réussite moyen</span>
                 </li>
-
               </ul>
-            )}
+            }
           />
         </Col>
       </Row>
     </Container>
-  )
-
+  );
 }
