@@ -10,7 +10,7 @@ import ChartWrapper from "../../../../../chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 
-export default function ProjectsTypes1() {
+export default function ProjectsTypesPiliers1() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
 
