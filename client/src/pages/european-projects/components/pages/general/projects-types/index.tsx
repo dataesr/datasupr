@@ -6,6 +6,7 @@ import ProjectsTypesPiliers1 from "./charts/projects-types-piliers-1";
 import ProjectsTypes1 from "./charts/projects-types-1";
 import ProjectsTypes2 from "./charts/projects-types-2";
 import ProjectsTypesPiliers2 from "./charts/projects-types-piliers-2";
+import ProjectsTypesPiliers3 from "./charts/projects-types-piliers-3";
 
 export default function ProjectsTypes() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,7 +25,9 @@ export default function ProjectsTypes() {
       <ProjectsTypesPiliers1 />
       <div className="fr-my-5w" />
       <ProjectsTypesPiliers2 />
-      {/* <div className="fr-my-5w" />
+      <div className="fr-my-5w" />
+      <ProjectsTypesPiliers3 />
+      {/* 
       <ProjectsTypes2 /> */}
       <div className="fr-my-5w" />
       <Title as="h2" look="h4">
