@@ -701,10 +701,16 @@ router
     if (req.query.country_code) {
       req.query.country_code = req.query.country_code.toUpperCase();
     }
+    const rangeOfYears = ["2021", "2022", "2023"];
     const data_country = await db
       .collection("fr-esr-all-projects-synthese")
       .aggregate([
-        { $match: { country_code: req.query.country_code } },
+        {
+          $match: {
+            country_code: req.query.country_code,
+            call_year: { $in: rangeOfYears },
+          },
+        },
         {
           $group: {
             _id: {
@@ -755,7 +761,7 @@ router
             total_evaluated: 1,
           },
         },
-        { $sort: { pilier_name_fr: 1 } },
+        { $sort: { pilier_name_fr: 1, year: 1 } },
       ])
       .toArray();
 
