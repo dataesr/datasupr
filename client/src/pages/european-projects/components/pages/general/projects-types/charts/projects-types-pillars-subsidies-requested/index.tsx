@@ -41,7 +41,7 @@ export default function ProjectsTypesPillarsSubsidiesRequested() {
       </Row>
       <Row>
         <Col>
-          <ul className="legend">
+          <ul style={{ fontSize: "12px" }}>
             <li
               style={{
                 display: "flex",
