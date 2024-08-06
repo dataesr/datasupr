@@ -17,14 +17,26 @@ export default function Options(data) {
     title: { text: "" },
     legend: { enabled: false },
     credits: { enabled: false },
-
-    xAxis: {
-      categories: Array.from(years),
-      crosshair: true,
-      accessibility: {
-        description: "Years",
+    xAxis: [
+      {
+        type: "category",
+        categories: Array.from(years),
+        width: "48%",
+        title: {
+          text: "Projets évalués",
+        },
       },
-    },
+      {
+        type: "category",
+        categories: Array.from(years),
+        offset: 0,
+        left: "50%",
+        width: "48%",
+        title: {
+          text: "Projets lauréats",
+        },
+      },
+    ],
     yAxis: {
       min: 0,
       title: {
@@ -32,7 +44,7 @@ export default function Options(data) {
       },
     },
     tooltip: {
-      valueSuffix: " (M€)",
+      valueSuffix: " %",
     },
     plotOptions: {
       line: {
@@ -52,6 +64,79 @@ export default function Options(data) {
           .map(
             (item) =>
               Math.round(
+                ((item.total_evaluated * 100) /
+                  filteredDataAll.find(
+                    (itemAll) =>
+                      itemAll.year === item.year &&
+                      itemAll.pilier_name_fr === item.pilier_name_fr
+                  ).total_evaluated) *
+                  10
+              ) / 10
+          ),
+        color: "#A558A0",
+      },
+      {
+        name: "Excellence scientifique",
+        data: filteredDataCountry
+          .filter((item) => item.pilier_name_fr === "Excellence scientifique")
+          .map(
+            (item) =>
+              (item.total_evaluated * 100) /
+              filteredDataAll.find(
+                (itemAll) =>
+                  itemAll.year === item.year &&
+                  itemAll.pilier_name_fr === item.pilier_name_fr
+              ).total_evaluated
+          ),
+        color: "#21AB8E",
+      },
+      {
+        name: "Problématiques mondiales et compétitivité industrielle européenne",
+        data: filteredDataCountry
+          .filter(
+            (item) =>
+              item.pilier_name_fr ===
+              "Problématiques mondiales et compétitivité industrielle européenne"
+          )
+          .map(
+            (item) =>
+              (item.total_evaluated * 100) /
+              filteredDataAll.find(
+                (itemAll) =>
+                  itemAll.year === item.year &&
+                  itemAll.pilier_name_fr === item.pilier_name_fr
+              ).total_evaluated
+          ),
+        color: "#223F3A",
+      },
+      {
+        name: "Élargir la participation et renforcer l'espace européen de la recherche",
+        data: filteredDataCountry
+          .filter(
+            (item) =>
+              item.pilier_name_fr ===
+              "Élargir la participation et renforcer l'espace européen de la recherche"
+          )
+          .map(
+            (item) =>
+              (item.total_evaluated * 100) /
+              filteredDataAll.find(
+                (itemAll) =>
+                  itemAll.year === item.year &&
+                  itemAll.pilier_name_fr === item.pilier_name_fr
+              ).total_evaluated
+          ),
+        color: "#E4794A",
+      },
+
+      {
+        name: "Europe plus innovante",
+        xAxis: 1,
+        data: filteredDataCountry
+          .filter((item) => item.pilier_name_fr === "Europe plus innovante")
+          .map(
+            (item) =>
+              Math.round(
                 ((item.total_successful * 100) /
                   filteredDataAll.find(
                     (itemAll) =>
@@ -65,6 +150,7 @@ export default function Options(data) {
       },
       {
         name: "Excellence scientifique",
+        xAxis: 1,
         data: filteredDataCountry
           .filter((item) => item.pilier_name_fr === "Excellence scientifique")
           .map(
@@ -80,6 +166,7 @@ export default function Options(data) {
       },
       {
         name: "Problématiques mondiales et compétitivité industrielle européenne",
+        xAxis: 1,
         data: filteredDataCountry
           .filter(
             (item) =>
@@ -99,6 +186,7 @@ export default function Options(data) {
       },
       {
         name: "Élargir la participation et renforcer l'espace européen de la recherche",
+        xAxis: 1,
         data: filteredDataCountry
           .filter(
             (item) =>

@@ -5,8 +5,6 @@ import { useEffect } from "react";
 import ProjectsTypesPiliers1 from "./charts/projects-types-piliers-1";
 import ProjectsTypes1 from "./charts/projects-types-1";
 import ProjectsTypes2 from "./charts/projects-types-2";
-import ProjectsTypesPiliers2 from "./charts/projects-types-piliers-2";
-// import ProjectsTypesPiliers3 from "./charts/projects-types-piliers-3";
 import ProjectsTypesPillarsSubsidiesRequested from "./charts/projects-types-pillars-subsidies-requested";
 
 export default function ProjectsTypes() {
@@ -25,12 +23,7 @@ export default function ProjectsTypes() {
       </Title>
       <ProjectsTypesPiliers1 />
       <div className="fr-my-5w" />
-      <ProjectsTypesPiliers2 />
-      <div className="fr-my-5w" />
-      {/* <ProjectsTypesPiliers3 /> */}
       <ProjectsTypesPillarsSubsidiesRequested />
-      {/* 
-      <ProjectsTypes2 /> */}
       <div className="fr-my-5w" />
       <Title as="h2" look="h4">
         Par type de projets

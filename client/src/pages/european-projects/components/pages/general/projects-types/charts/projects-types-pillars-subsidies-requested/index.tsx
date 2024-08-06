@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import Template from "./template";
 import { GetData } from "./query";
 import optionsValues from "./options-values";
-// import optionsSubventionsValuesEvaluatedRates from "./options-rates";
+import optionsRates from "./options-rates";
 
 import ChartWrapper from "../../../../../chart-wrapper";
 import { getDefaultParams } from "./utils";
@@ -28,93 +28,96 @@ export default function ProjectsTypesPillarsSubsidiesRequested() {
           <ChartWrapper
             id="projectsTypesPiliers3"
             options={optionsValues(data)}
-            legend={
-              <ul className="legend">
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#A558A0",
-                      marginRight: "10px",
-                    }}
-                  ></div>
-                  <span>Europe plus innovante</span>
-                </li>
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#21AB8E",
-                      marginRight: "10px",
-                    }}
-                  ></div>
-                  <span>Excellence scientifique</span>
-                </li>
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#223F3A",
-                      marginRight: "10px",
-                    }}
-                  ></div>
-                  <span>
-                    Problématiques mondiales et compétitivité industrielle
-                    européenne
-                  </span>
-                </li>
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#E4794A",
-                      marginRight: "10px",
-                    }}
-                  ></div>
-                  <span>
-                    Élargir la participation et renforcer l'espace européen de
-                    la recherche
-                  </span>
-                </li>
-              </ul>
-            }
-          />
-        </Col>
-        {/* <Col>
-          <ChartWrapper
-            id="projectsTypesPiliers3Rates"
-            options={optionsSubventionsValuesEvaluatedRates(data)}
             legend={null}
           />
-        </Col> */}
+        </Col>
+        <Col>
+          <ChartWrapper
+            id="projectsTypesPiliers3Rates"
+            options={optionsRates(data)}
+            legend={null}
+          />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <ul className="legend">
+            <li
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "5px",
+              }}
+            >
+              <div
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  background: "#A558A0",
+                  marginRight: "10px",
+                }}
+              ></div>
+              <span>Europe plus innovante</span>
+            </li>
+            <li
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "5px",
+              }}
+            >
+              <div
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  background: "#21AB8E",
+                  marginRight: "10px",
+                }}
+              ></div>
+              <span>Excellence scientifique</span>
+            </li>
+            <li
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "5px",
+              }}
+            >
+              <div
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  background: "#223F3A",
+                  marginRight: "10px",
+                }}
+              ></div>
+              <span>
+                Problématiques mondiales et compétitivité industrielle
+                européenne
+              </span>
+            </li>
+            <li
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "5px",
+              }}
+            >
+              <div
+                style={{
+                  width: "20px",
+                  height: "20px",
+                  background: "#E4794A",
+                  marginRight: "10px",
+                }}
+              ></div>
+              <span>
+                Élargir la participation et renforcer l'espace européen de la
+                recherche
+              </span>
+            </li>
+          </ul>
+        </Col>
       </Row>
     </Container>
   );
