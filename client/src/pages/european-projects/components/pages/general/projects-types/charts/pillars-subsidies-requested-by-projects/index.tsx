@@ -10,12 +10,12 @@ import ChartWrapper from "../../../../../chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 
-export default function ProjectsTypesPiliers1() {
+export default function PillarsSubsidiesRequestedByProjects() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["projectsTypesPiliers1", params],
+    queryKey: ["PillarsSubsidiesRequestedByProjects", params],
     queryFn: () => GetData(params),
   });
 
@@ -26,7 +26,7 @@ export default function ProjectsTypesPiliers1() {
       <Row>
         <Col>
           <ChartWrapper
-            id="projectsTypesPiliers1"
+            id="pillarsSubsidiesRequestedByProjects"
             options={optionsSubventionsValues(data)}
             legend={
               <ul className="legend">

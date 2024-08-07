@@ -26,14 +26,14 @@ export default function ProjectsTypesPillarsSubsidiesRequested() {
       <Row>
         <Col md={6}>
           <ChartWrapper
-            id="projectsTypesPiliers3"
+            id="projectsTypesPillarsSubsidiesRequested"
             options={optionsValues(data)}
             legend={null}
           />
         </Col>
         <Col>
           <ChartWrapper
-            id="projectsTypesPiliers3Rates"
+            id="projectsTypesPillarsSubsidiesRequestedRates"
             options={optionsRates(data)}
             legend={null}
           />

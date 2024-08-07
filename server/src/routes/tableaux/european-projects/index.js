@@ -638,7 +638,7 @@ router
 
 router
   .route(
-    "/european-projects/general-objectives-and-projects-types-piliers-subventions-1"
+    "/european-projects/general-projectsTypes-pillarsSubsidiesRequestedByProjects"
   )
   .get(async (req, res) => {
     if (!req.query.country_code) {

@@ -2,10 +2,10 @@ import { Container, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 
-import ProjectsTypesPiliers1 from "./charts/projects-types-piliers-1";
+import PillarsSubsidiesRequestedByProjects from "./charts/pillars-subsidies-requested-by-projects";
 import ProjectsTypes1 from "./charts/projects-types-1";
 import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
-import ProjectsTypesPillarsSubsidiesRequested from "./charts/projects-types-pillars-subsidies-requested";
+import PillarsSubsidiesRequestedLines from "./charts/pillars-subsidies-requested";
 import SuccessRateForAmountsByPillar from "./charts/success-rate-for-amounts-by-pillar";
 
 export default function ProjectsTypes() {
@@ -22,9 +22,10 @@ export default function ProjectsTypes() {
       <Title as="h2" look="h4">
         Par pilier
       </Title>
-      <ProjectsTypesPiliers1 />
+
+      <PillarsSubsidiesRequestedByProjects />
       <div className="fr-my-5w" />
-      <ProjectsTypesPillarsSubsidiesRequested />
+      <PillarsSubsidiesRequestedLines />
       <div className="fr-my-5w" />
       <SuccessRateForAmountsByPillar />
       <div className="fr-my-5w" />
