@@ -61,6 +61,14 @@ export default function Options(data) {
     },
     plotOptions: {
       line: {
+        marker: {
+          enabled: true,
+          symbol: "circle",
+          radius: 3,
+          // fillColor: "#FFFFFF",
+          lineWidth: 2,
+          lineColor: null,
+        },
         dataLabels: {
           enabled: true,
           formatter: function (this: Highcharts.TooltipFormatterContextObject) {

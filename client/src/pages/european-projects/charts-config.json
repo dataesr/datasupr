@@ -97,6 +97,24 @@
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
+    "id": "typeOfFinancingSubsidiesRequested",
+    "title": "",
+    "subtitle": "Subventions demandées et obtenues (M€)",
+    "description": "TODO: regroup KICS, PCP, COFUND",
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "typeOfFinancingSubsidiesRequestedRates",
+    "title": "",
+    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "description": "",
+    "source": "Commission européenne, Cordis",
+    "sourceURL": "https://cordis.europa.eu/",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
     "id": "pillarsSubsidiesRequestedByProjectsRates",
     "title": "",
     "subtitle": "Part des subventions demandées et obtenues sur HE",

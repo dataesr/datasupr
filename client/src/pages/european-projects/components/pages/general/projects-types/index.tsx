@@ -3,10 +3,12 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 
 import PillarsSubsidiesRequestedByProjects from "./charts/pillars-subsidies-requested-by-projects";
-import TypeOfFinancingSubsidiesRequestedByProjects from "./charts/projects-types-1";
-import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
-import PillarsSubsidiesRequestedLines from "./charts/pillars-subsidies-requested";
+import PillarsSubsidiesRequestedLines from "./charts/pillars-subsidies-requested-lines";
 import SuccessRateForAmountsByPillar from "./charts/success-rate-for-amounts-by-pillar";
+
+import TypeOfFinancingSubsidiesRequestedByProjects from "./charts/type-of-financing-subsidies-requested-by-projects";
+import TypeOfFinancingSubsidiesRequestedLines from "./charts/type-of-financing-subsidies-requested-lines";
+import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
 
 export default function ProjectsTypes() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,6 +35,8 @@ export default function ProjectsTypes() {
         Par type de projets
       </Title>
       <TypeOfFinancingSubsidiesRequestedByProjects />
+      <div className="fr-my-5w" />
+      <TypeOfFinancingSubsidiesRequestedLines />
       <div className="fr-my-5w" />
       <SuccessRateForAmountsByTypeOfFinancing />
     </Container>

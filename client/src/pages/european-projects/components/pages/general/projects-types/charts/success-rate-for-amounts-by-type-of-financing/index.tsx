@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
+import { Container, Row, Col } from "@dataesr/dsfr-plus";
 
 import Template from "./template";
 import { GetData } from "./query";
@@ -19,47 +20,53 @@ export default function SuccessRateForAmountsByTypeOfFinancing() {
 
   if (isLoading || !data) return <Template />;
   return (
-    <ChartWrapper
-      id="successRateForAmountsByTypeOfFinancing"
-      options={options(data)}
-      legend={
-        <ul className="legend">
-          <li
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "5px",
-            }}
-          >
-            <div
-              style={{
-                width: "20px",
-                height: "20px",
-                background: "#6DD897",
-                marginRight: "10px",
-              }}
-            />
-            <span>Pays sélectionné</span>
-          </li>
-          <li
-            style={{
-              display: "flex",
-              alignItems: "center",
-              marginBottom: "5px",
-            }}
-          >
-            <div
-              style={{
-                width: "20px",
-                height: "20px",
-                background: "#09622A",
-                marginRight: "10px",
-              }}
-            />
-            <span>UE & Etats associés</span>
-          </li>
-        </ul>
-      }
-    />
+    <Container fluid>
+      <Row>
+        <Col md={6}>
+          <ChartWrapper
+            id="successRateForAmountsByTypeOfFinancing"
+            options={options(data)}
+            legend={
+              <ul className="legend">
+                <li
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      background: "#6DD897",
+                      marginRight: "10px",
+                    }}
+                  />
+                  <span>Pays sélectionné</span>
+                </li>
+                <li
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    marginBottom: "5px",
+                  }}
+                >
+                  <div
+                    style={{
+                      width: "20px",
+                      height: "20px",
+                      background: "#09622A",
+                      marginRight: "10px",
+                    }}
+                  />
+                  <span>UE & Etats associés</span>
+                </li>
+              </ul>
+            }
+          />
+        </Col>
+      </Row>
+    </Container>
   );
 }

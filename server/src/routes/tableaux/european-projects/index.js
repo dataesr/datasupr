@@ -784,7 +784,7 @@ router
 
 router
   .route(
-    "/european-projects/general-objectives-and-projects-types-piliers-subventions-2"
+    "/european-projects/general-projectsTypes-pillarsSubsidiesRequestedLines"
   )
   .get(async (req, res) => {
     if (!req.query.country_code) {
@@ -912,6 +912,148 @@ router
           },
         },
         { $sort: { pilier_name_fr: 1 } },
+      ])
+      .toArray();
+
+    return res.json([
+      {
+        country: req.query.country_code,
+        data: data_country,
+      },
+      { country: "all", data: data_all },
+    ]);
+  });
+
+router
+  .route(
+    "/european-projects/general-projectsTypes-typeOfFinancingSubsidiesRequestedLines"
+  )
+  .get(async (req, res) => {
+    if (!req.query.country_code) {
+      res.status(400).send("country_code is required");
+      return;
+    }
+    if (req.query.country_code) {
+      req.query.country_code = req.query.country_code.toUpperCase();
+    }
+    const rangeOfYears = ["2021", "2022", "2023"];
+    const data_country = await db
+      .collection("fr-esr-all-projects-synthese")
+      .aggregate([
+        {
+          $match: {
+            country_code: req.query.country_code,
+            call_year: { $in: rangeOfYears },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              stage: "$stage",
+              action_id: "$action_id",
+              call_year: "$call_year",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            stage: "$_id.stage",
+            total_fund_eur: 1,
+            action_id: "$_id.action_id",
+            call_year: "$_id.call_year",
+          },
+        },
+        {
+          $group: {
+            _id: {
+              name: "$action_id",
+              year: "$call_year",
+            },
+            total_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_fund_eur",
+                  0,
+                ],
+              },
+            },
+            total_evaluated: {
+              $sum: {
+                $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            action_id: "$_id.name",
+            year: "$_id.year",
+            total_successful: 1,
+            total_evaluated: 1,
+          },
+        },
+        { $sort: { action_id: 1, year: 1 } },
+      ])
+      .toArray();
+
+    const data_all = await db
+      .collection("fr-esr-all-projects-synthese")
+      .aggregate([
+        {
+          $group: {
+            _id: {
+              stage: "$stage",
+              action_id: "$action_id",
+              call_year: "$call_year",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            stage: "$_id.stage",
+            total_fund_eur: 1,
+            action_id: "$_id.action_id",
+            call_year: "$_id.call_year",
+          },
+        },
+        {
+          $group: {
+            _id: {
+              name: "$action_id",
+              year: "$call_year",
+            },
+            total_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_fund_eur",
+                  0,
+                ],
+              },
+            },
+            total_evaluated: {
+              $sum: {
+                $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            action_id: "$_id.name",
+            year: "$_id.year",
+            total_successful: 1,
+            total_evaluated: 1,
+          },
+        },
+        { $sort: { action_id: 1 } },
       ])
       .toArray();
 
