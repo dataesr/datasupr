@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 import ProjectsTypesPiliers1 from "./charts/projects-types-piliers-1";
 import ProjectsTypes1 from "./charts/projects-types-1";
-import ProjectsTypes2 from "./charts/projects-types-2";
+import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
 import ProjectsTypesPillarsSubsidiesRequested from "./charts/projects-types-pillars-subsidies-requested";
 
 export default function ProjectsTypes() {
@@ -30,7 +30,7 @@ export default function ProjectsTypes() {
       </Title>
       <ProjectsTypes1 />
       <div className="fr-my-5w" />
-      <ProjectsTypes2 />
+      <SuccessRateForAmountsByTypeOfFinancing />
     </Container>
   );
 }

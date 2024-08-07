@@ -34,7 +34,7 @@
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
-    "id": "projectsTypes2",
+    "id": "successRateForAmountsByTypeOfFinancing",
     "title": "",
     "subtitle": "Taux de succès sur le montants par type de financement",
     "description": "Attention EIT",
