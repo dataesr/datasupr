@@ -37,12 +37,25 @@ export default function Options(data) {
         },
       },
     ],
-    yAxis: {
-      min: 0,
-      title: {
-        text: "(%)",
+    yAxis: [
+      {
+        lineWidth: 1,
+        lineColor: "#E6E6E6",
+        min: 0,
+        title: {
+          text: "%",
+        },
       },
-    },
+      {
+        min: 0,
+        title: {
+          text: "",
+        },
+        lineWidth: 1,
+        lineColor: "#E6E6E6",
+        left: "75%",
+      },
+    ],
     tooltip: {
       valueSuffix: " %",
     },

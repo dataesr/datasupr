@@ -41,7 +41,7 @@ export default function Options(data) {
         lineColor: "#E6E6E6",
         min: 0,
         title: {
-          text: "(M€)",
+          text: "M€",
         },
       },
       {
