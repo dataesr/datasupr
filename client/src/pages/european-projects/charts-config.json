@@ -16,7 +16,7 @@
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/synthesis-focus"
   },
   {
-    "id": "projectsTypes1",
+    "id": "typeOfFinancingSubsidiesRequestedByProjects",
     "title": "",
     "subtitle": "Subventions demandées et obtenues (M€)",
     "description": "",
@@ -25,7 +25,7 @@
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
-    "id": "projectsTypes1Rates",
+    "id": "typeOfFinancingSubsidiesRequestedByProjectsRates",
     "title": "",
     "subtitle": "Part des subventions demandées et obtenues sur HE",
     "description": "",

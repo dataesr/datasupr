@@ -70,7 +70,7 @@ export default function PillarsSubsidiesRequestedByProjects() {
         </Col>
         <Col>
           <ChartWrapper
-            id="projectsTypes1Rates"
+            id="pillarsSubsidiesRequestedByProjectsRates"
             options={optionsSubventionsRates(data)}
             legend={null}
           />
