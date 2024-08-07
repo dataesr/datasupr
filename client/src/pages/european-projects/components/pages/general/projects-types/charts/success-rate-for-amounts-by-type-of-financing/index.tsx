@@ -13,7 +13,7 @@ export default function SuccessRateForAmountsByTypeOfFinancing() {
   const params = getDefaultParams(searchParams);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["projectsTypes2", params],
+    queryKey: ["SuccessRateForAmountsByProjectsTypes", params],
     queryFn: () => GetData(params),
   });
 

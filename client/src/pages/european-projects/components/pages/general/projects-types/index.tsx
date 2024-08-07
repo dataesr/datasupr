@@ -6,6 +6,7 @@ import ProjectsTypesPiliers1 from "./charts/projects-types-piliers-1";
 import ProjectsTypes1 from "./charts/projects-types-1";
 import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
 import ProjectsTypesPillarsSubsidiesRequested from "./charts/projects-types-pillars-subsidies-requested";
+import SuccessRateForAmountsByPillar from "./charts/success-rate-for-amounts-by-pillar";
 
 export default function ProjectsTypes() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -25,6 +26,9 @@ export default function ProjectsTypes() {
       <div className="fr-my-5w" />
       <ProjectsTypesPillarsSubsidiesRequested />
       <div className="fr-my-5w" />
+      <SuccessRateForAmountsByPillar />
+      <div className="fr-my-5w" />
+
       <Title as="h2" look="h4">
         Par type de projets
       </Title>
