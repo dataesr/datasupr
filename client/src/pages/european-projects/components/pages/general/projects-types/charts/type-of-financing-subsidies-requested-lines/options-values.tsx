@@ -7,10 +7,10 @@ export default function Options(data) {
   filteredData.forEach((item) => years.add(item.year));
 
   const typesOfFinancing = {
-    // COFUND: {
-    //   color: "#000000",
-    //   name: "COFUND",
-    // },
+    "ACT-OTHERS": {
+      color: "#009099",
+      name: "ACT-OTHERS",
+    },
     CSA: {
       color: "#F28E2B",
       name: "CSA",
@@ -27,18 +27,10 @@ export default function Options(data) {
       color: "#B07AA1",
       name: "IA",
     },
-    // KICS: {
-    //   color: "#000000",
-    //   name: "KICS",
-    // },
     MSCA: {
       color: "#EDC948",
       name: "MSCA",
     },
-    // PCP: {
-    //   color: "#000000",
-    //   name: "PCP",
-    // },
     RIA: {
       color: "#BAB0AC",
       name: "RIA",

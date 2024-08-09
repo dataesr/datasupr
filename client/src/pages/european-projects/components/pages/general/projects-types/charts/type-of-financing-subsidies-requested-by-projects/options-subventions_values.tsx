@@ -17,7 +17,7 @@ export default function Options(data) {
     credits: { enabled: false },
 
     xAxis: {
-      categories: filteredData.map((item) => item.id),
+      categories: filteredData.map((item) => item.name),
       crosshair: true,
       accessibility: {
         description: "Actions",

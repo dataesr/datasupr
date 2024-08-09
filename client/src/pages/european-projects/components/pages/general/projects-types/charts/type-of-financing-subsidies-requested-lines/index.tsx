@@ -43,28 +43,32 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
         <Col className="legend">
           <ul>
             <li>
+              <div style={{ background: "#009099" }} />
+              <span>Others actions</span>
+            </li>
+            <li>
               <div style={{ background: "#F28E2B" }} />
-              <span>CSA</span>
+              <span>CSA Coordination and support actions</span>
             </li>
             <li>
               <div style={{ background: "#D5DBEF" }} />
-              <span>EIC</span>
+              <span>EIC actions</span>
             </li>
             <li>
               <div style={{ background: "#76B7B2" }} />
-              <span>ERC</span>
+              <span>ERC actions</span>
             </li>
             <li>
               <div style={{ background: "#B07AA1" }} />
-              <span>IA</span>
+              <span>IA Innovation actions</span>
             </li>
             <li>
               <div style={{ background: "#EDC948" }} />
-              <span>MSCA</span>
+              <span>MSCA Marie Skłodowska-Curie actions</span>
             </li>
             <li>
               <div style={{ background: "#BAB0AC" }} />
-              <span>RIA</span>
+              <span>RIA Research and Innovation actions</span>
             </li>
           </ul>
         </Col>

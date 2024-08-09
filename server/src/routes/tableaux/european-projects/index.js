@@ -206,8 +206,8 @@ router
           $group: {
             _id: {
               stage: "$stage",
-              action_id: "$action_id",
-              action_name: "$action_name",
+              action_id: "$action_group_code",
+              action_name: "$action_group_name",
             },
             total_fund_eur: { $sum: "$fund_eur" },
           },
@@ -264,8 +264,8 @@ router
           $group: {
             _id: {
               stage: "$stage",
-              action_id: "$action_id",
-              action_name: "$action_name",
+              action_id: "$action_group_code",
+              action_name: "$action_group_name",
             },
             total_fund_eur: { $sum: "$fund_eur" },
           },
@@ -352,8 +352,8 @@ router
           $group: {
             _id: {
               stage: "$stage",
-              action_id: "$action_id",
-              action_name: "$action_name",
+              action_id: "$action_group_code",
+              action_name: "$action_group_name",
             },
             total_fund_eur: { $sum: "$fund_eur" },
           },
@@ -410,8 +410,8 @@ router
           $group: {
             _id: {
               stage: "$stage",
-              action_id: "$action_id",
-              action_name: "$action_name",
+              action_id: "$action_group_code",
+              action_name: "$action_group_name",
             },
             total_fund_eur: { $sum: "$fund_eur" },
           },
@@ -950,7 +950,7 @@ router
           $group: {
             _id: {
               stage: "$stage",
-              action_id: "$action_id",
+              action_id: "$action_group_code",
               call_year: "$call_year",
             },
             total_fund_eur: { $sum: "$fund_eur" },
@@ -1007,7 +1007,7 @@ router
           $group: {
             _id: {
               stage: "$stage",
-              action_id: "$action_id",
+              action_id: "$action_group_code",
               call_year: "$call_year",
             },
             total_fund_eur: { $sum: "$fund_eur" },
