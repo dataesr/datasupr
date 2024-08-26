@@ -1,6 +1,5 @@
 import { Container, Text, Title } from "@dataesr/dsfr-plus";
-import { useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import PillarsSubsidiesRequestedByProjects from "./charts/pillars-subsidies-requested-by-projects";
 import PillarsSubsidiesRequestedLines from "./charts/pillars-subsidies-requested-lines";
@@ -11,14 +10,7 @@ import TypeOfFinancingSubsidiesRequestedLines from "./charts/type-of-financing-s
 import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
 
 export default function ProjectsTypes() {
-  const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCharts, setSelectedCharts] = useState("fundingRankingSub");
-
-  useEffect(() => {
-    if (!searchParams.get("country_code")) {
-      setSearchParams({ country_code: "FRA" });
-    }
-  }, [searchParams, setSearchParams]);
 
   return (
     <Container as="main">

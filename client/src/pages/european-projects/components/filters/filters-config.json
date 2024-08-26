@@ -1,7 +1,24 @@
 {
+  "entities": {
+    "defaultId": "all",
+    "icon": "community-fill",
+    "label": "Entités",
+    "title": "Sélectionner une entité",
+    "values": [
+      {
+        "id": "all",
+        "label": "Toutes les entités"
+      },
+      {
+        "id": "exept",
+        "label": "Hors OIE, OIG, entités communes"
+      }
+    ]
+  },
   "country_code": {
-    "label": "Pays",
+    "defaultId": "FRA",
     "icon": "earth-fill",
+    "label": "Pays",
     "title": "Sélectionner un pays",
     "values": [
       {
