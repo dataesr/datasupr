@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 
-import Template from "./template";
 import { GetData } from "./query";
+import { GetLegend } from "../../../../../legend";
 import optionsSub from "./options";
 import optionSubSuccessRate from "./options-succes-rate";
 import optionsCoordinationNumber from "./options-coordination_number";
@@ -9,7 +10,7 @@ import optionCoordinationNumberSuccessRate from "./options-coordination_number-s
 import optionsNumberInvolved from "./options-number_involved";
 import optionNumberInvolvedSuccessRate from "./options-number_involved-succes-rate";
 import ChartWrapper from "../../../../../chart-wrapper";
-import { Col, Container, Row } from "@dataesr/dsfr-plus";
+import Template from "./template";
 
 export default function FundingRanking({ indicateurId }) {
   const { data, isLoading } = useQuery({
@@ -56,88 +57,20 @@ export default function FundingRanking({ indicateurId }) {
           <ChartWrapper
             id={indicateurId}
             options={optionsChart(prepareData(data, sortIndicateur))}
-            legend={
-              <ul className="legend">
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#009099",
-                      marginRight: "10px",
-                    }}
-                  />
-                  <span>Projets évalués</span>
-                </li>
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#233E41",
-                      marginRight: "10px",
-                    }}
-                  />
-                  <span>Projets lauréats</span>
-                </li>
-              </ul>
-            }
+            legend={GetLegend([
+              ["Projets évalués", "#009099"],
+              ["Projets lauréats", "#233E41"],
+            ])}
           />
         </Col>
         <Col>
           <ChartWrapper
             id={successGraphId}
             options={optionChartSuccess(prepareData(data, sortIndicateur))}
-            legend={
-              <ul className="legend">
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#27A658",
-                      marginRight: "10px",
-                    }}
-                  />
-                  <span>Taux de réussite du pays</span>
-                </li>
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#D75521",
-                      marginRight: "10px",
-                    }}
-                  />
-                  <span>Taux de réussite moyen</span>
-                </li>
-              </ul>
-            }
+            legend={GetLegend([
+              ["Taux de réussite du pays", "#27A658"],
+              ["Taux de réussite moyen", "#D75521"],
+            ])}
           />
         </Col>
       </Row>
