@@ -21,11 +21,11 @@ export default function Top10Beneficiaries() {
   return (
     <ChartWrapper
       id="top10beneficiaries"
-      options={options(data, searchParams.get("country_code") ?? null)}
       legend={GetLegend([
         ["Total des subventions en euros €", "#233E41"],
         ["Poids du cumul des subventions (%)", "#D75521"],
       ])}
+      options={options(data, searchParams.get("country_code") ?? null)}
     />
   );
 }

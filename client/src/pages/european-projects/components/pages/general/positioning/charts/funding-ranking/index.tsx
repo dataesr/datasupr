@@ -56,21 +56,21 @@ export default function FundingRanking({ indicateurId }) {
         <Col>
           <ChartWrapper
             id={indicateurId}
-            options={optionsChart(prepareData(data, sortIndicateur))}
             legend={GetLegend([
               ["Projets évalués", "#009099"],
               ["Projets lauréats", "#233E41"],
             ])}
+            options={optionsChart(prepareData(data, sortIndicateur))}
           />
         </Col>
         <Col>
           <ChartWrapper
             id={successGraphId}
-            options={optionChartSuccess(prepareData(data, sortIndicateur))}
             legend={GetLegend([
               ["Taux de réussite du pays", "#27A658"],
               ["Taux de réussite moyen", "#D75521"],
             ])}
+            options={optionChartSuccess(prepareData(data, sortIndicateur))}
           />
         </Col>
       </Row>
