@@ -1,9 +1,10 @@
-export function GetLegend(legendArray: [string, string][]) {
+export function GetLegend(legendArray: [string, string][], legendId: string) {
   return (
     <ul className="legend">
       {legendArray.map((item) => (
         <li
           style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}
+          key={`${legendId}item[0]`}
         >
           <div
             style={{
@@ -12,7 +13,7 @@ export function GetLegend(legendArray: [string, string][]) {
               background: item[1],
               marginRight: "10px",
             }}
-          ></div>
+          />
           <span>{item[0]}</span>
         </li>
       ))}

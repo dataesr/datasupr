@@ -1,6 +1,5 @@
 export default function Options(data) {
   if (!data) return null;
-  console.log(data);
 
   const filteredData = data.country.filter(
     (el) => el.total_evaluated && el.total_successful

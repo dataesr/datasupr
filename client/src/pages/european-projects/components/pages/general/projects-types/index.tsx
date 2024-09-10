@@ -1,7 +1,7 @@
 import { Container, Text, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 
-import PillarsSubsidiesRequestedByProjects from "./charts/pillars-subsidies-requested-by-projects";
+import PillarsRequestedByProjects from "./charts/pillars-requested-by-projects";
 import PillarsSubsidiesRequestedLines from "./charts/pillars-subsidies-requested-lines";
 import SuccessRateForAmountsByPillar from "./charts/success-rate-for-amounts-by-pillar";
 
@@ -10,7 +10,7 @@ import TypeOfFinancingSubsidiesRequestedLines from "./charts/type-of-financing-s
 import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
 
 export default function ProjectsTypes() {
-  const [selectedCharts, setSelectedCharts] = useState("fundingRankingSub");
+  const [selectedChart, setSelectedChart] = useState("Subsidies");
 
   return (
     <Container as="main">
@@ -22,27 +22,29 @@ export default function ProjectsTypes() {
       </div>
       <select
         className="fr-select fr-mb-3w"
-        onChange={(e) => setSelectedCharts(e.target.value)}
-        value={selectedCharts}
+        onChange={(e) => setSelectedChart(e.target.value)}
+        value={selectedChart}
       >
-        <option value="subsidies">Subventions</option>
-        <option value="projectCoordination">Coordinations de projets</option>
-        <option value="applicantsAndParticipants">
-          Candidats et participants
+        <option value="Subsidies">Focus sur les subventions</option>
+        <option value="ProjectCoordination">
+          Focus sur les coordinations de projets
         </option>
-        <option value="projects">Projets</option>
+        <option value="ApplicantsAndParticipants">
+          Focus sur les candidats et participants
+        </option>
+        {/* <option value="projects">Projets</option> */}
       </select>
-
       <Title as="h2" look="h4">
         Par pilier
       </Title>
-      <PillarsSubsidiesRequestedByProjects />
+      <PillarsRequestedByProjects
+        indicateurId={`pillars${selectedChart}RequestedByProjects`}
+      />
       <div className="fr-my-5w" />
       <PillarsSubsidiesRequestedLines />
       <div className="fr-my-5w" />
       <SuccessRateForAmountsByPillar />
       <div className="fr-my-5w" />
-
       <Title as="h2" look="h4">
         Par type de projets
       </Title>
