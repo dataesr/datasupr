@@ -1,4 +1,4 @@
-import { Container, Text, Title } from "@dataesr/dsfr-plus";
+import { Container, Notice, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 
 import PillarsRequestedByProjects from "./charts/pillars-requested-by-projects";
@@ -14,26 +14,30 @@ export default function ProjectsTypes() {
 
   return (
     <Container as="main">
-      <Title as="h1" look="h3">
-        Objectifs et types de projets
-      </Title>
-      <div className="fr-notice__body">
-        <Text>La synthèse porte sur l'ensemble des acteurs du PCRI</Text>
+      <div className="sticky">
+        <Title as="h1" look="h3">
+          Objectifs et types de projets
+        </Title>
+        <Notice closeMode={"disallow"} type={"info"}>
+          Méthodo de la page <br />
+          Adipisicing do excepteur tempor mollit exercitation fugiat non.
+        </Notice>
+        <select
+          className="fr-select fr-my-1w"
+          onChange={(e) => setSelectedChart(e.target.value)}
+          value={selectedChart}
+        >
+          <option value="Subsidies">Focus sur les subventions</option>
+          <option value="ProjectCoordination">
+            Focus sur les coordinations de projets
+          </option>
+          <option value="ApplicantsAndParticipants">
+            Focus sur les candidats et participants
+          </option>
+          {/* <option value="projects">Projets</option> */}
+        </select>
       </div>
-      <select
-        className="fr-select fr-mb-3w"
-        onChange={(e) => setSelectedChart(e.target.value)}
-        value={selectedChart}
-      >
-        <option value="Subsidies">Focus sur les subventions</option>
-        <option value="ProjectCoordination">
-          Focus sur les coordinations de projets
-        </option>
-        <option value="ApplicantsAndParticipants">
-          Focus sur les candidats et participants
-        </option>
-        {/* <option value="projects">Projets</option> */}
-      </select>
+
       <Title as="h2" look="h4">
         Par pilier
       </Title>
