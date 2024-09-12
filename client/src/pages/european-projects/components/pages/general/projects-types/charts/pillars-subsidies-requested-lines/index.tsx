@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import Template from "./template";
 import { GetData } from "./query";
 import optionsSubsidiesValues from "./options-subsidies-values";
 import optionsSubsidiesRates from "./options-subsidies-rates";
@@ -11,6 +10,7 @@ import OptionsCoordinationNumberRates from "./options-coordination_number-rates"
 import ChartWrapper from "../../../../../chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
+import DefaultSkeleton from "../../../../../charts-skeletons/default";
 
 export default function ProjectsTypesPillarsSubsidiesRequested({
   indicateurId,
@@ -23,7 +23,7 @@ export default function ProjectsTypesPillarsSubsidiesRequested({
     queryFn: () => GetData(params),
   });
 
-  if (isLoading || !data) return <Template />;
+  if (isLoading || !data) return <DefaultSkeleton col={2} />;
 
   let options, optionsRates;
   switch (indicateurId) {

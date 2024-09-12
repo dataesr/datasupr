@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import Template from "./template";
 import { GetData } from "./query";
 import optionsValues from "./options-values";
 import optionsRates from "./options-rates";
@@ -9,6 +8,7 @@ import optionsRates from "./options-rates";
 import ChartWrapper from "../../../../../chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
+import DefaultSkeleton from "../../../../../charts-skeletons/default";
 
 export default function TypeOfFinancingSubsidiesRequestedLines() {
   const [searchParams] = useSearchParams();
@@ -19,7 +19,7 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
     queryFn: () => GetData(params),
   });
 
-  if (isLoading || !data) return <Template />;
+  if (isLoading || !data) return <DefaultSkeleton col={2} />;
 
   return (
     <Container fluid>
