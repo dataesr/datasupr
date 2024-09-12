@@ -41,7 +41,9 @@ export default function ProjectsTypes() {
         indicateurId={`pillars${selectedChart}RequestedByProjects`}
       />
       <div className="fr-my-5w" />
-      <PillarsSubsidiesRequestedLines />
+      <PillarsSubsidiesRequestedLines
+        indicateurId={`pillars${selectedChart}RequestedByProjectsLines`}
+      />
       <div className="fr-my-5w" />
       <SuccessRateForAmountsByPillar />
       <div className="fr-my-5w" />

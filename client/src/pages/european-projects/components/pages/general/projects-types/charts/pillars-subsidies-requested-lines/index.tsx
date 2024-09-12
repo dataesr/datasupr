@@ -3,38 +3,59 @@ import { useSearchParams } from "react-router-dom";
 
 import Template from "./template";
 import { GetData } from "./query";
-import optionsValues from "./options-values";
-import optionsRates from "./options-rates";
+import optionsSubsidiesValues from "./options-subsidies-values";
+import optionsSubsidiesRates from "./options-subsidies-rates";
+import optionsCoordinationNumber from "./options-coordination_number-values";
+import OptionsCoordinationNumberRates from "./options-coordination_number-rates";
 
 import ChartWrapper from "../../../../../chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 
-export default function ProjectsTypesPillarsSubsidiesRequested() {
+export default function ProjectsTypesPillarsSubsidiesRequested({
+  indicateurId,
+}) {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["projects-types-pillars-subsidies-requested", params],
+    queryKey: [indicateurId, params],
     queryFn: () => GetData(params),
   });
 
   if (isLoading || !data) return <Template />;
 
+  let options, optionsRates;
+  switch (indicateurId) {
+    case "pillarsSubsidiesRequestedByProjectsLines":
+      options = optionsSubsidiesValues(data);
+      optionsRates = optionsSubsidiesRates(data);
+      break;
+
+    case "pillarsProjectCoordinationRequestedByProjectsLines":
+      options = optionsCoordinationNumber(data);
+      optionsRates = OptionsCoordinationNumberRates(data);
+      break;
+
+    // case "pillarsApplicantsAndParticipantsRequestedByProjectsLines":
+    //   options = optionsSubsidiesValues(data);
+    //   // optionsRates = optionsSubsidiesRates(data);
+    //   break;
+
+    default:
+      break;
+  }
+
   return (
     <Container fluid>
       <Row>
         <Col md={6}>
-          <ChartWrapper
-            id="projectsTypesPillarsSubsidiesRequested"
-            options={optionsValues(data)}
-            legend={null}
-          />
+          <ChartWrapper id={indicateurId} options={options} legend={null} />
         </Col>
         <Col>
           <ChartWrapper
-            id="projectsTypesPillarsSubsidiesRequestedRates"
-            options={optionsRates(data)}
+            id={`${indicateurId}Rates`}
+            options={optionsRates}
             legend={null}
           />
         </Col>

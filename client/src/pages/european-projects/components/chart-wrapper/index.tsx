@@ -3,16 +3,21 @@ import HighchartsReact from "highcharts-react-official";
 import { getConfig } from "../../utils";
 import {
   Button,
-  Container, Row, Col,
-  Modal, ModalContent, ModalTitle,
-  Title, Text,
+  Col,
+  Container,
+  Modal,
+  ModalContent,
+  ModalTitle,
   Radio,
+  Row,
+  Text,
+  Title,
 } from "@dataesr/dsfr-plus";
 
 const { VITE_APP_URL } = import.meta.env;
 
-import SyntaxHighlighter from 'react-syntax-highlighter';
-import { a11yDark } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 import "./styles.scss";
 import { useState } from "react";
@@ -46,12 +51,22 @@ function MenuModal({
     <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="sm">
       <ModalContent className="modal-actions">
         <Title as="h1" look="h6">
-          <span className="fr-icon-bar-chart-box-line fr-mr-1w" aria-hidden="true" />
+          <span
+            className="fr-icon-bar-chart-box-line fr-mr-1w"
+            aria-hidden="true"
+          />
           Options du graphique
         </Title>
 
-        <fieldset className="fr-fieldset" id="radio-hint" aria-labelledby="radio-hint-legend radio-hint-messages">
-          <legend className="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-hint-legend">
+        <fieldset
+          className="fr-fieldset"
+          id="radio-hint"
+          aria-labelledby="radio-hint-legend radio-hint-messages"
+        >
+          <legend
+            className="fr-fieldset__legend--regular fr-fieldset__legend"
+            id="radio-hint-legend"
+          >
             Type d'affichage
           </legend>
           <div className="fr-fieldset__element">
@@ -113,7 +128,9 @@ function MenuModal({
         <Container fluid>
           <Row>
             <Col>
-              <Title as="h2" look="h6">Partager</Title>
+              <Title as="h2" look="h6">
+                Partager
+              </Title>
               <div className="share">
                 <Button
                   color="beige-gris-galet"
@@ -139,12 +156,17 @@ function MenuModal({
               </div>
             </Col>
             <Col>
-              <Title as="h2" look="h6">Intégrer</Title>
+              <Title as="h2" look="h6">
+                Intégrer
+              </Title>
               <div className="share">
                 <Button
                   color="beige-gris-galet"
                   icon="code-s-slash-line"
-                  onClick={() => { setIsOpenIntegration(true); setIsOpen(false) }}
+                  onClick={() => {
+                    setIsOpenIntegration(true);
+                    setIsOpen(false);
+                  }}
                   title="Intégration"
                   variant="secondary"
                 >
@@ -164,28 +186,33 @@ export default function ChartWrapper({ id, options, legend }) {
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
   const graphConfig = getConfig(id);
+  const source = "Commission européenne, Cordis";
+  const sourceURL = "https://cordis.europa.eu/";
 
   return (
     <section>
-      {
-        graphConfig.title && (
-          <>
-            <Title as="h2" look="h4" className="fr-mb-1w">{graphConfig.title}</Title>
-            <Text className="sources">
-              Sources : <a href={graphConfig.sourceURL} target="_blank" rel="noreferrer noopener">{graphConfig.source}</a>
-            </Text>
-          </>
-        )
-      }
-      {
-        graphConfig.subtitle && (
-          <Title as={graphConfig.title ? "h3" : "h2"}
-            look="h6"
-            className="fr-mb-0">
-            {graphConfig.subtitle}
+      {graphConfig.title && (
+        <>
+          <Title as="h2" look="h4" className="fr-mb-1w">
+            {graphConfig.title}
           </Title>
-        )
-      }
+          <Text className="sources">
+            Sources :{" "}
+            <a href={sourceURL} target="_blank" rel="noreferrer noopener">
+              {source}
+            </a>
+          </Text>
+        </>
+      )}
+      {graphConfig.subtitle && (
+        <Title
+          as={graphConfig.title ? "h3" : "h2"}
+          look="h6"
+          className="fr-mb-0"
+        >
+          {graphConfig.subtitle}
+        </Title>
+      )}
       <div className="actions">
         <Button
           color="beige-gris-galet"
@@ -196,37 +223,25 @@ export default function ChartWrapper({ id, options, legend }) {
           variant="text"
         />
       </div>
-      {
-        displayType === "data" && (
-          <pre>
-            {JSON.stringify(options.series, null, 2)}
-          </pre>
-        )
-      }
-      {
-        displayType === "chart" && (
-          <figure>
-            <HighchartsReact
-              highcharts={Highcharts}
-              options={options}
-            />
-          </figure>
-        )
-      }
+      {displayType === "data" && (
+        <pre>{JSON.stringify(options.series, null, 2)}</pre>
+      )}
+      {displayType === "chart" && (
+        <figure>
+          <HighchartsReact highcharts={Highcharts} options={options} />
+        </figure>
+      )}
       <div className="graph-footer fr-pt-1w">
         {legend}
         {graphConfig.description && (
           <div className="fr-notice fr-notice--info fr-mt-1w">
             <div className="fr-container">
               <div className="fr-notice__body">
-                <Text className="description">
-                  {graphConfig.description}
-                </Text>
+                <Text className="description">{graphConfig.description}</Text>
               </div>
             </div>
           </div>
         )}
-
       </div>
       <MenuModal
         displayType={displayType}

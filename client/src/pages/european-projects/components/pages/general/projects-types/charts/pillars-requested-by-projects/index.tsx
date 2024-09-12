@@ -18,7 +18,7 @@ export default function PillarsSubsidiesRequestedByProjects({ indicateurId }) {
   const params = getDefaultParams(searchParams);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["PillarsSubsidiesRequestedByProjects", params],
+    queryKey: [indicateurId, params],
     queryFn: () => GetData(params),
   });
 

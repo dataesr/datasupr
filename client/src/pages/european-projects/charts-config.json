@@ -3,34 +3,26 @@
     "id": "fundedObjectives",
     "title": "Financements obtenus",
     "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
   },
   {
     "id": "synthesisFocus",
     "title": "Focus sur la participation du pays",
     "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/synthesis-focus"
   },
   {
     "id": "typeOfFinancingSubsidiesRequestedByProjects",
     "title": "",
     "subtitle": "Subventions demandées et obtenues (M€)",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "typeOfFinancingSubsidiesRequestedByProjectsRates",
     "title": "",
     "subtitle": "Part des subventions demandées et obtenues sur HE",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
@@ -38,8 +30,6 @@
     "title": "",
     "subtitle": "Taux de succès sur le montants par type de financement",
     "description": "Attention EIT",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-2"
   },
   {
@@ -47,26 +37,20 @@
     "title": "",
     "subtitle": "Taux de succès sur le montants par pilier",
     "description": "Attention EIT",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-2"
   },
   {
     "id": "pillarsSubsidiesRequestedByProjects",
     "title": "",
     "subtitle": "Subventions demandées et obtenues (M€)",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "pillarsProjectCoordinationRequestedByProjects",
     "title": "",
     "subtitle": "Nombre de candidats et de participants",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
 
@@ -74,72 +58,56 @@
     "id": "projectsTypesPiliers2",
     "title": "",
     "subtitle": "Subventions demandées et obtenues (M€)",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "projectsTypesPiliers2Rates",
     "title": "",
     "subtitle": "Part des subventions demandées et obtenues sur HE",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "projectsTypesPillarsSubsidiesRequested",
     "title": "",
     "subtitle": "Subventions demandées et obtenues (M€)",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "projectsTypesPillarsSubsidiesRequestedRates",
     "title": "",
     "subtitle": "Part des subventions demandées et obtenues sur HE",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "typeOfFinancingSubsidiesRequested",
     "title": "",
     "subtitle": "Subventions demandées et obtenues (M€)",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "typeOfFinancingSubsidiesRequestedRates",
     "title": "",
     "subtitle": "Part des subventions demandées et obtenues sur HE",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "pillarsSubsidiesRequestedByProjectsRates",
     "title": "",
     "subtitle": "Part des subventions demandées et obtenues sur HE",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
   {
     "id": "pillarsProjectCoordinationRequestedByProjectsRates",
     "title": "",
     "subtitle": "Poids des candidats et participants sur HE",
-    "description": "",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
+    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
   },
 
@@ -148,8 +116,6 @@
     "title": "",
     "subtitle": "Principaux bénéficiaires qui concentrent 50 % des subventions allouées aux équipes",
     "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries"
   },
   {
@@ -157,8 +123,6 @@
     "title": "",
     "subtitle": "Principaux pays bénéficiaires",
     "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-beneficiaries"
   },
   {
@@ -166,8 +130,6 @@
     "title": "",
     "subtitle": "Subventions demandées et obtenues (M€) par pays",
     "description": null,
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
   },
   {
@@ -175,8 +137,6 @@
     "title": "",
     "subtitle": "Taux de succès sur les montants par pays",
     "description": null,
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
   },
   {
@@ -184,8 +144,6 @@
     "title": "",
     "subtitle": "Nombre de coordinations de projets déposés et lauréats",
     "description": null,
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
   },
   {
@@ -193,8 +151,6 @@
     "title": "",
     "subtitle": "Taux de succès sur le nombre de coordinations de projets lauréats",
     "description": null,
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
   },
   {
@@ -202,8 +158,6 @@
     "title": "",
     "subtitle": "Nombre de candidats et de participants",
     "description": null,
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
   },
   {
@@ -211,8 +165,34 @@
     "title": "",
     "subtitle": "Taux de succès individuel des participants",
     "description": null,
-    "source": "Commission européenne, Cordis",
-    "sourceURL": "https://cordis.europa.eu/",
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "pillarsSubsidiesRequestedByProjectsLines",
+    "title": "Subventions demandés et obtenues (M€)",
+    "subtitle": "",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "pillarsSubsidiesRequestedByProjectsLinesRates",
+    "title": "Part des subventions demandées et obtenues",
+    "subtitle": "",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "pillarsProjectCoordinationRequestedByProjectsLines",
+    "title": "Nombre de coordinatioons de projets évalués et lauréats",
+    "subtitle": "",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "pillarsProjectCoordinationRequestedByProjectsLinesRates",
+    "title": "Nombre de coordinatioons de projets évalués et lauréats",
+    "subtitle": "",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
   }
 ]
