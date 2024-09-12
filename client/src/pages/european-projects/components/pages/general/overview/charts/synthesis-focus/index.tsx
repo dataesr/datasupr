@@ -8,9 +8,9 @@ import { getDefaultParams } from "./utils";
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { getConfig } from "../../../../../../utils";
 
-import './styles.scss';
+import "./styles.scss";
 
-function Tile({ value, description }: { value: string, description: string }) {
+function Tile({ value, description }: { value: string; description: string }) {
   return (
     <div className="fr-tile fr-tile--sm fr-enlarge-link synthesis-focus">
       <div className="fr-tile__body">
@@ -30,60 +30,96 @@ export default function SynthesisFocus() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["SynthesisFocus", params],
-    queryFn: () => GetData(params)
-  })
+    queryFn: () => GetData(params),
+  });
 
-  if (isLoading || !data) return <Template />
+  if (isLoading || !data) return <Template />;
 
   const dataSuccessful = data.successful;
   const dataEvaluated = data.evaluated;
-  const dataCurrentCountry_successful = dataSuccessful.countries.find((el) => el.country_code === searchParams.get("country_code"));
-  const dataCurrentCountry_evaluated = dataEvaluated.countries.find((el) => el.country_code === searchParams.get("country_code"));
+  const dataCurrentCountry_successful = dataSuccessful.countries.find(
+    (el) => el.country_code === searchParams.get("country_code")
+  );
+  const dataCurrentCountry_evaluated = dataEvaluated.countries.find(
+    (el) => el.country_code === searchParams.get("country_code")
+  );
+
+  const source = "Commission européenne, Cordis";
+  const sourceURL = "https://cordis.europa.eu/";
 
   return (
     <Container as="section" fluid>
-      <Title as="h2" look="h4" className="fr-mb-0">{graphConfig.title}</Title>
+      <Title as="h2" look="h4" className="fr-mb-0">
+        {graphConfig.title}
+      </Title>
       <p className="sources">
-        Sources : <a href={graphConfig.sourceURL} target="_blank" rel="noreferrer noopener">{graphConfig.source}</a>
+        Sources :{" "}
+        <a href={sourceURL} target="_blank" rel="noreferrer noopener">
+          {source}
+        </a>
       </p>
       <Row gutters>
         <Col md={4}>
           <Tile
             description="part capté par les participants du pays"
-            value={`${((dataCurrentCountry_successful.total_fund_eur / dataSuccessful.total_fund_eur) * 100).toFixed(1)} %`}
+            value={`${(
+              (dataCurrentCountry_successful.total_fund_eur /
+                dataSuccessful.total_fund_eur) *
+              100
+            ).toFixed(1)} %`}
           />
         </Col>
         <Col md={4}>
           <Tile
             description="part des participants lauréats du pays"
-            value={`${((dataCurrentCountry_successful.total_involved / dataSuccessful.total_involved) * 100).toFixed(1)} %`}
+            value={`${(
+              (dataCurrentCountry_successful.total_involved /
+                dataSuccessful.total_involved) *
+              100
+            ).toFixed(1)} %`}
           />
         </Col>
         <Col md={4}>
           <Tile
             description="part des coordinations de projets du pays"
-            value={`${((dataCurrentCountry_successful.total_coordination_number / dataSuccessful.total_coordination_number) * 100).toFixed(1)} %`}
+            value={`${(
+              (dataCurrentCountry_successful.total_coordination_number /
+                dataSuccessful.total_coordination_number) *
+              100
+            ).toFixed(1)} %`}
           />
         </Col>
         <Col md={4}>
           <Tile
             description="taux de succès sur les montants"
-            value={`${((dataCurrentCountry_successful.total_fund_eur / dataCurrentCountry_evaluated.total_fund_eur) * 100).toFixed(1)} %`}
+            value={`${(
+              (dataCurrentCountry_successful.total_fund_eur /
+                dataCurrentCountry_evaluated.total_fund_eur) *
+              100
+            ).toFixed(1)} %`}
           />
         </Col>
         <Col md={4}>
           <Tile
             description="taux de succès individuel des participants du pays"
-            value={`${((dataCurrentCountry_successful.total_involved / dataCurrentCountry_evaluated.total_involved) * 100).toFixed(1)} %`}
+            value={`${(
+              (dataCurrentCountry_successful.total_involved /
+                dataCurrentCountry_evaluated.total_involved) *
+              100
+            ).toFixed(1)} %`}
           />
         </Col>
         <Col md={4}>
           <Tile
             description="taux de succès sur le nombre de projets"
-            value={`${((dataCurrentCountry_successful.total_coordination_number / dataCurrentCountry_evaluated.total_coordination_number) * 100).toFixed(1)} %`}
+            value={`${(
+              (dataCurrentCountry_successful.total_coordination_number /
+                dataCurrentCountry_evaluated.total_coordination_number) *
+              100
+            ).toFixed(1)} %`}
           />
         </Col>
       </Row>
     </Container>
-  )
+  );
 }
