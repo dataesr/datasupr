@@ -19,13 +19,16 @@ export default function Filters() {
   useEffect(() => {
     const obj = {
       country_code: filtersConfig["country_code"].defaultId,
-      entities: filtersConfig["entities"].defaultId,
+      extra_joint_organization:
+        filtersConfig["extra_joint_organization"].defaultId,
     };
     if (searchParams.get("country_code")) {
       obj.country_code = searchParams.get("country_code") as string;
     }
-    if (searchParams.get("entities")) {
-      obj.entities = searchParams.get("entities") as string;
+    if (searchParams.get("extra_joint_organization")) {
+      obj.extra_joint_organization = searchParams.get(
+        "extra_joint_organization"
+      ) as string;
     }
     setSearchParams(obj);
   }, [searchParams, setSearchParams]);

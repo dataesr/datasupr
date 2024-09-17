@@ -1,12 +1,12 @@
 {
-  "entities": {
-    "defaultId": "all",
+  "extra_joint_organization": {
+    "defaultId": "null",
     "icon": "community-fill",
     "label": "Entités",
     "title": "Sélectionner une entité",
     "values": [
       {
-        "id": "all",
+        "id": "null",
         "label": "Toutes les entités"
       },
       {
