@@ -1,12 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import Template from "./template";
 import { GetData } from "./query";
 import options from "./options";
 
 import ChartWrapper from "../../../../../chart-wrapper";
 import { getDefaultParams } from "./utils";
+import DefaultSkeleton from "../../../../../charts-skeletons/default";
 
 export default function MainBeneficiaries() {
   const [searchParams] = useSearchParams();
@@ -14,10 +14,11 @@ export default function MainBeneficiaries() {
 
   const { data, isLoading } = useQuery({
     queryKey: ["MainBeneficiaries", params],
-    queryFn: () => GetData(params)
-  })
+    queryFn: () => GetData(params),
+  });
 
-  if (isLoading || !data) return <Template />
+  if (isLoading || !data) return <DefaultSkeleton />;
+
   return (
     <ChartWrapper
       id="mainBeneficiaries"

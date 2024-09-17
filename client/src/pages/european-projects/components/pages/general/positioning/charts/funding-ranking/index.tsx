@@ -10,7 +10,7 @@ import optionCoordinationNumberSuccessRate from "./options-coordination_number-s
 import optionsNumberInvolved from "./options-number_involved";
 import optionNumberInvolvedSuccessRate from "./options-number_involved-succes-rate";
 import ChartWrapper from "../../../../../chart-wrapper";
-import Template from "./template";
+import DefaultSkeleton from "../../../../../charts-skeletons/default";
 
 export default function FundingRanking({ indicateurId }) {
   const { data, isLoading } = useQuery({
@@ -18,7 +18,7 @@ export default function FundingRanking({ indicateurId }) {
     queryFn: () => GetData(),
   });
 
-  if (isLoading || !data) return <Template />;
+  if (isLoading || !data) return <DefaultSkeleton />;
 
   let successGraphId,
     sortIndicateur = "";

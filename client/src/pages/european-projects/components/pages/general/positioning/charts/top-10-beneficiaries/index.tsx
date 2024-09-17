@@ -6,7 +6,7 @@ import { getDefaultParams } from "./utils";
 import { GetLegend } from "../../../../../legend";
 import options from "./options";
 import ChartWrapper from "../../../../../chart-wrapper";
-import Template from "./template";
+import DefaultSkeleton from "../../../../../charts-skeletons/default";
 
 export default function Top10Beneficiaries() {
   const [searchParams] = useSearchParams();
@@ -17,7 +17,8 @@ export default function Top10Beneficiaries() {
     queryFn: () => GetData(params),
   });
 
-  if (isLoading || !data) return <Template />;
+  if (isLoading || !data) return <DefaultSkeleton />;
+
   return (
     <ChartWrapper
       id="top10beneficiaries"
