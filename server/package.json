@@ -18,6 +18,7 @@
     "express-async-errors": "^3.1.1",
     "express-openapi-validator": "^5.0.4",
     "mongodb": "^6.2.0",
+    "morgan": "^1.10.0",
     "winston": "^3.8.2",
     "yamljs": "^0.3.0"
   },

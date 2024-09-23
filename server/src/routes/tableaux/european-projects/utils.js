@@ -8,6 +8,11 @@ export function checkQuery(query, mandatories = [], res) {
     filters[mandatory] = query[mandatory];
   });
 
+  if (filters.country_code) {
+    filters.country_code = filters.country_code.toUpperCase();
+  }
+
+  // specific case for extra_joint_organization format
   if (filters.extra_joint_organization === "null") {
     filters.extra_joint_organization = null;
   }

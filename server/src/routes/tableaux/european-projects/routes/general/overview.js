@@ -130,17 +130,14 @@ router
       res.status(400).send("country_code is required");
       return;
     }
-    if (req.query.country_code) {
-      req.query.country_code = req.query.country_code.toUpperCase();
-    }
+
+    const filters = checkQuery(req.query, ["country_code"], res);
+    filters.framework = "Horizon Europe";
     const data = await db
       .collection("fr-esr-horizon-projects-entities")
       .aggregate([
         {
-          $match: {
-            framework: "Horizon Europe",
-            country_code: req.query.country_code,
-          },
+          $match: filters,
         },
         {
           $group: {

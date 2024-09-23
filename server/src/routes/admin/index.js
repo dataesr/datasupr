@@ -1,20 +1,23 @@
 import express from "express";
 import fs from "fs";
+import { db } from "../../services/mongo";
 
 const router = new express.Router();
 
 // list all dashboards from the server folder
-router.route("/admin/list-dashboards").get((req, res) => {
-  const directoryPath = "./src/routes/tableaux";
-  const folderList = fs.readdirSync(directoryPath);
-  const list = folderList.map((folderName) => {
-    const configFilePath = `${directoryPath}/${folderName}/config.json`;
-    const config = JSON.parse(fs.readFileSync(configFilePath, "utf8"));
-    return {
-      [folderName]: config,
-    };
-  });
-  res.json(list);
+router.route("/admin/list-dashboards").get(async (req, res) => {
+  const response = await db.collection("boards").find({}).toArray();
+  res.json(response);
+  // const directoryPath = "./src/routes/tableaux";
+  // const folderList = fs.readdirSync(directoryPath);
+  // const list = folderList.map((folderName) => {
+  //   const configFilePath = `${directoryPath}/${folderName}/config.json`;
+  //   const config = JSON.parse(fs.readFileSync(configFilePath, "utf8"));
+  //   return {
+  //     [folderName]: config,
+  //   };
+  // });
+  // res.json(list);
 });
 
 // get last collection name for a dashboard collection
