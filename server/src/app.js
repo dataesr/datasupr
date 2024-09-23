@@ -23,7 +23,7 @@ if (process.env.NODE_ENV === "development") {
 }
 
 // Logger
-app.use(morgan(":method | :url | :status | :response-time ms"));
+// app.use(morgan(":method | :url | :status | :response-time ms"));
 
 app.use("/api", router);
 

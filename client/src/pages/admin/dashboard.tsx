@@ -11,6 +11,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { queryClient } from "../../main";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -47,6 +48,26 @@ export default function Dashboard() {
   //   setIsOpen(true);
   // };
 
+  const setCurrentVersion = (collectionId, versionId) => {
+    fetch(`${VITE_APP_SERVER_URL}/admin/set-current-version`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        dashboardId,
+        dataId: collectionId,
+        versionId,
+      }),
+    }).then((response) => {
+      if (response.ok) {
+        queryClient.invalidateQueries({ queryKey: ["list-dashboards"] });
+      } else {
+        console.log("Erreur lors de la modification de la version courante");
+      }
+    });
+  };
+
   return (
     <Container>
       <Row>
@@ -54,8 +75,8 @@ export default function Dashboard() {
       </Row>
       <ul>
         {data
-          .find((dashboard) => dashboard.id === dashboardId)
-          .data.map((collection) => (
+          .find((dashboard) => dashboard?.id === dashboardId)
+          ?.data.map((collection) => (
             <li key={collection.id}>
               <div className="fr-card fr-my-2w fr-p-3w">
                 <Title as="h2" look="h6">
@@ -100,11 +121,30 @@ export default function Dashboard() {
                             <tr key={version.id}>
                               <td>{version.id}</td>
                               <td>{version.createdAt}</td>
-                              {version.id === collection.current && (
+                              {version.id === collection.current ? (
                                 <td>
-                                  <span
-                                    className="fr-icon-star-s-fill"
-                                    aria-hidden="true"
+                                  <Button
+                                    icon="star-s-fill"
+                                    onClick={() => {
+                                      setCurrentVersion(
+                                        collection.id,
+                                        version.id
+                                      );
+                                    }}
+                                    variant="text"
+                                  />
+                                </td>
+                              ) : (
+                                <td>
+                                  <Button
+                                    icon="star-s-line"
+                                    onClick={() => {
+                                      setCurrentVersion(
+                                        collection.id,
+                                        version.id
+                                      );
+                                    }}
+                                    variant="text"
                                   />
                                 </td>
                               )}

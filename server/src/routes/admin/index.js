@@ -1,23 +1,44 @@
 import express from "express";
 import fs from "fs";
 import { db } from "../../services/mongo";
+import { checkQuery } from "./utils";
+import { log } from "console";
 
 const router = new express.Router();
 
-// list all dashboards from the server folder
+// list all dashboards from server
 router.route("/admin/list-dashboards").get(async (req, res) => {
   const response = await db.collection("boards").find({}).toArray();
   res.json(response);
-  // const directoryPath = "./src/routes/tableaux";
-  // const folderList = fs.readdirSync(directoryPath);
-  // const list = folderList.map((folderName) => {
-  //   const configFilePath = `${directoryPath}/${folderName}/config.json`;
-  //   const config = JSON.parse(fs.readFileSync(configFilePath, "utf8"));
-  //   return {
-  //     [folderName]: config,
-  //   };
-  // });
-  // res.json(list);
+});
+
+// change current data
+router.route("/admin/set-current-version").post(async (req, res) => {
+  const filters = checkQuery(
+    req.body,
+    ["dashboardId", "dataId", "versionId"],
+    res
+  );
+
+  console.log(filters);
+
+  const { dashboardId, dataId, versionId } = filters;
+
+  const response = await db
+    .collection("boards")
+    .updateOne(
+      { id: dashboardId, "data.id": dataId },
+      { $set: { "data.$.current": versionId } }
+    );
+
+  if (response.matchedCount === 0) {
+    res.status(404).json({ error: "No document found" });
+  }
+
+  // return current data
+  const ret = await db.collection("boards").findOne({ id: dashboardId });
+
+  res.json(ret);
 });
 
 // get last collection name for a dashboard collection
