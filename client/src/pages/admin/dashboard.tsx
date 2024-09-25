@@ -11,6 +11,7 @@ import {
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+
 import { queryClient } from "../../main";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -43,10 +44,14 @@ export default function Dashboard() {
     );
   }
 
-  // const addCollection = ({ dashboardId, collectionId }) => {
-  //   setSelected({ dashboardId, collectionId });
-  //   setIsOpen(true);
-  // };
+  const addCollection = ({ collectionId }) => {
+    // setSelected({ dashboardId, collectionId });
+    setSelectedCollection({
+      collectionId: collectionId,
+      newCollectionId: `${collectionId}_${new Date().getTime().toString()}`,
+    });
+    setIsOpen(true);
+  };
 
   const setCurrentVersion = (collectionId, versionId) => {
     fetch(`${VITE_APP_SERVER_URL}/admin/set-current-version`, {
@@ -68,6 +73,8 @@ export default function Dashboard() {
     });
   };
 
+  console.log(isOpen);
+
   return (
     <Container>
       <Row>
@@ -75,8 +82,8 @@ export default function Dashboard() {
       </Row>
       <ul>
         {data
-          .find((dashboard) => dashboard?.id === dashboardId)
-          ?.data.map((collection) => (
+          .find((dashboard) => dashboard.id === dashboardId)
+          .data.map((collection) => (
             <li key={collection.id}>
               <div className="fr-card fr-my-2w fr-p-3w">
                 <Title as="h2" look="h6">
@@ -88,17 +95,9 @@ export default function Dashboard() {
                     variant="tertiary"
                     icon="file-add-line"
                     onClick={() => {
-                      setSelectedCollection({
+                      addCollection({
                         collectionId: collection.id,
-                        newCollectionId: `${collection.id}_${new Date()
-                          .getTime()
-                          .toString()}`,
                       });
-                      setIsOpen(true);
-                      // addCollection({
-                      //   dashboardId,
-                      //   collectionId: collection.id,
-                      // });
                     }}
                   />
                 </Title>
@@ -159,7 +158,7 @@ export default function Dashboard() {
             </li>
           ))}
       </ul>
-      <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg">
+      <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg" id="">
         <ModalTitle>{dashboardId}</ModalTitle>
         <ModalContent>
           Ajout d'une nouvelle version à la collection{" "}
