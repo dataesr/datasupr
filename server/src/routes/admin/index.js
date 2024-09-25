@@ -1,8 +1,7 @@
 import express from "express";
 import fs from "fs";
-import { db } from "../../services/mongo";
-import { checkQuery } from "./utils";
-import { log } from "console";
+import { db } from "../../services/mongo.js";
+import { checkQuery } from "./utils.js";
 
 const router = new express.Router();
 

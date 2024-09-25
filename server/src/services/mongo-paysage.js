@@ -1,6 +1,6 @@
 import { MongoClient } from "mongodb";
 
-import logger from "./logger";
+import logger from "./logger.js";
 
 const mongoDbName = process.env.MONGO_DB_NAME_PAYSAGE || "paysage-prod-copy";
 const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/";

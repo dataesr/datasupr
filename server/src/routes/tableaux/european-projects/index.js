@@ -1,8 +1,8 @@
 import express from "express";
 
-import overviewRoutes from "./routes/general/overview";
-import positioningRoutes from "./routes/general/positioning";
-import projectstypesRoutes from "./routes/general/projects-types";
+import overviewRoutes from "./routes/general/overview.js";
+import positioningRoutes from "./routes/general/positioning.js";
+import projectstypesRoutes from "./routes/general/projects-types.js";
 
 const router = new express.Router();
 

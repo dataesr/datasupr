@@ -1,23 +1,23 @@
-import 'dotenv/config';
+import "dotenv/config";
 
-import logger from './src/services/logger';
+import logger from "./src/services/logger.js";
 
-import app from './src/app';
+import app from "./src/app.js";
 
 let httpServer;
 
 async function cleanup() {
   app.isReady = false;
-  logger.info('SIGTERM/SIGINT signal received');
+  logger.info("SIGTERM/SIGINT signal received");
   if (httpServer) {
     await httpServer.close();
   }
-  logger.info('HTTP server stopped');
+  logger.info("HTTP server stopped");
   process.exit(1);
 }
 
-process.on('SIGINT', cleanup);
-process.on('SIGTERM', cleanup);
+process.on("SIGINT", cleanup);
+process.on("SIGTERM", cleanup);
 
 function createAPIServer(port) {
   httpServer = app.listen(port, () => {

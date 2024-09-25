@@ -4,11 +4,12 @@
 
 DatasupR is fully functional in development.
 
+node: 20.17.0
+
 To install it : `npm i`
 To run it locally : `npm start`
 
 And the project should be available via your favorite browser at http://localhost:5173/.
-
 
 ## Build for production
 

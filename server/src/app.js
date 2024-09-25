@@ -3,8 +3,8 @@ import express from "express";
 import "express-async-errors";
 import path from "path";
 import morgan from "morgan";
-import { handleErrors } from "./commons/middlewares/handle-errors";
-import router from "./router";
+import { handleErrors } from "./commons/middlewares/handle-errors.js";
+import router from "./router.js";
 
 const app = express();
 

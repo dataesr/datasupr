@@ -1,6 +1,6 @@
 import express from "express";
-import { db } from "../../../services/mongo";
-import { dbPaysage } from "../../../services/mongo-paysage";
+import { db } from "../../../services/mongo.js";
+import { dbPaysage } from "../../../services/mongo-paysage.js";
 const router = new express.Router();
 
 const mappingRegion = [
