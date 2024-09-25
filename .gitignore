@@ -31,3 +31,5 @@ client/src/assets/geo-*
 *.sln
 *.sw?
 
+server/src/routes/admin/api-tests/contact.http
+client/.env
