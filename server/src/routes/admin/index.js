@@ -1,14 +1,36 @@
 import express from "express";
 import fs from "fs";
+import path from "path";
+
 import { db } from "../../services/mongo.js";
 import { checkQuery } from "./utils.js";
+import uploadVersionRoute from "./upload/upload-version.js";
 
 const router = new express.Router();
+
+router.use(uploadVersionRoute);
 
 // list all dashboards from server
 router.route("/admin/list-dashboards").get(async (req, res) => {
   const response = await db.collection("boards").find({}).toArray();
   res.json(response);
+});
+
+// list all indexes from a collection
+router.route("/admin/list-indexes").get(async (req, res) => {
+  const collectionId = req.query.collectionId;
+  if (!collectionId) {
+    return res.status(400).json({ error: "Collection ID is required" });
+  }
+
+  try {
+    const indexes = await db.collection(collectionId).indexes();
+    res.json(indexes);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ error: "Unable to list indexes", details: error.message });
+  }
 });
 
 // change current data
@@ -18,8 +40,6 @@ router.route("/admin/set-current-version").post(async (req, res) => {
     ["dashboardId", "dataId", "versionId"],
     res
   );
-
-  console.log(filters);
 
   const { dashboardId, dataId, versionId } = filters;
 
@@ -40,56 +60,99 @@ router.route("/admin/set-current-version").post(async (req, res) => {
   res.json(ret);
 });
 
-// get last collection name for a dashboard collection
-router.route("/admin/get-last-collection-name").get((req, res) => {
-  if (!req.query.dashboardName) {
-    res
-      .status(400)
-      .json({ error: "dashboardName query parameter is required" });
-  }
-  const dashboardName = req.query.dashboardName;
-  if (!fs.existsSync(`./src/routes/tableaux/${dashboardName}`)) {
-    res.status(400).json({ error: "dashboardName does not exist" });
-  }
-  if (!req.query.collectionKey) {
-    res
-      .status(400)
-      .json({ error: "collectionKey query parameter is required" });
-  }
-  const collectionKey = req.query.collectionKey;
+// list all uploaded files in files folder
+router.route("/admin/list-uploaded-files").get((req, res) => {
+  fs.readdir("../files", (err, files) => {
+    if (err) {
+      return res.status(500).json({ error: "Unable to scan files directory" });
+    }
 
-  const config = JSON.parse(
-    fs.readFileSync(
-      `./src/routes/tableaux/${dashboardName}/config.json`,
-      "utf8"
-    )
+    const fileDetails = files.map((file) => {
+      const filePath = path.join("../files", file);
+      const stats = fs.statSync(filePath);
+      return {
+        name: file,
+        size: (stats.size / (1024 * 1024)).toFixed(2), // size in MB
+      };
+    });
+
+    res.json(fileDetails);
+  });
+});
+
+// delete a version
+router.route("/admin/delete-version").delete(async (req, res) => {
+  const filters = checkQuery(
+    req.body,
+    ["dashboardId", "collectionId", "versionId"],
+    res
+  );
+  const { dashboardId, collectionId, versionId } = filters;
+
+  // Check if the version to be deleted is the current version
+  const board = await db
+    .collection("boards")
+    .findOne(
+      { id: dashboardId, "data.id": collectionId },
+      { projection: { "data.$": 1 } }
+    );
+
+  if (!board) {
+    return res.status(404).json({ error: "No document found" });
+  }
+
+  const data = board.data[0];
+  if (data.current === versionId) {
+    return res.status(400).json({ error: "Cannot delete the current version" });
+  }
+
+  const response = await db.collection("boards").updateOne(
+    { id: dashboardId, "data.id": collectionId },
+    {
+      $pull: {
+        "data.$.versions": { id: versionId },
+      },
+    }
   );
 
-  // TODO: fix - it doesn't sort
-  // sort collections by uploadDatetime to return only the last collection name
-  const collectionName = config.data[collectionKey].collections.sort((a, b) => {
-    new Date(a.uploadDatetime) - new Date(b.uploadDatetime);
-  })[0].name;
-
-  res.json(collectionName);
-});
-
-// add new data file to a dashboard collection
-router.route("/admin/add-dashboard-file").post((req, res) => {
-  res.json([]);
-});
-
-router.route("/admin/list-dashboard-files").get((req, res) => {
-  res.json([]);
-});
-
-// modify dashboard constant
-router.route("/admin/modify-dashboard-constant").post((req, res) => {
-  if (!req.query.dashboardName) {
-    res
-      .status(400)
-      .json({ error: "dashboardName query parameter is required" });
+  if (response.modifiedCount === 0) {
+    res.status(404).json({ error: "No document found" });
   }
+
+  // delete the collection
+  await db.collection(versionId).drop();
+
+  // return current data
+  const ret = await db.collection("boards").findOne({ id: dashboardId });
+
+  res.json(ret);
+});
+
+// delete all files in files folder
+router.route("/admin/delete-uploaded-files").delete((req, res) => {
+  const directory = "../files";
+  console.log(directory);
+
+  fs.readdir(directory, (err, files) => {
+    if (err) {
+      return res.status(500).json({ error: "Unable to scan files directory" });
+    }
+
+    files.forEach((file) => {
+      const filePath = path.join(directory, file);
+      console.log("filePath", filePath);
+
+      fs.unlink(filePath, (err) => {
+        if (err) {
+          return res
+            .status(500)
+            .json({ error: `Unable to delete file: ${file}` });
+        }
+      });
+    });
+
+    res.json({ message: "All files deleted successfully" });
+  });
 });
 
 export default router;

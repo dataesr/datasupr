@@ -1,0 +1,8 @@
+DELETE http://localhost:3000/api/admin/delete-version?dashboardId=yourDashboardId&collectionId=yourCollectionId&versionId=yourVersionId
+Content-Type: application/json
+
+{
+  "dashboardId": "european-projects",
+  "collectionId": "fr-esr-all-projects-synthese",
+  "versionId": "fr-esr-all-projects-synthese_123456789"
+}

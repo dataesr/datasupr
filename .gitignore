@@ -33,3 +33,5 @@ client/src/assets/geo-*
 
 server/src/routes/admin/api-tests/contact.http
 client/.env
+
+files/*

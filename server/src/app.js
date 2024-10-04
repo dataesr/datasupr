@@ -2,7 +2,6 @@ import cors from "cors";
 import express from "express";
 import "express-async-errors";
 import path from "path";
-import morgan from "morgan";
 import { handleErrors } from "./commons/middlewares/handle-errors.js";
 import router from "./router.js";
 
@@ -21,9 +20,6 @@ if (process.env.NODE_ENV === "development") {
 } else {
   app.use(express.static(path.join(path.resolve(), "dist")));
 }
-
-// Logger
-// app.use(morgan(":method | :url | :status | :response-time ms"));
 
 app.use("/api", router);
 
