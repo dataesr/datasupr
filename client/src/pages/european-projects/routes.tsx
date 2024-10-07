@@ -2,10 +2,11 @@ import { Routes, Route } from "react-router-dom";
 
 import Main from "./index.tsx";
 import AnalysisHomepage from "./components/pages/general/index.tsx";
+import Beneficiaries from "./components/pages/general/beneficiaries/index.tsx";
 import Overview from "./components/pages/general/overview/index.tsx";
 import Positioning from "./components/pages/general/positioning/index.tsx";
-import { Layout } from "../../layout/Layout.tsx";
 import ProjectsTypes from "./components/pages/general/projects-types/index.tsx";
+import { Layout } from "../../layout/Layout.tsx";
 
 export default function EuropeanProjectsRoutes() {
   return (
@@ -17,7 +18,7 @@ export default function EuropeanProjectsRoutes() {
             <Route path="positionnement" element={<Positioning />} />
             <Route path="evolution" element={<div>Evolution</div>} />
             <Route path="objectifs-types-projets" element={<ProjectsTypes />} />
-            <Route path="beneficiaires" element={<div>Bénéficiaires</div>} />
+            <Route path="beneficiaires" element={<Beneficiaries />} />
             <Route
               path="programme-mires"
               element={<div>Programme MIRES</div>}
