@@ -7,6 +7,7 @@ import Overview from "./components/pages/general/overview/index.tsx";
 import Positioning from "./components/pages/general/positioning/index.tsx";
 import ProjectsTypes from "./components/pages/general/projects-types/index.tsx";
 import { Layout } from "../../layout/Layout.tsx";
+import Informations from "./components/pages/general/informations.tsx";
 
 export default function EuropeanProjectsRoutes() {
   return (
@@ -31,7 +32,7 @@ export default function EuropeanProjectsRoutes() {
               path="donnees-reference"
               element={<div>Données de référence</div>}
             />
-            <Route path="informations" element={<div>Informations</div>} />
+            <Route path="informations" element={<Informations />} />
           </Route>
           <Route
             path="/horizon-europe"
