@@ -33,9 +33,16 @@
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-2"
   },
   {
-    "id": "successRateForAmountsByPillar",
+    "id": "pillarsSubsidiesRequestedByRates",
     "title": "",
     "subtitle": "Taux de succès sur le montants par pilier",
+    "description": "Attention EIT",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-2"
+  },
+  {
+    "id": "pillarsProjectCoordinationRequestedByRates",
+    "title": "",
+    "subtitle": "Taux de succès sur le nombre de coordinations de projets par pilier",
     "description": "Attention EIT",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-2"
   },

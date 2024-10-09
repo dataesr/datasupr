@@ -1,4 +1,6 @@
 export default function Options(data) {
+  console.log("data", data);
+
   if (!data) return null;
 
   // sort selectedCountry by action_id
@@ -53,12 +55,20 @@ export default function Options(data) {
     series: [
       {
         name: "Pays",
-        data: selectedCountry.map((item) => item.ratio),
+        data: selectedCountry.map(
+          (item) =>
+            (item.total_coordination_number_successful * 100) /
+            item.total_coordination_number_evaluated
+        ),
         color: "#6DD897",
       },
       {
         name: "UE & Etats associés",
-        data: otherCountriesSorted.map((item) => item.ratio),
+        data: otherCountriesSorted.map(
+          (item) =>
+            (item.total_coordination_number_successful * 100) /
+            item.total_coordination_number_evaluated
+        ),
         color: "#09622A",
       },
     ],

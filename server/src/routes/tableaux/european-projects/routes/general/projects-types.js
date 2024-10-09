@@ -324,6 +324,8 @@ router
               pilier_name_en: "$pilier_name_en",
             },
             total_fund_eur: { $sum: "$fund_eur" },
+            total_coordination_number: { $sum: "$coordination_number" },
+            total_number_involved: { $sum: "$number_involved" },
           },
         },
         {
@@ -333,6 +335,8 @@ router
             total_fund_eur: 1,
             pilier_name_fr: "$_id.pilier_name_fr",
             pilier_name_en: "$_id.pilier_name_en",
+            total_coordination_number: 1,
+            total_number_involved: 1,
           },
         },
         {
@@ -355,6 +359,42 @@ router
                 $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
               },
             },
+            total_coordination_number_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_coordination_number",
+                  0,
+                ],
+              },
+            },
+            total_coordination_number_evaluated: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "evaluated"] },
+                  "$total_coordination_number",
+                  0,
+                ],
+              },
+            },
+            total_number_involved_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_number_involved",
+                  0,
+                ],
+              },
+            },
+            total_number_involved_evaluated: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "evaluated"] },
+                  "$total_number_involved",
+                  0,
+                ],
+              },
+            },
           },
         },
         {
@@ -364,6 +404,10 @@ router
             name: "$_id.name",
             total_successful: 1,
             total_evaluated: 1,
+            total_coordination_number_successful: 1,
+            total_coordination_number_evaluated: 1,
+            total_number_involved_successful: 1,
+            total_number_involved_evaluated: 1,
           },
         },
         { $sort: { id: 1 } },
@@ -382,6 +426,8 @@ router
               pilier_name_en: "$pilier_name_en",
             },
             total_fund_eur: { $sum: "$fund_eur" },
+            total_coordination_number: { $sum: "$coordination_number" },
+            total_number_involved: { $sum: "$number_involved" },
           },
         },
         {
@@ -391,6 +437,8 @@ router
             total_fund_eur: 1,
             pilier_name_fr: "$_id.pilier_name_fr",
             pilier_name_en: "$_id.pilier_name_en",
+            total_coordination_number: 1,
+            total_number_involved: 1,
           },
         },
         {
@@ -413,6 +461,42 @@ router
                 $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
               },
             },
+            total_coordination_number_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_coordination_number",
+                  0,
+                ],
+              },
+            },
+            total_coordination_number_evaluated: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "evaluated"] },
+                  "$total_coordination_number",
+                  0,
+                ],
+              },
+            },
+            total_number_involved_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_number_involved",
+                  0,
+                ],
+              },
+            },
+            total_number_involved_evaluated: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "evaluated"] },
+                  "$total_number_involved",
+                  0,
+                ],
+              },
+            },
           },
         },
         {
@@ -422,6 +506,10 @@ router
             name: "$_id.name",
             total_successful: 1,
             total_evaluated: 1,
+            total_coordination_number_successful: 1,
+            total_coordination_number_evaluated: 1,
+            total_number_involved_successful: 1,
+            total_number_involved_evaluated: 1,
           },
         },
         { $sort: { id: 1 } },

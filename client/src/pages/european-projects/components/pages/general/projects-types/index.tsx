@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import PillarsRequestedByProjects from "./charts/pillars-requested-by-projects";
 import PillarsSubsidiesRequestedLines from "./charts/pillars-subsidies-requested-lines";
-import SuccessRateForAmountsByPillar from "./charts/success-rate-for-amounts-by-pillar";
+import SuccessRateAndEvolutionByPillar from "./charts/success-rate-and-evolution-by-pillar";
 
 import TypeOfFinancingSubsidiesRequestedByProjects from "./charts/type-of-financing-subsidies-requested-by-projects";
 import TypeOfFinancingSubsidiesRequestedLines from "./charts/type-of-financing-subsidies-requested-lines";
@@ -49,7 +49,9 @@ export default function ProjectsTypes() {
         indicateurId={`pillars${selectedChart}RequestedByProjectsLines`}
       />
       <div className="fr-my-5w" />
-      <SuccessRateForAmountsByPillar />
+      <SuccessRateAndEvolutionByPillar
+        indicateurId={`pillars${selectedChart}RequestedByRates`}
+      />
       <div className="fr-my-5w" />
       <Title as="h2" look="h4">
         Par type de projets
