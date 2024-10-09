@@ -1,6 +1,6 @@
+import { useId, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { getConfig } from "../../utils";
 import {
   Button,
   Col,
@@ -13,20 +13,25 @@ import {
   Text,
   Title,
 } from "@dataesr/dsfr-plus";
-
-const { VITE_APP_URL } = import.meta.env;
-
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
-import "./styles.scss";
-import { useState } from "react";
+import { getConfig } from "../../utils";
 import CopyButton from "../../../../components/copy-button";
 
-function IntegrationModal({ isOpen, setIsOpen, graphConfig }) {
+import "./styles.scss";
+
+const { VITE_APP_URL } = import.meta.env;
+
+function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
   const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc=${VITE_APP_URL}${graphConfig.integrationURL}></iframe>`;
   return (
-    <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg">
+    <Modal
+      hide={() => setIsOpen(false)}
+      isOpen={isOpen}
+      key={`${modalId}-integrationModal`}
+      size="lg"
+    >
       <ModalTitle>Intégrer ce graphique dans un autre site</ModalTitle>
       <ModalContent>
         <div className="text-right">
@@ -46,9 +51,15 @@ function MenuModal({
   setDisplayType,
   setIsOpen,
   setIsOpenIntegration,
+  modalId,
 }) {
   return (
-    <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="sm">
+    <Modal
+      isOpen={isOpen}
+      hide={() => setIsOpen(false)}
+      size="sm"
+      key={modalId}
+    >
       <ModalContent className="modal-actions">
         <Title as="h1" look="h6">
           <span
@@ -60,8 +71,7 @@ function MenuModal({
 
         <fieldset
           className="fr-fieldset"
-          id="radio-hint"
-          aria-labelledby="radio-hint-legend radio-hint-messages"
+          aria-labelledby="sélection du type d'affichage"
         >
           <legend
             className="fr-fieldset__legend--regular fr-fieldset__legend"
@@ -72,18 +82,16 @@ function MenuModal({
           <div className="fr-fieldset__element">
             <Radio
               defaultChecked={displayType === "chart"}
-              id="radio-hint-1"
               label="Graphique"
-              name="radio-hint"
+              name={`${modalId}_radio-hint`}
               onClick={() => setDisplayType("chart")}
             />
           </div>
           <div className="fr-fieldset__element">
             <Radio
               defaultChecked={displayType === "data"}
-              id="radio-hint-2"
               label="Données"
-              name="radio-hint"
+              name={`${modalId}_radio-hint`}
               onClick={() => setDisplayType("data")}
             />
           </div>
@@ -188,6 +196,7 @@ export default function ChartWrapper({ id, options, legend }) {
   const graphConfig = getConfig(id);
   const source = "Commission européenne, Cordis";
   const sourceURL = "https://cordis.europa.eu/";
+  const modalId = useId();
 
   return (
     <section>
@@ -249,11 +258,13 @@ export default function ChartWrapper({ id, options, legend }) {
         setDisplayType={setDisplayType}
         setIsOpen={setIsOpen}
         setIsOpenIntegration={setIsOpenIntegration}
+        modalId={modalId}
       />
       <IntegrationModal
         graphConfig={graphConfig}
         isOpen={isOpenIntegration}
         setIsOpen={setIsOpenIntegration}
+        modalId={modalId}
       />
     </section>
   );
