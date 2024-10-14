@@ -12,6 +12,12 @@ import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { GetLegend } from "../../../../../legend";
 import DefaultSkeleton from "../../../../../charts-skeletons/default";
+import {
+  RenderDataSubsidiesValues,
+  RenderDataSubsidiesRates,
+  RenderDataCoordinationNumberValues,
+  RenderDataCoordinationNumberRates,
+} from "./render-data";
 
 export default function PillarsSubsidiesRequestedByProjects({ indicateurId }) {
   const [searchParams] = useSearchParams();
@@ -25,21 +31,26 @@ export default function PillarsSubsidiesRequestedByProjects({ indicateurId }) {
   if (isLoading || !data) return <DefaultSkeleton col={2} />;
 
   let options, optionsRates;
+  let renderDataValues, renderDataRates;
   switch (indicateurId) {
     case "pillarsSubsidiesRequestedByProjects":
       options = optionsSubsidiesValues(data);
       optionsRates = optionsSubsidiesRates(data);
+      renderDataValues = RenderDataSubsidiesValues;
+      renderDataRates = RenderDataSubsidiesRates;
       break;
 
     case "pillarsProjectCoordinationRequestedByProjects":
       options = optionsCoordinationNumber(data);
       optionsRates = OptionsCoordinationNumberRates(data);
+      renderDataValues = RenderDataCoordinationNumberValues;
+      renderDataRates = RenderDataCoordinationNumberRates;
       break;
 
-    case "pillarsApplicantsAndParticipantsRequestedByProjects":
-      options = optionsSubsidiesValues(data);
-      optionsRates = optionsSubsidiesRates(data);
-      break;
+    // case "pillarsApplicantsAndParticipantsRequestedByProjects":
+    //   options = optionsSubsidiesValues(data);
+    //   optionsRates = optionsSubsidiesRates(data);
+    //   break;
 
     default:
       break;
@@ -57,13 +68,19 @@ export default function PillarsSubsidiesRequestedByProjects({ indicateurId }) {
     <Container fluid>
       <Row>
         <Col>
-          <ChartWrapper id={indicateurId} options={options} legend={legend} />
+          <ChartWrapper
+            id={indicateurId}
+            legend={legend}
+            options={options}
+            renderData={renderDataValues}
+          />
         </Col>
         <Col>
           <ChartWrapper
             id={`${indicateurId}Rates`}
-            options={optionsRates}
             legend={null}
+            options={optionsRates}
+            renderData={renderDataRates}
           />
         </Col>
       </Row>

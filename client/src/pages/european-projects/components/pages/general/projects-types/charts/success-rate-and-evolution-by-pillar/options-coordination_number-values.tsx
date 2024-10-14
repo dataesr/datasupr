@@ -1,6 +1,4 @@
 export default function Options(data) {
-  console.log("data", data);
-
   if (!data) return null;
 
   // sort selectedCountry by action_id
