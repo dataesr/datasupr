@@ -198,6 +198,14 @@ export default function ChartWrapper({ id, options, legend, renderData }) {
   const sourceURL = "https://cordis.europa.eu/";
   const modalId = useId();
 
+  if (displayType === "data" && !renderData) {
+    console.error(
+      "You need to provide a renderData function to display the data"
+    );
+    setDisplayType("chart");
+    return null;
+  }
+
   return (
     <section>
       {graphConfig.title && (
