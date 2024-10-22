@@ -50,13 +50,19 @@ export default function ProjectsTypesPillarsSubsidiesRequested({
     <Container fluid>
       <Row>
         <Col md={6}>
-          <ChartWrapper id={indicateurId} options={options} legend={null} />
+          <ChartWrapper
+            id={indicateurId}
+            options={options}
+            legend={null}
+            renderData={() => null} // TODO: add data table
+          />
         </Col>
         <Col>
           <ChartWrapper
             id={`${indicateurId}Rates`}
             options={optionsRates}
             legend={null}
+            renderData={() => null} // TODO: add data table
           />
         </Col>
       </Row>

@@ -66,6 +66,7 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
                 </li>
               </ul>
             }
+            renderData={() => null} // TODO: add data table
           />
         </Col>
         <Col>
@@ -73,6 +74,7 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
             id="typeOfFinancingSubsidiesRequestedByProjectsRates"
             options={optionsSubventionsRates(data)}
             legend={null}
+            renderData={() => null} // TODO: add data table
           />
         </Col>
       </Row>

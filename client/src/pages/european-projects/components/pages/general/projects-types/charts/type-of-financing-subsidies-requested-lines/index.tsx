@@ -29,6 +29,7 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
             id="typeOfFinancingSubsidiesRequested"
             options={optionsValues(data)}
             legend={null}
+            renderData={() => null} // TODO: add data table
           />
         </Col>
         <Col>
@@ -36,6 +37,7 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
             id="typeOfFinancingSubsidiesRequestedRates"
             options={optionsRates(data)}
             legend={null}
+            renderData={() => null} // TODO: add data table
           />
         </Col>
       </Row>

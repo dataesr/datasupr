@@ -89,6 +89,7 @@ export default function SuccessRateAndEvolutionByPillar({ indicateurId }) {
                 </li>
               </ul>
             }
+            renderData={() => null} // TODO: add data table
           />
         </Col>
       </Row>

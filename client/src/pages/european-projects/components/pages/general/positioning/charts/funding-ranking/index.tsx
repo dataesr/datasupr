@@ -64,6 +64,7 @@ export default function FundingRanking({ indicateurId }) {
               "FundingRanking"
             )}
             options={optionsChart(prepareData(data, sortIndicateur))}
+            renderData={() => null} // TODO: add data table
           />
         </Col>
         <Col>
@@ -77,6 +78,7 @@ export default function FundingRanking({ indicateurId }) {
               "FundingRankingRates"
             )}
             options={optionChartSuccess(prepareData(data, sortIndicateur))}
+            renderData={() => null} // TODO: add data table
           />
         </Col>
       </Row>

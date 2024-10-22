@@ -30,6 +30,7 @@ export default function Top10Beneficiaries() {
         "Top10Beneficiaries"
       )}
       options={options(data, searchParams.get("country_code") ?? null)}
+      renderData={() => null} // TODO: add data table
     />
   );
 }

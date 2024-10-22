@@ -24,6 +24,7 @@ export default function MainBeneficiaries() {
       id="mainBeneficiaries"
       options={options(data)}
       legend={null}
+      renderData={() => null} // TODO: add data table
     />
   );
 }

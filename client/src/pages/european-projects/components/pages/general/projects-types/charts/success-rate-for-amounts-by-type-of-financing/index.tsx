@@ -65,6 +65,7 @@ export default function SuccessRateForAmountsByTypeOfFinancing() {
                 </li>
               </ul>
             }
+            renderData={() => null} // TODO: add data table
           />
         </Col>
       </Row>

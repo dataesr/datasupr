@@ -1,8 +1,6 @@
 import { getColorByPillierName } from "./utils";
 
 export default function Options(data) {
-  if (!data) return null;
-
   return {
     chart: {
       type: "bar",

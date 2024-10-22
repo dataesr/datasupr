@@ -70,6 +70,7 @@ export default function FundedObjectives() {
           ))}
         </ul>
       }
+      renderData={() => null} // TODO: add data table
     />
   );
 }

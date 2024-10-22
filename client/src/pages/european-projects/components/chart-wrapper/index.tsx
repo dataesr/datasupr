@@ -189,17 +189,7 @@ function MenuModal({
   );
 }
 
-export default function ChartWrapper({
-  id,
-  options,
-  legend,
-  renderData,
-}: {
-  id: string;
-  options: Highcharts.Options;
-  legend: React.ReactNode;
-  renderData?: (options: Highcharts.Options) => React.ReactNode;
-}) {
+export default function ChartWrapper({ id, options, legend, renderData }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
