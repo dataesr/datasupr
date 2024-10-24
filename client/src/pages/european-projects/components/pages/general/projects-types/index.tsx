@@ -1,13 +1,13 @@
 import { Container, Notice, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 
-import PillarsRequestedByProjects from "./charts/pillars-requested-by-projects";
+// import PillarsRequestedByProjects from "./charts/pillars-requested-by-projects";
 import PillarsSubsidiesRequestedLines from "./charts/pillars-subsidies-requested-lines";
-import SuccessRateAndEvolutionByPillar from "./charts/success-rate-and-evolution-by-pillar";
+// import SuccessRateAndEvolutionByPillar from "./charts/success-rate-and-evolution-by-pillar";
 
-import TypeOfFinancingSubsidiesRequestedByProjects from "./charts/type-of-financing-subsidies-requested-by-projects";
-import TypeOfFinancingSubsidiesRequestedLines from "./charts/type-of-financing-subsidies-requested-lines";
-import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
+// import TypeOfFinancingSubsidiesRequestedByProjects from "./charts/type-of-financing-subsidies-requested-by-projects";
+// import TypeOfFinancingSubsidiesRequestedLines from "./charts/type-of-financing-subsidies-requested-lines";
+// import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
 
 export default function ProjectsTypes() {
   const [selectedChart, setSelectedChart] = useState("Subsidies");
@@ -41,14 +41,14 @@ export default function ProjectsTypes() {
       <Title as="h2" look="h4">
         Par pilier
       </Title>
-      <PillarsRequestedByProjects
+      {/* <PillarsRequestedByProjects
         indicateurId={`pillars${selectedChart}RequestedByProjects`}
-      />
+      /> */}
       <div className="fr-my-5w" />
       <PillarsSubsidiesRequestedLines
         indicateurId={`pillars${selectedChart}RequestedByProjectsLines`}
       />
-      <div className="fr-my-5w" />
+      {/* <div className="fr-my-5w" />
       <SuccessRateAndEvolutionByPillar
         indicateurId={`pillars${selectedChart}RequestedByRates`}
       />
@@ -60,7 +60,7 @@ export default function ProjectsTypes() {
       <div className="fr-my-5w" />
       <TypeOfFinancingSubsidiesRequestedLines />
       <div className="fr-my-5w" />
-      <SuccessRateForAmountsByTypeOfFinancing />
+      <SuccessRateForAmountsByTypeOfFinancing /> */}
     </Container>
   );
 }

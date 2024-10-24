@@ -11,6 +11,7 @@ import ChartWrapper from "../../../../../chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../charts-skeletons/default";
+import { RenderDataSubsidiesValues } from "./render-data";
 
 export default function ProjectsTypesPillarsSubsidiesRequested({
   indicateurId,
@@ -26,10 +27,12 @@ export default function ProjectsTypesPillarsSubsidiesRequested({
   if (isLoading || !data) return <DefaultSkeleton col={2} />;
 
   let options, optionsRates;
+  let renderDataValues;
   switch (indicateurId) {
     case "pillarsSubsidiesRequestedByProjectsLines":
       options = optionsSubsidiesValues(data);
       optionsRates = optionsSubsidiesRates(data);
+      renderDataValues = RenderDataSubsidiesValues;
       break;
 
     case "pillarsProjectCoordinationRequestedByProjectsLines":
@@ -54,7 +57,7 @@ export default function ProjectsTypesPillarsSubsidiesRequested({
             id={indicateurId}
             options={options}
             legend={null}
-            renderData={() => null} // TODO: add data table
+            renderData={renderDataValues}
           />
         </Col>
         <Col>
