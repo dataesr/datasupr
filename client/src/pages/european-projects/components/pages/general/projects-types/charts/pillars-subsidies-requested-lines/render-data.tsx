@@ -12,7 +12,7 @@ function TableWrapper({ children }) {
   );
 }
 
-export function RenderDataSubsidiesValues(options) {
+export function RenderDataSubsidiesValuesAndRates(options) {
   return (
     <TableWrapper>
       <thead>
@@ -38,29 +38,6 @@ export function RenderDataSubsidiesValues(options) {
     </TableWrapper>
   );
 }
-
-// export function RenderDataSubsidiesRates(options) {
-//   return (
-//     <TableWrapper>
-//       <thead>
-//         <tr>
-//           <th>Piliers</th>
-//           <th>{options.series[0].name}</th>
-//           <th>{options.series[1].name}</th>
-//         </tr>
-//       </thead>
-//       <tbody>
-//         {options.series[0].data.map((_, index) => (
-//           <tr key={index}>
-//             <td>{options.xAxis.categories[index]}</td>
-//             <td>{`${options.series[0].data[index].toFixed(2)} %`}</td>
-//             <td>{`${options.series[1].data[index].toFixed(2)} %`}</td>
-//           </tr>
-//         ))}
-//       </tbody>
-//     </TableWrapper>
-//   );
-// }
 
 // export function RenderDataCoordinationNumberValues(options) {
 //   return (
