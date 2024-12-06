@@ -38,7 +38,7 @@ export function Layout({ languageSelector = false }) {
           </Button>
           <Button
             as="a"
-            href="https://www.systeme-de-design.gouv.fr"
+            href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-atlas_regional-effectifs-d-etudiants-inscrits/table/?disjunctive.rgp_formations_ou_etablissements&sort=-rentree"
             icon="code-s-slash-line"
             rel="noreferer noopener"
             size="sm"
