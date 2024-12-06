@@ -321,8 +321,8 @@ export function Sectors() {
                   .map((el: SimilarData) => (
                     <li key={el.geo_id}>
                       {el.geo_nom} (Secteur public:{" "}
-                      <strong>{el.pctPU.toFixed(2)}%</strong> - Secteur privé:{" "}
-                      <strong>{el.pctPR.toFixed(2)}%</strong>)
+                      <strong>{el.pctPU.toFixed(1)}%</strong> - Secteur privé:{" "}
+                      <strong>{el.pctPR.toFixed(1)}%</strong>)
                       <Button
                         size="sm"
                         variant="text"

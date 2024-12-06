@@ -339,8 +339,8 @@ export function Genders() {
                   .map((el: SimilarData) => (
                     <li key={el.geo_id}>
                       {el.geo_nom} (Féminin:{" "}
-                      <strong>{el.pctF.toFixed(2)}%</strong> - Masculin:{" "}
-                      <strong>{el.pctM.toFixed(2)}%</strong>)
+                      <strong>{el.pctF.toFixed(1)}%</strong> - Masculin:{" "}
+                      <strong>{el.pctM.toFixed(1)}%</strong>)
                       <Button
                         size="sm"
                         variant="text"
