@@ -5,7 +5,7 @@ const client = new MongoClient("mongodb://localhost:27017/");
 async function run() {
   try {
     const database = client.db('datasupr');
-    const atlasCollection = database.collection('atlas2023');
+    const atlasCollection = database.collection('atlas2024');
     const similarElementsCollection = database.collection('similar-elements');
 
     await similarElementsCollection.deleteMany({});

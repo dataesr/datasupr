@@ -16,6 +16,11 @@
           "name": "atlas2023",
           "description": "Description de la collection atlas2023",
           "uploadDatetime": "2023-06-01"
+        },
+                {
+          "name": "atlas2024",
+          "description": "Description de la collection atlas2024",
+          "uploadDatetime": "2024-12-05"
         }
       ],
       "type": "mongoDb"

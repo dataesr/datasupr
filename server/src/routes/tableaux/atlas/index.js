@@ -65,7 +65,7 @@ router.route("/atlas/get-geo-ids-from-search").get((req, res) => {
 
   filters.geo_nom = { $regex: req.query.q, $options: "i" };
 
-  db.collection("atlas2023")
+  db.collection("atlas2024")
     .find(filters, {
       projection: { _id: 0, geo_nom: 1, geo_id: 1, niveau_geo: 1 },
     })
@@ -121,7 +121,7 @@ router.route("/atlas/get-geo-polygons").get(async (req, res) => {
     filters.niveau_geo = "REGION";
   }
   if (geoId.startsWith("R") || geoId.startsWith("A") || geoId.startsWith("P")) {
-    const ids = await db.collection("atlas2023").distinct("geo_id", filters);
+    const ids = await db.collection("atlas2024").distinct("geo_id", filters);
     if (geoId.startsWith("P")) {
       ids.push("D988"); //Nouvelle-Caledonie
       ids.push("D987"); //Polynesie-Francaise
@@ -172,7 +172,7 @@ router.route("/atlas/get-geo-polygons").get(async (req, res) => {
 
 router.route("/atlas/number-of-students-map").get((req, res) => {
   const allData = {};
-  db.collection("atlas2023")
+  db.collection("atlas2024")
     .find(req.query, { projection: { effectif: 1, geo_id: 1 } })
     .toArray()
     .then((data) => {
@@ -210,13 +210,13 @@ router.route("/atlas/get-parents-from-geo-id").get(async (req, res) => {
   }
 
   const data = await db
-    .collection("atlas2023")
+    .collection("atlas2024")
     .aggregate([
       { $match: { geo_id: geoId } },
       { $limit: 1 },
       {
         $lookup: {
-          from: "atlas2023",
+          from: "atlas2024",
           localField: "aca_id",
           foreignField: "geo_id",
           as: "academie",
@@ -236,7 +236,7 @@ router.route("/atlas/get-parents-from-geo-id").get(async (req, res) => {
       },
       {
         $lookup: {
-          from: "atlas2023",
+          from: "atlas2024",
           localField: "reg_id",
           foreignField: "geo_id",
           as: "region",
@@ -257,7 +257,7 @@ router.route("/atlas/get-parents-from-geo-id").get(async (req, res) => {
       },
       {
         $lookup: {
-          from: "atlas2023",
+          from: "atlas2024",
           localField: "dep_id",
           foreignField: "geo_id",
           as: "departement",
@@ -279,7 +279,7 @@ router.route("/atlas/get-parents-from-geo-id").get(async (req, res) => {
       },
       {
         $lookup: {
-          from: "atlas2023",
+          from: "atlas2024",
           localField: "uucr_id",
           foreignField: "geo_id",
           as: "uu",
@@ -337,7 +337,7 @@ router
     }
 
     const response = await db
-      .collection("atlas2023")
+      .collection("atlas2024")
       .findOne({ ...filters }, { projection: { geo_nom: 1 } });
     const levelName = response?.geo_nom || "France";
 
@@ -362,7 +362,7 @@ router
       };
     }
 
-    db.collection("atlas2023")
+    db.collection("atlas2024")
       .find(query, {
         projection: {
           effectif: 1,
@@ -420,7 +420,7 @@ router
       filters.annee_universitaire = "2022-23";
     }
     const data = await db
-      .collection("atlas2023")
+      .collection("atlas2024")
       .aggregate([
         { $match: filters },
         {
@@ -491,7 +491,7 @@ router
     filters.regroupement = "TOTAL";
 
     const data = await db
-      .collection("atlas2023")
+      .collection("atlas2024")
       .aggregate([
         { $match: filters },
         {
@@ -550,7 +550,7 @@ router
     }
 
     const data = await db
-      .collection("atlas2023")
+      .collection("atlas2024")
       .aggregate([
         { $match: filters },
         {
@@ -609,7 +609,7 @@ router
     }
 
     const data = await db
-      .collection("atlas2023")
+      .collection("atlas2024")
       .aggregate([
         { $match: filters },
         {
@@ -660,7 +660,7 @@ router.route("/atlas/number-of-students").get((req, res) => {
   }
 
   const allData = {};
-  db.collection("atlas2023")
+  db.collection("atlas2024")
     .find(filters)
     .toArray()
     .then(
@@ -800,7 +800,7 @@ router.route("/atlas/number-of-students-by-year").get((req, res) => {
   } else {
     filters.regroupement = "TOTAL";
   }
-  db.collection("atlas2023")
+  db.collection("atlas2024")
     .find(filters)
     .toArray()
     .then((data) => {
@@ -848,7 +848,7 @@ router.route("/atlas/number-of-students-by-year").get((req, res) => {
 });
 
 router.route("/atlas/get-years").get((req, res) => {
-  db.collection("atlas2023")
+  db.collection("atlas2024")
     .distinct("annee_universitaire")
     .then((data) => {
       res.json(data);
@@ -856,7 +856,7 @@ router.route("/atlas/get-years").get((req, res) => {
 });
 
 router.route("/atlas/get-filieres").get((req, res) => {
-  db.collection("atlas2023")
+  db.collection("atlas2024")
     .distinct("regroupement")
     .then((data) => {
       res.json(data);
@@ -870,13 +870,13 @@ router.route("/atlas/get-filters-values").get(async (req, res) => {
   }
 
   const annees_universitaires_onlyData = await db
-    .collection("atlas2023")
+    .collection("atlas2024")
     .distinct("annee_universitaire", filters);
   const annees_universitaires_all = await db
-    .collection("atlas2023")
+    .collection("atlas2024")
     .distinct("annee_universitaire");
   const temp = await db
-    .collection("atlas2023")
+    .collection("atlas2024")
     .aggregate([
       {
         $group: {
@@ -919,7 +919,7 @@ router.route("/atlas/get-filters-values").get(async (req, res) => {
 });
 
 router.route("/atlas/get-references").get(async (req, res) => {
-  const response = await db.collection("atlas2023").findOne({ ...req.query });
+  const response = await db.collection("atlas2024").findOne({ ...req.query });
   const { niveau_geo } = response;
 
   const objMapping = {
@@ -933,7 +933,7 @@ router.route("/atlas/get-references").get(async (req, res) => {
 
   const obj = {};
   obj.data = await db
-    .collection("atlas2023")
+    .collection("atlas2024")
     .aggregate([
       { $match: { [objMapping[niveau_geo]]: req.query.geo_id } },
       {
