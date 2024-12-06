@@ -24,7 +24,7 @@ export function Layout({ languageSelector = false }) {
   return (
     <>
       <Header>
-        <Logo text="Ministère de | l'enseignement supérieur | et de la recherche" />
+        <Logo text="Ministère | de l'enseignement | supérieur | et de la recherche" />
         <Service name="dataSupR" tagline="Si c'était pas super ça s'appellerait juste data" />
         <FastAccess>
           <Button
