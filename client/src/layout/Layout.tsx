@@ -34,7 +34,7 @@ export function Layout({ languageSelector = false }) {
             size="sm"
             variant="text"
           >
-            {(searchParams.get('language') === 'FR') ? "Explorer d'autres tableaux de bord" : "Explore dashboards"}
+            {(searchParams.get('language') === 'EN') ? "Explore dashboards" : "Explorer d'autres tableaux de bord"}
           </Button>
           <Button
             as="a"
@@ -45,14 +45,14 @@ export function Layout({ languageSelector = false }) {
             target="_blank"
             variant="text"
           >
-            {(searchParams.get('language') === 'FR') ? "Jeux de données" : "Datasets"}
+            {(searchParams.get('language') === 'EN') ? "Datasets" : "Jeux de données"}
           </Button>
           <Button
             aria-controls="fr-theme-modal"
             className="fr-btn fr-icon-theme-fill"
             data-fr-opened="false"
           >
-            {(searchParams.get('language') === 'FR') ? "Changer de thème" : "Themes"}
+            {(searchParams.get('language') === 'EN') ? "Themes" : "Changer de thème"}
           </Button>
           {
             languageSelector && (
