@@ -25,6 +25,11 @@ export default function YearsModalButton() {
     return <div>Chargement des filtres ...</div>
   }
 
+  if(!filtersValues?.annees_universitaires?.onlyWithData.includes(currentYear) && !isOpen) {
+    setIsOpen(true);
+  }
+  
+
   function YearsList() {
     return (
       <div className="fr-select-group">
