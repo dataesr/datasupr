@@ -16,11 +16,18 @@ export default function GenderChart({
   if (isLoading || !data || !data.length) {
     return <div>Loader</div>;
   }
+  const rootStyles = getComputedStyle(document.documentElement);
   const secteursOptions = {
     chart: {
       type: "pie",
       height: "60%",
       backgroundColor: "transparent",
+    },
+    legend: {
+      itemStyle:{
+        color: rootStyles.getPropertyValue("--label-color"),
+        fontFamily: "Marianne, sans-serif",
+      }
     },
     title: {
       text: "",

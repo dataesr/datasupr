@@ -16,6 +16,7 @@ export default function SectortsChart({
   if (isLoading || !data || !data.length) {
     return <div>Loader</div>;
   }
+  const rootStyles = getComputedStyle(document.documentElement);
   const secteursOptions = {
     chart: {
       type: "pie",
@@ -27,6 +28,12 @@ export default function SectortsChart({
     },
     credits: {
       enabled: false,
+    },
+    legend: {
+      itemStyle:{
+        color: rootStyles.getPropertyValue("--label-color"),
+        fontFamily: "Marianne, sans-serif",
+      }
     },
     plotOptions: {
       series: {

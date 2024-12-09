@@ -14,6 +14,7 @@ type CardProps = {
 import "./style.scss";
 
 export default function GendersCard({ currentYear, values }: CardProps) {
+  const rootStyles = getComputedStyle(document.documentElement);
   const secteursOptions = {
     chart: {
       backgroundColor: "transparent",
@@ -27,6 +28,17 @@ export default function GendersCard({ currentYear, values }: CardProps) {
       align: "center",
       verticalAlign: "middle",
       y: 60,
+      style: {
+        color: rootStyles.getPropertyValue("--label-color"),
+        fontSize: "16px",
+        fontFamily: "Marianne, sans-serif",
+      },
+    },
+    legend: {
+      itemStyle:{
+        color: rootStyles.getPropertyValue("--label-color"),
+        fontFamily: "Marianne, sans-serif",
+      }
     },
     tooltip: {
       pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>",

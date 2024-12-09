@@ -2,6 +2,7 @@ import { Button, Title, Text, Link } from "@dataesr/dsfr-plus";
 import {
   clearAllfavoriteIdsInCookie,
   getSortedfavoriteIdsInCookie,
+  getThemeFromHtmlNode,
 } from "../../../../utils.tsx";
 
 type TerritoiresListProps = {
@@ -54,8 +55,12 @@ export default function HomeMapCards({
   const favorites = getSortedfavoriteIdsInCookie();
   const territoires = getTerritoiresList(territoiresList, favorites);
 
+  const theme = getThemeFromHtmlNode();
   return (
-    <div className="fr-p-2w" style={{ backgroundColor: "#f3f3f3" }}>
+    <div 
+      className="fr-p-2w"
+      style={{ backgroundColor: getComputedStyle(document.documentElement).getPropertyValue(`--bg-${theme}`) }}
+    >
       <Title as="h2" look="h5" className="fr-mb-0 text-center">
         Accès rapide
       </Title>
@@ -66,7 +71,9 @@ export default function HomeMapCards({
         </Button>
       </Text>
       <ul>
-        <li className="fr-py-1w" style={{ borderBottom: "solid 1px #ddd" }}>
+        <li 
+        className="fr-py-1w" 
+        >
           <Link href="/atlas/general?geo_id=PAYS_100&annee_universitaire=2022-23">
             France
           </Link>

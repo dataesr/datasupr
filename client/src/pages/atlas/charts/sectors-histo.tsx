@@ -69,6 +69,8 @@ export default function SectorsHistoChart({
       break;
   }
 
+  const rootStyles = getComputedStyle(document.documentElement);
+
   const options = {
     chart: {
       type,
@@ -76,6 +78,12 @@ export default function SectorsHistoChart({
         duration: 500,
       },
       backgroundColor: "transparent",
+    },
+    legend: {
+      itemStyle:{
+        color: rootStyles.getPropertyValue("--label-color"),
+        fontFamily: "Marianne, sans-serif",
+      }
     },
     title: {
       text: "",
@@ -85,14 +93,30 @@ export default function SectorsHistoChart({
     },
     xAxis: {
       categories: data.map((item) => item.annee_universitaire),
+      labels: {
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
+      },
     },
     yAxis: {
       min: 0,
       title: {
         text: "Nombre d'étudiants",
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
       },
       stackLabels: {
         enabled: true,
+      },
+      labels: {
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
       },
     },
     tooltip: {

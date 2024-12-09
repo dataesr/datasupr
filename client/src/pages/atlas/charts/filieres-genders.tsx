@@ -19,17 +19,30 @@ export default function FilieresGendersChart({
   if (isLoading) {
     return <Template />;
   }
+  const rootStyles = getComputedStyle(document.documentElement);
   const filieresOptions = {
     chart: {
       backgroundColor: "transparent",
       type: "bar",
       height: "600",
     },
+    legend: {
+      itemStyle:{
+        color: rootStyles.getPropertyValue("--label-color"),
+        fontFamily: "Marianne, sans-serif",
+      }
+    },
     title: {
       text: "",
     },
     xAxis: {
       categories: data.map((filiere) => filiere.label),
+      labels: {
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
+      },
       title: {
         text: "",
       },
@@ -41,9 +54,17 @@ export default function FilieresGendersChart({
       title: {
         text: "Nombre d'étudiants",
         align: "high",
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
       },
       labels: {
         overflow: "justify",
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
       },
       gridLineWidth: 0,
     },

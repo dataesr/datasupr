@@ -19,11 +19,18 @@ export default function FilieresSectorsChart({
   if (isLoading) {
     return <Template />;
   }
+  const rootStyles = getComputedStyle(document.documentElement);
   const filieresOptions = {
     chart: {
       backgroundColor: "transparent",
       type: "bar",
       height: "600",
+    },
+    legend: {
+      itemStyle:{
+        color: rootStyles.getPropertyValue("--label-color"),
+        fontFamily: "Marianne, sans-serif",
+      }
     },
     title: {
       text: "",
@@ -35,15 +42,29 @@ export default function FilieresSectorsChart({
       },
       gridLineWidth: 0.5,
       lineWidth: 0,
+      labels: {
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
+      },
     },
     yAxis: {
       min: 0,
       title: {
         text: "Nombre d'étudiants",
         align: "high",
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
       },
       labels: {
         overflow: "justify",
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
       },
       gridLineWidth: 0,
     },

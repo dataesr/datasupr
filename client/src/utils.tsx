@@ -100,11 +100,17 @@ const setfavoriteIdsInCookie = (id: string) => {
   Cookies.set("favoriteIds", newCookie);
 };
 
+function getThemeFromHtmlNode() {
+  const htmlNode = document.querySelector("html");
+  return htmlNode?.getAttribute("data-fr-theme") || "light";
+}
+
 export {
   clearAllfavoriteIdsInCookie,
   getfavoriteIdsInCookie,
   getGeoLabel,
   getParentFromLevel,
   getSortedfavoriteIdsInCookie,
+  getThemeFromHtmlNode,
   setfavoriteIdsInCookie,
 };

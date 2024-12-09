@@ -1,4 +1,4 @@
-import { Row, Col, Badge } from "@dataesr/dsfr-plus";
+import { Row, Col, Badge, Title } from "@dataesr/dsfr-plus";
 
 import "./style.scss";
 
@@ -36,7 +36,7 @@ export default function StudentsCard({
             )}
           </Row>
           <p className="fr-card__desc card-description">{descriptionNode}</p>
-          <h3 className="fr-card__title">
+          <Title as="h3" className="fr-card__title">
             {to !== "#" ? (
               <a href={to} className="fr-card__link">
                 <div className="key-number">
@@ -68,7 +68,7 @@ export default function StudentsCard({
                 )}
               </>
             )}
-          </h3>
+          </Title>
         </div>
       </div>
     </div>

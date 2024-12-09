@@ -95,9 +95,16 @@ export default function MapPieSectors({
   const b = -a * minStaff;
 
   // Build the chart
+  const rootStyles = getComputedStyle(document.documentElement);
   const options = {
     title: { text: "" },
     credits: { enabled: false },
+    legend: {
+      itemStyle:{
+        color: rootStyles.getPropertyValue("--label-color"),
+        fontFamily: "Marianne, sans-serif",
+      }
+    },
     chart: {
       animation: false,
       backgroundColor: "transparent",
