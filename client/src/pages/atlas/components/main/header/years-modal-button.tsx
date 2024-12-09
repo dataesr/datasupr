@@ -29,7 +29,6 @@ export default function YearsModalButton() {
     setIsOpen(true);
   }
   
-
   function YearsList() {
     return (
       <div className="fr-select-group">
