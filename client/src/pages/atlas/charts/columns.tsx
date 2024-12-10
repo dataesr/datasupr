@@ -3,34 +3,54 @@ import HighchartsReact from "highcharts-react-official";
 import type { DataByYear } from '../../../types/atlas';
 
 export default function ColumnsChart({ data, label, currentYear }: { data: DataByYear[], label: string, currentYear: string }) {
+  const rootStyles = getComputedStyle(document.documentElement);
   const filieresOptions = {
     chart: {
+      backgroundColor: "transparent",
+      height: '250',
       type: 'column',
-      height: '250'
     },
     title: {
       text: ""
     },
     subtitle: {
-      text: 'Nombre d\'étudiants inscrits par année universitaire',
-      align: 'left'
+      align: 'left',
+      style: {
+        color: rootStyles.getPropertyValue("--label-color"),
+        fontFamily: "Marianne, sans-serif",
+      },
+      text: 'Nombre d\'étudiants inscrits par année universitaire'
     },
     xAxis: {
       categories: data.map((year) => year.annee_universitaire),
+      gridLineWidth: 1,
+      labels: {
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
+      },
+      lineWidth: 0,
       title: {
         text: null
-      },
-      gridLineWidth: 1,
-      lineWidth: 0
+      }
     },
     yAxis: {
       min: 0,
       title: {
-        text: "Nombre d'étudiants",
-        align: 'high'
+        align: 'high',
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
+        text: "Nombre d'étudiants"
       },
       labels: {
-        overflow: 'justify'
+        overflow: 'justify',
+        style: {
+          color: rootStyles.getPropertyValue("--label-color"),
+          fontFamily: "Marianne, sans-serif",
+        },
       },
       gridLineWidth: 0
     },
