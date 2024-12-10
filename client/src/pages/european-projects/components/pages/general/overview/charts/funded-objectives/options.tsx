@@ -1,13 +1,12 @@
+import HighchartsInstance from "highcharts";
+
+import { CreateChartOptions } from "../../../../../chart-ep";
 import { getColorByPillierName } from "./utils";
 
 export default function Options(data) {
-  return {
-    chart: {
-      type: "bar",
-      height: 500,
-      backgroundColor: "transparent",
-    },
-    title: { text: "" },
+  if (!data) return null;
+
+  const newOptions: HighchartsInstance.Options = {
     xAxis: {
       categories: data.map((item) => item.programme_name_fr),
       title: { text: "" },
@@ -16,17 +15,9 @@ export default function Options(data) {
       title: { text: "" },
       endOnTick: false,
     },
-
-    legend: { enabled: false },
-    credits: { enabled: false },
-    plotOptions: {
-      series: {
-        groupPadding: 0.1,
-        pointPadding: 0.1,
-      },
-    },
     series: [
       {
+        type: "bar",
         name: "Part captée en %",
         data: data.map((item) => ({
           y: item.total_funding,
@@ -40,4 +31,6 @@ export default function Options(data) {
       },
     ],
   };
+
+  return CreateChartOptions("bar", newOptions);
 }
