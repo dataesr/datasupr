@@ -10,6 +10,8 @@ export default function TrendGraph({
   color = "#000",
   data = [],
 }: TrendGraphProps) {
+  console.log("TrendGraph", data);
+  
   const options = {
     chart: {
       backgroundColor: "transparent",
@@ -38,8 +40,15 @@ export default function TrendGraph({
         label: {
           connectorAllowed: false,
         },
-        pointStart: 2010,
+        pointStart: 2001,
       },
+    },
+    tooltip: {
+      formatter: function () {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            return `Année universitaire <b>${this.x}-${parseInt(this.x.toString().substring(2))+1}</b><br/>=> <b>${this.y.toLocaleString()}</b> étudiants`;
+      }
     },
     colors: [color],
     series: [

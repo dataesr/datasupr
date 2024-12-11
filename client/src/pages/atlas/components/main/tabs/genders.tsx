@@ -185,48 +185,38 @@ export function Genders() {
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
-                descriptionNode={
-                  <Badge color="yellow-tournesol">{currentYear}</Badge>
-                }
-                number={
-                  dataByYear?.find(
-                    (el: DataByYear) =>
-                      el.annee_universitaire === data?.annee_universitaire
-                  )?.effectif_feminin || 0
-                }
-                label="Etudiantes inscrites"
-                trendGraph={
-                  <TrendCard
-                    color="#e18b76"
-                    data={dataByYear.map(
-                      (item: DataByYear) => item.effectif_feminin
-                    )}
-                  />
-                }
+              descriptionNode={
+                <Badge color="yellow-tournesol">{currentYear}</Badge>
+              }
+              number={effectifF}
+              label={`Etudiante${effectifF > 1 ? "s" : ""} inscrite${effectifF > 1 ? "s" : ""}`}
+              trendGraph={
+                <TrendCard
+                color="#e18b76"
+                data={dataByYear.map(
+                  (item: DataByYear) => item.effectif_feminin
+                )}
+                />
+              }
               />
             </Col>
           </Row>
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
-                descriptionNode={
-                  <Badge color="yellow-tournesol">{currentYear}</Badge>
-                }
-                number={
-                  dataByYear?.find(
-                    (el: DataByYear) =>
-                      el.annee_universitaire === data?.annee_universitaire
-                  )?.effectif_masculin || 0
-                }
-                label="Etudiants inscrits"
-                trendGraph={
-                  <TrendCard
-                    color="#efcb3a"
-                    data={dataByYear.map(
-                      (item: DataByYear) => item.effectif_masculin
-                    )}
-                  />
-                }
+              descriptionNode={
+                <Badge color="yellow-tournesol">{currentYear}</Badge>
+              }
+              number={effectifM}
+              label={`Etudiant${effectifM > 1 ? "s" : ""} inscrit${effectifM > 1 ? "s" : ""}`}
+              trendGraph={
+                <TrendCard
+                color="#efcb3a"
+                data={dataByYear.map(
+                  (item: DataByYear) => item.effectif_masculin
+                )}
+                />
+              }
               />
             </Col>
           </Row>

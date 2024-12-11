@@ -103,6 +103,9 @@ export function General() {
     }
   };
 
+console.log("dataByYear", dataByYear);
+
+
   function MapSelector() {
     if (
       isLoadingPolygons ||
@@ -401,6 +404,8 @@ export function General() {
     }
   }
 
+  const nbStudents = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_total || 0;
+
   return (
     <Container as="section" fluid>
       <Row gutters>
@@ -409,16 +414,12 @@ export function General() {
             descriptionNode={
               <Badge color="yellow-tournesol">{currentYear}</Badge>
             }
-            number={
-              dataByYear?.find(
-                (el: DataByYear) => el.annee_universitaire === currentYear
-              )?.effectif_total || 0
-            }
-            label="Etudiants inscrits"
+            number={nbStudents}
+            label={`Étudiant${nbStudents > 1 ? 's' : ''} inscrit${nbStudents > 1 ? 's' : ''}`}
             trendGraph={
               <TrendCard
                 color="#e18b76"
-                data={dataByYear?.map((item) => item.effectif_feminin)}
+                data={dataByYear?.map((item) => item.effectif_total)}
               />
             }
           />
