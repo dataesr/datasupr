@@ -38,8 +38,6 @@ router.post(
       const timestamp = Date.now();
       const collectionName = `${collectionId}_${timestamp}`;
 
-      console.log(collectionName);
-
       const resultInsert = await db
         .collection(collectionName)
         .insertMany(jsonData);
