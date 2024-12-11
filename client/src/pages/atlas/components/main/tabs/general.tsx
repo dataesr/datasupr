@@ -448,11 +448,32 @@ export function General() {
             secteur privé.
             <br />
             <br />
-            <strong>{effectifPU.toLocaleString()}</strong> étudiants sont
-            inscrits dans le secteur public et{" "}
-            <strong>{effectifPR.toLocaleString()}</strong> dans le secteur
-            privé, soit une répartition de <strong>{pctPU}%</strong> dans le
-            secteur public et <strong>{pctPR}%</strong> dans le secteur privé
+            {
+              (effectifPU === 0 ? (
+                <>
+                  Il n'y a pas d'étudiant inscrit dans le secteur public
+                </>
+              ) : (
+                <>
+                  <strong>{effectifPU.toLocaleString()}</strong> étudiants sont inscrits dans le secteur public 
+                </>
+              )              
+            )
+            }
+            {" "}et{" "}
+            {
+              (effectifPR === 0) ? (
+                <>
+                  il n'y a pas d'étudiant inscrit dans le secteur privé
+                </>
+              ) : (
+                <>
+                  <strong>{effectifPR.toLocaleString()}</strong> étudiants sont inscrits dans le secteur privé
+                </>
+              )
+            }
+            , soit une répartition de <strong>{pctPU.toFixed(1)} %</strong> dans le
+            secteur public et <strong>{pctPR.toFixed(1)} %</strong> dans le secteur privé
             pour l'année universitaire{" "}
             <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
@@ -476,15 +497,25 @@ export function General() {
             Répartition des effectifs étudiants par genre
           </Title>
           <Text>
-            Les effectifs étudiants sont répartis entre les genres masculin et
-            féminin.
+            Les effectifs étudiants sont répartis entre les genres masculin et féminin.
             <br />
             <br />
-            <strong>{effectifM.toLocaleString()}</strong> étudiants sont de
-            genre masculin et <strong>{effectifF.toLocaleString()}</strong> de
-            genre féminin, soit une répartition de <strong>{pctM}%</strong> dans
-            le genre masculin et <strong>{pctF}%</strong> dans le genre féminin
-            pour l'année universitaire{" "}
+            {effectifM === 0 ? (
+              <>Il n'y a pas d'étudiant de genre masculin</>
+            ) : (
+              <>
+                <strong>{effectifM.toLocaleString()}</strong> étudiants sont de genre masculin
+              </>
+            )}
+            {" "}et{" "}
+            {effectifF === 0 ? (
+              <>il n'y a pas d'étudiant de genre féminin</>
+            ) : (
+              <>
+                <strong>{effectifF.toLocaleString()}</strong> étudiants sont de genre féminin
+              </>
+            )}
+            , soit une répartition de <strong>{pctM.toFixed(1)} %</strong> dans le genre masculin et <strong>{pctF.toFixed(1)} %</strong> dans le genre féminin pour l'année universitaire{" "}
             <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
           <Link href={`/atlas/effectifs-par-genre?${params}`}>
