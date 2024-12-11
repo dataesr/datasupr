@@ -49,18 +49,26 @@ export default function GendersHistoChart({
         {
           name: "Féminin",
           data: data.map(
-            (item) =>
-              (item.effectif_feminin * 100) /
-              (item.effectif_feminin + item.effectif_masculin)
+        (item) =>
+          parseFloat(
+            (
+          (item.effectif_feminin * 100) /
+          (item.effectif_feminin + item.effectif_masculin)
+            ).toFixed(1)
+          )
           ),
           color: "#e18b76",
         },
         {
           name: "Masculin",
           data: data.map(
-            (item) =>
-              (item.effectif_masculin * 100) /
-              (item.effectif_feminin + item.effectif_masculin)
+        (item) =>
+          parseFloat(
+            (
+          (item.effectif_masculin * 100) /
+          (item.effectif_feminin + item.effectif_masculin)
+            ).toFixed(1)
+          )
           ),
           color: "#efcb3a",
         },
@@ -121,7 +129,7 @@ export default function GendersHistoChart({
     },
     tooltip: {
       headerFormat: "<b>{point.x}</b><br/>",
-      pointFormat: "{series.name}: {point.y}<br/>Total: {point.stackTotal}",
+      pointFormat: view === 'basic' ? "{series.name}: {point.y}<br/>Total: {point.stackTotal}" : "{series.name}: {point.y}%",
     },
     plotOptions: {
       column: {
