@@ -50,7 +50,10 @@ export default function SectorsHistoChart({
           name: "Secteur privé",
           data: data.map(
             (item) =>
+              parseFloat((
               (item.effectif_pr * 100) / (item.effectif_pr + item.effectif_pu)
+                ).toFixed(1)
+              )
           ),
           color: "#755F4D",
         },
@@ -58,8 +61,11 @@ export default function SectorsHistoChart({
           name: "Secteur public",
           data: data.map(
             (item) =>
-              (item.effectif_pu * 100) / (item.effectif_pr + item.effectif_pu)
-          ),
+              parseFloat((
+                (item.effectif_pu * 100) / (item.effectif_pr + item.effectif_pu)
+                ).toFixed(1)
+              )
+              ),
           color: "#748CC0",
         },
       ];
@@ -121,7 +127,8 @@ export default function SectorsHistoChart({
     },
     tooltip: {
       headerFormat: "<b>{point.x}</b><br/>",
-      pointFormat: "{series.name}: {point.y}<br/>Total: {point.stackTotal}",
+      pointFormat: view === 'basic' ? "{series.name}: {point.y}<br/>Total: {point.stackTotal}" : "{series.name}: {point.y}%",
+
     },
     plotOptions: {
       column: {
