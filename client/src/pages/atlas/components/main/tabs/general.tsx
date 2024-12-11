@@ -103,9 +103,6 @@ export function General() {
     }
   };
 
-console.log("dataByYear", dataByYear);
-
-
   function MapSelector() {
     if (
       isLoadingPolygons ||

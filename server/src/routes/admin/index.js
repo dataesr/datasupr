@@ -131,7 +131,6 @@ router.route("/admin/delete-version").delete(async (req, res) => {
 // delete all files in files folder
 router.route("/admin/delete-uploaded-files").delete((req, res) => {
   const directory = "../files";
-  console.log(directory);
 
   fs.readdir(directory, (err, files) => {
     if (err) {
@@ -140,7 +139,6 @@ router.route("/admin/delete-uploaded-files").delete((req, res) => {
 
     files.forEach((file) => {
       const filePath = path.join(directory, file);
-      console.log("filePath", filePath);
 
       fs.unlink(filePath, (err) => {
         if (err) {

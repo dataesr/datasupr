@@ -47,9 +47,7 @@ function Contact() {
 
     const maRequete = new Request(VITE_APP_TICKET_OFFICE_API_URL);
 
-    fetch(maRequete, monInit).then((response) => {
-      console.log(response);
-    });
+    fetch(maRequete, monInit);
   };
 
   return (

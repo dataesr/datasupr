@@ -10,7 +10,6 @@ export default function TrendGraph({
   color = "#000",
   data = [],
 }: TrendGraphProps) {
-  console.log("TrendGraph", data);
   
   const options = {
     chart: {
@@ -64,9 +63,6 @@ export default function TrendGraph({
       <figure className="highcharts-figure">
         <HighchartsReact highcharts={Highcharts} options={options} />
       </figure>
-      {/* <p className="fr-card__desc card-description fr-px-5w">
-        Annee universitaire {currentYear}
-      </p> */}
     </div>
   );
 }
