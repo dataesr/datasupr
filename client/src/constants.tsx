@@ -1,4 +1,4 @@
-export const DEFAULT_CURRENT_YEAR = "2022-23";
+export const DEFAULT_CURRENT_YEAR = "2023-24";
 export const DEFAULT_GEO_ID = "PAYS_100";
 
 export const LABELS = {
