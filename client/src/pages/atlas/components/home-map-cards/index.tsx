@@ -12,6 +12,7 @@ type TerritoiresListProps = {
 };
 
 import { GetLevelBadgeFromId } from "../../utils/badges.tsx";
+import { DEFAULT_CURRENT_YEAR } from "../../../../constants.tsx";
 
 function getRandomElementsFromArray(
   territoiresList: TerritoiresListProps[],
@@ -74,7 +75,7 @@ export default function HomeMapCards({
         <li 
         className="fr-py-1w" 
         >
-          <Link href="/atlas/general?geo_id=PAYS_100&annee_universitaire=2022-23">
+          <Link href={`/atlas/general?geo_id=PAYS_100&annee_universitaire=${DEFAULT_CURRENT_YEAR}`}>
             France
           </Link>
           {GetLevelBadgeFromId({ id: "PAYS_100" })}
@@ -87,7 +88,7 @@ export default function HomeMapCards({
             style={{ borderBottom: "solid 1px #ddd" }}
           >
             <Link
-              href={`/atlas/general?geo_id=${territoire.id}&annee_universitaire=2022-23`}
+              href={`/atlas/general?geo_id=${territoire.id}&annee_universitaire=${DEFAULT_CURRENT_YEAR}`}
             >
               {territoire.label}
             </Link>

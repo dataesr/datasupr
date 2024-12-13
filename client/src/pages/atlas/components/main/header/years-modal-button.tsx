@@ -4,11 +4,12 @@ import { useQuery } from '@tanstack/react-query';
 
 import { Alert, Button, Modal, ModalContent, ModalTitle } from '@dataesr/dsfr-plus';
 import { getFiltersValues } from '../../../../../api/atlas.ts';
+import { DEFAULT_CURRENT_YEAR } from '../../../../../constants.tsx';
 
 export default function YearsModalButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams] = useSearchParams();
-  const currentYear = searchParams.get('annee_universitaire') || '2022-23';
+  const currentYear = searchParams.get('annee_universitaire') || DEFAULT_CURRENT_YEAR;
   const geoId = searchParams.get('geo_id') || '';
   const [showAlertMessage, setShowAlertMessage] = useState(false);
 

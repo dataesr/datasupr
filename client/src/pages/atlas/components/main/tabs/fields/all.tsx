@@ -10,10 +10,11 @@ import {
 
 import FilieresGendersChart from "../../../../charts/filieres-genders.tsx";
 import FilieresList from "../../../../../../components/filieres-list/index.tsx";
+import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
 
 export default function AllFields() {
   const [searchParams] = useSearchParams();
-  const currentYear = searchParams.get("annee_universitaire") || "2022-23";
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   const params = [...searchParams]
     .map(([key, value]) => `${key}=${value}`)
     .join("&");

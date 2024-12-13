@@ -18,6 +18,7 @@ import FilieresList from "../../../../components/filieres-list/index.tsx";
 import SubList from "../main/tabs/sub-list.tsx";
 
 import "./styles.scss";
+import { DEFAULT_CURRENT_YEAR } from "../../../../constants.tsx";
 
 export default function AtlasMap() {
   const location = useLocation();
@@ -25,7 +26,7 @@ export default function AtlasMap() {
   const selectedTab = path[path.length - 1];
   const [searchParams] = useSearchParams();
   const geoId = searchParams.get("geo_id") || "";
-  const currentYear = searchParams.get("annee_universitaire") || "2022-23";
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
 
   const { data: dataHistoric, isLoading: isLoadingHistoric } = useQuery({
     queryKey: [

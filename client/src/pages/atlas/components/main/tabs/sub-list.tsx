@@ -4,12 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 
 import Template from "../../../../../components/template/index.tsx";
 import { getNumberOfStudentsHistoricByLevel } from "../../../../../api/index.ts";
+import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
 
 export default function SubList() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const geoId = searchParams.get("geo_id") || "";
-  const currentYear = searchParams.get("annee_universitaire") || "2022-23";
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
 
   const { data: dataHistoric, isLoading: isLoadingHistoric } = useQuery({
     queryKey: [

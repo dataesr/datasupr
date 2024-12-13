@@ -23,11 +23,12 @@ import { AtlasSideMenu } from "./side-menu-layout/index.tsx";
 import { GetLevelBadgeFromId } from "./utils/badges.tsx";
 
 import "./styles.scss";
+import { DEFAULT_CURRENT_YEAR } from "../../constants.tsx";
 
 export default function AtlasHeader() {
   const [searchParams] = useSearchParams();
   const geoId = searchParams.get("geo_id") || "";
-  const currentYear = searchParams.get("annee_universitaire") || "2022-23";
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   const navigate = useNavigate();
 
   useTitle("dataSupR - Atlas des effectifs étudiant-e-s");

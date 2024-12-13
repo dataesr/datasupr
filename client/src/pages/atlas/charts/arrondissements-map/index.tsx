@@ -7,6 +7,7 @@ import Template from "../../../../components/template";
 import MapWithPolygonAndBubbles from "../map-with-polygon-and-bubbles";
 import data from "./georef-france-commune-arrondissement-municipal@public.json";
 import { MapBubbleDataProps } from "../../../../types/atlas";
+import { DEFAULT_CURRENT_YEAR } from "../../../../constants";
 
 const config = {
   paris: {
@@ -54,7 +55,7 @@ const config = {
 
 export default function ArrondissementsMap({ location }) {
   const [searchParams] = useSearchParams();
-  const currentYear = searchParams.get("annee_universitaire") || "2022-23";
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
 
   const { data: dataHistoric, isLoading: isLoadingHistoric } = useQuery({
     queryKey: [

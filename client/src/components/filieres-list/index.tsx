@@ -4,13 +4,14 @@ import { Badge, Container, Row, Col, Text, Title } from "@dataesr/dsfr-plus";
 
 import ListSkeleton from "../../pages/atlas/charts/skeletons/list.tsx";
 import { getNumberOfStudents } from "../../api/atlas.ts";
+import { DEFAULT_CURRENT_YEAR } from "../../constants.tsx";
 
 export default function FilieresList() {
   const [searchParams] = useSearchParams();
   const params = [...searchParams]
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
-  const currentYear = searchParams.get("annee_universitaire") || "2022-23";
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
 
   const { data, isLoading } = useQuery({
     queryKey: ["atlas/number-of-students", params],

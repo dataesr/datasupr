@@ -19,6 +19,7 @@ import HomeMapCards from "../../../home-map-cards/index.js";
 import { GetLevelBadgeFromItem } from "../../../../utils/badges.js";
 
 import "./styles.scss";
+import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.js";
 
 type SearchTypes = {
   geo_id: string;
@@ -195,7 +196,7 @@ export function Search() {
                         key={result.geo_id}
                         onClick={() => {
                           navigate(
-                            `/atlas/general?geo_id=${result.geo_id}&annee_universitaire=2022-23`
+                            `/atlas/general?geo_id=${result.geo_id}&annee_universitaire=${DEFAULT_CURRENT_YEAR}`
                           );
                         }}
                       >

@@ -42,6 +42,8 @@ const filieresOrder = [
   "TOTAL",
 ];
 
+const DEFAULT_CURRENT_YEAR = "2023-24";
+
 router.route("/atlas/get-geo-ids-from-search").get((req, res) => {
   if (
     (!req.query.q || req.query?.q.length === 0) &&
@@ -413,7 +415,7 @@ router.route("/atlas/number-of-students-historic-by-level").get(async (req, res)
 router.route("/atlas/number-of-students-by-gender-and-level").get(async (req, res) => {
   const filters = { ...req.query };
   if (!req.query.annee_universitaire) {
-    filters.annee_universitaire = "2022-23";
+    filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
   }
   const data = await db
     .collection("atlas2024")
@@ -480,7 +482,7 @@ router.route("/atlas/number-of-students-by-gender-and-level").get(async (req, re
 router.route("/atlas/number-of-students-by-sector-and-sublevel").get(async (req, res) => {
   const filters = { ...req.query };
   if (!req.query.annee_universitaire) {
-    filters.annee_universitaire = "2022-23";
+    filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
   }
   filters.regroupement = "TOTAL";
 
@@ -538,7 +540,7 @@ router.route("/atlas/number-of-students-by-sector-and-sublevel").get(async (req,
 router.route("/atlas/number-of-students-by-gender-and-sublevel").get(async (req, res) => {
   const filters = { ...req.query };
   if (!req.query.annee_universitaire) {
-    filters.annee_universitaire = "2022-23";
+    filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
   }
 
   const data = await db
@@ -595,7 +597,7 @@ router.route("/atlas/number-of-students-by-gender-and-sublevel").get(async (req,
 router.route("/atlas/number-of-students-by-field-and-sublevel").get(async (req, res) => {
   const filters = { ...req.query };
   if (!req.query.annee_universitaire) {
-    filters.annee_universitaire = "2022-23";
+    filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
   }
 
   const data = await db
@@ -642,7 +644,7 @@ router.route("/atlas/number-of-students-by-field-and-sublevel").get(async (req, 
 router.route("/atlas/number-of-students").get((req, res) => {
   const filters = { ...req.query };
   if (!req.query.annee_universitaire) {
-    filters.annee_universitaire = "2022-23";
+    filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
   }
 
   if (!req.query.geo_id) {

@@ -1,7 +1,7 @@
 {
   "label": "Atlas des effectifs étudiants",
   "description": "Description de l'atlas des effectifs étudiants",
-  "constants": [{ "current_year": "2022-23" }],
+  "constants": [{ "current_year": "2023-24" }],
   "data": [
     {
       "key": "atlas",

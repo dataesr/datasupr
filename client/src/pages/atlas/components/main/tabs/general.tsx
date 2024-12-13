@@ -30,13 +30,14 @@ import MapSkeleton from "../../../charts/skeletons/map.tsx";
 import ArrondissementsMap from "../../../charts/arrondissements-map/index.tsx";
 
 import "./styles.scss";
+import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
 
 export function General() {
   const [searchParams] = useSearchParams();
   const params = [...searchParams]
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
-  const currentYear = searchParams.get("annee_universitaire") || "2022-23";
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   const geoId = searchParams.get("geo_id") || "";
 
   const { data, isLoading } = useQuery({
