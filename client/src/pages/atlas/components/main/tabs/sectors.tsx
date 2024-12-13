@@ -73,7 +73,7 @@ export function Sectors() {
       return "COMMUNE";
     }
 
-    return "";
+    return "COMMUNE";
   }
 
   const gt = pctPU - pctPU * 0.05;
@@ -131,6 +131,12 @@ export function Sectors() {
   ) {
     return <div>Loading...</div>;
   }
+
+  console.log("data", data,
+  "dataByYear", dataByYear,
+  "dataSimilar", dataSimilar,
+  "dataSectorsMap", dataSectorsMap,
+  "polygonsData", polygonsData);
 
   const toggleView = () => {
     if (chartView === "basic") {
