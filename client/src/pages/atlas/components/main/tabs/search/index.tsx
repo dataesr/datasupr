@@ -223,6 +223,7 @@ export function Search() {
         </Col>
         <Col md={3} offsetMd={1}>
           <HomeMapCards territoiresList={territoiresList} />
+          {/* <HomeMapCards /> */}
         </Col>
       </Row>
     </Container>

@@ -13,6 +13,7 @@ type TerritoiresListProps = {
 
 import { GetLevelBadgeFromId } from "../../utils/badges.tsx";
 import { DEFAULT_CURRENT_YEAR } from "../../../../constants.tsx";
+import { useState } from "react";
 
 function getRandomElementsFromArray(
   territoiresList: TerritoiresListProps[],
@@ -36,22 +37,20 @@ function getTerritoiresList(
   const territoiresInFavorites = territoiresList
     .filter((territoire) => favorites.includes(territoire?.id))
     .slice(0, nbmax);
-  const territoiresNotInFavorites = territoiresList.filter(
-    (territoire) => !favorites.includes(territoire?.id)
-  );
+  // const territoiresNotInFavorites = territoiresList.filter(
+  //   (territoire) => !favorites.includes(territoire?.id)
+  // );
 
-  const territoiresNotInFavoritesShuffled = getRandomElementsFromArray(
-    territoiresNotInFavorites,
-    nbmax - territoiresInFavorites.length
-  );
-  return [...territoiresInFavorites, ...territoiresNotInFavoritesShuffled];
+  // const territoiresNotInFavoritesShuffled = getRandomElementsFromArray(
+  //   territoiresNotInFavorites,
+  //   nbmax - territoiresInFavorites.length
+  // );
+  // return [...territoiresInFavorites, ...territoiresNotInFavoritesShuffled];
+  return [...territoiresInFavorites];
 }
 
-export default function HomeMapCards({
-  territoiresList = [],
-}: {
-  territoiresList: TerritoiresListProps[];
-}) {
+export default function HomeMapCards({ territoiresList }: { territoiresList: TerritoiresListProps[] }) {
+  const [refresh, setRefresh] = useState(0);
   // get favorites from cookie
   const favorites = getSortedfavoriteIdsInCookie();
   const territoires = getTerritoiresList(territoiresList, favorites);
@@ -69,8 +68,8 @@ export default function HomeMapCards({
         Accès rapide
       </Title>
       <Text as="p" className="fr-mb-1w">
-        <i>Vos territoires favoris apparaissent en premiers dans cette liste</i>
-        <Button onClick={() => clearAllfavoriteIdsInCookie()} variant="text">
+        <i>Vos territoires favoris apparaissent dans cette liste</i>
+        <Button onClick={() => {clearAllfavoriteIdsInCookie(); setRefresh(refresh + 1)}} variant="text">
           Réinitialiser cette liste
         </Button>
       </Text>
