@@ -24,7 +24,6 @@ export default function FilieresGendersChart({
     chart: {
       backgroundColor: "transparent",
       type: "bar",
-      height: "600",
     },
     legend: {
       itemStyle:{
