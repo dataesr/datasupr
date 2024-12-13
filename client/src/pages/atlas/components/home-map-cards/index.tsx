@@ -60,7 +60,10 @@ export default function HomeMapCards({
   return (
     <div 
       className="fr-p-2w"
-      style={{ backgroundColor: getComputedStyle(document.documentElement).getPropertyValue(`--bg-${theme}`) }}
+      style={{ 
+        backgroundColor: getComputedStyle(document.documentElement).getPropertyValue(`--bg-${theme}`),
+        borderRadius: "5px",
+      }}
     >
       <Title as="h2" look="h5" className="fr-mb-0 text-center">
         Accès rapide
