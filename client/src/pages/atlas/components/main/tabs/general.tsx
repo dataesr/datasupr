@@ -102,6 +102,7 @@ export function General() {
     if (geoId.startsWith("U")) {
       return "communes";
     }
+    return "communes";
   };
 
   function MapSelector() {
