@@ -2,6 +2,7 @@ import { Container, Row, Col, Link, SideMenu, Title } from "@dataesr/dsfr-plus";
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
 import "./styles.scss";
 import { ReactNode } from "react";
+import Source from "../components/source";
 
 export function AtlasSideMenu({ title }: { title: ReactNode }) {
   const { pathname } = useLocation();
@@ -51,6 +52,7 @@ export function AtlasSideMenu({ title }: { title: ReactNode }) {
             {title}
           </Title>
           <Outlet />
+          <Source />
         </Col>
       </Row>
     </Container>
