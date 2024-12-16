@@ -4,9 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   Button,
   Breadcrumb,
-  Container,
-  Row,
-  Col,
+  Container, Row, Col,
   Link,
 } from "@dataesr/dsfr-plus";
 
@@ -21,8 +19,10 @@ import { Search } from "./components/main/tabs/search/index.tsx";
 import YearsModalButton from "./components/main/header/years-modal-button.tsx";
 import { AtlasSideMenu } from "./side-menu-layout/index.tsx";
 import { GetLevelBadgeFromId } from "./utils/badges.tsx";
+import { getLevelFromGeoId } from "./utils/index.tsx";
 
 import "./styles.scss";
+
 import { DEFAULT_CURRENT_YEAR } from "../../constants.tsx";
 
 export default function AtlasHeader() {
@@ -116,7 +116,7 @@ export default function AtlasHeader() {
         {geoId && <Link>{geoLabel}</Link>}
       </Breadcrumb>
 
-      {!geoId ? <Search /> : <AtlasSideMenu title={geoLabelFull} />}
+      {!geoId ? <Search /> : <AtlasSideMenu geoLabel={geoLabel} level={getLevelFromGeoId({geoId}) } title={geoLabelFull} />}
     </Container>
   );
 }

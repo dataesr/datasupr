@@ -1,17 +1,26 @@
+import { ReactNode, useEffect } from "react";
 import { Container, Row, Col, Link, SideMenu, Title } from "@dataesr/dsfr-plus";
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
-import "./styles.scss";
-import { ReactNode } from "react";
 import Source from "../components/source";
 
-export function AtlasSideMenu({ title }: { title: ReactNode }) {
+import "./styles.scss";
+import { DEFAULT_CURRENT_YEAR } from "../../../constants";
+
+export function AtlasSideMenu({ geoLabel, level, title }: 
+  { geoLabel: string, level: string, title: ReactNode }) {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
+  
+  useEffect(() => {
+    document.title = `${geoLabel} (${level}) - Atlas des effectifs étudiant-e-s ${currentYear}`;
+  }, [geoLabel, level, currentYear]);
 
   if (!pathname) return null;
-  const filtersParams = searchParams.toString();
 
+  const filtersParams = searchParams.toString();
   const is = (str: string): boolean => pathname?.startsWith(str);
+
   return (
     <Container>
       <Row>
