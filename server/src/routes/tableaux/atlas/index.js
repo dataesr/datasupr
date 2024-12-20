@@ -781,6 +781,7 @@ router.route("/atlas/number-of-students").get((req, res) => {
 });
 
 router.route("/atlas/number-of-students-by-year").get((req, res) => {
+  const startYear = 2001;
   const filters = {};
   if (req.query.geo_id) {
     filters.geo_id = req.query.geo_id;
@@ -835,7 +836,33 @@ router.route("/atlas/number-of-students-by-year").get((req, res) => {
         return 0;
       });
 
-      res.json(dataByYear);
+      // ajout des années manquantes (à zéro) const startYear = "2001";
+      const range = [];
+      for (let year = startYear; year <= dataByYear[dataByYear.length -1].annee_universitaire.substring(0,4); year++) {
+        range.push(year);
+      }
+
+      const dataByYearFull = [];
+      for (let i = 0; i < range.length; i++) {
+        const currentYear = `${range[i]}-${(range[i] + 1).toString().slice(-2)}`;
+        if (!dataByYear.find((el) => el.annee_universitaire === currentYear)) {
+          dataByYearFull.push({
+            annee_universitaire: currentYear,
+            effectif_total: 0,
+            effectif_pr: 0,
+            effectif_pu: 0,
+            effectif_masculin: 0,
+            effectif_feminin: 0,
+            effectif_dut: 0,
+            effectif_form_ens: 0,
+            effectif_ing: 0,
+          });
+        } else {
+          dataByYearFull.push(dataByYear.find((el) => el.annee_universitaire === currentYear));
+        }
+      }
+
+      res.json(dataByYearFull);
     });
 });
 

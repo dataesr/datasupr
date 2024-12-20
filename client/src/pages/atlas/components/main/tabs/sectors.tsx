@@ -133,12 +133,6 @@ export function Sectors() {
     return <div>Loading...</div>;
   }
 
-  console.log("data", data,
-  "dataByYear", dataByYear,
-  "dataSimilar", dataSimilar,
-  "dataSectorsMap", dataSectorsMap,
-  "polygonsData", polygonsData);
-
   const toggleView = () => {
     if (chartView === "basic") {
       setChartView("percentage");
