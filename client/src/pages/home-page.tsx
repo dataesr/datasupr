@@ -49,7 +49,7 @@ export default function HomePage() {
   return (
     <>
       <Header>
-        <Logo text="Ministère de | l'enseignement supérieur | et de la recherche" />
+        <Logo text="Ministère|chargé|de l'enseignement|supérieur|et de la recherche" />
         <Service
           name="DataSupR"
           tagline="Ensemble de tableaux de bord de l'enseignement supérieur, de la recherche et de l'innovation"
@@ -215,13 +215,15 @@ export default function HomePage() {
             <div className="fr-footer__brand fr-enlarge-link">
               <a
                 href="/"
-                title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)"
+                title="Ministère chargé de l'enseignement supérieur et de la recherche"
               >
                 <p className="fr-logo">
-                  Intitulé
-                  <br />
-                  officiel
-                </p>
+                Ministère<br />
+                chargé<br />
+                de l'enseignement<br />
+                supérieur<br />
+                et de la recherche
+              </p>
               </a>
             </div>
             <div className="fr-footer__content">
