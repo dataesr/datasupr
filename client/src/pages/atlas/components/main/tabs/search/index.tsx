@@ -9,6 +9,7 @@ import {
   Spinner,
   Text,
   Title,
+  Badge,
 } from "@dataesr/dsfr-plus";
 
 import {
@@ -27,7 +28,7 @@ type SearchTypes = {
 };
 
 export function Search() {
-  const [territoiresType, setTerritoiresType] = useState("");
+  const [territoiresType, setTerritoiresType] = useState("all");
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
 
@@ -41,10 +42,10 @@ export function Search() {
     isLoading: isLoadingSearch,
     refetch,
   } = useQuery({
-    queryKey: ["atlas/search", searchValue, territoiresType],
-    queryFn: () => getGeoIdsFromSearch(searchValue, territoiresType),
+    queryKey: ["atlas/search", searchValue],
+    queryFn: () => getGeoIdsFromSearch(searchValue),
     enabled: false,
-  });
+  }); // TODO: add a debounce + delete unused props
 
   const handleClick = async () => {
     refetch();
@@ -69,6 +70,34 @@ export function Search() {
 
   // Sort the list of territories by label
   territoiresList.sort((a, b) => a.label.localeCompare(b.label));
+
+    function GetFilterButton({ type, label }) {
+      if(!dataSearch) {
+        return null;
+      }
+      return (
+        <li
+          className={territoiresType === type ? "active" : ""}
+        >
+          {dataSearch?.filter((el) => el.niveau_geo === type)?.length === 0 && type!=="all" ? (
+            null
+          ):(
+            <span onClick={() => setTerritoiresType(type)}>
+              {label}
+              <Badge className="fr-ml-1w" color="pink-tuile">
+                {
+                  (type === "all" && dataSearch?.length) || dataSearch?.filter((el) => el.niveau_geo === type)?.length
+                }
+              </Badge>
+            </span>
+          )}
+        </li>
+      );
+    }
+
+    const filteredData = territoiresType !== "all"
+      ? dataSearch?.filter((el) => el.niveau_geo === territoiresType)
+      : dataSearch; 
 
   return (
     <Container as="section">
@@ -124,48 +153,13 @@ export function Search() {
               <Col>
                 <div className="territories-filter">
                   <ul>
-                    <li className={territoiresType === "" ? "active" : ""}>
-                      <span onClick={() => setTerritoiresType("")}>Tous</span>
-                    </li>
-                    <li
-                      className={territoiresType === "REGION" ? "active" : ""}
-                    >
-                      <span onClick={() => setTerritoiresType("REGION")}>
-                        Régions
-                      </span>
-                    </li>
-                    <li
-                      className={territoiresType === "ACADEMIE" ? "active" : ""}
-                    >
-                      <span onClick={() => setTerritoiresType("ACADEMIE")}>
-                        Académies
-                      </span>
-                    </li>
-                    <li
-                      className={
-                        territoiresType === "DEPARTEMENT" ? "active" : ""
-                      }
-                    >
-                      <span onClick={() => setTerritoiresType("DEPARTEMENT")}>
-                        Départements
-                      </span>
-                    </li>
-                    <li
-                      className={
-                        territoiresType === "UNITE_URBAINE" ? "active" : ""
-                      }
-                    >
-                      <span onClick={() => setTerritoiresType("UNITE_URBAINE")}>
-                        Unités urbaines
-                      </span>
-                    </li>
-                    <li
-                      className={territoiresType === "COMMUNE" ? "active" : ""}
-                    >
-                      <span onClick={() => setTerritoiresType("COMMUNE")}>
-                        Communes
-                      </span>
-                    </li>
+                    {dataSearch?.length > 0 && (<span className="fr-icon-filter-line" aria-hidden="true" />)}
+                    <GetFilterButton type="all" label="Tous" />
+                    <GetFilterButton type="REGION" label="Régions" />
+                    <GetFilterButton type="ACADEMIE" label="Académies" />
+                    <GetFilterButton type="DEPARTEMENT" label="Départements" />
+                    <GetFilterButton type="UNITE_URBAINE" label="Unités urbaines" />
+                    <GetFilterButton type="COMMUNE" label="Communes" />
                   </ul>
                 </div>
 
@@ -182,16 +176,13 @@ export function Search() {
                       exemple : "Paris", "Bretagne", "Occitanie", etc ...
                       <br />
                       Puis cliquez sur le bouton <strong>"Rechercher"</strong>
-                      <br />
-                      Vous pouvez limiter les résultats à un type de territoire
-                      en cliquant sur les boutons correspondants
                     </i>
                   </div>
                 )}
 
                 {dataSearch?.length > 0 ? (
                   <ul className="results">
-                    {dataSearch.map((result: SearchTypes) => (
+                    {filteredData.map((result: SearchTypes) => (
                       <li
                         key={result.geo_id}
                         onClick={() => {

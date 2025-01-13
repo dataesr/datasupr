@@ -96,7 +96,11 @@ export async function getGeoIdsFromSearch(
   q: string,
   territoiresType: string = ""
 ) {
-  const url = `${VITE_APP_SERVER_URL}/atlas/get-geo-ids-from-search?q=${q}&niveau_geo=${territoiresType}`;
+  let niveau_geo = "";
+  if (territoiresType !== "all") {
+    niveau_geo = territoiresType;
+  }
+  const url = `${VITE_APP_SERVER_URL}/atlas/get-geo-ids-from-search?q=${q}&niveau_geo=${niveau_geo}`;
   return fetch(url).then((response) => response.json());
 }
 
