@@ -82,8 +82,8 @@ export function Sectors() {
   const similarParams = {
     niveau_geo: getLevel(),
     needle: "pctPU",
-    gt: gt * 100,
-    lt: lt * 100,
+    gt: gt * 100 || 0,
+    lt: lt * 100 || 0,
     annee_universitaire: currentYear,
   };
 
