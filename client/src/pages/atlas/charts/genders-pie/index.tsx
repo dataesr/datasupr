@@ -1,5 +1,6 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import Template from "../../../../components/template";
 
 type GenderData = {
   name: string;
@@ -13,8 +14,8 @@ export default function GenderChart({
   data: GenderData;
   isLoading: boolean;
 }) {
-  if (isLoading || !data || !data.length) {
-    return <div>Loader</div>;
+  if (isLoading || !data || (data[0].y === 0 && data[1].y === 0)) {
+    return <Template height="250px" />;
   }
   const rootStyles = getComputedStyle(document.documentElement);
   const secteursOptions = {

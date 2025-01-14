@@ -2,13 +2,11 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import {
-  Container,
-  Row,
-  Col,
-  Title,
-  Text,
   Badge,
   Button,
+  Container, Row, Col,
+  Text,
+  Title,
 } from "@dataesr/dsfr-plus";
 
 import MapPieSectors from "../../../charts/map-pie-sectors/index.jsx";

@@ -1,5 +1,6 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
+import Template from "../../../../components/template";
 
 type SectorData = {
   name: string;
@@ -13,8 +14,10 @@ export default function SectortsChart({
   data: SectorData;
   isLoading: boolean;
 }) {
-  if (isLoading || !data || !data.length) {
-    return <div>Loader</div>;
+  console.log(data);
+  
+  if (isLoading || !data || (data[0].y === 0 && data[1].y === 0)) {
+    return <Template height="250px" />;
   }
   const rootStyles = getComputedStyle(document.documentElement);
   const secteursOptions = {
