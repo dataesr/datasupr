@@ -685,16 +685,14 @@ router.route("/atlas/number-of-students").get((req, res) => {
         data.secteurs = [];
         data.secteurs.push({
           id: "PU",
-          label: allData.data.find((item) => item.secteur === "PU")
-            ?.secteur_de_l_etablissement,
+          label: "Secteur public",
           value: allData.data
             .filter((item) => item.secteur === "PU")
             ?.reduce((acc, item) => acc + item.effectif, 0),
         });
         data.secteurs.push({
           id: "PR",
-          label: allData.data.find((item) => item.secteur === "PR")
-            ?.secteur_de_l_etablissement,
+          label: "Secteur privé",
           value: allData.data
             .filter((item) => item.secteur === "PR")
             ?.reduce((acc, item) => acc + item.effectif, 0),
