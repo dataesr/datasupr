@@ -28,6 +28,7 @@ import { DEFAULT_CURRENT_YEAR } from "../../constants.tsx";
 export default function AtlasHeader() {
   const [searchParams] = useSearchParams();
   const geoId = searchParams.get("geo_id") || "";
+  const isdatasupr = searchParams.get("datasupr") === "true";
   const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   const navigate = useNavigate();
 
@@ -58,7 +59,7 @@ export default function AtlasHeader() {
     return (
       <Container as="main">
         <Breadcrumb>
-          <Link href="/">Accueil</Link>
+          {isdatasupr && <Link href="/">Accueil</Link>}
           <Link href="/atlas">Atlas des effectifs étudiant-e-s</Link>
           <Link>Chargement des filtres en cours ...</Link>
         </Breadcrumb>
@@ -83,7 +84,7 @@ export default function AtlasHeader() {
               className="button"
               color="pink-tuile"
               icon="home-4-line"
-              onClick={() => navigate("/atlas")}
+              onClick={() => navigate(`/atlas${isdatasupr ? '?datasupr=true' : ''}`)}
               size="sm"
             >
               Revenir à la page de sélection des territoires
@@ -95,9 +96,9 @@ export default function AtlasHeader() {
               color="pink-tuile"
               icon="arrow-up-line"
               onClick={() =>
-                navigate(
-                  `/atlas/general?geo_id=${parent.geo_id}&annee_universitaire=${currentYear}`
-                )
+              navigate(
+                `/atlas/general?geo_id=${parent.geo_id}&annee_universitaire=${currentYear}${isdatasupr ? '&datasupr=true' : ''}`
+              )
               }
               size="sm"
             >
@@ -111,8 +112,10 @@ export default function AtlasHeader() {
       </Row>
 
       <Breadcrumb>
-        <Link href="/">Accueil</Link>
-        <Link href="/atlas">Atlas des effectifs étudiant-e-s</Link>
+        {isdatasupr && <Link href={`/${isdatasupr ? '?datasupr=true' : ''}`}>Accueil</Link>}
+        <Link href={`/atlas${isdatasupr ? '?datasupr=true' : ''}`}>
+          {isdatasupr ? "Atlas des effectifs étudiant-e-s" : "Accueil"}
+        </Link>
         {geoId && <Link>{geoLabel}</Link>}
       </Breadcrumb>
 

@@ -37,20 +37,14 @@ function getTerritoiresList(
   const territoiresInFavorites = territoiresList
     .filter((territoire) => favorites.includes(territoire?.id))
     .slice(0, nbmax);
-  // const territoiresNotInFavorites = territoiresList.filter(
-  //   (territoire) => !favorites.includes(territoire?.id)
-  // );
-
-  // const territoiresNotInFavoritesShuffled = getRandomElementsFromArray(
-  //   territoiresNotInFavorites,
-  //   nbmax - territoiresInFavorites.length
-  // );
-  // return [...territoiresInFavorites, ...territoiresNotInFavoritesShuffled];
+    
   return [...territoiresInFavorites];
 }
 
-export default function HomeMapCards({ territoiresList }: { territoiresList: TerritoiresListProps[] }) {
+export default function FavoritesList({ territoiresList }: { territoiresList: TerritoiresListProps[] }) {
   const [refresh, setRefresh] = useState(0);
+  const urlParams = new URLSearchParams(window.location.search);
+  const datasupr = urlParams.get('datasupr') === 'true';
   // get favorites from cookie
   const favorites = getSortedfavoriteIdsInCookie();
   const territoires = getTerritoiresList(territoiresList, favorites);
@@ -77,7 +71,7 @@ export default function HomeMapCards({ territoiresList }: { territoiresList: Ter
         <li 
         className="fr-py-1w" 
         >
-          <Link href={`/atlas/general?geo_id=PAYS_100&annee_universitaire=${DEFAULT_CURRENT_YEAR}`}>
+          <Link href={`/atlas/general?geo_id=PAYS_100&annee_universitaire=${DEFAULT_CURRENT_YEAR}${datasupr ? '&datasupr=true' : ''}`}>
             France
           </Link>
           {GetLevelBadgeFromId({ id: "PAYS_100" })}
@@ -90,7 +84,7 @@ export default function HomeMapCards({ territoiresList }: { territoiresList: Ter
             style={{ borderBottom: "solid 1px #ddd" }}
           >
             <Link
-              href={`/atlas/general?geo_id=${territoire.id}&annee_universitaire=${DEFAULT_CURRENT_YEAR}`}
+              href={`/atlas/general?geo_id=${territoire.id}&annee_universitaire=${DEFAULT_CURRENT_YEAR}${datasupr ? '&datasupr=true' : ''}`}
             >
               {territoire.label}
             </Link>

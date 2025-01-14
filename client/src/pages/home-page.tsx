@@ -172,7 +172,7 @@ export default function HomePage() {
             <GenericCard
               description="L’Atlas des effectifs étudiants est un outil indispensable pour une bonne appréhension de la structuration territoriale de l’enseignement supérieur et pour l’élaboration de stratégies territoriales. Il présente, sous forme de cartes, de graphiques et de tableaux, la diversité du système français d’enseignement supérieur."
               title="Atlas des effectifs étudiants"
-              to="/atlas"
+              to="/atlas?datasupr=true"
             />
           </Col>
         </Row>
@@ -181,7 +181,7 @@ export default function HomePage() {
             <GenericCard
               description="Projets européens"
               title="Projets européens"
-              to="/european-projects"
+              to="/european-projects?datasupr=true"
             />
           </Col>
         </Row>
@@ -190,13 +190,13 @@ export default function HomePage() {
             <GenericCard
               description="Open Alex"
               title="Open Alex"
-              to="/open-alex"
+              to="/open-alex?datasupr=true"
             />
           </Col>
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="TEDS" title="TEDS" to="/teds" />
+            <GenericCard description="TEDS" title="TEDS" to="/teds?datasupr=true" />
           </Col>
         </Row>
         <Row gutters>
@@ -204,7 +204,7 @@ export default function HomePage() {
             <GenericCard
               description="Tableau de bord financier des universités"
               title="Finance"
-              to="/finance-universite"
+              to="/finance-universite?datasupr=true"
             />
           </Col>
         </Row>

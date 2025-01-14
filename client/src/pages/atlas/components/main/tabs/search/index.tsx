@@ -2,21 +2,19 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import {
+  Badge,
   Button,
-  Container,
-  Row,
-  Col,
+  Container, Row, Col,
   Spinner,
   Text,
   Title,
-  Badge,
 } from "@dataesr/dsfr-plus";
 
 import {
   getFiltersValues,
   getGeoIdsFromSearch,
 } from "../../../../../../api/atlas.js";
-import HomeMapCards from "../../../home-map-cards/index.js";
+import FavoritesList from "../../../favorites-list/index.js";
 import { GetLevelBadgeFromItem } from "../../../../utils/badges.js";
 
 import "./styles.scss";
@@ -31,6 +29,8 @@ export function Search() {
   const [territoiresType, setTerritoiresType] = useState("all");
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
+  const params = new URLSearchParams(window.location.search);
+  const datasupr = params.get("datasupr") === "true";
 
   const { data: filtersValues, isLoading: isLoadingFiltersValues } = useQuery({
     queryKey: ["atlas/get-filters-values"],
@@ -187,7 +187,7 @@ export function Search() {
                         key={result.geo_id}
                         onClick={() => {
                           navigate(
-                            `/atlas/general?geo_id=${result.geo_id}&annee_universitaire=${DEFAULT_CURRENT_YEAR}`
+                          `/atlas/general?geo_id=${result.geo_id}&annee_universitaire=${DEFAULT_CURRENT_YEAR}${datasupr ? "&datasupr=true" : ""}`
                           );
                         }}
                       >
@@ -213,8 +213,7 @@ export function Search() {
           </Container>
         </Col>
         <Col md={3} offsetMd={1}>
-          <HomeMapCards territoiresList={territoiresList} />
-          {/* <HomeMapCards /> */}
+          <FavoritesList territoiresList={territoiresList} />
         </Col>
       </Row>
     </Container>
