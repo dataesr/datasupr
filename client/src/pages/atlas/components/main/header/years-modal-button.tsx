@@ -38,13 +38,13 @@ export default function YearsModalButton() {
         </label>
         <select
           className="fr-select"
+          defaultValue={currentYear}
           id="select"
           name="select"
           onChange={(e) => {
             searchParams.set('annee_universitaire', e.target.value);
             window.location.search = searchParams.toString();
           }}
-          defaultValue={currentYear}
         >
           {
             filtersValues.annees_universitaires.all.map((value: string) => (
