@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from '@tanstack/react-query';
 
-import { Alert, Button, Modal, ModalContent, ModalTitle } from '@dataesr/dsfr-plus';
+import { Button, Modal, ModalContent, ModalTitle } from '@dataesr/dsfr-plus';
 import { getFiltersValues } from '../../../../../api/atlas.ts';
 import { DEFAULT_CURRENT_YEAR } from '../../../../../constants.tsx';
 
@@ -11,25 +11,16 @@ export default function YearsModalButton() {
   const [searchParams] = useSearchParams();
   const currentYear = searchParams.get('annee_universitaire') || DEFAULT_CURRENT_YEAR;
   const geoId = searchParams.get('geo_id') || '';
-  const [showAlertMessage, setShowAlertMessage] = useState(false);
 
   const { data: filtersValues, isLoading: isLoadingFiltersValues } = useQuery({
     queryKey: ["atlas/get-filters-values", geoId],
     queryFn: () => getFiltersValues(geoId)
   })
 
-  useEffect(() => {
-    setShowAlertMessage(!filtersValues?.annees_universitaires?.onlyWithData.includes(currentYear));
-  }, [currentYear, filtersValues]);
-
   if (isLoadingFiltersValues) {
     return <div>Chargement des filtres ...</div>
   }
 
-  if(!filtersValues?.annees_universitaires?.onlyWithData.includes(currentYear) && !isOpen) {
-    setIsOpen(true);
-  }
-  
   function YearsList() {
     return (
       <div className="fr-select-group">
@@ -56,7 +47,7 @@ export default function YearsModalButton() {
                 {`Années universitaire ${value}`}
                 {
                   !filtersValues?.annees_universitaires?.onlyWithData.includes(value) && (
-                    <> (- non disponibles -)</>
+                    <> - non disponibles</>
                   )
                 }
               </option>
@@ -83,14 +74,6 @@ export default function YearsModalButton() {
           Sélection d'une année universitaire
         </ModalTitle>
         <ModalContent>
-          {showAlertMessage && (
-            <Alert
-              className="fr-mb-3w"
-              description="Aucune donnée n'est disponible pour l'année universitaire sélectionnée"
-              title="Alerte"
-              variant="error"
-            />
-          )}
           <YearsList />
         </ModalContent>
       </Modal>
