@@ -14,8 +14,6 @@ export default function SectortsChart({
   data: SectorData;
   isLoading: boolean;
 }) {
-  console.log(data);
-  
   if (isLoading || !data || (data[0].y === 0 && data[1].y === 0)) {
     return <Template height="250px" />;
   }
