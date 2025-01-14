@@ -44,19 +44,19 @@ export default function YearsModalButton() {
             searchParams.set('annee_universitaire', e.target.value);
             window.location.search = searchParams.toString();
           }}
+          defaultValue={currentYear}
         >
           {
             filtersValues.annees_universitaires.all.map((value: string) => (
               <option
                 disabled={!filtersValues?.annees_universitaires?.onlyWithData.includes(value)}
                 key={value}
-                selected={searchParams.get('annee_universitaire') === value ? true : false}
                 value={value}
               >
                 {`Années universitaire ${value}`}
                 {
                   !filtersValues?.annees_universitaires?.onlyWithData.includes(value) && (
-                    <span> (- non disponibles -)</span>
+                    <> (- non disponibles -)</>
                   )
                 }
               </option>
