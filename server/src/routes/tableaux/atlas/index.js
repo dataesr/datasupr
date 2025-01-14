@@ -43,6 +43,8 @@ const filieresOrder = [
 ];
 
 const DEFAULT_CURRENT_YEAR = "2023-24";
+const START_YEAR = 2001;
+const END_YEAR = 2023;
 
 router.route("/atlas/get-geo-ids-from-search").get((req, res) => {
   if (
@@ -781,7 +783,6 @@ router.route("/atlas/number-of-students").get((req, res) => {
 });
 
 router.route("/atlas/number-of-students-by-year").get((req, res) => {
-  const startYear = 2001;
   const filters = {};
   if (req.query.geo_id) {
     filters.geo_id = req.query.geo_id;
@@ -836,9 +837,9 @@ router.route("/atlas/number-of-students-by-year").get((req, res) => {
         return 0;
       });
 
-      // ajout des années manquantes (à zéro) const startYear = "2001";
+      // ajout des années manquantes (à zéro) const START_YEAR = "2001" => END_YEAR";
       const range = [];
-      for (let year = startYear; year <= dataByYear[dataByYear.length -1].annee_universitaire.substring(0,4); year++) {
+      for (let year = START_YEAR; year <= END_YEAR; year++) {
         range.push(year);
       }
 
