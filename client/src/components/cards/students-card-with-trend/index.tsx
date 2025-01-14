@@ -64,7 +64,7 @@ export default function StudentsCardWithTrend({
             </Row>
           </Container>
 
-          <p className="fr-card__desc card-description">{descriptionNode}</p>
+          <div className="fr-card__desc card-description">{descriptionNode}</div>
           {tagsNode && <div className="fr-card__start">{tagsNode}</div>}
         </div>
       </div>
