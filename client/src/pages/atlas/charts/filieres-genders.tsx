@@ -16,9 +16,10 @@ export default function FilieresGendersChart({
   data: DataProps[];
   isLoading: boolean;
 }) {
-  if (isLoading) {
+  if (isLoading || !data || data.length === 0) {
     return <Template />;
   }
+  
   const rootStyles = getComputedStyle(document.documentElement);
   const filieresOptions = {
     chart: {
