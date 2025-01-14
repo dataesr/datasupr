@@ -44,9 +44,9 @@ export default function FieldsMainCard({
             </Row>
           </Container>
 
-          <p className="fr-card__desc card-description">
+          <div className="fr-card__desc card-description">
             {descriptionNode}
-          </p>
+          </div>
           {
             tagsNode && (
               <div className="fr-card__start">
