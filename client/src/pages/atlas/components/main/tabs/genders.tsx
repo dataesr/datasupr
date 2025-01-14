@@ -93,7 +93,7 @@ export function Genders() {
       return "COMMUNE";
     }
 
-    return "";
+    return "COMMUNE";
   }
 
   const gt = pctF - pctF * 0.05;
@@ -101,8 +101,8 @@ export function Genders() {
   const similarParams = {
     niveau_geo: getLevel(),
     needle: "pctF",
-    gt: gt * 100,
-    lt: lt * 100,
+    gt: gt * 100 || 0,
+    lt: lt * 100 || 0,
     annee_universitaire: currentYear,
   };
 
@@ -232,7 +232,7 @@ export function Genders() {
           <GenderChart data={dataGender || []} isLoading={isLoading} />
         </Col>
       </Row>
-      {polygonsData.length > 1 && (
+      {polygonsData?.length > 1 && (
         <>
           <Row className="fr-my-5w">
             <Col>
