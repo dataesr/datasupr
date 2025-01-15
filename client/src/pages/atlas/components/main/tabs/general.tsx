@@ -65,7 +65,7 @@ export function General() {
   });
 
   if (isLoading || isLoadingByYear) {
-    return <div>Loading...</div>;
+    return <div>Chargement ...</div>;
   }
 
   const effectifPU =
