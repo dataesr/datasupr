@@ -53,6 +53,13 @@ export default function SubList() {
     )
   );
 
+  // Special case "Saint-Martin" (geo_id = 978)
+  dataHistoric.data.forEach(item => {
+    if (item.geo_id === '978') {
+      item.geo_id = 'D978';
+    }
+  });
+
   return (
     <Container fluid as="section">
       <Row style={{ width: "100%" }}>

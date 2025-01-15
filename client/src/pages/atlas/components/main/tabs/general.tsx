@@ -123,7 +123,9 @@ export function General() {
       .forEach((item) => {
         let polygon;
         switch (item.geo_id) {
-          case "D988":
+          // Nouvelle-Calédonie
+          case "D988": 
+          case "A40": 
             mapbubbleData.push({
               z:
                 item.data.find((d) => d.annee_universitaire === currentYear)
@@ -134,7 +136,9 @@ export function General() {
             });
             break;
 
+          // Polynésie française
           case "D987":
+          case "A41":
             mapbubbleData.push({
               z:
                 item.data.find((d) => d.annee_universitaire === currentYear)
@@ -145,7 +149,9 @@ export function General() {
             });
             break;
 
+          // Saint-Martin
           case "978":
+          case "D978":
             mapbubbleData.push({
               z:
                 item.data.find((d) => d.annee_universitaire === currentYear)
@@ -153,6 +159,19 @@ export function General() {
               name: item.geo_nom,
               lat: 18.07,
               lon: -63.1,
+            });
+            break;
+
+          // Wallis et Futuna
+          case "D986":
+          case "A42":
+            mapbubbleData.push({
+              z:
+                item.data.find((d) => d.annee_universitaire === currentYear)
+                  ?.effectif || 0,
+              name: item.geo_nom,
+              lat: -13.3,
+              lon: -178,
             });
             break;
 
@@ -226,7 +245,7 @@ export function General() {
               <div className="item ">
                 <MapWithPolygonAndBubbles
                   currentYear={currentYear}
-                  idToFocus="978"
+                  idToFocus="D978"
                   isLoading={isLoadingHistoric}
                   mapbubbleData={mapbubbleData}
                   polygonsData={polygonsData}
@@ -337,6 +356,83 @@ export function General() {
                   Arrondissements de Paris
                 </Title>
                 <ArrondissementsMap location="paris" />
+              </Col>
+              <Col md={4}>
+                <SubList />
+              </Col>
+            </Row>
+          </>
+        );
+      }
+
+      // cas particulier des collectivités d'outre-mer
+      if (geoId === "R00") {
+        return (
+          <>
+            <Row className="fr-my-5w">
+              <Col>
+                <Title as="h3" look="h5">
+                  <span
+                    className="fr-icon-pie-chart-2-fill fr-mr-1w"
+                    aria-hidden="true"
+                  />
+                  Répartition des effectifs étudiants dans les collectivités
+                  d'outre-mer
+                </Title>
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col md={8}>
+                <Row gutters>
+                  <Col md={6}>
+                    <div className="standard-item">
+                      <MapWithPolygonAndBubbles
+                        currentYear={currentYear}
+                        idToFocus="D988"
+                        isLoading={isLoadingHistoric}
+                        mapbubbleData={mapbubbleData}
+                        polygonsData={polygonsData}
+                      />
+                      <div className="item-label">Nouvelle-Calédonie</div>
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="standard-item">
+                      <MapWithPolygonAndBubbles
+                        currentYear={currentYear}
+                        idToFocus="D987"
+                        isLoading={isLoadingHistoric}
+                        mapbubbleData={mapbubbleData}
+                        polygonsData={polygonsData}
+                      />
+                      <div className="item-label">Polynésie française</div>
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="standard-item">
+                      <MapWithPolygonAndBubbles
+                        currentYear={currentYear}
+                        idToFocus="D978"
+                        isLoading={isLoadingHistoric}
+                        mapbubbleData={mapbubbleData}
+                        polygonsData={polygonsData}
+                      />
+                      <div className="item-label">Saint-Martin</div>
+                    </div>
+                  </Col>
+                  <Col md={6}>
+                    <div className="standard-item">
+                      <MapWithPolygonAndBubbles
+                        currentYear={currentYear}
+                        idToFocus="D986"
+                        isLoading={isLoadingHistoric}
+                        mapbubbleData={mapbubbleData}
+                        polygonsData={polygonsData}
+                      />
+                      <div className="item-label">Wallis et Futuna</div>
+                    </div>
+                  </Col>
+                </Row>
               </Col>
               <Col md={4}>
                 <SubList />

@@ -126,13 +126,13 @@ router.route("/atlas/get-geo-polygons").get(async (req, res) => {
   }
   if (geoId.startsWith("R") || geoId.startsWith("A") || geoId.startsWith("P")) {
     const ids = await db.collection("atlas2024").distinct("geo_id", filters);
-    if (geoId.startsWith("P")) {
+    if (geoId.startsWith("P") || geoId === "R00") {
       ids.push("D988"); //Nouvelle-Caledonie
       ids.push("D987"); //Polynesie-Francaise
       ids.push("D986"); //Wallis-et-Futuna
       ids.push("D985"); //Saint-Pierre-et-Miquelon
       ids.push("D984"); //Saint-Barthelemy
-      ids.push("978"); //Saint-Martin
+      ids.push("D978"); //Saint-Martin
     }
     const polygons = [];
     for (let i = 0; i < ids.length; i++) {
@@ -355,7 +355,7 @@ router.route("/atlas/number-of-students-historic-by-level").get(async (req, res)
     query = {
       geo_id: { $ne: "R99" }, // français à l'etrangers
       $or: [
-        { geo_id: "978" },
+        { geo_id: "D978" },
         { geo_id: "D986" },
         { geo_id: "D987" },
         { geo_id: "D988" },

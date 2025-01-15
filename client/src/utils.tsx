@@ -49,6 +49,10 @@ function getParentFromLevel(parents, geoId) {
   if (geoId === "PAYS_100") {
     return null;
   }
+  if (geoId === "D978") {
+    return { geo_nom: parents.reg_nom, geo_id: parents.reg_id };
+
+  }
   if (geoId.startsWith("R")) {
     return { geo_nom: "France", geo_id: "PAYS_100" };
   }
@@ -61,6 +65,8 @@ function getParentFromLevel(parents, geoId) {
   if (geoId.startsWith("U")) {
     return { geo_nom: parents.reg_nom, geo_id: parents.reg_id };
   }
+  
+  // default = communes
   return { geo_nom: parents.dep_nom, geo_id: parents.dep_id };
 }
 

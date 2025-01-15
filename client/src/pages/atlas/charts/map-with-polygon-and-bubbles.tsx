@@ -23,11 +23,11 @@ export default function MapWithPolygonAndBubbles({
 }) {
   const [searchParams] = useSearchParams();
   const geoId = searchParams.get("geo_id") || "";
-
+  
   if (isLoading) {
     return <MapSkeleton />;
   }
-
+  
   const mapOptions = {
     chart: {
       map: "countries/ie/ie-all",
@@ -137,7 +137,7 @@ export default function MapWithPolygonAndBubbles({
   }
 
   // special case : France but idToFocus === Saint-Martin
-  if (geoId === "PAYS_100" && currentId === "978") {
+  if (geoId === "PAYS_100" && currentId === "D978") {
     mapOptions.mapView["center"] = [-63.1, 18.1];
     mapOptions.mapView["zoom"] = 9;
     mapOptions.chart["height"] = "150";
@@ -150,6 +150,36 @@ export default function MapWithPolygonAndBubbles({
     mapOptions.mapView["zoom"] = 6;
     mapOptions.chart["height"] = "150";
     mapOptions.chart["width"] = "130";
+  }
+
+  // special case : collectivités
+  if (geoId === "R00") {
+    mapOptions.chart["height"] = "130";
+    mapOptions.chart["width"] = "250";
+  }
+
+  // special case : collectivités but idToFocus === Nouvelle-Calédonie
+  if (geoId === "R00" && currentId === "D988") {
+    mapOptions.mapView["center"] = [165.7, -21];
+    mapOptions.mapView["zoom"] = 5.5;
+  }
+
+  // special case : collectivités but idToFocus === Polynésie française
+  if (geoId === "R00" && currentId === "D987") {
+    mapOptions.mapView["center"] = [-149.5, -17.5];
+    mapOptions.mapView["zoom"] = 7;
+  }
+
+  // special case : collectivités but idToFocus === Saint-Martin
+  if (geoId === "R00" && currentId === "D978") {
+    mapOptions.mapView["center"] = [-63.1, 18.1];
+    mapOptions.mapView["zoom"] =  9;
+  }
+
+  // special case : collectivités but idToFocus === Wallis et Futuna
+  if (geoId === "R00" && currentId === "D986") {
+    mapOptions.mapView["center"] = [-178, -13.3];
+    mapOptions.mapView["zoom"] = 6;
   }
 
   return (
