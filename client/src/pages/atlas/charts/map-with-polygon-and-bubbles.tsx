@@ -147,7 +147,7 @@ export default function MapWithPolygonAndBubbles({
   // special case : France but idToFocus === Wallis et Futuna
   if (geoId === "PAYS_100" && currentId === "D986") {
     mapOptions.mapView["center"] = [-178, -13.3];
-    mapOptions.mapView["zoom"] = 9;
+    mapOptions.mapView["zoom"] = 6;
     mapOptions.chart["height"] = "150";
     mapOptions.chart["width"] = "130";
   }
