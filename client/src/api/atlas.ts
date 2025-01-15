@@ -1,22 +1,27 @@
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
+function cleanedParams(params: string) {
+  return params.replace(/&?datasupr=true/, '');
+}
+
 export async function getNumberOfStudentsMap(params: string) {
-  const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-map?${params}`;
+  const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-map?${cleanedParams(params)}`;
   return fetch(url).then((response) => response.json());
 }
 
 export async function getNumberOfStudents(params: string) {
-  const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students?${params}`;
+  console.log(params);
+  const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students?${cleanedParams(params)}`;
   return fetch(url).then((response) => response.json());
 }
 
 export async function getReferences(params: string) {
-  const url = `${VITE_APP_SERVER_URL}/atlas/get-references?${params}`;
+  const url = `${VITE_APP_SERVER_URL}/atlas/get-references?${cleanedParams(params)}`;
   return fetch(url).then((response) => response.json());
 }
 
 export async function getNumberOfStudentsByYear(params: string) {
-  const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-by-year?${params}`;
+  const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-by-year?${cleanedParams(params)}`;
   return fetch(url).then((response) => response.json());
 }
 
@@ -65,7 +70,7 @@ export async function getNumberOfStudentsHistoricByLevel(
 }
 
 export async function getNumberOfStudentsByGenderAndLevel(params: string) {
-  const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-by-gender-and-level?${params}`;
+  const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students-by-gender-and-level?${cleanedParams(params)}`;
   return fetch(url).then((response) => response.json());
 }
 
