@@ -115,7 +115,7 @@ export default function MapPieGenders({
           const chart = this;
           // Add the pies after chart load, optionally with offset and connectors
           Highcharts.each(chart.series[0].points, function (state) {
-            if (!state.id) {
+            if (!state.id || !state.geometry) {
               return; // Skip points with no data, if any
             }
 
