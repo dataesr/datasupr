@@ -216,7 +216,7 @@ export function Sectors() {
           <SectortsChart data={dataSectors || []} isLoading={isLoading} />
         </Col>
       </Row>
-      {polygonsData.length > 1 && geoId !== "D075" ? (
+      {(polygonsData.length > 1 && geoId !== "D075" && geoId !== "R00") && (
         <>
           <Row className="fr-my-5w">
             <Col>
@@ -240,7 +240,7 @@ export function Sectors() {
             </Col>
           </Row>
         </>
-      ) : null}
+      )}
       <Row className="fr-mt-5w">
         <Col>
           <Title as="h3" look="h5">
