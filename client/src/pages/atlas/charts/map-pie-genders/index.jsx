@@ -137,7 +137,7 @@ export default function MapPieGenders({
                 sizeFormatter: function () {
                   const x = state.effectifFeminin + state.effectifMasculin;
                   const y = a * x + b;
-                  return Math.sqrt(y + 1.5) * 100;
+                  return Math.log(y + 1.5) * 100;
                 },
                 tooltip: {
                   pointFormatter: function () {
