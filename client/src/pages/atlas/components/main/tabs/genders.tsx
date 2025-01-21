@@ -181,7 +181,7 @@ export function Genders() {
   return (
     <Container as="section" fluid>
       <Row gutters>
-        <Col>
+        <Col md={7}>
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
@@ -221,7 +221,7 @@ export function Genders() {
             </Col>
           </Row>
         </Col>
-        <Col>
+        <Col md={5}>
           <Title as="h3" look="h6" className="fr-mx-5w">
             Pourcentage d'étudiants inscrits regroupés par genre
             <Badge color="yellow-tournesol" className="fr-ml-1w">
