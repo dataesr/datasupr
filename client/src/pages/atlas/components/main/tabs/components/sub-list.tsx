@@ -2,9 +2,10 @@ import { Badge, Button, Container, Row } from "@dataesr/dsfr-plus";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import Template from "../../../../../components/template/index.tsx";
-import { getNumberOfStudentsHistoricByLevel } from "../../../../../api/index.ts";
-import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
+import Template from "../../../../../../components/template/index.tsx";
+import { getNumberOfStudentsHistoricByLevel } from "../../../../../../api/index.ts";
+import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
+import { getSubLevel } from "../../../../utils/index.tsx";
 
 export default function SubList() {
   const [searchParams] = useSearchParams();
@@ -28,24 +29,6 @@ export default function SubList() {
     return null;
   }
 
-  const getSubLevel = () => {
-    if (!geoId || geoId === "PAYS_100") {
-      return "Liste des régions";
-    }
-    if (geoId.startsWith("R")) {
-      return "Liste des académies";
-    }
-    if (geoId.startsWith("D")) {
-      return "Liste des communes";
-    }
-    if (geoId.startsWith("A")) {
-      return "Liste des départements";
-    }
-    if (geoId.startsWith("U")) {
-      return "Liste des communes";
-    }
-  };
-
   const maxValue: number = Math.max(
     ...dataHistoric.data.map(
       (ter: { data: { annee_universitaire: string; effectif: number }[] }) =>
@@ -65,7 +48,7 @@ export default function SubList() {
       <Row style={{ width: "100%" }}>
         <div style={{ flexGrow: "1" }}>
           <strong>
-            <i>{getSubLevel()}</i>
+            <i>{getSubLevel({geoId})}</i>
           </strong>
         </div>
         <div className="fr-mb-1w">

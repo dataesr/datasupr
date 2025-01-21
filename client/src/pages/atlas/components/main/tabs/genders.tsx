@@ -23,6 +23,7 @@ import GenderHistoChart from "../../../charts/genders-histo.tsx";
 import { DataByYear, SimilarData } from "../../../../../types/atlas.ts";
 import StudentsCardWithTrend from "../../../../../components/cards/students-card-with-trend/index.tsx";
 import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
+import SubListGenders from "./components/sub-list-genders.tsx";
 
 export function Genders() {
   const [chartView, setChartView] = useState<"basic" | "percentage">("basic");
@@ -244,13 +245,16 @@ export function Genders() {
             </Col>
           </Row>
           <Row gutters>
-            <Col md={12}>
+            <Col md={7}>
               <MapPieGender
                 currentYear={currentYear}
                 isLoading={isLoadingDataGenders}
                 mapPieData={dataGenders}
                 polygonsData={polygonsData}
               />
+            </Col>
+            <Col md={5}>
+              <SubListGenders />
             </Col>
           </Row>
         </>

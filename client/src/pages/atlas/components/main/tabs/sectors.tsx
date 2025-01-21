@@ -23,6 +23,7 @@ import {
 import { DataByYear, SimilarData } from "../../../../../types/atlas.ts";
 import StudentsCardWithTrend from "../../../../../components/cards/students-card-with-trend/index.tsx";
 import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
+import SubListSectors from "./components/sub-list-sectors.tsx";
 
 export function Sectors() {
   const [chartView, setChartView] = useState<"basic" | "percentage">("basic");
@@ -230,13 +231,16 @@ export function Sectors() {
             </Col>
           </Row>
           <Row gutters>
-            <Col md={12}>
+            <Col md={7}>
               <MapPieSectors
                 currentYear={currentYear}
                 isLoading={isLoadingDataSectorsMap}
                 mapPieData={dataSectorsMap}
                 polygonsData={polygonsData}
               />
+            </Col>
+            <Col md={5}>
+              <SubListSectors />
             </Col>
           </Row>
         </>

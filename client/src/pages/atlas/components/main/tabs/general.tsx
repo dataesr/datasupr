@@ -24,7 +24,7 @@ import GendersCard from "../../../../../components/cards/genders-card/index.tsx"
 import SectorsCard from "../../../../../components/cards/sectors-card/index.tsx";
 import StudentsCardWithTrend from "../../../../../components/cards/students-card-with-trend/index.tsx";
 import TrendCard from "../../../charts/trend.tsx";
-import SubList from "./sub-list.tsx";
+import SubList from "./components/sub-list.tsx";
 import MapWithPolygonAndBubbles from "../../../charts/map-with-polygon-and-bubbles.tsx";
 import MapSkeleton from "../../../charts/skeletons/map.tsx";
 import ArrondissementsMap from "../../../charts/arrondissements-map/index.tsx";
