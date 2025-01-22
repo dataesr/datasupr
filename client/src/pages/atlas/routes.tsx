@@ -6,7 +6,7 @@ import { FieldsRouter } from './components/main/tabs/fields/index.tsx';
 import { Sectors } from './components/main/tabs/sectors.tsx';
 import { Genders } from './components/main/tabs/genders.tsx';
 import { OtherGeographicalLevels } from './components/main/tabs/other-geographical-levels.tsx';
-import { Layout } from './components/layout/Layout.tsx';
+import { Layout } from './components/layout/layout.tsx';
 
 export default function AtlasRoutes() {
   return (
