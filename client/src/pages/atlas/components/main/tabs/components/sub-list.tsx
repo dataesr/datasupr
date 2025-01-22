@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Badge, Button, Container, Row } from "@dataesr/dsfr-plus";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -7,11 +8,14 @@ import { getNumberOfStudentsHistoricByLevel } from "../../../../../../api/index.
 import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
 import { getSubLevel } from "../../../../utils/index.tsx";
 
+const MAX_ELEMENTS = 6;
+
 export default function SubList() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const geoId = searchParams.get("geo_id") || "";
   const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
+  const [max, setMax] = useState(MAX_ELEMENTS);
 
   const { data: dataHistoric, isLoading: isLoadingHistoric } = useQuery({
     queryKey: [
@@ -56,7 +60,7 @@ export default function SubList() {
         </div>
       </Row>
       <ul style={{ overflow: "auto", listStyle: "none", padding: 0 }}>
-        {dataHistoric?.data.slice(0, 20).map((item) => {
+        {dataHistoric?.data.slice(0, max).map((item) => {
           const size = Math.round(
             (item.data.find((el) => el.annee_universitaire === currentYear)
               ?.effectif *
@@ -104,6 +108,17 @@ export default function SubList() {
             </li>
           );
         })}
+        {
+        dataHistoric.data.length > MAX_ELEMENTS && (
+          <Button
+            onClick={() => setMax(max === MAX_ELEMENTS ? dataHistoric.data.length : MAX_ELEMENTS)}
+            size="sm"
+            variant="text"
+          >
+            {max === MAX_ELEMENTS ? "Voir plus" : "Voir moins"}
+          </Button>
+          )
+        }
       </ul>
     </Container>
   );
