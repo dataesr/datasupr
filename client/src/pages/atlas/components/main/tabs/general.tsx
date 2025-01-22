@@ -88,21 +88,21 @@ export function General() {
 
   const getSubLevelName = () => {
     if (!geoId || geoId === "PAYS_100") {
-      return "régions";
+      return "région";
     }
     if (geoId.startsWith("R")) {
-      return "académies";
+      return "académie";
     }
     if (geoId.startsWith("D")) {
-      return "communes";
+      return "commune";
     }
     if (geoId.startsWith("A")) {
-      return "départements";
+      return "département";
     }
     if (geoId.startsWith("U")) {
-      return "communes";
+      return "commune";
     }
-    return "communes";
+    return "commune";
   };
 
   function MapSelector() {
