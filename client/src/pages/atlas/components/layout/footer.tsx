@@ -34,19 +34,16 @@ export default function Footer() {
         <div className="fr-footer__bottom">
           <ul className="fr-footer__bottom-list">
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="#">Plan du site</a>
+              <a className="fr-footer__bottom-link" href="/atlas/plan-du-site">Plan du site</a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="#">Accessibilité : non/partiellement/totalement conforme</a>
+              <a className="fr-footer__bottom-link" href="/atlas/accessibilite">Accessibilité : partiellement conforme</a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="#">Mentions légales</a>
+              <a className="fr-footer__bottom-link" href="/atlas/mentions-legales">Mentions légales</a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="#">Données personnelles</a>
-            </li>
-            <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="#">Gestion des cookies</a>
+              <a className="fr-footer__bottom-link" href="/atlas/gestion-des-cookies">Gestion des cookies</a>
             </li>
           </ul>
           <div className="fr-footer__bottom-copy">

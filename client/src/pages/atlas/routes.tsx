@@ -7,6 +7,10 @@ import { Sectors } from './components/main/tabs/sectors.tsx';
 import { Genders } from './components/main/tabs/genders.tsx';
 import { OtherGeographicalLevels } from './components/main/tabs/other-geographical-levels.tsx';
 import { Layout } from './components/layout/layout.tsx';
+import SiteMap from './components/static-pages/site-map.tsx';
+import Accessibility from './components/static-pages/accessibility.tsx';
+import LegalMentions from './components/static-pages/legal-mentions.tsx';
+import CookieManagement from './components/static-pages/cookie-management.tsx';
 
 export default function AtlasRoutes() {
   return (
@@ -19,6 +23,10 @@ export default function AtlasRoutes() {
           <Route path="effectifs-par-genre" element={<Genders />} />
           <Route path="autres-niveaux-geographiques" element={<OtherGeographicalLevels />} />
         </Route>
+        <Route path="plan-du-site" element={<SiteMap />} />
+        <Route path="accessibilite" element={<Accessibility />} />
+        <Route path="mentions-legales" element={<LegalMentions />} />
+        <Route path="gestion-des-cookies" element={<CookieManagement />} />
       </Route>
     </Routes>
   );
