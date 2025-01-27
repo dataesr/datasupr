@@ -26,16 +26,16 @@ export default function Menu() {
             href={`/atlas/effectifs-par-filiere?${params}`}
             aria-current={pathname.split('/')[2] === 'effectifs-par-filiere' ? 'page' : undefined}
           >
-            Effectifs par filières
+            Effectifs par filière
           </Link>
         </li>
         <li className="fr-nav__item">
           <Link
             className="fr-nav__link"
-            href={`/atlas/effectifs-par-secteurs?${params}`}
-            aria-current={pathname.split('/')[2] === 'effectifs-par-secteurs' ? 'page' : undefined}
+            href={`/atlas/effectifs-par-secteur?${params}`}
+            aria-current={pathname.split('/')[2] === 'effectifs-par-secteur' ? 'page' : undefined}
           >
-            Effectifs par secteurs
+            Effectifs par secteur
           </Link>
         </li>
         <li className="fr-nav__item">
@@ -44,7 +44,7 @@ export default function Menu() {
             href={`/atlas/effectifs-par-genre?${params}`}
             aria-current={pathname.split('/')[2] === 'effectifs-par-genre' ? 'page' : undefined}
           >
-            Effectifs par genres
+            Effectifs par genre
           </Link>
         </li>
       </ul>

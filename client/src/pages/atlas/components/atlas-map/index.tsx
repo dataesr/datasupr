@@ -193,7 +193,7 @@ export default function AtlasMap() {
           </Row>
         );
 
-      case "effectifs-par-secteurs":
+      case "effectifs-par-secteur":
         return (
           <Row gutters>
             <Col md={12}>

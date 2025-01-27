@@ -54,10 +54,10 @@ export function AtlasSideMenu({ geoLabel, level, title }:
               Effectifs par filière
             </Link>
             <Link
-              current={is("/atlas/effectifs-par-secteurs")}
-              href={`/atlas/effectifs-par-secteurs?${filtersParams}`}
+              current={is("/atlas/effectifs-par-secteur")}
+              href={`/atlas/effectifs-par-secteur?${filtersParams}`}
             >
-              Effectifs par secteurs
+              Effectifs par secteur
             </Link>
             <Link
               current={is("/atlas/effectifs-par-genre")}

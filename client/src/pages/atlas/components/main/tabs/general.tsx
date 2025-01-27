@@ -575,7 +575,7 @@ export function General() {
             pour l'année universitaire{" "}
             <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
-          <Link href={`/atlas/effectifs-par-secteurs?${params}`}>
+          <Link href={`/atlas/effectifs-par-secteur?${params}`}>
             Voir le détail des effectifs par secteur
           </Link>
         </Col>
