@@ -19,7 +19,7 @@ export default function AtlasRoutes() {
         <Route path="/" element={<AtlasHeader />}>
           <Route path="general" element={<General />} />
           <Route path="effectifs-par-filiere/:idFiliere?" element={<FieldsRouter />} />
-          <Route path="effectifs-par-secteurs" element={<Sectors />} />
+          <Route path="effectifs-par-secteur" element={<Sectors />} />
           <Route path="effectifs-par-genre" element={<Genders />} />
           <Route path="autres-niveaux-geographiques" element={<OtherGeographicalLevels />} />
         </Route>
