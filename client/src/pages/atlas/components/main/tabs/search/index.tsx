@@ -123,9 +123,11 @@ export function Search() {
             </Row>
             <Row className="fr-mt-5w">
               <Col md={9} className="search">
+                  <Title as="h2" look="h6" className="fr-mb-1w">
                 <label className="fr-label" htmlFor="text-input-text">
-                  Rechercher un territoires
+                  Rechercher un territoire
                 </label>
+                  </Title>
                 <input
                   className="fr-input"
                   id="text-input-text"

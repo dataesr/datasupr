@@ -51,7 +51,7 @@ export default function FavoritesList({ territoiresList }: { territoiresList: Te
 
   const theme = getThemeFromHtmlNode();
   return (
-    <div 
+    <aside 
       className="fr-p-2w"
       style={{ 
         backgroundColor: getComputedStyle(document.documentElement).getPropertyValue(`--bg-${theme}`),
@@ -92,6 +92,6 @@ export default function FavoritesList({ territoiresList }: { territoiresList: Te
           </li>
         ))}
       </ul>
-    </div>
+    </aside>
   );
 }
