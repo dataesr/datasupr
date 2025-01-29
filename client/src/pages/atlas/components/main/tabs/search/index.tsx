@@ -55,7 +55,7 @@ export function Search() {
     return <Spinner />;
   }
 
-  // Create a list of all territories (regions, departments, academies - without urban unities and cities)
+  // Create a list of all territories (regions, departments, academies - without cities)
   const territoiresList = Object.keys(filtersValues.geo_id)
     .map((key) => {
       if (key !== "communes") {
@@ -133,6 +133,7 @@ export function Search() {
                   id="text-input-text"
                   name="text-input-text"
                   onChange={(e) => setSearchValue(e.target.value)}
+                  onClick={() => {setSearchValue("");}}
                   onKeyUp={(e) => {
                     if (e.key === "Enter") handleClick();
                   }}

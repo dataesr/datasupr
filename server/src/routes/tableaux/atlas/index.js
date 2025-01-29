@@ -47,35 +47,88 @@ const START_YEAR = 2001;
 const END_YEAR = 2023;
 
 router.route("/atlas/get-geo-ids-from-search").get((req, res) => {
-  if (
-    (!req.query.q || req.query?.q.length === 0) &&
-    (req.query.niveau_geo === "" || req.query.niveau_geo === "COMMUNE")
-  ) {
-    res.status(400).send("the query is required for this level");
+  const normalizeString = (str) => {
+    return str
+      .toLowerCase()
+      .normalize('NFC')
+      .replace('é', 'e')
+      .replace('è', 'e')
+      .replace('à', 'a')
+      .replace('ç', 'c')
+      .replace(/-/g, ' ');
+  }
+  if (!req.query.q || req.query?.q.length === 0) {
+    res.status(400).send("the query is required");
   }
 
   const filters = {};
-  if (req.query.niveau_geo) {
-    filters.niveau_geo = req.query.niveau_geo;
-  }
-
-  if (req.query.niveau_geo === "ACADEMIE") {
-    filters.geo_id = { $ne: "A99" };
-  }
-
-  if (req.query.niveau_geo === "REGION") {
-    filters.geo_id = { $ne: "R99" };
-  }
-
-  filters.geo_nom = { $regex: req.query.q, $options: "i" };
-
+  const searchQuery = normalizeString(req.query.q);
+  filters.geo_nom = { $regex: searchQuery, $options: "i" };
+  
   db.collection("atlas2024")
-    .find(filters, {
-      projection: { _id: 0, geo_nom: 1, geo_id: 1, niveau_geo: 1 },
-    })
-    .sort({ geo_nom: 1 })
-    .toArray()
+    .aggregate([
+    {
+      $addFields: {
+        normalized_name: {
+          $toLower: {
+            $replaceAll: {
+              input: {
+                $replaceAll: {
+                  input: {
+                    $replaceAll: {
+                      input: {
+                        $replaceAll: {
+                          input: {
+                            $replaceAll: {
+                              input: {
+                                $toLower: {
+                                  $trim: { input: "$geo_nom" }
+                                }
+                              },
+                                find: "é",
+                                replacement: "e"
+                            }
+                          },
+                            find: "è",
+                            replacement: "e"
+                        }
+                      },
+                        find: "à",
+                        replacement: "a"
+                    }
+                  },
+                  find: "-",
+                  replacement: " "
+                }
+              },
+              find: "ç",
+              replacement: "c"
+            }
+          }
+        }
+      }
+    },
+    {
+      $match: {
+        normalized_name: filters.geo_nom,
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        geo_nom: 1,
+        geo_id: 1, 
+        niveau_geo: 1,
+        normalized_name: 1
+      }
+    },
+    {
+      $sort: { geo_nom: 1 }
+    }
+  ]).toArray()
     .then((response) => {
+      console.log("response", response);
+      
       const set = new Set();
       const unique = [];
       response.map((item) => {

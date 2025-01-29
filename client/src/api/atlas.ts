@@ -10,7 +10,6 @@ export async function getNumberOfStudentsMap(params: string) {
 }
 
 export async function getNumberOfStudents(params: string) {
-  console.log(params);
   const url = `${VITE_APP_SERVER_URL}/atlas/number-of-students?${cleanedParams(params)}`;
   return fetch(url).then((response) => response.json());
 }
