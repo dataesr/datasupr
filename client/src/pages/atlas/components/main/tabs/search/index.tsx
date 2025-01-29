@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Badge,
   Button,
@@ -30,11 +30,14 @@ type SearchTypes = {
 };
 
 export function Search() {
+  const [searchParams] = useSearchParams();
   const [territoiresType, setTerritoiresType] = useState("all");
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
   const datasupr = params.get("datasupr") === "true";
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
+
 
   const { data: filtersValues, isLoading: isLoadingFiltersValues } = useQuery({
     queryKey: ["atlas/get-filters-values"],
@@ -43,7 +46,7 @@ export function Search() {
 
  const { data: dataByYear } = useQuery({
     queryKey: ["atlas/number-of-students-by-year", params],
-    queryFn: () => getNumberOfStudentsByYear(`?annee_universitaire=${DEFAULT_CURRENT_YEAR}`),
+    queryFn: () => getNumberOfStudentsByYear(`?annee_universitaire=${currentYear}`),
   });
 
   const {
@@ -64,7 +67,7 @@ export function Search() {
     return <Spinner />;
   }
 
-  const nbStudents = dataByYear?.find((el: DataByYear) => el.annee_universitaire === DEFAULT_CURRENT_YEAR)?.effectif_total || 0;
+  const nbStudents = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_total || 0;
   
   // Create a list of all territories (regions, departments, academies - without cities)
   const territoiresList = Object.keys(filtersValues.geo_id)
@@ -201,7 +204,7 @@ export function Search() {
                         key={result.geo_id}
                         onClick={() => {
                           navigate(
-                          `/atlas/general?geo_id=${result.geo_id}&annee_universitaire=${DEFAULT_CURRENT_YEAR}${datasupr ? "&datasupr=true" : ""}`
+                          `/atlas/general?geo_id=${result.geo_id}&annee_universitaire=${currentYear}${datasupr ? "&datasupr=true" : ""}`
                           );
                         }}
                       >
@@ -230,7 +233,7 @@ export function Search() {
         <Container fluid className="fr-mb-1w">
           <StudentsCardWithTrend
             descriptionNode={
-              <Badge color="yellow-tournesol">{DEFAULT_CURRENT_YEAR}</Badge>
+              <Badge color="yellow-tournesol">{currentYear}</Badge>
             }
             number={nbStudents}
             label={`Étudiant${nbStudents > 1 ? 's' : ''} inscrit${nbStudents > 1 ? 's' : ''} en France`}
