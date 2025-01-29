@@ -10,15 +10,19 @@ import {
   Title,
 } from "@dataesr/dsfr-plus";
 
+import StudentsCardWithTrend from "../../../../../../components/cards/students-card-with-trend/index.js";
+import TrendCard from "../../../../charts/trend.tsx";
 import {
   getFiltersValues,
   getGeoIdsFromSearch,
+  getNumberOfStudentsByYear,
 } from "../../../../../../api/atlas.js";
 import FavoritesList from "../../../favorites-list/index.js";
 import { GetLevelBadgeFromItem } from "../../../../utils/badges.js";
 
 import "./styles.scss";
 import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.js";
+import { DataByYear } from "../../../../../../types/atlas.ts";
 
 type SearchTypes = {
   geo_id: string;
@@ -35,6 +39,11 @@ export function Search() {
   const { data: filtersValues, isLoading: isLoadingFiltersValues } = useQuery({
     queryKey: ["atlas/get-filters-values"],
     queryFn: () => getFiltersValues(),
+  });
+
+ const { data: dataByYear } = useQuery({
+    queryKey: ["atlas/number-of-students-by-year", params],
+    queryFn: () => getNumberOfStudentsByYear(`?annee_universitaire=${DEFAULT_CURRENT_YEAR}`),
   });
 
   const {
@@ -55,6 +64,8 @@ export function Search() {
     return <Spinner />;
   }
 
+  const nbStudents = dataByYear?.find((el: DataByYear) => el.annee_universitaire === DEFAULT_CURRENT_YEAR)?.effectif_total || 0;
+  
   // Create a list of all territories (regions, departments, academies - without cities)
   const territoiresList = Object.keys(filtersValues.geo_id)
     .map((key) => {
@@ -102,7 +113,7 @@ export function Search() {
   return (
     <Container as="section">
       <Row>
-        <Col md={8}>
+        <Col md={7}>
           <Container fluid>
             <Row>
               <Col>
@@ -175,8 +186,8 @@ export function Search() {
                 {!isLoadingSearch && dataSearch?.length === undefined && (
                   <div className="results">
                     <i className="hint">
-                      Saisissez un mot clé pour rechercher un territoire Par
-                      exemple : "Paris", "Bretagne", "Occitanie", etc ...
+                      Saisissez un mot clé pour rechercher un territoire. Par
+                      exemple : "Paris", "Bretagne", etc ...
                       <br />
                       Puis cliquez sur le bouton <strong>"Rechercher"</strong>
                     </i>
@@ -215,7 +226,22 @@ export function Search() {
             </Row>
           </Container>
         </Col>
-        <Col md={3} offsetMd={1}>
+        <Col md={4} offsetMd={1}>
+        <Container fluid className="fr-mb-1w">
+          <StudentsCardWithTrend
+            descriptionNode={
+              <Badge color="yellow-tournesol">{DEFAULT_CURRENT_YEAR}</Badge>
+            }
+            number={nbStudents}
+            label={`Étudiant${nbStudents > 1 ? 's' : ''} inscrit${nbStudents > 1 ? 's' : ''} en France`}
+            trendGraph={
+              <TrendCard
+                color="#e18b76"
+                data={dataByYear?.map((item) => item.effectif_total)}
+              />
+            }
+          />
+          </Container>
           <FavoritesList territoiresList={territoiresList} />
         </Col>
       </Row>
