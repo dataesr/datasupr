@@ -118,7 +118,7 @@ export default function SubListGenders() {
               >
                 Effectifs <strong>{item.nom}</strong> par genre pour l'année universitaire {currentYear}
                 <br />
-                Féminin : {item.effectif_feminin.toLocaleString()} étudiants
+                Féminin : {item.effectif_feminin.toLocaleString()} étudiantes
                 <br />
                 Masculin : {item.effectif_masculin.toLocaleString()} étudiants
               </span>
