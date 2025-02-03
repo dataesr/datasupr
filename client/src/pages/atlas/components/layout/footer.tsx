@@ -4,12 +4,19 @@ export default function Footer() {
       <div className="fr-container">
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
-            <a href="/" title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
+            <a
+              href="/"
+              title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)"
+            >
               <p className="fr-logo">
-                Ministère<br />
-                chargé<br />
-                de l'enseignement<br />
-                supérieur<br />
+                Ministère
+                <br />
+                chargé
+                <br />
+                de l'enseignement
+                <br />
+                supérieur
+                <br />
                 et de la recherche
               </p>
             </a>
@@ -17,16 +24,48 @@ export default function Footer() {
           <div className="fr-footer__content">
             <ul className="fr-footer__content-list">
               <li className="fr-footer__content-item">
-                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="[À MODIFIER - Intitulé] - nouvelle fenêtre" href="https://legifrance.gouv.fr">legifrance.gouv.fr</a>
+                <a
+                  className="fr-footer__content-link"
+                  target="_blank"
+                  rel="noopener external"
+                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  href="https://legifrance.gouv.fr"
+                >
+                  legifrance.gouv.fr
+                </a>
               </li>
               <li className="fr-footer__content-item">
-                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="[À MODIFIER - Intitulé] - nouvelle fenêtre" href="https://gouvernement.fr">gouvernement.fr</a>
+                <a
+                  className="fr-footer__content-link"
+                  target="_blank"
+                  rel="noopener external"
+                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  href="https://gouvernement.fr"
+                >
+                  gouvernement.fr
+                </a>
               </li>
               <li className="fr-footer__content-item">
-                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="[À MODIFIER - Intitulé] - nouvelle fenêtre" href="https://service-public.fr">service-public.fr</a>
+                <a
+                  className="fr-footer__content-link"
+                  target="_blank"
+                  rel="noopener external"
+                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  href="https://service-public.fr"
+                >
+                  service-public.fr
+                </a>
               </li>
               <li className="fr-footer__content-item">
-                <a className="fr-footer__content-link" target="_blank" rel="noopener external" title="[À MODIFIER - Intitulé] - nouvelle fenêtre" href="https://data.gouv.fr">data.gouv.fr</a>
+                <a
+                  className="fr-footer__content-link"
+                  target="_blank"
+                  rel="noopener external"
+                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  href="https://data.gouv.fr"
+                >
+                  data.gouv.fr
+                </a>
               </li>
             </ul>
           </div>
@@ -34,20 +73,49 @@ export default function Footer() {
         <div className="fr-footer__bottom">
           <ul className="fr-footer__bottom-list">
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/atlas/plan-du-site">Plan du site</a>
+              <a className="fr-footer__bottom-link" href="/atlas/plan-du-site">
+                Plan du site
+              </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/atlas/accessibilite">Accessibilité : partiellement conforme</a>
+              <a className="fr-footer__bottom-link" href="/atlas/accessibilite">
+                Accessibilité : partiellement conforme
+              </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/atlas/mentions-legales">Mentions légales</a>
+              <a
+                className="fr-footer__bottom-link"
+                href="/atlas/mentions-legales"
+              >
+                Mentions légales
+              </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="/atlas/gestion-des-cookies">Gestion des cookies</a>
+              <a
+                className="fr-footer__bottom-link"
+                href="/atlas/gestion-des-cookies"
+              >
+                Gestion des cookies
+              </a>
+            </li>
+            <li className="fr-footer__bottom-item">
+              <a className="fr-footer__bottom-link" href="/atlas/contact">
+                Nous contacter
+              </a>
             </li>
           </ul>
           <div className="fr-footer__bottom-copy">
-            <p>Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous <a href="https://github.com/etalab/licence-ouverte/blob/master/LO.md" target="_blank" rel="noopener external" title="[À MODIFIER - Intitulé] - nouvelle fenêtre">licence etalab-2.0</a>
+            <p>
+              Sauf mention explicite de propriété intellectuelle détenue par des
+              tiers, les contenus de ce site sont proposés sous{" "}
+              <a
+                href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
+                target="_blank"
+                rel="noopener external"
+                title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+              >
+                licence etalab-2.0
+              </a>
             </p>
           </div>
         </div>
