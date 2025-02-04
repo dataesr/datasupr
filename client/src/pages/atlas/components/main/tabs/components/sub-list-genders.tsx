@@ -5,8 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 
 import Template from "../../../../../../components/template/index.tsx";
 import { getNumberOfStudentsByGenderAndSublevel } from "../../../../../../api/index.ts";
-import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
 import { getSubLevel } from "../../../../utils/index.tsx";
+// import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
+import { useAtlas } from "../../../../useAtlas.tsx";
 
 const MAX_ELEMENTS = 6;
 
@@ -14,7 +15,9 @@ export default function SubListGenders() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const geoId = searchParams.get("geo_id") || "";
-  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
+  const { DEFAULT_CURRENT_YEAR } = useAtlas();
+  const currentYear =
+    searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   const [max, setMax] = useState(MAX_ELEMENTS);
 
   const { data, isLoading } = useQuery({
@@ -32,11 +35,9 @@ export default function SubListGenders() {
   if (!data) {
     return null;
   }
-  
-  const maxValue: number = Math.max(
-    ...data.map((el) => el.effectif_total)
-  );
-  
+
+  const maxValue: number = Math.max(...data.map((el) => el.effectif_total));
+
   // return null;
   // // Special case "Saint-Martin" (geo_id = 978)
   // data.data.forEach(item => {
@@ -50,7 +51,7 @@ export default function SubListGenders() {
       <Row style={{ width: "100%" }}>
         <div style={{ flexGrow: "1" }}>
           <strong>
-            <i>{getSubLevel({geoId})}</i>
+            <i>{getSubLevel({ geoId })}</i>
           </strong>
         </div>
         <div className="fr-mb-1w">
@@ -59,17 +60,15 @@ export default function SubListGenders() {
       </Row>
       <ul style={{ overflow: "auto", listStyle: "none", padding: 0 }}>
         {data.slice(0, max).map((item) => {
-          const size_f = Math.round(item.effectif_feminin * 100 / maxValue);
-          const size_m = Math.round(item.effectif_masculin * 100 / maxValue);
+          const size_f = Math.round((item.effectif_feminin * 100) / maxValue);
+          const size_m = Math.round((item.effectif_masculin * 100) / maxValue);
 
           return (
             <li key={item.id}>
               <Row key={item.id} style={{ width: "100%" }}>
                 <div style={{ flexGrow: "1" }}>{item.nom}</div>
                 <div>
-                  <strong>
-                    {item.effectif_total.toLocaleString()}
-                  </strong>
+                  <strong>{item.effectif_total.toLocaleString()}</strong>
                   {["R", "D", "A", "U", "P"].includes(geoId?.charAt(0)) && (
                     <Button
                       className="fr-ml-1w"
@@ -110,13 +109,14 @@ export default function SubListGenders() {
                   borderBottomRightRadius: "3px",
                 }}
               />
-              <span 
+              <span
                 aria-hidden="true"
-                className="fr-tooltip fr-placement" 
-                id={`tooltip_${item.id}`} 
-                role="tooltip" 
+                className="fr-tooltip fr-placement"
+                id={`tooltip_${item.id}`}
+                role="tooltip"
               >
-                Effectifs <strong>{item.nom}</strong> par genre pour l'année universitaire {currentYear}
+                Effectifs <strong>{item.nom}</strong> par genre pour l'année
+                universitaire {currentYear}
                 <br />
                 Féminin : {item.effectif_feminin.toLocaleString()} étudiantes
                 <br />
@@ -125,17 +125,17 @@ export default function SubListGenders() {
             </li>
           );
         })}
-        {
-        data.length > MAX_ELEMENTS && (
+        {data.length > MAX_ELEMENTS && (
           <Button
-            onClick={() => setMax(max === MAX_ELEMENTS ? data.length : MAX_ELEMENTS)}
+            onClick={() =>
+              setMax(max === MAX_ELEMENTS ? data.length : MAX_ELEMENTS)
+            }
             size="sm"
             variant="text"
           >
             {max === MAX_ELEMENTS ? "Voir plus" : "Voir moins"}
           </Button>
-          )
-        }
+        )}
       </ul>
     </Container>
   );

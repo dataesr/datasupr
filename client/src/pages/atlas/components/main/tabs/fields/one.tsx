@@ -20,7 +20,6 @@ import {
   DataByYear,
   MapBubbleDataProps,
 } from "../../../../../../types/atlas.ts";
-import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
 import ColumnsChart from "../../../../charts/columns.tsx";
 import {
   getNumberOfStudentsByYear,
@@ -29,7 +28,11 @@ import {
   getNumberOfStudentsByFieldAndSublevel,
 } from "../../../../../../api/atlas.ts";
 
+// import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
+import { useAtlas } from "../../../../useAtlas.tsx";
+
 export default function OneField() {
+  const { DEFAULT_CURRENT_YEAR } = useAtlas();
   const { idFiliere } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();

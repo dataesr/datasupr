@@ -29,16 +29,20 @@ import MapWithPolygonAndBubbles from "../../../charts/map-with-polygon-and-bubbl
 import MapSkeleton from "../../../charts/skeletons/map.tsx";
 import ArrondissementsMap from "../../../charts/arrondissements-map/index.tsx";
 
+import { useAtlas } from "../../../useAtlas.tsx";
+// import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
+
 import "./styles.scss";
-import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
 
 export function General() {
   const [searchParams] = useSearchParams();
   const params = [...searchParams]
     .map(([key, value]) => `${key}=${value}`)
     .join("&");
-  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   const geoId = searchParams.get("geo_id") || "";
+  const { DEFAULT_CURRENT_YEAR } = useAtlas();
+  const currentYear =
+    searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
 
   const { data, isLoading } = useQuery({
     queryKey: ["atlas/number-of-students", params],
@@ -124,8 +128,8 @@ export function General() {
         let polygon;
         switch (item.geo_id) {
           // Nouvelle-Calédonie
-          case "D988": 
-          case "A40": 
+          case "D988":
+          case "A40":
             mapbubbleData.push({
               z:
                 item.data.find((d) => d.annee_universitaire === currentYear)
@@ -499,7 +503,9 @@ export function General() {
     }
   }
 
-  const nbStudents = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_total || 0;
+  const nbStudents =
+    dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)
+      ?.effectif_total || 0;
 
   return (
     <Container as="section" fluid>

@@ -22,14 +22,17 @@ import {
 import GenderHistoChart from "../../../charts/genders-histo.tsx";
 import { DataByYear, SimilarData } from "../../../../../types/atlas.ts";
 import StudentsCardWithTrend from "../../../../../components/cards/students-card-with-trend/index.tsx";
-import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
 import SubListGenders from "./components/sub-list-genders.tsx";
+// import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
+import { useAtlas } from "../../../useAtlas.tsx";
 
 export function Genders() {
   const [chartView, setChartView] = useState<"basic" | "percentage">("basic");
   const [chartType, setChartType] = useState<"column" | "line">("column");
   const [searchParams] = useSearchParams();
-  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
+  const { DEFAULT_CURRENT_YEAR } = useAtlas();
+  const currentYear =
+    searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   const geoId = searchParams.get("geo_id") || "";
   const params = [...searchParams]
     .map(([key, value]) => `${key}=${value}`)

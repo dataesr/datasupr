@@ -5,8 +5,9 @@ import { useQuery } from "@tanstack/react-query";
 
 import Template from "../../../../../../components/template/index.tsx";
 import { getNumberOfStudentsHistoricByLevel } from "../../../../../../api/index.ts";
-import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
 import { getSubLevel } from "../../../../utils/index.tsx";
+// import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
+import { useAtlas } from "../../../../useAtlas.tsx";
 
 const MAX_ELEMENTS = 6;
 
@@ -14,7 +15,10 @@ export default function SubList() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const geoId = searchParams.get("geo_id") || "";
-  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
+
+  const { DEFAULT_CURRENT_YEAR } = useAtlas();
+  const currentYear =
+    searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
   const [max, setMax] = useState(MAX_ELEMENTS);
 
   const { data: dataHistoric, isLoading: isLoadingHistoric } = useQuery({
@@ -41,9 +45,9 @@ export default function SubList() {
   );
 
   // Special case "Saint-Martin" (geo_id = 978)
-  dataHistoric.data.forEach(item => {
-    if (item.geo_id === '978') {
-      item.geo_id = 'D978';
+  dataHistoric.data.forEach((item) => {
+    if (item.geo_id === "978") {
+      item.geo_id = "D978";
     }
   });
 
@@ -52,7 +56,7 @@ export default function SubList() {
       <Row style={{ width: "100%" }}>
         <div style={{ flexGrow: "1" }}>
           <strong>
-            <i>{getSubLevel({geoId})}</i>
+            <i>{getSubLevel({ geoId })}</i>
           </strong>
         </div>
         <div className="fr-mb-1w">
@@ -108,17 +112,19 @@ export default function SubList() {
             </li>
           );
         })}
-        {
-        dataHistoric.data.length > MAX_ELEMENTS && (
+        {dataHistoric.data.length > MAX_ELEMENTS && (
           <Button
-            onClick={() => setMax(max === MAX_ELEMENTS ? dataHistoric.data.length : MAX_ELEMENTS)}
+            onClick={() =>
+              setMax(
+                max === MAX_ELEMENTS ? dataHistoric.data.length : MAX_ELEMENTS
+              )
+            }
             size="sm"
             variant="text"
           >
             {max === MAX_ELEMENTS ? "Voir plus" : "Voir moins"}
           </Button>
-          )
-        }
+        )}
       </ul>
     </Container>
   );

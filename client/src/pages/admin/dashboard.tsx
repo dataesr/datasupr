@@ -171,7 +171,7 @@ export default function Dashboard() {
           <div className="fr-table__container">
             <div className="fr-table__content">
               <table>
-                <caption>Constantes applicatives du serveur</caption>
+                <caption>Constantes applicatives</caption>
                 <thead>
                   <tr>
                     <th>Clé</th>

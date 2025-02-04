@@ -21,8 +21,9 @@ import FavoritesList from "../../../favorites-list/index.js";
 import { GetLevelBadgeFromItem } from "../../../../utils/badges.js";
 
 import "./styles.scss";
-import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.js";
+// import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.js";
 import { DataByYear } from "../../../../../../types/atlas.ts";
+import { useAtlas } from "../../../../useAtlas.tsx";
 
 type SearchTypes = {
   geo_id: string;
@@ -36,6 +37,7 @@ export function Search() {
   const navigate = useNavigate();
   const params = new URLSearchParams(window.location.search);
   const datasupr = params.get("datasupr") === "true";
+  const { DEFAULT_CURRENT_YEAR } = useAtlas();
   const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
 
 

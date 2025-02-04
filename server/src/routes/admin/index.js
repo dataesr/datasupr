@@ -268,4 +268,19 @@ await run({dependentCollectionId}).catch(console.dir);
   
 });
 
+// get constants from a dashboard
+router.route("/admin/get-constants").get(async (req, res) => {
+  const dashboardId = req.query.dashboardId;
+  if (!dashboardId) {
+    return res.status(400).json({ error: "Dashboard ID is required" });
+  }
+
+  const board = await db.collection("boards").findOne({ id: dashboardId });
+  if (!board) {
+    return res.status(404).json({ error: "No document found" });
+  }
+
+  res.json(board.constants);
+});
+
 export default router;
