@@ -188,11 +188,12 @@ export default function OneField() {
               <br />
               <br />
               <strong>{effectifPU.toLocaleString()}</strong> étudiant
-              {effectifPU > 1 ? "s sont inscrits" : " inscrit"} dans le secteur public et{" "}
-              <strong>{effectifPR.toLocaleString()}</strong> étudiant
-              {effectifPR > 1 ? "s inscrits" : "inscrit"} dans le secteur privé, soit une répartition de <strong>{pctPU}%</strong> dans le
-              secteur public et <strong>{pctPR}%</strong> dans le secteur privé
-              pour l'année universitaire{" "}
+              {effectifPU > 1 ? "s sont inscrits" : " inscrit"} dans le secteur
+              public et <strong>{effectifPR.toLocaleString()}</strong> étudiant
+              {effectifPR > 1 ? "s inscrits" : "inscrit"} dans le secteur privé,
+              soit une répartition de <strong>{pctPU}&nbsp;%</strong> dans le
+              secteur public et <strong>{pctPR}&nbsp;%</strong> dans le secteur
+              privé pour l'année universitaire{" "}
               <Badge color="yellow-tournesol">{currentYear}</Badge>.
             </Text>
           </Col>
@@ -216,13 +217,13 @@ export default function OneField() {
               féminin.
               <br />
               <br />
-                {effectifM.toLocaleString()} étudiant
-                {effectifM > 1 ? "s sont" : " est"} de genre masculin et{" "}
-                <strong>{effectifF.toLocaleString()}</strong> étudiant
-                {effectifF > 1 ? "s sont" : " est"} de genre féminin,
-                soit une répartition de <strong>{pctM}%</strong> dans le genre
-                masculin et <strong>{pctF}%</strong> dans le genre féminin pour
-                l'année universitaire{" "}
+              {effectifM.toLocaleString()} étudiant
+              {effectifM > 1 ? "s sont" : " est"} de genre masculin et{" "}
+              <strong>{effectifF.toLocaleString()}</strong> étudiant
+              {effectifF > 1 ? "s sont" : " est"} de genre féminin, soit une
+              répartition de <strong>{pctM}&nbsp;%</strong> dans le genre
+              masculin et <strong>{pctF}&nbsp;%</strong> dans le genre féminin
+              pour l'année universitaire{" "}
               <Badge color="yellow-tournesol">{currentYear}</Badge>.
             </Text>
           </Col>

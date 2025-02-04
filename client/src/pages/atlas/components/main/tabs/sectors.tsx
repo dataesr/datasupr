@@ -173,17 +173,21 @@ export function Sectors() {
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
-              descriptionNode={
-                <Badge color="yellow-tournesol">{currentYear}</Badge>
-              }
-              number={effectifPU}
-              label={`Etudiant${effectifPU > 1 ? 's' : ''} inscrit${effectifPU > 1 ? 's' : ''} dans le secteur public`}
-              trendGraph={
-                <TrendCard
-                color="#748CC0"
-                data={dataByYear?.map((item: DataByYear) => item.effectif_pu)}
-                />
-              }
+                descriptionNode={
+                  <Badge color="yellow-tournesol">{currentYear}</Badge>
+                }
+                number={effectifPU}
+                label={`Etudiant${effectifPU > 1 ? "s" : ""} inscrit${
+                  effectifPU > 1 ? "s" : ""
+                } dans le secteur public`}
+                trendGraph={
+                  <TrendCard
+                    color="#748CC0"
+                    data={dataByYear?.map(
+                      (item: DataByYear) => item.effectif_pu
+                    )}
+                  />
+                }
               />
             </Col>
           </Row>
@@ -194,7 +198,9 @@ export function Sectors() {
                   <Badge color="yellow-tournesol">{currentYear}</Badge>
                 }
                 number={effectifPR}
-                label={`Etudiant${effectifPR > 1 ? 's' : ''} inscrit${effectifPR > 1 ? 's' : ''} dans le secteur privé`}
+                label={`Etudiant${effectifPR > 1 ? "s" : ""} inscrit${
+                  effectifPR > 1 ? "s" : ""
+                } dans le secteur privé`}
                 trendGraph={
                   <TrendCard
                     color="#755F4D"
@@ -217,34 +223,37 @@ export function Sectors() {
           <SectortsChart data={dataSectors || []} isLoading={isLoading} />
         </Col>
       </Row>
-      {(polygonsData.length > 1 && geoId !== "PAYS_100" && geoId !== "D075" && geoId !== "R00") && (
-        <>
-          <Row className="fr-my-5w">
-            <Col>
-              <Title as="h3" look="h5">
-                <span
-                  className="fr-icon-pie-chart-2-line fr-mr-1w"
-                  aria-hidden="true"
+      {polygonsData.length > 1 &&
+        geoId !== "PAYS_100" &&
+        geoId !== "D075" &&
+        geoId !== "R00" && (
+          <>
+            <Row className="fr-my-5w">
+              <Col>
+                <Title as="h3" look="h5">
+                  <span
+                    className="fr-icon-pie-chart-2-line fr-mr-1w"
+                    aria-hidden="true"
+                  />
+                  {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
+                </Title>
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col md={7}>
+                <MapPieSectors
+                  currentYear={currentYear}
+                  isLoading={isLoadingDataSectorsMap}
+                  mapPieData={dataSectorsMap}
+                  polygonsData={polygonsData}
                 />
-                {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
-              </Title>
-            </Col>
-          </Row>
-          <Row gutters>
-            <Col md={7}>
-              <MapPieSectors
-                currentYear={currentYear}
-                isLoading={isLoadingDataSectorsMap}
-                mapPieData={dataSectorsMap}
-                polygonsData={polygonsData}
-              />
-            </Col>
-            <Col md={5}>
-              <SubListSectors />
-            </Col>
-          </Row>
-        </>
-      )}
+              </Col>
+              <Col md={5}>
+                <SubListSectors />
+              </Col>
+            </Row>
+          </>
+        )}
       <Row className="fr-mt-5w">
         <Col>
           <Title as="h3" look="h5">
@@ -301,7 +310,8 @@ export function Sectors() {
               Les territoires similaires sont ceux qui ont une répartition du
               nombre d'étudiants inscrits dans le secteur public et privé proche
               du territoire sélectionné. La tolérance maximum est de{" "}
-              <strong>5%</strong>. Seuls les 5 premiers résutats sont affichés.
+              <strong>5&nbsp;%</strong>. Seuls les 5 premiers résutats sont
+              affichés.
               <br />
               L'année universitaire sélectionnée est{" "}
               <Badge color="yellow-tournesol">{currentYear}</Badge>.
@@ -321,8 +331,8 @@ export function Sectors() {
                   .map((el: SimilarData) => (
                     <li key={el.geo_id}>
                       {el.geo_nom} (Secteur public:{" "}
-                      <strong>{el.pctPU.toFixed(1)}%</strong> - Secteur privé:{" "}
-                      <strong>{el.pctPR.toFixed(1)}%</strong>)
+                      <strong>{el.pctPU.toFixed(1)}&nbsp;%</strong> - Secteur
+                      privé: <strong>{el.pctPR.toFixed(1)}&nbsp;%</strong>)
                       <Button
                         size="sm"
                         variant="text"

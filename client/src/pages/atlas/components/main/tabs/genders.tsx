@@ -185,38 +185,42 @@ export function Genders() {
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
-              descriptionNode={
-                <Badge color="yellow-tournesol">{currentYear}</Badge>
-              }
-              number={effectifF}
-              label={`Etudiante${effectifF > 1 ? "s" : ""} inscrite${effectifF > 1 ? "s" : ""}`}
-              trendGraph={
-                <TrendCard
-                color="#e18b76"
-                data={dataByYear.map(
-                  (item: DataByYear) => item.effectif_feminin
-                )}
-                />
-              }
+                descriptionNode={
+                  <Badge color="yellow-tournesol">{currentYear}</Badge>
+                }
+                number={effectifF}
+                label={`Etudiante${effectifF > 1 ? "s" : ""} inscrite${
+                  effectifF > 1 ? "s" : ""
+                }`}
+                trendGraph={
+                  <TrendCard
+                    color="#e18b76"
+                    data={dataByYear.map(
+                      (item: DataByYear) => item.effectif_feminin
+                    )}
+                  />
+                }
               />
             </Col>
           </Row>
           <Row gutters>
             <Col>
               <StudentsCardWithTrend
-              descriptionNode={
-                <Badge color="yellow-tournesol">{currentYear}</Badge>
-              }
-              number={effectifM}
-              label={`Etudiant${effectifM > 1 ? "s" : ""} inscrit${effectifM > 1 ? "s" : ""}`}
-              trendGraph={
-                <TrendCard
-                color="#efcb3a"
-                data={dataByYear.map(
-                  (item: DataByYear) => item.effectif_masculin
-                )}
-                />
-              }
+                descriptionNode={
+                  <Badge color="yellow-tournesol">{currentYear}</Badge>
+                }
+                number={effectifM}
+                label={`Etudiant${effectifM > 1 ? "s" : ""} inscrit${
+                  effectifM > 1 ? "s" : ""
+                }`}
+                trendGraph={
+                  <TrendCard
+                    color="#efcb3a"
+                    data={dataByYear.map(
+                      (item: DataByYear) => item.effectif_masculin
+                    )}
+                  />
+                }
               />
             </Col>
           </Row>
@@ -231,34 +235,37 @@ export function Genders() {
           <GenderChart data={dataGender || []} isLoading={isLoading} />
         </Col>
       </Row>
-      {(polygonsData?.length > 1 && geoId !== "PAYS_100" && geoId !== "D075" && geoId !== "R00")  && (
-        <>
-          <Row className="fr-my-5w">
-            <Col>
-              <Title as="h3" look="h5">
-                <span
-                  className="fr-icon-pie-chart-2-line fr-mr-1w"
-                  aria-hidden="true"
+      {polygonsData?.length > 1 &&
+        geoId !== "PAYS_100" &&
+        geoId !== "D075" &&
+        geoId !== "R00" && (
+          <>
+            <Row className="fr-my-5w">
+              <Col>
+                <Title as="h3" look="h5">
+                  <span
+                    className="fr-icon-pie-chart-2-line fr-mr-1w"
+                    aria-hidden="true"
+                  />
+                  {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
+                </Title>
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col md={7}>
+                <MapPieGender
+                  currentYear={currentYear}
+                  isLoading={isLoadingDataGenders}
+                  mapPieData={dataGenders}
+                  polygonsData={polygonsData}
                 />
-                {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
-              </Title>
-            </Col>
-          </Row>
-          <Row gutters>
-            <Col md={7}>
-              <MapPieGender
-                currentYear={currentYear}
-                isLoading={isLoadingDataGenders}
-                mapPieData={dataGenders}
-                polygonsData={polygonsData}
-              />
-            </Col>
-            <Col md={5}>
-              <SubListGenders />
-            </Col>
-          </Row>
-        </>
-      )}
+              </Col>
+              <Col md={5}>
+                <SubListGenders />
+              </Col>
+            </Row>
+          </>
+        )}
       <Row className="fr-mt-5w">
         <Col>
           <Title as="h3" look="h5">
@@ -314,8 +321,8 @@ export function Genders() {
             <Text>
               Les territoires similaires sont ceux qui ont une répartition par
               genre du nombre d'étudiants inscrits proche du territoire
-              sélectionné. La tolérance maximum est de <strong>5%</strong>.
-              Seuls les 5 premiers résutats sont affichés.
+              sélectionné. La tolérance maximum est de <strong>5&nbsp;%</strong>
+              . Seuls les 5 premiers résutats sont affichés.
               <br />
               L'année universitaire sélectionnée est{" "}
               <Badge color="yellow-tournesol">{currentYear}</Badge>.
@@ -332,8 +339,8 @@ export function Genders() {
                   .map((el: SimilarData) => (
                     <li key={el.geo_id}>
                       {el.geo_nom} (Féminin:{" "}
-                      <strong>{el.pctF.toFixed(1)}%</strong> - Masculin:{" "}
-                      <strong>{el.pctM.toFixed(1)}%</strong>)
+                      <strong>{el.pctF.toFixed(1)}&nbsp;%</strong> - Masculin:{" "}
+                      <strong>{el.pctM.toFixed(1)}&nbsp;%</strong>)
                       <Button
                         size="sm"
                         variant="text"

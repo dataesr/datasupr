@@ -510,7 +510,9 @@ export function General() {
               <Badge color="yellow-tournesol">{currentYear}</Badge>
             }
             number={nbStudents}
-            label={`Étudiant${nbStudents > 1 ? 's' : ''} inscrit${nbStudents > 1 ? 's' : ''}`}
+            label={`Étudiant${nbStudents > 1 ? "s" : ""} inscrit${
+              nbStudents > 1 ? "s" : ""
+            }`}
             trendGraph={
               <TrendCard
                 color="#e18b76"
@@ -546,33 +548,26 @@ export function General() {
             secteur privé.
             <br />
             <br />
-            {
-              (effectifPU === 0 ? (
-                <>
-                  Il n'y a pas d'étudiant inscrit dans le secteur public
-                </>
-              ) : (
-                <>
-                  <strong>{effectifPU.toLocaleString()}</strong> étudiants sont inscrits dans le secteur public 
-                </>
-              )              
-            )
-            }
-            {" "}et{" "}
-            {
-              (effectifPR === 0) ? (
-                <>
-                  il n'y a pas d'étudiant inscrit dans le secteur privé
-                </>
-              ) : (
-                <>
-                  <strong>{effectifPR.toLocaleString()}</strong> étudiants sont inscrits dans le secteur privé
-                </>
-              )
-            }
-            , soit une répartition de <strong>{pctPU.toFixed(1)} %</strong> dans le
-            secteur public et <strong>{pctPR.toFixed(1)} %</strong> dans le secteur privé
-            pour l'année universitaire{" "}
+            {effectifPU === 0 ? (
+              <>Il n'y a pas d'étudiant inscrit dans le secteur public</>
+            ) : (
+              <>
+                <strong>{effectifPU.toLocaleString()}</strong> étudiants sont
+                inscrits dans le secteur public
+              </>
+            )}{" "}
+            et{" "}
+            {effectifPR === 0 ? (
+              <>il n'y a pas d'étudiant inscrit dans le secteur privé</>
+            ) : (
+              <>
+                <strong>{effectifPR.toLocaleString()}</strong> étudiants sont
+                inscrits dans le secteur privé
+              </>
+            )}
+            , soit une répartition de <strong>{pctPU.toFixed(1)}&nbsp;%</strong>{" "}
+            dans le secteur public et <strong>{pctPR.toFixed(1)}&nbsp;%</strong>{" "}
+            dans le secteur privé pour l'année universitaire{" "}
             <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
           <Link href={`/atlas/effectifs-par-secteur?${params}`}>
@@ -583,8 +578,14 @@ export function General() {
           <SectorsCard
             currentYear={currentYear}
             values={{
-              labels: data?.secteurs?.filter((item) => item.label !== undefined).map((item) => item.label) || [],
-              values: data?.secteurs?.filter((item) => item.value !== 0).map((item) => item.value) || [],
+              labels:
+                data?.secteurs
+                  ?.filter((item) => item.label !== undefined)
+                  .map((item) => item.label) || [],
+              values:
+                data?.secteurs
+                  ?.filter((item) => item.value !== 0)
+                  .map((item) => item.value) || [],
             }}
           />
         </Col>
@@ -595,25 +596,30 @@ export function General() {
             Répartition des effectifs étudiants par genre
           </Title>
           <Text>
-            Les effectifs étudiants sont répartis entre les genres masculin et féminin.
+            Les effectifs étudiants sont répartis entre les genres masculin et
+            féminin.
             <br />
             <br />
             {effectifM === 0 ? (
               <>Il n'y a pas d'étudiant de genre masculin</>
             ) : (
               <>
-                <strong>{effectifM.toLocaleString()}</strong> étudiants sont de genre masculin
+                <strong>{effectifM.toLocaleString()}</strong> étudiants sont de
+                genre masculin
               </>
-            )}
-            {" "}et{" "}
+            )}{" "}
+            et{" "}
             {effectifF === 0 ? (
               <>il n'y a pas d'étudiant de genre féminin</>
             ) : (
               <>
-                <strong>{effectifF.toLocaleString()}</strong> étudiants sont de genre féminin
+                <strong>{effectifF.toLocaleString()}</strong> étudiants sont de
+                genre féminin
               </>
             )}
-            , soit une répartition de <strong>{pctM.toFixed(1)} %</strong> dans le genre masculin et <strong>{pctF.toFixed(1)} %</strong> dans le genre féminin pour l'année universitaire{" "}
+            , soit une répartition de <strong>{pctM.toFixed(1)}&nbsp;%</strong>{" "}
+            dans le genre masculin et <strong>{pctF.toFixed(1)}&nbsp;%</strong>{" "}
+            dans le genre féminin pour l'année universitaire{" "}
             <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
           <Link href={`/atlas/effectifs-par-genre?${params}`}>
@@ -624,8 +630,14 @@ export function General() {
           <GendersCard
             currentYear={currentYear}
             values={{
-              labels: data?.gender?.filter((item) => item.label !== undefined).map((item) => item.label) || [],
-              values: data?.gender?.filter((item) => item.value !== 0).map((item) => item.value) || [],
+              labels:
+                data?.gender
+                  ?.filter((item) => item.label !== undefined)
+                  .map((item) => item.label) || [],
+              values:
+                data?.gender
+                  ?.filter((item) => item.value !== 0)
+                  .map((item) => item.value) || [],
             }}
           />
         </Col>
