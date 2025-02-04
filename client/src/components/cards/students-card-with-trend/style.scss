@@ -1,6 +1,6 @@
 .student-card-with-trend {
   .key-number {
-    color: var(--text-default-grey);
+    color: var(--label-color) !important;
     font-size: 2.5rem;
     font-style: normal;
     font-weight: 500;
@@ -8,9 +8,9 @@
   }
 
   .students-label {
+    color: var(--label-color) !important;
     font-size: 0.9rem;
     font-weight: 700;
-    color: var(--text-default-grey);
     display: inline-block;
     padding: 0;
     padding-bottom: 10px;
