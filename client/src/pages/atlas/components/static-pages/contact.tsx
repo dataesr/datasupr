@@ -14,25 +14,22 @@ import { FormData } from "../../../../types/atlas";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function Contact() {
-  const [name, setName] = useState("");
-  const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
-  const [fonction, setFonction] = useState("");
-  const [organisation, setOrganisation] = useState("");
-  const [errors, setErrors] = useState<Partial<FormData>>({});
-  const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [fonction, setFonction] = useState("");
+  const [message, setMessage] = useState("");
+  const [name, setName] = useState("");
+  const [organisation, setOrganisation] = useState("");
+  const [success, setSuccess] = useState(false);
 
   const nameRef = useRef<HTMLInputElement>(null);
 
   const isFormValid =
-    name.trim() !== "" && email.trim() !== "" && message.trim() !== "";
+    email.trim() !== "" && message.trim() !== "" && name.trim() !== "";
 
   const validate = (data: FormData) => {
     const newErrors: Partial<FormData> = {};
-    if (!data.name.trim()) {
-      newErrors.name = "Ce champ est obligatoire";
-    }
     if (!data.email.trim()) {
       newErrors.email = "Ce champ est obligatoire";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
@@ -41,24 +38,27 @@ export default function Contact() {
     if (!data.message.trim()) {
       newErrors.message = "Ce champ est obligatoire";
     }
+    if (!data.name.trim()) {
+      newErrors.name = "Ce champ est obligatoire";
+    }
     return newErrors;
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSuccess(false);
     setErrorMessage("");
+    setSuccess(false);
 
     const formData: FormData = {
-      message,
       email,
-      name,
-      fromApplication: "datasupr",
       extra: {
-        subApplication: "atlas",
         fonction,
         organisation,
+        subApplication: "atlas",
       },
+      fromApplication: "datasupr",
+      message,
+      name,
     };
 
     const validationErrors = validate(formData);
@@ -72,18 +72,18 @@ export default function Contact() {
     }
 
     const response = await fetch(`${VITE_APP_SERVER_URL}/contact`, {
-      method: "POST",
+      body: JSON.stringify(formData),
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(formData),
+      method: "POST",
     });
 
     if (response.ok) {
-      setName("");
-      setMessage("");
       setEmail("");
       setFonction("");
+      setMessage("");
+      setName("");
       setOrganisation("");
       setSuccess(true);
 
@@ -124,65 +124,65 @@ export default function Contact() {
         <Row gutters>
           <Col md="6">
             <TextInput
-              ref={nameRef}
               className="fr-mt-3w"
-              placeholder="Votre nom (obligatoire)"
-              type="text"
-              value={name}
-              required
-              label="Nom"
               disableAutoValidation
-              onChange={(e) => setName(e.target.value)}
+              label="Nom"
               message={errors.name}
               messageType={errors.name ? "error" : undefined}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Votre nom (obligatoire)"
+              ref={nameRef}
+              required
+              type="text"
+              value={name}
             />
             <TextInput
               className="fr-mt-3w"
-              placeholder="Votre fonction"
+              disableAutoValidation
               label="Fonction"
+              onChange={(e) => setFonction(e.target.value)}
+              placeholder="Votre fonction"
               type="text"
               value={fonction}
-              disableAutoValidation
-              onChange={(e) => setFonction(e.target.value)}
             />
             <TextInput
               className="fr-mt-3w"
-              placeholder="Votre organisation"
+              disableAutoValidation
               label="Organisation"
+              onChange={(e) => setOrganisation(e.target.value)}
+              placeholder="Votre organisation"
               type="text"
               value={organisation}
-              disableAutoValidation
-              onChange={(e) => setOrganisation(e.target.value)}
             />
           </Col>
           <Col md="6">
             <TextInput
               className="fr-mt-3w"
-              placeholder="Votre email (obligatoire)"
-              label="Email"
-              type="email"
-              required
-              value={email}
               disableAutoValidation
-              onChange={(e) => setEmail(e.target.value)}
+              label="Email"
               message={errors.email}
               messageType={errors.email ? "error" : undefined}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Votre email (obligatoire)"
+              required
+              type="email"
+              value={email}
             />
             <TextArea
-              placeholder="Votre message (obligatoire)"
-              value={message}
-              required
-              rows={5}
-              label="Message"
               disableAutoValidation
-              onChange={(e) => setMessage(e.target.value)}
+              label="Message"
               message={errors.message}
               messageType={errors.message ? "error" : undefined}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Votre message (obligatoire)"
+              required
+              rows={5}
+              value={message}
             />
           </Col>
         </Row>
         <Col style={{ textAlign: "right" }}>
-          <Button className="fr-mt-3w" type="submit" disabled={!isFormValid}>
+          <Button className="fr-mt-3w" disabled={!isFormValid} type="submit">
             Envoyer le message
           </Button>
           {!isFormValid && (

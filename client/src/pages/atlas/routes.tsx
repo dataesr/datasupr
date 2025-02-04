@@ -11,7 +11,7 @@ import SiteMap from "./components/static-pages/site-map.tsx";
 import Accessibility from "./components/static-pages/accessibility.tsx";
 import LegalMentions from "./components/static-pages/legal-mentions.tsx";
 import CookieManagement from "./components/static-pages/cookie-management.tsx";
-import Contact from "./components/static-pages/contact-page.tsx";
+import Contact from "./components/static-pages/contact.tsx";
 
 export default function AtlasRoutes() {
   return (
@@ -34,7 +34,7 @@ export default function AtlasRoutes() {
         <Route path="accessibilite" element={<Accessibility />} />
         <Route path="mentions-legales" element={<LegalMentions />} />
         <Route path="gestion-des-cookies" element={<CookieManagement />} />
-        <Route path="/contact" element={<Contact />} />
+        <Route path="contact" element={<Contact />} />
       </Route>
     </Routes>
   );
