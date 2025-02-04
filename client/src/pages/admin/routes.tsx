@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 
-import Home from "./index.tsx";
+import Home from "./home.tsx";
 import { Layout } from "../../layout/Layout.tsx";
 import Dashboard from "./dashboard.tsx";
 

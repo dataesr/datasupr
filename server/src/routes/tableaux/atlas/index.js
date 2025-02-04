@@ -42,21 +42,42 @@ const filieresOrder = [
   "TOTAL",
 ];
 
-const DEFAULT_CURRENT_YEAR = "2023-24";
-const START_YEAR = 2001;
-const END_YEAR = 2023;
+const getCurrentCollectionName = async (idCollection) => {
+  const data = await db.collection("boards").find({ id: "atlas" }).toArray();
+  const currentCollection = data[0].data.find(
+    (item) => item.id === idCollection
+  ).current;
 
-router.route("/atlas/get-geo-ids-from-search").get((req, res) => {
+  if (currentCollection) {
+    return currentCollection;
+  }
+  if (idCollection === "atlas") {
+    return "atlas2024";
+  }
+  if (idCollection === "similar-elements") {
+    return "similar-elements-2022-23";
+  }
+};
+
+const getConstants = async () => {
+  const data = await db.collection("boards").find({ id: "atlas" }).toArray();
+  return data[0].constants || [];
+};
+
+router.route("/atlas/get-geo-ids-from-search").get(async (req, res) => {
+  const currentCollectionName = await getCurrentCollectionName("atlas");
+
   const normalizeString = (str) => {
     return str
       .toLowerCase()
-      .normalize('NFC')
-      .replace('é', 'e')
-      .replace('è', 'e')
-      .replace('à', 'a')
-      .replace('ç', 'c')
-      .replace(/-/g, ' ');
-  }
+      .normalize("NFC")
+      .replace("é", "e")
+      .replace("è", "e")
+      .replace("à", "a")
+      .replace("ç", "c")
+      .replace(/-/g, " ");
+  };
+
   if (!req.query.q || req.query?.q.length === 0) {
     res.status(400).send("the query is required");
   }
@@ -64,71 +85,70 @@ router.route("/atlas/get-geo-ids-from-search").get((req, res) => {
   const filters = {};
   const searchQuery = normalizeString(req.query.q);
   filters.geo_nom = { $regex: searchQuery, $options: "i" };
-  
-  db.collection("atlas2024")
+
+  db.collection(currentCollectionName)
     .aggregate([
-    {
-      $addFields: {
-        normalized_name: {
-          $toLower: {
-            $replaceAll: {
-              input: {
-                $replaceAll: {
-                  input: {
-                    $replaceAll: {
-                      input: {
-                        $replaceAll: {
-                          input: {
-                            $replaceAll: {
-                              input: {
-                                $toLower: {
-                                  $trim: { input: "$geo_nom" }
-                                }
-                              },
+      {
+        $addFields: {
+          normalized_name: {
+            $toLower: {
+              $replaceAll: {
+                input: {
+                  $replaceAll: {
+                    input: {
+                      $replaceAll: {
+                        input: {
+                          $replaceAll: {
+                            input: {
+                              $replaceAll: {
+                                input: {
+                                  $toLower: {
+                                    $trim: { input: "$geo_nom" },
+                                  },
+                                },
                                 find: "é",
-                                replacement: "e"
-                            }
-                          },
+                                replacement: "e",
+                              },
+                            },
                             find: "è",
-                            replacement: "e"
-                        }
-                      },
+                            replacement: "e",
+                          },
+                        },
                         find: "à",
-                        replacement: "a"
-                    }
+                        replacement: "a",
+                      },
+                    },
+                    find: "-",
+                    replacement: " ",
                   },
-                  find: "-",
-                  replacement: " "
-                }
+                },
+                find: "ç",
+                replacement: "c",
               },
-              find: "ç",
-              replacement: "c"
-            }
-          }
-        }
-      }
-    },
-    {
-      $match: {
-        normalized_name: filters.geo_nom,
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        geo_nom: 1,
-        geo_id: 1, 
-        niveau_geo: 1,
-        normalized_name: 1
-      }
-    },
-    {
-      $sort: { geo_nom: 1 }
-    }
-  ]).toArray()
+            },
+          },
+        },
+      },
+      {
+        $match: {
+          normalized_name: filters.geo_nom,
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          geo_nom: 1,
+          geo_id: 1,
+          niveau_geo: 1,
+          normalized_name: 1,
+        },
+      },
+      {
+        $sort: { geo_nom: 1 },
+      },
+    ])
+    .toArray()
     .then((response) => {
-      console.log("response", response);
-      
       const set = new Set();
       const unique = [];
       response.map((item) => {
@@ -178,7 +198,10 @@ router.route("/atlas/get-geo-polygons").get(async (req, res) => {
     filters.niveau_geo = "REGION";
   }
   if (geoId.startsWith("R") || geoId.startsWith("A") || geoId.startsWith("P")) {
-    const ids = await db.collection("atlas2024").distinct("geo_id", filters);
+    const currentCollectionName = await getCurrentCollectionName("atlas");
+    const ids = await db
+      .collection(currentCollectionName)
+      .distinct("geo_id", filters);
     if (geoId.startsWith("P") || geoId === "R00") {
       ids.push("D988"); //Nouvelle-Caledonie
       ids.push("D987"); //Polynesie-Francaise
@@ -227,9 +250,10 @@ router.route("/atlas/get-geo-polygons").get(async (req, res) => {
   }
 });
 
-router.route("/atlas/number-of-students-map").get((req, res) => {
+router.route("/atlas/number-of-students-map").get(async (req, res) => {
+  const currentCollectionName = await getCurrentCollectionName("atlas");
   const allData = {};
-  db.collection("atlas2024")
+  db.collection(currentCollectionName)
     .find(req.query, { projection: { effectif: 1, geo_id: 1 } })
     .toArray()
     .then((data) => {
@@ -266,14 +290,16 @@ router.route("/atlas/get-parents-from-geo-id").get(async (req, res) => {
     res.status(400).send("geo_id is required");
   }
 
+  const currentCollectionName = await getCurrentCollectionName("atlas");
+
   const data = await db
-    .collection("atlas2024")
+    .collection(currentCollectionName)
     .aggregate([
       { $match: { geo_id: geoId } },
       { $limit: 1 },
       {
         $lookup: {
-          from: "atlas2024",
+          from: currentCollectionName,
           localField: "aca_id",
           foreignField: "geo_id",
           as: "academie",
@@ -293,7 +319,7 @@ router.route("/atlas/get-parents-from-geo-id").get(async (req, res) => {
       },
       {
         $lookup: {
-          from: "atlas2024",
+          from: currentCollectionName,
           localField: "reg_id",
           foreignField: "geo_id",
           as: "region",
@@ -314,7 +340,7 @@ router.route("/atlas/get-parents-from-geo-id").get(async (req, res) => {
       },
       {
         $lookup: {
-          from: "atlas2024",
+          from: currentCollectionName,
           localField: "dep_id",
           foreignField: "geo_id",
           as: "departement",
@@ -336,7 +362,7 @@ router.route("/atlas/get-parents-from-geo-id").get(async (req, res) => {
       },
       {
         $lookup: {
-          from: "atlas2024",
+          from: currentCollectionName,
           localField: "uucr_id",
           foreignField: "geo_id",
           as: "uu",
@@ -379,325 +405,368 @@ router.route("/atlas/get-parents-from-geo-id").get(async (req, res) => {
   });
 });
 
-router.route("/atlas/number-of-students-historic-by-level").get(async (req, res) => {
-  const filters = { ...req.query };
-  if (req.query.niveau_geo === "ACADEMIE") {
-    filters.niveau_geo = "REGION";
-  }
-  if (req.query.niveau_geo === "DEPARTEMENT") {
-    filters.niveau_geo = "ACADEMIE";
-  }
-  if (req.query.niveau_geo === "COMMUNE") {
-    filters.niveau_geo = "DEPARTEMENT";
-  }
+router
+  .route("/atlas/number-of-students-historic-by-level")
+  .get(async (req, res) => {
+    const filters = { ...req.query };
+    if (req.query.niveau_geo === "ACADEMIE") {
+      filters.niveau_geo = "REGION";
+    }
+    if (req.query.niveau_geo === "DEPARTEMENT") {
+      filters.niveau_geo = "ACADEMIE";
+    }
+    if (req.query.niveau_geo === "COMMUNE") {
+      filters.niveau_geo = "DEPARTEMENT";
+    }
 
-  const response = await db
-    .collection("atlas2024")
-    .findOne({ ...filters }, { projection: { geo_nom: 1 } });
-  const levelName = response?.geo_nom || "France";
+    const currentCollectionName = await getCurrentCollectionName("atlas");
+    const response = await db
+      .collection(currentCollectionName)
+      .findOne({ ...filters }, { projection: { geo_nom: 1 } });
+    const levelName = response?.geo_nom || "France";
 
-  let query = req.query;
-  if (
-    !req.query.geo_id &&
-    !req.query.reg_id &&
-    !req.query.dep_id &&
-    !req.query.uucr_id &&
-    !req.query.aca_id
-  ) {
-    // cas PAYS_100
-    query = {
-      geo_id: { $ne: "R99" }, // français à l'etrangers
-      $or: [
-        { geo_id: "D978" },
-        { geo_id: "D986" },
-        { geo_id: "D987" },
-        { geo_id: "D988" },
-        { niveau_geo: req.query.niveau_geo },
-      ],
-    };
-  }
+    let query = req.query;
+    if (
+      !req.query.geo_id &&
+      !req.query.reg_id &&
+      !req.query.dep_id &&
+      !req.query.uucr_id &&
+      !req.query.aca_id
+    ) {
+      // cas PAYS_100
+      query = {
+        geo_id: { $ne: "R99" }, // français à l'etrangers
+        $or: [
+          { geo_id: "D978" },
+          { geo_id: "D986" },
+          { geo_id: "D987" },
+          { geo_id: "D988" },
+          { niveau_geo: req.query.niveau_geo },
+        ],
+      };
+    }
 
-  db.collection("atlas2024")
-    .find(query, {
-      projection: {
-        effectif: 1,
-        geo_id: 1,
-        geo_nom: 1,
-        annee_universitaire: 1,
-        regroupement: 1,
-        _id: 0,
-      },
-    })
-    .toArray()
-    .then((data) => {
-      const years = [
-        ...new Set(data.map((item) => item.annee_universitaire)),
-      ].sort((a, b) => {
-        if (a > b) return 1;
-        if (a < b) return -1;
-        return 0;
-      });
+    db.collection(currentCollectionName)
+      .find(query, {
+        projection: {
+          effectif: 1,
+          geo_id: 1,
+          geo_nom: 1,
+          annee_universitaire: 1,
+          regroupement: 1,
+          _id: 0,
+        },
+      })
+      .toArray()
+      .then((data) => {
+        const years = [
+          ...new Set(data.map((item) => item.annee_universitaire)),
+        ].sort((a, b) => {
+          if (a > b) return 1;
+          if (a < b) return -1;
+          return 0;
+        });
 
-      const geoIds = [...new Set(data.map((item) => item.geo_id))];
-      const dataByGeo = [];
-      geoIds.map((geo_id) => {
-        dataByGeo.push({
-          geo_id, // ex: "A24"
-          geo_nom: data.find((item) => item.geo_id === geo_id).geo_nom, // ex: "Créteil"
-          data: years.map((year) => {
-            return {
-              annee_universitaire: year,
-              effectif: data
-                .filter(
-                  (item) =>
-                    item.annee_universitaire === year &&
-                    item.geo_id === geo_id &&
-                    item.regroupement === "TOTAL"
-                )
-                ?.reduce((acc, item) => acc + item.effectif, 0),
-            };
-          }),
+        const geoIds = [...new Set(data.map((item) => item.geo_id))];
+        const dataByGeo = [];
+        geoIds.map((geo_id) => {
+          dataByGeo.push({
+            geo_id, // ex: "A24"
+            geo_nom: data.find((item) => item.geo_id === geo_id).geo_nom, // ex: "Créteil"
+            data: years.map((year) => {
+              return {
+                annee_universitaire: year,
+                effectif: data
+                  .filter(
+                    (item) =>
+                      item.annee_universitaire === year &&
+                      item.geo_id === geo_id &&
+                      item.regroupement === "TOTAL"
+                  )
+                  ?.reduce((acc, item) => acc + item.effectif, 0),
+              };
+            }),
+          });
+        });
+
+        res.json({
+          level_nom: levelName, // ex: "Ile-de-France"
+          data: dataByGeo,
         });
       });
-
-      res.json({
-        level_nom: levelName, // ex: "Ile-de-France"
-        data: dataByGeo,
-      });
-    });
-});
-
-router.route("/atlas/number-of-students-by-gender-and-level").get(async (req, res) => {
-  const filters = { ...req.query };
-  if (!req.query.annee_universitaire) {
-    filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
-  }
-  const data = await db
-    .collection("atlas2024")
-    .aggregate([
-      { $match: filters },
-      {
-        $group: {
-          _id: {
-            genre: "$sexe",
-            regroupement: "$regroupement",
-            rgp_formations_ou_etablissements:
-              "$rgp_formations_ou_etablissements",
-          },
-          effectif: { $sum: "$effectif" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          genre: "$_id.genre",
-          regroupement: "$_id.regroupement",
-          effectif: 1,
-          label: "$_id.rgp_formations_ou_etablissements",
-        },
-      },
-      { $sort: { regroupement: 1 } },
-      {
-        $group: {
-          _id: { regroupement: "$regroupement" },
-          effectif_masculin: {
-            $sum: { $cond: [{ $eq: ["$genre", "1"] }, "$effectif", 0] },
-          },
-          effectif_feminin: {
-            $sum: { $cond: [{ $eq: ["$genre", "2"] }, "$effectif", 0] },
-          },
-          effectif_total: { $sum: "$effectif" },
-          label: { $first: "$label" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          id: "$_id.regroupement",
-          effectif_masculin: 1,
-          effectif_feminin: 1,
-          effectif_total: 1,
-          label: 1,
-        },
-      },
-    ])
-    .toArray();
-
-  const ret = [];
-  filieresOrder.map((regroupementId) => {
-    const datRegroupement = data.find((item) => item.id === regroupementId);
-    if (datRegroupement) {
-      ret.push(datRegroupement);
-    }
   });
 
-  res.json(ret);
-});
+router
+  .route("/atlas/number-of-students-by-gender-and-level")
+  .get(async (req, res) => {
+    const filters = { ...req.query };
+    const constants = await getConstants();
+    const DEFAULT_CURRENT_YEAR = constants.find(
+      (el) => el.key === "DEFAULT_CURRENT_YEAR"
+    )?.value;
 
-router.route("/atlas/number-of-students-by-sector-and-sublevel").get(async (req, res) => {
+    if (!req.query.annee_universitaire) {
+      filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
+    }
+    const currentCollectionName = await getCurrentCollectionName("atlas");
+    const data = await db
+      .collection(currentCollectionName)
+      .aggregate([
+        { $match: filters },
+        {
+          $group: {
+            _id: {
+              genre: "$sexe",
+              regroupement: "$regroupement",
+              rgp_formations_ou_etablissements:
+                "$rgp_formations_ou_etablissements",
+            },
+            effectif: { $sum: "$effectif" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            genre: "$_id.genre",
+            regroupement: "$_id.regroupement",
+            effectif: 1,
+            label: "$_id.rgp_formations_ou_etablissements",
+          },
+        },
+        { $sort: { regroupement: 1 } },
+        {
+          $group: {
+            _id: { regroupement: "$regroupement" },
+            effectif_masculin: {
+              $sum: { $cond: [{ $eq: ["$genre", "1"] }, "$effectif", 0] },
+            },
+            effectif_feminin: {
+              $sum: { $cond: [{ $eq: ["$genre", "2"] }, "$effectif", 0] },
+            },
+            effectif_total: { $sum: "$effectif" },
+            label: { $first: "$label" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: "$_id.regroupement",
+            effectif_masculin: 1,
+            effectif_feminin: 1,
+            effectif_total: 1,
+            label: 1,
+          },
+        },
+      ])
+      .toArray();
+
+    const ret = [];
+    filieresOrder.map((regroupementId) => {
+      const datRegroupement = data.find((item) => item.id === regroupementId);
+      if (datRegroupement) {
+        ret.push(datRegroupement);
+      }
+    });
+
+    res.json(ret);
+  });
+
+router
+  .route("/atlas/number-of-students-by-sector-and-sublevel")
+  .get(async (req, res) => {
+    const filters = { ...req.query };
+    const constants = await getConstants();
+    const DEFAULT_CURRENT_YEAR = constants.find(
+      (el) => el.key === "DEFAULT_CURRENT_YEAR"
+    )?.value;
+
+    if (!req.query.annee_universitaire) {
+      filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
+    }
+    filters.regroupement = "TOTAL";
+
+    const currentCollectionName = await getCurrentCollectionName("atlas");
+
+    const data = await db
+      .collection(currentCollectionName)
+      .aggregate([
+        { $match: filters },
+        {
+          $group: {
+            _id: {
+              geo_id: "$geo_id",
+              geo_nom: "$geo_nom",
+              secteur: "$secteur",
+            },
+            effectif: { $sum: "$effectif" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            secteur: "$_id.secteur",
+            geo_id: "$_id.geo_id",
+            geo_nom: "$_id.geo_nom",
+            effectif: 1,
+          },
+        },
+        {
+          $group: {
+            _id: { geo_id: "$geo_id", geo_nom: "$geo_nom" },
+            effectif_secteur_public: {
+              $sum: { $cond: [{ $eq: ["$secteur", "PU"] }, "$effectif", 0] },
+            },
+            effectif_secteur_prive: {
+              $sum: { $cond: [{ $eq: ["$secteur", "PR"] }, "$effectif", 0] },
+            },
+            effectif_total: { $sum: "$effectif" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: "$_id.geo_id",
+            nom: "$_id.geo_nom",
+            effectif_secteur_public: 1,
+            effectif_secteur_prive: 1,
+            effectif_total: 1,
+          },
+        },
+        { $sort: { effectif_total: -1 } },
+      ])
+      .toArray();
+    res.json(data);
+  });
+
+router
+  .route("/atlas/number-of-students-by-gender-and-sublevel")
+  .get(async (req, res) => {
+    const filters = { ...req.query };
+    const constants = await getConstants();
+    const DEFAULT_CURRENT_YEAR = constants.find(
+      (el) => el.key === "DEFAULT_CURRENT_YEAR"
+    )?.value;
+
+    if (!req.query.annee_universitaire) {
+      filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
+    }
+
+    const currentCollectionName = await getCurrentCollectionName("atlas");
+
+    const data = await db
+      .collection(currentCollectionName)
+      .aggregate([
+        { $match: filters },
+        {
+          $group: {
+            _id: {
+              geo_id: "$geo_id",
+              geo_nom: "$geo_nom",
+              sexe: "$sexe",
+            },
+            effectif: { $sum: "$effectif" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            sexe: "$_id.sexe",
+            geo_id: "$_id.geo_id",
+            geo_nom: "$_id.geo_nom",
+            effectif: 1,
+          },
+        },
+        {
+          $group: {
+            _id: { geo_id: "$geo_id", geo_nom: "$geo_nom" },
+            effectif_feminin: {
+              $sum: { $cond: [{ $eq: ["$sexe", "2"] }, "$effectif", 0] },
+            },
+            effectif_masculin: {
+              $sum: { $cond: [{ $eq: ["$sexe", "1"] }, "$effectif", 0] },
+            },
+            effectif_total: { $sum: "$effectif" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: "$_id.geo_id",
+            nom: "$_id.geo_nom",
+            effectif_feminin: 1,
+            effectif_masculin: 1,
+            effectif_total: 1,
+          },
+        },
+        { $sort: { effectif_total: -1 } },
+      ])
+      .toArray();
+    res.json(data);
+  });
+
+router
+  .route("/atlas/number-of-students-by-field-and-sublevel")
+  .get(async (req, res) => {
+    const filters = { ...req.query };
+    const constants = await getConstants();
+    const DEFAULT_CURRENT_YEAR = constants.find(
+      (el) => el.key === "DEFAULT_CURRENT_YEAR"
+    )?.value;
+
+    if (!req.query.annee_universitaire) {
+      filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
+    }
+
+    const currentCollectionName = await getCurrentCollectionName("atlas");
+
+    const data = await db
+      .collection(currentCollectionName)
+      .aggregate([
+        { $match: filters },
+        {
+          $group: {
+            _id: {
+              geo_id: "$geo_id",
+              geo_nom: "$geo_nom",
+            },
+            effectif: { $sum: "$effectif" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            geo_id: "$_id.geo_id",
+            geo_nom: "$_id.geo_nom",
+            effectif: 1,
+          },
+        },
+        {
+          $group: {
+            _id: { geo_id: "$geo_id", geo_nom: "$geo_nom" },
+            effectif_total: { $sum: "$effectif" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            id: "$_id.geo_id",
+            nom: "$_id.geo_nom",
+            effectif_total: 1,
+          },
+        },
+        { $sort: { effectif_total: -1 } },
+      ])
+      .toArray();
+    res.json(data);
+  });
+
+router.route("/atlas/number-of-students").get(async (req, res) => {
   const filters = { ...req.query };
-  if (!req.query.annee_universitaire) {
-    filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
-  }
-  filters.regroupement = "TOTAL";
+  const constants = await getConstants();
+  const DEFAULT_CURRENT_YEAR = constants.find(
+    (el) => el.key === "DEFAULT_CURRENT_YEAR"
+  )?.value;
 
-  const data = await db
-    .collection("atlas2024")
-    .aggregate([
-      { $match: filters },
-      {
-        $group: {
-          _id: {
-            geo_id: "$geo_id",
-            geo_nom: "$geo_nom",
-            secteur: "$secteur",
-          },
-          effectif: { $sum: "$effectif" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          secteur: "$_id.secteur",
-          geo_id: "$_id.geo_id",
-          geo_nom: "$_id.geo_nom",
-          effectif: 1,
-        },
-      },
-      {
-        $group: {
-          _id: { geo_id: "$geo_id", geo_nom: "$geo_nom" },
-          effectif_secteur_public: {
-            $sum: { $cond: [{ $eq: ["$secteur", "PU"] }, "$effectif", 0] },
-          },
-          effectif_secteur_prive: {
-            $sum: { $cond: [{ $eq: ["$secteur", "PR"] }, "$effectif", 0] },
-          },
-          effectif_total: { $sum: "$effectif" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          id: "$_id.geo_id",
-          nom: "$_id.geo_nom",
-          effectif_secteur_public: 1,
-          effectif_secteur_prive: 1,
-          effectif_total: 1,
-        },
-      },
-      { $sort: { effectif_total: -1 } },
-    ])
-    .toArray();
-  res.json(data);
-});
-
-router.route("/atlas/number-of-students-by-gender-and-sublevel").get(async (req, res) => {
-  const filters = { ...req.query };
-  if (!req.query.annee_universitaire) {
-    filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
-  }
-
-  const data = await db
-    .collection("atlas2024")
-    .aggregate([
-      { $match: filters },
-      {
-        $group: {
-          _id: {
-            geo_id: "$geo_id",
-            geo_nom: "$geo_nom",
-            sexe: "$sexe",
-          },
-          effectif: { $sum: "$effectif" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          sexe: "$_id.sexe",
-          geo_id: "$_id.geo_id",
-          geo_nom: "$_id.geo_nom",
-          effectif: 1,
-        },
-      },
-      {
-        $group: {
-          _id: { geo_id: "$geo_id", geo_nom: "$geo_nom" },
-          effectif_feminin: {
-            $sum: { $cond: [{ $eq: ["$sexe", "2"] }, "$effectif", 0] },
-          },
-          effectif_masculin: {
-            $sum: { $cond: [{ $eq: ["$sexe", "1"] }, "$effectif", 0] },
-          },
-          effectif_total: { $sum: "$effectif" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          id: "$_id.geo_id",
-          nom: "$_id.geo_nom",
-          effectif_feminin: 1,
-          effectif_masculin: 1,
-          effectif_total: 1,
-        },
-      },
-      { $sort: { effectif_total: -1 } },
-    ])
-    .toArray();
-  res.json(data);
-});
-
-router.route("/atlas/number-of-students-by-field-and-sublevel").get(async (req, res) => {
-  const filters = { ...req.query };
-  if (!req.query.annee_universitaire) {
-    filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
-  }
-
-  const data = await db
-    .collection("atlas2024")
-    .aggregate([
-      { $match: filters },
-      {
-        $group: {
-          _id: {
-            geo_id: "$geo_id",
-            geo_nom: "$geo_nom",
-          },
-          effectif: { $sum: "$effectif" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          geo_id: "$_id.geo_id",
-          geo_nom: "$_id.geo_nom",
-          effectif: 1,
-        },
-      },
-      {
-        $group: {
-          _id: { geo_id: "$geo_id", geo_nom: "$geo_nom" },
-          effectif_total: { $sum: "$effectif" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          id: "$_id.geo_id",
-          nom: "$_id.geo_nom",
-          effectif_total: 1,
-        },
-      },
-      { $sort: { effectif_total: -1 } },
-    ])
-    .toArray();
-  res.json(data);
-});
-
-router.route("/atlas/number-of-students").get((req, res) => {
-  const filters = { ...req.query };
   if (!req.query.annee_universitaire) {
     filters.annee_universitaire = DEFAULT_CURRENT_YEAR;
   }
@@ -707,7 +776,10 @@ router.route("/atlas/number-of-students").get((req, res) => {
   }
 
   const allData = {};
-  db.collection("atlas2024")
+
+  const currentCollectionName = await getCurrentCollectionName("atlas");
+
+  db.collection(currentCollectionName)
     .find(filters)
     .toArray()
     .then(
@@ -833,7 +905,7 @@ router.route("/atlas/number-of-students").get((req, res) => {
     );
 });
 
-router.route("/atlas/number-of-students-by-year").get((req, res) => {
+router.route("/atlas/number-of-students-by-year").get(async (req, res) => {
   const filters = {};
   if (req.query.geo_id) {
     filters.geo_id = req.query.geo_id;
@@ -845,7 +917,13 @@ router.route("/atlas/number-of-students-by-year").get((req, res) => {
   } else {
     filters.regroupement = "TOTAL";
   }
-  db.collection("atlas2024")
+
+  const currentCollectionName = await getCurrentCollectionName("atlas");
+  const constants = await getConstants();
+  const START_YEAR = constants.find((el) => el.key === "START_YEAR")?.value;
+  const END_YEAR = constants.find((el) => el.key === "END_YEAR")?.value;
+
+  db.collection(currentCollectionName)
     .find(filters)
     .toArray()
     .then((data) => {
@@ -888,15 +966,16 @@ router.route("/atlas/number-of-students-by-year").get((req, res) => {
         return 0;
       });
 
-      // ajout des années manquantes (à zéro) const START_YEAR = "2001" => END_YEAR";
       const range = [];
-      for (let year = START_YEAR; year <= END_YEAR; year++) {
+      for (let year = Number(START_YEAR); year <= Number(END_YEAR); year++) {
         range.push(year);
       }
 
       const dataByYearFull = [];
       for (let i = 0; i < range.length; i++) {
-        const currentYear = `${range[i]}-${(range[i] + 1).toString().slice(-2)}`;
+        const currentYear = `${range[i]}-${(range[i] + 1)
+          .toString()
+          .slice(-2)}`;
         if (!dataByYear.find((el) => el.annee_universitaire === currentYear)) {
           dataByYearFull.push({
             annee_universitaire: currentYear,
@@ -910,7 +989,9 @@ router.route("/atlas/number-of-students-by-year").get((req, res) => {
             effectif_ing: 0,
           });
         } else {
-          dataByYearFull.push(dataByYear.find((el) => el.annee_universitaire === currentYear));
+          dataByYearFull.push(
+            dataByYear.find((el) => el.annee_universitaire === currentYear)
+          );
         }
       }
 
@@ -918,16 +999,20 @@ router.route("/atlas/number-of-students-by-year").get((req, res) => {
     });
 });
 
-router.route("/atlas/get-years").get((req, res) => {
-  db.collection("atlas2024")
+router.route("/atlas/get-years").get(async (req, res) => {
+  const currentCollectionName = await getCurrentCollectionName("atlas");
+
+  db.collection(currentCollectionName)
     .distinct("annee_universitaire")
     .then((data) => {
       res.json(data);
     });
 });
 
-router.route("/atlas/get-filieres").get((req, res) => {
-  db.collection("atlas2024")
+router.route("/atlas/get-filieres").get(async (req, res) => {
+  const currentCollectionName = await getCurrentCollectionName("atlas");
+
+  db.collection(currentCollectionName)
     .distinct("regroupement")
     .then((data) => {
       res.json(data);
@@ -940,14 +1025,16 @@ router.route("/atlas/get-filters-values").get(async (req, res) => {
     filters = { geo_id: req.query.geo_id };
   }
 
+  const currentCollectionName = await getCurrentCollectionName("atlas");
+
   const annees_universitaires_onlyData = await db
-    .collection("atlas2024")
+    .collection(currentCollectionName)
     .distinct("annee_universitaire", filters);
   const annees_universitaires_all = await db
-    .collection("atlas2024")
+    .collection(currentCollectionName)
     .distinct("annee_universitaire");
   const temp = await db
-    .collection("atlas2024")
+    .collection(currentCollectionName)
     .aggregate([
       {
         $group: {
@@ -990,7 +1077,11 @@ router.route("/atlas/get-filters-values").get(async (req, res) => {
 });
 
 router.route("/atlas/get-references").get(async (req, res) => {
-  const response = await db.collection("atlas2024").findOne({ ...req.query });
+  const currentCollectionName = await getCurrentCollectionName("atlas");
+
+  const response = await db
+    .collection(currentCollectionName)
+    .findOne({ ...req.query });
   const { niveau_geo } = response;
 
   const objMapping = {
@@ -1004,7 +1095,7 @@ router.route("/atlas/get-references").get(async (req, res) => {
 
   const obj = {};
   obj.data = await db
-    .collection("atlas2024")
+    .collection(currentCollectionName)
     .aggregate([
       { $match: { [objMapping[niveau_geo]]: req.query.geo_id } },
       {
@@ -1058,12 +1149,25 @@ router.route("/atlas/get-similar-elements").get(async (req, res) => {
     $lt: parseInt(req.query.lt),
   };
 
-  db.collection("similar-elements")
+  const currentCollectionName = await getCurrentCollectionName(
+    "similar-elements"
+  );
+
+  db.collection(currentCollectionName)
     .find(filters)
     .toArray()
     .then((data) => {
       res.json(data);
     });
+});
+
+router.route("/atlas/get-indexes").get(async (req, res) => {
+  const currentCollectionName = await getCurrentCollectionName(
+    req.query.collectionId
+  );
+
+  const response = await db.collection(currentCollectionName).indexes();
+  res.json(response);
 });
 
 export default router;
