@@ -1020,19 +1020,41 @@ router.route("/atlas/get-filieres").get(async (req, res) => {
 });
 
 router.route("/atlas/get-filters-values").get(async (req, res) => {
+  /*
+  annees_universitaires_onlyData & annees_universitaires_all
+  => permet de présenter toutes les années universitaires, 
+  et de désactiver celles pour lesquelles il n'y a pas de données
+  */
   let filters = {};
   if (req.query.geo_id) {
     filters = { geo_id: req.query.geo_id };
   }
 
   const currentCollectionName = await getCurrentCollectionName("atlas");
+  const constants = await getConstants();
+  const START_YEAR = constants.find((el) => el.key === "START_YEAR")?.value;
+  const END_YEAR = constants.find((el) => el.key === "END_YEAR")?.value;
 
-  const annees_universitaires_onlyData = await db
+  const annees_universitaires_onlyData_temp = await db
     .collection(currentCollectionName)
     .distinct("annee_universitaire", filters);
-  const annees_universitaires_all = await db
+  const annees_universitaires_all_temp = await db
     .collection(currentCollectionName)
     .distinct("annee_universitaire");
+
+  // limiter aux années paramétrées
+  const annees_universitaires_onlyData =
+    annees_universitaires_onlyData_temp.filter((year) => {
+      const yearNum = parseInt(year.substring(0, 4));
+      return yearNum >= START_YEAR && yearNum <= END_YEAR;
+    });
+  const annees_universitaires_all = annees_universitaires_all_temp.filter(
+    (year) => {
+      const yearNum = parseInt(year.substring(0, 4));
+      return yearNum >= START_YEAR && yearNum <= END_YEAR;
+    }
+  );
+
   const temp = await db
     .collection(currentCollectionName)
     .aggregate([
