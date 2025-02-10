@@ -164,6 +164,12 @@ export default function Dashboard() {
               <strong>Dashboard {dashboardId}</strong>
             </Link>
           </Breadcrumb>
+          <Link
+            href="https://ticket-office.staging.dataesr.ovh/datasupr-contact?page=1&query=&searchInMessage=true&sort=DESC&status=choose"
+            target="_blank"
+          >
+            Accéder à ticket office
+          </Link>
         </Col>
       </Row>
       <div className="fr-table--sm fr-table fr-table--bordered">

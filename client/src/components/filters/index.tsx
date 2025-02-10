@@ -183,25 +183,28 @@ export default function FiltersFromUrl() {
         <Container>
           <Row>
             <Col md={3}>
-              <Title as="h2" look='h4'>Filtres disponibles</Title>
+              <Title as="h2" look="h4">
+                Filtres disponibles
+              </Title>
             </Col>
             <Col>
               <TagGroup>
-                {
-                  atlasKeysFilters.map(key => (
-                    <Tag
-                      key={key}
-                      color='green-archipel'
-                      onClick={(e) => { launchModal(key); e.preventDefault(); }}
-                      style={{ cursor: 'pointer' }}
-                    >
-                      <Text size='xs' className="fr-mr-1w">
-                        {LABELS[key as keyof typeof LABELS]}
-                      </Text>
-                      {mapValueLabel(key, searchParams.get(key) || '')}
-                    </Tag>
-                  ))
-                }
+                {atlasKeysFilters.map((key) => (
+                  <Tag
+                    key={key}
+                    color="green-archipel"
+                    onClick={(e) => {
+                      launchModal(key);
+                      e.preventDefault();
+                    }}
+                    style={{ cursor: "pointer" }}
+                  >
+                    <Text size="xs" className="fr-mr-1w">
+                      {LABELS[key as keyof typeof LABELS]}
+                    </Text>
+                    {mapValueLabel(key, searchParams.get(key) || "")}
+                  </Tag>
+                ))}
               </TagGroup>
             </Col>
           </Row>
@@ -210,20 +213,15 @@ export default function FiltersFromUrl() {
 
       <Modal isOpen={isOpen} hide={() => setIsOpen(false)}>
         <ModalTitle>
-          {
-            activeFilterForModal === "annee_universitaire" && "Sélection d'une année universitaire"
-          }
-          {
-            activeFilterForModal === "geo_id" && "Sélection d'un territoire"
-          }
+          {activeFilterForModal === "annee_universitaire" &&
+            "Sélection d'une année universitaire"}
+          {activeFilterForModal === "geo_id" && "Sélection d'un territoire"}
         </ModalTitle>
         <ModalContent>
-          {
-            activeFilterForModal === "annee_universitaire" && <YearsList list={false} />
-          }
-          {
-            activeFilterForModal === "geo_id" && <GeoIdList />
-          }
+          {activeFilterForModal === "annee_universitaire" && (
+            <YearsList list={false} />
+          )}
+          {activeFilterForModal === "geo_id" && <GeoIdList />}
         </ModalContent>
         {/* <ModalFooter>
           <ButtonGroup isInlineFrom="xs" align="right">
@@ -232,6 +230,6 @@ export default function FiltersFromUrl() {
           </ButtonGroup>
         </ModalFooter> */}
       </Modal>
-    </section >
-  )
+    </section>
+  );
 }

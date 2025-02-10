@@ -283,4 +283,41 @@ router.route("/admin/get-constants").get(async (req, res) => {
   res.json(board.constants);
 });
 
+router.route("/admin/get-ticket-office-messages").get(async (req, res) => {
+  try {
+    const params = new URLSearchParams({
+      fromApplication: "datasupr",
+      status: "new",
+    });
+
+    const response = await fetch(
+      `https://ticket-office.dataesr.ovh/api/contacts?${params}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Basic ${process.env.TICKET_OFFICE_BASIC_AUTH}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    res.json({
+      success: true,
+      data: data,
+    });
+  } catch (error) {
+    console.error("Erreur ticket-office:", error);
+    res.status(500).json({
+      success: false,
+      message: "Erreur lors de la récupération des messages",
+      error: error.message,
+    });
+  }
+});
+
 export default router;

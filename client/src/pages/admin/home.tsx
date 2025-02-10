@@ -17,7 +17,7 @@ import { useState } from "react";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-function DashboardCard({ dashboard }) {
+function DashboardCard({ dashboard, nbMessages }) {
   return (
     <div className="fr-card fr-enlarge-link">
       <div className="fr-card__body">
@@ -26,6 +26,19 @@ function DashboardCard({ dashboard }) {
             <Link href={`/admin/${dashboard.id}`}>{dashboard.name}</Link>
             <br />
             <Badge color="green-emeraude">{`${dashboard?.data?.length} collections`}</Badge>
+            <p className="fr-m-0">
+              {nbMessages > 0 && (
+                <Badge
+                  className="fr-mt-1w"
+                  color="brown-caramel"
+                  icon="mail-line"
+                >
+                  {`${nbMessages} message${
+                    nbMessages > 1 ? "s" : ""
+                  } ticketOffice`}
+                </Badge>
+              )}
+            </p>
           </h2>
           <p>{dashboard.description}</p>
         </div>
@@ -57,6 +70,14 @@ export default function Home() {
     queryKey: ["list-uploaded-files"],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/admin/list-uploaded-files`).then(
+        (response) => response.json()
+      ),
+  });
+
+  const { data: messages } = useQuery({
+    queryKey: ["get-ticket-office-messages"],
+    queryFn: () =>
+      fetch(`${VITE_APP_SERVER_URL}/admin/get-ticket-office-messages`).then(
         (response) => response.json()
       ),
   });
@@ -137,7 +158,14 @@ export default function Home() {
         </Col>
         {data.map((dashboard) => (
           <Col xs={12} sm={6} md={4} key={dashboard.id}>
-            <DashboardCard dashboard={dashboard} />
+            <DashboardCard
+              dashboard={dashboard}
+              nbMessages={
+                messages?.data?.data?.filter(
+                  (el) => el.extra.subApplication === dashboard.id
+                ).length
+              }
+            />
           </Col>
         ))}
       </Row>
