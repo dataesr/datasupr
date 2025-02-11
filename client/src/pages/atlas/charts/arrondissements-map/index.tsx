@@ -116,7 +116,7 @@ export default function ArrondissementsMap({ location }) {
       currentYear={currentYear}
       isLoading={isLoadingHistoric}
       mapbubbleData={mapbubbleData}
-      // @ts-expect-error : Paris, Marseillle, Lyon are a special cases
+      // @ts-expect-error : Paris, Marseillle, Lyon are special cases
       polygonsData={polygonsData}
     />
   );

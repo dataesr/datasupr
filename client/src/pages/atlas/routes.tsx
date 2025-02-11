@@ -14,6 +14,14 @@ import CookieManagement from "./components/static-pages/cookie-management.tsx";
 import Contact from "./components/static-pages/contact.tsx";
 import { AtlasProvider } from "./context.tsx";
 
+import Highcharts from "highcharts";
+import HCAccessibility from "highcharts/modules/accessibility";
+import HCExporting from "highcharts/modules/exporting";
+import HCExportingData from "highcharts/modules/export-data";
+HCAccessibility(Highcharts);
+HCExporting(Highcharts);
+HCExportingData(Highcharts);
+
 export default function AtlasRoutes() {
   return (
     <AtlasProvider>
