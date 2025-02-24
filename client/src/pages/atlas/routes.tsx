@@ -18,6 +18,7 @@ import Highcharts from "highcharts";
 import HCAccessibility from "highcharts/modules/accessibility";
 import HCExporting from "highcharts/modules/exporting";
 import HCExportingData from "highcharts/modules/export-data";
+import Methodology from "./components/static-pages/methodology.tsx";
 HCAccessibility(Highcharts);
 HCExporting(Highcharts);
 HCExportingData(Highcharts);
@@ -41,6 +42,7 @@ export default function AtlasRoutes() {
             />
           </Route>
           <Route path="plan-du-site" element={<SiteMap />} />
+          <Route path="methodologie" element={<Methodology />} />
           <Route path="accessibilite" element={<Accessibility />} />
           <Route path="mentions-legales" element={<LegalMentions />} />
           <Route path="gestion-des-cookies" element={<CookieManagement />} />

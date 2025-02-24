@@ -78,6 +78,11 @@ export default function Footer() {
               </a>
             </li>
             <li className="fr-footer__bottom-item">
+              <a className="fr-footer__bottom-link" href="/atlas/methodologie">
+                Methodologie
+              </a>
+            </li>
+            <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="/atlas/accessibilite">
                 Accessibilité : partiellement conforme
               </a>
