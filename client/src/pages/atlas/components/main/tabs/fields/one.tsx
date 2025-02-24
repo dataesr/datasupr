@@ -162,11 +162,13 @@ export default function OneField() {
             />
           </Col>
         </Row>
-        <Row>
-          <Col>
-            <Map />
-          </Col>
-        </Row>
+        {geoId !== "D075" && geoId !== "R00" && (
+          <Row>
+            <Col>
+              <Map />
+            </Col>
+          </Row>
+        )}
         <Row>
           <Col>
             <Title as="h3" look="h5">
