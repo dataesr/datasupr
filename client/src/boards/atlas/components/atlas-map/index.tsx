@@ -15,7 +15,7 @@ import MapWithPolygonAndBubbles from "../../charts/map-with-polygon-and-bubbles.
 import MapPieSectors from "../../charts/map-pie-sectors/index.js";
 import MapPieGender from "../../charts/map-pie-genders/index.js";
 import FilieresList from "../../../../components/filieres-list/index.tsx";
-import SubList from "../main/tabs/components/sub-list.tsx";
+import SubList from "../sub-list.tsx";
 
 import "./styles.scss";
 import { DEFAULT_CURRENT_YEAR } from "../../../../constants.tsx";
