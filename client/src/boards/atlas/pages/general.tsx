@@ -32,6 +32,7 @@ import ArrondissementsMap from "../charts/arrondissements-map/index.tsx";
 import { useAtlas } from "../useAtlas.tsx";
 
 import "./styles.scss";
+import Callout from "../components/callout.tsx";
 
 export function General() {
   const [searchParams] = useSearchParams();
@@ -508,6 +509,21 @@ export function General() {
 
   return (
     <Container as="section" fluid>
+      {geoId === "PAYS_100" && (
+        <div className="fr-mb-3w">
+          <Callout>
+            L’Atlas comprend le niveau géographique « France » comme l’agrégat
+            regroupant la France métropolitaine, les départements et régions
+            d’Outre-mer (DROM), et les autres collectivités d’outre-mer (COM) et
+            la Nouvelle-Calédonie. Les effectifs d’étudiants inscrits dans une
+            implantation à l’étranger d’un établissement dont le siège est situé
+            en France ne sont comptabilisés ni au niveau de la France ni aux
+            différents niveaux géographiques (unité urbaine ou commune rurale,
+            département, académie, région) auxquelles appartient l’établissement
+            d’origine.
+          </Callout>
+        </div>
+      )}
       <Row gutters>
         <Col md={6}>
           <StudentsCardWithTrend

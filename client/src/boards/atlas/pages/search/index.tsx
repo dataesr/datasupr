@@ -123,18 +123,28 @@ export function Search() {
           <Container fluid>
             <Row>
               <Col>
-                <Title as="h1" look="h1">
+                <Title as="h1" look="h6">
                   Atlas des effectifs étudiants
                 </Title>
                 <Text>
-                  <i>
-                    L’Atlas des effectifs étudiants est un outil indispensable
-                    pour une bonne appréhension de la structuration territoriale
-                    de l’enseignement supérieur et pour l’élaboration de
-                    stratégies territoriales. Il présente, sous forme de cartes,
-                    de graphiques et de tableaux, la diversité du système
-                    français d’enseignement supérieur.
-                  </i>
+                  L’Atlas des effectifs étudiants est un outil indispensable
+                  pour une bonne appréhension de la structuration territoriale
+                  de l’enseignement supérieur et pour l’élaboration de
+                  stratégies territoriales. Il présente, sous forme de cartes,
+                  de graphiques et de tableaux, la diversité du système français
+                  d’enseignement supérieur.
+                  <br />
+                  <br />
+                  L’Atlas comprend le niveau géographique « France » comme
+                  l’agrégat regroupant la France métropolitaine, les
+                  départements et régions d’Outre-mer (DROM), et les autres
+                  collectivités d’outre-mer (COM) et la Nouvelle-Calédonie. Les
+                  effectifs d’étudiants inscrits dans une implantation à
+                  l’étranger d’un établissement dont le siège est situé en
+                  France ne sont comptabilisés ni au niveau de la France ni aux
+                  différents niveaux géographiques (unité urbaine ou commune
+                  rurale, département, académie, région) auxquelles appartient
+                  l’établissement d’origine.
                 </Text>
               </Col>
             </Row>
