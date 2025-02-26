@@ -1,9 +1,9 @@
 import express from "express";
 
 import adminRouter from "./routes/admin/index.js";
-import atlasRouter from "./routes/tableaux/atlas/index.js";
+import atlasRouter from "./routes/boards/atlas/index.js";
 import elasticSearchRouter from "./routes/elasticsearch.js";
-import europeanProjectsRouter from "./routes/tableaux/european-projects/index.js";
+import europeanProjectsRouter from "./routes/boards/european-projects/index.js";
 import initRouter from "./routes/init.js";
 import searchRouter from "./routes/search.js";
 import tableauxRouter from "./routes/tableaux.js";

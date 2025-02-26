@@ -4,29 +4,30 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import {
   Badge,
   Button,
-  Container, Row, Col,
+  Container,
+  Row,
+  Col,
   Text,
   Title,
 } from "@dataesr/dsfr-plus";
 
-import GenderChart from "../../../charts/genders-pie/index.tsx";
-import MapPieGender from "../../../charts/map-pie-genders/index.jsx";
-import TrendCard from "../../../charts/trend.tsx";
+import MapPieSectors from "../charts/map-pie-sectors/index.jsx";
+import SectortsChart from "../charts/sectors-pie/index.tsx";
+import SectorHistoChart from "../charts/sectors-histo.tsx";
+import TrendCard from "../charts/trend.tsx";
 import {
   getGeoPolygon,
   getNumberOfStudents,
-  getNumberOfStudentsByGenderAndSublevel,
+  getNumberOfStudentsBySectorAndSublevel,
   getNumberOfStudentsByYear,
   getSimilarElements,
-} from "../../../../../api/atlas.ts";
-import GenderHistoChart from "../../../charts/genders-histo.tsx";
-import { DataByYear, SimilarData } from "../../../../../types/atlas.ts";
-import StudentsCardWithTrend from "../../../../../components/cards/students-card-with-trend/index.tsx";
-import SubListGenders from "./components/sub-list-genders.tsx";
-// import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
-import { useAtlas } from "../../../useAtlas.tsx";
+} from "../../../api/atlas.ts";
+import { DataByYear, SimilarData } from "../../../types/atlas.ts";
+import StudentsCardWithTrend from "../../../components/cards/students-card-with-trend/index.tsx";
+import SubListSectors from "../components/sub-list-sectors.tsx";
+import { useAtlas } from "../useAtlas.tsx";
 
-export function Genders() {
+export function Sectors() {
   const [chartView, setChartView] = useState<"basic" | "percentage">("basic");
   const [chartType, setChartType] = useState<"column" | "line">("column");
   const [searchParams] = useSearchParams();
@@ -49,34 +50,15 @@ export function Genders() {
     queryFn: () => getNumberOfStudentsByYear(params),
   });
 
-  const dataGender = [
-    {
-      name: "Masculin",
-      y:
-        dataByYear?.find(
-          (el: DataByYear) =>
-            el.annee_universitaire === data?.annee_universitaire
-        )?.effectif_masculin || 0,
-    },
-    {
-      name: "Féminin",
-      y:
-        dataByYear?.find(
-          (el: DataByYear) =>
-            el.annee_universitaire === data?.annee_universitaire
-        )?.effectif_feminin || 0,
-    },
-  ];
-
-  const effectifF =
+  const effectifPU =
     dataByYear?.find(
       (el: DataByYear) => el.annee_universitaire === data?.annee_universitaire
-    )?.effectif_feminin || 0;
-  const effectifM =
+    )?.effectif_pu || 0;
+  const effectifPR =
     dataByYear?.find(
       (el: DataByYear) => el.annee_universitaire === data?.annee_universitaire
-    )?.effectif_masculin || 0;
-  const pctF = effectifF / (effectifF + effectifM);
+    )?.effectif_pr || 0;
+  const pctPU = effectifPU / (effectifPU + effectifPR);
 
   function getLevel() {
     if (searchParams.get("geo_id")?.startsWith("R")) {
@@ -98,11 +80,11 @@ export function Genders() {
     return "COMMUNE";
   }
 
-  const gt = pctF - pctF * 0.05;
-  const lt = pctF + pctF * 0.05;
+  const gt = pctPU - pctPU * 0.05;
+  const lt = pctPU + pctPU * 0.05;
   const similarParams = {
     niveau_geo: getLevel(),
-    needle: "pctF",
+    needle: "pctPU",
     gt: gt * 100 || 0,
     lt: lt * 100 || 0,
     annee_universitaire: currentYear,
@@ -113,18 +95,20 @@ export function Genders() {
     queryFn: () => getSimilarElements(similarParams),
   });
 
+  const { data: dataSectorsMap, isLoading: isLoadingDataSectorsMap } = useQuery(
+    {
+      queryKey: [
+        "atlas/get-number-of-students-by-sector-and-sublevel",
+        geoId,
+        currentYear,
+      ],
+      queryFn: () => getNumberOfStudentsBySectorAndSublevel(geoId, currentYear),
+    }
+  );
+
   const { data: polygonsData, isLoading: isLoadingPolygons } = useQuery({
     queryKey: ["atlas/get-geo-polygons", geoId],
     queryFn: () => getGeoPolygon(geoId),
-  });
-
-  const { data: dataGenders, isLoading: isLoadingDataGenders } = useQuery({
-    queryKey: [
-      "atlas/get-number-of-students-by-gender-and-sublevel",
-      geoId,
-      currentYear,
-    ],
-    queryFn: () => getNumberOfStudentsByGenderAndSublevel(geoId, currentYear),
   });
 
   // order by distance
@@ -132,16 +116,21 @@ export function Genders() {
     ?.map((el: SimilarData) => {
       return {
         ...el,
-        distance: Math.abs(pctF * 100 - el.pctF),
+        distance: Math.abs(pctPU * 100 - el.pctPU),
       };
     })
     .sort((a: SimilarData, b: SimilarData) => a.distance - b.distance);
+
+  const dataSectors = [
+    { name: "Secteur public", y: effectifPU },
+    { name: "Secteur privé", y: effectifPR },
+  ];
 
   if (
     isLoading ||
     isLoadingByYear ||
     isLoadingSimilar ||
-    isLoadingDataGenders ||
+    isLoadingDataSectorsMap ||
     isLoadingPolygons
   ) {
     return <div>Loading...</div>;
@@ -191,15 +180,15 @@ export function Genders() {
                 descriptionNode={
                   <Badge color="yellow-tournesol">{currentYear}</Badge>
                 }
-                number={effectifF}
-                label={`Etudiante${effectifF > 1 ? "s" : ""} inscrite${
-                  effectifF > 1 ? "s" : ""
-                }`}
+                number={effectifPU}
+                label={`Etudiant${effectifPU > 1 ? "s" : ""} inscrit${
+                  effectifPU > 1 ? "s" : ""
+                } dans le secteur public`}
                 trendGraph={
                   <TrendCard
-                    color="#e18b76"
-                    data={dataByYear.map(
-                      (item: DataByYear) => item.effectif_feminin
+                    color="#748CC0"
+                    data={dataByYear?.map(
+                      (item: DataByYear) => item.effectif_pu
                     )}
                   />
                 }
@@ -212,15 +201,15 @@ export function Genders() {
                 descriptionNode={
                   <Badge color="yellow-tournesol">{currentYear}</Badge>
                 }
-                number={effectifM}
-                label={`Etudiant${effectifM > 1 ? "s" : ""} inscrit${
-                  effectifM > 1 ? "s" : ""
-                }`}
+                number={effectifPR}
+                label={`Etudiant${effectifPR > 1 ? "s" : ""} inscrit${
+                  effectifPR > 1 ? "s" : ""
+                } dans le secteur privé`}
                 trendGraph={
                   <TrendCard
-                    color="#efcb3a"
+                    color="#755F4D"
                     data={dataByYear.map(
-                      (item: DataByYear) => item.effectif_masculin
+                      (item: DataByYear) => item.effectif_pr
                     )}
                   />
                 }
@@ -230,15 +219,15 @@ export function Genders() {
         </Col>
         <Col md={5}>
           <Title as="h3" look="h6" className="fr-mx-5w">
-            Pourcentage d'étudiants inscrits regroupés par genre
+            Pourcentage d'étudiants inscrits regroupés par secteur
             <Badge color="yellow-tournesol" className="fr-ml-1w">
               {currentYear}
             </Badge>
           </Title>
-          <GenderChart data={dataGender || []} isLoading={isLoading} />
+          <SectortsChart data={dataSectors || []} isLoading={isLoading} />
         </Col>
       </Row>
-      {polygonsData?.length > 1 &&
+      {polygonsData.length > 1 &&
         geoId !== "PAYS_100" &&
         geoId !== "D075" &&
         geoId !== "R00" && (
@@ -256,15 +245,15 @@ export function Genders() {
             </Row>
             <Row gutters>
               <Col md={7}>
-                <MapPieGender
+                <MapPieSectors
                   currentYear={currentYear}
-                  isLoading={isLoadingDataGenders}
-                  mapPieData={dataGenders}
+                  isLoading={isLoadingDataSectorsMap}
+                  mapPieData={dataSectorsMap}
                   polygonsData={polygonsData}
                 />
               </Col>
               <Col md={5}>
-                <SubListGenders />
+                <SubListSectors />
               </Col>
             </Row>
           </>
@@ -300,7 +289,7 @@ export function Genders() {
               <span className="fr-icon-line-chart-line" />
             </Button>
           </div>
-          <GenderHistoChart
+          <SectorHistoChart
             data={dataByYear}
             isLoading={isLoadingByYear}
             type={chartType}
@@ -317,15 +306,16 @@ export function Genders() {
                 className="fr-icon-list-unordered fr-mr-1w"
                 aria-hidden="true"
               />
-              Liste des territoires similaires sur la répartition par genre pour
-              l'année universitaire{" "}
+              Liste des territoires similaires sur la répartition des secteurs
+              pour l'année universitaire{" "}
               <Badge color="yellow-tournesol">{currentYear}</Badge>
             </Title>
             <Text>
-              Les territoires similaires sont ceux qui ont une répartition par
-              genre du nombre d'étudiants inscrits proche du territoire
-              sélectionné. La tolérance maximum est de <strong>5&nbsp;%</strong>
-              . Seuls les 5 premiers résutats sont affichés.
+              Les territoires similaires sont ceux qui ont une répartition du
+              nombre d'étudiants inscrits dans le secteur public et privé proche
+              du territoire sélectionné. La tolérance maximum est de{" "}
+              <strong>5&nbsp;%</strong>. Seuls les 5 premiers résutats sont
+              affichés.
               <br />
               L'année universitaire sélectionnée est{" "}
               <Badge color="yellow-tournesol">{currentYear}</Badge>.
@@ -337,13 +327,16 @@ export function Genders() {
               <br />
               <ul>
                 {dataSimilarSorted
-                  ?.filter((el: SimilarData) => el.geo_id !== geoId)
+                  ?.filter(
+                    (el: SimilarData) =>
+                      el.geo_id !== searchParams.get("geo_id")
+                  )
                   .slice(0, 6)
                   .map((el: SimilarData) => (
                     <li key={el.geo_id}>
-                      {el.geo_nom} (Féminin:{" "}
-                      <strong>{el.pctF.toFixed(1)}&nbsp;%</strong> - Masculin:{" "}
-                      <strong>{el.pctM.toFixed(1)}&nbsp;%</strong>)
+                      {el.geo_nom} (Secteur public:{" "}
+                      <strong>{el.pctPU.toFixed(1)}&nbsp;%</strong> - Secteur
+                      privé: <strong>{el.pctPR.toFixed(1)}&nbsp;%</strong>)
                       <Button
                         size="sm"
                         variant="text"

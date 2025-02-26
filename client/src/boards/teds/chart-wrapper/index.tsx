@@ -17,7 +17,7 @@ import {
   Text,
   Title,
 } from "@dataesr/dsfr-plus";
-import CopyButton from "../../../components/copy-button";
+import CopyButton from "../../../components/copy-button/index.tsx";
 import { getConfig } from "../utils.ts";
 
 import "./styles.scss";

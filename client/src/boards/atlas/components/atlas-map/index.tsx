@@ -12,8 +12,8 @@ import {
 import { MapBubbleDataProps } from "../../../../types/atlas.ts";
 import MapSkeleton from "../../charts/skeletons/map.tsx";
 import MapWithPolygonAndBubbles from "../../charts/map-with-polygon-and-bubbles.tsx";
-import MapPieSectors from "../../charts/map-pie-sectors/index.jsx";
-import MapPieGender from "../../charts/map-pie-genders/index.jsx";
+import MapPieSectors from "../../charts/map-pie-sectors/index.js";
+import MapPieGender from "../../charts/map-pie-genders/index.js";
 import FilieresList from "../../../../components/filieres-list/index.tsx";
 import SubList from "../main/tabs/components/sub-list.tsx";
 
@@ -26,7 +26,8 @@ export default function AtlasMap() {
   const selectedTab = path[path.length - 1];
   const [searchParams] = useSearchParams();
   const geoId = searchParams.get("geo_id") || "";
-  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
+  const currentYear =
+    searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
 
   const { data: dataHistoric, isLoading: isLoadingHistoric } = useQuery({
     queryKey: [

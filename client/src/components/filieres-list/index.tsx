@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useSearchParams } from "react-router-dom";
 import { Badge, Container, Row, Col, Text, Title } from "@dataesr/dsfr-plus";
 
-import ListSkeleton from "../../pages/atlas/charts/skeletons/list.tsx";
+import ListSkeleton from "../../boards/atlas/charts/skeletons/list.tsx";
 import { getNumberOfStudents } from "../../api/atlas.ts";
 import { DEFAULT_CURRENT_YEAR } from "../../constants.tsx";
 

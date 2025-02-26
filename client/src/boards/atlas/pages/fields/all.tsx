@@ -2,16 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import { Badge, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
-import FilieresSectorsChart from "../../../../charts/filieres-sectors.tsx";
+import FilieresSectorsChart from "../../charts/filieres-sectors.tsx";
 import {
   getNumberOfStudents,
   getNumberOfStudentsByGenderAndLevel,
-} from "../../../../../../api/atlas.ts";
+} from "../../../../api/atlas.ts";
 
-import FilieresGendersChart from "../../../../charts/filieres-genders.tsx";
-import FilieresList from "../../../../../../components/filieres-list/index.tsx";
-import { useAtlas } from "../../../../useAtlas.tsx";
-// import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
+import FilieresGendersChart from "../../charts/filieres-genders.tsx";
+import FilieresList from "../../../../components/filieres-list/index.tsx";
+import { useAtlas } from "../../useAtlas.tsx";
 
 export default function AllFields() {
   const { DEFAULT_CURRENT_YEAR } = useAtlas();

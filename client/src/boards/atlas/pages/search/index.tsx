@@ -4,26 +4,27 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import {
   Badge,
   Button,
-  Container, Row, Col,
+  Container,
+  Row,
+  Col,
   Spinner,
   Text,
   Title,
 } from "@dataesr/dsfr-plus";
 
-import StudentsCardWithTrend from "../../../../../../components/cards/students-card-with-trend/index.js";
-import TrendCard from "../../../../charts/trend.tsx";
+import StudentsCardWithTrend from "../../../../components/cards/students-card-with-trend/index.js";
+import TrendCard from "../../charts/trend.tsx";
 import {
   getFiltersValues,
   getGeoIdsFromSearch,
   getNumberOfStudentsByYear,
-} from "../../../../../../api/atlas.js";
-import FavoritesList from "../../../favorites-list/index.js";
-import { GetLevelBadgeFromItem } from "../../../../utils/badges.js";
+} from "../../../../api/atlas.js";
+import FavoritesList from "../../components/favorites-list/index.tsx";
+import { GetLevelBadgeFromItem } from "../../utils/badges.js";
 
 import "./styles.scss";
-// import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.js";
-import { DataByYear } from "../../../../../../types/atlas.ts";
-import { useAtlas } from "../../../../useAtlas.tsx";
+import { DataByYear } from "../../../../types/atlas.ts";
+import { useAtlas } from "../../useAtlas.tsx";
 
 type SearchTypes = {
   geo_id: string;
@@ -38,17 +39,18 @@ export function Search() {
   const params = new URLSearchParams(window.location.search);
   const datasupr = params.get("datasupr") === "true";
   const { DEFAULT_CURRENT_YEAR } = useAtlas();
-  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
-
+  const currentYear =
+    searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
 
   const { data: filtersValues, isLoading: isLoadingFiltersValues } = useQuery({
     queryKey: ["atlas/get-filters-values"],
     queryFn: () => getFiltersValues(),
   });
 
- const { data: dataByYear } = useQuery({
+  const { data: dataByYear } = useQuery({
     queryKey: ["atlas/number-of-students-by-year", params],
-    queryFn: () => getNumberOfStudentsByYear(`?annee_universitaire=${currentYear}`),
+    queryFn: () =>
+      getNumberOfStudentsByYear(`?annee_universitaire=${currentYear}`),
   });
 
   const {
@@ -69,8 +71,10 @@ export function Search() {
     return <Spinner />;
   }
 
-  const nbStudents = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_total || 0;
-  
+  const nbStudents =
+    dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)
+      ?.effectif_total || 0;
+
   // Create a list of all territories (regions, departments, academies - without cities)
   const territoiresList = Object.keys(filtersValues.geo_id)
     .map((key) => {
@@ -87,33 +91,30 @@ export function Search() {
   // Sort the list of territories by label
   territoiresList.sort((a, b) => a.label.localeCompare(b.label));
 
-    function GetFilterButton({ type, label }) {
-      if(!dataSearch) {
-        return null;
-      }
-      return (
-        <li
-          className={territoiresType === type ? "active" : ""}
-        >
-          {dataSearch?.filter((el) => el.niveau_geo === type)?.length === 0 && type!=="all" ? (
-            null
-          ):(
-            <span onClick={() => setTerritoiresType(type)}>
-              {label}
-              <Badge className="fr-ml-1w" color="pink-tuile">
-                {
-                  (type === "all" && dataSearch?.length) || dataSearch?.filter((el) => el.niveau_geo === type)?.length
-                }
-              </Badge>
-            </span>
-          )}
-        </li>
-      );
+  function GetFilterButton({ type, label }) {
+    if (!dataSearch) {
+      return null;
     }
+    return (
+      <li className={territoiresType === type ? "active" : ""}>
+        {dataSearch?.filter((el) => el.niveau_geo === type)?.length === 0 &&
+        type !== "all" ? null : (
+          <span onClick={() => setTerritoiresType(type)}>
+            {label}
+            <Badge className="fr-ml-1w" color="pink-tuile">
+              {(type === "all" && dataSearch?.length) ||
+                dataSearch?.filter((el) => el.niveau_geo === type)?.length}
+            </Badge>
+          </span>
+        )}
+      </li>
+    );
+  }
 
-    const filteredData = territoiresType !== "all"
+  const filteredData =
+    territoiresType !== "all"
       ? dataSearch?.filter((el) => el.niveau_geo === territoiresType)
-      : dataSearch; 
+      : dataSearch;
 
   return (
     <Container as="section">
@@ -139,17 +140,19 @@ export function Search() {
             </Row>
             <Row className="fr-mt-5w">
               <Col md={9} className="search">
-                  <Title as="h2" look="h6" className="fr-mb-1w">
-                <label className="fr-label" htmlFor="text-input-text">
-                  Rechercher un territoire
-                </label>
-                  </Title>
+                <Title as="h2" look="h6" className="fr-mb-1w">
+                  <label className="fr-label" htmlFor="text-input-text">
+                    Rechercher un territoire
+                  </label>
+                </Title>
                 <input
                   className="fr-input"
                   id="text-input-text"
                   name="text-input-text"
                   onChange={(e) => setSearchValue(e.target.value)}
-                  onClick={() => {setSearchValue("");}}
+                  onClick={() => {
+                    setSearchValue("");
+                  }}
                   onKeyUp={(e) => {
                     if (e.key === "Enter") handleClick();
                   }}
@@ -172,12 +175,20 @@ export function Search() {
               <Col>
                 <div className="territories-filter">
                   <ul>
-                    {dataSearch?.length > 0 && (<span className="fr-icon-filter-line" aria-hidden="true" />)}
+                    {dataSearch?.length > 0 && (
+                      <span
+                        className="fr-icon-filter-line"
+                        aria-hidden="true"
+                      />
+                    )}
                     <GetFilterButton type="all" label="Tous" />
                     <GetFilterButton type="REGION" label="Régions" />
                     <GetFilterButton type="ACADEMIE" label="Académies" />
                     <GetFilterButton type="DEPARTEMENT" label="Départements" />
-                    <GetFilterButton type="UNITE_URBAINE" label="Unités urbaines" />
+                    <GetFilterButton
+                      type="UNITE_URBAINE"
+                      label="Unités urbaines"
+                    />
                     <GetFilterButton type="COMMUNE" label="Communes" />
                   </ul>
                 </div>
@@ -206,7 +217,11 @@ export function Search() {
                         key={result.geo_id}
                         onClick={() => {
                           navigate(
-                          `/atlas/general?geo_id=${result.geo_id}&annee_universitaire=${currentYear}${datasupr ? "&datasupr=true" : ""}`
+                            `/atlas/general?geo_id=${
+                              result.geo_id
+                            }&annee_universitaire=${currentYear}${
+                              datasupr ? "&datasupr=true" : ""
+                            }`
                           );
                         }}
                       >
@@ -232,20 +247,22 @@ export function Search() {
           </Container>
         </Col>
         <Col md={4} offsetMd={1}>
-        <Container fluid className="fr-mb-1w">
-          <StudentsCardWithTrend
-            descriptionNode={
-              <Badge color="yellow-tournesol">{currentYear}</Badge>
-            }
-            number={nbStudents}
-            label={`Étudiant${nbStudents > 1 ? 's' : ''} inscrit${nbStudents > 1 ? 's' : ''} en France`}
-            trendGraph={
-              <TrendCard
-                color="#e18b76"
-                data={dataByYear?.map((item) => item.effectif_total)}
-              />
-            }
-          />
+          <Container fluid className="fr-mb-1w">
+            <StudentsCardWithTrend
+              descriptionNode={
+                <Badge color="yellow-tournesol">{currentYear}</Badge>
+              }
+              number={nbStudents}
+              label={`Étudiant${nbStudents > 1 ? "s" : ""} inscrit${
+                nbStudents > 1 ? "s" : ""
+              } en France`}
+              trendGraph={
+                <TrendCard
+                  color="#e18b76"
+                  data={dataByYear?.map((item) => item.effectif_total)}
+                />
+              }
+            />
           </Container>
           <FavoritesList territoiresList={territoiresList} />
         </Col>

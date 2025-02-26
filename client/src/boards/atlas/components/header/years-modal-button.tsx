@@ -1,11 +1,10 @@
-import { useState } from 'react';
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useQuery } from '@tanstack/react-query';
+import { useQuery } from "@tanstack/react-query";
 
-import { Button, Modal, ModalContent, ModalTitle } from '@dataesr/dsfr-plus';
-import { getFiltersValues } from '../../../../../api/atlas.ts';
-// import { DEFAULT_CURRENT_YEAR } from '../../../../../constants.tsx';
-import { useAtlas } from '../../../useAtlas.tsx';
+import { Button, Modal, ModalContent, ModalTitle } from "@dataesr/dsfr-plus";
+import { getFiltersValues } from "../../../../api/atlas.ts";
+import { useAtlas } from "../../useAtlas.tsx";
 
 export default function YearsModalButton() {
   const [isOpen, setIsOpen] = useState(false);

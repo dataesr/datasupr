@@ -1,13 +1,13 @@
 import { Route, Routes } from "react-router-dom";
 
-import AdminRoutes from "./pages/admin/routes.tsx";
-import AtlasRoutes from "./pages/atlas/routes.tsx";
-import EuropeanProjectsRoutes from "./pages/european-projects/routes.tsx";
-import HomePage from "./pages/home-page.tsx";
-import Integration from "./pages/integration/index.tsx";
-import OpenAlexRoutes from "./pages/open-alex/routes.tsx";
-import TedsRoutes from "./pages/teds/routes.tsx";
-import FinanceUniversityRoutes from "./pages/finance-university/routes.tsx";
+import AdminRoutes from "./boards/admin/routes.tsx";
+import AtlasRoutes from "./boards/atlas/routes.tsx";
+import EuropeanProjectsRoutes from "./boards/european-projects/routes.tsx";
+import HomePage from "./boards/home-page.tsx";
+import Integration from "./boards/integration/index.tsx";
+import OpenAlexRoutes from "./boards/open-alex/routes.tsx";
+import TedsRoutes from "./boards/teds/routes.tsx";
+import FinanceUniversityRoutes from "./boards/finance-university/routes.tsx";
 
 export default function Router() {
   return (

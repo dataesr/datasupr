@@ -3,11 +3,10 @@ import { Badge, Button, Container, Row } from "@dataesr/dsfr-plus";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import Template from "../../../../../../components/template/index.tsx";
-import { getNumberOfStudentsHistoricByLevel } from "../../../../../../api/index.ts";
-import { getSubLevel } from "../../../../utils/index.tsx";
-// import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
-import { useAtlas } from "../../../../useAtlas.tsx";
+import Template from "../../../components/template/index.tsx";
+import { getNumberOfStudentsHistoricByLevel } from "../../../api/index.ts";
+import { getSubLevel } from "../utils/index.tsx";
+import { useAtlas } from "../useAtlas.tsx";
 
 const MAX_ELEMENTS = 6;
 

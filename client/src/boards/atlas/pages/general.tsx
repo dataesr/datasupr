@@ -11,26 +11,25 @@ import {
 } from "@dataesr/dsfr-plus";
 import * as turf from "@turf/turf";
 
-import { DataByYear } from "../../../../../types/atlas.ts";
+import { DataByYear } from "../../../types/atlas.ts";
 import {
   getNumberOfStudents,
   getNumberOfStudentsHistoricByLevel,
   getGeoPolygon,
-} from "../../../../../api/atlas.ts";
-import { getNumberOfStudentsByYear } from "../../../../../api/atlas.ts";
-import { MapBubbleDataProps } from "../../../../../types/atlas.ts";
-import FieldsMainCard from "../../../../../components/cards/fields-main-card/index.tsx";
-import GendersCard from "../../../../../components/cards/genders-card/index.tsx";
-import SectorsCard from "../../../../../components/cards/sectors-card/index.tsx";
-import StudentsCardWithTrend from "../../../../../components/cards/students-card-with-trend/index.tsx";
-import TrendCard from "../../../charts/trend.tsx";
-import SubList from "./components/sub-list.tsx";
-import MapWithPolygonAndBubbles from "../../../charts/map-with-polygon-and-bubbles.tsx";
-import MapSkeleton from "../../../charts/skeletons/map.tsx";
-import ArrondissementsMap from "../../../charts/arrondissements-map/index.tsx";
+} from "../../../api/atlas.ts";
+import { getNumberOfStudentsByYear } from "../../../api/atlas.ts";
+import { MapBubbleDataProps } from "../../../types/atlas.ts";
+import FieldsMainCard from "../../../components/cards/fields-main-card/index.tsx";
+import GendersCard from "../../../components/cards/genders-card/index.tsx";
+import SectorsCard from "../../../components/cards/sectors-card/index.tsx";
+import StudentsCardWithTrend from "../../../components/cards/students-card-with-trend/index.tsx";
+import TrendCard from "../charts/trend.tsx";
+import SubList from "../components/sub-list.tsx";
+import MapWithPolygonAndBubbles from "../charts/map-with-polygon-and-bubbles.tsx";
+import MapSkeleton from "../charts/skeletons/map.tsx";
+import ArrondissementsMap from "../charts/arrondissements-map/index.tsx";
 
-import { useAtlas } from "../../../useAtlas.tsx";
-// import { DEFAULT_CURRENT_YEAR } from "../../../../../constants.tsx";
+import { useAtlas } from "../useAtlas.tsx";
 
 import "./styles.scss";
 

@@ -3,15 +3,15 @@ import { Badge, Button, Container, Row } from "@dataesr/dsfr-plus";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import Template from "../../../../../../components/template/index.tsx";
-import { getNumberOfStudentsBySectorAndSublevel } from "../../../../../../api/index.ts";
-import { getSubLevel } from "../../../../utils/index.tsx";
+import Template from "../../../components/template/index.tsx";
+import { getNumberOfStudentsByGenderAndSublevel } from "../../../api/index.ts";
+import { getSubLevel } from "../utils/index.tsx";
 // import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
-import { useAtlas } from "../../../../useAtlas.tsx";
+import { useAtlas } from "../useAtlas.tsx";
 
 const MAX_ELEMENTS = 6;
 
-export default function SubListSectors() {
+export default function SubListGenders() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const geoId = searchParams.get("geo_id") || "";
@@ -22,11 +22,11 @@ export default function SubListSectors() {
 
   const { data, isLoading } = useQuery({
     queryKey: [
-      "atlas/get-number-of-students-by-sector-and-sublevel",
+      "atlas/get-number-of-students-by-gender-and-sublevel",
       geoId,
       currentYear,
     ],
-    queryFn: () => getNumberOfStudentsBySectorAndSublevel(geoId, currentYear),
+    queryFn: () => getNumberOfStudentsByGenderAndSublevel(geoId, currentYear),
   });
 
   if (isLoading) {
@@ -60,12 +60,8 @@ export default function SubListSectors() {
       </Row>
       <ul style={{ overflow: "auto", listStyle: "none", padding: 0 }}>
         {data.slice(0, max).map((item) => {
-          const size_public = Math.round(
-            (item.effectif_secteur_public * 100) / maxValue
-          );
-          const size_prive = Math.round(
-            (item.effectif_secteur_prive * 100) / maxValue
-          );
+          const size_f = Math.round((item.effectif_feminin * 100) / maxValue);
+          const size_m = Math.round((item.effectif_masculin * 100) / maxValue);
 
           return (
             <li key={item.id}>
@@ -94,9 +90,9 @@ export default function SubListSectors() {
                 aria-describedby={`tooltip_${item.id}`}
                 className="fr-mb-1v"
                 style={{
-                  width: `${size_public}%`,
+                  width: `${size_f}%`,
                   height: "6px",
-                  backgroundColor: "#748CC0",
+                  backgroundColor: "#E18B76",
                   borderTopRightRadius: "3px",
                   borderBottomRightRadius: "3px",
                 }}
@@ -106,9 +102,9 @@ export default function SubListSectors() {
                 aria-describedby={`tooltip_${item.id}`}
                 className="fr-mb-1w"
                 style={{
-                  width: `${size_prive}%`,
+                  width: `${size_m}%`,
                   height: "6px",
-                  backgroundColor: "#755F4D",
+                  backgroundColor: "#EFCB3A",
                   borderTopRightRadius: "3px",
                   borderBottomRightRadius: "3px",
                 }}
@@ -119,14 +115,12 @@ export default function SubListSectors() {
                 id={`tooltip_${item.id}`}
                 role="tooltip"
               >
-                Effectifs <strong>{item.nom}</strong> par secteur pour l'année
+                Effectifs <strong>{item.nom}</strong> par genre pour l'année
                 universitaire {currentYear}
                 <br />
-                Secteur public : {item.effectif_secteur_public.toLocaleString()}{" "}
-                étudiants
+                Féminin : {item.effectif_feminin.toLocaleString()} étudiantes
                 <br />
-                Secteur privé : {item.effectif_secteur_prive.toLocaleString()}{" "}
-                étudiants
+                Masculin : {item.effectif_masculin.toLocaleString()} étudiants
               </span>
             </li>
           );

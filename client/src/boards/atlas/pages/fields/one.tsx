@@ -11,25 +11,21 @@ import {
 } from "@dataesr/dsfr-plus";
 import * as turf from "@turf/turf";
 
-import GendersCard from "../../../../../../components/cards/genders-card/index.tsx";
-import MapSkeleton from "../../../../charts/skeletons/map.tsx";
-import MapWithPolygonAndBubbles from "../../../../charts/map-with-polygon-and-bubbles.tsx";
-import SectorsCard from "../../../../../../components/cards/sectors-card/index.tsx";
-import StudentsCard from "../../../../../../components/cards/students-card/index.tsx";
-import {
-  DataByYear,
-  MapBubbleDataProps,
-} from "../../../../../../types/atlas.ts";
-import ColumnsChart from "../../../../charts/columns.tsx";
+import GendersCard from "../../../../components/cards/genders-card/index.tsx";
+import MapSkeleton from "../../charts/skeletons/map.tsx";
+import MapWithPolygonAndBubbles from "../../charts/map-with-polygon-and-bubbles.tsx";
+import SectorsCard from "../../../../components/cards/sectors-card/index.tsx";
+import StudentsCard from "../../../../components/cards/students-card/index.tsx";
+import { DataByYear, MapBubbleDataProps } from "../../../../types/atlas.ts";
+import ColumnsChart from "../../charts/columns.tsx";
 import {
   getNumberOfStudentsByYear,
   getNumberOfStudents,
   getGeoPolygon,
   getNumberOfStudentsByFieldAndSublevel,
-} from "../../../../../../api/atlas.ts";
+} from "../../../../api/atlas.ts";
 
-// import { DEFAULT_CURRENT_YEAR } from "../../../../../../constants.tsx";
-import { useAtlas } from "../../../../useAtlas.tsx";
+import { useAtlas } from "../../useAtlas.tsx";
 
 export default function OneField() {
   const { DEFAULT_CURRENT_YEAR } = useAtlas();
