@@ -11,6 +11,7 @@ import {
   Service,
   Title,
 } from "@dataesr/dsfr-plus";
+import SwitchTheme from "./switch-theme";
 
 export default function NotFoundPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -67,6 +68,7 @@ export default function NotFoundPage() {
           </Col>
         </Row>
       </Container>
+      <SwitchTheme />
     </>
   );
 }
