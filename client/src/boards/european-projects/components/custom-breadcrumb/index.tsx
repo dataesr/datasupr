@@ -12,49 +12,49 @@ export default function CustomBreadcrumb({ pageKey }) {
       label: "Tableau de bord des projets européens - Horizon Europe",
       link: "/european-projects",
     },
-    general: {
+    "": {
       label: "General",
-      link: "/european-projects/general",
+      link: "/european-projects/",
     },
     synthese: {
-      label: "Synthèse Horizon Europe",
-      link: "/european-projects/general/synthese",
+      label: "En un coup d'oeil",
+      link: "/european-projects/synthese",
     },
     positionnement: {
       label: "Positionnement",
-      link: "/european-projects/general/positionnement",
+      link: "/european-projects/positionnement",
+    },
+    collaborations: {
+      label: "Collaborations",
+      link: "/european-projects/collaborations",
     },
     evolution: {
       label: "Evolution",
-      link: "/european-projects/general/evolution",
+      link: "/european-projects/evolution",
     },
     "objectifs-types-projets": {
       label: "Objectifs & types de projets",
-      link: "/european-projects/general/objectifs-types-projets",
+      link: "/european-projects/objectifs-types-projets",
     },
     beneficiaires: {
       label: "Bénéficiaires",
-      link: "/european-projects/general/beneficiaires",
+      link: "/european-projects/beneficiaires",
     },
     "programme-mires": {
       label: "Programme MIRES",
-      link: "/european-projects/general/programme-mires",
+      link: "/european-projects/programme-mires",
     },
     "appel-a-projets": {
       label: "Appel à projets",
-      link: "/european-projects/general/appel-a-projets",
+      link: "/european-projects/appel-a-projets",
     },
     "donnees-reference": {
       label: "Données de référence",
-      link: "/european-projects/general/donnees-reference",
+      link: "/european-projects/donnees-reference",
     },
     informations: {
       label: "Informations",
-      link: "/european-projects/general/informations",
-    },
-    "horizon-europe": {
-      label: "HE hors ERC & MSCA",
-      link: "/european-projects/horizon-europe",
+      link: "/european-projects/informations",
     },
     msca: {
       label: "MSCA",
