@@ -12,6 +12,7 @@ import {
   Title,
 } from "@dataesr/dsfr-plus";
 import SwitchTheme from "./switch-theme";
+import Footer from "../layout/footer";
 
 export default function NotFoundPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -61,13 +62,14 @@ export default function NotFoundPage() {
           </Button>
         </FastAccess>
       </Header>
-      <Container>
+      <Container style={{ minHeight: "calc(60vh - 200px)" }}>
         <Row>
           <Col className="fr-my-12w text-center">
             <Title as="h1">404 - Page Not Found</Title>
           </Col>
         </Row>
       </Container>
+      <Footer />
       <SwitchTheme />
     </>
   );
