@@ -8,6 +8,7 @@ import Integration from "./boards/integration/index.tsx";
 import OpenAlexRoutes from "./boards/open-alex/routes.tsx";
 import TedsRoutes from "./boards/teds/routes.tsx";
 import FinanceUniversityRoutes from "./boards/finance-university/routes.tsx";
+import NotFoundPage from "./components/not-found-page.tsx";
 
 export default function Router() {
   return (
@@ -23,7 +24,7 @@ export default function Router() {
       <Route path="/integration" element={<Integration />} />
       <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
       <Route path="/teds/*" element={<TedsRoutes />} />
-      <Route path="*" element={<div>404 atlas</div>} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
