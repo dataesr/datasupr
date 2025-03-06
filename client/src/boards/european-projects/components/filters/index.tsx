@@ -1,58 +1,140 @@
 import { Button, Modal, ModalContent, ModalTitle } from "@dataesr/dsfr-plus";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 
-import filtersConfig from "./filters-config.json";
+import { getFiltersValues } from "../../api";
 
 type ItemProps = {
   id: string;
-  label: string;
+  label_fr: string;
+  label_en: string;
 }[];
 
 export default function Filters() {
   const [filterId, setFilterId] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [filters, setFilters] = useState({});
   const [title, setTitle] = useState();
   const [values, setValues] = useState<ItemProps>([]);
 
+  const { data: filterCountries } = useQuery({
+    queryKey: ["european-projects/get-filters-values", "countries"],
+    queryFn: () => getFiltersValues("countries"),
+  });
+
+  const { data: filterExtraJointOrganization } = useQuery({
+    queryKey: [
+      "european-projects/get-filters-values",
+      "extra_joint_organization",
+    ],
+    queryFn: () => getFiltersValues("extra_joint_organization"),
+  });
+
+  const { data: filterPrograms } = useQuery({
+    queryKey: ["european-projects/get-filters-values", "programs"],
+    queryFn: () => getFiltersValues("programs"),
+  });
+
+  const { data: filterThematics } = useQuery({
+    queryKey: [
+      "european-projects/get-filters-values",
+      "thematics",
+      searchParams.get("programs"),
+    ],
+    queryFn: () =>
+      getFiltersValues("thematics", searchParams.get("programs") || undefined),
+  });
+
   useEffect(() => {
-    const obj = {
-      country_code: filtersConfig["country_code"].defaultId,
-      extra_joint_organization:
-        filtersConfig["extra_joint_organization"].defaultId,
-    };
-    if (searchParams.get("country_code")) {
-      obj.country_code = searchParams.get("country_code") as string;
+    if (filterCountries) {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        country_code: filterCountries,
+      }));
     }
-    if (searchParams.get("extra_joint_organization")) {
-      obj.extra_joint_organization = searchParams.get(
-        "extra_joint_organization"
-      ) as string;
+  }, [filterCountries]);
+
+  useEffect(() => {
+    if (filterExtraJointOrganization) {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        extra_joint_organization: filterExtraJointOrganization,
+      }));
     }
-    setSearchParams(obj);
-  }, [searchParams, setSearchParams]);
+  }, [filterExtraJointOrganization]);
+
+  useEffect(() => {
+    if (filterPrograms) {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        programs: filterPrograms,
+      }));
+    }
+  }, [filterPrograms]);
+
+  useEffect(() => {
+    if (filterThematics) {
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        thematics: filterThematics,
+      }));
+      setSearchParams((prev) => {
+        if (searchParams.get("programs") === "all") {
+          prev.set("thematics", "all");
+        } else {
+          if (filterThematics.values.length === 1) {
+            prev.set("thematics", filterThematics.values[0].id);
+          } else {
+            prev.set("thematics", "all");
+          }
+        }
+        return prev;
+      });
+    }
+  }, [filterThematics]);
+
+  // paramètre par défault
+  if (!searchParams.get("country_code")) {
+    setSearchParams((prev) => {
+      prev.set("country_code", "FRA");
+      return prev;
+    });
+  }
+  if (!searchParams.get("extra_joint_organization")) {
+    setSearchParams((prev) => {
+      prev.set("extra_joint_organization", "all");
+      return prev;
+    });
+  }
+  if (!searchParams.get("programs")) {
+    setSearchParams((prev) => {
+      prev.set("programs", "all");
+      return prev;
+    });
+  }
+  if (!searchParams.get("thematics")) {
+    setSearchParams((prev) => {
+      prev.set("thematics", "all");
+      return prev;
+    });
+  }
 
   const openModal = (key: string) => {
-    setTitle(filtersConfig[key].title);
-    setValues(filtersConfig[key].values);
+    setTitle(filters[key].title_fr);
+    if (filters[key].values && filters[key].values.length > 0) {
+      setValues(filters[key].values);
+    }
     setFilterId(key);
     setIsOpen(true);
-  };
-
-  const selectItem = (item: { id: string }) => {
-    const obj = Object.fromEntries([...searchParams]);
-    obj[filterId] = item.id;
-
-    setSearchParams(obj);
-    setIsOpen(false);
   };
 
   return (
     <>
       {[...searchParams].map((param) => {
         const [key, value] = param;
-        const filter = filtersConfig[key];
+        const filter = filters[key];
         if (!filter) return null;
         return (
           <Button
@@ -63,8 +145,8 @@ export default function Filters() {
             onClick={() => openModal(key)}
             size="sm"
           >
-            {`${filter.label} : ${
-              filter.values.find((item) => item.id === value)?.label ??
+            {`${filter.label_fr} : ${
+              filter.values.find((item) => item.id === value)?.label_fr ??
               "inconnu"
             }`}
           </Button>
@@ -78,11 +160,28 @@ export default function Filters() {
             className="fr-select"
             id="select"
             name="select"
-            onChange={(e) => selectItem({ id: e.target.value })}
+            onChange={(e) => {
+              setSearchParams((prev) => {
+                prev.set(filterId, e.target.value);
+                // if (filterId === "programs") {
+                //   if (e.target.value === "all") {
+                //     prev.set("thematics", "all");
+                //   } else {
+                //     if (filters["thematics"]?.values.length === 1) {
+                //       prev.set("thematics", filters["thematics"].values[0].id);
+                //     } else {
+                //       prev.set("thematics", "all");
+                //     }
+                //   }
+                // }
+                return prev;
+              });
+              setIsOpen(false);
+            }}
           >
             {values.map((value) => (
               <option key={value.id} value={value.id}>
-                {value.label}
+                {value.label_fr}
               </option>
             ))}
           </select>

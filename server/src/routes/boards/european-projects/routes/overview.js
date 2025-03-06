@@ -1,9 +1,9 @@
 import express from "express";
-import { db } from "../../../../../services/mongo.js";
+import { db } from "../../../../services/mongo.js";
 
 const router = new express.Router();
 
-import { checkQuery } from "../../utils.js";
+import { checkQuery } from "../utils.js";
 
 router.route("/european-projects/synthesis-focus").get(async (req, res) => {
   const dataSuccessful = await db

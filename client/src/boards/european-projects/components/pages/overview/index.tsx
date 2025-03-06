@@ -13,6 +13,9 @@ export default function Overview() {
     if (!searchParams.get("country_code")) {
       setSearchParams({ country_code: "FRA" });
     }
+    // if (!searchParams.get("extra_joint_organization")) {
+    //   setSearchParams({ extra_joint_organization: "all" });
+    // }
   }, [searchParams, setSearchParams]);
 
   return (
