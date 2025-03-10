@@ -9,32 +9,26 @@ export function Layout({ languageSelector = false }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   useEffect(() => {
-    if (!searchParams.get('language') && languageSelector) {
+    if (!searchParams.get("language") && languageSelector) {
       searchParams.set("language", "FR"); // default value
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams, languageSelector]);
-
-  const handleChange = (e) => {
-    searchParams.set("language", e.target.value);
-    setSearchParams(searchParams);
-  }
 
   // TODO: Add file for external translations
   return (
     <>
       <Header>
         <Logo text="Ministère|chargé|de l'enseignement|supérieur|et de la recherche" />
-        <Service name="dataSupR" tagline="Si c'était pas super ça s'appellerait juste data" />
+        <Service
+          name="dataSupR"
+          tagline="Si c'était pas super ça s'appellerait juste data"
+        />
         <FastAccess>
-          <Button
-            as="a"
-            href="/"
-            icon="github-fill"
-            size="sm"
-            variant="text"
-          >
-            {(searchParams.get('language') === 'EN') ? "Explore dashboards" : "Explorer d'autres tableaux de bord"}
+          <Button as="a" href="/" icon="github-fill" size="sm" variant="text">
+            {searchParams.get("language") === "EN"
+              ? "Explore dashboards"
+              : "Explorer d'autres tableaux de bord"}
           </Button>
           <Button
             as="a"
@@ -45,43 +39,96 @@ export function Layout({ languageSelector = false }) {
             target="_blank"
             variant="text"
           >
-            {(searchParams.get('language') === 'EN') ? "Datasets" : "Jeux de données"}
+            {searchParams.get("language") === "EN"
+              ? "Datasets"
+              : "Jeux de données"}
           </Button>
           <Button
             aria-controls="fr-theme-modal"
             className="fr-btn fr-icon-theme-fill"
             data-fr-opened="false"
           >
-            {(searchParams.get('language') === 'EN') ? "Themes" : "Changer de thème"}
+            {searchParams.get("language") === "EN"
+              ? "Themes"
+              : "Changer de thème"}
           </Button>
-          {
-            languageSelector && (
-              <select
-                className="fr-select fr-p-0 fr-pl-1w"
-                style={{ height: '25px', width: '55px' }}
-                onChange={handleChange}
-              >
-                <option
-                  selected={searchParams.get('language') === 'FR'}
-                  value="FR"
+          {languageSelector && (
+            // <select
+            //   className="fr-select fr-p-0 fr-pl-1w"
+            //   style={{ height: "25px", width: "55px" }}
+            //   onChange={handleChange}
+            // >
+            //   <option
+            //     selected={searchParams.get("language") === "FR"}
+            //     value="FR"
+            //   >
+            //     Fr
+            //   </option>
+            //   <option
+            //     selected={searchParams.get("language") === "EN"}
+            //     value="EN"
+            //   >
+            //     En
+            //   </option>
+            // </select>
+            <nav role="navigation" className="fr-translate fr-nav">
+              <div className="fr-nav__item">
+                <button
+                  className="fr-translate__btn fr-btn fr-btn--tertiary"
+                  aria-controls="translate-1177"
+                  aria-expanded="false"
+                  title="Sélectionner une langue"
                 >
-                  Fr
-                </option>
-                <option
-                  selected={searchParams.get('language') === 'EN'}
-                  value="EN"
+                  FR<span className="fr-hidden-lg"> - Français</span>
+                </button>
+                <div
+                  className="fr-collapse fr-translate__menu fr-menu"
+                  id="translate-1177"
                 >
-                  En
-                </option>
-              </select>
-            )
-          }
+                  <ul className="fr-menu__list">
+                    <li>
+                      <Button
+                        className="fr-translate__language fr-nav__link"
+                        aria-current={
+                          searchParams.get("language") === "fr"
+                            ? "true"
+                            : "false"
+                        }
+                        onClick={() => {
+                          searchParams.set("language", "fr");
+                          setSearchParams(searchParams);
+                        }}
+                      >
+                        FR - Français
+                      </Button>
+                    </li>
+                    <li>
+                      <Button
+                        className="fr-translate__language fr-nav__link"
+                        aria-current={
+                          searchParams.get("language") === "en"
+                            ? "true"
+                            : "false"
+                        }
+                        onClick={() => {
+                          searchParams.set("language", "en");
+                          setSearchParams(searchParams);
+                        }}
+                      >
+                        EN - English
+                      </Button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </nav>
+          )}
         </FastAccess>
       </Header>
       <Outlet />
       <Footer />
       <SwitchTheme />
     </>
-  )
+  );
 }
 

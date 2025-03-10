@@ -11,7 +11,7 @@ import Informations from "./components/pages/informations.tsx";
 export default function EuropeanProjectsRoutes() {
   return (
     <Routes>
-      <Route element={<Layout />}>
+      <Route element={<Layout languageSelector />}>
         <Route path="/" element={<Main />}>
           <Route index element={<Navigate to="synthese" replace />} />
           <Route path="synthese" element={<Overview />} />
