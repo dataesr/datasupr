@@ -104,7 +104,7 @@ export default function Filters() {
   }
   if (!searchParams.get("extra_joint_organization")) {
     setSearchParams((prev) => {
-      prev.set("extra_joint_organization", "all");
+      prev.set("extra_joint_organization", "null");
       return prev;
     });
   }
