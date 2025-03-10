@@ -1,0 +1,22 @@
+{
+  "datasets": {
+    "fr": "Jeux de données",
+    "en": "Datasets"
+  },
+  "explore": {
+    "fr": "Explorer d'autres tableaux de bord",
+    "en": "Explore dashboards"
+  },
+  "languagesSelector": {
+    "fr": "Sélectionner une langue",
+    "en": "Select a language"
+  },
+  "tagline":{
+    "fr": "Si c'était pas super ça s'appellerait juste data",
+    "en": "If it wasn't great it would just be data"
+  },
+  "themes": {
+    "fr": "Thèmes",
+    "en": "Themes"
+  }
+}

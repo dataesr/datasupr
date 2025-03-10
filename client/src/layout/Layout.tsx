@@ -4,9 +4,11 @@ import { Button, Header, Logo, Service, FastAccess } from '@dataesr/dsfr-plus';
 
 import Footer from './footer';
 import SwitchTheme from '../components/switch-theme';
+import i18n from "./i18n.json";
 
 export function Layout({ languageSelector = false }) {
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "FR";
 
   useEffect(() => {
     if (!searchParams.get("language") && languageSelector) {
@@ -15,20 +17,18 @@ export function Layout({ languageSelector = false }) {
     }
   }, [searchParams, setSearchParams, languageSelector]);
 
-  // TODO: Add file for external translations
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
+
   return (
     <>
       <Header>
         <Logo text="Ministère|chargé|de l'enseignement|supérieur|et de la recherche" />
-        <Service
-          name="dataSupR"
-          tagline="Si c'était pas super ça s'appellerait juste data"
-        />
+        <Service name="dataSupR" tagline={getI18nLabel("tagline")} />
         <FastAccess>
           <Button as="a" href="/" icon="github-fill" size="sm" variant="text">
-            {searchParams.get("language") === "EN"
-              ? "Explore dashboards"
-              : "Explorer d'autres tableaux de bord"}
+            {getI18nLabel("explore")}
           </Button>
           <Button
             as="a"
@@ -39,29 +39,33 @@ export function Layout({ languageSelector = false }) {
             target="_blank"
             variant="text"
           >
-            {searchParams.get("language") === "EN"
-              ? "Datasets"
-              : "Jeux de données"}
+            {getI18nLabel("datasets")}
           </Button>
           <Button
             aria-controls="fr-theme-modal"
             className="fr-btn fr-icon-theme-fill"
             data-fr-opened="false"
           >
-            {searchParams.get("language") === "EN"
-              ? "Themes"
-              : "Changer de thème"}
+            {getI18nLabel("themes")}
           </Button>
           {languageSelector && (
             <nav role="navigation" className="fr-translate fr-nav">
               <div className="fr-nav__item">
                 <button
-                  className="fr-translate__btn fr-btn fr-btn--tertiary"
                   aria-controls="translate-1177"
                   aria-expanded="false"
-                  title="Sélectionner une langue"
+                  className="fr-translate__btn fr-btn fr-btn--tertiary"
+                  title={getI18nLabel("languagesSelector")}
                 >
-                  FR<span className="fr-hidden-lg"> - Français</span>
+                  {currentLang === "fr" ? (
+                    <>
+                      FR<span className="fr-hidden-lg"> - Français</span>
+                    </>
+                  ) : (
+                    <>
+                      EN<span className="fr-hidden-lg"> - English</span>
+                    </>
+                  )}
                 </button>
                 <div
                   className="fr-collapse fr-translate__menu fr-menu"
@@ -70,12 +74,8 @@ export function Layout({ languageSelector = false }) {
                   <ul className="fr-menu__list">
                     <li>
                       <Button
+                        aria-current={searchParams.get("language") === "fr"}
                         className="fr-translate__language fr-nav__link"
-                        aria-current={
-                          searchParams.get("language") === "fr"
-                            ? "true"
-                            : "false"
-                        }
                         onClick={() => {
                           searchParams.set("language", "fr");
                           setSearchParams(searchParams);
@@ -86,12 +86,8 @@ export function Layout({ languageSelector = false }) {
                     </li>
                     <li>
                       <Button
+                        aria-current={searchParams.get("language") === "en"}
                         className="fr-translate__language fr-nav__link"
-                        aria-current={
-                          searchParams.get("language") === "en"
-                            ? "true"
-                            : "false"
-                        }
                         onClick={() => {
                           searchParams.set("language", "en");
                           setSearchParams(searchParams);
