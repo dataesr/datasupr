@@ -53,24 +53,6 @@ export function Layout({ languageSelector = false }) {
               : "Changer de thème"}
           </Button>
           {languageSelector && (
-            // <select
-            //   className="fr-select fr-p-0 fr-pl-1w"
-            //   style={{ height: "25px", width: "55px" }}
-            //   onChange={handleChange}
-            // >
-            //   <option
-            //     selected={searchParams.get("language") === "FR"}
-            //     value="FR"
-            //   >
-            //     Fr
-            //   </option>
-            //   <option
-            //     selected={searchParams.get("language") === "EN"}
-            //     value="EN"
-            //   >
-            //     En
-            //   </option>
-            // </select>
             <nav role="navigation" className="fr-translate fr-nav">
               <div className="fr-nav__item">
                 <button
