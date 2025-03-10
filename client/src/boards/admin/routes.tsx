@@ -1,7 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 
 import Home from "./home.tsx";
-import { Layout } from "../../layout/Layout.tsx";
+import { Layout } from "../../layout/layout.tsx";
 import Dashboard from "./dashboard.tsx";
 
 export default function AdminRoutes() {

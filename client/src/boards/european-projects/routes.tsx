@@ -5,7 +5,7 @@ import Beneficiaries from "./components/pages/beneficiaries/index.tsx";
 import Overview from "./components/pages/overview/index.tsx";
 import Positioning from "./components/pages/positioning/index.tsx";
 import ProjectsTypes from "./components/pages/projects-types/index.tsx";
-import { Layout } from "../../layout/Layout.tsx";
+import { Layout } from "../../layout/layout.tsx";
 import Informations from "./components/pages/informations.tsx";
 
 export default function EuropeanProjectsRoutes() {

@@ -1,7 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 
 import Main from './index.tsx';
-import { Layout } from '../../layout/Layout.tsx';
+import { Layout } from "../../layout/layout.tsx";
 
 export default function FinanceUniversityRoutes() {
   return (
