@@ -49,6 +49,13 @@ export default function CustomSideMenu() {
         >
           Bénéficiaires
         </Link>
+        // TODO: Add more links
+        <Link
+          current={is("/european-projects/beneficiaires")}
+          href={`/european-projects/beneficiaires?${filtersParams}`}
+        >
+          Catégories de bénéficiaires
+        </Link>
         <Link
           current={is("/european-projects/programme-mires")}
           href={`/european-projects/programme-mires?${filtersParams}`}

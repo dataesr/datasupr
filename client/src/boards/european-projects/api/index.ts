@@ -57,8 +57,8 @@ export async function getFiltersValues(
       icon: "community-fill",
       label_fr: "Programmes",
       label_en: "Programs",
-      title_fr: "Sélectionner un programme",
-      title_en: "Select a program",
+      title_fr: "Sélectionner un ou plusieurs programmes",
+      title_en: "Select one or several programs",
       values: [
       {
         id: "all",
