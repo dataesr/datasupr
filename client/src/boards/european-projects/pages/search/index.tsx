@@ -93,15 +93,32 @@ export default function Search() {
   function CustomTitle({ target }) {
     if (target === "pillars") {
       return (
-        <span>
-          {getI18nLabel("pillars")}
-          <Badge
-            className="fr-ml-1w fr-mb-1w"
-            color="beige-gris-galet"
+        <span style={{ display: "flex", justifyContent: "space-between" }}>
+          <span>
+            {getI18nLabel("pillars")}
+            <Badge
+              className="fr-ml-1w fr-mb-1w"
+              color="beige-gris-galet"
+              size="sm"
+            >
+              {selectedPillars?.length} / {dataPillars?.length}
+            </Badge>
+          </span>
+          <Button
+            variant="text"
             size="sm"
+            onClick={() =>
+              setSelectedPillars(
+                selectedPillars?.length === dataPillars?.length
+                  ? []
+                  : dataPillars?.map((p) => p.id)
+              )
+            }
           >
-            {selectedPillars?.length} / {dataPillars?.length}
-          </Badge>
+            {selectedPillars?.length === dataPillars?.length
+              ? getI18nLabel("unselect")
+              : getI18nLabel("select")}
+          </Button>
         </span>
       );
     }

@@ -32,11 +32,11 @@
     "en":"Entity name"
   },
   "select":{
-    "fr":"selectionner tout",
+    "fr":"sélectionner tout",
     "en":"select all"
   },
   "unselect":{
-    "fr":"déselectionner tout",
+    "fr":"désélectionner tout",
     "en":"unselect all"
   }
 }
