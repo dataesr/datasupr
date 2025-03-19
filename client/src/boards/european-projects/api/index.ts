@@ -6,6 +6,34 @@ type FilterValue = {
   label_en: string;
 };
 
+export async function getPrograms(
+  pillars: string[]
+) {
+  const url = `${VITE_APP_SERVER_URL}/european-projects/programs-from-pillars?pillars=${pillars.join("|")}`;
+  const values = await fetch(url).then((response) => response.json());
+  return values;
+}
+
+export async function getThematics(
+  programs: string[]
+) {
+  console.log(programs);
+  
+  const url = `${VITE_APP_SERVER_URL}/european-projects/thematics-from-programs?programs=${programs.join("|")}`;
+  const values = await fetch(url).then((response) => response.json());
+  return values;
+}
+
+export async function getDestinations(
+  thematics: string[]
+) {
+  console.log(thematics);
+  
+  const url = `${VITE_APP_SERVER_URL}/european-projects/destinations-from-thematics?thematics=${thematics.join("|")}`;
+  const values = await fetch(url).then((response) => response.json());
+  return values;
+}
+
 export async function getFiltersValues(
   filterKey: string,
   programId?: string
@@ -97,7 +125,13 @@ export async function getFiltersValues(
       title_en: "Select a thematic",
       values,
     };
-  }
+    }
+  
+  if (filterKey === "pillars") {
+    const url = `${VITE_APP_SERVER_URL}/european-projects/filters-pillars`;
+    const values = await fetch(url).then((response) => response.json());
 
+    return values;
+  }
   return [];
 }

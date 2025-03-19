@@ -1,0 +1,22 @@
+{
+  "beneficiaries": {
+    "fr": "Bénéficiaires",
+    "en": "Beneficiaries"
+  },
+  "beneficiaries-types": {
+    "fr": "Types de bénéficiaires",
+    "en": "Types of beneficiaries"
+  },
+  "collaborations": {
+    "fr": "Collaborations",
+    "en": "Collaborations"
+  },
+  "positioning": {
+    "fr": "Positionnement",
+    "en": "Positioning"
+  },
+  "synthesis": {
+    "fr": "Synthèse",
+    "en": "Synthesis"
+  }
+}

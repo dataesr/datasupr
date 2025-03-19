@@ -1,0 +1,26 @@
+{
+  "title1": {
+    "fr": "Présentation du tableau des projets européens",
+    "en": "Presentation of the European projects dashboard"
+  },
+  "bloc1": {
+    "fr": "Ce tableau de bord présente les projets européens financés par l'Union européenne",
+    "en": "This dashboard presents European projects funded by the European Union"
+  },
+  "title2": {
+    "fr": "Grands chiffres",
+    "en": "Key figures"
+  },
+  "bloc2": {
+    "fr": "Horizon-Europe représente 95% des financements européens...",
+    "en": "Horizon-Europe represents 95% of European funding..."
+  },
+  "title3": {
+    "fr": "Explorer les projets européens",
+    "en": "Explore European projects"
+  },
+  "bloc3": {
+    "fr": "Découvrez les projets européens financés par l'Union européenne<br /><a href='/european-projects/search'>Voir les projets</a>",
+    "en": "Discover European projects funded by the European Union<br /><a href='/european-projects/search'>see projects</a>"
+  }
+}

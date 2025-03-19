@@ -1,15 +1,21 @@
 import { SideMenu, Link } from "@dataesr/dsfr-plus";
 import { useLocation, useSearchParams } from "react-router-dom";
+
+import i18n from "./i18n.json";
 import "./styles.scss";
 
 export default function CustomSideMenu() {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
-
-  if (!pathname) return null;
+  const currentLang = searchParams.get("language") || "fr";
   const filtersParams = searchParams.toString();
-
+  if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
+
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
+
   return (
     <nav>
       <SideMenu title="" sticky fullHeight className="padded-sidemenu">
@@ -17,19 +23,38 @@ export default function CustomSideMenu() {
           current={is("/european-projects/synthese")}
           href={`/european-projects/synthese?${filtersParams}`}
         >
-          En un coup d'oeil
+          {getI18nLabel("synthesis")}
         </Link>
         <Link
           current={is("/european-projects/positionnement")}
           href={`/european-projects/positionnement?${filtersParams}`}
         >
-          Positionnement
+          {getI18nLabel("positioning")}
         </Link>
         <Link
           current={is("/european-projects/collaborations")}
           href={`/european-projects/collaborations?${filtersParams}`}
         >
-          Collaborations
+          {getI18nLabel("collaborations")}
+        </Link>
+        {/* 
+        <Link
+          current={is("/european-projects/objectifs-types-projets")}
+          href={`/european-projects/objectifs-types-projets?${filtersParams}`}
+        >
+          Objectifs & types de projets
+        </Link> */}
+        <Link
+          current={is("/european-projects/beneficiaires")}
+          href={`/european-projects/beneficiaires?${filtersParams}`}
+        >
+          {getI18nLabel("beneficiaries")}
+        </Link>
+        <Link
+          current={is("/european-projects/beneficiaires-types")}
+          href={`/european-projects/beneficiaires-types?${filtersParams}`}
+        >
+          {getI18nLabel("beneficiaries-types")}
         </Link>
         <Link
           current={is("/european-projects/evolution")}
@@ -37,20 +62,8 @@ export default function CustomSideMenu() {
         >
           Evolution
         </Link>
-        <Link
-          current={is("/european-projects/objectifs-types-projets")}
-          href={`/european-projects/objectifs-types-projets?${filtersParams}`}
-        >
-          Objectifs & types de projets
-        </Link>
-        <Link
-          current={is("/european-projects/beneficiaires")}
-          href={`/european-projects/beneficiaires?${filtersParams}`}
-        >
-          Bénéficiaires
-        </Link>
-        // TODO: Add more links
-        <Link
+
+        {/* <Link
           current={is("/european-projects/beneficiaires")}
           href={`/european-projects/beneficiaires?${filtersParams}`}
         >
@@ -93,7 +106,7 @@ export default function CustomSideMenu() {
           href={`/european-projects/informations?${filtersParams}`}
         >
           Informations complémentaires
-        </Link>
+        </Link> */}
       </SideMenu>
     </nav>
   );

@@ -147,4 +147,174 @@ router.route("/european-projects/filters-thematics").get(async (req, res) => {
   }
 });
 
+router.route("/european-projects/filters-pillars").get(async (req, res) => {
+  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
+
+  try {
+    const data = await db.collection(currentCollectionName).aggregate([
+      {
+        $match: {
+          pilier_name_fr: { $ne: null },
+          framework: "Horizon Europe"
+        }
+      },
+      {
+        $group: {
+          _id: "$pilier_name_fr",
+          label_fr: { $first: "$pilier_name_fr" },
+          label_en: { $first: "$pilier_name_en" },
+          id: { $first: "$pilier_name_fr" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          label_fr: 1,
+          label_en: 1,
+          id: 1
+        }
+      },
+      {
+        $sort: { 
+          label_fr: 1
+        }
+      }
+    ], {
+      collation: { locale: "fr", strength: 1 }
+    }).toArray();
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.route("/european-projects/programs-from-pillars").get(async (req, res) => {
+  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
+
+  try {
+    const data = await db.collection(currentCollectionName).aggregate([
+      {
+        $match: {
+          pilier_name_fr: { $in: req.query.pillars.split("|") },
+          framework: "Horizon Europe"
+        }
+      },
+      {
+        $group: {
+          _id: "$programme_code",
+          label_fr: { $first: "$programme_name_fr" },
+          label_en: { $first: "$programme_name_en" },
+          id: { $first: "$programme_code" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          label_fr: 1,
+          label_en: 1,
+          id: 1
+        }
+      },
+      {
+        $sort: { 
+          label_fr: 1
+        }
+      }
+    ], {
+      collation: { locale: "fr", strength: 1 }
+    }).toArray();
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.route("/european-projects/thematics-from-programs").get(async (req, res) => { 
+  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
+
+  try {
+    const data = await db.collection(currentCollectionName).aggregate([
+      {
+        $match: {
+          programme_code: { $in: req.query.programs.split("|") },
+          thema_code: { $ne: null }
+        }
+      },
+      {
+        $group: {
+          _id: "$thema_code",
+          label_fr: { $first: "$thema_name_fr" },
+          label_en: { $first: "$thema_name_en" },
+          id: { $first: "$thema_code" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          label_fr: 1,
+          label_en: 1,
+          id: 1
+        }
+      },
+      {
+        $sort: { 
+          label_fr: 1
+        }
+      }
+    ], {
+      collation: { locale: "fr", strength: 1 }
+    }).toArray();
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+);
+
+router.route("/european-projects/destinations-from-thematics").get(async (req, res) => { 
+  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
+
+  try {
+    const data = await db.collection(currentCollectionName).aggregate([
+      {
+        $match: {
+          thema_code: { $in: req.query.thematics.split("|") },
+          destination_code: { $ne: null }
+        }
+      },
+      {
+        $group: {
+          _id: "$destination_code",
+          label_fr: { $first: "$destination_name_en" },
+          label_en: { $first: "$destination_name_en" },
+          id: { $first: "$destination_code" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          label_fr: 1,
+          label_en: 1,
+          id: 1
+        }
+      },
+      {
+        $sort: { 
+          label_fr: 1
+        }
+      }
+    ], {
+      collation: { locale: "fr", strength: 1 }
+    }).toArray();
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+);
+
 export default router;

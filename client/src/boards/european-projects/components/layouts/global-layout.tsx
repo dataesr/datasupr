@@ -1,21 +1,34 @@
-import { useEffect } from 'react';
-import { Outlet, useSearchParams } from 'react-router-dom';
-import { Button, Header, Logo, Service, FastAccess } from '@dataesr/dsfr-plus';
+import { useEffect } from "react";
+import { Outlet, useLocation, useSearchParams } from "react-router-dom";
+import {
+  Button,
+  Header,
+  Logo,
+  Service,
+  FastAccess,
+  Container,
+  Nav,
+  Link,
+} from "@dataesr/dsfr-plus";
 
-import Footer from './footer';
-import SwitchTheme from '../components/switch-theme';
+import Footer from "./footer";
+import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
 
-export function Layout({ languageSelector = false }) {
+export default function GlobalLayout({ languageSelector = false }) {
+  const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
   useEffect(() => {
     if (!searchParams.get("language") && languageSelector) {
-      searchParams.set("language", "FR"); // default value
+      searchParams.set("language", "fr"); // default value
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams, languageSelector]);
+
+  if (!pathname) return null;
+  const is = (str: string): boolean => pathname?.startsWith(str);
 
   function getI18nLabel(key) {
     return i18n[key][currentLang];
@@ -103,10 +116,57 @@ export function Layout({ languageSelector = false }) {
           )}
         </FastAccess>
       </Header>
+      <div style={{ backgroundColor: "#f5f5f5" }}>
+        <Container>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <Nav
+              aria-label="Main navigation"
+              style={{ backgroundColor: "#f5f5f5" }}
+            >
+              <Link
+                current={is("/european-projects/accueil")}
+                href="/european-projects/accueil"
+              >
+                <span
+                  className="fr-icon-home-4-line fr-mr-1w"
+                  aria-hidden="true"
+                />
+                {getI18nLabel("home")}
+              </Link>
+              <Link
+                current={
+                  is("/european-projects/search") ||
+                  is("/european-projects/synthese") ||
+                  is("/european-projects/positionnement") ||
+                  is("/european-projects/collaborations") ||
+                  is("/european-projects/beneficiaires")
+                }
+                href="/european-projects/search"
+              >
+                {getI18nLabel("main")}
+              </Link>
+              <Link
+                current={is("/european-projects/msca")}
+                href="/european-projects/msca"
+              >
+                MSCA
+              </Link>
+              <Link
+                current={is("/european-projects/erc")}
+                href="/european-projects/erc"
+              >
+                ERC
+              </Link>
+            </Nav>
+            <Button icon="global-line" size="sm" variant="tertiary">
+              {getI18nLabel("selectedCountry")} France
+            </Button>
+          </div>
+        </Container>
+      </div>
       <Outlet />
       <Footer />
       <SwitchTheme />
     </>
   );
 }
-
