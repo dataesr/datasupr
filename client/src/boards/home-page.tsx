@@ -188,6 +188,15 @@ export default function HomePage() {
         <Row gutters>
           <Col>
             <GenericCard
+              description="Personnels enseignants"
+              title="Personnels enseignants"
+              to="/personnel-enseignants?datasupr=true"
+            />
+          </Col>
+        </Row>
+        <Row gutters>
+          <Col>
+            <GenericCard
               description="Open Alex"
               title="Open Alex"
               to="/open-alex?datasupr=true"

@@ -3,6 +3,7 @@ import { Route, Routes } from "react-router-dom";
 import AdminRoutes from "./boards/admin/routes.tsx";
 import AtlasRoutes from "./boards/atlas/routes.tsx";
 import EuropeanProjectsRoutes from "./boards/european-projects/routes.tsx";
+import PersonnelEnseignantsRoutes from "./boards/personnel-enseignants/routes.tsx";
 import HomePage from "./boards/home-page.tsx";
 import Integration from "./boards/integration/index.tsx";
 import OpenAlexRoutes from "./boards/open-alex/routes.tsx";
@@ -19,6 +20,10 @@ export default function Router() {
       <Route path="/atlas/*" element={<AtlasRoutes />} />
       <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
 
+      <Route
+        path="/personnel-enseignants/*"
+        element={<PersonnelEnseignantsRoutes />}
+      />
       <Route
         path="/finance-universite/*"
         element={<FinanceUniversityRoutes />}
