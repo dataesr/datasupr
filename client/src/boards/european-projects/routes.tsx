@@ -1,14 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 
-import Beneficiaries from "./components/pages/beneficiaries/index.tsx";
-import Overview from "./components/pages/overview/index.tsx";
-import Positioning from "./components/pages/positioning/index.tsx";
-import ProjectsTypes from "./components/pages/projects-types/index.tsx";
+import Beneficiaries from "./pages/beneficiaries/index.tsx";
+import Overview from "./pages/overview/index.tsx";
+import Positioning from "./pages/positioning/index.tsx";
+import ProjectsTypes from "./pages/projects-types/index.tsx";
 
-import Informations from "./components/pages/informations.tsx";
+import Informations from "./pages/informations.tsx";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 import Home from "./pages/home/index.tsx";
-import Search from "./pages/home/search/index.tsx";
+import Search from "./pages/search/index.tsx";
 import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
 
 export default function EuropeanProjectsRoutes() {

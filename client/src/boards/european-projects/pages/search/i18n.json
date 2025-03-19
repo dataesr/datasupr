@@ -1,0 +1,42 @@
+{
+  "pillars":{
+    "fr":"Piliers",
+    "en":"Pillars"
+  },
+  "programs":{
+    "fr":"Programmes",
+    "en":"Programs"
+  },
+  "topics":{
+    "fr":"Thématiques",
+    "en":"Topics"
+  },
+  "destinations":{
+    "fr":"Destinations",
+    "en":"Destinations"
+  },
+  "search":{
+    "fr":"Rechercher",
+    "en":"Search"
+  },
+  "reset":{
+    "fr":"Réinitialiser",
+    "en":"Reset"
+  },
+  "find-entity":{
+    "fr":"Trouver une entité",
+    "en":"Find an entity"
+  },
+  "find-entity-placeholder":{
+    "fr":"Nom de l'entité",
+    "en":"Entity name"
+  },
+  "select":{
+    "fr":"selectionner tout",
+    "en":"select all"
+  },
+  "unselect":{
+    "fr":"déselectionner tout",
+    "en":"unselect all"
+  }
+}

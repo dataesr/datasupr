@@ -189,6 +189,131 @@ router.route("/european-projects/filters-pillars").get(async (req, res) => {
   }
 });
 
+router.route("/european-projects/all-programs").get(async (req, res) => {
+  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
+
+  try {
+    const data = await db.collection(currentCollectionName).aggregate([
+      {
+      $match: {
+        programme_code: { $ne: null }
+      }
+      },
+      {
+      $group: {
+        _id: "$programme_code",
+        label_fr: { $first: "$programme_name_fr" },
+        label_en: { $first: "$programme_name_en" },
+        id: { $first: "$programme_code" }
+      }
+      },
+      {
+      $project: {
+        _id: 0,
+        label_fr: 1,
+        label_en: 1,
+        id: 1
+      }
+      },
+      {
+      $sort: { 
+        label_fr: 1
+      }
+      }
+    ], {
+      collation: { locale: "fr", strength: 1 }
+    }).toArray();
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.route("/european-projects/all-thematics").get(async (req, res) => {
+  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
+
+  try {
+    const data = await db.collection(currentCollectionName).aggregate([
+      {
+      $match: {
+        thema_code: { $ne: null }
+      }
+      },
+      {
+      $group: {
+        _id: "$thema_code",
+        label_fr: { $first: "$thema_name_fr" },
+        label_en: { $first: "$thema_name_en" },
+        id: { $first: "$thema_code" }
+      }
+      },
+      {
+      $project: {
+        _id: 0,
+        label_fr: 1,
+        label_en: 1,
+        id: 1
+      }
+      },
+      {
+      $sort: { 
+        label_fr: 1
+      }
+      }
+    ], {
+      collation: { locale: "fr", strength: 1 }
+    }).toArray();
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+router.route("/european-projects/all-destinations").get(async (req, res) => {
+  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
+
+  try {
+    const data = await db.collection(currentCollectionName).aggregate([
+      {
+      $match: {
+        destination_code: { $ne: null },
+        destination_name_en: { $ne: null }
+      }
+      },
+      {
+      $group: {
+        _id: "$destination_code",
+        label_fr: { $first: "$destination_name_en" },
+        label_en: { $first: "$destination_name_en" },
+        id: { $first: "$destination_code" }
+      }
+      },
+      {
+      $project: {
+        _id: 0,
+        label_fr: 1,
+        label_en: 1,
+        id: 1
+      }
+      },
+      {
+      $sort: { 
+        label_fr: 1
+      }
+      }
+    ], {
+      collation: { locale: "fr", strength: 1 }
+    }).toArray();
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+);
+
 router.route("/european-projects/programs-from-pillars").get(async (req, res) => {
   const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
 
@@ -282,7 +407,8 @@ router.route("/european-projects/destinations-from-thematics").get(async (req, r
       {
         $match: {
           thema_code: { $in: req.query.thematics.split("|") },
-          destination_code: { $ne: null }
+          destination_code: { $ne: null },
+          destination_name_en: { $ne: null }
         }
       },
       {

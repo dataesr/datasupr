@@ -6,6 +6,12 @@ type FilterValue = {
   label_en: string;
 };
 
+export async function getAll(filter: string) {
+  const url = `${VITE_APP_SERVER_URL}/european-projects/all-${filter}`;
+  const values = await fetch(url).then((response) => response.json());
+  return values;
+}
+
 export async function getPrograms(
   pillars: string[]
 ) {
@@ -16,9 +22,7 @@ export async function getPrograms(
 
 export async function getThematics(
   programs: string[]
-) {
-  console.log(programs);
-  
+) { 
   const url = `${VITE_APP_SERVER_URL}/european-projects/thematics-from-programs?programs=${programs.join("|")}`;
   const values = await fetch(url).then((response) => response.json());
   return values;
@@ -26,9 +30,7 @@ export async function getThematics(
 
 export async function getDestinations(
   thematics: string[]
-) {
-  console.log(thematics);
-  
+) {  
   const url = `${VITE_APP_SERVER_URL}/european-projects/destinations-from-thematics?thematics=${thematics.join("|")}`;
   const values = await fetch(url).then((response) => response.json());
   return values;
