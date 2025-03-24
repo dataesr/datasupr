@@ -1,11 +1,20 @@
-// import { Outlet, useLocation } from "react-router-dom";
-import { Container, Nav, Link, Button } from "@dataesr/dsfr-plus";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import {
+  Container,
+  Nav,
+  Link,
+  Button,
+  Modal,
+  ModalTitle,
+  ModalContent,
+  ModalFooter,
+  ButtonGroup,
+} from "@dataesr/dsfr-plus";
 import Home from "./pages/home";
-// import CustomBreadcrumb from "./components/custom-breadcrumb";
-// import CustomSideMenu from "./components/side-menu";
-// import Filters from "./components/filters";
 
-function MainMenu() {
+function MainMenu({ selectedCountry }) {
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <div style={{ backgroundColor: "#f5f5f5" }}>
       <Container>
@@ -25,9 +34,27 @@ function MainMenu() {
             <Link href="#">MSCA</Link>
             <Link href="#">ERC</Link>
           </Nav>
-          <Button icon="global-line" size="sm" variant="tertiary">
-            Pays sélectionné : France
+          <Button
+            onClick={(e) => {
+              setIsOpen(true);
+              e.preventDefault();
+            }}
+            icon="global-line"
+            size="sm"
+            variant="tertiary"
+          >
+            Pays sélectionné : {selectedCountry}
           </Button>
+          <Modal isOpen={isOpen} hide={() => setIsOpen(false)}>
+            <ModalTitle>Opened Controlled</ModalTitle>
+            <ModalContent>Hello Modal</ModalContent>
+            <ModalFooter>
+              <ButtonGroup isInlineFrom="xs" align="right">
+                <Button>Hello</Button>
+                <Button variant="secondary">Bye Bye</Button>
+              </ButtonGroup>
+            </ModalFooter>
+          </Modal>
         </div>
       </Container>
     </div>
@@ -35,28 +62,20 @@ function MainMenu() {
 }
 
 export default function Main() {
-  // const { pathname } = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedCountry = searchParams.get("country_code") || "FRA";
+
+  useEffect(() => {
+    if (!searchParams.get("country_code")) {
+      searchParams.set("country_code", "FRA"); // default value
+      setSearchParams(searchParams);
+    }
+  }, []);
 
   return (
     <main>
-      <MainMenu />
+      <MainMenu selectedCountry={selectedCountry} />
       <Home />
-      {/* <Container>
-        <Row>
-          <Col className="fr-ml-1w">
-            <CustomBreadcrumb pageKey={pathname.split("/").slice(-1)[0]} />
-            <Filters />
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={4} className="fr-pl-2w">
-            <CustomSideMenu />
-          </Col>
-          <Col xs={12} md={8} className="fr-pt-6w">
-            <Outlet />
-          </Col>
-        </Row>
-      </Container> */}
     </main>
   );
 }

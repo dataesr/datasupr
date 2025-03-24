@@ -10,6 +10,7 @@ import {
   TextInput,
 } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 
 import {
   getAll,
@@ -26,6 +27,7 @@ export default function Search() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
+  const selectedCountry = searchParams.get("country_code") || "FRA";
   const [selectedPillars, setSelectedPillars] = useState<string[]>([]);
   const [selectedPrograms, setSelectedPrograms] = useState<string[]>([]);
   const [selectedThematics, setSelectedThematics] = useState<string[]>([]);
@@ -96,11 +98,7 @@ export default function Search() {
         <span style={{ display: "flex", justifyContent: "space-between" }}>
           <span>
             {getI18nLabel("pillars")}
-            <Badge
-              className="fr-ml-1w fr-mb-1w"
-              color="beige-gris-galet"
-              size="sm"
-            >
+            <Badge className="fr-ml-1w fr-mb-1w" color="blue-cumulus" size="sm">
               {selectedPillars?.length} / {dataPillars?.length}
             </Badge>
           </span>
@@ -128,11 +126,7 @@ export default function Search() {
         <span style={{ display: "flex", justifyContent: "space-between" }}>
           <span>
             {getI18nLabel("programs")}
-            <Badge
-              className="fr-ml-1w fr-mb-1w"
-              color="beige-gris-galet"
-              size="sm"
-            >
+            <Badge className="fr-ml-1w fr-mb-1w" color="blue-cumulus" size="sm">
               {selectedPrograms?.length} / {allPrograms?.length}
             </Badge>
           </span>
@@ -160,11 +154,7 @@ export default function Search() {
         <span style={{ display: "flex", justifyContent: "space-between" }}>
           <span>
             {getI18nLabel("topics")}
-            <Badge
-              className="fr-ml-1w fr-mb-1w"
-              color="beige-gris-galet"
-              size="sm"
-            >
+            <Badge className="fr-ml-1w fr-mb-1w" color="blue-cumulus" size="sm">
               {selectedThematics?.length} / {allThematics?.length}
             </Badge>
           </span>
@@ -192,11 +182,7 @@ export default function Search() {
         <span style={{ display: "flex", justifyContent: "space-between" }}>
           <span>
             {getI18nLabel("destinations")}
-            <Badge
-              className="fr-ml-1w fr-mb-1w"
-              color="beige-gris-galet"
-              size="sm"
-            >
+            <Badge className="fr-ml-1w fr-mb-1w" color="blue-cumulus" size="sm">
               {selectedDestinations?.length} / {allDestinations?.length}
             </Badge>
           </span>
@@ -219,6 +205,27 @@ export default function Search() {
       );
     }
   }
+
+  // Cookies.set('favoriteIds', newCookie);
+  // Cookies.get("favoriteIds") || '';
+  // Cookies.remove('favoriteIds');
+
+  const searchFunction = () => {
+    // Sauvegarde des selections dans les cookies
+    Cookies.set("selectedPillars", selectedPillars.join("|"));
+    Cookies.set("numberOfPillars", dataPillars.length);
+    Cookies.set("selectedPrograms", selectedPrograms.join("|"));
+    Cookies.set("numberOfPrograms", allPrograms.length);
+    Cookies.set("selectedThematics", selectedThematics.join("|"));
+    Cookies.set("numberOfThematics", allThematics.length);
+    Cookies.set("selectedDestinations", selectedDestinations.join("|"));
+    Cookies.set("numberOfDestinations", allDestinations.length);
+
+    // Redirection vers la page de synthèse
+    navigate(
+      `/european-projects/synthese?country_code=${selectedCountry}&language=${currentLang}`
+    );
+  };
 
   return (
     <Container as="section" className="fr-mt-2w search">
@@ -347,10 +354,7 @@ export default function Search() {
             <Button
               icon="search-line"
               onClick={() => {
-                const destinationsParam = selectedDestinations.length
-                  ? `?destinations=${selectedDestinations.join(",")}`
-                  : "";
-                navigate(`/european-projects/synthese${destinationsParam}`);
+                searchFunction();
               }}
             >
               {getI18nLabel("search")}

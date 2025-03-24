@@ -1,4 +1,8 @@
 {
+  "back": {
+    "fr": "Retour à la selection des filtres",
+    "en": "Back to filters selection"
+  },
   "beneficiaries": {
     "fr": "Bénéficiaires",
     "en": "Beneficiaries"
@@ -11,12 +15,28 @@
     "fr": "Collaborations",
     "en": "Collaborations"
   },
+  "destinations": {
+    "fr": "Destinations",
+    "en": "Destinations"
+  },
+  "pillars": {
+    "fr": "Piliers",
+    "en": "Pillars"
+  },
   "positioning": {
     "fr": "Positionnement",
     "en": "Positioning"
   },
+  "programs": {
+    "fr": "Programmes",
+    "en": "Programs"
+  },
   "synthesis": {
     "fr": "Synthèse",
     "en": "Synthesis"
+  },
+  "topics": {
+    "fr": "Thématiques",
+    "en": "Topics"
   }
 }
