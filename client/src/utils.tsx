@@ -111,9 +111,19 @@ function getThemeFromHtmlNode() {
   return htmlNode?.getAttribute("data-fr-theme") || "light";
 }
 
+function getFlagEmoji(countryCode) {
+  if (!countryCode) return "";
+  const codePoints = countryCode
+    .toUpperCase()
+    .split("")
+    .map((char) => 127397 + char.charCodeAt());
+  return String.fromCodePoint(...codePoints);
+}
+
 export {
   clearAllfavoriteIdsInCookie,
   getfavoriteIdsInCookie,
+  getFlagEmoji,
   getGeoLabel,
   getParentFromLevel,
   getSortedfavoriteIdsInCookie,

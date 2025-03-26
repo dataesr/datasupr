@@ -154,16 +154,16 @@ router.route("/european-projects/filters-pillars").get(async (req, res) => {
     const data = await db.collection(currentCollectionName).aggregate([
       {
         $match: {
-          pilier_name_fr: { $ne: null },
+          pilier_code: { $ne: null },
           framework: "Horizon Europe"
         }
       },
       {
         $group: {
-          _id: "$pilier_name_fr",
+          _id: "$pilier_code",
           label_fr: { $first: "$pilier_name_fr" },
           label_en: { $first: "$pilier_name_en" },
-          id: { $first: "$pilier_name_fr" }
+          id: { $first: "$pilier_code" }
         }
       },
       {
@@ -321,7 +321,7 @@ router.route("/european-projects/programs-from-pillars").get(async (req, res) =>
     const data = await db.collection(currentCollectionName).aggregate([
       {
         $match: {
-          pilier_name_fr: { $in: req.query.pillars.split("|") },
+          pilier_code: { $in: req.query.pillars.split("|") },
           framework: "Horizon Europe"
         }
       },
@@ -431,6 +431,47 @@ router.route("/european-projects/destinations-from-thematics").get(async (req, r
         $sort: { 
           label_fr: 1
         }
+      }
+    ], {
+      collation: { locale: "fr", strength: 1 }
+    }).toArray();
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+);
+
+router.route("/european-projects/get-countries-with-data").get(async (req, res) => {
+  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
+  const defaultSort = { label_fr: 1 };
+
+  try {
+    const data = await db.collection(currentCollectionName).aggregate([
+      {
+        $match: {
+          country_code: { $ne: null }
+        }
+      },
+      {
+        $group: {
+          _id: "$country_code",
+          label_fr: { $first: "$country_name_fr" },
+          label_en: { $first: "$country_name_en" },
+          id: { $first: "$country_code" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          label_fr: 1,
+          label_en: 1,
+          id: 1
+        }
+      },
+      {
+        $sort: defaultSort
       }
     ], {
       collation: { locale: "fr", strength: 1 }

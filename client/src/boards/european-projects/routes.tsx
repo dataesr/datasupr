@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Beneficiaries from "./pages/beneficiaries/index.tsx";
 import Overview from "./pages/overview/index.tsx";
@@ -15,6 +15,7 @@ export default function EuropeanProjectsRoutes() {
   return (
     <Routes>
       <Route element={<GlobalLayout languageSelector />}>
+        <Route index element={<Navigate to="accueil" replace />} />
         <Route path="accueil" element={<Home />} />
         <Route path="search" element={<Search />} />
         <Route element={<SidemenuLayout />}>

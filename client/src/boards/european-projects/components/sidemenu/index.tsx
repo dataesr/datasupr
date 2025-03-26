@@ -46,7 +46,9 @@ export default function CustomSideMenu() {
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span>ACTIVE FILTERS</span>
+            <span style={{ textTransform: "uppercase" }}>
+              {getI18nLabel("active-filters")}
+            </span>
             <Button
               icon="menu-fill"
               size="sm"
@@ -58,10 +60,27 @@ export default function CustomSideMenu() {
           </div>
           {showFilters && (
             <div>
-              {getI18nLabel("pillars")}{" "}
-              <Badge color="blue-cumulus" size="sm">
-                {selectedPillars.split("|").length}/{numberOfPillars}
-              </Badge>
+              <span
+                aria-describedby="tooltip-piliars"
+                style={{ cursor: "help" }}
+              >
+                {getI18nLabel("pillars")}
+                <Badge className="fr-ml-1w" color="blue-cumulus" size="sm">
+                  {selectedPillars.split("|").length}/{numberOfPillars}
+                </Badge>
+              </span>
+              <span
+                className="fr-tooltip fr-placement"
+                id="tooltip-piliars"
+                role="tooltip"
+                aria-hidden="true"
+              >
+                <ul>
+                  {selectedPillars.split("|").map((pillar) => (
+                    <li key={pillar}>{pillar}</li>
+                  ))}
+                </ul>
+              </span>
               <br />
               {getI18nLabel("programs")}{" "}
               <Badge color="blue-cumulus" size="sm">

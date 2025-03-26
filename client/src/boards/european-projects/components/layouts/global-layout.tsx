@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
 import {
   Button,
@@ -9,21 +9,17 @@ import {
   Container,
   Nav,
   Link,
-  Modal,
-  ModalTitle,
-  ModalContent,
 } from "@dataesr/dsfr-plus";
 
 import Footer from "./footer";
 import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
+import CountrySelector from "../../../../components/country-selector/selector";
 
 export default function GlobalLayout({ languageSelector = false }) {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const selectedCountry = searchParams.get("country_code") || "FRA";
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     if (!searchParams.get("language") && languageSelector) {
@@ -42,14 +38,6 @@ export default function GlobalLayout({ languageSelector = false }) {
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
-
-  const baseUrl =
-    pathname +
-    "?" +
-    Array.from(searchParams.entries())
-      .filter(([key]) => key !== "country_code")
-      .map(([key, value]) => `${key}=${value}`)
-      .join("&");
 
   return (
     <>
@@ -175,25 +163,7 @@ export default function GlobalLayout({ languageSelector = false }) {
                 ERC
               </Link>
             </Nav>
-            <Button
-              icon="global-line"
-              onClick={() => {
-                setIsModalOpen(true);
-              }}
-              size="sm"
-              variant="tertiary"
-            >
-              {getI18nLabel("selectedCountry")} {selectedCountry}
-            </Button>
-            <Modal isOpen={isModalOpen} hide={() => setIsModalOpen(false)}>
-              <ModalTitle>{getI18nLabel("selectACountry")}</ModalTitle>
-              <ModalContent>
-                <Link href={`${baseUrl}&country_code=FRA`}>France</Link>
-                <Link href={`${baseUrl}&country_code=DEU`}>Germany</Link>
-                <Link href={`${baseUrl}&country_code=ITA`}>Italy</Link>
-                <Link href={`${baseUrl}&country_code=ESP`}>Spain</Link>
-              </ModalContent>
-            </Modal>
+            <CountrySelector />
           </div>
         </Container>
       </div>

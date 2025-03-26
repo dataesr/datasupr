@@ -1,0 +1,10 @@
+{
+  "selectedCountry": {
+    "fr": "Pays sélectionné :",
+    "en": "Selected country:"
+  },
+  "selectACountry": {
+    "fr": "Sélectionner un pays",
+    "en": "Select a country"
+  }
+}

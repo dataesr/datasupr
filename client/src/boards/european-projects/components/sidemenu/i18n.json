@@ -1,4 +1,8 @@
 {
+  "active-filters": {
+    "fr": "Filtres actifs",
+    "en": "Active filters"
+  },
   "back": {
     "fr": "Retour à la selection des filtres",
     "en": "Back to filters selection"
