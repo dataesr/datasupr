@@ -38,7 +38,6 @@ export default function CustomSideMenu() {
   const is = (str: string): boolean => pathname?.startsWith(str);
 
   function getI18nLabel(key) {
-    console.log("getI18nLabel", key);
     return i18n[key][currentLang];
   }
 
@@ -55,7 +54,6 @@ export default function CustomSideMenu() {
   console.log(allPillars, allPrograms, allThematics, allDestinations);
 
   const FilterItem = ({ filterKey }) => {
-    console.log("FilterItem", filterKey);
     if (!filterKey) return null;
     let sellected: string = "";
     let all: Array<{ id: string; label_fr: string; label_en: string }> = [];
