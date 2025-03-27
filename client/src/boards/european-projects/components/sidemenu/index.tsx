@@ -1,10 +1,12 @@
+import { useState } from "react";
 import { SideMenu, Link, Badge, Button } from "@dataesr/dsfr-plus";
 import { useLocation, useSearchParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
+import { getAll, getFiltersValues } from "../../api";
 
 import i18n from "./i18n.json";
 import "./styles.scss";
-import { useState } from "react";
 
 export default function CustomSideMenu() {
   const { pathname } = useLocation();
@@ -12,10 +14,31 @@ export default function CustomSideMenu() {
   const currentLang = searchParams.get("language") || "fr";
   const filtersParams = searchParams.toString();
   const [showFilters, setShowFilters] = useState(true);
+
+  const { data: allPillars } = useQuery({
+    queryKey: ["ep/get-filters-values", "pillars"],
+    queryFn: () => getFiltersValues("pillars"),
+  });
+
+  const { data: allPrograms } = useQuery({
+    queryKey: ["ep/get-all-programs"],
+    queryFn: () => getAll("programs"),
+  });
+
+  const { data: allThematics } = useQuery({
+    queryKey: ["ep/get-all-thematics"],
+    queryFn: () => getAll("thematics"),
+  });
+
+  const { data: allDestinations } = useQuery({
+    queryKey: ["ep/get-all-destinations"],
+    queryFn: () => getAll("destinations"),
+  });
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
 
   function getI18nLabel(key) {
+    console.log("getI18nLabel", key);
     return i18n[key][currentLang];
   }
 
@@ -28,6 +51,68 @@ export default function CustomSideMenu() {
   const numberOfThematics = Cookies.get("numberOfThematics") || 0;
   const selectedDestinations = Cookies.get("selectedDestinations");
   const numberOfDestinations = Cookies.get("numberOfDestinations") || 0;
+
+  console.log(allPillars, allPrograms, allThematics, allDestinations);
+
+  const FilterItem = ({ filterKey }) => {
+    console.log("FilterItem", filterKey);
+    if (!filterKey) return null;
+    let sellected: string = "";
+    let all: Array<{ id: string; label_fr: string; label_en: string }> = [];
+    let numberOf = 0;
+    if (filterKey === "pillars") {
+      sellected = selectedPillars;
+      all = allPillars;
+      numberOf = numberOfPillars;
+    }
+    if (filterKey === "programs") {
+      sellected = selectedPrograms;
+      all = allPrograms;
+      numberOf = numberOfPrograms;
+    }
+    if (filterKey === "thematics") {
+      sellected = selectedThematics;
+      all = allThematics;
+      numberOf = numberOfThematics;
+    }
+    if (filterKey === "destinations") {
+      sellected = selectedDestinations;
+      all = allDestinations;
+      numberOf = numberOfDestinations;
+    }
+
+    return (
+      <>
+        <span
+          aria-describedby={`tooltip-${filterKey}`}
+          style={{ cursor: "help" }}
+        >
+          {getI18nLabel(filterKey)}
+          <Badge className="fr-ml-1w" color="blue-cumulus" size="sm">
+            {(sellected?.split("|") || []).length}/{numberOf}
+          </Badge>
+        </span>
+        <span
+          className="fr-tooltip fr-placement"
+          id={`tooltip-${filterKey}`}
+          role="tooltip"
+          aria-hidden="true"
+        >
+          <ul>
+            {sellected?.split("|")?.map((pillarId) => (
+              <li key={pillarId}>
+                {
+                  all?.find((el) => el.id === pillarId)?.[
+                    `label_${currentLang}`
+                  ]
+                }
+              </li>
+            ))}
+          </ul>
+        </span>
+      </>
+    );
+  };
 
   return (
     <>
@@ -60,42 +145,13 @@ export default function CustomSideMenu() {
           </div>
           {showFilters && (
             <div>
-              <span
-                aria-describedby="tooltip-piliars"
-                style={{ cursor: "help" }}
-              >
-                {getI18nLabel("pillars")}
-                <Badge className="fr-ml-1w" color="blue-cumulus" size="sm">
-                  {selectedPillars.split("|").length}/{numberOfPillars}
-                </Badge>
-              </span>
-              <span
-                className="fr-tooltip fr-placement"
-                id="tooltip-piliars"
-                role="tooltip"
-                aria-hidden="true"
-              >
-                <ul>
-                  {selectedPillars.split("|").map((pillar) => (
-                    <li key={pillar}>{pillar}</li>
-                  ))}
-                </ul>
-              </span>
+              <FilterItem filterKey="pillars" />
               <br />
-              {getI18nLabel("programs")}{" "}
-              <Badge color="blue-cumulus" size="sm">
-                {selectedPrograms.split("|").length}/{numberOfPrograms}
-              </Badge>
+              <FilterItem filterKey="programs" />
               <br />
-              {getI18nLabel("topics")}{" "}
-              <Badge color="blue-cumulus" size="sm">
-                {selectedThematics.split("|").length}/{numberOfThematics}
-              </Badge>
+              <FilterItem filterKey="thematics" />
               <br />
-              {getI18nLabel("destinations")}{" "}
-              <Badge color="blue-cumulus" size="sm">
-                {selectedDestinations.split("|").length}/{numberOfDestinations}
-              </Badge>
+              <FilterItem filterKey="destinations" />
             </div>
           )}
           <hr className="fr-pb-1" />
