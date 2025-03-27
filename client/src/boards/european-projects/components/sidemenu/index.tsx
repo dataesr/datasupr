@@ -96,7 +96,7 @@ export default function CustomSideMenu() {
           role="tooltip"
           aria-hidden="true"
         >
-          <ul>
+          <ul style={{ listStyle: "initial", padding: "15px" }}>
             {sellected?.split("|")?.map((pillarId) => (
               <li key={pillarId}>
                 {
