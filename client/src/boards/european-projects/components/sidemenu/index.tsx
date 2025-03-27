@@ -96,7 +96,12 @@ export default function CustomSideMenu() {
           role="tooltip"
           aria-hidden="true"
         >
-          <ul style={{ listStyle: "initial", padding: "15px" }}>
+          <div>
+            <strong>
+              <u>{getI18nLabel(`${filterKey}`)}</u>
+            </strong>
+          </div>
+          <ul style={{ listStyle: "initial", paddingLeft: "15px" }}>
             {sellected?.split("|")?.map((pillarId) => (
               <li key={pillarId}>
                 {
