@@ -1,7 +1,7 @@
 import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import { formatToMillions } from "../../../../../../utils/format-currency";
+import { formatToMillions } from "../../../../../../utils/format";
 
 export default function Options(data) {
   if (!data) return null;
