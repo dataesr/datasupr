@@ -51,8 +51,6 @@ export default function CustomSideMenu() {
   const selectedDestinations = Cookies.get("selectedDestinations");
   const numberOfDestinations = Cookies.get("numberOfDestinations") || 0;
 
-  console.log(allPillars, allPrograms, allThematics, allDestinations);
-
   const FilterItem = ({ filterKey }) => {
     if (!filterKey) return null;
     let sellected: string = "";
