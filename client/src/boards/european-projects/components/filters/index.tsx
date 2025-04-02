@@ -163,6 +163,17 @@ export default function Filters() {
             onChange={(e) => {
               setSearchParams((prev) => {
                 prev.set(filterId, e.target.value);
+                // if (filterId === "programs") {
+                //   if (e.target.value === "all") {
+                //     prev.set("thematics", "all");
+                //   } else {
+                //     if (filters["thematics"]?.values.length === 1) {
+                //       prev.set("thematics", filters["thematics"].values[0].id);
+                //     } else {
+                //       prev.set("thematics", "all");
+                //     }
+                //   }
+                // }
                 return prev;
               });
               setIsOpen(false);

@@ -11,6 +11,8 @@ import Home from "./pages/home/index.tsx";
 import Search from "./pages/search/index.tsx";
 import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
 
+import "./styles.scss";
+
 export default function EuropeanProjectsRoutes() {
   return (
     <Routes>

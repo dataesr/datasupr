@@ -1,10 +1,11 @@
 import { Container } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
-import FundedObjectives from "./charts/funded-objectives";
-import SynthesisFocus from "./charts/synthesis-focus";
-import MainBeneficiaries from "./charts/main-beneficiaries";
-import MainPartners from "./charts/main-partners";
+// import FundedObjectives from "./charts/funded-objectives";
+// import SynthesisFocus from "./charts/synthesis-focus";
+// import MainBeneficiaries from "./charts/main-beneficiaries";
+// import MainPartners from "./charts/main-partners";
+import DestinationFunding from "./charts/destination-funding";
 
 export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -20,13 +21,16 @@ export default function Overview() {
 
   return (
     <Container as="main">
-      <SynthesisFocus />
+      {/* <CustomTitle /> */}
+      synthèse
+      <DestinationFunding />
+      {/* <SynthesisFocus />
       <div className="fr-my-5w" />
       <FundedObjectives />
       <div className="fr-my-5w" />
       <MainBeneficiaries />
       <div className="fr-my-5w" />
-      <MainPartners />
+      <MainPartners /> */}
     </Container>
   );
 }

@@ -1,5 +1,11 @@
 [
   {
+    "id": "destinationFunding",
+    "title": "Financements demandés et obtenus (M€)",
+    "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding"
+  },
+  {
     "id": "fundedObjectives",
     "title": "Financements obtenus",
     "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",

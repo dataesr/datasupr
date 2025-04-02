@@ -5,6 +5,18 @@ const router = new express.Router();
 
 import { checkQuery } from "../utils.js";
 
+router.route("/european-projects/overview/graph1").get(async (req, res) => {
+  const filters = checkQuery(
+    req.query,
+    ["country_code", "extra_joint_organization", "stage"],
+    res
+  );
+
+  const data = await db.collection("fr-esr-all-projects-entities").aggregate([
+    { $match: filters },
+  ]);
+});
+
 router.route("/european-projects/synthesis-focus").get(async (req, res) => {
   const dataSuccessful = await db
     .collection("fr-esr-all-projects-synthese")
@@ -208,6 +220,81 @@ router.route("/european-projects/funded-objectives").get(async (req, res) => {
     ])
     .toArray();
   res.json(data);
+});
+
+router.route("/european-projects/overview/destination-funding").get(async (req, res) => {
+  const filters = checkQuery(req.query, ["country_code"], res);
+
+  // test filters (thematics, programs, thematics, destinations)
+  console.log("req.query", req.query);
+  
+  if (req.query.pillars) {
+    const pillars = req.query.pillars.split("|");
+    filters.pilier_code = { $in: pillars };
+  }
+  if (req.query.programs) {
+    const programs = req.query.programs.split("|");
+    filters.programme_code = { $in: programs };
+  }
+  if (req.query.thematics) {
+    const thematics = req.query.thematics.split("|");
+    const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
+    filters.thema_code = { $in: filteredThematics };
+  }
+  if (req.query.destinations) {
+    const destinations = req.query.destinations.split("|");
+    filters.destination_code = { $in: destinations };
+  }
+
+  console.log("filters", filters);
+  // console.log("req.query", req.query);
+
+  const data = await db
+    .collection("fr-esr-all-projects-synthese")
+    .aggregate([
+      { $match: { $and: [filters] } },
+      {
+        $group: {
+          _id: {
+            destination: "$destination_code",
+            stage: "$stage",
+          },
+          total_fund_eur: { $sum: "$fund_eur" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          destination: "$_id.destination",
+          stage: "$_id.stage",
+          total_fund_eur: 1,
+        },
+      },
+      { $sort: { total_fund_eur: -1 } },
+    ])
+    .toArray();
+
+  const successRates = data.reduce((acc, item) => {
+    const destination = item.destination;
+    if (!acc[destination]) {
+      acc[destination] = { successful: 0, evaluated: 0 };
+    }
+    if (item.stage === "successful") {
+      acc[destination].successful += item.total_fund_eur;
+    } else if (item.stage === "evaluated") {
+      acc[destination].evaluated += item.total_fund_eur;
+    }
+    return acc;
+  }, {});
+
+  const successRateByDestination = Object.entries(successRates).map(
+    ([destination, { successful, evaluated }]) => ({
+      destination,
+      successRate: evaluated > 0 ? successful / evaluated : 0,
+    })
+  );
+
+  res.json({ data, successRateByDestination });
 });
 
 export default router;
