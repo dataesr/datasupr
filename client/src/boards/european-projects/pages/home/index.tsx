@@ -1,13 +1,29 @@
 import { useSearchParams } from "react-router-dom";
-import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import {
+  Button,
+  Col,
+  Container,
+  Row,
+  Title,
+  Modal,
+  ModalContent,
+  ModalTitle,
+} from "@dataesr/dsfr-plus";
 import { useState } from "react"; // Ajoutez cet import
 import i18n from "./i18n.json";
 import "./styles.css";
 
+interface Program {
+  title: string;
+  pilier: number;
+  description: string;
+}
 export default function Home() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const [activePillar, setActivePillar] = useState(null); // Ajoutez cet état
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
 
   function getI18nLabel(key) {
     return i18n[key][currentLang];
@@ -15,6 +31,11 @@ export default function Home() {
 
   const handlePillarClick = (pillarNumber) => {
     setActivePillar(activePillar === pillarNumber ? null : pillarNumber);
+  };
+
+  const handleProgramClick = (program) => {
+    setSelectedProgram(program);
+    setIsModalOpen(true);
   };
 
   return (
@@ -32,43 +53,6 @@ export default function Home() {
               __html: getI18nLabel("bloc1"),
             }}
           />
-          <Title as="h3" look="h6" className="fr-mb-1w">
-            Présentation de l'arborescence
-          </Title>
-          <div className="pillars-container">
-            <div className="pillar">
-              <Button onClick={() => handlePillarClick(1)}>pilier 1</Button>
-              <div className={`programs ${activePillar === 1 ? "active" : ""}`}>
-                <Button>Programme 1</Button>
-                <Button>Programme 2</Button>
-                <Button>Programme 3</Button>
-              </div>
-            </div>
-            <div className="pillar">
-              <Button onClick={() => handlePillarClick(2)}>pilier 2</Button>
-              <div className={`programs ${activePillar === 2 ? "active" : ""}`}>
-                <Button>Programme 1</Button>
-                <Button>Programme 2</Button>
-                <Button>Programme 3</Button>
-              </div>
-            </div>
-            <div className="pillar">
-              <Button onClick={() => handlePillarClick(3)}>pilier 3</Button>
-              <div className={`programs ${activePillar === 3 ? "active" : ""}`}>
-                <Button>Programme 1</Button>
-                <Button>Programme 2</Button>
-                <Button>Programme 3</Button>
-              </div>
-            </div>
-            <div className="pillar">
-              <Button onClick={() => handlePillarClick(4)}>pilier 4</Button>
-              <div className={`programs ${activePillar === 4 ? "active" : ""}`}>
-                <Button>Programme 1</Button>
-                <Button>Programme 2</Button>
-                <Button>Programme 3</Button>
-              </div>
-            </div>
-          </div>
         </Col>
       </Row>
       <Row
@@ -86,10 +70,7 @@ export default function Home() {
           />
         </Col>
       </Row>
-      <Row
-        className="fr-mb-5w"
-        style={{ height: "200px", backgroundColor: "lightblue" }}
-      >
+      <Row className="fr-mb-5w" style={{ minHeight: "200px" }}>
         <Col className="fr-p-1w">
           <Title as="h2" look="h5" className="fr-mb-1w">
             {getI18nLabel("title3")}
@@ -99,8 +80,295 @@ export default function Home() {
               __html: getI18nLabel("bloc3"),
             }}
           />
+          <Title as="h3" look="h6" className="fr-mb-1w">
+            Présentation de l'arborescence
+          </Title>
+          <div className="pillars-container">
+            <div className="pillar">
+              <Button
+                onClick={() => handlePillarClick(1)}
+                color="green-archipel"
+                size="sm"
+              >
+                Pilier 1 - Excellence scientifique
+              </Button>
+              <div className={`programs ${activePillar === 1 ? "active" : ""}`}>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 1,
+                      title: "Conseil européen de la recherche (ERC)",
+                      description: "Description du programme ERC...",
+                    })
+                  }
+                >
+                  Conseil européen de la recherche (ERC)
+                </Button>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 1,
+                      title: "Marie Sklodowska-Curie Actions (MSCA)",
+                      description:
+                        "Description des Marie Sklodowska-Curie Actions (MSCA)",
+                    })
+                  }
+                >
+                  Marie Sklodowska-Curie Actions (MSCA)
+                </Button>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 1,
+                      title: "Infrastructures de recherche",
+                      description:
+                        "Description des Infrastructures de recherche",
+                    })
+                  }
+                >
+                  Infrastructures de recherche
+                </Button>
+              </div>
+            </div>
+            <div className="pillar">
+              <Button
+                onClick={() => handlePillarClick(2)}
+                color="green-archipel"
+                size="sm"
+              >
+                Pilier 2 - Problématiques mondiales et compétitivité
+                industrielle européenne
+              </Button>
+              <div className={`programs ${activePillar === 2 ? "active" : ""}`}>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      title: "Bio-Environnement",
+                      pilier: 2,
+                      description: "Description du Bio-Environnement",
+                    })
+                  }
+                >
+                  Bio-Environnement
+                </Button>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 2,
+                      title: "Climat, énergie et mobilité",
+                      description: "Description du Climat, énergie et mobilité",
+                    })
+                  }
+                >
+                  Climat, énergie et mobilité
+                </Button>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 2,
+                      title: "Culture, créativité et société inclusive",
+                      description:
+                        "Description de la Culture, créativité et société inclusive",
+                    })
+                  }
+                >
+                  Culture, créativité et société inclusive
+                </Button>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 2,
+                      title: "Mission",
+                      description: "Description de la Mission",
+                    })
+                  }
+                >
+                  Mission
+                </Button>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 2,
+                      title: "Numérique, industrie et espace",
+                      description:
+                        "Description du Numérique, industrie et espace",
+                    })
+                  }
+                >
+                  Numérique, industrie et espace
+                </Button>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 2,
+                      title: "Santé",
+                      description: "Description de la Santé",
+                    })
+                  }
+                >
+                  Santé
+                </Button>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 2,
+                      title: "Sécurité civile pour la société",
+                      description:
+                        "Description de la Sécurité civile pour la société",
+                    })
+                  }
+                >
+                  Sécurité civile pour la société
+                </Button>
+              </div>
+            </div>
+            <div className="pillar">
+              <Button
+                onClick={() => handlePillarClick(3)}
+                color="green-archipel"
+                size="sm"
+              >
+                Pilier 3 - Europe plus innovante
+              </Button>
+              <div className={`programs ${activePillar === 3 ? "active" : ""}`}>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 3,
+                      title: "Conseil européen de l'innovation (EIC)",
+                      description:
+                        "Description du Conseil européen de l'innovation (EIC)",
+                    })
+                  }
+                >
+                  Conseil européen de l'innovation (EIC)
+                </Button>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 3,
+                      title: "Écosystèmes européens de l'innovation (EIE)",
+                      description:
+                        "Description des Écosystèmes européens de l'innovation (EIE)",
+                    })
+                  }
+                >
+                  Écosystèmes européens de l'innovation (EIE)
+                </Button>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 3,
+                      title:
+                        "Institut européen d'innovation et de technologie (EIT)",
+                      description:
+                        "Description de l'Institut européen d'innovation et de technologie (EIT)",
+                    })
+                  }
+                >
+                  Institut européen d'innovation et de technologie (EIT)
+                </Button>
+              </div>
+            </div>
+            <div className="pillar">
+              <Button
+                onClick={() => handlePillarClick(4)}
+                color="green-archipel"
+                size="sm"
+              >
+                Pilier 4 - Élargir la participation et renforcer l'espace
+                européen de la recherche
+              </Button>
+              <div className={`programs ${activePillar === 4 ? "active" : ""}`}>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 4,
+                      title:
+                        "Élargir la participation et diffuser l'excellence",
+                      description:
+                        "Description de l'Élargir la participation et diffuser l'excellence",
+                    })
+                  }
+                >
+                  Élargir la participation et diffuser l'excellence
+                </Button>
+                <Button
+                  color="green-archipel"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() =>
+                    handleProgramClick({
+                      pilier: 4,
+                      title:
+                        "Réformer et renforcer le système européen de la R&I",
+                      description:
+                        "Description de la Réformer et renforcer le système européen de la R&I",
+                    })
+                  }
+                >
+                  Réformer et renforcer le système européen de la R&I
+                </Button>
+              </div>
+            </div>
+          </div>
         </Col>
       </Row>
+      <Modal isOpen={isModalOpen} hide={() => setIsModalOpen(false)} size="lg">
+        <ModalTitle>{selectedProgram?.title || ""}</ModalTitle>
+        <ModalContent>
+          {selectedProgram && (
+            <div>
+              <p>
+                <strong>Pilier {selectedProgram.pilier}</strong>
+              </p>
+              <p>{selectedProgram.description}</p>
+            </div>
+          )}
+        </ModalContent>
+      </Modal>
     </Container>
   );
 }

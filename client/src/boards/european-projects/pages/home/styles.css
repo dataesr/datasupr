@@ -28,3 +28,11 @@
 .programs button {
   font-size: 0.9em;
 }
+
+.program-modal-content {
+  padding: 1rem;
+}
+
+.program-modal-content p {
+  margin-bottom: 1rem;
+}
