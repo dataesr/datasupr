@@ -1,0 +1,1 @@
+GET http://localhost:3000/api/european-projects/overview/destination-funding-proportion?country_code=FRA&programs=HORIZON.3.1

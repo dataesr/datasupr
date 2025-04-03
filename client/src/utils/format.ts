@@ -9,15 +9,7 @@ export const formatToThousands = (amount: number): string => {
 };
 
 export const formatToPercent = (amount: number): string => {
-  return `${(amount * 100).toFixed(1)} %`;
-}
-
-export const formatToPercentWithSign = (amount: number): string => {
-  return `${(amount * 100).toFixed(1)} %`;
-}
-
-export const formatToPercentWithSignAndSpace = (amount: number): string => {
-  return `${(amount * 100).toFixed(1)} %`;
+  return `${(amount).toFixed(1)} %`;
 }
 
 export const formatToEuro = (amount: number): string => {
