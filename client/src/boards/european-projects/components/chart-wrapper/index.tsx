@@ -20,6 +20,7 @@ import { getConfig } from "../../utils";
 import CopyButton from "../../../../components/copy-button";
 
 import "./styles.scss";
+import { useSearchParams } from "react-router-dom";
 
 const { VITE_APP_URL } = import.meta.env;
 
@@ -194,9 +195,11 @@ export default function ChartWrapper({ id, options, legend, renderData }) {
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
   const graphConfig = getConfig(id);
-  const source = "Commission européenne, Cordis";
-  const sourceURL = "https://cordis.europa.eu/";
+  // const source = "Commission européenne, Cordis";
+  // const sourceURL = "https://cordis.europa.eu/";
   const modalId = useId();
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
 
   if (displayType === "data" && !renderData) {
     console.error(
@@ -208,22 +211,22 @@ export default function ChartWrapper({ id, options, legend, renderData }) {
 
   return (
     <section>
-      {graphConfig.title && (
+      {graphConfig.title[currentLang] && (
         <>
           <Title as="h2" look="h4" className="fr-mb-1w">
-            {graphConfig.title}
+            {graphConfig.title[currentLang]}
           </Title>
-          <Text className="sources">
+          {/* <Text className="sources">
             Sources :{" "}
             <a href={sourceURL} target="_blank" rel="noreferrer noopener">
               {source}
             </a>
-          </Text>
+          </Text> */}
         </>
       )}
       {graphConfig.subtitle && (
         <Title
-          as={graphConfig.title ? "h3" : "h2"}
+          as={graphConfig.title[currentLang] ? "h3" : "h2"}
           look="h6"
           className="fr-mb-0"
         >
@@ -248,11 +251,13 @@ export default function ChartWrapper({ id, options, legend, renderData }) {
       )}
       <div className="graph-footer fr-pt-1w">
         {legend}
-        {graphConfig.description && (
+        {graphConfig.description?.[currentLang] && (
           <div className="fr-notice fr-notice--info fr-mt-1w">
             <div className="fr-container">
               <div className="fr-notice__body">
-                <Text className="description">{graphConfig.description}</Text>
+                <Text className="description">
+                  {graphConfig.description[currentLang]}
+                </Text>
               </div>
             </div>
           </div>

@@ -6,7 +6,7 @@ import { formatToRates } from "../../../../../../utils/format";
 export default function Options(data) {
   if (!data) return null;
 
-  // const rootStyles = getComputedStyle(document.documentElement);
+  const rootStyles = getComputedStyle(document.documentElement);
 
   const newOptions: HighchartsInstance.Options = {
     legend: { enabled: true },
@@ -37,7 +37,7 @@ export default function Options(data) {
       {
         type: "bar",
         name: "Taux de succès",
-        color: "#2ba241",
+        color: rootStyles.getPropertyValue("--successRate-color"),
         groupPadding: 0,
         data: data.successRateByDestination.map((item) => [
           item.destination,
