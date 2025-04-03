@@ -16,8 +16,6 @@ export default function DestinationFundingSuccessRates() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  console.log("DestinationFundingSuccessRates", options(data));
-
   return (
     <ChartWrapper
       id="destinationFundingSuccessRates"
