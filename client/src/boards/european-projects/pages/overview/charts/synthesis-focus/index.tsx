@@ -6,7 +6,7 @@ import { GetData } from "./query";
 
 import { getDefaultParams } from "./utils";
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
-import { getConfig } from "../../../../utils";
+// import { getConfig } from "../../../../utils";
 
 import "./styles.scss";
 
@@ -26,7 +26,7 @@ function Tile({ value, description }: { value: string; description: string }) {
 export default function SynthesisFocus() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
-  const graphConfig = getConfig("synthesisFocus");
+  // const graphConfig = getConfig("synthesisFocus");
 
   const { data, isLoading } = useQuery({
     queryKey: ["SynthesisFocus", params],
@@ -50,7 +50,7 @@ export default function SynthesisFocus() {
   return (
     <Container as="section" fluid>
       <Title as="h2" look="h4" className="fr-mb-0">
-        {graphConfig.title}
+        {/* {graphConfig.title.} */}titre
       </Title>
       <p className="sources">
         Sources :{" "}
