@@ -8,6 +8,8 @@ import {
   Modal,
   ModalContent,
   ModalTitle,
+  ModalFooter,
+  Link,
 } from "@dataesr/dsfr-plus";
 import { useState } from "react"; // Ajoutez cet import
 import i18n from "./i18n.json";
@@ -368,6 +370,15 @@ export default function Home() {
             </div>
           )}
         </ModalContent>
+        <ModalFooter>
+          <Link
+            href="/european-projects/search"
+            className="fr-link fr-link--icon-right"
+          >
+            <span className="fr-fi-arrow-right-line fr-link__icon fr-link__icon--right" />
+            Lien vers la page de sélection des filtres
+          </Link>
+        </ModalFooter>
       </Modal>
     </Container>
   );
