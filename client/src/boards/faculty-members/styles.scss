@@ -1,0 +1,17 @@
+:root {
+  --bg-light: #e5e5e5;
+  --bg-dark: #242424;
+}
+
+.faculty-member-header {
+  .button {
+    &:first-child {
+      border-bottom-left-radius: 8px;
+      border-right: 1px solid #e0e0e0;
+    }
+
+    &:last-child {
+      border-bottom-right-radius: 8px;
+    }
+  }
+}
