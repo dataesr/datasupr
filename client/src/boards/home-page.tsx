@@ -221,6 +221,15 @@ export default function HomePage() {
             />
           </Col>
         </Row>
+        <Row gutters>
+          <Col>
+            <GenericCard
+              description="Tableau de bord du personnel enseignant"
+              title="Personnel enseignant"
+              to="/personnel-enseignant?datasupr=true"
+            />
+          </Col>
+        </Row>
       </Container>
       <footer className="fr-footer fr-mt-5w" role="contentinfo" id="footer">
         <div className="fr-container">
