@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { SideMenu, Link, Badge, Button } from "@dataesr/dsfr-plus";
+import { SideMenu, Link, Badge, Tabs, Tab } from "@dataesr/dsfr-plus";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
@@ -13,7 +12,6 @@ export default function CustomSideMenu() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const filtersParams = searchParams.toString();
-  const [showFilters, setShowFilters] = useState(true);
 
   const { data: allPillars } = useQuery({
     queryKey: ["ep/get-filters-values", "pillars"],
@@ -78,27 +76,16 @@ export default function CustomSideMenu() {
     }
 
     return (
-      <>
-        <span
-          aria-describedby={`tooltip-${filterKey}`}
-          style={{ cursor: "help" }}
-        >
-          {getI18nLabel(filterKey)}
+      <div>
+        <span>
+          <strong>
+            <u>{getI18nLabel(`${filterKey}`)}</u>
+          </strong>
           <Badge className="fr-ml-1w" color="blue-cumulus" size="sm">
             {(sellected?.split("|") || []).length}/{numberOf}
           </Badge>
         </span>
-        <span
-          className="fr-tooltip fr-placement"
-          id={`tooltip-${filterKey}`}
-          role="tooltip"
-          aria-hidden="true"
-        >
-          <div>
-            <strong>
-              <u>{getI18nLabel(`${filterKey}`)}</u>
-            </strong>
-          </div>
+        <span>
           <ul style={{ listStyle: "initial", paddingLeft: "15px" }}>
             {sellected?.split("|")?.map((pillarId) => (
               <li key={pillarId}>
@@ -111,59 +98,28 @@ export default function CustomSideMenu() {
             ))}
           </ul>
         </span>
-      </>
+      </div>
     );
   };
 
   return (
-    <>
-      <nav>
-        <div
-          style={{
-            fontSize: "0.9rem",
-            fontWeight: "bold",
-            marginBottom: "1rem",
-            border: "1px solid #aaa",
-            padding: "0.5rem",
-            borderRadius: "5px",
-            backgroundColor: "#f5f5f5",
-            margin: "0.5rem",
-            marginRight: "2rem",
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <span style={{ textTransform: "uppercase" }}>
-              {getI18nLabel("active-filters")}
-            </span>
-            <Button
-              icon="menu-fill"
-              size="sm"
-              variant="text"
-              onClick={() => {
-                setShowFilters(!showFilters);
-              }}
-            />
-          </div>
-          {showFilters && (
-            <div>
-              <FilterItem filterKey="pillars" />
-              <br />
-              <FilterItem filterKey="programs" />
-              <br />
-              <FilterItem filterKey="thematics" />
-              <br />
-              <FilterItem filterKey="destinations" />
-            </div>
-          )}
-          <hr className="fr-pb-1" />
-          <div>
-            <span
-              className="fr-icon-arrow-go-back-fill fr-icon--sm"
-              aria-hidden="true"
-            />
-            <Link href="/european-projects/search">{getI18nLabel("back")}</Link>
-          </div>
+    <Tabs className="fr-mt-1w">
+      <Tab label="Filtres">
+        <div>
+          <span
+            className="fr-icon-arrow-go-back-fill fr-icon--sm"
+            aria-hidden="true"
+          />
+          <Link href="/european-projects/search">{getI18nLabel("back")}</Link>
         </div>
+        <div className="fr-mt-2w">
+          <FilterItem filterKey="pillars" />
+          <FilterItem filterKey="programs" />
+          <FilterItem filterKey="thematics" />
+          <FilterItem filterKey="destinations" />
+        </div>
+      </Tab>
+      <Tab label="Menu">
         <SideMenu title="" sticky fullHeight className="padded-sidemenu">
           <Link
             current={is("/european-projects/synthese")}
@@ -183,13 +139,6 @@ export default function CustomSideMenu() {
           >
             {getI18nLabel("collaborations")}
           </Link>
-          {/* 
-        <Link
-          current={is("/european-projects/objectifs-types-projets")}
-          href={`/european-projects/objectifs-types-projets?${filtersParams}`}
-        >
-          Objectifs & types de projets
-        </Link> */}
           <Link
             current={is("/european-projects/beneficiaires")}
             href={`/european-projects/beneficiaires?${filtersParams}`}
@@ -208,53 +157,8 @@ export default function CustomSideMenu() {
           >
             Evolution
           </Link>
-
-          {/* <Link
-          current={is("/european-projects/beneficiaires")}
-          href={`/european-projects/beneficiaires?${filtersParams}`}
-        >
-          Catégories de bénéficiaires
-        </Link>
-        <Link
-          current={is("/european-projects/programme-mires")}
-          href={`/european-projects/programme-mires?${filtersParams}`}
-        >
-          Programme MIRES
-        </Link>
-        <Link
-          current={is("/european-projects/appel-a-projets")}
-          href={`/european-projects/appel-a-projets?${filtersParams}`}
-          style={{ borderBottom: "1px solid #aaa" }}
-        >
-          Liste des appels à projets clôturés
-        </Link>
-        <Link
-          current={is("/european-projects/msca")}
-          href={`/european-projects/msca?${filtersParams}`}
-        >
-          MSCA
-        </Link>
-        <Link
-          current={is("/european-projects/erc")}
-          href={`/european-projects/erc?${filtersParams}`}
-          style={{ borderBottom: "1px solid #aaa" }}
-        >
-          ERC
-        </Link>
-        <Link
-          current={is("/european-projects/donnees-reference")}
-          href={`/european-projects/donnees-reference?${filtersParams}`}
-        >
-          Données de référence
-        </Link>
-        <Link
-          current={is("/european-projects/informations")}
-          href={`/european-projects/informations?${filtersParams}`}
-        >
-          Informations complémentaires
-        </Link> */}
         </SideMenu>
-      </nav>
-    </>
+      </Tab>
+    </Tabs>
   );
 }
