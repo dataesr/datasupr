@@ -5,17 +5,16 @@
 .legend {
   ul {
     font-size: 12px;
-    list-style-type: none;
-    padding: 0;
     li {
-      display: inline;
-      margin-right: 2rem;
-
+      display: flex;
+      align-items: center;
+      margin-bottom: 5px;
+      
       div {
-        width: 20px;
-        height: 20px;
-        margin-right: 5px;
-        display: inline-block;
+        border-radius: 50%;
+        height: 12px;
+        margin-right: 10px;
+        width: 12px;
       }
     }
   }
@@ -26,4 +25,8 @@
   --evaluated-project-color: #009099; // projets évalués
   --successful-project-color: #233e41; // projets lauréats
   --successRate-color: #2ba241; // taux de succès
+  --pillar-p1-color: #21AB8E; // pilier 1
+  --pillar-p2-color: #223F3A; // pilier 2
+  --pillar-p3-color: #A558A0; // pilier 3
+  --pillar-p4-color: #E4794A; // pilier 4
 }

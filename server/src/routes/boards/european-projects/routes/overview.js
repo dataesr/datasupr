@@ -225,9 +225,7 @@ router.route("/european-projects/funded-objectives").get(async (req, res) => {
 router.route("/european-projects/overview/destination-funding").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
 
-  // test filters (thematics, programs, thematics, destinations)
-  console.log("req.query", req.query);
-  
+  // test filters (thematics, programs, thematics, destinations) 
   if (req.query.pillars) {
     const pillars = req.query.pillars.split("|");
     filters.pilier_code = { $in: pillars };
@@ -245,8 +243,6 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
     const destinations = req.query.destinations.split("|");
     filters.destination_code = { $in: destinations };
   }
-
-  console.log("filters", filters);
 
   const data = await db
     .collection("fr-esr-all-projects-synthese")
@@ -318,8 +314,6 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
     const destinations = req.query.destinations.split("|");
     filters.destination_code = { $in: destinations };
   }
-
-  console.log("filters", filters);
 
   const data_country = await db
     .collection("fr-esr-all-projects-synthese")
@@ -407,4 +401,201 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
   res.json({ data });
 });
 
+router
+  .route(
+    "/european-projects/overview/pillars-funding-evo-3-years"
+  )
+  .get(async (req, res) => {
+    const filters = checkQuery(req.query, ["country_code"], res);
+
+    console.log(req.query);
+    
+    // cas de plusieurs piliers passés en paramètre
+    if (req.query.pilier_code?.split("|").length > 1) {
+      filters.pilier_code = { $in: req.query.pilier_code.split("|") };
+    } else if (req.query.pilier_code?.length ===1) {
+      filters.pilier_code = req.query.pilier_code;
+    } else {
+      filters.pilier_code = { $in: ["p1", "p2", "p3", "p4"] };
+    }
+
+    const rangeOfYears = ["2021", "2022", "2023"];
+    filters.call_year = { $in: rangeOfYears };
+
+    delete filters.thema_code
+    delete filters.programme_code
+    delete filters.destination_code
+
+    console.log("filters tototo", filters);
+    
+const data_country = await db
+  .collection("fr-esr-all-projects-synthese")
+  .aggregate([
+    {
+      $match: { $and: [filters] },
+    },
+    {
+      $group: {
+        _id: {
+          stage: "$stage",
+          pilier_code: "$pilier_code",
+          pilier_name_fr: "$pilier_name_fr",
+          pilier_name_en: "$pilier_name_en",
+          call_year: "$call_year",
+        },
+        total_fund_eur: { $sum: "$fund_eur" },
+        total_coordination_number: { $sum: "$coordination_number" },
+        total_number_involved: { $sum: "$number_involved" },
+      },
+    },
+    {
+      $group: {
+        _id: {
+          stage: "$_id.stage",
+          pilier_code: "$_id.pilier_code",
+          pilier_name_fr: "$_id.pilier_name_fr",
+          pilier_name_en: "$_id.pilier_name_en"
+        },
+        years: {
+          $push: {
+            year: "$_id.call_year",
+            total_fund_eur: "$total_fund_eur",
+            total_coordination_number: "$total_coordination_number",
+            total_number_involved: "$total_number_involved"
+          }
+        }
+      }
+    },
+    {
+      $group: {
+        _id: "$_id.stage",
+        pillars: {
+          $push: {
+            pilier_code: "$_id.pilier_code",
+            pilier_name_fr: "$_id.pilier_name_fr", 
+            pilier_name_en: "$_id.pilier_name_en",
+            years: "$years"
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 0,
+        stage: "$_id",
+        pillars: 1
+      }
+    }
+  ])
+  .toArray();
+
+    const data_all = await db
+      .collection("fr-esr-all-projects-synthese")
+      .aggregate([
+        {
+          $group: {
+            _id: {
+              stage: "$stage",
+              pilier_name_fr: "$pilier_name_fr",
+              call_year: "$call_year",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+            total_coordination_number: { $sum: "$coordination_number" },
+            total_number_involved: { $sum: "$number_involved" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            stage: "$_id.stage",
+            total_fund_eur: 1,
+            pilier_name_fr: "$_id.pilier_name_fr",
+            call_year: "$_id.call_year",
+            total_coordination_number: 1,
+            total_number_involved: 1,
+          },
+        },
+        {
+          $group: {
+            _id: {
+              name: "$pilier_name_fr",
+              year: "$call_year",
+            },
+            total_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_fund_eur",
+                  0,
+                ],
+              },
+            },
+            total_evaluated: {
+              $sum: {
+                $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
+              },
+            },
+            total_coordination_number_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_coordination_number",
+                  0,
+                ],
+              },
+            },
+            total_coordination_number_evaluated: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "evaluated"] },
+                  "$total_coordination_number",
+                  0,
+                ],
+              },
+            },
+            total_number_involved_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_number_involved",
+                  0,
+                ],
+              },
+            },
+            total_number_involved_evaluated: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "evaluated"] },
+                  "$total_number_involved",
+                  0,
+                ],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            pilier_name_fr: "$_id.name",
+            year: "$_id.year",
+            total_successful: 1,
+            total_evaluated: 1,
+            total_coordination_number_successful: 1,
+            total_coordination_number_evaluated: 1,
+            total_number_involved_successful: 1,
+            total_number_involved_evaluated: 1,
+          },
+        },
+        { $sort: { pilier_name_fr: 1 } },
+      ])
+      .toArray();
+
+    return res.json([
+      {
+        country: req.query.country_code,
+        data: data_country,
+      },
+      { country: "all", data: data_all },
+    ]);
+  });
 export default router;

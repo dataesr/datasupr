@@ -1,4 +1,4 @@
-import { Container, Row, Col } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 // import FundedObjectives from "./charts/funded-objectives";
@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import DestinationFunding from "./charts/destination-funding";
 import DestinationFundingSuccessRates from "./charts/destination-funding-success-rates";
 import DestinationFundingProportion from "./charts/destination-funding-proportion";
+import PillarsFundingEvo3Years from "./charts/pillars-funding-evo-3-years";
 
 export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,8 +23,14 @@ export default function Overview() {
   }, [searchParams, setSearchParams]);
 
   return (
-    <Container as="main">
+    <Container as="main" className="fr-my-6w">
       {/* <CustomTitle /> */}
+      <Title>Piliers</Title>
+      <Row>
+        <Col>
+          <PillarsFundingEvo3Years />
+        </Col>
+      </Row>
       <Row gutters>
         <Col>
           <DestinationFunding />
