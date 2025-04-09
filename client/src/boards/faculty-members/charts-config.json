@@ -14,5 +14,11 @@
     "title": "",
     "description": "Répartition des membres du personnel par CNU",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "professionalCategory",
+    "title": "Répartition des membres du personnel par catégorie professionnelle",
+    "description": "Répartition des membres du personnel par catégorie professionnelle",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
   }
 ]
