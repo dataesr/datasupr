@@ -55,7 +55,11 @@ export function FacultyMembers() {
       </Row>
       <Row gutters className="fr-mt-5w">
         <Col style={{ textAlign: "center" }}>
-          <Button onClick={handleClick("/personnel-enseignant/vue-d'ensemble")}>
+          <Button
+            onClick={handleClick(
+              "/personnel-enseignant/vue-d'ensemble/discipline"
+            )}
+          >
             Par discipline
           </Button>
           <div>
@@ -82,7 +86,9 @@ export function FacultyMembers() {
           </div>
         </Col>
         <Col style={{ textAlign: "center" }}>
-          <Button onClick={handleClick("/personnel-enseignant/vue-d'ensemble")}>
+          <Button
+            onClick={handleClick("/personnel-enseignant/vue-d'ensemble/geo")}
+          >
             Par géographie
           </Button>
           <div>
@@ -109,7 +115,11 @@ export function FacultyMembers() {
           </div>
         </Col>
         <Col style={{ textAlign: "center" }}>
-          <Button onClick={handleClick("/personnel-enseignant/vue-d'ensemble")}>
+          <Button
+            onClick={handleClick(
+              "/personnel-enseignant/vue-d'ensemble/universite"
+            )}
+          >
             Par université
           </Button>
           <div>

@@ -22,7 +22,6 @@ const YearFilter: React.FC<YearFilterProps> = ({
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onYearChange(event.target.value);
   };
-  console.log("selectedYear", years);
   return (
     <Row>
       <Col className="fr-select-group">

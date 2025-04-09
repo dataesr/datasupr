@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-const useFacultyMembersByStructures = (selectedYear?: string) => {
+const useFacultyMembersByGeo = (geoId: string, selectedYear?: string) => {
   return useQuery({
-    queryKey: ["universities", selectedYear],
+    queryKey: ["geo", geoId, selectedYear],
     queryFn: async () => {
-      let url = `${VITE_APP_SERVER_URL}/universities`;
+      let url = `${VITE_APP_SERVER_URL}/faculty-members-geo-data/${geoId}`;
       if (selectedYear) {
         url += `?annee=${selectedYear}`;
       }
@@ -15,7 +15,8 @@ const useFacultyMembersByStructures = (selectedYear?: string) => {
       }
       return response.json();
     },
+    enabled: !!geoId,
   });
 };
 
-export default useFacultyMembersByStructures;
+export default useFacultyMembersByGeo;
