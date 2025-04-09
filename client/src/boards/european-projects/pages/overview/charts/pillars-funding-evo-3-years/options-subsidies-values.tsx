@@ -6,6 +6,7 @@ export default function Options(data) {
   const years = new Set();
 
   const filteredData = data.filter((item) => item.country !== "all")[0].data;
+
   filteredData.forEach((item) => years.add(item.year));
 
   return {
@@ -14,13 +15,13 @@ export default function Options(data) {
       height: 500,
       backgroundColor: "transparent",
     },
-    title: { text: "" },
+    title: { text: "Evolution des financements demandés et obtenus (M€)" },
     legend: { enabled: false },
     credits: { enabled: false },
     xAxis: [
       {
         type: "category",
-        categories: ["2021", "2022", "2023"],
+        categories: Array.from(years),
         width: "48%",
         title: {
           text: "Projets évalués",
@@ -28,7 +29,7 @@ export default function Options(data) {
       },
       {
         type: "category",
-        categories: ["2021", "2022", "2023"],
+        categories: Array.from(years),
         offset: 0,
         left: "50%",
         width: "48%",

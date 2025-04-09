@@ -426,77 +426,19 @@ router
     delete filters.programme_code
     delete filters.destination_code
 
-    console.log("filters tototo", filters);
-    
-const data_country = await db
-  .collection("fr-esr-all-projects-synthese")
-  .aggregate([
-    {
-      $match: { $and: [filters] },
-    },
-    {
-      $group: {
-        _id: {
-          stage: "$stage",
-          pilier_code: "$pilier_code",
-          pilier_name_fr: "$pilier_name_fr",
-          pilier_name_en: "$pilier_name_en",
-          call_year: "$call_year",
-        },
-        total_fund_eur: { $sum: "$fund_eur" },
-        total_coordination_number: { $sum: "$coordination_number" },
-        total_number_involved: { $sum: "$number_involved" },
-      },
-    },
-    {
-      $group: {
-        _id: {
-          stage: "$_id.stage",
-          pilier_code: "$_id.pilier_code",
-          pilier_name_fr: "$_id.pilier_name_fr",
-          pilier_name_en: "$_id.pilier_name_en"
-        },
-        years: {
-          $push: {
-            year: "$_id.call_year",
-            total_fund_eur: "$total_fund_eur",
-            total_coordination_number: "$total_coordination_number",
-            total_number_involved: "$total_number_involved"
-          }
-        }
-      }
-    },
-    {
-      $group: {
-        _id: "$_id.stage",
-        pillars: {
-          $push: {
-            pilier_code: "$_id.pilier_code",
-            pilier_name_fr: "$_id.pilier_name_fr", 
-            pilier_name_en: "$_id.pilier_name_en",
-            years: "$years"
-          }
-        }
-      }
-    },
-    {
-      $project: {
-        _id: 0,
-        stage: "$_id",
-        pillars: 1
-      }
-    }
-  ])
-  .toArray();
-
-    const data_all = await db
+    const data_country = await db
       .collection("fr-esr-all-projects-synthese")
       .aggregate([
+        {
+          $match: { $and: [filters] },
+        },
         {
           $group: {
             _id: {
               stage: "$stage",
+              pilier_code: "$pilier_code",
               pilier_name_fr: "$pilier_name_fr",
+              pilier_name_en: "$pilier_name_en",
               call_year: "$call_year",
             },
             total_fund_eur: { $sum: "$fund_eur" },
@@ -505,90 +447,108 @@ const data_country = await db
           },
         },
         {
+          $group: {
+            _id: {
+              stage: "$_id.stage",
+              pilier_code: "$_id.pilier_code",
+              pilier_name_fr: "$_id.pilier_name_fr",
+              pilier_name_en: "$_id.pilier_name_en"
+            },
+            years: {
+              $push: {
+                year: "$_id.call_year",
+                total_fund_eur: "$total_fund_eur",
+                total_coordination_number: "$total_coordination_number",
+                total_number_involved: "$total_number_involved"
+              }
+            }
+          }
+        },
+        {
+          $group: {
+            _id: "$_id.stage",
+            pillars: {
+              $push: {
+                pilier_code: "$_id.pilier_code",
+                pilier_name_fr: "$_id.pilier_name_fr", 
+                pilier_name_en: "$_id.pilier_name_en",
+                years: "$years"
+              }
+            }
+          }
+        },
+        {
           $project: {
             _id: 0,
-            stage: "$_id.stage",
-            total_fund_eur: 1,
-            pilier_name_fr: "$_id.pilier_name_fr",
-            call_year: "$_id.call_year",
-            total_coordination_number: 1,
-            total_number_involved: 1,
+            stage: "$_id",
+            pillars: 1
+          }
+        }
+      ])
+      .toArray();
+
+    delete filters.country_code;
+    
+    const data_all = await db
+      .collection("fr-esr-all-projects-synthese")
+    .aggregate([
+        {
+          $match: { $and: [filters] },
+        },
+        {
+          $group: {
+            _id: {
+              stage: "$stage",
+              pilier_code: "$pilier_code",
+              pilier_name_fr: "$pilier_name_fr",
+              pilier_name_en: "$pilier_name_en",
+              call_year: "$call_year",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+            total_coordination_number: { $sum: "$coordination_number" },
+            total_number_involved: { $sum: "$number_involved" },
           },
         },
         {
           $group: {
             _id: {
-              name: "$pilier_name_fr",
-              year: "$call_year",
+              stage: "$_id.stage",
+              pilier_code: "$_id.pilier_code",
+              pilier_name_fr: "$_id.pilier_name_fr",
+              pilier_name_en: "$_id.pilier_name_en"
             },
-            total_successful: {
-              $sum: {
-                $cond: [
-                  { $eq: ["$stage", "successful"] },
-                  "$total_fund_eur",
-                  0,
-                ],
-              },
-            },
-            total_evaluated: {
-              $sum: {
-                $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
-              },
-            },
-            total_coordination_number_successful: {
-              $sum: {
-                $cond: [
-                  { $eq: ["$stage", "successful"] },
-                  "$total_coordination_number",
-                  0,
-                ],
-              },
-            },
-            total_coordination_number_evaluated: {
-              $sum: {
-                $cond: [
-                  { $eq: ["$stage", "evaluated"] },
-                  "$total_coordination_number",
-                  0,
-                ],
-              },
-            },
-            total_number_involved_successful: {
-              $sum: {
-                $cond: [
-                  { $eq: ["$stage", "successful"] },
-                  "$total_number_involved",
-                  0,
-                ],
-              },
-            },
-            total_number_involved_evaluated: {
-              $sum: {
-                $cond: [
-                  { $eq: ["$stage", "evaluated"] },
-                  "$total_number_involved",
-                  0,
-                ],
-              },
-            },
-          },
+            years: {
+              $push: {
+                year: "$_id.call_year",
+                total_fund_eur: "$total_fund_eur",
+                total_coordination_number: "$total_coordination_number",
+                total_number_involved: "$total_number_involved"
+              }
+            }
+          }
+        },
+        {
+          $group: {
+            _id: "$_id.stage",
+            pillars: {
+              $push: {
+                pilier_code: "$_id.pilier_code",
+                pilier_name_fr: "$_id.pilier_name_fr", 
+                pilier_name_en: "$_id.pilier_name_en",
+                years: "$years"
+              }
+            }
+          }
         },
         {
           $project: {
             _id: 0,
-            pilier_name_fr: "$_id.name",
-            year: "$_id.year",
-            total_successful: 1,
-            total_evaluated: 1,
-            total_coordination_number_successful: 1,
-            total_coordination_number_evaluated: 1,
-            total_number_involved_successful: 1,
-            total_number_involved_evaluated: 1,
-          },
-        },
-        { $sort: { pilier_name_fr: 1 } },
+            stage: "$_id",
+            pillars: 1
+          }
+        }
       ])
-      .toArray();
+      .toArray();      
 
     return res.json([
       {

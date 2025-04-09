@@ -23,8 +23,8 @@ export default function PillarsFundingEvo3Years() {
 
   if (isLoading || !data) return <DefaultSkeleton col={2} />;
 
-  // console.log("optionsSubsidiesValues", optionsSubsidiesValues(data));
-  // console.log("optionsSubsidiesRates", optionsSubsidiesRates(data));
+  console.log("optionsSubsidiesValues", optionsSubsidiesValues(data));
+  console.log("optionsSubsidiesRates", optionsSubsidiesRates(data));
 
   function Legend() {
     const rootStyles = getComputedStyle(document.documentElement);
@@ -62,12 +62,12 @@ export default function PillarsFundingEvo3Years() {
           />
         </Col>
         <Col>
-          {/* <ChartWrapper
+          <ChartWrapper
             id="pillarsSubsidiesRequestedByProjectsLinesRates"
             options={optionsSubsidiesRates(data)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}
-          /> */}
+          />
           empty
         </Col>
       </Row>
