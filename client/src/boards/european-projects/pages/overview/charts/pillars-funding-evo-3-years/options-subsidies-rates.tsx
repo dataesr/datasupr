@@ -1,12 +1,14 @@
+// import { formatToPercentage } from "../../../../../../utils/format";
+
 export default function Options(data) {
   if (!data) return null;
-
-  const filteredDataCountry = data.filter((item) => item.country !== "all")[0]
-    .data;
-  const filteredDataAll = data.filter((item) => item.country === "all")[0].data;
-
+  const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
-  filteredDataCountry.forEach((item) => years.add(item.year));
+
+  const filteredData = data.filter((item) => item.country !== "all")[0].data;
+  const allData = data.find((item) => item.country === "all").data;
+
+  filteredData.forEach((item) => years.add(item.year));
 
   return {
     chart: {
@@ -42,12 +44,14 @@ export default function Options(data) {
         lineWidth: 1,
         lineColor: "#E6E6E6",
         min: 0,
+        max: 100,
         title: {
           text: "%",
         },
       },
       {
         min: 0,
+        max: 100,
         title: {
           text: "",
         },
@@ -56,175 +60,71 @@ export default function Options(data) {
         left: "75%",
       },
     ],
-    tooltip: {
-      valueSuffix: " %",
-    },
+    // tooltip: {
+    //   valueSuffix: "%",
+    //   formatter: function () {
+    //     return `${this.series.name}: ${Number(this.y).toFixed(1)}%`;
+    //   },
+    // },
     plotOptions: {
       line: {
         marker: {
           enabled: true,
           symbol: "circle",
           radius: 3,
-          // fillColor: "#FFFFFF",
           lineWidth: 2,
           lineColor: null,
         },
         dataLabels: {
           enabled: true,
           formatter: function (this: Highcharts.TooltipFormatterContextObject) {
-            return (this.y as number).toFixed(1) + " %";
+            return `${Number(this.y).toFixed(1)}%`;
           },
         },
       },
     },
-    series: [
-      {
-        name: "Europe plus innovante",
-        data: filteredDataCountry
-          .filter((item) => item.pilier_name_fr === "Europe plus innovante")
-          .map(
-            (item) =>
-              Math.round(
-                ((item.total_evaluated * 100) /
-                  filteredDataAll.find(
-                    (itemAll) =>
-                      itemAll.year === item.year &&
-                      itemAll.pilier_name_fr === item.pilier_name_fr
-                  ).total_evaluated) *
-                  10
-              ) / 10
-          ),
-        color: "#A558A0",
-      },
-      {
-        name: "Excellence scientifique",
-        data: filteredDataCountry
-          .filter((item) => item.pilier_name_fr === "Excellence scientifique")
-          .map(
-            (item) =>
-              (item.total_evaluated * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_evaluated
-          ),
-        color: "#21AB8E",
-      },
-      {
-        name: "Problématiques mondiales et compétitivité industrielle européenne",
-        data: filteredDataCountry
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Problématiques mondiales et compétitivité industrielle européenne"
-          )
-          .map(
-            (item) =>
-              (item.total_evaluated * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_evaluated
-          ),
-        color: "#223F3A",
-      },
-      {
-        name: "Élargir la participation et renforcer l'espace européen de la recherche",
-        data: filteredDataCountry
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Élargir la participation et renforcer l'espace européen de la recherche"
-          )
-          .map(
-            (item) =>
-              (item.total_evaluated * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_evaluated
-          ),
-        color: "#E4794A",
-      },
+    series: filteredData
+      .find((item) => item.stage === "evaluated")
+      .pillars.map((pillar) => {
+        const allPillarData = allData
+          .find((item) => item.stage === "evaluated")
+          .pillars.find((p) => p.pilier_code === pillar.pilier_code);
 
-      {
-        name: "Europe plus innovante",
-        xAxis: 1,
-        data: filteredDataCountry
-          .filter((item) => item.pilier_name_fr === "Europe plus innovante")
-          .map(
-            (item) =>
-              Math.round(
-                ((item.total_successful * 100) /
-                  filteredDataAll.find(
-                    (itemAll) =>
-                      itemAll.year === item.year &&
-                      itemAll.pilier_name_fr === item.pilier_name_fr
-                  ).total_successful) *
-                  10
-              ) / 10
+        return {
+          name: pillar.pilier_name_fr,
+          data: pillar.years.map((year, index) => {
+            const totalForYear = allPillarData.years[index].total_fund_eur;
+            return totalForYear > 0
+              ? (year.total_fund_eur / totalForYear) * 100
+              : 0;
+          }),
+          color: rootStyles.getPropertyValue(
+            `--pillar-${pillar.pilier_code}-color`
           ),
-        color: "#A558A0",
-      },
-      {
-        name: "Excellence scientifique",
-        xAxis: 1,
-        data: filteredDataCountry
-          .filter((item) => item.pilier_name_fr === "Excellence scientifique")
-          .map(
-            (item) =>
-              (item.total_successful * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_successful
-          ),
-        color: "#21AB8E",
-      },
-      {
-        name: "Problématiques mondiales et compétitivité industrielle européenne",
-        xAxis: 1,
-        data: filteredDataCountry
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Problématiques mondiales et compétitivité industrielle européenne"
-          )
-          .map(
-            (item) =>
-              (item.total_successful * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_successful
-          ),
-        color: "#223F3A",
-      },
-      {
-        name: "Élargir la participation et renforcer l'espace européen de la recherche",
-        xAxis: 1,
-        data: filteredDataCountry
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Élargir la participation et renforcer l'espace européen de la recherche"
-          )
-          .map(
-            (item) =>
-              (item.total_successful * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_successful
-          ),
-        color: "#E4794A",
-      },
-    ],
+        };
+      })
+      .concat(
+        filteredData
+          .find((item) => item.stage === "successful")
+          .pillars.map((pillar) => {
+            const allPillarData = allData
+              .find((item) => item.stage === "successful")
+              .pillars.find((p) => p.pilier_code === pillar.pilier_code);
+
+            return {
+              xAxis: 1,
+              name: pillar.pilier_name_fr,
+              data: pillar.years.map((year, index) => {
+                const totalForYear = allPillarData.years[index].total_fund_eur;
+                return totalForYear > 0
+                  ? (year.total_fund_eur / totalForYear) * 100
+                  : 0;
+              }),
+              color: rootStyles.getPropertyValue(
+                `--pillar-${pillar.pilier_code}-color`
+              ),
+            };
+          })
+      ),
   };
 }
