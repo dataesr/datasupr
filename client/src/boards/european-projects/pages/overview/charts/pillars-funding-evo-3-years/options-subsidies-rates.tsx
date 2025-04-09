@@ -16,7 +16,9 @@ export default function Options(data) {
       height: 500,
       backgroundColor: "transparent",
     },
-    title: { text: "" },
+    title: {
+      text: "Evolution du taux de succès des financements demandés et obtenus",
+    },
     legend: { enabled: false },
     credits: { enabled: false },
     xAxis: [
