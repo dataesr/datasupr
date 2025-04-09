@@ -1,0 +1,18 @@
+[
+  {
+    "id": "facultyMembersGender",
+    "title": "Représentation des femmes et des hommes",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "contractType",
+    "title": "Répartition des membres du personnel par type de contrat",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "facultyMembersCNU",
+    "title": "",
+    "description": "Répartition des membres du personnel par CNU",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  }
+]

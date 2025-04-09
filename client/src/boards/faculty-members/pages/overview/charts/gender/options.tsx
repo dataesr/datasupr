@@ -1,20 +1,21 @@
-import React from "react";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+import HighchartsInstance from "highcharts";
+import { CreateChartOptions } from "../../../../components/chart-faculty-members";
 
-interface GenderPieChartProps {
+interface OptionsProps {
   maleCount: number;
   femaleCount: number;
 }
 
-const GenderPieChart: React.FC<GenderPieChartProps> = ({
+export default function Options({
   maleCount,
   femaleCount,
-}) => {
-  const chartOptions = {
+}: OptionsProps): HighchartsInstance.Options | null {
+  if (!maleCount || !femaleCount) return null;
+
+  const newOptions: HighchartsInstance.Options = {
     chart: {
       type: "pie",
-      height: "80%",
+      height: "40%",
       spacingTop: 0,
       spacingBottom: 0,
       spacingLeft: 0,
@@ -35,11 +36,12 @@ const GenderPieChart: React.FC<GenderPieChartProps> = ({
           enabled: false,
         },
         borderWidth: 0,
-        innerSize: "60%",
+        innerSize: "10%",
       },
     },
     series: [
       {
+        type: "pie",
         name: "Sexe",
         data: [
           { name: "Hommes", y: maleCount },
@@ -49,7 +51,5 @@ const GenderPieChart: React.FC<GenderPieChartProps> = ({
     ],
   };
 
-  return <HighchartsReact highcharts={Highcharts} options={chartOptions} />;
-};
-
-export default GenderPieChart;
+  return CreateChartOptions("pie", newOptions);
+}
