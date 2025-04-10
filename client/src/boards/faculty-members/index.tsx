@@ -57,7 +57,7 @@ export function FacultyMembers() {
         <Col style={{ textAlign: "center" }}>
           <Button
             onClick={handleClick(
-              "/personnel-enseignant/vue-d'ensemble/discipline"
+              "/personnel-enseignant/discipline/vue-d'ensemble"
             )}
           >
             Par discipline
@@ -87,7 +87,7 @@ export function FacultyMembers() {
         </Col>
         <Col style={{ textAlign: "center" }}>
           <Button
-            onClick={handleClick("/personnel-enseignant/vue-d'ensemble/geo")}
+            onClick={handleClick("/personnel-enseignant/geo/vue-d'ensemble")}
           >
             Par géographie
           </Button>
@@ -117,7 +117,7 @@ export function FacultyMembers() {
         <Col style={{ textAlign: "center" }}>
           <Button
             onClick={handleClick(
-              "/personnel-enseignant/vue-d'ensemble/universite"
+              "/personnel-enseignant/universite/vue-d'ensemble/"
             )}
           >
             Par université

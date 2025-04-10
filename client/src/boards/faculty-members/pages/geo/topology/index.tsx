@@ -1,8 +1,12 @@
-export function Topologie() {
+import { useParams } from "react-router-dom";
+
+export function GeoTopologie() {
+  const { geoId } = useParams<{ geoId?: string }>();
+
   return (
-    <>
-      <h3 className="fr-mt-5w">Topologie</h3>
-      <p>Topologie</p>
-    </>
+    <div>
+      <h1>Topologie</h1>
+      {geoId && <p>geoId: {geoId}</p>}
+    </div>
   );
 }

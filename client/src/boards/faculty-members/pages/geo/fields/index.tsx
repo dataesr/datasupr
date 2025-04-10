@@ -1,8 +1,12 @@
-export function Fields() {
+import { useParams } from "react-router-dom";
+
+export function GeoFields() {
+  const { geoId } = useParams<{ geoId?: string }>();
+
   return (
-    <>
-      <h3 className="fr-mt-5w">Fields</h3>
-      <p>Fields</p>
-    </>
+    <div>
+      <h1>Discipline</h1>
+      {geoId && <p>geoId: {geoId}</p>}
+    </div>
   );
 }
