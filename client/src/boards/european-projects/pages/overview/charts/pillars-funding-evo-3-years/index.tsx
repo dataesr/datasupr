@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import { GetData } from "./query";
-import optionsSubsidiesValues from "./options-subsidies-values";
-import optionsSubsidiesRates from "./options-subsidies-rates";
+import optionsSubsidiesValues from "./options-values";
+import optionsSubsidiesRates from "./options-rates";
+import optionsSubsidiesCountryRates from "./options-success-rates";
 
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
@@ -22,9 +23,6 @@ export default function PillarsFundingEvo3Years() {
   });
 
   if (isLoading || !data) return <DefaultSkeleton col={2} />;
-
-  console.log("optionsSubsidiesValues", optionsSubsidiesValues(data));
-  console.log("optionsSubsidiesRates", optionsSubsidiesRates(data));
 
   function Legend() {
     const rootStyles = getComputedStyle(document.documentElement);
@@ -55,7 +53,7 @@ export default function PillarsFundingEvo3Years() {
       <Row>
         <Col md={6}>
           <ChartWrapper
-            id="pillarsSubsidiesRequestedByProjectsLines"
+            id="pillarsEvolutionFundingLines"
             options={optionsSubsidiesValues(data)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}
@@ -63,12 +61,26 @@ export default function PillarsFundingEvo3Years() {
         </Col>
         <Col>
           <ChartWrapper
-            id="pillarsSubsidiesRequestedByProjectsLinesRates"
+            id="pillarsEvolutionFundingLinesRates"
             options={optionsSubsidiesRates(data)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}
           />
-          empty
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Legend />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <ChartWrapper
+            id="pillarsEvolutionFundingLinesSuccessRate"
+            options={optionsSubsidiesCountryRates(data)}
+            legend={null}
+            renderData={RenderDataSubsidiesValuesAndRates}
+          />
         </Col>
       </Row>
       <Row>

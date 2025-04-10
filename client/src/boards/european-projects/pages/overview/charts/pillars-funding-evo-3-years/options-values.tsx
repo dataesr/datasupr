@@ -7,7 +7,9 @@ export default function Options(data) {
 
   const filteredData = data.filter((item) => item.country !== "all")[0].data;
 
-  filteredData.forEach((item) => years.add(item.year));
+  filteredData
+    .find((item) => item.stage === "evaluated")
+    .pillars[0].years.forEach((year) => years.add(year.year));
 
   return {
     chart: {
@@ -15,7 +17,7 @@ export default function Options(data) {
       height: 500,
       backgroundColor: "transparent",
     },
-    title: { text: "Evolution des financements demandés et obtenus (M€)" },
+    title: { text: "" },
     legend: { enabled: false },
     credits: { enabled: false },
     xAxis: [

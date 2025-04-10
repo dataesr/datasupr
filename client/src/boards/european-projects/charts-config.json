@@ -217,17 +217,42 @@
     "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
   },
   {
-    "id": "pillarsSubsidiesRequestedByProjectsLines",
-    "title": "Subventions demandés et obtenues (M€)",
+    "id": "pillarsEvolutionFundingLines",
+    "title": {
+      "fr": "Evolution des financements demandés et obtenus (M€)",
+      "en": "Financing applied for and obtained (€m)"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
     "subtitle": "",
-    "description": null,
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
   },
   {
-    "id": "pillarsSubsidiesRequestedByProjectsLinesRates",
-    "title": "Part des subventions demandées et obtenues",
+    "id": "pillarsEvolutionFundingLinesRates",
+    "title": {
+      "fr": "Evolution du taux de succès des financements demandés et obtenus",
+      "en": "Trend in the success rate of financing applications and grants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
     "subtitle": "",
-    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+    {
+    "id": "pillarsEvolutionFundingLinesSuccessRate",
+    "title": {
+      "fr": "Part des financements du pays demandés et obtenus par rapport au total des participants",
+      "en": "Percentage of country funding applied for and obtained as a proportion of total participants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
   },
   {
