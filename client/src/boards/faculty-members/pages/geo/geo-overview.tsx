@@ -150,7 +150,7 @@ export default function GeoOverview() {
             {availableGeos.map((geo) => (
               <li key={geo.geo_id}>
                 <Link
-                  href={`/personnel-enseignant/vue-d'ensemble/geo/${geo.geo_id}`}
+                  href={`/personnel-enseignant/geo/vue-d'ensemble/${geo.geo_id}`}
                 >
                   {geo.geo_nom} ({geo.geo_id})
                 </Link>

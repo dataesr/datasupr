@@ -1,6 +1,6 @@
 import { Container } from "@dataesr/dsfr-plus";
 
-export function Evolution() {
+export function UniversityEvolution() {
   return (
     <Container as="main">
       <h3 className="fr-mt-5w">Evolution</h3>

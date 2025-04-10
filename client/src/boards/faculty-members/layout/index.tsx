@@ -1,39 +1,57 @@
 import { Container, Link, Nav } from "@dataesr/dsfr-plus";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useLocation, useParams } from "react-router-dom";
+import "../styles.scss";
 import "../styles.scss";
 
 export function FacultyLayout() {
   const location = useLocation();
   const path = location.pathname;
+  const { objectType, id } = useParams<{ objectType?: string; id?: string }>();
+
+  const buildContextualPath = (basePath: string) => {
+    const currentPathParts = path.split("/");
+    const currentObjectType = objectType || currentPathParts[2] || "";
+
+    return `/personnel-enseignant/${currentObjectType}/${basePath}${
+      id ? "/" + id : ""
+    }`;
+  };
+
+  const currentPathParts = path.split("/");
+  const currentObjectType = objectType || currentPathParts[2] || "";
+
+  const showDisciplineLink = currentObjectType !== "discipline";
 
   return (
     <Container>
       <div className="centered-nav">
         <Nav>
           <Link
-            current={path === "/personnel-enseignant"}
-            href="/personnel-enseignant/vue-d'ensemble"
+            current={path.includes(`vue-d'ensemble`)}
+            href={buildContextualPath("vue-d'ensemble")}
           >
             En un coup d'oeil
           </Link>
           <Link
-            current={path.includes("/personnel-enseignant/discipline")}
-            href="/personnel-enseignant/discipline"
-          >
-            Discipline
-          </Link>
-          <Link
-            current={path.includes("/personnel-enseignant/topologie")}
-            href="/personnel-enseignant/topologie"
+            current={path.includes(`topologie`)}
+            href={buildContextualPath("topologie")}
           >
             Topologie
           </Link>
           <Link
-            current={path.includes("/personnel-enseignant/evolution")}
-            href="/personnel-enseignant/evolution"
+            current={path.includes(`evolution`)}
+            href={buildContextualPath("evolution")}
           >
             Evolution
           </Link>
+          {showDisciplineLink && (
+            <Link
+              current={path.includes(`discipline`)}
+              href={buildContextualPath("discipline")}
+            >
+              Discipline
+            </Link>
+          )}
         </Nav>
       </div>
       <Outlet />

@@ -1,10 +1,12 @@
-import { Container } from "@dataesr/dsfr-plus";
+import { useParams } from "react-router-dom";
 
-export function Evolution() {
+export function GeoEvolution() {
+  const { geoId } = useParams<{ geoId?: string }>();
+
   return (
-    <Container as="main">
-      <h3 className="fr-mt-5w">Evolution</h3>
-      <p>Evolution</p>
-    </Container>
+    <div>
+      <h1>Evolution</h1>
+      {geoId && <p>geoId: {geoId}</p>}
+    </div>
   );
 }

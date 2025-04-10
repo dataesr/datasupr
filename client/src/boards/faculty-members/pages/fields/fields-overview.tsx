@@ -5,55 +5,9 @@ import {
   Title,
   Breadcrumb,
   Link,
-  Notice,
 } from "@dataesr/dsfr-plus";
-import { useState, useEffect } from "react";
-import YearSelector from "../../filters";
-import GenderPieChart from "../geo/charts/gender/gender";
-import CNUPieChart from "../geo/charts/cnu/cnu";
-import useFacultyMembersGeoData from "../../use-faculty-members-general";
 
 export default function FieldsOverview() {
-  const [selectedYear, setSelectedYear] = useState("");
-
-  const {
-    data: geoData,
-    isLoading: isGeoDataLoading,
-    isError: isGeoDataError,
-    error: geoDataError,
-  } = useFacultyMembersGeoData();
-
-  const [availableYears, setAvailableYears] = useState<string[]>([]);
-
-  useEffect(() => {
-    if (geoData) {
-      const years: string[] = geoData.years ? geoData.years.map(String) : [];
-
-      setAvailableYears([...new Set(years)]);
-
-      if (years.length > 0 && !selectedYear) {
-        setSelectedYear(years[years.length - 1]);
-      }
-    }
-  }, [geoData, selectedYear]);
-
-  if (isGeoDataLoading) {
-    return <div>Chargement des données...</div>;
-  }
-
-  if (isGeoDataError) {
-    return <div>Erreur: {geoDataError?.message}</div>;
-  }
-
-  const displayedYearData = geoData.data?.find(
-    (item) => String(item.annee_universitaire) === selectedYear
-  );
-
-  const maleCount = displayedYearData ? displayedYearData.totalHeadcountMan : 0;
-  const femaleCount = displayedYearData
-    ? displayedYearData.totalHeadcountWoman
-    : 0;
-
   return (
     <Container as="main">
       <Row>
@@ -65,52 +19,16 @@ export default function FieldsOverview() {
             </Link>
           </Breadcrumb>
           <Title as="h3" look="h5" className="fr-mt-5w">
-            Les universités en un coup d'oeil
+            Les disciplines en un coup d'oeil
           </Title>
         </Col>
-        <Col md={3} style={{ textAlign: "right" }}>
-          <YearSelector
-            years={availableYears}
-            selectedYear={selectedYear}
-            onYearChange={setSelectedYear}
-          />
-        </Col>
+        <Col md={3} style={{ textAlign: "right" }}></Col>
       </Row>
       <Row>
-        <Col md={8} style={{ textAlign: "center" }}>
-          <Notice closeMode={"disallow"} type={"info"}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis,
-            aut, omnis animi eos est dolores sint, minus culpa libero neque
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-          </Notice>
-        </Col>
-        <Col md={4} style={{ textAlign: "center" }}>
-          <GenderPieChart maleCount={maleCount} femaleCount={femaleCount} />
-        </Col>
+        <Col md={8} style={{ textAlign: "center" }}></Col>
+        <Col md={4} style={{ textAlign: "center" }}></Col>
       </Row>
-      <Row gutters className="fr-mt-3w">
-        <Col md={8}>
-          {displayedYearData && (
-            <CNUPieChart subjects={displayedYearData.subjects} />
-          )}
-        </Col>
-        <Col md={4} style={{ textAlign: "center" }}>
-          <Notice closeMode={"disallow"} type={"info"}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis,
-            aut, omnis animi eos est dolores sint, minus culpa libero neque
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-          </Notice>
-        </Col>
-      </Row>
+      <Row gutters className="fr-mt-3w"></Row>
     </Container>
   );
 }
