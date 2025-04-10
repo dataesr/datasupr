@@ -8,7 +8,9 @@ export default function Options(data) {
   const filteredData = data.filter((item) => item.country !== "all")[0].data;
   const allData = data.find((item) => item.country === "all").data;
 
-  filteredData.forEach((item) => years.add(item.year));
+  filteredData
+    .find((item) => item.stage === "evaluated")
+    .pillars[0].years.forEach((year) => years.add(year.year));
 
   return {
     chart: {
@@ -16,9 +18,7 @@ export default function Options(data) {
       height: 500,
       backgroundColor: "transparent",
     },
-    title: {
-      text: "Evolution du taux de succès des financements demandés et obtenus",
-    },
+    title: { text: "" },
     legend: { enabled: false },
     credits: { enabled: false },
     xAxis: [
@@ -41,27 +41,27 @@ export default function Options(data) {
         },
       },
     ],
-    yAxis: [
-      {
-        lineWidth: 1,
-        lineColor: "#E6E6E6",
-        min: 0,
-        max: 100,
-        title: {
-          text: "%",
-        },
-      },
-      {
-        min: 0,
-        max: 100,
-        title: {
-          text: "",
-        },
-        lineWidth: 1,
-        lineColor: "#E6E6E6",
-        left: "75%",
-      },
-    ],
+    // yAxis: [
+    //   {
+    //     lineWidth: 1,
+    //     lineColor: "#E6E6E6",
+    //     min: 0,
+    //     max: 100,
+    //     title: {
+    //       text: "%",
+    //     },
+    //   },
+    //   {
+    //     min: 0,
+    //     max: 100,
+    //     title: {
+    //       text: "",
+    //     },
+    //     lineWidth: 1,
+    //     lineColor: "#E6E6E6",
+    //     left: "50%",
+    //   },
+    // ],
     // tooltip: {
     //   valueSuffix: "%",
     //   formatter: function () {
