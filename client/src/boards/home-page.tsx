@@ -188,6 +188,15 @@ export default function HomePage() {
         <Row gutters>
           <Col>
             <GenericCard
+              description="Personnels enseignants"
+              title="Personnels enseignants"
+              to="/personnel-enseignants?datasupr=true"
+            />
+          </Col>
+        </Row>
+        <Row gutters>
+          <Col>
+            <GenericCard
               description="Open Alex"
               title="Open Alex"
               to="/open-alex?datasupr=true"
@@ -196,7 +205,11 @@ export default function HomePage() {
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="TEDS" title="TEDS" to="/teds?datasupr=true" />
+            <GenericCard
+              description="TEDS"
+              title="TEDS"
+              to="/teds?datasupr=true"
+            />
           </Col>
         </Row>
         <Row gutters>
@@ -218,12 +231,16 @@ export default function HomePage() {
                 title="Ministère chargé de l'enseignement supérieur et de la recherche"
               >
                 <p className="fr-logo">
-                Ministère<br />
-                chargé<br />
-                de l'enseignement<br />
-                supérieur<br />
-                et de la recherche
-              </p>
+                  Ministère
+                  <br />
+                  chargé
+                  <br />
+                  de l'enseignement
+                  <br />
+                  supérieur
+                  <br />
+                  et de la recherche
+                </p>
               </a>
             </div>
             <div className="fr-footer__content">
