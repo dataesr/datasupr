@@ -3,9 +3,9 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 
 const useFacultyMembersGeoData = (selectedYear?: string) => {
   return useQuery({
-    queryKey: ["faculty-members-geo-data", selectedYear],
+    queryKey: ["faculty-members-overview-geo-data", selectedYear],
     queryFn: async () => {
-      let url = `${VITE_APP_SERVER_URL}/faculty-members-geo-data`;
+      let url = `${VITE_APP_SERVER_URL}/faculty-members-overview-geo-data`;
       if (selectedYear) {
         url += `?annee=${selectedYear}`;
       }
