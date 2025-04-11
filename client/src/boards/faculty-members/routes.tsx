@@ -29,14 +29,14 @@ export default function FacultyMembersRoutes() {
           {/* ROUTE POUR LA GEO */}
           <Route path="/geo/vue-d'ensemble/" element={<GeoOverview />} />
           <Route
-            path="/geo/vue-d'ensemble/:id"
+            path="/geo/vue-d'ensemble/:geo_id"
             element={<SpecificGeoOverview />}
           />
-          <Route path="/geo/evolution/:id" element={<GeoEvolution />} />
+          <Route path="/geo/evolution/:geo_id" element={<GeoEvolution />} />
           <Route path="/geo/evolution/" element={<GeoEvolution />} />
-          <Route path="/geo/topologie/:id" element={<GeoTopologie />} />
+          <Route path="/geo/topologie/:geo_id" element={<GeoTopologie />} />
           <Route path="/geo/topologie/" element={<GeoTopologie />} />
-          <Route path="/geo/discipline/:id" element={<GeoFields />} />
+          <Route path="/geo/discipline/:geo_id" element={<GeoFields />} />
           <Route path="/geo/discipline/" element={<GeoFields />} />
 
           {/* ROUTE POUR LES UNIVERSITES */}

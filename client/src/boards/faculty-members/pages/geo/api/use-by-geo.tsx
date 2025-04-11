@@ -5,7 +5,7 @@ const useFacultyMembersByGeo = (geoId: string, selectedYear?: string) => {
   return useQuery({
     queryKey: ["geo", geoId, selectedYear],
     queryFn: async () => {
-      let url = `${VITE_APP_SERVER_URL}/faculty-members-geo-data/${geoId}`;
+      let url = `${VITE_APP_SERVER_URL}/faculty-members-overview-geo-data/${geoId}`;
       if (selectedYear) {
         url += `?annee=${selectedYear}`;
       }

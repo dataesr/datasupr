@@ -18,7 +18,7 @@ import ProfessionalCategoriesChart from "./charts/professional-categories/profes
 
 export default function SpecificGeoOverview() {
   const [selectedYear, setSelectedYear] = useState("");
-  const { id } = useParams(); // Utiliser "id" au lieu de "geoId"
+  const { geo_id } = useParams(); // Utiliser "geoId" au lieu de "ID"
   const {
     data: geoDataGlobal,
     isLoading: isGeoDataLoadingGlobal,
@@ -31,7 +31,7 @@ export default function SpecificGeoOverview() {
     isLoading: isGeoDataLoadingSpecific,
     isError: isGeoDataErrorSpecific,
     error: geoDataErrorSpecific,
-  } = useFacultyMembersByGeo(id || "");
+  } = useFacultyMembersByGeo(geo_id || "");
 
   const [availableYears, setAvailableYears] = useState<string[]>([]);
   interface GeoDataItem {
@@ -99,14 +99,14 @@ export default function SpecificGeoOverview() {
             <Link href="/personnel-enseignant/geo/vue-d'ensemble/">France</Link>
             <Link>
               <strong>
-                {geoDataGlobal?.geos?.find((geo) => geo.geo_id === id)
+                {geoDataGlobal?.geos?.find((geo) => geo.geo_id === geo_id)
                   ?.geo_nom || "Vue par région"}
               </strong>
             </Link>
           </Breadcrumb>
           <Title as="h3" look="h5" className="fr-mt-5w">
-            {geoDataGlobal?.geos?.find((geo) => geo.geo_id === id)?.geo_nom ||
-              geoDataGlobal?.geo_niveau_geo}
+            {geoDataGlobal?.geos?.find((geo) => geo.geo_id === geo_id)
+              ?.geo_nom || geoDataGlobal?.geo_niveau_geo}
           </Title>
         </Col>
         <Col md={3} style={{ textAlign: "right" }}>

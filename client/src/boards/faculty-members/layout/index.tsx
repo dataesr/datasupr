@@ -6,14 +6,17 @@ import "../styles.scss";
 export function FacultyLayout() {
   const location = useLocation();
   const path = location.pathname;
-  const { objectType, id } = useParams<{ objectType?: string; id?: string }>();
+  const { objectType, geo_id } = useParams<{
+    objectType?: string;
+    geo_id?: string;
+  }>();
 
   const buildContextualPath = (basePath: string) => {
     const currentPathParts = path.split("/");
     const currentObjectType = objectType || currentPathParts[2] || "";
 
     return `/personnel-enseignant/${currentObjectType}/${basePath}${
-      id ? "/" + id : ""
+      geo_id ? "/" + geo_id : ""
     }`;
   };
 
