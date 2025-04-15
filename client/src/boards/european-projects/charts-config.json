@@ -219,8 +219,8 @@
   {
     "id": "pillarsEvolutionFundingLines",
     "title": {
-      "fr": "Evolution des financements demandés et obtenus (M€)",
-      "en": "Financing applied for and obtained (€m)"
+      "fr": "Pilliers - Evolution des financements demandés et obtenus (M€)",
+      "en": "Pilars - Financing applied for and obtained (€m)"
     },
     "description": {
       "fr": "",
@@ -232,8 +232,8 @@
   {
     "id": "pillarsEvolutionFundingLinesRates",
     "title": {
-      "fr": "Evolution du taux de succès des financements demandés et obtenus",
-      "en": "Trend in the success rate of financing applications and grants"
+      "fr": "Pilliers - Evolution du taux de succès des financements demandés et obtenus",
+      "en": "Pilars - Trend in the success rate of financing applications and grants"
     },
     "description": {
       "fr": "",
@@ -245,8 +245,47 @@
     {
     "id": "pillarsEvolutionFundingLinesSuccessRate",
     "title": {
-      "fr": "Part des financements du pays demandés et obtenus par rapport au total des participants",
-      "en": "Percentage of country funding applied for and obtained as a proportion of total participants"
+      "fr": "Pilliers - Part des financements du pays demandés et obtenus par rapport au total des participants",
+      "en": "Pilars - Percentage of country funding applied for and obtained as a proportion of total participants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "programsEvolutionFundingLines",
+    "title": {
+      "fr": "Programmes - Evolution des financements demandés et obtenus (M€)",
+      "en": "Programs - Financing applied for and obtained (€m)"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "programsEvolutionFundingLinesRates",
+    "title": {
+      "fr": "Programmes - Evolution du taux de succès des financements demandés et obtenus",
+      "en": "Programs - Trend in the success rate of financing applications and grants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+    {
+    "id": "programsEvolutionFundingLinesSuccessRate",
+    "title": {
+      "fr": "Programmes - Part des financements du pays demandés et obtenus par rapport au total des participants",
+      "en": "Programs - Percentage of country funding applied for and obtained as a proportion of total participants"
     },
     "description": {
       "fr": "",
