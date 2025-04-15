@@ -465,6 +465,16 @@ router
           }
         },
         {
+          $addFields: {
+            years: {
+              $sortArray: {
+                input: "$years",
+                sortBy: { year: 1 }
+              }
+            }
+          }
+        },
+        {
           $group: {
             _id: "$_id.stage",
             pillars: {
@@ -523,6 +533,16 @@ router
                 total_fund_eur: "$total_fund_eur",
                 total_coordination_number: "$total_coordination_number",
                 total_number_involved: "$total_number_involved"
+              }
+            }
+          }
+        },
+        {
+          $addFields: {
+            years: {
+              $sortArray: {
+                input: "$years",
+                sortBy: { year: 1 }
               }
             }
           }
