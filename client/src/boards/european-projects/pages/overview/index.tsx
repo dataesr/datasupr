@@ -49,13 +49,13 @@ export default function Overview() {
       {selectView === "pillars" ? (
         <Row>
           <Col>
-            <PillarsFundingEvo3Years variant="total_fund_eur" />
+            <PillarsFundingEvo3Years />
           </Col>
         </Row>
       ) : selectView === "programs" ? (
-        <PillarsFundingEvo3Years variant="total_fund_eur" />
+        <PillarsFundingEvo3Years />
       ) : selectView === "topics" ? (
-        <PillarsFundingEvo3Years variant="total_fund_eur" />
+        <PillarsFundingEvo3Years />
       ) : (
         <>
           <Row gutters>
