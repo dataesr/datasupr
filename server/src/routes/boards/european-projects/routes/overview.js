@@ -407,8 +407,6 @@ router
   )
   .get(async (req, res) => {
     const filters = checkQuery(req.query, ["country_code"], res);
-
-    console.log(req.query);
     
     // cas de plusieurs piliers passés en paramètre
     if (req.query.pilier_code?.split("|").length > 1) {
@@ -426,7 +424,8 @@ router
     delete filters.programme_code
     delete filters.destination_code
 
-    const data_country = await db
+    const query = () => {
+      return db
       .collection("fr-esr-all-projects-synthese")
       .aggregate([
         {
@@ -496,79 +495,11 @@ router
         }
       ])
       .toArray();
+    }
 
+    const data_country = await query();
     delete filters.country_code;
-    
-    const data_all = await db
-      .collection("fr-esr-all-projects-synthese")
-    .aggregate([
-        {
-          $match: { $and: [filters] },
-        },
-        {
-          $group: {
-            _id: {
-              stage: "$stage",
-              pilier_code: "$pilier_code",
-              pilier_name_fr: "$pilier_name_fr",
-              pilier_name_en: "$pilier_name_en",
-              call_year: "$call_year",
-            },
-            total_fund_eur: { $sum: "$fund_eur" },
-            total_coordination_number: { $sum: "$coordination_number" },
-            total_number_involved: { $sum: "$number_involved" },
-          },
-        },
-        {
-          $group: {
-            _id: {
-              stage: "$_id.stage",
-              pilier_code: "$_id.pilier_code",
-              pilier_name_fr: "$_id.pilier_name_fr",
-              pilier_name_en: "$_id.pilier_name_en"
-            },
-            years: {
-              $push: {
-                year: "$_id.call_year",
-                total_fund_eur: "$total_fund_eur",
-                total_coordination_number: "$total_coordination_number",
-                total_number_involved: "$total_number_involved"
-              }
-            }
-          }
-        },
-        {
-          $addFields: {
-            years: {
-              $sortArray: {
-                input: "$years",
-                sortBy: { year: 1 }
-              }
-            }
-          }
-        },
-        {
-          $group: {
-            _id: "$_id.stage",
-            pillars: {
-              $push: {
-                pilier_code: "$_id.pilier_code",
-                pilier_name_fr: "$_id.pilier_name_fr", 
-                pilier_name_en: "$_id.pilier_name_en",
-                years: "$years"
-              }
-            }
-          }
-        },
-        {
-          $project: {
-            _id: 0,
-            stage: "$_id",
-            pillars: 1
-          }
-        }
-      ])
-      .toArray();      
+    const data_all = await query();
 
     return res.json([
       {
