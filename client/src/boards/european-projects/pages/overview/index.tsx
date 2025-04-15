@@ -1,6 +1,6 @@
-import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
+import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 // import FundedObjectives from "./charts/funded-objectives";
 // import SynthesisFocus from "./charts/synthesis-focus";
 // import MainBeneficiaries from "./charts/main-beneficiaries";
@@ -10,8 +10,12 @@ import DestinationFundingSuccessRates from "./charts/destination-funding-success
 import DestinationFundingProportion from "./charts/destination-funding-proportion";
 import PillarsFundingEvo3Years from "./charts/pillars-funding-evo-3-years";
 
+import i18n from "./i18n.json";
+
 export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+  const [selectView, setSelectView] = useState("pillars");
 
   useEffect(() => {
     if (!searchParams.get("country_code")) {
@@ -22,28 +26,54 @@ export default function Overview() {
     // }
   }, [searchParams, setSearchParams]);
 
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
   return (
     <Container as="main" className="fr-my-6w">
-      {/* <CustomTitle /> */}
-      <Title>Piliers</Title>
-      <Row>
-        <Col>
-          <PillarsFundingEvo3Years />
-        </Col>
-      </Row>
-      <Row gutters>
-        <Col>
-          <DestinationFunding />
-        </Col>
-        <Col>
-          <DestinationFundingSuccessRates />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <DestinationFundingProportion />
-        </Col>
-      </Row>
+      <label className="fr-label" htmlFor="select">
+        {getI18nLabel("select-title")}
+      </label>
+      <select
+        className="fr-select"
+        id="select"
+        name="select"
+        onChange={(e) => setSelectView(e.target.value)}
+      >
+        <option value="pillars">{getI18nLabel("pillars")}</option>
+        <option value="programs">{getI18nLabel("programs")}</option>
+        <option value="topics">{getI18nLabel("topics")}</option>
+        <option value="destinations">{getI18nLabel("destinations")}</option>
+      </select>
+
+      {selectView === "pillars" ? (
+        <Row>
+          <Col>
+            <PillarsFundingEvo3Years variant="total_fund_eur" />
+          </Col>
+        </Row>
+      ) : selectView === "programs" ? (
+        <PillarsFundingEvo3Years variant="total_fund_eur" />
+      ) : selectView === "topics" ? (
+        <PillarsFundingEvo3Years variant="total_fund_eur" />
+      ) : (
+        <>
+          <Row gutters>
+            <Col>
+              <DestinationFunding />
+            </Col>
+            <Col>
+              <DestinationFundingSuccessRates />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <DestinationFundingProportion />
+            </Col>
+          </Row>
+        </>
+      )}
+
       {/* <SynthesisFocus />
       <div className="fr-my-5w" />
       <FundedObjectives />

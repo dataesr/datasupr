@@ -1,0 +1,22 @@
+{
+  "pillars": {
+    "fr": "Piliers",
+    "en": "Pillars"
+  },
+  "programs": {
+    "fr": "Programmes",
+    "en": "Programs"
+  },
+  "topics": {
+    "fr": "Thématiques",
+    "en": "Topics"
+  },
+  "destinations": {
+    "fr": "Destinations",
+    "en": "Destinations"
+  },
+  "select-title":{
+    "fr": "Sélectionnez votre vue",
+    "en": "Select your view"
+  }
+}

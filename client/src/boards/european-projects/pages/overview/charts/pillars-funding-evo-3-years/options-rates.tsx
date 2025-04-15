@@ -1,4 +1,4 @@
-export default function Options(data) {
+export default function Options(data, displayType) {
   if (!data) return null;
   const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
@@ -76,9 +76,9 @@ export default function Options(data) {
         return {
           name: pillar.pilier_name_fr,
           data: pillar.years.map((year, index) => {
-            const evaluatedAmount = year.total_fund_eur;
+            const evaluatedAmount = year[displayType];
             const successfulAmount =
-              successfulPillarData.years[index].total_fund_eur;
+              successfulPillarData.years[index][displayType];
             return evaluatedAmount > 0
               ? (successfulAmount / evaluatedAmount) * 100
               : 0;

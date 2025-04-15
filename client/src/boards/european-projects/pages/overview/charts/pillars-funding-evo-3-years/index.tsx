@@ -11,11 +11,15 @@ import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { RenderDataSubsidiesValuesAndRates } from "./render-data";
+import { useState } from "react";
+
+import i18n from "./i18n.json";
 
 export default function PillarsFundingEvo3Years() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const params = getDefaultParams(searchParams);
+  const [displayType, setDisplayType] = useState("total_fund_eur");
 
   const { data, isLoading } = useQuery({
     queryKey: ["PillarsFundingEvo3Years", params],
@@ -23,6 +27,10 @@ export default function PillarsFundingEvo3Years() {
   });
 
   if (isLoading || !data) return <DefaultSkeleton col={2} />;
+
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
 
   function Legend() {
     const rootStyles = getComputedStyle(document.documentElement);
@@ -50,11 +58,29 @@ export default function PillarsFundingEvo3Years() {
 
   return (
     <Container fluid>
+      <Row className="fr-my-1w">
+        <Col>
+          <select
+            className="fr-select"
+            onChange={(e) => setDisplayType(e.target.value)}
+          >
+            <option value="total_fund_eur">
+              {getI18nLabel("total-fund-eur")}
+            </option>
+            <option value="total_coordination_number">
+              {getI18nLabel("total-coordination-number")}
+            </option>
+            <option value="total_number_involved">
+              {getI18nLabel("total-number-involved")}
+            </option>
+          </select>
+        </Col>
+      </Row>
       <Row>
         <Col md={6}>
           <ChartWrapper
             id="pillarsEvolutionFundingLines"
-            options={optionsSubsidiesValues(data)}
+            options={optionsSubsidiesValues(data, displayType)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}
           />
@@ -62,7 +88,7 @@ export default function PillarsFundingEvo3Years() {
         <Col>
           <ChartWrapper
             id="pillarsEvolutionFundingLinesRates"
-            options={optionsSubsidiesRates(data)}
+            options={optionsSubsidiesRates(data, displayType)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}
           />
@@ -77,7 +103,7 @@ export default function PillarsFundingEvo3Years() {
         <Col>
           <ChartWrapper
             id="pillarsEvolutionFundingLinesSuccessRate"
-            options={optionsSubsidiesCountryRates(data)}
+            options={optionsSubsidiesCountryRates(data, displayType)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}
           />

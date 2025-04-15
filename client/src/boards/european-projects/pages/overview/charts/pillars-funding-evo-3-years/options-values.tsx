@@ -1,6 +1,6 @@
 import { formatToMillions } from "../../../../../../utils/format";
 
-export default function Options(data) {
+export default function Options(data, displayType) {
   if (!data) return null;
   const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
@@ -74,7 +74,9 @@ export default function Options(data) {
         dataLabels: {
           enabled: true,
           formatter: function (this: Highcharts.TooltipFormatterContextObject) {
-            return formatToMillions(this.y as number);
+            return displayType === "total_fund_eur"
+              ? formatToMillions(this.y as number)
+              : (this.y as number);
           },
         },
       },
@@ -83,7 +85,7 @@ export default function Options(data) {
       .find((item) => item.stage === "evaluated")
       .pillars.map((pillar) => ({
         name: pillar.pilier_name_fr,
-        data: pillar.years.map((year) => year.total_fund_eur),
+        data: pillar.years.map((year) => year[displayType]),
         color: rootStyles.getPropertyValue(
           `--pillar-${pillar.pilier_code}-color`
         ),
@@ -94,7 +96,7 @@ export default function Options(data) {
           .pillars.map((pillar) => ({
             xAxis: 1,
             name: pillar.pilier_name_fr,
-            data: pillar.years.map((year) => year.total_fund_eur),
+            data: pillar.years.map((year) => year[displayType]),
             color: rootStyles.getPropertyValue(
               `--pillar-${pillar.pilier_code}-color`
             ),

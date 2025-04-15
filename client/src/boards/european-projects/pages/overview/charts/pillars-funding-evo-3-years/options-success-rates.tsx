@@ -1,6 +1,6 @@
 // import { formatToPercentage } from "../../../../../../utils/format";
 
-export default function Options(data) {
+export default function Options(data, displayType) {
   if (!data) return null;
   const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
@@ -95,9 +95,9 @@ export default function Options(data) {
         return {
           name: pillar.pilier_name_fr,
           data: pillar.years.map((year, index) => {
-            const totalForYear = allPillarData.years[index].total_fund_eur;
+            const totalForYear = allPillarData.years[index][displayType];
             return totalForYear > 0
-              ? (year.total_fund_eur / totalForYear) * 100
+              ? (year[displayType] / totalForYear) * 100
               : 0;
           }),
           color: rootStyles.getPropertyValue(
@@ -117,9 +117,9 @@ export default function Options(data) {
               xAxis: 1,
               name: pillar.pilier_name_fr,
               data: pillar.years.map((year, index) => {
-                const totalForYear = allPillarData.years[index].total_fund_eur;
+                const totalForYear = allPillarData.years[index][displayType];
                 return totalForYear > 0
-                  ? (year.total_fund_eur / totalForYear) * 100
+                  ? (year[displayType] / totalForYear) * 100
                   : 0;
               }),
               color: rootStyles.getPropertyValue(
