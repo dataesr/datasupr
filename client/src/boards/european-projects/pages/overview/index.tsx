@@ -9,6 +9,7 @@ import DestinationFunding from "./charts/destination-funding";
 import DestinationFundingSuccessRates from "./charts/destination-funding-success-rates";
 import DestinationFundingProportion from "./charts/destination-funding-proportion";
 import PillarsFundingEvo3Years from "./charts/pillars-funding-evo-3-years";
+import ProgramsFundingEvo3Years from "./charts/programs-funding-evo-3-years";
 
 import i18n from "./i18n.json";
 
@@ -53,7 +54,7 @@ export default function Overview() {
           </Col>
         </Row>
       ) : selectView === "programs" ? (
-        <PillarsFundingEvo3Years />
+        <ProgramsFundingEvo3Years />
       ) : selectView === "topics" ? (
         <PillarsFundingEvo3Years />
       ) : (

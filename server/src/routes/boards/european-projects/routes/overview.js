@@ -509,4 +509,114 @@ router
       { country: "all", data: data_all },
     ]);
   });
+
+router
+  .route(
+    "/european-projects/overview/programs-funding-evo-3-years"
+  )
+  .get(async (req, res) => {
+    const filters = checkQuery(req.query, ["country_code"], res);
+    
+    // cas de plusieurs programmes passés en paramètre
+    if (req.query.programme_code?.split("|").length > 1) {
+      filters.programme_code = { $in: req.query.programme_code.split("|") };
+    } else if (req.query.programme_code?.split("|").length === 1) {
+      filters.programme_code = req.query.programme_code;
+    }
+
+    const rangeOfYears = ["2021", "2022", "2023"];
+    filters.call_year = { $in: rangeOfYears };
+
+    delete filters.pilier_code
+    delete filters.thema_code
+    delete filters.destination_code
+
+    console.log(filters);
+    
+    const query = () => {
+      return db
+      .collection("fr-esr-all-projects-synthese")
+      .aggregate([
+        {
+          $match: { $and: [filters] },
+        },
+        {
+          $group: {
+            _id: {
+              stage: "$stage",
+              programme_code: "$programme_code",
+              programme_name_fr: "$programme_name_fr",
+              programme_name_en: "$programme_name_en",
+              call_year: "$call_year",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+            total_coordination_number: { $sum: "$coordination_number" },
+            total_number_involved: { $sum: "$number_involved" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              stage: "$_id.stage",
+              programme_code: "$_id.programme_code",
+              programme_name_fr: "$_id.programme_name_fr",
+              programme_name_en: "$_id.programme_name_en"
+            },
+            years: {
+              $push: {
+                year: "$_id.call_year",
+                total_fund_eur: "$total_fund_eur",
+                total_coordination_number: "$total_coordination_number",
+                total_number_involved: "$total_number_involved"
+              }
+            }
+          }
+        },
+        {
+          $addFields: {
+            years: {
+              $sortArray: {
+                input: "$years",
+                sortBy: { year: 1 }
+              }
+            }
+          }
+        },
+        {
+          $group: {
+            _id: "$_id.stage",
+            programs: {
+              $push: {
+                programme_code: "$_id.programme_code",
+                programme_name_fr: "$_id.programme_name_fr", 
+                programme_name_en: "$_id.programme_name_en",
+                years: "$years"
+              }
+            }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            stage: "$_id",
+            programs: 1
+          }
+        }
+      ])
+      .toArray();
+    }
+
+    const data_country = await query();
+    delete filters.country_code;
+    const data_all = await query();
+
+    return res.json([
+      {
+        country: req.query.country_code,
+        data: data_country,
+      },
+      { country: "all", data: data_all },
+    ]);
+  });
+
 export default router;
