@@ -202,9 +202,6 @@ export default function ChartWrapper({ id, options, legend, renderData }) {
   const currentLang = searchParams.get("language") || "fr";
 
   if (displayType === "data" && !renderData) {
-    console.error(
-      "You need to provide a renderData function to display the data"
-    );
     setDisplayType("chart");
     return null;
   }
