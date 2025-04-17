@@ -26,7 +26,13 @@ export default function PillarsFundingEvo3Years() {
     queryFn: () => GetData(params),
   });
 
-  if (isLoading || !data) return <DefaultSkeleton col={2} />;
+  if (isLoading || !data)
+    return (
+      <>
+        <DefaultSkeleton col={2} />
+        <DefaultSkeleton />
+      </>
+    );
 
   function getI18nLabel(key) {
     return i18n[key][currentLang];
