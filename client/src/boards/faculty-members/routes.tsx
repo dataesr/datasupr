@@ -16,9 +16,9 @@ import { FieldsEvolution } from "./pages/fields/evolutions/index.tsx";
 import { FieldsTopologie } from "./pages/fields/topology/index.tsx";
 import SpecificGeoOverview from "./pages/geo/geo-overview-by-id.tsx";
 import { SpecificUniversityOverview } from "./pages/university/univ-overview-by-id.tsx";
-import { SpecificFieldsOverview } from "./pages/fields/fields-overview-by-id.tsx";
 import { UniversityFields } from "./pages/university/fields/index.tsx";
 import { GeoFields } from "./pages/geo/fields/index.tsx";
+import SpecificFieldsOverview from "./pages/fields/fields-overview-by-id.tsx";
 
 export default function FacultyMembersRoutes() {
   return (
@@ -79,17 +79,17 @@ export default function FacultyMembersRoutes() {
             element={<FieldsOverview />}
           />
           <Route
-            path="/discipline/vue-d'ensemble/:id"
+            path="/discipline/vue-d'ensemble/:fieldId"
             element={<SpecificFieldsOverview />}
           />
           <Route
-            path="/discipline/evolution/:id"
+            path="/discipline/evolution/:fieldId"
             element={<FieldsEvolution />}
           />
           <Route path="/discipline/evolution/" element={<FieldsEvolution />} />
 
           <Route
-            path="/discipline/topologie/:id"
+            path="/discipline/topologie/:fieldId"
             element={<FieldsTopologie />}
           />
           <Route path="/discipline/topologie/" element={<FieldsTopologie />} />

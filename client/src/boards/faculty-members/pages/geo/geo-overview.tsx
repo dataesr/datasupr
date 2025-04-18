@@ -13,6 +13,7 @@ import GenderPieChart from "./charts/gender/gender";
 import CNUPieChart from "./charts/cnu/cnu";
 import useFacultyMembersGeoData from "../../use-faculty-members-general";
 import ProfessionalCategoriesChart from "./charts/professional-categories/professional-categories";
+import FacultyFranceMap from "./map";
 
 export default function GeoOverview() {
   const [selectedYear, setSelectedYear] = useState("");
@@ -87,18 +88,8 @@ export default function GeoOverview() {
         </Col>
       </Row>
       <Row>
-        <Col md={8} style={{ textAlign: "center" }}>
-          <Notice closeMode={"disallow"} type={"info"}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis,
-            aut, omnis animi eos est dolores sint, minus culpa libero neque
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-          </Notice>
+        <Col md={8} className="fr-mb-3w">
+          <FacultyFranceMap availableGeos={availableGeos} />
         </Col>
         <Col md={4} style={{ textAlign: "center" }}>
           <GenderPieChart maleCount={maleCount} femaleCount={femaleCount} />

@@ -1,8 +1,10 @@
 import express from "express";
-import facultyMembersRouter from "./data/geo/overview.js";
+import facultyMembersGeoRouter from "./data/geo/overview.js";
+import facultyMembersFieldsRouter from "./data/fields/overview.js";
 
 const router = new express.Router();
 
-router.use(facultyMembersRouter);
+router.use(facultyMembersGeoRouter);
+router.use(facultyMembersFieldsRouter);
 
 export default router;

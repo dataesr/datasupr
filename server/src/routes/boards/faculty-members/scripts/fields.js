@@ -1,118 +1,184 @@
 import { MongoClient } from "mongodb";
 
-// SCRIPT POUR CREER UNE NOUVELLE COLLECTION "teaching-staff-fields" A PARTIR DE LA COLLECTION "teaching-staff-general-indicators"
-// ON A DEDANS LES DISCIPLINES ET LEUR REPARTITION PAR ANNEE
-async function processAndCreateCollection() {
+async function transformAndInsert() {
+  const client = new MongoClient("mongodb://localhost:27017/");
+
   try {
-    const client = new MongoClient("mongodb://localhost:27017/");
-
     await client.connect();
-    console.log("Connecté à la base de données");
-
-    const database = client.db("datasupr");
-    const sourceCollection = database.collection(
-      "teaching-staff-general-indicators"
+    const db = client.db("datasupr");
+    const source = db.collection(
+      "test-PERSONNEL-ENSEIGNANT-effectifs-personnel-enseignant-etablissement"
     );
+    const targetCollectionName = "teaching-staff-fields";
 
-    const newCollectionName = "teaching-staff-fields";
+    const pipeline = [
+      {
+        $group: {
+          _id: {
+            geo_id: "$etablissement_id_paysage",
+            geo_level: "etablissement",
+            geo_name: "$etablissement_actuel_lib",
+            academic_year: "$annee_universitaire",
+            field_id: "$code_grande_discipline",
+            field_label: "$grande_discipline",
+            cnu_group_id: "$code_groupe_cnu",
+            cnu_group_label: "$groupe_cnu",
+            cnu_section_id: "$code_section_cnu",
+            cnu_section_label: "$section_cnu",
+            sexe: "$sexe",
+          },
+          total: { $sum: "$effectif" },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            geo_id: "$_id.geo_id",
+            geo_level: "$_id.geo_level",
+            geo_name: "$_id.geo_name",
+            academic_year: "$_id.academic_year",
+            field_id: "$_id.field_id",
+            field_label: "$_id.field_label",
+            cnu_group_id: "$_id.cnu_group_id",
+            cnu_group_label: "$_id.cnu_group_label",
+            cnu_section_id: "$_id.cnu_section_id",
+            cnu_section_label: "$_id.cnu_section_label",
+          },
+          numberWoman: {
+            $sum: {
+              $cond: [{ $eq: ["$_id.sexe", "Féminin"] }, "$total", 0],
+            },
+          },
+          numberMan: {
+            $sum: {
+              $cond: [{ $eq: ["$_id.sexe", "Masculin"] }, "$total", 0],
+            },
+          },
+          numberUnknown: {
+            $sum: {
+              $cond: [
+                { $not: { $in: ["$_id.sexe", ["Féminin", "Masculin"]] } },
+                "$total",
+                0,
+              ],
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            geo_id: "$_id.geo_id",
+            geo_level: "$_id.geo_level",
+            geo_name: "$_id.geo_name",
+            academic_year: "$_id.academic_year",
+            field_id: "$_id.field_id",
+            field_label: "$_id.field_label",
+            cnu_group_id: "$_id.cnu_group_id",
+            cnu_group_label: "$_id.cnu_group_label",
+          },
+          headcount_per_cnu_section: {
+            $push: {
+              cnu_section_id: "$_id.cnu_section_id",
+              cnu_section_label: "$_id.cnu_section_label",
+              numberWoman: "$numberWoman",
+              numberMan: "$numberMan",
+              numberUnknown: "$numberUnknown",
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            geo_id: "$_id.geo_id",
+            geo_level: "$_id.geo_level",
+            geo_name: "$_id.geo_name",
+            academic_year: "$_id.academic_year",
+            field_id: "$_id.field_id",
+            field_label: "$_id.field_label",
+          },
+          headcount_per_cnu_group: {
+            $push: {
+              cnu_group_id: "$_id.cnu_group_id",
+              cnu_group_label: "$_id.cnu_group_label",
+              headcount_per_cnu_section: "$headcount_per_cnu_section",
+              numberWoman: {
+                $sum: {
+                  $sum: "$headcount_per_cnu_section.numberWoman",
+                },
+              },
+              numberMan: {
+                $sum: {
+                  $sum: "$headcount_per_cnu_section.numberMan",
+                },
+              },
+              numberUnknown: {
+                $sum: {
+                  $sum: "$headcount_per_cnu_section.numberUnknown",
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            geo_id: "$_id.geo_id",
+            geo_level: "$_id.geo_level",
+            geo_name: "$_id.geo_name",
+            academic_year: "$_id.academic_year",
+          },
+          headcount_per_fields: {
+            $push: {
+              field_id: "$_id.field_id",
+              field_label: "$_id.field_label",
+              headcount_per_cnu_group: "$headcount_per_cnu_group",
+              numberWoman: {
+                $sum: {
+                  $sum: "$headcount_per_cnu_group.numberWoman",
+                },
+              },
+              numberMan: {
+                $sum: {
+                  $sum: "$headcount_per_cnu_group.numberMan",
+                },
+              },
+              numberUnknown: {
+                $sum: {
+                  $sum: "$headcount_per_cnu_group.numberUnknown",
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: false,
+          geo_id: "$_id.geo_id",
+          geo_level: "$_id.geo_level",
+          geo_name: "$_id.geo_name",
+          academic_year: "$_id.academic_year",
+          headcount_per_fields: 1,
+        },
+      },
+      {
+        $merge: {
+          into: targetCollectionName,
+          whenMatched: "merge",
+          whenNotMatched: "insert",
+        },
+      },
+    ];
 
-    const collections = await database
-      .listCollections({ name: newCollectionName })
-      .toArray();
-    if (collections.length > 0) {
-      console.log(
-        `La collection ${newCollectionName} existe déjà. Suppression...`
-      );
-      await database.collection(newCollectionName).drop();
-    }
+    await source.aggregate(pipeline).toArray();
 
-    await database.createCollection(newCollectionName);
-    console.log(`Nouvelle collection créée: ${newCollectionName}`);
-
-    const newCollection = database.collection(newCollectionName);
-
-    const documents = await sourceCollection.find({}).toArray();
-
-    const subjectData = {};
-
-    console.log(`Traitement de ${documents.length} documents...`);
-
-    documents.forEach((doc) => {
-      const annee = doc.annee_universitaire;
-      const hommesTotal = doc.headcountMan || 0;
-      const femmesTotal = doc.headcountWoman || 0;
-      const inconnusTotal = doc.headcountUnknown || 0;
-      const total = hommesTotal + femmesTotal + inconnusTotal;
-
-      if (!doc.subject || total === 0) return;
-
-      doc.subject.forEach((subject) => {
-        if (!subject.label_fr) return;
-
-        const label = subject.label_fr;
-        const part = subject.headcount / total;
-
-        const hommes = Math.round(part * hommesTotal);
-        const femmes = Math.round(part * femmesTotal);
-        const inconnus = Math.round(part * inconnusTotal);
-
-        // Initialiser l'objet pour ce sujet s'il n'existe pas
-        if (!subjectData[label]) {
-          subjectData[label] = {};
-        }
-
-        // Agréger les données par année pour éviter les doublons
-        if (!subjectData[label][annee]) {
-          subjectData[label][annee] = {
-            hommes: 0,
-            femmes: 0,
-            inconnus: 0,
-          };
-        }
-
-        // Ajouter les valeurs (au cas où il y aurait plusieurs entrées pour la même année)
-        subjectData[label][annee].hommes += hommes;
-        subjectData[label][annee].femmes += femmes;
-        subjectData[label][annee].inconnus += inconnus;
-      });
-    });
-
-    // Convertir l'objet en format approprié pour MongoDB
-    const groupedSubjects = Object.entries(subjectData).map(
-      ([subject, years]) => {
-        // Convertir l'objet années en tableau
-        const yearsArray = Object.entries(years).map(([annee, data]) => ({
-          annee: parseInt(annee),
-          hommes: data.hommes,
-          femmes: data.femmes,
-          inconnus: data.inconnus,
-        }));
-
-        // Trier par année (décroissant)
-        yearsArray.sort((a, b) => b.annee - a.annee);
-
-        return {
-          subject,
-          years: yearsArray,
-        };
-      }
-    );
-
-    // Insérer les données dans la nouvelle collection
-    if (groupedSubjects.length > 0) {
-      const result = await newCollection.insertMany(groupedSubjects);
-      console.log(
-        `${result.insertedCount} documents insérés dans la collection ${newCollectionName}`
-      );
-    } else {
-      console.log("Aucune donnée à insérer");
-    }
-
-    console.log("Opération terminée avec succès");
+    console.log("Transformation et insertion terminées !");
+  } finally {
     await client.close();
-  } catch (error) {
-    console.error("Une erreur s'est produite:", error);
   }
 }
 
-processAndCreateCollection();
+transformAndInsert().catch(console.dir);

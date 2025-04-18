@@ -1,27 +1,36 @@
 import { Container, Link, Nav } from "@dataesr/dsfr-plus";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import "../styles.scss";
-import "../styles.scss";
 
 export function FacultyLayout() {
   const location = useLocation();
   const path = location.pathname;
-  const { objectType, geo_id } = useParams<{
-    objectType?: string;
+  const { geo_id, id, fieldId } = useParams<{
     geo_id?: string;
+    id?: string;
+    fieldId?: string;
   }>();
 
   const buildContextualPath = (basePath: string) => {
     const currentPathParts = path.split("/");
-    const currentObjectType = objectType || currentPathParts[2] || "";
+    const currentObjectType = currentPathParts[2] || "";
+
+    let paramValue: string | null = null;
+    if (currentObjectType === "geo" && geo_id) {
+      paramValue = geo_id;
+    } else if (currentObjectType === "universite" && id) {
+      paramValue = id;
+    } else if (currentObjectType === "discipline" && fieldId) {
+      paramValue = fieldId;
+    }
 
     return `/personnel-enseignant/${currentObjectType}/${basePath}${
-      geo_id ? "/" + geo_id : ""
+      paramValue ? "/" + paramValue : ""
     }`;
   };
 
   const currentPathParts = path.split("/");
-  const currentObjectType = objectType || currentPathParts[2] || "";
+  const currentObjectType = currentPathParts[2] || "";
 
   const showDisciplineLink = currentObjectType !== "discipline";
 
