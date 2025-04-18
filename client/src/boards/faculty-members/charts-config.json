@@ -20,5 +20,14 @@
     "title": "Répartition des membres du personnel par catégorie professionnelle",
     "description": "Répartition des membres du personnel par catégorie professionnelle",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "genderByDiscipline",
+    "title": "Répartition des membres du personnel par domaine par sexe",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "fieldsDistributionTreemap",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
   }
 ]
