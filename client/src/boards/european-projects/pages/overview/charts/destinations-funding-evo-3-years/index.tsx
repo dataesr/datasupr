@@ -8,7 +8,7 @@ import optionsSubsidiesCountryRates from "./options-success-rates";
 
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
-import { Container, Row, Col } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Button } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { RenderDataSubsidiesValuesAndRates } from "./render-data";
 import { useState } from "react";
@@ -16,14 +16,14 @@ import { useState } from "react";
 import i18n from "./i18n.json";
 import { normalizeIdForCssColorNames } from "../../../../utils";
 
-export default function TopicsFundingEvo3Years() {
+export default function DestinationsFundingEvo3Years() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const params = getDefaultParams(searchParams);
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["TopicsFundingEvo3Years", params],
+    queryKey: ["DestinationsFundingEvo3Years", params],
     queryFn: () => GetData(params),
   });
 
@@ -41,28 +41,46 @@ export default function TopicsFundingEvo3Years() {
 
   function Legend() {
     const rootStyles = getComputedStyle(document.documentElement);
+    const [showAll, setShowAll] = useState(false);
+
+    const destinations = data.find((item) => item.country !== "all").data[0]
+      .destinations;
+
+    const displayedItems = showAll ? destinations : destinations.slice(0, 5);
+
     return (
       <fieldset>
         <legend>{getI18nLabel("legend")}</legend>
         <div className="legend">
           <ul>
-            {data
-              .find((item) => item.country !== "all")
-              .data[0].topics.map((item) => (
-                <li key={item.thema_code}>
-                  <div
-                    style={{
-                      background: rootStyles.getPropertyValue(
-                        `--topic-${normalizeIdForCssColorNames(
-                          item.thema_code
-                        )}-color`
-                      ),
-                    }}
-                  />
-                  <span>{item[`thema_name_${currentLang}`]}</span>
-                </li>
-              ))}
+            {displayedItems.map((item) => (
+              <li key={item.destination_code}>
+                <div
+                  style={{
+                    background: rootStyles.getPropertyValue(
+                      `--destination-${normalizeIdForCssColorNames(
+                        item.destination_code
+                      )}-color`
+                    ),
+                  }}
+                />
+                <span>
+                  {item[`destination_name_${currentLang}`]}
+                  {" - "}
+                  <b>{item[`destination_code`]}</b>
+                </span>
+              </li>
+            ))}
           </ul>
+          {destinations.length > 5 && (
+            <Button
+              onClick={() => setShowAll(!showAll)}
+              size="sm"
+              variant="tertiary"
+            >
+              {showAll ? getI18nLabel("show-less") : getI18nLabel("show-more")}
+            </Button>
+          )}
         </div>
       </fieldset>
     );
@@ -91,7 +109,7 @@ export default function TopicsFundingEvo3Years() {
       <Row>
         <Col md={6}>
           <ChartWrapper
-            id="topicsEvolutionFundingLines"
+            id="destinationsEvolutionFundingLines"
             options={optionsSubsidiesValues(data, displayType)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}
@@ -99,7 +117,7 @@ export default function TopicsFundingEvo3Years() {
         </Col>
         <Col>
           <ChartWrapper
-            id="topicsEvolutionFundingLinesRates"
+            id="destinationsEvolutionFundingLinesRates"
             options={optionsSubsidiesRates(data, displayType)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}
@@ -114,7 +132,7 @@ export default function TopicsFundingEvo3Years() {
       <Row>
         <Col>
           <ChartWrapper
-            id="topicsEvolutionFundingLinesSuccessRate"
+            id="destinationsEvolutionFundingLinesSuccessRate"
             options={optionsSubsidiesCountryRates(data, displayType)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}
