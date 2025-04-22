@@ -1,0 +1,26 @@
+{
+  "total-number-involved":{
+    "fr": "Nombre total de participants",
+    "en": "Total number of participants"
+  },
+  "total-coordination-number":{
+    "fr": "Nombre total de coordination",
+    "en": "Total number of coordination"
+  },
+  "total-fund-eur":{
+    "fr": "Total des subventions (EUR)",
+    "en": "Total grants (EUR)"
+  },
+  "legend":{
+    "fr": "Légende",
+    "en": "Legend"
+  },
+  "show-less":{
+    "fr": "Afficher moins",
+    "en": "Show less"
+  },
+  "show-more":{
+    "fr": "Afficher plus",
+    "en": "Show more"
+  }
+}

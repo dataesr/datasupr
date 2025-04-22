@@ -1,0 +1,1 @@
+GET http://localhost:3000/api/european-projects/overview/destinations-funding-evo-3-years?country_code=FRA&destination_code=ACCELERATOR|CANCER

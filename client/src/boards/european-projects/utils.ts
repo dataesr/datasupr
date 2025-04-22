@@ -53,7 +53,7 @@ export function getIso2Label(iso2) {
   return iso2Labels[iso2] || iso2;
 }
 
-export function normalizeIdForCssColorNames (id) {
+export function normalizeIdForCssColorNames(id) {
   const normalizedId = id.replace(/[\s.\-_]+/g, "_").toLowerCase();
   
   return normalizedId;

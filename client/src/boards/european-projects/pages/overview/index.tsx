@@ -13,6 +13,7 @@ import ProgramsFundingEvo3Years from "./charts/programs-funding-evo-3-years";
 
 import i18n from "./i18n.json";
 import TopicsFundingEvo3Years from "./charts/topics-funding-evo-3-years";
+import DestinationsFundingEvo3Years from "./charts/destinations-funding-evo-3-years";
 
 export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -73,6 +74,7 @@ export default function Overview() {
               <DestinationFundingProportion />
             </Col>
           </Row>
+          <DestinationsFundingEvo3Years />
         </>
       )}
 

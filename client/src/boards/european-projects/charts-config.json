@@ -294,8 +294,7 @@
     "subtitle": "",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
   },
-
-{
+  {
     "id": "topicsEvolutionFundingLines",
     "title": {
       "fr": "Thématiques - Evolution des financements demandés et obtenus (M€)",
@@ -334,7 +333,45 @@
     "subtitle": "",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
   },
-
+{
+    "id": "destinationsEvolutionFundingLines",
+    "title": {
+      "fr": "Destinations - Evolution des financements demandés et obtenus (M€)",
+      "en": "Destinations - Financing applied for and obtained (€m)"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "destinationsEvolutionFundingLinesRates",
+    "title": {
+      "fr": "Destinations - Evolution du taux de succès des financements demandés et obtenus",
+      "en": "Destinations - Trend in the success rate of financing applications and grants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+    {
+    "id": "destinationsEvolutionFundingLinesSuccessRate",
+    "title": {
+      "fr": "Destinations - Part des financements du pays demandés et obtenus par rapport au total des participants",
+      "en": "Destinations - Percentage of country funding applied for and obtained as a proportion of total participants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
   {
     "id": "pillarsProjectCoordinationRequestedByProjectsLines",
     "title": "Nombre de coordinatioons de projets évalués et lauréats",
