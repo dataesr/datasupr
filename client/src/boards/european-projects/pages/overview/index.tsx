@@ -12,6 +12,7 @@ import PillarsFundingEvo3Years from "./charts/pillars-funding-evo-3-years";
 import ProgramsFundingEvo3Years from "./charts/programs-funding-evo-3-years";
 
 import i18n from "./i18n.json";
+import TopicsFundingEvo3Years from "./charts/topics-funding-evo-3-years";
 
 export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -56,7 +57,7 @@ export default function Overview() {
       ) : selectView === "programs" ? (
         <ProgramsFundingEvo3Years />
       ) : selectView === "topics" ? (
-        <PillarsFundingEvo3Years />
+        <TopicsFundingEvo3Years />
       ) : (
         <>
           <Row gutters>

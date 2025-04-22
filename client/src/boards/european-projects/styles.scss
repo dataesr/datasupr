@@ -20,8 +20,111 @@
   }
 }
 
-:root {
---scale-1-color: var(--green-tilleul-verveine-main-707);
+:root {  
+  // --green-tilleul-verveine-main-707:
+  // --green-bourgeon-main-640:
+  // --green-emeraude-main-632:
+  // --green-menthe-main-548:
+  // --green-archipel-main-557:
+  // --blue-ecume-main-400:
+  // --blue-cumulus-main-526:
+  // --purple-glycine-main-494:
+  // --pink-macaron-main-689:
+  // --pink-tuile-main-556:
+  // --yellow-tournesol-main-731:
+  // --yellow-moutarde-main-679:
+  // --orange-terre-battue-main-645:
+  // --brown-cafe-creme-main-782:
+  // --brown-caramel-main-648:
+  // --brown-opera-main-680:
+  // --beige-gris-galet-main-702:
+  --green-tilleul-verveine-sun-418: #66673D;
+  --green-bourgeon-sun-425: #447049;
+  --green-emeraude-sun-425: #297254;
+  --green-menthe-sun-373: #37635f;
+  --green-archipel-sun-391: #006A6F;
+  --blue-ecume-sun-247: #2F4077;
+  --blue-cumulus-sun-368: #3558A2;
+  --purple-glycine-sun-319: #6E445A;
+  --pink-macaron-sun-406: #8D533E;
+  --pink-tuile-sun-425: #a94645;
+  --yellow-tournesol-sun-407: #716043;
+  --yellow-moutarde-sun-348: #695240;
+  --orange-terre-battue-sun-370: #755348;
+  --brown-cafe-creme-sun-383: #685C48;
+  --brown-caramel-sun-425: #845d48;
+  --brown-opera-sun-395: #745B47;
+  --beige-gris-galet-sun-407: #6A6156;
+  --green-tilleul-verveine-975: #fef7da;
+  --green-bourgeon-975: #e6feda;
+  --green-emeraude-975: #e3fdeb;
+  --green-menthe-975: #dffdf7;
+  --green-archipel-975: #e5fbfd;
+  --blue-ecume-975: #f4f6fe;
+  --blue-cumulus-975: #f3f6fe;
+  --purple-glycine-975: #fef3fd;
+  --pink-macaron-975: #fef4f2;
+  --pink-tuile-975: #fef4f3;
+  --yellow-tournesol-975: #fef6e3;
+  --yellow-moutarde-975: #fef5e8;
+  --orange-terre-battue-975: #fef4f2;
+  --brown-cafe-creme-975: #fbf6ed;
+  --brown-caramel-975: #fbf5f2;
+  --brown-opera-975: #fbf5f2;
+  --beige-gris-galet-975: #f9f6f2;
+  --green-tilleul-verveine-950: #fceeac;
+  --green-bourgeon-950: #c9fcac;
+  --green-emeraude-950: #c3fad5;
+  --green-menthe-950: #bafaee;
+  --green-archipel-950: #c7f6fc;
+  --blue-ecume-950: #e9edfe;
+  --blue-cumulus-950: #e6eefe;
+  --purple-glycine-950: #fee7fc;
+  --pink-macaron-950: #fee9e6;
+  --pink-tuile-950: #fee9e7;
+  --yellow-tournesol-950: #feecc2;
+  --yellow-moutarde-950: #feebd0;
+  --orange-terre-battue-950: #fee9e5;
+  --brown-cafe-creme-950: #f7ecdb;
+  --brown-caramel-950: #f7ebe5;
+  --brown-opera-950: #f7ece4;
+  --beige-gris-galet-950: #f3ede5;
+  --green-tilleul-verveine-925: #fbe769;
+  --green-bourgeon-925: #a9fb68;
+  --green-emeraude-925: #9ef9be;
+  --green-menthe-925: #8bf8e7;
+  --green-archipel-925: #a6f2fa;
+  --blue-ecume-925: #dee5fd;
+  --blue-cumulus-925: #dae6fd;
+  --purple-glycine-925: #fddbfa;
+  --pink-macaron-925: #fddfda;
+  --pink-tuile-925: #fddfdb;
+  --yellow-tournesol-925: #fde39c;
+  --yellow-moutarde-925: #fde2b5;
+  --orange-terre-battue-925: #fddfd8;
+  --brown-cafe-creme-925: #f4e3c7;
+  --brown-caramel-925: #f3e2d9;
+  --brown-opera-925: #f3e2d7;
+  --beige-gris-galet-925: #eee4d9;
+  --green-tilleul-verveine-850: #e2cf58;
+  --green-bourgeon-850: #95e257;
+  --green-emeraude-850: #6fe49d;
+  --green-menthe-850: #73e0cf;
+  --green-archipel-850: #60e0eb;
+  --blue-ecume-850: #bfccfb;
+  --blue-cumulus-850: #b6cffb;
+  --purple-glycine-850: #fbb8f6;
+  --pink-macaron-850: #fcc0b4;
+  --pink-tuile-850: #fcbfb7;
+  --yellow-tournesol-850: #efcb3a;
+  --yellow-moutarde-850: #fcc63a;
+  --orange-terre-battue-850: #fcc0b0;
+  --brown-cafe-creme-850: #e7ca8e;
+  --brown-caramel-850: #eac7b2;
+  --brown-opera-850: #eac7ad;
+  --beige-gris-galet-850: #e0cab0;
+  
+  --scale-1-color: var(--green-tilleul-verveine-main-707);
   --scale-2-color: var(--green-bourgeon-main-640);
   --scale-3-color: var(--green-emeraude-main-632);
   --scale-4-color: var(--green-menthe-main-548);
@@ -127,11 +230,11 @@
   --label-color: var(--text-action-high-grey);
   --evaluated-project-color: #009099; // projets évalués
   --successful-project-color: #233e41; // projets lauréats
-  --successRate-color: #2ba241; // taux de succès
-  --pillar-p1-color: #21AB8E; // pilier 1
-  --pillar-p2-color: #223F3A; // pilier 2
-  --pillar-p3-color: #A558A0; // pilier 3
-  --pillar-p4-color: #E4794A; // pilier 4
+  --successRate-color: #1f8d49; // taux de succès
+  --pillar-p1-color: var(--scale-1-color); // pilier 1
+  --pillar-p2-color: var(--scale-2-color); // pilier 2
+  --pillar-p3-color: var(--scale-3-color); // pilier 3
+  --pillar-p4-color: var(--scale-4-color); // pilier 4
 
   // Programs colors
   --program-horizon_1_1-color: var(--scale-1-color);
