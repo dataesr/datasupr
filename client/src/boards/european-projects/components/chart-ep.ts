@@ -21,7 +21,6 @@ export function CreateChartOptions(
 
   const defaultOptions: HighchartsInstance.Options = {
     chart: {
-      height: 500,
       backgroundColor: "transparent",
     },
     title: { text: "" },
