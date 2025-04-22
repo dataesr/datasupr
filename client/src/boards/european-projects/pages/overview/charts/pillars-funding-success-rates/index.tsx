@@ -7,10 +7,10 @@ import { useGetParams } from "./utils";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 
-export default function DestinationFundingValues() {
+export default function PillarsFundingSuccessRates() {
   const params = useGetParams();
   const { data, isLoading } = useQuery({
-    queryKey: ["destinationFundingValues", params],
+    queryKey: ["PillarsFunding", params],
     queryFn: () => getData(params),
   });
 
@@ -18,7 +18,7 @@ export default function DestinationFundingValues() {
 
   return (
     <ChartWrapper
-      id="destinationFundingValues"
+      id="destinationFundingSuccessRates"
       options={options(data)}
       legend={null}
       renderData={() => null} // TODO: add data table

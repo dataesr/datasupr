@@ -18,5 +18,13 @@
   "select-title":{
     "fr": "Sélectionnez votre vue",
     "en": "Select your view"
+  },
+  "title1-pillars": {
+    "fr": "Financements demandés et obtenus par pilier",
+    "en": "Funding requested and obtained by pillar"
+  },
+  "title2-pillars": {
+    "fr": "Evolution des demandes de financements demandés et obtenus par pilier",
+    "en": "Evolution of funding requests and obtained by pillar"
   }
 }

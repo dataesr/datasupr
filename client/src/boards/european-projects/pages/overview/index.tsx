@@ -1,19 +1,21 @@
-import { Container, Row, Col } from "@dataesr/dsfr-plus";
+import { Container, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import FundedObjectives from "./charts/funded-objectives";
 // import SynthesisFocus from "./charts/synthesis-focus";
 // import MainBeneficiaries from "./charts/main-beneficiaries";
 // import MainPartners from "./charts/main-partners";
-import DestinationFunding from "./charts/destination-funding";
-import DestinationFundingSuccessRates from "./charts/destination-funding-success-rates";
-import DestinationFundingProportion from "./charts/destination-funding-proportion";
+
 import PillarsFundingEvo3Years from "./charts/pillars-funding-evo-3-years";
 import ProgramsFundingEvo3Years from "./charts/programs-funding-evo-3-years";
 
 import i18n from "./i18n.json";
 import TopicsFundingEvo3Years from "./charts/topics-funding-evo-3-years";
 import DestinationsFundingEvo3Years from "./charts/destinations-funding-evo-3-years";
+import DestinationsFunding from "./components/destinations-funding";
+import PillarsFunding from "./components/pillars-funding";
+import ProgramsFunding from "./components/programs-funding";
+import TopicsFunding from "./components/topics-funding";
 
 export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -49,31 +51,33 @@ export default function Overview() {
         <option value="destinations">{getI18nLabel("destinations")}</option>
       </select>
 
-      {selectView === "pillars" ? (
-        <Row>
-          <Col>
-            <PillarsFundingEvo3Years />
-          </Col>
-        </Row>
-      ) : selectView === "programs" ? (
-        <ProgramsFundingEvo3Years />
-      ) : selectView === "topics" ? (
-        <TopicsFundingEvo3Years />
-      ) : (
+      {selectView === "pillars" && (
         <>
-          <Row gutters>
-            <Col>
-              <DestinationFunding />
-            </Col>
-            <Col>
-              <DestinationFundingSuccessRates />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <DestinationFundingProportion />
-            </Col>
-          </Row>
+          <Title as="h2" className="fr-my-5w">
+            {getI18nLabel("title1-pillars")}
+          </Title>
+          <PillarsFunding />
+          <Title as="h2" className="fr-my-5w">
+            {getI18nLabel("title2-pillars")}
+          </Title>
+          <PillarsFundingEvo3Years />
+        </>
+      )}
+      {selectView === "programs" && (
+        <>
+          <ProgramsFunding />
+          <ProgramsFundingEvo3Years />
+        </>
+      )}
+      {selectView === "topics" && (
+        <>
+          <TopicsFunding />
+          <TopicsFundingEvo3Years />
+        </>
+      )}
+      {selectView === "destinations" && (
+        <>
+          <DestinationsFunding />
           <DestinationsFundingEvo3Years />
         </>
       )}

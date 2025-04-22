@@ -1,6 +1,42 @@
 [
   {
-    "id": "destinationFunding",
+    "id": "pillarsFundingValues",
+    "title": {
+      "en": "Funding (M€)",
+      "fr": "Financements (M€)"
+    },
+    "description": {
+      "fr": "Financements demandés et obtenus (M€)",
+      "en": "Funding requested and obtained (M€)"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding"
+  },
+  {
+    "id": "pillarsFundingSuccessRates",
+    "title": {
+      "fr": "Taux de succès",
+      "en": "Success rate"
+    },
+    "description": {
+      "en": "Success rate on the amounts requested and obtained",
+      "fr": "Taux de succès sur les montants demandés et obtenus"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates"
+  },
+  {
+    "id": "pillarsFundingProportion",
+    "title": {
+      "fr": "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
+      "en": "Funding requested and obtained by the country on all countries"
+    },
+    "description": {
+      "fr": "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
+      "en": "Funding requested and obtained by the country on all countries"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion"
+  },
+  {
+    "id": "destinationFundingValues",
     "title": {
       "en": "Funding (M€)",
       "fr": "Financements (M€)"
