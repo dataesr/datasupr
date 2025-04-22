@@ -16,14 +16,14 @@ import { useState } from "react";
 import i18n from "./i18n.json";
 import { normalizeIdForCssColorNames } from "../../../../utils";
 
-export default function ProgramsFundingEvo3Years() {
+export default function TopicsFundingEvo3Years() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const params = getDefaultParams(searchParams);
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["ProgramsFundingEvo3Years", params],
+    queryKey: ["TopicsFundingEvo3Years", params],
     queryFn: () => GetData(params),
   });
 
@@ -43,23 +43,29 @@ export default function ProgramsFundingEvo3Years() {
     const rootStyles = getComputedStyle(document.documentElement);
     return (
       <fieldset>
-        <legend>Légende</legend>
+        <legend>{getI18nLabel("legend")}</legend>
         <div className="legend">
           <ul>
             {data
               .find((item) => item.country !== "all")
-              .data[0].programs.map((item) => (
-                <li key={item.programme_code}>
+              .data[0].topics.map((item) => (
+                <li key={item.thema_code}>
                   <div
                     style={{
                       background: rootStyles.getPropertyValue(
-                        `--program-${normalizeIdForCssColorNames(
-                          item.programme_code
+                        `--topic-${normalizeIdForCssColorNames(
+                          item.thema_code
                         )}-color`
                       ),
                     }}
                   />
-                  <span>{item[`programme_name_${currentLang}`]}</span>
+                  <span>
+                    {item[`thema_name_${currentLang}`]}
+                    {"     "}
+                    {`--topic-${normalizeIdForCssColorNames(
+                      item.thema_code
+                    )}-color`}
+                  </span>
                 </li>
               ))}
           </ul>
@@ -91,7 +97,7 @@ export default function ProgramsFundingEvo3Years() {
       <Row>
         <Col md={6}>
           <ChartWrapper
-            id="programsEvolutionFundingLines"
+            id="topicsEvolutionFundingLines"
             options={optionsSubsidiesValues(data, displayType)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}
@@ -99,7 +105,7 @@ export default function ProgramsFundingEvo3Years() {
         </Col>
         <Col>
           <ChartWrapper
-            id="programsEvolutionFundingLinesRates"
+            id="topicsEvolutionFundingLinesRates"
             options={optionsSubsidiesRates(data, displayType)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}
@@ -114,7 +120,7 @@ export default function ProgramsFundingEvo3Years() {
       <Row>
         <Col>
           <ChartWrapper
-            id="programsEvolutionFundingLinesSuccessRate"
+            id="topicsEvolutionFundingLinesSuccessRate"
             options={optionsSubsidiesCountryRates(data, displayType)}
             legend={null}
             renderData={RenderDataSubsidiesValuesAndRates}

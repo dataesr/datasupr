@@ -531,8 +531,6 @@ router
     delete filters.thema_code
     delete filters.destination_code
 
-    console.log(filters);
-    
     const query = () => {
       return db
       .collection("fr-esr-all-projects-synthese")
@@ -600,6 +598,113 @@ router
             _id: 0,
             stage: "$_id",
             programs: 1
+          }
+        }
+      ])
+      .toArray();
+    }
+
+    const data_country = await query();
+    delete filters.country_code;
+    const data_all = await query();
+
+    return res.json([
+      {
+        country: req.query.country_code,
+        data: data_country,
+      },
+      { country: "all", data: data_all },
+    ]);
+  });
+
+router
+  .route(
+    "/european-projects/overview/topics-funding-evo-3-years"
+  )
+  .get(async (req, res) => {
+    const filters = checkQuery(req.query, ["country_code"], res);
+    
+    // cas de plusieurs thématiques passées en paramètre
+    if (req.query.thema_code?.split("|").length > 1) {
+      filters.thema_code = { $in: req.query.thema_code.split("|") };
+    } else if (req.query.thema_code?.split("|").length === 1) {
+      filters.thema_code = req.query.thema_code;
+    }
+
+    const rangeOfYears = ["2021", "2022", "2023"];
+    filters.call_year = { $in: rangeOfYears };
+
+    delete filters.pilier_code
+    delete filters.programme_code
+    delete filters.destination_code
+    
+    const query = () => {
+      return db
+      .collection("fr-esr-all-projects-synthese")
+      .aggregate([
+        {
+          $match: { $and: [filters] },
+        },
+        {
+          $group: {
+            _id: {
+              stage: "$stage",
+              thema_code: "$thema_code",
+              thema_name_fr: "$thema_name_fr",
+              thema_name_en: "$thema_name_en",
+              call_year: "$call_year",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+            total_coordination_number: { $sum: "$coordination_number" },
+            total_number_involved: { $sum: "$number_involved" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              stage: "$_id.stage",
+              thema_code: "$_id.thema_code",
+              thema_name_fr: "$_id.thema_name_fr",
+              thema_name_en: "$_id.thema_name_en"
+            },
+            years: {
+              $push: {
+                year: "$_id.call_year",
+                total_fund_eur: "$total_fund_eur",
+                total_coordination_number: "$total_coordination_number",
+                total_number_involved: "$total_number_involved"
+              }
+            }
+          }
+        },
+        {
+          $addFields: {
+            years: {
+              $sortArray: {
+                input: "$years",
+                sortBy: { year: 1 }
+              }
+            }
+          }
+        },
+        {
+          $group: {
+            _id: "$_id.stage",
+            topics: {
+              $push: {
+                thema_code: "$_id.thema_code",
+                thema_name_fr: "$_id.thema_name_fr", 
+                thema_name_en: "$_id.thema_name_en",
+                years: "$years"
+              }
+            }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            stage: "$_id",
+            topics: 1
           }
         }
       ])

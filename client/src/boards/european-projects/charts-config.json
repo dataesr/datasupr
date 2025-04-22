@@ -294,6 +294,47 @@
     "subtitle": "",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
   },
+
+{
+    "id": "topicsEvolutionFundingLines",
+    "title": {
+      "fr": "Thématiques - Evolution des financements demandés et obtenus (M€)",
+      "en": "Topics - Financing applied for and obtained (€m)"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "topicsEvolutionFundingLinesRates",
+    "title": {
+      "fr": "Thématiques - Evolution du taux de succès des financements demandés et obtenus",
+      "en": "Topics - Trend in the success rate of financing applications and grants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+    {
+    "id": "topicsEvolutionFundingLinesSuccessRate",
+    "title": {
+      "fr": "Thématiques - Part des financements du pays demandés et obtenus par rapport au total des participants",
+      "en": "Topics - Percentage of country funding applied for and obtained as a proportion of total participants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+
   {
     "id": "pillarsProjectCoordinationRequestedByProjectsLines",
     "title": "Nombre de coordinatioons de projets évalués et lauréats",
