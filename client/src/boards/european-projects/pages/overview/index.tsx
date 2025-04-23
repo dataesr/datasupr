@@ -65,19 +65,37 @@ export default function Overview() {
       )}
       {selectView === "programs" && (
         <>
+          <Title as="h2" className="fr-my-5w">
+            {getI18nLabel("title1-programs")}
+          </Title>
           <ProgramsFunding />
+          <Title as="h2" className="fr-my-5w">
+            {getI18nLabel("title2-programs")}
+          </Title>
           <ProgramsFundingEvo3Years />
         </>
       )}
       {selectView === "topics" && (
         <>
+          <Title as="h2" className="fr-my-5w">
+            {getI18nLabel("title1-topics")}
+          </Title>
           <TopicsFunding />
+          <Title as="h2" className="fr-my-5w">
+            {getI18nLabel("title2-topics")}
+          </Title>
           <TopicsFundingEvo3Years />
         </>
       )}
       {selectView === "destinations" && (
         <>
+          <Title as="h2" className="fr-my-5w">
+            {getI18nLabel("title1-destinations")}
+          </Title>
           <DestinationsFunding />
+          <Title as="h2" className="fr-my-5w">
+            {getI18nLabel("title2-destinations")}
+          </Title>
           <DestinationsFundingEvo3Years />
         </>
       )}
