@@ -1,0 +1,1 @@
+GET http://localhost:3000/api/european-projects/overview/topics-funding?country_code=FRA&topics=ACCESS|TALENTS|ERA-OTHER|WIDENING-OTHER|COST|EURATOM|PRIZE|ERA

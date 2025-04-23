@@ -40,8 +40,8 @@ export default function Options(data) {
         name: "Taux de succès",
         color: rootStyles.getPropertyValue("--successRate-color"),
         groupPadding: 0,
-        data: data.successRateByProgram.map((item) => [
-          item.program,
+        data: data.successRateByTopic.map((item) => [
+          item.topic,
           item.successRate,
         ]),
         dataLabels: {

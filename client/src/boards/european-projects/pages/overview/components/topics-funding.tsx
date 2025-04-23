@@ -1,25 +1,22 @@
 import { Col, Row } from "@dataesr/dsfr-plus";
-// import DestinationFundingValues from "../charts/destination-funding";
-// import DestinationFundingSuccessRates from "../charts/destination-funding-success-rates";
-// import DestinationFundingProportion from "../charts/destination-funding-proportion";
+import TopicsFundingValues from "../charts/topics-funding";
+import TopicsFundingSuccessRates from "../charts/topics-funding-success-rates";
+import TopicsFundingProportion from "../charts/topics-funding-proportion";
 
 export default function TopicsFunding() {
   return (
     <>
       <Row gutters>
         <Col>
-          {/* <DestinationFundingValues /> */}
-          graph1
+          <TopicsFundingValues />
         </Col>
         <Col>
-          {/* <DestinationFundingSuccessRates /> */}
-          graph2
+          <TopicsFundingSuccessRates />
         </Col>
       </Row>
       <Row>
         <Col>
-          {/* <DestinationFundingProportion /> */}
-          graph3
+          <TopicsFundingProportion />
         </Col>
       </Row>
     </>
