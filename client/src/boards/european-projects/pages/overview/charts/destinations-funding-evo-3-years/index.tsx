@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import { GetData } from "./query";
 import optionsSubsidiesValues from "./options-values";
@@ -23,7 +24,11 @@ export default function DestinationsFundingEvo3Years() {
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["DestinationsFundingEvo3Years", params],
+    queryKey: [
+      "DestinationsFundingEvo3Years",
+      params,
+      Cookies.get("selectedDestinations"),
+    ],
     queryFn: () => GetData(params),
   });
 
