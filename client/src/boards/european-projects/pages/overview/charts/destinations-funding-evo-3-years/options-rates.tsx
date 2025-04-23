@@ -2,6 +2,7 @@ import { normalizeIdForCssColorNames } from "../../../../utils";
 
 export default function Options(data, displayType) {
   if (!data) return null;
+
   const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
 
