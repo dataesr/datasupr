@@ -580,7 +580,7 @@ router
     // cas de plusieurs piliers passés en paramètre
     if (req.query.pilier_code?.split("|").length > 1) {
       filters.pilier_code = { $in: req.query.pilier_code.split("|") };
-    } else if (req.query.pilier_code?.length ===1) {
+    } else if (req.query.pilier_code?.split("|").length === 1) {
       filters.pilier_code = req.query.pilier_code;
     } else {
       filters.pilier_code = { $in: ["p1", "p2", "p3", "p4"] };
