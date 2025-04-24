@@ -67,8 +67,8 @@ export function FacultyMembers() {
               className="fr-artwork"
               aria-hidden="true"
               viewBox="0 0 80 80"
-              width="100px"
-              height="100px"
+              width="200px"
+              height="200px"
             >
               <use
                 className="fr-artwork-decorative"
@@ -96,8 +96,8 @@ export function FacultyMembers() {
               className="fr-artwork"
               aria-hidden="true"
               viewBox="0 0 80 80"
-              width="100px"
-              height="100px"
+              width="200px"
+              height="200px"
             >
               <use
                 className="fr-artwork-decorative"
@@ -127,8 +127,8 @@ export function FacultyMembers() {
               className="fr-artwork"
               aria-hidden="true"
               viewBox="0 0 80 80"
-              width="100px"
-              height="100px"
+              width="200px"
+              height="200px"
             >
               <use
                 className="fr-artwork-decorative"

@@ -15,90 +15,159 @@ interface OptionsProps {
   selectedYear: string;
 }
 
-export default function OptionsTreemap({
+export default function OptionsColumnChart({
   fieldsData,
   selectedYear,
 }: OptionsProps): HighchartsInstance.Options | null {
   if (!fieldsData || fieldsData.length === 0) return null;
 
-  // Filtrer les données pour l'année sélectionnée
   const yearData = fieldsData.filter((field) => field.year === selectedYear);
-
   if (yearData.length === 0) return null;
 
-  // Transformer les données pour le treemap
-  const treemapData = yearData.map((field) => ({
+  const sortedData = [...yearData].sort((a, b) => b.totalCount - a.totalCount);
+  const limitedData = sortedData.slice(0, 7);
+
+  const categories = limitedData.map((field) => field.fieldLabel);
+
+  const colors = [
+    "#000091",
+    "#e18b00",
+    "#6a6af4",
+    "#e1000f",
+    "#009099",
+    "#8585f6",
+    "#666666",
+  ];
+
+  const data = limitedData.map((field, index) => ({
     name: field.fieldLabel,
-    value: field.totalCount, // Utiliser le total (hommes + femmes)
-    color: getColorForField(field.fieldId), // Fonction pour avoir une couleur par discipline
-    // Ajouter des informations supplémentaires pour le tooltip
+    y: field.totalCount,
+    color: colors[index % colors.length],
     customData: {
-      maleCount: field.maleCount,
       femaleCount: field.femaleCount,
-      totalCount: field.totalCount,
-      fieldId: field.fieldId,
+      maleCount: field.maleCount,
+      femalePercentage: Math.round(
+        (field.femaleCount / field.totalCount) * 100
+      ),
+      malePercentage: Math.round((field.maleCount / field.totalCount) * 100),
     },
   }));
 
-  const newOptions: HighchartsInstance.Options = {
+  const options: Highcharts.Options = {
     chart: {
-      type: "treemap",
-      height: "500px", // Plus grand que le pie chart
+      type: "column",
+      height: 450,
+      marginLeft: 0,
+      style: {
+        fontFamily: "Marianne, sans-serif",
+      },
     },
     title: {
       text: "Répartition par disciplines",
-      style: { fontSize: "16px" },
+      style: {
+        color: "#000000",
+        fontSize: "18px",
+        fontWeight: "bold",
+      },
+      align: "left",
+      margin: 20,
     },
     subtitle: {
       text: `Année universitaire ${selectedYear}`,
-      style: { fontSize: "12px" },
+      style: {
+        color: "#666666",
+        fontSize: "14px",
+      },
+      align: "left",
+    },
+    xAxis: {
+      categories,
+      crosshair: true,
+      labels: {
+        style: {
+          color: "#333333",
+          fontSize: "12px",
+        },
+      },
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: "Nombre d'enseignants",
+        style: {
+          color: "#333333",
+          fontSize: "12px",
+        },
+      },
+      labels: {
+        style: {
+          color: "#333333",
+          fontSize: "12px",
+        },
+        formatter() {
+          return Number(this.value) >= 1000
+            ? `${Number(this.value) / 1000}k`
+            : String(this.value);
+        },
+      },
+    },
+    tooltip: {
+      useHTML: true,
+      backgroundColor: "#FFFFFF",
+      borderColor: "#CCCCCC",
+      borderRadius: 8,
+      shadow: true,
+      formatter() {
+        interface CustomPoint extends Highcharts.Point {
+          customData: {
+            femaleCount: number;
+            maleCount: number;
+            femalePercentage: number;
+            malePercentage: number;
+          };
+        }
+        const p = this.point as CustomPoint;
+        return `
+          <div style="padding:10px">
+            <strong style="font-size:15px;">${p.name}</strong>
+            <div style="margin:8px 0; font-size:16px; font-weight:bold;">
+              ${p.y !== undefined ? p.y.toLocaleString() : 0} enseignants
+            </div>
+            <div style="margin-top:5px; color:#e1000f;">
+              Femmes: ${p.customData.femalePercentage}% (${
+          p.customData.femaleCount
+        })
+            </div>
+            <div style="margin-top:3px; color:#000091;">
+              Hommes: ${p.customData.malePercentage}% (${
+          p.customData.maleCount
+        })
+            </div>
+          </div>
+        `;
+      },
+    },
+    plotOptions: {
+      column: {
+        borderRadius: 4,
+        borderWidth: 0,
+      },
+    },
+    series: [
+      {
+        name: "Enseignants",
+        type: "column",
+        data,
+        colorByPoint: true,
+      },
+    ],
+    legend: {
+      enabled: false,
     },
     credits: {
       enabled: false,
     },
-    tooltip: {
-      pointFormat:
-        "<b>{point.name}</b>: {point.value} personnes<br>" +
-        "Hommes: {point.customData.maleCount} ({point.customData.maleCount/point.value:.1%})<br>" +
-        "Femmes: {point.customData.femaleCount} ({point.customData.femaleCount/point.value:.1%})",
-    },
-    series: [
-      {
-        type: "treemap",
-        layoutAlgorithm: "squarified",
-        data: treemapData,
-        dataLabels: {
-          enabled: true,
-          format: "{point.name}<br>{point.value}",
-          style: {
-            fontSize: "12px",
-            textOutline: "none",
-          },
-        },
-      },
-    ],
-    colorAxis: {
-      minColor: "#FFFFFF",
-      maxColor: "#1570AF", // Bleu DSFR
-    },
   };
 
-  return CreateChartOptions("treemap", newOptions);
-}
-
-// Fonction pour attribuer une couleur cohérente à chaque discipline
-function getColorForField(fieldId: string): string {
-  // Couleurs du DSFR ou palette adaptée
-  const colorMap: Record<string, string> = {
-    "1D": "#000091", // Droit - bleu france
-    "2L": "#E4794A", // Lettres - orange
-    "3S": "#169B62", // Sciences - vert menthe
-    "4P": "#9C8AEF", // Pharmacie - violet
-    "5M": "#CE614A", // Médecine - rouge
-    "6O": "#A558A0", // Odontologie - violet clair
-    "7G": "#8585F6", // Grands établissements - bleu clair
-    "9X": "#929292", // Non spécifiée - gris
-  };
-
-  return colorMap[fieldId] || "#006A9E"; // Bleu par défaut si non trouvé
+  return CreateChartOptions("column", options);
 }

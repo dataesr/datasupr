@@ -40,9 +40,10 @@ const GenderByDiscipline: React.FC<GenderByDisciplineProps> = ({
     chart: {
       type: "bar",
       height: 400,
+      marginBottom: 0,
     },
     title: {
-      text: "Répartition hommes/femmes par discipline",
+      text: "",
       style: { fontSize: "16px" },
     },
     xAxis: {
@@ -50,6 +51,16 @@ const GenderByDiscipline: React.FC<GenderByDisciplineProps> = ({
       title: {
         text: null,
       },
+      labels: {
+        style: {
+          color: "#000000", // Noir pour assurer la visibilité en mode clair
+          fontWeight: "600", // Gras pour meilleure lisibilité
+          fontSize: "13px",
+          textOutline: "1px contrast", // Contour adaptatif pour les deux modes
+        },
+      },
+      lineWidth: 0,
+      tickWidth: 0,
     },
     yAxis: {
       min: 0,
@@ -59,14 +70,21 @@ const GenderByDiscipline: React.FC<GenderByDisciplineProps> = ({
       },
       labels: {
         overflow: "justify",
+        style: {
+          color: "#333333", // Couleur lisible dans les deux modes
+        },
       },
       stackLabels: {
         enabled: true,
         format: "{total}",
         style: {
           fontWeight: "bold",
+          color: "#333333",
+          textOutline: "1px white",
         },
       },
+      gridLineWidth: 0.5,
+      gridLineColor: "rgba(128, 128, 128, 0.2)",
     },
     tooltip: {
       formatter: function () {

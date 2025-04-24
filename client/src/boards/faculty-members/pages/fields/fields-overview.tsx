@@ -5,7 +5,6 @@ import {
   Title,
   Breadcrumb,
   Link,
-  Text,
 } from "@dataesr/dsfr-plus";
 import { useState, useEffect, useMemo } from "react";
 import YearSelector from "../../filters";
@@ -13,8 +12,9 @@ import useFacultyMembersByFields from "./api/use-by-fields";
 import FieldsDistributionTreemap from "./charts/general/general";
 import GenderByDiscipline from "./charts/gender/gender";
 import { CNUGroup, CNUSection } from "../../types";
-import CnuGroupsTable from "./table/cnu-group-table";
-import CnuSectionsTable from "./table/cnu-section-table";
+import DisciplineStatsSidebar from "./components/sidebar";
+import FieldCardsGrid from "./components/fields-cards";
+import CnuGroupsChart from "./components/cnu-chart";
 
 export default function FieldOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
@@ -31,7 +31,7 @@ export default function FieldOverview() {
     isError,
     error,
   } = useFacultyMembersByFields(selectedYear);
-
+  console.log(fieldData);
   useEffect(() => {
     if (allFieldsData?.length) {
       const uniqueYears = Array.from(
@@ -64,7 +64,7 @@ export default function FieldOverview() {
     }
   }, [allFieldsData, selectedYear]);
 
-  const { cnuGroups, cnuSections } = useMemo(() => {
+  const { cnuGroups } = useMemo(() => {
     if (!fieldData?.length || !selectedYear) {
       return { cnuGroups: [], cnuSections: [] };
     }
@@ -198,7 +198,7 @@ export default function FieldOverview() {
           <Breadcrumb className="fr-m-0 fr-mt-1w">
             <Link href="/personnel-enseignant">Personnel enseignant</Link>
             <Link>
-              <strong>Vue Grandes disciplines</strong>
+              <strong>Les Grandes disciplines</strong>
             </Link>
           </Breadcrumb>
         </Col>
@@ -212,42 +212,12 @@ export default function FieldOverview() {
           )}
         </Col>
       </Row>
+      <Title as="h4" look="h5" className="fr-mb-3w fr-mt-3w">
+        Explorer par grande discipline
+      </Title>
       <Row gutters className="fr-mt-5w">
-        <Col>
-          <Title as="h4" look="h5" className="fr-mb-3w">
-            Explorer par grande discipline
-          </Title>
-
-          <div className="disciplines-grid">
-            {availableFields.map((field) => (
-              <Link
-                key={field.fieldId}
-                href={`/personnel-enseignant/discipline/vue-d'ensemble/${field.fieldId}`}
-                className="discipline-card"
-              >
-                <div className="discipline-content">
-                  <span className="discipline-name">{field.fieldLabel}</span>
-                  <span className="discipline-id">{field.fieldId}</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </Col>
-      </Row>
-      <Row gutters>
-        <Col md={2}>
-          <Text className="fr-mt-1w">
-            Cette page présente la répartition des personnels enseignants par
-            discipline. Les données permettent d'analyser la distribution par
-            genre et par champ disciplinaire universitaire.
-          </Text>
-        </Col>
-        <Col md={10} style={{ textAlign: "center" }}>
+        <Col md={8}>
           <GenderByDiscipline disciplinesData={disciplinesData} />
-        </Col>
-      </Row>
-      <Row>
-        <Col md={12} style={{ textAlign: "center" }}>
           {fieldData && selectedYear && (
             <FieldsDistributionTreemap
               fieldsData={fieldData}
@@ -255,15 +225,20 @@ export default function FieldOverview() {
             />
           )}
         </Col>
+        <DisciplineStatsSidebar disciplinesData={disciplinesData} />
       </Row>
+
       <Row className="fr-mt-5w">
         <Col>
-          <CnuGroupsTable cnuGroups={cnuGroups} />
+          <CnuGroupsChart cnuGroups={cnuGroups} />
         </Col>
       </Row>
       <Row className="fr-mt-5w fr-mb-5w">
         <Col>
-          <CnuSectionsTable cnuSections={cnuSections} maxDisplay={30} />
+          <Title as="h3" look="h6">
+            Voir d'autres grandes disciplines
+          </Title>
+          <FieldCardsGrid fields={availableFields} />
         </Col>
       </Row>
     </Container>
