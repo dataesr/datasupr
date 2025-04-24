@@ -1,4 +1,5 @@
-import { SideMenu, Link, Badge, Tabs, Tab } from "@dataesr/dsfr-plus";
+import { useState } from "react";
+import { SideMenu, Link, Badge, Tabs, Tab, Button } from "@dataesr/dsfr-plus";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
@@ -56,6 +57,7 @@ export default function CustomSideMenu() {
     (selectedDestinations?.split("|") || []).length;
 
   const FilterItem = ({ filterKey }) => {
+    const [showAll, setShowAll] = useState(false);
     if (!filterKey) return null;
     let sellected: string = "";
     let all: Array<{ id: string; label_fr: string; label_en: string }> = [];
@@ -81,6 +83,10 @@ export default function CustomSideMenu() {
       numberOf = numberOfDestinations;
     }
 
+    const items = sellected?.split("|") || [];
+    const displayedItems = showAll ? items : items.slice(0, 10);
+    const hasMore = items.length > 10;
+
     return (
       <div>
         <span>
@@ -88,12 +94,12 @@ export default function CustomSideMenu() {
             <u>{getI18nLabel(`${filterKey}`)}</u>
           </strong>
           <Badge className="fr-ml-1w" color="blue-cumulus" size="sm">
-            {(sellected?.split("|") || []).length}/{numberOf}
+            {items.length}/{numberOf}
           </Badge>
         </span>
         <span>
           <ul style={{ listStyle: "initial", paddingLeft: "15px" }}>
-            {sellected?.split("|")?.map((pillarId) => (
+            {displayedItems.map((pillarId) => (
               <li key={pillarId}>
                 {
                   all?.find((el) => el.id === pillarId)?.[
@@ -103,6 +109,19 @@ export default function CustomSideMenu() {
               </li>
             ))}
           </ul>
+          {hasMore && (
+            <Button
+              onClick={() => setShowAll(!showAll)}
+              size="sm"
+              variant="tertiary"
+            >
+              {showAll
+                ? getI18nLabel("show-less")
+                : `${getI18nLabel("show")} ${items.length - 10} ${getI18nLabel(
+                    "others"
+                  )}`}
+            </Button>
+          )}
         </span>
       </div>
     );

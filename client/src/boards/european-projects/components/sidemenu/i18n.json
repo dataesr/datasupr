@@ -42,5 +42,17 @@
   "thematics": {
     "fr": "Thématiques",
     "en": "Topics"
+  },
+  "show-less": {
+    "fr": "Voir moins",
+    "en": "Show less"
+  },
+  "show": {
+    "fr": "Voir les",
+    "en": "Show the"
+  },
+  "others": {
+    "fr": "autres",
+    "en": "others"
   }
 }
