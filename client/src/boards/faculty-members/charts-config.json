@@ -49,5 +49,9 @@
   {
     "id": "establishment-type-chart",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "age-distribution-chart",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
   }
 ]

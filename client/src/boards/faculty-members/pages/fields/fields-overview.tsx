@@ -20,6 +20,8 @@ import DisciplineStatusSummary from "./components/fields-by-status";
 import StatusDistribution from "./charts/status/status";
 import { EstablishmentTypeChart } from "./charts/establishment-type/establishment";
 import useFacultyMembersByEstablishmentType from "./api/use-by-univ";
+import useFacultyMembersAgeDistribution from "./api/use-by-age";
+import { AgeDistributionPieChart } from "./charts/age/age";
 
 export default function FieldOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
@@ -36,7 +38,6 @@ export default function FieldOverview() {
     isError,
     error,
   } = useFacultyMembersByFields(selectedYear);
-
   const {
     data: statusData,
     isLoading: statusLoading,
@@ -45,6 +46,9 @@ export default function FieldOverview() {
 
   const { data: establishmentData, isLoading: establishmentLoading } =
     useFacultyMembersByEstablishmentType(selectedYear);
+
+  const { data: ageDistributionData, isLoading: ageDistributionLoading } =
+    useFacultyMembersAgeDistribution(selectedYear);
 
   useEffect(() => {
     if (allFieldsData?.length) {
@@ -270,11 +274,15 @@ export default function FieldOverview() {
               year={selectedYear}
             />
           </Col>
-          <Col md={6} className="fr-ml-4w">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
-            Necessitatibus ut molestiae sed obcaecati! Voluptatibus ad, enim
-            consequatur debitis minima nobis, velit voluptas excepturi earum
-            quia recusandae quod veniam nostrum soluta?
+          <Col md={6}>
+            {ageDistributionData && (
+              <AgeDistributionPieChart
+                ageData={ageDistributionData}
+                isLoading={ageDistributionLoading}
+                year={selectedYear}
+                forcedSelectedField={undefined}
+              />
+            )}
           </Col>
         </Row>
       )}
