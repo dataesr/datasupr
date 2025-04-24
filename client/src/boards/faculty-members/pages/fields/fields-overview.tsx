@@ -14,10 +14,12 @@ import GenderByDiscipline from "./charts/gender/gender";
 import { CNUGroup, CNUSection } from "../../types";
 import DisciplineStatsSidebar from "./components/sidebar";
 import FieldCardsGrid from "./components/fields-cards";
-import CnuGroupsChart from "./components/cnu-chart";
+import CnuGroupsChart from "./charts/cnu-group/cnu-chart";
 import useFacultyMembersByStatus from "./api/use-by-status";
 import DisciplineStatusSummary from "./components/fields-by-status";
 import StatusDistribution from "./charts/status/status";
+import { EstablishmentTypeChart } from "./charts/establishment-type/establishment";
+import useFacultyMembersByEstablishmentType from "./api/use-by-univ";
 
 export default function FieldOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
@@ -40,6 +42,9 @@ export default function FieldOverview() {
     isLoading: statusLoading,
     error: statusError,
   } = useFacultyMembersByStatus(selectedYear);
+
+  const { data: establishmentData, isLoading: establishmentLoading } =
+    useFacultyMembersByEstablishmentType(selectedYear);
 
   useEffect(() => {
     if (allFieldsData?.length) {
@@ -255,6 +260,23 @@ export default function FieldOverview() {
             />
           </Col>
         </>
+      )}
+      {establishmentData && selectedYear && (
+        <Row className="fr-mt-4w">
+          <Col md={5}>
+            <EstablishmentTypeChart
+              establishmentData={establishmentData}
+              isLoading={establishmentLoading}
+              year={selectedYear}
+            />
+          </Col>
+          <Col md={6} className="fr-ml-4w">
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+            Necessitatibus ut molestiae sed obcaecati! Voluptatibus ad, enim
+            consequatur debitis minima nobis, velit voluptas excepturi earum
+            quia recusandae quod veniam nostrum soluta?
+          </Col>
+        </Row>
       )}
       <Row className="fr-mt-4w fr-mb-5w">
         <Col>
