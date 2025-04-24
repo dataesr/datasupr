@@ -33,5 +33,21 @@
   {
     "id": "statusDistribution",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "disciplines-treemap",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "discipline-profile-scatter",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "discipline-status-stack",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "establishment-type-chart",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
   }
 ]

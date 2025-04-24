@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { CNUGroup } from "../../../types";
+import { CNUGroup } from "../../../../types";
 
 interface CnuGroupsChartProps {
   cnuGroups: CNUGroup[];
