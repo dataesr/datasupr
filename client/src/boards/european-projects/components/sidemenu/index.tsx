@@ -49,6 +49,12 @@ export default function CustomSideMenu() {
   const selectedDestinations = Cookies.get("selectedDestinations");
   const numberOfDestinations = Cookies.get("numberOfDestinations") || 0;
 
+  const numberOfActiveFilters =
+    (selectedPillars?.split("|") || []).length +
+    (selectedPrograms?.split("|") || []).length +
+    (selectedThematics?.split("|") || []).length +
+    (selectedDestinations?.split("|") || []).length;
+
   const FilterItem = ({ filterKey }) => {
     if (!filterKey) return null;
     let sellected: string = "";
@@ -104,21 +110,6 @@ export default function CustomSideMenu() {
 
   return (
     <Tabs className="fr-mt-1w">
-      <Tab label="Filtres">
-        <div>
-          <span
-            className="fr-icon-arrow-go-back-fill fr-icon--sm"
-            aria-hidden="true"
-          />
-          <Link href="/european-projects/search">{getI18nLabel("back")}</Link>
-        </div>
-        <div className="fr-mt-2w">
-          <FilterItem filterKey="pillars" />
-          <FilterItem filterKey="programs" />
-          <FilterItem filterKey="thematics" />
-          <FilterItem filterKey="destinations" />
-        </div>
-      </Tab>
       <Tab label="Menu">
         <SideMenu title="" sticky fullHeight className="padded-sidemenu">
           <Link
@@ -158,6 +149,23 @@ export default function CustomSideMenu() {
             Evolution
           </Link>
         </SideMenu>
+      </Tab>
+      <Tab
+        label={`${getI18nLabel("active-filters")} (${numberOfActiveFilters})`}
+      >
+        <div>
+          <span
+            className="fr-icon-arrow-go-back-fill fr-icon--sm"
+            aria-hidden="true"
+          />
+          <Link href="/european-projects/search">{getI18nLabel("back")}</Link>
+        </div>
+        <div className="fr-mt-2w">
+          <FilterItem filterKey="pillars" />
+          <FilterItem filterKey="programs" />
+          <FilterItem filterKey="thematics" />
+          <FilterItem filterKey="destinations" />
+        </div>
       </Tab>
     </Tabs>
   );
