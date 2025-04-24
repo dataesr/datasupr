@@ -19,6 +19,8 @@ import CnuSectionsTable from "./table/cnu-section-table";
 import useFacultyMembersByStatus from "./api/use-by-status";
 import DisciplineStatusSummary from "./components/fields-by-status";
 import StatusDistribution from "./charts/status/status";
+import useFacultyMembersAgeDistribution from "./api/use-by-age";
+import { AgeDistributionPieChart } from "./charts/age/age";
 
 export default function SpecificFieldsOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
@@ -44,6 +46,21 @@ export default function SpecificFieldsOverview() {
     isLoading: statusLoading,
     error: statusError,
   } = useFacultyMembersByStatus(selectedYear);
+
+  const { data: ageDistributionData, isLoading: ageDistributionLoading } =
+    useFacultyMembersAgeDistribution(selectedYear);
+
+  const filteredAgeData = useMemo(() => {
+    if (!ageDistributionData || !fieldId) return null;
+
+    const disciplineAgeData = ageDistributionData.find(
+      (item) => item.fieldId === fieldId
+    );
+
+    if (!disciplineAgeData) return null;
+
+    return [disciplineAgeData];
+  }, [ageDistributionData, fieldId]);
 
   const disciplineStatusData = useMemo(() => {
     if (!statusData || statusData.length === 0 || !fieldId) return null;
@@ -317,6 +334,23 @@ export default function SpecificFieldsOverview() {
               ]}
               title={`Répartition par statut : ${specificFieldData?.fieldLabel}`}
             />
+          </Col>
+        </Row>
+      )}
+      {filteredAgeData && filteredAgeData.length > 0 && (
+        <Row gutters className="fr-mt-4w fr-mb-5w">
+          <Col>
+            <div className="fr-card fr-p-3w">
+              <Title as="h3" look="h6" className="fr-mb-2w">
+                Répartition par âge
+              </Title>
+              <AgeDistributionPieChart
+                ageData={filteredAgeData}
+                isLoading={ageDistributionLoading}
+                year={selectedYear}
+                forcedSelectedField={fieldId}
+              />
+            </div>
           </Col>
         </Row>
       )}
