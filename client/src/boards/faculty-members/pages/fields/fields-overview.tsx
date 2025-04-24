@@ -15,6 +15,9 @@ import { CNUGroup, CNUSection } from "../../types";
 import DisciplineStatsSidebar from "./components/sidebar";
 import FieldCardsGrid from "./components/fields-cards";
 import CnuGroupsChart from "./components/cnu-chart";
+import useFacultyMembersByStatus from "./api/use-by-status";
+import DisciplineStatusSummary from "./components/fields-by-status";
+import StatusDistribution from "./charts/status/status";
 
 export default function FieldOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
@@ -31,7 +34,13 @@ export default function FieldOverview() {
     isError,
     error,
   } = useFacultyMembersByFields(selectedYear);
-  console.log(fieldData);
+
+  const {
+    data: statusData,
+    isLoading: statusLoading,
+    error: statusError,
+  } = useFacultyMembersByStatus(selectedYear);
+
   useEffect(() => {
     if (allFieldsData?.length) {
       const uniqueYears = Array.from(
@@ -187,9 +196,10 @@ export default function FieldOverview() {
       .sort((a, b) => b.totalCount - a.totalCount);
   }, [fieldData, selectedYear]);
 
-  const isLoading = allDataLoading || dataLoading;
+  const isLoading = allDataLoading || dataLoading || statusLoading;
   if (isLoading) return <div>Chargement des données...</div>;
   if (isError) return <div>Erreur : {error?.message}</div>;
+  if (statusError) return <div>Erreur : {statusError?.message}</div>;
 
   return (
     <Container as="main">
@@ -215,7 +225,7 @@ export default function FieldOverview() {
       <Title as="h4" look="h5" className="fr-mb-3w fr-mt-3w">
         Explorer par grande discipline
       </Title>
-      <Row gutters className="fr-mt-5w">
+      <Row gutters className="fr-mt-3w">
         <Col md={8}>
           <GenderByDiscipline disciplinesData={disciplinesData} />
           {fieldData && selectedYear && (
@@ -227,13 +237,26 @@ export default function FieldOverview() {
         </Col>
         <DisciplineStatsSidebar disciplinesData={disciplinesData} />
       </Row>
-
       <Row className="fr-mt-5w">
         <Col>
           <CnuGroupsChart cnuGroups={cnuGroups} />
         </Col>
       </Row>
-      <Row className="fr-mt-5w fr-mb-5w">
+      {statusData && statusData.length > 0 && (
+        <>
+          <DisciplineStatusSummary
+            totalCount={statusData[0].total_count ?? 0}
+            aggregatedStats={statusData[0].aggregatedStats}
+            fields={statusData[0].disciplines ?? []}
+          />
+          <Col md={12} style={{ textAlign: "center" }}>
+            <StatusDistribution
+              disciplinesData={statusData[0].disciplines ?? []}
+            />
+          </Col>
+        </>
+      )}
+      <Row className="fr-mt-4w fr-mb-5w">
         <Col>
           <Title as="h3" look="h6">
             Voir d'autres grandes disciplines

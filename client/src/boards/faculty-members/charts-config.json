@@ -29,5 +29,9 @@
   {
     "id": "fieldsDistributionTreemap",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "statusDistribution",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
   }
 ]

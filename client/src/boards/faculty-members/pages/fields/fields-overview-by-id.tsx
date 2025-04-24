@@ -8,7 +8,7 @@ import {
   Badge,
   Text,
 } from "@dataesr/dsfr-plus";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import YearSelector from "../../filters";
 import useFacultyMembersByFields from "./api/use-by-fields";
@@ -16,6 +16,9 @@ import GenderByDiscipline from "./charts/gender/gender";
 import { DisciplineData, FieldData } from "../../types";
 import CnuGroupsTable from "./table/cnu-group-table";
 import CnuSectionsTable from "./table/cnu-section-table";
+import useFacultyMembersByStatus from "./api/use-by-status";
+import DisciplineStatusSummary from "./components/fields-by-status";
+import StatusDistribution from "./charts/status/status";
 
 export default function SpecificFieldsOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
@@ -35,6 +38,54 @@ export default function SpecificFieldsOverview() {
     isError,
     error,
   } = useFacultyMembersByFields(selectedYear);
+
+  const {
+    data: statusData,
+    isLoading: statusLoading,
+    error: statusError,
+  } = useFacultyMembersByStatus(selectedYear);
+
+  const disciplineStatusData = useMemo(() => {
+    if (!statusData || statusData.length === 0 || !fieldId) return null;
+
+    const discipline = statusData[0].disciplines?.find(
+      (d) => d.fieldId === fieldId || d.field_id === fieldId
+    );
+
+    if (!discipline) return null;
+
+    return {
+      totalCount: discipline.totalCount || discipline.total_count || 0,
+      aggregatedStats: {
+        titulairesPercent:
+          discipline.status?.titulaires?.percent ||
+          discipline.titulaires_percent ||
+          0,
+        enseignantsChercheursPercent:
+          discipline.status?.enseignantsChercheurs?.percent ||
+          discipline.enseignants_chercheurs_percent ||
+          0,
+        ecTitulairesPercent:
+          ((discipline.status?.ecTitulaires?.count || 0) /
+            (discipline.totalCount || discipline.total_count || 1)) *
+            100 ||
+          ((discipline.ec_titulaires || 0) /
+            (discipline.totalCount || discipline.total_count || 1)) *
+            100,
+        totalTitulaires:
+          discipline.status?.titulaires?.count || discipline.titulaires || 0,
+        totalEnseignantsChercheurs:
+          discipline.status?.enseignantsChercheurs?.count ||
+          discipline.enseignants_chercheurs ||
+          0,
+        totalEcTitulaires:
+          discipline.status?.ecTitulaires?.count ||
+          discipline.ec_titulaires ||
+          0,
+      },
+      fields: [discipline],
+    };
+  }, [statusData, fieldId]);
 
   useEffect(() => {
     if (
@@ -122,10 +173,11 @@ export default function SpecificFieldsOverview() {
     }
   }, [fieldData, selectedYear]);
 
-  const isLoading = allDataLoading || dataLoading;
+  const isLoading = allDataLoading || dataLoading || statusLoading;
   if (isLoading) return <div>Chargement des données...</div>;
   if (isError) return <div>Erreur : {error?.message}</div>;
-
+  if (statusError)
+    return <div>Erreur de chargement des statuts : {statusError.message}</div>;
   if (!specificFieldData) {
     return (
       <Container as="main">
@@ -140,7 +192,6 @@ export default function SpecificFieldsOverview() {
                 Veuillez vérifier l'identifiant de la discipline ou sélectionner
                 une autre année.
               </p>
-
               {availableYears.length > 0 && (
                 <div className="fr-mt-3w">
                   <p>Années disponibles pour cette discipline:</p>
@@ -234,6 +285,41 @@ export default function SpecificFieldsOverview() {
         champ disciplinaire universitaire.
       </i>
       <Row className="fr-mt-5w fr-mb-5w"></Row>
+      {disciplineStatusData && (
+        <Row gutters className="fr-mt-4w fr-mb-4w">
+          <Col>
+            <div>
+              <Title as="h3" look="h6" className="fr-mb-2w">
+                Répartition par statut
+              </Title>
+              <DisciplineStatusSummary
+                totalCount={disciplineStatusData.totalCount}
+                aggregatedStats={disciplineStatusData.aggregatedStats}
+                fields={disciplineStatusData.fields}
+                isSingleDiscipline={true}
+              />
+            </div>
+            <StatusDistribution
+              disciplinesData={[
+                {
+                  fieldId: fieldId || "",
+                  fieldLabel: specificFieldData?.fieldLabel || "",
+                  totalCount: disciplineStatusData.totalCount,
+                  enseignants_chercheurs:
+                    disciplineStatusData.aggregatedStats
+                      .totalEnseignantsChercheurs,
+                  titulaires:
+                    disciplineStatusData.aggregatedStats.totalTitulaires,
+                  non_titulaires:
+                    disciplineStatusData.totalCount -
+                    disciplineStatusData.aggregatedStats.totalTitulaires,
+                },
+              ]}
+              title={`Répartition par statut : ${specificFieldData?.fieldLabel}`}
+            />
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 }
