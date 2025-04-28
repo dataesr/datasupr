@@ -232,19 +232,38 @@ export default function FieldOverview() {
       <Row gutters className="fr-mt-3w">
         <Col md={8}>
           <GenderByDiscipline disciplinesData={disciplinesData} />
-          {fieldData && selectedYear && (
-            <FieldsDistributionTreemap
-              fieldsData={fieldData}
-              selectedYear={selectedYear}
-            />
+          {selectedYear && (
+            <div className="fr-mt-3w">
+              {ageDistributionData && (
+                <AgeDistributionPieChart
+                  ageData={ageDistributionData}
+                  isLoading={ageDistributionLoading}
+                  year={selectedYear}
+                  forcedSelectedField={undefined}
+                />
+              )}
+            </div>
           )}
         </Col>
         <DisciplineStatsSidebar disciplinesData={disciplinesData} />
       </Row>
+      {fieldData && selectedYear && (
+        <FieldsDistributionTreemap
+          fieldsData={fieldData}
+          selectedYear={selectedYear}
+        />
+      )}
       <Row className="fr-mt-5w">
-        <Col>
+        <Col md={6}>
           <CnuGroupsChart cnuGroups={cnuGroups} />
         </Col>
+        {statusData && statusData.length > 0 && (
+          <Col md={6} style={{ textAlign: "center" }}>
+            <StatusDistribution
+              disciplinesData={statusData[0].disciplines ?? []}
+            />
+          </Col>
+        )}
       </Row>
       {statusData && statusData.length > 0 && (
         <>
@@ -253,27 +272,9 @@ export default function FieldOverview() {
             aggregatedStats={statusData[0].aggregatedStats}
             fields={statusData[0].disciplines ?? []}
           />
-          <Col md={12} style={{ textAlign: "center" }}>
-            <StatusDistribution
-              disciplinesData={statusData[0].disciplines ?? []}
-            />
-          </Col>
         </>
       )}
-      {selectedYear && (
-        <Row className="fr-mt-4w">
-          <Col md={6}>
-            {ageDistributionData && (
-              <AgeDistributionPieChart
-                ageData={ageDistributionData}
-                isLoading={ageDistributionLoading}
-                year={selectedYear}
-                forcedSelectedField={undefined}
-              />
-            )}
-          </Col>
-        </Row>
-      )}
+
       <Row className="fr-mt-4w fr-mb-5w">
         <Col>
           <Title as="h3" look="h6">

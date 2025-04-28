@@ -23,13 +23,12 @@ const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
 
   return (
     <Col md={4}>
-      <div className=" fr-card--no-border">
+      <div className=" fr-card--no-border ">
         <div
-          className="fr-card--shadow fr-mb-2w"
+          className="fr-card--shadow "
           style={{
-            borderTopLeftRadius: "30px",
-            borderBottomRightRadius: "30px",
-            padding: "3px",
+            borderTopLeftRadius: "10px",
+            borderBottomRightRadius: "20px",
           }}
         >
           <div style={{ textAlign: "center" }}>
@@ -45,17 +44,6 @@ const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
           </div>
 
           <div className="fr-mb-3w">
-            <div className="fr-grid-row fr-mb-1w text-center">
-              <div className="fr-col">
-                <span
-                  className="fr-icon-team-line fr-icon--sm fr-mr-1w"
-                  aria-hidden="true"
-                ></span>
-                <span className="fr-text--bold fr-text--sm">
-                  Répartition F/H
-                </span>
-              </div>
-            </div>
             <div className="fr-grid-row fr-mb-1w">
               <div className="fr-col-6">
                 <div
@@ -111,13 +99,13 @@ const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
           </div>
         </div>
         <div className="fr-mb-3w">
-          <div className="fr-grid-row fr-mb-1w text-center">
+          <div className="fr-grid-row fr-mb-1w ">
             <div className="fr-col">
               <span
                 className="fr-icon-award-line fr-icon--sm fr-mr-1w"
                 aria-hidden="true"
               ></span>
-              <span className="fr-text--bold fr-text--sm ">
+              <span className="fr-text--bold  fr-text--sm ">
                 Top 3 des disciplines
               </span>
             </div>
@@ -131,7 +119,7 @@ const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
                 const colors = ["#e9be00", "#c0c0c0", "#cd7f32"];
                 return (
                   <div key={d.fieldId} className="fr-mb-2w">
-                    <div className="fr-grid-row fr-grid-row--middle">
+                    <div className="fr-grid-row fr-grid-row--middle text-center">
                       <div className="fr-col-10">
                         <div
                           className="fr-text--bold"

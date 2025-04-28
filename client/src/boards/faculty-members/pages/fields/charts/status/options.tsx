@@ -130,6 +130,7 @@ export default function StatusOptions({
     chart: {
       type: "column",
       height: 450,
+      marginLeft: 50,
     },
     title: {
       text: title,
@@ -148,7 +149,7 @@ export default function StatusOptions({
     },
     yAxis: {
       min: 0,
-      title: { text: "Effectif" },
+      title: { text: null }, // Supprime le texte sur l'axe Y
       stackLabels: {
         enabled: true,
         format: "{total}",

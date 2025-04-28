@@ -82,69 +82,6 @@ const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
           </div>
         </div>
       </Col>
-
-      {!isSingleDiscipline && (
-        <Col md={7}>
-          <Title as="h2" look="h6">
-            Les 3 plus grandes disciplines
-          </Title>
-          <div className="fr-table fr-table--bordered">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Discipline</th>
-                  <th scope="col">Effectif</th>
-                  <th scope="col">Titulaires</th>
-                  <th scope="col">Ens.-Chercheurs</th>
-                </tr>
-              </thead>
-              <tbody>
-                {fields
-                  .sort((a, b) => (b.totalCount ?? 0) - (a.totalCount ?? 0))
-                  .slice(0, 3)
-                  .map((discipline) => (
-                    <tr key={discipline.fieldId || discipline.field_id}>
-                      <td>{discipline.fieldLabel || discipline.field_label}</td>
-                      <td>
-                        {(
-                          discipline.totalCount ??
-                          discipline.total_count ??
-                          0
-                        ).toLocaleString()}
-                      </td>
-                      <td>
-                        {discipline.status?.titulaires?.percent ||
-                          discipline.titulaires_percent ||
-                          (discipline.titulaires &&
-                            (
-                              (discipline.titulaires /
-                                (discipline.totalCount ??
-                                  discipline.total_count ??
-                                  1)) *
-                              100
-                            ).toFixed(1))}
-                        %
-                      </td>
-                      <td>
-                        {discipline.status?.enseignantsChercheurs?.percent ||
-                          discipline.enseignants_chercheurs_percent ||
-                          (discipline.enseignants_chercheurs &&
-                            (
-                              (discipline.enseignants_chercheurs /
-                                (discipline.totalCount ??
-                                  discipline.total_count ??
-                                  1)) *
-                              100
-                            ).toFixed(1))}
-                        %
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
-          </div>
-        </Col>
-      )}
     </Row>
   );
 };
