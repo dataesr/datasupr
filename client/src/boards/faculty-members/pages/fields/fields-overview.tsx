@@ -18,8 +18,6 @@ import CnuGroupsChart from "./charts/cnu-group/cnu-chart";
 import useFacultyMembersByStatus from "./api/use-by-status";
 import DisciplineStatusSummary from "./components/fields-by-status";
 import StatusDistribution from "./charts/status/status";
-import { EstablishmentTypeChart } from "./charts/establishment-type/establishment";
-import useFacultyMembersByEstablishmentType from "./api/use-by-univ";
 import useFacultyMembersAgeDistribution from "./api/use-by-age";
 import { AgeDistributionPieChart } from "./charts/age/age";
 
@@ -43,9 +41,6 @@ export default function FieldOverview() {
     isLoading: statusLoading,
     error: statusError,
   } = useFacultyMembersByStatus(selectedYear);
-
-  const { data: establishmentData, isLoading: establishmentLoading } =
-    useFacultyMembersByEstablishmentType(selectedYear);
 
   const { data: ageDistributionData, isLoading: ageDistributionLoading } =
     useFacultyMembersAgeDistribution(selectedYear);
@@ -265,15 +260,8 @@ export default function FieldOverview() {
           </Col>
         </>
       )}
-      {establishmentData && selectedYear && (
+      {selectedYear && (
         <Row className="fr-mt-4w">
-          <Col md={5}>
-            <EstablishmentTypeChart
-              establishmentData={establishmentData}
-              isLoading={establishmentLoading}
-              year={selectedYear}
-            />
-          </Col>
           <Col md={6}>
             {ageDistributionData && (
               <AgeDistributionPieChart

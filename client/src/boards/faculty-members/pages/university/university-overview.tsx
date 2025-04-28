@@ -11,6 +11,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import YearSelector from "../../filters";
 import useFacultyMembersByUniversity from "./api/use-by-university";
+import { EstablishmentTypeChart } from "../fields/charts/establishment-type/establishment";
+import useFacultyMembersByEstablishmentType from "../fields/api/use-by-univ";
 
 export default function UniversityOverview() {
   const navigate = useNavigate();
@@ -22,6 +24,9 @@ export default function UniversityOverview() {
     isError,
     error,
   } = useFacultyMembersByUniversity(undefined, selectedYear || undefined);
+
+  const { data: establishmentData, isLoading: establishmentLoading } =
+    useFacultyMembersByEstablishmentType(selectedYear);
 
   const [availableYears, setAvailableYears] = useState<string[]>([]);
   const [universities, setUniversities] = useState<
@@ -201,6 +206,16 @@ export default function UniversityOverview() {
         </Row>
       )}
 
+      <Row className="fr-mt-8w">
+        <Col md={6}>
+          <EstablishmentTypeChart
+            establishmentData={establishmentData}
+            isLoading={establishmentLoading}
+            year={selectedYear}
+          />
+        </Col>
+        <Col></Col>
+      </Row>
       <Row className="fr-mt-8w">
         <Col>
           <Title as="h4" look="h6">
