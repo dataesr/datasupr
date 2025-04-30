@@ -5,6 +5,7 @@ import {
   Title,
   Breadcrumb,
   Link,
+  Text,
 } from "@dataesr/dsfr-plus";
 import { useState, useEffect, useMemo } from "react";
 import YearSelector from "../../filters";
@@ -232,6 +233,28 @@ export default function FieldOverview() {
       <Row gutters className="fr-mt-3w">
         <Col md={8}>
           <GenderByDiscipline disciplinesData={disciplinesData} />
+          <CnuGroupsChart cnuGroups={cnuGroups} />
+        </Col>
+        <Col md={4} style={{ textAlign: "center" }}>
+          <DisciplineStatsSidebar disciplinesData={disciplinesData} />
+          <div className="fr-mt-3w">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, fuga
+            similique? Commodi voluptates aliquam possimus! Dolor rerum sequi
+            ratione inventore alias reiciendis non repellat! Molestias
+            exercitationem provident recusandae aliquid eos.
+          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={8}>
+          {fieldData && selectedYear && (
+            <FieldsDistributionTreemap
+              fieldsData={fieldData}
+              selectedYear={selectedYear}
+            />
+          )}
+        </Col>
+        <Col>
           {selectedYear && (
             <div className="fr-mt-3w">
               {ageDistributionData && (
@@ -245,18 +268,9 @@ export default function FieldOverview() {
             </div>
           )}
         </Col>
-        <DisciplineStatsSidebar disciplinesData={disciplinesData} />
       </Row>
-      {fieldData && selectedYear && (
-        <FieldsDistributionTreemap
-          fieldsData={fieldData}
-          selectedYear={selectedYear}
-        />
-      )}
+
       <Row className="fr-mt-5w">
-        <Col md={6}>
-          <CnuGroupsChart cnuGroups={cnuGroups} />
-        </Col>
         {statusData && statusData.length > 0 && (
           <Col md={6} style={{ textAlign: "center" }}>
             <StatusDistribution
@@ -264,16 +278,18 @@ export default function FieldOverview() {
             />
           </Col>
         )}
+        <Col md={6} style={{ textAlign: "center" }}>
+          {statusData && statusData.length > 0 && (
+            <>
+              <DisciplineStatusSummary
+                totalCount={statusData[0].total_count ?? 0}
+                aggregatedStats={statusData[0].aggregatedStats}
+                fields={statusData[0].disciplines ?? []}
+              />
+            </>
+          )}
+        </Col>
       </Row>
-      {statusData && statusData.length > 0 && (
-        <>
-          <DisciplineStatusSummary
-            totalCount={statusData[0].total_count ?? 0}
-            aggregatedStats={statusData[0].aggregatedStats}
-            fields={statusData[0].disciplines ?? []}
-          />
-        </>
-      )}
 
       <Row className="fr-mt-4w fr-mb-5w">
         <Col>
@@ -281,6 +297,14 @@ export default function FieldOverview() {
             Voir d'autres grandes disciplines
           </Title>
           <FieldCardsGrid fields={availableFields} />
+        </Col>
+        <Col md={6} style={{ textAlign: "center" }}>
+          <Text className="fr-mt-3w">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, fuga
+            similique? Commodi voluptates aliquam possimus! Dolor rerum sequi
+            ratione inventore alias reiciendis non repellat! Molestias
+            exercitationem provident recusandae aliquid eos.
+          </Text>
         </Col>
       </Row>
     </Container>

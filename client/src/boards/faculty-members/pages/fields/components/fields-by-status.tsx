@@ -8,15 +8,14 @@ const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
   isSingleDiscipline = false,
 }) => {
   if (!fields || fields.length === 0) return null;
-
+  console.log(fields);
   const discipline = isSingleDiscipline ? fields[0] : null;
-
   return (
     <Row
       gutters
       className={isSingleDiscipline ? "fr-mb-3w" : "fr-mt-5w fr-mb-3w"}
     >
-      <Col md={isSingleDiscipline ? 12 : 5}>
+      <Col md={isSingleDiscipline ? 12 : undefined}>
         {!isSingleDiscipline && (
           <Title as="h3" look="h4" className="fr-mb-2w">
             Résumé des statuts par discipline
@@ -74,6 +73,30 @@ const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
                     <span className="fr-ml-1w">
                       (
                       {aggregatedStats.totalEnseignantsChercheurs.toLocaleString()}{" "}
+                      pers.)
+                    </span>
+                  )}
+              </div>
+            </div>
+          </div>
+          <div className="fr-grid-row fr-grid-row--middle">
+            <div className="fr-col-6">Non titulaire</div>
+            <div className="fr-col-6">
+              <div className="progress-container">
+                <div
+                  className="progress-bar"
+                  style={{
+                    width: `${aggregatedStats?.nonTitulairesPercent}%`,
+                    backgroundColor: "#6a6a6a",
+                  }}
+                ></div>
+              </div>
+              <div className="fr-text--xs fr-text--grey">
+                {aggregatedStats?.nonTitulairesPercent}%
+                {isSingleDiscipline &&
+                  aggregatedStats?.nonTitulairesPercent && (
+                    <span className="fr-ml-1w">
+                      ({aggregatedStats?.nonTitulairesPercent.toLocaleString()}{" "}
                       pers.)
                     </span>
                   )}
