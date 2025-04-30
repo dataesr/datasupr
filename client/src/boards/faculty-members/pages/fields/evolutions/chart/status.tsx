@@ -1,0 +1,222 @@
+import { useMemo } from "react";
+import ChartWrapper from "../../../../components/chart-wrapper";
+import { CreateChartOptions } from "../../../../components/chart-faculty-members";
+
+interface StatusEvolutionChartProps {
+  evolutionData: {
+    years: string[];
+    globalTrend: {
+      totalCount: number[];
+      femmes_percent: number[];
+      hommes_percent: number[];
+      titulaires_percent: number[];
+      enseignants_chercheurs_percent: number[];
+    };
+    disciplinesTrend: {
+      [key: string]: {
+        fieldId: string;
+        fieldLabel: string;
+        totalCount: number[];
+        femmes_percent: number[];
+        titulaires_percent: number[];
+        enseignants_chercheurs_percent: number[];
+      };
+    };
+  };
+  disciplineId?: string;
+  isLoading: boolean;
+}
+
+export function StatusEvolutionChart({
+  evolutionData,
+  disciplineId,
+  isLoading,
+}: StatusEvolutionChartProps) {
+  const specificFieldData = useMemo(() => {
+    if (!disciplineId || !evolutionData?.disciplinesTrend) return null;
+    return evolutionData.disciplinesTrend[disciplineId] || null;
+  }, [evolutionData, disciplineId]);
+
+  const chartOptions = useMemo(() => {
+    if (
+      !evolutionData ||
+      !evolutionData.years ||
+      evolutionData.years.length === 0
+    ) {
+      return null;
+    }
+
+    const years = evolutionData.years;
+    const isDisciplineSpecific = disciplineId && specificFieldData;
+
+    const totalCountData = isDisciplineSpecific
+      ? specificFieldData.totalCount
+      : evolutionData.globalTrend.totalCount;
+
+    const titulairesPctData = isDisciplineSpecific
+      ? specificFieldData.titulaires_percent
+      : evolutionData.globalTrend.titulaires_percent;
+
+    const ecPctData = isDisciplineSpecific
+      ? specificFieldData.enseignants_chercheurs_percent
+      : evolutionData.globalTrend.enseignants_chercheurs_percent;
+
+    const ecAbsolute = years.map(
+      (_, i) => (totalCountData[i] * ecPctData[i]) / 100
+    );
+
+    const titulairesNonECAbsolute = years.map(
+      (_, i) =>
+        (totalCountData[i] * (titulairesPctData[i] - ecPctData[i])) / 100
+    );
+
+    const nonTitulairesAbsolute = years.map(
+      (_, i) => (totalCountData[i] * (100 - titulairesPctData[i])) / 100
+    );
+
+    const chartTitle = isDisciplineSpecific
+      ? `Évolution des effectifs par statut - ${specificFieldData.fieldLabel}`
+      : "Évolution des effectifs enseignants par statut";
+
+    return CreateChartOptions("area", {
+      chart: {
+        height: 500,
+        type: "area",
+        marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 120,
+      },
+      title: {
+        text: chartTitle,
+        style: { fontSize: "18px", fontWeight: "bold" },
+      },
+      subtitle: {
+        text: `Période de ${years[0] || ""} à ${years[years.length - 1] || ""}`,
+        style: { fontSize: "14px" },
+      },
+      xAxis: {
+        categories: years,
+        title: { text: "Année académique" },
+        labels: { style: { fontSize: "12px" } },
+      },
+      yAxis: {
+        min: 0,
+        margin: 0,
+        title: { text: "Nombre d'enseignants" },
+        labels: {
+          formatter: function () {
+            return this.value.toLocaleString();
+          },
+        },
+        stackLabels: {
+          enabled: true,
+          formatter: function () {
+            return this.total.toLocaleString();
+          },
+          style: {
+            fontWeight: "bold",
+            color: "black",
+            textOutline: "none",
+          },
+        },
+      },
+      tooltip: {
+        shared: false,
+        formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+          if (this.x === undefined || this.y === undefined) return "";
+          return `<b>${this.series.name}</b><br>
+            Année ${this.x}: <b>${
+            this.y?.toLocaleString() || "0"
+          }</b> enseignants`;
+        },
+      },
+      plotOptions: {
+        area: {
+          stacking: "normal",
+          marker: {
+            enabled: true,
+            radius: 3,
+            symbol: "circle",
+            lineWidth: 1,
+          },
+          dataLabels: {
+            enabled: false,
+          },
+          enableMouseTracking: true,
+          fillOpacity: 0.85,
+          states: {
+            hover: {
+              lineWidth: 2,
+              brightness: 0.1,
+              halo: {
+                size: 5,
+                attributes: {
+                  fill: "#ffffff",
+                  opacity: 0.25,
+                },
+              },
+            },
+          },
+        },
+      },
+
+      series: [
+        {
+          name: "Non-titulaires",
+          data: nonTitulairesAbsolute,
+          color: "#69A297",
+          type: "area",
+        },
+        {
+          name: "Titulaires (non EC)",
+          data: titulairesNonECAbsolute,
+          color: "#4B9DFF",
+          type: "area",
+        },
+        {
+          name: "Enseignants-chercheurs",
+          data: ecAbsolute,
+          color: "#000091",
+          type: "area",
+        },
+      ],
+      legend: {
+        enabled: true,
+        align: "center",
+        verticalAlign: "bottom",
+        layout: "horizontal",
+      },
+      credits: { enabled: false },
+    });
+  }, [evolutionData, disciplineId, specificFieldData]);
+
+  if (isLoading) {
+    return (
+      <div className="fr-text--center fr-py-5w">
+        <span
+          className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
+          aria-hidden="true"
+        ></span>
+        <p className="fr-mt-2w">Chargement des données d'évolution...</p>
+      </div>
+    );
+  }
+
+  if (!chartOptions) {
+    return (
+      <div className="fr-alert fr-alert--info fr-my-3w">
+        <p>Aucune donnée d'évolution disponible.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <ChartWrapper
+        id="faculty-status-evolution"
+        options={chartOptions}
+        legend={null}
+      />
+    </div>
+  );
+}

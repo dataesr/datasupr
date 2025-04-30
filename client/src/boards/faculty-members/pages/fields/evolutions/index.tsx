@@ -1,19 +1,73 @@
-import { Container } from "@dataesr/dsfr-plus";
+import { useMemo } from "react";
+import { Container, Row, Col, Title, Breadcrumb } from "@dataesr/dsfr-plus";
 import { useParams } from "react-router-dom";
+import { Link } from "@dataesr/dsfr-plus";
+import useFacultyMembersEvolution from "../api/use-evolution";
+import { EvolutionGlobalChart } from "./chart/trends";
+import { StatusEvolutionChart } from "./chart/status";
+import useFacultyMembersAgeEvolution from "../api/use-age-evolution";
+import { AgeEvolutionChart } from "./chart/age-evolution";
 
 export function FieldsEvolution() {
-  const { id } = useParams<{ id?: string }>();
+  const { fieldId } = useParams<{ fieldId: string }>();
+  const { data: evolutionData, isLoading } = useFacultyMembersEvolution();
+  const { data: ageEvolutionData, isLoading: ageEvolutionLoading } =
+    useFacultyMembersAgeEvolution(fieldId);
+
+  const specificFieldData = useMemo(() => {
+    if (!fieldId || !evolutionData?.disciplinesTrend) return null;
+    return evolutionData.disciplinesTrend[fieldId] || null;
+  }, [evolutionData, fieldId]);
 
   return (
     <Container as="main">
-      <h3 className="fr-mt-5w">Evolution</h3>
-      {id ? (
-        <>
-          <p>Evolution pour la discipline avec l'ID: {id}</p>
-        </>
-      ) : (
-        <p>Evolution pour toutes les disciplines</p>
-      )}
+      <Row>
+        <Col md={12}>
+          <Breadcrumb className="fr-m-0 fr-mt-1w">
+            <Link href="/personnel-enseignant">Personnel enseignant</Link>
+            <Link href="/personnel-enseignant/discipline/vue-d'ensemble/">
+              Vue disciplinaire
+            </Link>
+            <Link>
+              <strong>
+                {specificFieldData?.fieldLabel || "Évolution des effectifs"}
+              </strong>
+            </Link>
+          </Breadcrumb>
+
+          <Title as="h2" look="h4" className="fr-mt-4w fr-mb-3w">
+            {specificFieldData
+              ? `Évolution des effectifs - ${specificFieldData.fieldLabel}`
+              : "Évolution des effectifs enseignants"}
+          </Title>
+        </Col>
+      </Row>
+
+      <Row gutters className="fr-mb-5w">
+        <Col md={6}>
+          <EvolutionGlobalChart
+            evolutionData={evolutionData}
+            disciplineId={fieldId}
+            isLoading={isLoading}
+          />
+        </Col>
+        <Col md={6}>
+          <StatusEvolutionChart
+            evolutionData={evolutionData}
+            disciplineId={fieldId}
+            isLoading={isLoading}
+          />
+        </Col>
+      </Row>
+      <Row gutters className="fr-mb-5w">
+        <Col md={6}>
+          <AgeEvolutionChart
+            ageEvolutionData={ageEvolutionData}
+            disciplineId={fieldId}
+            isLoading={ageEvolutionLoading}
+          />
+        </Col>
+      </Row>
     </Container>
   );
 }

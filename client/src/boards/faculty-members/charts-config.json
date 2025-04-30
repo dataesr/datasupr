@@ -53,5 +53,17 @@
   {
     "id": "age-distribution-chart",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "faculty-count-evolution",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "faculty-status-evolution",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "faculty-age-evolution",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
   }
 ]
