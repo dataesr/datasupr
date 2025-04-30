@@ -22,7 +22,7 @@ const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
   }
 
   return (
-    <Col md={4}>
+    <Col>
       <div className=" fr-card--no-border ">
         <div
           className="fr-card--shadow "

@@ -91,6 +91,11 @@ export default function SpecificFieldsOverview() {
             100,
         totalTitulaires:
           discipline.status?.titulaires?.count || discipline.titulaires || 0,
+        totalNonTitulaires:
+          discipline.status?.nonTitulaires?.count ||
+          discipline.non_titulaires ||
+          0,
+        nonTitulairesPercent: discipline.status?.nonTitulaires?.percent || 0,
         totalEnseignantsChercheurs:
           discipline.status?.enseignantsChercheurs?.count ||
           discipline.enseignants_chercheurs ||
@@ -280,7 +285,7 @@ export default function SpecificFieldsOverview() {
         </Col>
       </Row>
       <Row gutters className="fr-mt-5w">
-        <Col md={12} className="text-center">
+        <Col md={6} className="text-center">
           <CnuGroupsTable cnuGroups={cnuGroups || []} />
         </Col>
         <i>
@@ -290,10 +295,10 @@ export default function SpecificFieldsOverview() {
           groupe CNU. Les données permettent d'analyser la distribution par
           genre et par champ disciplinaire universitaire.
         </i>
+        <Col className="text-center">
+          <CnuSectionsTable cnuSections={cnuSections} maxDisplay={30} />
+        </Col>
       </Row>
-      <Col className="text-center">
-        <CnuSectionsTable cnuSections={cnuSections} maxDisplay={30} />
-      </Col>
       <i>
         <strong>Répartition par section CNU</strong>
         <br />

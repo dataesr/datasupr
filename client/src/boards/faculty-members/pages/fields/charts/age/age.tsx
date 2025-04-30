@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
 import ChartWrapper from "../../../../components/chart-wrapper";
+import { Col } from "@dataesr/dsfr-plus";
 
 interface AgeDistributionData {
   year: string;
@@ -172,26 +173,28 @@ export function AgeDistributionPieChart({
 
   return (
     <div>
-      {!forcedSelectedField && (
-        <div className="fr-select-group fr-mb-3w">
-          <select
-            className="fr-select"
-            id="discipline-select"
-            value={selectedField}
-            onChange={(e) => setSelectedField(e.target.value)}
-          >
-            <option value="all">
-              Toutes les disciplines (
-              {fields.reduce((sum, f) => sum + f.totalCount, 0)} enseignants)
-            </option>
-            {fields.map((field) => (
-              <option key={field.id} value={field.id}>
-                {field.label} ({field.totalCount} enseignants)
+      <Col md={12} className="fr-mb-3w">
+        {!forcedSelectedField && (
+          <div className="fr-select-group fr-mb-3w">
+            <select
+              className="fr-select"
+              id="discipline-select"
+              value={selectedField}
+              onChange={(e) => setSelectedField(e.target.value)}
+            >
+              <option value="all">
+                Toutes les disciplines (
+                {fields.reduce((sum, f) => sum + f.totalCount, 0)} enseignants)
               </option>
-            ))}
-          </select>
-        </div>
-      )}
+              {fields.map((field) => (
+                <option key={field.id} value={field.id}>
+                  {field.label} ({field.totalCount} enseignants)
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </Col>
 
       <ChartWrapper
         id="age-distribution-chart"

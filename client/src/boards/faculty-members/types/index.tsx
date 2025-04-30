@@ -153,6 +153,8 @@ export interface AggregatedStats {
   titulairesPercent: number;
   enseignantsChercheursPercent: number;
   ecTitulairesPercent: number;
+  nonTitulairesPercent: number;
+  totalNonTitulaires: number;
 }
 
 export interface FieldsStatusData {

@@ -133,39 +133,42 @@ export function FieldsTopologie() {
 
   return (
     <Container as="main">
-      <Breadcrumb className="fr-m-0 fr-mt-1w">
-        <Link href="/personnel-enseignant">Personnel enseignant</Link>
-        <Link href="/personnel-enseignant/discipline/vue-d'ensemble/">
-          Vue disciplinaire
-        </Link>
-        <Link>
-          <strong>{specificFieldData.fieldLabel}</strong>
-        </Link>
-      </Breadcrumb>
+      <Row>
+        <Col md={9}>
+          <Breadcrumb className="fr-m-0 fr-mt-1w">
+            <Link href="/personnel-enseignant">Personnel enseignant</Link>
+            <Link href="/personnel-enseignant/discipline/vue-d'ensemble/">
+              Vue disciplinaire
+            </Link>
+            <Link>
+              <strong>{specificFieldData?.fieldLabel}</strong>
+            </Link>
+          </Breadcrumb>
 
-      <Title as="h2" look="h4" className="fr-mt-4w">
-        {pageTitle}
-      </Title>
+          <Title as="h2" look="h4" className="fr-mt-4w">
+            {pageTitle}
+          </Title>
 
-      <p className="fr-text fr-mb-3w">
-        {fieldId
-          ? "Cette visualisation montre la répartition détaillée au sein de cette discipline."
-          : "Cette visualisation montre la répartition des effectifs entre les différentes disciplines. La taille de chaque bloc représente le nombre d'enseignants, et la couleur indique la proportion femmes/hommes."}
-      </p>
-
-      {availableYears.length > 0 && (
-        <div className="fr-mb-3w">
-          <YearSelector
-            years={availableYears}
-            selectedYear={selectedYear}
-            onYearChange={setSelectedYear}
-          />
-        </div>
-      )}
+          <p className="fr-text fr-mb-3w">
+            {fieldId
+              ? "Cette visualisation montre la répartition détaillée au sein de cette discipline."
+              : "Cette visualisation montre la répartition des effectifs entre les différentes disciplines. La taille de chaque bloc représente le nombre d'enseignants, et la couleur indique la proportion femmes/hommes."}
+          </p>
+        </Col>
+        <Col md={3} style={{ textAlign: "right" }}>
+          {availableYears.length > 0 && (
+            <YearSelector
+              years={availableYears}
+              selectedYear={selectedYear}
+              onYearChange={setSelectedYear}
+            />
+          )}
+        </Col>
+      </Row>
 
       <Row gutters>
         <Col md={12}>
-          <div className="fr-card fr-p-3w">
+          <div>
             <TreemapChart
               data={treemapData}
               title={chartTitle}
@@ -177,10 +180,10 @@ export function FieldsTopologie() {
       </Row>
       <Row gutters>
         <Col md={12}>
-          <div className="fr-card fr-p-3w">
+          <div>
             {!fieldId && (
               <Col md={6}>
-                <div className="fr-card fr-p-3w fr-mb-3w">
+                <div className="fr-mb-3w">
                   <Title as="h3" look="h6">
                     Répartition par statut
                   </Title>
