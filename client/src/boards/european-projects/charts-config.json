@@ -1,0 +1,497 @@
+[
+  {
+    "id": "pillarsFundingValues",
+    "title": {
+      "en": "Funding (M€)",
+      "fr": "Financements (M€)"
+    },
+    "description": {
+      "fr": "Financements demandés et obtenus (M€)",
+      "en": "Funding requested and obtained (M€)"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding"
+  },
+  {
+    "id": "pillarsFundingSuccessRates",
+    "title": {
+      "fr": "Taux de succès",
+      "en": "Success rate"
+    },
+    "description": {
+      "en": "Success rate on the amounts requested and obtained",
+      "fr": "Taux de succès sur les montants demandés et obtenus"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates"
+  },
+  {
+    "id": "pillarsFundingProportion",
+    "title": {
+      "fr": "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
+      "en": "Funding requested and obtained by the country on all countries"
+    },
+    "description": {
+      "fr": "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
+      "en": "Funding requested and obtained by the country on all countries"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion"
+  },
+  {
+    "id": "programsFundingValues",
+    "title": {
+      "en": "Funding (M€)",
+      "fr": "Financements (M€)"
+    },
+    "description": {
+      "fr": "Financements demandés et obtenus (M€)",
+      "en": "Funding requested and obtained (M€)"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding"
+  },
+  {
+    "id": "programsFundingSuccessRates",
+    "title": {
+      "fr": "Taux de succès",
+      "en": "Success rate"
+    },
+    "description": {
+      "en": "Success rate on the amounts requested and obtained",
+      "fr": "Taux de succès sur les montants demandés et obtenus"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates"
+  },
+  {
+    "id": "programsFundingProportion",
+    "title": {
+      "fr": "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
+      "en": "Funding requested and obtained by the country on all countries"
+    },
+    "description": {
+      "fr": "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
+      "en": "Funding requested and obtained by the country on all countries"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion"
+  },
+  {
+    "id": "topicsFundingValues",
+    "title": {
+      "en": "Funding (M€)",
+      "fr": "Financements (M€)"
+    },
+    "description": {
+      "fr": "Financements demandés et obtenus (M€)",
+      "en": "Funding requested and obtained (M€)"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding"
+  },
+  {
+    "id": "topicsFundingSuccessRates",
+    "title": {
+      "fr": "Taux de succès",
+      "en": "Success rate"
+    },
+    "description": {
+      "en": "Success rate on the amounts requested and obtained",
+      "fr": "Taux de succès sur les montants demandés et obtenus"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates"
+  },
+  {
+    "id": "topicsFundingProportion",
+    "title": {
+      "fr": "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
+      "en": "Funding requested and obtained by the country on all countries"
+    },
+    "description": {
+      "fr": "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
+      "en": "Funding requested and obtained by the country on all countries"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion"
+  },
+  {
+    "id": "destinationFundingValues",
+    "title": {
+      "en": "Funding (M€)",
+      "fr": "Financements (M€)"
+    },
+    "description": {
+      "fr": "Financements demandés et obtenus (M€)",
+      "en": "Funding requested and obtained (M€)"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding"
+  },
+  {
+    "id": "destinationFundingSuccessRates",
+    "title": {
+      "fr": "Taux de succès",
+      "en": "Success rate"
+    },
+    "description": {
+      "en": "Success rate on the amounts requested and obtained",
+      "fr": "Taux de succès sur les montants demandés et obtenus"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates"
+  },
+  {
+    "id": "destinationFundingProportion",
+    "title": {
+      "fr": "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
+      "en": "Funding requested and obtained by the country on all countries"
+    },
+    "description": {
+      "fr": "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
+      "en": "Funding requested and obtained by the country on all countries"
+    },
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion"
+  },
+  {
+    "id": "fundedObjectives",
+    "title": "Financements obtenus",
+    "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
+    "id": "synthesisFocus",
+    "title": "Focus sur la participation du pays",
+    "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/synthesis-focus"
+  },
+  {
+    "id": "typeOfFinancingSubsidiesRequestedByProjects",
+    "title": "",
+    "subtitle": "Subventions demandées et obtenues (M€)",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "typeOfFinancingSubsidiesRequestedByProjectsRates",
+    "title": "",
+    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "successRateForAmountsByTypeOfFinancing",
+    "title": "",
+    "subtitle": "Taux de succès sur le montants par type de financement",
+    "description": "Attention EIT",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-2"
+  },
+  {
+    "id": "pillarsSubsidiesRequestedByRates",
+    "title": "",
+    "subtitle": "Taux de succès sur le montants par pilier",
+    "description": "Attention EIT",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-2"
+  },
+  {
+    "id": "pillarsProjectCoordinationRequestedByRates",
+    "title": "",
+    "subtitle": "Taux de succès sur le nombre de coordinations de projets par pilier",
+    "description": "Attention EIT",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-2"
+  },
+  {
+    "id": "pillarsSubsidiesRequestedByProjects",
+    "title": "",
+    "subtitle": "Subventions demandées et obtenues (M€)",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "pillarsProjectCoordinationRequestedByProjects",
+    "title": "",
+    "subtitle": "Nombre de candidats et de participants",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+
+  {
+    "id": "projectsTypesPiliers2",
+    "title": "",
+    "subtitle": "Subventions demandées et obtenues (M€)",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "projectsTypesPiliers2Rates",
+    "title": "",
+    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "projectsTypesPillarsSubsidiesRequested",
+    "title": "",
+    "subtitle": "Subventions demandées et obtenues (M€)",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "projectsTypesPillarsSubsidiesRequestedRates",
+    "title": "",
+    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "typeOfFinancingSubsidiesRequested",
+    "title": "",
+    "subtitle": "Subventions demandées et obtenues (M€)",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "typeOfFinancingSubsidiesRequestedRates",
+    "title": "",
+    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "pillarsSubsidiesRequestedByProjectsRates",
+    "title": "",
+    "subtitle": "Part des subventions demandées et obtenues sur HE",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "pillarsProjectCoordinationRequestedByProjectsRates",
+    "title": "",
+    "subtitle": "Poids des candidats et participants sur HE",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-1"
+  },
+  {
+    "id": "mainBeneficiaries",
+    "title": "",
+    "subtitle": "Principaux bénéficiaires qui concentrent 50 % des subventions allouées aux équipes",
+    "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries"
+  },
+  {
+    "id": "mainPartners",
+    "title": "",
+    "subtitle": "Principaux partenaires des équipes du pays sélectionné",
+    "description": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries"
+  },
+  {
+    "id": "top10beneficiaries",
+    "title": "",
+    "subtitle": "Principaux pays bénéficiaires",
+    "description": "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-beneficiaries"
+  },
+  {
+    "id": "fundingRankingSub",
+    "title": "",
+    "subtitle": "Subventions demandées et obtenues (M€) par pays",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "fundingRankingSubSuccessRate",
+    "title": "",
+    "subtitle": "Taux de succès sur les montants par pays <br />",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "fundingRankingCoordination",
+    "title": "",
+    "subtitle": "Nombre de coordinations de projets déposés et lauréats",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "fundingRankingCoordinationSuccessRate",
+    "title": "",
+    "subtitle": "Taux de succès sur le nombre de coordinations de projets lauréats",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "fundingRankingInvolved",
+    "title": "",
+    "subtitle": "Nombre de candidats et de participants",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "fundingRankingInvolvedSuccessRate",
+    "title": "",
+    "subtitle": "Taux de succès individuel des participants",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations"
+  },
+  {
+    "id": "pillarsEvolutionFundingLines",
+    "title": {
+      "fr": "Pilliers - Evolution des financements demandés et obtenus (M€)",
+      "en": "Pilars - Financing applied for and obtained (€m)"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "pillarsEvolutionFundingLinesRates",
+    "title": {
+      "fr": "Pilliers - Evolution du taux de succès des financements demandés et obtenus",
+      "en": "Pilars - Trend in the success rate of financing applications and grants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+    {
+    "id": "pillarsEvolutionFundingLinesSuccessRate",
+    "title": {
+      "fr": "Pilliers - Part des financements du pays demandés et obtenus par rapport au total des participants",
+      "en": "Pilars - Percentage of country funding applied for and obtained as a proportion of total participants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "programsEvolutionFundingLines",
+    "title": {
+      "fr": "Programmes - Evolution des financements demandés et obtenus (M€)",
+      "en": "Programs - Financing applied for and obtained (€m)"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "programsEvolutionFundingLinesRates",
+    "title": {
+      "fr": "Programmes - Evolution du taux de succès des financements demandés et obtenus",
+      "en": "Programs - Trend in the success rate of financing applications and grants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+    {
+    "id": "programsEvolutionFundingLinesSuccessRate",
+    "title": {
+      "fr": "Programmes - Part des financements du pays demandés et obtenus par rapport au total des participants",
+      "en": "Programs - Percentage of country funding applied for and obtained as a proportion of total participants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "topicsEvolutionFundingLines",
+    "title": {
+      "fr": "Thématiques - Evolution des financements demandés et obtenus (M€)",
+      "en": "Topics - Financing applied for and obtained (€m)"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "topicsEvolutionFundingLinesRates",
+    "title": {
+      "fr": "Thématiques - Evolution du taux de succès des financements demandés et obtenus",
+      "en": "Topics - Trend in the success rate of financing applications and grants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+    {
+    "id": "topicsEvolutionFundingLinesSuccessRate",
+    "title": {
+      "fr": "Thématiques - Part des financements du pays demandés et obtenus par rapport au total des participants",
+      "en": "Topics - Percentage of country funding applied for and obtained as a proportion of total participants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+{
+    "id": "destinationsEvolutionFundingLines",
+    "title": {
+      "fr": "Destinations - Evolution des financements demandés et obtenus (M€)",
+      "en": "Destinations - Financing applied for and obtained (€m)"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "destinationsEvolutionFundingLinesRates",
+    "title": {
+      "fr": "Destinations - Evolution du taux de succès des financements demandés et obtenus",
+      "en": "Destinations - Trend in the success rate of financing applications and grants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+    {
+    "id": "destinationsEvolutionFundingLinesSuccessRate",
+    "title": {
+      "fr": "Destinations - Part des financements du pays demandés et obtenus par rapport au total des participants",
+      "en": "Destinations - Percentage of country funding applied for and obtained as a proportion of total participants"
+    },
+    "description": {
+      "fr": "",
+      "en": ""
+    },
+    "subtitle": "",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "pillarsProjectCoordinationRequestedByProjectsLines",
+    "title": "Nombre de coordinatioons de projets évalués et lauréats",
+    "subtitle": "",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  },
+  {
+    "id": "pillarsProjectCoordinationRequestedByProjectsLinesRates",
+    "title": "Nombre de coordinatioons de projets évalués et lauréats",
+    "subtitle": "",
+    "description": null,
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/projects-types-3"
+  }
+]
