@@ -45,10 +45,10 @@ export function FacultyLayout() {
             En un coup d'oeil
           </Link>
           <Link
-            current={path.includes(`topologie`)}
-            href={buildContextualPath("topologie")}
+            current={path.includes(`typologie`)}
+            href={buildContextualPath("typologie")}
           >
-            Topologie
+            Typologie
           </Link>
           <Link
             current={path.includes(`evolution`)}

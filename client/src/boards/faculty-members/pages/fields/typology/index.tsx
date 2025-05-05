@@ -7,8 +7,11 @@ import { Link } from "@dataesr/dsfr-plus";
 import { TreemapChart } from "./charts/treemap";
 import useFacultyMembersByStatus from "../api/use-by-status";
 import { DisciplineStatusStack } from "./charts/stack";
+import useFacultyMembersGenderComparison from "../api/use-by-gender";
+import { GenderDataCard } from "./components/gender-info";
+import DisciplineBarChart from "./charts/fields-bar";
 
-export function FieldsTopologie() {
+export function FieldsTypologie() {
   const { fieldId } = useParams<{ fieldId: string }>();
   const [selectedYear, setSelectedYear] = useState<string>("");
   const [availableYears, setAvailableYears] = useState<string[]>([]);
@@ -17,10 +20,15 @@ export function FieldsTopologie() {
     useFacultyMembersByFields(undefined, true);
   const { data: allFieldsByStatusData, isLoading: allDataByStatusLoading } =
     useFacultyMembersByStatus(selectedYear);
-  console.log(allFieldsByStatusData);
 
   const { data: fieldsData, isLoading } =
     useFacultyMembersByFields(selectedYear);
+
+  const { data: genderComparisonData, isLoading: genderDataLoading } =
+    useFacultyMembersGenderComparison({
+      selectedYear,
+      disciplineCode: fieldId,
+    });
 
   useEffect(() => {
     if (
@@ -60,13 +68,28 @@ export function FieldsTopologie() {
     );
   }, [fieldsData, fieldId]);
 
+  const genderData = useMemo(() => {
+    if (!genderComparisonData) return null;
+
+    if (Array.isArray(genderComparisonData)) {
+      if (fieldId) {
+        return genderComparisonData.find(
+          (item) => item.discipline?.code === fieldId
+        );
+      }
+      return genderComparisonData[0];
+    }
+
+    return genderComparisonData;
+  }, [genderComparisonData, fieldId]);
+
   const pageTitle = useMemo(() => {
     if (fieldId && specificFieldData) {
-      return `Topologie de la discipline ${
+      return `Typologie de la discipline ${
         specificFieldData.fieldLabel || specificFieldData.field_label
       }`;
     }
-    return "Topologie des disciplines";
+    return "Typologie des disciplines";
   }, [fieldId, specificFieldData]);
 
   const treemapData = useMemo(() => {
@@ -75,8 +98,6 @@ export function FieldsTopologie() {
     let dataToProcess = fieldsData;
     if (fieldId) {
       if (specificFieldData) {
-        // Si on est sur une discipline spécifique, on peut montrer ses groupes CNU
-        // ou afficher juste cette discipline si pas de groupes disponibles
         if (
           specificFieldData.cnuGroups &&
           specificFieldData.cnuGroups.length > 0
@@ -131,6 +152,31 @@ export function FieldsTopologie() {
     return "Répartition des effectifs par discipline";
   }, [fieldId, specificFieldData]);
 
+  const allDisciplines = genderData?.allDisciplines || [];
+
+  const prepareChartData = (allDisciplines) => {
+    if (
+      !allDisciplines ||
+      !Array.isArray(allDisciplines) ||
+      allDisciplines.length === 0
+    ) {
+      return [];
+    }
+
+    return allDisciplines.map((disc) => ({
+      discipline: disc.discipline.label,
+      disciplineCode: disc.discipline.code,
+      hommesCount: disc.hommes.total_count,
+      hommesPercent: Math.round(
+        (disc.hommes.total_count / disc.total_count) * 100
+      ),
+      femmesCount: disc.femmes.total_count,
+      femmesPercent: Math.round(
+        (disc.femmes.total_count / disc.total_count) * 100
+      ),
+    }));
+  };
+
   return (
     <Container as="main">
       <Row>
@@ -144,16 +190,9 @@ export function FieldsTopologie() {
               <strong>{specificFieldData?.fieldLabel}</strong>
             </Link>
           </Breadcrumb>
-
           <Title as="h2" look="h4" className="fr-mt-4w">
             {pageTitle}
           </Title>
-
-          <p className="fr-text fr-mb-3w">
-            {fieldId
-              ? "Cette visualisation montre la répartition détaillée au sein de cette discipline."
-              : "Cette visualisation montre la répartition des effectifs entre les différentes disciplines. La taille de chaque bloc représente le nombre d'enseignants, et la couleur indique la proportion femmes/hommes."}
-          </p>
         </Col>
         <Col md={3} style={{ textAlign: "right" }}>
           {availableYears.length > 0 && (
@@ -164,6 +203,32 @@ export function FieldsTopologie() {
             />
           )}
         </Col>
+      </Row>
+
+      <Row gutters>
+        <Col md={6}>
+          <GenderDataCard
+            data={genderData}
+            gender="hommes"
+            isLoading={genderDataLoading}
+            allDisciplines={allDisciplines}
+          />
+        </Col>
+        <Col md={6}>
+          <GenderDataCard
+            data={genderData}
+            gender="femmes"
+            isLoading={genderDataLoading}
+            allDisciplines={allDisciplines}
+          />
+        </Col>
+        {allDisciplines && !fieldId && (
+          <Col md={12}>
+            <DisciplineBarChart
+              disciplines={prepareChartData(allDisciplines)}
+            />
+          </Col>
+        )}
       </Row>
 
       <Row gutters>

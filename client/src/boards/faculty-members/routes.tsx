@@ -9,11 +9,11 @@ import UniversityOverview from "./pages/university/university-overview.tsx";
 
 import FieldsOverview from "./pages/fields/fields-overview.tsx";
 import { GeoEvolution } from "./pages/geo/evolutions/index.tsx";
-import { GeoTopologie } from "./pages/geo/topology/index.tsx";
+import { GeoTypologie } from "./pages/geo/typology/index.tsx";
 import { UniversityEvolution } from "./pages/university/evolutions/index.tsx";
-import { UniversityTopologie } from "./pages/university/topology/index.tsx";
+import { UniversityTypologie } from "./pages/university/typology/index.tsx";
 import { FieldsEvolution } from "./pages/fields/evolutions/index.tsx";
-import { FieldsTopologie } from "./pages/fields/topology/index.tsx";
+import { FieldsTypologie } from "./pages/fields/typology/index.tsx";
 import SpecificGeoOverview from "./pages/geo/geo-overview-by-id.tsx";
 import { UniversityFields } from "./pages/university/fields/index.tsx";
 import { GeoFields } from "./pages/geo/fields/index.tsx";
@@ -34,8 +34,8 @@ export default function FacultyMembersRoutes() {
           />
           <Route path="/geo/evolution/:geo_id" element={<GeoEvolution />} />
           <Route path="/geo/evolution/" element={<GeoEvolution />} />
-          <Route path="/geo/topologie/:geo_id" element={<GeoTopologie />} />
-          <Route path="/geo/topologie/" element={<GeoTopologie />} />
+          <Route path="/geo/typologie/:geo_id" element={<GeoTypologie />} />
+          <Route path="/geo/typologie/" element={<GeoTypologie />} />
           <Route path="/geo/discipline/:geo_id" element={<GeoFields />} />
           <Route path="/geo/discipline/" element={<GeoFields />} />
 
@@ -65,12 +65,12 @@ export default function FacultyMembersRoutes() {
             element={<UniversityFields />}
           />
           <Route
-            path="/universite/topologie/:id"
-            element={<UniversityTopologie />}
+            path="/universite/typologie/:id"
+            element={<UniversityTypologie />}
           />
           <Route
-            path="/universite/topologie/"
-            element={<UniversityTopologie />}
+            path="/universite/typologie/"
+            element={<UniversityTypologie />}
           />
 
           {/* ROUTE POUR LES DISCIPLINES */}
@@ -89,10 +89,10 @@ export default function FacultyMembersRoutes() {
           <Route path="/discipline/evolution/" element={<FieldsEvolution />} />
 
           <Route
-            path="/discipline/topologie/:fieldId"
-            element={<FieldsTopologie />}
+            path="/discipline/typologie/:fieldId"
+            element={<FieldsTypologie />}
           />
-          <Route path="/discipline/topologie/" element={<FieldsTopologie />} />
+          <Route path="/discipline/typologie/" element={<FieldsTypologie />} />
         </Route>
       </Route>
     </Routes>

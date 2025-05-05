@@ -26,10 +26,10 @@ export default function CustomSideMenu() {
           Disciplines
         </Link>
         <Link
-          current={is("/personnel-enseignants/topologie")}
-          href={`/personnel-enseignants/topologie?${filtersParams}`}
+          current={is("/personnel-enseignants/typologie")}
+          href={`/personnel-enseignants/typologie?${filtersParams}`}
         >
-          Topologie
+          Typologie
         </Link>
         <Link
           current={is("/personnel-enseignants/evolution")}

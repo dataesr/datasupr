@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 
-export function GeoTopologie() {
+export function GeoTypologie() {
   const { geoId } = useParams<{ geoId?: string }>();
 
   return (
     <div>
-      <h1>Topologie</h1>
+      <h1>Typologie</h1>
       {geoId && <p>geoId: {geoId}</p>}
     </div>
   );
