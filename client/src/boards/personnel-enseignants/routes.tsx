@@ -8,7 +8,7 @@ import Evolution from "./pages/evolution/index.tsx";
 import Home from "./pages/home/index.tsx";
 import Overview from "./pages/overview/index.tsx";
 import Search from "./pages/search/index.tsx";
-import Topology from "./pages/topology/index.tsx";
+import Typology from "./pages/topology/index.tsx";
 
 export default function EuropeanProjectsRoutes() {
   return (
@@ -20,7 +20,7 @@ export default function EuropeanProjectsRoutes() {
         <Route element={<SidemenuLayout />}>
           <Route path="synthese" element={<Overview />} />
           <Route path="disciplines" element={<Disciplines />} />
-          <Route path="topologie" element={<Topology />} />
+          <Route path="typologie" element={<Typology />} />
           <Route path="evolution" element={<Evolution />} />
         </Route>
       </Route>

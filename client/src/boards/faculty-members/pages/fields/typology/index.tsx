@@ -1,5 +1,12 @@
 import { useState, useEffect, useMemo } from "react";
-import { Container, Row, Col, Title, Breadcrumb, Notice } from "@dataesr/dsfr-plus";
+import {
+  Container,
+  Row,
+  Col,
+  Title,
+  Breadcrumb,
+  Notice,
+} from "@dataesr/dsfr-plus";
 import { useParams } from "react-router-dom";
 import useFacultyMembersByFields from "../api/use-by-fields";
 import YearSelector from "../../../filters";
@@ -177,7 +184,8 @@ export function FieldsTypologie() {
     }));
   };
 
-  const shareTitulaire = allFieldsByStatusData?.[0]?.aggregatedStats?.titulairesPercent;
+  const shareTitulaire =
+    allFieldsByStatusData?.[0]?.aggregatedStats?.titulairesPercent;
 
   return (
     <Container as="main">
@@ -189,7 +197,10 @@ export function FieldsTypologie() {
               Vue disciplinaire
             </Link>
             <Link>
-              <strong>{specificFieldData?.fieldLabel ?? "Typologie du personnel enseignant"}</strong>
+              <strong>
+                {specificFieldData?.fieldLabel ??
+                  "Typologie du personnel enseignant"}
+              </strong>
             </Link>
           </Breadcrumb>
         </Col>
@@ -205,15 +216,42 @@ export function FieldsTypologie() {
       </Row>
 
       <Row className="fr-mt-3w">
-          {shareTitulaire == 100 &&(
-            <Notice closeMode={"disallow"} type={"warning"}>
-              Les données des personnels enseignants non permanents ne sont pas prises en compte
-              pour l'année {selectedYear} car elles ne sont pas disponibles.
-            </Notice>
-            )}
-            <Title as="h3" look="h5"className="fr-mt-2w">
-             {pageTitle}
-          </Title>
+        {shareTitulaire == 100 && (
+          <Notice closeMode={"disallow"} type={"warning"}>
+            Les données des personnels enseignants non permanents ne sont pas
+            prises en compte pour l'année {selectedYear} car elles ne sont pas
+            disponibles.
+          </Notice>
+        )}
+        <Title as="h3" look="h5" className="fr-mt-2w">
+          {pageTitle}
+        </Title>
+      </Row>
+
+      <Row gutters>
+        <Col md={6}>
+          <GenderDataCard
+            data={genderData}
+            gender="hommes"
+            isLoading={genderDataLoading}
+            allDisciplines={allDisciplines}
+          />
+        </Col>
+        <Col md={6}>
+          <GenderDataCard
+            data={genderData}
+            gender="femmes"
+            isLoading={genderDataLoading}
+            allDisciplines={allDisciplines}
+          />
+        </Col>
+        {allDisciplines && !fieldId && (
+          <Col md={12}>
+            <DisciplineBarChart
+              disciplines={prepareChartData(allDisciplines)}
+            />
+          </Col>
+        )}
       </Row>
 
       <Row gutters>
