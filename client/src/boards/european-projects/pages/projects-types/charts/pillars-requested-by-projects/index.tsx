@@ -7,11 +7,11 @@ import optionsSubsidiesRates from "./options-subsidies_rates";
 import optionsCoordinationNumber from "./options-coordination_number_values";
 import OptionsCoordinationNumberRates from "./options-coordination_number_rates";
 
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { GetLegend } from "../../../../components/legend";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import {
   RenderDataSubsidiesValues,
   RenderDataSubsidiesRates,

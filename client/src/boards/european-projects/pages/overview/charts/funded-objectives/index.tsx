@@ -4,9 +4,9 @@ import { useSearchParams } from "react-router-dom";
 import { GetfundedObjectives } from "./query";
 import options from "./options";
 
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams, getColorByPillierName } from "./utils";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 export default function FundedObjectives() {
   const [searchParams] = useSearchParams();

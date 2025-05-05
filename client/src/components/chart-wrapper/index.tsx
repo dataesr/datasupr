@@ -16,8 +16,8 @@ import {
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
-import { getConfig } from "../../utils";
-import CopyButton from "../../../../components/copy-button";
+import { getConfig } from "../../boards/european-projects/utils";
+import CopyButton from "../copy-button";
 
 import "./styles.scss";
 import { useSearchParams } from "react-router-dom";

@@ -10,8 +10,8 @@ import optionsCoordinationNumber from "./options-coordination_number";
 import optionCoordinationNumberSuccessRate from "./options-coordination_number-succes-rate";
 import optionsNumberInvolved from "./options-number_involved";
 import optionNumberInvolvedSuccessRate from "./options-number_involved-succes-rate";
-import ChartWrapper from "../../../../components/chart-wrapper";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useSearchParams } from "react-router-dom";
 
 export default function FundingRanking() {

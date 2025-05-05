@@ -7,10 +7,10 @@ import optionsSubsidiesValues from "./options-values";
 import optionsSubsidiesRates from "./options-rates";
 import optionsSubsidiesCountryRates from "./options-success-rates";
 
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col, Button } from "@dataesr/dsfr-plus";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { RenderDataSubsidiesValuesAndRates } from "./render-data";
 import { useState } from "react";
 

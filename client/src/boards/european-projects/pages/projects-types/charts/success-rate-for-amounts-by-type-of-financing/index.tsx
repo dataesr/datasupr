@@ -5,9 +5,9 @@ import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { GetData } from "./query";
 import options from "./options";
 
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 export default function SuccessRateForAmountsByTypeOfFinancing() {
   const [searchParams] = useSearchParams();
