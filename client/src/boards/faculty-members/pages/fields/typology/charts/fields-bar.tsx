@@ -1,9 +1,16 @@
+<<<<<<< HEAD
 import { useRef, useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useNavigate } from "react-router-dom";
 import { Button, Col, Row } from "@dataesr/dsfr-plus";
 import "../../../../styles.scss";
+=======
+import { useRef, useEffect } from "react";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import { useNavigate } from "react-router-dom";
+>>>>>>> 14b06f7a (feat(faculty-members): update typology part)
 
 interface DisciplineBarChartProps {
   disciplines: Array<{
@@ -16,12 +23,23 @@ interface DisciplineBarChartProps {
   }>;
 }
 
+<<<<<<< HEAD
+=======
+const hommesColor = `rgba(${getComputedStyle(document.documentElement)
+  .getPropertyValue("--hommes-color")
+  .trim()}, 0.8)`;
+const femmesColor = `rgba(${getComputedStyle(document.documentElement)
+  .getPropertyValue("--femmes-color")
+  .trim()}, 0.8)`;
+
+>>>>>>> 14b06f7a (feat(faculty-members): update typology part)
 const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
   disciplines,
 }) => {
   const chartRef = useRef<HighchartsReact.RefObject>(null);
   const navigate = useNavigate();
 
+<<<<<<< HEAD
   const [sortKey, setSortKey] = useState<
     "total" | "femmesPercent" | "hommesPercent"
   >("total");
@@ -58,10 +76,20 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
     stackType === "percent"
       ? sortedDisciplines.map((d) => d.hommesPercent)
       : sortedDisciplines.map((d) => d.hommesCount);
+=======
+  const sortedDisciplines = [...disciplines].sort(
+    (a, b) => b.hommesCount + b.femmesCount - (a.hommesCount + a.femmesCount)
+  );
+
+  const categories = sortedDisciplines.map((d) => d.discipline);
+  const femmesData = sortedDisciplines.map((d) => d.femmesPercent);
+  const hommesData = sortedDisciplines.map((d) => d.hommesPercent);
+>>>>>>> 14b06f7a (feat(faculty-members): update typology part)
 
   const options: Highcharts.Options = {
     chart: {
       type: "bar",
+<<<<<<< HEAD
       height: categories.length * 65,
       marginLeft: 0,
       style: {
@@ -83,6 +111,17 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
         fontSize: "14px",
       },
       align: "left",
+=======
+      height: categories.length * 45,
+    },
+    title: {
+      text: "Répartition femmes / hommes par discipline",
+      align: "center",
+      style: {
+        fontWeight: "bold",
+        fontSize: "14px",
+      },
+>>>>>>> 14b06f7a (feat(faculty-members): update typology part)
     },
     credits: { enabled: false },
     xAxis: {
