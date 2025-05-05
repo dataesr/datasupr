@@ -21,6 +21,7 @@ import {
 
 export default function PillarsSubsidiesRequestedByProjects({ indicateurId }) {
   const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
   const params = getDefaultParams(searchParams);
 
   const { data, isLoading } = useQuery({
@@ -61,7 +62,8 @@ export default function PillarsSubsidiesRequestedByProjects({ indicateurId }) {
       ["Projets lauréats", "#233E41"],
       ["Projets évalués", "#009099"],
     ],
-    "PillarsSubsidiesRequestedByProjects"
+    "PillarsSubsidiesRequestedByProjects",
+    currentLang
   );
 
   return (
