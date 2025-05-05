@@ -1,0 +1,202 @@
+.gender-card {
+  border-radius: 4px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.gender-card-female .fr-grid-row {
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
+
+.gender-card-female .gender-percentage {
+  text-align: left;
+}
+
+.gender-card-female .gender-count {
+  text-align: left;
+}
+
+.gender-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+
+.gender-icon-male {
+  background: rgba(var(--hommes-color), 1);
+}
+
+.gender-icon-female {
+  background: rgba(var(--femmes-color), 1);
+}
+
+.gender-percentage {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.gender-percentage-male {
+  color: rgba(var(--hommes-color), 1);
+}
+
+.gender-percentage-female {
+  color: rgba(var(--femmes-color), 1);
+}
+
+.gender-count {
+  text-align: right;
+  font-size: 0.65rem;
+  color: #666;
+}
+
+.stat-title {
+  font-weight: bold;
+  font-size: 0.875rem;
+  height: 24px;
+}
+
+.stat-title-male {
+  text-align: center;
+}
+
+.stat-title-female {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: bold;
+  height: 32px;
+}
+
+.stat-value-male {
+  text-align: center;
+}
+
+.stat-value-female {
+  text-align: center;
+}
+
+.stat-count {
+  font-size: 0.75rem;
+  color: #666;
+  height: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.stat-count-male {
+  text-align: left;
+}
+
+.stat-count-female {
+  text-align: right;
+}
+.separator {
+  opacity: 0.3;
+}
+
+.separator-male {
+  border-top: 1px solid #000091;
+}
+
+.separator-female {
+  border-top: 1px solid #e1000f;
+}
+
+.age-distribution {
+  display: flex;
+  height: 45px;
+  border-radius: 4px;
+  background: #f6f6f6;
+  overflow: hidden;
+}
+
+.age-bar {
+  position: relative;
+  height: 100%;
+  margin: 0 1px;
+  min-width: 10px;
+}
+
+.age-bar-male {
+  background: rgba(var(--hommes-color), 1);
+}
+
+.age-bar-female {
+  background: rgba(var(--femmes-color), 0.8);
+}
+
+.age-label {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+  font-size: 10px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.age-percent {
+  position: absolute;
+  top: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+  font-size: 10px;
+  color: #fff;
+}
+
+.discipline-card {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  border-left: 4px solid transparent;
+  border-bottom: 1px solid #e6e6e6;
+}
+
+.discipline-card-male {
+  border-left: 1px solid #000091;
+}
+
+.discipline-card-female {
+  border-right: 1px solid #e1000f;
+}
+
+.discipline-title {
+  font-size: 0.875rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.75rem;
+}
+
+.discipline-title-male {
+  color: #000091;
+}
+
+.discipline-title-female {
+  color: #e1000f;
+}
+
+.discipline-count {
+  font-weight: bold;
+  margin-top: auto;
+  margin-bottom: 0.25rem;
+  line-height: 1;
+  height: 1.75rem;
+}
+
+.discipline-percent {
+  font-size: 0.875rem;
+  color: #666;
+  height: 1.25rem;
+}

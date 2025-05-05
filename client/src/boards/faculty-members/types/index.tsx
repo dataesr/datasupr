@@ -174,3 +174,56 @@ export interface DisciplineStatusSummaryProps {
   fields: Field[];
   isSingleDiscipline?: boolean;
 }
+export interface GenderInfo {
+  total_count: number;
+  percent?: number;
+  titulaires_percent: number;
+  titulaires_count: number;
+  enseignants_chercheurs_percent: number;
+  enseignants_chercheurs_count: number;
+  quotite_distribution?: {
+    "Temps plein"?: {
+      percent: number;
+      count: number;
+    };
+    [key: string]:
+      | {
+          percent: number;
+          count: number;
+        }
+      | undefined;
+  };
+  age_distribution?: {
+    [ageRange: string]: {
+      percent: number;
+      count: number;
+    };
+  };
+}
+
+export interface GenderData {
+  hommes: GenderInfo;
+  femmes: GenderInfo;
+  total_count: number;
+}
+
+export interface DisciplineItem {
+  discipline: {
+    code: string;
+    label: string;
+  };
+  hommes: {
+    total_count: number;
+  };
+  femmes: {
+    total_count: number;
+  };
+  total_count: number;
+}
+
+export type GenderDataCardProps = {
+  data: GenderData;
+  gender: "hommes" | "femmes";
+  isLoading: boolean;
+  allDisciplines?: DisciplineItem[];
+};

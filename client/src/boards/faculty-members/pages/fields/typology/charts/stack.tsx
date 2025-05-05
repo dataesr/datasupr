@@ -31,7 +31,7 @@ export function DisciplineStatusStack({
 
     const disciplines = [...statusData[0].disciplines].sort(
       (a, b) => b.totalCount - a.totalCount
-    ); // Trier par taille
+    );
 
     const categories = disciplines.map((d) => d.fieldLabel);
     const ecData = disciplines.map(
@@ -107,7 +107,7 @@ export function DisciplineStatusStack({
                   (d) => d.fieldLabel === this.category
                 );
                 if (discipline && discipline.fieldId) {
-                  window.location.href = `/personnel-enseignant/discipline/topologie/${discipline.fieldId}`;
+                  window.location.href = `/personnel-enseignant/discipline/typologie/${discipline.fieldId}`;
                 }
               },
             },

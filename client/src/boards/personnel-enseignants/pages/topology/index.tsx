@@ -1,7 +1,7 @@
-export default function Topology() {
+export default function Typology() {
   return (
     <div>
-      <h1>Topology</h1>
+      <h1>Typology</h1>
     </div>
   );
 }

@@ -49,7 +49,7 @@ export function Presentation() {
         </Col>
         <Col md={4} offsetMd={1}>
           <Text>Rapide coup d'oeil sur des chiffres </Text>
-          <Text>Rapide coup d'oeil sur les topologies</Text>
+          <Text>Rapide coup d'oeil sur les typologies</Text>
           <Text>Rapide coup d'oeil sur les évolutions</Text>
           <Text>Carte de la France</Text>
         </Col>
