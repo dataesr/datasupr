@@ -1,22 +1,34 @@
-export function GetLegend(legendArray: [string, string][], legendId: string) {
+import i18n from "./i18n.json";
+
+export function GetLegend(
+  legendArray: [string, string][],
+  legendId: string,
+  currentLang: string
+) {
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
+
   return (
-    <ul className="legend">
-      {legendArray.map((item) => (
-        <li
-          style={{ display: "flex", alignItems: "center", marginBottom: "5px" }}
-          key={`${legendId}item[0]`}
-        >
-          <div
-            style={{
-              width: "20px",
-              height: "20px",
-              background: item[1],
-              marginRight: "10px",
-            }}
-          />
-          <span>{item[0]}</span>
-        </li>
-      ))}
-    </ul>
+    <fieldset>
+      <legend>{getI18nLabel("legend")}</legend>
+      <div className="legend">
+        <ul className="legend">
+          {legendArray.map((item) => (
+            <li
+              style={{
+                display: "flex",
+                alignItems: "center",
+                marginBottom: "5px",
+              }}
+              key={`${legendId}item[0]`}
+            >
+              <div style={{ background: item[1] }} />
+              <span>{item[0]}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </fieldset>
   );
 }

@@ -11,6 +11,7 @@ import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 
 export default function Top10Beneficiaries() {
   const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
   const params = getDefaultParams(searchParams);
 
   const { data, isLoading } = useQuery({
@@ -35,7 +36,8 @@ export default function Top10Beneficiaries() {
           ["Total des subventions en euros €", "#233E41"],
           ["Poids du cumul des subventions (%)", "#D75521"],
         ],
-        "Top10Beneficiaries"
+        "Top10Beneficiaries",
+        currentLang
       )}
       options={options(data, searchParams.get("country_code") ?? null)}
       renderData={() => null} // TODO: add data table
