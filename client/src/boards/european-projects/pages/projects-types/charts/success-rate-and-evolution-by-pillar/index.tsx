@@ -6,9 +6,9 @@ import { GetData } from "./query";
 import optionsSubsidiesValues from "./options-subsidies-values";
 import optionsCoordinationNumber from "./options-coordination_number-values";
 
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 export default function SuccessRateAndEvolutionByPillar({ indicateurId }) {
   const [searchParams] = useSearchParams();

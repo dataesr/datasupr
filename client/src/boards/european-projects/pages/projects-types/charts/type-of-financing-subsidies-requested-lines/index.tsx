@@ -5,10 +5,10 @@ import { GetData } from "./query";
 import optionsValues from "./options-values";
 import optionsRates from "./options-rates";
 
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 export default function TypeOfFinancingSubsidiesRequestedLines() {
   const [searchParams] = useSearchParams();

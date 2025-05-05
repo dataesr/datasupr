@@ -4,8 +4,8 @@ import { getData } from "./query";
 import options from "./options";
 import { useGetParams } from "./utils";
 
-import ChartWrapper from "../../../../components/chart-wrapper";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 export default function TopicsFundingSuccessRates() {
   const params = useGetParams();

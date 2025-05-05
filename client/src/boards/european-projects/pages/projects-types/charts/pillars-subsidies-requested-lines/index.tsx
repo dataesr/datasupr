@@ -7,10 +7,10 @@ import optionsSubsidiesRates from "./options-subsidies-rates";
 import optionsCoordinationNumber from "./options-coordination_number-values";
 import OptionsCoordinationNumberRates from "./options-coordination_number-rates";
 
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { RenderDataSubsidiesValuesAndRates } from "./render-data";
 
 export default function ProjectsTypesPillarsSubsidiesRequested({

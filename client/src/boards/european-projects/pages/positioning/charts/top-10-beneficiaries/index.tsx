@@ -6,8 +6,8 @@ import { GetData } from "./query";
 import { getDefaultParams } from "./utils";
 import { GetLegend } from "../../../../components/legend";
 import options from "./options";
-import ChartWrapper from "../../../../components/chart-wrapper";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 export default function Top10Beneficiaries() {
   const [searchParams] = useSearchParams();

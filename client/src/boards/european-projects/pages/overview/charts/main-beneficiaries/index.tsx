@@ -4,9 +4,9 @@ import { useSearchParams } from "react-router-dom";
 import { GetData } from "./query";
 import options from "./options";
 
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 export default function MainBeneficiaries() {
   const [searchParams] = useSearchParams();
