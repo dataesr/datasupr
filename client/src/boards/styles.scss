@@ -51,7 +51,7 @@ ul {
       display: flex;
       align-items: center;
       margin-bottom: 5px;
-      
+
       div {
         border-radius: 3px;
         height: 6px;
@@ -62,7 +62,7 @@ ul {
   }
 }
 
-:root {  
+:root {
   // --green-tilleul-verveine-main-707:
   // --green-bourgeon-main-640:
   // --green-emeraude-main-632:
@@ -80,23 +80,25 @@ ul {
   // --brown-caramel-main-648:
   // --brown-opera-main-680:
   // --beige-gris-galet-main-702:
-  --green-tilleul-verveine-sun-418: #66673D;
+  --men-color:#efcb3a
+  --women-color: #e18b76;
+  --green-tilleul-verveine-sun-418: #66673d;
   --green-bourgeon-sun-425: #447049;
   --green-emeraude-sun-425: #297254;
   --green-menthe-sun-373: #37635f;
-  --green-archipel-sun-391: #006A6F;
-  --blue-ecume-sun-247: #2F4077;
-  --blue-cumulus-sun-368: #3558A2;
-  --purple-glycine-sun-319: #6E445A;
-  --pink-macaron-sun-406: #8D533E;
+  --green-archipel-sun-391: #006a6f;
+  --blue-ecume-sun-247: #2f4077;
+  --blue-cumulus-sun-368: #3558a2;
+  --purple-glycine-sun-319: #6e445a;
+  --pink-macaron-sun-406: #8d533e;
   --pink-tuile-sun-425: #a94645;
   --yellow-tournesol-sun-407: #716043;
   --yellow-moutarde-sun-348: #695240;
   --orange-terre-battue-sun-370: #755348;
-  --brown-cafe-creme-sun-383: #685C48;
+  --brown-cafe-creme-sun-383: #685c48;
   --brown-caramel-sun-425: #845d48;
-  --brown-opera-sun-395: #745B47;
-  --beige-gris-galet-sun-407: #6A6156;
+  --brown-opera-sun-395: #745b47;
+  --beige-gris-galet-sun-407: #6a6156;
   --green-tilleul-verveine-975: #fef7da;
   --green-bourgeon-975: #e6feda;
   --green-emeraude-975: #e3fdeb;
@@ -165,7 +167,7 @@ ul {
   --brown-caramel-850: #eac7b2;
   --brown-opera-850: #eac7ad;
   --beige-gris-galet-850: #e0cab0;
-  
+
   --scale-1-color: var(--green-tilleul-verveine-main-707);
   --scale-2-color: var(--green-bourgeon-main-640);
   --scale-3-color: var(--green-emeraude-main-632);
@@ -175,13 +177,13 @@ ul {
   --scale-7-color: var(--blue-cumulus-main-526);
   --scale-8-color: var(--purple-glycine-main-494);
   --scale-9-color: var(--pink-macaron-main-689);
-  --scale-10-color: var(--pink-tuile-main-556); 
-  --scale-11-color: var(--yellow-tournesol-main-731); 
-  --scale-12-color: var(--yellow-moutarde-main-679); 
-  --scale-13-color: var(--orange-terre-battue-main-645); 
-  --scale-14-color: var(--brown-cafe-creme-main-782); 
-  --scale-15-color: var(--brown-caramel-main-648); 
-  --scale-16-color: var(--brown-opera-main-680); 
+  --scale-10-color: var(--pink-tuile-main-556);
+  --scale-11-color: var(--yellow-tournesol-main-731);
+  --scale-12-color: var(--yellow-moutarde-main-679);
+  --scale-13-color: var(--orange-terre-battue-main-645);
+  --scale-14-color: var(--brown-cafe-creme-main-782);
+  --scale-15-color: var(--brown-caramel-main-648);
+  --scale-16-color: var(--brown-opera-main-680);
   --scale-17-color: var(--beige-gris-galet-main-702);
   --scale-18-color: var(--green-tilleul-verveine-sun-418);
   --scale-19-color: var(--green-bourgeon-sun-425);
@@ -293,7 +295,7 @@ ul {
   --program-horizon_3_3-color: var(--scale-12-color);
   --program-horizon_4_1-color: var(--scale-13-color);
   --program-horizon_4_2-color: var(--scale-14-color);
-  
+
   // Topics colors
   --topic-cluster_1-color: var(--scale-15-color);
   --topic-cluster_2-color: var(--scale-16-color);
