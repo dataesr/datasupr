@@ -197,12 +197,30 @@ router
   });
 
 router
-  .route("/european-projects/analysis-positioning-top-10-beneficiaries")
+  .route("/european-projects/positioning/top-10-beneficiaries")
   .get(async (req, res) => {
+    const filters = {framework: "Horizon Europe"};
+    if (req.query.pillars) {
+      const pillars = req.query.pillars.split("|");
+      filters.pilier_code = { $in: pillars };
+    }
+    if (req.query.programs) {
+      const programs = req.query.programs.split("|");
+      filters.programme_code = { $in: programs };
+    }
+    if (req.query.thematics) {
+      const thematics = req.query.thematics.split("|");
+      filters.thema_code = { $in: thematics };
+    }
+    if (req.query.destinations) {
+      const destinations = req.query.destinations.split("|");
+      filters.destination_code = { $in: destinations };
+    }
+
     const data = await db
       .collection("fr-esr-horizon-projects-entities")
       .aggregate([
-        { $match: { framework: "Horizon Europe" } },
+        { $match: filters },
         {
           $group: {
             _id: {

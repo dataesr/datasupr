@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import { GetData } from "./query";
 import { getDefaultParams } from "./utils";
@@ -13,7 +14,14 @@ export default function Top10Beneficiaries() {
   const params = getDefaultParams(searchParams);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["Top10Beneficiaries", params],
+    queryKey: [
+      "Top10Beneficiaries",
+      params,
+      Cookies.get("selectedPillars"),
+      Cookies.get("selectedPrograms"),
+      Cookies.get("selectedThematics"),
+      Cookies.get("selectedDestinations"),
+    ],
     queryFn: () => GetData(params),
   });
 
