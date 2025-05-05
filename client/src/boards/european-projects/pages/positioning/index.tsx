@@ -1,14 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Container, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
-import Top10Beneficiaries from "./charts/top-10-beneficiaries";
 // import Intro from "./charts/intro";
+import Top10Beneficiaries from "./charts/top-10-beneficiaries";
 import FundingRanking from "./charts/funding-ranking";
+
+import i18n from "./i18n.json";
 
 export default function Positioning() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedChart, setSelectedChart] = useState("fundingRankingSub");
+  const currentLang = searchParams.get("language") || "fr";
 
   useEffect(() => {
     if (!searchParams.get("country_code")) {
@@ -16,33 +18,17 @@ export default function Positioning() {
     }
   }, [searchParams, setSearchParams]);
 
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
   return (
-    <Container as="main">
+    <Container as="main" className="fr-my-6w">
       <Title as="h1" look="h3">
-        Positionnement
+        {getI18nLabel("title")}
       </Title>
       {/* <Intro /> */}
-      <div className="fr-my-5w" />
       <Top10Beneficiaries />
-
-      <div className="fr-my-5w" />
-      <Title as="h2" look="h4">
-        Top 10 par indicateur
-      </Title>
-      <select
-        className="fr-select fr-mb-3w"
-        onChange={(e) => setSelectedChart(e.target.value)}
-        value={selectedChart}
-      >
-        <option value="fundingRankingSub">Focus sur les subventions</option>
-        <option value="fundingRankingCoordination">
-          Focus sur les coordinations de projets
-        </option>
-        <option value="fundingRankingInvolved">
-          Focus sur les candidats et participants
-        </option>
-      </select>
-      <FundingRanking indicateurId={selectedChart} />
+      <FundingRanking />
     </Container>
   );
 }
