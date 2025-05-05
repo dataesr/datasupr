@@ -3,7 +3,7 @@ import { Container, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
 import Top10Beneficiaries from "./charts/top-10-beneficiaries";
-import Intro from "./charts/intro";
+// import Intro from "./charts/intro";
 import FundingRanking from "./charts/funding-ranking";
 
 export default function Positioning() {
@@ -21,7 +21,7 @@ export default function Positioning() {
       <Title as="h1" look="h3">
         Positionnement
       </Title>
-      <Intro />
+      {/* <Intro /> */}
       <div className="fr-my-5w" />
       <Top10Beneficiaries />
 
