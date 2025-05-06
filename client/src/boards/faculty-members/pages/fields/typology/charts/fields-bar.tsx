@@ -159,7 +159,7 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
           variant={sortKey === "total" ? undefined : "text"}
           onClick={() => setSortKey("total")}
         >
-          <span className="fr-icon-bar-chart-box-line" aria-hidden="true" />
+          <i className="ri-bar-chart-horizontal-line"></i>
         </Button>
 
         <Button
@@ -167,7 +167,7 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
           variant={sortKey === "femmesPercent" ? undefined : "text"}
           onClick={() => setSortKey("femmesPercent")}
         >
-          <span className="fr-icon-woman-fill" aria-hidden="true" />
+          <i className="ri-women-line"></i>
         </Button>
 
         <Button
@@ -175,7 +175,7 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
           variant={sortKey === "hommesPercent" ? undefined : "text"}
           onClick={() => setSortKey("hommesPercent")}
         >
-          <span className="fr-icon-man-fill" aria-hidden="true" />
+          <i className="ri-men-line"></i>
         </Button>
 
         <Button
@@ -187,9 +187,7 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
         >
           <span
             className={
-              stackType === "percent"
-                ? "fr-icon-percent-fill"
-                : "fr-icon-user-fill"
+              stackType === "percent" ? "ri-percent-fill" : "ri-user-fill"
             }
             aria-hidden="true"
           />

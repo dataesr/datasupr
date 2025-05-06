@@ -31,12 +31,14 @@ export const GenderDataCard = ({
       <div className="fr-grid-row fr-grid-row--middle fr-mb-2w">
         <div className="fr-col-auto">
           <div className={`gender-icon gender-icon-${genderClass}`}>
-            <i className={`${iconClass} fr-icon-snapchat-fill`}></i>
+            <i className={`${iconClass} `}></i>
           </div>
         </div>
         <div className="fr-col">
-          <Title as="h3" look="h4" className="text-center fr-mb-0 fr-ml-1w">
-            {titleText}
+          <Title as="h3" look="h4" className="text-center fr-mb-0 fr-ml-1w ">
+            <div className={`gender-percentage-${genderClass}`}>
+              {titleText}
+            </div>
           </Title>
         </div>
         <div className="fr-col-auto">
