@@ -58,10 +58,10 @@ export default function CustomSideMenu() {
   const numberOfDestinations = Cookies.get("numberOfDestinations") || 0;
 
   const numberOfActiveFilters =
-    (selectedPillars?.split("|") || []).length +
-    (selectedPrograms?.split("|") || []).length +
-    (selectedThematics?.split("|") || []).length +
-    (selectedDestinations?.split("|") || []).length;
+    (selectedPillars ? selectedPillars.split("|").filter(Boolean).length : 0) +
+    (selectedPrograms ? selectedPrograms.split("|").filter(Boolean).length : 0) +
+    (selectedThematics ? selectedThematics.split("|").filter(Boolean).length : 0) +
+    (selectedDestinations ? selectedDestinations.split("|").filter(Boolean).length : 0);
 
   const FilterItem = ({ filterKey }) => {
     const [showAll, setShowAll] = useState(false);
@@ -90,7 +90,7 @@ export default function CustomSideMenu() {
       numberOf = numberOfDestinations;
     }
 
-    const items = sellected?.split("|") || [];
+    const items = sellected?.split("|").filter(Boolean) || 0;
     const displayedItems = showAll ? items : items.slice(0, 10);
     const hasMore = items.length > 10;
 
@@ -107,26 +107,12 @@ export default function CustomSideMenu() {
         <span>
           <ul style={{ listStyle: "initial", paddingLeft: "15px" }}>
             {displayedItems.map((pillarId) => (
-              <li key={pillarId}>
-                {
-                  all?.find((el) => el.id === pillarId)?.[
-                    `label_${currentLang}`
-                  ]
-                }
-              </li>
+              <li key={pillarId}>{all?.find((el) => el.id === pillarId)?.[`label_${currentLang}`]}</li>
             ))}
           </ul>
           {hasMore && (
-            <Button
-              onClick={() => setShowAll(!showAll)}
-              size="sm"
-              variant="tertiary"
-            >
-              {showAll
-                ? getI18nLabel("show-less")
-                : `${getI18nLabel("show")} ${items.length - 10} ${getI18nLabel(
-                    "others"
-                  )}`}
+            <Button onClick={() => setShowAll(!showAll)} size="sm" variant="tertiary">
+              {showAll ? getI18nLabel("show-less") : `${getI18nLabel("show")} ${items.length - 10} ${getI18nLabel("others")}`}
             </Button>
           )}
         </span>
