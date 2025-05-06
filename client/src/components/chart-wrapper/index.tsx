@@ -16,7 +16,6 @@ import {
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
-import { getConfig } from "../../boards/european-projects/utils";
 import CopyButton from "../copy-button";
 
 import "./styles.scss";
@@ -190,11 +189,10 @@ function MenuModal({
   );
 }
 
-export default function ChartWrapper({ id, options, legend, renderData }) {
+export default function ChartWrapper({ config, options, legend, renderData }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
-  const graphConfig = getConfig(id);
   // const source = "Commission européenne, Cordis";
   // const sourceURL = "https://cordis.europa.eu/";
   const modalId = useId();
@@ -208,10 +206,10 @@ export default function ChartWrapper({ id, options, legend, renderData }) {
 
   return (
     <section>
-      {graphConfig.title[currentLang] && (
+      {config.title[currentLang] && (
         <>
           <Title as="h2" look="h4" className="fr-mb-1w">
-            {graphConfig.title[currentLang]}
+            {config.title[currentLang]}
           </Title>
           {/* <Text className="sources">
             Sources :{" "}
@@ -221,13 +219,13 @@ export default function ChartWrapper({ id, options, legend, renderData }) {
           </Text> */}
         </>
       )}
-      {graphConfig.subtitle && (
+      {config.subtitle && (
         <Title
-          as={graphConfig.title[currentLang] ? "h3" : "h2"}
+          as={config.title[currentLang] ? "h3" : "h2"}
           look="h6"
           className="fr-mb-0"
         >
-          {graphConfig.subtitle}
+          {config.subtitle}
         </Title>
       )}
       <div className="actions">
@@ -248,12 +246,12 @@ export default function ChartWrapper({ id, options, legend, renderData }) {
       )}
       <div className="graph-footer fr-pt-1w">
         {legend}
-        {graphConfig.description?.[currentLang] && (
+        {config.description?.[currentLang] && (
           <div className="fr-notice fr-notice--info fr-mt-1w">
             <div className="fr-container">
               <div className="fr-notice__body">
                 <Text className="description">
-                  {graphConfig.description[currentLang]}
+                  {config.description[currentLang]}
                 </Text>
               </div>
             </div>
@@ -269,7 +267,7 @@ export default function ChartWrapper({ id, options, legend, renderData }) {
         modalId={modalId}
       />
       <IntegrationModal
-        graphConfig={graphConfig}
+        graphConfig={config}
         isOpen={isOpenIntegration}
         setIsOpen={setIsOpenIntegration}
         modalId={modalId}

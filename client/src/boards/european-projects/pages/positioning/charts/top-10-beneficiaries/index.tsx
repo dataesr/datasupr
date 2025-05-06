@@ -9,6 +9,15 @@ import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+const config = {
+  id: "top10beneficiaries",
+  title: "",
+  subtitle: "Principaux pays bénéficiaires",
+  description: "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+  integrationURL:
+    "/european-projects/components/pages/analysis/positioning/charts/top-10-beneficiaries",
+};
+
 export default function Top10Beneficiaries() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
@@ -16,7 +25,7 @@ export default function Top10Beneficiaries() {
 
   const { data, isLoading } = useQuery({
     queryKey: [
-      "Top10Beneficiaries",
+      config.id,
       params,
       Cookies.get("selectedPillars"),
       Cookies.get("selectedPrograms"),
@@ -30,7 +39,7 @@ export default function Top10Beneficiaries() {
 
   return (
     <ChartWrapper
-      id="top10beneficiaries"
+      config={config}
       legend={GetLegend(
         [
           ["Total des subventions en euros €", "#233E41"],
