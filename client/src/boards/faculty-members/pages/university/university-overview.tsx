@@ -5,17 +5,20 @@ import {
   Title,
   Breadcrumb,
   Link,
+  Text,
   Button,
 } from "@dataesr/dsfr-plus";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import YearSelector from "../../filters";
 import useFacultyMembersByUniversity from "./api/use-by-university";
-import { EstablishmentTypeChart } from "../fields/charts/establishment-type/establishment";
+import GeneralIndicatorsCard from "./components/general-indicators-card";
+import { EstablishmentTypeChart } from "./charts/structure-type/structure";
+import { GenderPerStructureTypeChart } from "./charts/gender/gender-per-structure-type";
 import useFacultyMembersByEstablishmentType from "../fields/api/use-by-univ";
 
 export default function UniversityOverview() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [selectedYear, setSelectedYear] = useState("");
 
   const {
@@ -27,6 +30,12 @@ export default function UniversityOverview() {
 
   const { data: establishmentData, isLoading: establishmentLoading } =
     useFacultyMembersByEstablishmentType(selectedYear);
+
+  const genderData = establishmentData?.establishmentTypes
+    ?.find((item) => item?.['type'] == 'Université');
+
+  // console.log(genderData);
+
 
   const [availableYears, setAvailableYears] = useState<string[]>([]);
   const [universities, setUniversities] = useState<
@@ -56,9 +65,9 @@ export default function UniversityOverview() {
     return <div>Erreur: {(error as Error)?.message}</div>;
   }
 
-  const navigateToUniversity = (univId: string) => {
-    navigate(`/personnel-enseignant/universite/vue-d'ensemble/${univId}`);
-  };
+  // const navigateToUniversity = (univId: string) => {
+  //   navigate(`/personnel-enseignant/universite/vue-d'ensemble/${univId}`);
+  // };
 
   return (
     <Container as="main">
@@ -71,7 +80,7 @@ export default function UniversityOverview() {
             </Link>
           </Breadcrumb>
           <Title as="h3" look="h5" className="fr-mt-5w">
-            Vue d'ensemble des établissements universitaires
+            Explorer par établissement
           </Title>
         </Col>
         <Col md={3} style={{ textAlign: "right" }}>
@@ -82,11 +91,30 @@ export default function UniversityOverview() {
           />
         </Col>
       </Row>
+      
 
       {univData?.annual_summary && (
-        <Row className="fr-mt-4w">
+        <Row className="fr-mt-2w">
+          <Row>
+            <Col md={8} className="fr-pr-6w">
+              <Text>
+                Desriptif du périmètre des établissements du programme 150. <br/>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vitae lobortis sem.
+                Quisque vel ex a elit facilisis rhoncus. Morbi eleifend bibendum orci vel aliquet. Fusce
+                a neque dui. Cras molestie quam quis libero ullamcorper viverra. Sed rutrum placerat nibh
+                ut tristique. Cras egestas felis a scelerisque dignissim. Donec placerat nulla dapibus,
+                efficitur ex non, vehicula sapien. Aenean vehicula vitae eros ut egestas. Maecenas lorem
+                massa, vulputate id leo id, aliquet ornare mi. Etiam vitae ipsum ipsum. Cras fermentum
+                lobortis mauris eget malesuada. Sed in consequat elit, eu fringilla magna.
+              </Text>
+            </Col>
+            <Col md={4}>
+              <GeneralIndicatorsCard structureData={univData?.annual_summary} />
+            </Col>
+
+          </Row>
           <Col>
-            <Title as="h4" look="h6">
+            {/* <Title as="h4" look="h6">
               Statistiques globales pour l'année {selectedYear}
             </Title>
             <Row className="fr-mt-2w">
@@ -136,10 +164,10 @@ export default function UniversityOverview() {
                   </Col>
                 </>
               )}
-            </Row>
-            {console.log(univData)}
+            </Row> */}
+            {/* {console.log(univData)} */}
             {/* Section pour la distribution par domaine - à ajouter si vous implémentez l'API correspondante */}
-            {univData?.field_distribution && (
+            {/* {univData?.field_distribution && (
               <div className="fr-mt-5w">
                 <Title as="h4" look="h5">
                   Répartition par domaine scientifique ({selectedYear})
@@ -171,8 +199,8 @@ export default function UniversityOverview() {
                   </tbody>
                 </table>
               </div>
-            )}
-            <table className="fr-mt-3w">
+            )} */}
+            {/* <table className="fr-mt-3w">
               <thead>
                 <tr>
                   <th>Année académique</th>
@@ -201,22 +229,36 @@ export default function UniversityOverview() {
                   </tr>
                 ))}
               </tbody>
-            </table>
+            </table> */}
           </Col>
         </Row>
       )}
 
       <Row className="fr-mt-8w">
-        <Col md={6}>
+        <Col md={8} className="fr-pr-6w">
           <EstablishmentTypeChart
             establishmentData={establishmentData}
             isLoading={establishmentLoading}
             year={selectedYear}
           />
         </Col>
-        <Col></Col>
+        <Col  md={4}>
+          <Text>
+            Descriptif des types d'établissement ???
+          </Text>
+        </Col>
       </Row>
       <Row className="fr-mt-8w">
+        <Col md={8} className="fr-pr-6w">
+          {console.log(genderData)}
+          <GenderPerStructureTypeChart
+            structureData={genderData}
+            isLoading={establishmentLoading}
+            year={selectedYear}
+          />
+        </Col>
+      </Row>
+      {/* <Row className="fr-mt-8w">
         <Col>
           <Title as="h4" look="h6">
             Liste des établissements disponibles ({universities.length})
@@ -247,7 +289,7 @@ export default function UniversityOverview() {
             </Row>
           </div>
         </Col>
-      </Row>
+      </Row> */}
     </Container>
   );
 }
