@@ -6,14 +6,12 @@ import {
   Breadcrumb,
   Link,
   Badge,
-  Text,
 } from "@dataesr/dsfr-plus";
 import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import YearSelector from "../../filters";
 import useFacultyMembersByFields from "./api/use-by-fields";
-import GenderByDiscipline from "./charts/gender/gender";
-import { DisciplineData, FieldData } from "../../types";
+import { FieldData } from "../../types";
 import CnuGroupsTable from "./table/cnu-group-table";
 import CnuSectionsTable from "./table/cnu-section-table";
 import useFacultyMembersByStatus from "./api/use-by-status";
@@ -24,7 +22,6 @@ import { AgeDistributionPieChart } from "./charts/age/age";
 
 export default function SpecificFieldsOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
-  const [disciplinesData, setDisciplinesData] = useState<DisciplineData[]>([]);
   const [specificFieldData, setSpecificFieldData] = useState<FieldData | null>(
     null
   );
@@ -153,48 +150,6 @@ export default function SpecificFieldsOverview() {
     }
   }, [fieldData, fieldId, selectedYear]);
 
-  useEffect(() => {
-    if (fieldData && Array.isArray(fieldData) && selectedYear) {
-      const currentYearData = fieldData.filter(
-        (item) =>
-          item.year === selectedYear || item.academic_year === selectedYear
-      );
-
-      const transformedData = currentYearData
-        .map((field) => {
-          if (field.numberMan !== undefined) {
-            return {
-              fieldId: field.field_id,
-              fieldLabel: field.field_label,
-              maleCount: field.numberMan,
-              femaleCount: field.numberWoman,
-              unknownCount: field.numberUnknown || 0,
-              totalCount:
-                field.numberMan +
-                field.numberWoman +
-                (field.numberUnknown || 0),
-            };
-          } else {
-            return {
-              fieldId: field.fieldId,
-              fieldLabel: field.fieldLabel,
-              maleCount: field.maleCount,
-              femaleCount: field.femaleCount,
-              unknownCount: field.unknownCount || 0,
-              totalCount:
-                field.totalCount ||
-                field.maleCount + field.femaleCount + (field.unknownCount || 0),
-            };
-          }
-        })
-        .sort((a, b) => b.totalCount - a.totalCount);
-
-      setDisciplinesData(transformedData as DisciplineData[]);
-    } else {
-      setDisciplinesData([]);
-    }
-  }, [fieldData, selectedYear]);
-
   const isLoading = allDataLoading || dataLoading || statusLoading;
   if (isLoading) return <div>Chargement des données...</div>;
   if (isError) return <div>Erreur : {error?.message}</div>;
@@ -270,22 +225,27 @@ export default function SpecificFieldsOverview() {
           />
         </Col>
       </Row>
-      <Row className="text-center fr-mt-4w">
-        <Col>
-          <Text className="fr-mt-2w">
-            <strong>Année universitaire</strong>
-            <br />
-            {selectedYear}
-          </Text>
-        </Col>
-      </Row>
       <Row>
-        <Col md={12} style={{ textAlign: "center" }}>
-          <GenderByDiscipline disciplinesData={disciplinesData} />
+        <Col md={8}>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
+          tempora sapiente in, nam autem fugiat voluptatem, illo accusantium
+          consequuntur odit minima repellat at. Similique laboriosam totam dolor
+          cupiditate quo nostrum.
+        </Col>
+        <Col md={4}>
+          <Title as="h3" look="h6" className="fr-mb-2w">
+            Répartition par statut
+          </Title>
+          <DisciplineStatusSummary
+            totalCount={disciplineStatusData.totalCount || 0}
+            aggregatedStats={disciplineStatusData.aggregatedStats || {}}
+            fields={disciplineStatusData.fields || []}
+            isSingleDiscipline={true}
+          />
         </Col>
       </Row>
       <Row gutters className="fr-mt-5w">
-        <Col md={6} className="text-center">
+        <Col md={12} className="text-center">
           <CnuGroupsTable cnuGroups={cnuGroups || []} />
         </Col>
         <i>
@@ -310,17 +270,6 @@ export default function SpecificFieldsOverview() {
       {disciplineStatusData && (
         <Row gutters className="fr-mt-4w fr-mb-4w">
           <Col>
-            <div>
-              <Title as="h3" look="h6" className="fr-mb-2w">
-                Répartition par statut
-              </Title>
-              <DisciplineStatusSummary
-                totalCount={disciplineStatusData.totalCount}
-                aggregatedStats={disciplineStatusData.aggregatedStats}
-                fields={disciplineStatusData.fields}
-                isSingleDiscipline={true}
-              />
-            </div>
             <StatusDistribution
               disciplinesData={[
                 {

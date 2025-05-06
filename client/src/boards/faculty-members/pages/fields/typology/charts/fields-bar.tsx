@@ -133,13 +133,13 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
       {
         name: "Femmes",
         data: femmesData,
-        color: rootStyles.getPropertyValue("--women-color") || "#e1000f",
+        color: rootStyles.getPropertyValue("--women-color"),
         type: "bar",
       },
       {
         name: "Hommes",
         data: hommesData,
-        color: rootStyles.getPropertyValue("--men-color") || "#000091",
+        color: rootStyles.getPropertyValue("--men-color"),
         type: "bar",
       },
     ],
