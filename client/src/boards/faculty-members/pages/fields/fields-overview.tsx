@@ -11,7 +11,6 @@ import { useState, useEffect, useMemo } from "react";
 import YearSelector from "../../filters";
 import useFacultyMembersByFields from "./api/use-by-fields";
 import FieldsDistributionTreemap from "./charts/general/general";
-import GenderByDiscipline from "./charts/gender/gender";
 import { CNUGroup, CNUSection } from "../../types";
 import DisciplineStatsSidebar from "./components/sidebar";
 import FieldCardsGrid from "./components/fields-cards";
@@ -232,11 +231,19 @@ export default function FieldOverview() {
       </Title>
       <Row gutters className="fr-mt-3w">
         <Col md={8}>
-          <GenderByDiscipline disciplinesData={disciplinesData} />
-          <CnuGroupsChart cnuGroups={cnuGroups} />
+          {fieldData && selectedYear && (
+            <FieldsDistributionTreemap
+              fieldsData={fieldData}
+              selectedYear={selectedYear}
+            />
+          )}
         </Col>
         <Col md={4} style={{ textAlign: "center" }}>
           <DisciplineStatsSidebar disciplinesData={disciplinesData} />
+        </Col>
+      </Row>
+      <Row gutters className="fr-mt-3w fr-mb-5w">
+        <Col md={12}>
           <div className="fr-mt-3w">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, fuga
             similique? Commodi voluptates aliquam possimus! Dolor rerum sequi
@@ -247,14 +254,13 @@ export default function FieldOverview() {
       </Row>
       <Row>
         <Col md={8}>
-          {fieldData && selectedYear && (
-            <FieldsDistributionTreemap
-              fieldsData={fieldData}
-              selectedYear={selectedYear}
-            />
-          )}
+          <CnuGroupsChart cnuGroups={cnuGroups} />
         </Col>
-        <Col>
+        <Col md={4} style={{ textAlign: "center" }}>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea repellat
+          corporis est laudantium consequuntur consectetur, odit temporibus!
+          Eligendi, vitae. Vero, harum molestias? Repellendus voluptatem non
+          aperiam? Enim ab obcaecati non?
           {selectedYear && (
             <div className="fr-mt-3w">
               {ageDistributionData && (

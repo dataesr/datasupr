@@ -46,14 +46,14 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
   const categories = groupedData.map((d) => d.discipline);
 
   const getColorForDiscipline = (discipline: string) => {
-    if (discipline.includes("Science")) return "#000091";
+    if (discipline.includes("Science")) return "#3558a2";
     if (discipline.includes("Lettre") || discipline.includes("humaine"))
-      return "#e1000f";
+      return "#a94645";
     if (discipline.includes("Droit") || discipline.includes("économie"))
-      return "#6E445A";
-    if (discipline.includes("Médecine")) return "#E1000F";
+      return "#6e445a";
+    if (discipline.includes("Médecine")) return "#a94645";
     if (discipline.includes("Pharma")) return "#009099";
-    return "#666666";
+    return "#fcc63a";
   };
 
   const getShade = (baseColor: string, index: number, total: number) => {

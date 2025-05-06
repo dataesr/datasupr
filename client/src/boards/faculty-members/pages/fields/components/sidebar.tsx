@@ -14,6 +14,8 @@ interface DisciplineStatsSidebarProps {
   disciplinesData: DisciplineData[];
 }
 
+const rootStyles = getComputedStyle(document.documentElement);
+
 const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
   disciplinesData,
 }) => {
@@ -31,9 +33,9 @@ const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
             borderBottomRightRadius: "20px",
           }}
         >
-          <div style={{ textAlign: "center" }}>
+          <div className="fr-mb-3w">
             <span className="fr-icon-user-line " aria-hidden="true"></span>
-            <span className="fr-text--sm">Effectif total</span>
+            <span className="fr-text--sm ">Effectif total</span>
 
             <span style={{ fontWeight: "bold", color: "#000091" }}>
               {" "}
@@ -48,7 +50,9 @@ const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
               <div className="fr-col-6">
                 <div
                   style={{
-                    borderLeft: "4px solid #e1000f",
+                    borderLeft: `4px solid ${rootStyles.getPropertyValue(
+                      "--women-color"
+                    )}`,
                     paddingLeft: "0.5rem",
                     textAlign: "center",
                   }}
@@ -73,7 +77,9 @@ const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
               <div className="fr-col-6">
                 <div
                   style={{
-                    borderLeft: "4px solid #000091",
+                    borderLeft: `4px solid ${rootStyles.getPropertyValue(
+                      "--men-color"
+                    )}`,
                     paddingLeft: "0.5rem",
                     textAlign: "center",
                   }}
@@ -98,17 +104,15 @@ const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
             </div>
           </div>
         </div>
-        <div className="fr-mb-3w">
-          <div className="fr-grid-row fr-mb-1w ">
-            <div className="fr-col">
-              <span
-                className="fr-icon-award-line fr-icon--sm fr-mr-1w"
-                aria-hidden="true"
-              ></span>
-              <span className="fr-text--bold  fr-text--sm ">
-                Top 3 des disciplines
-              </span>
-            </div>
+        <div>
+          <div className="text-center fr-mr-8w fr-mb-2w">
+            <span
+              className="fr-icon-award-line fr-icon--sm fr-mr-1w"
+              aria-hidden="true"
+            ></span>
+            <span className="fr-text--bold  fr-text--sm ">
+              Top 3 des disciplines
+            </span>
           </div>
           <div className="fr-mb-3w">
             <div className="fr-card fr-card--no-border">
@@ -186,58 +190,6 @@ const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
               })}
             </div>
           </div>
-        </div>
-
-        <div className=" fr-p-2w fr-mb-1w">
-          <div>
-            <div className="fr-mb-1w">
-              <span className="fr-text--bold fr-text--sm fr-ml-1w">
-                Taux de féminisation
-              </span>
-            </div>
-          </div>
-          {disciplinesData.slice(0, 3).map((d) => {
-            const femRate = Math.round((d.femaleCount / d.totalCount) * 100);
-            return (
-              <div key={d.fieldId} className="fr-mb-1w">
-                <div className="fr-text--xs fr-mb-0">
-                  {d.fieldLabel.substring(0, 20)}
-                  {d.fieldLabel.length > 20 ? "..." : ""}
-                </div>
-                <div className="fr-grid-row fr-grid-row--middle">
-                  <div className="fr-col-10">
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "6px",
-                        backgroundColor: "#f5f5f5",
-                        borderRadius: "3px",
-                        overflow: "hidden",
-                        marginBottom: "0",
-                      }}
-                    >
-                      <div
-                        style={{
-                          height: "100%",
-                          width: `${femRate}%`,
-                          backgroundColor: femRate > 50 ? "#e1000f" : "#000091",
-                          borderRadius: "3px 0 0 3px",
-                          transition: "width 0.5s ease",
-                        }}
-                        role="progressbar"
-                        aria-valuenow={femRate}
-                        aria-valuemin={0}
-                        aria-valuemax={100}
-                      ></div>
-                    </div>
-                  </div>
-                  <div className="fr-text--right">
-                    <span className="fr-text--bold">{femRate}%</span>
-                  </div>
-                </div>
-              </div>
-            );
-          })}
         </div>
       </div>
     </Col>

@@ -188,7 +188,7 @@ export default function StatusOptions({
     },
     plotOptions: {
       column: {
-        stacking: "normal",
+        stacking: "percent",
         dataLabels: {
           enabled: true,
           formatter: function () {

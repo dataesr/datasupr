@@ -30,13 +30,13 @@ export default function OptionsColumnChart({
   const categories = limitedData.map((field) => field.fieldLabel);
 
   const colors = [
-    "#000091",
-    "#e18b00",
-    "#6a6af4",
-    "#e1000f",
-    "#009099",
-    "#8585f6",
-    "#666666",
+    "#fddbfa",
+    "#73e0cf",
+    "#6e445a",
+    "#a94645",
+    "#9ef9be",
+    "#e6feda",
+    "#c9fcac",
   ];
 
   const data = limitedData.map((field, index) => ({
@@ -133,12 +133,12 @@ export default function OptionsColumnChart({
             <div style="margin:8px 0; font-size:16px; font-weight:bold;">
               ${p.y !== undefined ? p.y.toLocaleString() : 0} enseignants
             </div>
-            <div style="margin-top:5px; color:#e1000f;">
+            <div style="margin-top:5px; color:#e18b76">
               Femmes: ${p.customData.femalePercentage}% (${
           p.customData.femaleCount
         })
             </div>
-            <div style="margin-top:3px; color:#000091;">
+            <div style="margin-top:3px; color:#efcb3a">
               Hommes: ${p.customData.malePercentage}% (${
           p.customData.maleCount
         })
