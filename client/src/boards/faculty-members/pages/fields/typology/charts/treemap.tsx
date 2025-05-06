@@ -58,21 +58,21 @@ export function TreemapChart({
           : 0;
         return `<b>${point.name}</b><br>
                Effectif total: <b>${point.value}</b> personnes<br>
-               <span style="color:#EB7369">Femmes: ${
+               <span style="color:#e18b76">Femmes: ${
                  point.femaleCount
                } (${femalePercent}%)</span><br>
-               <span style="color:#6E97CD">Hommes: ${point.maleCount} (${
+               <span style="color:#efcb3a">Hommes: ${point.maleCount} (${
           100 - femalePercent
         }%)</span>`;
       },
     },
     colorAxis: {
-      minColor: "#6E97CD",
-      maxColor: "#EB7369",
+      minColor: "#efcb3a",
+      maxColor: "#e18b76",
       stops: [
-        [0, "#6E97CD"],
+        [0, "#efcb3a"],
         [0.5, "#EFEFEF"],
-        [1, "#EB7369"],
+        [1, "#e18b76"],
       ],
     },
     series: [
@@ -109,7 +109,7 @@ export function TreemapChart({
               display: "inline-block",
               width: "10px",
               height: "10px",
-              backgroundColor: "#6E97CD",
+              backgroundColor: "#efcb3a",
               marginRight: "5px",
             }}
           ></span>
@@ -133,7 +133,7 @@ export function TreemapChart({
               display: "inline-block",
               width: "10px",
               height: "10px",
-              backgroundColor: "#EB7369",
+              backgroundColor: "#e18b76",
               marginRight: "5px",
             }}
           ></span>

@@ -1,7 +1,9 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useNavigate } from "react-router-dom";
+import { Button, Col, Row } from "@dataesr/dsfr-plus";
+import "../../../../styles.scss";
 
 interface DisciplineBarChartProps {
   disciplines: Array<{
@@ -14,26 +16,48 @@ interface DisciplineBarChartProps {
   }>;
 }
 
-const hommesColor = `rgba(${getComputedStyle(document.documentElement)
-  .getPropertyValue("--hommes-color")
-  .trim()}, 0.8)`;
-const femmesColor = `rgba(${getComputedStyle(document.documentElement)
-  .getPropertyValue("--femmes-color")
-  .trim()}, 0.8)`;
-
 const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
   disciplines,
 }) => {
   const chartRef = useRef<HighchartsReact.RefObject>(null);
   const navigate = useNavigate();
 
-  const sortedDisciplines = [...disciplines].sort(
-    (a, b) => b.hommesCount + b.femmesCount - (a.hommesCount + a.femmesCount)
+  const [sortKey, setSortKey] = useState<
+    "total" | "femmesPercent" | "hommesPercent"
+  >("total");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [stackType, setStackType] = useState<"percent" | "normal">("percent");
+
+  const rootStyles = getComputedStyle(document.documentElement);
+
+  const sortedDisciplines = [...disciplines].sort((a, b) => {
+    const getVal = (d: typeof a) => {
+      if (sortKey === "total") return d.femmesCount + d.hommesCount;
+      if (sortKey === "femmesPercent") return d.femmesPercent;
+      if (sortKey === "hommesPercent") return d.hommesPercent;
+      return 0;
+    };
+    const valA = getVal(a);
+    const valB = getVal(b);
+    return sortOrder === "asc" ? valA - valB : valB - valA;
+  });
+
+  const categories = sortedDisciplines.map(
+    (d) =>
+      `${d.discipline} <span style="font-size:11px; color:#888">(${
+        d.femmesCount + d.hommesCount
+      } personnes)</span>`
   );
 
-  const categories = sortedDisciplines.map((d) => d.discipline);
-  const femmesData = sortedDisciplines.map((d) => d.femmesPercent);
-  const hommesData = sortedDisciplines.map((d) => d.hommesPercent);
+  const femmesData =
+    stackType === "percent"
+      ? sortedDisciplines.map((d) => d.femmesPercent)
+      : sortedDisciplines.map((d) => d.femmesCount);
+
+  const hommesData =
+    stackType === "percent"
+      ? sortedDisciplines.map((d) => d.hommesPercent)
+      : sortedDisciplines.map((d) => d.hommesCount);
 
   const options: Highcharts.Options = {
     chart: {
@@ -52,16 +76,29 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
     xAxis: {
       categories,
       title: { text: null },
+      labels: {
+        useHTML: true,
+        align: "left",
+        x: 0,
+        style: {
+          fontSize: "13px",
+        },
+      },
     },
+
     yAxis: {
-      visible: false,
+      visible: stackType === "percent",
+      max: stackType === "percent" ? 100 : undefined,
+      title: {
+        text: stackType === "percent" ? "Pourcentage" : "Effectif",
+      },
     },
     legend: {
-      enabled: false,
+      reversed: false,
     },
     plotOptions: {
       series: {
-        stacking: "percent",
+        stacking: stackType,
         cursor: "pointer",
         point: {
           events: {
@@ -84,23 +121,25 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
     },
     tooltip: {
       formatter: function () {
-        const discipline = this.point.category;
+        const discipline = this.point.category?.toString().split("<br")[0];
         const value = Number(this.point.y).toFixed(1);
         return `<b>${discipline}</b><br/>
-          <span style="color:${this.point.color}">\u25CF</span> ${this.series.name}: ${value}%`;
+          <span style="color:${this.point.color}">\u25CF</span> ${
+          this.series.name
+        }: ${value}${stackType === "percent" ? "%" : ""}`;
       },
     },
     series: [
       {
         name: "Femmes",
         data: femmesData,
-        color: femmesColor,
+        color: rootStyles.getPropertyValue("--women-color") || "#e1000f",
         type: "bar",
       },
       {
         name: "Hommes",
         data: hommesData,
-        color: hommesColor,
+        color: rootStyles.getPropertyValue("--men-color") || "#000091",
         type: "bar",
       },
     ],
@@ -110,16 +149,77 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
     if (chartRef.current?.chart) {
       chartRef.current.chart.reflow();
     }
-  }, [disciplines]);
+  }, [disciplines, sortKey, sortOrder, stackType]);
 
   return (
-    <div className="fr-mb-3w">
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={options}
-        ref={chartRef}
-      />
-    </div>
+    <Row gutters>
+      <Col className="text-right">
+        <Button
+          size="sm"
+          variant={sortKey === "total" ? undefined : "text"}
+          onClick={() => setSortKey("total")}
+        >
+          <span className="fr-icon-bar-chart-box-line" aria-hidden="true" />
+        </Button>
+
+        <Button
+          size="sm"
+          variant={sortKey === "femmesPercent" ? undefined : "text"}
+          onClick={() => setSortKey("femmesPercent")}
+        >
+          <span className="fr-icon-woman-fill" aria-hidden="true" />
+        </Button>
+
+        <Button
+          size="sm"
+          variant={sortKey === "hommesPercent" ? undefined : "text"}
+          onClick={() => setSortKey("hommesPercent")}
+        >
+          <span className="fr-icon-man-fill" aria-hidden="true" />
+        </Button>
+
+        <Button
+          size="sm"
+          variant="text"
+          onClick={() =>
+            setStackType((prev) => (prev === "percent" ? "normal" : "percent"))
+          }
+        >
+          <span
+            className={
+              stackType === "percent"
+                ? "fr-icon-percent-fill"
+                : "fr-icon-user-fill"
+            }
+            aria-hidden="true"
+          />
+        </Button>
+        <Button
+          size="sm"
+          variant="text"
+          onClick={() =>
+            setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+          }
+        >
+          <span
+            className={
+              sortOrder === "asc"
+                ? "fr-icon-arrow-up-s-fill"
+                : "fr-icon-arrow-down-s-fill"
+            }
+            aria-hidden="true"
+          />
+          Ordre : {sortOrder}
+        </Button>
+      </Col>
+      <Col md={12} lg={12} xl={12}>
+        <HighchartsReact
+          highcharts={Highcharts}
+          options={options}
+          ref={chartRef}
+        />
+      </Col>
+    </Row>
   );
 };
 

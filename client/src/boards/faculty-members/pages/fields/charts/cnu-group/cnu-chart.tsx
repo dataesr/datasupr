@@ -176,7 +176,7 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
     },
     plotOptions: {
       column: {
-        stacking: "normal",
+        stacking: "percent",
         borderWidth: 0,
         borderRadius: 2,
       },

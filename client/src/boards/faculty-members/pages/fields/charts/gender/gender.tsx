@@ -53,10 +53,10 @@ const GenderByDiscipline: React.FC<GenderByDisciplineProps> = ({
       },
       labels: {
         style: {
-          color: "#000000", // Noir pour assurer la visibilité en mode clair
-          fontWeight: "600", // Gras pour meilleure lisibilité
+          color: "#000000",
+          fontWeight: "600",
           fontSize: "13px",
-          textOutline: "1px contrast", // Contour adaptatif pour les deux modes
+          textOutline: "1px contrast",
         },
       },
       lineWidth: 0,
@@ -71,7 +71,7 @@ const GenderByDiscipline: React.FC<GenderByDisciplineProps> = ({
       labels: {
         overflow: "justify",
         style: {
-          color: "#333333", // Couleur lisible dans les deux modes
+          color: "#333333",
         },
       },
       stackLabels: {
