@@ -46,9 +46,9 @@ router.get("/faculty-members-overview-university-data", async (req, res) => {
           $group: {
             _id: "$academic_year",
             establishment_count: { $sum: 1 },
-            total_headcount: { $sum: "$total_stats.total_headcount" },
-            woman_count: { $sum: "$total_stats.woman_count" },
-            man_count: { $sum: "$total_stats.man_count" },
+            totalCount: { $sum: "$total_stats.total_headcount" },
+            femaleCount: { $sum: "$total_stats.woman_count" },
+            maleCount: { $sum: "$total_stats.man_count" },
             titular_count: { $sum: "$total_stats.titular_count" },
             researcher_count: { $sum: "$total_stats.researcher_count" },
           },
@@ -58,16 +58,16 @@ router.get("/faculty-members-overview-university-data", async (req, res) => {
             _id: 0,
             academic_year: "$_id",
             establishment_count: 1,
-            total_headcount: 1,
-            woman_count: 1,
-            man_count: 1,
+            totalCount: 1,
+            femaleCount: 1,
+            maleCount: 1,
             titular_count: 1,
             researcher_count: 1,
             woman_percentage: {
               $round: [
                 {
                   $multiply: [
-                    { $divide: ["$woman_count", "$total_headcount"] },
+                    { $divide: ["$femaleCount", "$totalCount"] },
                     100,
                   ],
                 },
@@ -78,7 +78,7 @@ router.get("/faculty-members-overview-university-data", async (req, res) => {
               $round: [
                 {
                   $multiply: [
-                    { $divide: ["$man_count", "$total_headcount"] },
+                    { $divide: ["$maleCount", "$totalCount"] },
                     100,
                   ],
                 },
