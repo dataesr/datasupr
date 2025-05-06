@@ -9,12 +9,21 @@ import { getDefaultParams } from "./utils";
 import { RenderData } from "./render-data";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+const config = {
+  id: "mainPartners",
+  title: "",
+  subtitle: "Principaux partenaires des équipes du pays sélectionné",
+  description: "",
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries",
+};
+
 export default function MainPartners() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["MainBeneficiaries", params],
+    queryKey: [config.id, params],
     queryFn: () => GetData(params),
   });
 
@@ -23,9 +32,9 @@ export default function MainPartners() {
   return <>MainPartners chart</>; //TODO: Implement MainPartners chart
   return (
     <ChartWrapper
-      id="mainPartners"
-      options={options(data)}
+      config={config}
       legend={null}
+      options={options(data)}
       renderData={RenderData}
     />
   );

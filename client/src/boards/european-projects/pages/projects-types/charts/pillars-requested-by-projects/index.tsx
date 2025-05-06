@@ -19,73 +19,130 @@ import {
   RenderDataCoordinationNumberRates,
 } from "./render-data";
 
-export default function PillarsSubsidiesRequestedByProjects({ indicateurId }) {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
-  const params = getDefaultParams(searchParams);
+  const configChart1a = {
+    id: "pillarsSubsidiesRequestedByProjects",
+    title: "",
+    subtitle: "Subventions demandées et obtenues (M€)",
+    description: null,
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+  };
+  const configChart1b = {
+    id: "pillarsSubsidiesRequestedByProjectsRates",
+    title: "",
+    subtitle: "Part des subventions demandées et obtenues sur HE",
+    description: null,
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+  };
+  const configChart2a = {
+    id: "pillarsProjectCoordinationRequestedByProjects",
+    title: "",
+    subtitle: "Nombre de candidats et de participants",
+    description: null,
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+  };
+  const configChart2b = {
+    id: "pillarsProjectCoordinationRequestedByProjectsRates",
+    title: "",
+    subtitle: "Poids des candidats et participants sur HE",
+    description: null,
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+  };
 
-  const { data, isLoading } = useQuery({
-    queryKey: [indicateurId, params],
-    queryFn: () => GetData(params),
-  });
+  export default function PillarsSubsidiesRequestedByProjects({
+    indicateurId,
+  }) {
+    const [searchParams] = useSearchParams();
+    const currentLang = searchParams.get("language") || "fr";
+    const params = getDefaultParams(searchParams);
 
-  if (isLoading || !data) return <DefaultSkeleton col={2} />;
+    const { data, isLoading } = useQuery({
+      queryKey: [indicateurId, params],
+      queryFn: () => GetData(params),
+    });
 
-  let options, optionsRates;
-  let renderDataValues, renderDataRates;
-  switch (indicateurId) {
-    case "pillarsSubsidiesRequestedByProjects":
-      options = optionsSubsidiesValues(data);
-      optionsRates = optionsSubsidiesRates(data);
-      renderDataValues = RenderDataSubsidiesValues;
-      renderDataRates = RenderDataSubsidiesRates;
-      break;
+    if (isLoading || !data) return <DefaultSkeleton col={2} />;
 
-    case "pillarsProjectCoordinationRequestedByProjects":
-      options = optionsCoordinationNumber(data);
-      optionsRates = OptionsCoordinationNumberRates(data);
-      renderDataValues = RenderDataCoordinationNumberValues;
-      renderDataRates = RenderDataCoordinationNumberRates;
-      break;
+    let options, optionsRates;
+    let renderDataValues, renderDataRates;
+    switch (indicateurId) {
+      case "pillarsSubsidiesRequestedByProjects":
+        options = optionsSubsidiesValues(data);
+        optionsRates = optionsSubsidiesRates(data);
+        renderDataValues = RenderDataSubsidiesValues;
+        renderDataRates = RenderDataSubsidiesRates;
+        break;
 
-    // case "pillarsApplicantsAndParticipantsRequestedByProjects":
-    //   options = optionsSubsidiesValues(data);
-    //   optionsRates = optionsSubsidiesRates(data);
-    //   break;
+      case "pillarsProjectCoordinationRequestedByProjects":
+        options = optionsCoordinationNumber(data);
+        optionsRates = OptionsCoordinationNumberRates(data);
+        renderDataValues = RenderDataCoordinationNumberValues;
+        renderDataRates = RenderDataCoordinationNumberRates;
+        break;
 
-    default:
-      break;
+      // case "pillarsApplicantsAndParticipantsRequestedByProjects":
+      //   options = optionsSubsidiesValues(data);
+      //   optionsRates = optionsSubsidiesRates(data);
+      //   break;
+
+      default:
+        break;
+    }
+
+    const legend = GetLegend(
+      [
+        ["Projets lauréats", "#233E41"],
+        ["Projets évalués", "#009099"],
+      ],
+      "PillarsSubsidiesRequestedByProjects",
+      currentLang
+    );
+
+    return (
+      <Container fluid>
+        {indicateurId === "pillarsSubsidiesRequestedByProjects" && (
+          <Row>
+            <Col md={6}>
+              <ChartWrapper
+                config={configChart1a}
+                legend={legend}
+                options={options}
+                renderData={renderDataValues}
+              />
+            </Col>
+            <Col>
+              <ChartWrapper
+                config={configChart1b}
+                legend={null}
+                options={optionsRates}
+                renderData={renderDataRates}
+              />
+            </Col>
+          </Row>
+        )}
+        {indicateurId === "pillarsProjectCoordinationRequestedByProjects" && (
+          <Row>
+            <Col md={6}>
+              <ChartWrapper
+                config={configChart2a}
+                legend={legend}
+                options={options}
+                renderData={renderDataValues}
+              />
+            </Col>
+            <Col>
+              <ChartWrapper
+                config={configChart2b}
+                legend={null}
+                options={optionsRates}
+                renderData={renderDataRates}
+              />
+            </Col>
+          </Row>
+        )}
+      </Container>
+    );
   }
-
-  const legend = GetLegend(
-    [
-      ["Projets lauréats", "#233E41"],
-      ["Projets évalués", "#009099"],
-    ],
-    "PillarsSubsidiesRequestedByProjects",
-    currentLang
-  );
-
-  return (
-    <Container fluid>
-      <Row>
-        <Col>
-          <ChartWrapper
-            id={indicateurId}
-            legend={legend}
-            options={options}
-            renderData={renderDataValues}
-          />
-        </Col>
-        <Col>
-          <ChartWrapper
-            id={`${indicateurId}Rates`}
-            legend={null}
-            options={optionsRates}
-            renderData={renderDataRates}
-          />
-        </Col>
-      </Row>
-    </Container>
-  );
-}

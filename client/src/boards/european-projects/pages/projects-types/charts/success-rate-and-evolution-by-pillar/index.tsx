@@ -10,6 +10,25 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+const configChart1 = {
+  id: "pillarsSubsidiesRequestedByRates",
+  title: "",
+  subtitle: "Taux de succès sur le montants par pilier",
+  description: "Attention EIT",
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-2",
+};
+
+const configChart2 = {
+  id: "pillarsProjectCoordinationRequestedByRates",
+  title: "",
+  subtitle:
+    "Taux de succès sur le nombre de coordinations de projets par pilier",
+  description: "Attention EIT",
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-2",
+};
+
 export default function SuccessRateAndEvolutionByPillar({ indicateurId }) {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
@@ -22,77 +41,106 @@ export default function SuccessRateAndEvolutionByPillar({ indicateurId }) {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  let options;
-  // , optionsRates;
-  switch (indicateurId) {
-    case "pillarsSubsidiesRequestedByRates":
-      options = optionsSubsidiesValues(data);
-      // optionsEvolution = optionsSubsidiesRates(data);
-      break;
-
-    case "pillarsProjectCoordinationRequestedByRates":
-      options = optionsCoordinationNumber(data);
-      // optionsRates = OptionsCoordinationNumberRates(data);
-      break;
-
-    // case "pillarsApplicantsAndParticipantsRequestedByProjectsLines":
-    //   options = optionsSubsidiesValues(data);
-    //   // optionsEvolution = optionsSubsidiesRates(data);
-    //   break;
-
-    default:
-      break;
-  }
-
   return (
     <Container fluid>
-      <Row>
-        <Col md={6}>
-          <ChartWrapper
-            id={indicateurId}
-            options={options}
-            legend={
-              <ul className="legend">
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
+      {indicateurId === "pillarsSubsidiesRequestedByRates" && (
+        <Row>
+          <Col md={6}>
+            <ChartWrapper
+              config={configChart1}
+              options={optionsSubsidiesValues(data)}
+              legend={
+                <ul className="legend">
+                  <li
                     style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#6DD897",
-                      marginRight: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "5px",
                     }}
-                  />
-                  <span>Pays sélectionné</span>
-                </li>
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
+                  >
+                    <div
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        background: "#6DD897",
+                        marginRight: "10px",
+                      }}
+                    />
+                    <span>Pays sélectionné</span>
+                  </li>
+                  <li
                     style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#09622A",
-                      marginRight: "10px",
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "5px",
                     }}
-                  />
-                  <span>UE & Etats associés</span>
-                </li>
-              </ul>
-            }
-            renderData={() => null} // TODO: add data table
-          />
-        </Col>
-      </Row>
+                  >
+                    <div
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        background: "#09622A",
+                        marginRight: "10px",
+                      }}
+                    />
+                    <span>UE & Etats associés</span>
+                  </li>
+                </ul>
+              }
+              renderData={() => null} // TODO: add data table
+            />
+          </Col>
+        </Row>
+      )}
+      {indicateurId === "pillarsProjectCoordinationRequestedByRates" && (
+        <Row>
+          <Col md={6}>
+            <ChartWrapper
+              config={configChart2}
+              options={optionsCoordinationNumber(data)}
+              legend={
+                <ul className="legend">
+                  <li
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        background: "#6DD897",
+                        marginRight: "10px",
+                      }}
+                    />
+                    <span>Pays sélectionné</span>
+                  </li>
+                  <li
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      marginBottom: "5px",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "20px",
+                        height: "20px",
+                        background: "#09622A",
+                        marginRight: "10px",
+                      }}
+                    />
+                    <span>UE & Etats associés</span>
+                  </li>
+                </ul>
+              }
+              renderData={() => null} // TODO: add data table
+            />
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 }

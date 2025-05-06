@@ -17,6 +17,49 @@ import { useState } from "react";
 import i18n from "./i18n.json";
 import { normalizeIdForCssColorNames } from "../../../../utils";
 
+const configChart1 = {
+  id: "destinationsEvolutionFundingLines",
+  title: {
+    fr: "Destinations - Evolution des financements demandés et obtenus (M€)",
+    en: "Destinations - Financing applied for and obtained (€m)",
+  },
+  description: {
+    fr: "",
+    en: "",
+  },
+  subtitle: "",
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+};
+const configChart2 = {
+  id: "destinationsEvolutionFundingLinesRates",
+  title: {
+    fr: "Destinations - Evolution du taux de succès des financements demandés et obtenus",
+    en: "Destinations - Trend in the success rate of financing applications and grants",
+  },
+  description: {
+    fr: "",
+    en: "",
+  },
+  subtitle: "",
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+};
+const configChart3 = {
+  id: "destinationsEvolutionFundingLinesSuccessRate",
+  title: {
+    fr: "Destinations - Part des financements du pays demandés et obtenus par rapport au total des participants",
+    en: "Destinations - Percentage of country funding applied for and obtained as a proportion of total participants",
+  },
+  description: {
+    fr: "",
+    en: "",
+  },
+  subtitle: "",
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+};
+
 export default function DestinationsFundingEvo3Years() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
@@ -114,17 +157,17 @@ export default function DestinationsFundingEvo3Years() {
       <Row>
         <Col md={6}>
           <ChartWrapper
-            id="destinationsEvolutionFundingLines"
-            options={optionsSubsidiesValues(data, displayType)}
+            config={configChart1}
             legend={null}
+            options={optionsSubsidiesValues(data, displayType)}
             renderData={RenderDataSubsidiesValuesAndRates}
           />
         </Col>
         <Col>
           <ChartWrapper
-            id="destinationsEvolutionFundingLinesRates"
-            options={optionsSubsidiesRates(data, displayType)}
+            config={configChart2}
             legend={null}
+            options={optionsSubsidiesRates(data, displayType)}
             renderData={RenderDataSubsidiesValuesAndRates}
           />
         </Col>
@@ -137,9 +180,9 @@ export default function DestinationsFundingEvo3Years() {
       <Row>
         <Col>
           <ChartWrapper
-            id="destinationsEvolutionFundingLinesSuccessRate"
-            options={optionsSubsidiesCountryRates(data, displayType)}
+            config={configChart3}
             legend={null}
+            options={optionsSubsidiesCountryRates(data, displayType)}
             renderData={RenderDataSubsidiesValuesAndRates}
           />
         </Col>

@@ -8,12 +8,20 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams, getColorByPillierName } from "./utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+const config = {
+  id: "fundedObjectives",
+  title: "Financements obtenus",
+  description: "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/funded-objectives",
+};
+
 export default function FundedObjectives() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundedObjectives", params],
+    queryKey: [config.id, params],
     queryFn: () => GetfundedObjectives(params),
   });
 
@@ -44,8 +52,7 @@ export default function FundedObjectives() {
 
   return (
     <ChartWrapper
-      id="fundedObjectives"
-      options={options(data)}
+      config={config}
       legend={
         <ul className="legend">
           {pillierLegend.map((item) => (
@@ -70,6 +77,7 @@ export default function FundedObjectives() {
           ))}
         </ul>
       }
+      options={options(data)}
       renderData={() => null} // TODO: add data table
     />
   );

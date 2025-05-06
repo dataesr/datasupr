@@ -10,12 +10,30 @@ import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+const configChart1 = {
+  id: "typeOfFinancingSubsidiesRequestedByProjects",
+  title: "",
+  subtitle: "Subventions demandées et obtenues (M€)",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+};
+
+const configChart2 = {
+  id: "typeOfFinancingSubsidiesRequestedByProjectsRates",
+  title: "",
+  subtitle: "Part des subventions demandées et obtenues sur HE",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+};
+
 export default function TypeOfFinancingSubsidiesRequestedByProjects() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["TypeOfFinancingSubsidiesRequestedByProjects", params],
+    queryKey: [configChart1.id, params],
     queryFn: () => GetData(params),
   });
 
@@ -26,7 +44,7 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
       <Row>
         <Col>
           <ChartWrapper
-            id="typeOfFinancingSubsidiesRequestedByProjects"
+            config={configChart1}
             options={optionsSubventionsValues(data)}
             legend={
               <ul className="legend">
@@ -71,7 +89,7 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
         </Col>
         <Col>
           <ChartWrapper
-            id="typeOfFinancingSubsidiesRequestedByProjectsRates"
+            config={configChart2}
             options={optionsSubventionsRates(data)}
             legend={null}
             renderData={() => null} // TODO: add data table

@@ -7,10 +7,24 @@ import { useGetParams } from "./utils";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+const config = {
+  id: "pillarsFundingProportion",
+  title: {
+    fr: "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
+    en: "Funding requested and obtained by the country on all countries",
+  },
+  description: {
+    fr: "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
+    en: "Funding requested and obtained by the country on all countries",
+  },
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
+};
+
 export default function PillarsFundingProportion() {
   const params = useGetParams();
   const { data, isLoading } = useQuery({
-    queryKey: ["PillarsFundingProportion", params],
+    queryKey: [config.id, params],
     queryFn: () => getData(params),
   });
 
@@ -18,9 +32,9 @@ export default function PillarsFundingProportion() {
 
   return (
     <ChartWrapper
-      id="pillarsFundingProportion"
-      options={options(data)}
+      config={config}
       legend={null}
+      options={options(data)}
       renderData={() => null} // TODO: add data table
     />
   );

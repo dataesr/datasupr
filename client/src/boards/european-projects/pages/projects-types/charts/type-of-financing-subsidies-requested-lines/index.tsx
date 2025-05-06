@@ -10,6 +10,23 @@ import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+const configChart1 = {
+  id: "typeOfFinancingSubsidiesRequested",
+  title: "",
+  subtitle: "Subventions demandées et obtenues (M€)",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+};
+const configChart2 = {
+  id: "typeOfFinancingSubsidiesRequestedRates",
+  title: "",
+  subtitle: "Part des subventions demandées et obtenues sur HE",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+};
+
 export default function TypeOfFinancingSubsidiesRequestedLines() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
@@ -26,17 +43,17 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
       <Row>
         <Col md={6}>
           <ChartWrapper
-            id="typeOfFinancingSubsidiesRequested"
-            options={optionsValues(data)}
+            config={configChart1}
             legend={null}
+            options={optionsValues(data)}
             renderData={() => null} // TODO: add data table
           />
         </Col>
         <Col>
           <ChartWrapper
-            id="typeOfFinancingSubsidiesRequestedRates"
-            options={optionsRates(data)}
+            config={configChart2}
             legend={null}
+            options={optionsRates(data)}
             renderData={() => null} // TODO: add data table
           />
         </Col>

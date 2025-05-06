@@ -9,12 +9,21 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+const config = {
+  id: "successRateForAmountsByTypeOfFinancing",
+  title: "",
+  subtitle: "Taux de succès sur le montants par type de financement",
+  description: "Attention EIT",
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-2",
+};
+
 export default function SuccessRateForAmountsByTypeOfFinancing() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
 
   const { data, isLoading } = useQuery({
-    queryKey: ["SuccessRateForAmountsByProjectsTypes", params],
+    queryKey: [config.id, params],
     queryFn: () => GetData(params),
   });
 
@@ -25,7 +34,7 @@ export default function SuccessRateForAmountsByTypeOfFinancing() {
       <Row>
         <Col md={6}>
           <ChartWrapper
-            id="successRateForAmountsByTypeOfFinancing"
+            config={config}
             options={options(data)}
             legend={
               <ul className="legend">

@@ -14,6 +14,57 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useSearchParams } from "react-router-dom";
 
+const configChart1a = {
+  id: "fundingRankingSub",
+  title: "",
+  subtitle: "Subventions demandées et obtenues (M€) par pays",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+};
+const configChart1b = {
+  id: "fundingRankingSubSuccessRate",
+  title: "",
+  subtitle: "Taux de succès sur les montants par pays <br />",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+};
+
+const configChart2a = {
+  id: "fundingRankingCoordination",
+  title: "",
+  subtitle: "Nombre de coordinations de projets déposés et lauréats",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+};
+const configChart2b = {
+  id: "fundingRankingCoordinationSuccessRate",
+  title: "",
+  subtitle: "Taux de succès sur le nombre de coordinations de projets lauréats",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+};
+
+const configChart3a = {
+  id: "fundingRankingInvolved",
+  title: "",
+  subtitle: "Nombre de candidats et de participants",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+};
+const configChart3b = {
+  id: "fundingRankingInvolvedSuccessRate",
+  title: "",
+  subtitle: "Taux de succès individuel des participants",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+};
+
 export default function FundingRanking() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
@@ -25,26 +76,22 @@ export default function FundingRanking() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  let successGraphId,
-    sortIndicateur = "";
+  let sortIndicateur = "";
   let optionsChart, optionChartSuccess;
   switch (selectedChart) {
     case "fundingRankingSub":
-      successGraphId = "fundingRankingSubSuccessRate";
       sortIndicateur = "total_successful";
       optionsChart = optionsSub;
       optionChartSuccess = optionSubSuccessRate;
       break;
 
     case "fundingRankingCoordination":
-      successGraphId = "fundingRankingCoordinationSuccessRate";
       sortIndicateur = "total_coordination_number_successful";
       optionsChart = optionsCoordinationNumber;
       optionChartSuccess = optionCoordinationNumberSuccessRate;
       break;
 
     case "fundingRankingInvolved":
-      successGraphId = "fundingRankingInvolvedSuccessRate";
       sortIndicateur = "total_number_involved_successful";
       optionsChart = optionsNumberInvolved;
       optionChartSuccess = optionNumberInvolvedSuccessRate;
@@ -81,38 +128,108 @@ export default function FundingRanking() {
           </select>
         </Col>
       </Row>
-      <Row>
-        <Col>
-          <ChartWrapper
-            id={selectedChart}
-            legend={GetLegend(
-              [
-                ["Projets évalués", "#009099"],
-                ["Projets lauréats", "#233E41"],
-              ],
-              "FundingRanking",
-              currentLang
-            )}
-            options={optionsChart(prepareData(data, sortIndicateur))}
-            renderData={() => null} // TODO: add data table
-          />
-        </Col>
-        <Col>
-          <ChartWrapper
-            id={successGraphId}
-            legend={GetLegend(
-              [
-                ["Taux de réussite du pays", "#27A658"],
-                ["Taux de réussite moyen", "#D75521"],
-              ],
-              "FundingRankingRates",
-              currentLang
-            )}
-            options={optionChartSuccess(prepareData(data, sortIndicateur))}
-            renderData={() => null} // TODO: add data table
-          />
-        </Col>
-      </Row>
+      {selectedChart === "fundingRankingSub" && (
+        <Row>
+          <Col>
+            <ChartWrapper
+              config={configChart1a}
+              legend={GetLegend(
+                [
+                  ["Projets évalués", "#009099"],
+                  ["Projets lauréats", "#233E41"],
+                ],
+                "FundingRanking",
+                currentLang
+              )}
+              options={optionsChart(prepareData(data, sortIndicateur))}
+              renderData={() => null} // TODO: add data table
+            />
+          </Col>
+          <Col>
+            <ChartWrapper
+              config={configChart1b}
+              legend={GetLegend(
+                [
+                  ["Taux de réussite du pays", "#27A658"],
+                  ["Taux de réussite moyen", "#D75521"],
+                ],
+                "FundingRankingRates",
+                currentLang
+              )}
+              options={optionChartSuccess(prepareData(data, sortIndicateur))}
+              renderData={() => null} // TODO: add data table
+            />
+          </Col>
+        </Row>
+      )}
+      {selectedChart === "fundingRankingCoordination" && (
+        <Row>
+          <Col>
+            <ChartWrapper
+              config={configChart2a}
+              legend={GetLegend(
+                [
+                  ["Projets évalués", "#009099"],
+                  ["Projets lauréats", "#233E41"],
+                ],
+                "FundingRanking",
+                currentLang
+              )}
+              options={optionsChart(prepareData(data, sortIndicateur))}
+              renderData={() => null} // TODO: add data table
+            />
+          </Col>
+          <Col>
+            <ChartWrapper
+              config={configChart2b}
+              legend={GetLegend(
+                [
+                  ["Taux de réussite du pays", "#27A658"],
+                  ["Taux de réussite moyen", "#D75521"],
+                ],
+                "FundingRankingRates",
+                currentLang
+              )}
+              options={optionChartSuccess(prepareData(data, sortIndicateur))}
+              renderData={() => null} // TODO: add data table
+            />
+          </Col>
+        </Row>
+      )}
+      {selectedChart === "fundingRankingInvolved" && (
+        <Row>
+          <Col>
+            <ChartWrapper
+              config={configChart3a}
+              legend={GetLegend(
+                [
+                  ["Projets évalués", "#009099"],
+                  ["Projets lauréats", "#233E41"],
+                ],
+                "FundingRanking",
+                currentLang
+              )}
+              options={optionsChart(prepareData(data, sortIndicateur))}
+              renderData={() => null} // TODO: add data table
+            />
+          </Col>
+          <Col>
+            <ChartWrapper
+              config={configChart3b}
+              legend={GetLegend(
+                [
+                  ["Taux de réussite du pays", "#27A658"],
+                  ["Taux de réussite moyen", "#D75521"],
+                ],
+                "FundingRankingRates",
+                currentLang
+              )}
+              options={optionChartSuccess(prepareData(data, sortIndicateur))}
+              renderData={() => null} // TODO: add data table
+            />
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 }

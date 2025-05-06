@@ -3,8 +3,6 @@ import { useSearchParams } from "react-router-dom";
 
 import Template from "./template";
 
-import { getConfig } from "../european-projects/utils";
-
 export default function Integration() {
   const [searchParams] = useSearchParams();
   const chartId = searchParams.get("chart_id") || null;
@@ -13,13 +11,9 @@ export default function Integration() {
 
   if (!chartId) return <Template />;
 
-  const config = getConfig(chartId);
-  if (!config) {
-    throw new Error(`No config found for chart id ${chartId}`);
-  }
-
+  const integrationURL = `url_de_${chartId}`;
   const LazyComponent = React.lazy(
-    () => import(/* @vite-ignore */ config.integrationURL)
+    () => import(/* @vite-ignore */ integrationURL)
   );
   return (
     <Suspense fallback={<div>Loading...</div>}>

@@ -13,6 +13,23 @@ import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { RenderDataSubsidiesValuesAndRates } from "./render-data";
 
+const configChart1 = {
+  id: "pillarsProjectCoordinationRequestedByProjectsLines",
+  title: "Nombre de coordinatioons de projets évalués et lauréats",
+  subtitle: "",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+};
+const configChart2 = {
+  id: "pillarsProjectCoordinationRequestedByProjectsLinesRates",
+  title: "Nombre de coordinatioons de projets évalués et lauréats",
+  subtitle: "",
+  description: null,
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+};
+
 export default function ProjectsTypesPillarsSubsidiesRequested({
   indicateurId,
 }) {
@@ -54,7 +71,7 @@ export default function ProjectsTypesPillarsSubsidiesRequested({
       <Row>
         <Col md={6}>
           <ChartWrapper
-            id={indicateurId}
+            config={configChart1}
             options={options}
             legend={null}
             renderData={renderDataValuesAndRates}
@@ -62,7 +79,7 @@ export default function ProjectsTypesPillarsSubsidiesRequested({
         </Col>
         <Col>
           <ChartWrapper
-            id={`${indicateurId}Rates`}
+            config={configChart2}
             options={optionsRates}
             legend={null}
             renderData={renderDataValuesAndRates}

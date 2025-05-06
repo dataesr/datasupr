@@ -7,10 +7,25 @@ import { useGetParams } from "./utils";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+const config = {
+  id: "destinationFundingSuccessRates",
+  idQuery: "destinationFunding",
+  title: {
+    fr: "Taux de succès",
+    en: "Success rate",
+  },
+  description: {
+    en: "Success rate on the amounts requested and obtained",
+    fr: "Taux de succès sur les montants demandés et obtenus",
+  },
+  integrationURL:
+    "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates",
+};
+
 export default function DestinationFundingSuccessRates() {
   const params = useGetParams();
   const { data, isLoading } = useQuery({
-    queryKey: ["DestinationFunding", params],
+    queryKey: [config.idQuery, params],
     queryFn: () => getData(params),
   });
 
@@ -18,9 +33,9 @@ export default function DestinationFundingSuccessRates() {
 
   return (
     <ChartWrapper
-      id="destinationFundingSuccessRates"
-      options={options(data)}
+      config={config}
       legend={null}
+      options={options(data)}
       renderData={() => null} // TODO: add data table
     />
   );
