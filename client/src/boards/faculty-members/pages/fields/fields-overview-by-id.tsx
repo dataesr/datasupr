@@ -240,12 +240,22 @@ export default function SpecificFieldsOverview() {
             Répartition par statut
           </Title>
           {disciplineStatusData && (
-            <DisciplineStatusSummary
-              totalCount={disciplineStatusData.totalCount || 0}
-              aggregatedStats={disciplineStatusData.aggregatedStats || {}}
-              fields={disciplineStatusData.fields || []}
-              isSingleDiscipline={true}
-            />
+            <>
+              <DisciplineStatusSummary
+                totalCount={disciplineStatusData.totalCount || 0}
+                aggregatedStats={disciplineStatusData.aggregatedStats || {}}
+                fields={disciplineStatusData.fields || []}
+                isSingleDiscipline={true}
+              />
+              <i>
+                <Link
+                  href={`/personnel-enseignant/discipline/typologie/${fieldId}`}
+                >
+                  Pour plus de détails sur les enseignant-chercheurs, cliquez
+                  ici
+                </Link>
+              </i>
+            </>
           )}
         </Col>
       </Row>
