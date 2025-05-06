@@ -250,7 +250,6 @@ export default function UniversityOverview() {
       </Row>
       <Row className="fr-mt-8w">
         <Col md={8} className="fr-pr-6w">
-          {console.log(genderData)}
           <GenderPerStructureTypeChart
             structureData={genderData}
             isLoading={establishmentLoading}
