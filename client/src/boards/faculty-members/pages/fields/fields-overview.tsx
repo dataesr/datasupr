@@ -12,7 +12,7 @@ import YearSelector from "../../filters";
 import useFacultyMembersByFields from "./api/use-by-fields";
 import FieldsDistributionTreemap from "./charts/general/general";
 import { CNUGroup, CNUSection } from "../../types";
-import DisciplineStatsSidebar from "./components/sidebar";
+import DisciplineStatsSidebar from "./components/top-fields-indicators";
 import FieldCardsGrid from "./components/fields-cards";
 import CnuGroupsChart from "./charts/cnu-group/cnu-chart";
 import useFacultyMembersByStatus from "./api/use-by-status";
@@ -20,6 +20,7 @@ import DisciplineStatusSummary from "./components/fields-by-status";
 import StatusDistribution from "./charts/status/status";
 import useFacultyMembersAgeDistribution from "./api/use-by-age";
 import { AgeDistributionPieChart } from "./charts/age/age";
+import GeneralIndicatorsCard from "../../components/general-indicators-card";
 
 export default function FieldOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
@@ -239,6 +240,7 @@ export default function FieldOverview() {
           )}
         </Col>
         <Col md={4} style={{ textAlign: "center" }}>
+          <GeneralIndicatorsCard structureData={disciplinesData} />
           <DisciplineStatsSidebar disciplinesData={disciplinesData} />
         </Col>
       </Row>
@@ -278,13 +280,13 @@ export default function FieldOverview() {
 
       <Row className="fr-mt-5w">
         {statusData && statusData.length > 0 && (
-          <Col md={6} style={{ textAlign: "center" }}>
+          <Col md={8} style={{ textAlign: "center" }}>
             <StatusDistribution
               disciplinesData={statusData[0].disciplines ?? []}
             />
           </Col>
         )}
-        <Col md={6} style={{ textAlign: "center" }}>
+        <Col md={4} style={{ textAlign: "center" }}>
           {statusData && statusData.length > 0 && (
             <>
               <DisciplineStatusSummary
@@ -292,6 +294,12 @@ export default function FieldOverview() {
                 aggregatedStats={statusData[0].aggregatedStats}
                 fields={statusData[0].disciplines ?? []}
               />
+              <i>
+                <Link href="/personnel-enseignant/discipline/typologie">
+                  Pour plus de détails sur les enseignant-chercheurs, cliquez
+                  ici
+                </Link>
+              </i>
             </>
           )}
         </Col>
