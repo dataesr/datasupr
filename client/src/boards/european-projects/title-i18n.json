@@ -1,0 +1,62 @@
+{
+  "accueil": {
+    "fr": "Projet européen - Accueil",
+    "en": "European project - Home"
+  },
+  "search": {
+    "fr": "Projet européen - Recherche",
+    "en": "European project - Search"
+  },
+  "synthese": {
+    "fr": "Projet européen - Synthèse",
+    "en": "European project - Synthesis"
+  },
+  "positionnement": {
+    "fr": "Projet européen - Positionnement",
+    "en": "European project - Positioning"
+  },
+  "collaborations": {
+    "fr": "Projet européen - Collaborations",
+    "en": "European project - Collaborations"
+  },
+  "beneficiaires": {
+    "fr": "Projet européen - Bénéficiaires",
+    "en": "European project - Beneficiaries"
+  },
+  "beneficiaires-types": {
+    "fr": "Projet européen - Types de bénéficiaires",
+    "en": "European project - Types of beneficiaries"
+  },
+  "msca": {
+    "fr": "Projet européen - MSCA",
+    "en": "European project - MSCA "
+  },
+  "erc": {
+    "fr": "Projet européen - ERC",
+    "en": "European project - ERC"
+  },
+  "evolution": {
+    "fr": "Projet européen - Evolution",
+    "en": "European project - Evolution"
+  },
+  "objectifs-types-projets": {
+    "fr": "Projet européen - Objectifs types projets",
+    "en": "European project - Project types objectives"
+  },
+  "programme-mires": {
+    "fr": "Projet européen - Programme MIRES",
+    "en": "European project - MIRES program"
+  },
+  "appel-a-projets": {
+    "fr": "Projet européen - Appel à projets",
+    "en": "European project - Call for projects"
+  },
+  "donnees-reference": {
+    "fr": "Projet européen - Données de référence",
+    "en": "European project - Reference data"
+  },
+  "informations": {
+    "fr": "Projet européen - Informations",
+    "en": "European project - Information"
+  }
+}

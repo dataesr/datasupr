@@ -34,7 +34,14 @@ export default function CustomSideMenu() {
     queryFn: () => getAll("destinations"),
   });
   if (!pathname) return null;
-  const is = (str: string): boolean => pathname?.startsWith(str);
+
+  const is = (str: string): boolean => {
+    if (str === "/european-projects/beneficiaires") {
+      // fait la distinction entre beneficiaries et beneficiaries-types
+      return pathname === str;
+    }
+    return pathname?.startsWith(str);
+  };
 
   function getI18nLabel(key) {
     return i18n[key][currentLang];
@@ -131,52 +138,29 @@ export default function CustomSideMenu() {
     <Tabs className="fr-mt-1w">
       <Tab label="Menu">
         <SideMenu title="" sticky fullHeight className="padded-sidemenu">
-          <Link
-            current={is("/european-projects/synthese")}
-            href={`/european-projects/synthese?${filtersParams}`}
-          >
+          <Link current={is("/european-projects/synthese")} href={`/european-projects/synthese?${filtersParams}`}>
             {getI18nLabel("synthesis")}
           </Link>
-          <Link
-            current={is("/european-projects/positionnement")}
-            href={`/european-projects/positionnement?${filtersParams}`}
-          >
+          <Link current={is("/european-projects/positionnement")} href={`/european-projects/positionnement?${filtersParams}`}>
             {getI18nLabel("positioning")}
           </Link>
-          <Link
-            current={is("/european-projects/collaborations")}
-            href={`/european-projects/collaborations?${filtersParams}`}
-          >
+          <Link current={is("/european-projects/collaborations")} href={`/european-projects/collaborations?${filtersParams}`}>
             {getI18nLabel("collaborations")}
           </Link>
-          <Link
-            current={is("/european-projects/beneficiaires")}
-            href={`/european-projects/beneficiaires?${filtersParams}`}
-          >
+          <Link current={is("/european-projects/beneficiaires")} href={`/european-projects/beneficiaires?${filtersParams}`}>
             {getI18nLabel("beneficiaries")}
           </Link>
-          <Link
-            current={is("/european-projects/beneficiaires-types")}
-            href={`/european-projects/beneficiaires-types?${filtersParams}`}
-          >
+          <Link current={is("/european-projects/beneficiaires-types")} href={`/european-projects/beneficiaires-types?${filtersParams}`}>
             {getI18nLabel("beneficiaries-types")}
           </Link>
-          <Link
-            current={is("/european-projects/evolution")}
-            href={`/european-projects/evolution?${filtersParams}`}
-          >
+          <Link current={is("/european-projects/evolution")} href={`/european-projects/evolution?${filtersParams}`}>
             Evolution
           </Link>
         </SideMenu>
       </Tab>
-      <Tab
-        label={`${getI18nLabel("active-filters")} (${numberOfActiveFilters})`}
-      >
+      <Tab label={`${getI18nLabel("active-filters")} (${numberOfActiveFilters})`}>
         <div>
-          <span
-            className="fr-icon-arrow-go-back-fill fr-icon--sm"
-            aria-hidden="true"
-          />
+          <span className="fr-icon-arrow-go-back-fill fr-icon--sm" aria-hidden="true" />
           <Link href="/european-projects/search">{getI18nLabel("back")}</Link>
         </div>
         <div className="fr-mt-2w">
