@@ -19,6 +19,7 @@ import DisciplineStatusSummary from "./components/fields-by-status";
 import StatusDistribution from "./charts/status/status";
 import useFacultyMembersAgeDistribution from "./api/use-by-age";
 import { AgeDistributionPieChart } from "./charts/age/age";
+import GeneralIndicatorsCard from "../../components/general-indicators-card";
 
 export default function SpecificFieldsOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
@@ -37,7 +38,8 @@ export default function SpecificFieldsOverview() {
     isError,
     error,
   } = useFacultyMembersByFields(selectedYear);
-
+  console.log(fieldData);
+  // C'est fieldData qui contient les données de l'année sélectionnée
   const {
     data: statusData,
     isLoading: statusLoading,
@@ -233,15 +235,18 @@ export default function SpecificFieldsOverview() {
           cupiditate quo nostrum.
         </Col>
         <Col md={4}>
-          <Title as="h3" look="h6" className="fr-mb-2w">
+          <GeneralIndicatorsCard structureData={fieldData} />
+          <Title as="h3" look="h6" className="fr-mb-2w text-center">
             Répartition par statut
           </Title>
-          <DisciplineStatusSummary
-            totalCount={disciplineStatusData.totalCount || 0}
-            aggregatedStats={disciplineStatusData.aggregatedStats || {}}
-            fields={disciplineStatusData.fields || []}
-            isSingleDiscipline={true}
-          />
+          {disciplineStatusData && (
+            <DisciplineStatusSummary
+              totalCount={disciplineStatusData.totalCount || 0}
+              aggregatedStats={disciplineStatusData.aggregatedStats || {}}
+              fields={disciplineStatusData.fields || []}
+              isSingleDiscipline={true}
+            />
+          )}
         </Col>
       </Row>
       <Row gutters className="fr-mt-5w">
