@@ -1,16 +1,13 @@
 import { Title } from "@dataesr/dsfr-plus";
-import { Badge } from "@dataesr/dsfr-plus";
 import { DisciplineStatusSummaryProps } from "../../../types";
 import "./styles.scss";
 
 const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
-  totalCount,
   aggregatedStats,
   fields,
   isSingleDiscipline = false,
 }) => {
   if (!fields || fields.length === 0) return null;
-  const discipline = isSingleDiscipline ? fields[0] : null;
 
   const statusItems = [
     {
@@ -46,12 +43,6 @@ const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
         </Title>
       )}
 
-      <div className="sidebar-header fr-mb-2w">
-        <Badge color="yellow-moutarde" size="sm">
-          {totalCount?.toLocaleString()} Enseignants
-        </Badge>
-      </div>
-
       <div className="sidebar-status-items">
         {statusItems.map((item, index) => (
           <div className="sidebar-status-item" key={index}>
@@ -77,12 +68,6 @@ const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
                   }}
                 ></div>
               </div>
-
-              {isSingleDiscipline && item.count && (
-                <div className="fr-text--xs fr-text--grey fr-mt-1v">
-                  {item.count.toLocaleString()} enseignants
-                </div>
-              )}
             </div>
           </div>
         ))}

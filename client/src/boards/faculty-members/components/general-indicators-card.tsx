@@ -1,112 +1,115 @@
-import React from "react";
+import { Col } from "@dataesr/dsfr-plus";
+import { useParams } from "react-router-dom";
+import { useMemo } from "react";
 
 type StructureData = {
   man_count: number;
   woman_count: number;
   unknow_count: number;
   total_headcount: number;
+  maleCount: number;
+  femaleCount: number;
+  totalCount: number;
+  fieldId?: string;
 };
 
 interface StructureProps {
   structureData: StructureData[];
 }
 
-const GeneralIndicatorsCard: React.FC<StructureProps> = ({
-  structureData,
-}) => {
-  if (!structureData || structureData.length === 0) {
-    return <Col md={4}>Aucune donnée disponible</Col>;
+const GeneralIndicatorsCard: React.FC<StructureProps> = ({ structureData }) => {
+  const { fieldId } = useParams<{ fieldId: string }>();
+
+  const filteredData = useMemo(() => {
+    if (!structureData || structureData.length === 0) return [];
+
+    if (fieldId) {
+      return structureData.filter((item) => item.fieldId === fieldId);
+    }
+
+    return structureData;
+  }, [structureData, fieldId]);
+
+  if (!filteredData.length) {
+    return <Col md={4}>Aucune donnée disponible pour cette discipline</Col>;
   }
 
+  const totalCount = filteredData.reduce(
+    (sum, item) => sum + item.totalCount,
+    0
+  );
+  const femaleCount = filteredData.reduce(
+    (sum, item) => sum + item.femaleCount,
+    0
+  );
+  const maleCount = filteredData.reduce((sum, item) => sum + item.maleCount, 0);
+  const femalePercent = totalCount
+    ? Math.round((femaleCount / totalCount) * 100)
+    : 0;
+  const malePercent = totalCount
+    ? Math.round((maleCount / totalCount) * 100)
+    : 0;
+
   return (
-      <div className=" fr-card--no-border">
-        <div
-          className="fr-card--shadow fr-mb-2w"
-          style={{
-            borderTopLeftRadius: "30px",
-            borderBottomRightRadius: "30px",
-            padding: "3px",
-          }}
-        >
-          <div className="fr-mt-2w" style={{ textAlign: "center" }}>
-            <span className="fr-icon-user-line " aria-hidden="true"></span>
-            <span className="fr-text--sm">Effectif total</span>
+    <div className="fr-card--no-border">
+      <div
+        className="fr-card--shadow fr-mb-2w"
+        style={{
+          borderTopLeftRadius: "30px",
+          borderBottomRightRadius: "30px",
+          padding: "3px",
+        }}
+      >
+        <div className="fr-mt-2w" style={{ textAlign: "center" }}>
+          <span className="fr-icon-user-line" aria-hidden="true"></span>
+          <span className="fr-text--sm">Effectif total</span>
 
-            <span style={{ fontWeight: "bold", color: "#000091" }}>
-              {" "}
-              {structureData
-                .reduce((sum, item) => sum + item.total_headcount, 0)
-                .toLocaleString()}
-            </span>
-          </div>
+          <span style={{ fontWeight: "bold", color: "#000091" }}>
+            {" "}
+            {totalCount.toLocaleString()}
+          </span>
+        </div>
 
-          <div className="fr-mb-3w fr-mx-2w">
-            <div className="fr-grid-row fr-mb-1w text-center">
-              <div className="fr-col">
-                <span
-                  className="fr-icon-team-line fr-icon--sm fr-mr-1w"
-                  aria-hidden="true"
-                ></span>
-                <span className="fr-text--bold fr-text--sm">
-                  Répartition Femme / Homme
+        <div className="fr-mb-3w fr-mx-2w">
+          <div className="fr-grid-row fr-mb-1w fr-mt-3w">
+            <div className="fr-col-6">
+              <div
+                style={{
+                  borderLeft: "4px solid var(--women-color, #e18b76)",
+                  paddingLeft: "0.5rem",
+                  textAlign: "center",
+                }}
+              >
+                <span className="fr-text--lg fr-text--bold">
+                  {femalePercent}%
                 </span>
-              </div>
-            </div>
-            <div className="fr-grid-row fr-mb-1w">
-              <div className="fr-col-6">
-                <div
-                  style={{
-                    borderLeft: "4px solid #e1000f",
-                    paddingLeft: "0.5rem",
-                    textAlign: "center",
-                  }}
-                >
-                  <span className="fr-text--lg fr-text--bold">
-                    {Math.round(
-                      (structureData.reduce(
-                        (sum, item) => sum + item.woman_count,
-                        0
-                      ) /
-                        structureData.reduce(
-                          (sum, item) => sum + item.total_headcount,
-                          0
-                        )) *
-                        100
-                    )}
-                    %
-                  </span>
-                  <div className="fr-text--xs">Femmes</div>
+                <div className="fr-text--xs">Femmes</div>
+                <div className="fr-text--xs fr-text--grey">
+                  {femaleCount.toLocaleString()} enseignantes
                 </div>
               </div>
-              <div className="fr-col-6">
-                <div
-                  style={{
-                    borderLeft: "4px solid #000091",
-                    paddingLeft: "0.5rem",
-                    textAlign: "center",
-                  }}
-                >
-                  <span className="fr-text--lg fr-text--bold">
-                    {Math.round(
-                      (structureData.reduce(
-                        (sum, item) => sum + item.man_count,
-                        0
-                      ) /
-                        structureData.reduce(
-                          (sum, item) => sum + item.total_headcount,
-                          0
-                        )) *
-                        100
-                    )}
-                    %
-                  </span>
-                  <div className="fr-text--xs">Hommes</div>
+            </div>
+            <div className="fr-col-6">
+              <div
+                style={{
+                  borderLeft: "4px solid var(--men-color, #efcb3a)",
+                  paddingLeft: "0.5rem",
+                  textAlign: "center",
+                }}
+              >
+                <span className="fr-text--lg fr-text--bold">
+                  {malePercent}%
+                </span>
+                <div className="fr-text--xs">Hommes</div>
+                <div className="fr-text--xs fr-text--grey">
+                  {maleCount.toLocaleString()} enseignants
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
   );
 };
 
