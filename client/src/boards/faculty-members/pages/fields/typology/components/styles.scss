@@ -28,11 +28,11 @@
 }
 
 .gender-icon-male {
-  background: rgba(var(--hommes-color), 1);
+  background: var(--men-color);
 }
 
 .gender-icon-female {
-  background: rgba(var(--femmes-color), 1);
+  background: var(--women-color);
 }
 
 .gender-percentage {
@@ -41,11 +41,11 @@
 }
 
 .gender-percentage-male {
-  color: rgba(var(--hommes-color), 1);
+  color: (var(--men-color));
 }
 
 .gender-percentage-female {
-  color: rgba(var(--femmes-color), 1);
+  color: (var(--women-color));
 }
 
 .gender-count {
@@ -102,11 +102,11 @@
 }
 
 .separator-male {
-  border-top: 1px solid #000091;
+  border-top: 1px solid (var(--men-color));
 }
 
 .separator-female {
-  border-top: 1px solid #e1000f;
+  border-top: 1px solid (var(--men-women));
 }
 
 .age-distribution {
@@ -125,11 +125,11 @@
 }
 
 .age-bar-male {
-  background: rgba(var(--hommes-color), 1);
+  background: (var(--men-color));
 }
 
 .age-bar-female {
-  background: rgba(var(--femmes-color), 0.8);
+  background: (var(--women-color));
 }
 
 .age-label {
@@ -153,50 +153,4 @@
   text-align: center;
   font-size: 10px;
   color: #fff;
-}
-
-.discipline-card {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  border-left: 4px solid transparent;
-  border-bottom: 1px solid #e6e6e6;
-}
-
-.discipline-card-male {
-  border-left: 1px solid #000091;
-}
-
-.discipline-card-female {
-  border-right: 1px solid #e1000f;
-}
-
-.discipline-title {
-  font-size: 0.875rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 0.75rem;
-}
-
-.discipline-title-male {
-  color: #000091;
-}
-
-.discipline-title-female {
-  color: #e1000f;
-}
-
-.discipline-count {
-  font-weight: bold;
-  margin-top: auto;
-  margin-bottom: 0.25rem;
-  line-height: 1;
-  height: 1.75rem;
-}
-
-.discipline-percent {
-  font-size: 0.875rem;
-  color: #666;
-  height: 1.25rem;
 }
