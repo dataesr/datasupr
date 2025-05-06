@@ -12,7 +12,7 @@ import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 import YearSelector from "../../filters";
 import useFacultyMembersByUniversity from "./api/use-by-university";
-import GeneralIndicatorsCard from "./components/general-indicators-card";
+import GeneralIndicatorsCard from "../../components/general-indicators-card";
 import { EstablishmentTypeChart } from "./charts/structure-type/structure";
 import { GenderPerStructureTypeChart } from "./charts/gender/gender-per-structure-type";
 import useFacultyMembersByEstablishmentType from "../fields/api/use-by-univ";
