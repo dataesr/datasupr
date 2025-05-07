@@ -46,8 +46,8 @@ export default function EuropeanProjectsRoutes() {
           <Route path="beneficiaires" element={<RouteWithTitle titleKey="beneficiaires" element={<Beneficiaries />} />} />
           <Route path="beneficiaires-types" element={<RouteWithTitle titleKey="beneficiaires-types" element={<div>Types de bénéficiaires</div>} />} />
         </Route>
-        <Route path="/msca" element={<RouteWithTitle titleKey="/msca" element={<div>MSCA</div>} />} />
-        <Route path="/erc" element={<RouteWithTitle titleKey="/erc" element={<div>ERC</div>} />} />
+        <Route path="msca" element={<RouteWithTitle titleKey="msca" element={<div>MSCA</div>} />} />
+        <Route path="erc" element={<RouteWithTitle titleKey="erc" element={<div>ERC</div>} />} />
         <Route path="evolution" element={<RouteWithTitle titleKey="evolution" element={<div>Evolution</div>} />} />
         <Route path="objectifs-types-projets" element={<RouteWithTitle titleKey="objectifs-types-projets" element={<ProjectsTypes />} />} />
         <Route path="programme-mires" element={<RouteWithTitle titleKey="programme-mires" element={<div>Programme MIRES</div>} />} />
