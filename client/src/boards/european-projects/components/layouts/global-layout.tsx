@@ -20,6 +20,7 @@ export default function GlobalLayout({ languageSelector = false }) {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
+  const filtersParams = searchParams.toString();
 
   useEffect(() => {
     if (!searchParams.get("language") && languageSelector) {
@@ -59,11 +60,7 @@ export default function GlobalLayout({ languageSelector = false }) {
           >
             {getI18nLabel("datasets")}
           </Button>
-          <Button
-            aria-controls="fr-theme-modal"
-            className="fr-btn fr-icon-theme-fill"
-            data-fr-opened="false"
-          >
+          <Button aria-controls="fr-theme-modal" className="fr-btn fr-icon-theme-fill" data-fr-opened="false">
             {getI18nLabel("themes")}
           </Button>
           {languageSelector && (
@@ -85,10 +82,7 @@ export default function GlobalLayout({ languageSelector = false }) {
                     </>
                   )}
                 </button>
-                <div
-                  className="fr-collapse fr-translate__menu fr-menu"
-                  id="translate-1177"
-                >
+                <div className="fr-collapse fr-translate__menu fr-menu" id="translate-1177">
                   <ul className="fr-menu__list">
                     <li>
                       <Button
@@ -124,18 +118,9 @@ export default function GlobalLayout({ languageSelector = false }) {
       <div style={{ backgroundColor: "#f5f5f5" }}>
         <Container>
           <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Nav
-              aria-label="Main navigation"
-              style={{ backgroundColor: "#f5f5f5" }}
-            >
-              <Link
-                current={is("/european-projects/accueil")}
-                href="/european-projects/accueil"
-              >
-                <span
-                  className="fr-icon-home-4-line fr-mr-1w"
-                  aria-hidden="true"
-                />
+            <Nav aria-label="Main navigation" style={{ backgroundColor: "#f5f5f5" }}>
+              <Link current={is("/european-projects/accueil")} href="/european-projects/accueil">
+                <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
                 {getI18nLabel("home")}
               </Link>
               <Link
@@ -150,16 +135,10 @@ export default function GlobalLayout({ languageSelector = false }) {
               >
                 {getI18nLabel("main")}
               </Link>
-              <Link
-                current={is("/european-projects/msca")}
-                href="/european-projects/msca"
-              >
+              <Link current={is("/european-projects/msca")} href={`/european-projects/msca?${filtersParams}`}>
                 MSCA
               </Link>
-              <Link
-                current={is("/european-projects/erc")}
-                href="/european-projects/erc"
-              >
+              <Link current={is("/european-projects/erc")} href={`/european-projects/erc?${filtersParams}`}>
                 ERC
               </Link>
             </Nav>
