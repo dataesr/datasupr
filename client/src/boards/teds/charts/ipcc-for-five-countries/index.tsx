@@ -32,7 +32,7 @@ export default function IpccAll() {
     50,
     filter_ipcc.name
   );
-
+  console.log(response_total);
   // tests all responses if loaded
   if (
     responses.map((response) => response.isLoading).some((item) => item) ||
@@ -43,7 +43,7 @@ export default function IpccAll() {
 
   // filter on countries for the five countries ('FR', 'US', 'UK', 'DE', 'CN')
   const buckets = responses.map((response) =>
-    response.data.aggregations.by_countries.buckets.filter((country) =>
+    response.data.aggregations?.by_countries?.buckets?.filter((country) =>
       countries.includes(country.key)
     )
   );
@@ -54,15 +54,15 @@ export default function IpccAll() {
     values.push({
       name: filter.name,
       data: [
-        buckets[index].find((country) => country.key === countries[0])
+        buckets[index]?.find((country) => country.key === countries[0])
           .doc_count,
-        buckets[index].find((country) => country.key === countries[1])
+        buckets[index]?.find((country) => country.key === countries[1])
           .doc_count,
-        buckets[index].find((country) => country.key === countries[2])
+        buckets[index]?.find((country) => country.key === countries[2])
           .doc_count,
-        buckets[index].find((country) => country.key === countries[3])
+        buckets[index]?.find((country) => country.key === countries[3])
           .doc_count,
-        buckets[index].find((country) => country.key === countries[4])
+        buckets[index]?.find((country) => country.key === countries[4])
           .doc_count,
       ],
     });
@@ -72,13 +72,13 @@ export default function IpccAll() {
     name: "Multi WG",
     data: countries.map(
       (item) =>
-        response_total.data.aggregations.by_countries.buckets.find(
+        response_total.data?.aggregations?.by_countries.buckets?.find(
           (country) => country.key === item
         ).doc_count -
         responses
           .map(
             (response) =>
-              response.data.aggregations.by_countries.buckets.find(
+              response?.data?.aggregations?.by_countries?.buckets?.find(
                 (country) => country.key === item
               ).doc_count
           )
