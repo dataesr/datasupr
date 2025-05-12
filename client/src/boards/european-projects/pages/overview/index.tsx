@@ -16,6 +16,9 @@ import DestinationsFunding from "./components/destinations-funding";
 import PillarsFunding from "./components/pillars-funding";
 import ProgramsFunding from "./components/programs-funding";
 import TopicsFunding from "./components/topics-funding";
+import TypeOfFinancingSubsidiesRequestedByProjects from "../projects-types/charts/type-of-financing-subsidies-requested-by-projects";
+import TypeOfFinancingSubsidiesRequestedLines from "../projects-types/charts/type-of-financing-subsidies-requested-lines";
+import SuccessRateForAmountsByTypeOfFinancing from "../projects-types/charts/success-rate-for-amounts-by-type-of-financing";
 
 export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -39,12 +42,7 @@ export default function Overview() {
       <label className="fr-label" htmlFor="select">
         {getI18nLabel("select-title")}
       </label>
-      <select
-        className="fr-select"
-        id="select"
-        name="select"
-        onChange={(e) => setSelectView(e.target.value)}
-      >
+      <select className="fr-select" id="select" name="select" onChange={(e) => setSelectView(e.target.value)}>
         <option value="pillars">{getI18nLabel("pillars")}</option>
         <option value="programs">{getI18nLabel("programs")}</option>
         <option value="topics">{getI18nLabel("topics")}</option>
@@ -99,6 +97,14 @@ export default function Overview() {
           <DestinationsFundingEvo3Years />
         </>
       )}
+
+      <Title as="h2" className="fr-my-5w">
+        {getI18nLabel("title1-financing")}
+      </Title>
+
+      <TypeOfFinancingSubsidiesRequestedByProjects />
+      <TypeOfFinancingSubsidiesRequestedLines />
+      <SuccessRateForAmountsByTypeOfFinancing />
 
       {/* <SynthesisFocus />
       <div className="fr-my-5w" />
