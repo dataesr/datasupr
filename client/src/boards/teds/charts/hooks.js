@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getBuildQuery } from "./utils";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
+console.log(VITE_APP_SERVER_URL);
 
 function useQueryResponse(body, s, i) {
   const { data, isLoading } = useQuery({
