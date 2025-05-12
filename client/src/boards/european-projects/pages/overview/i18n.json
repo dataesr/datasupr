@@ -50,5 +50,9 @@
   "title2-destinations": {
     "fr": "Evolution des demandes de financements demandés et obtenus par destination",
     "en": "Evolution of funding requests and obtained by destination"
+  },
+  "title1-financing": {
+    "fr": "Financements demandés et obtenus par type de projet",
+    "en": "Funding requested and obtained by project type"
   }
 }
