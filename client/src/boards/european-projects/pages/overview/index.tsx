@@ -101,10 +101,16 @@ export default function Overview() {
       <Title as="h2" className="fr-my-5w">
         {getI18nLabel("title1-financing")}
       </Title>
-
       <TypeOfFinancingSubsidiesRequestedByProjects />
 
+      <Title as="h2" className="fr-my-5w">
+        {getI18nLabel("title2-financing")}
+      </Title>
       <TypeOfFinancingSubsidiesRequestedLines />
+
+      <Title as="h2" className="fr-my-5w">
+        {getI18nLabel("title3-financing")}
+      </Title>
       <SuccessRateForAmountsByTypeOfFinancing />
 
       {/* <SynthesisFocus />

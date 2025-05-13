@@ -9,27 +9,27 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import i18n from "../../../../i18n-global.json";
 
 const configChart1 = {
   id: "typeOfFinancingSubsidiesRequested",
   title: "",
-  subtitle: "Subventions demandées et obtenues (M€)",
+  subtitle: "Subventions demandées et obtenues (M€)<br />&nbsp;",
   description: null,
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
 };
 const configChart2 = {
   id: "typeOfFinancingSubsidiesRequestedRates",
   title: "",
   subtitle: "Part des subventions demandées et obtenues sur HE",
   description: null,
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
 };
 
 export default function TypeOfFinancingSubsidiesRequestedLines() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
+  const currentLang = searchParams.get("language") || "fr";
 
   const { data, isLoading } = useQuery({
     queryKey: ["type-of-financing-subsidies-requested-lines", params],
@@ -37,6 +37,10 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
   });
 
   if (isLoading || !data) return <DefaultSkeleton col={2} />;
+
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
 
   return (
     <Container fluid>
@@ -59,37 +63,42 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
         </Col>
       </Row>
       <Row>
-        <Col className="legend">
-          <ul>
-            <li>
-              <div style={{ background: "#009099" }} />
-              <span>Others actions</span>
-            </li>
-            <li>
-              <div style={{ background: "#F28E2B" }} />
-              <span>CSA Coordination and support actions</span>
-            </li>
-            <li>
-              <div style={{ background: "#D5DBEF" }} />
-              <span>EIC actions</span>
-            </li>
-            <li>
-              <div style={{ background: "#76B7B2" }} />
-              <span>ERC actions</span>
-            </li>
-            <li>
-              <div style={{ background: "#B07AA1" }} />
-              <span>IA Innovation actions</span>
-            </li>
-            <li>
-              <div style={{ background: "#EDC948" }} />
-              <span>MSCA Marie Skłodowska-Curie actions</span>
-            </li>
-            <li>
-              <div style={{ background: "#BAB0AC" }} />
-              <span>RIA Research and Innovation actions</span>
-            </li>
-          </ul>
+        <Col>
+          <fieldset>
+            <legend>{getI18nLabel("legend")}</legend>
+            <div className="legend">
+              <ul>
+                <li>
+                  <div style={{ background: "#009099" }} />
+                  <span>Others actions</span>
+                </li>
+                <li>
+                  <div style={{ background: "#F28E2B" }} />
+                  <span>CSA Coordination and support actions</span>
+                </li>
+                <li>
+                  <div style={{ background: "#D5DBEF" }} />
+                  <span>EIC actions</span>
+                </li>
+                <li>
+                  <div style={{ background: "#76B7B2" }} />
+                  <span>ERC actions</span>
+                </li>
+                <li>
+                  <div style={{ background: "#B07AA1" }} />
+                  <span>IA Innovation actions</span>
+                </li>
+                <li>
+                  <div style={{ background: "#EDC948" }} />
+                  <span>MSCA Marie Skłodowska-Curie actions</span>
+                </li>
+                <li>
+                  <div style={{ background: "#BAB0AC" }} />
+                  <span>RIA Research and Innovation actions</span>
+                </li>
+              </ul>
+            </div>
+          </fieldset>
         </Col>
       </Row>
     </Container>
