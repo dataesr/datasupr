@@ -209,7 +209,7 @@ export default function ChartWrapper({ config, options, legend, renderData }) {
       {config.title[currentLang] && (
         <>
           <Title as="h2" look="h4" className="fr-mb-1w">
-            {config.title[currentLang]}
+            <span dangerouslySetInnerHTML={{ __html: config.title[currentLang] }} />
           </Title>
           {/* <Text className="sources">
             Sources :{" "}
@@ -220,12 +220,8 @@ export default function ChartWrapper({ config, options, legend, renderData }) {
         </>
       )}
       {config.subtitle && (
-        <Title
-          as={config.title[currentLang] ? "h3" : "h2"}
-          look="h6"
-          className="fr-mb-0"
-        >
-          {config.subtitle}
+        <Title as={config.title[currentLang] ? "h3" : "h2"} look="h6" className="fr-mb-0">
+          <span dangerouslySetInnerHTML={{ __html: config.subtitle }} />
         </Title>
       )}
       <div className="actions">
@@ -250,9 +246,7 @@ export default function ChartWrapper({ config, options, legend, renderData }) {
           <div className="fr-notice fr-notice--info fr-mt-1w">
             <div className="fr-container">
               <div className="fr-notice__body">
-                <Text className="description">
-                  {config.description[currentLang]}
-                </Text>
+                <Text className="description">{config.description[currentLang]}</Text>
               </div>
             </div>
           </div>
@@ -266,12 +260,7 @@ export default function ChartWrapper({ config, options, legend, renderData }) {
         setIsOpenIntegration={setIsOpenIntegration}
         modalId={modalId}
       />
-      <IntegrationModal
-        graphConfig={config}
-        isOpen={isOpenIntegration}
-        setIsOpen={setIsOpenIntegration}
-        modalId={modalId}
-      />
+      <IntegrationModal graphConfig={config} isOpen={isOpenIntegration} setIsOpen={setIsOpenIntegration} modalId={modalId} />
     </section>
   );
 }

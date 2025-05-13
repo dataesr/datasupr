@@ -103,6 +103,7 @@ export default function Overview() {
       </Title>
 
       <TypeOfFinancingSubsidiesRequestedByProjects />
+
       <TypeOfFinancingSubsidiesRequestedLines />
       <SuccessRateForAmountsByTypeOfFinancing />
 
