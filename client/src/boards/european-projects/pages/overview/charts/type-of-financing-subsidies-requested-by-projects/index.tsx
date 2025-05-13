@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import { GetData } from "./query";
 import optionsSubventionsValues from "./options-subventions_values";
@@ -34,7 +35,14 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
   const currentLang = searchParams.get("language") || "fr";
 
   const { data, isLoading } = useQuery({
-    queryKey: [configChart1.id, params],
+    queryKey: [
+      configChart1.id,
+      params,
+      Cookies.get("selectedPillars"),
+      Cookies.get("selectedPrograms"),
+      Cookies.get("selectedTopics"),
+      Cookies.get("selectedDestinations"),
+    ],
     queryFn: () => GetData(params),
   });
 
