@@ -18,5 +18,13 @@
   "show-more":{
     "fr": "Afficher plus",
     "en": "Show more"
+  },
+  "selected-country":{
+    "fr": "Pays sélectionnés",
+    "en": "Selected countries"
+  },
+  "associated-countries":{
+    "fr": "Pays associés",
+    "en": "Associated countries"
   }
 }

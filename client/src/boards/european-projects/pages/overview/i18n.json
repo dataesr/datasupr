@@ -54,5 +54,13 @@
   "title1-financing": {
     "fr": "Financements demandés et obtenus par type de projet",
     "en": "Funding requested and obtained by project type"
+  },
+  "title2-financing": {
+    "fr": "Evolution des demandes de financements demandés et obtenus par type de projet",
+    "en": "Evolution of funding requests and obtained by project type"
+  },
+  "title3-financing": {
+    "fr": "Taux de succès sur le montants par type de financement",
+    "en": "Success rate on amounts by type of funding"
   }
 }

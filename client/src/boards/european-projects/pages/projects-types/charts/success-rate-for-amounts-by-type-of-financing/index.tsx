@@ -9,18 +9,20 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+import i18n from "../../../../i18n-global.json";
+
 const config = {
   id: "successRateForAmountsByTypeOfFinancing",
   title: "",
-  subtitle: "Taux de succès sur le montants par type de financement",
+  subtitle: "",
   description: "Attention EIT",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-2",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-2",
 };
 
 export default function SuccessRateForAmountsByTypeOfFinancing() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
+  const currentLang = searchParams.get("language") || "fr";
 
   const { data, isLoading } = useQuery({
     queryKey: [config.id, params],
@@ -29,50 +31,43 @@ export default function SuccessRateForAmountsByTypeOfFinancing() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
+
+  const rootStyles = getComputedStyle(document.documentElement);
+
   return (
     <Container fluid>
       <Row>
-        <Col md={6}>
+        <Col>
           <ChartWrapper
             config={config}
             options={options(data)}
             legend={
-              <ul className="legend">
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#6DD897",
-                      marginRight: "10px",
-                    }}
-                  />
-                  <span>Pays sélectionné</span>
-                </li>
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#09622A",
-                      marginRight: "10px",
-                    }}
-                  />
-                  <span>UE & Etats associés</span>
-                </li>
-              </ul>
+              <fieldset>
+                <legend>{getI18nLabel("legend")}</legend>
+                <div className="legend">
+                  <ul>
+                    <li>
+                      <div
+                        style={{
+                          background: rootStyles.getPropertyValue("--selected-country-color"),
+                        }}
+                      />
+                      <span>{getI18nLabel("selected-country")}</span>
+                    </li>
+                    <li>
+                      <div
+                        style={{
+                          background: rootStyles.getPropertyValue("--associated-countries-color"),
+                        }}
+                      />
+                      <span>{getI18nLabel("associated-countries")}</span>
+                    </li>
+                  </ul>
+                </div>
+              </fieldset>
             }
             renderData={() => null} // TODO: add data table
           />
