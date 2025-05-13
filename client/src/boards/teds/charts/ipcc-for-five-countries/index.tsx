@@ -32,7 +32,7 @@ export default function IpccAll() {
     50,
     filter_ipcc.name
   );
-  console.log(response_total);
+
   // tests all responses if loaded
   if (
     responses.map((response) => response.isLoading).some((item) => item) ||
