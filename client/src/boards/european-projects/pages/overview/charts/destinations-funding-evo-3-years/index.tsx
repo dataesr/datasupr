@@ -14,7 +14,9 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { RenderDataSubsidiesValuesAndRates } from "./render-data";
 import { useState } from "react";
 
-import i18n from "./i18n.json";
+import i18nGlobal from "../../../../i18n-global.json";
+import i18nLocal from "./i18n.json";
+
 import { normalizeIdForCssColorNames } from "../../../../utils";
 
 const configChart1 = {
@@ -83,6 +85,7 @@ export default function DestinationsFundingEvo3Years() {
       </>
     );
 
+  const i18n = { ...i18nGlobal, ...i18nLocal };
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }

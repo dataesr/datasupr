@@ -1,4 +1,12 @@
 {
+  "successful-prjects":{
+    "fr": "Projets lauréats",
+    "en": "Successful projects"
+  },
+  "evaluated-projects":{
+    "fr": "Projets évalués",
+    "en": "Evaluated projects"
+  },
   "legend":{
     "fr": "Légende",
     "en": "Legend"
