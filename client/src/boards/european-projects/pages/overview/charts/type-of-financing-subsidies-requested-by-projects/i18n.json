@@ -1,0 +1,14 @@
+{
+  "legend":{
+    "fr": "Légende",
+    "en": "Legend"
+  },
+  "show-less":{
+    "fr": "Afficher moins",
+    "en": "Show less"
+  },
+  "show-more":{
+    "fr": "Afficher plus",
+    "en": "Show more"
+  }
+}

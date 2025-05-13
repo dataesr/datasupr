@@ -16,7 +16,7 @@ import DestinationsFunding from "./components/destinations-funding";
 import PillarsFunding from "./components/pillars-funding";
 import ProgramsFunding from "./components/programs-funding";
 import TopicsFunding from "./components/topics-funding";
-import TypeOfFinancingSubsidiesRequestedByProjects from "../projects-types/charts/type-of-financing-subsidies-requested-by-projects";
+import TypeOfFinancingSubsidiesRequestedByProjects from "./charts/type-of-financing-subsidies-requested-by-projects";
 import TypeOfFinancingSubsidiesRequestedLines from "../projects-types/charts/type-of-financing-subsidies-requested-lines";
 import SuccessRateForAmountsByTypeOfFinancing from "../projects-types/charts/success-rate-for-amounts-by-type-of-financing";
 

@@ -10,13 +10,14 @@ import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+import i18n from "./i18n.json";
+
 const configChart1 = {
   id: "typeOfFinancingSubsidiesRequestedByProjects",
   title: "",
   subtitle: "Subventions demandées et obtenues (M€)",
   description: null,
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
 };
 
 const configChart2 = {
@@ -24,13 +25,13 @@ const configChart2 = {
   title: "",
   subtitle: "Part des subventions demandées et obtenues sur HE",
   description: null,
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
 };
 
 export default function TypeOfFinancingSubsidiesRequestedByProjects() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
+  const currentLang = searchParams.get("language") || "fr";
 
   const { data, isLoading } = useQuery({
     queryKey: [configChart1.id, params],
@@ -39,6 +40,12 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
 
   if (isLoading || !data) return <DefaultSkeleton col={2} />;
 
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
+
+  const rootStyles = getComputedStyle(document.documentElement);
+
   return (
     <Container fluid>
       <Row>
@@ -46,44 +53,7 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
           <ChartWrapper
             config={configChart1}
             options={optionsSubventionsValues(data)}
-            legend={
-              <ul className="legend">
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#233E41",
-                      marginRight: "10px",
-                    }}
-                  ></div>
-                  <span>Projets lauréats</span>
-                </li>
-                <li
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginBottom: "5px",
-                  }}
-                >
-                  <div
-                    style={{
-                      width: "20px",
-                      height: "20px",
-                      background: "#009099",
-                      marginRight: "10px",
-                    }}
-                  ></div>
-                  <span>Projets évalués</span>
-                </li>
-              </ul>
-            }
+            legend={null}
             renderData={() => null} // TODO: add data table
           />
         </Col>
@@ -94,6 +64,33 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
             legend={null}
             renderData={() => null} // TODO: add data table
           />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <fieldset>
+            <legend>{getI18nLabel("legend")}</legend>
+            <div className="legend">
+              <ul>
+                <li>
+                  <div
+                    style={{
+                      background: rootStyles.getPropertyValue("--evaluated-project-color"),
+                    }}
+                  />
+                  <span>Projets lauréats</span>
+                </li>
+                <li>
+                  <div
+                    style={{
+                      background: rootStyles.getPropertyValue("--successful-project-color"),
+                    }}
+                  />
+                  <span>Projets évalués</span>
+                </li>
+              </ul>
+            </div>
+          </fieldset>
         </Col>
       </Row>
     </Container>
