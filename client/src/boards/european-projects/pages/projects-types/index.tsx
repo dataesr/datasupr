@@ -5,7 +5,7 @@ import PillarsRequestedByProjects from "./charts/pillars-requested-by-projects";
 import PillarsSubsidiesRequestedLines from "./charts/pillars-subsidies-requested-lines";
 import SuccessRateAndEvolutionByPillar from "./charts/success-rate-and-evolution-by-pillar";
 
-import TypeOfFinancingSubsidiesRequestedByProjects from "./charts/type-of-financing-subsidies-requested-by-projects";
+import TypeOfFinancingSubsidiesRequestedByProjects from "../overview/charts/type-of-financing-subsidies-requested-by-projects";
 import TypeOfFinancingSubsidiesRequestedLines from "./charts/type-of-financing-subsidies-requested-lines";
 import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
 
