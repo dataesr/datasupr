@@ -14,7 +14,8 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { RenderDataSubsidiesValuesAndRates } from "./render-data";
 import { useState } from "react";
 
-import i18n from "./i18n.json";
+import i18nGlobal from "../../../../i18n-global.json";
+import i18nLocal from "./i18n.json";
 import { normalizeIdForCssColorNames } from "../../../../utils";
 
 const configChart1 = {
@@ -28,8 +29,7 @@ const configChart1 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 const configChart2 = {
   id: "topicsEvolutionFundingLinesRates",
@@ -42,8 +42,7 @@ const configChart2 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 const configChart3 = {
   id: "topicsEvolutionFundingLinesSuccessRate",
@@ -56,8 +55,7 @@ const configChart3 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 
 export default function TopicsFundingEvo3Years() {
@@ -67,11 +65,7 @@ export default function TopicsFundingEvo3Years() {
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      "TopicsFundingEvo3Years",
-      params,
-      Cookies.get("selectedThematics"),
-    ],
+    queryKey: ["TopicsFundingEvo3Years", params, Cookies.get("selectedThematics")],
     queryFn: () => GetData(params),
   });
 
@@ -83,6 +77,7 @@ export default function TopicsFundingEvo3Years() {
       </>
     );
 
+  const i18n = { ...i18nGlobal, ...i18nLocal };
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
@@ -100,11 +95,7 @@ export default function TopicsFundingEvo3Years() {
                 <li key={item.thema_code}>
                   <div
                     style={{
-                      background: rootStyles.getPropertyValue(
-                        `--topic-${normalizeIdForCssColorNames(
-                          item.thema_code
-                        )}-color`
-                      ),
+                      background: rootStyles.getPropertyValue(`--topic-${normalizeIdForCssColorNames(item.thema_code)}-color`),
                     }}
                   />
                   <span>{item[`thema_name_${currentLang}`]}</span>
@@ -120,19 +111,10 @@ export default function TopicsFundingEvo3Years() {
     <Container fluid>
       <Row className="fr-my-1w">
         <Col>
-          <select
-            className="fr-select"
-            onChange={(e) => setDisplayType(e.target.value)}
-          >
-            <option value="total_fund_eur">
-              {getI18nLabel("total-fund-eur")}
-            </option>
-            <option value="total_coordination_number">
-              {getI18nLabel("total-coordination-number")}
-            </option>
-            <option value="total_number_involved">
-              {getI18nLabel("total-number-involved")}
-            </option>
+          <select className="fr-select" onChange={(e) => setDisplayType(e.target.value)}>
+            <option value="total_fund_eur">{getI18nLabel("total-fund-eur")}</option>
+            <option value="total_coordination_number">{getI18nLabel("total-coordination-number")}</option>
+            <option value="total_number_involved">{getI18nLabel("total-number-involved")}</option>
           </select>
         </Col>
       </Row>

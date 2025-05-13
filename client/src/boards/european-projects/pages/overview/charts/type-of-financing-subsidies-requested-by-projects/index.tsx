@@ -10,7 +10,7 @@ import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
-import i18n from "./i18n.json";
+import i18n from "../../../../i18n-global.json";
 
 const configChart1 = {
   id: "typeOfFinancingSubsidiesRequestedByProjects",
@@ -78,7 +78,7 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
                       background: rootStyles.getPropertyValue("--evaluated-project-color"),
                     }}
                   />
-                  <span>Projets lauréats</span>
+                  <span>{getI18nLabel("evaluated-projects")}</span>
                 </li>
                 <li>
                   <div
@@ -86,7 +86,7 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
                       background: rootStyles.getPropertyValue("--successful-project-color"),
                     }}
                   />
-                  <span>Projets évalués</span>
+                  <span>{getI18nLabel("successful-prjects")}</span>
                 </li>
               </ul>
             </div>

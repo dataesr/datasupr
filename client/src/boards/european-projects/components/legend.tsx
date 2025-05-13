@@ -1,10 +1,6 @@
-import i18n from "./i18n.json";
+import i18n from "../i18n-global.json";
 
-export function GetLegend(
-  legendArray: [string, string][],
-  legendId: string,
-  currentLang: string
-) {
+export function GetLegend(legendArray: [string, string][], legendId: string, currentLang: string) {
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
