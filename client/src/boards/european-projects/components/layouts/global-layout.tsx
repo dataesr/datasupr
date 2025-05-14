@@ -15,6 +15,7 @@ import Footer from "./footer";
 import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
 import CountrySelector from "../../../../components/country-selector/selector";
+import "../styles.scss";
 
 export default function GlobalLayout({ languageSelector = false }) {
   const { pathname } = useLocation();
@@ -115,10 +116,10 @@ export default function GlobalLayout({ languageSelector = false }) {
           )}
         </FastAccess>
       </Header>
-      <div style={{ backgroundColor: "#f5f5f5" }}>
+      <div className="ep-main-menu ep-main-menu-bg-color">
         <Container>
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Nav aria-label="Main navigation" style={{ backgroundColor: "#f5f5f5" }}>
+          <div className="actions">
+            <Nav aria-label="Main navigation" className="ep-main-menu-bg-color">
               <Link current={is("/european-projects/accueil")} href="/european-projects/accueil">
                 <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
                 {getI18nLabel("home")}

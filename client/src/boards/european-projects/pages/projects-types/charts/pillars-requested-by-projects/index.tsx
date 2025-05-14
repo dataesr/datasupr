@@ -22,10 +22,9 @@ import {
   const configChart1a = {
     id: "pillarsSubsidiesRequestedByProjects",
     title: "",
-    subtitle: "Subventions demandées et obtenues (M€)",
+    subtitle: "Subventions demandées et obtenues (M€)<br />&nbsp;",
     description: null,
-    integrationURL:
-      "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
+    integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
   };
   const configChart1b = {
     id: "pillarsSubsidiesRequestedByProjectsRates",
