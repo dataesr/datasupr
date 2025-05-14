@@ -14,12 +14,13 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { RenderDataSubsidiesValuesAndRates } from "./render-data";
 import { useState } from "react";
 
-import i18n from "./i18n.json";
+import i18nLocal from "./i18n.json";
+import i18nGlobal from "../../../../i18n-global.json";
 
 const configChart1 = {
   id: "pillarsEvolutionFundingLines",
   title: {
-    fr: "Pilliers - Evolution des financements demandés et obtenus (M€)",
+    fr: "Pilliers - Evolution des financements demandés et obtenus (M€) <br />&nbsp;",
     en: "Pilars - Financing applied for and obtained (€m)",
   },
   description: {
@@ -27,8 +28,7 @@ const configChart1 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 const configChart2 = {
   id: "pillarsEvolutionFundingLinesRates",
@@ -41,8 +41,7 @@ const configChart2 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 const configChart3 = {
   id: "pillarsEvolutionFundingLinesSuccessRate",
@@ -55,8 +54,7 @@ const configChart3 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 
 export default function PillarsFundingEvo3Years() {
@@ -66,11 +64,7 @@ export default function PillarsFundingEvo3Years() {
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      "PillarsFundingEvo3Years",
-      params,
-      Cookies.get("selectedPillars"),
-    ],
+    queryKey: ["PillarsFundingEvo3Years", params, Cookies.get("selectedPillars")],
     queryFn: () => GetData(params),
   });
 
@@ -82,6 +76,10 @@ export default function PillarsFundingEvo3Years() {
       </>
     );
 
+  const i18n = {
+    ...i18nLocal,
+    ...i18nGlobal,
+  };
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
@@ -89,24 +87,25 @@ export default function PillarsFundingEvo3Years() {
   function Legend() {
     const rootStyles = getComputedStyle(document.documentElement);
     return (
-      <div className="legend">
-        <ul>
-          {data
-            .find((item) => item.country !== "all")
-            .data[0].pillars.map((item) => (
-              <li key={item.pilier_code}>
-                <div
-                  style={{
-                    background: rootStyles.getPropertyValue(
-                      `--pillar-${item.pilier_code}-color`
-                    ),
-                  }}
-                />
-                <span>{item[`pilier_name_${currentLang}`]}</span>
-              </li>
-            ))}
-        </ul>
-      </div>
+      <fieldset>
+        <legend>{getI18nLabel("legend")}</legend>
+        <div className="legend">
+          <ul>
+            {data
+              .find((item) => item.country !== "all")
+              .data[0].pillars.map((item) => (
+                <li key={item.pilier_code}>
+                  <div
+                    style={{
+                      background: rootStyles.getPropertyValue(`--pillar-${item.pilier_code}-color`),
+                    }}
+                  />
+                  <span>{item[`pilier_name_${currentLang}`]}</span>
+                </li>
+              ))}
+          </ul>
+        </div>
+      </fieldset>
     );
   }
 
@@ -114,19 +113,10 @@ export default function PillarsFundingEvo3Years() {
     <Container fluid>
       <Row className="fr-my-1w">
         <Col>
-          <select
-            className="fr-select"
-            onChange={(e) => setDisplayType(e.target.value)}
-          >
-            <option value="total_fund_eur">
-              {getI18nLabel("total-fund-eur")}
-            </option>
-            <option value="total_coordination_number">
-              {getI18nLabel("total-coordination-number")}
-            </option>
-            <option value="total_number_involved">
-              {getI18nLabel("total-number-involved")}
-            </option>
+          <select className="fr-select" onChange={(e) => setDisplayType(e.target.value)}>
+            <option value="total_fund_eur">{getI18nLabel("total-fund-eur")}</option>
+            <option value="total_coordination_number">{getI18nLabel("total-coordination-number")}</option>
+            <option value="total_number_involved">{getI18nLabel("total-number-involved")}</option>
           </select>
         </Col>
       </Row>

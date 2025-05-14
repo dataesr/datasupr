@@ -12,22 +12,17 @@ import {
   ButtonGroup,
 } from "@dataesr/dsfr-plus";
 import Home from "./pages/home";
+import "./styles.css";
 
 function MainMenu({ selectedCountry }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
-    <div style={{ backgroundColor: "#f5f5f5" }}>
+    <div className="ep-main-menu">
       <Container>
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-          <Nav
-            aria-label="Main navigation"
-            style={{ backgroundColor: "#f5f5f5" }}
-          >
+          <Nav aria-label="Main navigation" style={{ backgroundColor: "#f5f5f5" }}>
             <Link current href="#">
-              <span
-                className="fr-icon-home-4-line fr-mr-1w"
-                aria-hidden="true"
-              />
+              <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
               Accueil
             </Link>
             <Link href="#">Global</Link>

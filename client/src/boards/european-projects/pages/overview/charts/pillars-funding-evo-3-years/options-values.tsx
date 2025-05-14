@@ -74,9 +74,7 @@ export default function Options(data, displayType) {
         dataLabels: {
           enabled: true,
           formatter: function (this: Highcharts.TooltipFormatterContextObject) {
-            return displayType === "total_fund_eur"
-              ? formatToMillions(this.y as number)
-              : (this.y as number);
+            return displayType === "total_fund_eur" ? formatToMillions(this.y as number) : (this.y as number);
           },
         },
       },
@@ -86,9 +84,7 @@ export default function Options(data, displayType) {
       .pillars.map((pillar) => ({
         name: pillar.pilier_name_fr,
         data: pillar.years.map((year) => year[displayType]),
-        color: rootStyles.getPropertyValue(
-          `--pillar-${pillar.pilier_code}-color`
-        ),
+        color: rootStyles.getPropertyValue(`--pillar-${pillar.pilier_code}-color`),
       }))
       .concat(
         filteredData
@@ -97,9 +93,7 @@ export default function Options(data, displayType) {
             xAxis: 1,
             name: pillar.pilier_name_fr,
             data: pillar.years.map((year) => year[displayType]),
-            color: rootStyles.getPropertyValue(
-              `--pillar-${pillar.pilier_code}-color`
-            ),
+            color: rootStyles.getPropertyValue(`--pillar-${pillar.pilier_code}-color`),
           }))
       ),
   };

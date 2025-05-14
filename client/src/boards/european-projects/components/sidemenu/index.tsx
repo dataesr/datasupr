@@ -121,7 +121,7 @@ export default function CustomSideMenu() {
   };
 
   return (
-    <Tabs className="fr-mt-1w">
+    <Tabs className="fr-mt-1w ep-side-menu">
       <Tab label="Menu">
         <SideMenu title="" sticky fullHeight className="padded-sidemenu">
           <Link current={is("/european-projects/synthese")} href={`/european-projects/synthese?${filtersParams}`}>
