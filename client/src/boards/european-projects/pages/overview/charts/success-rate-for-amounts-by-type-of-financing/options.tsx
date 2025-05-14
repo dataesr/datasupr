@@ -54,12 +54,12 @@ export default function Options(data) {
       {
         name: "Pays",
         data: selectedCountry.map((item) => item.ratio),
-        color: "#6DD897",
+        color: "var(--selected-country-color)",
       },
       {
         name: "UE & Etats associés",
         data: otherCountriesSorted.map((item) => item.ratio),
-        color: "#09622A",
+        color: "var(--associated-countries-color)",
       },
     ],
   };
