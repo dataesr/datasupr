@@ -7,7 +7,7 @@ import SuccessRateAndEvolutionByPillar from "./charts/success-rate-and-evolution
 
 import TypeOfFinancingSubsidiesRequestedByProjects from "../overview/charts/type-of-financing-subsidies-requested-by-projects";
 import TypeOfFinancingSubsidiesRequestedLines from "./charts/type-of-financing-subsidies-requested-lines";
-import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
+import SuccessRateForAmountsByTypeOfFinancing from "../overview/charts/success-rate-for-amounts-by-type-of-financing";
 
 export default function ProjectsTypes() {
   const [selectedChart, setSelectedChart] = useState("Subsidies");

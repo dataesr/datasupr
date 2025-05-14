@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { Container, Row, Col } from "@dataesr/dsfr-plus";
+import Cookies from "js-cookie";
 
+import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { GetData } from "./query";
 import options from "./options";
 
@@ -25,7 +26,14 @@ export default function SuccessRateForAmountsByTypeOfFinancing() {
   const currentLang = searchParams.get("language") || "fr";
 
   const { data, isLoading } = useQuery({
-    queryKey: [config.id, params],
+    queryKey: [
+      config.id,
+      params,
+      Cookies.get("selectedPillars"),
+      Cookies.get("selectedPrograms"),
+      Cookies.get("selectedTopics"),
+      Cookies.get("selectedDestinations"),
+    ],
     queryFn: () => GetData(params),
   });
 

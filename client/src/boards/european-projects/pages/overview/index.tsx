@@ -18,7 +18,7 @@ import ProgramsFunding from "./components/programs-funding";
 import TopicsFunding from "./components/topics-funding";
 import TypeOfFinancingSubsidiesRequestedByProjects from "./charts/type-of-financing-subsidies-requested-by-projects";
 import TypeOfFinancingSubsidiesRequestedLines from "../projects-types/charts/type-of-financing-subsidies-requested-lines";
-import SuccessRateForAmountsByTypeOfFinancing from "../projects-types/charts/success-rate-for-amounts-by-type-of-financing";
+import SuccessRateForAmountsByTypeOfFinancing from "./charts/success-rate-for-amounts-by-type-of-financing";
 
 export default function Overview() {
   const [searchParams, setSearchParams] = useSearchParams();
