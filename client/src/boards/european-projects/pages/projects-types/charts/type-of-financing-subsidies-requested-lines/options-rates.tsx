@@ -1,73 +1,38 @@
 export default function Options(data) {
   if (!data) return null;
 
-  const filteredDataCountry = data.filter((item) => item.country !== "all")[0]
-    .data;
+  const filteredDataCountry = data.filter((item) => item.country !== "all")[0].data;
   const filteredDataAll = data.filter((item) => item.country === "all")[0].data;
 
   const years = new Set();
   filteredDataCountry.forEach((item) => years.add(item.year));
 
-  const typesOfFinancing = {
-    "ACT-OTHERS": {
-      color: "#009099",
-      name: "ACT-OTHERS",
-    },
-    CSA: {
-      color: "#F28E2B",
-      name: "CSA",
-    },
-    EIC: {
-      color: "#D5DBEF",
-      name: "EIC",
-    },
-    ERC: {
-      color: "#76B7B2",
-      name: "ERC",
-    },
-    IA: {
-      color: "#B07AA1",
-      name: "IA",
-    },
-    MSCA: {
-      color: "#EDC948",
-      name: "MSCA",
-    },
-    RIA: {
-      color: "#BAB0AC",
-      name: "RIA",
-    },
-  };
+  // Obtenir les action_ids uniques
+  const actionIds = [...new Set(filteredDataCountry.map((item) => item.action_id))];
 
-  const series = Object.keys(typesOfFinancing).map((key) => ({
-    name: typesOfFinancing[key].name,
+  const series = actionIds.map((actionId) => ({
+    name: actionId,
     data: filteredDataCountry
-      .filter((item) => item.action_id === key)
+      .filter((item) => item.action_id === actionId)
       .map(
         (item) =>
           (item.total_evaluated * 100) /
-          filteredDataAll.find(
-            (itemAll) =>
-              itemAll.year === item.year && itemAll.action_id === item.action_id
-          ).total_evaluated
+          filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.action_id === actionId).total_evaluated
       ),
-    color: typesOfFinancing[key].color,
+    color: `var(--project-type-${(actionId as string).toLowerCase()}-color)`,
   }));
 
-  const series2 = Object.keys(typesOfFinancing).map((key) => ({
-    name: typesOfFinancing[key].name,
+  const series2 = actionIds.map((actionId) => ({
+    name: actionId,
     xAxis: 1,
     data: filteredDataCountry
-      .filter((item) => item.action_id === key)
+      .filter((item) => item.action_id === actionId)
       .map(
         (item) =>
           (item.total_successful * 100) /
-          filteredDataAll.find(
-            (itemAll) =>
-              itemAll.year === item.year && itemAll.action_id === item.action_id
-          ).total_successful
+          filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.action_id === actionId).total_successful
       ),
-    color: typesOfFinancing[key].color,
+    color: `var(--project-type-${(actionId as string).toLowerCase()}-color)`,
   }));
 
   return {

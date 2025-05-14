@@ -1,57 +1,40 @@
+interface FilteredDataItem {
+  year: number;
+  action_id: string;
+  total_evaluated: number;
+  total_successful: number;
+  country: string;
+}
+
+interface SeriesItem {
+  name: string;
+  data: number[];
+  color: string;
+}
+
 export default function Options(data) {
   if (!data) return null;
 
-  const filteredData = data.filter((item) => item.country !== "all")[0].data;
+  const filteredData = data.filter((item) => item.country !== "all")[0].data.sort((a, b) => a.year - b.year);
 
   const years = new Set();
   filteredData.forEach((item) => years.add(item.year));
 
-  const typesOfFinancing = {
-    "ACT-OTHERS": {
-      color: "#009099",
-      name: "ACT-OTHERS",
-    },
-    CSA: {
-      color: "#F28E2B",
-      name: "CSA",
-    },
-    EIC: {
-      color: "#D5DBEF",
-      name: "EIC",
-    },
-    ERC: {
-      color: "#76B7B2",
-      name: "ERC",
-    },
-    IA: {
-      color: "#B07AA1",
-      name: "IA",
-    },
-    MSCA: {
-      color: "#EDC948",
-      name: "MSCA",
-    },
-    RIA: {
-      color: "#BAB0AC",
-      name: "RIA",
-    },
-  };
-
-  const series = Object.keys(typesOfFinancing).map((key) => ({
-    name: typesOfFinancing[key].name,
+  const series: SeriesItem[] = Array.from(new Set(filteredData.map((item: FilteredDataItem) => item.action_id))).map((actionId) => ({
+    name: actionId as string,
     data: filteredData
-      .filter((item) => item.action_id === key)
-      .map((item) => item.total_evaluated / 1000000),
-    color: typesOfFinancing[key].color,
+      .filter((item: FilteredDataItem) => item.action_id === actionId)
+      .map((item: FilteredDataItem) => item.total_evaluated / 1000000),
+    color: `var(--project-type-${(actionId as string).toLowerCase()}-color)`,
   }));
 
-  const series2 = Object.keys(typesOfFinancing).map((key) => ({
-    name: typesOfFinancing[key].name,
+  const series2: SeriesItem[] = Array.from(new Set(filteredData.map((item: FilteredDataItem) => item.action_id))).map((actionId) => ({
+    name: actionId as string,
     xAxis: 1,
     data: filteredData
-      .filter((item) => item.action_id === key)
-      .map((item) => item.total_successful / 1000000),
-    color: typesOfFinancing[key].color,
+      .filter((item: FilteredDataItem) => item.action_id === actionId)
+      .map((item: FilteredDataItem) => item.total_successful / 1000000),
+    color: `var(--project-type-${(actionId as string).toLowerCase()}-color)`,
   }));
 
   return {
@@ -111,7 +94,6 @@ export default function Options(data) {
           enabled: true,
           symbol: "circle",
           radius: 3,
-          // fillColor: "#FFFFFF",
           lineWidth: 2,
           lineColor: null,
         },
