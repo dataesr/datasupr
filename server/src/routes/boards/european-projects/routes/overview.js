@@ -1407,10 +1407,11 @@ router
         ])
         .toArray();
   
+      delete filters.country_code;
       const data_all = await db
         .collection("fr-esr-all-projects-synthese")
         .aggregate([
-          // { $match: { country_code: req.query.country_code } },
+          { $match: { $and: [filters] } },
           {
             $group: {
               _id: {
@@ -1482,5 +1483,168 @@ router
   
       return res.json({ country, all });
     });
+
+router.route("/european-projects/overview/projects-types-2")
+  .get(async (req, res) => {
+    const filters = checkQuery(req.query, ["country_code"], res);
+
+    // cas de plusieurs pilliers passés en paramètre
+    if (req.query.pilier_code?.split("|").length > 1) {
+      filters.pilier_code = { $in: req.query.pilier_code.split("|") };
+    } else if (req.query.pilier_code?.split("|").length === 1) {
+      filters.pilier_code = req.query.pilier_code;
+    }
+    // cas de plusieurs programmes passés en paramètre
+    if (req.query.programme_code?.split("|").length > 1) {
+      filters.programme_code = { $in: req.query.programme_code.split("|") };
+    } else if (req.query.programme_code?.split("|").length === 1) {
+      filters.programme_code = req.query.programme_code;
+    }
+    // cas de plusieurs thématiques passées en paramètre
+    if (req.query.thema_code?.split("|").length > 1) {
+      filters.thema_code = { $in: req.query.thema_code.split("|") };
+    } else if (req.query.thema_code?.split("|").length === 1) {
+      filters.thema_code = req.query.thema_code;
+    }
+    // cas de plusieurs destinations passées en paramètre
+    if (req.query.destination_code?.split("|").length > 1) {
+      filters.destination_code = { $in: req.query.destination_code.split("|") };
+    } else if (req.query.destination_code?.split("|").length === 1) {
+      filters.destination_code = req.query.destination_code;
+    }
+    
+    const rangeOfYears = ["2021", "2022", "2023"]; //TODO: get the range of years from the database
+    filters.call_year = { $in: rangeOfYears };
+    const data_country = await db
+      .collection("fr-esr-all-projects-synthese")
+      .aggregate([
+        { $match: { $and: [filters] }},
+        {
+          $group: {
+            _id: {
+              stage: "$stage",
+              action_id: "$action_group_code",
+              action_name: "$action_group_name",
+              call_year: "$call_year",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            stage: "$_id.stage",
+            total_fund_eur: 1,
+            action_id: "$_id.action_id",
+            action_name: "$_id.action_name",
+            call_year: "$_id.call_year",
+          },
+        },
+        {
+          $group: {
+            _id: {
+              id: "$action_id",
+              year: "$call_year",
+              action_name: "$action_name",
+            },
+            total_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_fund_eur",
+                  0,
+                ],
+              },
+            },
+            total_evaluated: {
+              $sum: {
+                $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            action_id: "$_id.id",
+            action_name: "$_id.action_name",
+            year: "$_id.year",
+            total_successful: 1,
+            total_evaluated: 1,
+          },
+        },
+        { $sort: { action_id: 1, year: 1 } },
+      ])
+      .toArray();
+
+    const data_all = await db
+      .collection("fr-esr-all-projects-synthese")
+      .aggregate([
+        {
+          $group: {
+            _id: {
+              stage: "$stage",
+              action_id: "$action_group_code",
+              action_name: "$action_group_name",
+              call_year: "$call_year",
+            },
+            total_fund_eur: { $sum: "$fund_eur" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            stage: "$_id.stage",
+            total_fund_eur: 1,
+            action_id: "$_id.action_id",
+            action_name: "$_id.action_name",
+            call_year: "$_id.call_year",
+          },
+        },
+        {
+          $group: {
+            _id: {
+              id: "$action_id",
+              year: "$call_year",
+              action_name: "$action_name",
+            },
+            total_successful: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$stage", "successful"] },
+                  "$total_fund_eur",
+                  0,
+                ],
+              },
+            },
+            total_evaluated: {
+              $sum: {
+                $cond: [{ $eq: ["$stage", "evaluated"] }, "$total_fund_eur", 0],
+              },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            action_id: "$_id.id",
+            action_name: "$_id.action_name",
+            year: "$_id.year",
+            total_successful: 1,
+            total_evaluated: 1,
+          },
+        },
+        { $sort: { action_id: 1 } },
+      ])
+      .toArray();
+
+    return res.json([
+      {
+        country: req.query.country_code,
+        data: data_country,
+      },
+      { country: "all", data: data_all },
+    ]);
+  });
 
 export default router;

@@ -10,7 +10,6 @@ export async function GetData(params: string) {
   if (selectedPillars) {
     searchParams.append("pilier_code", selectedPillars);
   }
-
   // Récupérer les programmes sélectionnés depuis les cookies
   const selectedPrograms = Cookies.get("selectedPrograms");
   if (selectedPrograms) {

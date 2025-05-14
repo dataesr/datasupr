@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import { GetData } from "./query";
 import optionsValues from "./options-values";
@@ -9,6 +10,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+
 import i18n from "../../../../i18n-global.json";
 
 const configChart1 = {
@@ -30,9 +32,17 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
   const currentLang = searchParams.get("language") || "fr";
+  const country_code = searchParams.get("country_code") || "FRA";
 
   const { data, isLoading } = useQuery({
-    queryKey: ["type-of-financing-subsidies-requested-lines", params],
+    queryKey: [
+      configChart1.id,
+      params,
+      Cookies.get("selectedPillars"),
+      Cookies.get("selectedPrograms"),
+      Cookies.get("selectedTopics"),
+      Cookies.get("selectedDestinations"),
+    ],
     queryFn: () => GetData(params),
   });
 
@@ -41,6 +51,18 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
+
+  interface Action {
+    id: string;
+    name: string;
+  }
+
+  const actions: Action[] = Array.from(
+    new Set(data.find((item) => item.country === country_code).data.map((item) => item.action_id.toLowerCase()))
+  ).map((id) => ({
+    id: id as string,
+    name: data.find((item) => item.country === country_code).data.find((item) => item.action_id.toLowerCase() === id).action_name,
+  }));
 
   return (
     <Container fluid>
@@ -68,34 +90,12 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
             <legend>{getI18nLabel("legend")}</legend>
             <div className="legend">
               <ul>
-                <li>
-                  <div style={{ background: "#009099" }} />
-                  <span>Others actions</span>
-                </li>
-                <li>
-                  <div style={{ background: "#F28E2B" }} />
-                  <span>CSA Coordination and support actions</span>
-                </li>
-                <li>
-                  <div style={{ background: "#D5DBEF" }} />
-                  <span>EIC actions</span>
-                </li>
-                <li>
-                  <div style={{ background: "#76B7B2" }} />
-                  <span>ERC actions</span>
-                </li>
-                <li>
-                  <div style={{ background: "#B07AA1" }} />
-                  <span>IA Innovation actions</span>
-                </li>
-                <li>
-                  <div style={{ background: "#EDC948" }} />
-                  <span>MSCA Marie Skłodowska-Curie actions</span>
-                </li>
-                <li>
-                  <div style={{ background: "#BAB0AC" }} />
-                  <span>RIA Research and Innovation actions</span>
-                </li>
+                {actions.map((action) => (
+                  <li key={action.id}>
+                    <div style={{ background: `var(--project-type-${action.id}-color)` }} />
+                    <span>{`${action.name} (${action.id.toLocaleUpperCase()})`}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </fieldset>
