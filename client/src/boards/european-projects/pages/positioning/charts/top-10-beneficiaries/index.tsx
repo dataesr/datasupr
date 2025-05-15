@@ -11,11 +11,16 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 
 const config = {
   id: "top10beneficiaries",
-  title: "",
-  subtitle: "Principaux pays bénéficiaires",
-  description: "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
-  integrationURL:
-    "/european-projects/components/pages/analysis/positioning/charts/top-10-beneficiaries",
+  title: {
+    fr: "Top 10 des bénéficiaires",
+    en: "Top 10 beneficiaries",
+  },
+  subtitle: "",
+  description: {
+    fr: "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+    en: "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
+  },
+  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-beneficiaries",
 };
 
 export default function Top10Beneficiaries() {

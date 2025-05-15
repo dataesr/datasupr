@@ -16,53 +16,65 @@ import { useSearchParams } from "react-router-dom";
 
 const configChart1a = {
   id: "fundingRankingSub",
-  title: "",
-  subtitle: "Subventions demandées et obtenues (M€) par pays",
+  title: {
+    fr: "Subventions demandées et obtenues (M€) par pays",
+    en: "Funding requested and obtained (M€) by country",
+  },
+  subtitle: "",
   description: null,
-  integrationURL:
-    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
 };
 const configChart1b = {
   id: "fundingRankingSubSuccessRate",
-  title: "",
-  subtitle: "Taux de succès sur les montants par pays <br />",
+  title: {
+    fr: "Taux de succès sur les montants par pays",
+    en: "Success rate on amounts by country<br />&nbsp;",
+  },
+  subtitle: "",
   description: null,
-  integrationURL:
-    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
 };
 
 const configChart2a = {
   id: "fundingRankingCoordination",
-  title: "",
-  subtitle: "Nombre de coordinations de projets déposés et lauréats",
+  title: {
+    fr: "Nombre de coordinations de projets déposés et lauréats",
+    en: "Number of project coordinations submitted and winners",
+  },
+  subtitle: "",
   description: null,
-  integrationURL:
-    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
 };
 const configChart2b = {
   id: "fundingRankingCoordinationSuccessRate",
-  title: "",
-  subtitle: "Taux de succès sur le nombre de coordinations de projets lauréats",
+  title: {
+    fr: "Taux de succès sur le nombre de coordinations de projets lauréats",
+    en: "Success rate on the number of winning project coordinations",
+  },
+  subtitle: "",
   description: null,
-  integrationURL:
-    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
 };
 
 const configChart3a = {
   id: "fundingRankingInvolved",
-  title: "",
-  subtitle: "Nombre de candidats et de participants",
+  title: {
+    fr: "Nombre de candidats et de participants",
+    en: "Number of candidates and participants",
+  },
+  subtitle: "",
   description: null,
-  integrationURL:
-    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
 };
 const configChart3b = {
   id: "fundingRankingInvolvedSuccessRate",
-  title: "",
-  subtitle: "Taux de succès individuel des participants",
+  title: {
+    fr: "Taux de succès sur le nombre de candidats et de participants",
+    en: "Success rate on the number of candidates and participants",
+  },
+  subtitle: "",
   description: null,
-  integrationURL:
-    "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
 };
 
 export default function FundingRanking() {
