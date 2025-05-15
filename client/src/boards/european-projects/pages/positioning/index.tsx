@@ -1,16 +1,17 @@
 import { useEffect } from "react";
-import { Container, Title } from "@dataesr/dsfr-plus";
+import { Container } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
 // import Intro from "./charts/intro";
 import Top10Beneficiaries from "./charts/top-10-beneficiaries";
 import FundingRanking from "./charts/funding-ranking";
 
-import i18n from "./i18n.json";
+// import i18n from "./i18n.json";
+import Callout from "../../../../components/callout";
 
 export default function Positioning() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
+  // const currentLang = searchParams.get("language") || "fr";
 
   useEffect(() => {
     if (!searchParams.get("country_code")) {
@@ -18,14 +19,16 @@ export default function Positioning() {
     }
   }, [searchParams, setSearchParams]);
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
+  // function getI18nLabel(key) {
+  //   return i18n[key][currentLang];
+  // }
   return (
     <Container as="main" className="fr-my-6w">
-      <Title as="h1" look="h3">
-        {getI18nLabel("title")}
-      </Title>
+      <Callout className="callout-style-positioning">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum impedit in nisi quibusdam, consequuntur omnis. Qui at error aliquam atque
+        natus facilis, reiciendis alias perferendis tenetur minus quae rerum?
+      </Callout>
+      {/* <Title as="h2">{getI18nLabel("title")}</Title> */}
       {/* <Intro /> */}
       <Top10Beneficiaries />
       <FundingRanking />
