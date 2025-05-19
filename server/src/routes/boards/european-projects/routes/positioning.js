@@ -6,12 +6,31 @@ const router = new express.Router();
 // import { checkQuery } from "../../utils";
 
 router
-  .route("/european-projects/analysis-positioning-top-10-funding-ranking")
+  .route("/european-projects/positioning/top-10-funding-ranking")
   .get(async (req, res) => {
+    const filters = {};
+    if (req.query.pillars) {
+      const pillars = req.query.pillars.split("|");
+      filters.pilier_code = { $in: pillars };
+    }
+    if (req.query.programs) {
+      const programs = req.query.programs.split("|");
+      filters.programme_code = { $in: programs };
+    }
+    if (req.query.thematics) {
+      const thematics = req.query.thematics.split("|");
+      filters.thema_code = { $in: thematics };
+    }
+    if (req.query.destinations) {
+      const destinations = req.query.destinations.split("|");
+      filters.destination_code = { $in: destinations };
+    }
+    filters.country_code = { $nin: ["ZOE", "ZOI"] };
+
     const data = await db
       .collection("fr-esr-all-projects-synthese")
       .aggregate([
-        { $match: { country_code: { $nin: ["ZOE", "ZOI"] } } },
+        { $match: filters },
         {
           $group: {
             _id: {
