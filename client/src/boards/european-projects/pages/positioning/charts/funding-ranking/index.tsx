@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import Cookies from "js-cookie";
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
 import { GetData } from "./query";
@@ -81,8 +82,15 @@ export default function FundingRanking() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const [selectedChart, setSelectedChart] = useState("fundingRankingSub");
+
   const { data, isLoading } = useQuery({
-    queryKey: ["fundingRanking"],
+    queryKey: [
+      "fundingRanking",
+      Cookies.get("selectedPillars"),
+      Cookies.get("selectedPrograms"),
+      Cookies.get("selectedThematics"),
+      Cookies.get("selectedDestinations"),
+    ],
     queryFn: () => GetData(),
   });
 
@@ -125,18 +133,10 @@ export default function FundingRanking() {
       </Row>
       <Row>
         <Col>
-          <select
-            className="fr-select fr-mb-3w"
-            onChange={(e) => setSelectedChart(e.target.value)}
-            value={selectedChart}
-          >
+          <select className="fr-select fr-mb-3w" onChange={(e) => setSelectedChart(e.target.value)} value={selectedChart}>
             <option value="fundingRankingSub">Focus sur les subventions</option>
-            <option value="fundingRankingCoordination">
-              Focus sur les coordinations de projets
-            </option>
-            <option value="fundingRankingInvolved">
-              Focus sur les candidats et participants
-            </option>
+            <option value="fundingRankingCoordination">Focus sur les coordinations de projets</option>
+            <option value="fundingRankingInvolved">Focus sur les candidats et participants</option>
           </select>
         </Col>
       </Row>
