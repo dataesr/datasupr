@@ -227,3 +227,29 @@ export type GenderDataCardProps = {
   isLoading: boolean;
   allDisciplines?: DisciplineItem[];
 };
+
+export interface CnuSectionsTableProps {
+  cnuSections: CNUSection[];
+  maxDisplay?: number;
+  showDiscipline?: boolean;
+  showGroup?: boolean;
+}
+
+export interface AgeDistributionData {
+  year: string;
+  fieldId: string;
+  fieldLabel: string;
+  totalCount: number;
+  ageDistribution: Array<{
+    ageClass: string;
+    count: number;
+    percent: number;
+  }>;
+}
+
+export interface AgeDistributionChartProps {
+  ageData: AgeDistributionData[];
+  isLoading: boolean;
+  year: string;
+  forcedSelectedField?: string;
+}

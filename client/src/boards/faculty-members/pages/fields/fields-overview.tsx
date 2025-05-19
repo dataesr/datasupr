@@ -10,7 +10,7 @@ import {
 import { useState, useEffect, useMemo } from "react";
 import YearSelector from "../../filters";
 import useFacultyMembersByFields from "./api/use-by-fields";
-import FieldsDistributionTreemap from "./charts/general/general";
+import FieldsDistributionBar from "./charts/general/general";
 import { CNUGroup, CNUSection } from "../../types";
 import DisciplineStatsSidebar from "./components/top-fields-indicators";
 import FieldCardsGrid from "./components/fields-cards";
@@ -233,7 +233,7 @@ export default function FieldOverview() {
       <Row gutters className="fr-mt-3w">
         <Col md={8}>
           {fieldData && selectedYear && (
-            <FieldsDistributionTreemap
+            <FieldsDistributionBar
               fieldsData={fieldData}
               selectedYear={selectedYear}
             />

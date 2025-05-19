@@ -2,12 +2,12 @@ import { Link } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import options from "./options";
 
-interface FieldsDistributionTreemapProps {
+interface FieldsDistributionBarProps {
   fieldsData: [];
   selectedYear: string;
 }
 
-const FieldsDistributionTreemap: React.FC<FieldsDistributionTreemapProps> = ({
+const FieldsDistributionBar: React.FC<FieldsDistributionBarProps> = ({
   fieldsData,
   selectedYear,
 }) => {
@@ -16,7 +16,7 @@ const FieldsDistributionTreemap: React.FC<FieldsDistributionTreemapProps> = ({
   return chartOptions ? (
     <>
       <ChartWrapper
-        id="fieldsDistributionTreemap"
+        id="FieldsDistributionBar"
         options={chartOptions}
         legend={null}
       />
@@ -29,4 +29,4 @@ const FieldsDistributionTreemap: React.FC<FieldsDistributionTreemapProps> = ({
   ) : null;
 };
 
-export default FieldsDistributionTreemap;
+export default FieldsDistributionBar;
