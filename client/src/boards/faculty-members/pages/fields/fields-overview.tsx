@@ -6,6 +6,7 @@ import {
   Breadcrumb,
   Link,
   Text,
+  Notice,
 } from "@dataesr/dsfr-plus";
 import { useState, useEffect, useMemo } from "react";
 import YearSelector from "../../filters";
@@ -206,11 +207,13 @@ export default function FieldOverview() {
   if (isError) return <div>Erreur : {error?.message}</div>;
   if (statusError) return <div>Erreur : {statusError?.message}</div>;
 
+  const shareTitulaire = statusData?.[0]?.aggregatedStats?.titulairesPercent;
+
   return (
     <Container as="main">
       <Row>
         <Col md={9}>
-          <Breadcrumb className="fr-m-0 fr-mt-1w">
+          <Breadcrumb className="fr-m-0 fr-pt-3w">
             <Link href="/personnel-enseignant">Personnel enseignant</Link>
             <Link>
               <strong>Les Grandes disciplines</strong>
@@ -220,45 +223,49 @@ export default function FieldOverview() {
         <Col md={3} style={{ textAlign: "right" }}>
           {availableYears.length > 0 && (
             <YearSelector
-              years={availableYears}
-              selectedYear={selectedYear}
-              onYearChange={setSelectedYear}
+            years={availableYears}
+            selectedYear={selectedYear}
+            onYearChange={setSelectedYear}
             />
           )}
         </Col>
       </Row>
-      <Title as="h4" look="h5" className="fr-mb-3w fr-mt-3w">
-        Explorer par grande discipline
-      </Title>
-      <Row gutters className="fr-mt-3w">
-        <Col md={8}>
-          {fieldData && selectedYear && (
-            <FieldsDistributionBar
-              fieldsData={fieldData}
-              selectedYear={selectedYear}
-            />
-          )}
-        </Col>
-        <Col md={4} style={{ textAlign: "center" }}>
-          <GeneralIndicatorsCard structureData={disciplinesData} />
-          <DisciplineStatsSidebar disciplinesData={disciplinesData} />
-        </Col>
+
+      <Row className="fr-mt-3w">
+          {shareTitulaire == 100 &&(
+            <Notice closeMode={"disallow"} type={"warning"}>
+              Les données des personnels enseignants non permanents ne sont pas prises en compte
+              pour l'année {selectedYear} car elles ne sont pas disponibles.
+            </Notice>
+            )}
+            <Title as="h3" look="h5"className="fr-mt-2w">
+             Explorer le personnel enseignant par grande discipline
+          </Title>
       </Row>
-      <Row gutters className="fr-mt-3w fr-mb-5w">
-        <Col md={12}>
-          <div className="fr-mt-3w">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, fuga
-            similique? Commodi voluptates aliquam possimus! Dolor rerum sequi
-            ratione inventore alias reiciendis non repellat! Molestias
-            exercitationem provident recusandae aliquid eos.
-          </div>
-        </Col>
-      </Row>
+
       <Row>
-        <Col md={8}>
+        {/* Colonne principale */}
+        <Col md={8} className="fr-pr-8w">
+            <Text>
+              Desriptif de notre référentiel des disciplines, limites et périmètres. <br/>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vitae lobortis sem.
+              Quisque vel ex a elit facilisis rhoncus. Morbi eleifend bibendum orci vel aliquet. Fusce
+              a neque dui. Cras molestie quam quis libero ullamcorper viverra. Sed rutrum placerat nibh
+              ut tristique. Cras egestas felis a scelerisque dignissim. Donec placerat nulla dapibus,
+              efficitur ex non, vehicula sapien. Aenean vehicula vitae eros ut egestas. Maecenas lorem
+              massa, vulputate id leo id, aliquet ornare mi. Etiam vitae ipsum ipsum. Cras fermentum
+              lobortis mauris eget malesuada. Sed in consequat elit, eu fringilla magna.
+            </Text>
+          {fieldData && selectedYear && (
+              <FieldsDistributionBar
+                fieldsData={fieldData}
+                selectedYear={selectedYear}
+              />
+            )}
           <CnuGroupsChart cnuGroups={cnuGroups} />
-        </Col>
-        <Col md={4} style={{ textAlign: "center" }}>
+          <StatusDistribution
+              disciplinesData={statusData?.[0].disciplines ?? []}
+          />
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea repellat
           corporis est laudantium consequuntur consectetur, odit temporibus!
           Eligendi, vitae. Vero, harum molestias? Repellendus voluptatem non
@@ -276,17 +283,11 @@ export default function FieldOverview() {
             </div>
           )}
         </Col>
-      </Row>
 
-      <Row className="fr-mt-5w">
-        {statusData && statusData.length > 0 && (
-          <Col md={8} style={{ textAlign: "center" }}>
-            <StatusDistribution
-              disciplinesData={statusData[0].disciplines ?? []}
-            />
-          </Col>
-        )}
+        {/* Colonne secondaire */}
         <Col md={4} style={{ textAlign: "center" }}>
+          <GeneralIndicatorsCard structureData={disciplinesData} />
+          <DisciplineStatsSidebar disciplinesData={disciplinesData} />
           {statusData && statusData.length > 0 && (
             <>
               <DisciplineStatusSummary
@@ -294,31 +295,18 @@ export default function FieldOverview() {
                 aggregatedStats={statusData[0].aggregatedStats}
                 fields={statusData[0].disciplines ?? []}
               />
-              <i>
-                <Link href="/personnel-enseignant/discipline/typologie">
-                  Pour plus de détails sur les enseignant-chercheurs, cliquez
-                  ici
-                </Link>
-              </i>
             </>
           )}
         </Col>
       </Row>
 
+    {/* Garder la suite  */}
       <Row className="fr-mt-4w fr-mb-5w">
         <Col>
-          <Title as="h3" look="h6">
-            Voir d'autres grandes disciplines
+          <Title as="h4" look="h5">
+            Explorer par discipline
           </Title>
           <FieldCardsGrid fields={availableFields} />
-        </Col>
-        <Col md={6} style={{ textAlign: "center" }}>
-          <Text className="fr-mt-3w">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Saepe, fuga
-            similique? Commodi voluptates aliquam possimus! Dolor rerum sequi
-            ratione inventore alias reiciendis non repellat! Molestias
-            exercitationem provident recusandae aliquid eos.
-          </Text>
         </Col>
       </Row>
     </Container>
