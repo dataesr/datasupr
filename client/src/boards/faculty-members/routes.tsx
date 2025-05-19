@@ -19,6 +19,7 @@ import { UniversityFields } from "./pages/university/fields/index.tsx";
 import { GeoFields } from "./pages/geo/fields/index.tsx";
 import SpecificFieldsOverview from "./pages/fields/fields-overview-by-id.tsx";
 import SpecificUniversityOverview from "./pages/university/univ-overview-by-id.tsx";
+import { ResearchTeachers } from "./pages/fields/research-teachers/index.tsx";
 
 export default function FacultyMembersRoutes() {
   return (
@@ -93,6 +94,14 @@ export default function FacultyMembersRoutes() {
             element={<FieldsTypologie />}
           />
           <Route path="/discipline/typologie/" element={<FieldsTypologie />} />
+          <Route
+            path="/discipline/enseignants-chercheurs/"
+            element={<ResearchTeachers />}
+          />
+          <Route
+            path="/discipline/enseignants-chercheurs/:fieldId"
+            element={<ResearchTeachers />}
+          />
         </Route>
       </Route>
     </Routes>

@@ -36,7 +36,7 @@ const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
   ].filter((item) => item.percent > 0);
 
   return (
-    <div className="sidebar-status-summary fr-p-2w fr-mb-3w">
+    <div className="sidebar-status-summary fr-p-2w ">
       {!isSingleDiscipline && (
         <Title as="h3" look="h6" className="fr-mb-1w">
           Résumé des statuts

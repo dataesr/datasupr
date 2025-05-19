@@ -12,8 +12,6 @@ import { useParams } from "react-router-dom";
 import YearSelector from "../../filters";
 import useFacultyMembersByFields from "./api/use-by-fields";
 import { FieldData } from "../../types";
-import CnuGroupsTable from "./table/cnu-group-table";
-import CnuSectionsTable from "./table/cnu-section-table";
 import useFacultyMembersByStatus from "./api/use-by-status";
 import DisciplineStatusSummary from "./components/fields-by-status";
 import StatusDistribution from "./charts/status/status";
@@ -38,8 +36,7 @@ export default function SpecificFieldsOverview() {
     isError,
     error,
   } = useFacultyMembersByFields(selectedYear);
-  console.log(fieldData);
-  // C'est fieldData qui contient les données de l'année sélectionnée
+
   const {
     data: statusData,
     isLoading: statusLoading,
@@ -189,18 +186,6 @@ export default function SpecificFieldsOverview() {
   }
 
   const fieldLabel = specificFieldData.fieldLabel;
-  const cnuGroups = specificFieldData.cnuGroups || [];
-
-  const cnuSections =
-    cnuGroups?.flatMap((group) =>
-      (group.cnuSections || []).map((section) => ({
-        ...section,
-        cnuGroupId: group.cnuGroupId,
-        cnuGroupLabel: group.cnuGroupLabel,
-        fieldId: specificFieldData.fieldId,
-        fieldLabel: specificFieldData.fieldLabel,
-      }))
-    ) || [];
 
   return (
     <Container as="main">
@@ -227,64 +212,13 @@ export default function SpecificFieldsOverview() {
           />
         </Col>
       </Row>
-      <Row>
+      <Row gutters className="fr-mt-2w fr-mb-3w">
         <Col md={8}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam,
           tempora sapiente in, nam autem fugiat voluptatem, illo accusantium
           consequuntur odit minima repellat at. Similique laboriosam totam dolor
           cupiditate quo nostrum.
-        </Col>
-        <Col md={4}>
-          <GeneralIndicatorsCard structureData={fieldData} />
-          <Title as="h3" look="h6" className="fr-mb-2w text-center">
-            Répartition par statut
-          </Title>
           {disciplineStatusData && (
-            <>
-              <DisciplineStatusSummary
-                totalCount={disciplineStatusData.totalCount || 0}
-                aggregatedStats={disciplineStatusData.aggregatedStats || {}}
-                fields={disciplineStatusData.fields || []}
-                isSingleDiscipline={true}
-              />
-              <i>
-                <Link
-                  href={`/personnel-enseignant/discipline/typologie/${fieldId}`}
-                >
-                  Pour plus de détails sur les enseignant-chercheurs, cliquez
-                  ici
-                </Link>
-              </i>
-            </>
-          )}
-        </Col>
-      </Row>
-      <Row gutters className="fr-mt-5w">
-        <Col md={12} className="text-center">
-          <CnuGroupsTable cnuGroups={cnuGroups || []} />
-        </Col>
-        <i>
-          <strong>Répartition par groupes CNU</strong>
-          <br />
-          Cette page présente la répartition des personnels enseignants par
-          groupe CNU. Les données permettent d'analyser la distribution par
-          genre et par champ disciplinaire universitaire.
-        </i>
-        <Col className="text-center">
-          <CnuSectionsTable cnuSections={cnuSections} maxDisplay={30} />
-        </Col>
-      </Row>
-      <i>
-        <strong>Répartition par section CNU</strong>
-        <br />
-        Cette page présente la répartition des personnels enseignants par groupe
-        CNU. Les données permettent d'analyser la distribution par genre et par
-        champ disciplinaire universitaire.
-      </i>
-      <Row className="fr-mt-5w fr-mb-5w"></Row>
-      {disciplineStatusData && (
-        <Row gutters className="fr-mt-4w fr-mb-4w">
-          <Col>
             <StatusDistribution
               disciplinesData={[
                 {
@@ -303,23 +237,48 @@ export default function SpecificFieldsOverview() {
               ]}
               title={`Répartition par statut : ${specificFieldData?.fieldLabel}`}
             />
-          </Col>
-        </Row>
-      )}
+          )}
+        </Col>
+        <Col md={4}>
+          <GeneralIndicatorsCard structureData={fieldData} />
+          {disciplineStatusData && (
+            <>
+              <DisciplineStatusSummary
+                totalCount={disciplineStatusData.totalCount || 0}
+                aggregatedStats={disciplineStatusData.aggregatedStats || {}}
+                fields={disciplineStatusData.fields || []}
+                isSingleDiscipline={true}
+              />
+              <i>
+                <Link
+                  href={`/personnel-enseignant/discipline/enseignants-chercheurs/${fieldId}`}
+                >
+                  Pour plus de détails sur les enseignant-chercheurs, cliquez
+                  ici
+                </Link>
+              </i>
+            </>
+          )}
+        </Col>
+      </Row>
+
+      <Row className="fr-mt-5w fr-mb-5w"></Row>
+
       {filteredAgeData && filteredAgeData.length > 0 && (
         <Row gutters className="fr-mt-4w fr-mb-5w">
-          <Col>
-            <div className="fr-card fr-p-3w">
-              <Title as="h3" look="h6" className="fr-mb-2w">
-                Répartition par âge
-              </Title>
-              <AgeDistributionPieChart
-                ageData={filteredAgeData}
-                isLoading={ageDistributionLoading}
-                year={selectedYear}
-                forcedSelectedField={fieldId}
-              />
-            </div>
+          <Col md={7}>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Id eum
+            mollitia exercitationem ullam maxime a illo, cupiditate nostrum
+            laudantium possimus doloribus iure dolor, laborum itaque, asperiores
+            molestias similique natus! Blanditiis!
+          </Col>
+          <Col md={5}>
+            <AgeDistributionPieChart
+              ageData={filteredAgeData}
+              isLoading={ageDistributionLoading}
+              year={selectedYear}
+              forcedSelectedField={fieldId}
+            />
           </Col>
         </Row>
       )}

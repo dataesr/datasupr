@@ -33,6 +33,7 @@ export function FacultyLayout() {
   const currentObjectType = currentPathParts[2] || "";
 
   const showDisciplineLink = currentObjectType !== "discipline";
+  const showReasearchTeachersLink = currentObjectType === "discipline";
 
   return (
     <Container>
@@ -62,6 +63,14 @@ export function FacultyLayout() {
               href={buildContextualPath("discipline")}
             >
               Discipline
+            </Link>
+          )}
+          {showReasearchTeachersLink && (
+            <Link
+              current={path.includes(`enseignants-chercheurs`)}
+              href={buildContextualPath("enseignants-chercheurs")}
+            >
+              Enseignants chercheurs
             </Link>
           )}
         </Nav>

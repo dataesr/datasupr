@@ -2,37 +2,18 @@ import { useEffect, useMemo, useState } from "react";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { Col } from "@dataesr/dsfr-plus";
-
-interface AgeDistributionData {
-  year: string;
-  fieldId: string;
-  fieldLabel: string;
-  totalCount: number;
-  forcedSelectedField?: string;
-
-  ageDistribution: Array<{
-    ageClass: string;
-    count: number;
-    percent: number;
-  }>;
-}
-
-interface AgeDistributionPieChartProps {
-  ageData: AgeDistributionData[];
-  isLoading: boolean;
-  year: string;
-  forcedSelectedField;
-}
+import { AgeDistributionChartProps } from "../../../../types";
 
 export function AgeDistributionPieChart({
   ageData,
   isLoading,
   year,
   forcedSelectedField,
-}: AgeDistributionPieChartProps) {
+}: AgeDistributionChartProps) {
   const [selectedField, setSelectedField] = useState<string>(
     forcedSelectedField || "all"
   );
+
   useEffect(() => {
     if (forcedSelectedField) {
       setSelectedField(forcedSelectedField);
@@ -43,7 +24,6 @@ export function AgeDistributionPieChart({
     if (!ageData || !ageData.length) return [];
 
     const sortedData = [...ageData].sort((a, b) => b.totalCount - a.totalCount);
-
     return sortedData.map((field) => ({
       id: field.fieldId,
       label: field.fieldLabel,
@@ -76,7 +56,7 @@ export function AgeDistributionPieChart({
       chartData = Object.entries(ageClasses).map(([ageClass, count]) => ({
         name: ageClass,
         y: ((count as number) / totalCount) * 100,
-        count: count,
+        count: count as number,
       }));
 
       chartTitle = "Répartition par âge - Toutes disciplines";
@@ -96,16 +76,23 @@ export function AgeDistributionPieChart({
       chartTitle = `Répartition par âge - ${selectedFieldData.fieldLabel}`;
     }
 
+    const sortOrder = {
+      "35 ans et moins": 1,
+      "36 à 55 ans": 2,
+      "56 ans et plus": 3,
+    };
+    chartData.sort((a, b) => sortOrder[a.name] - sortOrder[b.name]);
+
     const colors = {
       "35 ans et moins": "#6EADFF",
       "36 à 55 ans": "#000091",
       "56 ans et plus": "#4B9DFF",
     };
 
-    return CreateChartOptions("pie", {
+    return CreateChartOptions("bar", {
       chart: {
-        type: "pie",
-        height: 400,
+        type: "bar",
+        height: 350,
       },
       title: {
         text: chartTitle,
@@ -113,45 +100,59 @@ export function AgeDistributionPieChart({
       subtitle: {
         text: `Année académique ${year}`,
       },
-      tooltip: {
-        pointFormat:
-          "<b>{point.name}</b>: {point.y:.1f}% ({point.count} enseignants)",
+      xAxis: {
+        categories: chartData.map((item) => item.name),
+        title: {
+          text: null,
+        },
+        labels: {
+          style: {
+            fontSize: "14px",
+          },
+        },
       },
-      accessibility: {
-        point: {
-          valueSuffix: "%",
+      yAxis: {
+        min: 0,
+        max: 100,
+        title: {
+          text: "Pourcentage",
+          align: "high",
+        },
+        labels: {
+          format: "{value}%",
+          overflow: "justify",
+        },
+      },
+      tooltip: {
+        formatter: function () {
+          return `<b>${this.x}</b><br>${this.y?.toFixed(1) ?? 0}% (${
+            chartData.find((d) => d.name === this.x)?.count
+          } enseignants)`;
         },
       },
       plotOptions: {
-        pie: {
-          allowPointSelect: true,
-          cursor: "pointer",
-          colors: chartData.map((item) => colors[item.name] || "#999999"),
+        bar: {
           dataLabels: {
             enabled: true,
-            format: "<b>{point.name}</b>: {point.y:.1f}%",
-            style: {
-              textOutline: "1px contrast",
-            },
+            format: "{y:.1f}%",
           },
-          showInLegend: true,
+          colorByPoint: true,
+          colors: chartData.map((item) => colors[item.name]),
         },
       },
       legend: {
-        layout: "vertical",
-        align: "right",
-        verticalAlign: "middle",
-        itemMarginTop: 5,
-        itemMarginBottom: 5,
+        enabled: false,
+      },
+      credits: {
+        enabled: false,
       },
       series: [
         {
           name: "Âge",
-          type: "pie",
-          data: chartData,
+          data: chartData.map((item) => item.y),
+          type: "bar",
         },
       ],
-      credits: { enabled: false },
     });
   }, [ageData, selectedField, year]);
 
