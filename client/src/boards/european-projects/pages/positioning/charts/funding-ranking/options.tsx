@@ -1,12 +1,12 @@
 import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
+// import { useSearchParams } from "react-router-dom";
 
-export default function Options(data) {
+export default function Options(data, currentLang) {
   if (!data) return null;
 
   const rootStyles = getComputedStyle(document.documentElement);
-  // TODO : fix double "values" label
   const newOptions: HighchartsInstance.Options = {
     xAxis: {
       type: "category",
@@ -28,12 +28,12 @@ export default function Options(data) {
     series: [
       {
         type: "bar",
-        name: "Total subventions en euros",
+        // name: "Total subventions en euros",
         colors: [rootStyles.getPropertyValue("--evaluated-project-color")],
         colorByPoint: true,
         groupPadding: 0,
         data: data.map((item) => ({
-          name: item.name,
+          name: item[`name_${currentLang}`],
           y: item.total_evaluated,
           rank_evaluated: item.rank_evaluated,
         })),
@@ -46,12 +46,12 @@ export default function Options(data) {
       },
       {
         type: "bar",
-        name: "Total subventions en euros",
+        // name: "Total subventions en euros",
         colors: [rootStyles.getPropertyValue("--successful-project-color")],
         colorByPoint: true,
         groupPadding: 0,
         data: data.map((item) => ({
-          name: item.name,
+          name: item[`name_${currentLang}`],
           y: item.total_successful,
           rank_successful: item.rank_successful,
         })),

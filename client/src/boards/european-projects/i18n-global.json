@@ -1,5 +1,5 @@
 {
-  "successful-prjects":{
+  "successful-projects":{
     "fr": "Projets lauréats",
     "en": "Successful projects"
   },
@@ -26,5 +26,13 @@
   "associated-countries":{
     "fr": "UE & Etats associés",
     "en": "EU & Associated countries"
+  },
+  "country-success-rate":{
+    "fr": "Taux de réussite du pays",
+    "en": "Country success rate"
+  },
+  "average-success-rate":{
+    "fr": "Taux de réussite moyen",
+    "en": "Average success rate"
   }
 }

@@ -35,7 +35,8 @@ router
           $group: {
             _id: {
               id: "$country_code",
-              label: "$country_name_fr",
+              name_fr: "$country_name_fr",
+              name_en: "$country_name_en",
               stage: "$stage",
             },
             total_fund_eur: { $sum: "$fund_eur" },
@@ -47,7 +48,8 @@ router
           $project: {
             _id: 0,
             id: "$_id.id",
-            label: "$_id.label",
+            name_fr: "$_id.name_fr",
+            name_en: "$_id.name_en",
             total_fund_eur: 1,
             stage: "$_id.stage",
             total_coordination_number: 1,
@@ -58,7 +60,8 @@ router
           $group: {
             _id: {
               id: "$id",
-              name: "$label",
+              name_fr: "$name_fr",
+              name_en: "$name_en",
             },
             total_successful: {
               $sum: {
@@ -116,7 +119,8 @@ router
           $project: {
             _id: 0,
             id: "$_id.id",
-            name: "$_id.name",
+            name_fr: "$_id.name_fr",
+            name_en: "$_id.name_en",
             total_successful: 1,
             total_evaluated: 1,
             total_coordination_number_successful: 1,
