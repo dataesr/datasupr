@@ -15,6 +15,8 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useSearchParams } from "react-router-dom";
 
+import i18n from "../../../../i18n-global.json";
+
 const configChart1a = {
   id: "fundingRankingSub",
   title: {
@@ -96,31 +98,24 @@ export default function FundingRanking() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  let sortIndicateur = "";
-  let optionsChart, optionChartSuccess;
-  switch (selectedChart) {
-    case "fundingRankingSub":
-      sortIndicateur = "total_successful";
-      optionsChart = optionsSub;
-      optionChartSuccess = optionSubSuccessRate;
-      break;
-
-    case "fundingRankingCoordination":
-      sortIndicateur = "total_coordination_number_successful";
-      optionsChart = optionsCoordinationNumber;
-      optionChartSuccess = optionCoordinationNumberSuccessRate;
-      break;
-
-    case "fundingRankingInvolved":
-      sortIndicateur = "total_number_involved_successful";
-      optionsChart = optionsNumberInvolved;
-      optionChartSuccess = optionNumberInvolvedSuccessRate;
-      break;
-  }
-
   const prepareData = (data, sortKey) => {
-    return data.sort((a, b) => b[sortKey] - a[sortKey]).slice(0, 10);
+    data.sort((a, b) => b[sortKey] - a[sortKey]);
+    const dataToReturn = data.slice(0, 10);
+    const selectedCountry = searchParams.get("country_code");
+    if (selectedCountry) {
+      const pos = data.findIndex((item) => item.id === selectedCountry);
+      if (pos >= 10 && pos !== -1) {
+        dataToReturn.pop();
+        const countryData = data[pos];
+        dataToReturn.push(countryData);
+      }
+    }
+    return dataToReturn;
   };
+
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
 
   return (
     <Container fluid>
@@ -147,13 +142,13 @@ export default function FundingRanking() {
               config={configChart1a}
               legend={GetLegend(
                 [
-                  ["Projets évalués", "#009099"],
-                  ["Projets lauréats", "#233E41"],
+                  [getI18nLabel("evaluated-projects"), "#009099"],
+                  [getI18nLabel("successful-projects"), "#233E41"],
                 ],
                 "FundingRanking",
                 currentLang
               )}
-              options={optionsChart(prepareData(data, sortIndicateur))}
+              options={optionsSub(prepareData(data, "total_successful"), currentLang)}
               renderData={() => null} // TODO: add data table
             />
           </Col>
@@ -162,13 +157,13 @@ export default function FundingRanking() {
               config={configChart1b}
               legend={GetLegend(
                 [
-                  ["Taux de réussite du pays", "#27A658"],
-                  ["Taux de réussite moyen", "#D75521"],
+                  [getI18nLabel("country-success-rate"), "#27A658"],
+                  [getI18nLabel("average-success-rate"), "#D75521"],
                 ],
                 "FundingRankingRates",
                 currentLang
               )}
-              options={optionChartSuccess(prepareData(data, sortIndicateur))}
+              options={optionSubSuccessRate(prepareData(data, "total_successful"))}
               renderData={() => null} // TODO: add data table
             />
           </Col>
@@ -187,7 +182,7 @@ export default function FundingRanking() {
                 "FundingRanking",
                 currentLang
               )}
-              options={optionsChart(prepareData(data, sortIndicateur))}
+              options={optionsCoordinationNumber(prepareData(data, "total_coordination_number_successful"), currentLang)}
               renderData={() => null} // TODO: add data table
             />
           </Col>
@@ -202,7 +197,7 @@ export default function FundingRanking() {
                 "FundingRankingRates",
                 currentLang
               )}
-              options={optionChartSuccess(prepareData(data, sortIndicateur))}
+              options={optionCoordinationNumberSuccessRate(prepareData(data, "total_coordination_number_successful"))}
               renderData={() => null} // TODO: add data table
             />
           </Col>
@@ -221,7 +216,7 @@ export default function FundingRanking() {
                 "FundingRanking",
                 currentLang
               )}
-              options={optionsChart(prepareData(data, sortIndicateur))}
+              options={optionsNumberInvolved(prepareData(data, "total_number_involved_successful"), currentLang)}
               renderData={() => null} // TODO: add data table
             />
           </Col>
@@ -236,7 +231,7 @@ export default function FundingRanking() {
                 "FundingRankingRates",
                 currentLang
               )}
-              options={optionChartSuccess(prepareData(data, sortIndicateur))}
+              options={optionNumberInvolvedSuccessRate(prepareData(data, "total_number_involved_successful"))}
               renderData={() => null} // TODO: add data table
             />
           </Col>

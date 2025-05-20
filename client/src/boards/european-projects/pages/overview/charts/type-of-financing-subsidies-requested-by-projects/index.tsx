@@ -94,7 +94,7 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
                       background: rootStyles.getPropertyValue("--successful-project-color"),
                     }}
                   />
-                  <span>{getI18nLabel("successful-prjects")}</span>
+                  <span>{getI18nLabel("successful-projects")}</span>
                 </li>
               </ul>
             </div>

@@ -1,4 +1,4 @@
-export default function OptionsCoordinationNumber(data) {
+export default function OptionsCoordinationNumber(data, currentLang) {
   if (!data) return null;
 
   return {
@@ -11,58 +11,62 @@ export default function OptionsCoordinationNumber(data) {
     credits: { enabled: false },
 
     xAxis: {
-      type: 'category',
+      type: "category",
       labels: {
         autoRotation: [-45, -90],
         style: {
-          fontSize: '13px',
-          fontFamily: 'Verdana, sans-serif'
-        }
-      }
+          fontSize: "13px",
+          fontFamily: "Verdana, sans-serif",
+        },
+      },
     },
     yAxis: {
       min: 0,
       title: {
-        text: 'Euros € (millions)'
-      }
+        text: "Euros € (millions)",
+      },
     },
     tooltip: {
-      pointFormat: 'Nombre de coordinations : <b>{point.y}</b>'
+      pointFormat: "Nombre de coordinations : <b>{point.y}</b>",
     },
     plotOptions: {
-      series: { dataLabels: { enabled: true } }
+      series: { dataLabels: { enabled: true } },
     },
     series: [
       {
-        name: 'Coordination de projets déposés',
-        colors: ['#009099'],
+        name: "Coordination de projets déposés",
+        colors: ["#009099"],
         colorByPoint: true,
         groupPadding: 0,
         data: data.map((item) => ({
-          name: item.name,
+          name: item[`name_${currentLang}`],
           y: item.total_coordination_number_evaluated,
           rank_coordination_number_evaluated: item.rank_coordination_number_evaluated,
         })),
-        dataLabels: [{
-          align: 'right',
-          format: '{point.rank_coordination_number_evaluated}e'
-        }],
+        dataLabels: [
+          {
+            align: "right",
+            format: "{point.rank_coordination_number_evaluated}e",
+          },
+        ],
       },
       {
-        name: 'Coordination de projets lauéats',
-        colors: ['#233E41'],
+        name: "Coordination de projets lauéats",
+        colors: ["#233E41"],
         colorByPoint: true,
         groupPadding: 0,
         data: data.map((item) => ({
-          name: item.name,
+          name: item[`name_${currentLang}`],
           y: item.total_coordination_number_successful,
           rank_coordination_number_successful: item.rank_coordination_number_successful,
         })),
-        dataLabels: [{
-          align: 'right',
-          format: '{point.rank_coordination_number_successful}e'
-        }],
-      }
-    ]
+        dataLabels: [
+          {
+            align: "right",
+            format: "{point.rank_coordination_number_successful}e",
+          },
+        ],
+      },
+    ],
   };
 }
