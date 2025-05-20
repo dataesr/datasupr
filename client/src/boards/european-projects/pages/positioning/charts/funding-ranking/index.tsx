@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
 import { GetData } from "./query";
 import { GetLegend } from "../../../../components/legend";
@@ -15,7 +15,8 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useSearchParams } from "react-router-dom";
 
-import i18n from "../../../../i18n-global.json";
+import i18nGlobal from "../../../../i18n-global.json";
+import i18nLocal from "./i18n.json";
 
 const configChart1a = {
   id: "fundingRankingSub",
@@ -80,10 +81,13 @@ const configChart3b = {
   integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
 };
 
+const rootStyles = getComputedStyle(document.documentElement);
+
 export default function FundingRanking() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const [selectedChart, setSelectedChart] = useState("fundingRankingSub");
+  const [sortBy, setSortBy] = useState("evaluated");
 
   const { data, isLoading } = useQuery({
     queryKey: [
@@ -100,6 +104,11 @@ export default function FundingRanking() {
 
   const prepareData = (data, sortKey) => {
     data.sort((a, b) => b[sortKey] - a[sortKey]);
+    if (sortBy === "evaluated") {
+      data.sort((a, b) => b.total_evaluated - a.total_evaluated);
+    } else {
+      data.sort((a, b) => b.total_successful - a.total_successful);
+    }
     const dataToReturn = data.slice(0, 10);
     const selectedCountry = searchParams.get("country_code");
     if (selectedCountry) {
@@ -113,26 +122,52 @@ export default function FundingRanking() {
     return dataToReturn;
   };
 
+  const i18n = { ...i18nGlobal, ...i18nLocal };
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
 
   return (
-    <Container fluid>
+    <Container fluid className="fr-mt-5w">
       <Row>
         <Col>
           <Title as="h2" look="h4">
-            Top 10 par indicateur
+            {getI18nLabel("title")}
           </Title>
+        </Col>
+        <Col>
+          <select className="fr-select fr-mb-2w" onChange={(e) => setSelectedChart(e.target.value)} value={selectedChart}>
+            <option value="fundingRankingSub">{getI18nLabel("focus-on-subsidies")}</option>
+            <option value="fundingRankingCoordination">{getI18nLabel("focus-on-coordination")}</option>
+            <option value="fundingRankingInvolved">{getI18nLabel("focus-on-participations")}</option>
+          </select>
         </Col>
       </Row>
       <Row>
         <Col>
-          <select className="fr-select fr-mb-3w" onChange={(e) => setSelectedChart(e.target.value)} value={selectedChart}>
-            <option value="fundingRankingSub">Focus sur les subventions</option>
-            <option value="fundingRankingCoordination">Focus sur les coordinations de projets</option>
-            <option value="fundingRankingInvolved">Focus sur les candidats et participants</option>
-          </select>
+          <fieldset className="fr-mb-2w">
+            <legend>{getI18nLabel("sort-by")}</legend>
+            <Radio
+              checked={sortBy === "evaluated"}
+              className="fr-mb-1w"
+              defaultValue="evaluated"
+              label={getI18nLabel("sort-by-evaluated-project")}
+              name="checker"
+              onChange={(e) => {
+                setSortBy((e.target as HTMLInputElement).value);
+              }}
+            />
+            <Radio
+              checked={sortBy === "successful"}
+              className="fr-mb-1w"
+              defaultValue="successful"
+              label={getI18nLabel("sort-by-successful-project")}
+              name="checker"
+              onChange={(e) => {
+                setSortBy((e.target as HTMLInputElement).value);
+              }}
+            />
+          </fieldset>
         </Col>
       </Row>
       {selectedChart === "fundingRankingSub" && (
@@ -142,7 +177,7 @@ export default function FundingRanking() {
               config={configChart1a}
               legend={GetLegend(
                 [
-                  [getI18nLabel("evaluated-projects"), "#009099"],
+                  [getI18nLabel("evaluated-projects"), rootStyles.getPropertyValue("--evaluated-project-color")],
                   [getI18nLabel("successful-projects"), "#233E41"],
                 ],
                 "FundingRanking",
@@ -176,8 +211,8 @@ export default function FundingRanking() {
               config={configChart2a}
               legend={GetLegend(
                 [
-                  ["Projets évalués", "#009099"],
-                  ["Projets lauréats", "#233E41"],
+                  [getI18nLabel("evaluated-projects"), rootStyles.getPropertyValue("--evaluated-project-color")],
+                  [getI18nLabel("successful-projects"), "#233E41"],
                 ],
                 "FundingRanking",
                 currentLang
@@ -191,8 +226,8 @@ export default function FundingRanking() {
               config={configChart2b}
               legend={GetLegend(
                 [
-                  ["Taux de réussite du pays", "#27A658"],
-                  ["Taux de réussite moyen", "#D75521"],
+                  [getI18nLabel("country-success-rate"), "#27A658"],
+                  [getI18nLabel("average-success-rate"), "#D75521"],
                 ],
                 "FundingRankingRates",
                 currentLang
@@ -210,8 +245,8 @@ export default function FundingRanking() {
               config={configChart3a}
               legend={GetLegend(
                 [
-                  ["Projets évalués", "#009099"],
-                  ["Projets lauréats", "#233E41"],
+                  [getI18nLabel("evaluated-projects"), rootStyles.getPropertyValue("--evaluated-project-color")],
+                  [getI18nLabel("successful-projects"), "#233E41"],
                 ],
                 "FundingRanking",
                 currentLang
@@ -225,8 +260,8 @@ export default function FundingRanking() {
               config={configChart3b}
               legend={GetLegend(
                 [
-                  ["Taux de réussite du pays", "#27A658"],
-                  ["Taux de réussite moyen", "#D75521"],
+                  [getI18nLabel("country-success-rate"), "#27A658"],
+                  [getI18nLabel("average-success-rate"), "#D75521"],
                 ],
                 "FundingRankingRates",
                 currentLang
