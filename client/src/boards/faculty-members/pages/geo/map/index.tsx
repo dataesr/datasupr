@@ -4,13 +4,23 @@ import highchartsMap from "highcharts/modules/map";
 import mapDataIE from "../../../../../assets/regions.json";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { FacultyFranceMapProps, RegionMapPoint } from "../../../types";
+import { RegionMapPoint } from "../../../types";
 
 highchartsMap(Highcharts);
 
 export default function FacultyFranceMap({
   availableGeos,
-}: FacultyFranceMapProps) {
+}: {
+  availableGeos: {
+    femaleCount: number;
+    femalePercent: number;
+    geo_id: string;
+    geo_nom: string;
+    maleCount: number;
+    malePercent: number;
+    totalCount: number;
+  }[];
+}) {
   const navigate = useNavigate();
   const [mapOptions, setMapOptions] = useState<Highcharts.Options | null>(null);
 
@@ -35,25 +45,16 @@ export default function FacultyFranceMap({
       })
       .map((region) => {
         const mapRegionCode = regionMapping[region.geo_id];
-
-        const totalCount = Math.floor(Math.random() * 10000) + 1000;
-
-        const malePercent = Math.floor(Math.random() * 30) + 35;
-
-        const maleCount = Math.round((malePercent / 100) * totalCount);
-        const femaleCount = totalCount - maleCount;
-        const femalePercent = 100 - malePercent;
-
         return {
           "hc-key": mapRegionCode,
           name: region.geo_nom,
           geo_id: region.geo_id,
-          value: 1,
-          totalCount,
-          maleCount,
-          femaleCount,
-          malePercent,
-          femalePercent,
+          value: Number(region.totalCount) || 0,
+          totalCount: region.totalCount,
+          maleCount: region.maleCount,
+          femaleCount: region.femaleCount,
+          malePercent: region.malePercent,
+          femalePercent: region.femalePercent,
         };
       });
 
@@ -61,14 +62,16 @@ export default function FacultyFranceMap({
       chart: {
         map: mapDataIE,
         backgroundColor: "#fff",
-        height: "500px",
+        height: "650px",
+        spacing: [0, 50, 100, 355],
         borderWidth: 0,
         plotBorderWidth: 0,
-        margin: [0, 0, 0, 0],
+        margin: [0, 0, 150, 0],
         style: {
           fontFamily: "'Marianne', sans-serif",
         },
       },
+
       title: {
         text: "Sélectionnez une région pour explorer les données",
         style: {
@@ -88,14 +91,26 @@ export default function FacultyFranceMap({
       },
 
       colorAxis: {
-        dataClasses: [
-          {
-            from: 0.5,
-            to: 1.5,
-            color: "#e3e3fd",
-            name: "",
-          },
+        stops: [
+          [0, "#E3E3FD"],
+          [0.2, "#B5B5F7"],
+          [0.4, "#8787F2"],
+          [0.6, "#5959ED"],
+          [0.8, "#2B2BE8"],
+          [1, "#000091"],
         ],
+        min: 0,
+        max: 17000,
+        type: "linear",
+        labels: {
+          format: "{value:,.0f}",
+          style: {
+            fontSize: "12px",
+            fontFamily: "'Marianne', sans-serif",
+          },
+        },
+        tickPositions: [0, 3400, 6800, 10200, 13600, 17000],
+        layout: "horizontal",
       },
       tooltip: {
         useHTML: true,
@@ -138,10 +153,13 @@ export default function FacultyFranceMap({
         {
           type: "map",
           name: "Régions françaises",
-          data: mapData,
+          data: mapData.map((region) => ({
+            ...region,
+            value: Number(region.totalCount) || 0,
+          })),
           states: {
             hover: {
-              color: "#000091",
+              brightness: 0.2,
               borderColor: "#000",
             },
             select: {
@@ -180,6 +198,8 @@ export default function FacultyFranceMap({
             style: {
               fontWeight: "normal",
               fontSize: "10px",
+              textOutline: "2px white",
+              color: "#000000",
             },
           },
           cursor: "pointer",

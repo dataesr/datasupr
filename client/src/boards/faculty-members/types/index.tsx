@@ -66,11 +66,6 @@ export interface RegionMapPoint extends Highcharts.Point {
   femalePercent?: number;
 }
 
-interface Region {
-  geo_id: string;
-  geo_nom: string;
-}
-
 export interface FacultyFranceMapProps {
   availableGeos: Region[];
 }
@@ -252,4 +247,44 @@ export interface AgeDistributionChartProps {
   isLoading: boolean;
   year: string;
   forcedSelectedField?: string;
+}
+export interface Region {
+  geo_id: string;
+  geo_nom: string;
+  niveau_geo: string;
+  femaleCount: number;
+  femalePercent: number;
+  maleCount: number;
+  malePercent: number;
+  totalCount: number;
+}
+
+export interface GeoData {
+  annee_universitaire: number | string;
+  totalHeadcountMan: number;
+  totalHeadcountWoman: number;
+  totalHeadcountUnknown?: number;
+  professional_categories?: unknown;
+  subjects?: unknown;
+  regions?: Region[];
+}
+
+export interface GeoDataType {
+  data?: GeoData[];
+  years?: string[] | number[];
+  geos?: Array<{
+    niveau_geo: string;
+    geo_id: string;
+    geo_nom: string;
+  }>;
+}
+
+export interface GeoStats {
+  femaleCount: number;
+  femalePercent: number;
+  geo_id: string;
+  geo_nom: string;
+  maleCount: number;
+  malePercent: number;
+  totalCount: number;
 }

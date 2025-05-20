@@ -5,15 +5,17 @@ import {
   Title,
   Breadcrumb,
   Link,
-  Notice,
+  Text,
 } from "@dataesr/dsfr-plus";
 import { useState, useEffect } from "react";
-import YearSelector from "../../filters";
-import GenderPieChart from "./charts/gender/gender";
 import CNUPieChart from "./charts/cnu/cnu";
-import useFacultyMembersGeoData from "../../use-faculty-members-general";
-import ProfessionalCategoriesChart from "./charts/professional-categories/professional-categories";
 import FacultyFranceMap from "./map";
+import GenderPieChart from "./charts/gender/gender";
+import GeneralIndicatorsCard from "../../components/general-indicators-card";
+import ProfessionalCategoriesChart from "./charts/professional-categories/professional-categories";
+import useFacultyMembersGeoData from "../../use-faculty-members-general";
+import YearSelector from "../../filters";
+import { formatDataForIndicatorsCard } from "./utils";
 
 export default function GeoOverview() {
   const [selectedYear, setSelectedYear] = useState("");
@@ -24,27 +26,66 @@ export default function GeoOverview() {
     isError: isGeoDataError,
     error: geoDataError,
   } = useFacultyMembersGeoData();
-
   const [availableYears, setAvailableYears] = useState<string[]>([]);
   const [availableGeos, setAvailableGeos] = useState<
-    { geo_id: string; geo_nom: string }[]
+    {
+      femaleCount: number;
+      femalePercent: number;
+      geo_id: string;
+      geo_nom: string;
+      maleCount: number;
+      malePercent: number;
+      totalCount: number;
+    }[]
   >([]);
 
   useEffect(() => {
     if (geoData) {
       const years: string[] = geoData.years ? geoData.years.map(String) : [];
-      const geos = geoData.geos ? geoData.geos : [];
+      const geos = geoData.geos
+        ? geoData.geos.filter(
+            (geo) => geo.niveau_geo === "Région" && geo.geo_nom !== null
+          )
+        : [];
+      const yearData = geoData.data?.find(
+        (item) => String(item.annee_universitaire) === selectedYear
+      );
 
-      const uniqueGeos = [
-        ...new Map(geos.map((geo) => [geo.geo_id, geo])).values(),
-      ] as { geo_id: string; geo_nom: string }[];
+      if (yearData?.regions && geos.length > 0) {
+        const enrichedGeos = geos.map((geo) => {
+          const regionData = yearData.regions.find(
+            (r) => r.geo_id === geo.geo_id
+          );
 
-      setAvailableYears([...new Set(years)]);
-      setAvailableGeos(uniqueGeos);
+          if (regionData) {
+            return {
+              ...geo,
+              femaleCount: regionData.totalHeadcountWoman,
+              femalePercent: regionData.femalePercent,
+              maleCount: regionData.totalHeadcountMan,
+              malePercent: regionData.malePercent,
+              totalCount: regionData.totalHeadcount,
+            };
+          }
+
+          return {
+            ...geo,
+            femaleCount: 0,
+            femalePercent: 0,
+            maleCount: 0,
+            malePercent: 0,
+            totalCount: 0,
+          };
+        });
+
+        setAvailableGeos(enrichedGeos);
+      }
 
       if (years.length > 0 && !selectedYear) {
         setSelectedYear(years[years.length - 1]);
       }
+
+      setAvailableYears(years);
     }
   }, [geoData, selectedYear]);
 
@@ -92,12 +133,15 @@ export default function GeoOverview() {
           <FacultyFranceMap availableGeos={availableGeos} />
         </Col>
         <Col md={4} style={{ textAlign: "center" }}>
+          <GeneralIndicatorsCard
+            structureData={formatDataForIndicatorsCard(geoData, selectedYear)}
+          />
           <GenderPieChart maleCount={maleCount} femaleCount={femaleCount} />
         </Col>
       </Row>
       <Row>
         <Col md={4} style={{ textAlign: "center" }}>
-          <Notice closeMode={"disallow"} type={"info"}>
+          <Text>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis,
             aut, omnis animi eos est dolores sint, minus culpa libero neque
             placeat vitae quas deserunt optio minima. Architecto aut earum modi?
@@ -107,7 +151,7 @@ export default function GeoOverview() {
             placeat vitae quas deserunt optio minima. Architecto aut earum modi?
             placeat vitae quas deserunt optio minima. Architecto aut earum modi?
             placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-          </Notice>
+          </Text>
         </Col>
         <Col md={8} style={{ textAlign: "center" }}>
           <ProfessionalCategoriesChart
@@ -122,14 +166,14 @@ export default function GeoOverview() {
           )}
         </Col>
         <Col md={4} style={{ textAlign: "center" }}>
-          <Notice closeMode={"disallow"} type={"info"}>
+          <Text>
             Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis,
             aut, omnis animi eos est dolores sint, minus culpa libero neque
             placeat vitae quas deserunt optio minima. Architecto aut earum modi?
             placeat vitae quas deserunt optio minima. Architecto aut earum modi?
             placeat vitae quas deserunt optio minima. Architecto aut earum modi?
             placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-          </Notice>
+          </Text>
         </Col>
       </Row>
       <Row>
