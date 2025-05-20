@@ -7,7 +7,7 @@ import useQuery from "./query";
 import Template from "./template";
 import { getOptions } from "./utils";
 
-export default function IpccAll() {
+export default function Ipcc5countries() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "FR";
 

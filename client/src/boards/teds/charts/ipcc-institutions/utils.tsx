@@ -1,7 +1,7 @@
 import { getGeneralOptions } from "../utils";
 
 function getSeries(data) {
-  const series = (data?.aggregations?.by_countries?.buckets ?? []).map(
+  const series = (data?.aggregations?.french_tutelles?.buckets ?? []).map(
     (item) => ({
       color: item.key === "FRA" ? "#cc0000" : "#808080",
       name: item.key,

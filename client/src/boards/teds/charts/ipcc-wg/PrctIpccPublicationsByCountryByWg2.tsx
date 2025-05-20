@@ -11,7 +11,7 @@ export default function PrctIpccReferencesByCountry() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "FR";
   const bool = {
-    must: [{ match: { "ipcc.wg.keyword": "2" } }],
+    must: [{ match: { "ipcc.wg.keyword": "wg2" } }],
   };
 
   const { data, isLoading } = useQueryResponse(bool, 10, "2");
