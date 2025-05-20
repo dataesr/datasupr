@@ -1,7 +1,6 @@
 import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
-// import { useSearchParams } from "react-router-dom";
 
 export default function Options(data, currentLang) {
   if (!data) return null;

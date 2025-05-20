@@ -34,5 +34,9 @@
   "average-success-rate":{
     "fr": "Taux de réussite moyen",
     "en": "Average success rate"
+  },
+  "sort-by": {
+    "fr": "Trier par",
+    "en": "Sort by"
   }
 }
