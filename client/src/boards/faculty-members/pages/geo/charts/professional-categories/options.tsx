@@ -16,9 +16,20 @@ export default function Options({
     return null;
   }
 
+  const colors = [
+    "#3558a2",
+    "#2f4077",
+    "#6e445a",
+    "#8d533e",
+    "#a94645",
+    "#efcb3a",
+    "#006a6f",
+  ];
+
   const newOptions: HighchartsInstance.Options = {
     chart: {
       type: "column",
+      backgroundColor: "#f9f6f2",
     },
     title: {
       text: "",
@@ -28,25 +39,37 @@ export default function Options({
       title: {
         text: null,
       },
+      labels: {
+        style: {
+          color: "#2f4077",
+        },
+      },
     },
     yAxis: {
-      min: 0,
       title: {
-        text: "Effectif", // Suppression de "values" ici
-        align: "high",
-      },
-      labels: {
-        overflow: "justify",
+        text: null,
       },
     },
     tooltip: {
       valueSuffix: " personnes",
+      backgroundColor: "#f4f6fe",
+      borderColor: "#bfccfb",
+      style: {
+        color: "#2f4077",
+      },
     },
     plotOptions: {
       column: {
         dataLabels: {
           enabled: true,
+          style: {
+            color: "#2f4077",
+            textOutline: "none",
+          },
         },
+        colors: colors,
+        colorByPoint: true,
+        borderRadius: 3,
       },
     },
     legend: {
@@ -59,7 +82,10 @@ export default function Options({
       {
         name: "Effectif",
         type: "column",
-        data: categories.map((cat) => cat.headcount),
+        data: categories.map((cat) => ({
+          y: cat.headcount,
+          color: colors[categories.indexOf(cat) % colors.length],
+        })),
       },
     ],
   };

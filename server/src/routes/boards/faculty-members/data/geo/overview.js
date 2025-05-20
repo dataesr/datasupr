@@ -37,7 +37,6 @@ router.get("/faculty-members-overview-geo-data", async (req, res) => {
       ])
       .toArray();
 
-    // Agrégation par catégorie pro (fusion par label_fr uniquement)
     const professionalCategoriesByYear = await collection
       .aggregate([
         { $match: { niveau_geo: "Région" } },
@@ -83,11 +82,131 @@ router.get("/faculty-members-overview-geo-data", async (req, res) => {
       ])
       .toArray();
 
+    const regionsByYear = await collection
+      .aggregate([
+        { $match: { niveau_geo: "Région", geo_nom: { $ne: null } } },
+        {
+          $group: {
+            _id: {
+              annee_universitaire: "$annee_universitaire",
+              geo_id: "$geo_id",
+              geo_nom: "$geo_nom",
+            },
+            headcountWoman: { $sum: "$headcountWoman" },
+            headcountMan: { $sum: "$headcountMan" },
+            headcountUnknown: { $sum: "$headcountUnknown" },
+          },
+        },
+        {
+          $group: {
+            _id: "$_id.annee_universitaire",
+            regions: {
+              $push: {
+                geo_id: "$_id.geo_id",
+                geo_nom: "$_id.geo_nom",
+                totalHeadcountWoman: "$headcountWoman",
+                totalHeadcountMan: "$headcountMan",
+                totalHeadcountUnknown: "$headcountUnknown",
+                totalHeadcount: {
+                  $sum: [
+                    "$headcountWoman",
+                    "$headcountMan",
+                    "$headcountUnknown",
+                  ],
+                },
+                femalePercent: {
+                  $cond: [
+                    {
+                      $eq: [
+                        {
+                          $sum: [
+                            "$headcountWoman",
+                            "$headcountMan",
+                            "$headcountUnknown",
+                          ],
+                        },
+                        0,
+                      ],
+                    },
+                    0,
+                    {
+                      $round: [
+                        {
+                          $multiply: [
+                            {
+                              $divide: [
+                                "$headcountWoman",
+                                {
+                                  $sum: [
+                                    "$headcountWoman",
+                                    "$headcountMan",
+                                    "$headcountUnknown",
+                                  ],
+                                },
+                              ],
+                            },
+                            100,
+                          ],
+                        },
+                        0,
+                      ],
+                    },
+                  ],
+                },
+                malePercent: {
+                  $cond: [
+                    {
+                      $eq: [
+                        {
+                          $sum: [
+                            "$headcountWoman",
+                            "$headcountMan",
+                            "$headcountUnknown",
+                          ],
+                        },
+                        0,
+                      ],
+                    },
+                    0,
+                    {
+                      $round: [
+                        {
+                          $multiply: [
+                            {
+                              $divide: [
+                                "$headcountMan",
+                                {
+                                  $sum: [
+                                    "$headcountWoman",
+                                    "$headcountMan",
+                                    "$headcountUnknown",
+                                  ],
+                                },
+                              ],
+                            },
+                            100,
+                          ],
+                        },
+                        0,
+                      ],
+                    },
+                  ],
+                },
+              },
+            },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ])
+      .toArray();
+
     const data = subjectsByYear.map((entry) => {
       const totals = globalTotalsByYear.find((e) => e._id === entry._id) || {};
       const categories = professionalCategoriesByYear.find(
         (e) => e._id === entry._id
       );
+      const regionData = regionsByYear.find((e) => e._id === entry._id);
+
       return {
         annee_universitaire: entry._id,
         subjects: entry.subjects,
@@ -95,6 +214,7 @@ router.get("/faculty-members-overview-geo-data", async (req, res) => {
         totalHeadcountWoman: totals.totalHeadcountWoman || 0,
         totalHeadcountMan: totals.totalHeadcountMan || 0,
         totalHeadcountUnknown: totals.totalHeadcountUnknown || 0,
+        regions: regionData?.regions || [],
       };
     });
 

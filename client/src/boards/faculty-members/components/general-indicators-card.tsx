@@ -64,7 +64,7 @@ const GeneralIndicatorsCard: React.FC<StructureProps> = ({ structureData }) => {
           <span className="fr-icon-user-line" aria-hidden="true"></span>
           <span className="fr-text--sm">Effectif total</span>
 
-          <span style={{ fontWeight: "bold", color: "#000091" }}>
+          <span style={{ fontWeight: "bold" }}>
             {" "}
             {totalCount.toLocaleString()}
           </span>
