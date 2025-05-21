@@ -6,6 +6,7 @@ import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
 import { GetData } from "./query";
 import { GetLegend } from "../../../../components/legend";
 import optionsSub from "./options";
+import optionsSubRates from "./options-sub-rates";
 import optionSubSuccessRate from "./options-succes-rate";
 import optionsCoordinationNumber from "./options-coordination_number";
 import optionCoordinationNumberSuccessRate from "./options-coordination_number-succes-rate";
@@ -140,6 +141,7 @@ export default function FundingRanking() {
             <option value="fundingRankingSub">{getI18nLabel("focus-on-subsidies")}</option>
             <option value="fundingRankingCoordination">{getI18nLabel("focus-on-coordination")}</option>
             <option value="fundingRankingInvolved">{getI18nLabel("focus-on-participations")}</option>
+            <option value="fundingRankingSubRates">{getI18nLabel("focus-on-rates")}</option>
           </select>
         </Col>
       </Row>
@@ -170,6 +172,25 @@ export default function FundingRanking() {
           </fieldset>
         </Col>
       </Row>
+      {selectedChart === "fundingRankingSubRates" && (
+        <Row>
+          <Col>
+            <ChartWrapper
+              config={configChart1a}
+              legend={GetLegend(
+                [
+                  [getI18nLabel("evaluated-projects"), rootStyles.getPropertyValue("--evaluated-project-color")],
+                  [getI18nLabel("successful-projects"), rootStyles.getPropertyValue("--successful-project-color")],
+                ],
+                "FundingRanking",
+                currentLang
+              )}
+              options={optionsSubRates(prepareData(data, "total_successful"), currentLang)}
+              renderData={() => null} // TODO: add data table
+            />
+          </Col>
+        </Row>
+      )}
       {selectedChart === "fundingRankingSub" && (
         <Row>
           <Col>
@@ -178,7 +199,7 @@ export default function FundingRanking() {
               legend={GetLegend(
                 [
                   [getI18nLabel("evaluated-projects"), rootStyles.getPropertyValue("--evaluated-project-color")],
-                  [getI18nLabel("successful-projects"), "#233E41"],
+                  [getI18nLabel("successful-projects"), rootStyles.getPropertyValue("--successful-project-color")],
                 ],
                 "FundingRanking",
                 currentLang
@@ -192,8 +213,8 @@ export default function FundingRanking() {
               config={configChart1b}
               legend={GetLegend(
                 [
-                  [getI18nLabel("country-success-rate"), "#27A658"],
-                  [getI18nLabel("average-success-rate"), "#D75521"],
+                  [getI18nLabel("country-success-rate"), rootStyles.getPropertyValue("--successRate-color")],
+                  [getI18nLabel("average-success-rate"), rootStyles.getPropertyValue("--averageSuccessRate-color")],
                 ],
                 "FundingRankingRates",
                 currentLang
@@ -212,7 +233,7 @@ export default function FundingRanking() {
               legend={GetLegend(
                 [
                   [getI18nLabel("evaluated-projects"), rootStyles.getPropertyValue("--evaluated-project-color")],
-                  [getI18nLabel("successful-projects"), "#233E41"],
+                  [getI18nLabel("successful-projects"), rootStyles.getPropertyValue("--successful-project-color")],
                 ],
                 "FundingRanking",
                 currentLang
@@ -226,8 +247,8 @@ export default function FundingRanking() {
               config={configChart2b}
               legend={GetLegend(
                 [
-                  [getI18nLabel("country-success-rate"), "#27A658"],
-                  [getI18nLabel("average-success-rate"), "#D75521"],
+                  [getI18nLabel("country-success-rate"), rootStyles.getPropertyValue("--successRate-color")],
+                  [getI18nLabel("average-success-rate"), rootStyles.getPropertyValue("--averageSuccessRate-color")],
                 ],
                 "FundingRankingRates",
                 currentLang
@@ -246,7 +267,7 @@ export default function FundingRanking() {
               legend={GetLegend(
                 [
                   [getI18nLabel("evaluated-projects"), rootStyles.getPropertyValue("--evaluated-project-color")],
-                  [getI18nLabel("successful-projects"), "#233E41"],
+                  [getI18nLabel("successful-projects"), rootStyles.getPropertyValue("--successful-project-color")],
                 ],
                 "FundingRanking",
                 currentLang
@@ -260,8 +281,8 @@ export default function FundingRanking() {
               config={configChart3b}
               legend={GetLegend(
                 [
-                  [getI18nLabel("country-success-rate"), "#27A658"],
-                  [getI18nLabel("average-success-rate"), "#D75521"],
+                  [getI18nLabel("country-success-rate"), rootStyles.getPropertyValue("--successRate-color")],
+                  [getI18nLabel("average-success-rate"), rootStyles.getPropertyValue("--averageSuccessRate-color")],
                 ],
                 "FundingRankingRates",
                 currentLang
