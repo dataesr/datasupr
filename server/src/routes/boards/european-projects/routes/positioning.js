@@ -131,13 +131,30 @@ router
         },
       ])
       .toArray();
-
+    
+      const total_evaluated_all_country = data.reduce(
+        (acc, el) => acc + el.total_evaluated,
+        0
+      );
+      const total_successful_all_country = data.reduce(
+        (acc, el) => acc + el.total_successful,
+        0
+      );
+    
     const dataWithRatio = data.map((el) => {
       if (el.total_evaluated === 0) {
         return { ...el, ratio: 0 };
       }
       return {
         ...el,
+        total_evaluated_ratio: (
+          (el.total_evaluated / total_evaluated_all_country) *
+          100
+        ).toFixed(2),
+        total_successful_ratio: (
+          (el.total_successful / total_successful_all_country) *
+          100
+        ).toFixed(2),
         ratio: (el.total_successful / el.total_evaluated) * 100,
         ratio_coordination_number:
           (el.total_coordination_number_successful /

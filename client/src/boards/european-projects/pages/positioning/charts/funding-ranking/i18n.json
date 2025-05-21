@@ -15,6 +15,10 @@
     "fr": "Focus sur les candidat et participants",
     "en": "Focus on candidates and participants"
   },
+  "focus-on-rates": {
+    "fr": "Focus sur les parts des financements",
+    "en": "Focus on funding shares"
+  },
   "sort-by-evaluated-project": {
     "fr": "Trier par projets évalués",
     "en": "Sort by evaluated projects"
