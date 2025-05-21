@@ -1,5 +1,9 @@
 [
   {
+    "id": "StackStatusPerDisciplineBar",
+    "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"
+  },
+  {
     "id": "facultyMembersGender",
     "title": "Représentation des femmes et des hommes",
     "integrationURL": "/european-projects/components/pages/analysis/overview/charts/funded-objectives"

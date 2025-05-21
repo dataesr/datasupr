@@ -41,12 +41,27 @@ export function TreemapChart({
     chart: {
       type: "treemap",
       height: 600,
+      marginLeft: 0,
+      style: {
+        fontFamily: "Marianne, sans-serif",
+      },
     },
     title: {
       text: title,
+      style: {
+        color: "#000000",
+        fontSize: "18px",
+        fontWeight: "bold",
+      },
+      align: "left",
     },
     subtitle: {
-      text: `Année académique ${year}`,
+      text: `Année universitaire ${year}`,
+      style: {
+        color: "#666666",
+        fontSize: "14px",
+      },
+      align: "left",
     },
     tooltip: {
       formatter: function () {
@@ -102,7 +117,7 @@ export function TreemapChart({
         options={treemapOptions}
         legend={null}
       />
-      <div className="fr-text--xs fr-mt-2w fr-text--center">
+      <div className="fr-text--xs fr-mt-2w" style={{ display: "block"}}>
         <span className="fr-mr-2w">
           <span
             style={{

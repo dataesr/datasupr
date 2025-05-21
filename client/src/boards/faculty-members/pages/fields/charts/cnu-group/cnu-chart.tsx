@@ -106,13 +106,24 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
   const options: Highcharts.Options = {
     chart: {
       type: "column",
-      height: 600,
+      height: 600,   
+      style: {
+        fontFamily: "Marianne, sans-serif",
+      },
     },
     title: {
       text: "Répartition des groupes CNU par discipline",
       style: {
         fontSize: "18px",
         fontWeight: "bold",
+      },
+      align: "left",
+    },
+    subtitle: {
+      text: `Année universitaire `,
+      style: {
+        color: "#666666",
+        fontSize: "14px",
       },
       align: "left",
     },
