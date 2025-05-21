@@ -10,14 +10,14 @@ export function GetLegend(legendArray: [string, string][], legendId: string, cur
       <legend>{getI18nLabel("legend")}</legend>
       <div className="legend">
         <ul className="legend">
-          {legendArray.map((item) => (
+          {legendArray.map((item, index) => (
             <li
               style={{
                 display: "flex",
                 alignItems: "center",
                 marginBottom: "5px",
               }}
-              key={`${legendId}item[0]`}
+              key={`${legendId}item[${index}]`}
             >
               <div style={{ background: item[1] }} />
               <span>{item[0]}</span>
