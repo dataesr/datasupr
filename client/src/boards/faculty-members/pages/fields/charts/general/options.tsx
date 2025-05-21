@@ -70,7 +70,6 @@ export default function OptionsColumnChart({
         fontWeight: "bold",
       },
       align: "left",
-      margin: 20,
     },
     subtitle: {
       text: `Année universitaire ${selectedYear}`,

@@ -62,15 +62,27 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
   const options: Highcharts.Options = {
     chart: {
       type: "bar",
-      height: categories.length * 45,
+      height: categories.length * 65,
+      marginLeft: 0,
+      style: {
+        fontFamily: "Marianne, sans-serif",
+      },
     },
     title: {
-      text: "Répartition femmes / hommes par discipline",
-      align: "center",
+      text: "Répartition hommes / femmes par discipline",
+      align: "left",
       style: {
         fontWeight: "bold",
+        fontSize: "18px",
+      },
+    },
+    subtitle: {
+      text: `Année universitaire `,
+      style: {
+        color: "#666666",
         fontSize: "14px",
       },
+      align: "left",
     },
     credits: { enabled: false },
     xAxis: {
@@ -79,7 +91,7 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
       labels: {
         useHTML: true,
         align: "left",
-        x: 0,
+        x: 10,
         style: {
           fontSize: "13px",
         },
@@ -117,6 +129,8 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
       bar: {
         borderRadius: 4,
         borderWidth: 0,
+        pointWidth: 40,
+        pointPadding: 1,
       },
     },
     tooltip: {

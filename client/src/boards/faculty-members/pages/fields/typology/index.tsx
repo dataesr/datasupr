@@ -1,15 +1,15 @@
 import { useState, useEffect, useMemo } from "react";
-import { Container, Row, Col, Title, Breadcrumb } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Title, Breadcrumb, Notice } from "@dataesr/dsfr-plus";
 import { useParams } from "react-router-dom";
 import useFacultyMembersByFields from "../api/use-by-fields";
 import YearSelector from "../../../filters";
 import { Link } from "@dataesr/dsfr-plus";
 import { TreemapChart } from "./charts/treemap";
 import useFacultyMembersByStatus from "../api/use-by-status";
-import { DisciplineStatusStack } from "./charts/stack";
 import useFacultyMembersGenderComparison from "../api/use-by-gender";
 import { GenderDataCard } from "./components/gender-info";
 import DisciplineBarChart from "./charts/fields-bar";
+import StackStatusPerDisciplineBar from "./charts/stack-status-per-discipline/stack-status-per-discipline";
 
 export function FieldsTypologie() {
   const { fieldId } = useParams<{ fieldId: string }>();
@@ -89,7 +89,7 @@ export function FieldsTypologie() {
         specificFieldData.fieldLabel || specificFieldData.field_label
       }`;
     }
-    return "Typologie des disciplines";
+    return "Typologie du personnel enseignant par discipline";
   }, [fieldId, specificFieldData]);
 
   const treemapData = useMemo(() => {
@@ -177,22 +177,21 @@ export function FieldsTypologie() {
     }));
   };
 
+  const shareTitulaire = allFieldsByStatusData?.[0]?.aggregatedStats?.titulairesPercent;
+
   return (
     <Container as="main">
       <Row>
         <Col md={9}>
-          <Breadcrumb className="fr-m-0 fr-mt-1w">
+          <Breadcrumb className="fr-m-0 fr-pt-3w">
             <Link href="/personnel-enseignant">Personnel enseignant</Link>
             <Link href="/personnel-enseignant/discipline/vue-d'ensemble/">
               Vue disciplinaire
             </Link>
             <Link>
-              <strong>{specificFieldData?.fieldLabel}</strong>
+              <strong>{specificFieldData?.fieldLabel ?? "Typologie du personnel enseignant"}</strong>
             </Link>
           </Breadcrumb>
-          <Title as="h2" look="h4" className="fr-mt-4w">
-            {pageTitle}
-          </Title>
         </Col>
         <Col md={3} style={{ textAlign: "right" }}>
           {availableYears.length > 0 && (
@@ -203,6 +202,18 @@ export function FieldsTypologie() {
             />
           )}
         </Col>
+      </Row>
+
+      <Row className="fr-mt-3w">
+          {shareTitulaire == 100 &&(
+            <Notice closeMode={"disallow"} type={"warning"}>
+              Les données des personnels enseignants non permanents ne sont pas prises en compte
+              pour l'année {selectedYear} car elles ne sont pas disponibles.
+            </Notice>
+            )}
+            <Title as="h3" look="h5"className="fr-mt-2w">
+             {pageTitle}
+          </Title>
       </Row>
 
       <Row gutters>
@@ -243,42 +254,12 @@ export function FieldsTypologie() {
           </div>
         </Col>
       </Row>
-      <Row gutters>
+      <Row>
         <Col md={12}>
-          <div>
-            {!fieldId && (
-              <Col md={6}>
-                <div className="fr-mb-3w">
-                  <Title as="h3" look="h6">
-                    Répartition par statut
-                  </Title>
-                  <p className="fr-text--sm fr-mb-2w">
-                    Composition des effectifs par discipline.
-                  </p>
-                  <DisciplineStatusStack
-                    statusData={
-                      allFieldsByStatusData
-                        ? allFieldsByStatusData.map((item) => ({
-                            ...item,
-                            disciplines: item.disciplines?.map(
-                              (discipline) => ({
-                                ...discipline,
-                                fieldLabel:
-                                  discipline.fieldLabel || "Non spécifié",
-                                totalCount: discipline.totalCount || 0,
-                              })
-                            ),
-                          }))
-                        : []
-                    }
-                    isLoading={allDataByStatusLoading || isLoading}
-                    year={displayYear}
-                    fieldId={fieldId}
-                  />
-                </div>
-              </Col>
-            )}
-          </div>
+          <StackStatusPerDisciplineBar
+            statusData={allFieldsByStatusData || allDataByStatusLoading}
+            selectedYear={selectedYear}
+          />
         </Col>
       </Row>
     </Container>

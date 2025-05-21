@@ -80,7 +80,7 @@ export default function SpecificUniversityOverview() {
     totalHeadcount > 0 ? ((totalWomen / totalHeadcount) * 100).toFixed(1) : "0";
   const manPercentage =
     totalHeadcount > 0 ? ((totalMen / totalHeadcount) * 100).toFixed(1) : "0";
-  console.log(universityData);
+  
   return (
     <Container as="main">
       <Row>

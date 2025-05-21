@@ -130,11 +130,23 @@ export default function StatusOptions({
     chart: {
       type: "column",
       height: 450,
-      marginLeft: 50,
+      marginLeft: 0,
+      style: {
+        fontFamily: "Marianne, sans-serif",
+      },
     },
     title: {
       text: title,
-      style: { fontSize: "16px", fontWeight: "bold" },
+      style: { fontSize: "18px", fontWeight: "bold" },
+      align: "left",
+    },
+    subtitle: {
+      text: `Année universitaire`,
+      style: {
+        color: "#666666",
+        fontSize: "14px",
+      },
+      align: "left",
     },
     xAxis: {
       categories,
