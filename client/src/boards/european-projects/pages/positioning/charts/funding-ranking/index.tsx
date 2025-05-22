@@ -110,6 +110,7 @@ export default function FundingRanking() {
     } else {
       data.sort((a, b) => b.total_successful - a.total_successful);
     }
+    // Add selected country if it is not in the top 10
     const dataToReturn = data.slice(0, 10);
     const selectedCountry = searchParams.get("country_code");
     if (selectedCountry) {

@@ -36,40 +36,6 @@ export function CreateChartOptions(
         },
       },
     },
-    // yAxis: [
-    //   {
-    //     labels: {
-    //       style: {
-    //         fontSize: "13px",
-    //         fontFamily: "Marianne, sans-serif",
-    //         color: rootStyles.getPropertyValue("--label-color"),
-    //       },
-    //     },
-    //     title: {
-    //       style: {
-    //         fontSize: "16px",
-    //         fontFamily: "Marianne, sans-serif",
-    //         color: rootStyles.getPropertyValue("--label-color"),
-    //       },
-    //     },
-    //   },
-    //   {
-    //     labels: {
-    //       style: {
-    //         fontSize: "13px",
-    //         fontFamily: "Marianne, sans-serif",
-    //         color: rootStyles.getPropertyValue("--label-color"),
-    //       },
-    //     },
-    //     title: {
-    //       style: {
-    //         fontSize: "16px",
-    //         fontFamily: "Marianne, sans-serif",
-    //         color: rootStyles.getPropertyValue("--label-color"),
-    //       },
-    //     },
-    //   },
-    // ],
   };
 
   if (type !== "empty") {

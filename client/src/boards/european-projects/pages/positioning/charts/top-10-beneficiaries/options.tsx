@@ -2,7 +2,7 @@ import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 
-export default function Options(data, country_code) {
+export default function Options(data, country_code, currentLang) {
   if (!data) return null;
 
   const newOptions: HighchartsInstance.Options = {
@@ -27,8 +27,8 @@ export default function Options(data, country_code) {
         name: "Total subventions en euros",
         type: "column",
         colorByPoint: true,
-        data: data.top10.map((item) => ({
-          name: item.name_fr,
+        data: data.map((item) => ({
+          name: item[`name_${currentLang}`],
           y: item.total_fund_eur,
           color: item.id == country_code ? "#6E445A" : "#233E41",
         })),
@@ -40,10 +40,9 @@ export default function Options(data, country_code) {
         name: "Poids du cumul des subventions",
         type: "spline",
         color: "#D75521",
-        data: data.top10.map((item) => [item.name_fr, item.influence]),
+        data: data.map((item) => [item[`name_${currentLang}`], item.influence]),
         tooltip: {
-          pointFormat:
-            "Poids du cumul des subventions : <b>{point.y:.1f} %</b>",
+          pointFormat: "Poids du cumul des subventions : <b>{point.y:.1f} %</b>",
         },
         yAxis: 1,
         lineWidth: 0,

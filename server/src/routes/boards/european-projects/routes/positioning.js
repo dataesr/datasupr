@@ -265,6 +265,7 @@ router
           $group: {
             _id: {
               name_fr: "$country_name_fr",
+              name_en: "$country_name_en",
               id: "$country_code",
             },
             total_fund_eur: { $sum: "$fund_eur" },
@@ -274,6 +275,7 @@ router
           $project: {
             _id: 0,
             name_fr: "$_id.name_fr",
+            name_en: "$_id.name_en",
             id: "$_id.id",
             total_fund_eur: 1,
           },
@@ -299,7 +301,6 @@ router
           }
         })
         .filter((el) => el)
-        .slice(0, 10),
     };
 
     return res.json(dataReturn);
