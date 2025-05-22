@@ -1,0 +1,10 @@
+{
+  "total-of-subsidies":{
+    "fr": "Total des subventions",
+    "en": "Total of subsidies"
+  },
+  "weight-of-subsidies": {
+    "fr": "Poids du cumul des subventions",
+    "en": "Weight of the cumulative subsidies"    
+  }
+}

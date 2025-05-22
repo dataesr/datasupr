@@ -9,11 +9,14 @@ import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+import i18n from "./i18n.json";
+const rootStyles = getComputedStyle(document.documentElement);
+
 const config = {
   id: "top10beneficiaries",
   title: {
-    fr: "Top 10 des bénéficiaires",
-    en: "Top 10 beneficiaries",
+    fr: "Classement des bénéficiaires",
+    en: "Beneficiaries ranking",
   },
   subtitle: "",
   description: {
@@ -42,18 +45,37 @@ export default function Top10Beneficiaries() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
+
+  const prepareData = (data) => {
+    // Add selected country if it is not in the top 10
+    const dataToReturn = data.top10.slice(0, 10);
+    const selectedCountry = searchParams.get("country_code");
+    if (selectedCountry) {
+      const pos = data.top10.findIndex((item) => item.id === selectedCountry);
+      if (pos >= 10 && pos !== -1) {
+        dataToReturn.pop();
+        const countryData = data.top10[pos];
+        dataToReturn.push(countryData);
+      }
+    }
+    return dataToReturn;
+  };
+
   return (
     <ChartWrapper
       config={config}
       legend={GetLegend(
         [
-          ["Total des subventions en euros €", "#233E41"],
-          ["Poids du cumul des subventions (%)", "#D75521"],
+          [getI18nLabel("total-of-subsidies"), rootStyles.getPropertyValue("--successful-project-color")],
+          [getI18nLabel("weight-of-subsidies"), rootStyles.getPropertyValue("--cumulativeSuccessRate-color")],
         ],
         "Top10Beneficiaries",
         currentLang
       )}
-      options={options(data, searchParams.get("country_code") ?? null)}
+      options={options(prepareData(data), searchParams.get("country_code") ?? null, currentLang)}
       renderData={() => null} // TODO: add data table
     />
   );
