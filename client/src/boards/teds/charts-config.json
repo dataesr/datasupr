@@ -124,11 +124,11 @@
       "FR": "",
       "EN": ""
     },
-    "title_x_axis": {
+    "title_y_axis": {
       "FR": "Nombre de publications",
       "EN": "Number of publications"
     },
-    "title_y_axis": {
+    "title_x_axis": {
       "FR": "Institutions",
       "EN": "Institutions"
     },

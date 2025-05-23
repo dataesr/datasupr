@@ -2,10 +2,9 @@ import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../chart-wrapper";
 import { useQueryResponse } from "../hooks";
-import { getLabel } from "../utils";
 import bool from "./query";
 import Template from "./template";
-import { getOptions, getSeries } from "./utils";
+import { getOptions, getSeries, getLabel } from "./utils";
 
 export default function IpccInstitutions() {
   const [searchParams] = useSearchParams();
@@ -15,6 +14,7 @@ export default function IpccInstitutions() {
   if (isLoading || !data) return Template();
 
   const { series, categories } = getSeries(data);
+
   const title = getLabel("ipcc_institutions", "title", currentLang);
 
   const options = getOptions(
