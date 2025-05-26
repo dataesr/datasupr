@@ -1,5 +1,4 @@
-import React from "react";
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
 
 interface DisciplineData {
@@ -18,6 +17,21 @@ const GenderByDiscipline: React.FC<GenderByDisciplineProps> = ({
   disciplinesData,
 }) => {
   if (!disciplinesData || disciplinesData.length === 0) return null;
+
+  const config = {
+    id: "genderByDiscipline",
+    idQuery: "genderByDiscipline",
+    title: {
+      fr: "Répartition par sexe des enseignants par discipline",
+      en: "Distribution of faculty members by gender",
+    },
+    description: {
+      fr: "Répartition des membres du personnel par sexe",
+      en: "Distribution of faculty members by gender",
+    },
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  };
 
   const sortedData = [...disciplinesData].sort(
     (a, b) => b.totalCount - a.totalCount
@@ -144,9 +158,10 @@ const GenderByDiscipline: React.FC<GenderByDisciplineProps> = ({
 
   return (
     <ChartWrapper
-      id="genderByDiscipline"
+      config={config}
       options={chartOptions}
       legend={null}
+      renderData={undefined}
     />
   );
 };

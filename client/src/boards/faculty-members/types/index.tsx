@@ -405,9 +405,13 @@ export interface Demographie {
 export interface RegionApiData {
   geo_id: string;
   geo_nom: string;
-  annee_universitaire: number;
+  annee_universitaire: string;
   demographie: Demographie;
   disciplines: Subject[];
   categories_professionnelles: ProfessionalCategory[];
   age_distribution: AgeClass[];
+  totalHeadcountMan: number;
+  totalHeadcountWoman: number;
+  subjects: Subject[];
+  professional_categories: ProfessionalCategory[];
 }

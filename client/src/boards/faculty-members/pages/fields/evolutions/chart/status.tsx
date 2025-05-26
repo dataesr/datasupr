@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import ChartWrapper from "../../../../components/chart-wrapper";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 
 interface StatusEvolutionChartProps {
   evolutionData: {
@@ -32,6 +32,21 @@ export function StatusEvolutionChart({
   disciplineId,
   isLoading,
 }: StatusEvolutionChartProps) {
+  const config = {
+    id: "faculty-status-evolution",
+    idQuery: "faculty-status-evolution",
+    title: {
+      fr: "Répartition par statut des enseignants par discipline",
+      en: "Distribution of faculty members by status and discipline",
+    },
+    description: {
+      fr: "Répartition des enseignants par statut et discipline",
+      en: "Distribution of faculty members by status and discipline",
+    },
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  };
+
   const specificFieldData = useMemo(() => {
     if (!disciplineId || !evolutionData?.disciplinesTrend) return null;
     return evolutionData.disciplinesTrend[disciplineId] || null;
@@ -213,9 +228,10 @@ export function StatusEvolutionChart({
   return (
     <div>
       <ChartWrapper
-        id="faculty-status-evolution"
+        config={config}
         options={chartOptions}
         legend={null}
+        renderData={undefined}
       />
     </div>
   );

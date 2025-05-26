@@ -1,6 +1,6 @@
 import { Link } from "@dataesr/dsfr-plus";
-import ChartWrapper from "../../../../components/chart-wrapper";
 import options from "./options";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 
 interface FieldsDistributionBarProps {
   fieldsData: [];
@@ -13,12 +13,28 @@ const FieldsDistributionBar: React.FC<FieldsDistributionBarProps> = ({
 }) => {
   const chartOptions = options({ fieldsData, selectedYear });
 
+  const config = {
+    id: "FieldsDistributionBar",
+    idQuery: "FieldsDistributionBar",
+    title: {
+      fr: "Répartition par discipline des enseignants",
+      en: "Distribution of faculty members by discipline",
+    },
+    description: {
+      fr: "Répartition des enseignants par discipline",
+      en: "Distribution of faculty members by discipline",
+    },
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  };
+
   return chartOptions ? (
     <>
       <ChartWrapper
-        id="FieldsDistributionBar"
+        config={config}
         options={chartOptions}
         legend={null}
+        renderData={undefined}
       />
       <i className="text-center">
         <Link href="/personnel-enseignant/discipline/typologie">

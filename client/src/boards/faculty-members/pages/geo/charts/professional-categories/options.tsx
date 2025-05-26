@@ -17,6 +17,20 @@ export default function Options({
   }
   const rootStyles = getComputedStyle(document.documentElement);
 
+  const getCategoryColor = (index: number): string => {
+    const colorVariables = [
+      "--teaching-staffs-pillar-1-color",
+      "--teaching-staffs-pillar-2-color",
+      "--teaching-staffs-pillar-3-color",
+      "--teaching-staffs-pillar-4-color",
+      "--teaching-staffs-pillar-5-color",
+    ];
+
+    const colorVar = colorVariables[index % colorVariables.length];
+
+    return rootStyles.getPropertyValue(colorVar);
+  };
+
   const newOptions: HighchartsInstance.Options = {
     chart: {
       type: "column",
@@ -39,16 +53,11 @@ export default function Options({
     tooltip: {
       valueSuffix: " personnes",
       backgroundColor: "#f4f6fe",
-      borderColor: "#bfccfb",
     },
     plotOptions: {
       column: {
         dataLabels: {
           enabled: true,
-          style: {
-            color: "#2f4077",
-            textOutline: "none",
-          },
         },
         colorByPoint: true,
         borderRadius: 3,
@@ -64,11 +73,10 @@ export default function Options({
       {
         name: "Effectif",
         type: "column",
-        data: categories.map((cat) => ({
+        data: categories.map((cat, index) => ({
           y: cat.headcount,
-          color: rootStyles.getPropertyValue(
-            "--teaching-staffs-pillar-1-color"
-          ),
+          name: cat.label_fr,
+          color: getCategoryColor(index),
         })),
       },
     ],

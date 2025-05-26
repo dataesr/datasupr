@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import ChartWrapper from "../../../../components/chart-wrapper";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 
 interface AgeEvolutionChartProps {
   ageEvolutionData: {
@@ -27,6 +27,20 @@ export function AgeEvolutionChart({
   disciplineId,
   isLoading,
 }: AgeEvolutionChartProps) {
+  const config = {
+    id: "faculty-age-evolution",
+    idQuery: "faculty-age-evolution",
+    title: {
+      fr: "Répartition par âge des enseignants par discipline",
+      en: "Distribution of faculty members by age and discipline",
+    },
+    description: {
+      fr: "Répartition des enseignants par âge et discipline",
+      en: "Distribution of faculty members by age and discipline",
+    },
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  };
   const disciplineToShow = useMemo(() => {
     if (!ageEvolutionData || !ageEvolutionData.ageEvolution) return null;
 
@@ -168,9 +182,10 @@ export function AgeEvolutionChart({
   return (
     <div>
       <ChartWrapper
-        id="faculty-age-evolution"
+        config={config}
         options={chartOptions}
         legend={null}
+        renderData={undefined}
       />
     </div>
   );

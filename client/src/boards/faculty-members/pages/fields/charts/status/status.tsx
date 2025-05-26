@@ -1,7 +1,7 @@
-import React, { useMemo } from "react";
-import ChartWrapper from "../../../../components/chart-wrapper";
+import { useMemo } from "react";
 import StatusOptions from "./options";
 import { Field } from "../../../../types";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 
 interface StatusDistributionProps {
   disciplinesData: Field[];
@@ -12,6 +12,21 @@ const StatusDistribution: React.FC<StatusDistributionProps> = ({
   disciplinesData,
   title = "Répartition par statut du personnel enseignant",
 }) => {
+  const config = {
+    id: "statusDistribution",
+    idQuery: "statusDistribution",
+    title: {
+      fr: "Répartition par statut des enseignants par discipline",
+      en: "Distribution of faculty members by status",
+    },
+    description: {
+      fr: "Répartition des enseignants par statut et discipline",
+      en: "Distribution of faculty members by status and discipline",
+    },
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  };
+
   const processedData = useMemo(() => {
     if (!disciplinesData || disciplinesData.length === 0) return [];
     const sortedData = [...disciplinesData]
@@ -62,9 +77,10 @@ const StatusDistribution: React.FC<StatusDistributionProps> = ({
   return (
     <div>
       <ChartWrapper
-        id="statusDistribution"
+        config={config}
         options={chartOptions}
         legend={null}
+        renderData={undefined}
       />
       <div className="fr-text--xs fr-text--italic fr-mt-1w">
         Note: Les enseignants-chercheurs sont tous titulaires. La catégorie

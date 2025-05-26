@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
-import ChartWrapper from "../../../../components/chart-wrapper";
 import { Col } from "@dataesr/dsfr-plus";
 import { AgeDistributionChartProps } from "../../../../types";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 
 export function AgeDistributionPieChart({
   ageData,
@@ -13,6 +13,21 @@ export function AgeDistributionPieChart({
   const [selectedField, setSelectedField] = useState<string>(
     forcedSelectedField || "all"
   );
+
+  const config = {
+    id: "age-distribution-chart",
+    idQuery: "age-distribution-chart",
+    title: {
+      fr: "Répartition par âge des enseignants",
+      en: "Distribution of faculty members by age",
+    },
+    description: {
+      fr: "Répartition des enseignants par âge",
+      en: "Distribution of faculty members by age",
+    },
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  };
 
   useEffect(() => {
     if (forcedSelectedField) {
@@ -198,9 +213,10 @@ export function AgeDistributionPieChart({
       </Col>
 
       <ChartWrapper
-        id="age-distribution-chart"
+        config={config}
         options={chartOptions}
         legend={null}
+        renderData={undefined}
       />
     </div>
   );

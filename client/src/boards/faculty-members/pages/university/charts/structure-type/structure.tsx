@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 
 interface EstablishmentData {
   establishmentTypes: Array<{
@@ -113,9 +113,10 @@ export function EstablishmentTypeChart({
 
   return (
     <ChartWrapper
-      id="establishment-type-chart"
+      config="establishment-type-chart"
       options={chartOptions}
       legend={null}
+      renderData={undefined}
     />
   );
 }
