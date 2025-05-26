@@ -6,7 +6,6 @@ import {
   Breadcrumb,
   Link,
   Text,
-  Button,
 } from "@dataesr/dsfr-plus";
 import { useState, useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
@@ -31,11 +30,11 @@ export default function UniversityOverview() {
   const { data: establishmentData, isLoading: establishmentLoading } =
     useFacultyMembersByEstablishmentType(selectedYear);
 
-  const genderData = establishmentData?.establishmentTypes
-    ?.find((item) => item?.['type'] == 'Université');
+  const genderData = establishmentData?.establishmentTypes?.find(
+    (item) => item?.["type"] == "Université"
+  );
 
   // console.log(genderData);
-
 
   const [availableYears, setAvailableYears] = useState<string[]>([]);
   const [universities, setUniversities] = useState<
@@ -91,27 +90,29 @@ export default function UniversityOverview() {
           />
         </Col>
       </Row>
-      
 
       {univData?.annual_summary && (
         <Row className="fr-mt-2w">
           <Row>
             <Col md={8} className="fr-pr-6w">
               <Text>
-                Desriptif du périmètre des établissements du programme 150. <br/>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vitae lobortis sem.
-                Quisque vel ex a elit facilisis rhoncus. Morbi eleifend bibendum orci vel aliquet. Fusce
-                a neque dui. Cras molestie quam quis libero ullamcorper viverra. Sed rutrum placerat nibh
-                ut tristique. Cras egestas felis a scelerisque dignissim. Donec placerat nulla dapibus,
-                efficitur ex non, vehicula sapien. Aenean vehicula vitae eros ut egestas. Maecenas lorem
-                massa, vulputate id leo id, aliquet ornare mi. Etiam vitae ipsum ipsum. Cras fermentum
-                lobortis mauris eget malesuada. Sed in consequat elit, eu fringilla magna.
+                Desriptif du périmètre des établissements du programme 150.{" "}
+                <br />
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                Phasellus vitae lobortis sem. Quisque vel ex a elit facilisis
+                rhoncus. Morbi eleifend bibendum orci vel aliquet. Fusce a neque
+                dui. Cras molestie quam quis libero ullamcorper viverra. Sed
+                rutrum placerat nibh ut tristique. Cras egestas felis a
+                scelerisque dignissim. Donec placerat nulla dapibus, efficitur
+                ex non, vehicula sapien. Aenean vehicula vitae eros ut egestas.
+                Maecenas lorem massa, vulputate id leo id, aliquet ornare mi.
+                Etiam vitae ipsum ipsum. Cras fermentum lobortis mauris eget
+                malesuada. Sed in consequat elit, eu fringilla magna.
               </Text>
             </Col>
             <Col md={4}>
               <GeneralIndicatorsCard structureData={univData?.annual_summary} />
             </Col>
-
           </Row>
           <Col>
             {/* <Title as="h4" look="h6">
@@ -242,19 +243,17 @@ export default function UniversityOverview() {
             year={selectedYear}
           />
         </Col>
-        <Col  md={4}>
-          <Text>
-            Descriptif des types d'établissement ???
-          </Text>
+        <Col md={4}>
+          <Text>Descriptif des types d'établissement ???</Text>
         </Col>
       </Row>
       <Row className="fr-mt-8w">
         <Col md={8} className="fr-pr-6w">
-          <GenderPerStructureTypeChart
+          {/* <GenderPerStructureTypeChart
             structureData={genderData}
             isLoading={establishmentLoading}
             year={selectedYear}
-          />
+          /> */}
         </Col>
       </Row>
       {/* <Row className="fr-mt-8w">

@@ -18,9 +18,10 @@ import YearSelector from "../../filters";
 import { formatDataForIndicatorsCard } from "./utils";
 import AgeDistributionByRegion from "./charts/age";
 import useFacultyMembersByRegion from "./api/use-by-regions";
+import { RegionDemographics, RegionWithAgeData, YearlyGeoData } from "./types";
 
 export default function GeoOverview() {
-  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedYear, setSelectedYear] = useState<string>("");
 
   const {
     data: geoData,
@@ -33,28 +34,9 @@ export default function GeoOverview() {
     useFacultyMembersByRegion(undefined, selectedYear);
 
   const [availableYears, setAvailableYears] = useState<string[]>([]);
-  const [availableGeos, setAvailableGeos] = useState<
-    {
-      femaleCount: number;
-      femalePercent: number;
-      geo_id: string;
-      geo_nom: string;
-      maleCount: number;
-      malePercent: number;
-      totalCount: number;
-    }[]
-  >([]);
+  const [availableGeos, setAvailableGeos] = useState<RegionDemographics[]>([]);
   const [regionsWithAgeData, setRegionsWithAgeData] = useState<
-    {
-      geo_id: string;
-      geo_nom: string;
-      age_distribution: {
-        age_class: string;
-        headcount: number;
-        femaleCount: number;
-        maleCount: number;
-      }[];
-    }[]
+    RegionWithAgeData[]
   >([]);
 
   useEffect(() => {
@@ -139,7 +121,7 @@ export default function GeoOverview() {
     return <div>Erreur: {geoDataError?.message}</div>;
   }
 
-  const displayedYearData = geoData.data?.find(
+  const displayedYearData: YearlyGeoData | undefined = geoData.data?.find(
     (item) => String(item.annee_universitaire) === selectedYear
   );
 
@@ -197,7 +179,7 @@ export default function GeoOverview() {
         </Col>
         <Col md={8} style={{ textAlign: "center" }}>
           <ProfessionalCategoriesChart
-            categories={displayedYearData?.professional_categories}
+            categories={displayedYearData?.professional_categories || []}
           />
         </Col>
       </Row>

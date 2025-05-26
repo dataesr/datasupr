@@ -1,23 +1,13 @@
 import { Col } from "@dataesr/dsfr-plus";
 import { useParams } from "react-router-dom";
 import { useMemo } from "react";
+import { DemographicData } from "../pages/geo/types";
 
-type StructureData = {
-  man_count: number;
-  woman_count: number;
-  unknow_count: number;
-  total_headcount: number;
-  maleCount: number;
-  femaleCount: number;
-  totalCount: number;
-  fieldId?: string;
-};
-
-interface StructureProps {
-  structureData: StructureData[];
-}
-
-const GeneralIndicatorsCard: React.FC<StructureProps> = ({ structureData }) => {
+const GeneralIndicatorsCard = ({
+  structureData,
+}: {
+  structureData: DemographicData[];
+}) => {
   const { fieldId } = useParams<{ fieldId: string }>();
 
   const filteredData = useMemo(() => {

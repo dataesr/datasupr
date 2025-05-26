@@ -1,26 +1,7 @@
 import { useMemo } from "react";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-
-interface AgeEvolutionChartProps {
-  ageEvolutionData: {
-    years: string[];
-    ageEvolution: {
-      [disciplineId: string]: {
-        fieldId: string;
-        fieldLabel: string;
-        ageData: {
-          [ageClass: string]: {
-            counts: number[];
-            percents: number[];
-          };
-        };
-      };
-    };
-  };
-  disciplineId?: string;
-  isLoading: boolean;
-}
+import { AgeEvolutionChartProps } from "../../types";
 
 export function AgeEvolutionChart({
   ageEvolutionData,

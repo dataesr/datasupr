@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
 import { Col } from "@dataesr/dsfr-plus";
-import { AgeDistributionChartProps } from "../../../../types";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import { AgeDistributionChartProps } from "../../types";
 
 export function AgeDistributionPieChart({
   ageData,

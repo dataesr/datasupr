@@ -1,17 +1,12 @@
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import { Subject } from "../../types";
 import Options from "./options";
-
-interface Subject {
-  id: string;
-  label_fr: string;
-  headcount: number;
-}
 
 interface CNUPieChartProps {
   subjects: Subject[];
 }
 
-const CNUPieChart: React.FC<CNUPieChartProps> = ({ subjects }) => {
+const CNUPieChart = ({ subjects }: CNUPieChartProps) => {
   const config = {
     id: "facultyMembersCNU",
     idQuery: "facultyMembersCNU",
@@ -26,7 +21,7 @@ const CNUPieChart: React.FC<CNUPieChartProps> = ({ subjects }) => {
     integrationURL:
       "/european-projects/components/pages/analysis/overview/charts/destination-funding",
   };
-  const chartOptions = Options({ subjects: subjects });
+  const chartOptions = Options({ subjects });
 
   return chartOptions ? (
     <ChartWrapper

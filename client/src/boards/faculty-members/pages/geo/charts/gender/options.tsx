@@ -2,8 +2,8 @@ import HighchartsInstance from "highcharts";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
 
 interface OptionsProps {
-  maleCount: number;
-  femaleCount: number;
+  maleCount: number | undefined;
+  femaleCount: number | undefined;
 }
 
 export default function Options({

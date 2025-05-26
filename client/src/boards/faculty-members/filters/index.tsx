@@ -7,18 +7,13 @@ import {
   Row,
 } from "@dataesr/dsfr-plus";
 import { useState } from "react";
+import { YearSelectorProps } from "../types";
 
-interface YearFilterProps {
-  years: string[];
-  selectedYear: string;
-  onYearChange: (year: string) => void;
-}
-
-const YearFilter: React.FC<YearFilterProps> = ({
+const YearFilter = ({
   years,
   selectedYear,
   onYearChange,
-}) => {
+}: YearSelectorProps) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onYearChange(event.target.value);
   };
@@ -46,17 +41,11 @@ const YearFilter: React.FC<YearFilterProps> = ({
   );
 };
 
-interface YearSelectorProps {
-  years: string[];
-  selectedYear: string;
-  onYearChange: (year: string) => void;
-}
-
-const YearSelector: React.FC<YearSelectorProps> = ({
+const YearSelector = ({
   years,
   selectedYear,
   onYearChange,
-}) => {
+}: YearSelectorProps) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (

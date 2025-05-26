@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { SubjectDistributionChartProps } from "../../../../types";
+import { SubjectDistributionChartProps } from "../../types";
 
 const SubjectDistributionChart = ({
   subjects,

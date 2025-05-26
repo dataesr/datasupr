@@ -1,19 +1,7 @@
 import { useMemo } from "react";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-
-interface EstablishmentData {
-  establishmentTypes: Array<{
-    type: string;
-    totalCount: number;
-  }>;
-}
-
-interface EstablishmentTypeChartProps {
-  establishmentData: EstablishmentData;
-  isLoading: boolean;
-  year: string;
-}
+import { EstablishmentTypeChartProps } from "../../types";
 
 export function EstablishmentTypeChart({
   establishmentData,

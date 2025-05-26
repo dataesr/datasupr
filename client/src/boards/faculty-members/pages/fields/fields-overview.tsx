@@ -12,7 +12,6 @@ import { useState, useEffect, useMemo } from "react";
 import YearSelector from "../../filters";
 import useFacultyMembersByFields from "./api/use-by-fields";
 import FieldsDistributionBar from "./charts/general/general";
-import { CNUGroup, CNUSection } from "../../types";
 import DisciplineStatsSidebar from "./components/top-fields-indicators";
 import FieldCardsGrid from "./components/fields-cards";
 import CnuGroupsChart from "./charts/cnu-group/cnu-chart";
@@ -22,13 +21,12 @@ import StatusDistribution from "./charts/status/status";
 import useFacultyMembersAgeDistribution from "./api/use-by-age";
 import { AgeDistributionPieChart } from "./charts/age/age";
 import GeneralIndicatorsCard from "../../components/general-indicators-card";
+import { CNUGroup, CNUSection, FieldSimple } from "./types";
 
 export default function FieldOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
   const [availableYears, setAvailableYears] = useState<string[]>([]);
-  const [availableFields, setAvailableFields] = useState<
-    Array<{ fieldId: string; fieldLabel: string }>
-  >([]);
+  const [availableFields, setAvailableFields] = useState<FieldSimple[]>([]);
 
   const { data: allFieldsData, isLoading: allDataLoading } =
     useFacultyMembersByFields(undefined, true);
@@ -108,10 +106,10 @@ export default function FieldOverview() {
         allGroups.push({
           cnuGroupId: groupId,
           cnuGroupLabel: groupLabel,
-          maleCount,
-          femaleCount,
-          unknownCount,
-          totalCount,
+          maleCount: maleCount || 0,
+          femaleCount: femaleCount || 0,
+          unknownCount: unknownCount || 0,
+          totalCount: totalCount || 0,
           fieldId,
           fieldLabel,
           cnuSections: [],
@@ -157,21 +155,29 @@ export default function FieldOverview() {
     const mergedGroups = Object.values(
       allGroups.reduce<Record<string, CNUGroup>>((acc, group) => {
         const key = group.cnuGroupId;
+        if (!key) return acc;
+
         if (!acc[key]) {
           acc[key] = { ...group };
         } else {
-          acc[key].maleCount += group.maleCount;
-          acc[key].femaleCount += group.femaleCount;
-          acc[key].unknownCount += group.unknownCount;
-          acc[key].totalCount += group.totalCount;
+          acc[key]!.maleCount =
+            (acc[key]!.maleCount || 0) + (group.maleCount || 0);
+          acc[key]!.femaleCount =
+            (acc[key]!.femaleCount || 0) + (group.femaleCount || 0);
+          acc[key]!.unknownCount =
+            (acc[key]!.unknownCount || 0) + (group.unknownCount || 0);
+          acc[key]!.totalCount =
+            (acc[key]!.totalCount || 0) + (group.totalCount || 0);
         }
         return acc;
       }, {})
-    ).sort((a, b) => b.totalCount - a.totalCount);
+    ).sort((a, b) => (b.totalCount || 0) - (a.totalCount || 0));
 
     return {
       cnuGroups: mergedGroups,
-      cnuSections: allSections.sort((a, b) => b.totalCount - a.totalCount),
+      cnuSections: allSections.sort(
+        (a, b) => (b.totalCount ?? 0) - (a.totalCount ?? 0)
+      ),
     };
   }, [fieldData, selectedYear]);
 
@@ -223,48 +229,52 @@ export default function FieldOverview() {
         <Col md={3} style={{ textAlign: "right" }}>
           {availableYears.length > 0 && (
             <YearSelector
-            years={availableYears}
-            selectedYear={selectedYear}
-            onYearChange={setSelectedYear}
+              years={availableYears}
+              selectedYear={selectedYear}
+              onYearChange={setSelectedYear}
             />
           )}
         </Col>
       </Row>
 
       <Row className="fr-mt-3w">
-          {shareTitulaire == 100 &&(
-            <Notice closeMode={"disallow"} type={"warning"}>
-              Les données des personnels enseignants non permanents ne sont pas prises en compte
-              pour l'année {selectedYear} car elles ne sont pas disponibles.
-            </Notice>
-            )}
-            <Title as="h3" look="h5"className="fr-mt-2w">
-             Explorer le personnel enseignant par grande discipline
-          </Title>
+        {shareTitulaire == 100 && (
+          <Notice closeMode={"disallow"} type={"warning"}>
+            Les données des personnels enseignants non permanents ne sont pas
+            prises en compte pour l'année {selectedYear} car elles ne sont pas
+            disponibles.
+          </Notice>
+        )}
+        <Title as="h3" look="h5" className="fr-mt-2w">
+          Explorer le personnel enseignant par grande discipline
+        </Title>
       </Row>
 
       <Row>
-        {/* Colonne principale */}
         <Col md={8} className="fr-pr-8w">
-            <Text>
-              Desriptif de notre référentiel des disciplines, limites et périmètres. <br/>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vitae lobortis sem.
-              Quisque vel ex a elit facilisis rhoncus. Morbi eleifend bibendum orci vel aliquet. Fusce
-              a neque dui. Cras molestie quam quis libero ullamcorper viverra. Sed rutrum placerat nibh
-              ut tristique. Cras egestas felis a scelerisque dignissim. Donec placerat nulla dapibus,
-              efficitur ex non, vehicula sapien. Aenean vehicula vitae eros ut egestas. Maecenas lorem
-              massa, vulputate id leo id, aliquet ornare mi. Etiam vitae ipsum ipsum. Cras fermentum
-              lobortis mauris eget malesuada. Sed in consequat elit, eu fringilla magna.
-            </Text>
+          <Text>
+            Desriptif de notre référentiel des disciplines, limites et
+            périmètres. <br />
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
+            vitae lobortis sem. Quisque vel ex a elit facilisis rhoncus. Morbi
+            eleifend bibendum orci vel aliquet. Fusce a neque dui. Cras molestie
+            quam quis libero ullamcorper viverra. Sed rutrum placerat nibh ut
+            tristique. Cras egestas felis a scelerisque dignissim. Donec
+            placerat nulla dapibus, efficitur ex non, vehicula sapien. Aenean
+            vehicula vitae eros ut egestas. Maecenas lorem massa, vulputate id
+            leo id, aliquet ornare mi. Etiam vitae ipsum ipsum. Cras fermentum
+            lobortis mauris eget malesuada. Sed in consequat elit, eu fringilla
+            magna.
+          </Text>
           {fieldData && selectedYear && (
-              <FieldsDistributionBar
-                fieldsData={fieldData}
-                selectedYear={selectedYear}
-              />
-            )}
+            <FieldsDistributionBar
+              fieldsData={fieldData}
+              selectedYear={selectedYear}
+            />
+          )}
           <CnuGroupsChart cnuGroups={cnuGroups} />
           <StatusDistribution
-              disciplinesData={statusData?.[0].disciplines ?? []}
+            disciplinesData={statusData?.[0].disciplines ?? []}
           />
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea repellat
           corporis est laudantium consequuntur consectetur, odit temporibus!
@@ -284,7 +294,6 @@ export default function FieldOverview() {
           )}
         </Col>
 
-        {/* Colonne secondaire */}
         <Col md={4} style={{ textAlign: "center" }}>
           <GeneralIndicatorsCard structureData={disciplinesData} />
           <DisciplineStatsSidebar disciplinesData={disciplinesData} />
@@ -300,7 +309,6 @@ export default function FieldOverview() {
         </Col>
       </Row>
 
-    {/* Garder la suite  */}
       <Row className="fr-mt-4w fr-mb-5w">
         <Col>
           <Title as="h4" look="h5">

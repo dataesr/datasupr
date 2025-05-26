@@ -1,37 +1,33 @@
 import { useMemo } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { CNUGroup } from "../../../../types";
-
-interface CnuGroupsChartProps {
-  cnuGroups: CNUGroup[];
-}
+import { CnuGroupsChartProps } from "../../types";
 
 export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
   const groupedData = useMemo(() => {
     if (!cnuGroups || cnuGroups.length === 0) return [];
 
     const disciplines = Array.from(
-      new Set(cnuGroups.map((group) => group.fieldLabel))
+      new Set(cnuGroups.map((group) => group.fieldLabel).filter(Boolean))
     );
 
     const sortedDisciplines = [...disciplines].sort((a, b) => {
       const totalA = cnuGroups
         .filter((g) => g.fieldLabel === a)
-        .reduce((sum, g) => sum + g.totalCount, 0);
+        .reduce((sum, g) => sum + (g.totalCount || 0), 0);
       const totalB = cnuGroups
         .filter((g) => g.fieldLabel === b)
-        .reduce((sum, g) => sum + g.totalCount, 0);
+        .reduce((sum, g) => sum + (g.totalCount || 0), 0);
       return totalB - totalA;
     });
 
     return sortedDisciplines.map((discipline) => {
       const disciplineGroups = cnuGroups
         .filter((g) => g.fieldLabel === discipline)
-        .sort((a, b) => b.totalCount - a.totalCount);
+        .sort((a, b) => (b.totalCount || 0) - (a.totalCount || 0));
 
       const totalCount = disciplineGroups.reduce(
-        (sum, g) => sum + g.totalCount,
+        (sum, g) => sum + (g.totalCount || 0),
         0
       );
 
@@ -43,7 +39,9 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
     });
   }, [cnuGroups]);
 
-  const categories = groupedData.map((d) => d.discipline);
+  const categories = groupedData
+    .map((d) => d.discipline)
+    .filter((d): d is string => Boolean(d));
 
   const getColorForDiscipline = (discipline: string) => {
     if (discipline.includes("Science")) return "#3558a2";
@@ -66,7 +64,7 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
       name: string;
       y: number;
       x: number;
-      cnuGroupId: string;
+      cnuGroupId: string | number;
       color: Highcharts.ColorType;
       maleCount: number;
       femaleCount: number;
@@ -78,24 +76,31 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
     const result: DataPoint[] = [];
 
     groupedData.forEach((disciplineData) => {
-      const baseColor = getColorForDiscipline(disciplineData.discipline);
+      const baseColor = getColorForDiscipline(disciplineData.discipline || "");
 
       disciplineData.groups.forEach((group, index) => {
+        const maleCount = group.maleCount || group.numberMan || 0;
+        const femaleCount = group.femaleCount || group.numberWoman || 0;
+        const totalCount = group.totalCount || maleCount + femaleCount;
+        const groupId = group.cnuGroupId || group.cnu_group_id || "";
+        const groupLabel = group.cnuGroupLabel || group.cnu_group_label || "";
+
         result.push({
-          name: `${group.cnuGroupLabel} (Groupe ${group.cnuGroupId})`,
-          y: group.totalCount,
-          x: categories.indexOf(disciplineData.discipline),
-          cnuGroupId: group.cnuGroupId,
+          name: `${groupLabel} (Groupe ${groupId})`,
+          y: totalCount,
+          x: categories.indexOf(disciplineData.discipline || ""),
+          cnuGroupId: groupId,
           color: getShade(baseColor, index, disciplineData.groups.length),
-          maleCount: group.maleCount,
-          femaleCount: group.femaleCount,
-          malePercent: Math.round((group.maleCount / group.totalCount) * 100),
-          femalePercent: Math.round(
-            (group.femaleCount / group.totalCount) * 100
-          ),
-          cnuGroupPercent: Math.round(
-            (group.totalCount / disciplineData.totalCount) * 100
-          ),
+          maleCount,
+          femaleCount,
+          malePercent:
+            totalCount > 0 ? Math.round((maleCount / totalCount) * 100) : 0,
+          femalePercent:
+            totalCount > 0 ? Math.round((femaleCount / totalCount) * 100) : 0,
+          cnuGroupPercent:
+            disciplineData.totalCount > 0
+              ? Math.round((totalCount / disciplineData.totalCount) * 100)
+              : 0,
         });
       });
     });
@@ -106,7 +111,7 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
   const options: Highcharts.Options = {
     chart: {
       type: "column",
-      height: 600,   
+      height: 600,
       style: {
         fontFamily: "Marianne, sans-serif",
       },
@@ -120,7 +125,7 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
       align: "left",
     },
     subtitle: {
-      text: `Année universitaire `,
+      text: "Année universitaire",
       style: {
         color: "#666666",
         fontSize: "14px",
@@ -161,7 +166,7 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
         const point = this.point as Highcharts.Point & {
           name: string;
           y: number;
-          cnuGroupId: string;
+          cnuGroupId: string | number;
           maleCount: number;
           femaleCount: number;
           malePercent: number;
@@ -176,10 +181,10 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
                 <div style="color:#666;margin-bottom:5px">${
                   point.cnuGroupPercent
                 }% de la discipline</div>
-                <div style="margin-top:8px">👨 Hommes: ${point.maleCount} (${
+                <div style="margin-top:8px">👨 Hommes: ${point.maleCount.toLocaleString()} (${
           point.malePercent
         }%)</div>
-                <div>👩 Femmes: ${point.femaleCount} (${
+                <div>👩 Femmes: ${point.femaleCount.toLocaleString()} (${
           point.femalePercent
         }%)</div>
                 </div>`;
@@ -197,7 +202,7 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
           formatter: function () {
             const point = this.point as Highcharts.Point & {
               y: number;
-              cnuGroupId: string;
+              cnuGroupId: string | number;
               cnuGroupPercent: number;
             };
             if (point.y < 1000) return "";
@@ -231,7 +236,11 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
   };
 
   if (!cnuGroups || cnuGroups.length === 0) {
-    return <p>Aucune donnée disponible pour les groupes CNU</p>;
+    return (
+      <div className="fr-alert fr-alert--info fr-my-3w">
+        <p>Aucune donnée disponible pour les groupes CNU</p>
+      </div>
+    );
   }
 
   return (

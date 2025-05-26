@@ -1,27 +1,21 @@
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import { GenderDistributionProps } from "../../types";
 import options from "./options";
 
-interface GenderPieChartProps {
-  maleCount: number;
-  femaleCount: number;
-}
-
-const GenderPieChart: React.FC<GenderPieChartProps> = ({
+const GenderPieChart = ({
   maleCount,
   femaleCount,
-}) => {
+}: GenderDistributionProps) => {
   const chartOptions = options({ maleCount, femaleCount });
 
   const config = {
     id: "facultyMembersGender",
     idQuery: "facultyMembersGender",
     title: {
-      fr: "Professionnal Categories Distribution",
-      en: "Distribution of gender among faculty members",
+      fr: "Répartition par genre",
     },
     description: {
       fr: "Répartition des membres du personnel par sexe",
-      en: "Distribution of faculty members by gender",
     },
     integrationURL:
       "/european-projects/components/pages/analysis/overview/charts/destination-funding",

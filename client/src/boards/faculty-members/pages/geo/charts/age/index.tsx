@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
-import { AgeDistributionByRegionProps } from "../../../../types";
+import { AgeDistributionByRegionProps } from "../../types";
 
 const rootStyles = getComputedStyle(document.documentElement);
 

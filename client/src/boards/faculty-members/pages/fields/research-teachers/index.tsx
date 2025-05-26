@@ -14,9 +14,9 @@ import YearSelector from "../../../filters";
 import useFacultyMembersResearchsTeachers from "../api/use-researchs-teachers";
 import CnuGroupsTable from "../table/cnu-group-table";
 import CnuSectionsTable from "../table/cnu-section-table";
-import { CNUSection } from "../../../types";
 import GeneralIndicatorsCard from "../../../components/general-indicators-card";
 import { AgeDistributionPieChart } from "../charts/age/age";
+import { CNUSection } from "../types";
 
 export function ResearchTeachers() {
   const { fieldId } = useParams<{ fieldId: string }>();
@@ -79,20 +79,32 @@ export function ResearchTeachers() {
 
   const normalizeCnuSections = (sections: CNUSection[]): CNUSection[] => {
     const sectionsMap = new Map<string, CNUSection>();
+
     sections.forEach((section) => {
-      const key = section.cnuSectionId;
+      const sectionId = section.cnuSectionId ?? section.cnu_section_id;
+
+      const key = String(sectionId);
+
       if (sectionsMap.has(key)) {
         const existing = sectionsMap.get(key)!;
+        const existingTotal = existing.totalCount ?? 0;
+        const existingMale = existing.maleCount ?? 0;
+        const existingFemale = existing.femaleCount ?? 0;
+        const currentTotal = section.totalCount ?? 0;
+        const currentMale = section.maleCount ?? 0;
+        const currentFemale = section.femaleCount ?? 0;
+
         sectionsMap.set(key, {
           ...section,
-          totalCount: Math.max(section.totalCount, existing.totalCount),
-          maleCount: Math.max(section.maleCount, existing.maleCount),
-          femaleCount: Math.max(section.femaleCount, existing.femaleCount),
+          totalCount: Math.max(currentTotal, existingTotal),
+          maleCount: Math.max(currentMale, existingMale),
+          femaleCount: Math.max(currentFemale, existingFemale),
         });
       } else {
         sectionsMap.set(key, section);
       }
     });
+
     return Array.from(sectionsMap.values());
   };
   const cnuSections = useMemo(() => {

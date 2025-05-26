@@ -1,31 +1,7 @@
 import { useMemo } from "react";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-
-interface StatusEvolutionChartProps {
-  evolutionData: {
-    years: string[];
-    globalTrend: {
-      totalCount: number[];
-      femmes_percent: number[];
-      hommes_percent: number[];
-      titulaires_percent: number[];
-      enseignants_chercheurs_percent: number[];
-    };
-    disciplinesTrend: {
-      [key: string]: {
-        fieldId: string;
-        fieldLabel: string;
-        totalCount: number[];
-        femmes_percent: number[];
-        titulaires_percent: number[];
-        enseignants_chercheurs_percent: number[];
-      };
-    };
-  };
-  disciplineId?: string;
-  isLoading: boolean;
-}
+import { StatusEvolutionChartProps } from "../../types";
 
 export function StatusEvolutionChart({
   evolutionData,
@@ -36,12 +12,12 @@ export function StatusEvolutionChart({
     id: "faculty-status-evolution",
     idQuery: "faculty-status-evolution",
     title: {
-      fr: "Répartition par statut des enseignants par discipline",
-      en: "Distribution of faculty members by status and discipline",
+      fr: "Évolution de la répartition par statut des enseignants",
+      en: "Evolution of faculty members distribution by status",
     },
     description: {
-      fr: "Répartition des enseignants par statut et discipline",
-      en: "Distribution of faculty members by status and discipline",
+      fr: "Évolution de la répartition des enseignants par statut au fil des années",
+      en: "Evolution of faculty members distribution by status over years",
     },
     integrationURL:
       "/european-projects/components/pages/analysis/overview/charts/destination-funding",
@@ -53,11 +29,7 @@ export function StatusEvolutionChart({
   }, [evolutionData, disciplineId]);
 
   const chartOptions = useMemo(() => {
-    if (
-      !evolutionData ||
-      !evolutionData.years ||
-      evolutionData.years.length === 0
-    ) {
+    if (!evolutionData?.years?.length) {
       return null;
     }
 
@@ -76,17 +48,18 @@ export function StatusEvolutionChart({
       ? specificFieldData.enseignants_chercheurs_percent
       : evolutionData.globalTrend.enseignants_chercheurs_percent;
 
-    const ecAbsolute = years.map(
-      (_, i) => (totalCountData[i] * ecPctData[i]) / 100
+    const ecAbsolute = years.map((_, i) =>
+      Math.round((totalCountData[i] * ecPctData[i]) / 100)
     );
 
-    const titulairesNonECAbsolute = years.map(
-      (_, i) =>
+    const titulairesNonECAbsolute = years.map((_, i) =>
+      Math.round(
         (totalCountData[i] * (titulairesPctData[i] - ecPctData[i])) / 100
+      )
     );
 
-    const nonTitulairesAbsolute = years.map(
-      (_, i) => (totalCountData[i] * (100 - titulairesPctData[i])) / 100
+    const nonTitulairesAbsolute = years.map((_, i) =>
+      Math.round((totalCountData[i] * (100 - titulairesPctData[i])) / 100)
     );
 
     const chartTitle = isDisciplineSpecific
@@ -106,7 +79,7 @@ export function StatusEvolutionChart({
         style: { fontSize: "18px", fontWeight: "bold" },
       },
       subtitle: {
-        text: `Période de ${years[0] || ""} à ${years[years.length - 1] || ""}`,
+        text: `Période de ${years[0]} à ${years[years.length - 1]}`,
         style: { fontSize: "14px" },
       },
       xAxis: {
@@ -120,13 +93,13 @@ export function StatusEvolutionChart({
         title: { text: "Nombre d'enseignants" },
         labels: {
           formatter: function () {
-            return this.value.toLocaleString();
+            return this.value?.toLocaleString() ?? "0";
           },
         },
         stackLabels: {
           enabled: true,
           formatter: function () {
-            return this.total.toLocaleString();
+            return this.total?.toLocaleString() ?? "0";
           },
           style: {
             fontWeight: "bold",
@@ -137,11 +110,10 @@ export function StatusEvolutionChart({
       },
       tooltip: {
         shared: false,
-        formatter: function (this: Highcharts.TooltipFormatterContextObject) {
-          if (this.x === undefined || this.y === undefined) return "";
+        formatter: function () {
           return `<b>${this.series.name}</b><br>
             Année ${this.x}: <b>${
-            this.y?.toLocaleString() || "0"
+            this.y?.toLocaleString() ?? "0"
           }</b> enseignants`;
         },
       },
@@ -174,7 +146,6 @@ export function StatusEvolutionChart({
           },
         },
       },
-
       series: [
         {
           name: "Non-titulaires",
@@ -212,7 +183,9 @@ export function StatusEvolutionChart({
           className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
           aria-hidden="true"
         ></span>
-        <p className="fr-mt-2w">Chargement des données d'évolution...</p>
+        <p className="fr-mt-2w">
+          Chargement des données d'évolution de statut...
+        </p>
       </div>
     );
   }
@@ -220,19 +193,17 @@ export function StatusEvolutionChart({
   if (!chartOptions) {
     return (
       <div className="fr-alert fr-alert--info fr-my-3w">
-        <p>Aucune donnée d'évolution disponible.</p>
+        <p>Aucune donnée d'évolution de statut disponible.</p>
       </div>
     );
   }
 
   return (
-    <div>
-      <ChartWrapper
-        config={config}
-        options={chartOptions}
-        legend={null}
-        renderData={undefined}
-      />
-    </div>
+    <ChartWrapper
+      config={config}
+      options={chartOptions}
+      legend={null}
+      renderData={undefined}
+    />
   );
 }

@@ -16,23 +16,7 @@ import ProfessionalCategoriesChart from "./charts/professional-categories/profes
 import AgeDistributionByRegion from "./charts/age";
 import useFacultyMembersByRegion from "./api/use-by-regions";
 import SubjectDistributionChart from "./charts/fields";
-import { RegionApiData } from "../../types";
-
-interface AgeClass {
-  age_range: string;
-  femaleCount: number;
-  maleCount: number;
-  totalCount: number;
-}
-
-interface AgeDistributionItem {
-  geo_id: string;
-  geo_nom: string;
-  totalHeadcount: number;
-  totalHeadcountWoman: number;
-  totalHeadcountMan: number;
-  age_distribution: AgeClass[];
-}
+import { RegionApiData, RegionWithAgeData } from "./types";
 
 export default function SpecificGeoOverview() {
   const [selectedYear, setSelectedYear] = useState("");
@@ -44,10 +28,11 @@ export default function SpecificGeoOverview() {
     isError: isRegionDataError,
     error: regionDataError,
   } = useFacultyMembersByRegion(geo_id, selectedYear);
+
   const [availableYears, setAvailableYears] = useState<string[]>([]);
-  const [regionData, setRegionData] = useState<RegionApiData>([null]);
+  const [regionData, setRegionData] = useState<RegionApiData | null>(null);
   const [ageDistributionData, setAgeDistributionData] = useState<
-    AgeDistributionItem[]
+    RegionWithAgeData[]
   >([]);
 
   useEffect(() => {
@@ -73,7 +58,8 @@ export default function SpecificGeoOverview() {
       if (regionApiData.data) {
         if (Array.isArray(regionApiData.data)) {
           if (regionApiData.data.length > 0) {
-            const regionInfo = regionApiData.data[0] as RegionApiData;
+            const regionInfo = regionApiData
+              .data[0] as unknown as RegionApiData;
             setRegionData({
               geo_id: regionInfo.geo_id,
               geo_nom: regionInfo.geo_nom,
@@ -125,6 +111,7 @@ export default function SpecificGeoOverview() {
                     specificRegion.demographie?.hommes?.nombre || 0,
                   totalHeadcountWoman:
                     specificRegion.demographie?.femmes?.nombre || 0,
+                  demographie: specificRegion.demographie,
                   subjects: specificRegion.disciplines || [],
                   professional_categories:
                     specificRegion.categories_professionnelles || [],
