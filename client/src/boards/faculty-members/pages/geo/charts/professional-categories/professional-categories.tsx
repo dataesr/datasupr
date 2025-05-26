@@ -14,9 +14,24 @@ const ProfessionalCategoriesChart: React.FC<
 > = ({ categories }) => {
   const chartOptions = options({ categories });
 
+  const config = {
+    id: "professionalCategory",
+    idQuery: "professionalCategory",
+    title: {
+      en: "Répartition des membres du personnel par catégorie professionnelle",
+      fr: "Professionnal Categories Distribution",
+    },
+    description: {
+      fr: "Répartition des membres du personnel par catégorie professionnelle",
+      en: "Distribution of staff members by professional category",
+    },
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  };
+
   return chartOptions ? (
     <ChartWrapper
-      id="professionalCategory"
+      config={config}
       options={chartOptions}
       legend={null}
       renderData={() => null}
