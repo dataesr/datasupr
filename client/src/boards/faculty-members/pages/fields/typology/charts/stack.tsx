@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 
 interface DisciplineStatusStackProps {
   statusData: Array<{
@@ -24,6 +24,20 @@ export function DisciplineStatusStack({
   isLoading,
   year,
 }: DisciplineStatusStackProps) {
+  const config = {
+    id: "discipline-status-stack",
+    idQuery: "discipline-status-stack",
+    title: {
+      fr: "Répartition par statut au sein des disciplines",
+      en: "Distribution of faculty members by status within disciplines",
+    },
+    description: {
+      fr: "Evolution des effectifs enseignants par statut et discipline",
+      en: "Evolution of faculty members by status and discipline",
+    },
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  };
   const chartOptions = useMemo(() => {
     if (!statusData || !statusData[0] || !statusData[0].disciplines) {
       return null;
@@ -169,9 +183,10 @@ export function DisciplineStatusStack({
 
   return (
     <ChartWrapper
-      id="discipline-status-stack"
+      config={config}
       options={chartOptions}
       legend={null}
+      renderData={undefined}
     />
   );
 }

@@ -276,8 +276,8 @@ ul {
   --evaluated-project-color: #009099; // projets évalués
   --successful-project-color: #233e41; // projets lauréats
   --successRate-color: #1f8d49; // taux de succès
-  --averageSuccessRate-color: #D75521; // taux de succès moyen
-  --cumulativeSuccessRate-color: #D75521; // taux de succès moyen
+  --averageSuccessRate-color: #d75521; // taux de succès moyen
+  --cumulativeSuccessRate-color: #d75521; // taux de succès moyen
   --selected-country-color: #6dd897; // pays sélectionné
   --associated-countries-color: #09622a; // pays associés
 
@@ -285,6 +285,14 @@ ul {
   --pillar-p2-color: var(--scale-2-color); // pilier 2
   --pillar-p3-color: var(--scale-3-color); // pilier 3
   --pillar-p4-color: var(--scale-4-color); // pilier 4
+
+  --teaching-staffs-pillar-1-color: var(--scale-5-color);
+  --teaching-staffs-pillar-2-color: var(--scale-6-color);
+  --teaching-staffs-pillar-3-color: var(--scale-7-color);
+  --teaching-staffs-pillar-4-color: var(--scale-8-color);
+  --teaching-staffs-pillar-5-color: var(--scale-9-color);
+  --teaching-staffs-pillar-6-color: var(--scale-10-color);
+  --teaching-staffs-pillar-7-color: var(--scale-11-color);
 
   // Programs colors
   --program-horizon_1_1-color: var(--scale-1-color);

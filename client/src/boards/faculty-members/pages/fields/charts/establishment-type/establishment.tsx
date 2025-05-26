@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 
 interface EstablishmentData {
   establishmentTypes: Array<{
@@ -20,6 +20,21 @@ export function EstablishmentTypeChart({
   isLoading,
   year,
 }: EstablishmentTypeChartProps) {
+  const config = {
+    id: "establishment-type-chart",
+    idQuery: "establishment-type-chart",
+    title: {
+      fr: "Répartition du personnel enseignant par type d'établissement",
+      en: "Distribution of faculty members by type of establishment",
+    },
+    description: {
+      fr: "Répartition des enseignants par type d'établissement",
+      en: "Distribution of faculty members by type of establishment",
+    },
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  };
+
   const chartOptions = useMemo(() => {
     if (!establishmentData || !establishmentData.establishmentTypes) {
       return null;
@@ -113,9 +128,10 @@ export function EstablishmentTypeChart({
 
   return (
     <ChartWrapper
-      id="establishment-type-chart"
+      config={config}
       options={chartOptions}
       legend={null}
+      renderData={undefined}
     />
   );
 }

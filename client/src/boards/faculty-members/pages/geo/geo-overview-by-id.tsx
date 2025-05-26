@@ -18,6 +18,22 @@ import useFacultyMembersByRegion from "./api/use-by-regions";
 import SubjectDistributionChart from "./charts/fields";
 import { RegionApiData } from "../../types";
 
+interface AgeClass {
+  age_range: string;
+  femaleCount: number;
+  maleCount: number;
+  totalCount: number;
+}
+
+interface AgeDistributionItem {
+  geo_id: string;
+  geo_nom: string;
+  totalHeadcount: number;
+  totalHeadcountWoman: number;
+  totalHeadcountMan: number;
+  age_distribution: AgeClass[];
+}
+
 export default function SpecificGeoOverview() {
   const [selectedYear, setSelectedYear] = useState("");
   const { geo_id } = useParams();
@@ -29,8 +45,10 @@ export default function SpecificGeoOverview() {
     error: regionDataError,
   } = useFacultyMembersByRegion(geo_id, selectedYear);
   const [availableYears, setAvailableYears] = useState<string[]>([]);
-  const [regionData, setRegionData] = useState<null>(null);
-  const [ageDistributionData, setAgeDistributionData] = useState<[]>([]);
+  const [regionData, setRegionData] = useState<RegionApiData>([null]);
+  const [ageDistributionData, setAgeDistributionData] = useState<
+    AgeDistributionItem[]
+  >([]);
 
   useEffect(() => {
     if (regionApiData) {

@@ -1,5 +1,5 @@
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
-import ChartWrapper from "../../../../components/chart-wrapper";
 
 interface TreemapData {
   id: string;
@@ -23,6 +23,20 @@ export function TreemapChart({
   year,
   isLoading = false,
 }: TreemapChartProps) {
+  const config = {
+    id: "disciplines-treemap",
+    idQuery: "disciplines-treemap",
+    title: {
+      fr: "Répartition par statut au sein des disciplines",
+      en: "Distribution of faculty members by status within disciplines",
+    },
+    description: {
+      fr: "Evolution des effectifs enseignants par statut et discipline",
+      en: "Evolution of faculty members by status and discipline",
+    },
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  };
   if (isLoading) {
     return (
       <div className="fr-text--center fr-py-3w">Chargement des données...</div>
@@ -113,11 +127,12 @@ export function TreemapChart({
   return (
     <>
       <ChartWrapper
-        id="disciplines-treemap"
+        config={config}
         options={treemapOptions}
         legend={null}
+        renderData={undefined}
       />
-      <div className="fr-text--xs fr-mt-2w" style={{ display: "block"}}>
+      <div className="fr-text--xs fr-mt-2w" style={{ display: "block" }}>
         <span className="fr-mr-2w">
           <span
             style={{

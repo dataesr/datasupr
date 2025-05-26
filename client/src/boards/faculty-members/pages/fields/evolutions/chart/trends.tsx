@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import ChartWrapper from "../../../../components/chart-wrapper";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 
 interface EvolutionChartProps {
   evolutionData: {
@@ -32,6 +32,21 @@ export function EvolutionGlobalChart({
   disciplineId,
   isLoading,
 }: EvolutionChartProps) {
+  const config = {
+    id: "faculty-count-evolution",
+    idQuery: "faculty-count-evolution",
+    title: {
+      fr: "Evolution des effectifs enseignants",
+      en: "Evolution of faculty members count",
+    },
+    description: {
+      fr: "Evolution des effectifs enseignants par statut et discipline",
+      en: "Evolution of faculty members count by status and discipline",
+    },
+    integrationURL:
+      "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  };
+
   const specificFieldData = useMemo(() => {
     if (!disciplineId || !evolutionData?.disciplinesTrend) return null;
     return evolutionData.disciplinesTrend[disciplineId] || null;
@@ -208,9 +223,10 @@ export function EvolutionGlobalChart({
   return (
     <div>
       <ChartWrapper
-        id="faculty-count-evolution"
+        config={config}
         options={chartOptions}
         legend={null}
+        renderData={undefined}
       />
     </div>
   );
