@@ -1,4 +1,4 @@
-import ChartWrapper from "../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import options from "./options";
 
 interface ProfessionalCategoriesChartProps {
@@ -19,6 +19,7 @@ const ProfessionalCategoriesChart: React.FC<
       id="professionalCategory"
       options={chartOptions}
       legend={null}
+      renderData={() => null}
     />
   ) : null;
 };

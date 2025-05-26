@@ -15,8 +15,7 @@ export default function Options({
   if (!categories || categories.length === 0) {
     return null;
   }
-
-  const colors = ["#142018", "#2f4077", "#6e445a"];
+  const rootStyles = getComputedStyle(document.documentElement);
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
@@ -31,11 +30,6 @@ export default function Options({
       title: {
         text: null,
       },
-      labels: {
-        style: {
-          color: "#2f4077",
-        },
-      },
     },
     yAxis: {
       title: {
@@ -46,9 +40,6 @@ export default function Options({
       valueSuffix: " personnes",
       backgroundColor: "#f4f6fe",
       borderColor: "#bfccfb",
-      style: {
-        color: "#2f4077",
-      },
     },
     plotOptions: {
       column: {
@@ -59,7 +50,6 @@ export default function Options({
             textOutline: "none",
           },
         },
-        colors: colors,
         colorByPoint: true,
         borderRadius: 3,
       },
@@ -76,7 +66,9 @@ export default function Options({
         type: "column",
         data: categories.map((cat) => ({
           y: cat.headcount,
-          color: colors[categories.indexOf(cat) % colors.length],
+          color: rootStyles.getPropertyValue(
+            "--teaching-staffs-pillar-1-color"
+          ),
         })),
       },
     ],
