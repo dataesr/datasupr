@@ -2,14 +2,13 @@ import ChartWrapper from "../../../../../components/chart-wrapper";
 import options from "./options";
 
 interface StackStatusPerDisciplineBarProps {
-    statusData: [];
-    selectedYear: string;
+  statusData: [];
+  selectedYear: string;
 }
 
-const StackStatusPerDisciplineBar: React.FC<StackStatusPerDisciplineBarProps> = ({
-    statusData,
-    selectedYear,
-}) => {
+const StackStatusPerDisciplineBar: React.FC<
+  StackStatusPerDisciplineBarProps
+> = ({ statusData, selectedYear }) => {
   const chartOptions = options({ statusData, selectedYear });
 
   return chartOptions ? (
