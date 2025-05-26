@@ -16,6 +16,8 @@ import ProfessionalCategoriesChart from "./charts/professional-categories/profes
 import useFacultyMembersGeoData from "../../use-faculty-members-general";
 import YearSelector from "../../filters";
 import { formatDataForIndicatorsCard } from "./utils";
+import AgeDistributionByRegion from "./charts/age";
+import useFacultyMembersByRegion from "./api/use-by-regions";
 
 export default function GeoOverview() {
   const [selectedYear, setSelectedYear] = useState("");
@@ -26,6 +28,10 @@ export default function GeoOverview() {
     isError: isGeoDataError,
     error: geoDataError,
   } = useFacultyMembersGeoData();
+
+  const { data: regionData, isLoading: isRegionDataLoading } =
+    useFacultyMembersByRegion(undefined, selectedYear);
+
   const [availableYears, setAvailableYears] = useState<string[]>([]);
   const [availableGeos, setAvailableGeos] = useState<
     {
@@ -36,6 +42,18 @@ export default function GeoOverview() {
       maleCount: number;
       malePercent: number;
       totalCount: number;
+    }[]
+  >([]);
+  const [regionsWithAgeData, setRegionsWithAgeData] = useState<
+    {
+      geo_id: string;
+      geo_nom: string;
+      age_distribution: {
+        age_class: string;
+        headcount: number;
+        femaleCount: number;
+        maleCount: number;
+      }[];
     }[]
   >([]);
 
@@ -80,7 +98,6 @@ export default function GeoOverview() {
 
         setAvailableGeos(enrichedGeos);
       }
-
       if (years.length > 0 && !selectedYear) {
         setSelectedYear(years[years.length - 1]);
       }
@@ -89,7 +106,32 @@ export default function GeoOverview() {
     }
   }, [geoData, selectedYear]);
 
-  if (isGeoDataLoading) {
+  useEffect(() => {
+    if (regionData && selectedYear) {
+      const regionsData = Array.isArray(regionData.data) ? regionData.data : [];
+
+      const transformedRegionsData = regionsData
+        .filter(
+          (region) =>
+            region.age_distribution && region.age_distribution.length > 0
+        )
+        .map((region) => ({
+          geo_id: region.geo_id,
+          geo_nom: region.geo_nom,
+          totalHeadcount: region.demographie?.total || 0,
+          totalHeadcountWoman: region.demographie?.femmes?.nombre || 0,
+          totalHeadcountMan: region.demographie?.hommes?.nombre || 0,
+          age_distribution: region.age_distribution || [],
+        }))
+        .filter((region) => region.totalHeadcount > 0);
+
+      setRegionsWithAgeData(transformedRegionsData);
+    } else {
+      setRegionsWithAgeData([]);
+    }
+  }, [regionData, selectedYear]);
+
+  if (isGeoDataLoading || isRegionDataLoading) {
     return <div>Chargement des données...</div>;
   }
 
@@ -176,22 +218,65 @@ export default function GeoOverview() {
           </Text>
         </Col>
       </Row>
+      {regionsWithAgeData.length > 0 && (
+        <Row className="fr-mt-4w">
+          <Col>
+            <AgeDistributionByRegion
+              regionsData={regionsWithAgeData}
+              year={selectedYear}
+            />
+          </Col>
+        </Row>
+      )}
       <Row>
         <Col>
           <Title as="h4" look="h6">
             Sélectionner une région ou une académie:
           </Title>
-          <ul>
+          <div
+            className="fr-container"
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+              gap: "1rem",
+            }}
+          >
             {availableGeos.map((geo) => (
-              <li key={geo.geo_id}>
-                <Link
-                  href={`/personnel-enseignant/geo/vue-d'ensemble/${geo.geo_id}`}
+              <Link
+                key={geo.geo_id}
+                href={`/personnel-enseignant/geo/vue-d'ensemble/${geo.geo_id}`}
+                title={`Voir les détails de ${geo.geo_id}`}
+                style={{
+                  borderRadius: "12px",
+                  padding: "1rem",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "start",
+                  textDecoration: "none",
+                  transition: "all 0.2s ease",
+                  boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = "scale(1.03)";
+                  e.currentTarget.style.boxShadow =
+                    "0 4px 12px rgba(0,0,0,0.1)";
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = "scale(1)";
+                  e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)";
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "0.9rem",
+                    fontWeight: "600",
+                  }}
                 >
-                  {geo.geo_nom} ({geo.geo_id})
-                </Link>
-              </li>
+                  {geo.geo_nom}
+                </div>
+              </Link>
             ))}
-          </ul>
+          </div>
         </Col>
       </Row>
     </Container>

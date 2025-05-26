@@ -288,3 +288,126 @@ export interface GeoStats {
   malePercent: number;
   totalCount: number;
 }
+
+export interface AgeDistribution {
+  age_class: string;
+  headcount: number;
+  femaleCount: number;
+  maleCount: number;
+  femalePercent: number;
+  malePercent: number;
+}
+
+interface RegionData {
+  geo_id: string;
+  geo_nom: string;
+  totalHeadcount?: number;
+  totalHeadcountWoman?: number;
+  totalHeadcountMan?: number;
+  age_distribution?: {
+    age_class: string;
+    headcount: number;
+    femaleCount: number;
+    maleCount: number;
+  }[];
+}
+
+export interface AgeDistributionByRegionProps {
+  regionsData: RegionData[];
+  year: string;
+}
+
+export interface Subject {
+  id: string;
+  label_fr: string;
+  headcount: number;
+  femaleCount?: number;
+  maleCount?: number;
+  femalePercent?: number;
+  malePercent?: number;
+}
+
+export interface SubjectDistributionChartProps {
+  subjects: Subject[];
+  region: string;
+  year?: string;
+}
+
+export interface Subject {
+  id: string;
+  label_fr: string;
+  headcount: number;
+  femaleCount?: number;
+  maleCount?: number;
+  femalePercent?: number;
+  malePercent?: number;
+}
+
+export interface ProfessionalCategory {
+  id: string;
+  label_fr: string;
+  headcount: number;
+  femaleCount?: number;
+  maleCount?: number;
+  femalePercent?: number;
+  malePercent?: number;
+  age_distribution?: AgeClass[];
+}
+
+export interface AgeClass {
+  age_class: string;
+  headcount: number;
+  femaleCount?: number;
+  maleCount?: number;
+  femalePercent?: number;
+  malePercent?: number;
+}
+
+// export interface RegionData {
+//   geo_id: string;
+//   geo_nom: string;
+//   annee_universitaire: string;
+//   totalHeadcountMan: number;
+//   totalHeadcountWoman: number;
+//   subjects: Subject[];
+//   professional_categories: ProfessionalCategory[];
+//   age_distribution: AgeClass[];
+// }
+
+export interface AgeDistributionRegionData {
+  geo_id: string;
+  geo_nom: string;
+  totalHeadcount: number;
+  totalHeadcountWoman: number;
+  totalHeadcountMan: number;
+  age_distribution: AgeClass[];
+  annee_universitaire: string;
+  subjects?: Subject[];
+  professional_categories: [];
+}
+
+export interface Demographie {
+  total: number;
+  femmes: {
+    nombre: number;
+    pourcentage: number;
+  };
+  hommes: {
+    nombre: number;
+    pourcentage: number;
+  };
+  non_specifie?: {
+    nombre: number;
+    pourcentage: number;
+  };
+}
+
+export interface RegionApiData {
+  geo_id: string;
+  geo_nom: string;
+  annee_universitaire: number;
+  demographie: Demographie;
+  disciplines: Subject[];
+  categories_professionnelles: ProfessionalCategory[];
+  age_distribution: AgeClass[];
+}
