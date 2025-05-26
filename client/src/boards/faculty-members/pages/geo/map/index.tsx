@@ -61,7 +61,7 @@ export default function FacultyFranceMap({
     setMapOptions({
       chart: {
         map: mapDataIE,
-        backgroundColor: "#fff",
+        backgroundColor: "transparent",
         height: "650px",
         spacing: [0, 50, 100, 355],
         borderWidth: 0,

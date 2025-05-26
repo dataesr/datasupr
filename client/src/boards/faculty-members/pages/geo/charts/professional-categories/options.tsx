@@ -16,20 +16,12 @@ export default function Options({
     return null;
   }
 
-  const colors = [
-    "#3558a2",
-    "#2f4077",
-    "#6e445a",
-    "#8d533e",
-    "#a94645",
-    "#efcb3a",
-    "#006a6f",
-  ];
+  const colors = ["#142018", "#2f4077", "#6e445a"];
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
       type: "column",
-      backgroundColor: "#f9f6f2",
+      backgroundColor: "transparent",
     },
     title: {
       text: "",

@@ -48,17 +48,7 @@ export default function Options({
   });
   const newOptions: HighchartsInstance.Options = {
     chart: {
-      backgroundColor: "#f9f6f2",
-    },
-    colorAxis: {
-      minColor: "#f4f6fe",
-      maxColor: "#2f4077",
-      labels: {
-        style: {
-          color: "#2f4077",
-          fontFamily: "'Marianne', sans-serif",
-        },
-      },
+      backgroundColor: "transparent",
     },
     series: [
       {

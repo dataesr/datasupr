@@ -281,7 +281,6 @@ export default function AgeDistributionByRegion({
                 border: "1px solid rgb(229, 229, 229)",
                 borderRadius: "16px",
                 boxShadow: "0 6px 12px rgba(0, 0, 0, 0.1)",
-                backgroundColor: "#ffffff",
                 transition: "transform 0.2s, box-shadow 0.2s",
               }}
               onMouseOver={(e) => {
