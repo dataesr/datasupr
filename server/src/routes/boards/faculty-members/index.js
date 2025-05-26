@@ -9,6 +9,8 @@ import facultyMembersFieldsRouter from "./data/fields/overview.js";
 import facultyMembersGeoRouter from "./data/geo/overview.js";
 import facultyMembersUniversityRouter from "./data/university/overview.js";
 
+import facultyMembersGeoByRegionRouter from "./data/geo/by-regions.js";
+
 const router = new express.Router();
 
 router.use(facultyMembersFieldsByAgeRouter);
@@ -20,5 +22,7 @@ router.use(facultyMembersFieldsResearchsTeachersRouter);
 router.use(facultyMembersFieldsRouter);
 router.use(facultyMembersGeoRouter);
 router.use(facultyMembersUniversityRouter);
+
+router.use(facultyMembersGeoByRegionRouter);
 
 export default router;

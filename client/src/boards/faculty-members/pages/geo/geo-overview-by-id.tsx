@@ -5,90 +5,150 @@ import {
   Title,
   Breadcrumb,
   Link,
-  Notice,
+  Text,
 } from "@dataesr/dsfr-plus";
 import { useState, useEffect } from "react";
 import YearSelector from "../../filters";
 import GenderPieChart from "./charts/gender/gender";
 import CNUPieChart from "./charts/cnu/cnu";
 import { useParams } from "react-router-dom";
-import useFacultyMembersByGeo from "./api/use-by-geo";
-import useFacultyMembersGeoData from "../../use-faculty-members-general";
 import ProfessionalCategoriesChart from "./charts/professional-categories/professional-categories";
+import AgeDistributionByRegion from "./charts/age";
+import useFacultyMembersByRegion from "./api/use-by-regions";
+import SubjectDistributionChart from "./charts/fields";
+import { RegionApiData } from "../../types";
 
 export default function SpecificGeoOverview() {
   const [selectedYear, setSelectedYear] = useState("");
-  const { geo_id } = useParams(); // Utiliser "geoId" au lieu de "ID"
-  const {
-    data: geoDataGlobal,
-    isLoading: isGeoDataLoadingGlobal,
-    isError: isGeoDataErrorGlobal,
-    error: geoDataErrorGlobal,
-  } = useFacultyMembersGeoData();
+  const { geo_id } = useParams();
 
   const {
-    data: geoDataSpecific,
-    isLoading: isGeoDataLoadingSpecific,
-    isError: isGeoDataErrorSpecific,
-    error: geoDataErrorSpecific,
-  } = useFacultyMembersByGeo(geo_id || "");
-
+    data: regionApiData,
+    isLoading: isRegionDataLoading,
+    isError: isRegionDataError,
+    error: regionDataError,
+  } = useFacultyMembersByRegion(geo_id, selectedYear);
   const [availableYears, setAvailableYears] = useState<string[]>([]);
-  interface GeoDataItem {
-    geo_id: string;
-    annee_universitaire: string | number;
-    totalHeadcountMan: number;
-    totalHeadcountWoman: number;
-    subjects: [];
-    professional_categories: {
-      id: string;
-      label_fr: string;
-      headcount: number;
-    }[];
-  }
-
-  const [specificGeoData, setSpecificGeoData] = useState<GeoDataItem[] | null>(
-    null
-  );
+  const [regionData, setRegionData] = useState<null>(null);
+  const [ageDistributionData, setAgeDistributionData] = useState<[]>([]);
 
   useEffect(() => {
-    if (geoDataGlobal) {
-      const years: string[] = geoDataGlobal.years
-        ? geoDataGlobal.years.map(String)
-        : [];
+    if (regionApiData) {
+      if (!selectedYear && regionApiData.data) {
+        if (!Array.isArray(regionApiData.data)) {
+          const yearsFromData = Object.keys(regionApiData.data);
+          setAvailableYears(yearsFromData);
 
-      setAvailableYears([...new Set(years)]);
+          if (yearsFromData.length > 0) {
+            setSelectedYear(yearsFromData[yearsFromData.length - 1]);
+          }
+        } else if (regionApiData.years && regionApiData.years.length > 0) {
+          const years = regionApiData.years.map(String);
+          setAvailableYears(years);
 
-      if (years.length > 0 && !selectedYear) {
-        setSelectedYear(years[years.length - 1]);
+          if (years.length > 0) {
+            setSelectedYear(years[years.length - 1]);
+          }
+        }
       }
 
-      if (geoDataSpecific && geoDataSpecific.length > 0) {
-        setSpecificGeoData(geoDataSpecific);
+      if (regionApiData.data) {
+        if (Array.isArray(regionApiData.data)) {
+          if (regionApiData.data.length > 0) {
+            const regionInfo = regionApiData.data[0] as RegionApiData;
+            setRegionData({
+              geo_id: regionInfo.geo_id,
+              geo_nom: regionInfo.geo_nom,
+              annee_universitaire: selectedYear,
+              totalHeadcountMan: regionInfo.demographie?.hommes?.nombre || 0,
+              totalHeadcountWoman: regionInfo.demographie?.femmes?.nombre || 0,
+              subjects: regionInfo.disciplines || [],
+              professional_categories:
+                regionInfo.categories_professionnelles || [],
+              age_distribution: regionInfo.age_distribution || [],
+            });
+
+            if (
+              regionInfo.age_distribution &&
+              regionInfo.age_distribution.length > 0
+            ) {
+              setAgeDistributionData([
+                {
+                  geo_id: regionInfo.geo_id,
+                  geo_nom: regionInfo.geo_nom,
+                  totalHeadcount: regionInfo.demographie?.total || 0,
+                  totalHeadcountWoman:
+                    regionInfo.demographie?.femmes?.nombre || 0,
+                  totalHeadcountMan:
+                    regionInfo.demographie?.hommes?.nombre || 0,
+                  age_distribution: regionInfo.age_distribution,
+                },
+              ]);
+            }
+          }
+        } else {
+          const yearsFromData = Object.keys(regionApiData.data);
+          if (yearsFromData.length > 0) {
+            const latestYear = yearsFromData[yearsFromData.length - 1];
+            const regionsInYear = regionApiData.data[
+              latestYear
+            ] as RegionApiData[];
+
+            if (regionsInYear && regionsInYear.length > 0) {
+              const specificRegion = regionsInYear.find(
+                (r) => r.geo_id === geo_id
+              );
+              if (specificRegion) {
+                setRegionData({
+                  geo_id: specificRegion.geo_id,
+                  geo_nom: specificRegion.geo_nom,
+                  annee_universitaire: latestYear,
+                  totalHeadcountMan:
+                    specificRegion.demographie?.hommes?.nombre || 0,
+                  totalHeadcountWoman:
+                    specificRegion.demographie?.femmes?.nombre || 0,
+                  subjects: specificRegion.disciplines || [],
+                  professional_categories:
+                    specificRegion.categories_professionnelles || [],
+                  age_distribution: specificRegion.age_distribution || [],
+                });
+
+                if (
+                  specificRegion.age_distribution &&
+                  specificRegion.age_distribution.length > 0
+                ) {
+                  setAgeDistributionData([
+                    {
+                      geo_id: specificRegion.geo_id,
+                      geo_nom: specificRegion.geo_nom,
+                      totalHeadcount: specificRegion.demographie?.total || 0,
+                      totalHeadcountWoman:
+                        specificRegion.demographie?.femmes?.nombre || 0,
+                      totalHeadcountMan:
+                        specificRegion.demographie?.hommes?.nombre || 0,
+                      age_distribution: specificRegion.age_distribution,
+                    },
+                  ]);
+                }
+              }
+            }
+          }
+        }
       }
     }
-  }, [geoDataGlobal, selectedYear, geoDataSpecific]);
+  }, [regionApiData, selectedYear, geo_id]);
 
-  if (isGeoDataLoadingGlobal || isGeoDataLoadingSpecific) {
+  if (isRegionDataLoading) {
     return <div>Chargement des données...</div>;
   }
 
-  if (isGeoDataErrorGlobal || isGeoDataErrorSpecific) {
-    return (
-      <div>
-        Erreur: {geoDataErrorGlobal?.message || geoDataErrorSpecific?.message}
-      </div>
-    );
+  if (isRegionDataError) {
+    return <div>Erreur: {regionDataError?.message}</div>;
   }
 
-  const displayedYearData = specificGeoData?.find(
-    (item) => String(item.annee_universitaire) === selectedYear
-  );
-
-  const maleCount = displayedYearData ? displayedYearData.totalHeadcountMan : 0;
-  const femaleCount = displayedYearData
-    ? displayedYearData.totalHeadcountWoman
-    : 0;
+  const regionName = regionData?.geo_nom || "Région";
+  const maleCount = regionData ? regionData.totalHeadcountMan : 0;
+  const femaleCount = regionData ? regionData.totalHeadcountWoman : 0;
 
   return (
     <Container as="main">
@@ -98,15 +158,11 @@ export default function SpecificGeoOverview() {
             <Link href="/personnel-enseignant">Personnel enseignant</Link>
             <Link href="/personnel-enseignant/geo/vue-d'ensemble/">France</Link>
             <Link>
-              <strong>
-                {geoDataGlobal?.geos?.find((geo) => geo.geo_id === geo_id)
-                  ?.geo_nom || "Vue par région"}
-              </strong>
+              <strong>{regionName}</strong>
             </Link>
           </Breadcrumb>
           <Title as="h3" look="h5" className="fr-mt-5w">
-            {geoDataGlobal?.geos?.find((geo) => geo.geo_id === geo_id)
-              ?.geo_nom || geoDataGlobal?.geo_niveau_geo}
+            {regionName}
           </Title>
         </Col>
         <Col md={3} style={{ textAlign: "right" }}>
@@ -119,17 +175,11 @@ export default function SpecificGeoOverview() {
       </Row>
       <Row>
         <Col md={8} style={{ textAlign: "center" }}>
-          <Notice closeMode={"disallow"} type={"info"}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis,
-            aut, omnis animi eos est dolores sint, minus culpa libero neque
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-          </Notice>
+          <SubjectDistributionChart
+            subjects={regionData?.subjects || []}
+            region={regionName}
+            year={selectedYear}
+          />
         </Col>
         <Col md={4} style={{ textAlign: "center" }}>
           <GenderPieChart maleCount={maleCount} femaleCount={femaleCount} />
@@ -138,40 +188,54 @@ export default function SpecificGeoOverview() {
       <Row>
         <Col md={8} style={{ textAlign: "center" }}>
           <ProfessionalCategoriesChart
-            categories={displayedYearData?.professional_categories ?? []}
+            categories={regionData?.professional_categories ?? []}
           />
         </Col>
         <Col md={4} style={{ textAlign: "center" }}>
-          <Notice closeMode={"disallow"} type={"info"}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis,
-            aut, omnis animi eos est dolores sint, minus culpa libero neque
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-          </Notice>
+          <Text>
+            Visualisation des catégories professionnelles des enseignants de la
+            région {regionName}. Les données présentées montrent la répartition
+            entre professeurs, maîtres de conférences et autres catégories
+            d'enseignants.
+          </Text>
         </Col>
       </Row>
       <Row gutters className="fr-mt-3w">
         <Col md={8}>
-          {displayedYearData && (
-            <CNUPieChart subjects={displayedYearData.subjects} />
-          )}
+          {regionData &&
+            regionData.subjects &&
+            regionData.subjects.length > 0 && (
+              <CNUPieChart subjects={regionData.subjects} />
+            )}
         </Col>
         <Col md={4} style={{ textAlign: "center" }}>
-          <Notice closeMode={"disallow"} type={"info"}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Corporis,
-            aut, omnis animi eos est dolores sint, minus culpa libero neque
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-            placeat vitae quas deserunt optio minima. Architecto aut earum modi?
-          </Notice>
+          <Text>
+            Répartition par discipline CNU des enseignants de la région{" "}
+            {regionName}. Ces données permettent de visualiser les domaines
+            d'expertise présents dans les établissements de la région.
+          </Text>
         </Col>
       </Row>
+      {ageDistributionData.length > 0 && (
+        <Row gutters className="fr-mt-3w">
+          <Col>
+            <AgeDistributionByRegion
+              regionsData={ageDistributionData.map((region) => ({
+                ...region,
+                annee_universitaire: selectedYear,
+                subjects: [],
+                professional_categories: [],
+                age_distribution: region.age_distribution.map((ageClass) => ({
+                  ...ageClass,
+                  femaleCount: ageClass.femaleCount ?? 0,
+                  maleCount: ageClass.maleCount ?? 0,
+                })),
+              }))}
+              year={selectedYear}
+            />
+          </Col>
+        </Row>
+      )}
     </Container>
   );
 }
