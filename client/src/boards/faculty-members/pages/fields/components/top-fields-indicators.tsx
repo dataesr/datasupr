@@ -1,20 +1,7 @@
-import React from "react";
 import { Col, Badge } from "@dataesr/dsfr-plus";
+import { TopFieldsIndicatorsProps } from "../types";
 
-type DisciplineData = {
-  fieldId: string;
-  fieldLabel: string;
-  maleCount: number;
-  femaleCount: number;
-  unknownCount: number;
-  totalCount: number;
-};
-
-interface TopFieldsIndicators {
-  disciplinesData: DisciplineData[];
-}
-
-const TopFieldsIndicators: React.FC<TopFieldsIndicators> = ({
+const TopFieldsIndicators: React.FC<TopFieldsIndicatorsProps> = ({
   disciplinesData,
 }) => {
   if (!disciplinesData || disciplinesData.length === 0) {
@@ -27,7 +14,9 @@ const TopFieldsIndicators: React.FC<TopFieldsIndicators> = ({
         <div className="fr-card fr-card--no-border">
           {disciplinesData.slice(0, 3).map((d, i) => {
             const relativeWidth = Math.round(
-              (d.totalCount / disciplinesData[0].totalCount) * 100
+              d.totalCount && disciplinesData[0].totalCount
+                ? (d.totalCount / disciplinesData[0].totalCount) * 100
+                : 0
             );
             const colors = ["#e9be00", "#c0c0c0", "#cd7f32"];
             return (
@@ -44,9 +33,12 @@ const TopFieldsIndicators: React.FC<TopFieldsIndicators> = ({
                       {d.fieldLabel}
                     </div>
                     <div className="fr-text--xs fr-mb-1w">
-                      {d.totalCount.toLocaleString()} enseignants
-                      <br /> {Math.round((d.femaleCount / d.totalCount) * 100)}%
-                      de femmes
+                      {d.totalCount?.toLocaleString() || 0} enseignants
+                      <br />{" "}
+                      {Math.round(
+                        ((d.femaleCount || 0) / (d.totalCount || 1)) * 100
+                      )}
+                      % de femmes
                     </div>
                     <div
                       style={{
@@ -82,9 +74,9 @@ const TopFieldsIndicators: React.FC<TopFieldsIndicators> = ({
                       }}
                     >
                       {Math.round(
-                        (d.totalCount /
+                        ((d.totalCount || 0) /
                           disciplinesData.reduce(
-                            (sum, f) => sum + f.totalCount,
+                            (sum, f) => sum + (f.totalCount || 0),
                             0
                           )) *
                           100

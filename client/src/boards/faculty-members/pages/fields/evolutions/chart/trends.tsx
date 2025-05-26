@@ -1,47 +1,23 @@
 import { useMemo } from "react";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-
-interface EvolutionChartProps {
-  evolutionData: {
-    years: string[];
-    globalTrend: {
-      totalCount: number[];
-      femmes_percent: number[];
-      hommes_percent: number[];
-      titulaires_percent: number[];
-      enseignants_chercheurs_percent: number[];
-    };
-    disciplinesTrend: {
-      [key: string]: {
-        fieldId: string;
-        fieldLabel: string;
-        totalCount: number[];
-        femmes_percent: number[];
-        titulaires_percent: number[];
-        enseignants_chercheurs_percent: number[];
-      };
-    };
-  };
-  disciplineId?: string;
-  isLoading: boolean;
-}
+import { StatusEvolutionChartProps } from "../../types";
 
 export function EvolutionGlobalChart({
   evolutionData,
   disciplineId,
   isLoading,
-}: EvolutionChartProps) {
+}: StatusEvolutionChartProps) {
   const config = {
     id: "faculty-count-evolution",
     idQuery: "faculty-count-evolution",
     title: {
-      fr: "Evolution des effectifs enseignants",
+      fr: "Évolution des effectifs enseignants",
       en: "Evolution of faculty members count",
     },
     description: {
-      fr: "Evolution des effectifs enseignants par statut et discipline",
-      en: "Evolution of faculty members count by status and discipline",
+      fr: "Évolution des effectifs enseignants par genre au fil des années",
+      en: "Evolution of faculty members count by gender over years",
     },
     integrationURL:
       "/european-projects/components/pages/analysis/overview/charts/destination-funding",
@@ -53,11 +29,7 @@ export function EvolutionGlobalChart({
   }, [evolutionData, disciplineId]);
 
   const chartOptions = useMemo(() => {
-    if (
-      !evolutionData ||
-      !evolutionData.years ||
-      evolutionData.years.length === 0
-    ) {
+    if (!evolutionData?.years?.length) {
       return null;
     }
 
@@ -68,30 +40,21 @@ export function EvolutionGlobalChart({
       ? specificFieldData.totalCount
       : evolutionData.globalTrend.totalCount;
 
-    const femmesData = isDisciplineSpecific
-      ? years.map(
-          (_, i) =>
-            (totalCountData[i] * specificFieldData.femmes_percent[i]) / 100
-        )
-      : years.map(
-          (_, i) =>
-            (evolutionData.globalTrend.totalCount[i] *
-              evolutionData.globalTrend.femmes_percent[i]) /
-            100
-        );
+    const femmesPctData = isDisciplineSpecific
+      ? specificFieldData.femmes_percent
+      : evolutionData.globalTrend.femmes_percent;
 
-    const hommesData = isDisciplineSpecific
-      ? years.map(
-          (_, i) =>
-            (totalCountData[i] * (100 - specificFieldData.femmes_percent[i])) /
-            100
-        )
-      : years.map(
-          (_, i) =>
-            (evolutionData.globalTrend.totalCount[i] *
-              evolutionData.globalTrend.hommes_percent[i]) /
-            100
-        );
+    const hommesPctData = isDisciplineSpecific
+      ? years.map((_, i) => 100 - specificFieldData.femmes_percent[i])
+      : evolutionData.globalTrend.hommes_percent;
+
+    const femmesData = years.map((_, i) =>
+      Math.round((totalCountData[i] * femmesPctData[i]) / 100)
+    );
+
+    const hommesData = years.map((_, i) =>
+      Math.round((totalCountData[i] * hommesPctData[i]) / 100)
+    );
 
     const chartTitle = isDisciplineSpecific
       ? `Évolution des effectifs - ${specificFieldData.fieldLabel}`
@@ -100,6 +63,7 @@ export function EvolutionGlobalChart({
     return CreateChartOptions("column", {
       chart: {
         height: 500,
+        type: "column",
         marginLeft: 10,
         marginRight: 10,
         marginBottom: 120,
@@ -109,7 +73,7 @@ export function EvolutionGlobalChart({
         style: { fontSize: "18px", fontWeight: "bold" },
       },
       subtitle: {
-        text: `Période de ${years[0] || ""} à ${years[years.length - 1] || ""}`,
+        text: `Période de ${years[0]} à ${years[years.length - 1]}`,
         style: { fontSize: "14px" },
       },
       xAxis: {
@@ -122,27 +86,29 @@ export function EvolutionGlobalChart({
         title: { text: "Nombre d'enseignants" },
         labels: {
           formatter: function () {
-            return this.value.toLocaleString();
+            return this.value?.toLocaleString() ?? "0";
           },
         },
         stackLabels: {
           enabled: true,
           formatter: function () {
-            return this.total >= 10000
-              ? Math.round(this.total / 1000) + "k"
-              : this.total.toLocaleString();
+            const total = this.total ?? 0;
+            return total >= 10000
+              ? `${Math.round(total / 1000)}k`
+              : total.toLocaleString();
           },
           style: {
             fontWeight: "bold",
             color: "black",
+            textOutline: "none",
           },
         },
       },
       tooltip: {
         shared: false,
         formatter: function () {
-          const y = this.y || 0;
-          const total = totalCountData[this.point.index] || 1;
+          const y = this.y ?? 0;
+          const total = totalCountData[this.point?.index ?? 0] ?? 1;
           const percent = ((y / total) * 100).toFixed(1);
 
           return `<b>Année ${this.x}</b><br>
@@ -160,6 +126,8 @@ export function EvolutionGlobalChart({
             enabled: false,
           },
           borderWidth: 0,
+          pointPadding: 0.1,
+          groupPadding: 0.1,
         },
         series: {
           animation: { duration: 1000 },
@@ -169,7 +137,7 @@ export function EvolutionGlobalChart({
         {
           name: "Hommes",
           data: hommesData,
-          color: "#6a6a6a",
+          color: "#6A6A6A",
           type: "column",
         },
         {
@@ -179,22 +147,11 @@ export function EvolutionGlobalChart({
           type: "column",
         },
       ],
-      annotations: [
-        {
-          shapes: years.map((_year, i) => ({
-            type: "circle",
-            point: { x: i, y: totalCountData[i], xAxis: 0, yAxis: 0 },
-            r: 3,
-            fill: "transparent",
-            stroke: "#000091",
-            "stroke-width": 2,
-          })),
-        },
-      ],
       legend: {
         enabled: true,
         align: "center",
         verticalAlign: "bottom",
+        layout: "horizontal",
       },
       credits: { enabled: false },
     });
@@ -221,13 +178,11 @@ export function EvolutionGlobalChart({
   }
 
   return (
-    <div>
-      <ChartWrapper
-        config={config}
-        options={chartOptions}
-        legend={null}
-        renderData={undefined}
-      />
-    </div>
+    <ChartWrapper
+      config={config}
+      options={chartOptions}
+      legend={null}
+      renderData={undefined}
+    />
   );
 }

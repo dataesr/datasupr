@@ -1,6 +1,6 @@
 import { Title } from "@dataesr/dsfr-plus";
-import { DisciplineStatusSummaryProps } from "../../../types";
 import "./styles.scss";
+import { DisciplineStatusSummaryProps } from "../types";
 
 const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
   aggregatedStats,
@@ -12,31 +12,29 @@ const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
   const statusItems = [
     {
       label: "Titulaires",
-      percent: aggregatedStats?.titulairesPercent || 0,
+      percent: Math.round(aggregatedStats?.titulairesPercent || 0),
       count: aggregatedStats?.totalTitulaires,
       color: "var(--blue-cumulus-sun-368)",
       icon: "ri-shield-check-line",
     },
     {
       label: "Enseignants-chercheurs",
-      percent: aggregatedStats?.enseignantsChercheursPercent || 0,
+      percent: Math.round(aggregatedStats?.enseignantsChercheursPercent || 0),
       count: aggregatedStats?.totalEnseignantsChercheurs,
       color: "var(--pink-tuile-sun-425)",
       icon: "ri-book-open-line",
     },
     {
       label: "Non titulaires",
-      percent: aggregatedStats?.nonTitulairesPercent || 0,
-      count:
-        aggregatedStats?.totalNonTitulaires ||
-        aggregatedStats?.nonTitulairesPercent,
+      percent: Math.round(aggregatedStats?.nonTitulairesPercent || 0),
+      count: aggregatedStats?.totalNonTitulaires,
       color: "var(--beige-gris-galet-sun-407)",
       icon: "ri-user-line",
     },
   ].filter((item) => item.percent > 0);
 
   return (
-    <div className="sidebar-status-summary fr-p-2w ">
+    <div className="sidebar-status-summary fr-p-2w">
       {!isSingleDiscipline && (
         <Title as="h3" look="h6" className="fr-mb-1w">
           Résumé des statuts
@@ -58,6 +56,11 @@ const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
                 <div className="fr-text--xs">{item.label}</div>
                 <div className="fr-text--bold">{item.percent}%</div>
               </div>
+              {item.count !== undefined && (
+                <div className="fr-text--xs fr-text--mention-grey">
+                  {item.count.toLocaleString()} personnes
+                </div>
+              )}
 
               <div className="status-progress-container">
                 <div
@@ -72,6 +75,13 @@ const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
           </div>
         ))}
       </div>
+
+      {isSingleDiscipline && fields.length > 0 && (
+        <div className="fr-mt-2w fr-text--xs fr-text--mention-grey">
+          Données basées sur {fields[0].total_count?.toLocaleString() || 0}{" "}
+          enseignants
+        </div>
+      )}
     </div>
   );
 };

@@ -1,28 +1,5 @@
 import { Link } from "@dataesr/dsfr-plus";
-
-interface CnuSection {
-  cnuGroupId: string | number;
-  cnuSectionId: string | number;
-  fieldId?: string | number;
-  fieldLabel?: string;
-  cnuGroupLabel: string;
-  cnuSectionLabel: string;
-  maleCount: number;
-  femaleCount: number;
-  totalCount: number;
-  ageDistribution?: Array<{
-    ageClass: string;
-    count: number;
-    percent: number;
-  }>;
-}
-
-type CnuSectionsTableProps = {
-  cnuSections: Array<CnuSection>;
-  showDiscipline?: boolean;
-  showGroup?: boolean;
-  showAgeDemographics?: boolean;
-};
+import { CnuSectionsTableProps } from "../types";
 
 export default function CnuSectionsTable({
   cnuSections,
@@ -66,11 +43,23 @@ export default function CnuSectionsTable({
       </thead>
       <tbody>
         {cnuSections.map((section) => {
-          const malePercent = Math.round(
-            (section.maleCount / section.totalCount) * 100
-          );
+          const maleCount = section.maleCount ?? section.numberMan ?? 0;
+          const femaleCount = section.femaleCount ?? section.numberWoman ?? 0;
+          const totalCount = section.totalCount ?? maleCount + femaleCount;
+          const sectionId =
+            section.cnuSectionId ?? section.cnu_section_id ?? "";
+          const sectionLabel =
+            section.cnuSectionLabel ?? section.cnu_section_label ?? "";
+          const groupId = section.cnuGroupId ?? "";
+          const groupLabel = section.cnuGroupLabel ?? "";
+          const fieldId = section.fieldId ?? "";
+          const fieldLabel = section.fieldLabel ?? "";
+
+          const malePercent =
+            totalCount > 0 ? Math.round((maleCount / totalCount) * 100) : 0;
           const femalePercent = 100 - malePercent;
 
+          // Recherche des tranches d'âge
           const younger35 = section.ageDistribution?.find(
             (age) => age.ageClass === "35 ans et moins"
           );
@@ -82,35 +71,29 @@ export default function CnuSectionsTable({
           );
 
           return (
-            <tr key={`${section.cnuGroupId}-${section.cnuSectionId}`}>
+            <tr key={`${groupId}-${sectionId}`}>
               {showDiscipline && (
                 <td>
                   <Link
-                    href={`/personnel-enseignant/discipline/enseignants-chercheurs/${section.fieldId}`}
+                    href={`/personnel-enseignant/discipline/enseignants-chercheurs/${fieldId}`}
                   >
-                    <strong>{section.fieldLabel}</strong>
+                    <strong>{fieldLabel}</strong>
                   </Link>
                 </td>
               )}
               {showGroup && (
                 <td>
-                  <strong>{section.cnuGroupLabel}</strong>
+                  <strong>{groupLabel}</strong>
                 </td>
               )}
               <td>
-                <strong>{section.cnuSectionLabel}</strong>
+                <strong>{sectionLabel}</strong>
                 <br />
-                <small className="text-grey">{section.cnuSectionId}</small>
+                <small className="text-grey">{sectionId}</small>
               </td>
-              <td className="text-center">
-                {section.maleCount.toLocaleString()}
-              </td>
-              <td className="text-center">
-                {section.femaleCount.toLocaleString()}
-              </td>
-              <td className="text-center">
-                {section.totalCount.toLocaleString()}
-              </td>
+              <td className="text-center">{maleCount.toLocaleString()}</td>
+              <td className="text-center">{femaleCount.toLocaleString()}</td>
+              <td className="text-center">{totalCount.toLocaleString()}</td>
               <td className="text-center">
                 <div className="progress-container">
                   <div
@@ -129,17 +112,17 @@ export default function CnuSectionsTable({
               {showAgeDemographics && section.ageDistribution && (
                 <>
                   <td className="text-center">
-                    {younger35?.count.toLocaleString()}
+                    {younger35?.count.toLocaleString() || "N/A"}
                     <br />
                     <small>{younger35?.percent}%</small>
                   </td>
                   <td className="text-center">
-                    {middle36_55?.count.toLocaleString()}
+                    {middle36_55?.count.toLocaleString() || "N/A"}
                     <br />
                     <small>{middle36_55?.percent}%</small>
                   </td>
                   <td className="text-center">
-                    {older56?.count.toLocaleString()}
+                    {older56?.count.toLocaleString() || "N/A"}
                     <br />
                     <small>{older56?.percent}%</small>
                   </td>

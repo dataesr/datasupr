@@ -11,17 +11,17 @@ import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import YearSelector from "../../filters";
 import useFacultyMembersByFields from "./api/use-by-fields";
-import { FieldData } from "../../types";
 import useFacultyMembersByStatus from "./api/use-by-status";
 import DisciplineStatusSummary from "./components/fields-by-status";
 import StatusDistribution from "./charts/status/status";
 import useFacultyMembersAgeDistribution from "./api/use-by-age";
 import { AgeDistributionPieChart } from "./charts/age/age";
 import GeneralIndicatorsCard from "../../components/general-indicators-card";
+import { Field, NormalizedDiscipline } from "./types";
 
 export default function SpecificFieldsOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
-  const [specificFieldData, setSpecificFieldData] = useState<FieldData | null>(
+  const [specificFieldData, setSpecificFieldData] = useState<Field | null>(
     null
   );
   const [availableYears, setAvailableYears] = useState<string[]>([]);
@@ -62,44 +62,27 @@ export default function SpecificFieldsOverview() {
     if (!statusData || statusData.length === 0 || !fieldId) return null;
 
     const discipline = statusData[0].disciplines?.find(
-      (d) => d.fieldId === fieldId || d.field_id === fieldId
+      (d) => d.field_id === fieldId
     );
 
     if (!discipline) return null;
 
     return {
-      totalCount: discipline.totalCount || discipline.total_count || 0,
+      totalCount: discipline.total_count || 0,
       aggregatedStats: {
-        titulairesPercent:
-          discipline.status?.titulaires?.percent ||
-          discipline.titulaires_percent ||
-          0,
+        titulairesPercent: discipline.titulaires_percent || 0,
         enseignantsChercheursPercent:
-          discipline.status?.enseignantsChercheurs?.percent ||
-          discipline.enseignants_chercheurs_percent ||
-          0,
+          discipline.enseignants_chercheurs_percent || 0,
         ecTitulairesPercent:
-          ((discipline.status?.ecTitulaires?.count || 0) /
-            (discipline.totalCount || discipline.total_count || 1)) *
-            100 ||
-          ((discipline.ec_titulaires || 0) /
-            (discipline.totalCount || discipline.total_count || 1)) *
-            100,
-        totalTitulaires:
-          discipline.status?.titulaires?.count || discipline.titulaires || 0,
-        totalNonTitulaires:
-          discipline.status?.nonTitulaires?.count ||
-          discipline.non_titulaires ||
-          0,
-        nonTitulairesPercent: discipline.status?.nonTitulaires?.percent || 0,
-        totalEnseignantsChercheurs:
-          discipline.status?.enseignantsChercheurs?.count ||
-          discipline.enseignants_chercheurs ||
-          0,
-        totalEcTitulaires:
-          discipline.status?.ecTitulaires?.count ||
-          discipline.ec_titulaires ||
-          0,
+          ((discipline.ec_titulaires || 0) / (discipline.total_count || 1)) *
+          100,
+        totalTitulaires: discipline.titulaires || 0,
+        totalNonTitulaires: discipline.non_titulaires || 0,
+        nonTitulairesPercent:
+          ((discipline.non_titulaires || 0) / (discipline.total_count || 1)) *
+          100,
+        totalEnseignantsChercheurs: discipline.enseignants_chercheurs || 0,
+        totalEcTitulaires: discipline.ec_titulaires || 0,
       },
       fields: [discipline],
     };
@@ -111,8 +94,8 @@ export default function SpecificFieldsOverview() {
       Array.isArray(allFieldsData) &&
       allFieldsData.length > 0
     ) {
-      const filteredData = (allFieldsData as FieldData[]).filter(
-        (field) => field.fieldId === fieldId
+      const filteredData = allFieldsData.filter(
+        (field) => (field.fieldId || field.field_id) === fieldId
       );
 
       if (filteredData.length === 0) {
@@ -120,8 +103,12 @@ export default function SpecificFieldsOverview() {
       }
 
       const uniqueYears = Array.from(
-        new Set(filteredData.map((item) => item.year))
-      );
+        new Set(
+          filteredData
+            .map((item) => item.year || item.academic_year)
+            .filter(Boolean)
+        )
+      ) as string[];
 
       const sortedYears = [...uniqueYears].sort((a, b) => {
         const yearA = parseInt(a.split("-")[0]);
@@ -139,8 +126,10 @@ export default function SpecificFieldsOverview() {
 
   useEffect(() => {
     if (fieldData && Array.isArray(fieldData) && fieldId && selectedYear) {
-      const foundField = (fieldData as FieldData[]).find(
-        (field) => field.fieldId === fieldId && field.year === selectedYear
+      const foundField = fieldData.find(
+        (field) =>
+          (field.fieldId || field.field_id) === fieldId &&
+          (field.year || field.academic_year) === selectedYear
       );
 
       setSpecificFieldData(foundField || null);
@@ -149,11 +138,34 @@ export default function SpecificFieldsOverview() {
     }
   }, [fieldData, fieldId, selectedYear]);
 
+  const normalizedFieldData = useMemo<NormalizedDiscipline[]>(() => {
+    if (!specificFieldData) return [];
+
+    return [
+      {
+        fieldId: specificFieldData.fieldId || specificFieldData.field_id || "",
+        fieldLabel:
+          specificFieldData.fieldLabel || specificFieldData.field_label || "",
+        maleCount:
+          specificFieldData.maleCount || specificFieldData.numberMan || 0,
+        femaleCount:
+          specificFieldData.femaleCount || specificFieldData.numberWoman || 0,
+        unknownCount:
+          specificFieldData.unknownCount ||
+          specificFieldData.numberUnknown ||
+          0,
+        totalCount:
+          specificFieldData.totalCount || specificFieldData.total_count || 0,
+      },
+    ];
+  }, [specificFieldData]);
+
   const isLoading = allDataLoading || dataLoading || statusLoading;
   if (isLoading) return <div>Chargement des données...</div>;
   if (isError) return <div>Erreur : {error?.message}</div>;
   if (statusError)
     return <div>Erreur de chargement des statuts : {statusError.message}</div>;
+
   if (!specificFieldData) {
     return (
       <Container as="main">
@@ -185,7 +197,8 @@ export default function SpecificFieldsOverview() {
     );
   }
 
-  const fieldLabel = specificFieldData.fieldLabel;
+  const fieldLabel =
+    specificFieldData.fieldLabel || specificFieldData.field_label || "";
 
   return (
     <Container as="main">
@@ -220,27 +233,13 @@ export default function SpecificFieldsOverview() {
           cupiditate quo nostrum.
           {disciplineStatusData && (
             <StatusDistribution
-              disciplinesData={[
-                {
-                  fieldId: fieldId || "",
-                  fieldLabel: specificFieldData?.fieldLabel || "",
-                  totalCount: disciplineStatusData.totalCount,
-                  enseignants_chercheurs:
-                    disciplineStatusData.aggregatedStats
-                      .totalEnseignantsChercheurs,
-                  titulaires:
-                    disciplineStatusData.aggregatedStats.totalTitulaires,
-                  non_titulaires:
-                    disciplineStatusData.totalCount -
-                    disciplineStatusData.aggregatedStats.totalTitulaires,
-                },
-              ]}
-              title={`Répartition par statut : ${specificFieldData?.fieldLabel}`}
+              disciplinesData={normalizedFieldData}
+              title={`Répartition par statut : ${fieldLabel}`}
             />
           )}
         </Col>
         <Col md={4}>
-          <GeneralIndicatorsCard structureData={fieldData} />
+          <GeneralIndicatorsCard structureData={normalizedFieldData} />
           {disciplineStatusData && (
             <>
               <DisciplineStatusSummary

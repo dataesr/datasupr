@@ -1,27 +1,5 @@
-type AgeGroup = {
-  count: number;
-  percent: number | string;
-};
+import { CnuGroupsTableProps } from "../types";
 
-type AgeDistribution = {
-  younger_35?: AgeGroup;
-  middle_36_55?: AgeGroup;
-  older_56?: AgeGroup;
-};
-
-type CnuGroup = {
-  cnuGroupId: string | number;
-  cnuGroupLabel: string;
-  maleCount: number;
-  femaleCount: number;
-  totalCount: number;
-  ageDistribution?: AgeDistribution;
-};
-
-type CnuGroupsTableProps = {
-  cnuGroups: Array<CnuGroup>;
-  showAgeDemographics?: boolean;
-};
 export default function CnuGroupsTable({
   cnuGroups,
   showAgeDemographics = true,
@@ -60,28 +38,26 @@ export default function CnuGroupsTable({
       </thead>
       <tbody>
         {cnuGroups.map((group) => {
-          const malePercent = Math.round(
-            (group.maleCount / group.totalCount) * 100
-          );
-          console.log(group);
+          const maleCount = group.maleCount ?? group.numberMan ?? 0;
+          const femaleCount = group.femaleCount ?? group.numberWoman ?? 0;
+          const totalCount = group.totalCount ?? maleCount + femaleCount;
+          const groupId = group.cnuGroupId ?? group.cnu_group_id ?? "";
+          const groupLabel = group.cnuGroupLabel ?? group.cnu_group_label ?? "";
+
+          const malePercent =
+            totalCount > 0 ? Math.round((maleCount / totalCount) * 100) : 0;
           const femalePercent = 100 - malePercent;
 
           return (
-            <tr key={group.cnuGroupId}>
+            <tr key={groupId}>
               <td>
-                <strong>{group.cnuGroupLabel}</strong>
+                <strong>{groupLabel}</strong>
                 <br />
-                <small className="text-grey">{group.cnuGroupId}</small>
+                <small className="text-grey">{groupId}</small>
               </td>
-              <td className="text-center">
-                {group.maleCount.toLocaleString()}
-              </td>
-              <td className="text-center">
-                {group.femaleCount.toLocaleString()}
-              </td>
-              <td className="text-center">
-                {group.totalCount.toLocaleString()}
-              </td>
+              <td className="text-center">{maleCount.toLocaleString()}</td>
+              <td className="text-center">{femaleCount.toLocaleString()}</td>
+              <td className="text-center">{totalCount.toLocaleString()}</td>
               <td className="text-center">
                 <div className="progress-container">
                   <div
@@ -100,19 +76,22 @@ export default function CnuGroupsTable({
               {showAgeDemographics && group.ageDistribution && (
                 <>
                   <td className="text-center">
-                    {group.ageDistribution.younger_35?.count.toLocaleString()}
+                    {group.ageDistribution.younger_35?.count.toLocaleString() ||
+                      "N/A"}
                     <br />
                     <small>{group.ageDistribution.younger_35?.percent}%</small>
                   </td>
                   <td className="text-center">
-                    {group.ageDistribution.middle_36_55?.count.toLocaleString()}
+                    {group.ageDistribution.middle_36_55?.count.toLocaleString() ||
+                      "N/A"}
                     <br />
                     <small>
                       {group.ageDistribution.middle_36_55?.percent}%
                     </small>
                   </td>
                   <td className="text-center">
-                    {group.ageDistribution.older_56?.count.toLocaleString()}
+                    {group.ageDistribution.older_56?.count.toLocaleString() ||
+                      "N/A"}
                     <br />
                     <small>{group.ageDistribution.older_56?.percent}%</small>
                   </td>

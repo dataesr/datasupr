@@ -1,17 +1,12 @@
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import { ProfessionalCategory } from "../../types";
 import options from "./options";
 
-interface ProfessionalCategoriesChartProps {
-  categories: {
-    id: string;
-    label_fr: string;
-    headcount: number;
-  }[];
-}
-
-const ProfessionalCategoriesChart: React.FC<
-  ProfessionalCategoriesChartProps
-> = ({ categories }) => {
+const ProfessionalCategoriesChart = ({
+  categories,
+}: {
+  categories: ProfessionalCategory[];
+}) => {
   const chartOptions = options({ categories });
 
   const config = {

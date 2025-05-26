@@ -4,22 +4,14 @@ import highchartsMap from "highcharts/modules/map";
 import mapDataIE from "../../../../../assets/regions.json";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { RegionMapPoint } from "../../../types";
+import { RegionDemographics, RegionMapPoint } from "../types";
 
 highchartsMap(Highcharts);
 
 export default function FacultyFranceMap({
   availableGeos,
 }: {
-  availableGeos: {
-    femaleCount: number;
-    femalePercent: number;
-    geo_id: string;
-    geo_nom: string;
-    maleCount: number;
-    malePercent: number;
-    totalCount: number;
-  }[];
+  availableGeos: RegionDemographics[];
 }) {
   const navigate = useNavigate();
   const [mapOptions, setMapOptions] = useState<Highcharts.Options | null>(null);
@@ -116,37 +108,37 @@ export default function FacultyFranceMap({
         useHTML: true,
         headerFormat: "",
         pointFormatter: function () {
-          const point = this as RegionMapPoint;
+          const point = this as unknown as RegionMapPoint;
 
           return `
-    <div class="map-tooltip">
-      <h4 class="tooltip-title">${point.name}</h4>
-      <div class="tooltip-stats">
-        <div class="stat-row">
-          <span class="stat-label">Total enseignants:</span>
-          <span class="stat-value">${
-            point.totalCount?.toLocaleString() || "N/A"
-          }</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Hommes:</span> 
-          <span class="stat-value">${
-            point.maleCount?.toLocaleString() || "N/A"
-          } (${point.malePercent}%)</span>
-        </div>
-        <div class="stat-row">
-          <span class="stat-label">Femmes:</span>
-          <span class="stat-value">${
-            point.femaleCount?.toLocaleString() || "N/A"
-          } (${point.femalePercent}%)</span>
-        </div>
-      </div>
-      <hr class="tooltip-divider" />
-      <div class="tooltip-footer">
-        Cliquez pour voir les détails complets
-      </div>
-    </div>
-  `;
+            <div class="map-tooltip">
+              <h4 class="tooltip-title">${point.name}</h4>
+              <div class="tooltip-stats">
+                <div class="stat-row">
+                  <span class="stat-label">Total enseignants:</span>
+                  <span class="stat-value">${
+                    point.options.totalCount?.toLocaleString() || "N/A"
+                  }</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Hommes:</span> 
+                  <span class="stat-value">${
+                    point.options.maleCount?.toLocaleString() || "N/A"
+                  } (${point.options.malePercent}%)</span>
+                </div>
+                <div class="stat-row">
+                  <span class="stat-label">Femmes:</span>
+                  <span class="stat-value">${
+                    point.options.femaleCount?.toLocaleString() || "N/A"
+                  } (${point.options.femalePercent}%)</span>
+                </div>
+              </div>
+              <hr class="tooltip-divider" />
+              <div class="tooltip-footer">
+                Cliquez pour voir les détails complets
+              </div>
+            </div>
+          `;
         },
       },
       series: [
@@ -174,10 +166,6 @@ export default function FacultyFranceMap({
                 if (point.options && point.options.geo_id) {
                   navigate(
                     `/personnel-enseignant/geo/vue-d'ensemble/${point.options.geo_id}`
-                  );
-                } else if (point.geo_id) {
-                  navigate(
-                    `/personnel-enseignant/geo/vue-d'ensemble/${point.geo_id}`
                   );
                 } else {
                   const region = availableGeos.find(

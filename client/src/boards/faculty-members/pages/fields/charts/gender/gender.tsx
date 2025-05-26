@@ -1,16 +1,9 @@
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { CreateChartOptions } from "../../../../components/chart-faculty-members";
-
-interface DisciplineData {
-  fieldId: string;
-  fieldLabel: string;
-  maleCount: number;
-  femaleCount: number;
-  totalCount: number;
-}
+import { NormalizedDiscipline } from "../../types";
 
 interface GenderByDisciplineProps {
-  disciplinesData: DisciplineData[];
+  disciplinesData: NormalizedDiscipline[];
 }
 
 const GenderByDiscipline: React.FC<GenderByDisciplineProps> = ({
