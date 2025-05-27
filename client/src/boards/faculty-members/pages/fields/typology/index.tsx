@@ -31,11 +31,10 @@ export function FieldsTypologie() {
   const { data: fieldsData, isLoading } =
     useFacultyMembersByFields(selectedYear);
 
-  const { data: genderComparisonData, isLoading: genderDataLoading } =
-    useFacultyMembersGenderComparison({
-      selectedYear,
-      disciplineCode: fieldId,
-    });
+  const { data: genderComparisonData } = useFacultyMembersGenderComparison({
+    selectedYear,
+    disciplineCode: fieldId,
+  });
 
   useEffect(() => {
     if (
@@ -230,46 +229,10 @@ export function FieldsTypologie() {
 
       <Row gutters>
         <Col md={6}>
-          <GenderDataCard
-            data={genderData}
-            gender="hommes"
-            isLoading={genderDataLoading}
-            allDisciplines={allDisciplines}
-          />
+          <GenderDataCard selectedYear={selectedYear} gender="hommes" />
         </Col>
         <Col md={6}>
-          <GenderDataCard
-            data={genderData}
-            gender="femmes"
-            isLoading={genderDataLoading}
-            allDisciplines={allDisciplines}
-          />
-        </Col>
-        {allDisciplines && !fieldId && (
-          <Col md={12}>
-            <DisciplineBarChart
-              disciplines={prepareChartData(allDisciplines)}
-            />
-          </Col>
-        )}
-      </Row>
-
-      <Row gutters>
-        <Col md={6}>
-          <GenderDataCard
-            data={genderData}
-            gender="hommes"
-            isLoading={genderDataLoading}
-            allDisciplines={allDisciplines}
-          />
-        </Col>
-        <Col md={6}>
-          <GenderDataCard
-            data={genderData}
-            gender="femmes"
-            isLoading={genderDataLoading}
-            allDisciplines={allDisciplines}
-          />
+          <GenderDataCard selectedYear={selectedYear} gender="femmes" />
         </Col>
         {allDisciplines && !fieldId && (
           <Col md={12}>

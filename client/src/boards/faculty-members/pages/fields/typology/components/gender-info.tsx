@@ -1,12 +1,41 @@
+import { useParams } from "react-router-dom";
+import { useMemo } from "react";
 import { Title } from "@dataesr/dsfr-plus";
-import { GenderDataCardProps } from "../../../../types";
+import useFacultyMembersGenderComparison from "../../api/use-by-gender";
 import "./styles.scss";
 
+interface GenderDataCardProps {
+  selectedYear: string;
+  gender: "hommes" | "femmes";
+}
+
 export const GenderDataCard = ({
-  data,
+  selectedYear,
   gender,
-  isLoading,
 }: GenderDataCardProps) => {
+  const { fieldId } = useParams<{ fieldId?: string }>();
+
+  const { data: genderComparisonData, isLoading } =
+    useFacultyMembersGenderComparison({
+      selectedYear,
+      disciplineCode: fieldId,
+    });
+
+  const genderData = useMemo(() => {
+    if (!genderComparisonData) return null;
+
+    if (Array.isArray(genderComparisonData)) {
+      if (fieldId) {
+        return genderComparisonData.find(
+          (item) => item.discipline?.code === fieldId
+        );
+      }
+      return genderComparisonData[0];
+    }
+
+    return genderComparisonData;
+  }, [genderComparisonData, fieldId]);
+
   if (isLoading) {
     return (
       <div className="fr-p-3w fr-mb-3w">
@@ -18,9 +47,20 @@ export const GenderDataCard = ({
       </div>
     );
   }
-  if (!data) return null;
 
-  const genderData = gender === "hommes" ? data.hommes : data.femmes;
+  if (!genderData) {
+    return (
+      <div className="fr-p-3w fr-mb-3w">
+        <div className="fr-text--center fr-text--mention-grey">
+          Aucune donnée disponible pour {selectedYear}
+          {fieldId && " et la discipline sélectionnée"}
+        </div>
+      </div>
+    );
+  }
+
+  const specificGenderData =
+    gender === "hommes" ? genderData.hommes : genderData.femmes;
   const isMale = gender === "hommes";
   const genderClass = isMale ? "male" : "female";
   const iconClass = isMale ? "ri-men-line" : "ri-women-line";
@@ -43,12 +83,14 @@ export const GenderDataCard = ({
         </div>
         <div className="fr-col-auto">
           <div className={`gender-percentage gender-percentage-${genderClass}`}>
-            {genderData.percent ||
-              Math.round((genderData.total_count / data.total_count) * 100)}
+            {specificGenderData.percent ||
+              Math.round(
+                (specificGenderData.total_count / genderData.total_count) * 100
+              )}
             %
           </div>
           <div className="gender-count">
-            {genderData.total_count.toLocaleString()}
+            {specificGenderData.total_count.toLocaleString()}
           </div>
         </div>
       </div>
@@ -61,10 +103,10 @@ export const GenderDataCard = ({
             TITULAIRES
           </div>
           <div className={`stat-value stat-value-${genderClass}`}>
-            {genderData.titulaires_percent}%
+            {specificGenderData.titulaires_percent}%
           </div>
           <div className={`stat-count stat-count-${genderClass}`}>
-            {genderData.titulaires_count?.toLocaleString()} personnes
+            {specificGenderData.titulaires_count?.toLocaleString()} personnes
           </div>
         </div>
 
@@ -73,10 +115,10 @@ export const GenderDataCard = ({
             ENSEIG.-CHERCHEURS
           </div>
           <div className={`stat-value stat-value-${genderClass}`}>
-            {genderData.enseignants_chercheurs_percent}%
+            {specificGenderData.enseignants_chercheurs_percent}%
           </div>
           <div className={`stat-count stat-count-${genderClass}`}>
-            {genderData.enseignants_chercheurs_count?.toLocaleString()}{" "}
+            {specificGenderData.enseignants_chercheurs_count?.toLocaleString()}{" "}
             personnes
           </div>
         </div>
@@ -86,11 +128,12 @@ export const GenderDataCard = ({
             TEMPS PLEIN
           </div>
           <div className={`stat-value stat-value-${genderClass}`}>
-            {genderData.quotite_distribution?.["Temps plein"]?.percent || "N/A"}
+            {specificGenderData.quotite_distribution?.["Temps plein"]
+              ?.percent || "N/A"}
             %
           </div>
           <div className={`stat-count stat-count-${genderClass}`}>
-            {genderData.quotite_distribution?.[
+            {specificGenderData.quotite_distribution?.[
               "Temps plein"
             ]?.count?.toLocaleString() || "-"}{" "}
             personnes
@@ -102,26 +145,29 @@ export const GenderDataCard = ({
           RÉPARTITION PAR ÂGE
         </div>
         <div className="age-distribution">
-          {Object.entries(genderData.age_distribution || {})
+          {Object.entries(specificGenderData.age_distribution || {})
             .sort((a, b) => {
               const ageA = parseInt(a[0].split(" ")[0]);
               const ageB = parseInt(b[0].split(" ")[0]);
               return ageA - ageB;
             })
-            .map(([age, data]) => (
-              <div
-                key={age}
-                className={`age-bar age-bar-${genderClass}`}
-                style={{
-                  flex: data.percent,
-                  opacity: 0.7 + 0.3 * (parseInt(age.split(" ")[0]) / 60),
-                }}
-                title={`${age}: ${data.percent}% (${data.count} personnes)`}
-              >
-                <div className="age-label">{parseInt(age.split(" ")[0])}</div>
-                <div className="age-percent">{data.percent}%</div>
-              </div>
-            ))}
+            .map(([age, data]) => {
+              const ageData = data as { percent: number; count: number };
+              return (
+                <div
+                  key={age}
+                  className={`age-bar age-bar-${genderClass}`}
+                  style={{
+                    flex: ageData.percent,
+                    opacity: 0.7 + 0.3 * (parseInt(age.split(" ")[0]) / 60),
+                  }}
+                  title={`${age}: ${ageData.percent}% (${ageData.count} personnes)`}
+                >
+                  <div className="age-label">{parseInt(age.split(" ")[0])}</div>
+                  <div className="age-percent">{ageData.percent}%</div>
+                </div>
+              );
+            })}
         </div>
       </div>
     </div>
