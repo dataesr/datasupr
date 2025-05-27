@@ -1,26 +1,55 @@
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useMemo } from "react";
+import { useParams } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useNavigate } from "react-router-dom";
 import { Button, Col, Row } from "@dataesr/dsfr-plus";
+import useFacultyMembersGenderComparison from "../../api/use-by-gender";
 import "../../../../styles.scss";
 
+interface GenderStats {
+  total_count: number;
+  titulaires_count?: number;
+  titulaires_percent?: number;
+  enseignants_chercheurs_count?: number;
+  enseignants_chercheurs_percent?: number;
+  quotite_distribution?: Record<string, { count: number; percent: number }>;
+  age_distribution?: Record<string, { count: number; percent: number }>;
+}
+
+interface DisciplineGenderData {
+  discipline: {
+    code: string;
+    label: string;
+  };
+  total_count: number;
+  hommes: GenderStats;
+  femmes: GenderStats;
+}
+
+interface GenderComparisonResponse {
+  total_count: number;
+  hommes: GenderStats;
+  femmes: GenderStats;
+  allDisciplines?: DisciplineGenderData[];
+}
+
 interface DisciplineBarChartProps {
-  disciplines: Array<{
-    discipline: string;
-    disciplineCode: string;
-    hommesCount: number;
-    hommesPercent: number;
-    femmesCount: number;
-    femmesPercent: number;
-  }>;
+  selectedYear: string;
 }
 
 const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
-  disciplines,
+  selectedYear,
 }) => {
+  const { fieldId } = useParams<{ fieldId?: string }>();
   const chartRef = useRef<HighchartsReact.RefObject>(null);
   const navigate = useNavigate();
+
+  const { data: genderComparisonData, isLoading } =
+    useFacultyMembersGenderComparison({
+      selectedYear,
+      disciplineCode: fieldId,
+    });
 
   const [sortKey, setSortKey] = useState<
     "total" | "femmesPercent" | "hommesPercent"
@@ -30,17 +59,60 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
 
   const rootStyles = getComputedStyle(document.documentElement);
 
-  const sortedDisciplines = [...disciplines].sort((a, b) => {
-    const getVal = (d: typeof a) => {
-      if (sortKey === "total") return d.femmesCount + d.hommesCount;
-      if (sortKey === "femmesPercent") return d.femmesPercent;
-      if (sortKey === "hommesPercent") return d.hommesPercent;
-      return 0;
-    };
-    const valA = getVal(a);
-    const valB = getVal(b);
-    return sortOrder === "asc" ? valA - valB : valB - valA;
-  });
+  const disciplines = useMemo(() => {
+    if (!genderComparisonData) return [];
+
+    let genderData: GenderComparisonResponse | null = null;
+
+    if (Array.isArray(genderComparisonData)) {
+      if (fieldId) {
+        genderData = genderComparisonData.find(
+          (item) => item.discipline?.code === fieldId
+        ) as GenderComparisonResponse;
+      } else {
+        genderData = genderComparisonData[0] as GenderComparisonResponse;
+      }
+    } else {
+      genderData = genderComparisonData as GenderComparisonResponse;
+    }
+
+    const allDisciplines = genderData?.allDisciplines || [];
+
+    if (
+      !allDisciplines ||
+      !Array.isArray(allDisciplines) ||
+      allDisciplines.length === 0
+    ) {
+      return [];
+    }
+
+    return allDisciplines.map((disc: DisciplineGenderData) => ({
+      discipline: disc.discipline.label,
+      disciplineCode: disc.discipline.code,
+      hommesCount: disc.hommes.total_count,
+      hommesPercent: Math.round(
+        (disc.hommes.total_count / disc.total_count) * 100
+      ),
+      femmesCount: disc.femmes.total_count,
+      femmesPercent: Math.round(
+        (disc.femmes.total_count / disc.total_count) * 100
+      ),
+    }));
+  }, [genderComparisonData, fieldId]);
+
+  const sortedDisciplines = useMemo(() => {
+    return [...disciplines].sort((a, b) => {
+      const getVal = (d: typeof a) => {
+        if (sortKey === "total") return d.femmesCount + d.hommesCount;
+        if (sortKey === "femmesPercent") return d.femmesPercent;
+        if (sortKey === "hommesPercent") return d.hommesPercent;
+        return 0;
+      };
+      const valA = getVal(a);
+      const valB = getVal(b);
+      return sortOrder === "asc" ? valA - valB : valB - valA;
+    });
+  }, [disciplines, sortKey, sortOrder]);
 
   const categories = sortedDisciplines.map(
     (d) =>
@@ -77,7 +149,7 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
       },
     },
     subtitle: {
-      text: `Année universitaire `,
+      text: `Année universitaire ${selectedYear}`,
       style: {
         color: "#666666",
         fontSize: "14px",
@@ -164,6 +236,23 @@ const DisciplineBarChart: React.FC<DisciplineBarChartProps> = ({
       chartRef.current.chart.reflow();
     }
   }, [disciplines, sortKey, sortOrder, stackType]);
+
+  if (isLoading) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Chargement des données de répartition par genre...
+      </div>
+    );
+  }
+
+  if (!disciplines || disciplines.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour la répartition par genre pour l'année{" "}
+        {selectedYear}
+      </div>
+    );
+  }
 
   return (
     <Row gutters>
