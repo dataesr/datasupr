@@ -1,16 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { FieldsStatusData } from "../../../types";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-const useFacultyMembersByStatus = (selectedYear?: string) => {
-  return useQuery<FieldsStatusData[]>({
-    queryKey: ["faculty-fields-status", selectedYear],
+const useFacultyMembersByStatus = (selectedYear?: string, fieldId?: string) => {
+  return useQuery({
+    queryKey: ["faculty-fields-status", selectedYear, fieldId],
     queryFn: async () => {
       let url = `${VITE_APP_SERVER_URL}/faculty-members-fields-status`;
 
       const params = new URLSearchParams();
       if (selectedYear) {
         params.append("annee", selectedYear);
+      }
+      if (fieldId) {
+        params.append("fieldId", fieldId);
       }
 
       const queryString = params.toString();

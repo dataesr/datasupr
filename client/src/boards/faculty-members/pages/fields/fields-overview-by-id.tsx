@@ -11,11 +11,8 @@ import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import YearSelector from "../../filters";
 import useFacultyMembersByFields from "./api/use-by-fields";
-import useFacultyMembersByStatus from "./api/use-by-status";
 import DisciplineStatusSummary from "./components/fields-by-status";
 import StatusDistribution from "./charts/status/status";
-import useFacultyMembersAgeDistribution from "./api/use-by-age";
-import { AgeDistributionPieChart } from "./charts/age/age";
 import GeneralIndicatorsCard from "../../components/general-indicators-card";
 import { Field, NormalizedDiscipline } from "./types";
 
@@ -27,66 +24,9 @@ export default function SpecificFieldsOverview() {
   const [availableYears, setAvailableYears] = useState<string[]>([]);
   const { fieldId } = useParams<{ fieldId: string }>();
 
-  const { data: allFieldsData, isLoading: allDataLoading } =
-    useFacultyMembersByFields(undefined, true);
+  const { data: allFieldsData } = useFacultyMembersByFields(undefined, true);
 
-  const {
-    data: fieldData,
-    isLoading: dataLoading,
-    isError,
-    error,
-  } = useFacultyMembersByFields(selectedYear);
-
-  const {
-    data: statusData,
-    isLoading: statusLoading,
-    error: statusError,
-  } = useFacultyMembersByStatus(selectedYear);
-
-  const { data: ageDistributionData, isLoading: ageDistributionLoading } =
-    useFacultyMembersAgeDistribution(selectedYear);
-
-  const filteredAgeData = useMemo(() => {
-    if (!ageDistributionData || !fieldId) return null;
-
-    const disciplineAgeData = ageDistributionData.find(
-      (item) => item.fieldId === fieldId
-    );
-
-    if (!disciplineAgeData) return null;
-
-    return [disciplineAgeData];
-  }, [ageDistributionData, fieldId]);
-
-  const disciplineStatusData = useMemo(() => {
-    if (!statusData || statusData.length === 0 || !fieldId) return null;
-
-    const discipline = statusData[0].disciplines?.find(
-      (d) => d.field_id === fieldId
-    );
-
-    if (!discipline) return null;
-
-    return {
-      totalCount: discipline.total_count || 0,
-      aggregatedStats: {
-        titulairesPercent: discipline.titulaires_percent || 0,
-        enseignantsChercheursPercent:
-          discipline.enseignants_chercheurs_percent || 0,
-        ecTitulairesPercent:
-          ((discipline.ec_titulaires || 0) / (discipline.total_count || 1)) *
-          100,
-        totalTitulaires: discipline.titulaires || 0,
-        totalNonTitulaires: discipline.non_titulaires || 0,
-        nonTitulairesPercent:
-          ((discipline.non_titulaires || 0) / (discipline.total_count || 1)) *
-          100,
-        totalEnseignantsChercheurs: discipline.enseignants_chercheurs || 0,
-        totalEcTitulaires: discipline.ec_titulaires || 0,
-      },
-      fields: [discipline],
-    };
-  }, [statusData, fieldId]);
+  const { data: fieldData } = useFacultyMembersByFields(selectedYear);
 
   useEffect(() => {
     if (
@@ -160,12 +100,6 @@ export default function SpecificFieldsOverview() {
     ];
   }, [specificFieldData]);
 
-  const isLoading = allDataLoading || dataLoading || statusLoading;
-  if (isLoading) return <div>Chargement des données...</div>;
-  if (isError) return <div>Erreur : {error?.message}</div>;
-  if (statusError)
-    return <div>Erreur de chargement des statuts : {statusError.message}</div>;
-
   if (!specificFieldData) {
     return (
       <Container as="main">
@@ -231,56 +165,33 @@ export default function SpecificFieldsOverview() {
           tempora sapiente in, nam autem fugiat voluptatem, illo accusantium
           consequuntur odit minima repellat at. Similique laboriosam totam dolor
           cupiditate quo nostrum.
-          {disciplineStatusData && (
-            <StatusDistribution
-              disciplinesData={normalizedFieldData}
-              title={`Répartition par statut : ${fieldLabel}`}
-            />
-          )}
+          <StatusDistribution selectedYear={selectedYear} fieldId={fieldId} />
         </Col>
         <Col md={4}>
-          <GeneralIndicatorsCard structureData={normalizedFieldData} />
-          {disciplineStatusData && (
-            <>
-              <DisciplineStatusSummary
-                totalCount={disciplineStatusData.totalCount || 0}
-                aggregatedStats={disciplineStatusData.aggregatedStats || {}}
-                fields={disciplineStatusData.fields || []}
-                isSingleDiscipline={true}
-              />
-              <i>
-                <Link
-                  href={`/personnel-enseignant/discipline/enseignants-chercheurs/${fieldId}`}
-                >
-                  Pour plus de détails sur les enseignant-chercheurs, cliquez
-                  ici
-                </Link>
-              </i>
-            </>
-          )}
+          <GeneralIndicatorsCard generalIndicators={normalizedFieldData} />
+          <DisciplineStatusSummary
+            selectedYear={selectedYear}
+            fieldId={fieldId}
+          />
+          <i>
+            <Link
+              href={`/personnel-enseignant/discipline/enseignants-chercheurs/${fieldId}`}
+            >
+              Pour plus de détails sur les enseignant-chercheurs, cliquez ici
+            </Link>
+          </i>
         </Col>
       </Row>
-
       <Row className="fr-mt-5w fr-mb-5w"></Row>
-
-      {filteredAgeData && filteredAgeData.length > 0 && (
-        <Row gutters className="fr-mt-4w fr-mb-5w">
-          <Col md={7}>
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Id eum
-            mollitia exercitationem ullam maxime a illo, cupiditate nostrum
-            laudantium possimus doloribus iure dolor, laborum itaque, asperiores
-            molestias similique natus! Blanditiis!
-          </Col>
-          <Col md={5}>
-            <AgeDistributionPieChart
-              ageData={filteredAgeData}
-              isLoading={ageDistributionLoading}
-              year={selectedYear}
-              forcedSelectedField={fieldId}
-            />
-          </Col>
-        </Row>
-      )}
+      <Row gutters className="fr-mt-4w fr-mb-5w">
+        <Col md={7}>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Id eum
+          mollitia exercitationem ullam maxime a illo, cupiditate nostrum
+          laudantium possimus doloribus iure dolor, laborum itaque, asperiores
+          molestias similique natus! Blanditiis!
+        </Col>
+        <Col md={5}>Coucou</Col>
+      </Row>
     </Container>
   );
 }
