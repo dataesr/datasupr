@@ -6,7 +6,7 @@ const router = express.Router();
 router.get("/faculty-members-fields-status", async (req, res) => {
   try {
     const collection = db.collection("teaching-staff-fields-status");
-    const { annee } = req.query;
+    const { annee, id } = req.query;
 
     const pipeline = [];
 
@@ -87,67 +87,182 @@ router.get("/faculty-members-fields-status", async (req, res) => {
               $sum: "$disciplines.enseignants_chercheurs",
             },
             totalEcTitulaires: { $sum: "$disciplines.ec_titulaires" },
+            totalNonTitulaires: { $sum: "$disciplines.non_titulaires" },
           },
         },
       },
       {
         $addFields: {
+          "aggregatedStats.titulairesPercent": {
+            $round: [
+              {
+                $multiply: [
+                  {
+                    $divide: [
+                      "$aggregatedStats.totalTitulaires",
+                      "$totalCount",
+                    ],
+                  },
+                  100,
+                ],
+              },
+              1,
+            ],
+          },
+          "aggregatedStats.enseignantsChercheursPercent": {
+            $round: [
+              {
+                $multiply: [
+                  {
+                    $divide: [
+                      "$aggregatedStats.totalEnseignantsChercheurs",
+                      "$totalCount",
+                    ],
+                  },
+                  100,
+                ],
+              },
+              1,
+            ],
+          },
+          "aggregatedStats.nonTitulairesPercent": {
+            $round: [
+              {
+                $multiply: [
+                  {
+                    $divide: [
+                      "$aggregatedStats.totalNonTitulaires",
+                      "$totalCount",
+                    ],
+                  },
+                  100,
+                ],
+              },
+              1,
+            ],
+          },
+          "aggregatedStats.ecTitulairesPercent": {
+            $round: [
+              {
+                $multiply: [
+                  {
+                    $divide: [
+                      "$aggregatedStats.totalEcTitulaires",
+                      "$totalCount",
+                    ],
+                  },
+                  100,
+                ],
+              },
+              1,
+            ],
+          },
+        },
+      }
+    );
+
+    if (id) {
+      pipeline.push({
+        $addFields: {
+          disciplines: {
+            $filter: {
+              input: "$disciplines",
+              cond: { $eq: ["$$this.fieldId", id] },
+            },
+          },
+        },
+      });
+
+      pipeline.push({
+        $addFields: {
+          totalCount: { $sum: "$disciplines.totalCount" },
           aggregatedStats: {
+            totalTitulaires: { $sum: "$disciplines.status.titulaires.count" },
+            totalEnseignantsChercheurs: {
+              $sum: "$disciplines.status.enseignantsChercheurs.count",
+            },
+            totalNonTitulaires: {
+              $sum: "$disciplines.status.nonTitulaires.count",
+            },
+            totalEcTitulaires: {
+              $sum: "$disciplines.status.ecTitulaires.count",
+            },
             titulairesPercent: {
-              $round: [
+              $cond: [
+                { $eq: [{ $sum: "$disciplines.totalCount" }, 0] },
+                0,
                 {
-                  $multiply: [
+                  $round: [
                     {
-                      $divide: [
-                        "$aggregatedStats.totalTitulaires",
-                        "$totalCount",
+                      $multiply: [
+                        {
+                          $divide: [
+                            { $sum: "$disciplines.status.titulaires.count" },
+                            { $sum: "$disciplines.totalCount" },
+                          ],
+                        },
+                        100,
                       ],
                     },
-                    100,
+                    1,
                   ],
                 },
-                1,
               ],
             },
             enseignantsChercheursPercent: {
-              $round: [
+              $cond: [
+                { $eq: [{ $sum: "$disciplines.totalCount" }, 0] },
+                0,
                 {
-                  $multiply: [
+                  $round: [
                     {
-                      $divide: [
-                        "$aggregatedStats.totalEnseignantsChercheurs",
-                        "$totalCount",
+                      $multiply: [
+                        {
+                          $divide: [
+                            {
+                              $sum: "$disciplines.status.enseignantsChercheurs.count",
+                            },
+                            { $sum: "$disciplines.totalCount" },
+                          ],
+                        },
+                        100,
                       ],
                     },
-                    100,
+                    1,
                   ],
                 },
-                1,
               ],
             },
-            ecTitulairesPercent: {
-              $round: [
+            nonTitulairesPercent: {
+              $cond: [
+                { $eq: [{ $sum: "$disciplines.totalCount" }, 0] },
+                0,
                 {
-                  $multiply: [
+                  $round: [
                     {
-                      $divide: [
-                        "$aggregatedStats.totalEcTitulaires",
-                        "$totalCount",
+                      $multiply: [
+                        {
+                          $divide: [
+                            { $sum: "$disciplines.status.nonTitulaires.count" },
+                            { $sum: "$disciplines.totalCount" },
+                          ],
+                        },
+                        100,
                       ],
                     },
-                    100,
+                    1,
                   ],
                 },
-                1,
               ],
             },
           },
         },
-      },
-      {
-        $sort: { year: -1 },
-      }
-    );
+      });
+    }
+
+    pipeline.push({
+      $sort: { year: -1 },
+    });
 
     const result = await collection.aggregate(pipeline).toArray();
     res.json(result);

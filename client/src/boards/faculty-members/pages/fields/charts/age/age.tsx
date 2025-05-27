@@ -17,7 +17,6 @@ export function AgeDistributionPieChart({
     forcedSelectedField || "all"
   );
 
-  // Utilisation du hook directement dans le composant
   const { data: ageData, isLoading } =
     useFacultyMembersAgeDistribution(selectedYear);
 

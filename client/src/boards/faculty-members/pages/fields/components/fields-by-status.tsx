@@ -5,18 +5,19 @@ import useFacultyMembersByStatus from "../api/use-by-status";
 interface DisciplineStatusSummaryProps {
   selectedYear: string;
   isSingleDiscipline?: boolean;
+  fieldId?: string;
 }
 
 const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
   selectedYear,
   isSingleDiscipline = false,
+  fieldId,
 }) => {
-  // Utilisation du hook directement dans le composant
   const {
     data: statusData,
     isLoading,
     error,
-  } = useFacultyMembersByStatus(selectedYear);
+  } = useFacultyMembersByStatus(selectedYear, fieldId);
 
   if (isLoading) {
     return (
