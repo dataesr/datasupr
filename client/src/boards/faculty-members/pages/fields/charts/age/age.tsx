@@ -1,18 +1,25 @@
 import { useEffect, useMemo, useState } from "react";
-import { CreateChartOptions } from "../../../../components/chart-faculty-members";
 import { Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { AgeDistributionChartProps } from "../../types";
+import { createAgeDistributionChartOptions } from "./options";
+import useFacultyMembersAgeDistribution from "../../api/use-by-age";
+
+interface AgeDistributionPieChartProps {
+  selectedYear: string;
+  forcedSelectedField?: string;
+}
 
 export function AgeDistributionPieChart({
-  ageData,
-  isLoading,
-  year,
+  selectedYear,
   forcedSelectedField,
-}: AgeDistributionChartProps) {
+}: AgeDistributionPieChartProps) {
   const [selectedField, setSelectedField] = useState<string>(
     forcedSelectedField || "all"
   );
+
+  // Utilisation du hook directement dans le composant
+  const { data: ageData, isLoading } =
+    useFacultyMembersAgeDistribution(selectedYear);
 
   const config = {
     id: "age-distribution-chart",
@@ -91,85 +98,12 @@ export function AgeDistributionPieChart({
       chartTitle = `Répartition par âge - ${selectedFieldData.fieldLabel}`;
     }
 
-    const sortOrder = {
-      "35 ans et moins": 1,
-      "36 à 55 ans": 2,
-      "56 ans et plus": 3,
-    };
-    chartData.sort((a, b) => sortOrder[a.name] - sortOrder[b.name]);
-
-    const colors = {
-      "35 ans et moins": "#6EADFF",
-      "36 à 55 ans": "#000091",
-      "56 ans et plus": "#4B9DFF",
-    };
-
-    return CreateChartOptions("bar", {
-      chart: {
-        type: "bar",
-        height: 350,
-      },
-      title: {
-        text: chartTitle,
-      },
-      subtitle: {
-        text: `Année académique ${year}`,
-      },
-      xAxis: {
-        categories: chartData.map((item) => item.name),
-        title: {
-          text: null,
-        },
-        labels: {
-          style: {
-            fontSize: "14px",
-          },
-        },
-      },
-      yAxis: {
-        min: 0,
-        max: 100,
-        title: {
-          text: "Pourcentage",
-          align: "high",
-        },
-        labels: {
-          format: "{value}%",
-          overflow: "justify",
-        },
-      },
-      tooltip: {
-        formatter: function () {
-          return `<b>${this.x}</b><br>${this.y?.toFixed(1) ?? 0}% (${
-            chartData.find((d) => d.name === this.x)?.count
-          } enseignants)`;
-        },
-      },
-      plotOptions: {
-        bar: {
-          dataLabels: {
-            enabled: true,
-            format: "{y:.1f}%",
-          },
-          colorByPoint: true,
-          colors: chartData.map((item) => colors[item.name]),
-        },
-      },
-      legend: {
-        enabled: false,
-      },
-      credits: {
-        enabled: false,
-      },
-      series: [
-        {
-          name: "Âge",
-          data: chartData.map((item) => item.y),
-          type: "bar",
-        },
-      ],
-    });
-  }, [ageData, selectedField, year]);
+    return createAgeDistributionChartOptions(
+      chartData,
+      chartTitle,
+      selectedYear
+    );
+  }, [ageData, selectedField, selectedYear]);
 
   if (isLoading) {
     return (
@@ -182,7 +116,8 @@ export function AgeDistributionPieChart({
   if (!chartOptions || !ageData || !ageData.length) {
     return (
       <div className="fr-text--center fr-py-3w">
-        Aucune donnée disponible pour la répartition par âge cette année
+        Aucune donnée disponible pour la répartition par âge pour l'année{" "}
+        {selectedYear}
       </div>
     );
   }

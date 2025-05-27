@@ -1,17 +1,21 @@
 import { useMemo } from "react";
 import StatusOptions from "./options";
-import { Field } from "../../../../types";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import useFacultyMembersByStatus from "../../api/use-by-status";
 
 interface StatusDistributionProps {
-  disciplinesData: Field[];
-  title?: string;
+  selectedYear: string;
 }
 
 const StatusDistribution: React.FC<StatusDistributionProps> = ({
-  disciplinesData,
-  title = "Répartition par statut du personnel enseignant",
+  selectedYear,
 }) => {
+  const {
+    data: statusData,
+    isLoading,
+    error,
+  } = useFacultyMembersByStatus(selectedYear);
+
   const config = {
     id: "statusDistribution",
     idQuery: "statusDistribution",
@@ -28,8 +32,13 @@ const StatusDistribution: React.FC<StatusDistributionProps> = ({
   };
 
   const processedData = useMemo(() => {
-    if (!disciplinesData || disciplinesData.length === 0) return [];
-    const sortedData = [...disciplinesData]
+    // Trouver les données pour l'année spécifiée
+    const yearData = statusData?.find((data) => data.year === selectedYear);
+    const dataToProcess = yearData?.disciplines;
+
+    if (!dataToProcess || dataToProcess.length === 0) return [];
+
+    const sortedData = [...dataToProcess]
       .sort((a, b) => {
         const totalA = a.totalCount || a.total_count || 0;
         const totalB = b.totalCount || b.total_count || 0;
@@ -40,17 +49,19 @@ const StatusDistribution: React.FC<StatusDistributionProps> = ({
     return sortedData.map((disc) => {
       const totalCount = disc.totalCount || disc.total_count || 0;
       const titulaires = disc.status?.titulaires?.count || disc.titulaires || 0;
-      const nonTitulaires =
+      const nonTitulaires = Number(
         disc.status?.nonTitulaires?.count ||
-        disc.non_titulaires ||
-        totalCount - titulaires;
-
-      const enseignantsChercheurs =
+          disc.non_titulaires ||
+          totalCount - Number(titulaires)
+      );
+      const enseignantsChercheurs = Number(
         disc.status?.enseignantsChercheurs?.count ||
-        disc.enseignants_chercheurs ||
-        0;
+          disc.enseignants_chercheurs ||
+          0
+      );
 
-      const autresTitulaires = titulaires - enseignantsChercheurs;
+      const autresTitulaires =
+        Number(titulaires) - Number(enseignantsChercheurs);
 
       return {
         fieldLabel: disc.fieldLabel || disc.field_label || "",
@@ -60,19 +71,35 @@ const StatusDistribution: React.FC<StatusDistributionProps> = ({
         totalCount,
       };
     });
-  }, [disciplinesData]);
+  }, [statusData, selectedYear]);
 
   const chartOptions = StatusOptions({
     disciplines: processedData,
-    title,
   });
 
-  if (
-    !disciplinesData ||
-    disciplinesData.length === 0 ||
-    processedData.length === 0
-  )
-    return null;
+  if (isLoading) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Chargement des données par statut...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="fr-text--center fr-py-3w fr-text--red">
+        Erreur lors du chargement des données par statut
+      </div>
+    );
+  }
+
+  if (!statusData || processedData.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour les statuts pour l'année {selectedYear}
+      </div>
+    );
+  }
 
   return (
     <div>

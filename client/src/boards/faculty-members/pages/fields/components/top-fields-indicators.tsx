@@ -1,11 +1,65 @@
+import { useMemo } from "react";
 import { Col, Badge } from "@dataesr/dsfr-plus";
-import { TopFieldsIndicatorsProps } from "../types";
+import useFacultyMembersByFields from "../api/use-by-fields";
 
-const TopFieldsIndicators: React.FC<TopFieldsIndicatorsProps> = ({
-  disciplinesData,
+interface DisciplineStatsSidebarProps {
+  selectedYear: string;
+}
+
+const DisciplineStatsSidebar: React.FC<DisciplineStatsSidebarProps> = ({
+  selectedYear,
 }) => {
-  if (!disciplinesData || disciplinesData.length === 0) {
-    return <Col md={4}>Aucune donnée disponible</Col>;
+  const {
+    data: fieldData,
+    isLoading,
+    error,
+  } = useFacultyMembersByFields(selectedYear);
+
+  const disciplinesData = useMemo(() => {
+    if (!fieldData?.length || !selectedYear) return [];
+
+    return fieldData
+      .filter(
+        (item) =>
+          item.year === selectedYear || item.academic_year === selectedYear
+      )
+      .map((field) => {
+        const hasNumberMan = "numberMan" in field;
+        return {
+          fieldId: hasNumberMan ? field.field_id : field.fieldId,
+          fieldLabel: hasNumberMan ? field.field_label : field.fieldLabel,
+          maleCount: hasNumberMan ? field.numberMan : field.maleCount,
+          femaleCount: hasNumberMan ? field.numberWoman : field.femaleCount,
+          unknownCount: hasNumberMan
+            ? field.numberUnknown || 0
+            : field.unknownCount || 0,
+          totalCount: hasNumberMan
+            ? field.numberMan + field.numberWoman + (field.numberUnknown || 0)
+            : field.totalCount ||
+              field.maleCount + field.femaleCount + (field.unknownCount || 0),
+        };
+      })
+      .sort((a, b) => b.totalCount - a.totalCount);
+  }, [fieldData, selectedYear]);
+
+  if (isLoading) {
+    return (
+      <Col md={4}>
+        <div className="fr-text--center fr-py-3w">
+          Chargement des top disciplines...
+        </div>
+      </Col>
+    );
+  }
+
+  if (error || !disciplinesData || disciplinesData.length === 0) {
+    return (
+      <Col md={4}>
+        <div className="fr-text--center fr-py-3w">
+          Aucune donnée disponible pour {selectedYear}
+        </div>
+      </Col>
+    );
   }
 
   return (
@@ -34,7 +88,7 @@ const TopFieldsIndicators: React.FC<TopFieldsIndicatorsProps> = ({
                     </div>
                     <div className="fr-text--xs fr-mb-1w">
                       {d.totalCount?.toLocaleString() || 0} enseignants
-                      <br />{" "}
+                      <br />
                       {Math.round(
                         ((d.femaleCount || 0) / (d.totalCount || 1)) * 100
                       )}
@@ -94,4 +148,4 @@ const TopFieldsIndicators: React.FC<TopFieldsIndicatorsProps> = ({
   );
 };
 
-export default TopFieldsIndicators;
+export default DisciplineStatsSidebar;

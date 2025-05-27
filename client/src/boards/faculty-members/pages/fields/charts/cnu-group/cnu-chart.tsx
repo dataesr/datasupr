@@ -1,15 +1,109 @@
 import { useMemo } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import { CnuGroupsChartProps } from "../../types";
+import {
+  createCnuGroupsChartOptions,
+  getColorForDiscipline,
+  getShade,
+} from "./options";
+import useFacultyMembersByFields from "../../api/use-by-fields";
+import { CNUGroup } from "../../types";
 
-export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
-  const groupedData = useMemo(() => {
+interface DataPoint {
+  name: string;
+  y: number;
+  x: number;
+  cnuGroupId: string | number;
+  color: Highcharts.ColorType;
+  maleCount: number;
+  femaleCount: number;
+  malePercent: number;
+  femalePercent: number;
+  cnuGroupPercent: number;
+}
+
+interface GroupedData {
+  discipline: string;
+  groups: unknown[];
+  totalCount: number;
+}
+
+interface CnuGroupsChartProps {
+  selectedYear: string;
+}
+
+export default function CnuGroupsChart({ selectedYear }: CnuGroupsChartProps) {
+  const { data: fieldData } = useFacultyMembersByFields(selectedYear);
+
+  const cnuGroups = useMemo(() => {
+    if (!fieldData?.length || !selectedYear) {
+      return [];
+    }
+
+    const currentYearFields = fieldData.filter(
+      (item) =>
+        item.year === selectedYear || item.academic_year === selectedYear
+    );
+
+    const allGroups: CNUGroup[] = [];
+
+    currentYearFields.forEach((field) => {
+      const groups = field.headcount_per_cnu_group || field.cnuGroups || [];
+      const fieldId = field.fieldId || field.field_id;
+      const fieldLabel = field.fieldLabel || field.field_label;
+
+      groups.forEach((group) => {
+        const groupId = group.cnuGroupId || group.cnu_group_id;
+        const groupLabel = group.cnuGroupLabel || group.cnu_group_label;
+        const maleCount = group.numberMan || group.maleCount || 0;
+        const femaleCount = group.numberWoman || group.femaleCount || 0;
+        const unknownCount = group.numberUnknown || group.unknownCount || 0;
+        const totalCount = maleCount + femaleCount + unknownCount;
+
+        allGroups.push({
+          cnuGroupId: groupId,
+          cnuGroupLabel: groupLabel,
+          maleCount: maleCount || 0,
+          femaleCount: femaleCount || 0,
+          unknownCount: unknownCount || 0,
+          totalCount: totalCount || 0,
+          fieldId,
+          fieldLabel,
+          cnuSections: [],
+        });
+      });
+    });
+
+    const mergedGroups = Object.values(
+      allGroups.reduce<Record<string, CNUGroup>>((acc, group) => {
+        const key = group.cnuGroupId;
+        if (!key) return acc;
+
+        if (!acc[key]) {
+          acc[key] = { ...group };
+        } else {
+          acc[key]!.maleCount =
+            (acc[key]!.maleCount || 0) + (group.maleCount || 0);
+          acc[key]!.femaleCount =
+            (acc[key]!.femaleCount || 0) + (group.femaleCount || 0);
+          acc[key]!.unknownCount =
+            (acc[key]!.unknownCount || 0) + (group.unknownCount || 0);
+          acc[key]!.totalCount =
+            (acc[key]!.totalCount || 0) + (group.totalCount || 0);
+        }
+        return acc;
+      }, {})
+    ).sort((a, b) => (b.totalCount || 0) - (a.totalCount || 0));
+
+    return mergedGroups;
+  }, [fieldData, selectedYear]);
+
+  const groupedData: GroupedData[] = useMemo(() => {
     if (!cnuGroups || cnuGroups.length === 0) return [];
 
     const disciplines = Array.from(
       new Set(cnuGroups.map((group) => group.fieldLabel).filter(Boolean))
-    );
+    ) as string[];
 
     const sortedDisciplines = [...disciplines].sort((a, b) => {
       const totalA = cnuGroups
@@ -39,56 +133,26 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
     });
   }, [cnuGroups]);
 
-  const categories = groupedData
-    .map((d) => d.discipline)
-    .filter((d): d is string => Boolean(d));
+  const categories = groupedData.map((d) => d.discipline);
 
-  const getColorForDiscipline = (discipline: string) => {
-    if (discipline.includes("Science")) return "#3558a2";
-    if (discipline.includes("Lettre") || discipline.includes("humaine"))
-      return "#a94645";
-    if (discipline.includes("Droit") || discipline.includes("économie"))
-      return "#6e445a";
-    if (discipline.includes("Médecine")) return "#a94645";
-    if (discipline.includes("Pharma")) return "#009099";
-    return "#fcc63a";
-  };
-
-  const getShade = (baseColor: string, index: number, total: number) => {
-    const opacity = Math.max(0.3, 1 - (index * 0.7) / Math.max(1, total - 1));
-    return Highcharts.color(baseColor).setOpacity(opacity).get();
-  };
-
-  const data = useMemo(() => {
-    interface DataPoint {
-      name: string;
-      y: number;
-      x: number;
-      cnuGroupId: string | number;
-      color: Highcharts.ColorType;
-      maleCount: number;
-      femaleCount: number;
-      malePercent: number;
-      femalePercent: number;
-      cnuGroupPercent: number;
-    }
-
+  const data: DataPoint[] = useMemo(() => {
     const result: DataPoint[] = [];
 
     groupedData.forEach((disciplineData) => {
-      const baseColor = getColorForDiscipline(disciplineData.discipline || "");
+      const baseColor = getColorForDiscipline(disciplineData.discipline);
 
       disciplineData.groups.forEach((group, index) => {
-        const maleCount = group.maleCount || group.numberMan || 0;
-        const femaleCount = group.femaleCount || group.numberWoman || 0;
-        const totalCount = group.totalCount || maleCount + femaleCount;
-        const groupId = group.cnuGroupId || group.cnu_group_id || "";
-        const groupLabel = group.cnuGroupLabel || group.cnu_group_label || "";
+        const typedGroup = group as CNUGroup;
+        const maleCount = typedGroup.maleCount || 0;
+        const femaleCount = typedGroup.femaleCount || 0;
+        const totalCount = typedGroup.totalCount || 0;
+        const groupId = typedGroup.cnuGroupId || "";
+        const groupLabel = typedGroup.cnuGroupLabel || "";
 
         result.push({
           name: `${groupLabel} (Groupe ${groupId})`,
           y: totalCount,
-          x: categories.indexOf(disciplineData.discipline || ""),
+          x: categories.indexOf(disciplineData.discipline),
           cnuGroupId: groupId,
           color: getShade(baseColor, index, disciplineData.groups.length),
           maleCount,
@@ -108,137 +172,15 @@ export default function CnuGroupsChart({ cnuGroups }: CnuGroupsChartProps) {
     return result;
   }, [groupedData, categories]);
 
-  const options: Highcharts.Options = {
-    chart: {
-      type: "column",
-      height: 600,
-      style: {
-        fontFamily: "Marianne, sans-serif",
-      },
-    },
-    title: {
-      text: "Répartition des groupes CNU par discipline",
-      style: {
-        fontSize: "18px",
-        fontWeight: "bold",
-      },
-      align: "left",
-    },
-    subtitle: {
-      text: "Année universitaire",
-      style: {
-        color: "#666666",
-        fontSize: "14px",
-      },
-      align: "left",
-    },
-    xAxis: {
-      categories,
-      labels: {
-        style: {
-          fontWeight: "bold",
-          fontSize: "12px",
-        },
-        formatter: function () {
-          const index = categories.indexOf(this.value as string);
-          const totalCount = groupedData[index]?.totalCount || 0;
-          return `${
-            this.value
-          }<br><span style="font-weight:normal;font-size:12px;">${totalCount.toLocaleString()} pers.</span>`;
-        },
-        useHTML: true,
-      },
-    },
-    yAxis: {
-      title: {
-        text: "Effectifs",
-      },
-      labels: {
-        formatter: function () {
-          const value = Number(this.value);
-          return value >= 1000 ? `${value / 1000}k` : value.toString();
-        },
-      },
-    },
-    tooltip: {
-      useHTML: true,
-      formatter: function () {
-        const point = this.point as Highcharts.Point & {
-          name: string;
-          y: number;
-          cnuGroupId: string | number;
-          maleCount: number;
-          femaleCount: number;
-          malePercent: number;
-          femalePercent: number;
-          cnuGroupPercent: number;
-        };
-        return `<div style="padding:8px">
-                <div style="font-weight:bold;margin-bottom:5px">${
-                  point.name
-                }</div>
-                <div style="font-size:14px;font-weight:bold;margin-bottom:8px">${point.y.toLocaleString()} enseignants</div>
-                <div style="color:#666;margin-bottom:5px">${
-                  point.cnuGroupPercent
-                }% de la discipline</div>
-                <div style="margin-top:8px">👨 Hommes: ${point.maleCount.toLocaleString()} (${
-          point.malePercent
-        }%)</div>
-                <div>👩 Femmes: ${point.femaleCount.toLocaleString()} (${
-          point.femalePercent
-        }%)</div>
-                </div>`;
-      },
-    },
-    plotOptions: {
-      column: {
-        stacking: "percent",
-        borderWidth: 0,
-        borderRadius: 2,
-      },
-      series: {
-        dataLabels: {
-          enabled: true,
-          formatter: function () {
-            const point = this.point as Highcharts.Point & {
-              y: number;
-              cnuGroupId: string | number;
-              cnuGroupPercent: number;
-            };
-            if (point.y < 1000) return "";
-            return `Gr.${point.cnuGroupId} (${point.cnuGroupPercent}%)`;
-          },
-          style: {
-            fontSize: "11px",
-            fontWeight: "normal",
-            color: "#FFFFFF",
-            textOutline: "1px contrast",
-          },
-        },
-      },
-    },
-    legend: {
-      enabled: false,
-    },
-    credits: {
-      enabled: false,
-    },
-    series: [
-      {
-        name: "Groupes CNU",
-        data: data,
-        pointPadding: 0.1,
-        groupPadding: 0.2,
-        colorByPoint: true,
-        type: "column",
-      },
-    ],
-  };
+  const options = createCnuGroupsChartOptions(data, categories, groupedData);
 
   if (!cnuGroups || cnuGroups.length === 0) {
     return (
       <div className="fr-alert fr-alert--info fr-my-3w">
-        <p>Aucune donnée disponible pour les groupes CNU</p>
+        <p>
+          Aucune donnée disponible pour les groupes CNU pour l'année{" "}
+          {selectedYear}
+        </p>
       </div>
     );
   }

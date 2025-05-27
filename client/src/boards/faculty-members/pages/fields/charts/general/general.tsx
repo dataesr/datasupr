@@ -1,16 +1,17 @@
 import { Link } from "@dataesr/dsfr-plus";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import useFacultyMembersByFields from "../../api/use-by-fields";
 
 interface FieldsDistributionBarProps {
-  fieldsData: [];
   selectedYear: string;
 }
 
 const FieldsDistributionBar: React.FC<FieldsDistributionBarProps> = ({
-  fieldsData,
   selectedYear,
 }) => {
+  const { data: fieldsData } = useFacultyMembersByFields(selectedYear);
+
   const chartOptions = options({ fieldsData, selectedYear });
 
   const config = {
