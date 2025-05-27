@@ -306,4 +306,89 @@ router
     return res.json(dataReturn);
   });
 
+  router
+    .route(
+      "/european-projects/positionning/funding-evo-3-years"
+    )
+    .get(async (req, res) => {
+      const filters = {};
+      if (req.query.pillars) {
+        const pillars = req.query.pillars.split("|");
+        filters.pilier_code = { $in: pillars };
+      }
+      if (req.query.programs) {
+        const programs = req.query.programs.split("|");
+        filters.programme_code = { $in: programs };
+      }
+      if (req.query.thematics) {
+        const thematics = req.query.thematics.split("|");
+        filters.thema_code = { $in: thematics };
+      }
+      if (req.query.destinations) {
+        const destinations = req.query.destinations.split("|");
+        filters.destination_code = { $in: destinations };
+      }
+      filters.country_code = { $nin: ["ZOE", "ZOI"] };
+      filters.call_year = { $in: ["2021", "2022", "2023"] };
+  
+      const query = () => {
+        return db
+        .collection("fr-esr-all-projects-synthese")
+        .aggregate([
+          {
+            $match: { $and: [filters] },
+          },
+          {
+            $group: {
+              _id: {
+                stage: "$stage",
+                call_year: "$call_year",
+                id: "$country_code",
+                name_fr: "$country_name_fr",
+                name_en: "$country_name_en",
+              },
+              total_fund_eur: { $sum: "$fund_eur" },
+              total_coordination_number: { $sum: "$coordination_number" },
+              total_number_involved: { $sum: "$number_involved" },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                stage: "$_id.stage",
+                id: "$_id.id",
+                name_fr: "$_id.name_fr",
+                name_en: "$_id.name_en",
+              },
+              data: {
+                $push: {
+                  year: "$_id.call_year",
+                  total_fund_eur: "$total_fund_eur",
+                  total_coordination_number: "$total_coordination_number",
+                  total_number_involved: "$total_number_involved"
+                }
+              }
+            }
+          },
+          {
+            $project: {
+              _id: 0,
+              id: "$_id.id",
+              name_fr: "$_id.name_fr",
+              name_en: "$_id.name_en",
+              stage: "$_id.stage",
+              data: 1
+            }
+          },
+          {
+            $sort: { "data.year": 1 }
+          },
+        ])
+        .toArray();
+      }
+  
+      const data = await query();
+      return res.json(data);
+    });
+
 export default router;
