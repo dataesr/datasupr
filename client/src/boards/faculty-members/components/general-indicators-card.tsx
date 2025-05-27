@@ -4,21 +4,21 @@ import { useMemo } from "react";
 import { DemographicData } from "../pages/geo/types";
 
 const GeneralIndicatorsCard = ({
-  structureData,
+  generalIndicators,
 }: {
-  structureData: DemographicData[];
+  generalIndicators: DemographicData[];
 }) => {
   const { fieldId } = useParams<{ fieldId: string }>();
 
   const filteredData = useMemo(() => {
-    if (!structureData || structureData.length === 0) return [];
+    if (!generalIndicators || generalIndicators.length === 0) return [];
 
     if (fieldId) {
-      return structureData.filter((item) => item.fieldId === fieldId);
+      return generalIndicators.filter((item) => item.fieldId === fieldId);
     }
 
-    return structureData;
-  }, [structureData, fieldId]);
+    return generalIndicators;
+  }, [generalIndicators, fieldId]);
 
   if (!filteredData.length) {
     return <Col md={4}>Aucune donnée disponible pour cette discipline</Col>;

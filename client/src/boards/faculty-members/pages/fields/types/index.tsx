@@ -1,20 +1,43 @@
 import { DemographicData } from "../../geo/types";
 
+export interface StatusItem {
+  count: number;
+  percent: number;
+}
+
+export interface StatusBreakdown {
+  titulaires: StatusItem;
+  nonTitulaires: StatusItem;
+  enseignantsChercheurs: StatusItem;
+  nonEnseignantsChercheurs: StatusItem;
+  ecTitulaires: StatusItem;
+}
+
 export interface Field {
   fieldId?: string;
   field_id?: string;
   fieldLabel?: string;
   field_label?: string;
+
   year?: string;
   academic_year?: string;
+
+  totalCount?: number;
+  total_count?: number;
+
   maleCount?: number;
   numberMan?: number;
   femaleCount?: number;
   numberWoman?: number;
   unknownCount?: number;
   numberUnknown?: number;
-  totalCount?: number;
-  total_count?: number;
+
+  status?: StatusBreakdown;
+
+  titulaires?: string[] | number;
+  non_titulaires?: string[] | number;
+  enseignants_chercheurs?: string[] | number;
+
   cnuGroups?: CNUGroup[];
   headcount_per_cnu_group?: CNUGroup[];
 }

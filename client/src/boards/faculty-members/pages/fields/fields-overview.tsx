@@ -18,10 +18,9 @@ import CnuGroupsChart from "./charts/cnu-group/cnu-chart";
 import useFacultyMembersByStatus from "./api/use-by-status";
 import DisciplineStatusSummary from "./components/fields-by-status";
 import StatusDistribution from "./charts/status/status";
-import useFacultyMembersAgeDistribution from "./api/use-by-age";
 import { AgeDistributionPieChart } from "./charts/age/age";
 import GeneralIndicatorsCard from "../../components/general-indicators-card";
-import { CNUGroup, CNUSection, FieldSimple } from "./types";
+import { FieldSimple } from "./types";
 
 export default function FieldOverview() {
   const [selectedYear, setSelectedYear] = useState<string>("");
@@ -41,9 +40,6 @@ export default function FieldOverview() {
     isLoading: statusLoading,
     error: statusError,
   } = useFacultyMembersByStatus(selectedYear);
-
-  const { data: ageDistributionData, isLoading: ageDistributionLoading } =
-    useFacultyMembersAgeDistribution(selectedYear);
 
   useEffect(() => {
     if (allFieldsData?.length) {
@@ -76,110 +72,6 @@ export default function FieldOverview() {
       );
     }
   }, [allFieldsData, selectedYear]);
-
-  const { cnuGroups } = useMemo(() => {
-    if (!fieldData?.length || !selectedYear) {
-      return { cnuGroups: [], cnuSections: [] };
-    }
-
-    const currentYearFields = fieldData.filter(
-      (item) =>
-        item.year === selectedYear || item.academic_year === selectedYear
-    );
-
-    const allGroups: CNUGroup[] = [];
-    const allSections: CNUSection[] = [];
-
-    currentYearFields.forEach((field) => {
-      const groups = field.headcount_per_cnu_group || field.cnuGroups || [];
-      const fieldId = field.fieldId || field.field_id;
-      const fieldLabel = field.fieldLabel || field.field_label;
-
-      groups.forEach((group) => {
-        const groupId = group.cnuGroupId || group.cnu_group_id;
-        const groupLabel = group.cnuGroupLabel || group.cnu_group_label;
-        const maleCount = group.numberMan || group.maleCount || 0;
-        const femaleCount = group.numberWoman || group.femaleCount || 0;
-        const unknownCount = group.numberUnknown || group.unknownCount || 0;
-        const totalCount = maleCount + femaleCount + unknownCount;
-
-        allGroups.push({
-          cnuGroupId: groupId,
-          cnuGroupLabel: groupLabel,
-          maleCount: maleCount || 0,
-          femaleCount: femaleCount || 0,
-          unknownCount: unknownCount || 0,
-          totalCount: totalCount || 0,
-          fieldId,
-          fieldLabel,
-          cnuSections: [],
-        });
-
-        const sections =
-          group.headcount_per_cnu_section || group.cnuSections || [];
-
-        sections.forEach((section) => {
-          if (!section) return;
-
-          const sectionId =
-            section.cnuSectionId || section.cnu_section_id || "N/A";
-          const sectionLabel =
-            section.cnuSectionLabel ||
-            section.cnu_section_label ||
-            "Non spécifié";
-
-          if (sectionId === "N/A" || sectionLabel === "Non spécifié") return;
-
-          const secMaleCount = section.numberMan || section.maleCount || 0;
-          const secFemaleCount =
-            section.numberWoman || section.femaleCount || 0;
-          const secUnknownCount =
-            section.numberUnknown || section.unknownCount || 0;
-
-          allSections.push({
-            cnuSectionId: sectionId,
-            cnuSectionLabel: sectionLabel,
-            maleCount: secMaleCount,
-            femaleCount: secFemaleCount,
-            unknownCount: secUnknownCount,
-            totalCount: secMaleCount + secFemaleCount + secUnknownCount,
-            cnuGroupId: groupId,
-            cnuGroupLabel: groupLabel,
-            fieldId,
-            fieldLabel,
-          });
-        });
-      });
-    });
-
-    const mergedGroups = Object.values(
-      allGroups.reduce<Record<string, CNUGroup>>((acc, group) => {
-        const key = group.cnuGroupId;
-        if (!key) return acc;
-
-        if (!acc[key]) {
-          acc[key] = { ...group };
-        } else {
-          acc[key]!.maleCount =
-            (acc[key]!.maleCount || 0) + (group.maleCount || 0);
-          acc[key]!.femaleCount =
-            (acc[key]!.femaleCount || 0) + (group.femaleCount || 0);
-          acc[key]!.unknownCount =
-            (acc[key]!.unknownCount || 0) + (group.unknownCount || 0);
-          acc[key]!.totalCount =
-            (acc[key]!.totalCount || 0) + (group.totalCount || 0);
-        }
-        return acc;
-      }, {})
-    ).sort((a, b) => (b.totalCount || 0) - (a.totalCount || 0));
-
-    return {
-      cnuGroups: mergedGroups,
-      cnuSections: allSections.sort(
-        (a, b) => (b.totalCount ?? 0) - (a.totalCount ?? 0)
-      ),
-    };
-  }, [fieldData, selectedYear]);
 
   const disciplinesData = useMemo(() => {
     if (!fieldData?.length || !selectedYear) return [];
@@ -236,7 +128,6 @@ export default function FieldOverview() {
           )}
         </Col>
       </Row>
-
       <Row className="fr-mt-3w">
         {shareTitulaire == 100 && (
           <Notice closeMode={"disallow"} type={"warning"}>
@@ -249,7 +140,6 @@ export default function FieldOverview() {
           Explorer le personnel enseignant par grande discipline
         </Title>
       </Row>
-
       <Row>
         <Col md={8} className="fr-pr-8w">
           <Text>
@@ -267,48 +157,31 @@ export default function FieldOverview() {
             magna.
           </Text>
           {fieldData && selectedYear && (
-            <FieldsDistributionBar
-              fieldsData={fieldData}
-              selectedYear={selectedYear}
-            />
+            <FieldsDistributionBar selectedYear={selectedYear} />
           )}
-          <CnuGroupsChart cnuGroups={cnuGroups} />
-          <StatusDistribution
-            disciplinesData={statusData?.[0].disciplines ?? []}
-          />
+          <CnuGroupsChart selectedYear={selectedYear} />
+          <StatusDistribution selectedYear={selectedYear} />
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea repellat
           corporis est laudantium consequuntur consectetur, odit temporibus!
           Eligendi, vitae. Vero, harum molestias? Repellendus voluptatem non
           aperiam? Enim ab obcaecati non?
-          {selectedYear && (
-            <div className="fr-mt-3w">
-              {ageDistributionData && (
-                <AgeDistributionPieChart
-                  ageData={ageDistributionData}
-                  isLoading={ageDistributionLoading}
-                  year={selectedYear}
-                  forcedSelectedField={undefined}
-                />
-              )}
-            </div>
-          )}
+          <div className="fr-mt-3w">
+            <AgeDistributionPieChart
+              selectedYear={selectedYear}
+              forcedSelectedField={undefined}
+            />
+          </div>
         </Col>
-
         <Col md={4} style={{ textAlign: "center" }}>
-          <GeneralIndicatorsCard structureData={disciplinesData} />
-          <DisciplineStatsSidebar disciplinesData={disciplinesData} />
+          <GeneralIndicatorsCard generalIndicators={disciplinesData} />
+          <DisciplineStatsSidebar selectedYear={selectedYear} />
           {statusData && statusData.length > 0 && (
             <>
-              <DisciplineStatusSummary
-                totalCount={statusData[0].total_count ?? 0}
-                aggregatedStats={statusData[0].aggregatedStats}
-                fields={statusData[0].disciplines ?? []}
-              />
+              <DisciplineStatusSummary selectedYear={selectedYear} />
             </>
           )}
         </Col>
       </Row>
-
       <Row className="fr-mt-4w fr-mb-5w">
         <Col>
           <Title as="h4" look="h5">

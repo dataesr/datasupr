@@ -1,13 +1,57 @@
 import { Title } from "@dataesr/dsfr-plus";
 import "./styles.scss";
-import { DisciplineStatusSummaryProps } from "../types";
+import useFacultyMembersByStatus from "../api/use-by-status";
+
+interface DisciplineStatusSummaryProps {
+  selectedYear: string;
+  isSingleDiscipline?: boolean;
+}
 
 const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
-  aggregatedStats,
-  fields,
+  selectedYear,
   isSingleDiscipline = false,
 }) => {
-  if (!fields || fields.length === 0) return null;
+  // Utilisation du hook directement dans le composant
+  const {
+    data: statusData,
+    isLoading,
+    error,
+  } = useFacultyMembersByStatus(selectedYear);
+
+  if (isLoading) {
+    return (
+      <div className="sidebar-status-summary fr-p-2w">
+        <div className="fr-text--center fr-text--xs">
+          Chargement des statuts...
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !statusData || statusData.length === 0) {
+    return (
+      <div className="sidebar-status-summary fr-p-2w">
+        <div className="fr-text--center fr-text--xs">
+          Aucune donnée de statut disponible
+        </div>
+      </div>
+    );
+  }
+
+  // Récupérer les données pour l'année sélectionnée
+  const yearData = statusData.find((data) => data.year === selectedYear);
+
+  if (!yearData || !yearData.disciplines || yearData.disciplines.length === 0) {
+    return (
+      <div className="sidebar-status-summary fr-p-2w">
+        <div className="fr-text--center fr-text--xs">
+          Aucune donnée disponible pour {selectedYear}
+        </div>
+      </div>
+    );
+  }
+
+  const { aggregatedStats, disciplines: fields } = yearData;
 
   const statusItems = [
     {
@@ -78,7 +122,7 @@ const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
 
       {isSingleDiscipline && fields.length > 0 && (
         <div className="fr-mt-2w fr-text--xs fr-text--mention-grey">
-          Données basées sur {fields[0].total_count?.toLocaleString() || 0}{" "}
+          Données basées sur {yearData.totalCount?.toLocaleString() || 0}{" "}
           enseignants
         </div>
       )}

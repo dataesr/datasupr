@@ -22,14 +22,14 @@ const CreateChartOptions = (
 };
 
 const DISCIPLINE_COLORS = {
-  D: "#3558a2", // Droit, économie et gestion - bleu professionnel
-  L: "#6e445a", // Lettres et sciences humaines - violet
-  S: "#2f4077", // Sciences - bleu foncé
-  M: "#a94645", // Médecine - rouge médical
-  G: "#ef8969", // Pharmacie et Autres Santé - rose saumon
-  A: "#745b47", // Odontologie - marron
-  O: "#006a6f", // Personnel des grands établissements - vert professionnel
-  P: "#929292", // Non spécifiée - gris neutre
+  D: "#3558a2",
+  L: "#6e445a",
+  S: "#2f4077",
+  M: "#a94645",
+  G: "#ef8969",
+  A: "#745b47",
+  O: "#006a6f",
+  P: "#929292",
 };
 
 export default function Options({
