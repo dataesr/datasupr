@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate, useSearchParams } from "react-router-dom";
 
 import Beneficiaries from "./pages/beneficiaries/index.tsx";
+import Collaborations from "./pages/collaborations/index.tsx";
 import Overview from "./pages/overview/index.tsx";
 import Positioning from "./pages/positioning/index.tsx";
 import ProjectsTypes from "./pages/projects-types/index.tsx";
@@ -42,7 +43,7 @@ export default function EuropeanProjectsRoutes() {
         <Route element={<SidemenuLayout />}>
           <Route path="synthese" element={<RouteWithTitle titleKey="synthese" element={<Overview />} />} />
           <Route path="positionnement" element={<RouteWithTitle titleKey="positionnement" element={<Positioning />} />} />
-          <Route path="collaborations" element={<RouteWithTitle titleKey="collaborations" element={<div>Collaborations</div>} />} />
+          <Route path="collaborations" element={<RouteWithTitle titleKey="collaborations" element={<Collaborations />} />} />
           <Route path="beneficiaires" element={<RouteWithTitle titleKey="beneficiaires" element={<Beneficiaries />} />} />
           <Route path="beneficiaires-types" element={<RouteWithTitle titleKey="beneficiaires-types" element={<div>Types de bénéficiaires</div>} />} />
         </Route>
