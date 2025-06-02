@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
 import { GetData } from "./query";
 import options from "./options";
@@ -19,8 +20,11 @@ export default function CountriesCollaborationsBubble() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const country_code = searchParams.get("country_code") || "FRA";
-  const nbToShow = 10; // Number of countries to show in the bubble chart
+  const [nbToShow, setNbToShow] = useState(10); // Default number of countries to show
 
+  // TODO : ajouter en dessous la liste complète en tableau avec les mêmes données
+  // TODO : ajouter un bouton pour télécharger les données au format CSV
+  // TODO : ajouter un bouton pour télécharger les données au format Excel
   const configChart = {
     id: "CountriesCollaborationsBubble",
     title: {
@@ -59,13 +63,18 @@ export default function CountriesCollaborationsBubble() {
             {getI18nLabel("title")}
           </Title>
         </Col>
+        <Col className="text-right">
+          <Button disabled={nbToShow >= data.length} onClick={() => setNbToShow((prev) => prev + 5)} size="sm" variant="secondary">
+            {getI18nLabel("show_more_countries")} ({nbToShow + 5})
+          </Button>
+        </Col>
       </Row>
       <Row>
         <Col>
           <ChartWrapper
             config={configChart}
             legend={null}
-            options={options(data, currentLang)}
+            options={options(data, currentLang, nbToShow)}
             renderData={() => null} // TODO: add data table
           />
         </Col>

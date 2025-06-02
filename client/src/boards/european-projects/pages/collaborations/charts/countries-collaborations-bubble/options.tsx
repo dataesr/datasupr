@@ -5,7 +5,7 @@ import { CreateChartOptions } from "../../../../components/chart-ep";
 export default function Options(data, currentLang, nbToShow = 10) {
   if (!data) return null;
 
-  console.log("Options data:", data);
+  // console.log("Options data:", data);
 
   const newOptions: HighchartsInstance.Options = {
     // xAxis: {

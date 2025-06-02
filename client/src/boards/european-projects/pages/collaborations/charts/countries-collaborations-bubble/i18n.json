@@ -26,5 +26,9 @@
   "sort-by-successful-project": {
     "fr": "Trier par projets lauréats",
     "en": "Sort by successful projects"
+  },
+  "show_more_countries": {
+    "fr": "Afficher plus de pays",
+    "en": "Show more countries"
   }
 }
