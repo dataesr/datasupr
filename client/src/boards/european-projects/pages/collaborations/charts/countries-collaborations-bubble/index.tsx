@@ -65,7 +65,7 @@ export default function CountriesCollaborationsBubble() {
         </Col>
         <Col className="text-right">
           <Button disabled={nbToShow >= data.length} onClick={() => setNbToShow((prev) => prev + 5)} size="sm" variant="secondary">
-            {getI18nLabel("show_more_countries")} ({nbToShow + 5})
+            {getI18nLabel("show_more_countries")}
           </Button>
         </Col>
       </Row>

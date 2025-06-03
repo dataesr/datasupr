@@ -28,7 +28,11 @@
     "en": "Sort by successful projects"
   },
   "show_more_countries": {
-    "fr": "Afficher plus de pays",
-    "en": "Show more countries"
+    "fr": "Afficher plus de pays (+5)",
+    "en": "Show more countries (+5)"
+  },
+  "number-of-common-projects": {
+    "fr": "Nombre de projets communs",
+    "en": "Number of common projects"
   }
 }

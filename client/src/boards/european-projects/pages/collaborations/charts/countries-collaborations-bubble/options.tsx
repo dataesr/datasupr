@@ -1,33 +1,24 @@
 import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
+import i18n from "./i18n.json";
+const rootStyles = getComputedStyle(document.documentElement);
 
 export default function Options(data, currentLang, nbToShow = 10) {
   if (!data) return null;
 
-  // console.log("Options data:", data);
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
 
   const newOptions: HighchartsInstance.Options = {
-    // xAxis: {
-    //   type: "category",
-    // },
-    // yAxis: [
-    //   {
-    //     min: 0,
-    //     title: {
-    //       text: "Euros € (millions)",
-    //     },
-    //   },
-    // ],
-    // tooltip: {
-    //   pointFormat: "Total des subventions : <b>{point.y:.1f} €</b>",
-    // },
+    tooltip: {
+      pointFormat: "<b>{point.y}</b>",
+    },
     plotOptions: {
       packedbubble: {
         minSize: "30%",
-        maxSize: "120%",
-        // zMin: 0,
-        // zMax: 1000,
+        maxSize: "150%",
         layoutAlgorithm: {
           splitSeries: false,
           gravitationalConstant: 0.02,
@@ -51,10 +42,11 @@ export default function Options(data, currentLang, nbToShow = 10) {
     series: [
       {
         type: "packedbubble",
-        name: "test",
+        name: getI18nLabel("number-of-common-projects"),
         data: data.slice(0, nbToShow).map((item) => ({
           name: item[`country_name_${currentLang}`],
           value: item.total_collaborations,
+          color: rootStyles.getPropertyValue("--collaboration-color"),
         })),
       },
     ],
