@@ -27,6 +27,7 @@ export default function CountriesCollaborationsBubble() {
   // TODO : ajouter un bouton pour télécharger les données au format Excel
   const configChart = {
     id: "CountriesCollaborationsBubble",
+    queryId: "CountriesCollaborations",
     title: {
       fr: `Top ${nbToShow} des pays ayant collaborés avec le pays sélectionné`,
       en: "Countries that collaborated with the selected country",

@@ -6,6 +6,7 @@ import CountriesCollaborationsBubble from "./charts/countries-collaborations-bub
 
 // import i18n from "./i18n.json";
 import Callout from "../../../../components/callout";
+import CountriesCollaborationsTable from "./charts/countries-collaborations-table";
 
 export default function Collaborations() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,6 +29,7 @@ export default function Collaborations() {
       </Callout>
 
       <CountriesCollaborationsBubble />
+      <CountriesCollaborationsTable />
     </Container>
   );
 }

@@ -38,5 +38,13 @@
   "sort-by": {
     "fr": "Trier par",
     "en": "Sort by"
+  },
+  "country": {
+    "fr": "Pays",
+    "en": "Country"
+  },
+  "download_data": {
+    "fr": "Télécharger les données",
+    "en": "Download data"
   }
 }

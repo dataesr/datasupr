@@ -1,5 +1,7 @@
 import Cookies from "js-cookie";
 
+const { VITE_APP_SERVER_URL } = import.meta.env;
+
 type Geo = {
   geo_id: string;
   geo_nom: string;
@@ -51,7 +53,6 @@ function getParentFromLevel(parents, geoId) {
   }
   if (geoId === "D978") {
     return { geo_nom: parents.reg_nom, geo_id: parents.reg_id };
-
   }
   if (geoId.startsWith("R")) {
     return { geo_nom: "France", geo_id: "PAYS_100" };
@@ -65,7 +66,7 @@ function getParentFromLevel(parents, geoId) {
   if (geoId.startsWith("U")) {
     return { geo_nom: parents.reg_nom, geo_id: parents.reg_id };
   }
-  
+
   // default = communes
   return { geo_nom: parents.dep_nom, geo_id: parents.dep_id };
 }
@@ -89,9 +90,7 @@ const getSortedfavoriteIdsInCookie = () => {
       favoriteIdsCount[element] = 1;
     }
   });
-  const sortedfavoriteIds = Object.keys(favoriteIdsCount).sort(
-    (a, b) => favoriteIdsCount[b] - favoriteIdsCount[a]
-  );
+  const sortedfavoriteIds = Object.keys(favoriteIdsCount).sort((a, b) => favoriteIdsCount[b] - favoriteIdsCount[a]);
   return sortedfavoriteIds;
 };
 
@@ -120,6 +119,19 @@ function getFlagEmoji(countryCode) {
   return String.fromCodePoint(...codePoints);
 }
 
+async function getNeighbouringCountriesFromIso3(iso3: string) {
+  if (!iso3) return [];
+  try {
+    const baseUrl = VITE_APP_SERVER_URL || "http://localhost:3000";
+    const response = await fetch(`${baseUrl}/geo/get-from-iso3?iso3=${iso3}`);
+    const data = await response.json();
+    return data.borders ? data.borders.split(",") : [];
+  } catch (error) {
+    console.error("Error fetching neighbouring countries:", error);
+    return [];
+  }
+}
+
 export {
   clearAllfavoriteIdsInCookie,
   getfavoriteIdsInCookie,
@@ -129,4 +141,5 @@ export {
   getSortedfavoriteIdsInCookie,
   getThemeFromHtmlNode,
   setfavoriteIdsInCookie,
+  getNeighbouringCountriesFromIso3,
 };
