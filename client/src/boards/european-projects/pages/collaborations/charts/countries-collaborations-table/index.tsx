@@ -1,16 +1,31 @@
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { Badge, Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Badge, Button, Col, Container, Row, Title, Modal, ModalContent, Select, Tag, TagGroup } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
-import { GetData } from "./query";
+import { getCollaborations, getCollaborationsByCountry } from "./query";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 import i18nGlobal from "../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
 import { getFlagEmoji } from "../../../../utils";
 import { getNeighbouringCountriesFromIso3 } from "../../../../../../utils";
+import { formatToMillions } from "../../../../../../utils/format";
+
+type CollaborationDetail = {
+  project_id: string;
+  call_year: string;
+  country_code: string;
+  country_code_collab: string;
+  participates_as: string;
+  participates_as_collab: string;
+  total_cost: number;
+  proposal_budget: number;
+  participation_nuts: string;
+  participation_nuts_collab: string;
+  flag_coordination: string;
+};
 
 export default function CountriesCollaborationsTable() {
   const [searchParams] = useSearchParams();
@@ -18,6 +33,19 @@ export default function CountriesCollaborationsTable() {
   const [sortDirection, setSortDirection] = useState("desc");
   const [sortColumn, setSortColumn] = useState("collaborations");
   const [showAll, setShowAll] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedYear, setSelectedYear] = useState("all");
+  const [selectedParticipationType, setSelectedParticipationType] = useState("all");
+  const [displayLimit, setDisplayLimit] = useState(20);
+
+  type CollaborationCountry = {
+    country_code: string;
+    country_name_fr: string;
+    country_name_en: string;
+    total_collaborations: number;
+  };
+
+  const [collabCountry, setCollabCountry] = useState<CollaborationCountry | null>(null);
   const currentLang = searchParams.get("language") || "fr";
   const country_code = searchParams.get("country_code") || "FRA";
 
@@ -42,7 +70,13 @@ export default function CountriesCollaborationsTable() {
       Cookies.get("selectedThematics"),
       Cookies.get("selectedDestinations"),
     ],
-    queryFn: () => GetData(country_code),
+    queryFn: () => getCollaborations(country_code),
+  });
+
+  const { data: collaborationDetails, isLoading: isLoadingDetails } = useQuery<CollaborationDetail[]>({
+    queryKey: ["getCollaborationsByCountry", country_code, collabCountry?.country_code],
+    queryFn: () => getCollaborationsByCountry(country_code, collabCountry?.country_code),
+    enabled: !!collabCountry,
   });
 
   const { data: dataCountries } = useQuery({
@@ -94,6 +128,62 @@ export default function CountriesCollaborationsTable() {
     navigate(`?${newSearchParams.toString()}`);
   };
 
+  // Fonctions utilitaires pour le traitement des données
+  type CollaborationStats = {
+    total: number;
+    totalBudget: number;
+    asCoordinator: number;
+  };
+
+  type ProcessedCollaborationDetails = {
+    years: string[];
+    byYear: Record<string, CollaborationDetail[]>;
+    stats: CollaborationStats;
+  };
+
+  const processCollaborationDetails = (data: CollaborationDetail[] | undefined): ProcessedCollaborationDetails => {
+    if (!data) return { years: [], byYear: {}, stats: { total: 0, totalBudget: 0, asCoordinator: 0 } };
+
+    const byYear = data.reduce((acc, item) => {
+      if (!acc[item.call_year]) acc[item.call_year] = [];
+      acc[item.call_year].push(item);
+      return acc;
+    }, {} as Record<string, CollaborationDetail[]>);
+
+    const years = Object.keys(byYear).sort((a, b) => parseInt(b) - parseInt(a));
+    const minYear = Math.min(...years.map(Number));
+    const maxYear = Math.max(...years.map(Number));
+    const yearRanges = [`${minYear}-${maxYear}`, ...years];
+
+    const stats = {
+      total: data.length,
+      totalBudget: data.reduce((sum, item) => sum + (item.total_cost || 0), 0),
+      asCoordinator: data.filter((item) => item.flag_coordination === "True").length,
+    };
+
+    return { years: yearRanges, byYear, stats };
+  };
+
+  const filterData = (data: CollaborationDetail[] | undefined, withLimit = true) => {
+    if (!data) return [];
+    let filtered = [...data];
+
+    if (selectedYear !== "all") {
+      const yearStart = parseInt(selectedYear.split("-")[0]);
+      const yearEnd = parseInt(selectedYear.split("-")[1]) || yearStart;
+      filtered = filtered.filter((item) => {
+        const itemYear = parseInt(item.call_year);
+        return itemYear >= yearStart && itemYear <= yearEnd;
+      });
+    }
+
+    if (selectedParticipationType !== "all") {
+      filtered = filtered.filter((item) => item.participates_as === selectedParticipationType);
+    }
+
+    return withLimit ? filtered.slice(0, displayLimit) : filtered;
+  };
+
   return (
     <Container fluid className="fr-mt-5w">
       <Row>
@@ -103,7 +193,7 @@ export default function CountriesCollaborationsTable() {
       </Row>
       <Row>
         <Col>
-          <div className="fr-table--sm fr-table fr-table" id="table-sm-component">
+          <div className="fr-table fr-table--sm">
             <div className="fr-table__wrapper">
               <div className="fr-table__container">
                 <div className="fr-table__content">
@@ -123,15 +213,36 @@ export default function CountriesCollaborationsTable() {
                       </tr>
                     </thead>
                     <tbody>
-                      {displayedData.map((item) => (
-                        <tr key={item.country_code}>
-                          <td>
-                            <button className="fr-btn fr-btn--tertiary-no-outline fr-p-0" onClick={() => handleCountryClick(item.country_code)}>
-                              {getFlagEmoji(item.country_code)}
-                              <span className="fr-ml-1w">{item[`country_name_${currentLang}`]}</span>
+                      {displayedData.map((collab) => (
+                        <tr key={collab.country_code}>
+                          <td className="fr-py-0">
+                            <button className="fr-btn fr-btn--tertiary-no-outline fr-p-0" onClick={() => handleCountryClick(collab.country_code)}>
+                              {getFlagEmoji(collab.country_code)}
+                              <span className="fr-ml-1w">{collab[`country_name_${currentLang}`]}</span>
+                              {
+                                // ajoute un badge si le pays est un pays frontalier
+                                dataCountries && dataCountries.includes(collab.country_code) && (
+                                  <span
+                                    className="fr-mx-1w"
+                                    style={{ display: "inline-block", width: "5px", height: "5px", backgroundColor: "#000091", borderRadius: "50%" }}
+                                  />
+                                )
+                              }
                             </button>
                           </td>
-                          <td>{item.total_collaborations}</td>
+                          <td className="fr-py-0" style={{ textAlign: "center" }}>
+                            {collab.total_collaborations}
+                            <Button
+                              icon="eye-line"
+                              className="fr-ml-1w"
+                              size="sm"
+                              variant="text"
+                              onClick={() => {
+                                setCollabCountry(collab);
+                                setIsModalOpen(true);
+                              }}
+                            />
+                          </td>
                         </tr>
                       ))}
                       <tr>
@@ -199,6 +310,134 @@ export default function CountriesCollaborationsTable() {
           </Row>
         </Col>
       </Row>
+      <Modal isOpen={isModalOpen} hide={() => setIsModalOpen(false)} size="xl">
+        <ModalContent>
+          {isLoadingDetails ? (
+            <p>Chargement des détails...</p>
+          ) : (
+            <>
+              <div className="fr-grid-row fr-grid-row--gutters">
+                <div className="fr-col-12">
+                  <h4>{collabCountry && `${getFlagEmoji(collabCountry.country_code)} ${collabCountry[`country_name_${currentLang}`]}`}</h4>
+                </div>
+              </div>
+
+              {collaborationDetails && (
+                <>
+                  {/* Statistiques globales */}
+                  <div className="fr-grid-row fr-grid-row--gutters fr-mt-2w">
+                    <div className="fr-col-12">
+                      <TagGroup>
+                        <Tag color="green-bourgeon">{processCollaborationDetails(collaborationDetails).stats.total} projets</Tag>
+                        <Tag color="green-emeraude">
+                          <span className="fr-icon-money-euro-circle-line fr-mr-1w" aria-hidden="true" />
+                          {formatToMillions(processCollaborationDetails(collaborationDetails).stats.totalBudget)}
+                        </Tag>
+                        <Tag color="yellow-tournesol">
+                          {processCollaborationDetails(collaborationDetails).stats.asCoordinator} en tant que coordinateur
+                        </Tag>
+                      </TagGroup>
+                    </div>
+                  </div>
+
+                  {/* Filtres */}
+                  <Row gutters className="fr-mt-2w">
+                    <Col>
+                      <label className="fr-label">Années</label>
+                      <select className="fr-select" onChange={(e) => setSelectedYear(e.target.value)} value={selectedYear}>
+                        {processCollaborationDetails(collaborationDetails).years.map((year) => (
+                          <option key={year} value={year}>
+                            {year.includes("-") ? `${year} (Toutes)` : year}
+                          </option>
+                        ))}
+                      </select>
+                    </Col>
+                    <Col>
+                      <label className="fr-label">Type de participation du pays</label>
+                      <select className="fr-select" onChange={(e) => setSelectedParticipationType(e.target.value)} value={selectedParticipationType}>
+                        <option value="all">Tous</option>
+                        <option value="beneficiary">Bénéficiaire</option>
+                        <option value="thirdparty">Partenaire tiers</option>
+                        <option value="associated partner">Associé</option>
+                      </select>
+                    </Col>
+                  </Row>
+
+                  {/* Récapitulatif en tags */}
+                  <div className="fr-mt-4w">
+                    <TagGroup>
+                      <Tag>
+                        <span className="fr-icon-calendar-line fr-mr-1w" aria-hidden="true" />
+                        {selectedYear === "all" ? "Toutes les années" : selectedYear.includes("-") ? `${selectedYear} (Toutes)` : selectedYear}
+                      </Tag>
+                      <Tag>
+                        <span className="fr-icon-folder-2-line fr-mr-1w" aria-hidden="true" />
+                        {filterData(collaborationDetails, false).length} projets
+                      </Tag>
+                      <Tag>
+                        <span className="fr-icon-money-euro-circle-line fr-mr-1w" aria-hidden="true" />
+                        Budget total :{" "}
+                        {formatToMillions(filterData(collaborationDetails, false).reduce((sum, item) => sum + (item.total_cost || 0), 0))}
+                      </Tag>
+                      <Tag>
+                        <span className="fr-icon-money-euro-box-line fr-mr-1w" aria-hidden="true" />
+                        Budget proposé :{" "}
+                        {formatToMillions(filterData(collaborationDetails, false).reduce((sum, item) => sum + (item.proposal_budget || 0), 0))}
+                      </Tag>
+                    </TagGroup>
+                  </div>
+
+                  {/* Liste des projets */}
+                  <div className="fr-table fr-table--sm">
+                    <div className="fr-table__wrapper">
+                      <div className="fr-table__container">
+                        <div className="fr-table__content">
+                          <table>
+                            <thead>
+                              <tr>
+                                <th>Année</th>
+                                <th>ID Projet</th>
+                                <th>Rôle pays</th>
+                                <th>Rôle collab.</th>
+                                <th>Budget total</th>
+                                <th>Budget proposé</th>
+                                <th>participation_nuts</th>
+                                <th>participation_nuts_collab</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {filterData(collaborationDetails).map((item, index) => (
+                                <tr key={`${item.project_id}-${index}`}>
+                                  <td className="fr-py-0">{item.call_year}</td>
+                                  <td className="fr-py-0">{item.project_id}</td> {/* TODO: lien vers commission ? */}
+                                  <td className="fr-py-0">{item.participates_as}</td>
+                                  <td className="fr-py-0">{item.participates_as_collab}</td>
+                                  <td className="fr-py-0">{formatToMillions(item.total_cost, 2)}</td>
+                                  <td className="fr-py-0">{item.proposal_budget ? `${formatToMillions(item.proposal_budget, 2)}` : "-"}</td>
+                                  <td className="fr-py-0">{item.participation_nuts || "-"}</td>
+                                  <td className="fr-py-0">{item.participation_nuts_collab || "-"}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {collaborationDetails.length > displayLimit && (
+                    <div className="fr-mt-2w">
+                      <Button onClick={() => setDisplayLimit((prev) => prev + 50)} size="sm" variant="secondary">
+                        Voir plus de résultats
+                      </Button>
+                    </div>
+                  )}
+                </>
+              )}
+            </>
+          )}
+        </ModalContent>
+      </Modal>
     </Container>
   );
 }

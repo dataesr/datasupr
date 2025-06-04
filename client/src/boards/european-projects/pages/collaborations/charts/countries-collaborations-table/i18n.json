@@ -50,5 +50,9 @@
   "countries": {
     "fr": "Pays",
     "en": "Countries"
+  },
+  "neighbouring": {
+    "fr": "frontaliers",
+    "en": "neighbouring"
   }
 }

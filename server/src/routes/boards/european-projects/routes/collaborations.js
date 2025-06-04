@@ -15,6 +15,23 @@ const router = new express.Router();
 //   { name: "idx_collaborations_covered" }
 // )
 
+// // Index pour la requête get-collaborations-by-country
+// await db.collection("fr-esr-all-signed-projects-collaborations").createIndex(
+//   { 
+//     country_code: 1,
+//     country_code_collab: 1,
+//     participates_as: 1,
+//     participates_as_collab: 1,
+//     project_id: 1,
+//     call_year: 1,
+//     flag_coordination: 1,
+//     proposal_budget: 1,
+//     total_cost: 1,
+//     // abstract: 1, // Si nécessaire, sinon à enlever pour optimiser
+//   },
+//   { name: "idx_collaborations-by-country_covered" }
+// )
+
 router
   .route("/european-projects/collaborations/get-entities")
   .get(async (req, res) => {
@@ -114,5 +131,47 @@ router.route("/european-projects/collaborations/get-collaborations").get(async (
     res.status(500).json({ error: "Erreur interne du serveur" });
   }
 });
+
+// Route pour récupérer les collaborations par pays en fonction du pays en cours et du pays collaborateur
+router.route("/european-projects/collaborations/get-collaborations-by-country").get(async (req, res) => {
+  const { country_code, country_code_collab } = req.query;
+  if (!country_code || !country_code_collab) {
+    return res.status(400).json({ error: "Les codes pays sont requis" });
+  }
+  try {
+    const collaborations = await db
+      .collection("fr-esr-all-signed-projects-collaborations")
+      .find({
+        country_code: country_code,
+        country_code_collab: country_code_collab
+      })
+      .project({
+        _id: 0,
+        // abstract: 1,
+        call_year: 1,
+        country_code_collab: 1,
+        country_code: 1,
+        extra_joint_organizations_collab: 1,
+        extra_joint_organizations: 1,
+        flag_coordination: 1,
+        part_num_collab: 1,
+        part_num: 1,
+        participates_as_collab: 1,
+        participates_as: 1,
+        participation_nuts_collab: 1,
+        participation_nuts: 1,
+        project_id: 1,
+        proposal_budget: 1,
+        total_cost: 1,
+      })
+      .toArray()
+
+    res.status(200).json(collaborations);
+  } catch (error) {
+    console.error("Error fetching collaborations by country:", error);
+    res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+}
+);
 
 export default router;

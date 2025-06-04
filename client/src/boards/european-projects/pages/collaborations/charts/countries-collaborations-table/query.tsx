@@ -1,7 +1,7 @@
 // import Cookies from "js-cookie";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-export async function GetData(countryCode) {
+export async function getCollaborations(countryCode) {
   const queryParams = new URLSearchParams();
 
   // const selectedPillars = Cookies.get("selectedPillars");
@@ -25,6 +25,18 @@ export async function GetData(countryCode) {
   }
 
   return fetch(`${VITE_APP_SERVER_URL}/european-projects/collaborations/get-collaborations?${queryParams.toString()}`).then((response) =>
+    response.json()
+  );
+}
+
+export async function getCollaborationsByCountry(countryCode, countryCodeCollab) {
+  const queryParams = new URLSearchParams();
+  queryParams.append("country_code", countryCode);
+  queryParams.append("country_code_collab", countryCodeCollab);
+
+  console.log(`Fetching collaborations for country: ${countryCode} and collaboration country: ${countryCodeCollab}`);
+
+  return fetch(`${VITE_APP_SERVER_URL}/european-projects/collaborations/get-collaborations-by-country?${queryParams.toString()}`).then((response) =>
     response.json()
   );
 }
