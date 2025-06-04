@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { Badge, Button, Col, Container, Row, Title, Modal, ModalContent, Select, Tag, TagGroup } from "@dataesr/dsfr-plus";
+import { Badge, Button, Col, Container, Row, Title, Modal, ModalContent, Tag, TagGroup } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
