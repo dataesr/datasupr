@@ -46,5 +46,9 @@
   "neighbouring-countries": {
     "fr": "Pays frontaliers",
     "en": "Neighbouring countries"
+  },
+  "countries": {
+    "fr": "Pays",
+    "en": "Countries"
   }
 }

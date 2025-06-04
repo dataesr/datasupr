@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
-import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Badge, Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
@@ -178,6 +178,12 @@ export default function CountriesCollaborationsTable() {
                     <span className="fr-icon-earth-fill fr-mr-1w" aria-hidden="true" />
                     <br />
                     {getI18nLabel("neighbouring-countries")}
+                    <br />
+                    <Badge>
+                      {dataCountries ? dataCountries.length : 0} {getI18nLabel("countries")}
+                      {" / "}
+                      {data.length}
+                    </Badge>
                   </h3>
                   <p className="fr-tile__desc">
                     Les pays frontaliers comptabilisent <strong>{neighbouringCountriesSum.toLocaleString()}</strong> projets, soit{" "}
