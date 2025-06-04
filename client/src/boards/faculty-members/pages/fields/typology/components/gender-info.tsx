@@ -13,28 +13,28 @@ export const GenderDataCard = ({
   selectedYear,
   gender,
 }: GenderDataCardProps) => {
-  const { fieldId } = useParams<{ fieldId?: string }>();
+  const { field_id } = useParams<{ field_id?: string }>();
 
   const { data: genderComparisonData, isLoading } =
     useFacultyMembersGenderComparison({
       selectedYear,
-      disciplineCode: fieldId,
+      disciplineCode: field_id,
     });
 
   const genderData = useMemo(() => {
     if (!genderComparisonData) return null;
 
     if (Array.isArray(genderComparisonData)) {
-      if (fieldId) {
+      if (field_id) {
         return genderComparisonData.find(
-          (item) => item.discipline?.code === fieldId
+          (item) => item.discipline?.code === field_id
         );
       }
       return genderComparisonData[0];
     }
 
     return genderComparisonData;
-  }, [genderComparisonData, fieldId]);
+  }, [genderComparisonData, field_id]);
 
   if (isLoading) {
     return (
@@ -53,7 +53,7 @@ export const GenderDataCard = ({
       <div className="fr-p-3w fr-mb-3w">
         <div className="fr-text--center fr-text--mention-grey">
           Aucune donnée disponible pour {selectedYear}
-          {fieldId && " et la discipline sélectionnée"}
+          {field_id && " et la discipline sélectionnée"}
         </div>
       </div>
     );

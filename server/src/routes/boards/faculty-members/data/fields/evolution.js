@@ -43,7 +43,7 @@ router.get("/faculty-members-trends", async (req, res) => {
             input: "$disciplines",
             as: "discipline",
             in: {
-              fieldId: "$$discipline.field_id",
+              field_id: "$$discipline.field_id",
               fieldLabel: "$$discipline.field_label",
               totalCount: "$$discipline.total_count",
               femmes: "$$discipline.femmes",
@@ -74,7 +74,7 @@ router.get("/faculty-members-trends", async (req, res) => {
             $filter: {
               input: "$disciplines",
               as: "disc",
-              cond: { $eq: ["$$disc.fieldId", discipline] },
+              cond: { $eq: ["$$disc.field_id", discipline] },
             },
           },
         },
@@ -167,7 +167,7 @@ router.get("/faculty-members-evolution", async (req, res) => {
 
     Array.from(allDisciplines).forEach((disciplineId) => {
       processedResult.disciplinesTrend[disciplineId] = {
-        fieldId: disciplineId,
+        field_id: disciplineId,
         fieldLabel: "",
         totalCount: [],
         femmes_percent: [],
@@ -295,7 +295,7 @@ router.get("/faculty-members-age-evolution", async (req, res) => {
     if (discipline) {
       // Initialiser la structure pour la discipline spécifique
       processedResult.ageEvolution[discipline] = {
-        fieldId: discipline,
+        field_id: discipline,
         fieldLabel: "",
         ageData: {},
       };
@@ -348,7 +348,7 @@ router.get("/faculty-members-age-evolution", async (req, res) => {
     } else {
       // Pour toutes les disciplines (données globales)
       processedResult.ageEvolution.global = {
-        fieldId: "global",
+        field_id: "global",
         fieldLabel: "Toutes disciplines",
         ageData: {},
       };

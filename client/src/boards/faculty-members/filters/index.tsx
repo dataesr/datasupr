@@ -6,17 +6,23 @@ import {
   ModalTitle,
   Row,
 } from "@dataesr/dsfr-plus";
-import { useState } from "react";
-import { YearSelectorProps } from "../types";
+import { useState, useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useFacultyMembersYears } from "../api/general-queries";
 
 const YearFilter = ({
   years,
   selectedYear,
   onYearChange,
-}: YearSelectorProps) => {
+}: {
+  years: string[];
+  selectedYear: string;
+  onYearChange: (year: string) => void;
+}) => {
   const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onYearChange(event.target.value);
   };
+
   return (
     <Row>
       <Col className="fr-select-group">
@@ -30,7 +36,7 @@ const YearFilter = ({
           name="select"
           onChange={handleChange}
         >
-          {years.map((value: string) => (
+          {years?.map((value: string) => (
             <option key={value} value={value}>
               {`Année universitaire ${value}`}
             </option>
@@ -41,12 +47,64 @@ const YearFilter = ({
   );
 };
 
-const YearSelector = ({
-  years,
-  selectedYear,
-  onYearChange,
-}: YearSelectorProps) => {
+const YearSelector = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { data: yearsData, isLoading, error } = useFacultyMembersYears();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const years = useMemo(
+    () => yearsData?.academic_years || [],
+    [yearsData?.academic_years]
+  );
+
+  const selectedYear =
+    searchParams.get("year") || (years.length > 0 ? years[0] : "");
+
+  const handleYearChange = (year: string) => {
+    setSearchParams((prev) => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set("year", year);
+      return newParams;
+    });
+  };
+
+  useEffect(() => {
+    if (years.length > 0 && !searchParams.get("year")) {
+      setSearchParams((prev) => {
+        const newParams = new URLSearchParams(prev);
+        newParams.set("year", years[0]);
+        return newParams;
+      });
+    }
+  }, [years, searchParams, setSearchParams]);
+
+  if (isLoading) {
+    return (
+      <Button
+        className="button"
+        color="blue-cumulus"
+        icon="calendar-2-line"
+        disabled
+        size="sm"
+      >
+        Chargement...
+      </Button>
+    );
+  }
+
+  if (error) {
+    return (
+      <Button
+        className="button"
+        color="error"
+        icon="calendar-2-line"
+        disabled
+        size="sm"
+      >
+        Erreur
+      </Button>
+    );
+  }
 
   return (
     <>
@@ -65,7 +123,7 @@ const YearSelector = ({
           <YearFilter
             years={years}
             selectedYear={selectedYear}
-            onYearChange={onYearChange}
+            onYearChange={handleYearChange}
           />
         </ModalContent>
       </Modal>

@@ -20,7 +20,7 @@ router.get("/faculty-members-age-distribution", async (req, res) => {
       $group: {
         _id: {
           year: "$academic_year",
-          fieldId: "$headcount_per_fields.field_id",
+          field_id: "$headcount_per_fields.field_id",
           fieldLabel: "$headcount_per_fields.field_label",
           ageClass: "$age_class",
         },
@@ -40,7 +40,7 @@ router.get("/faculty-members-age-distribution", async (req, res) => {
       $group: {
         _id: {
           year: "$_id.year",
-          fieldId: "$_id.fieldId",
+          field_id: "$_id.field_id",
           fieldLabel: "$_id.fieldLabel",
         },
         totalCount: { $sum: "$countForAgeClass" },
@@ -84,7 +84,7 @@ router.get("/faculty-members-age-distribution", async (req, res) => {
       $project: {
         _id: 0,
         year: "$_id.year",
-        fieldId: "$_id.fieldId",
+        field_id: "$_id.field_id",
         fieldLabel: "$_id.fieldLabel",
         totalCount: 1,
         ageDistribution: {

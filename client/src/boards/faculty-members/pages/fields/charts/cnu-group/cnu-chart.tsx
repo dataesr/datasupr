@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import {
@@ -6,8 +7,7 @@ import {
   getColorForDiscipline,
   getShade,
 } from "./options";
-import useFacultyMembersByFields from "../../api/use-by-fields";
-import { CNUGroup } from "../../types";
+import { useFacultyMembersFieldsCnu } from "../../api/use-cnu";
 
 interface DataPoint {
   name: string;
@@ -28,75 +28,73 @@ interface GroupedData {
   totalCount: number;
 }
 
-interface CnuGroupsChartProps {
-  selectedYear: string;
+interface CNUSection {
+  details?: Array<{
+    gender: string;
+    count: number;
+  }>;
 }
 
-export default function CnuGroupsChart({ selectedYear }: CnuGroupsChartProps) {
-  const { data: fieldData } = useFacultyMembersByFields(selectedYear);
+interface CNUGroup {
+  cnuGroupId: string;
+  cnuGroupLabel: string;
+  maleCount: number;
+  femaleCount: number;
+  unknownCount: number;
+  totalCount: number;
+  field_id?: string;
+  fieldLabel?: string;
+  cnuSections: CNUSection[];
+}
+export default function CnuGroupsChart() {
+  const [searchParams] = useSearchParams();
+  const selectedYear = searchParams.get("year") || "";
+  console.log("Selected Year:", selectedYear);
+  const { data: cnuData } = useFacultyMembersFieldsCnu(selectedYear);
+  console.log(cnuData);
 
   const cnuGroups = useMemo(() => {
-    if (!fieldData?.length || !selectedYear) {
+    if (!cnuData?.disciplines_with_cnu_groups || !selectedYear) {
       return [];
     }
 
-    const currentYearFields = fieldData.filter(
-      (item) =>
-        item.year === selectedYear || item.academic_year === selectedYear
-    );
-
     const allGroups: CNUGroup[] = [];
 
-    currentYearFields.forEach((field) => {
-      const groups = field.headcount_per_cnu_group || field.cnuGroups || [];
-      const fieldId = field.fieldId || field.field_id;
-      const fieldLabel = field.fieldLabel || field.field_label;
+    // Pour chaque discipline
+    cnuData.disciplines_with_cnu_groups.forEach((discipline) => {
+      const disciplineCode = discipline._id.discipline_code;
+      const disciplineName = discipline._id.discipline_name;
 
-      groups.forEach((group) => {
-        const groupId = group.cnuGroupId || group.cnu_group_id;
-        const groupLabel = group.cnuGroupLabel || group.cnu_group_label;
-        const maleCount = group.numberMan || group.maleCount || 0;
-        const femaleCount = group.numberWoman || group.femaleCount || 0;
-        const unknownCount = group.numberUnknown || group.unknownCount || 0;
-        const totalCount = maleCount + femaleCount + unknownCount;
+      discipline.groups?.forEach((group) => {
+        let maleCount = 0;
+        let femaleCount = 0;
+
+        group.sections?.forEach((section) => {
+          section.details?.forEach((detail) => {
+            if (detail.gender === "Masculin") {
+              maleCount += detail.count;
+            } else if (detail.gender === "Féminin") {
+              femaleCount += detail.count;
+            }
+          });
+        });
 
         allGroups.push({
-          cnuGroupId: groupId,
-          cnuGroupLabel: groupLabel,
-          maleCount: maleCount || 0,
-          femaleCount: femaleCount || 0,
-          unknownCount: unknownCount || 0,
-          totalCount: totalCount || 0,
-          fieldId,
-          fieldLabel,
-          cnuSections: [],
+          cnuGroupId: group.group_code,
+          cnuGroupLabel: group.group_name,
+          maleCount,
+          femaleCount,
+          unknownCount: 0,
+          totalCount: group.group_total,
+          field_id: disciplineCode,
+          fieldLabel: disciplineName,
+          cnuSections: group.sections || [],
         });
       });
     });
 
-    const mergedGroups = Object.values(
-      allGroups.reduce<Record<string, CNUGroup>>((acc, group) => {
-        const key = group.cnuGroupId;
-        if (!key) return acc;
-
-        if (!acc[key]) {
-          acc[key] = { ...group };
-        } else {
-          acc[key]!.maleCount =
-            (acc[key]!.maleCount || 0) + (group.maleCount || 0);
-          acc[key]!.femaleCount =
-            (acc[key]!.femaleCount || 0) + (group.femaleCount || 0);
-          acc[key]!.unknownCount =
-            (acc[key]!.unknownCount || 0) + (group.unknownCount || 0);
-          acc[key]!.totalCount =
-            (acc[key]!.totalCount || 0) + (group.totalCount || 0);
-        }
-        return acc;
-      }, {})
-    ).sort((a, b) => (b.totalCount || 0) - (a.totalCount || 0));
-
-    return mergedGroups;
-  }, [fieldData, selectedYear]);
+    return allGroups;
+  }, [cnuData, selectedYear]);
 
   const groupedData: GroupedData[] = useMemo(() => {
     if (!cnuGroups || cnuGroups.length === 0) return [];

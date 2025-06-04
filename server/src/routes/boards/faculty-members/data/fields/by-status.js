@@ -25,7 +25,7 @@ router.get("/faculty-members-fields-status", async (req, res) => {
               input: "$disciplines",
               as: "discipline",
               in: {
-                fieldId: "$$discipline.field_id",
+                field_id: "$$discipline.field_id",
                 fieldLabel: "$$discipline.field_label",
                 totalCount: "$$discipline.total_count",
                 status: {
@@ -167,7 +167,7 @@ router.get("/faculty-members-fields-status", async (req, res) => {
           disciplines: {
             $filter: {
               input: "$disciplines",
-              cond: { $eq: ["$$this.fieldId", id] },
+              cond: { $eq: ["$$this.field_id", id] },
             },
           },
         },

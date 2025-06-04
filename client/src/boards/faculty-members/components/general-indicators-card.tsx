@@ -8,17 +8,17 @@ const GeneralIndicatorsCard = ({
 }: {
   generalIndicators: DemographicData[];
 }) => {
-  const { fieldId } = useParams<{ fieldId: string }>();
+  const { field_id } = useParams<{ field_id: string }>();
 
   const filteredData = useMemo(() => {
     if (!generalIndicators || generalIndicators.length === 0) return [];
 
-    if (fieldId) {
-      return generalIndicators.filter((item) => item.fieldId === fieldId);
+    if (field_id) {
+      return generalIndicators.filter((item) => item.field_id === field_id);
     }
 
     return generalIndicators;
-  }, [generalIndicators, fieldId]);
+  }, [generalIndicators, field_id]);
 
   if (!filteredData.length) {
     return <Col md={4}>Aucune donnée disponible pour cette discipline</Col>;

@@ -25,8 +25,8 @@ export default function FieldCardsGrid({ fields }) {
 
         return (
           <Link
-            key={field.fieldId}
-            href={`/personnel-enseignant/discipline/vue-d'ensemble/${field.fieldId}`}
+            key={field.field_id}
+            href={`/personnel-enseignant/discipline/vue-d'ensemble/${field.field_id}`}
             title={`Voir les détails de ${field.fieldLabel}`}
             style={{
               backgroundColor: color,

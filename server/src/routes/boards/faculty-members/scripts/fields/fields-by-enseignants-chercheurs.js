@@ -1623,7 +1623,7 @@ async function analyzeResearchTeachersByDiscipline() {
         $project: {
           _id: 0,
           year: "$_id.academic_year",
-          fieldId: "$_id.discipline_code",
+          field_id: "$_id.discipline_code",
           fieldLabel: "$_id.discipline_label",
           totalCount: "$total_count",
           maleCount: "$male_count",
@@ -1806,7 +1806,7 @@ async function analyzeResearchTeachersByDiscipline() {
       {
         $sort: {
           year: 1,
-          fieldId: 1,
+          field_id: 1,
         },
       },
 

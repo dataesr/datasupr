@@ -3,7 +3,7 @@ import { CreateChartOptions } from "../../../../components/chart-faculty-members
 
 interface Field {
   year: string;
-  fieldId: string;
+  field_id: string;
   fieldLabel: string;
   maleCount: number;
   femaleCount: number;

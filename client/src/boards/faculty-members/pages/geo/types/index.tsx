@@ -110,7 +110,7 @@ export interface DemographicData {
   femaleCount: number;
   totalCount: number;
   unknownCount?: number;
-  fieldId?: string;
+  field_id?: string;
 }
 
 export interface GenderDistributionProps {

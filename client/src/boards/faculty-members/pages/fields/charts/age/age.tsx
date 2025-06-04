@@ -46,7 +46,7 @@ export function AgeDistributionPieChart({
 
     const sortedData = [...ageData].sort((a, b) => b.totalCount - a.totalCount);
     return sortedData.map((field) => ({
-      id: field.fieldId,
+      id: field.field_id,
       label: field.fieldLabel,
       totalCount: field.totalCount,
     }));
@@ -83,7 +83,7 @@ export function AgeDistributionPieChart({
       chartTitle = "Répartition par âge - Toutes disciplines";
     } else {
       const selectedFieldData = ageData.find(
-        (f) => f.fieldId === selectedField
+        (f) => f.field_id === selectedField
       );
 
       if (!selectedFieldData) return null;

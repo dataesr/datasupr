@@ -105,7 +105,7 @@ router.get("/faculty-members-overview-fields-data", async (req, res) => {
         $project: {
           _id: 0,
           year: "$_id.annee",
-          fieldId: "$_id.field_id",
+          field_id: "$_id.field_id",
           fieldLabel: "$_id.field_label",
           maleCount: "$hommes",
           femaleCount: "$femmes",

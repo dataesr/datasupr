@@ -11,7 +11,7 @@ router.get("/faculty-members-research-teachers-by-fields", async (req, res) => {
     // ATTENTION !! ON FAIT LA MÊME CHOSE POUR LES GROUPS CNU ET LES SECTIONS CNU !!
 
     //  Et aussi ; dans les sections CNU il n'y a que les enseignants-chercheurs
-    const { annee, fieldId } = req.query;
+    const { annee, field_id } = req.query;
     const pipeline = [];
 
     if (annee) {
@@ -32,8 +32,8 @@ router.get("/faculty-members-research-teachers-by-fields", async (req, res) => {
       }
     }
 
-    if (fieldId) {
-      pipeline.push({ $match: { fieldId: fieldId } });
+    if (field_id) {
+      pipeline.push({ $match: { field_id: field_id } });
     }
 
     pipeline.push(
@@ -41,7 +41,7 @@ router.get("/faculty-members-research-teachers-by-fields", async (req, res) => {
         $project: {
           _id: 0,
           year: 1,
-          fieldId: 1,
+          field_id: 1,
           fieldLabel: 1,
           totalCount: 1,
           maleCount: 1,
@@ -137,12 +137,12 @@ router.get("/faculty-members-research-teachers-by-fields", async (req, res) => {
           last_updated: 1,
         },
       },
-      { $sort: { fieldId: 1 } }
+      { $sort: { field_id: 1 } }
     );
 
     const result = await collection.aggregate(pipeline).toArray();
 
-    if (!fieldId && result.length > 0) {
+    if (!field_id && result.length > 0) {
       const totalCount = result.reduce((sum, item) => sum + item.totalCount, 0);
       const maleCount = result.reduce((sum, item) => sum + item.maleCount, 0);
       const femaleCount = result.reduce(
@@ -199,7 +199,7 @@ router.get("/faculty-members-research-teachers-by-fields", async (req, res) => {
           discipline.cnuGroups.forEach((group) => {
             allCnuGroups.push({
               ...group,
-              fieldId: discipline.fieldId,
+              field_id: discipline.field_id,
               fieldLabel: discipline.fieldLabel,
             });
           });
@@ -208,7 +208,7 @@ router.get("/faculty-members-research-teachers-by-fields", async (req, res) => {
 
       const globalData = {
         year: result[0].year,
-        fieldId: "total",
+        field_id: "total",
         fieldLabel: "Toutes disciplines",
         totalCount,
         maleCount,

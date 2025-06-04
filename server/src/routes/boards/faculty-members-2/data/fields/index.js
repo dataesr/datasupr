@@ -101,7 +101,7 @@ router.get("/faculty-members/fields/overview", async (req, res) => {
       .toArray();
 
     // Le nombre d'enseignants par discipline par discipline
-    const disciplineDistribution = await collection
+    const discipline_distribution = await collection
       .aggregate([
         { $match: matchStage },
         {
@@ -109,11 +109,27 @@ router.get("/faculty-members/fields/overview", async (req, res) => {
             _id: {
               discipline_code: "$code_grande_discipline",
               discipline_name: "$grande_discipline",
+              gender: "$sexe",
             },
             count: { $sum: "$effectif" },
           },
         },
-        { $sort: { count: -1 } },
+        {
+          $group: {
+            _id: {
+              discipline_code: "$_id.discipline_code",
+              discipline_name: "$_id.discipline_name",
+            },
+            total_count: { $sum: "$count" },
+            gender_breakdown: {
+              $push: {
+                gender: "$_id.gender",
+                count: "$count",
+              },
+            },
+          },
+        },
+        { $sort: { total_count: -1 } },
       ])
       .toArray();
 
@@ -145,6 +161,54 @@ router.get("/faculty-members/fields/overview", async (req, res) => {
       ])
       .toArray();
 
+    let contextInfo = null;
+    if (field_id) {
+      const disciplineInfo = await collection.findOne(
+        { code_grande_discipline: field_id },
+        { projection: { grande_discipline: 1, code_grande_discipline: 1 } }
+      );
+
+      if (disciplineInfo) {
+        contextInfo = {
+          id: disciplineInfo.code_grande_discipline,
+          name: disciplineInfo.grande_discipline,
+          type: "discipline",
+        };
+      }
+    }
+
+    const disciplineGenderDistribution = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: {
+              discipline_code: "$code_grande_discipline",
+              discipline_name: "$grande_discipline",
+              gender: "$sexe",
+            },
+            count: { $sum: "$effectif" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              discipline_code: "$_id.discipline_code",
+              discipline_name: "$_id.discipline_name",
+            },
+            total_count: { $sum: "$count" },
+            gender_breakdown: {
+              $push: {
+                gender: "$_id.gender",
+                count: "$count",
+              },
+            },
+          },
+        },
+        { $sort: { total_count: -1 } },
+      ])
+      .toArray();
+
     // Le nombre d'enseignants chercheur par discipline
     const quotiteDistribution = await collection
       .aggregate([
@@ -172,13 +236,66 @@ router.get("/faculty-members/fields/overview", async (req, res) => {
       ])
       .toArray();
 
+    const disciplineStatusDistribution = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $addFields: {
+            status_category: {
+              $cond: {
+                if: { $eq: ["$is_enseignant_chercheur", true] },
+                then: "enseignant_chercheur",
+                else: {
+                  $cond: {
+                    if: { $eq: ["$is_titulaire", true] },
+                    then: "titulaire_non_chercheur",
+                    else: "non_titulaire",
+                  },
+                },
+              },
+            },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              discipline_code: "$code_grande_discipline",
+              discipline_name: "$grande_discipline",
+              status_category: "$status_category",
+            },
+            count: { $sum: "$effectif" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              discipline_code: "$_id.discipline_code",
+              discipline_name: "$_id.discipline_name",
+            },
+            total_count: { $sum: "$count" },
+            status_breakdown: {
+              $push: {
+                status: "$_id.status_category",
+                count: "$count",
+              },
+            },
+          },
+        },
+        { $sort: { total_count: -1 } },
+      ])
+      .toArray();
+
     res.json({
+      context_info: contextInfo,
       gender_distribution: genderDistribution,
       age_distribution: ageDistribution,
-      discipline_distribution: disciplineDistribution,
+      discipline_distribution: discipline_distribution,
       permanentDistribution: permanentDistribution,
+      personnalCategoryDistribution: personnalCategoryDistribution,
+      disciplineGenderDistribution: disciplineGenderDistribution,
       quotiteDistribution: quotiteDistribution,
       researcherDistribution: researcherDistribution,
+      disciplineStatusDistribution: disciplineStatusDistribution,
       total_count: totalCount[0]?.total || 0,
     });
   } catch (error) {
@@ -198,13 +315,14 @@ router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
     if (year) matchStage.annee_universitaire = year;
     if (field_id) matchStage.code_grande_discipline = field_id;
 
-    // Les groupes CNU avec sections dedans. On a justela somme des effectifs par section et par genre/age
     const cnuGroupsWithSections = await collection
       .aggregate([
         { $match: matchStage },
         {
           $group: {
             _id: {
+              discipline_code: "$code_grande_discipline",
+              discipline_name: "$grande_discipline",
               group_code: "$code_groupe_cnu",
               group_name: "$groupe_cnu",
               section_code: "$code_section_cnu",
@@ -218,6 +336,8 @@ router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
         {
           $group: {
             _id: {
+              discipline_code: "$_id.discipline_code",
+              discipline_name: "$_id.discipline_name",
               group_code: "$_id.group_code",
               group_name: "$_id.group_name",
               section_code: "$_id.section_code",
@@ -236,6 +356,8 @@ router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
         {
           $group: {
             _id: {
+              discipline_code: "$_id.discipline_code",
+              discipline_name: "$_id.discipline_name",
               group_code: "$_id.group_code",
               group_name: "$_id.group_name",
             },
@@ -250,17 +372,35 @@ router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
             },
           },
         },
-        { $sort: { group_total: -1 } },
+        {
+          $group: {
+            _id: {
+              discipline_code: "$_id.discipline_code",
+              discipline_name: "$_id.discipline_name",
+            },
+            discipline_total: { $sum: "$group_total" },
+            groups: {
+              $push: {
+                group_code: "$_id.group_code",
+                group_name: "$_id.group_name",
+                group_total: "$group_total",
+                sections: "$sections",
+              },
+            },
+          },
+        },
+        { $sort: { discipline_total: -1 } },
       ])
       .toArray();
 
-    // Le genre par groupe CNU
     const genderByGroups = await collection
       .aggregate([
         { $match: matchStage },
         {
           $group: {
             _id: {
+              discipline_code: "$code_grande_discipline", // AJOUT
+              discipline_name: "$grande_discipline", // AJOUT
               group_code: "$code_groupe_cnu",
               group_name: "$groupe_cnu",
               gender: "$sexe",
@@ -272,6 +412,8 @@ router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
         {
           $group: {
             _id: {
+              discipline_code: "$_id.discipline_code", // AJOUT
+              discipline_name: "$_id.discipline_name", // AJOUT
               group_code: "$_id.group_code",
               group_name: "$_id.group_name",
             },
@@ -287,7 +429,6 @@ router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
         },
         { $sort: { total: -1 } },
       ])
-
       .toArray();
 
     res.json({

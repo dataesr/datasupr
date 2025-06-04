@@ -5,10 +5,10 @@ import "../styles.scss";
 export function FacultyLayout() {
   const location = useLocation();
   const path = location.pathname;
-  const { geo_id, id, fieldId } = useParams<{
+  const { geo_id, id, field_id } = useParams<{
     geo_id?: string;
     id?: string;
-    fieldId?: string;
+    field_id?: string;
   }>();
 
   const buildContextualPath = (basePath: string) => {
@@ -20,8 +20,8 @@ export function FacultyLayout() {
       paramValue = geo_id;
     } else if (currentObjectType === "universite" && id) {
       paramValue = id;
-    } else if (currentObjectType === "discipline" && fieldId) {
-      paramValue = fieldId;
+    } else if (currentObjectType === "discipline" && field_id) {
+      paramValue = field_id;
     }
 
     return `/personnel-enseignant/${currentObjectType}/${basePath}${

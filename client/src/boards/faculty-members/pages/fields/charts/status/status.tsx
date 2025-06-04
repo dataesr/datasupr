@@ -5,34 +5,34 @@ import useFacultyMembersByStatus from "../../api/use-by-status";
 
 interface StatusDistributionProps {
   selectedYear: string;
-  fieldId?: string;
+  field_id?: string;
 }
 
 const StatusDistribution: React.FC<StatusDistributionProps> = ({
   selectedYear,
-  fieldId,
+  field_id,
 }) => {
   const {
     data: statusData,
     isLoading,
     error,
-  } = useFacultyMembersByStatus(selectedYear, fieldId);
+  } = useFacultyMembersByStatus(selectedYear, field_id);
   const config = {
     id: "statusDistribution",
     idQuery: "statusDistribution",
     title: {
-      fr: fieldId
+      fr: field_id
         ? "Répartition par statut de la discipline sélectionnée"
         : "Répartition par statut des enseignants par discipline",
-      en: fieldId
+      en: field_id
         ? "Distribution of faculty members by status for selected field"
         : "Distribution of faculty members by status",
     },
     description: {
-      fr: fieldId
+      fr: field_id
         ? "Répartition des enseignants par statut pour la discipline sélectionnée"
         : "Répartition des enseignants par statut et discipline",
-      en: fieldId
+      en: field_id
         ? "Distribution of faculty members by status for selected field"
         : "Distribution of faculty members by status and discipline",
     },
@@ -53,8 +53,8 @@ const StatusDistribution: React.FC<StatusDistributionProps> = ({
         const totalB = b.totalCount || b.total_count || 0;
         return totalB - totalA;
       })
-      // Si fieldId est spécifié, ne pas limiter à 8 (une seule discipline)
-      .slice(0, fieldId ? dataToProcess.length : 8);
+      // Si field_id est spécifié, ne pas limiter à 8 (une seule discipline)
+      .slice(0, field_id ? dataToProcess.length : 8);
 
     return sortedData.map((disc) => {
       const totalCount = disc.totalCount || disc.total_count || 0;
@@ -81,7 +81,7 @@ const StatusDistribution: React.FC<StatusDistributionProps> = ({
         totalCount,
       };
     });
-  }, [statusData, selectedYear, fieldId]);
+  }, [statusData, selectedYear, field_id]);
 
   const chartOptions = StatusOptions({
     disciplines: processedData,
@@ -107,7 +107,7 @@ const StatusDistribution: React.FC<StatusDistributionProps> = ({
     return (
       <div className="fr-text--center fr-py-3w">
         Aucune donnée disponible pour les statuts pour l'année {selectedYear}
-        {fieldId && " et la discipline sélectionnée"}
+        {field_id && " et la discipline sélectionnée"}
       </div>
     );
   }
@@ -124,7 +124,7 @@ const StatusDistribution: React.FC<StatusDistributionProps> = ({
         Note: Les enseignants-chercheurs sont tous titulaires. La catégorie
         "Autres titulaires" comprend le personnel titulaire non
         enseignant-chercheur.
-        {fieldId && (
+        {field_id && (
           <>
             Données filtrées pour la discipline sélectionnée.
             <br />

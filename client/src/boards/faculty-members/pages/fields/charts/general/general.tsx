@@ -1,16 +1,28 @@
 import { Link } from "@dataesr/dsfr-plus";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import useFacultyMembersByFields from "../../api/use-by-fields";
+import { useFacultyMembersFieldsOverview } from "../../api/use-overview";
+import { useSearchParams } from "react-router-dom";
 
-interface FieldsDistributionBarProps {
-  selectedYear: string;
-}
+const FieldsDistributionBar: React.FC = () => {
+  const [searchParams] = useSearchParams();
+  const selectedYear = searchParams.get("year") || "";
 
-const FieldsDistributionBar: React.FC<FieldsDistributionBarProps> = ({
-  selectedYear,
-}) => {
-  const { data: fieldsData } = useFacultyMembersByFields(selectedYear);
+  const {
+    data: overviewData,
+    isLoading,
+    error,
+  } = useFacultyMembersFieldsOverview(selectedYear);
+
+  const fieldsData =
+    overviewData?.discipline_distribution?.map((discipline) => ({
+      year: selectedYear,
+      field_id: discipline._id.discipline_code,
+      fieldLabel: discipline._id.discipline_name,
+      totalCount: discipline.count,
+      maleCount: 0,
+      femaleCount: 0,
+    })) || [];
 
   const chartOptions = options({ fieldsData, selectedYear });
 
@@ -28,6 +40,14 @@ const FieldsDistributionBar: React.FC<FieldsDistributionBarProps> = ({
     integrationURL:
       "/european-projects/components/pages/analysis/overview/charts/destination-funding",
   };
+
+  if (isLoading) {
+    return <div>Chargement du graphique...</div>;
+  }
+
+  if (error) {
+    return <div>Erreur lors du chargement des données</div>;
+  }
 
   return chartOptions ? (
     <>

@@ -14,7 +14,7 @@ export interface StatusBreakdown {
 }
 
 export interface Field {
-  fieldId?: string;
+  field_id?: string;
   field_id?: string;
   fieldLabel?: string;
   field_label?: string;
@@ -58,7 +58,7 @@ export interface CNUGroup {
   unknownCount?: number;
   numberUnknown?: number;
   totalCount?: number;
-  fieldId?: string;
+  field_id?: string;
   fieldLabel?: string;
   cnuSections?: CNUSection[];
   headcount_per_cnu_section?: CNUSection[];
@@ -79,7 +79,7 @@ export interface CNUSection {
   totalCount?: number;
   cnuGroupId?: string | number;
   cnuGroupLabel?: string;
-  fieldId?: string | number;
+  field_id?: string | number;
   fieldLabel?: string;
   ageDistribution?: AgeClass[];
 }
@@ -113,7 +113,7 @@ export interface StatusData {
 
 export interface AgeDistributionData {
   year: string;
-  fieldId: string;
+  field_id: string;
   fieldLabel: string;
   totalCount: number;
   ageDistribution: Array<{
@@ -137,12 +137,12 @@ export interface CnuSectionsTableProps {
 }
 
 export interface FieldSimple {
-  fieldId: string;
+  field_id: string;
   fieldLabel: string;
 }
 
 export interface NormalizedDiscipline extends DemographicData {
-  fieldId: string;
+  field_id: string;
   fieldLabel: string;
 }
 
@@ -168,7 +168,7 @@ export interface AgeClassEvolutionData {
 }
 
 export interface DisciplineAgeEvolution {
-  fieldId: string;
+  field_id: string;
   fieldLabel: string;
   ageData: {
     [ageClass: string]: AgeClassEvolutionData;
@@ -189,7 +189,7 @@ export interface AgeEvolutionChartProps {
 }
 
 export interface DisciplineTrend {
-  fieldId: string;
+  field_id: string;
   fieldLabel: string;
   totalCount: number[];
   femmes_percent: number[];

@@ -5,19 +5,19 @@ import useFacultyMembersByStatus from "../api/use-by-status";
 interface DisciplineStatusSummaryProps {
   selectedYear: string;
   isSingleDiscipline?: boolean;
-  fieldId?: string;
+  field_id?: string;
 }
 
 const DisciplineStatusSummary: React.FC<DisciplineStatusSummaryProps> = ({
   selectedYear,
   isSingleDiscipline = false,
-  fieldId,
+  field_id,
 }) => {
   const {
     data: statusData,
     isLoading,
     error,
-  } = useFacultyMembersByStatus(selectedYear, fieldId);
+  } = useFacultyMembersByStatus(selectedYear, field_id);
 
   if (isLoading) {
     return (
