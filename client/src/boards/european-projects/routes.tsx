@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useSearchParams } from "react-router-dom";
+import { Routes, Route, Navigate, useSearchParams, useParams } from "react-router-dom";
 
 import Beneficiaries from "./pages/beneficiaries/index.tsx";
 import Collaborations from "./pages/collaborations/index.tsx";
@@ -16,6 +16,7 @@ import "./styles.scss";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 
 import i18n from "./title-i18n.json";
+import CollaborationsEntity from "./pages/collaborations/index-entity.tsx";
 
 const useRouteTitle = (path: string) => {
   const [searchParams] = useSearchParams();
@@ -33,6 +34,11 @@ const RouteWithTitle = ({ titleKey, element }) => {
   return element;
 };
 
+const EntityWrapper = () => {
+  const { entityCode } = useParams();
+  return <CollaborationsEntity entityCode={entityCode} />;
+};
+
 export default function EuropeanProjectsRoutes() {
   return (
     <Routes>
@@ -44,6 +50,7 @@ export default function EuropeanProjectsRoutes() {
           <Route path="synthese" element={<RouteWithTitle titleKey="synthese" element={<Overview />} />} />
           <Route path="positionnement" element={<RouteWithTitle titleKey="positionnement" element={<Positioning />} />} />
           <Route path="collaborations" element={<RouteWithTitle titleKey="collaborations" element={<Collaborations />} />} />
+          <Route path="collaborations/:entityCode" element={<RouteWithTitle titleKey="collaborations" element={<EntityWrapper />} />} />
           <Route path="beneficiaires" element={<RouteWithTitle titleKey="beneficiaires" element={<Beneficiaries />} />} />
           <Route path="beneficiaires-types" element={<RouteWithTitle titleKey="beneficiaires-types" element={<div>Types de bénéficiaires</div>} />} />
         </Route>
