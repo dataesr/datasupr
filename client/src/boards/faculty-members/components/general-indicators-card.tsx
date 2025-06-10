@@ -2,6 +2,7 @@ import { useSearchParams, useParams } from "react-router-dom";
 import { useMemo } from "react";
 import { useFacultyMembersOverview } from "../api/use-overview";
 import { generateContextualTitle } from "../utils";
+import { formatToPercent } from "../../../utils/format";
 
 const GeneralIndicatorsCard = () => {
   const [searchParams] = useSearchParams();
@@ -225,7 +226,7 @@ const GeneralIndicatorsCard = () => {
                   }}
                 >
                   <span className="fr-text--lg fr-text--bold">
-                    {femalePercent}%
+                    {formatToPercent(femalePercent)}%
                   </span>
                   <div className="fr-text--xs">Femmes</div>
                   <div className="fr-text--xs fr-text--grey">

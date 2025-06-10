@@ -1,4 +1,4 @@
-import { CreateChartOptions } from "../../../../components/chart-faculty-members";
+import { CreateChartOptions } from "../../../../components/creat-chart-options";
 
 interface TrendsOptionsParams {
   years: string[];

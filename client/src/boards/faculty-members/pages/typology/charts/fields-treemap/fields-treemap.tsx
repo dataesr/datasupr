@@ -5,7 +5,7 @@ import Highcharts from "highcharts";
 import HighchartsTreemap from "highcharts/modules/treemap";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { useFacultyMembersCNU } from "../../../../api/use-cnu";
-import { CreateChartOptions } from "../../../../components/chart-faculty-members";
+import { CreateChartOptions } from "../../../../components/creat-chart-options";
 import { useContextDetection } from "../../../../utils";
 import { createTreemapOptions } from "./options";
 

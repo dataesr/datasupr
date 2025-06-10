@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { CreateChartOptions } from "../../components/chart-faculty-members";
+import { CreateChartOptions } from "../../components/creat-chart-options";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { createEstablishmentTypeChartOptions } from "./options";
 import { useFacultyMembersOverview } from "../../api/use-overview";

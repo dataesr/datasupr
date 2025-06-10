@@ -4,9 +4,10 @@ import Highcharts from "highcharts";
 import HighchartsTreemap from "highcharts/modules/treemap";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { useFacultyMembersCNU } from "../../../../api/use-cnu";
-import { CreateChartOptions } from "../../../../components/chart-faculty-members";
+import { CreateChartOptions } from "../../../../components/creat-chart-options";
 import { useContextDetection } from "../../../../utils";
 import { createGroupTreemapOptions } from "./options";
+import { formatToPercent } from "../../../../../../utils/format";
 
 HighchartsTreemap(Highcharts);
 
@@ -329,7 +330,7 @@ export function GroupCNUTreemapChart() {
                         <strong>
                           {singleGroup.femaleCount.toLocaleString()}
                         </strong>{" "}
-                        ({femalePercent}%)
+                        ({formatToPercent(femalePercent)})
                       </p>
                     </div>
                   </div>

@@ -1,5 +1,6 @@
 import { Badge } from "@dataesr/dsfr-plus";
 import { useFacultyMembersResearchTeachers } from "../../../api/use-research-teachers";
+import { formatToPercent } from "../../../../../utils/format";
 
 interface CnuGroupsTableProps {
   context: "fields" | "geo" | "structures";
@@ -119,7 +120,8 @@ export default function CnuGroupsTable({
                 </div>
                 <small>
                   <Badge>
-                    {malePercent}% / {femalePercent}%
+                    {formatToPercent(malePercent)}% /{" "}
+                    {formatToPercent(femalePercent)}%
                   </Badge>
                 </small>
               </td>

@@ -1,6 +1,7 @@
 import { Badge, Link } from "@dataesr/dsfr-plus";
 import { useFacultyMembersResearchTeachers } from "../../../api/use-research-teachers";
 import { useSearchParams } from "react-router-dom";
+import { formatToPercent } from "../../../../../utils/format";
 
 interface ResearchTeachersOverviewTableProps {
   context: "fields" | "geo" | "structures";
@@ -217,7 +218,8 @@ export default function ResearchTeachersOverviewTable({
                 </div>
                 <small>
                   <Badge>
-                    {malePercent}% / {femalePercent}%
+                    {formatToPercent(malePercent)} /{" "}
+                    {formatToPercent(femalePercent)}
                   </Badge>
                 </small>
               </td>

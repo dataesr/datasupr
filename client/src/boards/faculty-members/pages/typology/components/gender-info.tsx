@@ -4,6 +4,7 @@ import { Title } from "@dataesr/dsfr-plus";
 import "./styles.scss";
 import { useFacultyMembersTypology } from "../../../api/use-typology";
 import { useContextDetection } from "../../../utils";
+import { formatToPercent } from "../../../../../utils/format";
 
 interface GenderDataCardProps {
   gender: "hommes" | "femmes";
@@ -398,7 +399,9 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
                   }% (${ageData.count.toLocaleString()} personnes)`}
                 >
                   <div className="age-label">{ageLabel}</div>
-                  <div className="age-percent">{ageData.percent}%</div>
+                  <div className="age-percent">
+                    {formatToPercent(ageData.percent)}
+                  </div>
                 </div>
               );
             })}

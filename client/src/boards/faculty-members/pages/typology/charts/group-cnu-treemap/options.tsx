@@ -1,4 +1,5 @@
 import Highcharts from "highcharts";
+import { formatToPercent } from "../../../../../../utils/format";
 
 interface TreemapData {
   id: string;
@@ -67,8 +68,12 @@ export const createGroupTreemapOptions = ({
 
       return `<b>${point.name}</b><br>
              Effectif total: <b>${point.value.toLocaleString()}</b> enseignants<br>
-             <span style="color:#e18b76">♀ Femmes: ${point.femaleCount.toLocaleString()} (${femalePercent}%)</span><br>
-             <span style="color:#efcb3a">♂ Hommes: ${point.maleCount.toLocaleString()} (${malePercent}%)</span>`;
+             <span style="color:#e18b76">♀ Femmes: ${point.femaleCount.toLocaleString()} (${formatToPercent(
+        femalePercent
+      )})</span><br>
+             <span style="color:#efcb3a">♂ Hommes: ${point.maleCount.toLocaleString()} (${formatToPercent(
+        malePercent
+      )})</span>`;
     },
   },
   colorAxis: {
@@ -104,7 +109,9 @@ export const createGroupTreemapOptions = ({
           if (point.value > 1000) {
             return `<b>${
               point.name
-            }</b><br>${point.value.toLocaleString()}<br>(${femalePercent}% ♀)`;
+            }</b><br>${point.value.toLocaleString()}<br>(${formatToPercent(
+              femalePercent
+            )} ♀)`;
           } else {
             return `${point.name}<br>${point.value.toLocaleString()}`;
           }

@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/faculty-members/filters/structures", async (req, res) => {
   try {
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const structures = await collection
       .aggregate([
@@ -50,7 +50,7 @@ router.get("/faculty-members/filters/structures", async (req, res) => {
 router.get("/faculty-members/structures/overview", async (req, res) => {
   try {
     const { annee_universitaire, structure_id } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -370,7 +370,7 @@ router.get("/faculty-members/structures/overview", async (req, res) => {
 router.get("/faculty-members/structures/cnu-analysis", async (req, res) => {
   try {
     const { annee_universitaire, structure_id } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     let matchStage = {};
     if (annee_universitaire && annee_universitaire !== "all") {
@@ -484,7 +484,7 @@ router.get(
   async (req, res) => {
     try {
       const { annee_universitaire, structure_id } = req.query;
-      const collection = db.collection("teaching-staff");
+      const collection = db.collection("faculty-members");
 
       const matchStage = {
         is_enseignant_chercheur: true,
@@ -782,7 +782,7 @@ router.get(
 router.get("/faculty-members/structures/evolution", async (req, res) => {
   try {
     const { structure_id } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const matchStage = {};
     if (structure_id) {

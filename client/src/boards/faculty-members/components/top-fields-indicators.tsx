@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { Badge } from "@dataesr/dsfr-plus";
 import { useFacultyMembersOverview } from "../api/use-overview";
 import { useContextDetection } from "../utils";
+import { formatToPercent } from "../../../utils/format";
 
 const TopItemsIndicators: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -219,7 +220,7 @@ const TopItemsIndicators: React.FC = () => {
                         enseignants
                         <br />
                         <span style={{ color: "#e1000f" }}>
-                          {femalePercent}% de femmes
+                          {formatToPercent(femalePercent)} de femmes
                         </span>
                       </div>
 
@@ -260,7 +261,7 @@ const TopItemsIndicators: React.FC = () => {
                           fontSize: "0.75rem",
                         }}
                       >
-                        {itemPercent}%
+                        {formatToPercent(itemPercent)}%
                       </Badge>
                     </div>
                   </div>

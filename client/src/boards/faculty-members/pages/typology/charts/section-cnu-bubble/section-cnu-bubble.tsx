@@ -4,9 +4,10 @@ import Highcharts from "highcharts";
 import HighchartsMore from "highcharts/highcharts-more";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { useFacultyMembersCNU } from "../../../../api/use-cnu";
-import { CreateChartOptions } from "../../../../components/chart-faculty-members";
+import { CreateChartOptions } from "../../../../components/creat-chart-options";
 import { useContextDetection } from "../../../../utils";
 import { createBubbleOptions } from "./options";
+import { formatToPercent } from "../../../../../../utils/format";
 
 HighchartsMore(Highcharts);
 
@@ -494,7 +495,7 @@ export function SectionsBubbleChart() {
                         <strong>
                           {singleSection.femaleCount.toLocaleString()}
                         </strong>{" "}
-                        ({femalePercent}%)
+                        ({formatToPercent(femalePercent)})
                       </p>
                     </div>
                   </div>

@@ -1,6 +1,7 @@
 import { Badge, Link } from "@dataesr/dsfr-plus";
 import { useFacultyMembersResearchTeachers } from "../../../api/use-research-teachers";
 import { useMemo } from "react";
+import { formatToPercent } from "../../../../../utils/format";
 
 interface CnuSectionsTableProps {
   context: "fields" | "geo" | "structures";
@@ -107,7 +108,6 @@ export default function CnuSectionsTable({
               : 0;
           const femalePercent = 100 - malePercent;
 
-          // Recherche des tranches d'âge
           const younger35 = section.ageDistribution?.find(
             (age) => age.ageClass === "35 ans et moins"
           );
@@ -161,7 +161,8 @@ export default function CnuSectionsTable({
                 </div>
                 <small>
                   <Badge>
-                    {malePercent}% / {femalePercent}%
+                    {formatToPercent(malePercent)} /{" "}
+                    {formatToPercent(femalePercent)}
                   </Badge>
                 </small>
               </td>

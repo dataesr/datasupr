@@ -1,4 +1,5 @@
 import Highcharts from "highcharts";
+import { formatToPercent } from "../../../../../../utils/format";
 
 interface BubbleData {
   x: number;
@@ -121,11 +122,15 @@ export const createBubbleOptions = ({
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
               <span style="color: #e18b76;">♀ Femmes:</span>
-              <span><strong>${point.femaleCount.toLocaleString()}</strong> (${femalePercent}%)</span>
+              <span><strong>${point.femaleCount.toLocaleString()}</strong> (${formatToPercent(
+          femalePercent
+        )})</span>
             </div>
             <div style="display: flex; justify-content: space-between;">
               <span style="color: #efcb3a;">♂ Hommes:</span>
-              <span><strong>${point.maleCount.toLocaleString()}</strong> (${malePercent}%)</span>
+              <span><strong>${point.maleCount.toLocaleString()}</strong> (${formatToPercent(
+          malePercent
+        )})</span>
             </div>
           </div>
         `;

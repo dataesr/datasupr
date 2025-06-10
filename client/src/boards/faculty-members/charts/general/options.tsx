@@ -1,5 +1,5 @@
 import HighchartsInstance from "highcharts";
-import { CreateChartOptions } from "../../components/chart-faculty-members";
+import { CreateChartOptions } from "../../components/creat-chart-options";
 
 interface Field {
   year: string;

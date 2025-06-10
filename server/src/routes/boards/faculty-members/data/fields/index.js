@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/faculty-members/filters/fields", async (req, res) => {
   try {
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const fields = await collection
       .aggregate([
@@ -50,7 +50,7 @@ router.get("/faculty-members/filters/fields", async (req, res) => {
 router.get("/faculty-members/fields/overview", async (req, res) => {
   try {
     const { annee_universitaire, field_id } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -343,7 +343,7 @@ router.get("/faculty-members/fields/overview", async (req, res) => {
 router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
   try {
     const { annee_universitaire, field_id } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -479,7 +479,7 @@ router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
 router.get("/faculty-members/fields/evolution", async (req, res) => {
   try {
     const { field_id } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const matchStage = {};
     if (field_id) matchStage.code_grande_discipline = field_id;
@@ -695,7 +695,7 @@ router.get("/faculty-members/fields/evolution", async (req, res) => {
 router.get("/faculty-members/fields/research-teachers", async (req, res) => {
   try {
     const { annee_universitaire, field_id } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const matchStage = {
       is_enseignant_chercheur: true,

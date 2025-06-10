@@ -9,6 +9,7 @@ import {
 } from "./options";
 import { useFacultyMembersCNU } from "../../api/use-cnu";
 import { useContextDetection } from "../../utils";
+import { formatToPercent } from "../../../../utils/format";
 
 interface DataPoint {
   name: string;
@@ -254,7 +255,7 @@ export default function CnuGroupsChart() {
                         <strong>
                           {singleGroup.femaleCount.toLocaleString()}
                         </strong>{" "}
-                        ({femalePercent}%)
+                        ({formatToPercent(femalePercent)})
                       </p>
                     </div>
                   </div>

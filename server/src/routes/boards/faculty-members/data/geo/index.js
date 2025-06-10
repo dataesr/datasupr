@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/faculty-members/filters/regions", async (req, res) => {
   try {
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const regions = await collection
       .aggregate([
@@ -50,7 +50,7 @@ router.get("/faculty-members/filters/regions", async (req, res) => {
 router.get("/faculty-members/geo/overview", async (req, res) => {
   try {
     const { annee_universitaire, geo_id } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -354,7 +354,7 @@ router.get("/faculty-members/geo/overview", async (req, res) => {
 router.get("/faculty-members/geo/cnu-analysis", async (req, res) => {
   try {
     const { annee_universitaire, geo_id } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     let matchStage = {};
     if (annee_universitaire && annee_universitaire !== "all") {
@@ -460,7 +460,7 @@ router.get("/faculty-members/geo/cnu-analysis", async (req, res) => {
 router.get("/faculty-members/geo/map-data", async (req, res) => {
   try {
     const { annee_universitaire } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -621,7 +621,7 @@ router.get("/faculty-members/geo/map-data", async (req, res) => {
 router.get("/faculty-members/geo/evolution", async (req, res) => {
   try {
     const { geo_id } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const baseMatch = {};
     if (geo_id) baseMatch.etablissement_code_region = geo_id;
@@ -855,7 +855,7 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
 router.get("/faculty-members/geo/research-teachers", async (req, res) => {
   try {
     const { annee_universitaire, geo_id } = req.query;
-    const collection = db.collection("teaching-staff");
+    const collection = db.collection("faculty-members");
 
     const matchStage = {
       is_enseignant_chercheur: true,
