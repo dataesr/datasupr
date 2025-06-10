@@ -9,7 +9,7 @@ import OpenAlexRoutes from "./boards/open-alex/routes.tsx";
 import TedsRoutes from "./boards/teds/routes.tsx";
 import FinanceUniversityRoutes from "./boards/finance-university/routes.tsx";
 import NotFoundPage from "./components/not-found-page.tsx";
-import FacultyMembersRoutes from "./boards/faculty-members-2/routes.tsx";
+import FacultyMembersRoutes from "./boards/faculty-members/routes.tsx";
 
 export default function Router() {
   return (

@@ -8,17 +8,22 @@ import {
   Text,
   Notice,
 } from "@dataesr/dsfr-plus";
-import YearSelector from "../../filters";
-import FieldsDistributionBar from "./charts/general/general";
-import DisciplineStatsSidebar from "./components/top-fields-indicators";
-import FieldCardsGrid from "./components/fields-cards";
-import CnuGroupsChart from "./charts/cnu-group/cnu-chart";
-import DisciplineStatusSummary from "./components/fields-by-status";
-import StatusDistribution from "./charts/status/status";
-import { AgeDistributionPieChart } from "./charts/age/age";
+import FieldsDistributionBar from "../../charts/general/general";
+import CnuGroupsChart from "../../charts/cnu-group/cnu-chart";
+import StatusDistribution from "../../charts/status/status";
+import { AgeDistributionPieChart } from "../../charts/age/age";
 import GeneralIndicatorsCard from "../../components/general-indicators-card";
+import { EstablishmentTypeChart } from "../../charts/establishment-type/establishment";
+import DisciplineStatsSidebar from "../../components/top-fields-indicators";
+import DisciplineStatusSummary from "../../components/fields-by-status";
+import { useSearchParams } from "react-router-dom";
+import NavigationCards from "../../components/fields-cards";
+import YearSelector from "../../components/filters";
 
 export default function FieldOverview() {
+  const [searchParams] = useSearchParams();
+  const field_id = searchParams.get("field_id");
+
   return (
     <Container as="main">
       <Row>
@@ -43,7 +48,7 @@ export default function FieldOverview() {
           Explorer le personnel enseignant par grande discipline
         </Title>
       </Row>
-      <Row>
+      <Row gutters>
         <Col md={8} className="fr-pr-8w">
           <Text>
             Desriptif de notre référentiel des disciplines, limites et
@@ -59,31 +64,33 @@ export default function FieldOverview() {
             lobortis mauris eget malesuada. Sed in consequat elit, eu fringilla
             magna.
           </Text>
-          <FieldsDistributionBar />
+          {!field_id && <FieldsDistributionBar />}
           <CnuGroupsChart />
-          {/* <StatusDistribution />
+          <StatusDistribution />
           Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea repellat
           corporis est laudantium consequuntur consectetur, odit temporibus!
           Eligendi, vitae. Vero, harum molestias? Repellendus voluptatem non
           aperiam? Enim ab obcaecati non?
           <div className="fr-mt-3w">
             <AgeDistributionPieChart />
-          </div> */}
+          </div>
         </Col>
         <Col md={4} style={{ textAlign: "center" }}>
-          {/* <GeneralIndicatorsCard />
-          <DisciplineStatsSidebar />
-
-          <DisciplineStatusSummary /> */}
+          <GeneralIndicatorsCard />
+          {!field_id && <DisciplineStatsSidebar />}
+          <DisciplineStatusSummary />
         </Col>
       </Row>
+      <Row>
+        <EstablishmentTypeChart />
+      </Row>
       <Row className="fr-mt-4w fr-mb-5w">
-        {/* <Col>
+        <Col>
           <Title as="h4" look="h5">
             Explorer par discipline
           </Title>
-          <FieldCardsGrid />
-        </Col> */}
+          <NavigationCards type="fields" maxItems={12} />
+        </Col>
       </Row>
     </Container>
   );

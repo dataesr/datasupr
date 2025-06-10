@@ -1,39 +1,27 @@
 import { Container, Link, Nav } from "@dataesr/dsfr-plus";
-import { Outlet, useLocation, useParams } from "react-router-dom";
+import { Outlet, useLocation, useSearchParams } from "react-router-dom";
 import "../styles.scss";
 
 export function FacultyLayout() {
   const location = useLocation();
   const path = location.pathname;
-  const { geo_id, id, field_id } = useParams<{
-    geo_id?: string;
-    id?: string;
-    field_id?: string;
-  }>();
+  const [searchParams] = useSearchParams();
 
   const buildContextualPath = (basePath: string) => {
     const currentPathParts = path.split("/");
     const currentObjectType = currentPathParts[2] || "";
 
-    let paramValue: string | null = null;
-    if (currentObjectType === "geo" && geo_id) {
-      paramValue = geo_id;
-    } else if (currentObjectType === "universite" && id) {
-      paramValue = id;
-    } else if (currentObjectType === "discipline" && field_id) {
-      paramValue = field_id;
+    const baseUrl = `/personnel-enseignant/${currentObjectType}/${basePath}`;
+
+    const existingParams = new URLSearchParams(searchParams);
+
+    if (!existingParams.get("année_universitaire")) {
+      existingParams.set("année_universitaire", "2023-24");
     }
 
-    return `/personnel-enseignant/${currentObjectType}/${basePath}${
-      paramValue ? "/" + paramValue : ""
-    }`;
+    const queryString = existingParams.toString();
+    return queryString ? `${baseUrl}?${queryString}` : baseUrl;
   };
-
-  const currentPathParts = path.split("/");
-  const currentObjectType = currentPathParts[2] || "";
-
-  const showDisciplineLink = currentObjectType !== "discipline";
-  const showReasearchTeachersLink = currentObjectType === "discipline";
 
   return (
     <Container>
@@ -57,22 +45,12 @@ export function FacultyLayout() {
           >
             Evolution
           </Link>
-          {showDisciplineLink && (
-            <Link
-              current={path.includes(`discipline`)}
-              href={buildContextualPath("discipline")}
-            >
-              Discipline
-            </Link>
-          )}
-          {showReasearchTeachersLink && (
-            <Link
-              current={path.includes(`enseignants-chercheurs`)}
-              href={buildContextualPath("enseignants-chercheurs")}
-            >
-              Enseignants chercheurs
-            </Link>
-          )}
+          <Link
+            current={path.includes(`enseignants-chercheurs`)}
+            href={buildContextualPath("enseignants-chercheurs")}
+          >
+            Enseignants chercheurs
+          </Link>
         </Nav>
       </div>
       <Outlet />
