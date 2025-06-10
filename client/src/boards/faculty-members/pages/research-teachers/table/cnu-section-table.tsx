@@ -5,7 +5,7 @@ import { useMemo } from "react";
 interface CnuSectionsTableProps {
   context: "fields" | "geo" | "structures";
   contextId: string;
-  année_universitaire?: string;
+  annee_universitaire?: string;
   showDiscipline?: boolean;
   showGroup?: boolean;
   showAgeDemographics?: boolean;
@@ -14,7 +14,7 @@ interface CnuSectionsTableProps {
 export default function CnuSectionsTable({
   context,
   contextId,
-  année_universitaire,
+  annee_universitaire,
   showDiscipline = false,
   showGroup = false,
   showAgeDemographics = true,
@@ -26,7 +26,7 @@ export default function CnuSectionsTable({
   } = useFacultyMembersResearchTeachers({
     context,
     contextId,
-    année_universitaire,
+    annee_universitaire,
   });
 
   const cnuSections = useMemo(() => {

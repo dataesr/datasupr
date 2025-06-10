@@ -40,14 +40,14 @@ interface MapOptionsParams {
     female_percent: number;
   }>;
   stats: MapStatistics;
-  year: string;
+  annee_universitaire: string;
   onRegionClick: (geoId: string) => void;
 }
 
 export const createMapOptions = ({
   chartData,
   stats,
-  year,
+  annee_universitaire,
   onRegionClick,
 }: MapOptionsParams): Highcharts.Options => ({
   chart: {
@@ -64,7 +64,9 @@ export const createMapOptions = ({
   },
   title: {
     text: `Personnel enseignant par région ${
-      year !== "Toutes les années" ? `- ${year}` : ""
+      annee_universitaire !== "Toutes les années"
+        ? `- ${annee_universitaire}`
+        : ""
     }`,
     style: {
       color: "#000091",

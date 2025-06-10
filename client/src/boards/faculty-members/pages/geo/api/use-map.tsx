@@ -24,18 +24,19 @@ export interface MapStatistics {
 export interface GeoMapResponse {
   regions: RegionMapData[];
   statistics: MapStatistics;
-  year: string;
+  annee_universitaire: string;
 }
 
 interface UseGeoMapDataParams {
-  year: string;
+  annee_universitaire: string;
 }
-export const useGeoMapData = ({ year }: UseGeoMapDataParams) => {
+export const useGeoMapData = ({ annee_universitaire }: UseGeoMapDataParams) => {
   return useQuery<GeoMapResponse>({
-    queryKey: ["faculty-members", "geo", "map", year],
+    queryKey: ["faculty-members", "geo", "map", annee_universitaire],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (year) params.append("year", year);
+      if (annee_universitaire)
+        params.append("annee_universitaire", annee_universitaire);
 
       const response = await fetch(
         `${VITE_APP_SERVER_URL}/faculty-members/geo/map-data?${params.toString()}`

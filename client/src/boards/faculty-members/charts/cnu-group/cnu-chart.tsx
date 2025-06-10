@@ -43,12 +43,12 @@ interface CNUGroup {
 
 export default function CnuGroupsChart() {
   const [searchParams] = useSearchParams();
-  const selectedYear = searchParams.get("année_universitaire") || "";
+  const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId, contextName } = useContextDetection();
 
   const { data: cnuData } = useFacultyMembersCNU({
     context,
-    année_universitaire: selectedYear,
+    annee_universitaire: selectedYear,
     contextId,
   });
   const cnuGroups = useMemo(() => {

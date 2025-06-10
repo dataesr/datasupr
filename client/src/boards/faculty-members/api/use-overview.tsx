@@ -6,24 +6,26 @@ type OverviewContext = "fields" | "geo" | "structures";
 
 interface UseOverviewParams {
   context: OverviewContext;
-  année_universitaire?: string;
+  annee_universitaire?: string;
   contextId?: string; // field_id, geo_id, ou structure_id
 }
 export const useFacultyMembersOverview = ({
   context,
-  année_universitaire,
+  annee_universitaire,
   contextId,
 }: UseOverviewParams) => {
   return useQuery({
     queryKey: [
       "faculty-members-overview",
       context,
-      année_universitaire,
+      annee_universitaire,
       contextId,
     ],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (année_universitaire) params.append("year", année_universitaire);
+
+      if (annee_universitaire)
+        params.append("annee_universitaire", annee_universitaire);
 
       if (contextId) {
         switch (context) {

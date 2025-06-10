@@ -15,7 +15,7 @@ import YearSelector from "../../components/filters";
 
 export function ResearchTeachers() {
   const [searchParams] = useSearchParams();
-  const selectedYear = searchParams.get("année_universitaire") || "";
+  const selectedYear = searchParams.get("annee_universitaire") || "";
 
   const field_id = searchParams.get("field_id");
   const geo_id = searchParams.get("geo_id");
@@ -100,7 +100,7 @@ export function ResearchTeachers() {
           </Title>
           <ResearchTeachersOverviewTable
             context={context}
-            année_universitaire={selectedYear}
+            annee_universitaire={selectedYear}
             contextId={contextId}
           />
         </Col>
@@ -115,7 +115,7 @@ export function ResearchTeachers() {
             <CnuGroupsTable
               context={context}
               contextId={contextId}
-              année_universitaire={selectedYear}
+              annee_universitaire={selectedYear}
             />
             <div className="fr-text--xs fr-mt-1w fr-mb-4w">
               <i>
@@ -139,7 +139,7 @@ export function ResearchTeachers() {
             <CnuSectionsTable
               context={context}
               contextId={contextId}
-              année_universitaire={selectedYear}
+              annee_universitaire={selectedYear}
               showDiscipline={false}
               showGroup={true}
               showAgeDemographics={true}

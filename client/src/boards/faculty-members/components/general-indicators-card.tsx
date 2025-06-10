@@ -6,7 +6,7 @@ import { generateContextualTitle } from "../utils";
 const GeneralIndicatorsCard = () => {
   const [searchParams] = useSearchParams();
   const { geo_id, id, field_id: paramFieldId } = useParams();
-  const selectedYear = searchParams.get("année_universitaire") || "";
+  const selectedYear = searchParams.get("annee_universitaire") || "";
 
   const field_id = searchParams.get("field_id") || paramFieldId;
   const geo_id_param = searchParams.get("geo_id") || geo_id;
@@ -46,7 +46,7 @@ const GeneralIndicatorsCard = () => {
     error,
   } = useFacultyMembersOverview({
     context,
-    année_universitaire: selectedYear,
+    annee_universitaire: selectedYear,
     contextId,
   });
 

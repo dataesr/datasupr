@@ -16,7 +16,7 @@ interface StatusData {
 
 const StatusDistribution: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const selectedYear = searchParams.get("année_universitaire") || "";
+  const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId, contextName } = useContextDetection();
 
   const {
@@ -25,7 +25,7 @@ const StatusDistribution: React.FC = () => {
     error,
   } = useFacultyMembersOverview({
     context,
-    année_universitaire: selectedYear,
+    annee_universitaire: selectedYear,
     contextId,
   });
 

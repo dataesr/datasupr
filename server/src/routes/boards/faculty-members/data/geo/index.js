@@ -49,11 +49,12 @@ router.get("/faculty-members/filters/regions", async (req, res) => {
 
 router.get("/faculty-members/geo/overview", async (req, res) => {
   try {
-    const { year, geo_id } = req.query;
+    const { annee_universitaire, geo_id } = req.query;
     const collection = db.collection("teaching-staff");
 
     const matchStage = {};
-    if (year) matchStage.annee_universitaire = year;
+    if (annee_universitaire)
+      matchStage.annee_universitaire = annee_universitaire;
     if (geo_id) matchStage.etablissement_code_region = geo_id;
 
     // Le genre par region
@@ -352,12 +353,12 @@ router.get("/faculty-members/geo/overview", async (req, res) => {
 
 router.get("/faculty-members/geo/cnu-analysis", async (req, res) => {
   try {
-    const { year, geo_id } = req.query;
+    const { annee_universitaire, geo_id } = req.query;
     const collection = db.collection("teaching-staff");
 
     let matchStage = {};
-    if (year && year !== "all") {
-      matchStage.annee_universitaire = year;
+    if (annee_universitaire && annee_universitaire !== "all") {
+      matchStage.annee_universitaire = annee_universitaire;
     }
     if (geo_id) {
       matchStage.etablissement_code_region = geo_id;
@@ -444,7 +445,7 @@ router.get("/faculty-members/geo/cnu-analysis", async (req, res) => {
 
     res.json({
       cnu_groups_with_sections: cnuGroupsWithSections,
-      year: year || "current",
+      annee_universitaire: annee_universitaire || "current",
       geo_id: geo_id || null,
     });
   } catch (error) {
@@ -458,11 +459,12 @@ router.get("/faculty-members/geo/cnu-analysis", async (req, res) => {
 
 router.get("/faculty-members/geo/map-data", async (req, res) => {
   try {
-    const { year } = req.query;
+    const { annee_universitaire } = req.query;
     const collection = db.collection("teaching-staff");
 
     const matchStage = {};
-    if (year) matchStage.annee_universitaire = year;
+    if (annee_universitaire)
+      matchStage.annee_universitaire = annee_universitaire;
 
     const mapData = await collection
       .aggregate([
@@ -605,7 +607,7 @@ router.get("/faculty-members/geo/map-data", async (req, res) => {
     res.json({
       regions: mapData,
       statistics: stats,
-      year: year || "Toutes les années",
+      annee_universitaire: annee_universitaire || "Toutes les années",
     });
   } catch (error) {
     console.error("Error fetching map data:", error);
@@ -635,7 +637,7 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
           {
             $group: {
               _id: {
-                year: "$annee_universitaire",
+                annee_universitaire: "$annee_universitaire",
                 region_code: geo_id ? null : "$etablissement_code_region",
                 region_name: geo_id ? null : "$etablissement_region",
                 discipline_code: "$code_grande_discipline",
@@ -648,7 +650,7 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
               count: { $sum: "$effectif" },
             },
           },
-          { $sort: { "_id.year": 1 } },
+          { $sort: { "_id.annee_universitaire": 1 } },
         ])
         .toArray(),
 
@@ -672,27 +674,32 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
     const disciplineEvolution = new Map();
 
     allData.forEach((item) => {
-      const year = item._id.year;
+      const annee_universitaire = item._id.annee_universitaire;
       const count = item.count;
 
-      if (!globalEvolution.has(year)) {
-        globalEvolution.set(year, { year, total: 0, male: 0, female: 0 });
+      if (!globalEvolution.has(annee_universitaire)) {
+        globalEvolution.set(annee_universitaire, {
+          annee_universitaire,
+          total: 0,
+          male: 0,
+          female: 0,
+        });
       }
-      const global = globalEvolution.get(year);
+      const global = globalEvolution.get(annee_universitaire);
       global.total += count;
       if (item._id.gender === "Masculin") global.male += count;
       if (item._id.gender === "Féminin") global.female += count;
 
-      if (!statusEvolution.has(year)) {
-        statusEvolution.set(year, {
-          year,
+      if (!statusEvolution.has(annee_universitaire)) {
+        statusEvolution.set(annee_universitaire, {
+          annee_universitaire,
           total: 0,
           enseignant_chercheur: 0,
           titulaire_non_chercheur: 0,
           non_titulaire: 0,
         });
       }
-      const status = statusEvolution.get(year);
+      const status = statusEvolution.get(annee_universitaire);
       status.total += count;
       if (item._id.is_enseignant_chercheur) {
         status.enseignant_chercheur += count;
@@ -703,11 +710,15 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
       }
 
       // Age evolution
-      const ageKey = `${year}-${item._id.age_class}`;
-      if (!ageEvolution.has(year)) {
-        ageEvolution.set(year, { year, total: 0, breakdown: new Map() });
+      const ageKey = `${annee_universitaire}-${item._id.age_class}`;
+      if (!ageEvolution.has(annee_universitaire)) {
+        ageEvolution.set(annee_universitaire, {
+          annee_universitaire,
+          total: 0,
+          breakdown: new Map(),
+        });
       }
-      const age = ageEvolution.get(year);
+      const age = ageEvolution.get(annee_universitaire);
       age.total += count;
       if (!age.breakdown.has(item._id.age_class)) {
         age.breakdown.set(item._id.age_class, 0);
@@ -718,11 +729,11 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
       );
 
       if (!geo_id && item._id.region_code) {
-        const regionKey = `${year}-${item._id.region_code}`;
+        const regionKey = `${annee_universitaire}-${item._id.region_code}`;
         if (!regionEvolution.has(regionKey)) {
           regionEvolution.set(regionKey, {
             _id: {
-              year: year,
+              annee_universitaire: annee_universitaire,
               region_code: item._id.region_code,
               region_name: item._id.region_name,
             },
@@ -738,11 +749,11 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
       }
 
       if (item._id.discipline_code) {
-        const discKey = `${year}-${item._id.discipline_code}`;
+        const discKey = `${annee_universitaire}-${item._id.discipline_code}`;
         if (!disciplineEvolution.has(discKey)) {
           disciplineEvolution.set(discKey, {
             _id: {
-              year: year,
+              annee_universitaire: annee_universitaire,
               discipline_code: item._id.discipline_code,
               discipline_name: item._id.discipline_name,
             },
@@ -760,7 +771,7 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
 
     const processedGlobalEvolution = Array.from(globalEvolution.values()).map(
       (item) => ({
-        _id: item.year,
+        _id: item.annee_universitaire,
         total_count: item.total,
         gender_breakdown: [
           { gender: "Masculin", count: item.male },
@@ -771,7 +782,7 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
 
     const processedStatusEvolution = Array.from(statusEvolution.values()).map(
       (item) => ({
-        _id: item.year,
+        _id: item.annee_universitaire,
         total_count: item.total,
         status_breakdown: [
           { status: "enseignant_chercheur", count: item.enseignant_chercheur },
@@ -786,7 +797,7 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
 
     const processedAgeEvolution = Array.from(ageEvolution.values()).map(
       (item) => ({
-        _id: item.year,
+        _id: item.annee_universitaire,
         total_count: item.total,
         age_breakdown: Array.from(item.breakdown.entries()).map(
           ([age, count]) => ({
@@ -843,13 +854,14 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
 
 router.get("/faculty-members/geo/research-teachers", async (req, res) => {
   try {
-    const { year, geo_id } = req.query;
+    const { annee_universitaire, geo_id } = req.query;
     const collection = db.collection("teaching-staff");
 
     const matchStage = {
       is_enseignant_chercheur: true,
     };
-    if (year) matchStage.annee_universitaire = year;
+    if (annee_universitaire)
+      matchStage.annee_universitaire = annee_universitaire;
     if (geo_id) matchStage.etablissement_code_region = geo_id;
 
     if (geo_id) {

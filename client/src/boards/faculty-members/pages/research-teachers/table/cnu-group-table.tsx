@@ -4,14 +4,14 @@ import { useFacultyMembersResearchTeachers } from "../../../api/use-research-tea
 interface CnuGroupsTableProps {
   context: "fields" | "geo" | "structures";
   contextId: string;
-  année_universitaire?: string;
+  annee_universitaire?: string;
   showAgeDemographics?: boolean;
 }
 
 export default function CnuGroupsTable({
   context,
   contextId,
-  année_universitaire,
+  annee_universitaire,
   showAgeDemographics = false,
 }: CnuGroupsTableProps) {
   const {
@@ -21,7 +21,7 @@ export default function CnuGroupsTable({
   } = useFacultyMembersResearchTeachers({
     context,
     contextId,
-    année_universitaire,
+    annee_universitaire,
   });
 
   if (isLoading) {

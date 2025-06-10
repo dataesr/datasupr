@@ -12,7 +12,7 @@ HighchartsMore(Highcharts);
 
 export function SectionsBubbleChart() {
   const [searchParams] = useSearchParams();
-  const selectedYear = searchParams.get("année_universitaire") || "";
+  const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context } = useContextDetection();
 
   const getContextParams = () => {
@@ -44,7 +44,7 @@ export function SectionsBubbleChart() {
 
   const { data: cnuData, isLoading } = useFacultyMembersCNU({
     context,
-    année_universitaire: selectedYear,
+    annee_universitaire: selectedYear,
     contextId: contextId || undefined,
   });
 

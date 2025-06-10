@@ -58,22 +58,22 @@ const YearSelector = () => {
   );
 
   const selectedYear =
-    searchParams.get("année_universitaire") ||
+    searchParams.get("annee_universitaire") ||
     (years.length > 0 ? years[0] : "");
 
-  const handleYearChange = (année_universitaire: string) => {
+  const handleYearChange = (annee_universitaire: string) => {
     setSearchParams((prev) => {
       const newParams = new URLSearchParams(prev);
-      newParams.set("année_universitaire", année_universitaire);
+      newParams.set("annee_universitaire", annee_universitaire);
       return newParams;
     });
   };
 
   useEffect(() => {
-    if (years.length > 0 && !searchParams.get("année_universitaire")) {
+    if (years.length > 0 && !searchParams.get("annee_universitaire")) {
       setSearchParams((prev) => {
         const newParams = new URLSearchParams(prev);
-        newParams.set("année_universitaire", years[0]);
+        newParams.set("annee_universitaire", years[0]);
         return newParams;
       });
     }

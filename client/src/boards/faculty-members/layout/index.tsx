@@ -15,8 +15,8 @@ export function FacultyLayout() {
 
     const existingParams = new URLSearchParams(searchParams);
 
-    if (!existingParams.get("année_universitaire")) {
-      existingParams.set("année_universitaire", "2023-24");
+    if (!existingParams.get("annee_universitaire")) {
+      existingParams.set("annee_universitaire", "2023-24");
     }
 
     const queryString = existingParams.toString();

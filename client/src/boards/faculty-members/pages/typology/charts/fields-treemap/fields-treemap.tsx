@@ -13,13 +13,13 @@ HighchartsTreemap(Highcharts);
 
 export function ItemsTreemapChart() {
   const [searchParams] = useSearchParams();
-  const selectedYear = searchParams.get("année_universitaire") || "";
+  const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId } = useContextDetection();
   const navigate = useNavigate();
 
   const { data: cnuData, isLoading } = useFacultyMembersCNU({
     context,
-    année_universitaire: selectedYear,
+    annee_universitaire: selectedYear,
     contextId,
   });
 

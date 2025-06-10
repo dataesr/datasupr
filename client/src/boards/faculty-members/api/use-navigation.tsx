@@ -12,26 +12,27 @@ interface NavigationItem {
 
 interface NavigationResponse {
   type: string;
-  année_universitaire: string;
+  annee_universitaire: string;
   items: NavigationItem[];
   total_items: number;
 }
 
 interface UseNavigationParams {
   type: "fields" | "regions" | "structures";
-  année_universitaire?: string;
+  annee_universitaire?: string;
   enabled?: boolean;
 }
 
 export const useNavigation = ({
   type,
-  année_universitaire,
+  annee_universitaire,
 }: UseNavigationParams) => {
   return useQuery({
     queryKey: ["faculty-navigation", type],
     queryFn: async (): Promise<NavigationResponse> => {
       const params = new URLSearchParams();
-      if (année_universitaire) params.append("year", année_universitaire);
+      if (annee_universitaire)
+        params.append("annee_universitaire", annee_universitaire);
 
       const url = `${VITE_APP_SERVER_URL}/faculty-members/navigation/${type}${
         params.toString() ? `?${params.toString()}` : ""

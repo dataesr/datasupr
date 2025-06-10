@@ -12,11 +12,11 @@ export default function NavigationCards({
   maxItems = 20,
 }: NavigationCardsProps) {
   const [searchParams] = useSearchParams();
-  const selectedYear = searchParams.get("année_universitaire") || "";
+  const selectedYear = searchParams.get("annee_universitaire") || "";
 
   const { data, isLoading, error } = useNavigation({
     type,
-    année_universitaire: selectedYear,
+    annee_universitaire: selectedYear,
   });
 
   const getConfig = () => {
@@ -167,7 +167,7 @@ export default function NavigationCards({
 
         const getItemUrl = () => {
           const params = new URLSearchParams();
-          if (selectedYear) params.set("année_universitaire", selectedYear);
+          if (selectedYear) params.set("annee_universitaire", selectedYear);
 
           switch (type) {
             case "regions":

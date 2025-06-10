@@ -12,7 +12,7 @@ interface GenderDataCardProps {
 export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
   const [searchParams] = useSearchParams();
   const { context, contextId } = useContextDetection();
-  const selectedYear = searchParams.get("année_universitaire") || "";
+  const selectedYear = searchParams.get("annee_universitaire") || "";
 
   const {
     data: typologyData,
@@ -20,7 +20,7 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
     error,
   } = useFacultyMembersTypology({
     context,
-    année_universitaire: selectedYear,
+    annee_universitaire: selectedYear,
     contextId: contextId || undefined,
   });
 

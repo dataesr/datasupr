@@ -11,7 +11,7 @@ import "../../../../styles.scss";
 
 const ItemBarChart: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const selectedYear = searchParams.get("année_universitaire") || "";
+  const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId } = useContextDetection();
   const chartRef = useRef<HighchartsReact.RefObject>(null);
   const navigate = useNavigate();
@@ -21,7 +21,7 @@ const ItemBarChart: React.FC = () => {
     error,
   } = useFacultyMembersOverview({
     context,
-    année_universitaire: selectedYear,
+    annee_universitaire: selectedYear,
     contextId: contextId || undefined,
   });
   // AJOUTER LE CHARTWRAPPER

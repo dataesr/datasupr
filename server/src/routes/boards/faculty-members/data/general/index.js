@@ -29,7 +29,7 @@ router.get("/faculty-members/filters/years", async (req, res) => {
 router.get("/faculty-members/typology/:context", async (req, res) => {
   try {
     const { context } = req.params;
-    const { year, field_id, geo_id, structure_id } = req.query;
+    const { annee_universitaire, field_id, geo_id, structure_id } = req.query;
 
     if (!["fields", "geo", "structures"].includes(context)) {
       return res.status(400).json({
@@ -83,7 +83,9 @@ router.get("/faculty-members/typology/:context", async (req, res) => {
     }
 
     const pipeline = [
-      ...(year ? [{ $match: { annee_universitaire: year } }] : []),
+      ...(annee_universitaire
+        ? [{ $match: { annee_universitaire: annee_universitaire } }]
+        : []),
 
       ...(Object.keys(contextFilter).length > 0
         ? [{ $match: contextFilter }]
@@ -283,7 +285,7 @@ router.get("/faculty-members/typology/:context", async (req, res) => {
         [itemName]: results[0] || null,
         context,
         item_type: itemName,
-        year: year || "current",
+        annee_universitaire: annee_universitaire || "current",
       });
     }
   } catch (error) {
@@ -301,12 +303,13 @@ router.get("/faculty-members/typology/:context", async (req, res) => {
 router.get("/faculty-members/navigation/:type", async (req, res) => {
   try {
     const { type } = req.params;
-    const { year } = req.query;
+    const { annee_universitaire } = req.query;
 
     const collection = db.collection("teaching-staff");
 
     const matchStage = {};
-    if (year) matchStage.annee_universitaire = year;
+    if (annee_universitaire)
+      matchStage.annee_universitaire = annee_universitaire;
 
     let aggregation = [];
 
@@ -415,7 +418,7 @@ router.get("/faculty-members/navigation/:type", async (req, res) => {
 
     res.json({
       type,
-      year: year || "Toutes les années",
+      annee_universitaire: annee_universitaire || "Toutes les années",
       items,
       total_items: items.length,
     });

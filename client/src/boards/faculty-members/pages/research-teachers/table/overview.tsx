@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 interface ResearchTeachersOverviewTableProps {
   context: "fields" | "geo" | "structures";
-  année_universitaire?: string;
+  annee_universitaire?: string;
   contextId?: string;
 }
 
@@ -33,7 +33,7 @@ type TableItem = FieldItem | RegionItem | StructureItem;
 
 export default function ResearchTeachersOverviewTable({
   context,
-  année_universitaire,
+  annee_universitaire,
   contextId,
 }: ResearchTeachersOverviewTableProps) {
   const [searchParams] = useSearchParams();
@@ -44,7 +44,7 @@ export default function ResearchTeachersOverviewTable({
     error,
   } = useFacultyMembersResearchTeachers({
     context,
-    année_universitaire,
+    annee_universitaire,
     contextId,
   });
 

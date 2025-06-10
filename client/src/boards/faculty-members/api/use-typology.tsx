@@ -6,25 +6,27 @@ type TypologyContext = "fields" | "geo" | "structures";
 
 interface UseTypologyParams {
   context: TypologyContext;
-  année_universitaire?: string;
+  annee_universitaire?: string;
   contextId?: string;
 }
 
 export const useFacultyMembersTypology = ({
   context,
-  année_universitaire,
+  annee_universitaire,
   contextId,
 }: UseTypologyParams) => {
   return useQuery({
     queryKey: [
       "faculty-members-typology",
       context,
-      année_universitaire,
+      annee_universitaire,
       contextId,
     ],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (année_universitaire) params.append("year", année_universitaire);
+      if (annee_universitaire)
+        params.append("annee_universitaire", annee_universitaire);
+
       if (contextId) {
         switch (context) {
           case "fields":

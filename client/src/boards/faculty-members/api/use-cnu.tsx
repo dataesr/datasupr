@@ -6,20 +6,21 @@ type CNUContext = "fields" | "geo" | "structures";
 
 interface UseCNUParams {
   context: CNUContext;
-  année_universitaire?: string;
+  annee_universitaire?: string;
   contextId?: string; // field_id, geo_id, ou structure_id
 }
 
 export const useFacultyMembersCNU = ({
   context,
-  année_universitaire,
+  annee_universitaire,
   contextId,
 }: UseCNUParams) => {
   return useQuery({
-    queryKey: ["faculty-members-cnu", context, année_universitaire, contextId],
+    queryKey: ["faculty-members-cnu", context, annee_universitaire, contextId],
     queryFn: async () => {
       const params = new URLSearchParams();
-      if (année_universitaire) params.append("year", année_universitaire);
+      if (annee_universitaire)
+        params.append("annee_universitaire", annee_universitaire);
 
       if (contextId) {
         switch (context) {

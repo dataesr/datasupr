@@ -49,11 +49,12 @@ router.get("/faculty-members/filters/structures", async (req, res) => {
 
 router.get("/faculty-members/structures/overview", async (req, res) => {
   try {
-    const { year, structure_id } = req.query;
+    const { annee_universitaire, structure_id } = req.query;
     const collection = db.collection("teaching-staff");
 
     const matchStage = {};
-    if (year) matchStage.annee_universitaire = year;
+    if (annee_universitaire)
+      matchStage.annee_universitaire = annee_universitaire;
     if (structure_id) {
       matchStage.$or = [
         { etablissement_id_paysage: structure_id },
@@ -368,12 +369,12 @@ router.get("/faculty-members/structures/overview", async (req, res) => {
 
 router.get("/faculty-members/structures/cnu-analysis", async (req, res) => {
   try {
-    const { year, structure_id } = req.query;
+    const { annee_universitaire, structure_id } = req.query;
     const collection = db.collection("teaching-staff");
 
     let matchStage = {};
-    if (year && year !== "all") {
-      matchStage.annee_universitaire = year;
+    if (annee_universitaire && annee_universitaire !== "all") {
+      matchStage.annee_universitaire = annee_universitaire;
     }
 
     if (structure_id) {
@@ -463,7 +464,7 @@ router.get("/faculty-members/structures/cnu-analysis", async (req, res) => {
 
     res.json({
       cnu_groups_with_sections: cnuGroupsWithSections,
-      year: year || "current",
+      annee_universitaire: annee_universitaire || "current",
       structure_id: structure_id || null,
     });
   } catch (error) {
@@ -482,13 +483,14 @@ router.get(
   "/faculty-members/structures/research-teachers",
   async (req, res) => {
     try {
-      const { year, structure_id } = req.query;
+      const { annee_universitaire, structure_id } = req.query;
       const collection = db.collection("teaching-staff");
 
       const matchStage = {
         is_enseignant_chercheur: true,
       };
-      if (year) matchStage.annee_universitaire = year;
+      if (annee_universitaire)
+        matchStage.annee_universitaire = annee_universitaire;
       if (structure_id) {
         matchStage.$or = [
           { etablissement_id_paysage: structure_id },
@@ -875,7 +877,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
           {
             $group: {
               _id: {
-                year: "$annee_universitaire",
+                annee_universitaire: "$annee_universitaire",
                 age_class: "$classe_age3",
               },
               count: { $sum: "$effectif" },
@@ -883,7 +885,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
           },
           {
             $group: {
-              _id: "$_id.year",
+              _id: "$_id.annee_universitaire",
               total_count: { $sum: "$count" },
               age_breakdown: {
                 $push: {
@@ -904,7 +906,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
               {
                 $group: {
                   _id: {
-                    year: "$annee_universitaire",
+                    annee_universitaire: "$annee_universitaire",
                     structure_id: "$etablissement_id_paysage_actuel",
                     structure_name: "$etablissement_actuel_lib",
                   },
@@ -927,7 +929,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
                   "_id.structure_name": { $ne: null },
                 },
               },
-              { $sort: { "_id.year": 1, total_count: -1 } },
+              { $sort: { "_id.annee_universitaire": 1, total_count: -1 } },
               { $limit: 100 },
             ])
             .toArray()
@@ -939,7 +941,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
           {
             $group: {
               _id: {
-                year: "$annee_universitaire",
+                annee_universitaire: "$annee_universitaire",
                 discipline_code: "$code_grande_discipline",
                 discipline_name: "$grande_discipline",
               },
@@ -962,7 +964,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
               "_id.discipline_name": { $ne: null },
             },
           },
-          { $sort: { "_id.year": 1, total_count: -1 } },
+          { $sort: { "_id.annee_universitaire": 1, total_count: -1 } },
           { $limit: 80 },
         ])
         .toArray(),
@@ -973,7 +975,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
           {
             $group: {
               _id: {
-                year: "$annee_universitaire",
+                annee_universitaire: "$annee_universitaire",
                 establishment_type: "$etablissement_type",
               },
               total_count: { $sum: "$effectif" },
@@ -989,7 +991,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
               },
             },
           },
-          { $sort: { "_id.year": 1, total_count: -1 } },
+          { $sort: { "_id.annee_universitaire": 1, total_count: -1 } },
           { $limit: 50 },
         ])
         .toArray(),
@@ -1000,7 +1002,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
           {
             $group: {
               _id: {
-                year: "$annee_universitaire",
+                annee_universitaire: "$annee_universitaire",
                 category: "$categorie_personnels",
               },
               count: { $sum: "$effectif" },
@@ -1008,7 +1010,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
           },
           {
             $group: {
-              _id: "$_id.year",
+              _id: "$_id.annee_universitaire",
               total_count: { $sum: "$count" },
               category_breakdown: {
                 $push: {

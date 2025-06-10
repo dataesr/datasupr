@@ -3,13 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 interface UseResearchTeachersParams {
-  année_universitaire?: string;
+  annee_universitaire?: string;
   contextId?: string;
   context?: "fields" | "geo" | "structures";
 }
 
 export const useFacultyMembersResearchTeachers = ({
-  année_universitaire,
+  annee_universitaire,
   contextId,
   context = "fields",
 }: UseResearchTeachersParams) => {
@@ -17,13 +17,14 @@ export const useFacultyMembersResearchTeachers = ({
     queryKey: [
       "faculty-members-research-teachers",
       context,
-      année_universitaire,
+      annee_universitaire,
       contextId,
     ],
     queryFn: async () => {
       const params = new URLSearchParams();
 
-      if (année_universitaire) params.append("year", année_universitaire);
+      if (annee_universitaire)
+        params.append("annee_universitaire", annee_universitaire);
 
       if (contextId) {
         switch (context) {

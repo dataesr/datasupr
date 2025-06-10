@@ -49,11 +49,12 @@ router.get("/faculty-members/filters/fields", async (req, res) => {
 
 router.get("/faculty-members/fields/overview", async (req, res) => {
   try {
-    const { year, field_id } = req.query;
+    const { annee_universitaire, field_id } = req.query;
     const collection = db.collection("teaching-staff");
 
     const matchStage = {};
-    if (year) matchStage.annee_universitaire = year;
+    if (annee_universitaire)
+      matchStage.annee_universitaire = annee_universitaire;
     if (field_id) matchStage.code_grande_discipline = field_id;
 
     // Le genre par discipline
@@ -341,11 +342,12 @@ router.get("/faculty-members/fields/overview", async (req, res) => {
 
 router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
   try {
-    const { year, field_id } = req.query;
+    const { annee_universitaire, field_id } = req.query;
     const collection = db.collection("teaching-staff");
 
     const matchStage = {};
-    if (year) matchStage.annee_universitaire = year;
+    if (annee_universitaire)
+      matchStage.annee_universitaire = annee_universitaire;
     if (field_id) matchStage.code_grande_discipline = field_id;
 
     const cnuGroupsWithSections = await collection
@@ -564,7 +566,7 @@ router.get("/faculty-members/fields/evolution", async (req, res) => {
           {
             $group: {
               _id: {
-                year: "$annee_universitaire",
+                annee_universitaire: "$annee_universitaire",
                 age_class: "$classe_age3",
               },
               count: { $sum: "$effectif" },
@@ -572,7 +574,7 @@ router.get("/faculty-members/fields/evolution", async (req, res) => {
           },
           {
             $group: {
-              _id: "$_id.year",
+              _id: "$_id.annee_universitaire",
               total_count: { $sum: "$count" },
               age_breakdown: {
                 $push: {
@@ -593,7 +595,7 @@ router.get("/faculty-members/fields/evolution", async (req, res) => {
               {
                 $group: {
                   _id: {
-                    year: "$annee_universitaire",
+                    annee_universitaire: "$annee_universitaire",
                     discipline_code: "$code_grande_discipline",
                     discipline_name: "$grande_discipline",
                   },
@@ -616,7 +618,7 @@ router.get("/faculty-members/fields/evolution", async (req, res) => {
                   "_id.discipline_name": { $ne: null },
                 },
               },
-              { $sort: { "_id.year": 1, total_count: -1 } },
+              { $sort: { "_id.annee_universitaire": 1, total_count: -1 } },
               { $limit: 100 },
             ])
             .toArray()
@@ -692,13 +694,14 @@ router.get("/faculty-members/fields/evolution", async (req, res) => {
 
 router.get("/faculty-members/fields/research-teachers", async (req, res) => {
   try {
-    const { year, field_id } = req.query;
+    const { annee_universitaire, field_id } = req.query;
     const collection = db.collection("teaching-staff");
 
     const matchStage = {
       is_enseignant_chercheur: true,
     };
-    if (year) matchStage.annee_universitaire = year;
+    if (annee_universitaire)
+      matchStage.annee_universitaire = annee_universitaire;
     if (field_id) matchStage.code_grande_discipline = field_id;
 
     if (field_id) {

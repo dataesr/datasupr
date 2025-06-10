@@ -12,14 +12,14 @@ highchartsMap(Highcharts);
 export default function FacultyMap() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const selectedYear = searchParams.get("année_universitaire") || "";
+  const selectedYear = searchParams.get("annee_universitaire") || "";
 
   const {
     data: mapData,
     isLoading,
     error,
   } = useGeoMapData({
-    year: selectedYear,
+    annee_universitaire: selectedYear,
   });
 
   const [mapOptions, setMapOptions] = useState<Highcharts.Options | null>(null);
@@ -63,7 +63,7 @@ export default function FacultyMap() {
     const options = createMapOptions({
       chartData,
       stats: mapData.statistics,
-      year: mapData.year,
+      annee_universitaire: mapData.annee_universitaire,
       onRegionClick: handleRegionClick,
     });
 
