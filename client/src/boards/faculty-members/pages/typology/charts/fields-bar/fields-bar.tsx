@@ -192,7 +192,9 @@ const ItemBarChart: React.FC = () => {
 
   const handleItemClick = (itemCode: string) => {
     navigate(
-      `/personnel-enseignant/${labels.urlPath}/typologie?year=${selectedYear}&${
+      `/personnel-enseignant/${
+        labels.urlPath
+      }/typologie?annee_universitaire=${selectedYear}&${
         context === "fields"
           ? "field_id"
           : context === "geo"

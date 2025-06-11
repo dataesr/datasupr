@@ -431,4 +431,158 @@ router.get("/faculty-members/navigation/:type", async (req, res) => {
   }
 });
 
+router.get("/faculty-members/search-bar", async (req, res) => {
+  try {
+    const { limit = 50 } = req.query;
+    const collection = db.collection("faculty-members");
+
+    const latestYear = await collection.distinct("annee_universitaire").then(
+      (years) =>
+        years.filter(Boolean).sort((a, b) => {
+          const yearA = parseInt(a.split("-")[0]);
+          const yearB = parseInt(b.split("-")[0]);
+          return yearB - yearA;
+        })[0]
+    );
+
+    const [universities, regions, fields] = await Promise.all([
+      collection
+        .aggregate([
+          {
+            $group: {
+              _id: {
+                id: "$etablissement_id_paysage_actuel",
+                name: "$etablissement_actuel_lib",
+                type: "$etablissement_type",
+                region: "$etablissement_region",
+              },
+              total_count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $match: {
+              "_id.id": { $ne: null, $ne: "" },
+              "_id.name": { $ne: null, $ne: "" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              id: "$_id.id",
+              name: "$_id.name",
+              type: "univ",
+              subtype: "$_id.type",
+              region: "$_id.region",
+              total_count: 1,
+              href: {
+                $concat: [
+                  "/enseignants-chercheurs?structure_id=",
+                  "$_id.id",
+                  "&annee_universitaire=",
+                  latestYear,
+                ],
+              },
+            },
+          },
+          { $sort: { total_count: -1 } },
+          { $limit: parseInt(limit) },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          {
+            $group: {
+              _id: {
+                id: "$etablissement_code_region",
+                name: "$etablissement_region",
+              },
+              total_count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $match: {
+              "_id.id": { $ne: null, $ne: "" },
+              "_id.name": { $ne: null, $ne: "" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              id: "$_id.id",
+              name: "$_id.name",
+              type: "region",
+              total_count: 1,
+              href: {
+                $concat: [
+                  "/enseignants-chercheurs?geo_id=",
+                  "$_id.id",
+                  "&annee_universitaire=",
+                  latestYear,
+                ],
+              },
+            },
+          },
+          { $sort: { total_count: -1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          {
+            $group: {
+              _id: {
+                id: "$code_grande_discipline",
+                name: "$grande_discipline",
+              },
+              total_count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $match: {
+              "_id.id": { $ne: null, $ne: "" },
+              "_id.name": { $ne: null, $ne: "" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              id: "$_id.id",
+              name: "$_id.name",
+              type: "discipline",
+              total_count: 1,
+              href: {
+                $concat: [
+                  "/enseignants-chercheurs?field_id=",
+                  "$_id.id",
+                  "&annee_universitaire=",
+                  latestYear,
+                ],
+              },
+            },
+          },
+          { $sort: { total_count: -1 } },
+        ])
+        .toArray(),
+    ]);
+
+    res.json({
+      latest_year: latestYear,
+      universities: universities,
+      regions: regions,
+      fields: fields,
+      totals: {
+        universities: universities.length,
+        regions: regions.length,
+        fields: fields.length,
+      },
+    });
+  } catch (error) {
+    console.error("Error in searchBar:", error);
+    res.status(500).json({
+      error: "Erreur serveur lors de la récupération des données",
+      details: error.message,
+    });
+  }
+});
 export default router;
