@@ -347,8 +347,6 @@ export function SectionsBubbleChart() {
       }
     }
 
-    console.log("Data to process:", dataToProcess);
-
     const getColor = (femalePercent: number) => {
       if (femalePercent < 40) return "#efcb3a";
       if (femalePercent > 60) return "#e18b76";

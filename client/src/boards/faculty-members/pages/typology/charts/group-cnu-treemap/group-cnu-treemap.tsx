@@ -200,8 +200,6 @@ export function GroupCNUTreemapChart() {
       }
     }
 
-    console.log("Data to process:", dataToProcess);
-
     const processedData = dataToProcess.map((item) => ({
       id: item.item_id,
       name: item.itemLabel,

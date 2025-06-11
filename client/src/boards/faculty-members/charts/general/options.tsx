@@ -52,7 +52,6 @@ export default function OptionsColumnChart({
       malePercentage: Math.round((field.maleCount / field.totalCount) * 100),
     },
   }));
-  console.log(data);
   const options: Highcharts.Options = {
     chart: {
       type: "column",
