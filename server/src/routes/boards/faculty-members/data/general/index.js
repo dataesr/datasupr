@@ -433,7 +433,7 @@ router.get("/faculty-members/navigation/:type", async (req, res) => {
 
 router.get("/faculty-members/search-bar", async (req, res) => {
   try {
-    const { limit = 50 } = req.query;
+    const { limit = 200 } = req.query;
     const collection = db.collection("faculty-members");
 
     const latestYear = await collection.distinct("annee_universitaire").then(
@@ -448,6 +448,7 @@ router.get("/faculty-members/search-bar", async (req, res) => {
     const [universities, regions, fields] = await Promise.all([
       collection
         .aggregate([
+          { $match: { annee_universitaire: latestYear } },
           {
             $group: {
               _id: {
@@ -476,7 +477,7 @@ router.get("/faculty-members/search-bar", async (req, res) => {
               total_count: 1,
               href: {
                 $concat: [
-                  "/enseignants-chercheurs?structure_id=",
+                  "/personnel-enseignant/universite/vue-d'ensemble?structure_id=",
                   "$_id.id",
                   "&annee_universitaire=",
                   latestYear,
@@ -491,6 +492,7 @@ router.get("/faculty-members/search-bar", async (req, res) => {
 
       collection
         .aggregate([
+          { $match: { annee_universitaire: latestYear } },
           {
             $group: {
               _id: {
@@ -515,7 +517,7 @@ router.get("/faculty-members/search-bar", async (req, res) => {
               total_count: 1,
               href: {
                 $concat: [
-                  "/enseignants-chercheurs?geo_id=",
+                  "/personnel-enseignant/geo/vue-d'ensemble?geo_id=",
                   "$_id.id",
                   "&annee_universitaire=",
                   latestYear,
@@ -529,6 +531,7 @@ router.get("/faculty-members/search-bar", async (req, res) => {
 
       collection
         .aggregate([
+          { $match: { annee_universitaire: latestYear } },
           {
             $group: {
               _id: {
@@ -553,7 +556,7 @@ router.get("/faculty-members/search-bar", async (req, res) => {
               total_count: 1,
               href: {
                 $concat: [
-                  "/enseignants-chercheurs?field_id=",
+                  "/personnel-enseignant/discipline/vue-d'ensemble?field_id=",
                   "$_id.id",
                   "&annee_universitaire=",
                   latestYear,
@@ -585,4 +588,5 @@ router.get("/faculty-members/search-bar", async (req, res) => {
     });
   }
 });
+
 export default router;

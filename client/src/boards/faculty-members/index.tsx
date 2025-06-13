@@ -8,6 +8,7 @@ import {
   Title,
 } from "@dataesr/dsfr-plus";
 import { useNavigate } from "react-router-dom";
+import { SearchBar } from "./components/search-bar";
 
 export function FacultyMembers() {
   const navigate = useNavigate();
@@ -30,27 +31,8 @@ export function FacultyMembers() {
         Le personnel enseignant
       </Title>
       <Row>
-        <Col md={10} className="search">
-          <label className="fr-label" htmlFor="text-input-text">
-            Saisissez un établissement, une discipline, un nom de region ou une
-            académie.
-          </label>
-          <input
-            className="fr-input"
-            type="text"
-            id="text-input-text"
-            name="text-input-text"
-          />
-        </Col>
-        <Col md={2}>
-          <Button
-            className="fr-mt-4w"
-            color="pink-tuile"
-            icon="search-line"
-            onClick={() => {}}
-          >
-            Rechercher
-          </Button>
+        <Col md={12}>
+          <SearchBar />
         </Col>
       </Row>
       <Row gutters className="fr-mt-5w">
