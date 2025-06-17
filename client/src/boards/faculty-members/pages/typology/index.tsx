@@ -1,4 +1,4 @@
-import { Container, Row, Col, Title, Breadcrumb } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Title, Breadcrumb, Badge, Notice, Text } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { Link } from "@dataesr/dsfr-plus";
 import { GenderDataCard } from "./components/gender-info";
@@ -8,6 +8,7 @@ import ItemBarChart from "./charts/fields-bar/fields-bar";
 import SectionsBubbleChart from "./charts/section-cnu-bubble/section-cnu-bubble";
 import { useContextDetection } from "../../utils";
 import YearSelector from "../../components/filters";
+import SubtitleWithContext from "../../../../utils/subtitle-with-context";
 
 export function Typologie() {
   const [searchParams] = useSearchParams();
@@ -50,13 +51,6 @@ export function Typologie() {
   };
 
   const labels = getLabels();
-
-  const getPageTitle = () => {
-    if (contextId) {
-      return `Typologie de ${labels.singular} - ${contextName || ""}`;
-    }
-    return `Typologie du personnel enseignant par ${labels.singular}`;
-  };
 
   const getBreadcrumbItems = () => {
     const items = [
@@ -126,22 +120,21 @@ export function Typologie() {
           <YearSelector />
         </Col>
       </Row>
+      <Row className="fr-my-3w">
+        <Notice closeMode={"disallow"} type={"warning"}>
+            Les données des personnels enseignants non permanents ne sont pas
+            prises en compte pour l'année car elles ne sont pas disponibles.
+        </Notice>
+      </Row>
 
       <Row className="fr-mt-3w">
         <Col md={12}>
-          <Title as="h1" look="h3" className="fr-mt-2w">
-            {getPageTitle()}
+          <Title as="h1" look="h3" className="fr-mb-1w">
+            Typologie du personnel enseignant
           </Title>
-          <div className="fr-text--xs fr-text--mention-grey fr-mb-3w">
-            Année universitaire
-            {contextId && (
-              <span className="fr-ml-2w fr-badge fr-badge--blue-ecume">
-                {labels.singular.charAt(0).toUpperCase() +
-                  labels.singular.slice(1)}{" "}
-                sélectionnée
-              </span>
-            )}
-          </div>
+          <SubtitleWithContext
+            classText="fr-text--lead"
+          />
         </Col>
       </Row>
 
@@ -158,7 +151,7 @@ export function Typologie() {
         <>
           <Row gutters className="fr-mb-4w">
             <Col md={12}>
-              <Title as="h2" look="h4" className="fr-mb-2w">
+              <Title as="h2" look="h4" className="fr-mb-3w">
                 Répartition par {labels.singular}
               </Title>
               <ItemBarChart />
@@ -177,7 +170,7 @@ export function Typologie() {
         <>
           <Row gutters className="fr-mb-4w">
             <Col md={12}>
-              <Title as="h2" look="h4" className="fr-mb-2w">
+              <Title as="h2" look="h4" className="fr-mb-3w">
                 {labels.groupPlural.charAt(0).toUpperCase() +
                   labels.groupPlural.slice(1)}{" "}
                 - {contextName}
@@ -188,7 +181,7 @@ export function Typologie() {
 
           <Row gutters className="fr-mb-4w">
             <Col md={12}>
-              <Title as="h2" look="h4" className="fr-mb-2w">
+              <Title as="h2" look="h4" className="fr-mb-3w">
                 {labels.sectionPlural.charAt(0).toUpperCase() +
                   labels.sectionPlural.slice(1)}{" "}
                 - {contextName}
@@ -202,7 +195,7 @@ export function Typologie() {
       {contextId && groupId && (
         <Row gutters className="fr-mb-4w">
           <Col md={12}>
-            <Title as="h2" look="h4" className="fr-mb-2w">
+            <Title as="h2" look="h4" className="fr-mb-3w">
               {labels.sectionPlural.charAt(0).toUpperCase() +
                 labels.sectionPlural.slice(1)}{" "}
               du {labels.groupSingular}
@@ -213,26 +206,30 @@ export function Typologie() {
       )}
 
       {contextId && (
-        <Row className="fr-mt-4w">
-          <Col md={12}>
-            <div className="fr-alert fr-alert--info fr-alert--sm">
-              <h3 className="fr-alert__title">Navigation</h3>
-              <p>
-                <Link
-                  href={`/personnel-enseignant/${labels.urlPath}/vue-d'ensemble`}
-                >
-                  ← Retour à la vue d'ensemble des {labels.plural}
-                </Link>
-              </p>
+        <>
+            <Notice closeMode={"disallow"} type="info">
+              <Title look="h4" as="h3">
+                Navigation
+              </Title>
+            <Row>
+              <Text>
+                  <Link
+                      href={`/personnel-enseignant/${labels.urlPath}/vue-d'ensemble`}
+                      >
+                      ← Retour à la vue d'ensemble des {labels.plural}
+                    </Link>
+              </Text>
+            </Row>
+            <Row>
               {!groupId && (
-                <p className="fr-mb-0">
+                <Text>
                   Cliquez sur un {labels.groupSingular} dans le graphique
                   ci-dessus pour explorer ses {labels.sectionPlural} en détail.
-                </p>
+                </Text>
               )}
-            </div>
-          </Col>
-        </Row>
+            </Row>                  
+          </Notice>
+        </>
       )}
     </Container>
   );

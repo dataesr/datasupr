@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useNavigate } from "react-router-dom";
-import { Button, Col, Row } from "@dataesr/dsfr-plus";
+import { Button, Col, Row, Text, Notice } from "@dataesr/dsfr-plus";
 import { useFacultyMembersOverview } from "../../../../api/use-overview";
 import { useContextDetection } from "../../../../utils";
 import { createBarChartOptions } from "./options";
@@ -224,82 +224,82 @@ const ItemBarChart: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="fr-text--center fr-py-3w">
-        <div className="fr-mb-2w">
-          <span
-            className="fr-icon-loader-line fr-icon--lg"
-            aria-hidden="true"
-          ></span>
-        </div>
-        <div>Chargement des données de répartition par genre...</div>
-      </div>
+      <Row horizontalAlign="center" style={{display: 'inline-block;'}}>
+        <span
+          className="fr-icon-loader-line fr-icon--lg"
+          aria-hidden="true"
+        />
+        <Text className="fr-ml-1w">
+          Chargement des données par {labels.singular}...
+        </Text>
+      </Row>
     );
   }
 
   if (error) {
     return (
-      <div className="fr-text--center fr-py-3w">
-        <div className="fr-alert fr-alert--error fr-alert--sm">
-          <p>Erreur lors du chargement des données de répartition par genre</p>
-        </div>
-      </div>
+      <Row>
+        <Notice closeMode={"disallow"} type={"warning"}>
+          <Text>Erreur lors du chargement des données de répartition par genre</Text>
+        </Notice>
+      </Row>
     );
   }
 
   if (!items || items.length === 0) {
     return (
-      <div className="fr-text--center fr-py-3w">
-        <div className="fr-alert fr-alert--info fr-alert--sm">
-          <p>
+      <Row>
+        <Notice closeMode={"disallow"} type={"warning"}>
+          <Text>
             Aucune donnée disponible pour la répartition par genre pour l'année{" "}
             {selectedYear}
-          </p>
-        </div>
-      </div>
+          </Text>
+        </Notice>
+      </Row>
     );
   }
 
   return (
-    <div className="fr-mb-3w">
-      <Row gutters className="fr-mb-2w">
-        <Col className="fr-text--right">
-          <div className="fr-text--xs fr-text--mention-grey fr-mb-1w">
+    <>
+          <Row className="fr-mb-1w">
             Options d'affichage :
-          </div>
+          </Row>
 
-          <div className="fr-btn-group fr-btn-group--sm">
-            <Button
-              size="sm"
-              variant={sortKey === "total" ? "primary" : "secondary"}
-              onClick={() => setSortKey("total")}
-              title="Trier par effectif total"
-            >
-              <i className="ri-bar-chart-horizontal-line"></i>
-              Total
-            </Button>
+          <Row className="fr-mb-1w">
+              <Button
+                size="sm"
+                variant={sortKey === "total" ? "primary" : "secondary"}
+                onClick={() => setSortKey("total")}
+                title="Trier par effectif total"
+                className="fr-mr-1w"
+                >
+                <i className="ri-bar-chart-horizontal-line"></i>
+                Total
+              </Button>
 
-            <Button
-              size="sm"
-              variant={sortKey === "femmesPercent" ? "primary" : "secondary"}
-              onClick={() => setSortKey("femmesPercent")}
-              title="Trier par pourcentage de femmes"
-            >
-              <i className="ri-women-line"></i>
-              Femmes
-            </Button>
+              <Button
+                size="sm"
+                variant={sortKey === "femmesPercent" ? "primary" : "secondary"}
+                onClick={() => setSortKey("femmesPercent")}
+                title="Trier par pourcentage de femmes"
+                className="fr-mr-1w"
+                >
+                <i className="ri-women-line"></i>
+                Femmes
+              </Button>
 
-            <Button
-              size="sm"
-              variant={sortKey === "hommesPercent" ? "primary" : "secondary"}
-              onClick={() => setSortKey("hommesPercent")}
-              title="Trier par pourcentage d'hommes"
-            >
-              <i className="ri-men-line"></i>
-              Hommes
-            </Button>
-          </div>
-
-          <div className="fr-btn-group fr-btn-group--sm fr-ml-2w">
+              <Button
+                size="sm"
+                variant={sortKey === "hommesPercent" ? "primary" : "secondary"}
+                onClick={() => setSortKey("hommesPercent")}
+                title="Trier par pourcentage d'hommes"
+                className="fr-mr-1w"
+                >
+                <i className="ri-men-line"></i>
+                Hommes
+              </Button>
+          </Row>
+          <Row> 
             <Button
               size="sm"
               variant="secondary"
@@ -311,14 +311,15 @@ const ItemBarChart: React.FC = () => {
               title={`Afficher en ${
                 stackType === "percent" ? "effectifs" : "pourcentages"
               }`}
+              className="fr-mr-1w"
             >
               <span
                 className={
-                  stackType === "percent" ? "ri-percent-fill" : "ri-user-fill"
+                  stackType === "percent" ? "ri-user-fill" : "ri-percent-fill"
                 }
                 aria-hidden="true"
               />
-              {stackType === "percent" ? "%" : "Nb"}
+              {stackType === "percent" ? "Nb" : ""}
             </Button>
 
             <Button
@@ -330,6 +331,7 @@ const ItemBarChart: React.FC = () => {
               title={`Trier par ordre ${
                 sortOrder === "asc" ? "décroissant" : "croissant"
               }`}
+              className="fr-mr-1w"
             >
               <span
                 className={
@@ -339,11 +341,9 @@ const ItemBarChart: React.FC = () => {
                 }
                 aria-hidden="true"
               />
-              {sortOrder === "asc" ? "Croiss." : "Décroiss."}
+              {sortOrder === "asc" ? "Croissant" : "Décroissant"}
             </Button>
-          </div>
-        </Col>
-      </Row>
+          </Row>
 
       <Row>
         <Col md={12}>
@@ -356,7 +356,7 @@ const ItemBarChart: React.FC = () => {
       </Row>
 
       {contextId && (
-        <Row className="fr-mt-2w">
+        <Row>
           <Col md={12}>
             <div className="fr-text--xs fr-text--mention-grey">
               <strong>Note :</strong>{" "}
@@ -368,7 +368,7 @@ const ItemBarChart: React.FC = () => {
           </Col>
         </Row>
       )}
-    </div>
+    </>
   );
 };
 

@@ -44,19 +44,19 @@ export function useContextDetection(): ContextInfo {
       return {
         context: "fields" as const,
         contextId: undefined,
-        contextName: "global",
+        contextName: "Toutes les grandes disciplines",
       };
     } else if (path.includes("/geo/")) {
       return {
         context: "geo" as const,
         contextId: undefined,
-        contextName: "global",
+        contextName: "France",
       };
     } else if (path.includes("/universite/")) {
       return {
         context: "structures" as const,
         contextId: undefined,
-        contextName: "global",
+        contextName: "Tous les établissements",
       };
     }
 

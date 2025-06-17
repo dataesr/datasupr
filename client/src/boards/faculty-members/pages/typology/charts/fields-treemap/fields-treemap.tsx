@@ -8,6 +8,7 @@ import { useFacultyMembersCNU } from "../../../../api/use-cnu";
 import { CreateChartOptions } from "../../../../components/creat-chart-options";
 import { useContextDetection } from "../../../../utils";
 import { createTreemapOptions } from "./options";
+import { Col, Notice, Row, Text } from "@dataesr/dsfr-plus";
 
 HighchartsTreemap(Highcharts);
 
@@ -193,28 +194,26 @@ export function ItemsTreemapChart() {
 
   if (isLoading) {
     return (
-      <div className="fr-text--center fr-py-3w">
-        <div className="fr-mb-2w">
+      <Row horizontalAlign="center" style={{display: 'inline-block;'}}>
           <span
             className="fr-icon-loader-line fr-icon--lg"
             aria-hidden="true"
-          ></span>
-        </div>
-        <div>Chargement des données par {labels.singular}...</div>
-      </div>
+          />
+          <Text className="fr-ml-1w">
+            Chargement des données par {labels.singular}...
+          </Text>
+      </Row>
     );
   }
 
   if (!treemapData || treemapData.length === 0) {
     return (
-      <div className="fr-text--center fr-py-3w">
-        <div className="fr-alert fr-alert--info fr-alert--sm">
-          <p>
+        <Notice closeMode={"disallow"} type={"warning"}>
+          <Text>
             Aucune donnée disponible pour les {labels.plural} pour l'année{" "}
             {selectedYear}
-          </p>
-        </div>
-      </div>
+          </Text>
+        </Notice>
     );
   }
 
@@ -227,9 +226,8 @@ export function ItemsTreemapChart() {
         renderData={undefined}
       />
 
-      <div className="fr-text--xs fr-mt-2w" style={{ display: "block" }}>
-        <div className="fr-grid-row fr-grid-row--gutters fr-grid-row--center">
-          <div className="fr-col-auto">
+      <Row horizontalAlign="center" className="fr-mt-2w">
+          <Col className="text-center">
             <span className="fr-mr-3w">
               <span
                 style={{
@@ -243,8 +241,8 @@ export function ItemsTreemapChart() {
               ></span>
               Majorité masculine (≥60%)
             </span>
-          </div>
-          <div className="fr-col-auto">
+          </Col>
+          <Col className="text-center">
             <span className="fr-mr-3w">
               <span
                 style={{
@@ -259,8 +257,8 @@ export function ItemsTreemapChart() {
               ></span>
               Parité (40-60%)
             </span>
-          </div>
-          <div className="fr-col-auto">
+          </Col>
+          <Col className="text-center">
             <span>
               <span
                 style={{
@@ -274,16 +272,14 @@ export function ItemsTreemapChart() {
               ></span>
               Majorité féminine (≥60%)
             </span>
-          </div>
-        </div>
-
-        <div className="fr-text--center fr-mt-2w">
-          <em>
-            Cliquez sur {contextId ? "une autre" : "une"} {labels.singular} pour
-            explorer ses groupes et sections CNU en détail
-          </em>
-        </div>
-      </div>
+          </Col>
+      </Row>
+      <Row horizontalAlign="center" className="fr-mt-2w fr-text--italic">
+        <em>
+          Cliquez sur {contextId ? "une autre" : "une"} {labels.singular} pour
+          explorer ses groupes et sections CNU en détail.
+        </em>
+      </Row>
     </>
   );
 }
