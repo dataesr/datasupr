@@ -1,1 +1,1 @@
-GET http://localhost:3000/api/european-projects/collaborations/get-entities?entityName=eri&country_code=FRA
+GET http://localhost:3000/api/european-projects/collaborations/get-entities?entityName=uni&country_code=FRA

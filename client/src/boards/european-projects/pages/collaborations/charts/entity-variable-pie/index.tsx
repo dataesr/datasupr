@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 
 import { getCollaborations } from "./query";
@@ -11,25 +12,15 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 // import i18nLocal from "./i18n.json";
 
 export default function EntityVariablePie() {
-  // const [searchParams] = useSearchParams();
-  // const currentLang = searchParams.get("language") || "fr";
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
   // const country_code = searchParams.get("country_code") || "FRA";
 
-  const configChart = {
-    id: "CountriesCollaborationsBubble",
-    queryId: "CountriesCollaborations",
-    title: {
-      fr: `Top des pays ayant collaborés avec le pays sélectionné`,
-      en: "Countries that collaborated with the selected country",
-    },
-    subtitle: "",
-    description: null,
-    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
-  };
+  const entityId = window.location.pathname.split("/").pop()?.split("?")[0] || "";
 
   const { data, isLoading } = useQuery({
-    queryKey: [configChart.id],
-    queryFn: () => getCollaborations(),
+    queryKey: ["EntitiesCollaborations", entityId],
+    queryFn: () => getCollaborations(entityId),
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
@@ -38,6 +29,17 @@ export default function EntityVariablePie() {
   // function getI18nLabel(key) {
   //   return i18n[key][currentLang];
   // }
+
+  const configChart = {
+    id: "EntitiesCollaborations",
+    title: {
+      fr: `Top 20 des entités ayant collaboré avec ${data.name_fr}`,
+      en: `Top 20 entities collaborating with ${data.name_en}`,
+    },
+    subtitle: "",
+    description: null,
+    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+  };
 
   return (
     <Container fluid className="fr-mt-5w">
@@ -58,7 +60,7 @@ export default function EntityVariablePie() {
           <ChartWrapper
             config={configChart}
             legend={null}
-            options={options(data)}
+            options={options(data, currentLang)}
             renderData={() => null} // TODO: add data table
           />
         </Col>

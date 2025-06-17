@@ -24,3 +24,6 @@ dist
 *.sw?
 
 src/routes/admin/upload/files/*
+
+# don't send because it contains sensitive data
+src/routes/admin/api-tests/get-ticket-office-messages.http

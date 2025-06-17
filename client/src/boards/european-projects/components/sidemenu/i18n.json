@@ -19,6 +19,14 @@
     "fr": "Collaborations",
     "en": "Collaborations"
   },
+  "by-country": {
+    "fr": "Par pays",
+    "en": "By country"
+  },
+  "by-entity": {
+    "fr": "Par entité",
+    "en": "By entity"
+  },
   "destinations": {
     "fr": "Destinations",
     "en": "Destinations"

@@ -1,0 +1,7 @@
+POST http://localhost:3000/api/admin/copy-collection
+Content-Type: application/json
+
+{
+  "sourceName": "boards",
+  "targetName": "boards-test"
+}

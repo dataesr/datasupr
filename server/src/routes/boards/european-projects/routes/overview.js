@@ -141,7 +141,7 @@ router.route("/european-projects/main-beneficiaries").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
   filters.framework = "Horizon Europe";
   const data = await db
-    .collection("fr-esr-horizon-projects-entities")
+    .collection("ep_projects-entities_staging")
     .aggregate([
       {
         $match: filters,

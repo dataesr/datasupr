@@ -22,3 +22,7 @@
 |/european-projects/general-projectsTypes-pillarsRequestedByProjects|fr-esr-all-projects-synthese
 |/european-projects/general-projectsTypes-pillarsSubsidiesRequestedLines|fr-esr-all-projects-synthese
 |/european-projects/general-projectsTypes-typeOfFinancingSubsidiesRequestedLines|fr-esr-all-projects-synthese
+
+## collections naming
+- fr-esr-all-signed-projects-collaborations => ep_collaborations_staging
+- fr-esr-horizon-projects-entities => ep_projects-entities_staging

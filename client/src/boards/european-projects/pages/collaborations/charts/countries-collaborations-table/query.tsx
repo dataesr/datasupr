@@ -34,8 +34,6 @@ export async function getCollaborationsByCountry(countryCode, countryCodeCollab)
   queryParams.append("country_code", countryCode);
   queryParams.append("country_code_collab", countryCodeCollab);
 
-  console.log(`Fetching collaborations for country: ${countryCode} and collaboration country: ${countryCodeCollab}`);
-
   return fetch(`${VITE_APP_SERVER_URL}/european-projects/collaborations/get-collaborations-by-country?${queryParams.toString()}`).then((response) =>
     response.json()
   );

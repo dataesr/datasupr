@@ -1,0 +1,18 @@
+{
+  "find-entity":{
+    "fr":"Trouver une entité",
+    "en":"Find an entity"
+  },
+  "find-entity-placeholder":{
+    "fr":"Nom de l'entité",
+    "en":"Entity name"
+  },
+  "reset":{
+    "fr":"Réinitialiser",
+    "en":"Reset"
+  },
+  "search":{
+    "fr":"Rechercher",
+    "en":"Search"
+  }
+}

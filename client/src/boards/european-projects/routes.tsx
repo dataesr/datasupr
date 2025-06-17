@@ -35,8 +35,8 @@ const RouteWithTitle = ({ titleKey, element }) => {
 };
 
 const EntityWrapper = () => {
-  const { entityCode } = useParams();
-  return <CollaborationsEntity entityCode={entityCode} />;
+  const { entityId } = useParams();
+  return <CollaborationsEntity entityId={entityId} />;
 };
 
 export default function EuropeanProjectsRoutes() {
@@ -50,7 +50,7 @@ export default function EuropeanProjectsRoutes() {
           <Route path="synthese" element={<RouteWithTitle titleKey="synthese" element={<Overview />} />} />
           <Route path="positionnement" element={<RouteWithTitle titleKey="positionnement" element={<Positioning />} />} />
           <Route path="collaborations" element={<RouteWithTitle titleKey="collaborations" element={<Collaborations />} />} />
-          <Route path="collaborations/:entityCode" element={<RouteWithTitle titleKey="collaborations" element={<EntityWrapper />} />} />
+          <Route path="collaborations/:entityId" element={<RouteWithTitle titleKey="collaborations" element={<EntityWrapper />} />} />
           <Route path="beneficiaires" element={<RouteWithTitle titleKey="beneficiaires" element={<Beneficiaries />} />} />
           <Route path="beneficiaires-types" element={<RouteWithTitle titleKey="beneficiaires-types" element={<div>Types de bénéficiaires</div>} />} />
         </Route>
