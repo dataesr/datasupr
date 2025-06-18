@@ -21,10 +21,7 @@ interface TreemapOptionsParams {
 }
 
 export const createTreemapOptions = ({
-  title,
-  selectedYear,
   treemapData,
-  labels,
   onItemClick,
 }: TreemapOptionsParams): Highcharts.Options => ({
   chart: {
@@ -36,21 +33,7 @@ export const createTreemapOptions = ({
     },
   },
   title: {
-    text: title,
-    style: {
-      color: "#000000",
-      fontSize: "18px",
-      fontWeight: "bold",
-    },
-    align: "left",
-  },
-  subtitle: {
-    text: `Année universitaire ${selectedYear} - ${treemapData.length} ${labels.plural}`,
-    style: {
-      color: "#666666",
-      fontSize: "14px",
-    },
-    align: "left",
+    text: ""
   },
   tooltip: {
     formatter: function () {
@@ -69,6 +52,7 @@ export const createTreemapOptions = ({
       <em>Cliquez pour explorer en détail</em>`;
     },
   },
+  exporting: false,
   colorAxis: {
     minColor: "#efcb3a", // Majorité hommes
     maxColor: "#e18b76", // Majorité femmes

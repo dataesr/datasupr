@@ -1,4 +1,4 @@
-import { Container, Row, Col, Title, Breadcrumb, Badge, Notice, Text } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Title, Breadcrumb, Notice, Text } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { Link } from "@dataesr/dsfr-plus";
 import { GenderDataCard } from "./components/gender-info";
@@ -168,16 +168,7 @@ export function Typologie() {
 
       {contextId && !groupId && (
         <>
-          <Row gutters className="fr-mb-4w">
-            <Col md={12}>
-              <Title as="h2" look="h4" className="fr-mb-3w">
-                {labels.groupPlural.charAt(0).toUpperCase() +
-                  labels.groupPlural.slice(1)}{" "}
-                - {contextName}
-              </Title>
-              <GroupCNUTreemapChart />
-            </Col>
-          </Row>
+          <GroupCNUTreemapChart />
 
           <Row gutters className="fr-mb-4w">
             <Col md={12}>

@@ -11,7 +11,6 @@ interface TreemapData {
 }
 
 interface TreemapOptionsParams {
-  title: string;
   selectedYear: string;
   treemapData: TreemapData[];
   contextId: string | null;
@@ -24,11 +23,7 @@ interface TreemapOptionsParams {
 }
 
 export const createGroupTreemapOptions = ({
-  title,
-  selectedYear,
   treemapData,
-  contextId,
-  labels,
 }: TreemapOptionsParams): Highcharts.Options => ({
   chart: {
     type: "treemap",
@@ -37,25 +32,6 @@ export const createGroupTreemapOptions = ({
     style: {
       fontFamily: "Marianne, sans-serif",
     },
-  },
-  title: {
-    text: title,
-    style: {
-      color: "#000000",
-      fontSize: "18px",
-      fontWeight: "bold",
-    },
-    align: "left",
-  },
-  subtitle: {
-    text: `Année universitaire ${selectedYear} - ${treemapData.length} ${
-      contextId ? labels.groupPlural : labels.plural
-    }`,
-    style: {
-      color: "#666666",
-      fontSize: "14px",
-    },
-    align: "left",
   },
   tooltip: {
     formatter: function () {
@@ -76,6 +52,7 @@ export const createGroupTreemapOptions = ({
       )})</span>`;
     },
   },
+  exporting: false,
   colorAxis: {
     minColor: "#efcb3a",
     maxColor: "#e18b76",

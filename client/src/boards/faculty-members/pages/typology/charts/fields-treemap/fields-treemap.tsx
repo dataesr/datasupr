@@ -182,9 +182,17 @@ export function ItemsTreemapChart() {
     id: `${context}-treemap`,
     idQuery: `faculty-members-cnu`,
     title: {
-      fr: `Répartition des effectifs par ${labels.singular}`,
-      en: `Distribution of faculty members by ${labels.singular}`,
+      fr: `État de la parité du personnel enseignant par grande discipline`,
+      en: `Parity status of faculty members by major discipline`,
     },
+    subtitle: `Année universitaire ${selectedYear}&nbsp;-&nbsp;
+      ${treemapData?.length}
+      grande${
+        treemapData?.length > 1 ? "s" : ""
+      }
+      discipline${
+        treemapData?.length > 1 ? "s" : ""
+    }`,
     description: {
       fr: `Visualisation hiérarchique des effectifs enseignants par ${labels.singular}`,
       en: `Hierarchical visualization of faculty members by ${labels.singular}`,

@@ -8,6 +8,7 @@ import { CreateChartOptions } from "../../../../components/creat-chart-options";
 import { useContextDetection } from "../../../../utils";
 import { createGroupTreemapOptions } from "./options";
 import { formatToPercent } from "../../../../../../utils/format";
+import { Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 
 HighchartsTreemap(Highcharts);
 
@@ -53,7 +54,6 @@ export function GroupCNUTreemapChart() {
 
   const {
     data: treemapData,
-    title,
     groupCount,
   } = useMemo(() => {
     if (!cnuData) {
@@ -222,15 +222,15 @@ export function GroupCNUTreemapChart() {
     idQuery: `faculty-members-cnu`,
     title: {
       fr: contextId
-        ? `${
-            labels.groupPlural.charAt(0).toUpperCase() +
-            labels.groupPlural.slice(1)
-          } de ${labels.singular} sélectionnée`
+        ? `Les ${labels.groupPlural} de la discipline ${cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_code}
+          - ${cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_name}`
         : `Répartition par ${labels.singular}`,
       en: contextId
         ? `${labels.groupPlural} of the selected ${labels.singular}`
         : `Distribution by ${labels.singular}`,
     },
+    subtitle: `Année universitaire ${selectedYear} - ${treemapData.length} ${
+        contextId ? labels.groupPlural : labels.plural}`,
     description: {
       fr: contextId
         ? `Répartition des effectifs par ${labels.groupSingular} au sein de ${labels.singular}`
@@ -244,28 +244,26 @@ export function GroupCNUTreemapChart() {
 
   if (isLoading) {
     return (
-      <div className="fr-text--center fr-py-3w">
-        <div className="fr-mb-2w">
+       <Row horizontalAlign="center" style={{display: 'inline-block;'}}>
           <span
-            className="fr-icon-loader-line fr-icon--lg"
+            className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
             aria-hidden="true"
-          ></span>
-        </div>
-        <div>Chargement des données...</div>
-      </div>
+          />
+          <Text className="fr-ml-1w">
+            Chargement des données par {labels.singular}...
+          </Text>
+        </Row>
     );
   }
 
   if (!treemapData || treemapData.length === 0) {
     return (
-      <div className="fr-text--center fr-py-3w">
-        <div className="fr-alert fr-alert--info fr-alert--sm">
-          <p>
-            Aucune donnée disponible pour {selectedYear}
-            {contextId && ` et ${labels.singular} sélectionnée`}
-          </p>
-        </div>
-      </div>
+      <Row horizontalAlign="center">
+        <Text className="fr-ml-1w">
+          Aucune donnée disponible pour {selectedYear}
+          {contextId && ` et ${labels.singular} sélectionnée`}
+        </Text>
+      </Row>
     );
   }
 
@@ -278,20 +276,18 @@ export function GroupCNUTreemapChart() {
     const malePercent = 100 - femalePercent;
 
     return (
-      <div className="fr-py-4w">
-        <div className="fr-alert fr-alert--info">
-          <h3 className="fr-alert__title">
+      <>
+          <Title as="h2" look="h5">
             {labels.groupSingular.charAt(0).toUpperCase() +
               labels.groupSingular.slice(1)}{" "}
             unique
-          </h3>
-          <p>
+          </Title>
+          <Text className="fr-text">
             Cette {labels.singular} ne contient qu'un seul{" "}
             {labels.groupSingular} : <strong>{singleGroup.name}</strong>
-          </p>
-          <div className="fr-mt-3w">
-            <div className="fr-grid-row fr-grid-row--gutters">
-              <div className="fr-col-12 fr-col-md-4">
+          </Text>
+            <Row gutters className="fr-mb-4w">
+              <Col>
                 <div className="fr-card fr-card--grey">
                   <div className="fr-card__body">
                     <div className="fr-card__content">
@@ -303,8 +299,8 @@ export function GroupCNUTreemapChart() {
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="fr-col-12 fr-col-md-4">
+              </Col>
+              <Col>
                 <div className="fr-card fr-card--grey">
                   <div className="fr-card__body">
                     <div className="fr-card__content">
@@ -318,8 +314,8 @@ export function GroupCNUTreemapChart() {
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="fr-col-12 fr-col-md-4">
+              </Col>
+              <Col>
                 <div className="fr-card fr-card--grey">
                   <div className="fr-card__body">
                     <div className="fr-card__content">
@@ -333,29 +329,28 @@ export function GroupCNUTreemapChart() {
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <p className="fr-mt-3w fr-text--sm">
+              </Col>
+            </Row>
+          <Text className="fr-text--sm">
             Un treemap n'est pas nécessaire pour visualiser un seul{" "}
             {labels.groupSingular}. Les données détaillées sont disponibles dans
             les sections ci-dessus.
-          </p>
-        </div>
-      </div>
+          </Text>
+      </>
     );
   }
 
   const treemapOptions = CreateChartOptions(
     "treemap",
     createGroupTreemapOptions({
-      title,
       selectedYear,
       treemapData,
       contextId: contextId || null,
       labels,
     })
   );
+
+  console.log("cnuData",cnuData);
 
   return (
     <>
@@ -365,62 +360,55 @@ export function GroupCNUTreemapChart() {
         legend={null}
         renderData={undefined}
       />
-
-      <div className="fr-text--xs fr-mt-2w" style={{ display: "block" }}>
-        <div className="fr-text--center">
-          <span className="fr-mr-3w">
-            <span
-              style={{
-                display: "inline-block",
-                width: "12px",
-                height: "12px",
-                backgroundColor: "#efcb3a",
-                marginRight: "5px",
-                borderRadius: "2px",
-              }}
-            ></span>
-            Majorité d'hommes
-          </span>
-          <span className="fr-mr-3w">
-            <span
-              style={{
-                display: "inline-block",
-                width: "12px",
-                height: "12px",
-                backgroundColor: "#EFEFEF",
-                marginRight: "5px",
-                borderRadius: "2px",
-                border: "1px solid #ddd",
-              }}
-            ></span>
-            Parité
-          </span>
-          <span>
-            <span
-              style={{
-                display: "inline-block",
-                width: "12px",
-                height: "12px",
-                backgroundColor: "#e18b76",
-                marginRight: "5px",
-                borderRadius: "2px",
-              }}
-            ></span>
-            Majorité de femmes
-          </span>
-        </div>
-
-        <div className="fr-text--center fr-mt-1w">
-          <em>
-            {contextId
-              ? `${
-                  labels.groupPlural.charAt(0).toUpperCase() +
-                  labels.groupPlural.slice(1)
-                } de ${labels.singular} sélectionnée`
-              : `Cliquez sur une ${labels.singular} pour voir ses ${labels.groupPlural}`}
-          </em>
-        </div>
-      </div>
+      
+      <Row horizontalAlign="center" className="fr-mb-4w">
+          <Col className="text-center">
+            <span className="fr-mr-3w">
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "12px",
+                  height: "12px",
+                  backgroundColor: "#efcb3a",
+                  marginRight: "5px",
+                  borderRadius: "2px",
+                }}
+              ></span>
+              Majorité masculine (≥60%)
+            </span>
+          </Col>
+          <Col className="text-center">
+            <span className="fr-mr-3w">
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "12px",
+                  height: "12px",
+                  backgroundColor: "#EFEFEF",
+                  marginRight: "5px",
+                  borderRadius: "2px",
+                  border: "1px solid #ddd",
+                }}
+              ></span>
+              Parité (40-60%)
+            </span>
+          </Col>
+          <Col className="text-center">
+            <span>
+              <span
+                style={{
+                  display: "inline-block",
+                  width: "12px",
+                  height: "12px",
+                  backgroundColor: "#e18b76",
+                  marginRight: "5px",
+                  borderRadius: "2px",
+                }}
+              ></span>
+              Majorité féminine (≥60%)
+            </span>
+          </Col>
+      </Row>
     </>
   );
 }
