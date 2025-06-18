@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { Text } from "@dataesr/dsfr-plus";
-import { useContextDetection } from "../boards/faculty-members/utils";
-import { useFacultyMembersTypology } from "../boards/faculty-members/api/use-typology";
+import { useContextDetection } from "../../../utils";
+import { useFacultyMembersTypology } from "../../../api/use-typology";
 
 interface SubtitleWithContextProps {
   classText: string;

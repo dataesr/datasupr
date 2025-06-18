@@ -8,7 +8,7 @@ import ItemBarChart from "./charts/fields-bar/fields-bar";
 import SectionsBubbleChart from "./charts/section-cnu-bubble/section-cnu-bubble";
 import { useContextDetection } from "../../utils";
 import YearSelector from "../../components/filters";
-import SubtitleWithContext from "../../../../utils/subtitle-with-context";
+import SubtitleWithContext from "./utils/subtitle-with-context";
 
 export function Typologie() {
   const [searchParams] = useSearchParams();
