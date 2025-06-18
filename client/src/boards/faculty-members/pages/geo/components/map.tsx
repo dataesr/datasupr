@@ -75,7 +75,7 @@ export default function FacultyMap() {
       <div className="fr-text--center fr-py-6w">
         <div className="fr-mb-3w">
           <span
-            className="fr-icon-loader-line fr-icon--lg"
+            className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
             aria-hidden="true"
           ></span>
         </div>

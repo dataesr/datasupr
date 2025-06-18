@@ -406,7 +406,7 @@ export function SectionsBubbleChart() {
       <div className="fr-text--center fr-py-3w">
         <div className="fr-mb-2w">
           <span
-            className="fr-icon-loader-line fr-icon--lg"
+            className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
             aria-hidden="true"
           ></span>
         </div>

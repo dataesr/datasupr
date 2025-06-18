@@ -226,7 +226,7 @@ const ItemBarChart: React.FC = () => {
     return (
       <Row horizontalAlign="center" style={{display: 'inline-block;'}}>
         <span
-          className="fr-icon-loader-line fr-icon--lg"
+          className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
           aria-hidden="true"
         />
         <Text className="fr-ml-1w">
