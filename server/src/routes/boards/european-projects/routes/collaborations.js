@@ -313,7 +313,13 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
                       role: "$role"
                     }
                   },
-                  total_collaborations: { $sum: 1 }
+                  total_collaborations: { $addToSet: "$project_id" }
+                }
+              },
+              // On ajoute une étape pour calculer total_collaborations à partir de la taille du tableau
+              {
+                $addFields: {
+                  total_collaborations: { $size: "$total_collaborations" }
                 }
               },
               // Ajout d'une étape pour compter le nombre total de projets
