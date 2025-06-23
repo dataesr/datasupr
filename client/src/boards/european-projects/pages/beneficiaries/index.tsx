@@ -1,9 +1,8 @@
-import { Col, Container, Notice, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
-// import FundedObjectives from "./charts/funded-objectives";
-// import SynthesisFocus from "./charts/synthesis-focus";
-// import MainBeneficiaries from "./charts/main-beneficiaries";
+import MainBeneficiaries from "./charts/main-beneficiaries";
+import Callout from "../../../../components/callout";
 
 export default function Beneficiaries() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,33 +15,17 @@ export default function Beneficiaries() {
 
   return (
     <Container as="main">
-      {/* <SynthesisFocus />
       <div className="fr-my-5w" />
-      <FundedObjectives />
+      {/* <div className="sticky"> */}
+      <Title as="h1" look="h3">
+        Bénéficiaires page
+      </Title>
+      <Callout>
+        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus hic inventore ipsum pariatur possimus est voluptatibus ut aspernatur
+        itaque quae. Eveniet, numquam? Soluta fugit cupiditate et molestias. Tenetur, quod eligendi!
+      </Callout>
       <div className="fr-my-5w" />
-      <MainBeneficiaries /> */}
-      <div className="sticky">
-        <Title as="h1" look="h3">
-          Bénéficiaires page
-        </Title>
-        <Notice closeMode={"disallow"} type={"info"}>
-          Méthodo de la page <br />
-          Adipisicing do excepteur tempor mollit exercitation fugiat non.
-        </Notice>
-        <br />
-        <input type="radio" name="coordinator_radio" value="coordinator" />
-        En tant que coordinaeur
-        <input
-          type="radio"
-          name="coordinator_radio"
-          value="coordinator_and_or_partner"
-        />
-        En tant que coordinateur et/ou partenaire
-      </div>
-      <div className="fr-my-5w" />
-      Les 10 premiers bénéficiaires des subventions allouées
-      <br />
-      chart...
+      <MainBeneficiaries />
       <div className="fr-my-5w" />
       Selection d'un indicateur <select />
       <br />
