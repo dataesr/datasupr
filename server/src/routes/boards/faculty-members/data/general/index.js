@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/faculty-members/filters/years", async (req, res) => {
   try {
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const academicYears = await collection.distinct("annee_universitaire");
 
@@ -37,7 +37,7 @@ router.get("/faculty-members/typology/:context", async (req, res) => {
       });
     }
 
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     let contextFilter = {};
     let contextId = null;
@@ -305,7 +305,7 @@ router.get("/faculty-members/navigation/:type", async (req, res) => {
     const { type } = req.params;
     const { annee_universitaire } = req.query;
 
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -434,7 +434,7 @@ router.get("/faculty-members/navigation/:type", async (req, res) => {
 router.get("/faculty-members/search-bar", async (req, res) => {
   try {
     const { limit = 200 } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const latestYear = await collection.distinct("annee_universitaire").then(
       (years) =>

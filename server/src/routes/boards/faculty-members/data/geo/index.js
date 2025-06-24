@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/faculty-members/filters/regions", async (req, res) => {
   try {
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const regions = await collection
       .aggregate([
@@ -50,7 +50,7 @@ router.get("/faculty-members/filters/regions", async (req, res) => {
 router.get("/faculty-members/geo/overview", async (req, res) => {
   try {
     const { annee_universitaire, geo_id } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -354,7 +354,7 @@ router.get("/faculty-members/geo/overview", async (req, res) => {
 router.get("/faculty-members/geo/cnu-analysis", async (req, res) => {
   try {
     const { annee_universitaire, geo_id } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     let matchStage = {};
     if (annee_universitaire && annee_universitaire !== "all") {
@@ -460,7 +460,7 @@ router.get("/faculty-members/geo/cnu-analysis", async (req, res) => {
 router.get("/faculty-members/geo/map-data", async (req, res) => {
   try {
     const { annee_universitaire } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -621,7 +621,7 @@ router.get("/faculty-members/geo/map-data", async (req, res) => {
 router.get("/faculty-members/geo/evolution", async (req, res) => {
   try {
     const { geo_id } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const baseMatch = {};
     if (geo_id) baseMatch.etablissement_code_region = geo_id;
@@ -855,7 +855,7 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
 router.get("/faculty-members/geo/research-teachers", async (req, res) => {
   try {
     const { annee_universitaire, geo_id } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {
       is_enseignant_chercheur: true,
@@ -931,6 +931,12 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
             femaleCount: 0,
             totalCount: 0,
             cnuSections: [],
+            ageDistribution: [
+              { ageClass: "35 ans et moins", count: 0, percent: "0" },
+              { ageClass: "36 à 55 ans", count: 0, percent: "0" },
+              { ageClass: "56 ans et plus", count: 0, percent: "0" },
+              { ageClass: "Non précisé", count: 0, percent: "0" },
+            ],
           });
         }
 
@@ -955,6 +961,13 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
             item.totalCount > 0
               ? ((count / item.totalCount) * 100).toFixed(1)
               : "0";
+
+          const groupAgeItem = group.ageDistribution.find(
+            (a) => a.ageClass === ageClass
+          );
+          if (groupAgeItem) {
+            groupAgeItem.count += count;
+          }
           return { ageClass, count, percent };
         });
 
@@ -970,6 +983,15 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
         group.maleCount += maleCount;
         group.femaleCount += femaleCount;
         group.totalCount += item.totalCount;
+      });
+
+      cnuGroups.forEach((group) => {
+        group.ageDistribution.forEach((ageItem) => {
+          ageItem.percent =
+            group.totalCount > 0
+              ? ((ageItem.count / group.totalCount) * 100).toFixed(1)
+              : "0";
+        });
       });
 
       const genderData = await collection

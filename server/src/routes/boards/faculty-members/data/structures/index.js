@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/faculty-members/filters/structures", async (req, res) => {
   try {
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const structures = await collection
       .aggregate([
@@ -50,7 +50,7 @@ router.get("/faculty-members/filters/structures", async (req, res) => {
 router.get("/faculty-members/structures/overview", async (req, res) => {
   try {
     const { annee_universitaire, structure_id } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -370,7 +370,7 @@ router.get("/faculty-members/structures/overview", async (req, res) => {
 router.get("/faculty-members/structures/cnu-analysis", async (req, res) => {
   try {
     const { annee_universitaire, structure_id } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     let matchStage = {};
     if (annee_universitaire && annee_universitaire !== "all") {
@@ -484,7 +484,7 @@ router.get(
   async (req, res) => {
     try {
       const { annee_universitaire, structure_id } = req.query;
-      const collection = db.collection("faculty-members");
+      const collection = db.collection("faculty-members_main_staging");
 
       const matchStage = {
         is_enseignant_chercheur: true,
@@ -515,7 +515,6 @@ router.get(
           }
         );
 
-        // Données CNU pour cet établissement
         const cnuData = await collection
           .aggregate([
             { $match: matchStage },
@@ -575,6 +574,12 @@ router.get(
               femaleCount: 0,
               totalCount: 0,
               cnuSections: [],
+              ageDistribution: [
+                { ageClass: "35 ans et moins", count: 0, percent: "0" },
+                { ageClass: "36 à 55 ans", count: 0, percent: "0" },
+                { ageClass: "56 ans et plus", count: 0, percent: "0" },
+                { ageClass: "Non précisé", count: 0, percent: "0" },
+              ],
             });
           }
 
@@ -601,6 +606,13 @@ router.get(
               item.totalCount > 0
                 ? ((count / item.totalCount) * 100).toFixed(1)
                 : "0";
+
+            const groupAgeItem = group.ageDistribution.find(
+              (a) => a.ageClass === ageClass
+            );
+            if (groupAgeItem) {
+              groupAgeItem.count += count;
+            }
             return { ageClass, count, percent };
           });
 
@@ -618,7 +630,14 @@ router.get(
           group.totalCount += item.totalCount;
         });
 
-        // Données de genre globales pour l'établissement
+        cnuGroups.forEach((group) => {
+          group.ageDistribution.forEach((ageItem) => {
+            ageItem.percent =
+              group.totalCount > 0
+                ? ((ageItem.count / group.totalCount) * 100).toFixed(1)
+                : "0";
+          });
+        });
         const genderData = await collection
           .aggregate([
             { $match: matchStage },
@@ -782,7 +801,7 @@ router.get(
 router.get("/faculty-members/structures/evolution", async (req, res) => {
   try {
     const { structure_id } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {};
     if (structure_id) {

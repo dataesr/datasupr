@@ -90,7 +90,15 @@ export default function CnuGroupsTable({
               ? Math.round((group.maleCount / group.totalCount) * 100)
               : 0;
           const femalePercent = 100 - malePercent;
-
+          const younger35 = group.ageDistribution?.find(
+            (age) => age.ageClass === "35 ans et moins"
+          );
+          const middle36_55 = group.ageDistribution?.find(
+            (age) => age.ageClass === "36 à 55 ans"
+          );
+          const older56 = group.ageDistribution?.find(
+            (age) => age.ageClass === "56 ans et plus"
+          );
           return (
             <tr key={group.cnuGroupId}>
               <td>
@@ -127,9 +135,21 @@ export default function CnuGroupsTable({
               </td>
               {showAgeDemographics && (
                 <>
-                  <td className="text-center">N/A</td>
-                  <td className="text-center">N/A</td>
-                  <td className="text-center">N/A</td>
+                  <td className="text-center">
+                    {younger35?.count.toLocaleString() || "N/A"}
+                    <br />
+                    <small>{younger35?.percent}%</small>
+                  </td>
+                  <td className="text-center">
+                    {middle36_55?.count.toLocaleString() || "N/A"}
+                    <br />
+                    <small>{middle36_55?.percent}%</small>
+                  </td>
+                  <td className="text-center">
+                    {older56?.count.toLocaleString() || "N/A"}
+                    <br />
+                    <small>{older56?.percent}%</small>
+                  </td>
                 </>
               )}
             </tr>

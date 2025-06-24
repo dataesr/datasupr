@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/faculty-members/filters/fields", async (req, res) => {
   try {
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const fields = await collection
       .aggregate([
@@ -50,7 +50,7 @@ router.get("/faculty-members/filters/fields", async (req, res) => {
 router.get("/faculty-members/fields/overview", async (req, res) => {
   try {
     const { annee_universitaire, field_id } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -70,7 +70,6 @@ router.get("/faculty-members/fields/overview", async (req, res) => {
       ])
       .toArray();
 
-    // La répartition des personnels par catégorie
     const personnalCategoryDistribution = await collection
       .aggregate([
         { $match: matchStage },
@@ -83,7 +82,6 @@ router.get("/faculty-members/fields/overview", async (req, res) => {
       ])
       .toArray();
 
-    // L'âge par discipline
     const ageDistribution = await collection
       .aggregate([
         { $match: matchStage },
@@ -343,7 +341,7 @@ router.get("/faculty-members/fields/overview", async (req, res) => {
 router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
   try {
     const { annee_universitaire, field_id } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -479,7 +477,7 @@ router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
 router.get("/faculty-members/fields/evolution", async (req, res) => {
   try {
     const { field_id } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {};
     if (field_id) matchStage.code_grande_discipline = field_id;
@@ -695,7 +693,7 @@ router.get("/faculty-members/fields/evolution", async (req, res) => {
 router.get("/faculty-members/fields/research-teachers", async (req, res) => {
   try {
     const { annee_universitaire, field_id } = req.query;
-    const collection = db.collection("faculty-members");
+    const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {
       is_enseignant_chercheur: true,
@@ -800,6 +798,12 @@ router.get("/faculty-members/fields/research-teachers", async (req, res) => {
             femaleCount: 0,
             totalCount: 0,
             cnuSections: [],
+            ageDistribution: [
+              { ageClass: "35 ans et moins", count: 0, percent: "0" },
+              { ageClass: "36 à 55 ans", count: 0, percent: "0" },
+              { ageClass: "56 ans et plus", count: 0, percent: "0" },
+              { ageClass: "Non précisé", count: 0, percent: "0" },
+            ],
           });
         }
 
@@ -824,6 +828,14 @@ router.get("/faculty-members/fields/research-teachers", async (req, res) => {
             item.totalCount > 0
               ? ((count / item.totalCount) * 100).toFixed(1)
               : "0";
+
+          const groupAgeItem = group.ageDistribution.find(
+            (a) => a.ageClass === ageClass
+          );
+          if (groupAgeItem) {
+            groupAgeItem.count += count;
+          }
+
           return { ageClass, count, percent };
         });
 
@@ -839,6 +851,15 @@ router.get("/faculty-members/fields/research-teachers", async (req, res) => {
         group.maleCount += maleCount;
         group.femaleCount += femaleCount;
         group.totalCount += item.totalCount;
+      });
+
+      cnuGroups.forEach((group) => {
+        group.ageDistribution.forEach((ageItem) => {
+          ageItem.percent =
+            group.totalCount > 0
+              ? ((ageItem.count / group.totalCount) * 100).toFixed(1)
+              : "0";
+        });
       });
 
       const result = {
