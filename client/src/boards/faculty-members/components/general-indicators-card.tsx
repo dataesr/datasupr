@@ -192,70 +192,64 @@ const GeneralIndicatorsCard = () => {
     calculatedData;
 
   return (
-    <>
-      <div className="fr-card--no-border">
-        <div
-          className="fr-card--shadow fr-mb-2w"
-          style={{
-            borderTopLeftRadius: "30px",
-            borderBottomRightRadius: "30px",
-            padding: "3px",
-          }}
-        >
-          <div className="fr-mt-2w" style={{ textAlign: "center" }}>
-            <span className="fr-icon-user-line" aria-hidden="true"></span>
-            <div className="fr-text--sm">{getTitle()}</div>
-            <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
-              {totalCount.toLocaleString()}
-            </div>
-            {selectedYear && (
-              <div className="fr-text--xs fr-text--grey fr-mt-1w">
-                Année universitaire {selectedYear}
-              </div>
-            )}
+    <div
+      className="fr-card--shadow fr-mb-2w"
+      style={{
+        borderTopLeftRadius: "30px",
+        borderBottomRightRadius: "30px",
+        padding: "3px",
+      }}
+    >
+      <div className="fr-mt-2w" style={{ textAlign: "center" }}>
+        <span className="fr-icon-user-line" aria-hidden="true"></span>
+        <div className="fr-text--sm">{getTitle()}</div>
+        <div style={{ fontWeight: "bold", fontSize: "1.5rem" }}>
+          {totalCount.toLocaleString()}
+        </div>
+        {selectedYear && (
+          <div className="fr-text--xs fr-text--grey fr-mt-1w">
+            Année universitaire {selectedYear}
           </div>
+        )}
+      </div>
 
-          <div className="fr-mb-3w fr-mx-2w">
-            <div className="fr-grid-row fr-mb-1w fr-mt-3w">
-              <div className="fr-col-6">
-                <div
-                  style={{
-                    borderLeft: "4px solid var(--women-color, #e18b76)",
-                    paddingLeft: "0.5rem",
-                    textAlign: "center",
-                  }}
-                >
-                  <span className="fr-text--lg fr-text--bold">
-                    {formatToPercent(femalePercent)}%
-                  </span>
-                  <div className="fr-text--xs">Femmes</div>
-                  <div className="fr-text--xs fr-text--grey">
-                    {femaleCount.toLocaleString()} enseignantes
-                  </div>
-                </div>
+      <div className="fr-mb-3w fr-mx-2w">
+        <div className="fr-grid-row fr-mb-1w fr-mt-3w">
+          <div className="fr-col-6">
+            <div
+              style={{
+                borderLeft: "4px solid var(--women-color, #e18b76)",
+                paddingLeft: "0.5rem",
+                textAlign: "center",
+              }}
+            >
+              <span className="fr-text--lg fr-text--bold">
+                {formatToPercent(femalePercent)}
+              </span>
+              <div className="fr-text--xs">Femmes</div>
+              <div className="fr-text--xs fr-text--grey">
+                {femaleCount.toLocaleString()} enseignantes
               </div>
-              <div className="fr-col-6">
-                <div
-                  style={{
-                    borderLeft: "4px solid var(--men-color, #efcb3a)",
-                    paddingLeft: "0.5rem",
-                    textAlign: "center",
-                  }}
-                >
-                  <span className="fr-text--lg fr-text--bold">
-                    {malePercent}%
-                  </span>
-                  <div className="fr-text--xs">Hommes</div>
-                  <div className="fr-text--xs fr-text--grey">
-                    {maleCount.toLocaleString()} enseignants
-                  </div>
-                </div>
+            </div>
+          </div>
+          <div className="fr-col-6">
+            <div
+              style={{
+                borderLeft: "4px solid var(--men-color, #efcb3a)",
+                paddingLeft: "0.5rem",
+                textAlign: "center",
+              }}
+            >
+              <span className="fr-text--lg fr-text--bold">{malePercent}%</span>
+              <div className="fr-text--xs">Hommes</div>
+              <div className="fr-text--xs fr-text--grey">
+                {maleCount.toLocaleString()} enseignants
               </div>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

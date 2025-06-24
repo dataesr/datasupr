@@ -120,8 +120,8 @@ export default function CnuGroupsTable({
                 </div>
                 <small>
                   <Badge>
-                    {formatToPercent(malePercent)}% /{" "}
-                    {formatToPercent(femalePercent)}%
+                    {formatToPercent(malePercent)} /{" "}
+                    {formatToPercent(femalePercent)}
                   </Badge>
                 </small>
               </td>

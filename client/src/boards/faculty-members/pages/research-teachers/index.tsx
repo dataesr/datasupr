@@ -1,11 +1,4 @@
-import {
-  Container,
-  Row,
-  Col,
-  Title,
-  Breadcrumb,
-  Link,
-} from "@dataesr/dsfr-plus";
+import { Container } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useContextDetection } from "../../utils";
 import CnuGroupsTable from "./table/cnu-group-table";
@@ -57,7 +50,7 @@ export function ResearchTeachers() {
     }
   };
 
-  const { overviewUrl, currentContext } = getBreadcrumbData();
+  const { currentContext } = getBreadcrumbData();
 
   const getContextTitle = () => {
     switch (context) {
@@ -80,82 +73,73 @@ export function ResearchTeachers() {
 
   return (
     <Container as="main">
-      <Row>
-        <Col md={9}>
-          <Breadcrumb className="fr-m-0 fr-mt-1w">
-            <Link href="/personnel-enseignant">Personnel enseignant</Link>
-            <Link href={overviewUrl}>Vue d'ensemble</Link>
-            {currentContext && <Link>{currentContext}</Link>}
-          </Breadcrumb>
-        </Col>
-        <Col md={3} style={{ textAlign: "right" }}>
+      <div className="fr-grid-row fr-grid-row--gutters fr-mb-4w">
+        <div className="fr-col-md-9">
+          <div className="fr-mb-2w">
+            <h1 className="fr-h2 fr-mb-1w">{getContextTitle()}</h1>
+            {currentContext && (
+              <p className="fr-text--lg fr-text--bold fr-mb-0">
+                {currentContext}
+              </p>
+            )}
+          </div>
+        </div>
+        <div className="fr-col-md-3" style={{ textAlign: "right" }}>
           <YearSelector />
-        </Col>
-      </Row>
+        </div>
+      </div>
 
-      <Row gutters className="fr-mt-4w">
-        <Col md={8}>
-          <Title as="h2" look="h4" className="fr-mb-2w">
-            {getContextTitle()}
-          </Title>
-          <ResearchTeachersOverviewTable
-            context={context}
-            annee_universitaire={selectedYear}
-            contextId={contextId}
-          />
-        </Col>
-      </Row>
-
-      {contextId && (
-        <Row gutters className="fr-mt-5w">
-          <Col md={8}>
-            <Title as="h2" look="h4" className="fr-mb-2w">
-              Répartition par groupes CNU {contextName && `en ${contextName}`}
-            </Title>
-            <CnuGroupsTable
-              context={context}
-              contextId={contextId}
-              annee_universitaire={selectedYear}
-            />
-            <div className="fr-text--xs fr-mt-1w fr-mb-4w">
-              <i>
-                <strong>Répartition par groupes CNU</strong>
-                <br />
-                Ce tableau présente la répartition des enseignants-chercheurs
-                par groupe CNU {contextName && `en ${contextName}`}. Les données
-                permettent d'analyser la distribution par genre.
-              </i>
+      {!contextId && (
+        <div className="fr-card fr-card--shadow fr-mb-4w">
+          <div className="fr-card__body">
+            <div className="fr-card__content">
+              <h2 className="fr-card__title fr-h4 fr-mb-3w">
+                <span
+                  className="fr-icon-chart-line-fill fr-icon--sm fr-mr-1w"
+                  aria-hidden="true"
+                ></span>
+                Vue d'ensemble
+              </h2>
+              <ResearchTeachersOverviewTable
+                context={context}
+                annee_universitaire={selectedYear}
+                contextId={contextId}
+              />
             </div>
-          </Col>
-        </Row>
+          </div>
+        </div>
       )}
 
       {contextId && (
-        <Row gutters className="fr-mt-5w">
-          <Col md={12}>
-            <Title as="h2" look="h4" className="fr-mb-2w">
-              Répartition par sections CNU {contextName && `en ${contextName}`}
-            </Title>
-            <CnuSectionsTable
-              context={context}
-              contextId={contextId}
-              annee_universitaire={selectedYear}
-              showDiscipline={false}
-              showGroup={true}
-              showAgeDemographics={true}
-            />
-            <div className="fr-text--xs fr-mt-1w">
-              <i>
-                <strong>Répartition par sections CNU</strong>
-                <br />
-                Ce tableau présente la répartition des enseignants-chercheurs
-                par section CNU {contextName && `en ${contextName}`}. Les
-                données permettent d'obtenir une vision plus fine de la
-                distribution par spécialité au sein des groupes CNU.
-              </i>
+        <>
+          <div className="fr-card fr-card--shadow fr-mb-4w">
+            <div className="fr-card__body">
+              <div className="fr-card__content">
+                <CnuGroupsTable
+                  context={context}
+                  contextId={contextId}
+                  annee_universitaire={selectedYear}
+                  showAgeDemographics={true}
+                />
+              </div>
             </div>
-          </Col>
-        </Row>
+          </div>
+
+          <div className="fr-card fr-card--shadow">
+            <div className="fr-card__body">
+              <div className="fr-card__content">
+                <CnuSectionsTable
+                  context={context}
+                  contextId={contextId}
+                  annee_universitaire={selectedYear}
+                  showDiscipline={false}
+                  showGroup={true}
+                  showAgeDemographics={true}
+                />
+              </div>
+            </div>
+          </div>
+        </>
       )}
     </Container>
   );

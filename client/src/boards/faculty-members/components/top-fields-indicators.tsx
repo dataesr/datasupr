@@ -261,7 +261,7 @@ const TopItemsIndicators: React.FC = () => {
                           fontSize: "0.75rem",
                         }}
                       >
-                        {formatToPercent(itemPercent)}%
+                        {formatToPercent(itemPercent)}
                       </Badge>
                     </div>
                   </div>
