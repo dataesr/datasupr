@@ -3,6 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import MainBeneficiaries from "./charts/main-beneficiaries";
 import Callout from "../../../../components/callout";
+import BeneficiariesByRole from "./charts/beneficiaries-by-role";
 
 export default function Beneficiaries() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,6 +28,7 @@ export default function Beneficiaries() {
       <div className="fr-my-5w" />
       <MainBeneficiaries />
       <div className="fr-my-5w" />
+      <BeneficiariesByRole />
       Selection d'un indicateur <select />
       <br />
       Statut du projet <select />

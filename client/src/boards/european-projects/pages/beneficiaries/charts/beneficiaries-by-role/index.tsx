@@ -10,10 +10,10 @@ import { getDefaultParams } from "./utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 const config = {
-  id: "mainBeneficiaries",
+  id: "beneficiariesByRole",
   title: {
-    fr: "Principaux bénéficiaires qui concentrent 50 % des subventions allouées aux équipes",
-    en: "Main beneficiaries who concentrate 50% of the grants allocated to teams",
+    fr: "Top 10 des bénéficiaires par rôle en fonction des financements alloués",
+    en: "Top 10 beneficiaries by role based on allocated funding",
   },
   subtitle: "",
   description: {
@@ -23,10 +23,9 @@ const config = {
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries",
 };
 
-export default function MainBeneficiaries() {
+export default function BeneficiariesByRole() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
-  const country_code = searchParams.get("country_code") || "FRA";
   const currentLang = searchParams.get("language") || "fr";
 
   const { data, isLoading } = useQuery({
@@ -37,7 +36,6 @@ export default function MainBeneficiaries() {
       Cookies.get("selectedPrograms"),
       Cookies.get("selectedThematics"),
       Cookies.get("selectedDestinations"),
-      country_code,
     ],
     queryFn: () => GetData(params),
   });
