@@ -2,7 +2,7 @@ import Cookies from "js-cookie";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export async function GetData(params: string) {
-  const baseUrl = `${VITE_APP_SERVER_URL}/european-projects/beneficiaries/main-beneficiaries`;
+  const baseUrl = `${VITE_APP_SERVER_URL}/european-projects/beneficiaries/main-beneficiaries-pct-50`;
   const searchParams = new URLSearchParams(params);
 
   // Récupérer les piliers sélectionnés depuis les cookies

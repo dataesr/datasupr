@@ -4,7 +4,7 @@ import { db } from "../../../../services/mongo.js";
 
 const router = new express.Router();
 
-router.route("/european-projects/beneficiaries/main-beneficiaries").get(async (req, res) => {
+router.route("/european-projects/beneficiaries/main-beneficiaries-pct-50").get(async (req, res) => {
   if (!req.query.country_code) {
     res.status(400).send("country_code is required");
     return;

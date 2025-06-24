@@ -23,6 +23,8 @@ const config = {
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries",
 };
 
+// TODO: ajouter en stacked coordinateur/partenaires
+
 export default function MainBeneficiaries() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);

@@ -18,7 +18,7 @@ export default function Beneficiaries() {
       <div className="fr-my-5w" />
       {/* <div className="sticky"> */}
       <Title as="h1" look="h3">
-        Bénéficiaires page
+        Entités bénéficiaires
       </Title>
       <Callout>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus hic inventore ipsum pariatur possimus est voluptatibus ut aspernatur
