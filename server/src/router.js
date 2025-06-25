@@ -9,6 +9,7 @@ import searchRouter from "./routes/search.js";
 import tableauxRouter from "./routes/tableaux.js";
 import contactRouter from "./routes/contact.js";
 import geoRouter from "./routes/geo.js";
+import graduatesRouter from "./routes/boards/graduates/index.js";
 
 const router = new express.Router();
 
@@ -21,5 +22,7 @@ router.use(initRouter);
 router.use(searchRouter);
 router.use(tableauxRouter);
 router.use(geoRouter);
+router.use(graduatesRouter);
+
 
 export default router;
