@@ -7,9 +7,19 @@ import { useMemo, useState, useEffect } from "react";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-async function getGraduatesTests(id: string, diplome: string) {
-  const url = `${VITE_APP_SERVER_URL}/graduates/tests/${id}/${diplome}`;
+async function getGraduatesTests(id: string, diplome: string, composante?: string) {
+  let url = `${VITE_APP_SERVER_URL}/graduates/tests/${id}/${diplome}`;
+  if (composante && composante.trim()) {
+    url += `?composante=${encodeURIComponent(composante.trim())}`;
+  }
   console.log(`Fetching graduates tests from: ${url}`);
+
+  return fetch(url).then((response) => response.json());
+}
+
+async function getGraduatesOptions() {
+  const url = `${VITE_APP_SERVER_URL}/graduates/tests/options`;
+  console.log(`Fetching graduates options from: ${url}`);
 
   return fetch(url).then((response) => response.json());
 }
@@ -26,9 +36,11 @@ export default function Welcome() {
   const navigate = useNavigate();
   const id = searchParams.get("id");
   const diplome = searchParams.get("diplome");
+  const composante = searchParams.get("composante");
 
   const [inputId, setInputId] = useState(id || "");
   const [inputDiplome, setInputDiplome] = useState(diplome || "");
+  const [inputComposante, setInputComposante] = useState(composante || "");
 
   // Synchroniser l'état local avec l'URL
   useEffect(() => {
@@ -38,6 +50,10 @@ export default function Welcome() {
   useEffect(() => {
     setInputDiplome(diplome || "");
   }, [diplome]);
+
+  useEffect(() => {
+    setInputComposante(composante || "");
+  }, [composante]);
 
   const handleBothParametersChange = () => {
     const newSearchParams = new URLSearchParams(searchParams);
@@ -54,13 +70,24 @@ export default function Welcome() {
       newSearchParams.delete("diplome");
     }
 
+    if (inputComposante.trim()) {
+      newSearchParams.set("composante", inputComposante.trim());
+    } else {
+      newSearchParams.delete("composante");
+    }
+
     navigate(`?${newSearchParams.toString()}`, { replace: true });
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["graduates/tests", id, diplome],
-    queryFn: () => getGraduatesTests(id!, diplome!),
+    queryKey: ["graduates/tests", id, diplome, composante],
+    queryFn: () => getGraduatesTests(id!, diplome!, composante || undefined),
     enabled: !!id && !!diplome,
+  });
+
+  const { data: optionsData, isLoading: optionsLoading } = useQuery({
+    queryKey: ["graduates/options"],
+    queryFn: () => getGraduatesOptions(),
   });
 
   const chartOptions = useMemo(() => {
@@ -70,7 +97,7 @@ export default function Welcome() {
 
     return {
       title: {
-        text: `Nombre de diplômes délivrés par année - ${diplome}`,
+        text: `Nombre de diplômes délivrés par année - ${diplome}${composante ? ` (${composante})` : ""}`,
       },
       xAxis: {
         categories: data.data.map((item: GraduateData) => item.rentree),
@@ -112,76 +139,107 @@ export default function Welcome() {
         ],
       },
     };
-  }, [data, diplome]);
+  }, [data, diplome, composante]);
 
   const renderFormInputs = () => (
     <div style={{ marginBottom: "20px", padding: "20px", backgroundColor: "#f8f9fa", borderRadius: "8px" }}>
-      <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", alignItems: "end" }}>
-        <div style={{ flex: "1", minWidth: "250px" }}>
-          <label htmlFor="id-input" style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
-            ID Établissement :
-          </label>
-          <input
-            id="id-input"
-            type="text"
-            value={inputId}
-            onChange={(e) => setInputId(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === "Enter") {
-                handleBothParametersChange();
-              }
-            }}
-            placeholder="ex: 54VTe"
-            style={{
-              padding: "8px 12px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              width: "100%",
-            }}
-          />
-        </div>
+      {optionsLoading ? (
+        <div>Chargement des options...</div>
+      ) : (
+        <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", alignItems: "end" }}>
+          <div style={{ flex: "1", minWidth: "250px" }}>
+            <label htmlFor="id-select" style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
+              ID Établissement :
+            </label>
+            <select
+              id="id-select"
+              value={inputId}
+              onChange={(e) => setInputId(e.target.value)}
+              style={{
+                padding: "8px 12px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                width: "100%",
+                backgroundColor: "white",
+              }}
+            >
+              <option value="">Sélectionnez un établissement</option>
+              {optionsData?.etablissement_ids?.map((idOption: string) => (
+                <option key={idOption} value={idOption}>
+                  {idOption}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div style={{ flex: "1", minWidth: "250px" }}>
-          <label htmlFor="diplome-input" style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
-            Diplôme :
-          </label>
-          <input
-            id="diplome-input"
-            type="text"
-            value={inputDiplome}
-            onChange={(e) => setInputDiplome(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === "Enter") {
-                handleBothParametersChange();
-              }
-            }}
-            placeholder="ex: MAST_M_AUTRES"
-            style={{
-              padding: "8px 12px",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
-              width: "100%",
-            }}
-          />
-        </div>
+          <div style={{ flex: "1", minWidth: "250px" }}>
+            <label htmlFor="diplome-select" style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
+              Diplôme :
+            </label>
+            <select
+              id="diplome-select"
+              value={inputDiplome}
+              onChange={(e) => setInputDiplome(e.target.value)}
+              style={{
+                padding: "8px 12px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                width: "100%",
+                backgroundColor: "white",
+              }}
+            >
+              <option value="">Sélectionnez un diplôme</option>
+              {optionsData?.diplomes?.map((diplomeOption: string) => (
+                <option key={diplomeOption} value={diplomeOption}>
+                  {diplomeOption}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <div>
-          <button
-            onClick={handleBothParametersChange}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "#0078f3",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              height: "42px",
-            }}
-          >
-            Mettre à jour
-          </button>
+          <div style={{ flex: "1", minWidth: "250px" }}>
+            <label htmlFor="composante-select" style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>
+              Composante <span style={{ fontWeight: "normal", fontStyle: "italic" }}>(facultatif)</span> :
+            </label>
+            <select
+              id="composante-select"
+              value={inputComposante}
+              onChange={(e) => setInputComposante(e.target.value)}
+              style={{
+                padding: "8px 12px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                width: "100%",
+                backgroundColor: "white",
+              }}
+            >
+              <option value="">Sélectionnez une composante</option>
+              {optionsData?.composantes?.map((composanteOption: string) => (
+                <option key={composanteOption} value={composanteOption}>
+                  {composanteOption}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
+            <button
+              onClick={handleBothParametersChange}
+              style={{
+                padding: "8px 16px",
+                backgroundColor: "#0078f3",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                height: "42px",
+              }}
+            >
+              Mettre à jour
+            </button>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 
