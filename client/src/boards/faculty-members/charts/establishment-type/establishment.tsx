@@ -1,10 +1,53 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { CreateChartOptions } from "../../components/creat-chart-options";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { createEstablishmentTypeChartOptions } from "./options";
-import { useFacultyMembersOverview } from "../../api/use-overview";
 import { useContextDetection, generateIntegrationURL } from "../../utils";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import { useEstablishmentTypeDistribution } from "./use-establishment-type";
+
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table id="establishment-type-table">
+              <thead>
+                <tr>
+                  <th>Type d'établissement</th>
+                  <th>Effectif total</th>
+                  <th>Pourcentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item._id || "Non précisé"}</td>
+                    <td>{item.total_count.toLocaleString()}</td>
+                    <td>
+                      {item.percentage
+                        ? `${item.percentage.toFixed(1)}%`
+                        : "N/A"}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function EstablishmentTypeChart() {
   const [searchParams] = useSearchParams();
@@ -12,10 +55,10 @@ export function EstablishmentTypeChart() {
   const { context, contextId, contextName } = useContextDetection();
 
   const {
-    data: overviewData,
+    data: establishmentData,
     isLoading,
     error,
-  } = useFacultyMembersOverview({
+  } = useEstablishmentTypeDistribution({
     context,
     annee_universitaire: selectedYear,
     contextId,
@@ -23,64 +66,54 @@ export function EstablishmentTypeChart() {
 
   const config = {
     id: "establishment-type-chart",
-    idQuery: "faculty-members-overview",
-    title: `Répartition par type d'établissement - ${contextName} sélectionnée`,
+    idQuery: "establishment-type-distribution",
+    title: {
+      fr: `Répartition par type d'établissement - ${contextName} sélectionnée`,
+    },
     description: {
-      fr: contextId
-        ? `Répartition des enseignants par type d'établissement pour ${
-            contextName === "discipline"
-              ? "la"
-              : contextName === "région"
-              ? "la"
-              : "l'"
-          } ${contextName} sélectionnée`
-        : "Répartition des enseignants par type d'établissement",
+      fr: "blablabla",
     },
     integrationURL: generateIntegrationURL(context, "etablissements"),
   };
 
-  const establishmentData = useMemo(() => {
-    if (!overviewData?.establishmentTypeDistribution) {
-      return null;
-    }
-
-    const establishmentTypes = overviewData.establishmentTypeDistribution.map(
-      (item) => ({
-        type: item._id || "Non précisé",
-        totalCount: item.total_count,
-        genderBreakdown: item.gender_breakdown,
-      })
-    );
-
-    return { establishmentTypes };
-  }, [overviewData]);
-
   const chartOptions = useMemo(() => {
-    if (!establishmentData?.establishmentTypes) {
+    if (!establishmentData?.establishment_type_distribution) {
       return null;
     }
 
-    const validTypes = establishmentData.establishmentTypes.filter(
-      (et) => et.totalCount > 0
+    const validTypes = establishmentData.establishment_type_distribution.filter(
+      (et) => et.total_count > 0
     );
 
     if (validTypes.length === 0) {
       return null;
     }
 
-    const categories = validTypes.map((et) => et.type);
-    const data = validTypes.map((et) => et.totalCount);
+    const categories = validTypes.map((et) => et._id || "Non précisé");
+    const data = validTypes.map((et) => et.total_count);
 
-    return CreateChartOptions(
-      "column",
-      createEstablishmentTypeChartOptions(categories, data, selectedYear)
+    return createEstablishmentTypeChartOptions(categories, data);
+  }, [establishmentData]);
+
+  const tableData = useMemo(() => {
+    if (!establishmentData?.establishment_type_distribution) return [];
+
+    const total = establishmentData.establishment_type_distribution.reduce(
+      (sum, et) => sum + et.total_count,
+      0
     );
-  }, [establishmentData, selectedYear]);
+
+    return establishmentData.establishment_type_distribution.map((et) => ({
+      _id: et._id || "Non précisé",
+      total_count: et.total_count,
+      percentage: total > 0 ? (et.total_count / total) * 100 : null,
+    }));
+  }, [establishmentData]);
 
   if (isLoading) {
     return (
       <div className="fr-text--center fr-py-3w">
-        Chargement des données par établissement...
+        <DefaultSkeleton />
       </div>
     );
   }
@@ -93,28 +126,12 @@ export function EstablishmentTypeChart() {
     );
   }
 
-  if (!chartOptions || !establishmentData?.establishmentTypes) {
+  if (!chartOptions) {
     return (
       <div className="fr-text--center fr-py-3w">
         <p>Aucune donnée disponible pour les types d'établissement</p>
         {selectedYear && <p>Année : {selectedYear}</p>}
         {contextId && <p>Contexte : {contextName} sélectionnée</p>}
-        <details className="fr-mt-2w">
-          <summary>Détails de debug</summary>
-          <pre className="fr-text--xs">
-            {JSON.stringify(
-              {
-                hasOverviewData: !!overviewData,
-                hasEstablishmentData:
-                  !!overviewData?.establishmentTypeDistribution,
-                establishmentDataLength:
-                  overviewData?.establishmentTypeDistribution?.length || 0,
-              },
-              null,
-              2
-            )}
-          </pre>
-        </details>
       </div>
     );
   }
@@ -125,7 +142,7 @@ export function EstablishmentTypeChart() {
         config={config}
         options={chartOptions}
         legend={null}
-        renderData={establishmentData.establishmentTypes}
+        renderData={() => <RenderData data={tableData} />}
       />
     </div>
   );

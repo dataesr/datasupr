@@ -14,29 +14,7 @@ interface StatusEvolutionOptionsParams {
 export function createStatusEvolutionOptions({
   years,
   statusData,
-  contextName,
-  contextType = "discipline",
 }: StatusEvolutionOptionsParams) {
-  const getTitle = () => {
-    if (contextName) {
-      const contextLabel = {
-        discipline: "discipline",
-        région: "région",
-        établissement: "établissement",
-      }[contextType];
-
-      return `Évolution par statut - ${contextLabel} ${contextName}`;
-    }
-    return "Évolution des effectifs par statut professionnel";
-  };
-
-  const getSubtitle = () => {
-    if (years.length > 0) {
-      return `Période de ${years[0]} à ${years[years.length - 1]}`;
-    }
-    return "";
-  };
-
   return CreateChartOptions("area", {
     chart: {
       height: 500,
@@ -47,20 +25,14 @@ export function createStatusEvolutionOptions({
       spacing: [20, 20, 20, 20],
     },
     title: {
-      text: getTitle(),
+      text: "",
       style: {
         fontSize: "18px",
         fontWeight: "bold",
         color: "#161616",
       },
     },
-    subtitle: {
-      text: getSubtitle(),
-      style: {
-        fontSize: "14px",
-        color: "#666666",
-      },
-    },
+
     xAxis: {
       categories: years,
       title: {

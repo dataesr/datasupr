@@ -11,6 +11,57 @@ import { formatToPercent } from "../../../../../../utils/format";
 
 HighchartsMore(Highcharts);
 
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
+      <table className="fr-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Effectif total</th>
+            <th>Hommes</th>
+            <th>Femmes</th>
+            <th>% Hommes</th>
+            <th>% Femmes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => {
+            const totalCount = item.totalCount || 0;
+            const malePercent =
+              totalCount > 0
+                ? ((item.maleCount / totalCount) * 100).toFixed(1)
+                : "0.0";
+            const femalePercent =
+              totalCount > 0
+                ? ((item.femaleCount / totalCount) * 100).toFixed(1)
+                : "0.0";
+
+            return (
+              <tr key={index}>
+                <td>{item.name || "Non précisé"}</td>
+                <td>{totalCount.toLocaleString()}</td>
+                <td>{item.maleCount.toLocaleString()}</td>
+                <td>{item.femaleCount.toLocaleString()}</td>
+                <td>{malePercent}%</td>
+                <td>{femalePercent}%</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export function SectionsBubbleChart() {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
@@ -530,7 +581,7 @@ export function SectionsBubbleChart() {
         config={config}
         options={bubbleOptions}
         legend={null}
-        renderData={undefined}
+        renderData={() => <RenderData data={bubbleData} />}
       />
 
       <div className="fr-text--xs fr-mt-2w">

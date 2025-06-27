@@ -62,21 +62,7 @@ export default function OptionsColumnChart({
       },
     },
     title: {
-      text: "Répartition par disciplines",
-      style: {
-        color: "#000000",
-        fontSize: "18px",
-        fontWeight: "bold",
-      },
-      align: "left",
-    },
-    subtitle: {
-      text: `Année universitaire ${selectedYear}`,
-      style: {
-        color: "#666666",
-        fontSize: "14px",
-      },
-      align: "left",
+      text: "",
     },
     xAxis: {
       categories,

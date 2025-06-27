@@ -1,16 +1,63 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import Highcharts from "highcharts";
-import HighchartsTreemap from "highcharts/modules/treemap";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { useFacultyMembersCNU } from "../../../../api/use-cnu";
 import { CreateChartOptions } from "../../../../components/creat-chart-options";
 import { useContextDetection } from "../../../../utils";
 import { createTreemapOptions } from "./options";
-import { Col, Notice, Row, Text } from "@dataesr/dsfr-plus";
+import { Notice, Row, Text } from "@dataesr/dsfr-plus";
 
-HighchartsTreemap(Highcharts);
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
+      <table className="fr-table">
+        <thead>
+          <tr>
+            <th>Discipline</th>
+            <th>Effectif total</th>
+            <th>Hommes</th>
+            <th>Femmes</th>
+            <th>% Hommes</th>
+            <th>% Femmes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => {
+            const totalCount = item.value || 0;
+            const malePercent =
+              totalCount > 0
+                ? ((item.maleCount / totalCount) * 100).toFixed(1)
+                : "0.0";
+            const femalePercent =
+              totalCount > 0
+                ? ((item.femaleCount / totalCount) * 100).toFixed(1)
+                : "0.0";
+
+            return (
+              <tr key={index}>
+                <td>{item.name || "Non précisé"}</td>
+                <td>{totalCount.toLocaleString()}</td>
+                <td>{item.maleCount.toLocaleString()}</td>
+                <td>{item.femaleCount.toLocaleString()}</td>
+                <td>{malePercent}%</td>
+                <td>{femalePercent}%</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 export function ItemsTreemapChart() {
   const [searchParams] = useSearchParams();
@@ -56,29 +103,9 @@ export function ItemsTreemapChart() {
           });
         });
 
-        let itemCode, itemName, itemTotal;
-
-        switch (context) {
-          case "fields":
-            itemCode = item._id.discipline_code;
-            itemName = item._id.discipline_name;
-            itemTotal = item.discipline_total;
-            break;
-          case "geo":
-            itemCode = item._id.discipline_code;
-            itemName = item._id.discipline_name;
-            itemTotal = item.discipline_total;
-            break;
-          case "structures":
-            itemCode = item._id.discipline_code;
-            itemName = item._id.discipline_name;
-            itemTotal = item.discipline_total;
-            break;
-          default:
-            itemCode = item._id.discipline_code;
-            itemName = item._id.discipline_name;
-            itemTotal = item.discipline_total;
-        }
+        const itemCode = item._id.discipline_code;
+        const itemName = item._id.discipline_name;
+        const itemTotal = item.discipline_total;
 
         return {
           item_id: itemCode,
@@ -123,58 +150,23 @@ export function ItemsTreemapChart() {
     };
   }, [cnuData, context]);
 
-  const getLabels = () => {
-    const labels = {
-      fields: {
-        singular: "discipline",
-        plural: "disciplines",
-        urlPath: "discipline",
-      },
-      geo: {
-        singular: "région",
-        plural: "régions",
-        urlPath: "geo",
-      },
-      structures: {
-        singular: "établissement",
-        plural: "établissements",
-        urlPath: "universite",
-      },
-    };
-    return labels[context];
-  };
-
-  const labels = getLabels();
-
-  const getNavigationURL = (itemCode: string) => {
-    const paramNames = {
-      fields: "field_id",
-      geo: "geo_id",
-      structures: "structure_id",
-    };
-
-    const targetPath = context === "fields" ? "discipline" : "discipline";
-
-    return `/personnel-enseignant/${targetPath}/typologie?year=${selectedYear}&${
-      paramNames[context === "fields" ? "fields" : "fields"]
-    }=${itemCode}`;
-  };
-
-  const handleItemClick = (itemCode: string) => {
-    const parts = itemCode.split("_");
-    const disciplineId = parts.slice(1, -1).join("_");
-
-    navigate(getNavigationURL(disciplineId));
-  };
-
   const treemapOptions = CreateChartOptions(
     "treemap",
     createTreemapOptions({
       title,
       selectedYear,
       treemapData,
-      labels,
-      onItemClick: handleItemClick,
+      labels: {
+        singular: "discipline",
+        plural: "disciplines",
+      },
+      onItemClick: (itemCode) => {
+        const parts = itemCode.split("_");
+        const disciplineId = parts.slice(1, -1).join("_");
+        navigate(
+          `/personnel-enseignant/discipline/typologie?year=${selectedYear}&field_id=${disciplineId}`
+        );
+      },
     })
   );
 
@@ -187,108 +179,47 @@ export function ItemsTreemapChart() {
     },
     subtitle: `Année universitaire ${selectedYear}&nbsp;-&nbsp;
       ${treemapData?.length}
-      grande${
-        treemapData?.length > 1 ? "s" : ""
-      }
-      discipline${
-        treemapData?.length > 1 ? "s" : ""
-    }`,
+      grande${treemapData?.length > 1 ? "s" : ""}
+      discipline${treemapData?.length > 1 ? "s" : ""}`,
     description: {
-      fr: `Visualisation hiérarchique des effectifs enseignants par ${labels.singular}`,
-      en: `Hierarchical visualization of faculty members by ${labels.singular}`,
+      fr: `Visualisation hiérarchique des effectifs enseignants par discipline`,
+      en: `Hierarchical visualization of faculty members by discipline`,
     },
-    integrationURL: `/personnel-enseignant/${labels.urlPath}/typologie`,
+    integrationURL: `/personnel-enseignant/discipline/typologie`,
   };
 
   if (isLoading) {
     return (
-      <Row horizontalAlign="center" style={{display: 'inline-block;'}}>
-          <span
-            className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
-            aria-hidden="true"
-          />
-          <Text className="fr-ml-1w">
-            Chargement des données par {labels.singular}...
-          </Text>
+      <Row horizontalAlign="center" style={{ display: "inline-block;" }}>
+        <span
+          className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
+          aria-hidden="true"
+        />
+        <Text className="fr-ml-1w">
+          Chargement des données par discipline...
+        </Text>
       </Row>
     );
   }
 
   if (!treemapData || treemapData.length === 0) {
     return (
-        <Notice closeMode={"disallow"} type={"warning"}>
-          <Text>
-            Aucune donnée disponible pour les {labels.plural} pour l'année{" "}
-            {selectedYear}
-          </Text>
-        </Notice>
+      <Notice closeMode={"disallow"} type={"warning"}>
+        <Text>
+          Aucune donnée disponible pour les disciplines pour l'année{" "}
+          {selectedYear}
+        </Text>
+      </Notice>
     );
   }
 
   return (
-    <>
-      <ChartWrapper
-        config={config}
-        options={treemapOptions}
-        legend={null}
-        renderData={undefined}
-      />
-
-      <Row horizontalAlign="center" className="fr-mt-2w">
-          <Col className="text-center">
-            <span className="fr-mr-3w">
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "12px",
-                  height: "12px",
-                  backgroundColor: "#efcb3a",
-                  marginRight: "5px",
-                  borderRadius: "2px",
-                }}
-              ></span>
-              Majorité masculine (≥60%)
-            </span>
-          </Col>
-          <Col className="text-center">
-            <span className="fr-mr-3w">
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "12px",
-                  height: "12px",
-                  backgroundColor: "#EFEFEF",
-                  marginRight: "5px",
-                  borderRadius: "2px",
-                  border: "1px solid #ddd",
-                }}
-              ></span>
-              Parité (40-60%)
-            </span>
-          </Col>
-          <Col className="text-center">
-            <span>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "12px",
-                  height: "12px",
-                  backgroundColor: "#e18b76",
-                  marginRight: "5px",
-                  borderRadius: "2px",
-                }}
-              ></span>
-              Majorité féminine (≥60%)
-            </span>
-          </Col>
-      </Row>
-      <Row horizontalAlign="center" className="fr-mt-2w fr-text--italic">
-        <em>
-          Cliquez sur {contextId ? "une autre" : "une"} {labels.singular} pour
-          explorer ses groupes et sections CNU en détail.
-        </em>
-      </Row>
-    </>
+    <ChartWrapper
+      config={config}
+      options={treemapOptions}
+      legend={null}
+      renderData={() => <RenderData data={treemapData} />}
+    />
   );
 }
 

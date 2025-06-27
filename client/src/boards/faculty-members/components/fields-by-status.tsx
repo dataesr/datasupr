@@ -1,293 +1,179 @@
 import { useSearchParams } from "react-router-dom";
 import { useMemo } from "react";
-import { Title } from "@dataesr/dsfr-plus";
-import "./styles.scss";
-import { useFacultyMembersOverview } from "../api/use-overview";
 import { useContextDetection } from "../utils";
+import DefaultSkeleton from "../../../components/charts-skeletons/default";
+import { useStatusDistribution } from "../charts/status/use-status-distribution";
 
-interface StatusSummaryProps {
-  isSingleItem?: boolean;
-}
-
-const StatusSummary: React.FC<StatusSummaryProps> = ({
-  isSingleItem = false,
-}) => {
+const FieldByStatus: React.FC = () => {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId } = useContextDetection();
 
   const {
-    data: overviewData,
+    data: statusData,
     isLoading,
     error,
-  } = useFacultyMembersOverview({
+  } = useStatusDistribution({
     context,
     annee_universitaire: selectedYear,
     contextId,
   });
 
   const processedData = useMemo(() => {
-    if (!overviewData) return null;
+    if (!statusData || !statusData.status_distribution) return null;
 
-    let statusDistribution;
-    switch (context) {
-      case "fields":
-        statusDistribution = overviewData.disciplineStatusDistribution;
-        break;
-      case "geo":
-        statusDistribution = overviewData.regionStatusDistribution;
-        break;
-      case "structures":
-        statusDistribution = overviewData.structureStatusDistribution;
-        break;
-      default:
-        return null;
-    }
+    let enseignantsChercheurs = 0;
+    let titulairesNonChercheurs = 0;
+    let nonTitulaires = 0;
+    let totalCount = 0;
 
-    if (!statusDistribution) return null;
+    statusData.status_distribution.forEach((item) => {
+      totalCount += item.total_count;
 
-    if (contextId) {
-      const selectedItem = statusDistribution.find((item) => {
-        switch (context) {
-          case "fields":
-            return item._id.discipline_code === contextId;
-          case "geo":
-            return item._id.geo_code === contextId;
-          case "structures":
-            return item._id.structure_code === contextId;
-          default:
-            return false;
-        }
-      });
-
-      if (!selectedItem) return null;
-
-      let enseignantsChercheurs = 0;
-      let titulairesNonChercheurs = 0;
-      let nonTitulaires = 0;
-
-      selectedItem.status_breakdown?.forEach((status) => {
+      item.status_breakdown?.forEach((status) => {
         switch (status.status) {
           case "enseignant_chercheur":
-            enseignantsChercheurs = status.count;
+            enseignantsChercheurs += status.count;
             break;
           case "titulaire_non_chercheur":
-            titulairesNonChercheurs = status.count;
+            titulairesNonChercheurs += status.count;
             break;
           case "non_titulaire":
-            nonTitulaires = status.count;
+            nonTitulaires += status.count;
             break;
         }
       });
+    });
 
-      const totalTitulaires = enseignantsChercheurs + titulairesNonChercheurs;
-      const totalCount = selectedItem.total_count;
+    const totalTitulaires = enseignantsChercheurs + titulairesNonChercheurs;
 
-      let itemName;
-      switch (context) {
-        case "fields":
-          itemName = selectedItem._id.discipline_name;
-          break;
-        case "geo":
-          itemName = selectedItem._id.geo_name;
-          break;
-        case "structures":
-          itemName = selectedItem._id.structure_name;
-          break;
-        default:
-          itemName = null;
-      }
-
-      return {
-        totalCount,
-        totalTitulaires,
-        totalEnseignantsChercheurs: enseignantsChercheurs,
-        totalNonTitulaires: nonTitulaires,
-        titulairesPercent:
-          totalCount > 0 ? (totalTitulaires / totalCount) * 100 : 0,
-        enseignantsChercheursPercent:
-          totalCount > 0 ? (enseignantsChercheurs / totalCount) * 100 : 0,
-        nonTitulairesPercent:
-          totalCount > 0 ? (nonTitulaires / totalCount) * 100 : 0,
-        itemName,
-      };
-    } else {
-      let totalEnseignantsChercheurs = 0;
-      let totalTitulairesNonChercheurs = 0;
-      let totalNonTitulaires = 0;
-      let totalCount = 0;
-
-      statusDistribution.forEach((item) => {
-        totalCount += item.total_count;
-
-        item.status_breakdown?.forEach((status) => {
-          switch (status.status) {
-            case "enseignant_chercheur":
-              totalEnseignantsChercheurs += status.count;
-              break;
-            case "titulaire_non_chercheur":
-              totalTitulairesNonChercheurs += status.count;
-              break;
-            case "non_titulaire":
-              totalNonTitulaires += status.count;
-              break;
-          }
-        });
-      });
-
-      const totalTitulaires =
-        totalEnseignantsChercheurs + totalTitulairesNonChercheurs;
-
-      return {
-        totalCount,
-        totalTitulaires,
-        totalEnseignantsChercheurs,
-        totalNonTitulaires,
-        titulairesPercent:
-          totalCount > 0 ? (totalTitulaires / totalCount) * 100 : 0,
-        enseignantsChercheursPercent:
-          totalCount > 0 ? (totalEnseignantsChercheurs / totalCount) * 100 : 0,
-        nonTitulairesPercent:
-          totalCount > 0 ? (totalNonTitulaires / totalCount) * 100 : 0,
-        itemName: null,
-      };
-    }
-  }, [overviewData, contextId, context]);
-
-  const getLabels = () => {
-    const labels = {
-      fields: {
-        singular: "discipline",
-        plural: "disciplines",
-        article: "cette",
-        preposition: "pour",
-      },
-      geo: {
-        singular: "région",
-        plural: "régions",
-        article: "cette",
-        preposition: "pour",
-      },
-      structures: {
-        singular: "établissement",
-        plural: "établissements",
-        article: "cet",
-        preposition: "pour",
-      },
+    return {
+      totalCount,
+      totalTitulaires,
+      enseignantsChercheurs,
+      nonTitulaires,
+      titulairesPercent:
+        totalCount > 0 ? (totalTitulaires / totalCount) * 100 : 0,
+      enseignantsChercheursPercent:
+        totalCount > 0 ? (enseignantsChercheurs / totalCount) * 100 : 0,
+      nonTitulairesPercent:
+        totalCount > 0 ? (nonTitulaires / totalCount) * 100 : 0,
     };
-    return labels[context];
-  };
-
-  const labels = getLabels();
+  }, [statusData]);
 
   if (isLoading) {
     return (
-      <div className="sidebar-status-summary fr-p-2w">
-        <div className="fr-text--center fr-text--xs">
-          Chargement des statuts...
-        </div>
+      <div
+        style={{
+          padding: "1rem",
+          borderRadius: "8px",
+        }}
+      >
+        <DefaultSkeleton />
       </div>
     );
   }
 
   if (error || !processedData) {
     return (
-      <div className="sidebar-status-summary fr-p-2w">
-        <div className="fr-text--center fr-text--xs">
-          Aucune donnée de statut disponible
-          {contextId &&
-            ` ${labels.preposition} ${labels.article} ${labels.singular}`}
-        </div>
+      <div
+        style={{
+          padding: "1rem",
+          borderRadius: "8px",
+          textAlign: "center",
+        }}
+      >
+        <span className="fr-text--sm">
+          Aucune donnée de statut disponible pour l'année {selectedYear}
+        </span>
       </div>
     );
   }
 
+  const {
+    totalCount,
+    totalTitulaires,
+    enseignantsChercheurs,
+    nonTitulaires,
+    titulairesPercent,
+    enseignantsChercheursPercent,
+    nonTitulairesPercent,
+  } = processedData;
+
   const statusItems = [
     {
       label: "Titulaires",
-      percent: Math.round(processedData.titulairesPercent || 0),
-      count: processedData.totalTitulaires,
+      percent: Math.round(titulairesPercent || 0),
+      count: totalTitulaires,
       color: "var(--blue-cumulus-sun-368)",
-      icon: "ri-shield-check-line",
     },
     {
       label: "Enseignants-chercheurs",
-      percent: Math.round(processedData.enseignantsChercheursPercent || 0),
-      count: processedData.totalEnseignantsChercheurs,
+      percent: Math.round(enseignantsChercheursPercent || 0),
+      count: enseignantsChercheurs,
       color: "var(--pink-tuile-sun-425)",
-      icon: "ri-book-open-line",
     },
     {
       label: "Non titulaires",
-      percent: Math.round(processedData.nonTitulairesPercent || 0),
-      count: processedData.totalNonTitulaires,
+      percent: Math.round(nonTitulairesPercent || 0),
+      count: nonTitulaires,
       color: "var(--beige-gris-galet-sun-407)",
-      icon: "ri-user-line",
     },
   ].filter((item) => item.percent > 0);
 
   return (
-    <div className="sidebar-status-summary fr-p-2w">
-      {!isSingleItem && (
-        <Title as="h3" look="h6" className="fr-mb-1w">
-          Résumé des statuts
-          {processedData.itemName && (
-            <div className="fr-text--xs fr-text--mention-grey fr-mt-1v">
-              {processedData.itemName}
-            </div>
-          )}
-        </Title>
-      )}
-
-      <div className="sidebar-status-items">
-        {statusItems.map((item, index) => (
-          <div className="sidebar-status-item" key={index}>
-            <div
-              className="status-icon"
-              style={{ backgroundColor: item.color }}
-            >
-              <i className={item.icon} aria-hidden="true"></i>
-            </div>
-
-            <div className="status-info">
-              <div className="status-label">
-                <div className="fr-text--xs">{item.label}</div>
-                <div className="fr-text--bold">{item.percent}%</div>
-              </div>
-              {item.count !== undefined && (
-                <div className="fr-text--xs fr-text--mention-grey">
-                  {item.count.toLocaleString()} personnes
-                </div>
-              )}
-
-              <div className="status-progress-container">
-                <div
-                  className="status-progress"
-                  style={{
-                    width: `${item.percent}%`,
-                    backgroundColor: item.color,
-                  }}
-                ></div>
-              </div>
-            </div>
-          </div>
-        ))}
+    <div
+      style={{
+        padding: "1rem",
+        borderRadius: "8px",
+      }}
+    >
+      <div style={{ marginBottom: "1rem" }}>
+        <div className="fr-text--sm">Résumé des statuts</div>
+        <div className="fr-text--xs fr-text--grey">
+          Année universitaire {selectedYear}
+        </div>
       </div>
 
-      <div className="fr-mt-2w fr-text--xs fr-text--mention-grey">
-        Total: {processedData.totalCount?.toLocaleString() || 0} enseignants
-        <br />
-        Année universitaire {selectedYear}
-        {processedData.itemName && (
-          <>
-            <br />
-            {labels.singular.charAt(0).toUpperCase() + labels.singular.slice(1)}
-            : {processedData.itemName}
-          </>
-        )}
+      {statusItems.map((item, index) => (
+        <div
+          key={index}
+          style={{
+            marginBottom: "1rem",
+            paddingBottom: "1rem",
+            borderBottom:
+              index < statusItems.length - 1 ? "1px solid #ddd" : "none",
+          }}
+        >
+          <div className="fr-text--sm fr-text--bold">{item.label}</div>
+          <div className="fr-text--xs fr-text--grey">
+            {item.count.toLocaleString()} personnes
+          </div>
+          <div
+            style={{
+              height: "8px",
+              backgroundColor: "#f5f5f5",
+              borderRadius: "4px",
+              overflow: "hidden",
+              marginTop: "0.5rem",
+            }}
+          >
+            <div
+              style={{
+                width: `${item.percent}%`,
+                backgroundColor: item.color,
+                height: "100%",
+              }}
+            ></div>
+          </div>
+        </div>
+      ))}
+
+      <div className="fr-text--xs fr-text--grey">
+        Total: {totalCount.toLocaleString()} enseignants
       </div>
     </div>
   );
 };
 
-export default StatusSummary;
+export default FieldByStatus;

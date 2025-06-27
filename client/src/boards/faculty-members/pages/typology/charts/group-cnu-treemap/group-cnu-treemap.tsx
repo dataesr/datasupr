@@ -12,6 +12,57 @@ import { Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 
 HighchartsTreemap(Highcharts);
 
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
+      <table className="fr-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Effectif total</th>
+            <th>Hommes</th>
+            <th>Femmes</th>
+            <th>% Hommes</th>
+            <th>% Femmes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => {
+            const totalCount = item.value || 0;
+            const malePercent =
+              totalCount > 0
+                ? ((item.maleCount / totalCount) * 100).toFixed(1)
+                : "0.0";
+            const femalePercent =
+              totalCount > 0
+                ? ((item.femaleCount / totalCount) * 100).toFixed(1)
+                : "0.0";
+
+            return (
+              <tr key={index}>
+                <td>{item.name || "Non précisé"}</td>
+                <td>{totalCount.toLocaleString()}</td>
+                <td>{item.maleCount.toLocaleString()}</td>
+                <td>{item.femaleCount.toLocaleString()}</td>
+                <td>{malePercent}%</td>
+                <td>{femalePercent}%</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export function GroupCNUTreemapChart() {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
@@ -52,10 +103,7 @@ export function GroupCNUTreemapChart() {
 
   const labels = getLabels();
 
-  const {
-    data: treemapData,
-    groupCount,
-  } = useMemo(() => {
+  const { data: treemapData, groupCount } = useMemo(() => {
     if (!cnuData) {
       return { data: [], title: "Répartition des effectifs", groupCount: 0 };
     }
@@ -230,7 +278,8 @@ export function GroupCNUTreemapChart() {
         : `Distribution by ${labels.singular}`,
     },
     subtitle: `Année universitaire ${selectedYear} - ${treemapData.length} ${
-        contextId ? labels.groupPlural : labels.plural}`,
+      contextId ? labels.groupPlural : labels.plural
+    }`,
     description: {
       fr: contextId
         ? `Répartition des effectifs par ${labels.groupSingular} au sein de ${labels.singular}`
@@ -244,15 +293,15 @@ export function GroupCNUTreemapChart() {
 
   if (isLoading) {
     return (
-       <Row horizontalAlign="center" style={{display: 'inline-block;'}}>
-          <span
-            className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
-            aria-hidden="true"
-          />
-          <Text className="fr-ml-1w">
-            Chargement des données par {labels.singular}...
-          </Text>
-        </Row>
+      <Row horizontalAlign="center" style={{ display: "inline-block;" }}>
+        <span
+          className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
+          aria-hidden="true"
+        />
+        <Text className="fr-ml-1w">
+          Chargement des données par {labels.singular}...
+        </Text>
+      </Row>
     );
   }
 
@@ -277,65 +326,61 @@ export function GroupCNUTreemapChart() {
 
     return (
       <>
-          <Title as="h2" look="h5">
-            {labels.groupSingular.charAt(0).toUpperCase() +
-              labels.groupSingular.slice(1)}{" "}
-            unique
-          </Title>
-          <Text className="fr-text">
-            Cette {labels.singular} ne contient qu'un seul{" "}
-            {labels.groupSingular} : <strong>{singleGroup.name}</strong>
-          </Text>
-            <Row gutters className="fr-mb-4w">
-              <Col>
-                <div className="fr-card fr-card--grey">
-                  <div className="fr-card__body">
-                    <div className="fr-card__content">
-                      <h4 className="fr-card__title">Effectif total</h4>
-                      <p className="fr-text--xl fr-mb-0">
-                        <strong>{singleGroup.value.toLocaleString()}</strong>{" "}
-                        enseignants
-                      </p>
-                    </div>
-                  </div>
+        <Title as="h2" look="h5">
+          {labels.groupSingular.charAt(0).toUpperCase() +
+            labels.groupSingular.slice(1)}{" "}
+          unique
+        </Title>
+        <Text className="fr-text">
+          Cette {labels.singular} ne contient qu'un seul {labels.groupSingular}{" "}
+          : <strong>{singleGroup.name}</strong>
+        </Text>
+        <Row gutters className="fr-mb-4w">
+          <Col>
+            <div className="fr-card fr-card--grey">
+              <div className="fr-card__body">
+                <div className="fr-card__content">
+                  <h4 className="fr-card__title">Effectif total</h4>
+                  <p className="fr-text--xl fr-mb-0">
+                    <strong>{singleGroup.value.toLocaleString()}</strong>{" "}
+                    enseignants
+                  </p>
                 </div>
-              </Col>
-              <Col>
-                <div className="fr-card fr-card--grey">
-                  <div className="fr-card__body">
-                    <div className="fr-card__content">
-                      <h4 className="fr-card__title">Hommes</h4>
-                      <p className="fr-text--xl fr-mb-0">
-                        <strong>
-                          {singleGroup.maleCount.toLocaleString()}
-                        </strong>{" "}
-                        ({malePercent}%)
-                      </p>
-                    </div>
-                  </div>
+              </div>
+            </div>
+          </Col>
+          <Col>
+            <div className="fr-card fr-card--grey">
+              <div className="fr-card__body">
+                <div className="fr-card__content">
+                  <h4 className="fr-card__title">Hommes</h4>
+                  <p className="fr-text--xl fr-mb-0">
+                    <strong>{singleGroup.maleCount.toLocaleString()}</strong> (
+                    {malePercent}%)
+                  </p>
                 </div>
-              </Col>
-              <Col>
-                <div className="fr-card fr-card--grey">
-                  <div className="fr-card__body">
-                    <div className="fr-card__content">
-                      <h4 className="fr-card__title">Femmes</h4>
-                      <p className="fr-text--xl fr-mb-0">
-                        <strong>
-                          {singleGroup.femaleCount.toLocaleString()}
-                        </strong>{" "}
-                        ({formatToPercent(femalePercent)})
-                      </p>
-                    </div>
-                  </div>
+              </div>
+            </div>
+          </Col>
+          <Col>
+            <div className="fr-card fr-card--grey">
+              <div className="fr-card__body">
+                <div className="fr-card__content">
+                  <h4 className="fr-card__title">Femmes</h4>
+                  <p className="fr-text--xl fr-mb-0">
+                    <strong>{singleGroup.femaleCount.toLocaleString()}</strong>{" "}
+                    ({formatToPercent(femalePercent)})
+                  </p>
                 </div>
-              </Col>
-            </Row>
-          <Text className="fr-text--sm">
-            Un treemap n'est pas nécessaire pour visualiser un seul{" "}
-            {labels.groupSingular}. Les données détaillées sont disponibles dans
-            les sections ci-dessus.
-          </Text>
+              </div>
+            </div>
+          </Col>
+        </Row>
+        <Text className="fr-text--sm">
+          Un treemap n'est pas nécessaire pour visualiser un seul{" "}
+          {labels.groupSingular}. Les données détaillées sont disponibles dans
+          les sections ci-dessus.
+        </Text>
       </>
     );
   }
@@ -350,64 +395,62 @@ export function GroupCNUTreemapChart() {
     })
   );
 
-  console.log("cnuData",cnuData);
-
   return (
     <>
       <ChartWrapper
         config={config}
         options={treemapOptions}
         legend={null}
-        renderData={undefined}
+        renderData={() => <RenderData data={treemapData} />}
       />
-      
+
       <Row horizontalAlign="center" className="fr-mb-4w">
-          <Col className="text-center">
-            <span className="fr-mr-3w">
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "12px",
-                  height: "12px",
-                  backgroundColor: "#efcb3a",
-                  marginRight: "5px",
-                  borderRadius: "2px",
-                }}
-              ></span>
-              Majorité masculine (≥60%)
-            </span>
-          </Col>
-          <Col className="text-center">
-            <span className="fr-mr-3w">
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "12px",
-                  height: "12px",
-                  backgroundColor: "#EFEFEF",
-                  marginRight: "5px",
-                  borderRadius: "2px",
-                  border: "1px solid #ddd",
-                }}
-              ></span>
-              Parité (40-60%)
-            </span>
-          </Col>
-          <Col className="text-center">
-            <span>
-              <span
-                style={{
-                  display: "inline-block",
-                  width: "12px",
-                  height: "12px",
-                  backgroundColor: "#e18b76",
-                  marginRight: "5px",
-                  borderRadius: "2px",
-                }}
-              ></span>
-              Majorité féminine (≥60%)
-            </span>
-          </Col>
+        <Col className="text-center">
+          <span className="fr-mr-3w">
+            <span
+              style={{
+                display: "inline-block",
+                width: "12px",
+                height: "12px",
+                backgroundColor: "#efcb3a",
+                marginRight: "5px",
+                borderRadius: "2px",
+              }}
+            ></span>
+            Majorité masculine (≥60%)
+          </span>
+        </Col>
+        <Col className="text-center">
+          <span className="fr-mr-3w">
+            <span
+              style={{
+                display: "inline-block",
+                width: "12px",
+                height: "12px",
+                backgroundColor: "#EFEFEF",
+                marginRight: "5px",
+                borderRadius: "2px",
+                border: "1px solid #ddd",
+              }}
+            ></span>
+            Parité (40-60%)
+          </span>
+        </Col>
+        <Col className="text-center">
+          <span>
+            <span
+              style={{
+                display: "inline-block",
+                width: "12px",
+                height: "12px",
+                backgroundColor: "#e18b76",
+                marginRight: "5px",
+                borderRadius: "2px",
+              }}
+            ></span>
+            Majorité féminine (≥60%)
+          </span>
+        </Col>
       </Row>
     </>
   );

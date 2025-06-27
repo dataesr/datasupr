@@ -2,8 +2,59 @@ import { Link } from "@dataesr/dsfr-plus";
 import options from "./options";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { useSearchParams } from "react-router-dom";
-import { useFacultyMembersOverview } from "../../api/use-overview";
 import { useContextDetection } from "../../utils";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import { useDisciplineDistribution } from "./use-discipline-distribution";
+
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
+      <table className="fr-table">
+        <thead>
+          <tr>
+            <th>Discipline</th>
+            <th>Effectif total</th>
+            <th>Hommes</th>
+            <th>Femmes</th>
+            <th>% Hommes</th>
+            <th>% Femmes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => {
+            const malePercent =
+              item.totalCount > 0
+                ? ((item.maleCount / item.totalCount) * 100).toFixed(1)
+                : "0.0";
+            const femalePercent =
+              item.totalCount > 0
+                ? ((item.femaleCount / item.totalCount) * 100).toFixed(1)
+                : "0.0";
+
+            return (
+              <tr key={index}>
+                <td>{item.fieldLabel || "Non précisé"}</td>
+                <td>{item.totalCount.toLocaleString()}</td>
+                <td>{item.maleCount.toLocaleString()}</td>
+                <td>{item.femaleCount.toLocaleString()}</td>
+                <td>{malePercent}%</td>
+                <td>{femalePercent}%</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 const DistributionBar: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -11,10 +62,10 @@ const DistributionBar: React.FC = () => {
   const { context, contextId, contextName } = useContextDetection();
 
   const {
-    data: overviewData,
+    data: disciplineData,
     isLoading,
     error,
-  } = useFacultyMembersOverview({
+  } = useDisciplineDistribution({
     context,
     annee_universitaire: selectedYear,
     contextId,
@@ -25,9 +76,9 @@ const DistributionBar: React.FC = () => {
   }
 
   const itemsData = (() => {
-    if (!overviewData || !overviewData.discipline_distribution) return [];
+    if (!disciplineData || !disciplineData.discipline_distribution) return [];
 
-    return overviewData.discipline_distribution.map((item) => {
+    return disciplineData.discipline_distribution.map((item) => {
       const maleData = item.gender_breakdown?.find(
         (g) => g.gender === "Masculin"
       );
@@ -67,18 +118,22 @@ const DistributionBar: React.FC = () => {
 
   const config = {
     id: "DistributionBar",
-    idQuery: "faculty-members-overview",
+    idQuery: "discipline-distribution",
     title: {
       fr: getTitle(),
     },
     description: {
-      fr: getTitle(),
+      fr: "blablabla",
     },
     integrationURL: "/personnel-enseignant/discipline/typologie",
   };
 
   if (isLoading) {
-    return <div>Chargement du graphique...</div>;
+    return (
+      <div>
+        <DefaultSkeleton />
+      </div>
+    );
   }
 
   if (error) {
@@ -95,7 +150,7 @@ const DistributionBar: React.FC = () => {
         config={config}
         options={chartOptions}
         legend={null}
-        renderData={undefined}
+        renderData={() => <RenderData data={itemsData} />}
       />
       <i className="text-center">
         <Link href="/personnel-enseignant/discipline/typologie">

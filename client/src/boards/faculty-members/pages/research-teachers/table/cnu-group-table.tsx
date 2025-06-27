@@ -79,17 +79,22 @@ export default function CnuGroupsTable({
               <th scope="col" className="text-center">
                 ≥ 56 ans
               </th>
+              <th scope="col" className="text-center">
+                Non précisé
+              </th>
             </>
           )}
         </tr>
       </thead>
       <tbody>
+        {console.log("CNU Group Data:", cnuGroups)}
         {cnuGroups.map((group) => {
           const malePercent =
             group.totalCount > 0
               ? Math.round((group.maleCount / group.totalCount) * 100)
               : 0;
           const femalePercent = 100 - malePercent;
+
           const younger35 = group.ageDistribution?.find(
             (age) => age.ageClass === "35 ans et moins"
           );
@@ -99,6 +104,10 @@ export default function CnuGroupsTable({
           const older56 = group.ageDistribution?.find(
             (age) => age.ageClass === "56 ans et plus"
           );
+          const unspecified = group.ageDistribution?.find(
+            (age) => age.ageClass === "Non précisé"
+          );
+
           return (
             <tr key={group.cnuGroupId}>
               <td>
@@ -113,7 +122,7 @@ export default function CnuGroupsTable({
                 {group.femaleCount.toLocaleString()}
               </td>
               <td className="text-center">
-                {group.totalCount.toLocaleString()}
+                {group.totalCount?.toLocaleString()}
               </td>
               <td className="text-center">
                 <div className="progress-container">
@@ -136,19 +145,16 @@ export default function CnuGroupsTable({
               {showAgeDemographics && (
                 <>
                   <td className="text-center">
-                    {younger35?.count.toLocaleString() || "N/A"}
-                    <br />
-                    <small>{younger35?.percent}%</small>
+                    {younger35?.count?.toLocaleString() || "N/A"}
                   </td>
                   <td className="text-center">
-                    {middle36_55?.count.toLocaleString() || "N/A"}
-                    <br />
-                    <small>{middle36_55?.percent}%</small>
+                    {middle36_55?.count?.toLocaleString() || "N/A"}
                   </td>
                   <td className="text-center">
-                    {older56?.count.toLocaleString() || "N/A"}
-                    <br />
-                    <small>{older56?.percent}%</small>
+                    {older56?.count?.toLocaleString() || "N/A"}
+                  </td>
+                  <td className="text-center">
+                    {unspecified?.count?.toLocaleString() || "N/A"}
                   </td>
                 </>
               )}

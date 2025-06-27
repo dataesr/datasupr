@@ -2,21 +2,18 @@ import { useQuery } from "@tanstack/react-query";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-type OverviewContext = "fields" | "geo" | "structures";
-
-interface UseOverviewParams {
-  context: OverviewContext;
-  annee_universitaire?: string;
-  contextId?: string; // field_id, geo_id, ou structure_id
-}
-export const useFacultyMembersOverview = ({
+export const useDisciplineDistribution = ({
   context,
   annee_universitaire,
   contextId,
-}: UseOverviewParams) => {
+}: {
+  context: "structures" | "fields" | "geo";
+  annee_universitaire?: string;
+  contextId?: string;
+}) => {
   return useQuery({
     queryKey: [
-      "faculty-members-overview",
+      "discipline-distribution",
       context,
       annee_universitaire,
       contextId,
@@ -24,8 +21,9 @@ export const useFacultyMembersOverview = ({
     queryFn: async () => {
       const params = new URLSearchParams();
 
-      if (annee_universitaire)
+      if (annee_universitaire) {
         params.append("annee_universitaire", annee_universitaire);
+      }
 
       if (contextId) {
         switch (context) {
@@ -42,9 +40,9 @@ export const useFacultyMembersOverview = ({
       }
 
       const endpoints = {
-        fields: "/faculty-members/fields/overview",
-        geo: "/faculty-members/geo/overview",
-        structures: "/faculty-members/structures/overview",
+        fields: "/faculty-members/fields/discipline-distribution",
+        geo: "/faculty-members/geo/discipline-distribution",
+        structures: "/faculty-members/structures/discipline-distribution",
       };
 
       const url = `${VITE_APP_SERVER_URL}${endpoints[context]}${
@@ -54,7 +52,7 @@ export const useFacultyMembersOverview = ({
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(
-          `Erreur lors de la récupération des données ${context}`
+          "Erreur lors de la récupération des données de répartition par discipline"
         );
       }
       return response.json();

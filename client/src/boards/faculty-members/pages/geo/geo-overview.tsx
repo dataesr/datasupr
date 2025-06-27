@@ -4,32 +4,41 @@ import {
   Col,
   Title,
   Breadcrumb,
-  Link,
   Notice,
+  Link,
 } from "@dataesr/dsfr-plus";
 import FieldsDistributionBar from "../../charts/general/general";
 import CnuGroupsChart from "../../charts/cnu-group/cnu-chart";
 import StatusDistribution from "../../charts/status/status";
 import { AgeDistributionPieChart } from "../../charts/age/age";
-import GeneralIndicatorsCard from "../../components/general-indicators-card";
+import GeneralIndicatorsCard from "../../components/general-indicators-card/general-indicators-card";
 import { EstablishmentTypeChart } from "../../charts/establishment-type/establishment";
-import DisciplineStatsSidebar from "../../components/top-fields-indicators";
+import DisciplineStatsSidebar from "../../components/top-indicators/top-fields-indicators";
 import DisciplineStatusSummary from "../../components/fields-by-status";
 import FacultyMap from "./components/map";
 import NavigationCards from "../../components/fields-cards";
 import YearSelector from "../../components/filters";
+import { useBreadcrumbItems, useContextDetection } from "../../utils";
 
 export default function RegionsOverview() {
+  const { context, contextId, contextName } = useContextDetection();
+
+  const breadcrumbItems = useBreadcrumbItems(context, contextId, contextName);
+
   return (
     <Container as="main">
       <Row>
         <Col md={9}>
-          <Breadcrumb className="fr-m-0 fr-pt-3w">
-            <Link href="/personnel-enseignant">Personnel enseignant</Link>
-            <Link>
-              <strong>Données nationale</strong>
+          <Breadcrumb className="fr-m-0 fr-mt-1w">
+            <Link href="/personnel-enseignant">
+              Accueil personnels enseignants
             </Link>
-          </Breadcrumb>
+            {breadcrumbItems.map((item, index) => (
+              <Link key={index} href={item.href}>
+                {item.label}
+              </Link>
+            ))}
+          </Breadcrumb>{" "}
         </Col>
         <Col md={3} style={{ textAlign: "right" }}>
           <YearSelector />

@@ -4,35 +4,40 @@ import {
   Col,
   Title,
   Breadcrumb,
-  Link,
   Text,
   Notice,
+  Link,
 } from "@dataesr/dsfr-plus";
 import FieldsDistributionBar from "../../charts/general/general";
 import CnuGroupsChart from "../../charts/cnu-group/cnu-chart";
 import StatusDistribution from "../../charts/status/status";
 import { AgeDistributionPieChart } from "../../charts/age/age";
-import GeneralIndicatorsCard from "../../components/general-indicators-card";
+import GeneralIndicatorsCard from "../../components/general-indicators-card/general-indicators-card";
 import { EstablishmentTypeChart } from "../../charts/establishment-type/establishment";
-import DisciplineStatsSidebar from "../../components/top-fields-indicators";
+import DisciplineStatsSidebar from "../../components/top-indicators/top-fields-indicators";
 import DisciplineStatusSummary from "../../components/fields-by-status";
-import { useSearchParams } from "react-router-dom";
 import NavigationCards from "../../components/fields-cards";
 import YearSelector from "../../components/filters";
+import { useBreadcrumbItems, useContextDetection } from "../../utils";
 
 export default function FieldOverview() {
-  const [searchParams] = useSearchParams();
-  const field_id = searchParams.get("field_id");
+  const { context, contextId, contextName } = useContextDetection();
+
+  const breadcrumbItems = useBreadcrumbItems(context, contextId, contextName);
 
   return (
     <Container as="main">
       <Row>
         <Col md={9}>
-          <Breadcrumb className="fr-m-0 fr-pt-3w">
-            <Link href="/personnel-enseignant">Personnel enseignant</Link>
-            <Link>
-              <strong>Les Grandes disciplines</strong>
+          <Breadcrumb className="fr-m-0 fr-mt-1w">
+            <Link href="/personnel-enseignant">
+              Accueil personnels enseignants
             </Link>
+            {breadcrumbItems.map((item, index) => (
+              <Link key={index} href={item.href}>
+                {item.label}
+              </Link>
+            ))}
           </Breadcrumb>
         </Col>
         <Col md={3} style={{ textAlign: "right" }}>
@@ -48,10 +53,10 @@ export default function FieldOverview() {
           Explorer le personnel enseignant par grande discipline
         </Title>
       </Row>
-      <Row gutters>
+      <Row>
         <Col md={8} className="fr-pr-8w">
-          <Text>
-            Desriptif de notre référentiel des disciplines, limites et
+          <Text className="fr-pr-8w">
+            Descriptif de notre référentiel des disciplines, limites et
             périmètres. <br />
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
             vitae lobortis sem. Quisque vel ex a elit facilisis rhoncus. Morbi
@@ -64,32 +69,56 @@ export default function FieldOverview() {
             lobortis mauris eget malesuada. Sed in consequat elit, eu fringilla
             magna.
           </Text>
-          {!field_id && <FieldsDistributionBar />}
-          <CnuGroupsChart />
-          <StatusDistribution />
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea repellat
-          corporis est laudantium consequuntur consectetur, odit temporibus!
-          Eligendi, vitae. Vero, harum molestias? Repellendus voluptatem non
-          aperiam? Enim ab obcaecati non?
+          <div className="fr-mt-5w">
+            <FieldsDistributionBar />
+          </div>
+          <div className="fr-mt-5w">
+            <CnuGroupsChart />
+            <Text>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Voluptatem sit quod veniam quam odio a earum deserunt minima velit
+              minus cumque explicabo, ducimus porro inventore. Veniam autem
+              error cupiditate eum. Lorem ipsum dolor sit, amet consectetur
+              adipisicing elit. Similique exercitationem totam suscipit, vel
+              ipsum nobis commodi ut omnis ipsa aspernatur nostrum atque odio
+              praesentium corrupti! Quidem consectetur voluptatem laudantium
+              nam.
+            </Text>
+          </div>
+        </Col>
+        <Col md={4} style={{ textAlign: "center" }}>
+          <div className="fr-mb-5w">
+            <GeneralIndicatorsCard />
+          </div>
+          <div className="fr-mt-5w">
+            <DisciplineStatsSidebar />
+          </div>
+          <div className="fr-mt-5w">
+            <DisciplineStatusSummary />
+          </div>
           <div className="fr-mt-3w">
             <AgeDistributionPieChart />
           </div>
         </Col>
-        <Col md={4} style={{ textAlign: "center" }}>
-          <GeneralIndicatorsCard />
-          {!field_id && <DisciplineStatsSidebar />}
-          <DisciplineStatusSummary />
+        <Col>
+          <div className="fr-pr-8w">
+            <StatusDistribution />
+            <Text size="sm" className="fr-mt-2w">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea
+              repellat corporis est laudantium consequuntur consectetur, odit
+              temporibus! Eligendi, vitae. Vero, harum molestias? Repellendus
+              voluptatem non aperiam? Enim ab obcaecati non?
+            </Text>
+          </div>
+          <EstablishmentTypeChart />
         </Col>
-      </Row>
-      <Row>
-        <EstablishmentTypeChart />
       </Row>
       <Row className="fr-mt-4w fr-mb-5w">
         <Col>
           <Title as="h4" look="h5">
             Explorer par discipline
           </Title>
-          <NavigationCards type="fields" maxItems={12} />
+          <NavigationCards type="fields" maxItems={25} />
         </Col>
       </Row>
     </Container>

@@ -96,13 +96,14 @@ router.get("/faculty-members/structures/overview", async (req, res) => {
 
       if (structureInfo) {
         contextInfo = {
-          id: structureInfo.etablissement_id_paysage_actuel,
+          id: structureInfo.etablissement_id_paysage_actuel || structure_id,
           name:
             structureInfo.etablissement_actuel_lib ||
-            structureInfo.etablissement_lib,
+            structureInfo.etablissement_lib ||
+            "Nom de l'université inconnu",
           type: "structure",
-          structure_type: structureInfo.etablissement_type,
-          region: structureInfo.etablissement_region,
+          structure_type: structureInfo.etablissement_type || "Type inconnu",
+          region: structureInfo.etablissement_region || "Région inconnue",
         };
       }
     }
@@ -1148,6 +1149,623 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching structures evolution:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/faculty-members/structures/age-distribution", async (req, res) => {
+  try {
+    const { annee_universitaire, structure_id } = req.query;
+    const collection = db.collection("faculty-members_main_staging");
+
+    const matchStage = {};
+    if (annee_universitaire) {
+      matchStage.annee_universitaire = annee_universitaire;
+    }
+    if (structure_id) {
+      matchStage.$or = [
+        { etablissement_id_paysage: structure_id },
+        { etablissement_id_paysage_actuel: structure_id },
+      ];
+    }
+
+    const ageDistribution = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: "$classe_age3",
+            count: { $sum: "$effectif" },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ])
+      .toArray();
+
+    let contextInfo = null;
+    if (structure_id) {
+      const structureInfo = await collection.findOne(
+        {
+          $or: [
+            { etablissement_id_paysage: structure_id },
+            { etablissement_id_paysage_actuel: structure_id },
+          ],
+        },
+        {
+          projection: {
+            etablissement_lib: 1,
+            etablissement_actuel_lib: 1,
+          },
+        }
+      );
+
+      if (structureInfo) {
+        contextInfo = {
+          id: structure_id,
+          name:
+            structureInfo.etablissement_actuel_lib ||
+            structureInfo.etablissement_lib ||
+            "Nom de l'université inconnu",
+        };
+      }
+    }
+
+    res.json({
+      age_distribution: ageDistribution,
+      context_info: contextInfo,
+    });
+  } catch (error) {
+    console.error("Error fetching age distribution:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get(
+  "/faculty-members/structures/establishment-type-distribution",
+  async (req, res) => {
+    try {
+      const { annee_universitaire, structure_id } = req.query;
+      const collection = db.collection("faculty-members_main_staging");
+
+      const matchStage = {};
+      if (annee_universitaire) {
+        matchStage.annee_universitaire = annee_universitaire;
+      }
+      if (structure_id) {
+        matchStage.$or = [
+          { etablissement_id_paysage: structure_id },
+          { etablissement_id_paysage_actuel: structure_id },
+        ];
+      }
+
+      const establishmentTypeDistribution = await collection
+        .aggregate([
+          { $match: matchStage },
+          {
+            $group: {
+              _id: {
+                establishment_type: "$etablissement_type",
+                gender: "$sexe",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.establishment_type",
+              total_count: { $sum: "$count" },
+              gender_breakdown: {
+                $push: {
+                  gender: "$_id.gender",
+                  count: "$count",
+                },
+              },
+            },
+          },
+          {
+            $sort: {
+              total_count: -1,
+            },
+          },
+        ])
+        .toArray();
+
+      let contextInfo = null;
+      if (structure_id) {
+        const structureInfo = await collection.findOne(
+          {
+            $or: [
+              { etablissement_id_paysage: structure_id },
+              { etablissement_id_paysage_actuel: structure_id },
+            ],
+          },
+          {
+            projection: {
+              etablissement_lib: 1,
+              etablissement_actuel_lib: 1,
+            },
+          }
+        );
+
+        if (structureInfo) {
+          contextInfo = {
+            id: structure_id,
+            name:
+              structureInfo.etablissement_actuel_lib ||
+              structureInfo.etablissement_lib ||
+              "Nom de l'université inconnu",
+          };
+        }
+      }
+
+      res.json({
+        establishment_type_distribution: establishmentTypeDistribution,
+        context_info: contextInfo,
+      });
+    } catch (error) {
+      console.error("Error fetching establishment type distribution:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/discipline-distribution",
+  async (req, res) => {
+    try {
+      const { annee_universitaire, structure_id } = req.query;
+      const collection = db.collection("faculty-members_main_staging");
+
+      const matchStage = {};
+      if (annee_universitaire) {
+        matchStage.annee_universitaire = annee_universitaire;
+      }
+      if (structure_id) {
+        matchStage.$or = [
+          { etablissement_id_paysage: structure_id },
+          { etablissement_id_paysage_actuel: structure_id },
+        ];
+      }
+
+      const disciplineDistribution = await collection
+        .aggregate([
+          { $match: matchStage },
+          {
+            $group: {
+              _id: {
+                discipline_code: "$code_grande_discipline",
+                discipline_name: "$grande_discipline",
+                gender: "$sexe",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                discipline_code: "$_id.discipline_code",
+                discipline_name: "$_id.discipline_name",
+              },
+              total_count: { $sum: "$count" },
+              gender_breakdown: {
+                $push: {
+                  gender: "$_id.gender",
+                  count: "$count",
+                },
+              },
+            },
+          },
+          { $sort: { total_count: -1 } },
+        ])
+        .toArray();
+
+      let contextInfo = null;
+      if (structure_id) {
+        const structureInfo = await collection.findOne(
+          {
+            $or: [
+              { etablissement_id_paysage: structure_id },
+              { etablissement_id_paysage_actuel: structure_id },
+            ],
+          },
+          {
+            projection: {
+              etablissement_lib: 1,
+              etablissement_actuel_lib: 1,
+            },
+          }
+        );
+
+        if (structureInfo) {
+          contextInfo = {
+            id: structure_id,
+            name:
+              structureInfo.etablissement_actuel_lib ||
+              structureInfo.etablissement_lib ||
+              "Nom de l'université inconnu",
+          };
+        }
+      }
+
+      res.json({
+        discipline_distribution: disciplineDistribution,
+        context_info: contextInfo,
+      });
+    } catch (error) {
+      console.error("Error fetching discipline distribution:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/status-distribution",
+  async (req, res) => {
+    try {
+      const { annee_universitaire, structure_id } = req.query;
+      const collection = db.collection("faculty-members_main_staging");
+
+      const matchStage = {};
+      if (annee_universitaire) {
+        matchStage.annee_universitaire = annee_universitaire;
+      }
+      if (structure_id) {
+        matchStage.$or = [
+          { etablissement_id_paysage: structure_id },
+          { etablissement_id_paysage_actuel: structure_id },
+        ];
+      }
+
+      const statusDistribution = await collection
+        .aggregate([
+          { $match: matchStage },
+          {
+            $group: {
+              _id: {
+                structure_code: "$etablissement_id_paysage_actuel",
+                structure_name: "$etablissement_actuel_lib",
+                status: {
+                  $switch: {
+                    branches: [
+                      {
+                        case: { $eq: ["$is_enseignant_chercheur", true] },
+                        then: "enseignant_chercheur",
+                      },
+                      {
+                        case: {
+                          $and: [
+                            { $eq: ["$is_titulaire", true] },
+                            { $eq: ["$is_enseignant_chercheur", false] },
+                          ],
+                        },
+                        then: "titulaire_non_chercheur",
+                      },
+                      {
+                        case: { $eq: ["$is_titulaire", false] },
+                        then: "non_titulaire",
+                      },
+                    ],
+                    default: "non_titulaire",
+                  },
+                },
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                structure_code: "$_id.structure_code",
+                structure_name: "$_id.structure_name",
+              },
+              total_count: { $sum: "$count" },
+              status_breakdown: {
+                $push: {
+                  status: "$_id.status",
+                  count: "$count",
+                },
+              },
+            },
+          },
+          { $sort: { total_count: -1 } },
+        ])
+        .toArray();
+
+      let contextInfo = null;
+      if (structure_id) {
+        const structureInfo = await collection.findOne(
+          {
+            $or: [
+              { etablissement_id_paysage: structure_id },
+              { etablissement_id_paysage_actuel: structure_id },
+            ],
+          },
+          {
+            projection: {
+              etablissement_lib: 1,
+              etablissement_actuel_lib: 1,
+            },
+          }
+        );
+
+        if (structureInfo) {
+          contextInfo = {
+            id: structure_id,
+            name:
+              structureInfo.etablissement_actuel_lib ||
+              structureInfo.etablissement_lib ||
+              "Nom de l'université inconnu",
+          };
+        }
+      }
+
+      res.json({
+        status_distribution: statusDistribution,
+        context_info: contextInfo,
+      });
+    } catch (error) {
+      console.error("Error fetching status distribution:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/general-indicators",
+  async (req, res) => {
+    try {
+      const { annee_universitaire, structure_id } = req.query;
+      const collection = db.collection("faculty-members_main_staging");
+
+      const matchStage = {};
+      if (annee_universitaire) {
+        matchStage.annee_universitaire = annee_universitaire;
+      }
+      if (structure_id) {
+        matchStage.$or = [
+          { etablissement_id_paysage: structure_id },
+          { etablissement_id_paysage_actuel: structure_id },
+        ];
+      }
+
+      // Distribution par genre
+      const genderDistribution = await collection
+        .aggregate([
+          { $match: matchStage },
+          {
+            $group: {
+              _id: "$sexe",
+              count: { $sum: "$effectif" },
+            },
+          },
+        ])
+        .toArray();
+
+      // Total des effectifs
+      const totalCount = await collection
+        .aggregate([
+          { $match: matchStage },
+          {
+            $group: {
+              _id: null,
+              total: { $sum: "$effectif" },
+            },
+          },
+        ])
+        .toArray();
+
+      // Informations contextuelles
+      let contextInfo = null;
+      if (structure_id) {
+        const structureInfo = await collection.findOne(
+          {
+            $or: [
+              { etablissement_id_paysage: structure_id },
+              { etablissement_id_paysage_actuel: structure_id },
+            ],
+          },
+          {
+            projection: {
+              etablissement_lib: 1,
+              etablissement_actuel_lib: 1,
+            },
+          }
+        );
+
+        if (structureInfo) {
+          contextInfo = {
+            id: structure_id,
+            name:
+              structureInfo.etablissement_actuel_lib ||
+              structureInfo.etablissement_lib ||
+              "Nom de l'université inconnu",
+          };
+        }
+      }
+
+      res.json({
+        gender_distribution: genderDistribution,
+        total_count: totalCount[0]?.total || 0,
+        context_info: contextInfo,
+      });
+    } catch (error) {
+      console.error("Error fetching general indicators:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/gender-distribution",
+  async (req, res) => {
+    try {
+      const { annee_universitaire, structure_id } = req.query;
+      const collection = db.collection("faculty-members_main_staging");
+
+      const matchStage = {};
+      if (annee_universitaire) {
+        matchStage.annee_universitaire = annee_universitaire;
+      }
+      if (structure_id) {
+        matchStage.$or = [
+          { etablissement_id_paysage: structure_id },
+          { etablissement_id_paysage_actuel: structure_id },
+        ];
+      }
+
+      const genderDistribution = await collection
+        .aggregate([
+          { $match: matchStage },
+          {
+            $group: {
+              _id: {
+                structure_code: "$etablissement_id_paysage_actuel",
+                structure_name: "$etablissement_actuel_lib",
+                gender: "$sexe",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                structure_code: "$_id.structure_code",
+                structure_name: "$_id.structure_name",
+              },
+              total_count: { $sum: "$count" },
+              gender_breakdown: {
+                $push: {
+                  gender: "$_id.gender",
+                  count: "$count",
+                },
+              },
+            },
+          },
+          { $sort: { total_count: -1 } },
+        ])
+        .toArray();
+
+      let contextInfo = null;
+      if (structure_id) {
+        const structureInfo = await collection.findOne(
+          {
+            $or: [
+              { etablissement_id_paysage: structure_id },
+              { etablissement_id_paysage_actuel: structure_id },
+            ],
+          },
+          {
+            projection: {
+              etablissement_lib: 1,
+              etablissement_actuel_lib: 1,
+            },
+          }
+        );
+
+        if (structureInfo) {
+          contextInfo = {
+            id: structure_id,
+            name:
+              structureInfo.etablissement_actuel_lib ||
+              structureInfo.etablissement_lib ||
+              "Nom de l'université inconnu",
+          };
+        }
+      }
+
+      res.json({
+        gender_distribution: genderDistribution,
+        context_info: contextInfo,
+      });
+    } catch (error) {
+      console.error("Error fetching gender distribution:", error);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+router.get("/faculty-members/structures/top-indicators", async (req, res) => {
+  try {
+    const { annee_universitaire, structure_id } = req.query;
+    const collection = db.collection("faculty-members_main_staging");
+
+    const matchStage = {};
+    if (annee_universitaire) {
+      matchStage.annee_universitaire = annee_universitaire;
+    }
+    if (structure_id) {
+      matchStage.$or = [
+        { etablissement_id_paysage: structure_id },
+        { etablissement_id_paysage_actuel: structure_id },
+      ];
+    }
+
+    const genderDistribution = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: {
+              structure_code: "$etablissement_id_paysage_actuel",
+              structure_name: "$etablissement_actuel_lib",
+              gender: "$sexe",
+            },
+            count: { $sum: "$effectif" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              structure_code: "$_id.structure_code",
+              structure_name: "$_id.structure_name",
+            },
+            total_count: { $sum: "$count" },
+            gender_breakdown: {
+              $push: {
+                gender: "$_id.gender",
+                count: "$count",
+              },
+            },
+          },
+        },
+        { $sort: { total_count: -1 } },
+      ])
+      .toArray();
+
+    let contextInfo = null;
+    if (structure_id) {
+      const structureInfo = await collection.findOne(
+        {
+          $or: [
+            { etablissement_id_paysage: structure_id },
+            { etablissement_id_paysage_actuel: structure_id },
+          ],
+        },
+        {
+          projection: {
+            etablissement_lib: 1,
+            etablissement_actuel_lib: 1,
+          },
+        }
+      );
+
+      if (structureInfo) {
+        contextInfo = {
+          id: structure_id,
+          name:
+            structureInfo.etablissement_actuel_lib ||
+            structureInfo.etablissement_lib ||
+            "Nom de l'université inconnu",
+        };
+      }
+    }
+
+    res.json({
+      gender_distribution: genderDistribution,
+      context_info: contextInfo,
+    });
+  } catch (error) {
+    console.error("Error fetching gender distribution:", error);
     res.status(500).json({ error: "Server error" });
   }
 });

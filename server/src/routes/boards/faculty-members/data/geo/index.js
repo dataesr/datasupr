@@ -1190,4 +1190,381 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
   }
 });
 
+router.get(
+  "/faculty-members/geo/establishment-type-distribution",
+  async (req, res) => {
+    try {
+      const { annee_universitaire, geo_id } = req.query;
+      const collection = db.collection("faculty-members_main_staging");
+
+      const matchStage = {};
+      if (annee_universitaire) {
+        matchStage.annee_universitaire = annee_universitaire;
+      }
+      if (geo_id) {
+        matchStage.etablissement_code_region = geo_id;
+      }
+
+      const establishmentTypeDistribution = await collection
+        .aggregate([
+          { $match: matchStage },
+          {
+            $group: {
+              _id: {
+                establishment_type: "$etablissement_type",
+                gender: "$sexe",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.establishment_type",
+              total_count: { $sum: "$count" },
+              gender_breakdown: {
+                $push: {
+                  gender: "$_id.gender",
+                  count: "$count",
+                },
+              },
+            },
+          },
+          { $sort: { total_count: -1 } },
+        ])
+        .toArray();
+
+      res.json({
+        establishment_type_distribution: establishmentTypeDistribution,
+      });
+    } catch (error) {
+      console.error(
+        "Error fetching establishment type distribution for geo:",
+        error
+      );
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+);
+
+router.get("/faculty-members/geo/age-distribution", async (req, res) => {
+  try {
+    const { annee_universitaire, geo_id } = req.query;
+    const collection = db.collection("faculty-members_main_staging");
+
+    const matchStage = {};
+    if (annee_universitaire) {
+      matchStage.annee_universitaire = annee_universitaire;
+    }
+    if (geo_id) {
+      matchStage.etablissement_code_region = geo_id;
+    }
+
+    const ageDistribution = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: "$classe_age3",
+            count: { $sum: "$effectif" },
+          },
+        },
+        { $sort: { _id: 1 } },
+      ])
+      .toArray();
+
+    res.json({
+      age_distribution: ageDistribution,
+    });
+  } catch (error) {
+    console.error("Error fetching age distribution for geo:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/faculty-members/geo/discipline-distribution", async (req, res) => {
+  try {
+    const { annee_universitaire, geo_id } = req.query;
+    const collection = db.collection("faculty-members_main_staging");
+
+    const matchStage = {};
+    if (annee_universitaire) {
+      matchStage.annee_universitaire = annee_universitaire;
+    }
+    if (geo_id) {
+      matchStage.etablissement_code_region = geo_id;
+    }
+
+    const disciplineDistribution = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: {
+              discipline_code: "$code_grande_discipline",
+              discipline_name: "$grande_discipline",
+              gender: "$sexe",
+            },
+            count: { $sum: "$effectif" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              discipline_code: "$_id.discipline_code",
+              discipline_name: "$_id.discipline_name",
+            },
+            total_count: { $sum: "$count" },
+            gender_breakdown: {
+              $push: {
+                gender: "$_id.gender",
+                count: "$count",
+              },
+            },
+          },
+        },
+        { $sort: { total_count: -1 } },
+      ])
+      .toArray();
+
+    res.json({
+      discipline_distribution: disciplineDistribution,
+    });
+  } catch (error) {
+    console.error("Error fetching discipline distribution for geo:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/faculty-members/geo/status-distribution", async (req, res) => {
+  try {
+    const { annee_universitaire, geo_id } = req.query;
+    const collection = db.collection("faculty-members_main_staging");
+
+    const matchStage = {};
+    if (annee_universitaire) {
+      matchStage.annee_universitaire = annee_universitaire;
+    }
+    if (geo_id) {
+      matchStage.etablissement_code_region = geo_id;
+    }
+
+    const statusDistribution = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: {
+              geo_code: "$etablissement_code_region",
+              geo_name: "$etablissement_region",
+              status: {
+                $switch: {
+                  branches: [
+                    {
+                      case: { $eq: ["$is_enseignant_chercheur", true] },
+                      then: "enseignant_chercheur",
+                    },
+                    {
+                      case: {
+                        $and: [
+                          { $eq: ["$is_titulaire", true] },
+                          { $eq: ["$is_enseignant_chercheur", false] },
+                        ],
+                      },
+                      then: "titulaire_non_chercheur",
+                    },
+                    {
+                      case: { $eq: ["$is_titulaire", false] },
+                      then: "non_titulaire",
+                    },
+                  ],
+                  default: "non_titulaire",
+                },
+              },
+            },
+            count: { $sum: "$effectif" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              geo_code: "$_id.geo_code",
+              geo_name: "$_id.geo_name",
+            },
+            total_count: { $sum: "$count" },
+            status_breakdown: {
+              $push: {
+                status: "$_id.status",
+                count: "$count",
+              },
+            },
+          },
+        },
+        { $sort: { total_count: -1 } },
+      ])
+      .toArray();
+
+    res.json({
+      status_distribution: statusDistribution,
+    });
+  } catch (error) {
+    console.error("Error fetching status distribution for geo:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/faculty-members/geo/general-indicators", async (req, res) => {
+  try {
+    const { annee_universitaire, geo_id } = req.query;
+    const collection = db.collection("faculty-members_main_staging");
+
+    const matchStage = {};
+    if (annee_universitaire) {
+      matchStage.annee_universitaire = annee_universitaire;
+    }
+    if (geo_id) {
+      matchStage.etablissement_code_region = geo_id;
+    }
+
+    const genderDistribution = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: "$sexe",
+            count: { $sum: "$effectif" },
+          },
+        },
+      ])
+      .toArray();
+
+    const totalCount = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: null,
+            total: { $sum: "$effectif" },
+          },
+        },
+      ])
+      .toArray();
+
+    res.json({
+      gender_distribution: genderDistribution,
+      total_count: totalCount[0]?.total || 0,
+    });
+  } catch (error) {
+    console.error("Error fetching general indicators for geo:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/faculty-members/geo/gender-distribution", async (req, res) => {
+  try {
+    const { annee_universitaire, geo_id } = req.query;
+    const collection = db.collection("faculty-members_main_staging");
+
+    const matchStage = {};
+    if (annee_universitaire) {
+      matchStage.annee_universitaire = annee_universitaire;
+    }
+    if (geo_id) {
+      matchStage.etablissement_code_region = geo_id;
+    }
+
+    const genderDistribution = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: {
+              geo_code: "$etablissement_code_region",
+              geo_name: "$etablissement_region",
+              gender: "$sexe",
+            },
+            count: { $sum: "$effectif" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              geo_code: "$_id.geo_code",
+              geo_name: "$_id.geo_name",
+            },
+            total_count: { $sum: "$count" },
+            gender_breakdown: {
+              $push: {
+                gender: "$_id.gender",
+                count: "$count",
+              },
+            },
+          },
+        },
+        { $sort: { total_count: -1 } },
+      ])
+      .toArray();
+
+    res.json({
+      gender_distribution: genderDistribution,
+    });
+  } catch (error) {
+    console.error("Error fetching gender distribution for geo:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/faculty-members/geo/top-indicators", async (req, res) => {
+  try {
+    const { annee_universitaire, geo_id } = req.query;
+    const collection = db.collection("faculty-members_main_staging");
+
+    const matchStage = {};
+    if (annee_universitaire) {
+      matchStage.annee_universitaire = annee_universitaire;
+    }
+    if (geo_id) {
+      matchStage.etablissement_code_region = geo_id;
+    }
+
+    const genderDistribution = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: {
+              geo_code: "$etablissement_code_region",
+              geo_name: "$etablissement_region",
+              gender: "$sexe",
+            },
+            count: { $sum: "$effectif" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              geo_code: "$_id.geo_code",
+              geo_name: "$_id.geo_name",
+            },
+            total_count: { $sum: "$count" },
+            gender_breakdown: {
+              $push: {
+                gender: "$_id.gender",
+                count: "$count",
+              },
+            },
+          },
+        },
+        { $sort: { total_count: -1 } },
+      ])
+      .toArray();
+
+    res.json({
+      gender_distribution: genderDistribution,
+    });
+  } catch (error) {
+    console.error("Error fetching top indicators for geo:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
 export default router;

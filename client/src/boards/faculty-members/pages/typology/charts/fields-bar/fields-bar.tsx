@@ -1,13 +1,52 @@
 import { useRef, useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import { useNavigate } from "react-router-dom";
 import { Button, Col, Row, Text, Notice } from "@dataesr/dsfr-plus";
-import { useFacultyMembersOverview } from "../../../../api/use-overview";
 import { useContextDetection } from "../../../../utils";
 import { createBarChartOptions } from "./options";
 import "../../../../styles.scss";
+import { useGenderDistribution } from "./use-gender-distrubition";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
+
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
+      <table className="fr-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Effectif total</th>
+            <th>Hommes</th>
+            <th>Femmes</th>
+            <th>% Hommes</th>
+            <th>% Femmes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => (
+            <tr key={index}>
+              <td>{item.itemName || "Non précisé"}</td>
+              <td>{item.totalCount.toLocaleString()}</td>
+              <td>{item.hommesCount.toLocaleString()}</td>
+              <td>{item.femmesCount.toLocaleString()}</td>
+              <td>{item.hommesPercent}%</td>
+              <td>{item.femmesPercent}%</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 const ItemBarChart: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -19,18 +58,16 @@ const ItemBarChart: React.FC = () => {
     data: overviewData,
     isLoading,
     error,
-  } = useFacultyMembersOverview({
+  } = useGenderDistribution({
     context,
     annee_universitaire: selectedYear,
     contextId: contextId || undefined,
   });
-  // AJOUTER LE CHARTWRAPPER
   const [sortKey, setSortKey] = useState<
     "total" | "femmesPercent" | "hommesPercent"
   >("total");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
   const [stackType, setStackType] = useState<"percent" | "normal">("percent");
-
   const rootStyles = getComputedStyle(document.documentElement);
 
   const items = useMemo(() => {
@@ -39,17 +76,17 @@ const ItemBarChart: React.FC = () => {
     let distributionData;
 
     if (contextId) {
-      distributionData = overviewData.disciplineGenderDistribution;
+      distributionData = overviewData.gender_distribution;
     } else {
       switch (context) {
         case "fields":
-          distributionData = overviewData.disciplineGenderDistribution;
+          distributionData = overviewData.gender_distribution;
           break;
         case "geo":
-          distributionData = overviewData.regionGenderDistribution;
+          distributionData = overviewData.gender_distribution;
           break;
         case "structures":
-          distributionData = overviewData.structureGenderDistribution;
+          distributionData = overviewData.gender_distribution; // Utilisez gender_distribution ici parce que le model a changer le sang
           break;
         default:
           return [];
@@ -71,30 +108,16 @@ const ItemBarChart: React.FC = () => {
       });
 
       const totalCount = item.total_count;
-      let itemCode, itemName;
-
-      if (contextId) {
-        itemCode = item._id.discipline_code;
-        itemName = item._id.discipline_name;
-      } else {
-        switch (context) {
-          case "fields":
-            itemCode = item._id.discipline_code;
-            itemName = item._id.discipline_name;
-            break;
-          case "geo":
-            itemCode = item._id.geo_code;
-            itemName = item._id.geo_name;
-            break;
-          case "structures":
-            itemCode = item._id.structure_code;
-            itemName = item._id.structure_name;
-            break;
-          default:
-            itemCode = "";
-            itemName = "";
-        }
-      }
+      const itemCode =
+        item._id?.geo_code ||
+        item._id?.discipline_code ||
+        item._id?.structure_code ||
+        "";
+      const itemName =
+        item._id?.geo_name ||
+        item._id?.discipline_name ||
+        item._id?.structure_name ||
+        "Non précisé";
 
       return {
         itemName,
@@ -204,6 +227,17 @@ const ItemBarChart: React.FC = () => {
     );
   };
 
+  const config = {
+    id: "gender-distribution-chart",
+    idQuery: "gender-distribution",
+    title: {
+      fr: "Répartition par genre",
+    },
+    description: {
+      fr: `Répartition par genre pour l'année ${selectedYear}`,
+    },
+  };
+
   const options = createBarChartOptions({
     sortedItems,
     categories,
@@ -224,7 +258,7 @@ const ItemBarChart: React.FC = () => {
 
   if (isLoading) {
     return (
-      <Row horizontalAlign="center" style={{display: 'inline-block;'}}>
+      <Row horizontalAlign="center" style={{ display: "inline-block;" }}>
         <span
           className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
           aria-hidden="true"
@@ -240,7 +274,9 @@ const ItemBarChart: React.FC = () => {
     return (
       <Row>
         <Notice closeMode={"disallow"} type={"warning"}>
-          <Text>Erreur lors du chargement des données de répartition par genre</Text>
+          <Text>
+            Erreur lors du chargement des données de répartition par genre
+          </Text>
         </Notice>
       </Row>
     );
@@ -261,96 +297,93 @@ const ItemBarChart: React.FC = () => {
 
   return (
     <>
-          <Row className="fr-mb-1w">
-            Options d'affichage :
-          </Row>
+      <Row className="fr-mb-1w">Options d'affichage :</Row>
 
-          <Row className="fr-mb-1w">
-              <Button
-                size="sm"
-                variant={sortKey === "total" ? "primary" : "secondary"}
-                onClick={() => setSortKey("total")}
-                title="Trier par effectif total"
-                className="fr-mr-1w"
-                >
-                <i className="ri-bar-chart-horizontal-line"></i>
-                Total
-              </Button>
+      <Row className="fr-mb-1w">
+        <Button
+          size="sm"
+          variant={sortKey === "total" ? "primary" : "secondary"}
+          onClick={() => setSortKey("total")}
+          title="Trier par effectif total"
+          className="fr-mr-1w"
+        >
+          <i className="ri-bar-chart-horizontal-line"></i>
+          Total
+        </Button>
 
-              <Button
-                size="sm"
-                variant={sortKey === "femmesPercent" ? "primary" : "secondary"}
-                onClick={() => setSortKey("femmesPercent")}
-                title="Trier par pourcentage de femmes"
-                className="fr-mr-1w"
-                >
-                <i className="ri-women-line"></i>
-                Femmes
-              </Button>
+        <Button
+          size="sm"
+          variant={sortKey === "femmesPercent" ? "primary" : "secondary"}
+          onClick={() => setSortKey("femmesPercent")}
+          title="Trier par pourcentage de femmes"
+          className="fr-mr-1w"
+        >
+          <i className="ri-women-line"></i>
+          Femmes
+        </Button>
 
-              <Button
-                size="sm"
-                variant={sortKey === "hommesPercent" ? "primary" : "secondary"}
-                onClick={() => setSortKey("hommesPercent")}
-                title="Trier par pourcentage d'hommes"
-                className="fr-mr-1w"
-                >
-                <i className="ri-men-line"></i>
-                Hommes
-              </Button>
-          </Row>
-          <Row> 
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() =>
-                setStackType((prev) =>
-                  prev === "percent" ? "normal" : "percent"
-                )
-              }
-              title={`Afficher en ${
-                stackType === "percent" ? "effectifs" : "pourcentages"
-              }`}
-              className="fr-mr-1w"
-            >
-              <span
-                className={
-                  stackType === "percent" ? "ri-user-fill" : "ri-percent-fill"
-                }
-                aria-hidden="true"
-              />
-              {stackType === "percent" ? "Nb" : ""}
-            </Button>
+        <Button
+          size="sm"
+          variant={sortKey === "hommesPercent" ? "primary" : "secondary"}
+          onClick={() => setSortKey("hommesPercent")}
+          title="Trier par pourcentage d'hommes"
+          className="fr-mr-1w"
+        >
+          <i className="ri-men-line"></i>
+          Hommes
+        </Button>
+      </Row>
+      <Row>
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() =>
+            setStackType((prev) => (prev === "percent" ? "normal" : "percent"))
+          }
+          title={`Afficher en ${
+            stackType === "percent" ? "effectifs" : "pourcentages"
+          }`}
+          className="fr-mr-1w"
+        >
+          <span
+            className={
+              stackType === "percent" ? "ri-user-fill" : "ri-percent-fill"
+            }
+            aria-hidden="true"
+          />
+          {stackType === "percent" ? "Nb" : ""}
+        </Button>
 
-            <Button
-              size="sm"
-              variant="secondary"
-              onClick={() =>
-                setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
-              }
-              title={`Trier par ordre ${
-                sortOrder === "asc" ? "décroissant" : "croissant"
-              }`}
-              className="fr-mr-1w"
-            >
-              <span
-                className={
-                  sortOrder === "asc"
-                    ? "fr-icon-arrow-up-s-fill"
-                    : "fr-icon-arrow-down-s-fill"
-                }
-                aria-hidden="true"
-              />
-              {sortOrder === "asc" ? "Croissant" : "Décroissant"}
-            </Button>
-          </Row>
+        <Button
+          size="sm"
+          variant="secondary"
+          onClick={() =>
+            setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+          }
+          title={`Trier par ordre ${
+            sortOrder === "asc" ? "décroissant" : "croissant"
+          }`}
+          className="fr-mr-1w"
+        >
+          <span
+            className={
+              sortOrder === "asc"
+                ? "fr-icon-arrow-up-s-fill"
+                : "fr-icon-arrow-down-s-fill"
+            }
+            aria-hidden="true"
+          />
+          {sortOrder === "asc" ? "Croissant" : "Décroissant"}
+        </Button>
+      </Row>
 
       <Row>
         <Col md={12}>
-          <HighchartsReact
-            highcharts={Highcharts}
+          <ChartWrapper
+            config={config}
             options={options}
-            ref={chartRef}
+            legend={null}
+            renderData={() => <RenderData data={sortedItems} />}
           />
         </Col>
       </Row>

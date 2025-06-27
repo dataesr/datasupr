@@ -34,20 +34,8 @@ export const createCnuGroupsChartOptions = (
     },
     title: {
       text: "",
-      style: {
-        fontSize: "18px",
-        fontWeight: "bold",
-      },
-      align: "left",
     },
-    subtitle: {
-      text: "Année universitaire",
-      style: {
-        color: "#666666",
-        fontSize: "14px",
-      },
-      align: "left",
-    },
+
     xAxis: {
       categories,
       labels: {

@@ -1,8 +1,56 @@
 import { useMemo } from "react";
-import { useContextDetection } from "../../../../utils";
+import {
+  generateContextualTitle,
+  useContextDetection,
+} from "../../../../utils";
 import { useFacultyMembersEvolution } from "../../../../api/use-evolution";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createStatusEvolutionOptions } from "./options";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
+      <table className="fr-table">
+        <thead>
+          <tr>
+            <th>Année</th>
+            <th>Enseignants-chercheurs</th>
+            <th>Titulaires non-chercheurs</th>
+            <th>Non-titulaires</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => {
+            const total =
+              (item.enseignant_chercheur || 0) +
+              (item.titulaire_non_chercheur || 0) +
+              (item.non_titulaire || 0);
+
+            return (
+              <tr key={index}>
+                <td>{item.year}</td>
+                <td>{(item.enseignant_chercheur || 0).toLocaleString()}</td>
+                <td>{(item.titulaire_non_chercheur || 0).toLocaleString()}</td>
+                <td>{(item.non_titulaire || 0).toLocaleString()}</td>
+                <td>{total.toLocaleString()}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 export function StatusEvolutionChart() {
   const { context, contextId, contextName } = useContextDetection();
@@ -15,6 +63,14 @@ export function StatusEvolutionChart() {
     context,
     contextId,
   });
+
+  const chartTitle = generateContextualTitle(
+    null,
+    context,
+    contextId,
+    evolutionData,
+    isLoading
+  );
 
   const { processedData, chartOptions } = useMemo(() => {
     if (!evolutionData?.status_evolution || !evolutionData?.years) {
@@ -67,11 +123,8 @@ export function StatusEvolutionChart() {
     idQuery: "faculty-members-evolution",
     title: {
       fr: contextName
-        ? `Évolution par statut - ${contextName}`
+        ? `Évolution par statut - ${chartTitle}`
         : "Évolution des effectifs par statut professionnel",
-      en: contextName
-        ? `Status evolution - ${contextName}`
-        : "Faculty status evolution",
     },
     description: {
       fr: contextName
@@ -86,13 +139,7 @@ export function StatusEvolutionChart() {
   if (isLoading) {
     return (
       <div className="fr-text--center fr-py-5w">
-        <span
-          className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
-          aria-hidden="true"
-        ></span>
-        <p className="fr-mt-2w">
-          Chargement des données d'évolution de statut...
-        </p>
+        <DefaultSkeleton />
       </div>
     );
   }
@@ -121,7 +168,7 @@ export function StatusEvolutionChart() {
         config={config}
         options={chartOptions}
         legend={null}
-        renderData={processedData}
+        renderData={() => <RenderData data={processedData} />}
       />
     </div>
   );

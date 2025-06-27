@@ -1,27 +1,30 @@
-import { Container, Row, Col, Title, Breadcrumb } from "@dataesr/dsfr-plus";
-import { Link } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Breadcrumb, Link } from "@dataesr/dsfr-plus";
 import { AgeEvolutionChart } from "./chart/age-evolution/age-evolution";
 import { StatusEvolutionChart } from "./chart/status/status";
 import { TrendsChart } from "./chart/trend/trends";
+import SubtitleWithContext from "../research-teachers/utils/get-title";
+import { useBreadcrumbItems, useContextDetection } from "../../utils";
 
 export function Evolution() {
+  const { context, contextId, contextName } = useContextDetection();
+
+  const breadcrumbItems = useBreadcrumbItems(context, contextId, contextName);
+
   return (
     <Container as="main">
       <Row>
         <Col md={12}>
           <Breadcrumb className="fr-m-0 fr-mt-1w">
-            <Link href="/personnel-enseignant">Personnel enseignant</Link>
-            <Link href="/personnel-enseignant/discipline/vue-d'ensemble/">
-              Vue disciplinaire
+            <Link href="/personnel-enseignant">
+              Accueil personnels enseignants
             </Link>
-            <Link>
-              <strong>coucou </strong>
-            </Link>
+            {breadcrumbItems.map((item, index) => (
+              <Link key={index} href={item.href}>
+                {item.label}
+              </Link>
+            ))}
           </Breadcrumb>
-
-          <Title as="h2" look="h4" className="fr-mt-4w fr-mb-3w">
-            coucou2
-          </Title>
+          <SubtitleWithContext />
         </Col>
       </Row>
 

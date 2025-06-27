@@ -1,7 +1,7 @@
 import { Text, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useContextDetection } from "../../../utils";
-import { useFacultyMembersOverview } from "../../../api/use-overview";
+import { useContext } from "./use-context";
 
 interface SubtitleWithContextProps {
   classText?: string;
@@ -12,9 +12,9 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
   const { context, contextId, contextName } = useContextDetection();
   const selectedYear = searchParams.get("annee_universitaire") || "";
 
-  const { data: allData, isLoading } = useFacultyMembersOverview({
-    context,
+  const { data: structureData, isLoading } = useContext({
     contextId: contextId || undefined,
+    context,
   });
 
   function capitalize(word: string) {
@@ -22,10 +22,10 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
   }
 
   const getContextParams = () => {
-    if (allData?.context_info) {
+    if (structureData) {
       return {
-        name: allData.context_info.name,
-        identifiant: allData.context_info.id,
+        name: structureData.lib,
+        identifiant: structureData.id,
       };
     }
 

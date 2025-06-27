@@ -1,8 +1,62 @@
 import { useMemo } from "react";
-import { useContextDetection } from "../../../../utils";
+import {
+  generateContextualTitle,
+  useContextDetection,
+} from "../../../../utils";
 import { useFacultyMembersEvolution } from "../../../../api/use-evolution";
 import { createTrendsOptions } from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
+      <table className="fr-table">
+        <thead>
+          <tr>
+            <th>Année</th>
+            <th>Effectif total</th>
+            <th>Hommes</th>
+            <th>Femmes</th>
+            <th>% Hommes</th>
+            <th>% Femmes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => {
+            const malePercent =
+              item.total > 0
+                ? ((item.male / item.total) * 100).toFixed(1)
+                : "0.0";
+            const femalePercent =
+              item.total > 0
+                ? ((item.female / item.total) * 100).toFixed(1)
+                : "0.0";
+
+            return (
+              <tr key={index}>
+                <td>{item.year}</td>
+                <td>{item.total.toLocaleString()}</td>
+                <td>{item.male.toLocaleString()}</td>
+                <td>{item.female.toLocaleString()}</td>
+                <td>{malePercent}%</td>
+                <td>{femalePercent}%</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 export function TrendsChart() {
   const { context, contextId, contextName } = useContextDetection();
@@ -15,6 +69,14 @@ export function TrendsChart() {
     context,
     contextId,
   });
+
+  const chartTitle = generateContextualTitle(
+    null,
+    context,
+    contextId,
+    evolutionData,
+    isLoading
+  );
 
   const { chartData, chartOptions } = useMemo(() => {
     if (!evolutionData?.global_evolution || !evolutionData?.years) {
@@ -58,11 +120,8 @@ export function TrendsChart() {
     idQuery: "faculty-members-evolution",
     title: {
       fr: contextName
-        ? `Évolution des effectifs - ${contextName}`
+        ? `Évolution des effectifs - ${chartTitle}`
         : "Évolution des effectifs du personnel enseignant",
-      en: contextName
-        ? `Faculty trends - ${contextName}`
-        : "Faculty trends evolution",
     },
     description: {
       fr: contextName
@@ -77,11 +136,7 @@ export function TrendsChart() {
   if (isLoading) {
     return (
       <div className="fr-text--center fr-py-5w">
-        <span
-          className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
-          aria-hidden="true"
-        ></span>
-        <p className="fr-mt-2w">Chargement des données d'évolution...</p>
+        <DefaultSkeleton />
       </div>
     );
   }
@@ -108,7 +163,7 @@ export function TrendsChart() {
         config={config}
         options={chartOptions}
         legend={null}
-        renderData={chartData}
+        renderData={() => <RenderData data={chartData} />}
       />
     </div>
   );

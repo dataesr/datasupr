@@ -2,16 +2,47 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import StatusOptions from "./options";
 import ChartWrapper from "../../../../components/chart-wrapper";
-import { useFacultyMembersOverview } from "../../api/use-overview";
 import { useContextDetection, generateIntegrationURL } from "../../utils";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import { useStatusDistribution } from "./use-status-distribution";
 
-interface StatusData {
-  fieldLabel: string;
-  totalCount: number;
-  nonTitulaires: number;
-  titulairesNonChercheurs: number;
-  enseignantsChercheurs: number;
-  totalTitulaires: number;
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
+      <table className="fr-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Effectif total</th>
+            <th>Non-titulaires</th>
+            <th>Titulaires non-chercheurs</th>
+            <th>Enseignants-chercheurs</th>
+            <th>Total titulaires</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => (
+            <tr key={index}>
+              <td>{item.fieldLabel || "Inconnu"}</td>
+              <td>{item.totalCount.toLocaleString()}</td>
+              <td>{item.nonTitulaires.toLocaleString()}</td>
+              <td>{item.titulairesNonChercheurs.toLocaleString()}</td>
+              <td>{item.enseignantsChercheurs.toLocaleString()}</td>
+              <td>{item.totalTitulaires.toLocaleString()}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
 }
 
 const StatusDistribution: React.FC = () => {
@@ -20,73 +51,20 @@ const StatusDistribution: React.FC = () => {
   const { context, contextId, contextName } = useContextDetection();
 
   const {
-    data: overviewData,
+    data: statusData,
     isLoading,
     error,
-  } = useFacultyMembersOverview({
+  } = useStatusDistribution({
     context,
     annee_universitaire: selectedYear,
     contextId,
   });
 
-  const config = {
-    id: "statusDistribution",
-    idQuery: "faculty-members-overview",
-    title: {
-      fr: contextId
-        ? `Répartition par statut - ${contextName} sélectionnée`
-        : "Répartition par statut des enseignants",
-    },
-    description: {
-      fr: contextId
-        ? `Répartition des enseignants par statut pour ${
-            contextName === "discipline"
-              ? "la"
-              : contextName === "région"
-              ? "la"
-              : "l'"
-          } ${contextName} sélectionnée`
-        : "Répartition des enseignants par statut (Non-titulaires, Titulaires non-chercheurs, Enseignants-chercheurs)",
-    },
-    integrationURL: generateIntegrationURL(context, "statuts"),
-  };
-
   const processedData = useMemo(() => {
-    if (!overviewData) return [];
+    if (!statusData || !statusData.status_distribution) return [];
 
-    let statusDistribution;
-    switch (context) {
-      case "fields":
-        statusDistribution = overviewData.disciplineStatusDistribution;
-        break;
-      case "geo":
-        statusDistribution = overviewData.regionStatusDistribution;
-        break;
-      case "structures":
-        statusDistribution = overviewData.structureStatusDistribution;
-        break;
-      default:
-        return [];
-    }
-
-    if (!statusDistribution) return [];
-
-    const statusData: StatusData[] = statusDistribution.map((item) => {
-      let itemName;
-      switch (context) {
-        case "fields":
-          itemName = item._id.discipline_name;
-          break;
-        case "geo":
-          itemName = item._id.geo_name;
-          break;
-        case "structures":
-          itemName = item._id.structure_name;
-          break;
-        default:
-          itemName = "Unknown";
-      }
-
+    return statusData.status_distribution.map((item) => {
+      console.log(item);
       const totalCount = item.total_count;
       let enseignantsChercheurs = 0;
       let titulairesNonChercheurs = 0;
@@ -105,23 +83,17 @@ const StatusDistribution: React.FC = () => {
             break;
         }
       });
-
-      const totalTitulaires = enseignantsChercheurs + titulairesNonChercheurs;
-
       return {
-        fieldLabel: itemName,
+        fieldLabel:
+          item._id.structure_name || item._id.field_name || item._id.geo_name,
         totalCount,
         nonTitulaires,
         titulairesNonChercheurs,
         enseignantsChercheurs,
-        totalTitulaires,
+        totalTitulaires: enseignantsChercheurs + titulairesNonChercheurs,
       };
     });
-
-    return statusData
-      .sort((a, b) => b.totalCount - a.totalCount)
-      .slice(0, contextId ? statusData.length : 8);
-  }, [overviewData, context, contextId]);
+  }, [statusData]);
 
   const chartData = useMemo(() => {
     return processedData.map((item) => ({
@@ -153,7 +125,7 @@ const StatusDistribution: React.FC = () => {
   if (isLoading) {
     return (
       <div className="fr-text--center fr-py-3w">
-        Chargement des données par statut...
+        <DefaultSkeleton />
       </div>
     );
   }
@@ -166,7 +138,7 @@ const StatusDistribution: React.FC = () => {
     );
   }
 
-  if (!overviewData || processedData.length === 0) {
+  if (!statusData || processedData.length === 0) {
     return (
       <div className="fr-text--center fr-py-3w">
         Aucune donnée disponible pour les statuts pour l'année {selectedYear}
@@ -182,46 +154,26 @@ const StatusDistribution: React.FC = () => {
     );
   }
 
-  const getDisplayLimit = () => {
-    const labels = {
-      fields: "disciplines",
-      geo: "régions",
-      structures: "établissements",
-    };
-    return labels[context];
-  };
-
   return (
     <div>
       <ChartWrapper
-        config={config}
+        config={{
+          id: "statusDistribution",
+          idQuery: "status-distribution",
+          title: {
+            fr: contextId
+              ? `Répartition par statut - ${contextName} sélectionnée`
+              : "Répartition par statut des enseignants",
+          },
+          description: {
+            fr: "blabla",
+          },
+          integrationURL: generateIntegrationURL(context, "statuts"),
+        }}
         options={chartOptions}
         legend={null}
-        renderData={undefined}
+        renderData={() => <RenderData data={processedData} />}
       />
-      <div className="fr-text--xs fr-text--italic fr-mt-1w">
-        <strong>Légende :</strong>
-        <br />
-        <span style={{ color: "#FF6B6B" }}>■</span> Non-titulaires |{" "}
-        <span style={{ color: "#4ECDC4" }}>■</span> Titulaires non-chercheurs |{" "}
-        <span style={{ color: "#45B7D1" }}>■</span> Enseignants-chercheurs
-        <br />
-        {contextId ? (
-          <>
-            Données de statut pour{" "}
-            {contextName === "discipline"
-              ? "la"
-              : contextName === "région"
-              ? "la"
-              : "l'"}{" "}
-            {contextName} sélectionnée.
-          </>
-        ) : (
-          <>
-            Affichage des 8 principales {getDisplayLimit()} par effectif total.
-          </>
-        )}
-      </div>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
 import { useGeoMapData } from "../api/use-map";
 import { createMapOptions } from "./options";
+import MapSkeleton from "../../../../atlas/charts/skeletons/map";
 
 highchartsMap(Highcharts);
 
@@ -70,19 +71,7 @@ export default function FacultyMap() {
     setMapOptions(options);
   }, [mapData, handleRegionClick]);
 
-  if (isLoading) {
-    return (
-      <div className="fr-text--center fr-py-6w">
-        <div className="fr-mb-3w">
-          <span
-            className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
-            aria-hidden="true"
-          ></span>
-        </div>
-        <div>Chargement de la carte des régions...</div>
-      </div>
-    );
-  }
+  if (isLoading) return <MapSkeleton />;
 
   if (error) {
     return (

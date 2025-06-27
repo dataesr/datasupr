@@ -21,7 +21,6 @@ export default function StatusOptions({
 
   if (isSingleDiscipline) {
     const discipline = disciplines[0];
-    const totalCount = discipline.totalCount;
 
     const newOptions: HighchartsInstance.Options = {
       chart: {
@@ -29,13 +28,9 @@ export default function StatusOptions({
         height: 400,
       },
       title: {
-        text: `Répartition par statut - ${discipline.fieldLabel}`,
-        style: { fontSize: "16px", fontWeight: "bold" },
+        text: "",
       },
-      subtitle: {
-        text: `Total: ${totalCount.toLocaleString()} personnes`,
-        style: { fontSize: "14px", color: "#666" },
-      },
+
       plotOptions: {
         pie: {
           allowPointSelect: true,
@@ -138,17 +133,7 @@ export default function StatusOptions({
       },
     },
     title: {
-      text: "Répartition par statut du personnel enseignant",
-      style: { fontSize: "18px", fontWeight: "bold" },
-      align: "left",
-    },
-    subtitle: {
-      text: `Année universitaire`,
-      style: {
-        color: "#666666",
-        fontSize: "14px",
-      },
-      align: "left",
+      text: "",
     },
     xAxis: {
       categories,

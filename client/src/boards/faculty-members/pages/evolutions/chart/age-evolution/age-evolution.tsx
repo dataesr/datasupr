@@ -1,8 +1,51 @@
 import { useMemo } from "react";
-import { useContextDetection } from "../../../../utils";
+import {
+  generateContextualTitle,
+  useContextDetection,
+} from "../../../../utils";
 import { useFacultyMembersEvolution } from "../../../../api/use-evolution";
 import { createAgeEvolutionOptions } from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
+      <table className="fr-table">
+        <thead>
+          <tr>
+            <th>Année</th>
+            <th>Effectif total</th>
+            <th>35 ans et moins</th>
+            <th>36 à 55 ans</th>
+            <th>56 ans et plus</th>
+            <th>Non précisé</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => (
+            <tr key={index}>
+              <td>{item.year}</td>
+              <td>{item.totalCount.toLocaleString()}</td>
+              <td>{item["35 ans et moins"].toFixed(1)}%</td>
+              <td>{item["36 à 55 ans"].toFixed(1)}%</td>
+              <td>{item["56 ans et plus"].toFixed(1)}%</td>
+              <td>{item["Non précisé"].toFixed(1)}%</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
 
 export function AgeEvolutionChart() {
   const { context, contextId, contextName } = useContextDetection();
@@ -15,6 +58,14 @@ export function AgeEvolutionChart() {
     context,
     contextId,
   });
+
+  const chartTitle = generateContextualTitle(
+    null,
+    context,
+    contextId,
+    evolutionData,
+    isLoading
+  );
 
   const { processedData, chartOptions } = useMemo(() => {
     if (!evolutionData?.age_evolution || !evolutionData?.years) {
@@ -92,7 +143,7 @@ export function AgeEvolutionChart() {
     idQuery: "faculty-members-evolution",
     title: {
       fr: contextName
-        ? `Évolution par âge - ${contextName}`
+        ? `Évolution par âge - ${chartTitle}`
         : "Évolution de la répartition par âge",
     },
     description: {
@@ -105,13 +156,7 @@ export function AgeEvolutionChart() {
   if (isLoading) {
     return (
       <div className="fr-text--center fr-py-5w">
-        <span
-          className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
-          aria-hidden="true"
-        ></span>
-        <p className="fr-mt-2w">
-          Chargement des données d'évolution par âge...
-        </p>
+        <DefaultSkeleton />
       </div>
     );
   }
@@ -154,7 +199,7 @@ export function AgeEvolutionChart() {
         config={config}
         options={chartOptions}
         legend={null}
-        renderData={processedData}
+        renderData={() => <RenderData data={processedData} />}
       />
     </div>
   );

@@ -9,8 +9,6 @@ interface ChartDataItem {
 
 export const createAgeDistributionChartOptions = (
   chartData: ChartDataItem[],
-  chartTitle: string,
-  year: string,
   isSingleDiscipline: boolean = false
 ): Highcharts.Options | null => {
   if (!chartData || chartData.length === 0) return null;
@@ -38,13 +36,9 @@ export const createAgeDistributionChartOptions = (
         height: 400,
       },
       title: {
-        text: chartTitle,
-        style: { fontSize: "16px", fontWeight: "bold" },
+        text: "",
       },
-      subtitle: {
-        text: `Année universitaire ${year}`,
-        style: { fontSize: "14px", color: "#666" },
-      },
+
       plotOptions: {
         pie: {
           allowPointSelect: true,
@@ -111,18 +105,9 @@ export const createAgeDistributionChartOptions = (
       },
     },
     title: {
-      text: chartTitle,
-      style: { fontSize: "18px", fontWeight: "bold" },
-      align: "left",
+      text: "",
     },
-    subtitle: {
-      text: `Année universitaire ${year}`,
-      style: {
-        color: "#666666",
-        fontSize: "14px",
-      },
-      align: "left",
-    },
+
     xAxis: {
       categories: sortedChartData.map((item) => item.name),
       title: {

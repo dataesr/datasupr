@@ -2,12 +2,52 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { createAgeDistributionChartOptions } from "./options";
-import { useFacultyMembersOverview } from "../../api/use-overview";
 import {
   generateContextualTitle,
   generateIntegrationURL,
   useContextDetection,
 } from "../../utils";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import { useAgeDistribution } from "./use-age-distribution";
+
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table id="age-distribution-table">
+              <thead>
+                <tr>
+                  <th>Tranche d'âge</th>
+                  <th>Pourcentage</th>
+                  <th>Nombre</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((item, index) => (
+                  <tr key={index}>
+                    <td>{item.name}</td>
+                    <td>{item.y}%</td>
+                    <td>{item.count.toLocaleString()}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export function AgeDistributionPieChart() {
   const [searchParams] = useSearchParams();
@@ -16,47 +56,19 @@ export function AgeDistributionPieChart() {
   const { context, contextId, contextName } = useContextDetection();
 
   const {
-    data: overviewData,
+    data: ageData,
     isLoading,
     error,
-  } = useFacultyMembersOverview({
+  } = useAgeDistribution({
     context,
     annee_universitaire: selectedYear,
     contextId,
   });
 
-  const config = {
-    id: "age-distribution-chart",
-    idQuery: "faculty-members-overview",
-    title: {
-      fr: contextId
-        ? `Répartition par âge - ${contextName} sélectionnée`
-        : "Répartition par âge des enseignants",
-      en: contextId
-        ? `Age distribution for selected ${contextName}`
-        : "Age distribution of faculty members",
-    },
-    description: {
-      fr: contextId
-        ? `Répartition des enseignants par classe d'âge pour ${
-            contextName === "discipline"
-              ? "la"
-              : contextName === "région"
-              ? "la"
-              : "l'"
-          } ${contextName} sélectionnée`
-        : "Répartition des enseignants par classe d'âge",
-      en: contextId
-        ? `Distribution of faculty members by age group for selected ${contextName}`
-        : "Distribution of faculty members by age group",
-    },
-    integrationURL: generateIntegrationURL(context, "age"),
-  };
-
   const processedData = useMemo(() => {
-    if (!overviewData?.age_distribution) return null;
+    if (!ageData?.age_distribution) return null;
 
-    const ageDistribution = overviewData.age_distribution;
+    const ageDistribution = ageData.age_distribution;
 
     let totalCount = 0;
     ageDistribution.forEach((ageData) => {
@@ -80,7 +92,8 @@ export function AgeDistributionPieChart() {
       "Répartition par âge",
       context,
       contextId,
-      overviewData.context_info?.name
+      ageData,
+      isLoading
     );
 
     return {
@@ -88,25 +101,20 @@ export function AgeDistributionPieChart() {
       title: chartTitle,
       totalCount,
       isSpecific: !!contextId,
-      contextName: overviewData.context_info?.name || contextName,
+      contextName: ageData.context_info?.name || contextName,
     };
-  }, [overviewData, contextId, context, contextName]);
+  }, [ageData, contextId, context, contextName, isLoading]);
 
   const chartOptions = useMemo(() => {
     if (!processedData) return null;
 
-    return createAgeDistributionChartOptions(
-      processedData.chartData,
-      processedData.title,
-      selectedYear,
-      processedData.isSpecific
-    );
-  }, [processedData, selectedYear]);
+    return createAgeDistributionChartOptions(processedData.chartData);
+  }, [processedData]);
 
   if (isLoading) {
     return (
       <div className="fr-text--center fr-py-3w">
-        Chargement des données de répartition par âge...
+        <DefaultSkeleton />
       </div>
     );
   }
@@ -143,37 +151,22 @@ export function AgeDistributionPieChart() {
     return <div className="fr-text--center fr-py-3w">{getEmptyMessage()}</div>;
   }
 
-  const getFooterMessage = () => {
-    let message = `Total: ${processedData.totalCount.toLocaleString()} enseignants`;
-
-    if (contextId && processedData.contextName) {
-      message += ` pour ${processedData.contextName}`;
-    } else if (contextId) {
-      message += ` pour ${
-        contextName === "discipline"
-          ? "la"
-          : contextName === "région"
-          ? "la"
-          : "l'"
-      } ${contextName} sélectionnée`;
-    }
-
-    return message;
-  };
-
   return (
     <div>
       <ChartWrapper
-        config={config}
+        config={{
+          id: "age-distribution-chart",
+          idQuery: "age-distribution",
+          title: {
+            fr: "Répartition par âge",
+          },
+
+          integrationURL: generateIntegrationURL(context, "age"),
+        }}
         options={chartOptions}
         legend={null}
-        renderData={undefined}
+        renderData={() => <RenderData data={processedData.chartData} />}
       />
-      <div className="fr-text--xs fr-text--italic fr-mt-1w">
-        {getFooterMessage()}
-        <br />
-        <small>Note: Les données "Non précisé" sont exclues du graphique</small>
-      </div>
     </div>
   );
 }

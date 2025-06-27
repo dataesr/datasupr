@@ -4,31 +4,40 @@ import {
   Col,
   Title,
   Breadcrumb,
-  Link,
   Text,
   Notice,
+  Link,
 } from "@dataesr/dsfr-plus";
 import FieldsDistributionBar from "../../charts/general/general";
 import CnuGroupsChart from "../../charts/cnu-group/cnu-chart";
 import StatusDistribution from "../../charts/status/status";
 import { AgeDistributionPieChart } from "../../charts/age/age";
-import GeneralIndicatorsCard from "../../components/general-indicators-card";
+import GeneralIndicatorsCard from "../../components/general-indicators-card/general-indicators-card";
 import { EstablishmentTypeChart } from "../../charts/establishment-type/establishment";
-import DisciplineStatsSidebar from "../../components/top-fields-indicators";
+import DisciplineStatsSidebar from "../../components/top-indicators/top-fields-indicators";
 import DisciplineStatusSummary from "../../components/fields-by-status";
 import NavigationCards from "../../components/fields-cards";
 import YearSelector from "../../components/filters";
+import { useBreadcrumbItems, useContextDetection } from "../../utils";
 
 export default function UniversityOverview() {
+  const { context, contextId, contextName } = useContextDetection();
+
+  const breadcrumbItems = useBreadcrumbItems(context, contextId, contextName);
+
   return (
     <Container as="main">
       <Row>
         <Col md={9}>
-          <Breadcrumb className="fr-m-0 fr-pt-3w">
-            <Link href="/personnel-enseignant">Personnel enseignant</Link>
-            <Link>
-              <strong>Données nationale</strong>
+          <Breadcrumb className="fr-m-0 fr-mt-1w">
+            <Link href="/personnel-enseignant">
+              Accueil personnels enseignants
             </Link>
+            {breadcrumbItems.map((item, index) => (
+              <Link key={index} href={item.href}>
+                {item.label}
+              </Link>
+            ))}
           </Breadcrumb>
         </Col>
         <Col md={3} style={{ textAlign: "right" }}>
@@ -41,12 +50,12 @@ export default function UniversityOverview() {
           prises en compte pour l'année car elles ne sont pas disponibles.
         </Notice>
         <Title as="h3" look="h5" className="fr-mt-2w">
-          Explorer le personnel enseignant au niveau national
+          Explorer le personnel enseignant au niveau regional
         </Title>
       </Row>
       <Row>
         <Col md={8} className="fr-pr-8w">
-          <Text>
+          <Text className="fr-pr-8w">
             Desriptif de notre référentiel des disciplines, limites et
             périmètres. <br />
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
@@ -60,30 +69,54 @@ export default function UniversityOverview() {
             lobortis mauris eget malesuada. Sed in consequat elit, eu fringilla
             magna.
           </Text>
-          <FieldsDistributionBar />
-          <CnuGroupsChart />
-          <StatusDistribution />
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea repellat
-          corporis est laudantium consequuntur consectetur, odit temporibus!
-          Eligendi, vitae. Vero, harum molestias? Repellendus voluptatem non
-          aperiam? Enim ab obcaecati non?
+          <div className="fr-mt-5w">
+            <FieldsDistributionBar />
+          </div>
+          <div className="fr-mt-5w">
+            <CnuGroupsChart />
+            <Text>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Voluptatem sit quod veniam quam odio a earum deserunt minima velit
+              minus cumque explicabo, ducimus porro inventore. Veniam autem
+              error cupiditate eum. Lorem ipsum dolor sit, amet consectetur
+              adipisicing elit. Similique exercitationem totam suscipit, vel
+              ipsum nobis commodi ut omnis ipsa aspernatur nostrum atque odio
+              praesentium corrupti! Quidem consectetur voluptatem laudantium
+              nam.
+            </Text>
+          </div>
+        </Col>
+        <Col md={4} style={{ textAlign: "center" }}>
+          <div className="fr-mb-5w">
+            <GeneralIndicatorsCard />
+          </div>
+          <div className="fr-mt-5w">
+            <DisciplineStatsSidebar />
+          </div>
+          <div>
+            <DisciplineStatusSummary />
+          </div>
           <div className="fr-mt-3w">
             <AgeDistributionPieChart />
           </div>
         </Col>
-        <Col md={4} style={{ textAlign: "center" }}>
-          <GeneralIndicatorsCard />
-          <DisciplineStatsSidebar />
-          <DisciplineStatusSummary />
+        <Col>
+          <div className="fr-pr-8w">
+            <StatusDistribution />
+            <Text size="sm" className="fr-mt-2w">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea
+              repellat corporis est laudantium consequuntur consectetur, odit
+              temporibus! Eligendi, vitae. Vero, harum molestias? Repellendus
+              voluptatem non aperiam? Enim ab obcaecati non?
+            </Text>
+          </div>
+          <EstablishmentTypeChart />
         </Col>
-      </Row>
-      <Row>
-        <EstablishmentTypeChart />
       </Row>
       <Row className="fr-mt-4w fr-mb-5w">
         <Col>
           <Title as="h4" look="h5">
-            Explorer par discipline
+            Explorer par universités
           </Title>
           <NavigationCards type="structures" maxItems={25} />
         </Col>

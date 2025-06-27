@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
 import {
   createCnuGroupsChartOptions,
   getColorForDiscipline,
@@ -9,7 +8,52 @@ import {
 } from "./options";
 import { useFacultyMembersCNU } from "../../api/use-cnu";
 import { useContextDetection } from "../../utils";
-import { formatToPercent } from "../../../../utils/format";
+import ChartWrapper from "../../../../components/chart-wrapper";
+
+function RenderData({ groupedData }) {
+  if (!groupedData || groupedData.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table id="cnu-groups-table">
+              <thead>
+                <tr>
+                  <th>Groupe CNU</th>
+                  <th>Effectif total</th>
+                  <th>Hommes</th>
+                  <th>Femmes</th>
+                  <th>% Hommes</th>
+                  <th>% Femmes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {groupedData.map((group, index) => (
+                  <tr key={index}>
+                    <td>{group.groupLabel}</td>
+                    <td>{group.totalCount.toLocaleString()}</td>
+                    <td>{group.maleCount.toLocaleString()}</td>
+                    <td>{group.femaleCount.toLocaleString()}</td>
+                    <td>{group.malePercent}%</td>
+                    <td>{group.femalePercent}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 interface DataPoint {
   name: string;
@@ -26,7 +70,7 @@ interface DataPoint {
 
 interface GroupedData {
   discipline: string;
-  groups: unknown[];
+  groups: CNUGroup[];
   totalCount: number;
 }
 
@@ -52,6 +96,7 @@ export default function CnuGroupsChart() {
     annee_universitaire: selectedYear,
     contextId,
   });
+
   const cnuGroups = useMemo(() => {
     if (!cnuData?.cnu_groups_with_sections || !selectedYear) {
       return [];
@@ -93,6 +138,7 @@ export default function CnuGroupsChart() {
 
     return allGroups;
   }, [cnuData, selectedYear]);
+
   const groupedData: GroupedData[] = useMemo(() => {
     if (!cnuGroups || cnuGroups.length === 0) return [];
 
@@ -127,6 +173,29 @@ export default function CnuGroupsChart() {
       };
     });
   }, [cnuGroups]);
+
+  const tableData = useMemo(() => {
+    if (!groupedData || groupedData.length === 0) return [];
+
+    return groupedData.flatMap((itemData) =>
+      itemData.groups.map((group) => {
+        const maleCount = group.maleCount || 0;
+        const femaleCount = group.femaleCount || 0;
+        const totalCount = group.totalCount || 0;
+
+        return {
+          groupLabel: `${group.cnuGroupLabel} (Groupe ${group.cnuGroupId})`,
+          totalCount,
+          maleCount,
+          femaleCount,
+          malePercent:
+            totalCount > 0 ? Math.round((maleCount / totalCount) * 100) : 0,
+          femalePercent:
+            totalCount > 0 ? Math.round((femaleCount / totalCount) * 100) : 0,
+        };
+      })
+    );
+  }, [groupedData]);
 
   const categories = groupedData.map((d) => d.discipline);
 
@@ -187,119 +256,25 @@ export default function CnuGroupsChart() {
       </div>
     );
   }
-  if (cnuGroups.length === 1) {
-    const singleGroup = cnuGroups[0];
-    const femalePercent =
-      singleGroup.totalCount > 0
-        ? Math.round((singleGroup.femaleCount / singleGroup.totalCount) * 100)
-        : 0;
-    const malePercent = 100 - femalePercent;
-
-    return (
-      <div className="fr-py-4w">
-        <div className="fr-alert fr-alert--info">
-          <h3 className="fr-alert__title">Groupe CNU unique</h3>
-          <p>
-            {contextId
-              ? `${
-                  contextName === "discipline"
-                    ? "Cette"
-                    : contextName === "région"
-                    ? "Cette"
-                    : "Cet"
-                } ${contextName} ne contient qu'un seul groupe CNU`
-              : "Il n'y a qu'un seul groupe CNU dans la sélection actuelle"}{" "}
-            :{" "}
-            <strong>
-              Groupe {singleGroup.cnuGroupId} - {singleGroup.cnuGroupLabel}
-            </strong>
-          </p>
-          <div className="fr-mt-3w">
-            <div className="fr-grid-row fr-grid-row--gutters">
-              <div className="fr-col-12 fr-col-md-3">
-                <div className="fr-card fr-card--grey">
-                  <div className="fr-card__body">
-                    <div className="fr-card__content">
-                      <h4 className="fr-card__title">Effectif total</h4>
-                      <p className="fr-text--xl fr-mb-0">
-                        <strong>
-                          {singleGroup.totalCount.toLocaleString()}
-                        </strong>{" "}
-                        enseignants
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="fr-col-12 fr-col-md-3">
-                <div className="fr-card fr-card--grey">
-                  <div className="fr-card__body">
-                    <div className="fr-card__content">
-                      <h4 className="fr-card__title">Hommes</h4>
-                      <p className="fr-text--xl fr-mb-0">
-                        <strong>
-                          {singleGroup.maleCount.toLocaleString()}
-                        </strong>{" "}
-                        ({malePercent}%)
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="fr-col-12 fr-col-md-3">
-                <div className="fr-card fr-card--grey">
-                  <div className="fr-card__body">
-                    <div className="fr-card__content">
-                      <h4 className="fr-card__title">Femmes</h4>
-                      <p className="fr-text--xl fr-mb-0">
-                        <strong>
-                          {singleGroup.femaleCount.toLocaleString()}
-                        </strong>{" "}
-                        ({formatToPercent(femalePercent)})
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="fr-col-12 fr-col-md-3">
-                <div className="fr-card fr-card--grey">
-                  <div className="fr-card__body">
-                    <div className="fr-card__content">
-                      <h4 className="fr-card__title">Sections CNU</h4>
-                      <p className="fr-text--xl fr-mb-0">
-                        <strong>{singleGroup.cnuSections.length}</strong>{" "}
-                        sections
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="fr-mt-3w">
-            <h4>Sections CNU du groupe :</h4>
-            <div className="fr-grid-row fr-grid-row--gutters">
-              {singleGroup.cnuSections.map((section, index) => (
-                <div key={index} className="fr-col-12 fr-col-md-6">
-                  <div className="fr-badge fr-badge--info fr-m-1w">
-                    {section.section_code} - {section.section_name}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-          <p className="fr-mt-3w fr-text--sm">
-            Un graphique en barres empilées n'est pas nécessaire pour visualiser
-            un seul groupe. Les données détaillées sont disponibles ci-dessus.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="fr-mb-4w">
-      <HighchartsReact highcharts={Highcharts} options={options} />
+      <ChartWrapper
+        config={{
+          id: "cnu-groups-chart",
+          idQuery: "cnu-groups",
+          title: {
+            fr: "Groupes CNU",
+          },
+          description: {
+            fr: "blablabla",
+          },
+          integrationURL: "/integration-url",
+        }}
+        options={options}
+        legend={null}
+        renderData={() => <RenderData groupedData={tableData} />}
+      />
     </div>
   );
 }

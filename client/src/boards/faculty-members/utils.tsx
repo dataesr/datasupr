@@ -1,5 +1,6 @@
 import { useSearchParams, useParams, useLocation } from "react-router-dom";
 import { useMemo } from "react";
+import { useContext } from "./pages/research-teachers/utils/use-context";
 
 export type ContextType = "fields" | "geo" | "structures";
 
@@ -8,7 +9,6 @@ export interface ContextInfo {
   contextId: string | undefined;
   contextName: string;
 }
-
 export function useContextDetection(): ContextInfo {
   const [searchParams] = useSearchParams();
   const { geo_id, id, field_id: paramFieldId } = useParams();
@@ -25,17 +25,19 @@ export function useContextDetection(): ContextInfo {
         contextId: field_id,
         contextName: "discipline",
       };
-    } else if (geo_id_param) {
+    }
+    if (geo_id_param) {
       return {
         context: "geo" as const,
         contextId: geo_id_param,
         contextName: "région",
       };
-    } else if (structure_id) {
+    }
+    if (structure_id) {
       return {
         context: "structures" as const,
         contextId: structure_id,
-        contextName: "établissement",
+        contextName: "université",
       };
     }
 
@@ -44,19 +46,21 @@ export function useContextDetection(): ContextInfo {
       return {
         context: "fields" as const,
         contextId: undefined,
-        contextName: "Toutes les grandes disciplines",
+        contextName: "discipline",
       };
-    } else if (path.includes("/geo/")) {
+    }
+    if (path.includes("/geo/")) {
       return {
         context: "geo" as const,
         contextId: undefined,
-        contextName: "France",
+        contextName: "région",
       };
-    } else if (path.includes("/universite/")) {
+    }
+    if (path.includes("/universite/")) {
       return {
         context: "structures" as const,
         contextId: undefined,
-        contextName: "Tous les établissements",
+        contextName: "université",
       };
     }
 
@@ -69,30 +73,43 @@ export function useContextDetection(): ContextInfo {
 
   return contextInfo;
 }
-
 export function generateContextualTitle(
-  baseTitle: string,
+  baseTitle: string | null,
   context: ContextType,
   contextId?: string,
-  contextName?: string
+  allData?: { context_info?: { name: string } | null },
+  isLoading?: boolean
 ): string {
-  if (contextId && contextName && contextName !== "global") {
-    return `${baseTitle} - ${contextName}`;
-  } else if (contextId) {
-    const defaultNames = {
-      fields: "discipline sélectionnée",
-      geo: "région sélectionnée",
-      structures: "établissement sélectionné",
-    };
-    return `${baseTitle} - ${defaultNames[context]}`;
-  } else {
-    const globalNames = {
+  if (isLoading) {
+    return baseTitle ? `${baseTitle} - Chargement...` : "Chargement...";
+  }
+
+  if (contextId && !allData?.context_info) {
+    const fallbackTitles = {
       fields: "Toutes disciplines",
       geo: "Toutes régions",
-      structures: "Tous établissements",
+      structures: "Toutes les universités",
     };
-    return `${baseTitle} - ${globalNames[context]}`;
+    return baseTitle
+      ? `${baseTitle} - ${fallbackTitles[context]}`
+      : fallbackTitles[context];
   }
+
+  if (contextId && allData?.context_info?.name) {
+    return baseTitle
+      ? `${baseTitle} - ${allData.context_info.name}`
+      : allData.context_info.name;
+  }
+
+  const genericTitles = {
+    fields: "Toutes disciplines",
+    geo: "Toutes régions",
+    structures: "Toutes les universités",
+  };
+
+  return baseTitle
+    ? `${baseTitle} - ${genericTitles[context]}`
+    : genericTitles[context];
 }
 
 export function generateIntegrationURL(
@@ -102,8 +119,94 @@ export function generateIntegrationURL(
   const contextPaths = {
     fields: "discipline",
     geo: "geo",
-    structures: "universite",
+    structure: "universite",
   };
 
   return `/personnel-enseignant/${contextPaths[context]}/${page}`;
+}
+
+export function useBreadcrumbItems(
+  context: ContextType,
+  contextId?: string,
+  contextName?: string
+): { label: string; href: string }[] {
+  const location = useLocation();
+  const { data: contextData, isLoading: isContextLoading } = useContext({
+    context,
+    contextId,
+  });
+
+  const searchParams = new URLSearchParams(location.search);
+  const selectedYear = searchParams.get("annee_universitaire") || "";
+
+  const currentPage = (() => {
+    if (location.pathname.includes("/typologie")) return "Typologie";
+    if (location.pathname.includes("/evolution")) return "Évolution";
+    if (location.pathname.includes("/enseignants-chercheurs"))
+      return "Enseignants-chercheurs";
+    return null;
+  })();
+
+  if (!contextId) {
+    switch (context) {
+      case "fields":
+        return [
+          {
+            label: "Toutes les disciplines",
+            href: "/personnel-enseignant/discipline/vue-d'ensemble/",
+          },
+          ...(currentPage ? [{ label: currentPage, href: "#" }] : []),
+        ];
+      case "geo":
+        return [
+          {
+            label: "Donnée nationale",
+            href: "/personnel-enseignant/geo/vue-d'ensemble/",
+          },
+          ...(currentPage ? [{ label: currentPage, href: "#" }] : []),
+        ];
+      case "structures":
+        return [
+          {
+            label: "Toutes les universités",
+            href: "/personnel-enseignant/universite/vue-d'ensemble/",
+          },
+          ...(currentPage ? [{ label: currentPage, href: "#" }] : []),
+        ];
+      default:
+        return [];
+    }
+  } else {
+    const baseLabel =
+      context === "fields"
+        ? "Toutes les disciplines"
+        : context === "geo"
+        ? "Donnée nationale"
+        : "Toutes les universités";
+
+    const baseHref =
+      context === "fields"
+        ? "/personnel-enseignant/discipline/vue-d'ensemble/"
+        : context === "geo"
+        ? "/personnel-enseignant/geo/vue-d'ensemble/"
+        : "/personnel-enseignant/universite/vue-d'ensemble/";
+
+    const overviewHref = `${baseHref}?annee_universitaire=${selectedYear}&${
+      context === "fields"
+        ? `field_id=${contextId}`
+        : context === "geo"
+        ? `geo_id=${contextId}`
+        : `structure_id=${contextId}`
+    }`;
+
+    const name = isContextLoading
+      ? "Chargement..."
+      : contextData?.lib || contextName || "Inconnu";
+
+    return [
+      { label: baseLabel, href: baseHref },
+      { label: name, href: overviewHref },
+      ...(currentPage ? [{ label: currentPage, href: "#" }] : []),
+    ];
+  }
 }

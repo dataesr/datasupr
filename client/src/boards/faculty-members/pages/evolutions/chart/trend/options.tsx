@@ -12,35 +12,10 @@ interface TrendsOptionsParams {
   contextType?: "discipline" | "région" | "établissement";
 }
 
-export function createTrendsOptions({
-  years,
-  chartData,
-  contextName,
-  contextType = "discipline",
-}: TrendsOptionsParams) {
+export function createTrendsOptions({ years, chartData }: TrendsOptionsParams) {
   const maleData = chartData.map((item) => item.male);
   const femaleData = chartData.map((item) => item.female);
   const totalData = chartData.map((item) => item.total);
-
-  const getTitle = () => {
-    if (contextName) {
-      const contextLabel = {
-        discipline: "discipline",
-        région: "région",
-        établissement: "établissement",
-      }[contextType];
-
-      return `Évolution des effectifs - ${contextLabel} ${contextName}`;
-    }
-    return "Évolution des effectifs du personnel enseignant";
-  };
-
-  const getSubtitle = () => {
-    if (years.length > 0) {
-      return `Période de ${years[0]} à ${years[years.length - 1]}`;
-    }
-    return "";
-  };
 
   return CreateChartOptions("column", {
     chart: {
@@ -52,20 +27,14 @@ export function createTrendsOptions({
       spacing: [20, 20, 20, 20],
     },
     title: {
-      text: getTitle(),
+      text: "",
       style: {
         fontSize: "18px",
         fontWeight: "bold",
         color: "#161616",
       },
     },
-    subtitle: {
-      text: getSubtitle(),
-      style: {
-        fontSize: "14px",
-        color: "#666666",
-      },
-    },
+
     xAxis: {
       categories: years,
       title: {

@@ -1,4 +1,4 @@
-import { Badge, Link } from "@dataesr/dsfr-plus";
+import { Badge } from "@dataesr/dsfr-plus";
 import { useFacultyMembersResearchTeachers } from "../../../api/use-research-teachers";
 import { useMemo } from "react";
 import { formatToPercent } from "../../../../../utils/format";
@@ -96,6 +96,9 @@ export default function CnuSectionsTable({
               <th scope="col" className="text-center">
                 ≥ 56 ans
               </th>
+              <th scope="col" className="text-center">
+                Non précisé
+              </th>
             </>
           )}
         </tr>
@@ -117,21 +120,17 @@ export default function CnuSectionsTable({
           const older56 = section.ageDistribution?.find(
             (age) => age.ageClass === "56 ans et plus"
           );
+          const unspecified = section.ageDistribution?.find(
+            (age) => age.ageClass === "Non précisé"
+          );
 
           return (
             <tr key={`${section.cnuGroupId}-${section.cnuSectionId}`}>
-              {showDiscipline && (
-                <td>
-                  <Link
-                    href={`/personnel-enseignant/discipline/enseignants-chercheurs/${contextId}`}
-                  >
-                    <strong>{researchTeachersData?.fieldLabel}</strong>
-                  </Link>
-                </td>
-              )}
               {showGroup && (
                 <td>
                   <strong>{section.cnuGroupLabel}</strong>
+                  <br />
+                  <small className="text-grey">{section.cnuGroupId}</small>
                 </td>
               )}
               <td>
@@ -146,7 +145,7 @@ export default function CnuSectionsTable({
                 {section.femaleCount.toLocaleString()}
               </td>
               <td className="text-center">
-                {section.totalCount.toLocaleString()}
+                {section.totalCount?.toLocaleString()}
               </td>
               <td className="text-center">
                 <div className="progress-container">
@@ -169,19 +168,16 @@ export default function CnuSectionsTable({
               {showAgeDemographics && (
                 <>
                   <td className="text-center">
-                    {younger35?.count.toLocaleString() || "N/A"}
-                    <br />
-                    <small>{younger35?.percent}%</small>
+                    {younger35?.count?.toLocaleString() || "N/A"}
                   </td>
                   <td className="text-center">
-                    {middle36_55?.count.toLocaleString() || "N/A"}
-                    <br />
-                    <small>{middle36_55?.percent}%</small>
+                    {middle36_55?.count?.toLocaleString() || "N/A"}
                   </td>
                   <td className="text-center">
-                    {older56?.count.toLocaleString() || "N/A"}
-                    <br />
-                    <small>{older56?.percent}%</small>
+                    {older56?.count?.toLocaleString() || "N/A"}
+                  </td>
+                  <td className="text-center">
+                    {unspecified?.count?.toLocaleString() || "N/A"}
                   </td>
                 </>
               )}

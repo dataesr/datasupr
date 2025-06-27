@@ -10,8 +10,6 @@ interface AgeEvolutionOptionsParams {
 export function createAgeEvolutionOptions({
   years,
   ageData,
-  contextName,
-  contextType = "discipline",
 }: AgeEvolutionOptionsParams) {
   const ageColors = {
     "35 ans et moins": "#4B9DFF",
@@ -38,26 +36,6 @@ export function createAgeEvolutionOptions({
     };
   });
 
-  const getTitle = () => {
-    if (contextName) {
-      const contextLabel = {
-        discipline: "discipline",
-        région: "région",
-        établissement: "établissement",
-      }[contextType];
-
-      return `Évolution de la pyramide des âges - ${contextLabel} ${contextName}`;
-    }
-    return "Évolution de la pyramide des âges du personnel enseignant";
-  };
-
-  const getSubtitle = () => {
-    if (years.length > 0) {
-      return `Période de ${years[0]} à ${years[years.length - 1]}`;
-    }
-    return "";
-  };
-
   return CreateChartOptions("area", {
     chart: {
       height: 500,
@@ -66,20 +44,14 @@ export function createAgeEvolutionOptions({
       spacing: [20, 20, 20, 20],
     },
     title: {
-      text: getTitle(),
+      text: "",
       style: {
         fontSize: "18px",
         fontWeight: "bold",
         color: "#161616",
       },
     },
-    subtitle: {
-      text: getSubtitle(),
-      style: {
-        fontSize: "14px",
-        color: "#666666",
-      },
-    },
+
     xAxis: {
       categories: years,
       title: {

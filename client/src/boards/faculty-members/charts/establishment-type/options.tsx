@@ -1,16 +1,12 @@
 export const createEstablishmentTypeChartOptions = (
   categories: string[],
-  data: number[],
-  year: string
+  data: number[]
 ) => ({
   chart: {
     type: "column" as const,
   },
   title: {
-    text: "Répartition du personnel enseignant par type d'établissement",
-  },
-  subtitle: {
-    text: `Année universitaire ${year}`,
+    text: "",
   },
   xAxis: {
     categories: categories,
