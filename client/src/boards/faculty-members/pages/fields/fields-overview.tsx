@@ -25,6 +25,8 @@ export default function FieldOverview() {
 
   const breadcrumbItems = useBreadcrumbItems(context, contextId, contextName);
 
+  console.log("context", context);
+
   return (
     <Container as="main">
       <Row>

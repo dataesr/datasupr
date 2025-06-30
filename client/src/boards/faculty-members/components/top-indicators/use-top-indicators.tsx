@@ -34,7 +34,7 @@ export const useTopIndicators = ({
         }
       }
 
-      const url = `${VITE_APP_SERVER_URL}/faculty-members/structures/top-indicators${
+      const url = `${VITE_APP_SERVER_URL}/faculty-members/${context}/top-indicators${
         params.toString() ? `?${params.toString()}` : ""
       }`;
 

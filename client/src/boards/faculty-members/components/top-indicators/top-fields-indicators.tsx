@@ -11,7 +11,7 @@ const TopItemsIndicators: React.FC = () => {
   const { context, contextId } = useContextDetection();
 
   const {
-    data: structureGenderData,
+    data: genderData,
     isLoading,
     error,
   } = useTopIndicators({
@@ -21,9 +21,9 @@ const TopItemsIndicators: React.FC = () => {
   });
 
   const itemsData = useMemo(() => {
-    if (contextId || !structureGenderData || !selectedYear) return [];
+    if (contextId || !genderData || !selectedYear) return [];
 
-    const distributionData = structureGenderData.gender_distribution;
+    const distributionData = genderData.gender_distribution;
 
     if (!distributionData) return [];
 
@@ -41,16 +41,36 @@ const TopItemsIndicators: React.FC = () => {
           }
         });
 
+        let itemIdField = "";
+        let itemLabelField = "";
+
+        switch (context) {
+          case "fields":
+            itemIdField = "field_code";
+            itemLabelField = "field_name";
+            break;
+          case "structures":
+            itemIdField = "structure_code";
+            itemLabelField = "structure_name";
+            break;
+          case "geo":
+            itemIdField = "geo_code";
+            itemLabelField = "geo_name";
+            break;
+          default:
+            throw new Error(`Contexte inconnu : ${context}`);
+        }
+
         return {
-          item_id: item._id.structure_code,
-          itemLabel: item._id.structure_name,
+          item_id: item._id[itemIdField],
+          itemLabel: item._id[itemLabelField],
           maleCount,
           femaleCount,
           totalCount,
         };
       })
       .sort((a, b) => b.totalCount - a.totalCount);
-  }, [structureGenderData, selectedYear, contextId]);
+  }, [genderData, selectedYear, contextId, context]);
 
   if (contextId) {
     return null;
@@ -164,10 +184,6 @@ const TopItemsIndicators: React.FC = () => {
           </div>
         );
       })}
-
-      <div className="fr-text--xs fr-text--grey">
-        Total: {totalAllItems.toLocaleString()} enseignants
-      </div>
     </div>
   );
 };
