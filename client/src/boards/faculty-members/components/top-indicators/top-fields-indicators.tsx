@@ -4,6 +4,7 @@ import { useContextDetection } from "../../utils";
 import { formatToPercent } from "../../../../utils/format";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useTopIndicators } from "./use-top-indicators";
+import { Title, Text, Row, Col } from "@dataesr/dsfr-plus";
 
 const TopItemsIndicators: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -19,6 +20,20 @@ const TopItemsIndicators: React.FC = () => {
     annee_universitaire: selectedYear,
     contextId,
   });
+
+  let word = "";
+
+  switch (context) {
+    case "fields":
+      word = "disciplines";
+      break;
+    case "geo":
+      word = "régions";
+      break;
+    case "structures":
+      word = "structures";
+      break;
+  }
 
   const itemsData = useMemo(() => {
     if (contextId || !genderData || !selectedYear) return [];
@@ -121,23 +136,28 @@ const TopItemsIndicators: React.FC = () => {
     );
   }
 
-  const totalAllItems = itemsData.reduce((sum, d) => sum + d.totalCount, 0);
-
   return (
     <div
       style={{
         padding: "1rem",
-        borderRadius: "8px",
+        borderRadius: "px",
       }}
     >
-      <div style={{ marginBottom: "1rem" }}>
-        <div className="fr-text--sm">Top 3 des établissements</div>
-        <div className="fr-text--xs fr-text--grey">
-          Année universitaire {selectedYear}
-        </div>
-      </div>
+      <Row horizontalAlign="center">
+        <Title as="h3" look="h6">
+          Top 3 des {word}
+          <Text
+            className="fr-text--sm fr-text--regular"
+            style={{
+              marginBottom: "0px",
+            }}
+          >
+            Année universitaire {selectedYear}
+          </Text>
+        </Title>
+      </Row>
 
-      {itemsData.slice(0, 3).map((item, index) => {
+      {itemsData.slice(0, 3).map((item) => {
         const femalePercent = Math.round(
           ((item.femaleCount || 0) / (item.totalCount || 1)) * 100
         );
@@ -148,16 +168,28 @@ const TopItemsIndicators: React.FC = () => {
             style={{
               marginBottom: "1rem",
               paddingBottom: "1rem",
-              borderBottom: index < 2 ? "1px solid #ddd" : "none",
             }}
           >
-            <div className="fr-text--sm fr-text--bold">{item.itemLabel}</div>
-            <div className="fr-text--xs fr-text--grey">
+            <Row horizontalAlign="center" className="fr-text--sm fr-text--bold">
+              {item.itemLabel}
+            </Row>
+            <Row
+              horizontalAlign="center"
+              className="fr-text--xs fr-text--grey fr-mb-1w"
+            >
               {item.totalCount.toLocaleString()} enseignants
-            </div>
+            </Row>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <div style={{ textAlign: "center", flex: 1 }}>
-                <span
+              <Col
+                className="fr-py-2w"
+                style={{
+                  textAlign: "center",
+                  flex: 1,
+                  borderRight: "1px solid #ddd",
+                }}
+              >
+                <Row
+                  horizontalAlign="center"
                   style={{
                     fontSize: "1.2rem",
                     fontWeight: "bold",
@@ -165,11 +197,17 @@ const TopItemsIndicators: React.FC = () => {
                   }}
                 >
                   {formatToPercent(femalePercent)}
-                </span>
-                <div className="fr-text--xs">Femmes</div>
-              </div>
-              <div style={{ textAlign: "center", flex: 1 }}>
-                <span
+                </Row>
+                <Row horizontalAlign="center" className="fr-text--xs">
+                  Femmes
+                </Row>
+              </Col>
+              <Col
+                className="fr-py-2w"
+                style={{ textAlign: "center", flex: 1 }}
+              >
+                <Row
+                  horizontalAlign="center"
                   style={{
                     fontSize: "1.2rem",
                     fontWeight: "bold",
@@ -177,9 +215,11 @@ const TopItemsIndicators: React.FC = () => {
                   }}
                 >
                   {formatToPercent(100 - femalePercent)}
-                </span>
-                <div className="fr-text--xs">Hommes</div>
-              </div>
+                </Row>
+                <Row horizontalAlign="center" className="fr-text--xs">
+                  Hommes
+                </Row>
+              </Col>
             </div>
           </div>
         );

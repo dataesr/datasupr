@@ -1,10 +1,12 @@
 import { useSearchParams } from "react-router-dom";
 import { useMemo } from "react";
-import { generateContextualTitle, useContextDetection } from "../../utils";
+import { useContextDetection } from "../../utils";
 import { useGeneralIndicators } from "./use-general-indicators";
 import { useFacultyMembersResearchTeachers } from "../../api/use-research-teachers";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { formatToPercent } from "../../../../utils/format";
+import { Row, Title } from "@dataesr/dsfr-plus";
+import SubtitleWithContext from "../../pages/typology/utils/subtitle-with-context";
 
 interface GeneralIndicatorsCardProps {
   type?: "general" | "research-teachers";
@@ -87,18 +89,18 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
     };
   }, [processedData]);
 
-  const getTitle = () => {
-    if (type === "research-teachers") {
-      return "Enseignants-chercheurs";
-    }
-    return generateContextualTitle(
-      null,
-      context,
-      contextId,
-      overviewData,
-      isLoading
-    );
-  };
+  // const getTitle = () => {
+  //   if (type === "research-teachers") {
+  //     return "Enseignants-chercheurs";
+  //   }
+  //   return generateContextualTitle(
+  //     null,
+  //     context,
+  //     contextId,
+  //     overviewData,
+  //     isLoading
+  //   );
+  // };
 
   if (isLoading) {
     return (
@@ -150,26 +152,18 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
     calculatedData;
 
   return (
-    <div
-      style={{
-        padding: "1rem",
-        borderRadius: "8px",
-      }}
-    >
+    <div>
       <div style={{ marginBottom: "1rem" }}>
-        <div className="fr-text--sm">{getTitle()}</div>
-        <div
-          style={{
-            fontWeight: "bold",
-            fontSize: "1.5rem",
-            marginTop: "0.5rem",
-          }}
-        >
+        <Title as="h3" look="h6" style={{ marginBottom: "0px" }}>
+          Effectif total
+        </Title>
+        <SubtitleWithContext classText="fr-text--sm" />
+        <Row horizontalAlign="center" className="fr-text--lead fr-text--bold">
           {totalCount.toLocaleString()}
-        </div>
-        {selectedYear && (
-          <div className="fr-text--xs">Année universitaire {selectedYear}</div>
-        )}
+        </Row>
+        <Row horizontalAlign="center" className="fr-text--sm">
+          personnels enseignants
+        </Row>
       </div>
 
       <div style={{ display: "flex", justifyContent: "space-between" }}>
@@ -203,7 +197,7 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
               color: "var(--men-color, #efcb3a)",
             }}
           >
-            {malePercent}%
+            {formatToPercent(malePercent)}
           </span>
           <div className="fr-text--xs">Hommes</div>
           <div className="fr-text--xs">

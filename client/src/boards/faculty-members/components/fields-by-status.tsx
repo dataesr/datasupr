@@ -3,6 +3,7 @@ import { useMemo } from "react";
 import { useContextDetection } from "../utils";
 import DefaultSkeleton from "../../../components/charts-skeletons/default";
 import { useStatusDistribution } from "../charts/status/use-status-distribution";
+import { Title, Text, Row } from "@dataesr/dsfr-plus";
 
 const FieldByStatus: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -91,7 +92,6 @@ const FieldByStatus: React.FC = () => {
   }
 
   const {
-    totalCount,
     totalTitulaires,
     enseignantsChercheurs,
     nonTitulaires,
@@ -128,27 +128,28 @@ const FieldByStatus: React.FC = () => {
         borderRadius: "8px",
       }}
     >
-      <div style={{ marginBottom: "1rem" }}>
-        <div className="fr-text--sm">Résumé des statuts</div>
-        <div className="fr-text--xs fr-text--grey">
-          Année universitaire {selectedYear}
-        </div>
-      </div>
+      <Row horizontalAlign="center">
+        <Title as="h3" look="h5">
+          Résumé des statuts
+          <Text
+            className="fr-text--sm fr-text--regular"
+            style={{
+              marginBottom: "0px",
+            }}
+          >
+            Année universitaire {selectedYear}
+          </Text>
+        </Title>
+      </Row>
 
       {statusItems.map((item, index) => (
-        <div
-          key={index}
-          style={{
-            marginBottom: "1rem",
-            paddingBottom: "1rem",
-            borderBottom:
-              index < statusItems.length - 1 ? "1px solid #ddd" : "none",
-          }}
-        >
-          <div className="fr-text--sm fr-text--bold">{item.label}</div>
-          <div className="fr-text--xs fr-text--grey">
+        <div key={index} className="fr-mb-3w">
+          <Row horizontalAlign="center" className="fr-text--sm fr-text--bold">
+            {item.label}
+          </Row>
+          <Row horizontalAlign="center" className="fr-text--xs fr-text--grey">
             {item.count.toLocaleString()} personnes
-          </div>
+          </Row>
           <div
             style={{
               height: "8px",
@@ -168,10 +169,6 @@ const FieldByStatus: React.FC = () => {
           </div>
         </div>
       ))}
-
-      <div className="fr-text--xs fr-text--grey">
-        Total: {totalCount.toLocaleString()} enseignants
-      </div>
     </div>
   );
 };
