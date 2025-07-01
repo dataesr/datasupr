@@ -88,7 +88,7 @@ export function generateContextualTitle(
     const fallbackTitles = {
       fields: "Toutes disciplines",
       geo: "Toutes régions",
-      structures: "Toutes les universités",
+      structures: "Tous les établissements",
     };
     return baseTitle
       ? `${baseTitle} - ${fallbackTitles[context]}`
@@ -104,7 +104,7 @@ export function generateContextualTitle(
   const genericTitles = {
     fields: "Toutes disciplines",
     geo: "Toutes régions",
-    structures: "Toutes les universités",
+    structures: "Tous les établissements",
   };
 
   return baseTitle
@@ -168,7 +168,7 @@ export function useBreadcrumbItems(
       case "structures":
         return [
           {
-            label: "Toutes les universités",
+            label: "Tous les établissements",
             href: "/personnel-enseignant/universite/vue-d'ensemble/",
           },
           ...(currentPage ? [{ label: currentPage, href: "#" }] : []),
@@ -182,7 +182,7 @@ export function useBreadcrumbItems(
         ? "Toutes les disciplines"
         : context === "geo"
         ? "Donnée nationale"
-        : "Toutes les universités";
+        : "Tous les établissements";
 
     const baseHref =
       context === "fields"
