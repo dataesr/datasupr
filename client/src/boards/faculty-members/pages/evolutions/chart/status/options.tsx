@@ -21,16 +21,11 @@ export function createStatusEvolutionOptions({
       type: "area",
       marginLeft: 60,
       marginRight: 30,
-      marginBottom: 100,
+      marginBottom: 120,
       spacing: [20, 20, 20, 20],
     },
     title: {
       text: "",
-      style: {
-        fontSize: "18px",
-        fontWeight: "bold",
-        color: "#161616",
-      },
     },
 
     xAxis: {

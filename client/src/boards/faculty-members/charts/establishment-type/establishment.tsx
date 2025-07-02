@@ -16,34 +16,31 @@ function RenderData({ data }) {
   }
 
   return (
-    <div className="fr-table--sm fr-table fr-table--bordered">
-      <div className="fr-table__wrapper">
-        <div className="fr-table__container">
-          <div className="fr-table__content">
-            <table id="establishment-type-table">
-              <thead>
-                <tr>
-                  <th>Type d'établissement</th>
-                  <th>Effectif total</th>
-                  <th>Pourcentage</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((item, index) => (
-                  <tr key={index}>
-                    <td>{item._id || "Non précisé"}</td>
-                    <td>{item.total_count.toLocaleString()}</td>
-                    <td>
-                      {item.percentage
-                        ? `${item.percentage.toFixed(1)}%`
-                        : "N/A"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+    <div style={{ width: "100%" }}>
+      <div className="fr-table-responsive">
+        <table
+          className="fr-table fr-table--bordered fr-table--sm"
+          style={{ width: "100%" }}
+        >
+          <thead>
+            <tr>
+              <th>Type d'établissement</th>
+              <th>Effectif total</th>
+              <th>Pourcentage</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr key={index}>
+                <td>{item._id || "Non précisé"}</td>
+                <td>{item.total_count.toLocaleString()}</td>
+                <td>
+                  {item.percentage ? `${item.percentage.toFixed(1)}%` : "N/A"}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

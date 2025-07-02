@@ -18,8 +18,11 @@ function RenderData({ data }) {
   }
 
   return (
-    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
-      <table className="fr-table">
+    <div style={{ width: "100%", overflowX: "auto" }} className="fr-mt-3w">
+      <table
+        className="fr-table fr-table--bordered fr-table--sm"
+        style={{ width: "100%" }}
+      >
         <thead>
           <tr>
             <th>Année</th>

@@ -23,16 +23,11 @@ export function createTrendsOptions({ years, chartData }: TrendsOptionsParams) {
       type: "column",
       marginLeft: 60,
       marginRight: 30,
-      marginBottom: 80,
+      marginBottom: 120,
       spacing: [20, 20, 20, 20],
     },
     title: {
       text: "",
-      style: {
-        fontSize: "18px",
-        fontWeight: "bold",
-        color: "#161616",
-      },
     },
 
     xAxis: {
@@ -136,13 +131,13 @@ export function createTrendsOptions({ years, chartData }: TrendsOptionsParams) {
       {
         name: "Hommes",
         data: maleData,
-        color: "#6A6AF4",
+        color: "var(--men-color, #efcb3a)",
         type: "column",
       },
       {
         name: "Femmes",
         data: femaleData,
-        color: "#EA526F",
+        color: "var(--women-color, #e18b76)",
         type: "column",
       },
     ],
