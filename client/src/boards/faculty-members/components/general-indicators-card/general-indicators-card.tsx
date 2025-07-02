@@ -55,18 +55,19 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
       });
       totalCount = overviewData.total_count || 0;
     } else if (type === "research-teachers") {
-      overviewData.cnuGroups?.forEach((group) => {
-        maleCount += group.maleCount || 0;
-        femaleCount += group.femaleCount || 0;
-        totalCount += group.totalCount || 0;
-      });
+      if (overviewData.cnuGroups?.length) {
+        overviewData.cnuGroups.forEach((group) => {
+          maleCount += group.maleCount || 0;
+          femaleCount += group.femaleCount || 0;
+          totalCount += group.totalCount || 0;
+        });
+      }
     }
-
     return {
       totalCount,
       maleCount,
       femaleCount,
-      itemName: overviewData.context_info?.name || contextId,
+      itemName: overviewData.context_info?.name || contextId || "Global",
     };
   }, [overviewData, contextId, type]);
 
@@ -88,19 +89,6 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
       malePercent,
     };
   }, [processedData]);
-
-  // const getTitle = () => {
-  //   if (type === "research-teachers") {
-  //     return "Enseignants-chercheurs";
-  //   }
-  //   return generateContextualTitle(
-  //     null,
-  //     context,
-  //     contextId,
-  //     overviewData,
-  //     isLoading
-  //   );
-  // };
 
   if (isLoading) {
     return (

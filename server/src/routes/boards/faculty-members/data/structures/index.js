@@ -490,8 +490,9 @@ router.get(
       const matchStage = {
         is_enseignant_chercheur: true,
       };
-      if (annee_universitaire)
+      if (annee_universitaire) {
         matchStage.annee_universitaire = annee_universitaire;
+      }
       if (structure_id) {
         matchStage.$or = [
           { etablissement_id_paysage: structure_id },
@@ -499,262 +500,143 @@ router.get(
         ];
       }
 
-      if (structure_id) {
-        const structureInfo = await collection.findOne(
+      const cnuData = await collection
+        .aggregate([
+          { $match: matchStage },
           {
-            $or: [
-              { etablissement_id_paysage: structure_id },
-              { etablissement_id_paysage_actuel: structure_id },
-            ],
+            $group: {
+              _id: {
+                group_code: "$code_groupe_cnu",
+                group_name: "$groupe_cnu",
+                section_code: "$code_section_cnu",
+                section_name: "$section_cnu",
+                gender: "$sexe",
+                age_class: "$classe_age3",
+              },
+              count: { $sum: "$effectif" },
+            },
           },
           {
-            projection: {
-              etablissement_lib: 1,
-              etablissement_id_paysage: 1,
-              etablissement_id_paysage_actuel: 1,
-            },
-          }
-        );
-
-        const cnuData = await collection
-          .aggregate([
-            { $match: matchStage },
-            {
-              $group: {
-                _id: {
-                  group_code: "$code_groupe_cnu",
-                  group_name: "$groupe_cnu",
-                  section_code: "$code_section_cnu",
-                  section_name: "$section_cnu",
-                  gender: "$sexe",
-                  age_class: "$classe_age3",
-                },
-                count: { $sum: "$effectif" },
+            $group: {
+              _id: {
+                group_code: "$_id.group_code",
+                group_name: "$_id.group_name",
+                section_code: "$_id.section_code",
+                section_name: "$_id.section_name",
               },
-            },
-            {
-              $group: {
-                _id: {
-                  group_code: "$_id.group_code",
-                  group_name: "$_id.group_name",
-                  section_code: "$_id.section_code",
-                  section_name: "$_id.section_name",
+              maleCount: {
+                $sum: {
+                  $cond: [{ $eq: ["$_id.gender", "Masculin"] }, "$count", 0],
                 },
-                totalCount: { $sum: "$count" },
-                genderBreakdown: {
-                  $push: {
-                    gender: "$_id.gender",
-                    count: "$count",
-                  },
+              },
+              femaleCount: {
+                $sum: {
+                  $cond: [{ $eq: ["$_id.gender", "Féminin"] }, "$count", 0],
                 },
-                ageBreakdown: {
-                  $push: {
-                    age_class: "$_id.age_class",
-                    count: "$count",
-                  },
+              },
+              totalCount: { $sum: "$count" },
+              ageDistribution: {
+                $push: {
+                  ageClass: "$_id.age_class",
+                  count: "$count",
                 },
               },
             },
-            { $sort: { totalCount: -1 } },
-          ])
-          .toArray();
-
-        const cnuGroups = new Map();
-
-        cnuData.forEach((item) => {
-          const groupCode = item._id.group_code;
-          const groupName = item._id.group_name;
-          const sectionCode = item._id.section_code;
-          const sectionName = item._id.section_name;
-
-          if (!cnuGroups.has(groupCode)) {
-            cnuGroups.set(groupCode, {
-              cnuGroupId: groupCode,
-              cnuGroupLabel: groupName,
-              maleCount: 0,
-              femaleCount: 0,
-              totalCount: 0,
-              cnuSections: [],
-              ageDistribution: [
-                { ageClass: "35 ans et moins", count: 0, percent: "0" },
-                { ageClass: "36 à 55 ans", count: 0, percent: "0" },
-                { ageClass: "56 ans et plus", count: 0, percent: "0" },
-                { ageClass: "Non précisé", count: 0, percent: "0" },
-              ],
-            });
-          }
-
-          const group = cnuGroups.get(groupCode);
-
-          const maleCount =
-            item.genderBreakdown.find((g) => g.gender === "Masculin")?.count ||
-            0;
-          const femaleCount =
-            item.genderBreakdown.find((g) => g.gender === "Féminin")?.count ||
-            0;
-
-          const ageDistribution = [
-            "35 ans et moins",
-            "36 à 55 ans",
-            "56 ans et plus",
-            "Non précisé",
-          ].map((ageClass) => {
-            const ageData = item.ageBreakdown.find(
-              (a) => a.age_class === ageClass
-            );
-            const count = ageData?.count || 0;
-            const percent =
-              item.totalCount > 0
-                ? ((count / item.totalCount) * 100).toFixed(1)
-                : "0";
-
-            const groupAgeItem = group.ageDistribution.find(
-              (a) => a.ageClass === ageClass
-            );
-            if (groupAgeItem) {
-              groupAgeItem.count += count;
-            }
-            return { ageClass, count, percent };
-          });
-
-          group.cnuSections.push({
-            cnuSectionId: sectionCode,
-            cnuSectionLabel: sectionName,
-            maleCount: maleCount,
-            femaleCount: femaleCount,
-            totalCount: item.totalCount,
-            ageDistribution: ageDistribution,
-          });
-
-          group.maleCount += maleCount;
-          group.femaleCount += femaleCount;
-          group.totalCount += item.totalCount;
-        });
-
-        cnuGroups.forEach((group) => {
-          group.ageDistribution.forEach((ageItem) => {
-            ageItem.percent =
-              group.totalCount > 0
-                ? ((ageItem.count / group.totalCount) * 100).toFixed(1)
-                : "0";
-          });
-        });
-        const genderData = await collection
-          .aggregate([
-            { $match: matchStage },
-            {
-              $group: {
-                _id: "$sexe",
-                count: { $sum: "$effectif" },
+          },
+          {
+            $group: {
+              _id: {
+                group_code: "$_id.group_code",
+                group_name: "$_id.group_name",
               },
-            },
-          ])
-          .toArray();
-
-        const totalCount = genderData.reduce(
-          (sum, item) => sum + item.count,
-          0
-        );
-        const maleCount =
-          genderData.find((item) => item._id === "Masculin")?.count || 0;
-        const femaleCount =
-          genderData.find((item) => item._id === "Féminin")?.count || 0;
-
-        // Disciplines dans cet établissement
-        const disciplinesData = await collection
-          .aggregate([
-            { $match: matchStage },
-            {
-              $group: {
-                _id: {
-                  field_id: "$code_grande_discipline",
-                  fieldLabel: "$grande_discipline",
-                  gender: "$sexe",
-                },
-                count: { $sum: "$effectif" },
-              },
-            },
-            {
-              $group: {
-                _id: {
-                  field_id: "$_id.field_id",
-                  fieldLabel: "$_id.fieldLabel",
-                },
-                totalCount: { $sum: "$count" },
-                genderBreakdown: {
-                  $push: {
-                    gender: "$_id.gender",
-                    count: "$count",
-                  },
+              groupTotal: { $sum: "$totalCount" },
+              maleCount: { $sum: "$maleCount" },
+              femaleCount: { $sum: "$femaleCount" },
+              sections: {
+                $push: {
+                  sectionCode: "$_id.section_code",
+                  sectionName: "$_id.section_name",
+                  totalCount: "$totalCount",
+                  maleCount: "$maleCount",
+                  femaleCount: "$femaleCount",
+                  ageDistribution: "$ageDistribution",
                 },
               },
             },
-            { $sort: { totalCount: -1 } },
-          ])
-          .toArray();
+          },
+          { $sort: { groupTotal: -1 } },
+        ])
+        .toArray();
 
-        const fields = disciplinesData.map((item) => {
-          const maleCount =
-            item.genderBreakdown.find((g) => g.gender === "Masculin")?.count ||
-            0;
-          const femaleCount =
-            item.genderBreakdown.find((g) => g.gender === "Féminin")?.count ||
-            0;
-
-          return {
-            field_id: item._id.field_id,
-            fieldLabel: item._id.fieldLabel,
-            maleCount: maleCount,
-            femaleCount: femaleCount,
-            totalCount: item.totalCount,
-          };
-        });
-
-        res.json({
-          structure_id: structure_id,
-          structureName:
-            structureInfo?.etablissement_lib || "Établissement inconnu",
-          maleCount: maleCount,
-          femaleCount: femaleCount,
-          totalCount: totalCount,
-          fields: fields,
-          cnuGroups: Array.from(cnuGroups.values()), // ✅ AJOUTÉ ICI
-        });
-      } else {
-        // CAS GLOBAL : Tous les établissements
-        const structuresData = await collection
-          .aggregate([
-            { $match: matchStage },
-            {
-              $group: {
-                _id: {
-                  structure_id: "$etablissement_id_paysage",
-                  structureName: "$etablissement_lib",
-                  gender: "$sexe",
-                },
-                count: { $sum: "$effectif" },
+      const disciplinesData = await collection
+        .aggregate([
+          { $match: matchStage },
+          {
+            $group: {
+              _id: {
+                field_id: "$code_grande_discipline",
+                fieldLabel: "$grande_discipline",
+                gender: "$sexe",
               },
+              count: { $sum: "$effectif" },
             },
-            {
-              $group: {
-                _id: {
-                  structure_id: "$_id.structure_id",
-                  structureName: "$_id.structureName",
-                },
-                totalCount: { $sum: "$count" },
-                genderBreakdown: {
-                  $push: {
-                    gender: "$_id.gender",
-                    count: "$count",
-                  },
+          },
+          {
+            $group: {
+              _id: {
+                field_id: "$_id.field_id",
+                fieldLabel: "$_id.fieldLabel",
+              },
+              totalCount: { $sum: "$count" },
+              genderBreakdown: {
+                $push: {
+                  gender: "$_id.gender",
+                  count: "$count",
                 },
               },
             },
-            { $sort: { totalCount: -1 } },
-          ])
-          .toArray();
+          },
+          { $sort: { totalCount: -1 } },
+        ])
+        .toArray();
 
-        const structures = structuresData.map((item) => {
+      const structuresData = await collection
+        .aggregate([
+          { $match: matchStage },
+          {
+            $group: {
+              _id: {
+                structure_id: "$etablissement_id_paysage_actuel",
+                structureName: "$etablissement_actuel_lib",
+                gender: "$sexe",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                structure_id: "$_id.structure_id",
+                structureName: "$_id.structureName",
+              },
+              totalCount: { $sum: "$count" },
+              genderBreakdown: {
+                $push: {
+                  gender: "$_id.gender",
+                  count: "$count",
+                },
+              },
+            },
+          },
+          { $sort: { totalCount: -1 } },
+        ])
+        .toArray();
+
+      // Transformation des données par structure
+      const structures = structuresData
+        .map((item) => {
+          if (!item._id.structure_id || !item._id.structureName) return null;
+
           const maleCount =
             item.genderBreakdown.find((g) => g.gender === "Masculin")?.count ||
             0;
@@ -769,29 +651,42 @@ router.get(
             femaleCount: femaleCount,
             totalCount: item.totalCount,
           };
-        });
+        })
+        .filter(Boolean);
 
-        const totalCount = structures.reduce(
-          (sum, structure) => sum + structure.totalCount,
-          0
-        );
-        const maleCount = structures.reduce(
-          (sum, structure) => sum + structure.maleCount,
-          0
-        );
-        const femaleCount = structures.reduce(
-          (sum, structure) => sum + structure.femaleCount,
-          0
-        );
+      const fields = disciplinesData.map((item) => {
+        const maleCount =
+          item.genderBreakdown.find((g) => g.gender === "Masculin")?.count || 0;
+        const femaleCount =
+          item.genderBreakdown.find((g) => g.gender === "Féminin")?.count || 0;
 
-        // RÉPONSE SANS CNU GROUPS (vue globale)
-        res.json({
-          totalCount: totalCount,
+        return {
+          field_id: item._id.field_id,
+          fieldLabel: item._id.fieldLabel,
           maleCount: maleCount,
           femaleCount: femaleCount,
-          structures: structures, // ✅ CORRIGÉ
-        });
-      }
+          totalCount: item.totalCount,
+        };
+      });
+
+      res.json({
+        cnuGroups: cnuData.map((group) => ({
+          cnuGroupId: group._id.group_code,
+          cnuGroupLabel: group._id.group_name,
+          maleCount: group.maleCount,
+          femaleCount: group.femaleCount,
+          totalCount: group.groupTotal,
+          cnuSections: group.sections.map((section) => ({
+            cnuSectionId: section.sectionCode,
+            cnuSectionLabel: section.sectionName,
+            maleCount: section.maleCount,
+            femaleCount: section.femaleCount,
+            totalCount: section.totalCount,
+            ageDistribution: section.ageDistribution,
+          })),
+        })),
+        structures: structures,
+      });
     } catch (error) {
       console.error("Error fetching research teachers by structures:", error);
       res.status(500).json({ error: "Server error" });

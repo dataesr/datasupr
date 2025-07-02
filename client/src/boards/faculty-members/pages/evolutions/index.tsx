@@ -29,15 +29,17 @@ export function Evolution() {
       </Row>
 
       <Row gutters className="fr-mb-5w">
-        <Col md={6}>
+        <Col>
           <TrendsChart />
         </Col>
-        <Col md={6}>
+      </Row>
+      <Row gutters className="fr-mb-5w">
+        <Col>
           <StatusEvolutionChart />
         </Col>
       </Row>
       <Row gutters className="fr-mb-5w">
-        <Col md={6}>
+        <Col>
           <AgeEvolutionChart />
         </Col>
       </Row>

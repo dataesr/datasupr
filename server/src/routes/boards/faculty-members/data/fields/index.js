@@ -851,6 +851,53 @@ router.get("/faculty-members/fields/research-teachers", async (req, res) => {
       ])
       .toArray();
 
+    const disciplinesData = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: {
+              field_id: "$code_grande_discipline",
+              fieldLabel: "$grande_discipline",
+              gender: "$sexe",
+            },
+            count: { $sum: "$effectif" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              field_id: "$_id.field_id",
+              fieldLabel: "$_id.fieldLabel",
+            },
+            totalCount: { $sum: "$count" },
+            genderBreakdown: {
+              $push: {
+                gender: "$_id.gender",
+                count: "$count",
+              },
+            },
+          },
+        },
+        { $sort: { totalCount: -1 } },
+      ])
+      .toArray();
+
+    const fields = disciplinesData.map((item) => {
+      const maleCount =
+        item.genderBreakdown.find((g) => g.gender === "Masculin")?.count || 0;
+      const femaleCount =
+        item.genderBreakdown.find((g) => g.gender === "Féminin")?.count || 0;
+
+      return {
+        field_id: item._id.field_id,
+        fieldLabel: item._id.fieldLabel,
+        maleCount: maleCount,
+        femaleCount: femaleCount,
+        totalCount: item.totalCount,
+      };
+    });
+
     res.json({
       cnuGroups: cnuData.map((group) => ({
         cnuGroupId: group._id.group_code,
@@ -868,6 +915,7 @@ router.get("/faculty-members/fields/research-teachers", async (req, res) => {
           ageDistribution: section.ageDistribution,
         })),
       })),
+      fields: fields,
     });
   } catch (error) {
     console.error("Error fetching research teachers by fields:", error);
