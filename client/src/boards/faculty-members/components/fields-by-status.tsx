@@ -105,19 +105,19 @@ const FieldByStatus: React.FC = () => {
       label: "Titulaires",
       percent: Math.round(titulairesPercent || 0),
       count: totalTitulaires,
-      color: "var(--blue-cumulus-sun-368)",
+      color: "var(--green-bourgeon-main-640)",
     },
     {
       label: "Enseignants-chercheurs",
       percent: Math.round(enseignantsChercheursPercent || 0),
       count: enseignantsChercheurs,
-      color: "var(--pink-tuile-sun-425)",
+      color: "var(--orange-terre-battue-main-645)",
     },
     {
       label: "Non titulaires",
       percent: Math.round(nonTitulairesPercent || 0),
       count: nonTitulaires,
-      color: "var(--beige-gris-galet-sun-407)",
+      color: "var(--blue-ecume-moon-675)",
     },
   ].filter((item) => item.percent > 0);
 

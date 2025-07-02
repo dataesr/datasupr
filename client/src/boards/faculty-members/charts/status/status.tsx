@@ -101,17 +101,17 @@ const StatusDistribution: React.FC = () => {
         {
           name: "Non-titulaires",
           value: item.nonTitulaires,
-          color: "#FF6B6B",
+          color: "var(--blue-ecume-moon-675)",
         },
         {
           name: "Titulaires ",
           value: item.titulairesNonChercheurs,
-          color: "#4ECDC4",
+          color: "var(--green-bourgeon-main-640)",
         },
         {
           name: "Enseignants-chercheurs",
           value: item.enseignantsChercheurs,
-          color: "#45B7D1",
+          color: "var(--orange-terre-battue-main-645)",
         },
       ],
     }));

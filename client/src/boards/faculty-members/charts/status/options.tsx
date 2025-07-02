@@ -80,7 +80,7 @@ export default function StatusOptions({
               y: discipline.enseignantsChercheurs,
               sliced: true,
               selected: true,
-              color: "#000091",
+              color: "var(--orange-terre-battue-main-645)",
               dataLabels: {
                 enabled: true,
                 format:
@@ -99,7 +99,7 @@ export default function StatusOptions({
             {
               name: "Non-titulaires",
               y: discipline.nonTitulaires,
-              color: "#FF6B6B",
+              color: "var(--blue-ecume-moon-675)",
               dataLabels: {
                 format:
                   "<b>Non-titulaires</b>: {point.percentage:.1f}%<br/>({point.y} pers.)",
@@ -225,19 +225,19 @@ export default function StatusOptions({
       {
         name: "Non-titulaires",
         data: nonTitulairesData,
-        color: "#FF6B6B",
+        color: "var(--blue-ecume-moon-675)",
         type: "column",
       },
       {
         name: "Titulaires",
         data: titulairesNonChercheursData,
-        color: "#4B9DFF",
+        color: "var(--green-bourgeon-main-640)",
         type: "column",
       },
       {
         name: "Enseignants-chercheurs",
         data: enseignantsChercheursData,
-        color: "#000091",
+        color: "var(--orange-terre-battue-main-645)",
         type: "column",
       },
     ],
