@@ -92,14 +92,9 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
 
   if (isLoading) {
     return (
-      <div
-        style={{
-          padding: "1rem",
-          borderRadius: "8px",
-        }}
-      >
+      <>
         <DefaultSkeleton />
-      </div>
+      </>
     );
   }
 
@@ -112,9 +107,9 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
           textAlign: "center",
         }}
       >
-        <span className="fr-text--sm fr-text--red">
+        <Row className="fr-text--sm fr-text--red">
           Erreur lors du chargement des données
-        </span>
+        </Row>
       </div>
     );
   }
@@ -141,18 +136,20 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
 
   return (
     <div>
-      <div style={{ marginBottom: "1rem" }}>
+      <Row horizontalAlign="center">
         <Title as="h3" look="h6" style={{ marginBottom: "0px" }}>
           Effectif total
         </Title>
+      </Row>
+      <Row horizontalAlign="center">
         <SubtitleWithContext classText="fr-text--sm" />
-        <Row horizontalAlign="center" className="fr-text--lead fr-text--bold">
-          {totalCount.toLocaleString()}
-        </Row>
-        <Row horizontalAlign="center" className="fr-text--sm">
-          personnels enseignants
-        </Row>
-      </div>
+      </Row>
+      <Row horizontalAlign="center" className="fr-text--lead fr-text--bold">
+        {totalCount.toLocaleString()}
+      </Row>
+      <Row horizontalAlign="center" className="fr-text--sm">
+        personnels enseignants
+      </Row>
 
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div

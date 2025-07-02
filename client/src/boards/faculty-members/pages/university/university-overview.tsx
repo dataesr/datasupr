@@ -54,7 +54,7 @@ export default function UniversityOverview() {
         </Title>
       </Row>
       <Row>
-        <Col md={8} className="fr-pr-8w">
+        <Col className="fr-pr-8w" style={{ width: "auto" }}>
           <Text className="fr-pr-8w">
             Desriptif de notre référentiel des disciplines, limites et
             périmètres. <br />
@@ -69,48 +69,31 @@ export default function UniversityOverview() {
             lobortis mauris eget malesuada. Sed in consequat elit, eu fringilla
             magna.
           </Text>
-          <div className="fr-mt-5w">
-            <FieldsDistributionBar />
-          </div>
-          <div className="fr-mt-5w">
-            <CnuGroupsChart />
-            <Text>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Voluptatem sit quod veniam quam odio a earum deserunt minima velit
-              minus cumque explicabo, ducimus porro inventore. Veniam autem
-              error cupiditate eum. Lorem ipsum dolor sit, amet consectetur
-              adipisicing elit. Similique exercitationem totam suscipit, vel
-              ipsum nobis commodi ut omnis ipsa aspernatur nostrum atque odio
-              praesentium corrupti! Quidem consectetur voluptatem laudantium
-              nam.
-            </Text>
-          </div>
-        </Col>
-        <Col md={4} style={{ textAlign: "center" }}>
-          <div className="fr-mb-5w">
-            <GeneralIndicatorsCard />
-          </div>
-          <div className="fr-mt-5w">
-            <DisciplineStatsSidebar />
-          </div>
-          <div>
-            <DisciplineStatusSummary />
-          </div>
-          <div className="fr-mt-3w">
-            <AgeDistributionPieChart />
-          </div>
-        </Col>
-        <Col>
-          <div className="fr-pr-8w">
-            <StatusDistribution />
-            <Text size="sm" className="fr-mt-2w">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea
-              repellat corporis est laudantium consequuntur consectetur, odit
-              temporibus! Eligendi, vitae. Vero, harum molestias? Repellendus
-              voluptatem non aperiam? Enim ab obcaecati non?
-            </Text>
-          </div>
+          <FieldsDistributionBar />
+          <CnuGroupsChart />
+          <Text>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem
+            sit quod veniam quam odio a earum deserunt minima velit minus cumque
+            explicabo, ducimus porro inventore. Veniam autem error cupiditate
+            eum. Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+            Similique exercitationem totam suscipit, vel ipsum nobis commodi ut
+            omnis ipsa aspernatur nostrum atque odio praesentium corrupti!
+            Quidem consectetur voluptatem laudantium nam.
+          </Text>
+          <StatusDistribution />
+          <Text size="sm" className="fr-mt-2w">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea repellat
+            corporis est laudantium consequuntur consectetur, odit temporibus!
+            Eligendi, vitae. Vero, harum molestias? Repellendus voluptatem non
+            aperiam? Enim ab obcaecati non?
+          </Text>
           <EstablishmentTypeChart />
+        </Col>
+        <Col md={4} style={{ height: "auto" }}>
+          <GeneralIndicatorsCard />
+          <DisciplineStatsSidebar />
+          <DisciplineStatusSummary />
+          <AgeDistributionPieChart />
         </Col>
       </Row>
       <Row className="fr-mt-4w fr-mb-5w">
