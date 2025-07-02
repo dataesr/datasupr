@@ -206,6 +206,12 @@ export default function NavigationCards({
               boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
               position: "relative",
             }}
+            onClick={() => {
+              window.scrollTo({
+                top: 0,
+                behavior: "smooth",
+              });
+            }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = "scale(1.03)";
               e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";

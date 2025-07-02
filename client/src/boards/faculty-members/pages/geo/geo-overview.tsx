@@ -79,7 +79,7 @@ export default function RegionsOverview() {
       <Row className="fr-mt-4w fr-mb-5w">
         <Col>
           <Title as="h4" look="h5">
-            Explorer par discipline
+            Explorer par régions
           </Title>
           <NavigationCards type="regions" maxItems={12} />
         </Col>

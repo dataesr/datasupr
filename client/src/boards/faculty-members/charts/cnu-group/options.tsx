@@ -19,6 +19,11 @@ interface GroupedData {
   totalCount: number;
 }
 
+const truncateText = (text: string, maxLength: number = 18): string => {
+  if (!text) return "";
+  return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
+};
+
 export const createCnuGroupsChartOptions = (
   data: DataPoint[],
   categories: string[],
@@ -27,61 +32,97 @@ export const createCnuGroupsChartOptions = (
   return {
     chart: {
       type: "column",
-      height: 600,
-      style: {
-        fontFamily: "Marianne, sans-serif",
-      },
+      height: 650,
+
+      spacing: [10, 10, 60, 10],
     },
     title: {
       text: "",
     },
-
     xAxis: {
       categories,
       labels: {
+        rotation: -45,
+        align: "right",
         style: {
-          fontWeight: "bold",
-          fontSize: "12px",
+          fontSize: "11px",
+          textOverflow: "ellipsis",
+          whiteSpace: "nowrap",
         },
         formatter: function () {
           const index = categories.indexOf(this.value as string);
           const totalCount = groupedData[index]?.totalCount || 0;
-          return `${
+          const truncatedValue = truncateText(this.value as string);
+
+          return `<span title="${
             this.value
-          }<br><span style="font-weight:normal;font-size:12px;">${totalCount.toLocaleString()} pers.</span>`;
+          }">${truncatedValue}</span> <span style="font-weight:normal;color:#666666">(${totalCount.toLocaleString()})</span>`;
         },
         useHTML: true,
+        y: 10,
       },
+      lineWidth: 1,
+      lineColor: "#E0E0E0",
+      tickWidth: 1,
+      tickColor: "#E0E0E0",
+      tickLength: 5,
     },
     yAxis: {
       title: {
         text: "Effectifs",
+        style: {
+          color: "#666666",
+          fontSize: "12px",
+        },
       },
       labels: {
         formatter: function () {
           const value = Number(this.value);
-          return value >= 1000 ? `${value / 1000}k` : value.toString();
+          return value >= 1000
+            ? `${(value / 1000).toFixed(value >= 10000 ? 0 : 1)}k`
+            : value.toString();
+        },
+        style: {
+          color: "#666666",
         },
       },
+      gridLineColor: "#F0F0F0",
+      gridLineDashStyle: "Dash",
     },
     tooltip: {
       useHTML: true,
+      backgroundColor: "rgba(255, 255, 255, 0.95)",
+      borderWidth: 1,
+      borderColor: "#E0E0E0",
+      borderRadius: 8,
+      shadow: true,
       formatter: function () {
         const point = this.point as Highcharts.Point & DataPoint;
-        return `<div style="padding:8px">
-                <div style="font-weight:bold;margin-bottom:5px">${
+        return `<div style="padding:10px">
+                <div style="font-weight:bold;margin-bottom:8px;font-size:13px">${
                   point.name
                 }</div>
-                <div style="font-size:14px;font-weight:bold;margin-bottom:8px">${point.y.toLocaleString()} enseignants</div>
-                <div style="color:#666;margin-bottom:5px">${
+                <div style="font-size:16px;font-weight:bold;margin-bottom:10px">${point.y.toLocaleString()} enseignants</div>
+                <div style="color:#666;margin-bottom:8px">${
                   point.cnuGroupPercent
                 }% de la discipline</div>
-                <div style="margin-top:8px">👨 Hommes: ${point.maleCount.toLocaleString()} (${
-          point.malePercent
-        }%)</div>
-                <div>👩 Femmes: ${point.femaleCount.toLocaleString()} (${
-          point.femalePercent
-        }%)</div>
+                <hr style="margin:5px 0;border:0;border-top:1px solid #eee">
+                <table style="width:100%;border-collapse:collapse">
+                  <tr>
+                    <td style="padding:4px 0">👨 Hommes:</td>
+                    <td style="text-align:right;font-weight:bold">${point.maleCount.toLocaleString()}</td>
+                    <td style="text-align:right;width:40px;color:#666">${
+                      point.malePercent
+                    }%</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:4px 0">👩 Femmes:</td>
+                    <td style="text-align:right;font-weight:bold">${point.femaleCount.toLocaleString()}</td>
+                    <td style="text-align:right;width:40px;color:#666">${
+                      point.femalePercent
+                    }%</td>
+                  </tr>
+                </table>
                 </div>`;
       },
     },
@@ -89,7 +130,9 @@ export const createCnuGroupsChartOptions = (
       column: {
         stacking: "percent",
         borderWidth: 0,
-        borderRadius: 2,
+        borderRadius: 3,
+        groupPadding: 0.15,
+        pointPadding: 0.05,
       },
       series: {
         dataLabels: {
@@ -97,13 +140,19 @@ export const createCnuGroupsChartOptions = (
           formatter: function () {
             const point = this.point as Highcharts.Point & DataPoint;
             if (point.y < 1000) return "";
-            return `Gr.${point.cnuGroupId} (${point.cnuGroupPercent}%)`;
+            return `Gr.${point.cnuGroupId}`;
           },
           style: {
             fontSize: "11px",
             fontWeight: "normal",
             color: "#FFFFFF",
             textOutline: "1px contrast",
+          },
+          y: -5,
+        },
+        states: {
+          hover: {
+            brightness: 0.1,
           },
         },
       },
@@ -118,12 +167,32 @@ export const createCnuGroupsChartOptions = (
       {
         name: "Groupes CNU",
         data: data,
-        pointPadding: 0.1,
-        groupPadding: 0.2,
         colorByPoint: true,
         type: "column",
       },
     ],
+    responsive: {
+      rules: [
+        {
+          condition: {
+            maxWidth: 500,
+          },
+          chartOptions: {
+            chart: {
+              height: 700,
+            },
+            xAxis: {
+              labels: {
+                rotation: -60,
+                style: {
+                  fontSize: "9px",
+                },
+              },
+            },
+          },
+        },
+      ],
+    },
   };
 };
 

@@ -258,7 +258,7 @@ export default function CnuGroupsChart() {
   }
 
   return (
-    <div className="fr-mb-4w">
+    <div className="fr-mb-4w fr-mt-4w">
       <ChartWrapper
         config={{
           id: "cnu-groups-chart",

@@ -64,7 +64,6 @@ const StatusDistribution: React.FC = () => {
     if (!statusData || !statusData.status_distribution) return [];
 
     return statusData.status_distribution.map((item) => {
-      console.log(item);
       const totalCount = item.total_count;
       let enseignantsChercheurs = 0;
       let titulairesNonChercheurs = 0;

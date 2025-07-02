@@ -670,21 +670,53 @@ router.get(
       });
 
       res.json({
-        cnuGroups: cnuData.map((group) => ({
-          cnuGroupId: group._id.group_code,
-          cnuGroupLabel: group._id.group_name,
-          maleCount: group.maleCount,
-          femaleCount: group.femaleCount,
-          totalCount: group.groupTotal,
-          cnuSections: group.sections.map((section) => ({
-            cnuSectionId: section.sectionCode,
-            cnuSectionLabel: section.sectionName,
-            maleCount: section.maleCount,
-            femaleCount: section.femaleCount,
-            totalCount: section.totalCount,
-            ageDistribution: section.ageDistribution,
-          })),
-        })),
+        cnuGroups: cnuData.map((group) => {
+          // Calculer l'ageDistribution au niveau du groupe en agrégeant les données des sections
+          const ageClasses = [
+            "35 ans et moins",
+            "36 à 55 ans",
+            "56 ans et plus",
+            "Non précisé",
+          ];
+          const ageDistribution = ageClasses.map((ageClass) => {
+            let count = 0;
+
+            group.sections.forEach((section) => {
+              const ageData = section.ageDistribution.find(
+                (age) => age.ageClass === ageClass
+              );
+              if (ageData) {
+                count += ageData.count;
+              }
+            });
+
+            const percent =
+              group.groupTotal > 0 ? (count / group.groupTotal) * 100 : 0;
+
+            return {
+              ageClass,
+              count,
+              percent,
+            };
+          });
+
+          return {
+            cnuGroupId: group._id.group_code,
+            cnuGroupLabel: group._id.group_name,
+            maleCount: group.maleCount,
+            femaleCount: group.femaleCount,
+            totalCount: group.groupTotal,
+            ageDistribution: ageDistribution,
+            cnuSections: group.sections.map((section) => ({
+              cnuSectionId: section.sectionCode,
+              cnuSectionLabel: section.sectionName,
+              maleCount: section.maleCount,
+              femaleCount: section.femaleCount,
+              totalCount: section.totalCount,
+              ageDistribution: section.ageDistribution,
+            })),
+          };
+        }),
         structures: structures,
       });
     } catch (error) {
