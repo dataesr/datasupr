@@ -47,13 +47,10 @@ export function ResearchTeachers() {
         </Col>
       </Row>
 
-      <Row className="fr-mt-4w">
+      <Row >
         <Col md={8}>
           {!contextId && (
             <div>
-              <Title as="h3" look="h5" className="fr-mb-2w">
-                Vue d'ensemble
-              </Title>
               <ResearchTeachersOverviewTable
                 context={context}
                 annee_universitaire={selectedYear}
@@ -92,7 +89,7 @@ export function ResearchTeachers() {
           )}
         </Col>
 
-        <Col md={4} style={{ textAlign: "center" }}>
+        <Col  md={4} style={{ textAlign: "center" }}>
           <div className="fr-mb-5w">
             <GeneralIndicatorsCard type="research-teachers" />
           </div>

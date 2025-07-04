@@ -49,10 +49,10 @@ export default function FieldOverview() {
           Les données des personnels enseignants non permanents ne sont pas
           prises en compte pour l'année car elles ne sont pas disponibles.
         </Notice>
+      </Row>
         <Title as="h3" look="h5" className="fr-mt-2w">
           Explorer le personnel enseignant par grande discipline
         </Title>
-      </Row>
       <Row>
         <Col md={8} className="fr-pr-8w">
           <Text className="fr-pr-8w">
