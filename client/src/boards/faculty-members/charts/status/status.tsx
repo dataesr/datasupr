@@ -165,7 +165,13 @@ const StatusDistribution: React.FC = () => {
               : "Répartition par statut des enseignants",
           },
           description: {
-            fr: "blabla",
+            fr: `Ce graphique présente la répartition du personnel enseignant par statut selon les disciplines.
+
+La visualisation utilise trois niveaux de colonnes imbriquées : les enseignants-chercheurs au premier plan, les titulaires au niveau intermédiaire, et l'effectif total en arrière-plan.
+
+Les pourcentages affichés indiquent la proportion d'enseignants-chercheurs par rapport à l'effectif total pour chaque discipline.
+
+Cette représentation permet de comparer rapidement la composition des effectifs entre les différentes disciplines et d'identifier les écarts de répartition entre statuts.`,
           },
           integrationURL: generateIntegrationURL(context, "statuts"),
         }}
