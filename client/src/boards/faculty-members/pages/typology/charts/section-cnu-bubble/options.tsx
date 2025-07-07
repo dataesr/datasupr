@@ -56,6 +56,7 @@ export const createBubbleOptions = ({
       },
       backgroundColor: "#ffffff",
     },
+    exporting: { enabled: false },
     title: {
       text: title,
       style: {

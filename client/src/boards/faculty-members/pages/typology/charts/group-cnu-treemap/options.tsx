@@ -52,7 +52,7 @@ export const createGroupTreemapOptions = ({
       )})</span>`;
     },
   },
-  exporting: false,
+  exporting: { enabled: false },
   colorAxis: {
     minColor: "#efcb3a",
     maxColor: "#e18b76",

@@ -24,6 +24,7 @@ export function CreateChartOptions(
       height: 500,
       backgroundColor: "transparent",
     },
+    exporting: { enabled: false },
     title: { text: "" },
     legend: { enabled: false },
     credits: { enabled: false },

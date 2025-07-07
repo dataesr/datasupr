@@ -40,7 +40,7 @@ export const createCnuGroupsChartOptions = (
       text: "",
     },
     exporting: {
-      enabled: true,
+      enabled: false,
     },
     xAxis: {
       categories,

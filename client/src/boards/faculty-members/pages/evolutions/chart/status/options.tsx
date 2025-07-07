@@ -24,10 +24,10 @@ export function createStatusEvolutionOptions({
       marginBottom: 120,
       spacing: [20, 20, 20, 20],
     },
+    exporting: { enabled: false },
     title: {
       text: "",
     },
-
     xAxis: {
       categories: years,
       title: {

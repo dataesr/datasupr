@@ -62,6 +62,7 @@ export const createMapOptions = ({
       fontFamily: "'Marianne', sans-serif",
     },
   },
+  exporting: { enabled: false },
   title: {
     text: `Personnel enseignant par région ${
       annee_universitaire !== "Toutes les années"

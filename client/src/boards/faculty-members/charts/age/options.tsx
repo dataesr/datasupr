@@ -38,7 +38,7 @@ export const createAgeDistributionChartOptions = (
       title: {
         text: "",
       },
-
+      exporting: { enabled: false },
       plotOptions: {
         pie: {
           allowPointSelect: true,
@@ -107,7 +107,7 @@ export const createAgeDistributionChartOptions = (
     title: {
       text: "",
     },
-
+    exporting: { enabled: false },
     xAxis: {
       categories: sortedChartData.map((item) => item.name),
       title: {

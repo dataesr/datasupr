@@ -32,6 +32,7 @@ export const createTreemapOptions = ({
       fontFamily: "Marianne, sans-serif",
     },
   },
+  exporting: { enabled: false },
   title: {
     text: "",
   },
@@ -52,7 +53,6 @@ export const createTreemapOptions = ({
       <em>Cliquez pour explorer en détail</em>`;
     },
   },
-  exporting: false,
   colorAxis: {
     minColor: "#efcb3a",
     maxColor: "#e18b76",

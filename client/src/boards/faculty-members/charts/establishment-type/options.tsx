@@ -5,6 +5,7 @@ export const createEstablishmentTypeChartOptions = (
   chart: {
     type: "column" as const,
   },
+  exporting: { enabled: false },
   title: {
     text: "",
   },

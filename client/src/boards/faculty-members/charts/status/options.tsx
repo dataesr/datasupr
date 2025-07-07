@@ -29,7 +29,7 @@ export default function StatusOptions({
       title: {
         text: "",
       },
-
+      exporting: { enabled: false },
       plotOptions: {
         pie: {
           allowPointSelect: true,
@@ -146,6 +146,7 @@ export default function StatusOptions({
     chart: {
       type: "bar",
     },
+    exporting: { enabled: false },
     title: {
       text: "",
     },

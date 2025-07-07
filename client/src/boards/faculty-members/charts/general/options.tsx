@@ -51,11 +51,9 @@ export default function OptionsColumnChart({
         fontFamily: "Marianne, sans-serif",
       },
     },
+    exporting: { enabled: false },
     title: {
       text: "",
-    },
-    exporting: {
-      enabled: true,
     },
     xAxis: {
       categories,

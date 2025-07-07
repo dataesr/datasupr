@@ -46,6 +46,7 @@ export const createBarChartOptions = ({
       fontFamily: "Marianne, sans-serif",
     },
   },
+  exporting: { enabled: false },
   title: {
     text: contextId
       ? `Répartition hommes / femmes - Comparaison avec autres ${labels.plural}`
