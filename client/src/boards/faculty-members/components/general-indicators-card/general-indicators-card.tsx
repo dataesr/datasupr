@@ -147,11 +147,11 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
       <Row horizontalAlign="center" className="fr-text--lead fr-text--bold">
         {totalCount.toLocaleString()}
       </Row>
-      <Row horizontalAlign="center" className="fr-text--sm">
+      <Row horizontalAlign="center" className="fr-text--sm fr-mb-3w">
         personnels enseignants
       </Row>
 
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div style={{ display: "flex" }}>
         <div
           style={{
             textAlign: "center",

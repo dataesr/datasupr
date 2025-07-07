@@ -32,7 +32,7 @@ export const createCnuGroupsChartOptions = (
   return {
     chart: {
       type: "column",
-      height: 650,
+      height: 400,
 
       spacing: [10, 10, 60, 10],
     },

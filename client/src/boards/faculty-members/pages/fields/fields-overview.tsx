@@ -50,28 +50,41 @@ export default function FieldOverview() {
           prises en compte pour l'année car elles ne sont pas disponibles.
         </Notice>
       </Row>
-        <Title as="h3" look="h5" className="fr-mt-2w">
-          Explorer le personnel enseignant par grande discipline
-        </Title>
+      <Title as="h3" look="h5" className="fr-mt-2w">
+        Explorer le personnel enseignant par grande discipline
+      </Title>
       <Row>
-        <Col md={8} className="fr-pr-8w">
+        <Col md={9} className="fr-pr-8w">
           <Text className="fr-pr-8w">
             Descriptif de notre référentiel des disciplines, limites et
             périmètres. <br />
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-            vitae lobortis sem. Quisque vel ex a elit facilisis rhoncus. Morbi
-            eleifend bibendum orci vel aliquet. Fusce a neque dui. Cras molestie
-            quam quis libero ullamcorper viverra. Sed rutrum placerat nibh ut
-            tristique. Cras egestas felis a scelerisque dignissim. Donec
-            placerat nulla dapibus, efficitur ex non, vehicula sapien. Aenean
-            vehicula vitae eros ut egestas. Maecenas lorem massa, vulputate id
-            leo id, aliquet ornare mi. Etiam vitae ipsum ipsum. Cras fermentum
-            lobortis mauris eget malesuada. Sed in consequat elit, eu fringilla
-            magna.
+            Cette page présente la répartition des personnels enseignants par
+            grande discipline, avec une visualisation de l'équilibre
+            femmes-hommes dans chaque domaine. Les barres horizontales
+            permettent de comparer facilement les effectifs totaux entre
+            disciplines, tandis que les segments colorés illustrent la
+            proportion respective des enseignants par genre. Le tableau associé
+            détaille les effectifs précis et les pourcentages par discipline.
           </Text>
           <div className="fr-mt-5w">
             <FieldsDistributionBar />
           </div>
+          <div className="fr-mt-3w">
+            <AgeDistributionPieChart />
+          </div>
+        </Col>
+        <Col md={3} style={{ textAlign: "center" }}>
+          <div className="fr-mb-5w">
+            <GeneralIndicatorsCard />
+          </div>
+          <div className="fr-mt-5w">
+            <DisciplineStatsSidebar />
+          </div>
+          <div className="fr-mt-5w">
+            <DisciplineStatusSummary />
+          </div>
+        </Col>
+        <Col>
           <div className="fr-mt-5w">
             <CnuGroupsChart />
             <Text>
@@ -85,22 +98,6 @@ export default function FieldOverview() {
               nam.
             </Text>
           </div>
-        </Col>
-        <Col md={4} style={{ textAlign: "center" }}>
-          <div className="fr-mb-5w">
-            <GeneralIndicatorsCard />
-          </div>
-          <div className="fr-mt-5w">
-            <DisciplineStatsSidebar />
-          </div>
-          <div className="fr-mt-5w">
-            <DisciplineStatusSummary />
-          </div>
-          <div className="fr-mt-3w">
-            <AgeDistributionPieChart />
-          </div>
-        </Col>
-        <Col>
           <div className="fr-pr-8w">
             <StatusDistribution />
             <Text size="sm" className="fr-mt-2w">

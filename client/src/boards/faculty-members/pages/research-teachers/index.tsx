@@ -76,7 +76,7 @@ export function ResearchTeachers() {
       </Row>
 
       <Row gutters>
-        <Col md={8}>
+        <Col md={9}>
           {!contextId && (
             <div>
               <ResearchTeachersOverviewTable
@@ -103,7 +103,7 @@ export function ResearchTeachers() {
             </>
           )}
         </Col>
-        <Col md={4} style={{ textAlign: "center" }}>
+        <Col md={3} style={{ textAlign: "center" }}>
           <div className="fr-mt-3w">
             <GeneralIndicatorsCard type="research-teachers" />
             <CnuAgeDistribution />

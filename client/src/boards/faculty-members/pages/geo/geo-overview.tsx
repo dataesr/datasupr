@@ -54,15 +54,21 @@ export default function RegionsOverview() {
       <Title as="h3" look="h5" className="fr-mt-2w">
         Explorer le personnel enseignant au niveau national
       </Title>
+
       <Row>
-        <Col md={8} className="fr-pr-8w">
+        <Col md={9} className="fr-pr-8w">
           <Text className="fr-pr-8w">
-            Descriptif de la répartition géographique des personnels enseignants 
-            en France métropolitaine et d'outre-mer.<br />
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus
-            vitae lobortis sem. Quisque vel ex a elit facilisis rhoncus. Morbi
-            eleifend bibendum orci vel aliquet. Fusce a neque dui. Cras molestie
-            quam quis libero ullamcorper viverra.
+            Descriptif de la répartition géographique des personnels enseignants
+            en France métropolitaine et d'outre-mer.
+            <br />
+            Cette page présente la répartition des personnels enseignants par
+            région, avec une visualisation de l'équilibre femmes-hommes dans
+            chaque région. Les données présentées sur cette page sont la sommes
+            des données des régions. Les barres horizontales permettent de
+            comparer facilement les effectifs totaux entre régions, tandis que
+            les segments colorés illustrent la proportion respective des
+            enseignants par genre. Le tableau associé détaille les effectifs
+            précis et les pourcentages par région.
           </Text>
           <div className="fr-mt-5w">
             <FacultyMap />
@@ -70,17 +76,8 @@ export default function RegionsOverview() {
           <div className="fr-mt-5w">
             <FieldsDistributionBar />
           </div>
-          <div className="fr-mt-5w">
-            <CnuGroupsChart />
-            <Text>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Voluptatem sit quod veniam quam odio a earum deserunt minima velit
-              minus cumque explicabo, ducimus porro inventore. Veniam autem
-              error cupiditate eum.
-            </Text>
-          </div>
         </Col>
-        <Col md={4} style={{ textAlign: "center" }}>
+        <Col md={3} style={{ textAlign: "center" }}>
           <div className="fr-mb-5w">
             <GeneralIndicatorsCard />
           </div>
@@ -95,6 +92,15 @@ export default function RegionsOverview() {
           </div>
         </Col>
         <Col>
+          <div className="fr-mt-5w">
+            <CnuGroupsChart />
+            <Text>
+              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+              Voluptatem sit quod veniam quam odio a earum deserunt minima velit
+              minus cumque explicabo, ducimus porro inventore. Veniam autem
+              error cupiditate eum.
+            </Text>
+          </div>
           <div className="fr-pr-8w">
             <StatusDistribution />
             <Text size="sm" className="fr-mt-2w">

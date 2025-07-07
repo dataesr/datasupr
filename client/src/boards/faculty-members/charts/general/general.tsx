@@ -1,4 +1,4 @@
-import { Link } from "@dataesr/dsfr-plus";
+import { Link, Text } from "@dataesr/dsfr-plus";
 import options from "./options";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { useSearchParams } from "react-router-dom";
@@ -152,11 +152,13 @@ const DistributionBar: React.FC = () => {
         legend={null}
         renderData={() => <RenderData data={itemsData} />}
       />
-      <i className="text-center">
-        <Link href="/personnel-enseignant/discipline/typologie">
-          En savoir plus sur la typologie des enseignants
-        </Link>
-      </i>
+      <div className="fr-mt-3w">
+        <Text size="sm" className="text-center ">
+          <Link href="/personnel-enseignant/discipline/typologie">
+            En savoir plus sur la typologie des enseignants
+          </Link>
+        </Text>
+      </div>
     </>
   ) : null;
 };
