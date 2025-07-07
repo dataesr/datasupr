@@ -51,18 +51,19 @@ export const createBarChartOptions = ({
     text: "",
   },
   subtitle: {
-    text: `Année universitaire ${selectedYear}${
-      contextId
-        ? ` - ${
-            labels.singular.charAt(0).toUpperCase() + labels.singular.slice(1)
-          } sélectionnée mise en évidence`
-        : ""
-    }`,
-    style: {
-      color: "#666666",
-      fontSize: "14px",
-    },
-    align: "left",
+    text: "",
+    // text: `Année universitaire ${selectedYear}${
+    //   contextId
+    //     ? ` - ${
+    //         labels.singular.charAt(0).toUpperCase() + labels.singular.slice(1)
+    //       } sélectionnée mise en évidence`
+    //     : ""
+    // }`,
+    // style: {
+    //   color: "#666666",
+    //   fontSize: "14px",
+    // },
+    // align: "left",
   },
   credits: { enabled: false },
   xAxis: {
@@ -90,9 +91,7 @@ export const createBarChartOptions = ({
     },
   },
   legend: {
-    reversed: false,
-    align: "center",
-    verticalAlign: "bottom",
+    enabled: false,
   },
   plotOptions: {
     series: {

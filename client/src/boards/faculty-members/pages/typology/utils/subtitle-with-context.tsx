@@ -52,7 +52,7 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
 
   return (
     <Text className={classText} size="sm">
-      Année universitaire {selectedYear}&nbsp;&nbsp;
+      Année universitaire {selectedYear}&nbsp;&nbsp;-&nbsp;&nbsp;
       {!contextId && contextNameCapital}
       {name}&nbsp;{identifiant}
     </Text>

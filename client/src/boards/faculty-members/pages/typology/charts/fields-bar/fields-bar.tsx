@@ -236,8 +236,9 @@ const ItemBarChart: React.FC = () => {
           : `Répartition hommes / femmes par ${labels.singular}`
       }`,
     },
+    subtitle: `Année universitaire ${selectedYear}`,
     description: {
-      fr: `Répartition par genre pour l'année ${selectedYear}`,
+      fr: "",
     },
   };
 
@@ -423,13 +424,44 @@ const ItemBarChart: React.FC = () => {
                 ></i>
               </Button>
             </div>
-
             <ChartWrapper
               config={config}
               options={options}
               legend={null}
               renderData={() => <RenderData data={sortedItems} />}
             />
+            <Row horizontalAlign="center" className="fr-mb-4w">
+              <Col className="text-center">
+                <span className="fr-mr-3w">
+                  <span
+                    style={{
+                      display: "inline-block",
+                      width: "12px",
+                      height: "12px",
+                      backgroundColor: "#efcb3a",
+                      marginRight: "5px",
+                      borderRadius: "2px",
+                    }}
+                  ></span>
+                  Part d'hommes
+                </span>
+              </Col>
+              <Col className="text-center">
+                <span>
+                  <span
+                    style={{
+                      display: "inline-block",
+                      width: "12px",
+                      height: "12px",
+                      backgroundColor: "#e18b76",
+                      marginRight: "5px",
+                      borderRadius: "2px",
+                    }}
+                  ></span>
+                  Part de femmes
+                </span>
+              </Col>
+            </Row>
           </div>
         </Col>
       </Row>
