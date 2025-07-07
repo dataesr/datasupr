@@ -53,11 +53,11 @@ export const createMapOptions = ({
   chart: {
     map: mapDataIE,
     backgroundColor: "transparent",
-    height: "650px",
-    spacing: [0, 50, 100, 355],
+    height: "550px",
+    spacing: [0, 0, 20, 0],
     borderWidth: 0,
     plotBorderWidth: 0,
-    margin: [0, 0, 150, 0],
+    margin: [50, 10, 50, 10],
     style: {
       fontFamily: "'Marianne', sans-serif",
     },
@@ -69,21 +69,13 @@ export const createMapOptions = ({
         ? `- ${annee_universitaire}`
         : ""
     }`,
+    align: "center",
     style: {
       color: "#000091",
       fontWeight: "bold",
-      fontSize: "16px",
     },
   },
-  subtitle: {
-    text: `${stats.total_count.toLocaleString()} enseignants dans ${
-      stats.regions_count
-    } régions`,
-    style: {
-      color: "#666666",
-      fontSize: "14px",
-    },
-  },
+
   credits: { enabled: false },
   mapNavigation: {
     enabled: true,
@@ -93,12 +85,12 @@ export const createMapOptions = ({
   },
   colorAxis: {
     stops: [
-      [0, "#E3E3FD"],
-      [0.2, "#B5B5F7"],
-      [0.4, "#8787F2"],
-      [0.6, "#5959ED"],
-      [0.8, "#2B2BE8"],
-      [1, "#000091"],
+      [0, "var(--blue-cumulus-850)"],
+      [0.2, "var(--blue-ecume-850)"],
+      [0.4, "var(--blue-cumulus-main-526)"],
+      [0.6, "var(--blue-cumulus-sun-368)"],
+      [0.8, "var(--blue-ecume-sun-247)"],
+      [1, "var(--blue-ecume-sun-247)"],
     ],
     min: 0,
     max: stats.max_region_count,
@@ -108,6 +100,7 @@ export const createMapOptions = ({
       style: {
         fontSize: "12px",
         fontFamily: "'Marianne', sans-serif",
+        color: "#000091",
       },
     },
     tickPositions: [0, stats.p25, stats.p50, stats.p75, stats.max_region_count],

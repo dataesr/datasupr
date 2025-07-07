@@ -50,6 +50,7 @@ export default function OptionsColumnChart({
       style: {
         fontFamily: "Marianne, sans-serif",
       },
+      backgroundColor: "transparent",
     },
     exporting: { enabled: false },
     title: {

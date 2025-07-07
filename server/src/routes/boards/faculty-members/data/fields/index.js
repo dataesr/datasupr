@@ -851,6 +851,42 @@ router.get("/faculty-members/fields/research-teachers", async (req, res) => {
       ])
       .toArray();
 
+    const categoryDistribution = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: {
+              category_code: "$code_categorie_assimil",
+              category_name: "$categorie_assimilation",
+              gender: "$sexe",
+            },
+            count: { $sum: "$effectif" },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              category_code: "$_id.category_code",
+              category_name: "$_id.category_name",
+            },
+            totalCount: { $sum: "$count" },
+            maleCount: {
+              $sum: {
+                $cond: [{ $eq: ["$_id.gender", "Masculin"] }, "$count", 0],
+              },
+            },
+            femaleCount: {
+              $sum: {
+                $cond: [{ $eq: ["$_id.gender", "Féminin"] }, "$count", 0],
+              },
+            },
+          },
+        },
+        { $sort: { totalCount: -1 } },
+      ])
+      .toArray();
+
     const disciplinesData = await collection
       .aggregate([
         { $match: matchStage },
@@ -916,6 +952,13 @@ router.get("/faculty-members/fields/research-teachers", async (req, res) => {
         })),
       })),
       fields: fields,
+      categoryDistribution: categoryDistribution.map((cat) => ({
+        categoryCode: cat._id.category_code,
+        categoryName: cat._id.category_name,
+        maleCount: cat.maleCount,
+        femaleCount: cat.femaleCount,
+        totalCount: cat.totalCount,
+      })),
     });
   } catch (error) {
     console.error("Error fetching research teachers by fields:", error);

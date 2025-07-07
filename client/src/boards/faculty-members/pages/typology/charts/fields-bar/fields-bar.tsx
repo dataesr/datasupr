@@ -109,15 +109,15 @@ const ItemBarChart: React.FC = () => {
       const totalCount = item.total_count;
       const itemCode =
         item._id?.geo_code ||
-        item._id?.discipline_code ||
+        item._id?.structure_code ||
         item._id?.field_code ||
         "";
       const itemName =
         item._id?.geo_name ||
-        item._id?.discipline_name ||
+        item._id?.structure_name ||
         item._id?.field_name ||
         "Non précisé";
-
+      console.log(item);
       return {
         itemName,
         itemCode,

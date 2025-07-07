@@ -124,7 +124,6 @@ const FieldByStatus: React.FC = () => {
   return (
     <div
       style={{
-        padding: "1rem",
         borderRadius: "8px",
       }}
     >
@@ -136,9 +135,7 @@ const FieldByStatus: React.FC = () => {
             style={{
               marginBottom: "0px",
             }}
-          >
-            Année universitaire {selectedYear}
-          </Text>
+          ></Text>
         </Title>
       </Row>
 

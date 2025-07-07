@@ -1,5 +1,5 @@
 import Highcharts from "highcharts";
-import { CreateChartOptions } from "../../../components/creat-chart-options";
+import { CreateChartOptions } from "../../../../components/creat-chart-options";
 
 export interface AgeGroupData {
   ageClass: string;
@@ -55,7 +55,7 @@ export const createCnuAgeOptions = (
   const newOptions: Highcharts.Options = {
     chart: {
       type: "bar",
-      height: Math.max(300, 100 + categories.length * 30), 
+      height: Math.max(300, 100 + categories.length * 30),
       style: {
         fontFamily: "Marianne, sans-serif",
       },
@@ -99,10 +99,15 @@ export const createCnuAgeOptions = (
     },
     tooltip: {
       formatter: function () {
-        const point = this.point as Highcharts.Point & { count: number; total: number };
+        const point = this.point as Highcharts.Point & {
+          count: number;
+          total: number;
+        };
         return `<b>${this.series.name}</b><br/>
                 ${this.x}<br/>
-                <b>${point.y?.toFixed(1) || 0}%</b> (${point.count} personnes)<br/>
+                <b>${point.y?.toFixed(1) || 0}%</b> (${
+          point.count
+        } personnes)<br/>
                 ${point.count} sur ${point.total} enseignants-chercheurs`;
       },
       style: {

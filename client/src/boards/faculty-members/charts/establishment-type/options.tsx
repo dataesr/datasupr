@@ -4,10 +4,16 @@ export const createEstablishmentTypeChartOptions = (
 ) => ({
   chart: {
     type: "column" as const,
+    backgroundColor: "transparent",
   },
   exporting: { enabled: false },
   title: {
-    text: "",
+    text: "Types d'établissements",
+    align: "left",
+    style: {
+      fontWeight: "bold",
+      fontSize: "16px",
+    },
   },
   xAxis: {
     categories: categories,
@@ -45,6 +51,12 @@ export const createEstablishmentTypeChartOptions = (
         },
       },
       colorByPoint: true,
+      colors: [
+        "var(--blue-cumulus-main-526)", // Université
+        "var(--green-archipel-main-557)", // Grand établissement
+        "var(--orange-terre-battue-main-645)", // École
+        "var(--purple-glycine-main-494)", // Autre établissement
+      ],
     },
   },
   legend: {

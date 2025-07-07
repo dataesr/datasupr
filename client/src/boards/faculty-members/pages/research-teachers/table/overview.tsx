@@ -161,7 +161,7 @@ export default function ResearchTeachersOverviewTable({
   };
 
   return (
-    <table className="fr-table fr-table--bordered" style={{ width: "90%" }}>
+    <table className="fr-table fr-table--bordered" style={{ width: "100%" }}>
       <thead>
         <tr>
           <th scope="col">

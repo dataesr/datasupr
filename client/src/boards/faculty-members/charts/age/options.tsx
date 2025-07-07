@@ -98,91 +98,63 @@ export const createAgeDistributionChartOptions = (
 
   const newOptions: Highcharts.Options = {
     chart: {
-      type: "bar",
-      height: 350,
-      style: {
-        fontFamily: "Marianne, sans-serif",
-      },
+      type: "pie",
+      height: 300,
+      backgroundColor: "transparent",
     },
     title: {
       text: "",
     },
     exporting: { enabled: false },
-    xAxis: {
-      categories: sortedChartData.map((item) => item.name),
-      title: {
-        text: null,
-      },
-      labels: {
-        style: {
-          fontSize: "14px",
-          fontWeight: "600",
-        },
-      },
-    },
-    yAxis: {
-      min: 0,
-      max: 100,
-      title: {
-        text: "Pourcentage",
-        align: "high",
-        style: {
-          fontSize: "14px",
-        },
-      },
-      labels: {
-        format: "{value}%",
-        overflow: "justify",
-      },
-      gridLineWidth: 1,
-      gridLineColor: "#E0E0E0",
-    },
-    tooltip: {
-      formatter: function () {
-        const dataItem = sortedChartData.find((d) => d.name === this.x);
-        return `<b>${this.x}</b><br>
-                ${this.y?.toFixed(1) ?? 0}% 
-                (${dataItem?.count?.toLocaleString() ?? 0} enseignants)`;
-      },
-    },
     plotOptions: {
-      bar: {
+      pie: {
+        innerSize: "60%",
+        allowPointSelect: true,
+        cursor: "pointer",
         dataLabels: {
-          enabled: true,
-          format: "{y:.1f}%",
-          style: {
-            color: "white",
-            textOutline: "1px contrast",
-            fontWeight: "bold",
-          },
+          enabled: false,
         },
-        colorByPoint: true,
-        colors: sortedChartData.map((item) => colors[item.name] || "#CCCCCC"),
-        borderRadius: 3,
+        showInLegend: true,
+        borderWidth: 0,
       },
       series: {
         animation: {
-          duration: 1000,
+          duration: 800,
         },
       },
     },
-    legend: {
-      enabled: false,
+    tooltip: {
+      pointFormat:
+        "<b>{point.name}</b>: {point.percentage:.1f}% ({point.count} enseignants)",
+      headerFormat: "",
     },
-    credits: {
-      enabled: false,
+    legend: {
+      enabled: true,
+      layout: "horizontal",
+      align: "center",
+      verticalAlign: "bottom",
+      itemMarginTop: 5,
+      itemMarginBottom: 5,
+      itemStyle: {
+        fontSize: "11px",
+        fontWeight: "normal",
+      },
     },
     series: [
       {
         name: "Âge",
+        colorByPoint: true,
+        type: "pie",
         data: sortedChartData.map((item) => ({
+          name: item.name,
           y: item.y,
+          count: item.count,
           color: colors[item.name] || "#CCCCCC",
         })),
-        type: "bar",
-      },
+      } as Highcharts.SeriesPieOptions,
     ],
+    credits: { enabled: false },
   };
 
-  return CreateChartOptions("bar", newOptions);
+  return CreateChartOptions("pie", newOptions);
 };

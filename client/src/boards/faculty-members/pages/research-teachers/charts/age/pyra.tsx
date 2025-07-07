@@ -1,10 +1,10 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import ChartWrapper from "../../../../../components/chart-wrapper";
-import { createCnuAgeOptions, CnuGroupData } from "./options";
-import { generateIntegrationURL, useContextDetection } from "../../../utils";
-import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
-import { useResearchTeachersData } from "../use-cnu-data";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
+import { generateIntegrationURL, useContextDetection } from "../../../../utils";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { useResearchTeachersData } from "../../use-cnu-data";
+import { CnuGroupData, createCnuAgeOptions } from "./options";
 
 function RenderData({ data }: { data: CnuGroupData[] }) {
   if (!data || data.length === 0) {
@@ -144,7 +144,7 @@ export function CnuAgeDistribution() {
           id: "cnu-age-distribution",
           idQuery: "cnu-age-distribution",
           title: {
-            fr: "Pyramide des âges des enseignants-chercheurs par groupe CNU",
+            fr: "Age par groupe CNU",
           },
           description: {
             fr: ``,

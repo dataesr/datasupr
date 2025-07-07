@@ -68,7 +68,7 @@ export function EstablishmentTypeChart() {
       fr: `Répartition par type d'établissement - ${contextName} sélectionnée`,
     },
     description: {
-      fr: "Ce graphique présente la répartition des personnels enseignants selon les différents types d'établissements d'enseignement supérieur. Il permet d'identifier la concentration des effectifs par catégorie d'établissement (universités, grandes écoles, etc.) et d'analyser les différences de structure institutionnelle. Le tableau associé fournit les effectifs précis et les pourcentages pour chaque type d'établissement.",
+      fr: "",
     },
     integrationURL: generateIntegrationURL(context, "etablissements"),
   };

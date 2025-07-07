@@ -16,8 +16,11 @@ function RenderData({ data }) {
   }
 
   return (
-    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
-      <table className="fr-table">
+    <div className="fr-table-responsive">
+      <table
+        className="fr-table fr-table--bordered fr-table--sm"
+        style={{ width: "100%" }}
+      >
         <thead>
           <tr>
             <th>Discipline</th>

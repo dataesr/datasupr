@@ -33,6 +33,7 @@ export const createCnuGroupsChartOptions = (
     chart: {
       type: "column",
       height: 400,
+      backgroundColor: "transparent",
 
       spacing: [10, 10, 60, 10],
     },

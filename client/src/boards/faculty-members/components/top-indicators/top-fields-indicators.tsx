@@ -1,16 +1,13 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useContextDetection } from "../../utils";
-import { formatToPercent } from "../../../../utils/format";
-import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useTopIndicators } from "./use-top-indicators";
-import { Title, Text, Row, Col } from "@dataesr/dsfr-plus";
+import { Row, Text, Title } from "@dataesr/dsfr-plus";
 
 const TopItemsIndicators: React.FC = () => {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId } = useContextDetection();
-
   const {
     data: genderData,
     isLoading,
@@ -21,44 +18,31 @@ const TopItemsIndicators: React.FC = () => {
     contextId,
   });
 
-  let word = "";
-
-  switch (context) {
-    case "fields":
-      word = "disciplines";
-      break;
-    case "geo":
-      word = "régions";
-      break;
-    case "structures":
-      word = "structures";
-      break;
-  }
+  const word =
+    context === "fields"
+      ? "disciplines"
+      : context === "geo"
+      ? "régions"
+      : "structures";
 
   const itemsData = useMemo(() => {
     if (contextId || !genderData || !selectedYear) return [];
-
     const distributionData = genderData.gender_distribution;
-
     if (!distributionData) return [];
 
     return distributionData
       .map((item) => {
         const totalCount = item.total_count;
-        let maleCount = 0;
-        let femaleCount = 0;
-
+        let maleCount = 0,
+          femaleCount = 0;
         item.gender_breakdown?.forEach((genderData) => {
-          if (genderData.gender === "Masculin") {
-            maleCount = genderData.count;
-          } else if (genderData.gender === "Féminin") {
+          if (genderData.gender === "Masculin") maleCount = genderData.count;
+          else if (genderData.gender === "Féminin")
             femaleCount = genderData.count;
-          }
         });
 
-        let itemIdField = "";
-        let itemLabelField = "";
-
+        let itemIdField = "",
+          itemLabelField = "";
         switch (context) {
           case "fields":
             itemIdField = "field_code";
@@ -87,73 +71,20 @@ const TopItemsIndicators: React.FC = () => {
       .sort((a, b) => b.totalCount - a.totalCount);
   }, [genderData, selectedYear, contextId, context]);
 
-  if (contextId) {
+  if (contextId || isLoading || error || !itemsData || itemsData.length === 0)
     return null;
-  }
-
-  if (isLoading) {
-    return (
-      <div
-        style={{
-          padding: "1rem",
-          borderRadius: "8px",
-        }}
-      >
-        <DefaultSkeleton />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div
-        style={{
-          padding: "1rem",
-          borderRadius: "8px",
-          textAlign: "center",
-        }}
-      >
-        <span className="fr-text--sm fr-text--red">
-          Erreur lors du chargement des données
-        </span>
-      </div>
-    );
-  }
-
-  if (!itemsData || itemsData.length === 0) {
-    return (
-      <div
-        style={{
-          padding: "1rem",
-          borderRadius: "8px",
-          textAlign: "center",
-        }}
-      >
-        <span className="fr-text--sm">
-          Aucune donnée disponible pour l'année {selectedYear}
-        </span>
-      </div>
-    );
-  }
 
   return (
-    <div
-      style={{
-        padding: "1rem",
-        borderRadius: "px",
-      }}
-    >
+    <div style={{ borderRadius: "8px" }}>
       <Row horizontalAlign="center">
-        <Title as="h3" look="h6">
-          Top 3 des {word}
+        <Title as="h3" look="h5">
+          Top 3 {word}
           <Text
             className="fr-text--sm fr-text--regular"
             style={{
               marginBottom: "0px",
             }}
-          >
-            Année universitaire {selectedYear}
-          </Text>
+          ></Text>
         </Title>
       </Row>
 
@@ -161,65 +92,83 @@ const TopItemsIndicators: React.FC = () => {
         const femalePercent = Math.round(
           ((item.femaleCount || 0) / (item.totalCount || 1)) * 100
         );
+        const malePercent = 100 - femalePercent;
+        const truncatedName =
+          item.itemLabel.length > 20
+            ? item.itemLabel.substring(0, 30) + "..."
+            : item.itemLabel;
 
         return (
-          <div
-            key={item.item_id}
-            style={{
-              marginBottom: "1rem",
-              paddingBottom: "1rem",
-            }}
-          >
-            <Row horizontalAlign="center" className="fr-text--sm fr-text--bold">
-              {item.itemLabel}
-            </Row>
-            <Row
-              horizontalAlign="center"
-              className="fr-text--xs fr-text--grey fr-mb-1w"
+          <div key={item.item_id}>
+            <div
+              style={{
+                textAlign: "center",
+                margin: 0,
+                padding: 0,
+                lineHeight: "1.2",
+              }}
+              className="fr-text--sm fr-text--bold"
             >
-              {item.totalCount.toLocaleString()} enseignants
-            </Row>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Col
-                className="fr-py-2w"
+              {truncatedName}
+            </div>
+            <div
+              style={{
+                textAlign: "center",
+                margin: 0,
+                padding: 0,
+              }}
+              className="fr-text--xs fr-text--grey"
+            >
+              {item.totalCount.toLocaleString()} ens.
+            </div>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                margin: 0,
+                padding: 0,
+              }}
+            >
+              <div
                 style={{
-                  textAlign: "center",
+                  height: "8px",
+                  display: "flex",
+                  borderRadius: "3px",
+                  overflow: "hidden",
                   flex: 1,
-                  borderRight: "1px solid #ddd",
+                  margin: 0,
                 }}
               >
-                <Row
-                  horizontalAlign="center"
+                <div
                   style={{
-                    fontSize: "1.2rem",
-                    fontWeight: "bold",
-                    color: "var(--women-color, #e18b76)",
+                    width: `${femalePercent}%`,
+                    backgroundColor: "var(--women-color, #e18b76)",
+                    height: "100%",
                   }}
-                >
-                  {formatToPercent(femalePercent)}
-                </Row>
-                <Row horizontalAlign="center" className="fr-text--xs">
-                  Femmes
-                </Row>
-              </Col>
-              <Col
-                className="fr-py-2w"
-                style={{ textAlign: "center", flex: 1 }}
-              >
-                <Row
-                  horizontalAlign="center"
+                ></div>
+                <div
                   style={{
-                    fontSize: "1.2rem",
-                    fontWeight: "bold",
-                    color: "var(--men-color, #efcb3a)",
+                    width: `${malePercent}%`,
+                    backgroundColor: "var(--men-color, #efcb3a)",
+                    height: "100%",
                   }}
-                >
-                  {formatToPercent(100 - femalePercent)}
-                </Row>
-                <Row horizontalAlign="center" className="fr-text--xs">
-                  Hommes
-                </Row>
-              </Col>
+                ></div>
+              </div>
+            </div>
+            <div
+              className="fr-text--xs text-center"
+              style={{
+                whiteSpace: "nowrap",
+                lineHeight: "1",
+              }}
+            >
+              <span style={{ color: "var(--women-color, #e18b76)" }}>
+                {femalePercent}%
+              </span>
+              {"/"}
+              <span style={{ color: "var(--men-color, #efcb3a)" }}>
+                {malePercent}%
+              </span>
             </div>
           </div>
         );

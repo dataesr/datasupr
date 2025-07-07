@@ -568,6 +568,42 @@ router.get(
         ])
         .toArray();
 
+      const categoryDistribution = await collection
+        .aggregate([
+          { $match: matchStage },
+          {
+            $group: {
+              _id: {
+                category_code: "$code_categorie_assimil",
+                category_name: "$categorie_assimilation",
+                gender: "$sexe",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                category_code: "$_id.category_code",
+                category_name: "$_id.category_name",
+              },
+              totalCount: { $sum: "$count" },
+              maleCount: {
+                $sum: {
+                  $cond: [{ $eq: ["$_id.gender", "Masculin"] }, "$count", 0],
+                },
+              },
+              femaleCount: {
+                $sum: {
+                  $cond: [{ $eq: ["$_id.gender", "Féminin"] }, "$count", 0],
+                },
+              },
+            },
+          },
+          { $sort: { totalCount: -1 } },
+        ])
+        .toArray();
+
       const disciplinesData = await collection
         .aggregate([
           { $match: matchStage },
@@ -632,7 +668,6 @@ router.get(
         ])
         .toArray();
 
-      // Transformation des données par structure
       const structures = structuresData
         .map((item) => {
           if (!item._id.structure_id || !item._id.structureName) return null;
@@ -671,7 +706,6 @@ router.get(
 
       res.json({
         cnuGroups: cnuData.map((group) => {
-          // Calculer l'ageDistribution au niveau du groupe en agrégeant les données des sections
           const ageClasses = [
             "35 ans et moins",
             "36 à 55 ans",
@@ -718,6 +752,13 @@ router.get(
           };
         }),
         structures: structures,
+        categoryDistribution: categoryDistribution.map((cat) => ({
+          categoryCode: cat._id.category_code,
+          categoryName: cat._id.category_name,
+          maleCount: cat.maleCount,
+          femaleCount: cat.femaleCount,
+          totalCount: cat.totalCount,
+        })),
       });
     } catch (error) {
       console.error("Error fetching research teachers by structures:", error);

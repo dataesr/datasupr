@@ -19,10 +19,10 @@ import DisciplineStatusSummary from "../../components/fields-by-status";
 import NavigationCards from "../../components/fields-cards";
 import YearSelector from "../../components/filters";
 import { useBreadcrumbItems, useContextDetection } from "../../utils";
+import SubtitleWithContext from "../typology/utils/subtitle-with-context";
 
-export default function RegionsOverview() {
+export default function UniversityOverview() {
   const { context, contextId, contextName } = useContextDetection();
-
   const breadcrumbItems = useBreadcrumbItems(context, contextId, contextName);
 
   return (
@@ -44,77 +44,154 @@ export default function RegionsOverview() {
           <YearSelector />
         </Col>
       </Row>
+
       <Row className="fr-mt-3w">
-        <Notice closeMode={"disallow"} type={"warning"}>
-          Les données des personnels enseignants non permanents ne sont pas
-          prises en compte pour l'année car elles ne sont pas disponibles.
-        </Notice>
+        <Col md={12}>
+          <Notice closeMode={"disallow"} type={"warning"}>
+            Les données des personnels enseignants non permanents ne sont pas
+            prises en compte pour l'année car elles ne sont pas disponibles.
+          </Notice>
+        </Col>
       </Row>
-      <Title as="h3" look="h5" className="fr-mt-2w">
-        Explorer le personnel enseignant au niveau national
+
+      <Title
+        as="h3"
+        look="h5"
+        className="fr-mt-2w fr-mb-3w"
+        style={{
+          backgroundColor: "var(--background-alt-blue-france)",
+          padding: "1.0rem 0.5rem 0.1rem 0.5rem",
+          borderLeft: "6px solid var(--blue-france-main-525)",
+        }}
+      >
+        Explorer le personnel enseignant
+        <i>
+          <SubtitleWithContext classText="" />
+        </i>
       </Title>
-      <Row>
-        <Col md={9} className="fr-pr-8w">
-          <Text className="fr-pr-8w">
-            Descriptif de la répartition géographique des personnels enseignants
-            en France métropolitaine et d'outre-mer.
+
+      <Row className="fr-mt-3w">
+        <Col md={12}>
+          <Text>
+            Descriptif de la répartition des personnels enseignants par
+            établissement d'enseignement supérieur.
             <br />
             Cette page présente la répartition des personnels enseignants par
             université et composante, avec une visualisation de l'équilibre
-            femmes-hommes dans chaque universités. Les données présentées sur
-            cette page sont la sommes des données des universités. Les barres
-            horizontales permettent de comparer facilement les effectifs totaux
-            entre universités, tandis que les segments colorés illustrent la
-            proportion respective des enseignants par genre. Le tableau associé
-            détaille les effectifs précis et les pourcentages par université.
+            femmes-hommes dans chaque établissement. Les barres horizontales
+            permettent de comparer facilement les effectifs totaux entre
+            universités, tandis que les segments colorés illustrent la
+            proportion respective des enseignants par genre.
           </Text>
-
-          <div className="fr-mt-5w">
-            <FieldsDistributionBar />
-          </div>
-          <div className="fr-mt-3w">
-            <AgeDistributionPieChart />
-          </div>
-        </Col>
-        <Col md={3} style={{ textAlign: "center" }}>
-          <div className="fr-mb-5w">
-            <GeneralIndicatorsCard />
-          </div>
-          <div className="fr-mt-5w">
-            <DisciplineStatsSidebar />
-          </div>
-          <div className="fr-mt-5w">
-            <DisciplineStatusSummary />
-          </div>
-        </Col>
-        <Col>
-          <div className="fr-mt-5w">
-            <CnuGroupsChart />
-            <Text>
-              Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-              Voluptatem sit quod veniam quam odio a earum deserunt minima velit
-              minus cumque explicabo, ducimus porro inventore. Veniam autem
-              error cupiditate eum.
-            </Text>
-          </div>
-          <div className="fr-pr-8w">
-            <StatusDistribution />
-            <Text size="sm" className="fr-mt-2w">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ea
-              repellat corporis est laudantium consequuntur consectetur, odit
-              temporibus! Eligendi, vitae. Vero, harum molestias? Repellendus
-              voluptatem non aperiam? Enim ab obcaecati non?
-            </Text>
-          </div>
-          <EstablishmentTypeChart />
         </Col>
       </Row>
-      <Row className="fr-mt-4w fr-mb-5w">
-        <Col>
+
+      <Row className="fr-mt-3w fr-mb-4w">
+        <Col md={12}>
+          <div className="fr-grid-row fr-grid-row--gutters">
+            <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
+              <div
+                className="fr-background-alt--blue-france fr-p-3w"
+                style={{
+                  height: "100%",
+                }}
+              >
+                <GeneralIndicatorsCard />
+              </div>
+            </div>
+
+            {!contextId && (
+              <div className="fr-col-md-3">
+                <div
+                  className="fr-background-alt--blue-france fr-p-3w"
+                  style={{ height: "100%" }}
+                >
+                  <DisciplineStatsSidebar />
+                </div>
+              </div>
+            )}
+
+            <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
+              <div
+                className="fr-background-alt--blue-france fr-p-3w"
+                style={{
+                  height: "100%",
+                }}
+              >
+                <DisciplineStatusSummary />
+              </div>
+            </div>
+
+            <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
+              <div
+                className="fr-background-alt--blue-france fr-p-3w"
+                style={{
+                  height: "100%",
+                }}
+              >
+                <AgeDistributionPieChart />
+              </div>
+            </div>
+          </div>
+        </Col>
+      </Row>
+
+      <Row className="fr-mt-4w">
+        <Col md={12}>
+          <div className="fr-background-alt--blue-france fr-p-3w">
+            <FieldsDistributionBar />
+            <Text size="sm" className="fr-mt-2w">
+              Répartition des personnels enseignants par établissement avec
+              visualisation de l'équilibre femmes-hommes.
+            </Text>
+          </div>
+        </Col>
+      </Row>
+
+      <Row className="fr-mt-4w">
+        <Col md={12}>
+          <div className="fr-background-alt--blue-france fr-p-3w">
+            <StatusDistribution />
+            <Text size="sm" className="fr-mt-2w">
+              Répartition par statut des personnels enseignants, distinguant
+              notamment les enseignants-chercheurs, les titulaires
+              non-chercheurs et les non-titulaires.
+            </Text>
+          </div>
+        </Col>
+      </Row>
+
+      <Row className="fr-mt-4w">
+        <Col md={12}>
+          <div className="fr-background-alt--blue-france fr-p-3w">
+            <CnuGroupsChart />
+            <Text size="sm" className="fr-mt-2w">
+              Répartition des enseignants-chercheurs par groupe CNU. Cette
+              visualisation montre la distribution des effectifs selon les
+              principales disciplines académiques dans les établissements.
+            </Text>
+          </div>
+        </Col>
+      </Row>
+
+      <Row className="fr-mt-4w">
+        <Col md={12}>
+          <div className="fr-background-alt--blue-france fr-p-3w">
+            <EstablishmentTypeChart />
+            <Text size="sm" className="fr-mt-2w">
+              Distribution des personnels enseignants selon les différentes
+              catégories d'établissements d'enseignement supérieur.
+            </Text>
+          </div>
+        </Col>
+      </Row>
+
+      <Row className="fr-mt-5w fr-mb-5w">
+        <Col md={12}>
           <Title as="h4" look="h5">
-            Explorer par régions
+            Explorer par établissement
           </Title>
-          <NavigationCards type="regions" maxItems={12} />
+          <NavigationCards type="structures" maxItems={12} />
         </Col>
       </Row>
     </Container>

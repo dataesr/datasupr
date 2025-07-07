@@ -15,7 +15,8 @@ import ResearchTeachersOverviewTable from "./table/overview";
 import YearSelector from "../../components/filters";
 import SubtitleWithContext from "./utils/get-title";
 import GeneralIndicatorsCard from "../../components/general-indicators-card/general-indicators-card";
-import { CnuAgeDistribution } from "./charts/heatmap";
+import { CnuAgeDistribution } from "./charts/age/pyra";
+import { CategoryDistribution } from "./charts/categories/categories";
 
 export function ResearchTeachers() {
   const [searchParams] = useSearchParams();
@@ -42,12 +43,21 @@ export function ResearchTeachers() {
           <YearSelector />
         </Col>
       </Row>
-
-      <Row gutters className="fr-mt-3w">
-        <Col>
-          <SubtitleWithContext classText="fr-text--lg fr-text--bold fr-mb-0" />
-        </Col>
-      </Row>
+      <Title
+        as="h3"
+        look="h6"
+        className="fr-mt-2w fr-mb-3w"
+        style={{
+          backgroundColor: "var(--background-alt-blue-france)",
+          padding: "1.0rem 0.5rem 0.1rem 0.5rem",
+          borderLeft: "6px solid var(--blue-france-main-525)",
+        }}
+      >
+        Les enseignants-chercheurs
+        <i>
+          <SubtitleWithContext classText="" />
+        </i>
+      </Title>
       <Row gutters className="fr-mt-3w">
         <Col>
           <Text>
@@ -74,9 +84,36 @@ export function ResearchTeachers() {
           </Text>
         </Col>
       </Row>
-
-      <Row gutters>
-        <Col md={9}>
+      <Row gutters className="fr-mt-4w">
+        <Col md={4}>
+          <div
+            className="fr-background-alt--blue-france fr-p-3w"
+            style={{ height: "100%" }}
+          >
+            <GeneralIndicatorsCard type="research-teachers" />
+          </div>
+        </Col>
+        <Col md={8}>
+          <div
+            className="fr-background-alt--blue-france fr-p-3w"
+            style={{ height: "100%" }}
+          >
+            <CategoryDistribution />
+          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={12} className="fr-mt-4w">
+          <div
+            className="fr-background-alt--blue-france fr-p-3w"
+            style={{ height: "100%" }}
+          >
+            <CnuAgeDistribution />
+          </div>
+        </Col>
+      </Row>
+      <Row gutters className="fr-mt-4w">
+        <Col md={12}>
           {!contextId && (
             <div>
               <ResearchTeachersOverviewTable
@@ -103,14 +140,7 @@ export function ResearchTeachers() {
             </>
           )}
         </Col>
-        <Col md={3} style={{ textAlign: "center" }}>
-          <div className="fr-mt-3w">
-            <GeneralIndicatorsCard type="research-teachers" />
-            <CnuAgeDistribution />
-          </div>
-        </Col>
       </Row>
-
       {contextId && (
         <Row gutters className="fr-mt-4w">
           <Col>

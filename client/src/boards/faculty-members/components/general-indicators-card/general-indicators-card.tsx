@@ -6,7 +6,6 @@ import { useFacultyMembersResearchTeachers } from "../../api/use-research-teache
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { formatToPercent } from "../../../../utils/format";
 import { Row, Title } from "@dataesr/dsfr-plus";
-import SubtitleWithContext from "../../pages/typology/utils/subtitle-with-context";
 
 interface GeneralIndicatorsCardProps {
   type?: "general" | "research-teachers";
@@ -137,17 +136,18 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
   return (
     <div>
       <Row horizontalAlign="center">
-        <Title as="h3" look="h6" style={{ marginBottom: "0px" }}>
-          Effectif total
+        <Title as="h3" look="h5">
+          Effectif
         </Title>
       </Row>
-      <Row horizontalAlign="center">
-        <SubtitleWithContext classText="fr-text--sm" />
-      </Row>
-      <Row horizontalAlign="center" className="fr-text--lead fr-text--bold">
+      <Row horizontalAlign="center" className="fr-mt-1w fr-mb-1w"></Row>
+      <Row
+        horizontalAlign="center"
+        className="fr-text--lead fr-text--bold fr-mt-1w"
+      >
         {totalCount.toLocaleString()}
       </Row>
-      <Row horizontalAlign="center" className="fr-text--sm fr-mb-3w">
+      <Row horizontalAlign="center" className="fr-text--sm fr-mb-2w">
         personnels enseignants
       </Row>
 
