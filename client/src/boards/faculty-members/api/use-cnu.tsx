@@ -7,7 +7,7 @@ type CNUContext = "fields" | "geo" | "structures";
 interface UseCNUParams {
   context: CNUContext;
   annee_universitaire?: string;
-  contextId?: string; // field_id, geo_id, ou structure_id
+  contextId?: string;
 }
 
 export const useFacultyMembersCNU = ({

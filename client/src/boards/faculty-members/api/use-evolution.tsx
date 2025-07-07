@@ -6,7 +6,7 @@ type EvolutionContext = "fields" | "geo" | "structures";
 
 interface UseEvolutionParams {
   context: EvolutionContext;
-  contextId?: string; // field_id, geo_id, ou structure_id
+  contextId?: string;
 }
 
 export const useFacultyMembersEvolution = ({
@@ -55,7 +55,7 @@ export interface EvolutionData {
   };
   years: string[];
   global_evolution: Array<{
-    _id: string; // année
+    _id: string;
     total_count: number;
     gender_breakdown: Array<{
       gender: string;
@@ -63,8 +63,7 @@ export interface EvolutionData {
     }>;
   }>;
   status_evolution: Array<{
-    _id: string; // année
-    total_count: number;
+    _id: string;
     status_breakdown: Array<{
       status: string;
       count: number;

@@ -33,7 +33,7 @@ export const createTreemapOptions = ({
     },
   },
   title: {
-    text: ""
+    text: "",
   },
   tooltip: {
     formatter: function () {
@@ -54,14 +54,14 @@ export const createTreemapOptions = ({
   },
   exporting: false,
   colorAxis: {
-    minColor: "#efcb3a", // Majorité hommes
-    maxColor: "#e18b76", // Majorité femmes
+    minColor: "#efcb3a",
+    maxColor: "#e18b76",
     stops: [
-      [0, "#efcb3a"], // 0% femmes = jaune (hommes)
-      [0.4, "#f0e68c"], // 40% femmes = jaune clair
-      [0.5, "#EFEFEF"], // 50% = gris (parité)
-      [0.6, "#f0b7a8"], // 60% femmes = rose clair
-      [1, "#e18b76"], // 100% femmes = rose
+      [0, "#efcb3a"],
+      [0.4, "#f0e68c"],
+      [0.5, "#EFEFEF"],
+      [0.6, "#f0b7a8"],
+      [1, "#e18b76"],
     ],
   },
   plotOptions: {

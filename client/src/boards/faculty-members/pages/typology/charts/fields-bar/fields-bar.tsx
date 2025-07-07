@@ -86,7 +86,7 @@ const ItemBarChart: React.FC = () => {
           distributionData = overviewData.gender_distribution;
           break;
         case "structures":
-          distributionData = overviewData.gender_distribution; // Utilisez gender_distribution ici parce que le model a changer le sang
+          distributionData = overviewData.gender_distribution;
           break;
         default:
           return [];
