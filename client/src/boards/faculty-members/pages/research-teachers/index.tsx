@@ -14,6 +14,7 @@ import ResearchTeachersOverviewTable from "./table/overview";
 import YearSelector from "../../components/filters";
 import SubtitleWithContext from "./utils/get-title";
 import GeneralIndicatorsCard from "../../components/general-indicators-card/general-indicators-card";
+import { CnuAgeDistribution } from "./charts/heatmap";
 
 export function ResearchTeachers() {
   const [searchParams] = useSearchParams();
@@ -47,7 +48,7 @@ export function ResearchTeachers() {
         </Col>
       </Row>
 
-      <Row >
+      <Row>
         <Col md={8}>
           {!contextId && (
             <div>
@@ -89,10 +90,11 @@ export function ResearchTeachers() {
           )}
         </Col>
 
-        <Col  md={4} style={{ textAlign: "center" }}>
+        <Col md={4} style={{ textAlign: "center" }}>
           <div className="fr-mb-5w">
             <GeneralIndicatorsCard type="research-teachers" />
           </div>
+          <CnuAgeDistribution />
         </Col>
       </Row>
     </Container>

@@ -118,53 +118,33 @@ export default function StatusOptions({
   }
   disciplines.sort((a, b) => b.totalCount - a.totalCount);
 
-  const categories = disciplines.map((d) => d.fieldLabel);
+  const sortedDisciplines = [...disciplines]
+    .sort((a, b) => b.totalCount - a.totalCount)
+    .slice(0, 10);
 
-  const colorEnseignantsChercheurs = "var(--orange-terre-battue-main-645)";
-  const colorTitulaires = "var(--green-bourgeon-main-640)";
-  const colorEffectifTotal = "var(--beige-gris-galet-950)";
+  const categories = sortedDisciplines.map(d => d.fieldLabel);
 
-  const backgroundData = disciplines.map((d) => ({
-    y: d.totalCount,
+  const enseignantsChercheursData = sortedDisciplines.map(d => ({
+    y: Math.round((d.enseignantsChercheurs / d.totalCount) * 100 * 10) / 10,
+    count: d.enseignantsChercheurs,
+    total: d.totalCount
   }));
 
-  const titulairesData = disciplines.map((d) => ({
-    y: d.enseignantsChercheurs + d.titulairesNonChercheurs,
+  const titulairesNonChercheursData = sortedDisciplines.map(d => ({
+    y: Math.round((d.titulairesNonChercheurs / d.totalCount) * 100 * 10) / 10,
+    count: d.titulairesNonChercheurs,
+    total: d.totalCount
   }));
 
-  const enseignantsChercheursData = disciplines.map((d) => ({
-    y: d.enseignantsChercheurs,
-    percent: Math.round((d.enseignantsChercheurs / d.totalCount) * 100),
-    percentOfTitulaires:
-      d.enseignantsChercheurs + d.titulairesNonChercheurs > 0
-        ? Math.round(
-            (d.enseignantsChercheurs /
-              (d.enseignantsChercheurs + d.titulairesNonChercheurs)) *
-              100
-          )
-        : 0,
+  const nonTitulairesData = sortedDisciplines.map(d => ({
+    y: Math.round((d.nonTitulaires / d.totalCount) * 100 * 10) / 10,
+    count: d.nonTitulaires,
+    total: d.totalCount
   }));
-
-  const percentTitulaires = disciplines.map((d) =>
-    Math.round(
-      ((d.enseignantsChercheurs + d.titulairesNonChercheurs) / d.totalCount) *
-        100
-    )
-  );
-
-  const percentNonTitulaires = disciplines.map((d) =>
-    Math.round((d.nonTitulaires / d.totalCount) * 100)
-  );
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
-      type: "column",
-      height: Math.max(450, 100 + categories.length * 40),
-      marginLeft: 120,
-      marginRight: 200,
-      style: {
-        fontFamily: "Marianne, sans-serif",
-      },
+      type: "bar",
     },
     title: {
       text: "",
@@ -173,187 +153,82 @@ export default function StatusOptions({
       categories,
       labels: {
         style: {
-          fontSize: "12px",
+          fontSize: "11px",
           fontWeight: "500",
         },
-        rotation: categories.length > 4 ? -45 : 0,
-        align: categories.length > 4 ? "right" : "center",
       },
-      lineWidth: 0,
     },
     yAxis: {
       min: 0,
+      max: 100,
       title: {
-        text: "Nombre d'enseignants",
+        text: "Pourcentage (%)",
         style: {
           fontSize: "12px",
-          color: "var(--label-color)",
         },
       },
       labels: {
-        formatter: function () {
-          return this.value.toLocaleString();
-        },
-        style: {
-          fontSize: "11px",
-        },
+        format: "{value}%",
       },
-      gridLineDashStyle: "Dash",
-      gridLineColor: "var(--beige-gris-galet-975)",
     },
     tooltip: {
-      useHTML: true,
-      formatter: function () {
-        const point = this.point as HighchartsInstance.Point & {
-          percent?: number;
-          percentOfTitulaires?: number;
-        };
-        const index = this.point.index;
-        const discipline = disciplines[index];
-
-        if (this.series.name === "Enseignants-chercheurs") {
-          return `
-            <div style="padding:10px; min-width:200px;">
-              <h4 style="margin:0 0 8px 0">${categories[index]}</h4>
-              <div style="margin-bottom:8px;">
-                <b>Enseignants-chercheurs:</b> ${point.y?.toLocaleString() || 0}
-                <br><small>(${point.percent}% du total, ${
-            point.percentOfTitulaires
-          }% des titulaires)</small>
-              </div>
-              <hr style="margin:8px 0; border-top:1px solid var(--beige-gris-galet-975)">
-              <div>
-                <b>Titulaires:</b> ${(
-                  discipline.enseignantsChercheurs +
-                  discipline.titulairesNonChercheurs
-                ).toLocaleString()}
-                <br><small>(${percentTitulaires[index]}% du total)</small>
-              </div>
-              <div>
-                <b>Non-titulaires:</b> ${discipline.nonTitulaires.toLocaleString()}
-                <br><small>(${percentNonTitulaires[index]}% du total)</small>
-              </div>
-              <hr style="margin:8px 0; border-top:1px solid var(--beige-gris-galet-975)">
-              <div><b>Total:</b> ${discipline.totalCount.toLocaleString()}</div>
-            </div>
-          `;
-        }
-
-        return false;
-      },
-      backgroundColor: "var(--beige-gris-galet-975)",
-      borderWidth: 1,
-      borderColor: "var(--beige-gris-galet-950)",
-      borderRadius: 6,
-      shadow: true,
+      pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:.1f}%</b> ({point.count} sur {point.total})<br/>',
+      shared: true,
     },
     plotOptions: {
-      column: {
-        grouping: false,
-        borderWidth: 0,
-        pointPadding: 0.05,
-        shadow: false,
-      },
-      series: {
-        animation: {
-          duration: 700,
-        },
-        states: {
-          hover: {
-            brightness: 0.1,
+      bar: {
+        stacking: "normal",
+        dataLabels: {
+          enabled: true,
+          format: "{y:.1f}%",
+          style: {
+            fontSize: "10px",
+            fontWeight: "bold",
+            textOutline: "1px contrast",
+          },
+          filter: {
+            property: "y",
+            operator: ">" as HighchartsInstance.OptionsOperatorValue,
+            value: 5,
           },
         },
       },
     },
     legend: {
       enabled: true,
-      layout: "vertical",
-      align: "right",
-      verticalAlign: "middle",
+      layout: "horizontal",
+      align: "center",
+      verticalAlign: "bottom",
       itemStyle: {
         fontWeight: "normal",
         fontSize: "11px",
-        color: "var(--text-mention-grey)",
       },
-      itemDistance: 10,
-      symbolRadius: 2,
-      symbolHeight: 8,
-      symbolWidth: 8,
-      padding: 10,
-      itemMarginTop: 5,
-      itemMarginBottom: 5,
-      margin: 15,
-      backgroundColor: "transparent",
-      x: 20,
-      floating: true,
-      useHTML: true,
-      width: 150,
     },
-    credits: { enabled: false },
     series: [
-      {
-        name: "Effectif total",
-        data: backgroundData,
-        pointPadding: 0,
-        groupPadding: 0.05,
-        pointWidth: 45,
-        enableMouseTracking: false,
-        states: {
-          hover: { enabled: false },
-        },
-        type: "column",
-        showInLegend: true,
-        legendIndex: 3,
-        color: colorEffectifTotal,
-      },
-      {
-        name: "Titulaires",
-        data: titulairesData,
-        pointPadding: 0.05,
-        groupPadding: 0.05,
-        pointWidth: 45,
-        enableMouseTracking: false,
-        pointPlacement: 0.1,
-        states: {
-          hover: { enabled: false },
-        },
-        type: "column",
-        zIndex: 0,
-        showInLegend: true,
-        legendIndex: 2,
-        color: colorTitulaires,
-      },
       {
         name: "Enseignants-chercheurs",
         data: enseignantsChercheursData,
-        pointWidth: 25,
-        pointPadding: 0.05,
-        groupPadding: 0.05,
-        pointPlacement: 0.1,
-        zIndex: 2,
-        showInLegend: true,
-        legendIndex: 1,
-        color: colorEnseignantsChercheurs,
-        dataLabels: {
-          enabled: true,
-          formatter: function () {
-            const point = this.point as HighchartsInstance.Point & {
-              percent?: number;
-            };
-            return `${point.percent}%`;
-          },
-          style: {
-            fontSize: "11px",
-            fontWeight: "bold",
-            color: "#FFF",
-            textOutline: "1px contrast",
-          },
-          y: -5,
-        },
-        type: "column",
+        color: "var(--orange-terre-battue-main-645)",
+        zIndex: 3,
+        type: "bar",
       },
-    ],
+      {
+        name: "Titulaires non-chercheurs",
+        data: titulairesNonChercheursData,
+        color: "var(--green-bourgeon-main-640)",
+        zIndex: 2,
+        type: "bar",
+      },
+      {
+        name: "Non-titulaires",
+        data: nonTitulairesData,
+        color: "var(--blue-ecume-moon-675)",
+        zIndex: 1,
+        type: "bar",
+      },
+    ] as HighchartsInstance.SeriesOptionsType[],
+    credits: { enabled: false },
   };
 
-  return CreateChartOptions("column", newOptions);
+  return CreateChartOptions("bar", newOptions);
 }
