@@ -263,7 +263,7 @@ export default function CnuGroupsChart() {
             fr: "Groupes CNU",
           },
           description: {
-            fr: "blablabla",
+            fr: "Ce graphique présente la répartition des enseignants-chercheurs par groupes CNU. La taille de chaque barre est proportionnelle au nombre d'enseignants-chercheurs dans le groupe. Les données incluent également la répartition par genre au sein de chaque groupe, permettant d'identifier les disparités hommes-femmes selon les disciplines scientifiques.",
           },
           integrationURL: "/integration-url",
         }}

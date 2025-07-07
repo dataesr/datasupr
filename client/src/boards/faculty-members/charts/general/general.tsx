@@ -123,7 +123,7 @@ const DistributionBar: React.FC = () => {
       fr: getTitle(),
     },
     description: {
-      fr: "blablabla",
+      fr: "Ce graphique présente la répartition des effectifs d'enseignants par grande discipline, avec une visualisation de l'équilibre femmes-hommes dans chaque domaine. Les barres horizontales permettent de comparer facilement les effectifs totaux entre disciplines, tandis que les segments colorés illustrent la proportion respective des enseignants par genre. Le tableau associé détaille les effectifs précis et les pourcentages par discipline.",
     },
     integrationURL: "/personnel-enseignant/discipline/typologie",
   };

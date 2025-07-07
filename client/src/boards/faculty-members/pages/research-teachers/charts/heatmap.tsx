@@ -148,9 +148,7 @@ export function CnuAgeDistribution() {
           },
           description: {
             fr: `Ce graphique présente la répartition des enseignants-chercheurs par tranche d'âge dans les principaux groupes CNU.
-
 Les barres empilées permettent de visualiser la structure démographique de chaque discipline et d'identifier celles qui ont une population plus jeune ou vieillissante.
-
 `,
           },
           integrationURL: generateIntegrationURL(context, "cnu-age"),
