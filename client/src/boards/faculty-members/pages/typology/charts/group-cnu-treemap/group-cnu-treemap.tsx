@@ -270,7 +270,7 @@ export function GroupCNUTreemapChart() {
     idQuery: `faculty-members-cnu`,
     title: {
       fr: contextId
-        ? `Les ${labels.groupPlural} de la discipline ${cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_code}
+        ? `Les sections CNU de la discipline ${cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_code}
           - ${cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_name}`
         : `Répartition par ${labels.singular}`,
       en: contextId
@@ -278,7 +278,7 @@ export function GroupCNUTreemapChart() {
         : `Distribution by ${labels.singular}`,
     },
     subtitle: `Année universitaire ${selectedYear} - ${treemapData.length} ${
-      contextId ? labels.groupPlural : labels.plural
+      treemapData.length > 1 ? `sections` : `section`
     }`,
     description: {
       fr: contextId

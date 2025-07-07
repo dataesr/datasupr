@@ -230,7 +230,11 @@ const ItemBarChart: React.FC = () => {
     id: "gender-distribution-chart",
     idQuery: "gender-distribution",
     title: {
-      fr: "Répartition par genre",
+      fr: `${
+        contextId
+          ? `Répartition hommes / femmes - Comparaison avec autres ${labels.plural}`
+          : `Répartition hommes / femmes par ${labels.singular}`
+      }`,
     },
     description: {
       fr: `Répartition par genre pour l'année ${selectedYear}`,
