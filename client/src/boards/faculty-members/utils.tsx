@@ -73,6 +73,7 @@ export function useContextDetection(): ContextInfo {
 
   return contextInfo;
 }
+
 export function generateContextualTitle(
   baseTitle: string | null,
   context: ContextType,
@@ -210,3 +211,26 @@ export function useBreadcrumbItems(
     ];
   }
 }
+
+const rootStyles = getComputedStyle(document.documentElement);
+
+export const getColorForDiscipline = (discipline: string) => {
+  if (discipline === "Sciences")
+    return rootStyles.getPropertyValue("--sciences-field-color");
+  if (discipline === "Lettres et sciences humaines")
+    return rootStyles.getPropertyValue("--literature-human-sc-field-color");
+  if (discipline === "Droit, économie et gestion")
+    return rootStyles.getPropertyValue("--law-economics-field-color");
+  if (discipline === "Médecine")
+    return rootStyles.getPropertyValue("--medecine-field-color");
+  if (discipline === "Pharmacie")
+    return rootStyles.getPropertyValue("--pharmacy-field-color");
+  if (discipline === "Odontologie")
+    return rootStyles.getPropertyValue("--ondotologie-field-color");
+  if (discipline === "Autres Santé")
+    return rootStyles.getPropertyValue("--other-health-field-color");
+  if (discipline === "Personnel des grands établissements")
+    return rootStyles.getPropertyValue("--non-univ-field-color");
+  if (discipline === "Non spécifiée")
+    return rootStyles.getPropertyValue("--unspecified-field-color");
+};

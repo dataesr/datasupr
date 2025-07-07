@@ -1,5 +1,6 @@
 import HighchartsInstance from "highcharts";
 import { CreateChartOptions } from "../../components/creat-chart-options";
+import { getColorForDiscipline } from "../../utils";
 
 interface Field {
   year: string;
@@ -25,24 +26,13 @@ export default function OptionsColumnChart({
   if (yearData.length === 0) return null;
 
   const sortedData = [...yearData].sort((a, b) => b.totalCount - a.totalCount);
-  const limitedData = sortedData.slice(0, 7);
 
-  const categories = limitedData.map((field) => field.fieldLabel);
+  const categories = sortedData.map((field) => field.fieldLabel);
 
-  const colors = [
-    "#fddbfa",
-    "#73e0cf",
-    "#6e445a",
-    "#a94645",
-    "#9ef9be",
-    "#e6feda",
-    "#c9fcac",
-  ];
-
-  const data = limitedData.map((field, index) => ({
+  const data = sortedData.map((field) => ({
     name: field.fieldLabel,
     y: field.totalCount,
-    color: colors[index % colors.length],
+    color: getColorForDiscipline(field.fieldLabel),
     customData: {
       femaleCount: field.femaleCount,
       maleCount: field.maleCount,
@@ -63,6 +53,9 @@ export default function OptionsColumnChart({
     },
     title: {
       text: "",
+    },
+    exporting: {
+      enabled: true,
     },
     xAxis: {
       categories,

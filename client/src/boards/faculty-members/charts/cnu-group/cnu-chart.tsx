@@ -1,13 +1,9 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
-import {
-  createCnuGroupsChartOptions,
-  getColorForDiscipline,
-  getShade,
-} from "./options";
+import { createCnuGroupsChartOptions, getShade } from "./options";
 import { useFacultyMembersCNU } from "../../api/use-cnu";
-import { useContextDetection } from "../../utils";
+import { useContextDetection, getColorForDiscipline } from "../../utils";
 import ChartWrapper from "../../../../components/chart-wrapper";
 
 function RenderData({ groupedData }) {
@@ -203,7 +199,7 @@ export default function CnuGroupsChart() {
     const result: DataPoint[] = [];
 
     groupedData.forEach((itemData) => {
-      const baseColor = getColorForDiscipline(itemData.discipline);
+      const baseColor = getColorForDiscipline(itemData.discipline) || "";
 
       itemData.groups.forEach((group, index) => {
         const typedGroup = group as CNUGroup;

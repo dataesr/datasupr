@@ -39,6 +39,9 @@ export const createCnuGroupsChartOptions = (
     title: {
       text: "",
     },
+    exporting: {
+      enabled: true,
+    },
     xAxis: {
       categories,
       labels: {
@@ -194,17 +197,6 @@ export const createCnuGroupsChartOptions = (
       ],
     },
   };
-};
-
-export const getColorForDiscipline = (discipline: string) => {
-  if (discipline.includes("Science")) return "#3558a2";
-  if (discipline.includes("Lettre") || discipline.includes("humaine"))
-    return "#a94645";
-  if (discipline.includes("Droit") || discipline.includes("économie"))
-    return "#6e445a";
-  if (discipline.includes("Médecine")) return "#a94645";
-  if (discipline.includes("Pharma")) return "#009099";
-  return "#fcc63a";
 };
 
 export const getShade = (baseColor: string, index: number, total: number) => {
