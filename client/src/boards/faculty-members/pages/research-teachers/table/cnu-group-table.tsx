@@ -86,7 +86,10 @@ export default function CnuGroupsTable({
         </div>
       )}
 
-      <table className="fr-table fr-table--bordered">
+      <table
+        className="fr-table fr-table--bordered fr-table--sm"
+        style={{ width: "100%" }}
+      >
         <thead>
           <tr>
             <th scope="col">Groupe CNU</th>

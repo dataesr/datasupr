@@ -137,9 +137,6 @@ export function Typologie() {
         <>
           <Row gutters className="fr-mb-4w">
             <Col md={12}>
-              <Title as="h2" look="h4" className="fr-mb-3w">
-                Répartition par {labels.singular}
-              </Title>
               <ItemBarChart />
             </Col>
           </Row>

@@ -106,17 +106,16 @@ const ItemBarChart: React.FC = () => {
           femaleCount = genderData.count;
         }
       });
-
       const totalCount = item.total_count;
       const itemCode =
         item._id?.geo_code ||
         item._id?.discipline_code ||
-        item._id?.structure_code ||
+        item._id?.field_code ||
         "";
       const itemName =
         item._id?.geo_name ||
         item._id?.discipline_name ||
-        item._id?.structure_name ||
+        item._id?.field_name ||
         "Non précisé";
 
       return {
@@ -297,110 +296,139 @@ const ItemBarChart: React.FC = () => {
 
   return (
     <>
-      <Row className="fr-mb-1w">Options d'affichage :</Row>
-
-      <Row className="fr-mb-1w">
-        <Button
-          size="sm"
-          variant={sortKey === "total" ? "primary" : "secondary"}
-          onClick={() => setSortKey("total")}
-          title="Trier par effectif total"
-          className="fr-mr-1w"
-        >
-          <i className="ri-bar-chart-horizontal-line"></i>
-          Total
-        </Button>
-
-        <Button
-          size="sm"
-          variant={sortKey === "femmesPercent" ? "primary" : "secondary"}
-          onClick={() => setSortKey("femmesPercent")}
-          title="Trier par pourcentage de femmes"
-          className="fr-mr-1w"
-        >
-          <i className="ri-women-line"></i>
-          Femmes
-        </Button>
-
-        <Button
-          size="sm"
-          variant={sortKey === "hommesPercent" ? "primary" : "secondary"}
-          onClick={() => setSortKey("hommesPercent")}
-          title="Trier par pourcentage d'hommes"
-          className="fr-mr-1w"
-        >
-          <i className="ri-men-line"></i>
-          Hommes
-        </Button>
-      </Row>
-      <Row>
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() =>
-            setStackType((prev) => (prev === "percent" ? "normal" : "percent"))
-          }
-          title={`Afficher en ${
-            stackType === "percent" ? "effectifs" : "pourcentages"
-          }`}
-          className="fr-mr-1w"
-        >
-          <span
-            className={
-              stackType === "percent" ? "ri-user-fill" : "ri-percent-fill"
-            }
-            aria-hidden="true"
-          />
-          {stackType === "percent" ? "Nb" : ""}
-        </Button>
-
-        <Button
-          size="sm"
-          variant="secondary"
-          onClick={() =>
-            setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
-          }
-          title={`Trier par ordre ${
-            sortOrder === "asc" ? "décroissant" : "croissant"
-          }`}
-          className="fr-mr-1w"
-        >
-          <span
-            className={
-              sortOrder === "asc"
-                ? "fr-icon-arrow-up-s-fill"
-                : "fr-icon-arrow-down-s-fill"
-            }
-            aria-hidden="true"
-          />
-          {sortOrder === "asc" ? "Croissant" : "Décroissant"}
-        </Button>
-      </Row>
-
-      <Row>
+      <Row gutters>
         <Col md={12}>
-          <ChartWrapper
-            config={config}
-            options={options}
-            legend={null}
-            renderData={() => <RenderData data={sortedItems} />}
-          />
+          <div style={{ position: "relative" }}>
+            <div
+              className="fr-btns-group fr-btns-group--sm"
+              style={{
+                position: "absolute",
+                top: "10px",
+                right: "10px",
+                zIndex: 10,
+                display: "flex",
+                flexDirection: "row",
+                gap: "4px",
+              }}
+            >
+              <Button
+                size="sm"
+                variant={sortKey === "total" ? "primary" : "secondary"}
+                onClick={() => setSortKey("total")}
+                title="Trier par effectif total"
+                style={{
+                  minWidth: "30px",
+                  width: "30px",
+                  height: "30px",
+                  padding: "0",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                T
+              </Button>
+              <Button
+                size="sm"
+                variant={sortKey === "femmesPercent" ? "primary" : "secondary"}
+                onClick={() => setSortKey("femmesPercent")}
+                title="Trier par pourcentage de femmes"
+                style={{
+                  minWidth: "30px",
+                  width: "30px",
+                  height: "30px",
+                  padding: "0",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                F
+              </Button>
+              <Button
+                size="sm"
+                variant={sortKey === "hommesPercent" ? "primary" : "secondary"}
+                onClick={() => setSortKey("hommesPercent")}
+                title="Trier par pourcentage d'hommes"
+                style={{
+                  minWidth: "30px",
+                  width: "30px",
+                  height: "30px",
+                  padding: "0",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                H
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() =>
+                  setStackType((prev) =>
+                    prev === "percent" ? "normal" : "percent"
+                  )
+                }
+                title={`Afficher en ${
+                  stackType === "percent" ? "effectifs" : "pourcentages"
+                }`}
+                style={{
+                  minWidth: "30px",
+                  width: "30px",
+                  height: "30px",
+                  padding: "0",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <i
+                  className={
+                    stackType === "percent" ? "ri-user-fill" : "ri-percent-fill"
+                  }
+                  aria-hidden="true"
+                ></i>
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() =>
+                  setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+                }
+                title={`Trier par ordre ${
+                  sortOrder === "asc" ? "décroissant" : "croissant"
+                }`}
+                style={{
+                  minWidth: "30px",
+                  width: "30px",
+                  height: "30px",
+                  padding: "0",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <i
+                  className={
+                    sortOrder === "asc"
+                      ? "fr-icon-arrow-up-s-fill"
+                      : "fr-icon-arrow-down-s-fill"
+                  }
+                  aria-hidden="true"
+                ></i>
+              </Button>
+            </div>
+
+            <ChartWrapper
+              config={config}
+              options={options}
+              legend={null}
+              renderData={() => <RenderData data={sortedItems} />}
+            />
+          </div>
         </Col>
       </Row>
-
-      {contextId && (
-        <Row>
-          <Col md={12}>
-            <div className="fr-text--xs fr-text--mention-grey">
-              <strong>Note :</strong>{" "}
-              {labels.singular.charAt(0).toUpperCase() +
-                labels.singular.slice(1)}{" "}
-              sélectionnée est mise en évidence. Cliquez sur une autre{" "}
-              {labels.singular} pour la comparer.
-            </div>
-          </Col>
-        </Row>
-      )}
     </>
   );
 };

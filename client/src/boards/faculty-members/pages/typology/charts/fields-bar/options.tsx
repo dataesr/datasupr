@@ -48,14 +48,7 @@ export const createBarChartOptions = ({
   },
   exporting: { enabled: false },
   title: {
-    text: contextId
-      ? `Répartition hommes / femmes - Comparaison avec autres ${labels.plural}`
-      : `Répartition hommes / femmes par ${labels.singular}`,
-    align: "left",
-    style: {
-      fontWeight: "bold",
-      fontSize: "18px",
-    },
+    text: "",
   },
   subtitle: {
     text: `Année universitaire ${selectedYear}${
