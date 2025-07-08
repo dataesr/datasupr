@@ -17,6 +17,7 @@ import { useTitle } from "../../hooks/usePageTitle.tsx";
 
 import i18n from "./title-i18n.json";
 import CollaborationsEntity from "./pages/collaborations/index-entity.tsx";
+import TypeOfBeneficiaries from "./pages/type-of-beneficiaries/index.tsx";
 
 const useRouteTitle = (path: string) => {
   const [searchParams] = useSearchParams();
@@ -52,7 +53,7 @@ export default function EuropeanProjectsRoutes() {
           <Route path="collaborations" element={<RouteWithTitle titleKey="collaborations" element={<Collaborations />} />} />
           <Route path="collaborations/:entityId" element={<RouteWithTitle titleKey="collaborations" element={<EntityWrapper />} />} />
           <Route path="beneficiaires" element={<RouteWithTitle titleKey="beneficiaires" element={<Beneficiaries />} />} />
-          <Route path="beneficiaires-types" element={<RouteWithTitle titleKey="beneficiaires-types" element={<div>Types de bénéficiaires</div>} />} />
+          <Route path="beneficiaires-types" element={<RouteWithTitle titleKey="beneficiaires-types" element={<TypeOfBeneficiaries />} />} />
         </Route>
         <Route path="msca" element={<RouteWithTitle titleKey="msca" element={<div>MSCA</div>} />} />
         <Route path="erc" element={<RouteWithTitle titleKey="erc" element={<div>ERC</div>} />} />

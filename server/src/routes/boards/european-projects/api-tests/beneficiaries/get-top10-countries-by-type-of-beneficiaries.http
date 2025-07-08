@@ -1,0 +1,22 @@
+# Test de la route top10-countries-by-type-of-beneficiaries
+
+### Test basique avec country_code
+GET http://localhost:3000/api/european-projects/type-beneficiaries/top10-countries-by-type-of-beneficiaries?country_code=FRA
+
+### Test avec filtres additionnels
+GET http://localhost:3000/api/european-projects/type-beneficiaries/top10-countries-by-type-of-beneficiaries?country_code=FRA&pillars=p1
+
+### Test avec filtres multiples
+GET http://localhost:3000/api/european-projects/type-beneficiaries/top10-countries-by-type-of-beneficiaries?country_code=DEU&pillars=p1|p2&programs=HORIZON-EIC|HORIZON-MSCA&thematics=HORIZON-CL1-2021-01
+
+### Test avec destinations
+GET http://localhost:3000/api/european-projects/type-beneficiaries/top10-countries-by-type-of-beneficiaries?country_code=ITA&destinations=HORIZON-EIC-2021-ACCELERATOR
+
+### Test avec tous les filtres
+GET http://localhost:3000/api/european-projects/type-beneficiaries/top10-countries-by-type-of-beneficiaries?country_code=ESP&pillars=1&programs=HORIZON-EIC&thematics=HORIZON-CL1-2021-01&destinations=HORIZON-EIC-2021-ACCELERATOR
+
+### Test sans country_code (devrait retourner erreur 400)
+GET http://localhost:3000/api/european-projects/type-beneficiaries/top10-countries-by-type-of-beneficiaries
+
+### Test avec pays au-delà du top 10
+GET http://localhost:3000/api/european-projects/type-beneficiaries/type-by-country?country_code=CAN

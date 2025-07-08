@@ -1,0 +1,4 @@
+# Test de création d'index pour top10-countries-by-type-of-beneficiaries
+
+### Créer l'index pour top10-countries-by-type-of-beneficiaries
+GET http://localhost:3000/api/european-projects/type-beneficiaries/top10-countries-by-type-of-beneficiaries_indexes
