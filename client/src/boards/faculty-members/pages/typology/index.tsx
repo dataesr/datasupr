@@ -22,7 +22,17 @@ export function Typologie() {
   const [searchParams] = useSearchParams();
   const { context, contextId, contextName } = useContextDetection();
 
-  const breadcrumbItems = useBreadcrumbItems(context, contextId, contextName);
+  function capitalize(word: string) {
+    return String(word).charAt(0).toUpperCase() + String(word).slice(1);
+  }
+
+  const contextNameCapital = capitalize(contextName);
+
+  const breadcrumbItems = useBreadcrumbItems(
+    context,
+    contextId,
+    contextNameCapital
+  );
 
   const getLabels = () => {
     const labels = {
@@ -115,14 +125,12 @@ export function Typologie() {
         </Notice>
       </Row>
 
-      <Row className="fr-mt-3w">
-        <Col md={12}>
-          <Title as="h1" look="h3" className="fr-mb-1w">
-            Typologie du personnel enseignant
-          </Title>
+      <Title as="h1" look="h3" className="fr-mt-2w fr-mb-3w">
+        La typologie du personnel enseignant par {contextName}
+        <i>
           <SubtitleWithContext classText="fr-text--lead" />
-        </Col>
-      </Row>
+        </i>
+      </Title>
 
       <Row gutters className="fr-mb-4w">
         <Col md={6}>

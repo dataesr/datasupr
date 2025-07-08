@@ -42,7 +42,7 @@ export function useContextDetection(): ContextInfo {
       return {
         context: "structures" as const,
         contextId: structure_id,
-        contextName: "Université",
+        contextName: "établissement",
       };
     }
 
@@ -51,21 +51,21 @@ export function useContextDetection(): ContextInfo {
       return {
         context: "fields" as const,
         contextId: undefined,
-        contextName: "Discipline",
+        contextName: "discipline",
       };
     }
     if (path.includes("/geo/")) {
       return {
         context: "geo" as const,
         contextId: undefined,
-        contextName: "Région",
+        contextName: "région",
       };
     }
     if (path.includes("/universite/")) {
       return {
         context: "structures" as const,
         contextId: undefined,
-        contextName: "Université",
+        contextName: "établissement",
       };
     }
 

@@ -45,7 +45,7 @@ export default function RegionsOverview() {
           <YearSelector />
         </Col>
       </Row>
-      <Row className="fr-mt-3w">
+      <Row className="fr-my-3w">
         <Col md={12}>
           <Notice closeMode={"disallow"} type={"warning"}>
             Les données des personnels enseignants non permanents ne sont pas
@@ -53,19 +53,11 @@ export default function RegionsOverview() {
           </Notice>
         </Col>
       </Row>
-      <Title
-        as="h3"
-        look="h5"
-        className="fr-mt-2w fr-mb-3w"
-        style={{
-          backgroundColor: "var(--background-alt-blue-france)",
-          padding: "1.0rem 0.5rem 0.1rem 0.5rem",
-          borderLeft: "6px solid var(--blue-france-main-525)",
-        }}
-      >
-        Explorer le personnel enseignant
+
+      <Title as="h1" look="h3" className="fr-mt-2w fr-mb-3w">
+        La représentation du personnel enseignant par région
         <i>
-          <SubtitleWithContext classText="" />
+          <SubtitleWithContext classText="fr-text--lead" />
         </i>
       </Title>
 

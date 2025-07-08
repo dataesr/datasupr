@@ -6,6 +6,7 @@ import {
   Breadcrumb,
   Link,
   Text,
+  Notice,
 } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useBreadcrumbItems, useContextDetection } from "../../utils";
@@ -13,16 +14,27 @@ import CnuGroupsTable from "./table/cnu-group-table";
 import CnuSectionsTable from "./table/cnu-section-table";
 import ResearchTeachersOverviewTable from "./table/overview";
 import YearSelector from "../../components/filters";
-import SubtitleWithContext from "./utils/get-title";
 import GeneralIndicatorsCard from "../../components/general-indicators-card/general-indicators-card";
 import { CnuAgeDistribution } from "./charts/age/pyra";
 import { CategoryDistribution } from "./charts/categories/categories";
+import SubtitleWithContext from "../typology/utils/subtitle-with-context";
 
 export function ResearchTeachers() {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId, contextName } = useContextDetection();
-  const breadcrumbItems = useBreadcrumbItems(context, contextId, contextName);
+
+  function capitalize(word: string) {
+    return String(word).charAt(0).toUpperCase() + String(word).slice(1);
+  }
+
+  const contextNameCapital = capitalize(contextName);
+
+  const breadcrumbItems = useBreadcrumbItems(
+    context,
+    contextId,
+    contextNameCapital
+  );
 
   return (
     <Container as="main">
@@ -43,21 +55,23 @@ export function ResearchTeachers() {
           <YearSelector />
         </Col>
       </Row>
-      <Title
-        as="h3"
-        look="h6"
-        className="fr-mt-2w fr-mb-3w"
-        style={{
-          backgroundColor: "var(--background-alt-blue-france)",
-          padding: "1.0rem 0.5rem 0.1rem 0.5rem",
-          borderLeft: "6px solid var(--blue-france-main-525)",
-        }}
-      >
-        Les enseignants-chercheurs
+
+      <Row className="fr-my-3w">
+        <Col md={12}>
+          <Notice closeMode={"disallow"} type={"warning"}>
+            Les données des personnels enseignants non permanents ne sont pas
+            prises en compte pour l'année car elles ne sont pas disponibles.
+          </Notice>
+        </Col>
+      </Row>
+
+      <Title as="h1" look="h3" className="fr-mt-2w fr-mb-3w">
+        La représentation des enseignants-chercheurs par {contextName}
         <i>
-          <SubtitleWithContext classText="" />
+          <SubtitleWithContext classText="fr-text--lead" />
         </i>
       </Title>
+
       <Row gutters className="fr-mt-3w">
         <Col>
           <Text>

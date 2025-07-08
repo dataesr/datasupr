@@ -23,7 +23,18 @@ import SubtitleWithContext from "../typology/utils/subtitle-with-context";
 
 export default function FieldOverview() {
   const { context, contextId, contextName } = useContextDetection();
-  const breadcrumbItems = useBreadcrumbItems(context, contextId, contextName);
+
+  function capitalize(word: string) {
+    return String(word).charAt(0).toUpperCase() + String(word).slice(1);
+  }
+
+  const contextNameCapital = capitalize(contextName);
+
+  const breadcrumbItems = useBreadcrumbItems(
+    context,
+    contextId,
+    contextNameCapital
+  );
 
   return (
     <Container as="main">
@@ -45,7 +56,7 @@ export default function FieldOverview() {
         </Col>
       </Row>
 
-      <Row className="fr-mt-3w">
+      <Row className="fr-my-3w">
         <Col md={12}>
           <Notice closeMode={"disallow"} type={"warning"}>
             Les données des personnels enseignants non permanents ne sont pas
@@ -54,19 +65,10 @@ export default function FieldOverview() {
         </Col>
       </Row>
 
-      <Title
-        as="h3"
-        look="h5"
-        className="fr-mt-2w fr-mb-3w"
-        style={{
-          backgroundColor: "var(--background-alt-blue-france)",
-          padding: "1.0rem 0.5rem 0.1rem 0.5rem",
-          borderLeft: "6px solid var(--blue-france-main-525)",
-        }}
-      >
-        Explorer le personnel enseignant
+      <Title as="h1" look="h3" className="fr-mt-2w fr-mb-3w">
+        La représentation du personnel enseignant par discipline&nbsp;
         <i>
-          <SubtitleWithContext classText="" />
+          <SubtitleWithContext classText="fr-text--lead" />
         </i>
       </Title>
 
