@@ -1,8 +1,5 @@
 import { useMemo } from "react";
-import {
-  generateContextualTitle,
-  useContextDetection,
-} from "../../../../utils";
+import { useContextDetection } from "../../../../utils";
 import { useFacultyMembersEvolution } from "../../../../api/use-evolution";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createStatusEvolutionOptions } from "./options";
@@ -67,14 +64,6 @@ export function StatusEvolutionChart() {
     contextId,
   });
 
-  const chartTitle = generateContextualTitle(
-    null,
-    context,
-    contextId,
-    evolutionData,
-    isLoading
-  );
-
   const { processedData, chartOptions } = useMemo(() => {
     if (!evolutionData?.status_evolution || !evolutionData?.years) {
       return { processedData: [], chartOptions: null };
@@ -125,17 +114,10 @@ export function StatusEvolutionChart() {
     id: "status-evolution-chart",
     idQuery: "faculty-members-evolution",
     title: {
-      fr: contextName
-        ? `Évolution par statut - ${chartTitle}`
-        : "Évolution des effectifs par statut professionnel",
+      fr: `Évolution par statut `,
     },
     description: {
-      fr: contextName
-        ? `Évolution de la répartition par statut professionnel pour ${contextName} au fil des années`
-        : "Évolution de la répartition par statut professionnel du personnel enseignant",
-      en: contextName
-        ? `Professional status distribution evolution for ${contextName} over the years`
-        : "Faculty professional status distribution evolution over time",
+      fr: "Évolution de la répartition par statut professionnel du personnel enseignant",
     },
   };
 

@@ -101,15 +101,12 @@ const DistributionBar: React.FC = () => {
   })();
 
   const chartOptions = options({ fieldsData: itemsData, selectedYear });
-
   const getTitle = () => {
     switch (context) {
       case "fields":
         return "Répartition par discipline des enseignants";
       case "geo":
-        return contextId
-          ? `Répartition par discipline des enseignants pour la région ${contextName}`
-          : "Répartition par discipline des enseignants par région";
+        return "Répartition par discipline des enseignants ";
       case "structures":
         return contextId
           ? `Répartition par discipline des enseignants pour l'établissement ${contextName}`

@@ -47,307 +47,51 @@ router.get("/faculty-members/filters/regions", async (req, res) => {
   }
 });
 
-router.get("/faculty-members/geo/overview", async (req, res) => {
+router.get("/faculty-members/filters/academies", async (req, res) => {
   try {
-    const { annee_universitaire, geo_id } = req.query;
     const collection = db.collection("faculty-members_main_staging");
 
-    const matchStage = {};
-    if (annee_universitaire)
-      matchStage.annee_universitaire = annee_universitaire;
-    if (geo_id) matchStage.etablissement_code_region = geo_id;
-
-    // Le genre par region
-    const genderDistribution = await collection
+    const academies = await collection
       .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: "$sexe",
-            count: { $sum: "$effectif" },
-          },
-        },
-      ])
-      .toArray();
-
-    // La catégorie personnelle par region
-    const personnalCategoryDistribution = await collection
-      .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: "$categorie_personnels",
-            count: { $sum: "$effectif" },
-          },
-        },
-      ])
-      .toArray();
-
-    // L'âge par region
-    const ageDistribution = await collection
-      .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: "$classe_age3",
-            count: { $sum: "$effectif" },
-          },
-        },
-        { $sort: { _id: 1 } },
-      ])
-      .toArray();
-
-    const establishmentTypeDistribution = await collection
-      .aggregate([
-        { $match: matchStage },
         {
           $group: {
             _id: {
-              establishment_type: "$etablissement_type",
-              gender: "$sexe",
+              id: "$etablissement_code_academie",
+              lib: "$etablissement_academie",
+              region_id: "$etablissement_code_region",
+              region_lib: "$etablissement_region",
             },
-            count: { $sum: "$effectif" },
-          },
-        },
-        {
-          $group: {
-            _id: "$_id.establishment_type",
-            total_count: { $sum: "$count" },
-            gender_breakdown: {
-              $push: {
-                gender: "$_id.gender",
-                count: "$count",
-              },
-            },
-          },
-        },
-
-        {
-          $sort: {
-            sortOrder: 1,
-            total_count: -1,
           },
         },
         {
           $project: {
-            sortOrder: 0,
-          },
-        },
-      ])
-      .toArray();
-
-    // Le nombre d'enseignants chercheur par discipline
-    const quotiteDistribution = await collection
-      .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: "$quotite",
-            count: { $sum: "$effectif" },
-          },
-        },
-        { $sort: { count: -1 } },
-      ])
-      .toArray();
-
-    const discipline_distribution = await collection
-      .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: {
-              discipline_code: "$code_grande_discipline",
-              discipline_name: "$grande_discipline",
-              gender: "$sexe",
-            },
-            count: { $sum: "$effectif" },
+            _id: 0,
+            id: "$_id.id",
+            lib: "$_id.lib",
+            region_id: "$_id.region_id",
+            region_lib: "$_id.region_lib",
           },
         },
         {
-          $group: {
-            _id: {
-              discipline_code: "$_id.discipline_code",
-              discipline_name: "$_id.discipline_name",
-            },
-            total_count: { $sum: "$count" },
-            gender_breakdown: {
-              $push: {
-                gender: "$_id.gender",
-                count: "$count",
-              },
-            },
-          },
-        },
-        { $sort: { total_count: -1 } },
-      ])
-      .toArray();
-
-    // Le nombre d'enseignants titulaire par region
-    const permanentDistribution = await collection
-      .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: "$is_titulaire",
-            count: { $sum: "$effectif" },
-          },
-        },
-        { $sort: { count: -1 } },
-      ])
-      .toArray();
-
-    let contextInfo = null;
-    if (geo_id) {
-      const regionInfo = await collection.findOne(
-        { etablissement_code_region: geo_id },
-        {
-          projection: {
-            etablissement_region: 1,
-            etablissement_code_region: 1,
-          },
-        }
-      );
-
-      if (regionInfo) {
-        contextInfo = {
-          id: regionInfo.etablissement_code_region,
-          name: regionInfo.etablissement_region,
-          type: "region",
-        };
-      }
-    }
-
-    // Le nombre d'enseignants chercheur par region
-    const researcherDistribution = await collection
-      .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: "$is_enseignant_chercheur",
-            count: { $sum: "$effectif" },
-          },
-        },
-        { $sort: { count: -1 } },
-      ])
-      .toArray();
-
-    // Total
-    const totalCount = await collection
-      .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: null,
-            total: { $sum: "$effectif" },
-          },
-        },
-      ])
-      .toArray();
-
-    const regionStatusDistribution = await collection
-      .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: {
-              geo_code: "$etablissement_code_region",
-              geo_name: "$etablissement_region",
-              status: {
-                $switch: {
-                  branches: [
-                    {
-                      case: { $eq: ["$is_enseignant_chercheur", true] },
-                      then: "enseignant_chercheur",
-                    },
-                    {
-                      case: {
-                        $and: [
-                          { $eq: ["$is_titulaire", true] },
-                          { $eq: ["$is_enseignant_chercheur", false] },
-                        ],
-                      },
-                      then: "titulaire_non_chercheur",
-                    },
-                    {
-                      case: { $eq: ["$is_titulaire", false] },
-                      then: "non_titulaire",
-                    },
-                  ],
-                  default: "non_titulaire",
-                },
-              },
-            },
-            count: { $sum: "$effectif" },
+          $match: {
+            id: { $ne: null },
+            lib: { $ne: null },
           },
         },
         {
-          $group: {
-            _id: {
-              geo_code: "$_id.geo_code",
-              geo_name: "$_id.geo_name",
-            },
-            total_count: { $sum: "$count" },
-            status_breakdown: {
-              $push: {
-                status: "$_id.status",
-                count: "$count",
-              },
-            },
-          },
+          $sort: { lib: 1 },
         },
-        { $sort: { total_count: -1 } },
-      ])
-      .toArray();
-
-    const regionGenderDistribution = await collection
-      .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: {
-              geo_code: "$etablissement_code_region",
-              geo_name: "$etablissement_region",
-              gender: "$sexe",
-            },
-            count: { $sum: "$effectif" },
-          },
-        },
-        {
-          $group: {
-            _id: {
-              geo_code: "$_id.geo_code",
-              geo_name: "$_id.geo_name",
-            },
-            total_count: { $sum: "$count" },
-            gender_breakdown: {
-              $push: {
-                gender: "$_id.gender",
-                count: "$count",
-              },
-            },
-          },
-        },
-        { $sort: { total_count: -1 } },
       ])
       .toArray();
 
     res.json({
-      context_info: contextInfo,
-      gender_distribution: genderDistribution,
-      age_distribution: ageDistribution,
-      establishmentTypeDistribution: establishmentTypeDistribution,
-      regionGenderDistribution: regionGenderDistribution,
-      regionStatusDistribution: regionStatusDistribution,
-      discipline_distribution: discipline_distribution,
-      permanentDistribution: permanentDistribution,
-      quotiteDistribution: quotiteDistribution,
-      personnalCategoryDistribution: personnalCategoryDistribution,
-      researcherDistribution: researcherDistribution,
-      total_count: totalCount[0]?.total || 0,
+      academies: academies,
     });
   } catch (error) {
-    console.error("Error fetching geo overview:", error);
-    res.status(500).json({ error: "Server error" });
+    console.error("Error fetching academies:", error);
+    res.status(500).json({
+      error: "Server error while fetching academies",
+    });
   }
 });
 
@@ -360,8 +104,16 @@ router.get("/faculty-members/geo/cnu-analysis", async (req, res) => {
     if (annee_universitaire && annee_universitaire !== "all") {
       matchStage.annee_universitaire = annee_universitaire;
     }
+
+    let isAcademie = false;
     if (geo_id) {
-      matchStage.etablissement_code_region = geo_id;
+      isAcademie = geo_id.toString().startsWith("A");
+
+      if (isAcademie) {
+        matchStage.etablissement_code_academie = geo_id;
+      } else {
+        matchStage.etablissement_code_region = geo_id;
+      }
     }
 
     const cnuGroupsWithSections = await collection
@@ -370,7 +122,6 @@ router.get("/faculty-members/geo/cnu-analysis", async (req, res) => {
         {
           $group: {
             _id: {
-              // CORRECTION : Grouper d'abord par DISCIPLINE
               discipline_code: "$code_grande_discipline",
               discipline_name: "$grande_discipline",
               group_code: "$code_groupe_cnu",
@@ -447,6 +198,7 @@ router.get("/faculty-members/geo/cnu-analysis", async (req, res) => {
       cnu_groups_with_sections: cnuGroupsWithSections,
       annee_universitaire: annee_universitaire || "current",
       geo_id: geo_id || null,
+      geo_type: isAcademie ? "academie" : "region",
     });
   } catch (error) {
     console.error("Erreur lors de la récupération des données CNU geo:", error);
@@ -623,8 +375,18 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
     const { geo_id } = req.query;
     const collection = db.collection("faculty-members_main_staging");
 
+    let isAcademie = false;
     const baseMatch = {};
-    if (geo_id) baseMatch.etablissement_code_region = geo_id;
+
+    if (geo_id) {
+      isAcademie = geo_id.toString().startsWith("A");
+
+      if (isAcademie) {
+        baseMatch.etablissement_code_academie = geo_id;
+      } else {
+        baseMatch.etablissement_code_region = geo_id;
+      }
+    }
 
     const [years, allData, contextInfo] = await Promise.all([
       collection
@@ -640,6 +402,10 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
                 annee_universitaire: "$annee_universitaire",
                 region_code: geo_id ? null : "$etablissement_code_region",
                 region_name: geo_id ? null : "$etablissement_region",
+                academie_code:
+                  isAcademie && !geo_id ? "$etablissement_code_academie" : null,
+                academie_name:
+                  isAcademie && !geo_id ? "$etablissement_academie" : null,
                 discipline_code: "$code_grande_discipline",
                 discipline_name: "$grande_discipline",
                 gender: "$sexe",
@@ -656,11 +422,15 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
 
       geo_id
         ? collection.findOne(
-            { etablissement_code_region: geo_id },
+            isAcademie
+              ? { etablissement_code_academie: geo_id }
+              : { etablissement_code_region: geo_id },
             {
               projection: {
                 etablissement_region: 1,
                 etablissement_code_region: 1,
+                etablissement_academie: 1,
+                etablissement_code_academie: 1,
               },
             }
           )
@@ -671,6 +441,7 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
     const statusEvolution = new Map();
     const ageEvolution = new Map();
     const regionEvolution = new Map();
+    const academieEvolution = new Map();
     const disciplineEvolution = new Map();
 
     allData.forEach((item) => {
@@ -709,8 +480,6 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
         status.non_titulaire += count;
       }
 
-      // Age evolution
-      const ageKey = `${annee_universitaire}-${item._id.age_class}`;
       if (!ageEvolution.has(annee_universitaire)) {
         ageEvolution.set(annee_universitaire, {
           annee_universitaire,
@@ -728,24 +497,44 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
         age.breakdown.get(item._id.age_class) + count
       );
 
-      if (!geo_id && item._id.region_code) {
-        const regionKey = `${annee_universitaire}-${item._id.region_code}`;
-        if (!regionEvolution.has(regionKey)) {
-          regionEvolution.set(regionKey, {
-            _id: {
-              annee_universitaire: annee_universitaire,
-              region_code: item._id.region_code,
-              region_name: item._id.region_name,
-            },
-            total_count: 0,
-            male_count: 0,
-            female_count: 0,
-          });
+      if (!geo_id) {
+        if (!isAcademie && item._id.region_code) {
+          const regionKey = `${annee_universitaire}-${item._id.region_code}`;
+          if (!regionEvolution.has(regionKey)) {
+            regionEvolution.set(regionKey, {
+              _id: {
+                annee_universitaire: annee_universitaire,
+                region_code: item._id.region_code,
+                region_name: item._id.region_name,
+              },
+              total_count: 0,
+              male_count: 0,
+              female_count: 0,
+            });
+          }
+          const region = regionEvolution.get(regionKey);
+          region.total_count += count;
+          if (item._id.gender === "Masculin") region.male_count += count;
+          if (item._id.gender === "Féminin") region.female_count += count;
+        } else if (isAcademie && item._id.academie_code) {
+          const academieKey = `${annee_universitaire}-${item._id.academie_code}`;
+          if (!academieEvolution.has(academieKey)) {
+            academieEvolution.set(academieKey, {
+              _id: {
+                annee_universitaire: annee_universitaire,
+                academie_code: item._id.academie_code,
+                academie_name: item._id.academie_name,
+              },
+              total_count: 0,
+              male_count: 0,
+              female_count: 0,
+            });
+          }
+          const academie = academieEvolution.get(academieKey);
+          academie.total_count += count;
+          if (item._id.gender === "Masculin") academie.male_count += count;
+          if (item._id.gender === "Féminin") academie.female_count += count;
         }
-        const region = regionEvolution.get(regionKey);
-        region.total_count += count;
-        if (item._id.gender === "Masculin") region.male_count += count;
-        if (item._id.gender === "Féminin") region.female_count += count;
       }
 
       if (item._id.discipline_code) {
@@ -810,30 +599,56 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
 
     let processedContextInfo = null;
     if (geo_id && contextInfo) {
-      processedContextInfo = {
-        id: contextInfo.etablissement_code_region,
-        name: contextInfo.etablissement_region,
-        type: "region",
-      };
+      if (isAcademie) {
+        processedContextInfo = {
+          id: contextInfo.etablissement_code_academie,
+          name: contextInfo.etablissement_academie,
+          region_id: contextInfo.etablissement_code_region,
+          region_name: contextInfo.etablissement_region,
+          type: "academie",
+        };
+      } else {
+        processedContextInfo = {
+          id: contextInfo.etablissement_code_region,
+          name: contextInfo.etablissement_region,
+          type: "region",
+        };
+      }
     }
+
+    const geoEvolution = isAcademie
+      ? Array.from(academieEvolution.values())
+          .sort((a, b) => b.total_count - a.total_count)
+          .slice(0, 100)
+          .map((item) => ({
+            _id: item._id,
+            total_count: item.total_count,
+            gender_breakdown: [
+              { gender: "Masculin", count: item.male_count },
+              { gender: "Féminin", count: item.female_count },
+            ].filter((g) => g.count > 0),
+          }))
+      : Array.from(regionEvolution.values())
+          .sort((a, b) => b.total_count - a.total_count)
+          .slice(0, 100)
+          .map((item) => ({
+            _id: item._id,
+            total_count: item.total_count,
+            gender_breakdown: [
+              { gender: "Masculin", count: item.male_count },
+              { gender: "Féminin", count: item.female_count },
+            ].filter((g) => g.count > 0),
+          }));
 
     res.json({
       context_info: processedContextInfo,
       years: years,
+      geo_type: isAcademie ? "academie" : "region",
       global_evolution: processedGlobalEvolution,
       status_evolution: processedStatusEvolution,
       age_evolution: processedAgeEvolution,
-      region_evolution: Array.from(regionEvolution.values())
-        .sort((a, b) => b.total_count - a.total_count)
-        .slice(0, 100)
-        .map((item) => ({
-          _id: item._id,
-          total_count: item.total_count,
-          gender_breakdown: [
-            { gender: "Masculin", count: item.male_count },
-            { gender: "Féminin", count: item.female_count },
-          ].filter((g) => g.count > 0),
-        })),
+      region_evolution: !isAcademie ? geoEvolution : [],
+      academie_evolution: isAcademie ? geoEvolution : [],
       discipline_evolution: Array.from(disciplineEvolution.values())
         .sort((a, b) => b.total_count - a.total_count)
         .slice(0, 50)
@@ -863,8 +678,16 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
     if (annee_universitaire) {
       matchStage.annee_universitaire = annee_universitaire;
     }
+
+    let isAcademie = false;
     if (geo_id) {
-      matchStage.etablissement_code_region = geo_id;
+      isAcademie = geo_id.toString().startsWith("A");
+
+      if (isAcademie) {
+        matchStage.etablissement_code_academie = geo_id;
+      } else {
+        matchStage.etablissement_code_region = geo_id;
+      }
     }
 
     const ageClasses = [
@@ -1081,14 +904,18 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
       ])
       .toArray();
 
-    const regionsData = await collection
+    const geoEntitiesData = await collection
       .aggregate([
         { $match: matchStage },
         {
           $group: {
             _id: {
-              geo_id: "$etablissement_code_region",
-              regionName: "$etablissement_region",
+              geo_id: isAcademie
+                ? "$etablissement_code_academie"
+                : "$etablissement_code_region",
+              geoName: isAcademie
+                ? "$etablissement_academie"
+                : "$etablissement_region",
               gender: "$sexe",
             },
             count: { $sum: "$effectif" },
@@ -1098,7 +925,7 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
           $group: {
             _id: {
               geo_id: "$_id.geo_id",
-              regionName: "$_id.regionName",
+              geoName: "$_id.geoName",
             },
             totalCount: { $sum: "$count" },
             genderBreakdown: {
@@ -1113,9 +940,9 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
       ])
       .toArray();
 
-    const regions = regionsData
+    const geoEntities = geoEntitiesData
       .map((item) => {
-        if (!item._id.geo_id || !item._id.regionName) return null;
+        if (!item._id.geo_id || !item._id.geoName) return null;
 
         const maleCount =
           item.genderBreakdown.find((g) => g.gender === "Masculin")?.count || 0;
@@ -1124,7 +951,7 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
 
         return {
           geo_id: item._id.geo_id,
-          regionName: item._id.regionName,
+          geoName: item._id.geoName,
           maleCount: maleCount,
           femaleCount: femaleCount,
           totalCount: item.totalCount,
@@ -1164,7 +991,8 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
           ageDistribution: section.ageDistribution,
         })),
       })),
-      regions: regions,
+      regions: geoEntities,
+      geo_type: isAcademie ? "academie" : "region",
       categoryDistribution: categoryDistribution.map((cat) => ({
         categoryCode: cat._id.category_code,
         categoryName: cat._id.category_name,
@@ -1172,6 +1000,7 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
         femaleCount: cat.femaleCount,
         totalCount: cat.totalCount,
       })),
+      fields: fields,
     });
   } catch (error) {
     console.error("Error fetching research teachers by geo:", error);
@@ -1190,8 +1019,16 @@ router.get(
       if (annee_universitaire) {
         matchStage.annee_universitaire = annee_universitaire;
       }
+
+      let isAcademie = false;
       if (geo_id) {
-        matchStage.etablissement_code_region = geo_id;
+        isAcademie = geo_id.toString().startsWith("A");
+
+        if (isAcademie) {
+          matchStage.etablissement_code_academie = geo_id;
+        } else {
+          matchStage.etablissement_code_region = geo_id;
+        }
       }
 
       const establishmentTypeDistribution = await collection
@@ -1224,6 +1061,7 @@ router.get(
 
       res.json({
         establishment_type_distribution: establishmentTypeDistribution,
+        geo_type: isAcademie ? "academie" : "region",
       });
     } catch (error) {
       console.error(
@@ -1244,8 +1082,16 @@ router.get("/faculty-members/geo/age-distribution", async (req, res) => {
     if (annee_universitaire) {
       matchStage.annee_universitaire = annee_universitaire;
     }
+
+    let isAcademie = false;
     if (geo_id) {
-      matchStage.etablissement_code_region = geo_id;
+      isAcademie = geo_id.toString().startsWith("A");
+
+      if (isAcademie) {
+        matchStage.etablissement_code_academie = geo_id;
+      } else {
+        matchStage.etablissement_code_region = geo_id;
+      }
     }
 
     const ageDistribution = await collection
@@ -1263,6 +1109,7 @@ router.get("/faculty-members/geo/age-distribution", async (req, res) => {
 
     res.json({
       age_distribution: ageDistribution,
+      geo_type: isAcademie ? "academie" : "region",
     });
   } catch (error) {
     console.error("Error fetching age distribution for geo:", error);
@@ -1279,8 +1126,17 @@ router.get("/faculty-members/geo/discipline-distribution", async (req, res) => {
     if (annee_universitaire) {
       matchStage.annee_universitaire = annee_universitaire;
     }
+
+    // Déterminer si le geo_id correspond à une académie ou une région
+    let isAcademie = false;
     if (geo_id) {
-      matchStage.etablissement_code_region = geo_id;
+      isAcademie = geo_id.toString().startsWith("A");
+
+      if (isAcademie) {
+        matchStage.etablissement_code_academie = geo_id;
+      } else {
+        matchStage.etablissement_code_region = geo_id;
+      }
     }
 
     const disciplineDistribution = await collection
@@ -1317,6 +1173,7 @@ router.get("/faculty-members/geo/discipline-distribution", async (req, res) => {
 
     res.json({
       discipline_distribution: disciplineDistribution,
+      geo_type: isAcademie ? "academie" : "region",
     });
   } catch (error) {
     console.error("Error fetching discipline distribution for geo:", error);
@@ -1333,8 +1190,16 @@ router.get("/faculty-members/geo/status-distribution", async (req, res) => {
     if (annee_universitaire) {
       matchStage.annee_universitaire = annee_universitaire;
     }
+
+    let isAcademie = false;
     if (geo_id) {
-      matchStage.etablissement_code_region = geo_id;
+      isAcademie = geo_id.toString().startsWith("A");
+
+      if (isAcademie) {
+        matchStage.etablissement_code_academie = geo_id;
+      } else {
+        matchStage.etablissement_code_region = geo_id;
+      }
     }
 
     const statusDistribution = await collection
@@ -1343,8 +1208,12 @@ router.get("/faculty-members/geo/status-distribution", async (req, res) => {
         {
           $group: {
             _id: {
-              geo_code: "$etablissement_code_region",
-              geo_name: "$etablissement_region",
+              geo_code: isAcademie
+                ? "$etablissement_code_academie"
+                : "$etablissement_code_region",
+              geo_name: isAcademie
+                ? "$etablissement_academie"
+                : "$etablissement_region",
               status: {
                 $switch: {
                   branches: [
@@ -1394,6 +1263,7 @@ router.get("/faculty-members/geo/status-distribution", async (req, res) => {
 
     res.json({
       status_distribution: statusDistribution,
+      geo_type: isAcademie ? "academie" : "region",
     });
   } catch (error) {
     console.error("Error fetching status distribution for geo:", error);
@@ -1410,8 +1280,16 @@ router.get("/faculty-members/geo/general-indicators", async (req, res) => {
     if (annee_universitaire) {
       matchStage.annee_universitaire = annee_universitaire;
     }
+
+    let isAcademie = false;
     if (geo_id) {
-      matchStage.etablissement_code_region = geo_id;
+      isAcademie = geo_id.toString().startsWith("A");
+
+      if (isAcademie) {
+        matchStage.etablissement_code_academie = geo_id;
+      } else {
+        matchStage.etablissement_code_region = geo_id;
+      }
     }
 
     const genderDistribution = await collection
@@ -1438,9 +1316,42 @@ router.get("/faculty-members/geo/general-indicators", async (req, res) => {
       ])
       .toArray();
 
+    let geoInfo = null;
+    if (geo_id) {
+      const geoInfoQuery = isAcademie
+        ? { etablissement_code_academie: geo_id }
+        : { etablissement_code_region: geo_id };
+
+      const geoData = await collection.findOne(geoInfoQuery, {
+        projection: {
+          etablissement_region: 1,
+          etablissement_code_region: 1,
+          etablissement_academie: 1,
+          etablissement_code_academie: 1,
+          _id: 0,
+        },
+      });
+
+      if (geoData) {
+        geoInfo = isAcademie
+          ? {
+              id: geoData.etablissement_code_academie,
+              name: geoData.etablissement_academie,
+              region_id: geoData.etablissement_code_region,
+              region_name: geoData.etablissement_region,
+            }
+          : {
+              id: geoData.etablissement_code_region,
+              name: geoData.etablissement_region,
+            };
+      }
+    }
+
     res.json({
       gender_distribution: genderDistribution,
       total_count: totalCount[0]?.total || 0,
+      geo_type: isAcademie ? "academie" : "region",
+      geo_info: geoInfo,
     });
   } catch (error) {
     console.error("Error fetching general indicators for geo:", error);
@@ -1457,8 +1368,16 @@ router.get("/faculty-members/geo/gender-distribution", async (req, res) => {
     if (annee_universitaire) {
       matchStage.annee_universitaire = annee_universitaire;
     }
+
+    let isAcademie = false;
     if (geo_id) {
-      matchStage.etablissement_code_region = geo_id;
+      isAcademie = geo_id.toString().startsWith("A");
+
+      if (isAcademie) {
+        matchStage.etablissement_code_academie = geo_id;
+      } else {
+        matchStage.etablissement_code_region = geo_id;
+      }
     }
 
     const genderDistribution = await collection
@@ -1467,8 +1386,12 @@ router.get("/faculty-members/geo/gender-distribution", async (req, res) => {
         {
           $group: {
             _id: {
-              geo_code: "$etablissement_code_region",
-              geo_name: "$etablissement_region",
+              geo_code: isAcademie
+                ? "$etablissement_code_academie"
+                : "$etablissement_code_region",
+              geo_name: isAcademie
+                ? "$etablissement_academie"
+                : "$etablissement_region",
               gender: "$sexe",
             },
             count: { $sum: "$effectif" },
@@ -1495,6 +1418,7 @@ router.get("/faculty-members/geo/gender-distribution", async (req, res) => {
 
     res.json({
       gender_distribution: genderDistribution,
+      geo_type: isAcademie ? "academie" : "region",
     });
   } catch (error) {
     console.error("Error fetching gender distribution for geo:", error);
@@ -1511,8 +1435,16 @@ router.get("/faculty-members/geo/top-indicators", async (req, res) => {
     if (annee_universitaire) {
       matchStage.annee_universitaire = annee_universitaire;
     }
+
+    let isAcademie = false;
     if (geo_id) {
-      matchStage.etablissement_code_region = geo_id;
+      isAcademie = geo_id.toString().startsWith("A");
+
+      if (isAcademie) {
+        matchStage.etablissement_code_academie = geo_id;
+      } else {
+        matchStage.etablissement_code_region = geo_id;
+      }
     }
 
     const genderDistribution = await collection
@@ -1521,8 +1453,12 @@ router.get("/faculty-members/geo/top-indicators", async (req, res) => {
         {
           $group: {
             _id: {
-              geo_code: "$etablissement_code_region",
-              geo_name: "$etablissement_region",
+              geo_code: isAcademie
+                ? "$etablissement_code_academie"
+                : "$etablissement_code_region",
+              geo_name: isAcademie
+                ? "$etablissement_academie"
+                : "$etablissement_region",
               gender: "$sexe",
             },
             count: { $sum: "$effectif" },
@@ -1549,6 +1485,7 @@ router.get("/faculty-members/geo/top-indicators", async (req, res) => {
 
     res.json({
       gender_distribution: genderDistribution,
+      geo_type: isAcademie ? "academie" : "region",
     });
   } catch (error) {
     console.error("Error fetching top indicators for geo:", error);

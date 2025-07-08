@@ -16,8 +16,13 @@ export const useContext = ({
         return null;
       }
 
+      const isAcademie =
+        context === "geo" && contextId.toString().startsWith("A");
+
       const endpoints = {
-        geo: "/faculty-members/filters/regions",
+        geo: isAcademie
+          ? "/faculty-members/filters/academies"
+          : "/faculty-members/filters/regions",
         fields: "/faculty-members/filters/fields",
         structures: "/faculty-members/filters/structures",
       };
@@ -35,10 +40,13 @@ export const useContext = ({
 
       const key =
         context === "geo"
-          ? "regions"
+          ? isAcademie
+            ? "academies"
+            : "regions"
           : context === "fields"
           ? "fields"
           : "structures";
+
       const item = data[key]?.find(
         (item: { id: string }) => item.id === contextId
       );

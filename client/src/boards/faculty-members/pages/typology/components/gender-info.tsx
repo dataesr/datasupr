@@ -14,6 +14,7 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
   const [searchParams] = useSearchParams();
   const { context, contextId } = useContextDetection();
   const selectedYear = searchParams.get("annee_universitaire") || "";
+  const isAcademie = context === "geo" && contextId?.toString().startsWith("A");
 
   const {
     data: typologyData,
@@ -33,6 +34,9 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
         case "fields":
           return typologyData.discipline;
         case "geo":
+          if (isAcademie) {
+            return typologyData.academie || typologyData.region;
+          }
           return typologyData.region;
         case "structures":
           return typologyData.structure;
@@ -97,7 +101,10 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
         item: {
           name: itemData._id?.item_name,
           code: itemData._id?.item_code,
+          region_name: isAcademie ? itemData._id?.region_name : undefined,
+          region_code: isAcademie ? itemData._id?.region_code : undefined,
         },
+        geo_type: typologyData.geo_type,
       };
     } else {
       const globalSummary = typologyData.global_summary;
@@ -256,7 +263,7 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
         femmes: avgFemaleData,
       };
     }
-  }, [typologyData, contextId, context]);
+  }, [typologyData, contextId, context, isAcademie]);
 
   if (isLoading) {
     return (

@@ -1,8 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
+import { ReactNode } from "react";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 interface NavigationItem {
+  region_name: ReactNode;
   id: string;
   name: string;
   type?: string;

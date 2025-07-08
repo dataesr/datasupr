@@ -1,8 +1,5 @@
 import { useMemo } from "react";
-import {
-  generateContextualTitle,
-  useContextDetection,
-} from "../../../../utils";
+import { useContextDetection } from "../../../../utils";
 import { useFacultyMembersEvolution } from "../../../../api/use-evolution";
 import { createAgeEvolutionOptions } from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -61,14 +58,6 @@ export function AgeEvolutionChart() {
     context,
     contextId,
   });
-
-  const chartTitle = generateContextualTitle(
-    null,
-    context,
-    contextId,
-    evolutionData,
-    isLoading
-  );
 
   const { processedData, chartOptions } = useMemo(() => {
     if (!evolutionData?.age_evolution || !evolutionData?.years) {
@@ -145,14 +134,10 @@ export function AgeEvolutionChart() {
     id: "age-evolution-chart",
     idQuery: "faculty-members-evolution",
     title: {
-      fr: contextName
-        ? `Évolution par âge - ${chartTitle}`
-        : "Évolution de la répartition par âge",
+      fr: `Évolution par âge`,
     },
     description: {
-      fr: contextName
-        ? `Évolution de la pyramide des âges pour ${contextName} au fil des années`
-        : "Évolution de la pyramide des âges du personnel enseignant",
+      fr: "Évolution de la pyramide des âges du personnel enseignant",
     },
   };
 

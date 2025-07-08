@@ -3,8 +3,16 @@ import { Link } from "@dataesr/dsfr-plus";
 import { useNavigation } from "../api/use-navigation";
 
 interface NavigationCardsProps {
-  type: "fields" | "regions" | "structures";
+  type: "fields" | "regions" | "structures" | "academies";
   maxItems?: number;
+}
+
+export interface NavigationItem {
+  id: string;
+  name: string;
+  total_count: number;
+  region?: string;
+  region_name?: string;
 }
 
 export default function NavigationCards({
@@ -14,8 +22,10 @@ export default function NavigationCards({
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
 
+  const apiType = type === "academies" ? "regions" : type;
+
   const { data, isLoading, error } = useNavigation({
-    type,
+    type: apiType,
     annee_universitaire: selectedYear,
   });
 
@@ -48,6 +58,20 @@ export default function NavigationCards({
           ],
           urlParam: "geo_id",
           emptyMessage: "Aucune région disponible",
+        };
+      case "academies":
+        return {
+          basePath: "/personnel-enseignant/geo/vue-d'ensemble",
+          colors: [
+            "#e3f2fd",
+            "#fff3e0",
+            "#fce4ec",
+            "#f5f5fe",
+            "#ede7f6",
+            "#e8f5e9",
+          ],
+          urlParam: "geo_id",
+          emptyMessage: "Aucune académie disponible",
         };
       case "structures":
         return {
@@ -150,7 +174,19 @@ export default function NavigationCards({
     );
   }
 
-  const displayItems = data.items.slice(0, maxItems);
+  let filteredItems = [...data.items];
+
+  if (type === "academies") {
+    filteredItems = filteredItems.filter(
+      (item) => item.id && item.id.toString().startsWith("A")
+    );
+  } else if (type === "regions") {
+    filteredItems = filteredItems.filter(
+      (item) => !item.id || !item.id.toString().startsWith("A")
+    );
+  }
+
+  const displayItems = filteredItems.slice(0, maxItems);
 
   return (
     <div
@@ -171,6 +207,7 @@ export default function NavigationCards({
 
           switch (type) {
             case "regions":
+            case "academies":
               params.set("geo_id", item.id);
               return `${config.basePath}?${params.toString()}`;
 
@@ -192,7 +229,7 @@ export default function NavigationCards({
             key={item.id}
             href={getItemUrl()}
             title={`Voir les détails de ${
-              item.name
+              type === "academies" ? `Académie de ${item.name}` : item.name
             } (${item.total_count.toLocaleString()} enseignants)`}
             style={{
               backgroundColor: color,
@@ -247,7 +284,7 @@ export default function NavigationCards({
                 lineHeight: "1.3",
               }}
             >
-              {item.name}
+              {type === "academies" ? `Académie de ${item.name}` : item.name}
             </div>
             <div
               style={{
@@ -268,6 +305,18 @@ export default function NavigationCards({
                 }}
               >
                 {item.region}
+              </div>
+            )}
+
+            {type === "academies" && item.region_name && (
+              <div
+                style={{
+                  fontSize: "0.7rem",
+                  color: "#888888",
+                  marginTop: "0.25rem",
+                }}
+              >
+                Région {item.region_name}
               </div>
             )}
           </Link>

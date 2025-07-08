@@ -8,7 +8,9 @@ export interface ContextInfo {
   context: ContextType;
   contextId: string | undefined;
   contextName: string;
+  isAcademie?: boolean;
 }
+
 export function useContextDetection(): ContextInfo {
   const [searchParams] = useSearchParams();
   const { geo_id, id, field_id: paramFieldId } = useParams();
@@ -27,17 +29,20 @@ export function useContextDetection(): ContextInfo {
       };
     }
     if (geo_id_param) {
+      const isAcademie = geo_id_param.toString().startsWith("A");
+
       return {
         context: "geo" as const,
         contextId: geo_id_param,
-        contextName: "région",
+        contextName: isAcademie ? "académie" : "région",
+        isAcademie: isAcademie,
       };
     }
     if (structure_id) {
       return {
         context: "structures" as const,
         contextId: structure_id,
-        contextName: "université",
+        contextName: "Université",
       };
     }
 
@@ -46,21 +51,21 @@ export function useContextDetection(): ContextInfo {
       return {
         context: "fields" as const,
         contextId: undefined,
-        contextName: "discipline",
+        contextName: "Discipline",
       };
     }
     if (path.includes("/geo/")) {
       return {
         context: "geo" as const,
         contextId: undefined,
-        contextName: "région",
+        contextName: "Région",
       };
     }
     if (path.includes("/universite/")) {
       return {
         context: "structures" as const,
         contextId: undefined,
-        contextName: "université",
+        contextName: "Université",
       };
     }
 
@@ -78,17 +83,20 @@ export function generateContextualTitle(
   baseTitle: string | null,
   context: ContextType,
   contextId?: string,
-  allData?: { context_info?: { name: string } | null },
+  allData?: { context_info?: { name: string; type?: string } | null },
   isLoading?: boolean
 ): string {
   if (isLoading) {
     return baseTitle ? `${baseTitle} - Chargement...` : "Chargement...";
   }
 
+  const isAcademie =
+    contextId && context === "geo" && contextId.toString().startsWith("A");
+
   if (contextId && !allData?.context_info) {
     const fallbackTitles = {
       fields: "Toutes disciplines",
-      geo: "Toutes régions",
+      geo: isAcademie ? "Toutes académies" : "Toutes régions",
       structures: "Tous les établissements",
     };
     return baseTitle
@@ -104,7 +112,7 @@ export function generateContextualTitle(
 
   const genericTitles = {
     fields: "Toutes disciplines",
-    geo: "Toutes régions",
+    geo: isAcademie ? "Toutes académies" : "Toutes régions",
     structures: "Tous les établissements",
   };
 
@@ -120,7 +128,7 @@ export function generateIntegrationURL(
   const contextPaths = {
     fields: "discipline",
     geo: "geo",
-    structure: "universite",
+    structures: "universite",
   };
 
   return `/personnel-enseignant/${contextPaths[context]}/${page}`;
@@ -139,6 +147,9 @@ export function useBreadcrumbItems(
 
   const searchParams = new URLSearchParams(location.search);
   const selectedYear = searchParams.get("annee_universitaire") || "";
+
+  const isAcademie =
+    contextId && context === "geo" && contextId.toString().startsWith("A");
 
   const currentPage = (() => {
     if (location.pathname.includes("/typologie")) return "Typologie";
@@ -200,9 +211,26 @@ export function useBreadcrumbItems(
         : `structure_id=${contextId}`
     }`;
 
-    const name = isContextLoading
+    let name = isContextLoading
       ? "Chargement..."
-      : contextData?.lib || contextName || "Inconnu";
+      : contextData?.name || contextName || "Inconnu";
+    console.log(contextData);
+    if (context === "geo" && isAcademie && !isContextLoading) {
+      name = `Académie de ${contextData.lib}`;
+    } else if (context === "geo" && !isAcademie && !isContextLoading) {
+      name = `Région ${contextData.lib}`;
+    }
+
+    if (context === "geo" && isAcademie && contextData?.region_name) {
+      const regionHref = `${baseHref}?annee_universitaire=${selectedYear}&geo_id=${contextData.region_id}`;
+
+      return [
+        { label: baseLabel, href: baseHref },
+        { label: `Région ${contextData.region_name}`, href: regionHref },
+        { label: name, href: overviewHref },
+        ...(currentPage ? [{ label: currentPage, href: "#" }] : []),
+      ];
+    }
 
     return [
       { label: baseLabel, href: baseHref },

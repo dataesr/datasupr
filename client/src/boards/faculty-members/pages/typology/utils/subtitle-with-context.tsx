@@ -12,6 +12,8 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
   const { context, contextId, contextName } = useContextDetection();
   const selectedYear = searchParams.get("annee_universitaire") || "";
 
+  const isAcademie = context === "geo" && contextId?.toString().startsWith("A");
+
   const { data: typologyData } = useFacultyMembersTypology({
     context,
     contextId: contextId || undefined,
@@ -29,9 +31,19 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
           identifiant: typologyData?.discipline?._id?.item_code,
         };
       case "geo":
+        if (isAcademie) {
+          return {
+            name:
+              typologyData?.academie?._id?.item_name ||
+              typologyData?.region?._id?.item_name,
+            identifiant: null,
+            prefix: "Académie de ",
+          };
+        }
         return {
           name: typologyData?.region?._id?.item_name,
           identifiant: null,
+          prefix: "Région ",
         };
       case "structures":
         return {
@@ -48,13 +60,18 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
 
   const contextNameCapital = capitalize(contextName);
 
-  const { name, identifiant } = getContextParams();
+  const { name, identifiant, prefix = "" } = getContextParams();
 
   return (
     <Text className={classText} size="sm">
-      Année universitaire {selectedYear}&nbsp;&nbsp;-&nbsp;&nbsp;
-      {!contextId && contextNameCapital}
-      {name}&nbsp;{identifiant}
+      Année universitaire {selectedYear}
+      {contextId && (
+        <>
+          &nbsp;&nbsp;-&nbsp;&nbsp;
+          {prefix}
+          {name}&nbsp;{identifiant}
+        </>
+      )}
     </Text>
   );
 };

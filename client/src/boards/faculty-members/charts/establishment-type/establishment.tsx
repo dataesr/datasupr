@@ -65,7 +65,7 @@ export function EstablishmentTypeChart() {
     id: "establishment-type-chart",
     idQuery: "establishment-type-distribution",
     title: {
-      fr: `Répartition par type d'établissement - ${contextName} sélectionnée`,
+      fr: `Répartition par type d'établissement`,
     },
     description: {
       fr: "",

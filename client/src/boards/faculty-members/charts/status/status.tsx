@@ -159,11 +159,7 @@ const StatusDistribution: React.FC = () => {
         config={{
           id: "statusDistribution",
           idQuery: "status-distribution",
-          title: {
-            fr: contextId
-              ? `Répartition par statut - ${contextName} sélectionnée`
-              : "Répartition par statut des enseignants",
-          },
+          title: { fr: "Répartition des enseignants par statut " },
           description: {
             fr: `Ce graphique présente la répartition du personnel enseignant par statut selon les disciplines.
 

@@ -1,8 +1,5 @@
 import { useMemo } from "react";
-import {
-  generateContextualTitle,
-  useContextDetection,
-} from "../../../../utils";
+import { useContextDetection } from "../../../../utils";
 import { useFacultyMembersEvolution } from "../../../../api/use-evolution";
 import { createTrendsOptions } from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -73,14 +70,6 @@ export function TrendsChart() {
     contextId,
   });
 
-  const chartTitle = generateContextualTitle(
-    null,
-    context,
-    contextId,
-    evolutionData,
-    isLoading
-  );
-
   const { chartData, chartOptions } = useMemo(() => {
     if (!evolutionData?.global_evolution || !evolutionData?.years) {
       return { chartData: [], chartOptions: null };
@@ -122,17 +111,12 @@ export function TrendsChart() {
     id: "trends-evolution-chart",
     idQuery: "faculty-members-evolution",
     title: {
-      fr: contextName
-        ? `Évolution des effectifs - ${chartTitle}`
-        : "Évolution des effectifs du personnel enseignant",
+      fr: "Évolution des effectifs",
     },
     description: {
       fr: contextName
         ? `Évolution du nombre d'enseignants pour ${contextName} au fil des années, répartis par genre`
         : "Évolution du nombre d'enseignants au fil des années, répartis par genre",
-      en: contextName
-        ? `Faculty numbers evolution for ${contextName} over the years, by gender`
-        : "Faculty numbers evolution over the years, by gender",
     },
   };
 

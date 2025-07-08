@@ -7,9 +7,11 @@ import { useFacultyMembersSearchBar } from "../api/use-search-bar";
 interface SearchResult {
   id: string;
   name: string;
-  type: "univ" | "region" | "discipline";
+  type: "univ" | "region" | "academie" | "discipline";
   subtype?: string;
   region?: string;
+  region_id?: string;
+  region_name?: string;
   total_count: number;
   href: string;
 }
@@ -24,6 +26,7 @@ const getTypeIcon = (type: string) => {
   const icons = {
     univ: "fr-icon-building-line",
     region: "fr-icon-earth-line",
+    academie: "fr-icon-map-pin-2-line",
     discipline: "fr-icon-article-line",
   };
 
@@ -34,6 +37,7 @@ const getTypeLabel = (type: string, subtype?: string) => {
   const labels = {
     univ: subtype || "Université",
     region: "Région",
+    academie: "Académie",
     discipline: "Discipline",
   };
   return labels[type as keyof typeof labels] || "Autre";
@@ -51,6 +55,7 @@ export function SearchBar() {
     const allResults: SearchResult[] = [
       ...data.universities,
       ...data.regions,
+      ...data.academies,
       ...data.fields,
     ];
 
@@ -138,6 +143,9 @@ export function SearchBar() {
                 <div>
                   {getTypeLabel(item.type, item.subtype)}
                   {item.region && item.type === "univ" && ` • ${item.region}`}
+                  {item.region_name &&
+                    item.type === "academie" &&
+                    ` • ${item.region_name}`}
                 </div>
                 <div>
                   {item.total_count.toLocaleString()} enseignants pour l'année

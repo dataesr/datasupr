@@ -44,6 +44,8 @@ router.get("/faculty-members/typology/:context", async (req, res) => {
     let groupFields = {};
     let itemName = "";
 
+    const isAcademie = geo_id && geo_id.toString().startsWith("A");
+
     switch (context) {
       case "fields":
         contextId = field_id;
@@ -60,13 +62,31 @@ router.get("/faculty-members/typology/:context", async (req, res) => {
       case "geo":
         contextId = geo_id;
         if (geo_id) {
-          contextFilter.etablissement_code_region = geo_id;
+          if (isAcademie) {
+            contextFilter.etablissement_code_academie = geo_id;
+            groupFields = {
+              item_code: "$etablissement_code_academie",
+              item_name: "$etablissement_academie",
+              region_code: "$etablissement_code_region",
+              region_name: "$etablissement_region",
+            };
+            itemName = "academie";
+          } else {
+            contextFilter.etablissement_code_region = geo_id;
+            groupFields = {
+              item_code: "$etablissement_code_region",
+              item_name: "$etablissement_region",
+            };
+            itemName = "region";
+          }
+        } else {
+          // Par défaut, regrouper par région si aucun geo_id n'est spécifié
+          groupFields = {
+            item_code: "$etablissement_code_region",
+            item_name: "$etablissement_region",
+          };
+          itemName = "region";
         }
-        groupFields = {
-          item_code: "$etablissement_code_region",
-          item_name: "$etablissement_region",
-        };
-        itemName = "region";
         break;
 
       case "structures":
@@ -143,12 +163,15 @@ router.get("/faculty-members/typology/:context", async (req, res) => {
         },
       },
 
-      // Regroupement final par item
       {
         $group: {
           _id: {
             item_code: "$_id.item_code",
             item_name: "$_id.item_name",
+            ...(isAcademie && {
+              region_code: "$_id.region_code",
+              region_name: "$_id.region_name",
+            }),
           },
           total_count: { $sum: "$total_count" },
           gender_breakdown: {
@@ -262,6 +285,8 @@ router.get("/faculty-members/typology/:context", async (req, res) => {
         items: results,
         context,
         item_type: itemName,
+        geo_type:
+          context === "geo" ? (isAcademie ? "academie" : "region") : undefined,
         global_summary: {
           total_count: results.reduce((sum, d) => sum + d.total_count, 0),
           total_male: results.reduce((sum, d) => {
@@ -285,6 +310,8 @@ router.get("/faculty-members/typology/:context", async (req, res) => {
         [itemName]: results[0] || null,
         context,
         item_type: itemName,
+        geo_type:
+          context === "geo" ? (isAcademie ? "academie" : "region") : undefined,
         annee_universitaire: annee_universitaire || "current",
       });
     }
@@ -445,7 +472,7 @@ router.get("/faculty-members/search-bar", async (req, res) => {
         })[0]
     );
 
-    const [universities, regions, fields] = await Promise.all([
+    const [universities, regions, academies, fields] = await Promise.all([
       collection
         .aggregate([
           { $match: { annee_universitaire: latestYear } },
@@ -490,6 +517,7 @@ router.get("/faculty-members/search-bar", async (req, res) => {
         ])
         .toArray(),
 
+      // Régions
       collection
         .aggregate([
           { $match: { annee_universitaire: latestYear } },
@@ -529,6 +557,51 @@ router.get("/faculty-members/search-bar", async (req, res) => {
         ])
         .toArray(),
 
+      // Académies
+      collection
+        .aggregate([
+          { $match: { annee_universitaire: latestYear } },
+          {
+            $group: {
+              _id: {
+                id: "$etablissement_code_academie",
+                name: "$etablissement_academie",
+                region_id: "$etablissement_code_region",
+                region_name: "$etablissement_region",
+              },
+              total_count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $match: {
+              "_id.id": { $ne: null, $ne: "" },
+              "_id.name": { $ne: null, $ne: "" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              id: "$_id.id",
+              name: "$_id.name",
+              type: "academie",
+              region_id: "$_id.region_id",
+              region_name: "$_id.region_name",
+              total_count: 1,
+              href: {
+                $concat: [
+                  "/personnel-enseignant/geo/vue-d'ensemble?geo_id=",
+                  "$_id.id",
+                  "&annee_universitaire=",
+                  latestYear,
+                ],
+              },
+            },
+          },
+          { $sort: { total_count: -1 } },
+        ])
+        .toArray(),
+
+      // Disciplines
       collection
         .aggregate([
           { $match: { annee_universitaire: latestYear } },
@@ -573,10 +646,12 @@ router.get("/faculty-members/search-bar", async (req, res) => {
       latest_year: latestYear,
       universities: universities,
       regions: regions,
+      academies: academies,
       fields: fields,
       totals: {
         universities: universities.length,
         regions: regions.length,
+        academies: academies.length,
         fields: fields.length,
       },
     });

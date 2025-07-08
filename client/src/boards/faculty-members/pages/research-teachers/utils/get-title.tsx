@@ -12,6 +12,8 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
   const { context, contextId, contextName } = useContextDetection();
   const selectedYear = searchParams.get("annee_universitaire") || "";
 
+  const isAcademie = context === "geo" && contextId?.toString().startsWith("A");
+
   const { data: structureData, isLoading } = useContext({
     contextId: contextId || undefined,
     context,
@@ -22,20 +24,60 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
   }
 
   const getContextParams = () => {
+    if (!contextId) {
+      return {
+        name: null,
+        identifiant: null,
+        prefix: "",
+      };
+    }
+
     if (structureData) {
+      if (isAcademie) {
+        return {
+          name: structureData.lib,
+          identifiant: structureData.id,
+          prefix: "Académie de ",
+        };
+      }
+
+      if (context === "geo" && !isAcademie) {
+        return {
+          name: structureData.lib,
+          identifiant: structureData.id,
+          prefix: "Région ",
+        };
+      }
+
       return {
         name: structureData.lib,
         identifiant: structureData.id,
+        prefix: "",
+      };
+    }
+
+    if (isAcademie) {
+      return {
+        name: capitalize(contextName),
+        identifiant: null,
+        prefix: "Académie de ",
+      };
+    } else if (context === "geo") {
+      return {
+        name: capitalize(contextName),
+        identifiant: null,
+        prefix: "Région ",
       };
     }
 
     return {
       name: capitalize(contextName),
       identifiant: null,
+      prefix: "",
     };
   };
 
-  const { name } = getContextParams();
+  const { name, prefix = "" } = getContextParams();
 
   return (
     <Title look="h3" as="h2" className={classText}>
@@ -43,7 +85,12 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
         <Text size="sm">Chargement...</Text>
       ) : (
         <>
-          <b>{name}&nbsp;&nbsp;</b>
+          {name && (
+            <b>
+              {prefix}
+              {name}&nbsp;&nbsp;
+            </b>
+          )}
           <Text size="sm">Année universitaire {selectedYear}</Text>
         </>
       )}
