@@ -5,7 +5,6 @@ import {
   Title,
   Breadcrumb,
   Notice,
-  Text,
 } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { Link } from "@dataesr/dsfr-plus";
@@ -119,10 +118,12 @@ export function Typologie() {
         </Col>
       </Row>
       <Row className="fr-my-3w">
-        <Notice closeMode={"disallow"} type={"warning"}>
-          Les données des personnels enseignants non permanents ne sont pas
-          prises en compte pour l'année car elles ne sont pas disponibles.
-        </Notice>
+        <Col md={12}>
+          <Notice closeMode={"disallow"} type={"warning"}>
+            Les données des personnels enseignants non permanents ne sont pas
+            prises en compte pour l'année car elles ne sont pas disponibles.
+          </Notice>
+        </Col>
       </Row>
 
       <Title as="h1" look="h3" className="fr-mt-2w fr-mb-3w">
@@ -143,73 +144,59 @@ export function Typologie() {
 
       {!contextId && (
         <>
-          <Row gutters className="fr-mb-4w">
-            <Col md={12}>
-              <ItemBarChart />
-            </Col>
-          </Row>
+          <Col md={12}>
+            <ItemBarChart />
+          </Col>
 
-          <Row gutters className="fr-mb-4w">
-            <Col md={12}>
-              <ItemsTreemapChart />
-            </Col>
-          </Row>
+          <Col md={12}>
+            <ItemsTreemapChart />
+          </Col>
         </>
       )}
 
       {contextId && !groupId && (
         <>
           <GroupCNUTreemapChart />
-          <Row gutters className="fr-mb-4w">
-            <Col md={12}>
-              <Title as="h2" look="h4" className="fr-mb-3w">
-                {labels.sectionPlural.charAt(0).toUpperCase() +
-                  labels.sectionPlural.slice(1)}{" "}
-                - {contextName}
-              </Title>
-              <SectionsBubbleChart />
-            </Col>
-          </Row>
-        </>
-      )}
-
-      {contextId && groupId && (
-        <Row gutters className="fr-mb-4w">
           <Col md={12}>
             <Title as="h2" look="h4" className="fr-mb-3w">
               {labels.sectionPlural.charAt(0).toUpperCase() +
                 labels.sectionPlural.slice(1)}{" "}
-              du {labels.groupSingular}
+              - {contextName}
             </Title>
             <SectionsBubbleChart />
           </Col>
-        </Row>
+        </>
+      )}
+
+      {contextId && groupId && (
+        <Col md={12}>
+          <Title as="h2" look="h4" className="fr-mb-3w">
+            {labels.sectionPlural.charAt(0).toUpperCase() +
+              labels.sectionPlural.slice(1)}{" "}
+            du {labels.groupSingular}
+          </Title>
+          <SectionsBubbleChart />
+        </Col>
       )}
 
       {contextId && (
         <>
-          <Notice closeMode={"disallow"} type="info">
-            <Title look="h4" as="h3">
-              Navigation
-            </Title>
-            <Row>
-              <Text>
-                <Link
-                  href={`/personnel-enseignant/${labels.urlPath}/vue-d'ensemble`}
-                >
-                  ← Retour à la vue d'ensemble des {labels.plural}
-                </Link>
-              </Text>
-            </Row>
-            <Row>
-              {!groupId && (
-                <Text>
-                  Cliquez sur un {labels.groupSingular} dans le graphique
-                  ci-dessus pour explorer ses {labels.sectionPlural} en détail.
-                </Text>
-              )}
-            </Row>
-          </Notice>
+          <div className="fr-alert fr-alert--info fr-mb-4w">
+            <div className="fr-alert__title">Navigation</div>
+            <div>
+              <Link
+                href={`/personnel-enseignant/${labels.urlPath}/vue-d'ensemble`}
+              >
+                ← Retour à la vue d'ensemble des {labels.plural}
+              </Link>
+            </div>
+            {!groupId && (
+              <div className="fr-mt-2w">
+                Cliquez sur un {labels.groupSingular} dans le graphique
+                ci-dessus pour explorer ses {labels.sectionPlural} en détail.
+              </div>
+            )}
+          </div>
         </>
       )}
     </Container>

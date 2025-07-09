@@ -117,7 +117,7 @@ export function SearchBar() {
   return (
     <div>
       <Autocomplete
-        label=""
+        label="Rechercher"
         items={filteredItems}
         inputValue={filterText}
         onInputChange={handleInputChange}
@@ -130,33 +130,48 @@ export function SearchBar() {
         allowsCustomValue={false}
         disabledKeys={filteredItems.length === 0 ? [""] : []}
       >
-        {(item) => (
-          <AutocompleteItem
-            key={item.id}
-            startContent={
-              <span
-                className={`fr-mr-3v fr-icon--md ${getTypeIcon(item.type)}`}
-              />
-            }
-            description={
-              <div>
+        {(item) => {
+          const regionInfo =
+            item.type === "univ" && item.region
+              ? `, ${item.region}`
+              : item.type === "academie" && item.region_name
+              ? `, Région ${item.region_name}`
+              : "";
+
+          const textValue = `${item.name} - ${getTypeLabel(
+            item.type,
+            item.subtype
+          )}${regionInfo}`;
+
+          return (
+            <AutocompleteItem
+              key={item.id}
+              textValue={textValue}
+              startContent={
+                <span
+                  className={`fr-mr-3v fr-icon--md ${getTypeIcon(item.type)}`}
+                />
+              }
+              description={
                 <div>
-                  {getTypeLabel(item.type, item.subtype)}
-                  {item.region && item.type === "univ" && ` • ${item.region}`}
-                  {item.region_name &&
-                    item.type === "academie" &&
-                    ` • ${item.region_name}`}
+                  <div>
+                    {getTypeLabel(item.type, item.subtype)}
+                    {item.region && item.type === "univ" && ` • ${item.region}`}
+                    {item.region_name &&
+                      item.type === "academie" &&
+                      ` • ${item.region_name}`}
+                  </div>
+                  <div>
+                    {item.total_count.toLocaleString()} enseignants pour l'année
+                    universitaire {data?.latest_year}
+                  </div>
                 </div>
-                <div>
-                  {item.total_count.toLocaleString()} enseignants pour l'année
-                  universitaire {data?.latest_year}
-                </div>
-              </div>
-            }
-          >
-            <span className="fr-text--sm">{item.name}</span>
-          </AutocompleteItem>
-        )}
+              }
+            >
+              <span className="fr-text--sm">{item.name}</span>
+            </AutocompleteItem>
+          );
+        }}
       </Autocomplete>
     </div>
   );

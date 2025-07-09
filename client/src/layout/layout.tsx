@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
-import { Outlet, useSearchParams } from 'react-router-dom';
-import { Button, Header, Logo, Service, FastAccess } from '@dataesr/dsfr-plus';
+import { useEffect } from "react";
+import { Outlet, useSearchParams } from "react-router-dom";
+import { Button, Header, Logo, Service, FastAccess } from "@dataesr/dsfr-plus";
 
-import Footer from './footer';
-import SwitchTheme from '../components/switch-theme';
+import Footer from "./footer";
+import SwitchTheme from "../components/switch-theme";
 import i18n from "./i18n.json";
 
 export function Layout({ languageSelector = false }) {
@@ -109,4 +109,3 @@ export function Layout({ languageSelector = false }) {
     </>
   );
 }
-

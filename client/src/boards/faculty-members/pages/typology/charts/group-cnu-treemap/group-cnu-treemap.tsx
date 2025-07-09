@@ -273,9 +273,6 @@ export function GroupCNUTreemapChart() {
         ? `Les sections CNU de la discipline ${cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_code}
           - ${cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_name}`
         : `Répartition par ${labels.singular}`,
-      en: contextId
-        ? `${labels.groupPlural} of the selected ${labels.singular}`
-        : `Distribution by ${labels.singular}`,
     },
     subtitle: `Année universitaire ${selectedYear} - ${treemapData.length} ${
       treemapData.length > 1 ? `sections` : `section`
@@ -284,16 +281,13 @@ export function GroupCNUTreemapChart() {
       fr: contextId
         ? `Répartition des effectifs par ${labels.groupSingular} au sein de ${labels.singular}`
         : `Répartition des effectifs enseignants par ${labels.singular}`,
-      en: contextId
-        ? `Distribution of faculty members by ${labels.groupSingular} within the ${labels.singular}`
-        : `Distribution of faculty members by ${labels.singular}`,
     },
     integrationURL: `/personnel-enseignant/${labels.urlPath}/typologie`,
   };
 
   if (isLoading) {
     return (
-      <Row horizontalAlign="center" style={{ display: "inline-block;" }}>
+      <Row horizontalAlign="center" style={{ display: "inline-block" }}>
         <span
           className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
           aria-hidden="true"

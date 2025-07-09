@@ -20,29 +20,49 @@ export function useContextDetection(): ContextInfo {
   const geo_id_param = searchParams.get("geo_id") || geo_id;
   const structure_id = searchParams.get("structure_id") || id;
 
-  const contextInfo = useMemo(() => {
+  const { data: fieldsData } = useContext({
+    context: "fields" as const,
+    contextId: field_id,
+  });
+
+  const { data: geoData } = useContext({
+    context: "geo" as const,
+    contextId: geo_id_param,
+  });
+
+  const { data: structureData } = useContext({
+    context: "structures" as const,
+    contextId: structure_id,
+  });
+
+  return useMemo(() => {
     if (field_id) {
       return {
         context: "fields" as const,
         contextId: field_id,
-        contextName: "discipline",
+        contextName: fieldsData?.name || fieldsData?.lib || "Discipline",
       };
     }
+
     if (geo_id_param) {
       const isAcademie = geo_id_param.toString().startsWith("A");
 
       return {
         context: "geo" as const,
         contextId: geo_id_param,
-        contextName: isAcademie ? "académie" : "région",
+        contextName: isAcademie
+          ? `Académie de ${geoData?.name || geoData?.lib || ""}`
+          : `Région ${geoData?.name || geoData?.lib || ""}`,
         isAcademie: isAcademie,
       };
     }
+
     if (structure_id) {
       return {
         context: "structures" as const,
         contextId: structure_id,
-        contextName: "établissement",
+        contextName:
+          structureData?.name || structureData?.lib || "Établissement",
       };
     }
 
@@ -74,11 +94,16 @@ export function useContextDetection(): ContextInfo {
       contextId: undefined,
       contextName: "global",
     };
-  }, [field_id, geo_id_param, structure_id, location.pathname]);
-
-  return contextInfo;
+  }, [
+    field_id,
+    fieldsData,
+    geo_id_param,
+    geoData,
+    structure_id,
+    structureData,
+    location.pathname,
+  ]);
 }
-
 export function generateContextualTitle(
   baseTitle: string | null,
   context: ContextType,
@@ -214,7 +239,6 @@ export function useBreadcrumbItems(
     let name = isContextLoading
       ? "Chargement..."
       : contextData?.name || contextName || "Inconnu";
-    console.log(contextData);
     if (context === "geo" && isAcademie && !isContextLoading) {
       name = `Académie de ${contextData.lib}`;
     } else if (context === "geo" && !isAcademie && !isContextLoading) {
