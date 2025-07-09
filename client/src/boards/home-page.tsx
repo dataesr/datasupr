@@ -50,7 +50,10 @@ export default function HomePage() {
     <>
       <Header>
         <Logo text="Ministère|chargé|de l'enseignement|supérieur|et de la recherche" />
-        <Service name="DataSupR" tagline="Ensemble de tableaux de bord de l'enseignement supérieur, de la recherche et de l'innovation" />
+        <Service
+          name="DataSupR"
+          tagline="Ensemble de tableaux de bord de l'enseignement supérieur, de la recherche et de l'innovation"
+        />
         <FastAccess>
           <Button
             as="a"
@@ -80,13 +83,17 @@ export default function HomePage() {
         <Row className="fr-mt-5w">
           <Col>
             <Title as="h2" className="fr-mb-2w">
-              dataSupR - Tableaux de bord de l'enseignement supérieur, de la recherche et de l'innovation
+              dataSupR - Tableaux de bord de l'enseignement supérieur, de la
+              recherche et de l'innovation
             </Title>
             <Text>
-              Bienvenue sur dataSupR, la plateforme de visualisation des données de l'enseignement supérieur, de la recherche et de l'innovation.
+              Bienvenue sur dataSupR, la plateforme de visualisation des données
+              de l'enseignement supérieur, de la recherche et de l'innovation.
               <br />
-              Vous y trouverez des tableaux de bord interactifs, des cartes, des graphiques et des données brutes sur les effectifs étudiants, les
-              ressources humaines, les formations, les diplômes, la recherche, les publications, les brevets, les finances, etc.
+              Vous y trouverez des tableaux de bord interactifs, des cartes, des
+              graphiques et des données brutes sur les effectifs étudiants, les
+              ressources humaines, les formations, les diplômes, la recherche,
+              les publications, les brevets, les finances, etc.
             </Text>
           </Col>
         </Row>
@@ -100,9 +107,17 @@ export default function HomePage() {
         <Row>
           <Col md={10} className="search">
             <label className="fr-label" htmlFor="text-input-text">
-              Saisissez un mot clé pour rechercher un tableau de bord. Par exemple : "étudiants", "atlas", "France", "recherche", "finances", etc ...
+              Saisissez un mot clé pour rechercher un tableau de bord. Par
+              exemple : "étudiants", "atlas", "France", "recherche", "finances",
+              etc ...
             </label>
-            <input className="fr-input" type="text" id="text-input-text" name="text-input-text" onChange={(e) => setSearchText(e.target.value)} />
+            <input
+              className="fr-input"
+              type="text"
+              id="text-input-text"
+              name="text-input-text"
+              onChange={(e) => setSearchText(e.target.value)}
+            />
             {searchResults?.length > 0 ? (
               <ul className="search-results">
                 {searchResults.map((result: TDBDefinitionTypes) => (
@@ -135,7 +150,12 @@ export default function HomePage() {
             ) : null}
           </Col>
           <Col md={2}>
-            <Button className="fr-mt-4w" color="pink-tuile" icon="search-line" onClick={() => {}}>
+            <Button
+              className="fr-mt-4w"
+              color="pink-tuile"
+              icon="search-line"
+              onClick={() => {}}
+            >
               Rechercher
             </Button>
           </Col>
@@ -158,32 +178,47 @@ export default function HomePage() {
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="Projets européens" title="Projets européens" to="/european-projects?datasupr=true" />
+            <GenericCard
+              description="Projets européens"
+              title="Projets européens"
+              to="/european-projects?datasupr=true"
+            />
           </Col>
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="Personnels enseignants" title="Personnels enseignants" to="/personnel-enseignants?datasupr=true" />
+            <GenericCard
+              description="Open Alex"
+              title="Open Alex"
+              to="/open-alex?datasupr=true"
+            />
           </Col>
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="Open Alex" title="Open Alex" to="/open-alex?datasupr=true" />
+            <GenericCard
+              description="TEDS"
+              title="TEDS"
+              to="/teds?datasupr=true"
+            />
           </Col>
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="TEDS" title="TEDS" to="/teds?datasupr=true" />
+            <GenericCard
+              description="Tableau de bord financier des universités"
+              title="Finance"
+              to="/finance-universite?datasupr=true"
+            />
           </Col>
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="Tableau de bord financier des universités" title="Finance" to="/finance-universite?datasupr=true" />
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col>
-            <GenericCard description="Diplomés" title="Diplomés" to="/graduates" />
+            <GenericCard
+              description="Diplomés"
+              title="Diplomés"
+              to="/graduates"
+            />
           </Col>
         </Row>
         <Row gutters>
@@ -200,7 +235,10 @@ export default function HomePage() {
         <div className="fr-container">
           <div className="fr-footer__body">
             <div className="fr-footer__brand fr-enlarge-link">
-              <a href="/" title="Ministère chargé de l'enseignement supérieur et de la recherche">
+              <a
+                href="/"
+                title="Ministère chargé de l'enseignement supérieur et de la recherche"
+              >
                 <p className="fr-logo">
                   Ministère
                   <br />
@@ -294,7 +332,8 @@ export default function HomePage() {
             </ul>
             <div className="fr-footer__bottom-copy">
               <p>
-                Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous{" "}
+                Sauf mention explicite de propriété intellectuelle détenue par
+                des tiers, les contenus de ce site sont proposés sous{" "}
                 <a
                   href="https://github.com/etalab/licence-ouverte/blob/master/LO.md"
                   target="_blank"

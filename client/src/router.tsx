@@ -19,8 +19,10 @@ export default function Router() {
       <Route path="/admin/*" element={<AdminRoutes />} />
       <Route path="/atlas/*" element={<AtlasRoutes />} />
       <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
-      <Route path="/personnel-enseignants/*" element={<PersonnelEnseignantsRoutes />} />
-      <Route path="/finance-universite/*" element={<FinanceUniversityRoutes />} />
+      <Route
+        path="/finance-universite/*"
+        element={<FinanceUniversityRoutes />}
+      />
       <Route path="/integration" element={<Integration />} />
       <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
       <Route
