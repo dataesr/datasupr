@@ -14,7 +14,6 @@ import StatusDistribution from "../../charts/status/status";
 import { AgeDistributionPieChart } from "../../charts/age/age";
 import GeneralIndicatorsCard from "../../components/general-indicators-card/general-indicators-card";
 import { EstablishmentTypeChart } from "../../charts/establishment-type/establishment";
-import DisciplineStatsSidebar from "../../components/top-indicators/top-fields-indicators";
 import DisciplineStatusSummary from "../../components/fields-by-status";
 import NavigationCards from "../../components/fields-cards";
 import YearSelector from "../../components/filters";
@@ -91,7 +90,7 @@ export default function UniversityOverview() {
       <Row className="fr-mt-3w fr-mb-4w">
         <Col md={12}>
           <div className="fr-grid-row fr-grid-row--gutters">
-            <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
+            <Col md={4}>
               <div
                 className="fr-background-alt--blue-france fr-p-3w"
                 style={{
@@ -100,20 +99,9 @@ export default function UniversityOverview() {
               >
                 <GeneralIndicatorsCard />
               </div>
-            </div>
+            </Col>
 
-            {!contextId && (
-              <div className="fr-col-md-3">
-                <div
-                  className="fr-background-alt--blue-france fr-p-3w"
-                  style={{ height: "100%" }}
-                >
-                  <DisciplineStatsSidebar />
-                </div>
-              </div>
-            )}
-
-            <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
+            <Col md={4}>
               <div
                 className="fr-background-alt--blue-france fr-p-3w"
                 style={{
@@ -122,9 +110,9 @@ export default function UniversityOverview() {
               >
                 <DisciplineStatusSummary />
               </div>
-            </div>
+            </Col>
 
-            <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
+            <Col md={4}>
               <div
                 className="fr-background-alt--blue-france fr-p-3w"
                 style={{
@@ -133,7 +121,7 @@ export default function UniversityOverview() {
               >
                 <AgeDistributionPieChart />
               </div>
-            </div>
+            </Col>
           </div>
         </Col>
       </Row>
