@@ -9,6 +9,7 @@ import {
 } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useAgeDistribution } from "./use-age-distribution";
+import SubtitleWithContext from "../../pages/typology/utils/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -158,7 +159,17 @@ export function AgeDistributionPieChart() {
           id: "age-distribution-chart",
           idQuery: "age-distribution",
           title: {
-            fr: "Répartition par âge",
+            className: "fr-mt-0w",
+            look: "h6",
+            as: "h3",
+            fr: (
+              <>
+                La représentation du personnel enseignant par discipline&nbsp;
+                <i>
+                  <SubtitleWithContext classText="fr-text--lead" />
+                </i>
+              </>
+            ),
           },
 
           integrationURL: generateIntegrationURL(context, "age"),

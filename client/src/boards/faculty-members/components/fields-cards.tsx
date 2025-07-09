@@ -1,6 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 import { Link } from "@dataesr/dsfr-plus";
 import { useNavigation } from "../api/use-navigation";
+import { useMemo } from "react";
+import { useFacultyMembersYears } from "../api/general-queries";
 
 interface NavigationCardsProps {
   type: "fields" | "regions" | "structures" | "academies";
@@ -20,16 +22,26 @@ export default function NavigationCards({
   maxItems = 20,
 }: NavigationCardsProps) {
   const [searchParams] = useSearchParams();
-  const selectedYear = searchParams.get("annee_universitaire") || "";
+  const selectedYearParam = searchParams.get("annee_universitaire") || "";
+
+  const { data: yearsData, isLoading: isYearsLoading } =
+    useFacultyMembersYears();
+
+  const yearToUse = useMemo(() => {
+    if (selectedYearParam) return selectedYearParam;
+    if (yearsData?.academic_years?.length > 0)
+      return yearsData.academic_years[0];
+    return "";
+  }, [selectedYearParam, yearsData]);
 
   const apiType = type === "academies" ? "regions" : type;
 
   const { data, isLoading, error } = useNavigation({
     type: apiType,
-    annee_universitaire: selectedYear,
+    annee_universitaire: yearToUse,
   });
 
-  const getConfig = () => {
+  const config = useMemo(() => {
     switch (type) {
       case "fields":
         return {
@@ -88,9 +100,10 @@ export default function NavigationCards({
           emptyMessage: "Aucun établissement disponible",
         };
     }
-  };
+  }, [type]);
 
-  const config = getConfig();
+  const yearDisplay =
+    yearToUse || (isYearsLoading ? "chargement..." : "toutes les années");
 
   const LoadingSkeleton = () => (
     <div
@@ -144,7 +157,7 @@ export default function NavigationCards({
     </div>
   );
 
-  if (isLoading) {
+  if (isLoading || isYearsLoading) {
     return (
       <div className="fr-container">
         <LoadingSkeleton />
@@ -167,7 +180,7 @@ export default function NavigationCards({
       <div className="fr-container">
         <div className="fr-alert fr-alert--info fr-alert--sm">
           <p>
-            {config.emptyMessage} pour l'année {selectedYear}
+            {config.emptyMessage} pour l'année {yearDisplay}
           </p>
         </div>
       </div>
@@ -175,7 +188,6 @@ export default function NavigationCards({
   }
 
   let filteredItems = [...data.items];
-
   if (type === "academies") {
     filteredItems = filteredItems.filter(
       (item) => item.id && item.id.toString().startsWith("A")
@@ -189,139 +201,136 @@ export default function NavigationCards({
   const displayItems = filteredItems.slice(0, maxItems);
 
   return (
-    <div
-      className="fr-container"
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
-        gap: "1rem",
-      }}
-    >
-      {displayItems.map((item, idx) => {
-        const color = config.colors[idx % config.colors.length];
-        const initial = item.name.charAt(0).toUpperCase();
+    <div className="fr-container">
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(180px, 1fr))",
+          gap: "1rem",
+        }}
+      >
+        {displayItems.map((item, idx) => {
+          const color = config.colors[idx % config.colors.length];
+          const initial = item.name.charAt(0).toUpperCase();
 
-        const getItemUrl = () => {
-          const params = new URLSearchParams();
-          if (selectedYear) params.set("annee_universitaire", selectedYear);
+          const getItemUrl = () => {
+            const params = new URLSearchParams();
+            params.set("annee_universitaire", yearToUse);
 
-          switch (type) {
-            case "regions":
-            case "academies":
-              params.set("geo_id", item.id);
-              return `${config.basePath}?${params.toString()}`;
+            switch (type) {
+              case "regions":
+              case "academies":
+                params.set("geo_id", item.id);
+                break;
+              case "fields":
+                params.set("field_id", item.id);
+                break;
+              case "structures":
+                params.set("structure_id", item.id);
+                break;
+            }
+            return `${config.basePath}?${params.toString()}`;
+          };
 
-            case "fields":
-              params.set("field_id", item.id);
-              return `${config.basePath}?${params.toString()}`;
-
-            case "structures":
-              params.set("structure_id", item.id);
-              return `${config.basePath}?${params.toString()}`;
-
-            default:
-              return config.basePath;
-          }
-        };
-
-        return (
-          <Link
-            key={item.id}
-            href={getItemUrl()}
-            title={`Voir les détails de ${
-              type === "academies" ? `Académie de ${item.name}` : item.name
-            } (${item.total_count.toLocaleString()} enseignants)`}
-            style={{
-              backgroundColor: color,
-              borderRadius: "12px",
-              padding: "1rem",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "start",
-              textDecoration: "none",
-              transition: "all 0.2s ease",
-              boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
-              position: "relative",
-            }}
-            onClick={() => {
-              window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-              });
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = "scale(1.03)";
-              e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = "scale(1)";
-              e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)";
-            }}
-          >
-            <div
+          return (
+            <Link
+              key={item.id}
+              href={getItemUrl()}
+              title={`Voir les détails de ${
+                type === "academies" ? `Académie de ${item.name}` : item.name
+              } (${item.total_count.toLocaleString()} enseignants - ${yearDisplay})`}
               style={{
-                backgroundColor: "#ffffff",
-                borderRadius: "50%",
-                width: "36px",
-                height: "36px",
+                backgroundColor: color,
+                borderRadius: "12px",
+                padding: "1rem",
                 display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontWeight: "bold",
-                color: "#000091",
-                marginBottom: "0.5rem",
-                boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                flexDirection: "column",
+                alignItems: "start",
+                textDecoration: "none",
+                transition: "all 0.2s ease",
+                boxShadow: "0 1px 3px rgba(0, 0, 0, 0.1)",
+                position: "relative",
+              }}
+              onClick={() => {
+                window.scrollTo({
+                  top: 0,
+                  behavior: "smooth",
+                });
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "scale(1.03)";
+                e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = "0 1px 3px rgba(0,0,0,0.1)";
               }}
             >
-              {initial}
-            </div>
-            <div
-              style={{
-                fontSize: "0.9rem",
-                fontWeight: "600",
-                color: "#1e1e1e",
-                marginBottom: "0.25rem",
-                lineHeight: "1.3",
-              }}
-            >
-              {type === "academies" ? `Académie de ${item.name}` : item.name}
-            </div>
-            <div
-              style={{
-                fontSize: "0.75rem",
-                color: "#666666",
-                fontWeight: "500",
-              }}
-            >
-              {item.total_count.toLocaleString()} enseignants
-            </div>
-
-            {type === "structures" && item.region && (
               <div
                 style={{
-                  fontSize: "0.7rem",
-                  color: "#888888",
-                  marginTop: "0.25rem",
+                  backgroundColor: "#ffffff",
+                  borderRadius: "50%",
+                  width: "36px",
+                  height: "36px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  fontWeight: "bold",
+                  color: "#000091",
+                  marginBottom: "0.5rem",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
                 }}
               >
-                {item.region}
+                {initial}
               </div>
-            )}
-
-            {type === "academies" && item.region_name && (
               <div
                 style={{
-                  fontSize: "0.7rem",
-                  color: "#888888",
-                  marginTop: "0.25rem",
+                  fontSize: "0.9rem",
+                  fontWeight: "600",
+                  color: "#1e1e1e",
+                  marginBottom: "0.25rem",
+                  lineHeight: "1.3",
                 }}
               >
-                Région {item.region_name}
+                {type === "academies" ? `Académie de ${item.name}` : item.name}
               </div>
-            )}
-          </Link>
-        );
-      })}
+              <div
+                style={{
+                  fontSize: "0.75rem",
+                  color: "#666666",
+                  fontWeight: "500",
+                }}
+              >
+                {item.total_count.toLocaleString()} enseignants
+              </div>
+
+              {type === "structures" && item.region && (
+                <div
+                  style={{
+                    fontSize: "0.7rem",
+                    color: "#888888",
+                    marginTop: "0.25rem",
+                  }}
+                >
+                  {item.region}
+                </div>
+              )}
+
+              {type === "academies" && item.region_name && (
+                <div
+                  style={{
+                    fontSize: "0.7rem",
+                    color: "#888888",
+                    marginTop: "0.25rem",
+                  }}
+                >
+                  Région {item.region_name}
+                </div>
+              )}
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }

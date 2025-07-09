@@ -217,20 +217,17 @@ export default function ChartWrapper({ config, options, legend, renderData }) {
 
   return (
     <section>
-      {config.title[currentLang] && (
-        <Title as="h2" look="h4" className="fr-mb-1w">
-          <span
-            dangerouslySetInnerHTML={{ __html: config.title[currentLang] }}
-          />
-        </Title>
-      )}
-      {config.subtitle && (
+      {config.title && (
         <Title
-          as={config.title[currentLang] ? "h3" : "h2"}
-          look="h6"
-          className="fr-mb-0"
+          as={config.title.size ? config.title.size : "h2"}
+          look={config.title.look ? config.title.look : "h6"}
+          className={
+            config.title.className
+              ? config.title.className
+              : "fr-mt-2w fr-mb-3w"
+          }
         >
-          <span dangerouslySetInnerHTML={{ __html: config.subtitle }} />
+          {config.title[currentLang]}
         </Title>
       )}
       <div className="actions">
