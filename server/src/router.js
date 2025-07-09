@@ -1,6 +1,7 @@
 import express from "express";
 
 import adminRouter from "./routes/admin/index.js";
+import facultyMembersRouter from "./routes/boards/faculty-members/index.js";
 import atlasRouter from "./routes/boards/atlas/index.js";
 import elasticSearchRouter from "./routes/elasticsearch.js";
 import europeanProjectsRouter from "./routes/boards/european-projects/index.js";
@@ -14,6 +15,7 @@ import graduatesRouter from "./routes/boards/graduates/index.js";
 const router = new express.Router();
 
 router.use(adminRouter);
+router.use(facultyMembersRouter);
 router.use(atlasRouter);
 router.use(contactRouter);
 router.use(elasticSearchRouter);

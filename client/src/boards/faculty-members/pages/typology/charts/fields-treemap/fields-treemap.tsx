@@ -1,0 +1,226 @@
+import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
+import { useFacultyMembersCNU } from "../../../../api/use-cnu";
+import { CreateChartOptions } from "../../../../components/creat-chart-options";
+import { useContextDetection } from "../../../../utils";
+import { createTreemapOptions } from "./options";
+import { Notice, Row, Text } from "@dataesr/dsfr-plus";
+
+function RenderData({ data }) {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered fr-mt-3w">
+      <table className="fr-table">
+        <thead>
+          <tr>
+            <th>Discipline</th>
+            <th>Effectif total</th>
+            <th>Hommes</th>
+            <th>Femmes</th>
+            <th>% Hommes</th>
+            <th>% Femmes</th>
+          </tr>
+        </thead>
+        <tbody>
+          {data.map((item, index) => {
+            const totalCount = item.value || 0;
+            const malePercent =
+              totalCount > 0
+                ? ((item.maleCount / totalCount) * 100).toFixed(1)
+                : "0.0";
+            const femalePercent =
+              totalCount > 0
+                ? ((item.femaleCount / totalCount) * 100).toFixed(1)
+                : "0.0";
+
+            return (
+              <tr key={index}>
+                <td>{item.name || "Non précisé"}</td>
+                <td>{totalCount.toLocaleString()}</td>
+                <td>{item.maleCount.toLocaleString()}</td>
+                <td>{item.femaleCount.toLocaleString()}</td>
+                <td>{malePercent}%</td>
+                <td>{femalePercent}%</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+export function ItemsTreemapChart() {
+  const [searchParams] = useSearchParams();
+  const selectedYear = searchParams.get("annee_universitaire") || "";
+  const { context, contextId } = useContextDetection();
+  const navigate = useNavigate();
+
+  const { data: cnuData, isLoading } = useFacultyMembersCNU({
+    context,
+    annee_universitaire: selectedYear,
+    contextId,
+  });
+
+  const { data: treemapData, title } = useMemo(() => {
+    if (!cnuData || !cnuData.cnu_groups_with_sections) {
+      const labels = {
+        fields: "discipline",
+        geo: "région",
+        structures: "établissement",
+      };
+      return {
+        data: [],
+        title: `Répartition des effectifs par ${
+          labels[context] || "discipline"
+        }`,
+      };
+    }
+
+    const itemsData = cnuData.cnu_groups_with_sections
+      .map((item) => {
+        let totalMaleCount = 0;
+        let totalFemaleCount = 0;
+
+        item.groups?.forEach((group) => {
+          group.sections?.forEach((section) => {
+            section.details?.forEach((detail) => {
+              if (detail.gender === "Masculin") {
+                totalMaleCount += detail.count;
+              } else if (detail.gender === "Féminin") {
+                totalFemaleCount += detail.count;
+              }
+            });
+          });
+        });
+
+        const itemCode = item._id.discipline_code;
+        const itemName = item._id.discipline_name;
+        const itemTotal = item.discipline_total;
+
+        return {
+          item_id: itemCode,
+          itemLabel: itemName,
+          totalCount: itemTotal || 0,
+          maleCount: totalMaleCount,
+          femaleCount: totalFemaleCount,
+        };
+      })
+      .filter(
+        (item) =>
+          item.item_id &&
+          item.itemLabel &&
+          item.totalCount > 0 &&
+          !isNaN(item.totalCount) &&
+          isFinite(item.totalCount)
+      );
+
+    const processedData = itemsData.map((item, index) => {
+      const totalCount = Math.max(item.totalCount, 1);
+      const femalePercent =
+        totalCount > 0 && item.femaleCount > 0
+          ? Math.min(Math.max((item.femaleCount / totalCount) * 100, 0), 100)
+          : 50;
+
+      return {
+        id: `${context}_${item.item_id}_${index}`,
+        name: item.itemLabel.substring(0, 50),
+        value: totalCount,
+        colorValue: femalePercent,
+        maleCount: item.maleCount || 0,
+        femaleCount: item.femaleCount || 0,
+      };
+    });
+
+    return {
+      data: processedData
+        .filter((item) => item.value > 0)
+        .sort((a, b) => b.value - a.value)
+        .slice(0, 50),
+      title: ` `,
+    };
+  }, [cnuData, context]);
+
+  const treemapOptions = CreateChartOptions(
+    "treemap",
+    createTreemapOptions({
+      title,
+      selectedYear,
+      treemapData,
+      labels: {
+        singular: "discipline",
+        plural: "disciplines",
+      },
+      onItemClick: (itemCode) => {
+        const parts = itemCode.split("_");
+        const disciplineId = parts.slice(1, -1).join("_");
+        navigate(
+          `/personnel-enseignant/discipline/typologie?year=${selectedYear}&field_id=${disciplineId}`
+        );
+      },
+    })
+  );
+
+  const config = {
+    id: `${context}-treemap`,
+    idQuery: `faculty-members-cnu`,
+    title: {
+      fr: `État de la parité du personnel enseignant par grande discipline`,
+      en: `Parity status of faculty members by major discipline`,
+    },
+    subtitle: `Année universitaire ${selectedYear}&nbsp;-&nbsp;
+      ${treemapData?.length}
+      grande${treemapData?.length > 1 ? "s" : ""}
+      discipline${treemapData?.length > 1 ? "s" : ""}`,
+    description: {
+      fr: `Visualisation hiérarchique des effectifs enseignants par discipline`,
+      en: `Hierarchical visualization of faculty members by discipline`,
+    },
+    integrationURL: `/personnel-enseignant/discipline/typologie`,
+  };
+
+  if (isLoading) {
+    return (
+      <Row horizontalAlign="center" style={{ display: "inline-block;" }}>
+        <span
+          className="fr-icon-refresh-line fr-icon--lg fr-icon--spin"
+          aria-hidden="true"
+        />
+        <Text className="fr-ml-1w">
+          Chargement des données par discipline...
+        </Text>
+      </Row>
+    );
+  }
+
+  if (!treemapData || treemapData.length === 0) {
+    return (
+      <Notice closeMode={"disallow"} type={"warning"}>
+        <Text>
+          Aucune donnée disponible pour les disciplines pour l'année{" "}
+          {selectedYear}
+        </Text>
+      </Notice>
+    );
+  }
+
+  return (
+    <ChartWrapper
+      config={config}
+      options={treemapOptions}
+      legend={null}
+      renderData={() => <RenderData data={treemapData} />}
+    />
+  );
+}
+
+export default ItemsTreemapChart;

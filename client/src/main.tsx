@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { DSFRConfig } from "@dataesr/dsfr-plus";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import "remixicon/fonts/remixicon.css";
 
 import AppRoutes from "./router.js";
 import RouterLink from "./components/router-link.js";
