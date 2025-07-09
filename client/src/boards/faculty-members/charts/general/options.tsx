@@ -31,6 +31,7 @@ export default function OptionsColumnChart({
 
   const data = sortedData.map((field) => ({
     name: field.fieldLabel,
+    code: field.field_id,
     y: field.totalCount,
     color: getColorForDiscipline(field.fieldLabel),
     customData: {
@@ -50,7 +51,7 @@ export default function OptionsColumnChart({
       style: {
         fontFamily: "Marianne, sans-serif",
       },
-      backgroundColor: "transparent",
+      backgroundColor: "#fff",
     },
     exporting: { enabled: false },
     title: {
@@ -72,13 +73,13 @@ export default function OptionsColumnChart({
         text: "Nombre d'enseignants",
         style: {
           color: "#333333",
-          fontSize: "12px",
+          fontSize: "14px",
         },
       },
       labels: {
         style: {
           color: "#333333",
-          fontSize: "12px",
+          fontSize: "14px",
         },
         formatter() {
           return Number(this.value) >= 1000
@@ -95,6 +96,7 @@ export default function OptionsColumnChart({
       shadow: true,
       formatter() {
         interface CustomPoint extends Highcharts.Point {
+          code: string;
           customData: {
             femaleCount: number;
             maleCount: number;
@@ -105,20 +107,29 @@ export default function OptionsColumnChart({
         const p = this.point as CustomPoint;
         return `
           <div style="padding:10px">
-            <strong style="font-size:15px;">${p.name}</strong>
-            <div style="margin:8px 0; font-size:16px; font-weight:bold;">
+            <div style="font-weight:bold;margin-bottom:8px;font-size:14px">
+              ${p.name}&nbsp;${p.code}
+            </div>
+            <div style="margin:8px 0; font-size:14px; font-weight:bold;">
               ${p.y !== undefined ? p.y.toLocaleString() : 0} enseignants
             </div>
-            <div style="margin-top:5px; color:#e18b76">
-              Femmes: ${p.customData.femalePercentage}% (${
-          p.customData.femaleCount
-        })
-            </div>
-            <div style="margin-top:3px; color:#efcb3a">
-              Hommes: ${p.customData.malePercentage}% (${
-          p.customData.maleCount
-        })
-            </div>
+            <hr style="margin:5px 0;border:0;border-top:1px solid #eee">
+            <table style="width:100%;border-collapse:collapse">
+                  <tr>
+                    <td style="padding:4px 0">👨 Hommes:</td>
+                    <td style="text-align:right;font-weight:bold;font-size:14px">${p.customData.maleCount.toLocaleString()}</td>
+                    <td style="text-align:right;width:40px;color:#666;font-size:14px">${
+                      p.customData.malePercentage
+                    }%</td>
+                  </tr>
+                  <tr>
+                    <td style="padding:4px 0">👩 Femmes:</td>
+                    <td style="text-align:right;font-weight:bold;font-size:14px">${p.customData.femaleCount.toLocaleString()}</td>
+                    <td style="text-align:right;width:40px;color:#666;font-size:14px">${
+                      p.customData.femalePercentage
+                    }%</td>
+                  </tr>
+                </table>
           </div>
         `;
       },
@@ -127,6 +138,7 @@ export default function OptionsColumnChart({
       column: {
         borderRadius: 4,
         borderWidth: 0,
+        minPointLength: 1.5,
       },
     },
     series: [

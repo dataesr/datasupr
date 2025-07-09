@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useContextDetection } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useDisciplineDistribution } from "./use-discipline-distribution";
+import SubtitleWithContext from "../../pages/typology/utils/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -62,7 +63,7 @@ function RenderData({ data }) {
 const DistributionBar: React.FC = () => {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
-  const { context, contextId, contextName } = useContextDetection();
+  const { context, contextId } = useContextDetection();
 
   const {
     data: disciplineData,
@@ -101,26 +102,21 @@ const DistributionBar: React.FC = () => {
   })();
 
   const chartOptions = options({ fieldsData: itemsData, selectedYear });
-  const getTitle = () => {
-    switch (context) {
-      case "fields":
-        return "Répartition par discipline des enseignants";
-      case "geo":
-        return "Répartition par discipline des enseignants ";
-      case "structures":
-        return contextId
-          ? `Répartition par discipline des enseignants pour l'établissement ${contextName}`
-          : "Répartition par discipline des enseignants par établissement";
-      default:
-        return "Répartition par discipline des enseignants";
-    }
-  };
 
   const config = {
     id: "DistributionBar",
     idQuery: "discipline-distribution",
     title: {
-      fr: getTitle(),
+      className: "fr-mt-0w",
+      look: "h5",
+      as: "h2",
+      fr: (
+        <>
+          Quelles sont les disciplines qui emploient le plus de personnel
+          enseignant ?&nbsp;
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+        </>
+      ),
     },
     description: {
       fr: "Ce graphique présente la répartition des effectifs d'enseignants par grande discipline, avec une visualisation de l'équilibre femmes-hommes dans chaque domaine. Les barres horizontales permettent de comparer facilement les effectifs totaux entre disciplines, tandis que les segments colorés illustrent la proportion respective des enseignants par genre. Le tableau associé détaille les effectifs précis et les pourcentages par discipline.",
