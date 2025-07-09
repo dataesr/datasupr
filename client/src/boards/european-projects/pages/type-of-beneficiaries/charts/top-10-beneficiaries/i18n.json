@@ -1,0 +1,26 @@
+{
+  "REC": {
+    "fr": "Recherche",
+    "en": "Research"
+  },
+  "PUB": {
+    "fr": "Organisme public",
+    "en": "Public institution"
+  },
+  "PRC": {
+    "fr": "Organisme privé",
+    "en": "Private institution"
+  },
+  "HES": {
+    "fr": "Établissement d'enseignement supérieur",
+    "en": "Higher education institution"
+  },
+  "OTH": {
+    "fr": "Autre",
+    "en": "Other"
+  },
+  "xAxis-label": {
+    "fr": "Total subventions en euros millions d'euros",
+    "en": "Total grants in million euros"
+  }
+}

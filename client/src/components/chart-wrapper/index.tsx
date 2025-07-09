@@ -21,6 +21,7 @@ import CopyButton from "../copy-button";
 import "./styles.scss";
 import { useSearchParams } from "react-router-dom";
 
+
 const { VITE_APP_URL } = import.meta.env;
 const source = "Commission européenne, Cordis";
 const sourceURL = "https://cordis.europa.eu/";

@@ -35,3 +35,4 @@ server/src/routes/admin/api-tests/contact.http
 client/.env
 
 files/*
+todo.txt

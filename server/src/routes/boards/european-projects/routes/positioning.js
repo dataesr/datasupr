@@ -258,7 +258,7 @@ router
     }
 
     const data = await db
-      .collection("fr-esr-horizon-projects-entities")
+      .collection("ep_projects-entities_staging")
       .aggregate([
         { $match: filters },
         {

@@ -62,6 +62,10 @@ ul {
   }
 }
 
+.fr-sidemenu__btn{
+  background-color: transparent !important;
+}
+
 :root {
   --label-color: var(--text-action-high-grey);
   // --green-tilleul-verveine-main-707:
@@ -288,6 +292,9 @@ ul {
   --cumulativeSuccessRate-color: #d75521; // taux de succès moyen
   --selected-country-color: #6dd897; // pays sélectionné
   --associated-countries-color: #09622a; // pays associés
+  --collaboration-color: #f2b705; // collaboration
+  --coordination-color: var(--blue-ecume-sun-247); // coordination
+  --partner-color: var(--purple-glycine-sun-319); // partenaire
 
   --pillar-p1-color: var(--scale-1-color); // pilier 1
   --pillar-p2-color: var(--scale-2-color); // pilier 2
@@ -437,4 +444,11 @@ ul {
   --project-type-ia-color: var(--scale-5-color);
   --project-type-msca-color: var(--scale-6-color);
   --project-type-ria-color: var(--scale-7-color);
+
+  // beneficiaries-types colors
+  --beneficiarie-type-REC-color: var(--scale-1-color);
+  --beneficiarie-type-PUB-color: var(--scale-4-color);
+  --beneficiarie-type-PRC-color: var(--scale-2-color);
+  --beneficiarie-type-HES-color: var(--scale-3-color);
+  --beneficiarie-type-OTH-color: var(--scale-5-color);
 }

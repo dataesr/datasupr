@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SideMenu, Link, Badge, Tabs, Tab, Button } from "@dataesr/dsfr-plus";
+import { SideMenu, Link, Badge, Tabs, Tab, Button, SideMenuItem } from "@dataesr/dsfr-plus";
 import { useLocation, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
@@ -39,6 +39,10 @@ export default function CustomSideMenu() {
     if (str === "/european-projects/beneficiaires") {
       // fait la distinction entre beneficiaries et beneficiaries-types
       return pathname === str;
+    }
+    if (str === "/european-projects/collaborations") {
+      // fait la distinction entre la page principale des collaborations et les pages détaillées
+      return pathname === str || pathname === str + "/";
     }
     return pathname?.startsWith(str);
   };
@@ -130,9 +134,14 @@ export default function CustomSideMenu() {
           <Link current={is("/european-projects/positionnement")} href={`/european-projects/positionnement?${filtersParams}`}>
             {getI18nLabel("positioning")}
           </Link>
-          <Link current={is("/european-projects/collaborations")} href={`/european-projects/collaborations?${filtersParams}`}>
-            {getI18nLabel("collaborations")}
-          </Link>
+          <SideMenuItem defaultExpanded title={getI18nLabel("collaborations")}>
+            <Link current={is("/european-projects/collaborations")} href={`/european-projects/collaborations?${filtersParams}`}>
+              {getI18nLabel("by-country")}
+            </Link>
+            <Link current={is("/european-projects/collaborations/")} href={`/european-projects/collaborations/entityId?${filtersParams}`}>
+              {getI18nLabel("by-entity")}
+            </Link>
+          </SideMenuItem>
           <Link current={is("/european-projects/beneficiaires")} href={`/european-projects/beneficiaires?${filtersParams}`}>
             {getI18nLabel("beneficiaries")}
           </Link>

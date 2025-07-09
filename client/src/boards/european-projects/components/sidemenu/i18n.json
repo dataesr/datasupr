@@ -8,8 +8,8 @@
     "en": "Back to filters selection"
   },
   "beneficiaries": {
-    "fr": "Bénéficiaires",
-    "en": "Beneficiaries"
+    "fr": "Entités bénéficiaires",
+    "en": "Beneficiaries entities"
   },
   "beneficiaries-types": {
     "fr": "Types de bénéficiaires",
@@ -18,6 +18,14 @@
   "collaborations": {
     "fr": "Collaborations",
     "en": "Collaborations"
+  },
+  "by-country": {
+    "fr": "Par pays",
+    "en": "By country"
+  },
+  "by-entity": {
+    "fr": "Par entité",
+    "en": "By entity"
   },
   "destinations": {
     "fr": "Destinations",

@@ -1,6 +1,6 @@
-export const formatToMillions = (amount: number): string => {
+export const formatToMillions = (amount: number, precision=1): string => {
   const millions = amount / 1_000_000;
-  return `${millions.toFixed(1)} M€`;
+  return `${millions.toFixed(precision)} M€`;
 };
 
 export const formatToThousands = (amount: number): string => {

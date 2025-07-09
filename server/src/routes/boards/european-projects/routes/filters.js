@@ -3,22 +3,21 @@ import { db } from "../../../../services/mongo.js";
 
 const router = new express.Router();
 
-const getCurrentCollectionName = async (idCollection) => {
-  const data = await db.collection("boards").find({ id: "european-projects" }).toArray();
-  const currentCollection = data[0].data.find(
-    (item) => item.id === idCollection
-  ).current;
+// const getCurrentCollectionName = async (idCollection) => {
+//   const data = await db.collection("boards").find({ id: "european-projects" }).toArray();
+//   const currentCollection = data[0].data.find(
+//     (item) => item.id === idCollection
+//   ).current;
 
-  if (currentCollection) {
-    return currentCollection;
-  }
-};
+//   if (currentCollection) {
+//     return currentCollection;
+//   }
+// };
 
 router.route("/european-projects/filters-countries").get(async (req, res) => {
-  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
 
   try {
-    const data = await db.collection(currentCollectionName).aggregate([
+    const data = await db.collection("ep_projects-entities_staging").aggregate([
       {
         $match: {
           country_code: { $ne: null }
@@ -54,10 +53,9 @@ router.route("/european-projects/filters-countries").get(async (req, res) => {
 });
 
 router.route("/european-projects/filters-programs").get(async (req, res) => {
-  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
 
   try {
-    const data = await db.collection(currentCollectionName).aggregate([
+    const data = await db.collection("ep_projects-entities_staging").aggregate([
       {
         $match: {
           programme_code: { $ne: null }
@@ -95,7 +93,6 @@ router.route("/european-projects/filters-programs").get(async (req, res) => {
 });
 
 router.route("/european-projects/filters-thematics").get(async (req, res) => {
-  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
 
   try {
     const matchStage = {
@@ -112,7 +109,7 @@ router.route("/european-projects/filters-thematics").get(async (req, res) => {
     }
 
 
-    const data = await db.collection(currentCollectionName).aggregate([
+    const data = await db.collection("ep_projects-entities_staging").aggregate([
       {
         $match: matchStage
       },
@@ -148,10 +145,9 @@ router.route("/european-projects/filters-thematics").get(async (req, res) => {
 });
 
 router.route("/european-projects/filters-pillars").get(async (req, res) => {
-  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
 
   try {
-    const data = await db.collection(currentCollectionName).aggregate([
+    const data = await db.collection("ep_projects-entities_staging").aggregate([
       {
         $match: {
           pilier_code: { $ne: null },
@@ -190,10 +186,9 @@ router.route("/european-projects/filters-pillars").get(async (req, res) => {
 });
 
 router.route("/european-projects/all-programs").get(async (req, res) => {
-  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
 
   try {
-    const data = await db.collection(currentCollectionName).aggregate([
+    const data = await db.collection("ep_projects-entities_staging").aggregate([
       {
       $match: {
         programme_code: { $ne: null }
@@ -231,10 +226,9 @@ router.route("/european-projects/all-programs").get(async (req, res) => {
 });
 
 router.route("/european-projects/all-thematics").get(async (req, res) => {
-  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
 
   try {
-    const data = await db.collection(currentCollectionName).aggregate([
+    const data = await db.collection("ep_projects-entities_staging").aggregate([
       {
       $match: {
         thema_code: { $ne: null }
@@ -272,10 +266,9 @@ router.route("/european-projects/all-thematics").get(async (req, res) => {
 });
 
 router.route("/european-projects/all-destinations").get(async (req, res) => {
-  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
 
   try {
-    const data = await db.collection(currentCollectionName).aggregate([
+    const data = await db.collection("ep_projects-entities_staging").aggregate([
       {
       $match: {
         destination_code: { $ne: null },
@@ -315,10 +308,9 @@ router.route("/european-projects/all-destinations").get(async (req, res) => {
 );
 
 router.route("/european-projects/programs-from-pillars").get(async (req, res) => {
-  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
 
   try {
-    const data = await db.collection(currentCollectionName).aggregate([
+    const data = await db.collection("ep_projects-entities_staging").aggregate([
       {
         $match: {
           pilier_code: { $in: req.query.pillars.split("|") },
@@ -357,10 +349,9 @@ router.route("/european-projects/programs-from-pillars").get(async (req, res) =>
 });
 
 router.route("/european-projects/thematics-from-programs").get(async (req, res) => { 
-  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
 
   try {
-    const data = await db.collection(currentCollectionName).aggregate([
+    const data = await db.collection("ep_projects-entities_staging").aggregate([
       {
         $match: {
           programme_code: { $in: req.query.programs.split("|") },
@@ -400,10 +391,9 @@ router.route("/european-projects/thematics-from-programs").get(async (req, res) 
 );
 
 router.route("/european-projects/destinations-from-thematics").get(async (req, res) => { 
-  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
 
   try {
-    const data = await db.collection(currentCollectionName).aggregate([
+    const data = await db.collection("ep_projects-entities_staging").aggregate([
       {
         $match: {
           thema_code: { $in: req.query.thematics.split("|") },
@@ -444,11 +434,10 @@ router.route("/european-projects/destinations-from-thematics").get(async (req, r
 );
 
 router.route("/european-projects/get-countries-with-data").get(async (req, res) => {
-  const currentCollectionName = await getCurrentCollectionName("fr-esr-horizon-projects-entities");
   const defaultSort = { label_fr: 1 };
 
   try {
-    const data = await db.collection(currentCollectionName).aggregate([
+    const data = await db.collection("ep_projects-entities_staging").aggregate([
       {
         $match: {
           country_code: { $ne: null }

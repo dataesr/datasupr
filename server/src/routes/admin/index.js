@@ -5,9 +5,10 @@ import path from "path";
 import { db } from "../../services/mongo.js";
 import { checkQuery } from "./utils.js";
 import uploadVersionRoute from "./upload/upload-version.js";
-import { create } from "domain";
 
 const router = new express.Router();
+
+const copyProgress = new Map();
 
 router.use(uploadVersionRoute);
 
@@ -15,6 +16,147 @@ router.use(uploadVersionRoute);
 router.route("/admin/list-dashboards").get(async (req, res) => {
   const response = await db.collection("boards").find({}).toArray();
   res.json(response);
+});
+
+router.route("/admin/list-boards").get(async (req, res) => {
+  try {
+    // Liste de toutes les collections
+    const collections = await db.listCollections().toArray();
+    
+    // Récupérer tous les dashboards pour avoir les createdAt
+    const dashboards = await db.collection("dashboards").find({}).toArray();
+
+    // Mapper les collections avec le format attendu
+    const boards = collections
+      .map((collection) => {
+        const parts = collection.name.split("_");
+        if (parts.length < 3) {
+          return null; // Ignorer les collections qui ne suivent pas la convention de nommage
+        }
+
+        const boardName = parts[0];
+        const collectionName = collection.name;
+
+        // Chercher la date de création dans la collection dashboards
+        const dashboard = dashboards.find(d => d.boardName === boardName);
+        const collectionInfo = dashboard?.collections
+          ?.filter(c => c.name === collectionName)
+          .sort((a, b) => b.createdAt - a.createdAt)[0];
+        
+        return {
+          boardName: parts[0],
+          collectionName: parts[1],
+          version: parts[2],
+          createdAt: collectionInfo?.createdAt || null
+        };
+      })
+      .filter((board) => board !== null);
+
+    res.json(boards);
+  } catch (error) {
+    console.error("Error listing boards:", error);
+    res.status(500).json({ 
+      error: "Unable to list boards", 
+      details: error.message 
+    });
+  }
+});
+
+// copy collection with new name
+router.route("/admin/copy-collection").post(async (req, res) => {
+  const filters = checkQuery(req.body, ["sourceName", "targetName"], res);
+  const { sourceName, targetName } = filters;
+  const timestamp = req.body.timestamp || Math.floor(Date.now() / 1000);
+console.log("Copying collection from", sourceName, "to", targetName, );
+  try {
+    // Vérifier si la collection source existe
+    const sourceExists = await db.listCollections({ name: sourceName }).hasNext();
+    if (!sourceExists) {
+      return res.status(404).json({ error: "Source collection not found" });
+    }
+
+    // Vérifier si la collection cible existe déjà
+    const targetExists = await db.listCollections({ name: targetName }).hasNext();
+    if (targetExists) {
+      return res.status(409).json({ 
+        error: "Target collection already exists : " + targetName,
+        message: "Please choose a different target name or delete the existing collection first"
+      });
+    }
+
+    // Créer la nouvelle collection
+    await db.createCollection(targetName);
+
+    // Copier les documents avec une agrégation
+    await db.collection(sourceName).aggregate([
+      {
+        $out: targetName
+      }
+    ]).toArray();
+
+    // Copier les index
+    const indexes = await db.collection(sourceName).indexes();
+    for (const index of indexes) {
+      if (index.name !== "_id_") {
+        const indexOptions = { ...index };
+        delete indexOptions._id;
+        delete indexOptions.ns;
+        delete indexOptions.v;
+        delete indexOptions.key;
+        await db.collection(targetName).createIndex(index.key, indexOptions);
+      }
+    }
+
+    // Extraire le nom du tableau de bord depuis le nom de la collection
+    // Format attendu: boardName_*
+    const boardName = targetName.split('_')[0];
+
+    // Mettre à jour la collection dashboards
+    await db.collection("dashboards").updateOne(
+      { 
+        boardName,
+        "collections.name": targetName
+      },
+      {
+        $push: {
+          collections: {
+            name: targetName,
+            createdAt: timestamp
+          }
+        }
+      },
+      { upsert: true }
+    );
+
+    res.json({ message: "Collection copied successfully", targetName });
+  } catch (error) {
+    console.error("Error copying collection:", error);
+    res.status(500).json({ error: "Unable to copy collection", details: error.message });
+  }
+});
+
+// delete a collection
+router.route("/admin/delete-collection").delete(async (req, res) => {
+  const filters = checkQuery(req.body, ["collectionName"], res);
+  const { collectionName } = filters;
+  try {
+    // Check if the collection exists
+    const collectionExists = await db
+      .listCollections({ name: collectionName })
+      .hasNext();
+    if (!collectionExists) {
+      return res.status(404).json({ error: "Collection not found" });
+    }
+    // Drop the collection
+    await db.collection(collectionName).drop();
+    res.json({ message: "Collection deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting collection:", error);
+    res.status(500).json({
+      error: "Unable to delete collection",
+      details: error.message,
+    });
+  }
 });
 
 // list all indexes from a collection
@@ -283,39 +425,69 @@ router.route("/admin/get-constants").get(async (req, res) => {
   res.json(board.constants);
 });
 
-router.route("/admin/get-ticket-office-messages").get(async (req, res) => {
+// router.route("/admin/get-ticket-office-messages").get(async (req, res) => {
+//   try {
+//     const params = new URLSearchParams({
+//       fromApplication: "datasupr",
+//       status: "new",
+//     });
+
+//     const response = await fetch(
+//       `https://ticket-office.dataesr.ovh/api/contacts?${params}`,
+//       {
+//         method: "GET",
+//         headers: {
+//           Authorization: `Basic ${process.env.TICKET_OFFICE_BASIC_AUTH}`,
+//           "Content-Type": "application/json",
+//         },
+//       }
+//     );
+
+//     if (!response.ok) {
+//       throw new Error(`HTTP error! status: ${response.status}`);
+//     }
+
+//     const data = await response.json();
+//     res.json({
+//       success: true,
+//       data: data,
+//     });
+//   } catch (error) {
+//     console.error("Erreur ticket-office:", error);
+//     res.status(500).json({
+//       success: false,
+//       message: "Erreur lors de la récupération des messages",
+//       error: error.message,
+//     });
+//   }
+// });
+
+// Get collection size
+router.route("/admin/collection-size/:name").get(async (req, res) => {
   try {
-    const params = new URLSearchParams({
-      fromApplication: "datasupr",
-      status: "new",
-    });
-
-    const response = await fetch(
-      `https://ticket-office.dataesr.ovh/api/contacts?${params}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Basic ${process.env.TICKET_OFFICE_BASIC_AUTH}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    res.json({
-      success: true,
-      data: data,
-    });
+    const collectionName = req.params.name;
+    const totalDocs = await db.collection(collectionName).countDocuments();
+    res.json({ size: totalDocs });
   } catch (error) {
-    console.error("Erreur ticket-office:", error);
-    res.status(500).json({
-      success: false,
-      message: "Erreur lors de la récupération des messages",
-      error: error.message,
+    console.error("Error getting collection size:", error);
+    res.status(500).json({ 
+      error: "Unable to get collection size", 
+      details: error.message 
+    });
+  }
+});
+
+// Get copy progress
+router.route("/admin/copy-progress/:name").get(async (req, res) => {
+  try {
+    const collectionName = req.params.name;
+    const copiedSize = copyProgress.get(collectionName) || 0;
+    res.json({ copiedSize });
+  } catch (error) {
+    console.error("Error getting copy progress:", error);
+    res.status(500).json({ 
+      error: "Unable to get copy progress", 
+      details: error.message 
     });
   }
 });

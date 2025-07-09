@@ -1,0 +1,58 @@
+{
+  "title": {
+    "fr": "Classement par pays",
+    "en": "Country ranking"
+  },
+  "focus-on-subsidies": {
+    "fr": "Focus sur les subventions",
+    "en": "Focus on subsidies"
+  },
+  "focus-on-coordination": {
+    "fr": "Focus sur les coordinations de projets",
+    "en": "Focus on project coordinations"
+  },
+  "focus-on-participations" : {
+    "fr": "Focus sur les candidat et participants",
+    "en": "Focus on candidates and participants"
+  },
+  "focus-on-rates": {
+    "fr": "Focus sur les parts des financements",
+    "en": "Focus on funding shares"
+  },
+  "sort-by-evaluated-project": {
+    "fr": "Trier par projets évalués",
+    "en": "Sort by evaluated projects"
+  },
+  "sort-by-successful-project": {
+    "fr": "Trier par projets lauréats",
+    "en": "Sort by successful projects"
+  },
+  "show_more_countries": {
+    "fr": "Afficher plus de pays (+5)",
+    "en": "Show more countries (+5)"
+  },
+  "number-of-common-projects": {
+    "fr": "Nombre de projets communs",
+    "en": "Number of common projects"
+  },
+  "collaborations-count": {
+    "fr": "Collaborations",
+    "en": "Collaborations"
+  },
+  "total-collaborations": {
+    "fr": "Nombre total de collaborations : ",
+    "en": "Total collaborations: "
+  },
+  "neighbouring-countries": {
+    "fr": "Pays frontaliers",
+    "en": "Neighbouring countries"
+  },
+  "countries": {
+    "fr": "Pays",
+    "en": "Countries"
+  },
+  "neighbouring": {
+    "fr": "frontaliers",
+    "en": "neighbouring"
+  }
+}

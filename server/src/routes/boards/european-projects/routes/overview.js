@@ -132,59 +132,6 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
   });
 });
 
-router.route("/european-projects/main-beneficiaries").get(async (req, res) => {
-  if (!req.query.country_code) {
-    res.status(400).send("country_code is required");
-    return;
-  }
-
-  const filters = checkQuery(req.query, ["country_code"], res);
-  filters.framework = "Horizon Europe";
-  const data = await db
-    .collection("fr-esr-horizon-projects-entities")
-    .aggregate([
-      {
-        $match: filters,
-      },
-      {
-        $group: {
-          _id: {
-            name: "$entities_name",
-            acronym: "$entities_acronym",
-          },
-          total_fund_eur: { $sum: "$fund_eur" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          name: "$_id.name",
-          acronym: "$_id.acronym",
-          total_fund_eur: 1,
-        },
-      },
-      {
-        $sort: { total_fund_eur: -1 },
-      },
-    ])
-    .toArray();
-
-  const total = data.reduce((acc, el) => acc + el.total_fund_eur, 0);
-  const half = total / 2;
-
-  // get list who represent 50% of the total
-  const list = [];
-  let currentTotal = 0;
-  for (let i = 0; i < data.length; i++) {
-    if (currentTotal < half) {
-      list.push(data[i]);
-      currentTotal += data[i].total_fund_eur;
-    }
-  }
-
-  return res.json({ total_fund_eur: total, list });
-});
-
 router.route("/european-projects/funded-objectives").get(async (req, res) => {
   const filters = checkQuery(
     req.query,

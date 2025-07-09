@@ -1,0 +1,14 @@
+{
+  "total-subsidies":{
+    "fr": "Total des subventions : ",
+    "en": "Total subsidies: "
+  },
+  "coordinator":{
+    "fr": "Coordinateur",
+    "en": "Coordinator"
+  },
+  "partner":{
+    "fr": "Partenaire",
+    "en": "Partner"
+  }
+}

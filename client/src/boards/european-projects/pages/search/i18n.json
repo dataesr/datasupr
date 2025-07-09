@@ -23,14 +23,6 @@
     "fr":"Réinitialiser",
     "en":"Reset"
   },
-  "find-entity":{
-    "fr":"Trouver une entité",
-    "en":"Find an entity"
-  },
-  "find-entity-placeholder":{
-    "fr":"Nom de l'entité",
-    "en":"Entity name"
-  },
   "select":{
     "fr":"sélectionner tout",
     "en":"select all"
