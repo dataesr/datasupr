@@ -107,6 +107,10 @@ export function EstablishmentTypeChart() {
     }));
   }, [establishmentData]);
 
+  if (context === "structures" && contextId) {
+    return null;
+  }
+
   if (isLoading) {
     return (
       <div className="fr-text--center fr-py-3w">

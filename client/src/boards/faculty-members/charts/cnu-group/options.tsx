@@ -23,45 +23,49 @@ interface GroupedData {
 export const createCnuGroupsChartOptions = (
   data: DataPoint[],
   categories: string[],
-  groupedData: GroupedData[]
+  groupedData: GroupedData[],
+  isGroupedView: boolean
 ): Highcharts.Options => {
-  const seriesData = data
-    .map((point) => {
-      const disciplineIndex = point.x;
-      const disciplineInfo = groupedData[disciplineIndex];
-      if (!disciplineInfo || disciplineInfo.groups.length === 0) return null;
+  const seriesData = isGroupedView
+    ? data
+        .map((point) => {
+          const disciplineIndex = point.x;
+          const disciplineInfo = groupedData[disciplineIndex];
+          if (!disciplineInfo || disciplineInfo.groups.length === 0)
+            return null;
 
-      const numberOfGroups = disciplineInfo.groups.length;
-      const groupIndex = disciplineInfo.groups.findIndex(
-        (g) => g.cnuGroupId === point.cnuGroupId
-      );
-      if (groupIndex === -1) return null;
+          const numberOfGroups = disciplineInfo.groups.length;
+          const groupIndex = disciplineInfo.groups.findIndex(
+            (g) => g.cnuGroupId === point.cnuGroupId
+          );
+          if (groupIndex === -1) return null;
 
-      const barWidthInPixels = 12;
-      const spacingInPixels = 4;
+          const barWidthInPixels = 12;
+          const spacingInPixels = 4;
 
-      const groupWidthInPixels =
-        numberOfGroups * barWidthInPixels +
-        Math.max(0, numberOfGroups - 1) * spacingInPixels;
+          const groupWidthInPixels =
+            numberOfGroups * barWidthInPixels +
+            Math.max(0, numberOfGroups - 1) * spacingInPixels;
 
-      const pixelToAxisUnitRatio = 1 / (groupWidthInPixels * 2);
-      const groupWidth = groupWidthInPixels * pixelToAxisUnitRatio;
+          const pixelToAxisUnitRatio = 1 / (groupWidthInPixels * 2);
+          const groupWidth = groupWidthInPixels * pixelToAxisUnitRatio;
 
-      const startOffset = -groupWidth / 2;
-      const barOffset =
-        groupIndex *
-        (barWidthInPixels + spacingInPixels) *
-        pixelToAxisUnitRatio;
+          const startOffset = -groupWidth / 2;
+          const barOffset =
+            groupIndex *
+            (barWidthInPixels + spacingInPixels) *
+            pixelToAxisUnitRatio;
 
-      const xPos = disciplineIndex + startOffset + barOffset;
+          const xPos = disciplineIndex + startOffset + barOffset;
 
-      return {
-        ...point,
-        x: xPos,
-        disciplineIndex: disciplineIndex,
-      };
-    })
-    .filter(Boolean);
+          return {
+            ...point,
+            x: xPos,
+            disciplineIndex: disciplineIndex,
+          };
+        })
+        .filter(Boolean)
+    : data;
 
   return {
     chart: {

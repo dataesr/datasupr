@@ -87,6 +87,7 @@ export default function CnuGroupsChart() {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId, contextName } = useContextDetection();
+  const isDisciplineContext = context === "fields" && !!contextId;
 
   const { data: cnuData } = useFacultyMembersCNU({
     context,
@@ -194,13 +195,56 @@ export default function CnuGroupsChart() {
     );
   }, [groupedData]);
 
-  const categories = groupedData.map((d) => d.discipline);
+  const categories = useMemo(() => {
+    if (isDisciplineContext && groupedData.length > 0) {
+      return groupedData[0].groups.map(
+        (g) => `${g.cnuGroupLabel} (Groupe ${g.cnuGroupId})`
+      );
+    }
+    return groupedData.map((d) => d.discipline);
+  }, [isDisciplineContext, groupedData]);
 
   const data: DataPoint[] = useMemo(() => {
-    const result: DataPoint[] = [];
+    if (isDisciplineContext && groupedData.length > 0) {
+      const result: DataPoint[] = [];
+      const singleDiscipline = groupedData[0];
+      const baseColor =
+        getColorForDiscipline(singleDiscipline.discipline) || "";
 
+      singleDiscipline.groups.forEach((group, index) => {
+        const typedGroup = group as CNUGroup;
+        const maleCount = typedGroup.maleCount || 0;
+        const femaleCount = typedGroup.femaleCount || 0;
+        const totalCount = typedGroup.totalCount || 0;
+        const groupId = typedGroup.cnuGroupId || "";
+        const groupLabel = typedGroup.cnuGroupLabel || "";
+
+        result.push({
+          name: `${groupLabel} (Groupe ${groupId})`,
+          y: totalCount,
+          x: index,
+          disciplineIndex: 0,
+          cnuGroupId: groupId,
+          color: getShade(baseColor, index, singleDiscipline.groups.length),
+          maleCount,
+          femaleCount,
+          malePercent:
+            totalCount > 0 ? Math.round((maleCount / totalCount) * 100) : 0,
+          femalePercent:
+            totalCount > 0 ? Math.round((femaleCount / totalCount) * 100) : 0,
+          cnuGroupPercent:
+            singleDiscipline.totalCount > 0
+              ? Math.round((totalCount / singleDiscipline.totalCount) * 100)
+              : 0,
+        });
+      });
+      return result;
+    }
+
+    const result: DataPoint[] = [];
     groupedData.forEach((itemData) => {
       const baseColor = getColorForDiscipline(itemData.discipline) || "";
+      const disciplineIndex = categories.indexOf(itemData.discipline);
 
       itemData.groups.forEach((group, index) => {
         const typedGroup = group as CNUGroup;
@@ -213,12 +257,11 @@ export default function CnuGroupsChart() {
         result.push({
           name: `${groupLabel} (Groupe ${groupId})`,
           y: totalCount,
-          x: categories.indexOf(itemData.discipline),
-          disciplineIndex: categories.indexOf(itemData.discipline),
+          x: disciplineIndex,
+          disciplineIndex: disciplineIndex,
           cnuGroupId: groupId,
           color: getShade(baseColor, index, itemData.groups.length),
           maleCount,
-
           femaleCount,
           malePercent:
             totalCount > 0 ? Math.round((maleCount / totalCount) * 100) : 0,
@@ -233,9 +276,14 @@ export default function CnuGroupsChart() {
     });
 
     return result;
-  }, [groupedData, categories]);
+  }, [isDisciplineContext, groupedData, categories]);
 
-  const options = createCnuGroupsChartOptions(data, categories, groupedData);
+  const options = createCnuGroupsChartOptions(
+    data,
+    categories,
+    groupedData,
+    !isDisciplineContext
+  );
 
   if (!cnuGroups || cnuGroups.length === 0) {
     return (
@@ -266,7 +314,7 @@ export default function CnuGroupsChart() {
             fr: "Groupes CNU",
           },
           description: {
-            fr: "Il y a11 groupes, eux-mêmes divisés en 52 sections, dont chacune correspond à une discipline. Chaque section comprend deux collèges où siègent en nombre égal d’une part, des représentants des professeurs des universités et personnels assimilés et, d’autre part, des représentants des maîtres de conférences et personnels assimilés. Ce graphique présente la répartition des enseignants-chercheurs par groupes CNU. La taille de chaque barre est proportionnelle au nombre d'enseignants-chercheurs dans le groupe. Les données incluent également la répartition par genre au sein de chaque groupe, permettant d'identifier les disparités hommes-femmes selon les disciplines scientifiques.",
+            fr: "Il est composé de 11 groupes, eux-mêmes divisés en 52 sections, dont chacune correspond à une discipline. Chaque section comprend deux collèges où siègent en nombre égal d’une part, des représentants des professeurs des universités et personnels assimilés et, d’autre part, des représentants des maîtres de conférences et personnels assimilés.Ce graphique présente la répartition des enseignants-chercheurs par groupes CNU. La taille de chaque barre est proportionnelle au nombre d'enseignants-chercheurs dans le groupe. Les données incluent également la répartition par genre au sein de chaque groupe, permettant d'identifier les disparités hommes-femmes selon les disciplines scientifiques.",
           },
           integrationURL: "/integration-url",
         }}
