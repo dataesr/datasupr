@@ -11,31 +11,63 @@ interface DataPoint {
   malePercent: number;
   femalePercent: number;
   cnuGroupPercent: number;
+  disciplineIndex: number;
 }
 
 interface GroupedData {
   discipline: string;
-  groups: unknown[];
+  groups: { cnuGroupId: string | number }[];
   totalCount: number;
 }
-
-const truncateText = (text: string, maxLength: number = 18): string => {
-  if (!text) return "";
-  return text.length > maxLength ? `${text.substring(0, maxLength)}...` : text;
-};
 
 export const createCnuGroupsChartOptions = (
   data: DataPoint[],
   categories: string[],
   groupedData: GroupedData[]
 ): Highcharts.Options => {
+  const seriesData = data
+    .map((point) => {
+      const disciplineIndex = point.x;
+      const disciplineInfo = groupedData[disciplineIndex];
+      if (!disciplineInfo || disciplineInfo.groups.length === 0) return null;
+
+      const numberOfGroups = disciplineInfo.groups.length;
+      const groupIndex = disciplineInfo.groups.findIndex(
+        (g) => g.cnuGroupId === point.cnuGroupId
+      );
+      if (groupIndex === -1) return null;
+
+      const barWidthInPixels = 12;
+      const spacingInPixels = 4;
+
+      const groupWidthInPixels =
+        numberOfGroups * barWidthInPixels +
+        Math.max(0, numberOfGroups - 1) * spacingInPixels;
+
+      const pixelToAxisUnitRatio = 1 / (groupWidthInPixels * 2);
+      const groupWidth = groupWidthInPixels * pixelToAxisUnitRatio;
+
+      const startOffset = -groupWidth / 2;
+      const barOffset =
+        groupIndex *
+        (barWidthInPixels + spacingInPixels) *
+        pixelToAxisUnitRatio;
+
+      const xPos = disciplineIndex + startOffset + barOffset;
+
+      return {
+        ...point,
+        x: xPos,
+        disciplineIndex: disciplineIndex,
+      };
+    })
+    .filter(Boolean);
+
   return {
     chart: {
       type: "column",
-      height: 400,
+      height: 450,
       backgroundColor: "transparent",
-
-      spacing: [10, 10, 60, 10],
     },
     title: {
       text: "",
@@ -45,25 +77,18 @@ export const createCnuGroupsChartOptions = (
     },
     xAxis: {
       categories,
+      min: 0,
+      max: categories.length - 1,
       labels: {
-        rotation: -45,
-        align: "right",
+        rotation: 0,
+        y: 20,
         style: {
-          fontSize: "11px",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
+          fontSize: "13px",
         },
         formatter: function () {
-          const index = categories.indexOf(this.value as string);
-          const totalCount = groupedData[index]?.totalCount || 0;
-          const truncatedValue = truncateText(this.value as string);
-
-          return `<span title="${
-            this.value
-          }">${truncatedValue}</span> <span style="font-weight:normal;color:#666666">(${totalCount.toLocaleString()})</span>`;
+          return `<div style="width: 100px; text-align: center; white-space: normal;">${this.value}</div>`;
         },
         useHTML: true,
-        y: 10,
       },
       lineWidth: 1,
       lineColor: "#E0E0E0",
@@ -74,38 +99,58 @@ export const createCnuGroupsChartOptions = (
     yAxis: {
       title: {
         text: "Effectifs",
-        style: {
-          color: "#666666",
-          fontSize: "12px",
-        },
-      },
-      labels: {
-        formatter: function () {
-          const value = Number(this.value);
-          return value >= 1000
-            ? `${(value / 1000).toFixed(value >= 10000 ? 0 : 1)}k`
-            : value.toString();
-        },
-        style: {
-          color: "#666666",
-        },
       },
       gridLineColor: "#F0F0F0",
-      gridLineDashStyle: "Dash",
     },
     tooltip: {
       useHTML: true,
-      backgroundColor: "rgba(255, 255, 255, 0.95)",
+      backgroundColor: "#FFFFFF",
       borderWidth: 1,
       borderColor: "#E0E0E0",
       borderRadius: 8,
-      shadow: true,
+      shadow: false,
+      positioner: function (labelWidth, labelHeight, point) {
+        const chart = this.chart;
+        const plotLeft = chart.plotLeft;
+        const plotWidth = chart.plotWidth;
+        const plotTop = chart.plotTop;
+        const plotHeight = chart.plotHeight;
+
+        let x = plotLeft + point.plotX - labelWidth / 2;
+        let y = plotTop + point.plotY - labelHeight - 10;
+
+        if (x < plotLeft) {
+          x = plotLeft;
+        }
+
+        if (x + labelWidth > plotLeft + plotWidth) {
+          x = plotLeft + plotWidth - labelWidth;
+        }
+
+        if (y + labelHeight > plotTop + plotHeight) {
+          y = plotTop + plotHeight - labelHeight;
+        }
+
+        if (y < plotTop) {
+          y = plotTop;
+        }
+
+        return {
+          x: x,
+          y: y,
+        };
+      },
       formatter: function () {
         const point = this.point as Highcharts.Point & DataPoint;
+        const disciplineInfo = groupedData[point.disciplineIndex];
+        const disciplineTotal = disciplineInfo.totalCount;
+        const disciplineName = disciplineInfo.discipline;
+
         return `<div style="padding:10px">
-                <div style="font-weight:bold;margin-bottom:8px;font-size:13px">${
+                <div style="font-weight:bold;margin-bottom:5px;font-size:13px">${
                   point.name
                 }</div>
+                <div style="font-size:12px;color:#666;margin-bottom:8px">Discipline: ${disciplineName} (${disciplineTotal.toLocaleString()} enseignants)</div>
                 <div style="font-size:16px;font-weight:bold;margin-bottom:10px">${point.y.toLocaleString()} enseignants</div>
                 <div style="color:#666;margin-bottom:8px">${
                   point.cnuGroupPercent
@@ -132,33 +177,11 @@ export const createCnuGroupsChartOptions = (
     },
     plotOptions: {
       column: {
-        stacking: "percent",
         borderWidth: 0,
         borderRadius: 3,
-        groupPadding: 0.15,
-        pointPadding: 0.05,
-      },
-      series: {
-        dataLabels: {
-          enabled: true,
-          formatter: function () {
-            const point = this.point as Highcharts.Point & DataPoint;
-            if (point.y < 1000) return "";
-            return `Gr.${point.cnuGroupId}`;
-          },
-          style: {
-            fontSize: "11px",
-            fontWeight: "normal",
-            color: "#FFFFFF",
-            textOutline: "1px contrast",
-          },
-          y: -5,
-        },
-        states: {
-          hover: {
-            brightness: 0.1,
-          },
-        },
+        colorByPoint: true,
+        grouping: false,
+        pointWidth: 12,
       },
     },
     legend: {
@@ -169,10 +192,9 @@ export const createCnuGroupsChartOptions = (
     },
     series: [
       {
-        name: "Groupes CNU",
-        data: data,
-        colorByPoint: true,
+        name: "Enseignants",
         type: "column",
+        data: seriesData,
       },
     ],
     responsive: {

@@ -62,6 +62,7 @@ interface DataPoint {
   malePercent: number;
   femalePercent: number;
   cnuGroupPercent: number;
+  disciplineIndex: number;
 }
 
 interface GroupedData {
@@ -213,9 +214,11 @@ export default function CnuGroupsChart() {
           name: `${groupLabel} (Groupe ${groupId})`,
           y: totalCount,
           x: categories.indexOf(itemData.discipline),
+          disciplineIndex: categories.indexOf(itemData.discipline),
           cnuGroupId: groupId,
           color: getShade(baseColor, index, itemData.groups.length),
           maleCount,
+
           femaleCount,
           malePercent:
             totalCount > 0 ? Math.round((maleCount / totalCount) * 100) : 0,
@@ -263,7 +266,7 @@ export default function CnuGroupsChart() {
             fr: "Groupes CNU",
           },
           description: {
-            fr: "Il y a 11 groupes CNU, eux-mêmes divisés en 52 sections, dont chacune correspond à une discipline. Chaque section comprend deux collèges où siègent en nombre égal d’une part, des représentants des professeurs des universités et personnels assimilés et, d’autre part, des représentants des maîtres de conférences et personnels assimilés. Ce graphique présente la répartition des enseignants-chercheurs par groupes CNU. La taille de chaque barre est proportionnelle au nombre d'enseignants-chercheurs dans le groupe. Les données incluent également la répartition par genre au sein de chaque groupe, permettant d'identifier les disparités hommes-femmes selon les disciplines scientifiques.",
+            fr: "Il y a11 groupes, eux-mêmes divisés en 52 sections, dont chacune correspond à une discipline. Chaque section comprend deux collèges où siègent en nombre égal d’une part, des représentants des professeurs des universités et personnels assimilés et, d’autre part, des représentants des maîtres de conférences et personnels assimilés. Ce graphique présente la répartition des enseignants-chercheurs par groupes CNU. La taille de chaque barre est proportionnelle au nombre d'enseignants-chercheurs dans le groupe. Les données incluent également la répartition par genre au sein de chaque groupe, permettant d'identifier les disparités hommes-femmes selon les disciplines scientifiques.",
           },
           integrationURL: "/integration-url",
         }}
