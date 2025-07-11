@@ -76,7 +76,7 @@ export default function Options(data, currentLang) {
           symbol: "circle",
           radius: 3,
           lineWidth: 2,
-          // lineColor: null,
+          // lineColor: undefined,
         },
         dataLabels: {
           enabled: true,

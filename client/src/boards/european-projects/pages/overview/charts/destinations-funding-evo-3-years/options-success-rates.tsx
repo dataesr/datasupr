@@ -1,8 +1,9 @@
 // import { formatToPercentage } from "../../../../../../utils/format";
 
 import { normalizeIdForCssColorNames } from "../../../../utils";
+import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
-export default function Options(data, displayType) {
+export default function Options(data, displayType): HighchartsOptions {
   if (!data) return null;
   const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
@@ -10,9 +11,7 @@ export default function Options(data, displayType) {
   const filteredData = data.filter((item) => item.country !== "all")[0].data;
   const allData = data.find((item) => item.country === "all").data;
 
-  filteredData
-    .find((item) => item.stage === "evaluated")
-    .destinations[0].years.forEach((year) => years.add(year.year));
+  filteredData.find((item) => item.stage === "evaluated").destinations[0].years.forEach((year) => years.add(year.year));
 
   return {
     chart: {
@@ -25,16 +24,16 @@ export default function Options(data, displayType) {
     credits: { enabled: false },
     xAxis: [
       {
-        type: "category",
-        categories: Array.from(years),
+        type: "category" as const,
+        categories: Array.from(years).map(String),
         width: "48%",
         title: {
           text: "Projets évalués",
         },
       },
       {
-        type: "category",
-        categories: Array.from(years),
+        type: "category" as const,
+        categories: Array.from(years).map(String),
         offset: 0,
         left: "50%",
         width: "48%",
@@ -77,7 +76,7 @@ export default function Options(data, displayType) {
           symbol: "circle",
           radius: 3,
           lineWidth: 2,
-          lineColor: null,
+          lineColor: undefined,
         },
         dataLabels: {
           enabled: true,
@@ -92,23 +91,15 @@ export default function Options(data, displayType) {
       .destinations.map((destinations) => {
         const allPillarData = allData
           .find((item) => item.stage === "evaluated")
-          .destinations.find(
-            (p) => p.destination_code === destinations.destination_code
-          );
+          .destinations.find((p) => p.destination_code === destinations.destination_code);
 
         return {
           name: destinations.destination_name_fr,
           data: destinations.years.map((year, index) => {
             const totalForYear = allPillarData.years[index][displayType];
-            return totalForYear > 0
-              ? (year[displayType] / totalForYear) * 100
-              : 0;
+            return totalForYear > 0 ? (year[displayType] / totalForYear) * 100 : 0;
           }),
-          color: rootStyles.getPropertyValue(
-            `--destination-${normalizeIdForCssColorNames(
-              destinations.destination_code
-            )}-color`
-          ),
+          color: rootStyles.getPropertyValue(`--destination-${normalizeIdForCssColorNames(destinations.destination_code)}-color`),
         };
       })
       .concat(
@@ -117,26 +108,18 @@ export default function Options(data, displayType) {
           .destinations.map((destinations) => {
             const allPillarData = allData
               .find((item) => item.stage === "successful")
-              .destinations.find(
-                (p) => p.destination_code === destinations.destination_code
-              );
+              .destinations.find((p) => p.destination_code === destinations.destination_code);
 
             return {
               xAxis: 1,
               name: destinations.destination_name_fr,
               data: destinations.years.map((year, index) => {
                 const totalForYear = allPillarData.years[index][displayType];
-                return totalForYear > 0
-                  ? (year[displayType] / totalForYear) * 100
-                  : 0;
+                return totalForYear > 0 ? (year[displayType] / totalForYear) * 100 : 0;
               }),
-              color: rootStyles.getPropertyValue(
-                `--destination-${normalizeIdForCssColorNames(
-                  destinations.destination_code
-                )}-color`
-              ),
+              color: rootStyles.getPropertyValue(`--destination-${normalizeIdForCssColorNames(destinations.destination_code)}-color`),
             };
           })
       ),
-  };
+  } as HighchartsOptions;
 }

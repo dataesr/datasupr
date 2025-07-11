@@ -67,7 +67,7 @@ export default function Options(data) {
           radius: 3,
           // fillColor: "#FFFFFF",
           lineWidth: 2,
-          lineColor: null,
+          lineColor: undefined,
         },
         dataLabels: {
           enabled: true,

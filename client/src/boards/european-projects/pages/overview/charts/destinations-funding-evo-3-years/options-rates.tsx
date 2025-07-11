@@ -1,6 +1,7 @@
 import { normalizeIdForCssColorNames } from "../../../../utils";
+import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
-export default function Options(data, displayType) {
+export default function Options(data, displayType): HighchartsOptions {
   if (!data) return null;
 
   const rootStyles = getComputedStyle(document.documentElement);
@@ -8,9 +9,7 @@ export default function Options(data, displayType) {
 
   const countryData = data.filter((item) => item.country !== "all")[0].data;
 
-  countryData
-    .find((item) => item.stage === "evaluated")
-    .destinations[0].years.forEach((year) => years.add(year.year));
+  countryData.find((item) => item.stage === "evaluated").destinations[0].years.forEach((year) => years.add(year.year));
 
   return {
     chart: {
@@ -23,8 +22,8 @@ export default function Options(data, displayType) {
     credits: { enabled: false },
     xAxis: [
       {
-        type: "category",
-        categories: Array.from(years),
+        type: "category" as const,
+        categories: Array.from(years).map(String),
         width: "100%",
         title: {
           text: "Projets évalués",
@@ -59,7 +58,7 @@ export default function Options(data, displayType) {
           symbol: "circle",
           radius: 3,
           lineWidth: 2,
-          lineColor: null,
+          lineColor: undefined,
         },
         dataLabels: {
           enabled: true,
@@ -74,26 +73,17 @@ export default function Options(data, displayType) {
       .destinations.map((destination) => {
         const successfulPillarData = countryData
           .find((item) => item.stage === "successful")
-          .destinations.find(
-            (p) => p.destination_code === destination.destination_code
-          );
+          .destinations.find((p) => p.destination_code === destination.destination_code);
 
         return {
           name: destination.thema_name_fr,
           data: destination.years.map((year, index) => {
             const evaluatedAmount = year[displayType];
-            const successfulAmount =
-              successfulPillarData.years[index][displayType];
-            return evaluatedAmount > 0
-              ? (successfulAmount / evaluatedAmount) * 100
-              : 0;
+            const successfulAmount = successfulPillarData.years[index][displayType];
+            return evaluatedAmount > 0 ? (successfulAmount / evaluatedAmount) * 100 : 0;
           }),
-          color: rootStyles.getPropertyValue(
-            `--destination-${normalizeIdForCssColorNames(
-              destination.destination_code
-            )}-color`
-          ),
+          color: rootStyles.getPropertyValue(`--destination-${normalizeIdForCssColorNames(destination.destination_code)}-color`),
         };
       }),
-  };
+  } as HighchartsOptions;
 }
