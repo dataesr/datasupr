@@ -1,18 +1,7 @@
 import { useId, useState } from "react";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import {
-  Button,
-  Col,
-  Container,
-  Modal,
-  ModalContent,
-  ModalTitle,
-  Radio,
-  Row,
-  Text,
-  Title,
-} from "@dataesr/dsfr-plus";
+import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Text, Title } from "@dataesr/dsfr-plus";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
@@ -21,8 +10,9 @@ import CopyButton from "../copy-button";
 import "./styles.scss";
 import { useSearchParams } from "react-router-dom";
 
-type ChartConfig = {
+export type ChartConfig = {
   id: string;
+  idQuery?: string;
   subtitle?: string;
   title?:
     | string
@@ -36,11 +26,12 @@ type ChartConfig = {
     | string
     | {
         [key: string]: string;
-      };
+      }
+    | null;
   integrationURL?: string;
 };
 
-type HighchartsOptions = Highcharts.Options;
+export type HighchartsOptions = Highcharts.Options | null;
 
 const { VITE_APP_URL } = import.meta.env;
 const source = "Commission européenne, Cordis";
@@ -200,7 +191,7 @@ export default function ChartWrapper({
   config: ChartConfig;
   options: HighchartsOptions;
   legend: React.ReactNode;
-  renderData?: (options: HighchartsOptions) => React.ReactNode;
+  renderData?: (options: Highcharts.Options) => React.ReactNode;
   hideTitle?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -212,6 +203,11 @@ export default function ChartWrapper({
 
   if (displayType === "data" && !renderData) {
     setDisplayType("chart");
+    return null;
+  }
+
+  // Si les options sont null, ne pas afficher le graphique
+  if (!options) {
     return null;
   }
 
@@ -228,15 +224,15 @@ export default function ChartWrapper({
           variant="text"
         />
       </div>
-      {displayType === "data" && renderData && <>{renderData(options)}</>}
-      {displayType === "chart" && (
+      {displayType === "data" && renderData && options && <>{renderData(options)}</>}
+      {displayType === "chart" && options && (
         <figure>
           <HighchartsReact highcharts={Highcharts} options={options} />
         </figure>
       )}
       <div className="graph-footer fr-pt-1w">
         {legend}
-        {config.description && (
+        {config.description && config.description !== null && (
           <div className="fr-notice fr-notice--info fr-mt-1w">
             <div className="fr-container">
               <div className="fr-notice__body">
@@ -258,6 +254,9 @@ export default function ChartWrapper({
     </section>
   );
 }
+
+// Ajout de la propriété Title au composant principal
+ChartWrapper.Title = ChartTitle;
 
 // Ajout de la propriété Title au composant principal
 ChartWrapper.Title = ChartTitle;

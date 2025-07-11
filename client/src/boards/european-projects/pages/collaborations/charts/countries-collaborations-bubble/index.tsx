@@ -30,7 +30,7 @@ export default function CountriesCollaborationsBubble() {
       en: "Countries that collaborated with the selected country",
     },
     subtitle: "",
-    description: null,
+    description: undefined,
     integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
   };
 
