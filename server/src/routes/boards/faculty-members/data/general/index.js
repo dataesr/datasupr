@@ -371,6 +371,36 @@ router.get("/faculty-members/navigation/:type", async (req, res) => {
         ];
         break;
 
+      case "academies":
+        aggregation = [
+          { $match: matchStage },
+          {
+            $group: {
+              _id: {
+                academie_code: "$etablissement_code_academie",
+                academie_name: "$etablissement_academie",
+              },
+              total_count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $match: {
+              "_id.academie_code": { $ne: null, $ne: "" },
+              "_id.academie_name": { $ne: null, $ne: "" },
+            },
+          },
+          {
+            $project: {
+              _id: 0,
+              id: "$_id.academie_code",
+              name: "$_id.academie_name",
+              total_count: 1,
+            },
+          },
+          { $sort: { total_count: -1 } },
+        ];
+        break;
+
       case "regions":
         aggregation = [
           { $match: matchStage },

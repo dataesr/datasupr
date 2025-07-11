@@ -20,7 +20,7 @@ interface NavigationResponse {
 }
 
 interface UseNavigationParams {
-  type: "fields" | "regions" | "structures";
+  type: "fields" | "regions" | "structures" | "academies";
   annee_universitaire: string;
   enabled?: boolean;
 }
