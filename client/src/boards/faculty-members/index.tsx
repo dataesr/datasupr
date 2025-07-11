@@ -9,14 +9,21 @@ import {
 } from "@dataesr/dsfr-plus";
 import { useNavigate } from "react-router-dom";
 import { SearchBar } from "./components/search-bar";
+import { useFacultyMembersYears } from "./api/general-queries";
 
 export function FacultyMembers() {
   const navigate = useNavigate();
+  const { data: yearsData } = useFacultyMembersYears();
 
   const handleClick =
     (url: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
-      navigate(url);
+      const latestYear = yearsData?.academic_years?.[0];
+      if (latestYear) {
+        navigate(`${url}?annee_universitaire=${latestYear}`);
+      } else {
+        navigate(url);
+      }
     };
 
   return (
