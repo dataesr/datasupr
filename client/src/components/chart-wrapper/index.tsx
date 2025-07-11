@@ -24,15 +24,19 @@ import { useSearchParams } from "react-router-dom";
 type ChartConfig = {
   id: string;
   subtitle?: string;
-  title?: {
-    [key: string]: React.ReactNode;
-    size?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
-    look?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
-    className?: string;
-  };
-  description?: {
-    [key: string]: string;
-  };
+  title?:
+    | string
+    | {
+        [key: string]: React.ReactNode;
+        size?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+        look?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+        className?: string;
+      };
+  description?:
+    | string
+    | {
+        [key: string]: string;
+      };
   integrationURL?: string;
 };
 
@@ -157,17 +161,30 @@ function ChartTitle({ config, children = null }: { config: ChartConfig; children
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
+  if (!config.title) return <>{children}</>;
+
+  // Si title est un string simple
+  if (typeof config.title === "string") {
+    return (
+      <>
+        <Title as="h2" look="h6" className="fr-mt-2w fr-mb-3w">
+          {config.title}
+        </Title>
+        {children}
+      </>
+    );
+  }
+
+  // Si title est un objet avec configuration
   return (
     <>
-      {config.title && (
-        <Title
-          as={config.title.size ? config.title.size : "h2"}
-          look={config.title.look ? config.title.look : "h6"}
-          className={config.title.className ? config.title.className : "fr-mt-2w fr-mb-3w"}
-        >
-          {config.title[currentLang]}
-        </Title>
-      )}
+      <Title
+        as={config.title.size ? config.title.size : "h2"}
+        look={config.title.look ? config.title.look : "h6"}
+        className={config.title.className ? config.title.className : "fr-mt-2w fr-mb-3w"}
+      >
+        {config.title[currentLang]}
+      </Title>
       {children}
     </>
   );
@@ -219,11 +236,11 @@ export default function ChartWrapper({
       )}
       <div className="graph-footer fr-pt-1w">
         {legend}
-        {config.description?.[currentLang] && (
+        {config.description && (
           <div className="fr-notice fr-notice--info fr-mt-1w">
             <div className="fr-container">
               <div className="fr-notice__body">
-                <Text className="description">{config.description[currentLang]}</Text>
+                <Text className="description">{typeof config.description === "string" ? config.description : config.description[currentLang]}</Text>
               </div>
             </div>
           </div>
