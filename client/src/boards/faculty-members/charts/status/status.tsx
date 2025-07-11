@@ -5,6 +5,7 @@ import ChartWrapper from "../../../../components/chart-wrapper";
 import { useContextDetection, generateIntegrationURL } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useStatusDistribution } from "./use-status-distribution";
+import SubtitleWithContext from "../../pages/typology/utils/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -159,7 +160,18 @@ const StatusDistribution: React.FC = () => {
         config={{
           id: "statusDistribution",
           idQuery: "status-distribution",
-          title: { fr: "Répartition des enseignants par statut " },
+          title: {
+            className: "fr-mt-0w",
+            look: "h5",
+            as: "h2",
+            fr: (
+              <>
+                Quelle est la répartition des statuts du personnel enseignant
+                par discipline ?&nbsp;
+                <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+              </>
+            ),
+          },
           description: {
             fr: `Ce graphique présente la répartition du personnel enseignant par statut selon les disciplines.
 
