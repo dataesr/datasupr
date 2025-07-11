@@ -1,21 +1,29 @@
 import i18n from "../i18n-global.json";
 
-export function GetLegend(legendArray: [string, string][], legendId: string, currentLang: string) {
+export function GetLegend(legendArray: [string, string][], legendId: string, currentLang: string, columns?: number) {
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
+
+  const columnStyle = columns
+    ? {
+        columnCount: columns,
+        columnGap: "20px",
+      }
+    : {};
 
   return (
     <fieldset>
       <legend>{getI18nLabel("legend")}</legend>
       <div className="legend">
-        <ul className="legend">
+        <ul className="legend" style={columnStyle}>
           {legendArray.map((item, index) => (
             <li
               style={{
                 display: "flex",
                 alignItems: "center",
                 marginBottom: "5px",
+                breakInside: "avoid",
               }}
               key={`${legendId}item[${index}]`}
             >

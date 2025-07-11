@@ -1,0 +1,38 @@
+{
+  "entity_type": {
+    "fr": "Type d'entité",
+    "en": "Entity type"
+  },
+  "years": {
+    "fr": "Années",
+    "en": "Years"
+  },
+  "fund_eur": {
+    "fr": "Financement (millions €)",
+    "en": "Funding (millions €)"
+  },
+  "evolution": {
+    "fr": "Évolution",
+    "en": "Evolution"
+  },
+  "REC": {
+    "fr": "Recherche",
+    "en": "Research"
+  },
+  "PUB": {
+    "fr": "Organisme public",
+    "en": "Public institution"
+  },
+  "PRC": {
+    "fr": "Organisme privé",
+    "en": "Private institution"
+  },
+  "HES": {
+    "fr": "Établissement d'enseignement supérieur",
+    "en": "Higher education institution"
+  },
+  "OTH": {
+    "fr": "Autre",
+    "en": "Other"
+  }
+}

@@ -10,17 +10,28 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 import i18n from "./i18n.json";
+import { Text } from "@dataesr/dsfr-plus";
 const rootStyles = getComputedStyle(document.documentElement);
 
 const config = {
   id: "top10beneficiaries",
   title: {
-    fr: "Top 10 des pays",
-    en: "Top 10 countries",
-  },
-  subtitle: {
-    fr: "Financements obtenus par type d'entités (en millions d'euros)",
-    en: "Funding obtained by type of entities (in millions of euros)",
+    fr: (
+      <>
+        Top 10 des pays
+        <Text className="fr-text--light">
+          <i>Financements obtenus par type d'entités (en millions d'euros)</i>
+        </Text>
+      </>
+    ),
+    en: (
+      <>
+        Top 10 countries
+        <Text className="fr-text--light">
+          <i>Funding obtained by type of entities (in millions of euros)</i>
+        </Text>
+      </>
+    ),
   },
   description: {
     fr: "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",

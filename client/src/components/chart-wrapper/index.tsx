@@ -21,6 +21,20 @@ import CopyButton from "../copy-button";
 import "./styles.scss";
 import { useSearchParams } from "react-router-dom";
 
+type ChartConfig = {
+  title?: {
+    [key: string]: React.ReactNode;
+    size?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+    look?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+    className?: string;
+  };
+  description?: {
+    [key: string]: string;
+  };
+  integrationURL?: string;
+};
+
+type HighchartsOptions = Highcharts.Options;
 
 const { VITE_APP_URL } = import.meta.env;
 const source = "Commission européenne, Cordis";
@@ -29,12 +43,7 @@ const sourceURL = "https://cordis.europa.eu/";
 function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
   const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc=${VITE_APP_URL}${graphConfig.integrationURL}></iframe>`;
   return (
-    <Modal
-      hide={() => setIsOpen(false)}
-      isOpen={isOpen}
-      key={`${modalId}-integrationModal`}
-      size="lg"
-    >
+    <Modal hide={() => setIsOpen(false)} isOpen={isOpen} key={`${modalId}-integrationModal`} size="lg">
       <ModalTitle>Intégrer ce graphique dans un autre site</ModalTitle>
       <ModalContent>
         <div className="text-right">
@@ -48,38 +57,17 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
   );
 }
 
-function MenuModal({
-  displayType,
-  isOpen,
-  setDisplayType,
-  setIsOpen,
-  setIsOpenIntegration,
-  modalId,
-}) {
+function MenuModal({ displayType, isOpen, setDisplayType, setIsOpen, setIsOpenIntegration, modalId }) {
   return (
-    <Modal
-      isOpen={isOpen}
-      hide={() => setIsOpen(false)}
-      size="sm"
-      key={modalId}
-    >
+    <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="sm" key={modalId}>
       <ModalContent className="modal-actions">
         <Title as="h1" look="h6">
-          <span
-            className="fr-icon-bar-chart-box-line fr-mr-1w"
-            aria-hidden="true"
-          />
+          <span className="fr-icon-bar-chart-box-line fr-mr-1w" aria-hidden="true" />
           Options du graphique
         </Title>
 
-        <fieldset
-          className="fr-fieldset"
-          aria-labelledby="sélection du type d'affichage"
-        >
-          <legend
-            className="fr-fieldset__legend--regular fr-fieldset__legend"
-            id="radio-hint-legend"
-          >
+        <fieldset className="fr-fieldset" aria-labelledby="sélection du type d'affichage">
+          <legend className="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-hint-legend">
             Type d'affichage
           </legend>
           <div className="fr-fieldset__element">
@@ -91,46 +79,23 @@ function MenuModal({
             />
           </div>
           <div className="fr-fieldset__element">
-            <Radio
-              defaultChecked={displayType === "data"}
-              label="Données"
-              name={`${modalId}_radio-hint`}
-              onClick={() => setDisplayType("data")}
-            />
+            <Radio defaultChecked={displayType === "data"} label="Données" name={`${modalId}_radio-hint`} onClick={() => setDisplayType("data")} />
           </div>
         </fieldset>
         <hr />
         <ul>
           <li>
-            <Button
-              color="beige-gris-galet"
-              icon="file-download-line"
-              title="téléchargement des données du graphique"
-              variant="text"
-              disabled
-            >
+            <Button color="beige-gris-galet" icon="file-download-line" title="téléchargement des données du graphique" variant="text" disabled>
               Télécharger les données (csv)
             </Button>
           </li>
           <li>
-            <Button
-              color="beige-gris-galet"
-              icon="image-line"
-              title="téléchargement de l'image"
-              variant="text"
-              disabled
-            >
+            <Button color="beige-gris-galet" icon="image-line" title="téléchargement de l'image" variant="text" disabled>
               Télécharger l'image (png)
             </Button>
           </li>
           <li>
-            <Button
-              color="beige-gris-galet"
-              icon="printer-line"
-              title="lancement de l'impression"
-              variant="text"
-              disabled
-            >
+            <Button color="beige-gris-galet" icon="printer-line" title="lancement de l'impression" variant="text" disabled>
               Imprimer
             </Button>
           </li>
@@ -143,27 +108,9 @@ function MenuModal({
                 Partager
               </Title>
               <div className="share">
-                <Button
-                  color="beige-gris-galet"
-                  icon="twitter-x-fill"
-                  title="Twitter-X"
-                  variant="text"
-                  disabled
-                />
-                <Button
-                  color="beige-gris-galet"
-                  icon="linkedin-box-fill"
-                  title="Linkedin"
-                  variant="text"
-                  disabled
-                />
-                <Button
-                  color="beige-gris-galet"
-                  icon="facebook-circle-fill"
-                  title="Linkedin"
-                  variant="text"
-                  disabled
-                />
+                <Button color="beige-gris-galet" icon="twitter-x-fill" title="Twitter-X" variant="text" disabled />
+                <Button color="beige-gris-galet" icon="linkedin-box-fill" title="Linkedin" variant="text" disabled />
+                <Button color="beige-gris-galet" icon="facebook-circle-fill" title="Linkedin" variant="text" disabled />
               </div>
             </Col>
             <Col>
@@ -203,7 +150,40 @@ function MenuModal({
   );
 }
 
-export default function ChartWrapper({ config, options, legend, renderData }) {
+// Composant Title exportable séparément
+function ChartTitle({ config, children = null }: { config: ChartConfig; children?: React.ReactNode }) {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+
+  return (
+    <>
+      {config.title && (
+        <Title
+          as={config.title.size ? config.title.size : "h2"}
+          look={config.title.look ? config.title.look : "h6"}
+          className={config.title.className ? config.title.className : "fr-mt-2w fr-mb-3w"}
+        >
+          {config.title[currentLang]}
+        </Title>
+      )}
+      {children}
+    </>
+  );
+}
+
+export default function ChartWrapper({
+  config,
+  options,
+  legend,
+  renderData,
+  hideTitle = false,
+}: {
+  config: ChartConfig;
+  options: HighchartsOptions;
+  legend: React.ReactNode;
+  renderData?: (options: HighchartsOptions) => React.ReactNode;
+  hideTitle?: boolean;
+}) {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
@@ -218,19 +198,7 @@ export default function ChartWrapper({ config, options, legend, renderData }) {
 
   return (
     <section>
-      {config.title && (
-        <Title
-          as={config.title.size ? config.title.size : "h2"}
-          look={config.title.look ? config.title.look : "h6"}
-          className={
-            config.title.className
-              ? config.title.className
-              : "fr-mt-2w fr-mb-3w"
-          }
-        >
-          {config.title[currentLang]}
-        </Title>
-      )}
+      {!hideTitle && <ChartTitle config={config} />}
       <div className="actions">
         <Button
           color="beige-gris-galet"
@@ -253,9 +221,7 @@ export default function ChartWrapper({ config, options, legend, renderData }) {
           <div className="fr-notice fr-notice--info fr-mt-1w">
             <div className="fr-container">
               <div className="fr-notice__body">
-                <Text className="description">
-                  {config.description[currentLang]}
-                </Text>
+                <Text className="description">{config.description[currentLang]}</Text>
               </div>
             </div>
           </div>
@@ -269,12 +235,10 @@ export default function ChartWrapper({ config, options, legend, renderData }) {
         setIsOpenIntegration={setIsOpenIntegration}
         modalId={modalId}
       />
-      <IntegrationModal
-        graphConfig={config}
-        isOpen={isOpenIntegration}
-        setIsOpen={setIsOpenIntegration}
-        modalId={modalId}
-      />
+      <IntegrationModal graphConfig={config} isOpen={isOpenIntegration} setIsOpen={setIsOpenIntegration} modalId={modalId} />
     </section>
   );
 }
+
+// Ajout de la propriété Title au composant principal
+ChartWrapper.Title = ChartTitle;
