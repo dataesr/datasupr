@@ -22,6 +22,8 @@ import "./styles.scss";
 import { useSearchParams } from "react-router-dom";
 
 type ChartConfig = {
+  id: string;
+  subtitle?: string;
   title?: {
     [key: string]: React.ReactNode;
     size?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
