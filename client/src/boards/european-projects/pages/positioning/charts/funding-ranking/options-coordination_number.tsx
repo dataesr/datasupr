@@ -1,4 +1,15 @@
-export default function OptionsCoordinationNumber(data, currentLang) {
+import * as Highcharts from "highcharts";
+
+interface DataItem {
+  name_fr: string;
+  name_en: string;
+  total_coordination_number_evaluated: number;
+  total_coordination_number_successful: number;
+  rank_coordination_number_evaluated: number;
+  rank_coordination_number_successful: number;
+}
+
+export default function OptionsCoordinationNumber(data: DataItem[], currentLang: string): Highcharts.Options | null {
   if (!data) return null;
 
   return {
@@ -34,12 +45,13 @@ export default function OptionsCoordinationNumber(data, currentLang) {
     },
     series: [
       {
+        type: "bar",
         name: "Coordination de projets déposés",
         colors: ["#009099"],
         colorByPoint: true,
         groupPadding: 0,
         data: data.map((item) => ({
-          name: item[`name_${currentLang}`],
+          name: item[`name_${currentLang}` as keyof DataItem],
           y: item.total_coordination_number_evaluated,
           rank_coordination_number_evaluated: item.rank_coordination_number_evaluated,
         })),
@@ -49,14 +61,15 @@ export default function OptionsCoordinationNumber(data, currentLang) {
             format: "{point.rank_coordination_number_evaluated}e",
           },
         ],
-      },
+      } as Highcharts.SeriesBarOptions,
       {
+        type: "bar",
         name: "Coordination de projets lauéats",
         colors: ["#233E41"],
         colorByPoint: true,
         groupPadding: 0,
         data: data.map((item) => ({
-          name: item[`name_${currentLang}`],
+          name: item[`name_${currentLang}` as keyof DataItem],
           y: item.total_coordination_number_successful,
           rank_coordination_number_successful: item.rank_coordination_number_successful,
         })),
@@ -66,7 +79,7 @@ export default function OptionsCoordinationNumber(data, currentLang) {
             format: "{point.rank_coordination_number_successful}e",
           },
         ],
-      },
+      } as Highcharts.SeriesBarOptions,
     ],
   };
 }

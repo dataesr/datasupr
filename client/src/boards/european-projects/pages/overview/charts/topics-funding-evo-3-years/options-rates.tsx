@@ -1,15 +1,14 @@
 import { normalizeIdForCssColorNames } from "../../../../utils";
+import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
-export default function Options(data, displayType) {
+export default function Options(data, displayType): HighchartsOptions {
   if (!data) return null;
   const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
 
   const countryData = data.filter((item) => item.country !== "all")[0].data;
 
-  countryData
-    .find((item) => item.stage === "evaluated")
-    .topics[0].years.forEach((year) => years.add(year.year));
+  countryData.find((item) => item.stage === "evaluated").topics[0].years.forEach((year) => years.add(year.year));
 
   return {
     chart: {
@@ -22,8 +21,8 @@ export default function Options(data, displayType) {
     credits: { enabled: false },
     xAxis: [
       {
-        type: "category",
-        categories: Array.from(years),
+        type: "category" as const,
+        categories: Array.from(years).map(String),
         width: "100%",
         title: {
           text: "Projets évalués",
@@ -71,24 +70,17 @@ export default function Options(data, displayType) {
     series: countryData
       .find((item) => item.stage === "evaluated")
       .topics.map((topic) => {
-        const successfulPillarData = countryData
-          .find((item) => item.stage === "successful")
-          .topics.find((p) => p.thema_code === topic.thema_code);
+        const successfulPillarData = countryData.find((item) => item.stage === "successful").topics.find((p) => p.thema_code === topic.thema_code);
 
         return {
           name: topic.thema_name_fr,
           data: topic.years.map((year, index) => {
             const evaluatedAmount = year[displayType];
-            const successfulAmount =
-              successfulPillarData.years[index][displayType];
-            return evaluatedAmount > 0
-              ? (successfulAmount / evaluatedAmount) * 100
-              : 0;
+            const successfulAmount = successfulPillarData.years[index][displayType];
+            return evaluatedAmount > 0 ? (successfulAmount / evaluatedAmount) * 100 : 0;
           }),
-          color: rootStyles.getPropertyValue(
-            `--topic-${normalizeIdForCssColorNames(topic.thema_code)}-color`
-          ),
+          color: rootStyles.getPropertyValue(`--topic-${normalizeIdForCssColorNames(topic.thema_code)}-color`),
         };
       }),
-  };
+  } as HighchartsOptions;
 }

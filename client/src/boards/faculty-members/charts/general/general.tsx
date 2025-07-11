@@ -108,12 +108,11 @@ const DistributionBar: React.FC = () => {
     idQuery: "discipline-distribution",
     title: {
       className: "fr-mt-0w",
-      look: "h5",
+      look: "h5" as const,
       as: "h2",
       fr: (
         <>
-          Quelles sont les disciplines qui emploient le plus de personnel
-          enseignant ?&nbsp;
+          Quelles sont les disciplines qui emploient le plus de personnel enseignant ?&nbsp;
           <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ),

@@ -1,9 +1,21 @@
-export default function Options(data) {
+import * as Highcharts from "highcharts";
+
+interface DataItem {
+  id: number;
+  name: string;
+  total_evaluated: number;
+  total_successful: number;
+}
+
+interface ChartData {
+  country: DataItem[];
+  all: DataItem[];
+}
+
+export default function Options(data: ChartData): Highcharts.Options | null {
   if (!data) return null;
 
-  const filteredData = data.country.filter(
-    (el) => el.total_evaluated && el.total_successful
-  );
+  const filteredData = data.country.filter((el) => el.total_evaluated && el.total_successful);
 
   return {
     chart: {
@@ -41,25 +53,23 @@ export default function Options(data) {
     },
     series: [
       {
+        type: "column",
         name: "Projets évalués",
-        data: filteredData.map(
-          (item) =>
-            (item.total_evaluated /
-              data.all.find((el) => el.id === item.id).total_evaluated) *
-            100
-        ),
+        data: filteredData.map((item) => {
+          const allItem = data.all.find((el) => el.id === item.id);
+          return allItem ? (item.total_evaluated / allItem.total_evaluated) * 100 : 0;
+        }),
         color: "#009099",
-      },
+      } as Highcharts.SeriesColumnOptions,
       {
+        type: "column",
         name: "Projets lauréats",
-        data: filteredData.map(
-          (item) =>
-            (item.total_successful /
-              data.all.find((el) => el.id === item.id).total_successful) *
-            100
-        ),
+        data: filteredData.map((item) => {
+          const allItem = data.all.find((el) => el.id === item.id);
+          return allItem ? (item.total_successful / allItem.total_successful) * 100 : 0;
+        }),
         color: "#233E41",
-      },
+      } as Highcharts.SeriesColumnOptions,
     ],
   };
 }

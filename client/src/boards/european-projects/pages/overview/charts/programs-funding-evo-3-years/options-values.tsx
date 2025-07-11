@@ -1,16 +1,15 @@
 import { formatToMillions } from "../../../../../../utils/format";
 import { normalizeIdForCssColorNames } from "../../../../utils";
+import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
-export default function Options(data, displayType) {
+export default function Options(data, displayType): HighchartsOptions {
   if (!data) return null;
   const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
 
   const filteredData = data.filter((item) => item.country !== "all")[0].data;
 
-  filteredData
-    .find((item) => item.stage === "evaluated")
-    .programs[0].years.forEach((year) => years.add(year.year));
+  filteredData.find((item) => item.stage === "evaluated").programs[0].years.forEach((year) => years.add(year.year));
 
   return {
     chart: {
@@ -23,16 +22,16 @@ export default function Options(data, displayType) {
     credits: { enabled: false },
     xAxis: [
       {
-        type: "category",
-        categories: Array.from(years),
+        type: "category" as const,
+        categories: Array.from(years).map(String),
         width: "48%",
         title: {
           text: "Projets évalués",
         },
       },
       {
-        type: "category",
-        categories: Array.from(years),
+        type: "category" as const,
+        categories: Array.from(years).map(String),
         offset: 0,
         left: "50%",
         width: "48%",
@@ -75,9 +74,7 @@ export default function Options(data, displayType) {
         dataLabels: {
           enabled: true,
           formatter: function (this: Highcharts.TooltipFormatterContextObject) {
-            return displayType === "total_fund_eur"
-              ? formatToMillions(this.y as number)
-              : (this.y as number);
+            return displayType === "total_fund_eur" ? formatToMillions(this.y as number) : (this.y as number);
           },
         },
       },
@@ -87,11 +84,7 @@ export default function Options(data, displayType) {
       .programs.map((program) => ({
         name: program.programme_name_fr,
         data: program.years.map((year) => year[displayType]),
-        color: rootStyles.getPropertyValue(
-          `--program-${normalizeIdForCssColorNames(
-            program.programme_code
-          )}-color`
-        ),
+        color: rootStyles.getPropertyValue(`--program-${normalizeIdForCssColorNames(program.programme_code)}-color`),
       }))
       .concat(
         filteredData
@@ -100,12 +93,8 @@ export default function Options(data, displayType) {
             xAxis: 1,
             name: program.programme_name_fr,
             data: program.years.map((year) => year[displayType]),
-            color: rootStyles.getPropertyValue(
-              `--program-${normalizeIdForCssColorNames(
-                program.programme_code
-              )}-color`
-            ),
+            color: rootStyles.getPropertyValue(`--program-${normalizeIdForCssColorNames(program.programme_code)}-color`),
           }))
       ),
-  };
+  } as HighchartsOptions;
 }

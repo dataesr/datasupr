@@ -1,8 +1,9 @@
 // import { formatToPercentage } from "../../../../../../utils/format";
 
 import { normalizeIdForCssColorNames } from "../../../../utils";
+import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
-export default function Options(data, displayType) {
+export default function Options(data, displayType): HighchartsOptions {
   if (!data) return null;
   const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
@@ -10,9 +11,7 @@ export default function Options(data, displayType) {
   const filteredData = data.filter((item) => item.country !== "all")[0].data;
   const allData = data.find((item) => item.country === "all").data;
 
-  filteredData
-    .find((item) => item.stage === "evaluated")
-    .topics[0].years.forEach((year) => years.add(year.year));
+  filteredData.find((item) => item.stage === "evaluated").topics[0].years.forEach((year) => years.add(year.year));
 
   return {
     chart: {
@@ -25,16 +24,16 @@ export default function Options(data, displayType) {
     credits: { enabled: false },
     xAxis: [
       {
-        type: "category",
-        categories: Array.from(years),
+        type: "category" as const,
+        categories: Array.from(years).map(String),
         width: "48%",
         title: {
           text: "Projets évalués",
         },
       },
       {
-        type: "category",
-        categories: Array.from(years),
+        type: "category" as const,
+        categories: Array.from(years).map(String),
         offset: 0,
         left: "50%",
         width: "48%",
@@ -90,47 +89,33 @@ export default function Options(data, displayType) {
     series: filteredData
       .find((item) => item.stage === "evaluated")
       .topics.map((topics) => {
-        const allPillarData = allData
-          .find((item) => item.stage === "evaluated")
-          .topics.find((p) => p.thema_code === topics.thema_code);
+        const allPillarData = allData.find((item) => item.stage === "evaluated").topics.find((p) => p.thema_code === topics.thema_code);
 
         return {
           name: topics.thema_name_fr,
           data: topics.years.map((year, index) => {
             const totalForYear = allPillarData.years[index][displayType];
-            return totalForYear > 0
-              ? (year[displayType] / totalForYear) * 100
-              : 0;
+            return totalForYear > 0 ? (year[displayType] / totalForYear) * 100 : 0;
           }),
-          color: rootStyles.getPropertyValue(
-            `--topic-${normalizeIdForCssColorNames(topics.thema_code)}-color`
-          ),
+          color: rootStyles.getPropertyValue(`--topic-${normalizeIdForCssColorNames(topics.thema_code)}-color`),
         };
       })
       .concat(
         filteredData
           .find((item) => item.stage === "successful")
           .topics.map((topics) => {
-            const allPillarData = allData
-              .find((item) => item.stage === "successful")
-              .topics.find((p) => p.thema_code === topics.thema_code);
+            const allPillarData = allData.find((item) => item.stage === "successful").topics.find((p) => p.thema_code === topics.thema_code);
 
             return {
               xAxis: 1,
               name: topics.thema_name_fr,
               data: topics.years.map((year, index) => {
                 const totalForYear = allPillarData.years[index][displayType];
-                return totalForYear > 0
-                  ? (year[displayType] / totalForYear) * 100
-                  : 0;
+                return totalForYear > 0 ? (year[displayType] / totalForYear) * 100 : 0;
               }),
-              color: rootStyles.getPropertyValue(
-                `--topic-${normalizeIdForCssColorNames(
-                  topics.thema_code
-                )}-color`
-              ),
+              color: rootStyles.getPropertyValue(`--topic-${normalizeIdForCssColorNames(topics.thema_code)}-color`),
             };
           })
       ),
-  };
+  } as HighchartsOptions;
 }

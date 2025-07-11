@@ -1,37 +1,52 @@
-export default function Options(data) {
+import * as Highcharts from "highcharts";
+
+interface FilteredDataItem {
+  year: number;
+  action_id: string;
+  total_evaluated: number;
+  total_successful: number;
+  country: string;
+}
+
+interface DataContainer {
+  data: FilteredDataItem[];
+  country: string;
+}
+
+export default function Options(data: DataContainer[]): Highcharts.Options | null {
   if (!data) return null;
 
   const filteredDataCountry = data.filter((item) => item.country !== "all")[0].data;
   const filteredDataAll = data.filter((item) => item.country === "all")[0].data;
 
-  const years = new Set();
+  const years = new Set<number>();
   filteredDataCountry.forEach((item) => years.add(item.year));
 
   // Obtenir les action_ids uniques
   const actionIds = [...new Set(filteredDataCountry.map((item) => item.action_id))];
 
   const series = actionIds.map((actionId) => ({
+    type: "line" as const,
     name: actionId,
     data: filteredDataCountry
       .filter((item) => item.action_id === actionId)
-      .map(
-        (item) =>
-          (item.total_evaluated * 100) /
-          filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.action_id === actionId).total_evaluated
-      ),
+      .map((item) => {
+        const allItem = filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.action_id === actionId);
+        return allItem ? (item.total_evaluated * 100) / allItem.total_evaluated : 0;
+      }),
     color: `var(--project-type-${(actionId as string).toLowerCase()}-color)`,
   }));
 
   const series2 = actionIds.map((actionId) => ({
+    type: "line" as const,
     name: actionId,
     xAxis: 1,
     data: filteredDataCountry
       .filter((item) => item.action_id === actionId)
-      .map(
-        (item) =>
-          (item.total_successful * 100) /
-          filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.action_id === actionId).total_successful
-      ),
+      .map((item) => {
+        const allItem = filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.action_id === actionId);
+        return allItem ? (item.total_successful * 100) / allItem.total_successful : 0;
+      }),
     color: `var(--project-type-${(actionId as string).toLowerCase()}-color)`,
   }));
 
@@ -47,7 +62,7 @@ export default function Options(data) {
     xAxis: [
       {
         type: "category",
-        categories: Array.from(years),
+        categories: Array.from(years).map((year) => year.toString()),
         width: "48%",
         title: {
           text: "Projets évalués",
@@ -55,7 +70,7 @@ export default function Options(data) {
       },
       {
         type: "category",
-        categories: Array.from(years),
+        categories: Array.from(years).map((year) => year.toString()),
         offset: 0,
         left: "50%",
         width: "48%",

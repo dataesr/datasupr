@@ -1,10 +1,11 @@
 import HighchartsInstance from "highcharts";
+import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
 import { formatToMillions } from "../../../../../../utils/format";
 import i18n from "../../../../i18n-global.json";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 
-export default function Options(data, currentLang) {
+export default function Options(data, currentLang): HighchartsOptions {
   if (!data) return null;
   const rootStyles = getComputedStyle(document.documentElement);
   const evaluatedYears = new Set<string>();
@@ -29,16 +30,16 @@ export default function Options(data, currentLang) {
   const newOptions: HighchartsInstance.Options = {
     xAxis: [
       {
-        type: "category",
-        categories: Array.from(evaluatedYears),
+        type: "category" as const,
+        categories: Array.from(evaluatedYears).map(String),
         width: "48%",
         title: {
           text: getI18nLabel("evaluated-projects"),
         },
       },
       {
-        type: "category",
-        categories: Array.from(successufulYears),
+        type: "category" as const,
+        categories: Array.from(successufulYears).map(String),
         offset: 0,
         left: "50%",
         width: "48%",
@@ -102,5 +103,5 @@ export default function Options(data, currentLang) {
       ),
   };
 
-  return CreateChartOptions("line", newOptions);
+  return CreateChartOptions("line", newOptions) as HighchartsOptions;
 }

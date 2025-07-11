@@ -1,3 +1,5 @@
+import * as Highcharts from "highcharts";
+
 interface FilteredDataItem {
   year: number;
   action_id: string;
@@ -6,21 +8,28 @@ interface FilteredDataItem {
   country: string;
 }
 
-interface SeriesItem {
+interface SeriesItem extends Highcharts.SeriesLineOptions {
   name: string;
   data: number[];
   color: string;
+  type: "line";
 }
 
-export default function Options(data) {
+interface DataContainer {
+  data: FilteredDataItem[];
+  country: string;
+}
+
+export default function Options(data: DataContainer[]): Highcharts.Options | null {
   if (!data) return null;
 
   const filteredData = data.filter((item) => item.country !== "all")[0].data.sort((a, b) => a.year - b.year);
 
-  const years = new Set();
+  const years = new Set<number>();
   filteredData.forEach((item) => years.add(item.year));
 
   const series: SeriesItem[] = Array.from(new Set(filteredData.map((item: FilteredDataItem) => item.action_id))).map((actionId) => ({
+    type: "line",
     name: actionId as string,
     data: filteredData
       .filter((item: FilteredDataItem) => item.action_id === actionId)
@@ -29,6 +38,7 @@ export default function Options(data) {
   }));
 
   const series2: SeriesItem[] = Array.from(new Set(filteredData.map((item: FilteredDataItem) => item.action_id))).map((actionId) => ({
+    type: "line",
     name: actionId as string,
     xAxis: 1,
     data: filteredData
@@ -49,7 +59,7 @@ export default function Options(data) {
     xAxis: [
       {
         type: "category",
-        categories: Array.from(years),
+        categories: Array.from(years).map((year) => year.toString()),
         width: "48%",
         title: {
           text: "Projets évalués",
@@ -57,7 +67,7 @@ export default function Options(data) {
       },
       {
         type: "category",
-        categories: Array.from(years),
+        categories: Array.from(years).map((year) => year.toString()),
         offset: 0,
         left: "50%",
         width: "48%",
