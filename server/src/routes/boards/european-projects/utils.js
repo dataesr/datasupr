@@ -22,18 +22,25 @@ export function checkQuery(query, mandatories = [], res) {
 // Fonction utilitaire pour gérer les index
 export async function recreateIndex(collection, indexSpec, indexName) {
   try {
-    // Vérifier si des index existent avec les mêmes spécifications
+    // Vérifier si des index existent avec le même nom ou des spécifications similaires
     const existingIndexes = await collection.listIndexes().toArray();
 
-    // Vérifier l'existence d'index similaires
+    // Vérifier l'existence d'index avec le même nom ou des spécifications similaires
     for (const index of existingIndexes) {
-      // Comparer les spécifications de l'index
+      // Si l'index a le même nom, le supprimer (même si les spécifications sont différentes)
+      if (index.name === indexName) {
+        await collection.dropIndex(index.name);
+        console.log(`Index existant ${index.name} supprimé car même nom`);
+        continue;
+      }
+
+      // Comparer les spécifications de l'index (pour les autres index)
       const isSpecMatch = Object.entries(indexSpec).every(
         ([key, value]) => index.key[key] === value
-      );
+      ) && Object.keys(index.key).length === Object.keys(indexSpec).length;
 
       if (isSpecMatch) {
-        // Si l'index existe avec un nom différent, le supprimer
+        // Si l'index existe avec des spécifications identiques mais un nom différent, le supprimer
         await collection.dropIndex(index.name);
         console.log(`Index existant ${index.name} supprimé car spécifications identiques`);
       }

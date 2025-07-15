@@ -96,6 +96,26 @@ router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries").get(asy
 
     const total = data.reduce((acc, el) => acc + el.total_fund_eur, 0);
 
+    // Récupérer toutes les années disponibles en fonction des filtres
+    const allYears = await db
+      .collection("ep_projects-entities_staging")
+      .aggregate([
+        {
+          $match: filters,
+        },
+        {
+          $group: {
+            _id: "$call_year"
+          }
+        },
+        {
+          $sort: { _id: 1 }
+        }
+      ])
+      .toArray();
+
+    const rangeOfYears = allYears.map(y => y._id).filter(year => year != null);
+
     // Logique pour le top 10 avec remplacement
     let resultData = [...data];
     const top10 = resultData.slice(0, 10);
@@ -110,7 +130,11 @@ router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries").get(asy
       return res.status(404).json({ error: "Aucune donnée trouvée pour ce pays" });
     }
 
-    res.status(200).json({ total_fund_eur: total, data: top10 });
+    res.status(200).json({ 
+      total_fund_eur: total, 
+      data: top10,
+      rangeOfYears 
+    });
   } catch (error) {
     console.error("Error fetching type by country:", error);
     res.status(500).json({ error: "Erreur interne du serveur" });
@@ -129,10 +153,10 @@ router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries_indexes")
         programme_code: 1,
         thema_code: 1,
         destination_code: 1,
-        // Champs utilisés dans le groupement et la projection
         country_code: 1,
-        cordis_type_entity_acro: 1,
-        fund_eur: 1
+        cordis_type_entity_code: 1,
+        fund_eur: 1,
+        call_year: 1
       },
       "idx_top10_countries_by_type_of_beneficiaries_covered"
     );
