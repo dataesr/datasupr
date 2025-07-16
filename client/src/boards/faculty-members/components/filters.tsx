@@ -3,6 +3,8 @@ import {
   Col,
   Modal,
   ModalContent,
+  ModalFooter,
+  ModalTitle,
   Row,
   Tab,
   Tabs,
@@ -48,45 +50,25 @@ const ContextFilter = ({
   data,
   onSelect,
   selectedItem,
-  searchTerm,
   type,
 }: {
   data: NavigationItem[];
   onSelect: (item: NavigationItem | null) => void;
   selectedItem: NavigationItem | null;
-  searchTerm: string;
   type: "discipline" | "region" | "academie" | "structure";
 }) => {
-  const filteredData = useMemo(
-    () =>
-      data?.filter((item) =>
-        item?.name?.toLowerCase().includes(searchTerm.toLowerCase())
-      ) || [],
-    [data, searchTerm]
-  );
-
   return (
     <div
       style={{
         height: "350px",
         overflowY: "auto",
-        padding: "0.5rem",
-        display: "flex",
-        flexWrap: "wrap",
-        gap: "0.5rem",
-        alignContent: "flex-start",
+        paddingRight: "1rem",
       }}
     >
-      {filteredData.map((item) => {
+      {data.map((item) => {
         const isSelected = selectedItem?.id === item.id;
         const disciplineColor =
           type === "discipline" ? getColorForDiscipline(item.name) : undefined;
-
-        const getBackgroundColor = () => {
-          if (isSelected) return "var(--background-action-low-blue-france)";
-          if (disciplineColor) return disciplineColor;
-          return "var(--blue-ecume-moon-675)";
-        };
 
         return (
           <div
@@ -94,13 +76,27 @@ const ContextFilter = ({
             onClick={() => onSelect(item)}
             style={{
               cursor: "pointer",
-              padding: "0.25rem 0.75rem",
-              border: "1px solid transparent",
-              borderRadius: "1rem",
-              fontSize: "0.85rem",
-              color: "var(--text-action-high-grey)",
-              backgroundColor: getBackgroundColor(),
+              padding: "0.75rem 1rem",
+              backgroundColor: isSelected
+                ? "var(--background-action-low-blue-france)"
+                : "transparent",
+              borderLeft: "4px solid",
+              borderColor: isSelected
+                ? "var(--blue-cumulus-sun-368)"
+                : disciplineColor || "var(--border-default-grey)",
+              marginBottom: "0.25rem",
               transition: "background-color 0.2s ease-in-out",
+            }}
+            onMouseEnter={(e) => {
+              if (!isSelected) {
+                e.currentTarget.style.backgroundColor =
+                  "var(--background-alt-grey)";
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isSelected) {
+                e.currentTarget.style.backgroundColor = "transparent";
+              }
             }}
           >
             {item.name}
@@ -151,11 +147,37 @@ const YearSelector = () => {
     enabled: isOpen,
   });
 
-  useEffect(() => {
-    if (years.length > 0 && !searchParams.get("annee_universitaire")) {
-      setSelectedYear(years[0]);
-    }
-  }, [years, searchParams]);
+  const filteredDisciplines = useMemo(
+    () =>
+      disciplines?.items?.filter((item) =>
+        item?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+      ) || [],
+    [disciplines?.items, searchTerm]
+  );
+
+  const filteredRegions = useMemo(
+    () =>
+      regions?.items?.filter((item) =>
+        item?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+      ) || [],
+    [regions?.items, searchTerm]
+  );
+
+  const filteredAcademies = useMemo(
+    () =>
+      academies?.items?.filter((item) =>
+        item?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+      ) || [],
+    [academies?.items, searchTerm]
+  );
+
+  const filteredStructures = useMemo(
+    () =>
+      structures?.items?.filter((item) =>
+        item?.name?.toLowerCase().includes(searchTerm.toLowerCase())
+      ) || [],
+    [structures?.items, searchTerm]
+  );
 
   useEffect(() => {
     if (isOpen) {
@@ -194,8 +216,9 @@ const YearSelector = () => {
           return;
       }
       navigate(`${path}?${params.toString()}`);
-    }
-    // on garde ce else si juste l'année est changé, mais ça peut changer en fait
+    } 
+        // on garde ce else si juste l'année est changé, mais ça peut changer en fait
+
     else if (selectedYear !== initialYear) {
       const newParams = new URLSearchParams(searchParams);
       newParams.set("annee_universitaire", selectedYear);
@@ -237,94 +260,78 @@ const YearSelector = () => {
         Filtrer les données
       </Button>
       <Modal isOpen={isOpen} hide={handleClose} size="lg">
+        <ModalTitle>Filtrer les données</ModalTitle>
         <ModalContent>
-          <div>
-            <h1 className="fr-modal__title" style={{ fontSize: "1.5rem" }}>
-              Filtrer les données
-            </h1>
-          </div>
-          <div style={{ padding: "1.5rem", flexGrow: 1, overflowY: "hidden" }}>
-            <YearFilter
-              years={years}
-              selectedYear={selectedYear}
-              onYearChange={handleYearChange}
-            />
-            <hr />
-            <input
-              type="search"
-              placeholder="Rechercher..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="fr-input"
-              style={{ marginBottom: "1rem" }}
-            />
-            <Tabs>
-              <Tab label="Disciplines">
-                <ContextFilter
-                  type="discipline"
-                  data={disciplines?.items || []}
-                  onSelect={(item) =>
-                    item && handleContextSelect(item, "discipline")
-                  }
-                  selectedItem={selectedContextItem}
-                  searchTerm={searchTerm}
-                />
-              </Tab>
-              <Tab label="Régions">
-                <ContextFilter
-                  type="region"
-                  data={regions?.items || []}
-                  onSelect={(item) =>
-                    item && handleContextSelect(item, "region")
-                  }
-                  selectedItem={selectedContextItem}
-                  searchTerm={searchTerm}
-                />
-              </Tab>
-              <Tab label="Académies">
-                <ContextFilter
-                  type="academie"
-                  data={academies?.items || []}
-                  onSelect={(item) =>
-                    item && handleContextSelect(item, "academie")
-                  }
-                  selectedItem={selectedContextItem}
-                  searchTerm={searchTerm}
-                />
-              </Tab>
-              <Tab label="Établissements">
-                <ContextFilter
-                  type="structure"
-                  data={structures?.items || []}
-                  onSelect={(item) =>
-                    item && handleContextSelect(item, "structure")
-                  }
-                  selectedItem={selectedContextItem}
-                  searchTerm={searchTerm}
-                />
-              </Tab>
-            </Tabs>
-          </div>
-          <div
-            style={{
-              padding: "1.5rem",
-              borderTop: "1px solid var(--border-default-grey)",
-              display: "flex",
-              justifyContent: "flex-end",
-              gap: "1rem",
-            }}
-          >
-            <Button variant="secondary" onClick={handleClose}>
-              Annuler
-            </Button>
-            <Button
-              onClick={handleApplyFilters}
-              disabled={!selectedContextItem && selectedYear === initialYear}
+          <YearFilter
+            years={years}
+            selectedYear={selectedYear}
+            onYearChange={handleYearChange}
+          />
+          <hr />
+          <input
+            type="search"
+            placeholder="Rechercher..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="fr-input"
+            style={{ marginBottom: "1rem" }}
+          />
+          <Tabs>
+            <Tab
+              label={`Disciplines (${filteredDisciplines.length})`}
             >
-              Appliquer les filtres
-            </Button>
-          </div>
+              <ContextFilter
+                type="discipline"
+                data={filteredDisciplines}
+                onSelect={(item) =>
+                  item && handleContextSelect(item, "discipline")
+                }
+                selectedItem={selectedContextItem}
+              />
+            </Tab>
+            <Tab label={`Régions (${filteredRegions.length})`}>
+              <ContextFilter
+                type="region"
+                data={filteredRegions}
+                onSelect={(item) => item && handleContextSelect(item, "region")}
+                selectedItem={selectedContextItem}
+              />
+            </Tab>
+            <Tab label={`Académies (${filteredAcademies.length})`}>
+              <ContextFilter
+                type="academie"
+                data={filteredAcademies}
+                onSelect={(item) =>
+                  item && handleContextSelect(item, "academie")
+                }
+                selectedItem={selectedContextItem}
+              />
+            </Tab>
+            <Tab
+              label={`Établissements (${filteredStructures.length})`}
+            >
+              <ContextFilter
+                type="structure"
+                data={filteredStructures}
+                onSelect={(item) =>
+                  item && handleContextSelect(item, "structure")
+                }
+                selectedItem={selectedContextItem}
+              />
+            </Tab>
+          </Tabs>
         </ModalContent>
+        <ModalFooter >
+          <Button variant="secondary"  onClick={handleClose}>
+            Annuler
+          </Button>
+          <Button
+            onClick={handleApplyFilters}
+            disabled={!selectedContextItem && selectedYear === initialYear}
+          >
+            Appliquer les filtres
+          </Button>
+        </ModalFooter>
       </Modal>
     </>
   );
