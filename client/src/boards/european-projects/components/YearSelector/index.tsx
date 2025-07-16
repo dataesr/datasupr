@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import i18n from "./i18n.json";
+import { Button } from "@dataesr/dsfr-plus";
 
 interface YearSelectorProps {
   availableYears: (string | number)[];
@@ -50,10 +51,10 @@ export default function YearSelector({ availableYears, selectedYears, onYearsCha
     setIsDropdownOpen(false);
   };
 
-  const handleCancelChanges = () => {
-    setTempSelectedYears(selectedYears);
-    setIsDropdownOpen(false);
-  };
+  // const handleCancelChanges = () => {
+  //   setTempSelectedYears(selectedYears);
+  //   setIsDropdownOpen(false);
+  // };
 
   const handleResetYears = () => {
     const allYears = availableYears.map((year) => year.toString());
@@ -139,7 +140,7 @@ export default function YearSelector({ availableYears, selectedYears, onYearsCha
             borderRadius: "4px",
             boxShadow: "0 8px 24px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.1)",
             zIndex: 1000,
-            maxHeight: "200px",
+            maxHeight: "250px",
             overflowY: "auto",
             animation: "dropdownSlideIn 0.2s ease-out",
             transformOrigin: "top",
@@ -182,7 +183,6 @@ export default function YearSelector({ availableYears, selectedYears, onYearsCha
             </label>
           ))}
 
-          {/* Boutons de validation */}
           <div
             style={{
               display: "flex",
@@ -192,15 +192,17 @@ export default function YearSelector({ availableYears, selectedYears, onYearsCha
               backgroundColor: "#f8f9fa",
             }}
           >
-            <button className="fr-btn fr-btn--sm fr-btn--tertiary" onClick={handleResetYears} style={{ flex: 1 }} title={getI18nLabel("reset")}>
-              {getI18nLabel("reset")}
-            </button>
-            <button className="fr-btn fr-btn--sm" onClick={handleApplyChanges} style={{ flex: 1 }}>
+            <Button
+              icon="arrow-go-back-fill"
+              onClick={handleResetYears}
+              size="sm"
+              style={{ flex: 1 }}
+              title={getI18nLabel("reset")}
+              variant="tertiary"
+            />
+            <Button onClick={handleApplyChanges} size="sm" style={{ flex: 1 }}>
               {getI18nLabel("apply")}
-            </button>
-            <button className="fr-btn fr-btn--sm fr-btn--secondary" onClick={handleCancelChanges} style={{ flex: 1 }}>
-              {getI18nLabel("cancel")}
-            </button>
+            </Button>
           </div>
         </div>
       )}

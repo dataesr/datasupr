@@ -47,6 +47,7 @@ export default function Top10CountriesByTypeOfBeneficiaries() {
   const currentLang = searchParams.get("language") || "fr";
   const params = getDefaultParams(searchParams);
   const [selectedYears, setSelectedYears] = useState<string[]>([]);
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
 
   // Query pour récupérer les données initiales (sans filtre d'années)
   const { data: initialData, isLoading: isInitialLoading } = useQuery({
@@ -94,10 +95,67 @@ export default function Top10CountriesByTypeOfBeneficiaries() {
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
+
+  function Filters() {
+    return (
+      <div className="filters">
+        <div style={{ display: "flex", alignItems: "center", gap: "12px", marginBottom: filtersExpanded ? "16px" : "0" }}>
+          <button
+            className="fr-btn fr-btn--sm fr-btn--tertiary"
+            onClick={() => setFiltersExpanded(!filtersExpanded)}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
+              transition: "all 0.2s ease-in-out",
+            }}
+          >
+            <span
+              style={{
+                transition: "transform 0.2s ease-in-out",
+                transform: filtersExpanded ? "rotate(90deg)" : "rotate(0deg)",
+              }}
+            >
+              ▶
+            </span>
+            {getI18nLabel("filters")}
+          </button>
+        </div>
+
+        {filtersExpanded && (
+          <div
+            style={{
+              animation: "filtersSlideIn 0.3s ease-out",
+              overflow: "hidden",
+            }}
+          >
+            <style>
+              {`
+                @keyframes filtersSlideIn {
+                  from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                    max-height: 0;
+                  }
+                  to {
+                    opacity: 1;
+                    transform: translateY(0);
+                    max-height: 200px;
+                  }
+                }
+              `}
+            </style>
+            <YearSelector availableYears={data.rangeOfYears || []} selectedYears={selectedYears} onYearsChange={setSelectedYears} />
+          </div>
+        )}
+      </div>
+    );
+  }
+
   return (
     <>
       <ChartWrapper.Title config={config}>
-        <YearSelector availableYears={data?.rangeOfYears || []} selectedYears={selectedYears} onYearsChange={setSelectedYears} />
+        <Filters />
       </ChartWrapper.Title>
       <ChartWrapper
         config={config}
