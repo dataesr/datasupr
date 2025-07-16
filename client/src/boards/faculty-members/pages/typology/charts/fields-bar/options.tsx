@@ -69,7 +69,10 @@ export const createBarChartOptions = ({
     visible: true,
     max: stackType === "percent" ? 100 : undefined,
     title: {
-      text: stackType === "percent" ? "Pourcentage" : "Effectif",
+      text:
+        stackType === "percent"
+          ? "Part du personnel enseignant par sexe"
+          : "Nombre de personnel enseignant par sexe",
     },
     labels: {
       formatter: function () {
@@ -85,14 +88,14 @@ export const createBarChartOptions = ({
             value: 50,
             zIndex: 5,
             label: {
-              text: "Parité Homme/Femme",
+              text: "Parité parfaite Homme / Femme",
               rotation: 0,
               verticalAlign: "top",
               style: {
                 color: "var(--blue-ecume-moon-675)",
                 fontSize: "14px",
               },
-              y: 2,
+              y: 3,
             },
           }
         : {},

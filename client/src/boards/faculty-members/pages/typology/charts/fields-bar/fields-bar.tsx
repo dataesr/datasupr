@@ -150,9 +150,11 @@ const ItemBarChart: React.FC = () => {
   const categories = sortedItems.map((d) => {
     const name = d.itemName;
     const count = d.totalCount.toLocaleString();
-    const style = d.isSelected ? "font-weight: bold; color: #000091;" : "";
+    const style = d.isSelected
+      ? "font-weight: bold; color: #161616;"
+      : "color: #161616;";
 
-    return `<span style="${style}">${name}</span> <span style="font-size:12px; color:#6a6156">(${count} personnes)</span>`;
+    return `<span style="${style}">${name}</span> <span style="font-size:12px; color:#161616">(${count} personnes)</span>`;
   });
 
   const femmesData =
@@ -231,20 +233,17 @@ const ItemBarChart: React.FC = () => {
     idQuery: "gender-distribution",
     title: {
       className: "fr-mt-0w",
-      look: "h5" as const,
+      look: "h6" as const,
       size: "h2" as const,
       fr: (
         <>
           Quelles sont les disciplines où le personnel enseignant est paritaire
           ?&nbsp;
-          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+          <SubtitleWithContext classText="fr-text--small fr-text--regular" />
         </>
       ),
     },
-    subtitle: `Année universitaire ${selectedYear}`,
-    description: {
-      fr: "",
-    },
+    subtitle: "",
   };
 
   const options = createBarChartOptions({
@@ -306,170 +305,122 @@ const ItemBarChart: React.FC = () => {
 
   return (
     <>
-      <Row gutters>
-        <Col md={12}>
-          <div style={{ position: "relative" }}>
-            <div
-              className="fr-btns-group fr-btns-group--sm"
-              style={{
-                position: "absolute",
-                top: "10px",
-                right: "10px",
-                zIndex: 10,
-                display: "flex",
-                flexDirection: "row",
-                gap: "4px",
-              }}
-            >
-              <Button
-                size="sm"
-                variant={sortKey === "total" ? "primary" : "secondary"}
-                onClick={() => setSortKey("total")}
-                title="Trier par effectif total"
-                style={{
-                  minWidth: "30px",
-                  width: "30px",
-                  height: "30px",
-                  padding: "0",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                T
-              </Button>
-              <Button
-                size="sm"
-                variant={sortKey === "femmesPercent" ? "primary" : "secondary"}
-                onClick={() => setSortKey("femmesPercent")}
-                title="Trier par pourcentage de femmes"
-                style={{
-                  minWidth: "30px",
-                  width: "30px",
-                  height: "30px",
-                  padding: "0",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                F
-              </Button>
-              <Button
-                size="sm"
-                variant={sortKey === "hommesPercent" ? "primary" : "secondary"}
-                onClick={() => setSortKey("hommesPercent")}
-                title="Trier par pourcentage d'hommes"
-                style={{
-                  minWidth: "30px",
-                  width: "30px",
-                  height: "30px",
-                  padding: "0",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                H
-              </Button>
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={() =>
-                  setStackType((prev) =>
-                    prev === "percent" ? "normal" : "percent"
-                  )
-                }
-                title={`Afficher en ${
-                  stackType === "percent" ? "effectifs" : "pourcentages"
-                }`}
-                style={{
-                  minWidth: "30px",
-                  width: "30px",
-                  height: "30px",
-                  padding: "0",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <i
-                  className={
-                    stackType === "percent" ? "ri-user-fill" : "ri-percent-fill"
-                  }
-                  aria-hidden="true"
-                ></i>
-              </Button>
-              <Button
-                size="sm"
-                variant="secondary"
-                onClick={() =>
-                  setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
-                }
-                title={`Trier par ordre ${
-                  sortOrder === "asc" ? "décroissant" : "croissant"
-                }`}
-                style={{
-                  minWidth: "30px",
-                  width: "30px",
-                  height: "30px",
-                  padding: "0",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <i
-                  className={
-                    sortOrder === "asc"
-                      ? "fr-icon-arrow-up-s-fill"
-                      : "fr-icon-arrow-down-s-fill"
-                  }
-                  aria-hidden="true"
-                ></i>
-              </Button>
+      <ChartWrapper.Title config={config}>
+        <Row>
+          <Col md={8}>
+            <div className="fr-mr-1w" style={{ display: "inline" }}>
+              Trier par effectif :
             </div>
-            <ChartWrapper
-              config={config}
-              options={options}
-              legend={null}
-              renderData={() => <RenderData data={sortedItems} />}
-            />
-            <Row horizontalAlign="center" className="fr-mb-4w">
-              <Col className="text-center">
-                <span className="fr-mr-3w">
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: "12px",
-                      height: "12px",
-                      backgroundColor: "#efcb3a",
-                      marginRight: "5px",
-                      borderRadius: "2px",
-                    }}
-                  ></span>
-                  Part d'hommes
-                </span>
-              </Col>
-              <Col className="text-center">
-                <span>
-                  <span
-                    style={{
-                      display: "inline-block",
-                      width: "12px",
-                      height: "12px",
-                      backgroundColor: "#e18b76",
-                      marginRight: "5px",
-                      borderRadius: "2px",
-                    }}
-                  ></span>
-                  Part de femmes
-                </span>
-              </Col>
-            </Row>
-          </div>
-        </Col>
-      </Row>
+            <Button
+              size="sm"
+              className="fr-mr-1w"
+              variant={sortKey === "hommesPercent" ? "primary" : "secondary"}
+              onClick={() => setSortKey("hommesPercent")}
+              title="Trier par effectif d'hommes"
+            >
+              Homme
+            </Button>
+            <Button
+              size="sm"
+              className="fr-mr-1w"
+              variant={sortKey === "femmesPercent" ? "primary" : "secondary"}
+              onClick={() => setSortKey("femmesPercent")}
+              title="Trier par effectif de femmes"
+            >
+              Femme
+            </Button>
+            <Button
+              size="sm"
+              className="fr-mr-1w"
+              variant={sortKey === "total" ? "primary" : "secondary"}
+              onClick={() => setSortKey("total")}
+              title="Trier par effectif total"
+            >
+              Total
+            </Button>
+            <div className="fr-mr-1w" style={{ display: "inline" }}>
+              par ordre
+            </div>
+            <Button
+              size="sm"
+              className="fr-mr-1w"
+              variant="secondary"
+              onClick={() =>
+                setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"))
+              }
+              title={`Trier par ordre ${
+                sortOrder === "asc" ? "décroissant" : "croissant"
+              }`}
+            >
+              {sortOrder === "asc" ? "croissant" : "décroissant"}
+            </Button>
+          </Col>
+          <Col md={4} style={{ textAlign: "right" }} className="fr-pr-4w">
+            <div style={{ display: "inline" }} className="fr-mr-1w">
+              Voir les
+            </div>
+            <Button
+              size="sm"
+              className="fr-mr-1w"
+              variant="secondary"
+              onClick={() =>
+                setStackType((prev) =>
+                  prev === "percent" ? "normal" : "percent"
+                )
+              }
+              title={`Afficher en ${
+                stackType === "percent" ? "effectifs" : "pourcentages"
+              }`}
+            >
+              {stackType === "percent" ? "effectifs" : "pourcentages"}
+            </Button>
+          </Col>
+        </Row>
+      </ChartWrapper.Title>
+
+      <Col md={12}>
+        <div style={{ position: "relative" }}>
+          <ChartWrapper
+            config={config}
+            hideTitle={true}
+            options={options}
+            legend={null}
+            renderData={() => <RenderData data={sortedItems} />}
+          />
+          <Row horizontalAlign="center" className="fr-mb-4w">
+            <Col className="text-center">
+              <div style={{ fontSize: "12px" }} className="fr-mr-3w">
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "12px",
+                    height: "12px",
+                    backgroundColor: "#efcb3a",
+                    marginRight: "5px",
+                    borderRadius: "2px",
+                  }}
+                ></span>
+                Part d'hommes
+              </div>
+            </Col>
+            <Col className="text-center">
+              <div style={{ fontSize: "12px" }}>
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "12px",
+                    height: "12px",
+                    backgroundColor: "#e18b76",
+                    marginRight: "5px",
+                    borderRadius: "2px",
+                  }}
+                ></span>
+                Part de femmes
+              </div>
+            </Col>
+          </Row>
+        </div>
+      </Col>
     </>
   );
 };
