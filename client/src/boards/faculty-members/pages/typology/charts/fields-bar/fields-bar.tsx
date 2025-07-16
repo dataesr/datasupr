@@ -8,6 +8,7 @@ import { createBarChartOptions } from "./options";
 import "../../../../styles.scss";
 import { useGenderDistribution } from "./use-gender-distrubition";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import SubtitleWithContext from "../../utils/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -117,7 +118,6 @@ const ItemBarChart: React.FC = () => {
         item._id?.structure_name ||
         item._id?.field_name ||
         "Non précisé";
-      console.log(item);
       return {
         itemName,
         itemCode,
@@ -152,7 +152,7 @@ const ItemBarChart: React.FC = () => {
     const count = d.totalCount.toLocaleString();
     const style = d.isSelected ? "font-weight: bold; color: #000091;" : "";
 
-    return `<span style="${style}">${name}</span> <span style="font-size:11px; color:#888">(${count} personnes)</span>`;
+    return `<span style="${style}">${name}</span> <span style="font-size:12px; color:#6a6156">(${count} personnes)</span>`;
   });
 
   const femmesData =
@@ -230,11 +230,16 @@ const ItemBarChart: React.FC = () => {
     id: "gender-distribution-chart",
     idQuery: "gender-distribution",
     title: {
-      fr: `${
-        contextId
-          ? `Répartition hommes / femmes - Comparaison avec autres ${labels.plural}`
-          : `Répartition hommes / femmes par ${labels.singular}`
-      }`,
+      className: "fr-mt-0w",
+      look: "h5" as const,
+      size: "h2" as const,
+      fr: (
+        <>
+          Quelles sont les disciplines où le personnel enseignant est paritaire
+          ?&nbsp;
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+        </>
+      ),
     },
     subtitle: `Année universitaire ${selectedYear}`,
     description: {

@@ -151,14 +151,13 @@ export const createCnuGroupsChartOptions = (
         const disciplineName = disciplineInfo.discipline;
 
         return `<div style="padding:10px">
-                <div style="font-weight:bold;margin-bottom:5px;font-size:13px">${
+                <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
                   point.name
                 }</div>
-                <div style="font-size:12px;color:#666;margin-bottom:8px">Discipline: ${disciplineName} (${disciplineTotal.toLocaleString()} enseignants)</div>
-                <div style="font-size:16px;font-weight:bold;margin-bottom:10px">${point.y.toLocaleString()} enseignants</div>
-                <div style="color:#666;margin-bottom:8px">${
+                <div style="font-size:16px;font-weight:bold;margin-bottom:14px">${point.y.toLocaleString()} enseignants</div>
+                <div style="color:#666;margin-bottom:14px">soit ${
                   point.cnuGroupPercent
-                }% de la discipline</div>
+                }% de la discipline ${disciplineName} (${disciplineTotal.toLocaleString()} enseignants)</div>
                 <hr style="margin:5px 0;border:0;border-top:1px solid #eee">
                 <table style="width:100%;border-collapse:collapse">
                   <tr>
@@ -181,6 +180,7 @@ export const createCnuGroupsChartOptions = (
     },
     plotOptions: {
       column: {
+        minPointLength: 1.5,
         borderWidth: 0,
         borderRadius: 3,
         colorByPoint: true,
@@ -210,6 +210,11 @@ export const createCnuGroupsChartOptions = (
           chartOptions: {
             chart: {
               height: 700,
+            },
+            plotOptions: {
+              column: {
+                minPointLength: 1.5,
+              },
             },
             xAxis: {
               labels: {

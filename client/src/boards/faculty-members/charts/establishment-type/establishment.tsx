@@ -5,6 +5,7 @@ import { createEstablishmentTypeChartOptions } from "./options";
 import { useContextDetection, generateIntegrationURL } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useEstablishmentTypeDistribution } from "./use-establishment-type";
+import SubtitleWithContext from "../../pages/typology/utils/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -65,7 +66,16 @@ export function EstablishmentTypeChart() {
     id: "establishment-type-chart",
     idQuery: "establishment-type-distribution",
     title: {
-      fr: `Répartition par type d'établissement`,
+      className: "fr-mt-0w",
+      look: "h5" as const,
+      size: "h2" as const,
+      fr: (
+        <>
+          Comment le personnel enseignant se répartit selon le type
+          d'établissement ?&nbsp;
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+        </>
+      ),
     },
     description: {
       fr: "",

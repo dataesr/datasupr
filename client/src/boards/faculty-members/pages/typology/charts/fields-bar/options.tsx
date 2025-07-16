@@ -60,12 +60,13 @@ export const createBarChartOptions = ({
       align: "left",
       x: 10,
       style: {
-        fontSize: "13px",
+        fontSize: "14px",
+        color: "#6a6156",
       },
     },
   },
   yAxis: {
-    visible: stackType === "percent",
+    visible: true,
     max: stackType === "percent" ? 100 : undefined,
     title: {
       text: stackType === "percent" ? "Pourcentage" : "Effectif",
@@ -75,6 +76,27 @@ export const createBarChartOptions = ({
         return stackType === "percent" ? `${this.value}%` : `${this.value}`;
       },
     },
+    tickAmount: 3,
+    plotLines: [
+      stackType === "percent"
+        ? {
+            color: "var(--blue-ecume-moon-675)",
+            width: 3,
+            value: 50,
+            zIndex: 5,
+            label: {
+              text: "Parité Homme/Femme",
+              rotation: 0,
+              verticalAlign: "top",
+              style: {
+                color: "var(--blue-ecume-moon-675)",
+                fontSize: "14px",
+              },
+              y: 2,
+            },
+          }
+        : {},
+    ],
   },
   legend: {
     enabled: false,
@@ -100,22 +122,29 @@ export const createBarChartOptions = ({
       pointWidth: 40,
       pointPadding: 1,
       groupPadding: 0.1,
+      minPointLength: 5,
     },
   },
   tooltip: {
+    style: {
+      fontSize: "14px",
+    },
     formatter: function () {
       const itemIndex = this.point.index!;
       const itemData = sortedItems[itemIndex];
       const value = Number(this.point.y).toFixed(1);
       const isSelected = itemData?.isSelected;
 
-      return `<b>${itemData.itemName}${
-        isSelected ? " (sélectionnée)" : ""
-      }</b><br/>
+      return `
+      <div style="padding:10px">
+        <div style="font-weight:bold;margin-bottom:8px;font-size:14px">
+          <b>${itemData.itemName}${isSelected ? " (sélectionnée)" : ""}</b><br/>
+        </div>
         <span style="color:${this.point.color}">\u25CF</span> ${
         this.series.name
       }: ${value}${stackType === "percent" ? "%" : ""}<br/>
-      Total: ${itemData.totalCount.toLocaleString()} enseignants`;
+      Total: ${itemData.totalCount.toLocaleString()} enseignants
+      </div>`;
     },
   },
   series: [

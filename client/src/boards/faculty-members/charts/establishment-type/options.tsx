@@ -1,13 +1,16 @@
 import * as Highcharts from "highcharts";
 
-export const createEstablishmentTypeChartOptions = (categories: string[], data: number[]): Highcharts.Options => ({
+export const createEstablishmentTypeChartOptions = (
+  categories: string[],
+  data: number[]
+): Highcharts.Options => ({
   chart: {
     type: "column" as const,
     backgroundColor: "transparent",
   },
   exporting: { enabled: false },
   title: {
-    text: "Types d'établissements",
+    text: "",
     align: "left" as Highcharts.AlignValue,
     style: {
       fontWeight: "bold",
