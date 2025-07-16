@@ -1,7 +1,7 @@
 import Cookies from "js-cookie";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-export async function GetData(params: string) {
+export async function GetData(params: string, selectedYears?: string[], allYears?: number[]) {
   if (params === "") {
     return [];
   }
@@ -22,6 +22,11 @@ export async function GetData(params: string) {
   const selectedDestinations = Cookies.get("selectedDestinations");
   if (selectedDestinations) {
     searchParams.append("destination", selectedDestinations);
+  }
+
+  // Ajouter le filtre des années si elles ne sont pas toutes sélectionnées
+  if (selectedYears && allYears && selectedYears.length > 0 && selectedYears.length < allYears.length) {
+    searchParams.append("years", selectedYears.join("|"));
   }
 
   return fetch(

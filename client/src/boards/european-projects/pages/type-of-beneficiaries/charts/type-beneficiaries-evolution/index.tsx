@@ -106,10 +106,10 @@ export default function TypeOfBeneficiariesEvolution() {
 
       <ChartWrapper
         config={config}
+        hideTitle={true}
         legend={GetLegend(legendData, "TypeBeneficiariesEvolution", currentLang, 3)}
         options={options(data, currentLang)}
         renderData={() => null} // TODO: add data table
-        hideTitle={true}
       />
     </>
   );

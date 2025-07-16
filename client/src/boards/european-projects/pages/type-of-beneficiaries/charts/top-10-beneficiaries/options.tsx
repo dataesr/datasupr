@@ -6,7 +6,7 @@ import i18n from "./i18n.json";
 const rootStyles = getComputedStyle(document.documentElement);
 
 export default function Options(data, currentLang) {
-  if (!data) return null;
+  if (!data || !data.data || !Array.isArray(data.data)) return null;
 
   function getI18nLabel(key) {
     return i18n[key][currentLang];

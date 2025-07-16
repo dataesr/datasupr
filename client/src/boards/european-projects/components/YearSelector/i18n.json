@@ -1,0 +1,22 @@
+{
+  "selectYears": {
+    "fr": "Sélectionner les années",
+    "en": "Select years"
+  },
+  "yearsSelected": {
+    "fr": "années sélectionnées",
+    "en": "years selected"
+  },
+  "apply": {
+    "fr": "Appliquer",
+    "en": "Apply"
+  },
+  "cancel": {
+    "fr": "Annuler",
+    "en": "Cancel"
+  },
+  "reset": {
+    "fr": "Réinitialiser",
+    "en": "Reset"
+  }
+}
