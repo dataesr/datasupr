@@ -22,17 +22,5 @@
   "xAxis-label": {
     "fr": "Total subventions en euros millions d'euros",
     "en": "Total grants in million euros"
-  },
-  "filters": {
-    "fr": "Filtres",
-    "en": "Filters"
-  },
-  "showFilters": {
-    "fr": "Afficher les filtres",
-    "en": "Show filters"
-  },
-  "hideFilters": {
-    "fr": "Masquer les filtres",
-    "en": "Hide filters"
   }
 }
