@@ -9,7 +9,7 @@ import { GetLegend } from "../../../../components/legend";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { YearSelector } from "../../../../components";
+import YearSelector from "../../../../components/YearSelector";
 
 import i18n from "./i18n.json";
 import { Text } from "@dataesr/dsfr-plus";
@@ -126,7 +126,9 @@ export default function Top10CountriesByTypeOfBeneficiaries() {
           <div
             style={{
               animation: "filtersSlideIn 0.3s ease-out",
-              overflow: "hidden",
+              overflow: "visible",
+              position: "relative",
+              zIndex: 1000,
             }}
           >
             <style>

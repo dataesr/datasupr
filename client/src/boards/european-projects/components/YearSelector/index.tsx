@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import i18n from "./i18n.json";
 import { Button } from "@dataesr/dsfr-plus";
+import "./styles.scss";
 
 interface YearSelectorProps {
   availableYears: (string | number)[];
@@ -17,10 +18,10 @@ export default function YearSelector({ availableYears, selectedYears, onYearsCha
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const currentLang = (searchParams.get("lang") || "fr") as "fr" | "en";
+  const currentLang = (searchParams.get("language") || searchParams.get("lang") || "fr") as "fr" | "en";
 
   const getI18nLabel = (key: keyof typeof i18n) => {
-    return i18n[key][currentLang];
+    return i18n[key]?.[currentLang] || i18n[key]?.["fr"] || key;
   };
 
   // Synchroniser tempSelectedYears avec selectedYears quand ils changent
@@ -97,110 +98,53 @@ export default function YearSelector({ availableYears, selectedYears, onYearsCha
   };
 
   return (
-    <div ref={dropdownRef} className={className} style={{ position: "relative", display: "inline-block", ...style }}>
-      <button
-        className="fr-btn fr-btn--secondary"
-        onClick={() => {
+    <div ref={dropdownRef} className={`year-selector ${className}`} style={style}>
+      <Button
+        className="year-selector__button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
           if (!isDropdownOpen) {
             // Synchroniser les années temporaires avec les années actuelles quand on ouvre
             setTempSelectedYears(selectedYears);
           }
           setIsDropdownOpen(!isDropdownOpen);
         }}
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          minWidth: "200px",
-          textAlign: "left",
-          transition: "all 0.2s ease-in-out",
-        }}
+        size="sm"
+        variant="secondary"
       >
-        <span>{getSelectedYearsText()}</span>
-        <span
-          style={{
-            marginLeft: "8px",
-            transition: "transform 0.2s ease-in-out",
-            transform: isDropdownOpen ? "rotate(180deg)" : "rotate(0deg)",
-          }}
-        >
-          ▼
-        </span>
-      </button>
+        <span className="year-selector__button-text">{getSelectedYearsText()}</span>
+        <span className={`year-selector__arrow ${isDropdownOpen ? "year-selector__arrow--open" : "year-selector__arrow--closed"}`}>▼</span>
+      </Button>
 
       {isDropdownOpen && (
-        <div
-          style={{
-            position: "absolute",
-            top: "100%",
-            left: 0,
-            right: 0,
-            backgroundColor: "white",
-            border: "1px solid #ddd",
-            borderRadius: "4px",
-            boxShadow: "0 8px 24px rgba(0,0,0,0.15), 0 4px 8px rgba(0,0,0,0.1)",
-            zIndex: 1000,
-            maxHeight: "250px",
-            overflowY: "auto",
-            animation: "dropdownSlideIn 0.2s ease-out",
-            transformOrigin: "top",
-          }}
-        >
-          <style>
-            {`
-              @keyframes dropdownSlideIn {
-                from {
-                  opacity: 0;
-                  transform: translateY(-10px) scaleY(0.8);
-                }
-                to {
-                  opacity: 1;
-                  transform: translateY(0) scaleY(1);
-                }
-              }
-            `}
-          </style>
-          {availableYears.map((year) => (
-            <label
-              key={year}
-              style={{
-                display: "block",
-                padding: "8px 12px",
-                cursor: "pointer",
-                borderBottom: "1px solid #eee",
-                transition: "background-color 0.15s ease-in-out",
-              }}
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "#f5f5f5")}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "white")}
-            >
-              <input
-                type="checkbox"
-                checked={tempSelectedYears.includes(year.toString())}
-                onChange={() => handleYearToggle(year.toString())}
-                style={{ marginRight: "8px" }}
-              />
-              {year}
-            </label>
-          ))}
+        <div className="year-selector__dropdown" onClick={(e) => e.stopPropagation()}>
+          {availableYears.length > 0 ? (
+            availableYears.map((year) => (
+              <label key={year} className="year-selector__option">
+                <input
+                  type="checkbox"
+                  className="year-selector__checkbox"
+                  checked={tempSelectedYears.includes(year.toString())}
+                  onChange={() => handleYearToggle(year.toString())}
+                />
+                {year}
+              </label>
+            ))
+          ) : (
+            <div className="year-selector__empty-state">Aucune année disponible</div>
+          )}
 
-          <div
-            style={{
-              display: "flex",
-              gap: "8px",
-              padding: "8px 12px",
-              borderTop: "1px solid #eee",
-              backgroundColor: "#f8f9fa",
-            }}
-          >
+          <div className="year-selector__actions">
             <Button
+              className="year-selector__action-button"
               icon="arrow-go-back-fill"
               onClick={handleResetYears}
               size="sm"
-              style={{ flex: 1 }}
               title={getI18nLabel("reset")}
               variant="tertiary"
             />
-            <Button onClick={handleApplyChanges} size="sm" style={{ flex: 1 }}>
+            <Button className="year-selector__action-button" onClick={handleApplyChanges} size="sm">
               {getI18nLabel("apply")}
             </Button>
           </div>
