@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 
 import { GetData } from "./query";
@@ -9,6 +9,8 @@ import { GetLegend } from "../../../../components/legend";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import YearSelector from "../../../../components/YearSelector";
+import FiltersWrapper from "../../../../components/filters-wrapper";
 
 import { Text } from "@dataesr/dsfr-plus";
 
@@ -43,6 +45,7 @@ export default function TypeOfBeneficiariesEvolution() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const [selectedEntityType, setSelectedEntityType] = useState("REC");
+  const [selectedYears, setSelectedYears] = useState<string[]>([]);
   const params = getDefaultParams(searchParams);
 
   const entityTypes = [
@@ -57,9 +60,10 @@ export default function TypeOfBeneficiariesEvolution() {
     setSelectedEntityType(event.target.value);
   };
 
-  const { data, isLoading } = useQuery({
+  // Query pour récupérer les données initiales (sans filtre d'années)
+  const { data: initialData, isLoading: isInitialLoading } = useQuery({
     queryKey: [
-      config.id,
+      config.id + "_initial",
       params,
       selectedEntityType,
       Cookies.get("selectedPillars"),
@@ -68,7 +72,36 @@ export default function TypeOfBeneficiariesEvolution() {
       Cookies.get("selectedDestinations"),
     ],
     queryFn: () => GetData(params, selectedEntityType),
+    enabled: !!params,
   });
+
+  // Query pour récupérer les données filtrées par années (si nécessaire)
+  const { data: filteredData, isLoading: isFilteredLoading } = useQuery({
+    queryKey: [
+      config.id + "_filtered",
+      params,
+      selectedEntityType,
+      selectedYears,
+      Cookies.get("selectedPillars"),
+      Cookies.get("selectedPrograms"),
+      Cookies.get("selectedThematics"),
+      Cookies.get("selectedDestinations"),
+    ],
+    queryFn: () => GetData(params, selectedEntityType, selectedYears, initialData?.years),
+    enabled: !!params && !!initialData?.years && selectedYears.length > 0 && selectedYears.length < initialData.years.length,
+  });
+
+  // Utiliser les données filtrées si disponibles, sinon les données initiales
+  const data = filteredData || initialData;
+  const isLoading = isInitialLoading || isFilteredLoading;
+
+  // Initialiser toutes les années comme sélectionnées par défaut
+  useEffect(() => {
+    if (initialData?.years && selectedYears.length === 0) {
+      const allYears = initialData.years.map((year) => year.toString());
+      setSelectedYears(allYears);
+    }
+  }, [initialData, selectedYears.length]);
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
@@ -82,6 +115,9 @@ export default function TypeOfBeneficiariesEvolution() {
   return (
     <>
       <ChartWrapper.Title config={config}>
+        <FiltersWrapper>
+          <YearSelector availableYears={initialData?.years || []} selectedYears={selectedYears} onYearsChange={setSelectedYears} />
+        </FiltersWrapper>
         <div className="fr-my-3w">
           <div className="fr-select-group">
             <label className="fr-label" htmlFor="entity-type-select-evolution">

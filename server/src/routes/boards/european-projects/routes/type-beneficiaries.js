@@ -293,6 +293,10 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
       const destinations = req.query.destinations.split("|");
       filters.destination_code = { $in: destinations };
     }
+    if (req.query.years) {
+      const years = req.query.years.split("|");
+      filters.call_year = { $in: years };
+    }
 
     // Ajouter le filtre pour le type d'entité
     filters.cordis_type_entity_code = targetEntityType;
@@ -376,15 +380,38 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
     // Obtenir les codes des pays sélectionnés
     const selectedCountryCodes = selectedCountries.map(c => c.country_code);
 
+    // Créer les filtres pour l'évolution temporelle (sans le filtre des années)
+    const evolutionFilters = {
+      framework: "Horizon Europe",
+      cordis_type_entity_code: targetEntityType,
+      country_code: { $in: selectedCountryCodes }
+    };
+
+    // Ajouter les filtres optionnels (sans les années)
+    if (req.query.pillars) {
+      const pillars = req.query.pillars.split("|");
+      evolutionFilters.pilier_code = { $in: pillars };
+    }
+    if (req.query.programs) {
+      const programs = req.query.programs.split("|");
+      evolutionFilters.programme_code = { $in: programs };
+    }
+    if (req.query.thematics) {
+      const thematics = req.query.thematics.split("|");
+      const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
+      evolutionFilters.thema_code = { $in: filteredThematics };
+    }
+    if (req.query.destinations) {
+      const destinations = req.query.destinations.split("|");
+      evolutionFilters.destination_code = { $in: destinations };
+    }
+
     // Deuxième étape : obtenir l'évolution temporelle pour ces pays
     const evolutionData = await db
       .collection("ep_projects-entities_staging")
       .aggregate([
         {
-          $match: {
-            ...filters,
-            country_code: { $in: selectedCountryCodes }
-          },
+          $match: evolutionFilters,
         },
         {
           $group: {
@@ -430,40 +457,62 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
       ])
       .toArray();
 
-    // Obtenir la liste de toutes les années disponibles
-    const allYears = await db
-      .collection("ep_projects-entities_staging")
-      .aggregate([
-        {
-          $match: filters,
-        },
-        {
-          $group: {
-            _id: "$call_year"
+    // Obtenir la liste des années disponibles
+    let yearsList;
+    if (req.query.years) {
+      // Si des années spécifiques sont filtrées, utiliser ces années
+      yearsList = req.query.years.split("|").map(year => parseInt(year)).filter(year => !isNaN(year)).sort((a, b) => a - b);
+    } else {
+      // Sinon, récupérer toutes les années disponibles
+      const allYears = await db
+        .collection("ep_projects-entities_staging")
+        .aggregate([
+          {
+            $match: {
+              framework: "Horizon Europe",
+              cordis_type_entity_code: targetEntityType,
+              ...(req.query.pillars && { pilier_code: { $in: req.query.pillars.split("|") } }),
+              ...(req.query.programs && { programme_code: { $in: req.query.programs.split("|") } }),
+              ...(req.query.thematics && { thema_code: { $in: req.query.thematics.split("|").filter(thematic => !['ERC', 'MSCA'].includes(thematic)) } }),
+              ...(req.query.destinations && { destination_code: { $in: req.query.destinations.split("|") } }),
+            },
+          },
+          {
+            $group: {
+              _id: "$call_year"
+            }
+          },
+          {
+            $sort: { _id: 1 }
           }
-        },
-        {
-          $sort: { _id: 1 }
-        }
-      ])
-      .toArray();
+        ])
+        .toArray();
 
-    const yearsList = allYears.map(y => y._id).filter(year => year != null);
+      yearsList = allYears.map(y => y._id).filter(year => year != null);
+    }
 
-    // Compléter les données manquantes avec 0 pour chaque pays
+    // Compléter les données manquantes avec 0 pour chaque pays et filtrer par années sélectionnées
     const completeData = evolutionData.map(country => {
       const existingYears = country.evolution.map(e => e.year);
       const completeEvolution = yearsList.map(year => {
-        const existingData = country.evolution.find(e => e.year === year);
+        const existingData = country.evolution.find(e => e.year === year || e.year === year.toString() || e.year === parseInt(year));
         return {
           year,
           total_fund_eur: existingData ? existingData.total_fund_eur : 0
         };
       });
 
+      // Filtrer l'évolution pour ne garder que les années sélectionnées
+      const filteredEvolution = req.query.years 
+        ? completeEvolution.filter(item => {
+            const selectedYears = req.query.years.split("|").map(y => parseInt(y));
+            return selectedYears.includes(parseInt(item.year));
+          })
+        : completeEvolution;
+
       return {
         ...country,
-        evolution: completeEvolution
+        evolution: filteredEvolution
       };
     });
 
@@ -475,6 +524,36 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
   } catch (error) {
     console.error("Error fetching type beneficiaries evolution:", error);
     res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+});
+
+// Route pour créer l'index pour type-beneficiaries-evolution
+router.route(routesPrefix + "/type-beneficiaries-evolution_indexes").get(async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("ep_projects-entities_staging"),
+      {
+        // Champs de filtrage (ordre optimisé pour la sélectivité)
+        framework: 1,
+        cordis_type_entity_code: 1,
+        pilier_code: 1,
+        programme_code: 1,
+        thema_code: 1,
+        destination_code: 1,
+        country_code: 1,
+        call_year: 1,
+        fund_eur: 1
+      },
+      "idx_type_beneficiaries_evolution_covered"
+    );
+    
+    res.status(201).json({ 
+      message: "Index couvert pour type-beneficiaries-evolution créé avec succès",
+      indexName: "idx_type_beneficiaries_evolution_covered"
+    });
+  } catch (error) {
+    console.error("Erreur lors de la création de l'index couvert:", error);
+    res.status(500).json({ error: "Erreur lors de la création de l'index couvert" });
   }
 });
 

@@ -1,0 +1,11 @@
+### Test avec filtre années - toutes les années sélectionnées
+GET http://localhost:3000/api/european-projects/type-beneficiaries/type-beneficiaries-evolution?country_code=FRA&cordis_type_entity_code=REC
+
+### Test avec filtre années - années spécifiques
+GET http://localhost:3000/api/european-projects/type-beneficiaries/type-beneficiaries-evolution?country_code=FRA&cordis_type_entity_code=REC&years=2021|2022
+
+### Test avec tous les filtres + années
+GET http://localhost:3000/api/european-projects/type-beneficiaries/type-beneficiaries-evolution?country_code=ESP&cordis_type_entity_code=HES&pillars=1&programs=HORIZON-EIC&thematics=HORIZON-CL1-2021-01&destinations=HORIZON-EIC-2021-ACCELERATOR&years=2021|2022|2023
+
+### Test index couvert pour type-beneficiaries-evolution
+GET http://localhost:3000/api/european-projects/type-beneficiaries/type-beneficiaries-evolution_indexes
