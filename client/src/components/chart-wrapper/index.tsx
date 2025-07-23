@@ -1,14 +1,53 @@
-import { useId, useState } from "react";
+import { useId, useRef, useState } from "react";
+import React from "react";
 import Highcharts from "highcharts";
+import HighchartsExporting from "highcharts/modules/exporting";
+import HighchartsOfflineExporting from "highcharts/modules/offline-exporting";
 import HighchartsReact from "highcharts-react-official";
 import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Text, Title } from "@dataesr/dsfr-plus";
+
+// Initialiser les modules d'export
+HighchartsExporting(Highcharts);
+HighchartsOfflineExporting(Highcharts);
+
+// Configuration globale pour l'export offline
+Highcharts.setOptions({
+  exporting: {
+    fallbackToExportServer: false,
+  },
+});
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 import CopyButton from "../copy-button";
+import translations from "./i18n.json";
 
 import "./styles.scss";
 import { useSearchParams } from "react-router-dom";
+
+// Fonction utilitaire pour obtenir les traductions
+function getTranslation(key: keyof typeof translations, lang: string = "fr"): string {
+  return translations[key]?.[lang as "fr" | "en"] || translations[key]?.["fr"] || key;
+}
+
+// Fonction utilitaire pour extraire le texte d'un ReactNode
+function extractTextFromReactNode(node: React.ReactNode): string {
+  if (typeof node === "string" || typeof node === "number") {
+    return String(node);
+  }
+  if (React.isValidElement(node)) {
+    if (node.props.children) {
+      if (Array.isArray(node.props.children)) {
+        return node.props.children.map(extractTextFromReactNode).join("");
+      }
+      return extractTextFromReactNode(node.props.children);
+    }
+  }
+  if (Array.isArray(node)) {
+    return node.map(extractTextFromReactNode).join("");
+  }
+  return "";
+}
 
 export type ChartConfig = {
   id: string;
@@ -38,10 +77,13 @@ const source = "Commission européenne, Cordis";
 const sourceURL = "https://cordis.europa.eu/";
 
 function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+
   const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc=${VITE_APP_URL}${graphConfig.integrationURL}></iframe>`;
   return (
     <Modal hide={() => setIsOpen(false)} isOpen={isOpen} key={`${modalId}-integrationModal`} size="lg">
-      <ModalTitle>Intégrer ce graphique dans un autre site</ModalTitle>
+      <ModalTitle>{getTranslation("integrationModalTitle", currentLang)}</ModalTitle>
       <ModalContent>
         <div className="text-right">
           <CopyButton text={integrationCode} />
@@ -49,51 +91,70 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
         <SyntaxHighlighter language="javascript" style={a11yDark}>
           {integrationCode}
         </SyntaxHighlighter>
+        <div className="fr-mt-2w text-right">
+          <Button color="beige-gris-galet" onClick={() => setIsOpen(false)} variant="secondary">
+            {getTranslation("close", currentLang)}
+          </Button>
+        </div>
       </ModalContent>
     </Modal>
   );
 }
 
-function MenuModal({ displayType, isOpen, setDisplayType, setIsOpen, setIsOpenIntegration, modalId }) {
+function MenuModal({ config, displayType, isOpen, setDisplayType, setIsOpen, setIsOpenIntegration, modalId, downloadCSV, downloadPNG, printChart }) {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+
   return (
     <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="sm" key={modalId}>
       <ModalContent className="modal-actions">
         <Title as="h1" look="h6">
           <span className="fr-icon-bar-chart-box-line fr-mr-1w" aria-hidden="true" />
-          Options du graphique
+          {getTranslation("modalTitle", currentLang)}
         </Title>
 
         <fieldset className="fr-fieldset" aria-labelledby="sélection du type d'affichage">
           <legend className="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-hint-legend">
-            Type d'affichage
+            {getTranslation("displayType", currentLang)}
           </legend>
           <div className="fr-fieldset__element">
             <Radio
               defaultChecked={displayType === "chart"}
-              label="Graphique"
+              label={getTranslation("chart", currentLang)}
               name={`${modalId}_radio-hint`}
               onClick={() => setDisplayType("chart")}
             />
           </div>
           <div className="fr-fieldset__element">
-            <Radio defaultChecked={displayType === "data"} label="Données" name={`${modalId}_radio-hint`} onClick={() => setDisplayType("data")} />
+            <Radio
+              defaultChecked={displayType === "data"}
+              label={getTranslation("data", currentLang)}
+              name={`${modalId}_radio-hint`}
+              onClick={() => setDisplayType("data")}
+            />
           </div>
         </fieldset>
         <hr />
         <ul>
           <li>
-            <Button color="beige-gris-galet" icon="file-download-line" title="téléchargement des données du graphique" variant="text" disabled>
-              Télécharger les données (csv)
+            <Button
+              color="beige-gris-galet"
+              icon="file-download-line"
+              title="téléchargement des données du graphique"
+              variant="text"
+              onClick={downloadCSV}
+            >
+              {getTranslation("downloadCSV", currentLang)}
             </Button>
           </li>
           <li>
-            <Button color="beige-gris-galet" icon="image-line" title="téléchargement de l'image" variant="text" disabled>
-              Télécharger l'image (png)
+            <Button color="beige-gris-galet" icon="image-line" title="téléchargement de l'image" variant="text" onClick={downloadPNG}>
+              {getTranslation("downloadPNG", currentLang)}
             </Button>
           </li>
           <li>
-            <Button color="beige-gris-galet" icon="printer-line" title="lancement de l'impression" variant="text" disabled>
-              Imprimer
+            <Button color="beige-gris-galet" icon="printer-line" title="lancement de l'impression" variant="text" onClick={printChart}>
+              {getTranslation("print", currentLang)}
             </Button>
           </li>
         </ul>
@@ -102,7 +163,7 @@ function MenuModal({ displayType, isOpen, setDisplayType, setIsOpen, setIsOpenIn
           <Row>
             <Col>
               <Title as="h2" look="h6">
-                Partager
+                {getTranslation("share", currentLang)}
               </Title>
               <div className="share">
                 <Button color="beige-gris-galet" icon="twitter-x-fill" title="Twitter-X" variant="text" disabled />
@@ -112,20 +173,23 @@ function MenuModal({ displayType, isOpen, setDisplayType, setIsOpen, setIsOpenIn
             </Col>
             <Col>
               <Title as="h2" look="h6">
-                Intégrer
+                {getTranslation("integration", currentLang)}
               </Title>
               <div className="share">
                 <Button
                   color="beige-gris-galet"
                   icon="code-s-slash-line"
                   onClick={() => {
-                    setIsOpenIntegration(true);
-                    setIsOpen(false);
+                    if (config.integrationURL) {
+                      setIsOpenIntegration(true);
+                      setIsOpen(false);
+                    }
                   }}
-                  title="Intégration"
+                  title={getTranslation("integration", currentLang)}
                   variant="secondary"
+                  disabled={!config.integrationURL}
                 >
-                  Intégrer
+                  {getTranslation("integration", currentLang)}
                 </Button>
               </div>
             </Col>
@@ -142,6 +206,11 @@ function MenuModal({ displayType, isOpen, setDisplayType, setIsOpen, setIsOpenIn
             </Col>
           </Row>
         </Container>
+        <div className="fr-mt-2w text-right">
+          <Button color="beige-gris-galet" onClick={() => setIsOpen(false)} variant="secondary">
+            {getTranslation("close", currentLang)}
+          </Button>
+        </div>
       </ModalContent>
     </Modal>
   );
@@ -201,6 +270,8 @@ export default function ChartWrapper({
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
+  const chart = useRef<HighchartsReact.RefObject>(null);
+
   if (displayType === "data" && !renderData) {
     setDisplayType("chart");
     return null;
@@ -210,6 +281,99 @@ export default function ChartWrapper({
   if (!options) {
     return null;
   }
+
+  const downloadCSV = () => {
+    if (chart && chart.current && chart.current.chart) {
+      chart.current.chart.downloadCSV();
+    }
+  };
+
+  const downloadPNG = () => {
+    if (chart && chart.current && chart.current.chart) {
+      try {
+        // Utiliser l'export offline
+        chart.current.chart.exportChart(
+          {
+            type: "image/png",
+            filename: config.title && typeof config.title === "string" ? config.title : "graphique",
+            sourceWidth: 800,
+            sourceHeight: 600,
+            scale: 2, // Pour une meilleure qualité
+          },
+          {
+            exporting: {
+              fallbackToExportServer: false,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Erreur lors de l'export PNG:", error);
+        // Fallback alternatif : essayer avec la méthode print
+        alert("L'export PNG a échoué. Vous pouvez utiliser Ctrl+P pour imprimer la page.");
+      }
+    }
+  };
+
+  const printChart = () => {
+    if (chart && chart.current && chart.current.chart) {
+      try {
+        // Obtenir le titre du graphique
+        let chartTitle = "Graphique";
+        if (config.title && typeof config.title === "string") {
+          chartTitle = config.title;
+        } else if (config.title && typeof config.title === "object" && config.title[currentLang]) {
+          // Si c'est un ReactNode, essayer d'extraire le texte
+          const titleContent = config.title[currentLang];
+          if (typeof titleContent === "string") {
+            chartTitle = titleContent;
+          } else {
+            // Pour les ReactNode complexes, utiliser la fonction d'extraction
+            const extractedText = extractTextFromReactNode(titleContent);
+            chartTitle = extractedText || "Graphique";
+          }
+        }
+
+        // Sauvegarder le titre actuel
+        const currentTitle = chart.current.chart.options.title;
+
+        // Mettre à jour temporairement le titre pour l'impression
+        chart.current.chart.update(
+          {
+            title: {
+              text: chartTitle,
+              style: {
+                fontSize: "18px",
+                fontWeight: "bold",
+              },
+            },
+          },
+          false
+        );
+
+        // Imprimer
+        chart.current.chart.print();
+
+        // Restaurer le titre original après un délai
+        setTimeout(() => {
+          if (chart.current && chart.current.chart) {
+            chart.current.chart.update(
+              {
+                title: currentTitle,
+              },
+              false
+            );
+          }
+        }, 100);
+      } catch (error) {
+        console.error("Erreur lors de l'impression:", error);
+        // Fallback : ouvrir la fenêtre d'impression du navigateur
+        window.print();
+      }
+    } else {
+      // Si pas de graphique, imprimer la page entière
+      window.print();
+    }
+  };
 
   return (
     <section>
@@ -227,7 +391,7 @@ export default function ChartWrapper({
       {displayType === "data" && renderData && options && <>{renderData(options)}</>}
       {displayType === "chart" && options && (
         <figure>
-          <HighchartsReact highcharts={Highcharts} options={options} />
+          <HighchartsReact highcharts={Highcharts} options={options} ref={chart} />
         </figure>
       )}
       <div className="graph-footer fr-pt-1w">
@@ -243,14 +407,23 @@ export default function ChartWrapper({
         )}
       </div>
       <MenuModal
+        config={config}
         displayType={displayType}
         isOpen={isOpen}
         setDisplayType={setDisplayType}
         setIsOpen={setIsOpen}
         setIsOpenIntegration={setIsOpenIntegration}
         modalId={modalId}
+        downloadCSV={downloadCSV}
+        downloadPNG={downloadPNG}
+        printChart={printChart}
       />
-      <IntegrationModal graphConfig={config} isOpen={isOpenIntegration} setIsOpen={setIsOpenIntegration} modalId={modalId} />
+      <IntegrationModal
+        graphConfig={config}
+        isOpen={isOpenIntegration && !!config.integrationURL}
+        setIsOpen={setIsOpenIntegration}
+        modalId={modalId}
+      />
     </section>
   );
 }

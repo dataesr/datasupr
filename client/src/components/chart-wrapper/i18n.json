@@ -1,0 +1,46 @@
+{
+  "print": {
+    "fr": "Imprimer",
+    "en": "Print"
+  },
+  "downloadCSV": {
+    "fr": "Télécharger CSV",
+    "en": "Download CSV"
+  },
+  "downloadPNG": {
+    "fr": "Télécharger PNG",
+    "en": "Download PNG"
+  },
+  "modalTitle": {
+    "fr": "Options du graphique",
+    "en": "Chart options"
+  },
+  "displayType": {
+    "fr": "Type d'affichage",
+    "en": "Display type"
+  },
+  "chart": {
+    "fr": "Graphique",
+    "en": "Chart"
+  },
+  "data": {
+    "fr": "Données",
+    "en": "Data"
+  },
+  "share": {
+    "fr": "Partager",
+    "en": "Share"
+  },
+  "integration": {
+    "fr": "Intégration",
+    "en": "Integration"
+  },
+  "close": {
+    "fr": "Fermer",
+    "en": "Close"
+  },
+  "integrationModalTitle": {
+    "fr": "Intégrer ce graphique dans un autre site",
+    "en": "Embed this chart in another website"
+  }
+}

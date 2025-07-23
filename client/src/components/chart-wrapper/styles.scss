@@ -30,6 +30,37 @@
       list-style: none;
     }
   }
+
+  // Masquer le texte "Fermer" du bouton de fermeture du Design System
+  // en gardant seulement l'icône "×"
+  .fr-btn--close {
+    font-size: 0;
+    
+    &::before,
+    &::after {
+      font-size: 1rem;
+    }
+  }
+}
+
+// Règle globale pour masquer le texte des boutons de fermeture de modal
+.fr-modal {
+  .fr-btn--close,
+  .fr-modal__btn--close,
+  button[aria-label*="Fermer"],
+  button[title*="Fermer"] {
+    font-size: 0 !important;
+    
+    &::before,
+    &::after {
+      font-size: 1rem !important;
+    }
+    
+    // Assurer que l'icône reste visible
+    .fr-icon-close-line {
+      font-size: 1rem !important;
+    }
+  }
 }
 
 .sources {
