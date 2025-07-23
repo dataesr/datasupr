@@ -6,6 +6,7 @@ import { useState, useEffect } from "react";
 import { GetData } from "./query";
 import { getDefaultParams } from "./utils";
 import { GetLegend } from "../../../../components/legend";
+import { RenderData } from "./render-data";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
@@ -118,7 +119,7 @@ export default function Top10CountriesByTypeOfBeneficiaries() {
           currentLang
         )}
         options={options(data, currentLang)}
-        renderData={() => null} // TODO: add data table
+        renderData={() => RenderData(data, currentLang)}
       />
     </>
   );
