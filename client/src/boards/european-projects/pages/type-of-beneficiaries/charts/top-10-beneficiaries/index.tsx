@@ -41,7 +41,7 @@ const config = {
     fr: "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
     en: "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
   },
-  integrationURL: null,
+  integrationURL: "",
 };
 // top10-countries-by-type-of-beneficiaries
 export default function Top10CountriesByTypeOfBeneficiaries() {
