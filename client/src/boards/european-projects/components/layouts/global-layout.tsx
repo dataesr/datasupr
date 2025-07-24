@@ -116,10 +116,10 @@ export default function GlobalLayout({ languageSelector = false }) {
           )}
         </FastAccess>
       </Header>
-      <div className="ep-main-menu ep-main-menu-bg-color">
+      <div className="ep-main-menu">
         <Container>
           <div className="actions">
-            <Nav aria-label="Main navigation" className="ep-main-menu-bg-color">
+            <Nav aria-label="Main navigation">
               <Link current={is("/european-projects/accueil")} href="/european-projects/accueil">
                 <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
                 {getI18nLabel("home")}

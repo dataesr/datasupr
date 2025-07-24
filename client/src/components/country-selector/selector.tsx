@@ -53,6 +53,7 @@ export default function CountrySelector() {
   return (
     <>
       <Button
+        className="fr-m-1w"
         icon="global-line"
         onClick={() => {
           setIsModalOpen(true);
@@ -60,8 +61,7 @@ export default function CountrySelector() {
         size="sm"
         variant="tertiary"
       >
-        {getI18nLabel("selectedCountry")}{" "}
-        {getFlagEmoji(getIso2(selectedCountry))}
+        {getI18nLabel("selectedCountry")} {getFlagEmoji(getIso2(selectedCountry))}
       </Button>
       <Modal isOpen={isModalOpen} hide={() => setIsModalOpen(false)}>
         <ModalTitle>{getI18nLabel("selectACountry")}</ModalTitle>
@@ -70,8 +70,7 @@ export default function CountrySelector() {
             {countriesWithData?.map((country) => (
               <li key={country.id}>
                 <Link href={`${baseUrl}&country_code=${country.id}`}>
-                  {getFlagEmoji(getIso2(country.id))}{" "}
-                  {country[`label_${currentLang}`]}
+                  {getFlagEmoji(getIso2(country.id))} {country[`label_${currentLang}`]}
                 </Link>
               </li>
             ))}
