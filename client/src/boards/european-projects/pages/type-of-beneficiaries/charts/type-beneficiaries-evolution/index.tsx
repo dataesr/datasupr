@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { GetData } from "./query";
 import { getDefaultParams } from "./utils";
 import { GetLegend } from "../../../../components/legend";
+import { RenderData } from "./render-data";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
@@ -145,7 +146,7 @@ export default function TypeOfBeneficiariesEvolution() {
         hideTitle={true}
         legend={GetLegend(legendData, "TypeBeneficiariesEvolution", currentLang, 3)}
         options={options(data, currentLang)}
-        renderData={() => null} // TODO: add data table
+        renderData={() => RenderData(data, currentLang)}
       />
     </>
   );
