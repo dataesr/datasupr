@@ -8,7 +8,7 @@ import { createBarChartOptions } from "./options";
 import "../../../../styles.scss";
 import { useGenderDistribution } from "./use-gender-distrubition";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import SubtitleWithContext from "../../utils/subtitle-with-context";
+import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -239,7 +239,7 @@ const ItemBarChart: React.FC = () => {
         <>
           Quelles sont les disciplines où le personnel enseignant est paritaire
           ?&nbsp;
-          <SubtitleWithContext classText="fr-text--small fr-text--regular" />
+          <SubtitleWithContext />
         </>
       ),
     },
