@@ -108,6 +108,7 @@ export default function ResearchTeachersOverviewTable({
       case "fields":
         return (item as FieldItem).fieldLabel;
       case "geo":
+        console.log(item);
         return (item as RegionItem).regionName;
       case "structures":
         return (item as StructureItem).structureName;
@@ -117,19 +118,6 @@ export default function ResearchTeachersOverviewTable({
   };
 
   const getItemId = (item: TableItem): string => {
-    switch (context) {
-      case "fields":
-        return (item as FieldItem).field_id;
-      case "geo":
-        return (item as RegionItem).geo_id;
-      case "structures":
-        return (item as StructureItem).structure_id;
-      default:
-        return "";
-    }
-  };
-
-  const getItemCode = (item: TableItem): string => {
     switch (context) {
       case "fields":
         return (item as FieldItem).field_id;
@@ -195,7 +183,6 @@ export default function ResearchTeachersOverviewTable({
                 <Link href={generateItemLink(item)}>
                   <strong>{getItemName(item)}</strong>
                   <br />
-                  <small className="text-grey">{getItemCode(item)}</small>
                 </Link>
               </td>
               <td className="text-center">{item.maleCount.toLocaleString()}</td>
