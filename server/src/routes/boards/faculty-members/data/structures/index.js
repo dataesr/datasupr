@@ -617,6 +617,7 @@ router.get(
     }
   }
 );
+
 router.get("/faculty-members/structures/evolution", async (req, res) => {
   try {
     const { structure_id } = req.query;
