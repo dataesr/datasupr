@@ -10,9 +10,12 @@ interface StatusOptionsProps {
     enseignantsChercheurs: number;
     totalTitulaires: number;
   }>;
+  displayAsPercentage: boolean;
 }
+
 export default function StatusOptions({
   disciplines,
+  displayAsPercentage,
 }: StatusOptionsProps): HighchartsInstance.Options | null {
   if (!disciplines || disciplines.length === 0) return null;
 
@@ -36,7 +39,9 @@ export default function StatusOptions({
           cursor: "pointer",
           dataLabels: {
             enabled: true,
-            format: "<b>{point.name}</b>: {point.percentage:.1f}%",
+            format: displayAsPercentage
+              ? "<b>{point.name}</b>: {point.percentage:.1f}%"
+              : "<b>{point.name}</b>: {point.y} personnes",
             style: {
               textOutline: "1px contrast",
             },
@@ -54,8 +59,25 @@ export default function StatusOptions({
         },
       },
       tooltip: {
-        pointFormat:
-          "{point.name}: <b>{point.y} personnes</b> ({point.percentage:.1f}%)",
+        pointFormat: displayAsPercentage
+          ? "{point.name}: <b>{point.y} personnes</b> ({point.percentage:.1f}%)"
+          : "{point.name}: <b>{point.options.absoluteValue} personnes</b>",
+        formatter: function () {
+          const point = this.point as Highcharts.Point;
+          if (displayAsPercentage) {
+            return `${point.name}: <b>${(point.y ?? 0).toLocaleString(
+              "fr-FR"
+            )} personnes</b> (${
+              point.percentage !== undefined
+                ? point.percentage.toFixed(1)
+                : "0.0"
+            }%)`;
+          } else {
+            return `${point.name}: <b>${(point.y ?? 0).toLocaleString(
+              "fr-FR"
+            )} personnes</b>`;
+          }
+        },
       },
       legend: {
         enabled: true,
@@ -80,34 +102,48 @@ export default function StatusOptions({
           data: [
             {
               name: "Enseignants-chercheurs",
-              y: discipline.enseignantsChercheurs,
+              y: displayAsPercentage
+                ? (discipline.enseignantsChercheurs / discipline.totalCount) *
+                  100
+                : discipline.enseignantsChercheurs,
+              absoluteValue: discipline.enseignantsChercheurs,
               sliced: true,
               selected: true,
               color: "var(--orange-terre-battue-main-645)",
               dataLabels: {
                 enabled: true,
-                format:
-                  "<b>Enseignants-chercheurs</b>: {point.percentage:.1f}%<br/>({point.y} pers.)",
+                format: displayAsPercentage
+                  ? "<b>Enseignants-chercheurs</b>: {point.percentage:.1f}%<br/>({point.absoluteValue} pers.)"
+                  : "<b>Enseignants-chercheurs</b>: {point.y} pers.",
               },
-            },
+            } as HighchartsInstance.PointOptionsObject,
             {
               name: "Titulaires non-chercheurs",
-              y: discipline.titulairesNonChercheurs,
+              y: displayAsPercentage
+                ? (discipline.titulairesNonChercheurs / discipline.totalCount) *
+                  100
+                : discipline.titulairesNonChercheurs,
+              absoluteValue: discipline.titulairesNonChercheurs,
               color: "var(--blue-cumulus-main-526)",
               dataLabels: {
-                format:
-                  "<b>Titulaires non-chercheurs</b>: {point.percentage:.1f}%<br/>({point.y} pers.)",
+                format: displayAsPercentage
+                  ? "<b>Titulaires non-chercheurs</b>: {point.percentage:.1f}%<br/>({point.absoluteValue} pers.)"
+                  : "<b>Titulaires non-chercheurs</b>: {point.y} pers.",
               },
-            },
+            } as HighchartsInstance.PointOptionsObject,
             {
               name: "Non-titulaires",
-              y: discipline.nonTitulaires,
+              y: displayAsPercentage
+                ? (discipline.nonTitulaires / discipline.totalCount) * 100
+                : discipline.nonTitulaires,
+              absoluteValue: discipline.nonTitulaires,
               color: "var(--blue-ecume-moon-675)",
               dataLabels: {
-                format:
-                  "<b>Non-titulaires</b>: {point.percentage:.1f}%<br/>({point.y} pers.)",
+                format: displayAsPercentage
+                  ? "<b>Non-titulaires</b>: {point.percentage:.1f}%<br/>({point.absoluteValue} pers.)"
+                  : "<b>Non-titulaires</b>: {point.y} pers.",
               },
-            },
+            } as HighchartsInstance.PointOptionsObject,
           ],
         } as HighchartsInstance.SeriesPieOptions,
       ],
@@ -116,30 +152,37 @@ export default function StatusOptions({
 
     return CreateChartOptions("pie", newOptions);
   }
+
   disciplines.sort((a, b) => b.totalCount - a.totalCount);
 
   const sortedDisciplines = [...disciplines]
     .sort((a, b) => b.totalCount - a.totalCount)
     .slice(0, 10);
 
-  const categories = sortedDisciplines.map(d => d.fieldLabel);
+  const categories = sortedDisciplines.map((d) => d.fieldLabel);
 
-  const enseignantsChercheursData = sortedDisciplines.map(d => ({
-    y: Math.round((d.enseignantsChercheurs / d.totalCount) * 100 * 10) / 10,
+  const enseignantsChercheursData = sortedDisciplines.map((d) => ({
+    y: displayAsPercentage
+      ? Math.round((d.enseignantsChercheurs / d.totalCount) * 100 * 10) / 10
+      : d.enseignantsChercheurs,
     count: d.enseignantsChercheurs,
-    total: d.totalCount
+    total: d.totalCount,
   }));
 
-  const titulairesNonChercheursData = sortedDisciplines.map(d => ({
-    y: Math.round((d.titulairesNonChercheurs / d.totalCount) * 100 * 10) / 10,
+  const titulairesNonChercheursData = sortedDisciplines.map((d) => ({
+    y: displayAsPercentage
+      ? Math.round((d.titulairesNonChercheurs / d.totalCount) * 100 * 10) / 10
+      : d.titulairesNonChercheurs,
     count: d.titulairesNonChercheurs,
-    total: d.totalCount
+    total: d.totalCount,
   }));
 
-  const nonTitulairesData = sortedDisciplines.map(d => ({
-    y: Math.round((d.nonTitulaires / d.totalCount) * 100 * 10) / 10,
+  const nonTitulairesData = sortedDisciplines.map((d) => ({
+    y: displayAsPercentage
+      ? Math.round((d.nonTitulaires / d.totalCount) * 100 * 10) / 10
+      : d.nonTitulaires,
     count: d.nonTitulaires,
-    total: d.totalCount
+    total: d.totalCount,
   }));
 
   const newOptions: HighchartsInstance.Options = {
@@ -161,27 +204,75 @@ export default function StatusOptions({
     },
     yAxis: {
       min: 0,
-      max: 100,
+      max: displayAsPercentage ? 100 : undefined,
       title: {
-        text: "Pourcentage (%)",
+        text: displayAsPercentage ? "Pourcentage (%)" : "Nombre d'enseignants",
         style: {
           fontSize: "12px",
         },
       },
       labels: {
-        format: "{value}%",
+        format: displayAsPercentage ? "{value}%" : "{value}",
+        formatter: function () {
+          return displayAsPercentage
+            ? `${this.value}%`
+            : Number(this.value).toLocaleString("fr-FR");
+        },
       },
     },
     tooltip: {
-      pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y:.1f}%</b> ({point.count} sur {point.total})<br/>',
+      useHTML: true,
       shared: true,
+      formatter: function () {
+        let s = `<span style="font-size: 10px">${this.x}</span><br/>`;
+        let totalSum = 0;
+
+        if (this.points) {
+          type CustomPoint = Highcharts.Point & { count?: number };
+          this.points.forEach(function (point) {
+            totalSum += (point.point as CustomPoint).count ?? 0;
+          });
+
+          this.points.forEach(function (point) {
+            const seriesName = point.series.name;
+            const absoluteValue = (point.point as CustomPoint).count ?? 0;
+            const percentage = (absoluteValue / totalSum) * 100;
+
+            if (displayAsPercentage) {
+              s += `<span style="color:${
+                point.color
+              }">\u25CF</span> ${seriesName}: <b>${(point.y ?? 0).toFixed(
+                1
+              )}%</b> (${absoluteValue.toLocaleString(
+                "fr-FR"
+              )} personnes)<br/>`;
+            } else {
+              s += `<span style="color:${
+                point.color
+              }">\u25CF</span> ${seriesName}: <b>${absoluteValue.toLocaleString(
+                "fr-FR"
+              )} personnes</b> (${percentage.toFixed(1)}%)<br/>`;
+            }
+          });
+        }
+        return s;
+      },
     },
     plotOptions: {
       bar: {
-        stacking: "normal",
+        stacking: displayAsPercentage ? "normal" : undefined,
         dataLabels: {
           enabled: true,
-          format: "{y:.1f}%",
+          format: displayAsPercentage ? "{y:.1f}%" : "{point.count}",
+          formatter: function () {
+            if (displayAsPercentage) {
+              return `${(this.y ?? 0).toFixed(1)}%`;
+            } else {
+              return Number(
+                (this.point as { count?: number }).count
+              ).toLocaleString("fr-FR");
+            }
+          },
           style: {
             fontSize: "10px",
             fontWeight: "bold",

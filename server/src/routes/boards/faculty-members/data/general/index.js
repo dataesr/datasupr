@@ -8,15 +8,29 @@ router.get("/faculty-members/filters/years", async (req, res) => {
     const collection = db.collection("faculty-members_main_staging");
 
     const academicYears = await collection.distinct("annee_universitaire");
-
     const sortedYears = academicYears.filter(Boolean).sort((a, b) => {
       const yearA = parseInt(a.split("-")[0]);
       const yearB = parseInt(b.split("-")[0]);
       return yearB - yearA;
     });
 
+    const completeYears = [];
+    for (const year of sortedYears) {
+      const nonTitulaireCount = await collection.countDocuments({
+        annee_universitaire: year,
+        is_titulaire: false,
+      });
+      if (nonTitulaireCount > 0) {
+        completeYears.push(year);
+      }
+    }
+
+    const lastCompleteYear = completeYears[0] || null;
+
     res.json({
       academic_years: sortedYears,
+      complete_years: completeYears,
+      last_complete_year: lastCompleteYear,
     });
   } catch (error) {
     console.error("Error fetching filters:", error);
@@ -691,6 +705,123 @@ router.get("/faculty-members/search-bar", async (req, res) => {
       error: "Erreur serveur lors de la récupération des données",
       details: error.message,
     });
+  }
+});
+
+router.get("/faculty-members/evolution/categories", async (req, res) => {
+  try {
+    const { context, contextId, start_year, end_year } = req.query;
+    const collection = db.collection("faculty-members_main_staging");
+
+    const matchStage = {
+      is_titulaire: true,
+    };
+
+    if (contextId) {
+      if (context === "geo") {
+        const isAcademie = contextId.toString().startsWith("A");
+        if (isAcademie) {
+          matchStage.etablissement_code_academie = contextId;
+        } else {
+          matchStage.etablissement_code_region = contextId;
+        }
+      } else if (context === "fields") {
+        matchStage.code_grande_discipline = contextId;
+      } else if (context === "structures") {
+        matchStage.$or = [
+          { etablissement_id_paysage: contextId },
+          { etablissement_id_paysage_actuel: contextId },
+        ];
+      }
+    }
+
+    if (start_year || end_year) {
+      matchStage.annee_universitaire = {};
+      if (start_year) {
+        matchStage.annee_universitaire.$gte = start_year;
+      }
+      if (end_year) {
+        matchStage.annee_universitaire.$lte = end_year;
+      }
+    }
+
+    const evolutionData = await collection
+      .aggregate([
+        { $match: matchStage },
+        {
+          $group: {
+            _id: {
+              annee_universitaire: "$annee_universitaire",
+              category_name: "$categorie_assimilation",
+            },
+            totalCount: { $sum: "$effectif" },
+            maleCount: {
+              $sum: { $cond: [{ $eq: ["$sexe", "Masculin"] }, "$effectif", 0] },
+            },
+            femaleCount: {
+              $sum: { $cond: [{ $eq: ["$sexe", "Féminin"] }, "$effectif", 0] },
+            },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            annee_universitaire: "$_id.annee_universitaire",
+            categoryName: "$_id.category_name",
+            totalCount: 1,
+            maleCount: 1,
+            femaleCount: 1,
+          },
+        },
+        { $sort: { annee_universitaire: 1, categoryName: 1 } },
+      ])
+      .toArray();
+
+    const formattedEvolutionData = evolutionData.reduce((acc, item) => {
+      if (!acc[item.annee_universitaire]) {
+        acc[item.annee_universitaire] = [];
+      }
+      acc[item.annee_universitaire].push({
+        categoryName: item.categoryName,
+        totalCount: item.totalCount,
+        maleCount: item.maleCount,
+        femaleCount: item.femaleCount,
+      });
+      return acc;
+    }, {});
+
+    const allYears = [
+      ...new Set(evolutionData.map((d) => d.annee_universitaire)),
+    ].sort();
+    const allCategories = [
+      ...new Set(evolutionData.map((d) => d.categoryName)),
+    ].filter(Boolean);
+
+    const seriesData = allCategories.map((categoryName) => {
+      return {
+        name: categoryName,
+        data: allYears.map((year) => {
+          const yearData = evolutionData.find(
+            (d) =>
+              d.annee_universitaire === year && d.categoryName === categoryName
+          );
+          return {
+            y: yearData ? yearData.totalCount : 0,
+            maleCount: yearData ? yearData.maleCount : 0,
+            femaleCount: yearData ? yearData.femaleCount : 0,
+            annee_universitaire: year,
+          };
+        }),
+      };
+    });
+
+    res.json({
+      evolutionByCategories: seriesData,
+      academicYears: allYears,
+    });
+  } catch (error) {
+    console.error("Error fetching category evolution:", error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 

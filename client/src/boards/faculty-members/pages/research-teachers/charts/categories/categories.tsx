@@ -87,7 +87,7 @@ export const CategoryDistribution = () => {
     annee_universitaire: selectedYear,
     contextId,
   });
-
+  console.log(researchTeachersData);
   const categoryData = useMemo(() => {
     if (!researchTeachersData?.categoryDistribution) return null;
 

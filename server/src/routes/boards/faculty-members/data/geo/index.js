@@ -673,7 +673,7 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
     const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {
-      is_enseignant_chercheur: true,
+      is_titulaire: true,
     };
     if (annee_universitaire) {
       matchStage.annee_universitaire = annee_universitaire;
@@ -709,6 +709,7 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
               section_name: "$section_cnu",
               gender: "$sexe",
               age_class: "$classe_age3",
+              category_name: "$categorie_assimilation",
             },
             count: { $sum: "$effectif" },
           },
@@ -720,6 +721,7 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
               group_name: "$_id.group_name",
               section_code: "$_id.section_code",
               section_name: "$_id.section_name",
+              age_class: "$_id.age_class",
             },
             maleCount: {
               $sum: {
@@ -732,10 +734,89 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
               },
             },
             totalCount: { $sum: "$count" },
+            categories: {
+              $push: {
+                categoryName: "$_id.category_name",
+                count: "$count",
+              },
+            },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              group_code: "$_id.group_code",
+              group_name: "$_id.group_name",
+              section_code: "$_id.section_code",
+              section_name: "$_id.section_name",
+            },
+            maleCount: { $sum: "$maleCount" },
+            femaleCount: { $sum: "$femaleCount" },
+            totalCount: { $sum: "$totalCount" },
             ageDistribution: {
               $push: {
                 ageClass: "$_id.age_class",
-                count: "$count",
+                count: "$totalCount",
+              },
+            },
+            categories: {
+              $push: "$categories",
+            },
+          },
+        },
+        {
+          $addFields: {
+            categories: {
+              $reduce: {
+                input: "$categories",
+                initialValue: [],
+                in: { $concatArrays: ["$$value", "$$this"] },
+              },
+            },
+          },
+        },
+        {
+          $addFields: {
+            categories: {
+              $filter: {
+                input: {
+                  $map: {
+                    input: {
+                      $setUnion: [
+                        {
+                          $map: {
+                            input: "$categories",
+                            as: "cat",
+                            in: "$$cat.categoryName",
+                          },
+                        },
+                      ],
+                    },
+                    as: "catName",
+                    in: {
+                      categoryName: "$$catName",
+                      count: {
+                        $sum: {
+                          $map: {
+                            input: {
+                              $filter: {
+                                input: "$categories",
+                                as: "cat",
+                                cond: {
+                                  $eq: ["$$cat.categoryName", "$$catName"],
+                                },
+                              },
+                            },
+                            as: "fcat",
+                            in: "$$fcat.count",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                as: "cat",
+                cond: { $ne: ["$$cat.categoryName", null] },
               },
             },
           },
@@ -757,10 +838,75 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
                 maleCount: "$maleCount",
                 femaleCount: "$femaleCount",
                 ageDistribution: "$ageDistribution",
+                categories: "$categories",
+              },
+            },
+            groupCategories: {
+              $push: "$categories",
+            },
+          },
+        },
+        {
+          $addFields: {
+            categories: {
+              $filter: {
+                input: {
+                  $map: {
+                    input: {
+                      $setUnion: [
+                        {
+                          $map: {
+                            input: {
+                              $reduce: {
+                                input: "$groupCategories",
+                                initialValue: [],
+                                in: { $concatArrays: ["$$value", "$$this"] },
+                              },
+                            },
+                            as: "cat",
+                            in: "$$cat.categoryName",
+                          },
+                        },
+                      ],
+                    },
+                    as: "catName",
+                    in: {
+                      categoryName: "$$catName",
+                      count: {
+                        $sum: {
+                          $map: {
+                            input: {
+                              $filter: {
+                                input: {
+                                  $reduce: {
+                                    input: "$groupCategories",
+                                    initialValue: [],
+                                    in: {
+                                      $concatArrays: ["$$value", "$$this"],
+                                    },
+                                  },
+                                },
+                                as: "cat",
+                                cond: {
+                                  $eq: ["$$cat.categoryName", "$$catName"],
+                                },
+                              },
+                            },
+                            as: "fcat",
+                            in: "$$fcat.count",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                as: "cat",
+                cond: { $ne: ["$$cat.categoryName", null] },
               },
             },
           },
         },
+        { $project: { groupCategories: 0 } },
         {
           $addFields: {
             ageDistribution: ageClasses.map((ageClass) => ({
@@ -973,7 +1119,6 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
         totalCount: item.totalCount,
       };
     });
-
     res.json({
       cnuGroups: cnuData.map((group) => ({
         cnuGroupId: group._id.group_code,
@@ -982,13 +1127,20 @@ router.get("/faculty-members/geo/research-teachers", async (req, res) => {
         femaleCount: group.femaleCount,
         totalCount: group.groupTotal,
         ageDistribution: group.ageDistribution,
+        categories: group.categories,
         cnuSections: group.sections.map((section) => ({
           cnuSectionId: section.sectionCode,
           cnuSectionLabel: section.sectionName,
           maleCount: section.maleCount,
           femaleCount: section.femaleCount,
           totalCount: section.totalCount,
-          ageDistribution: section.ageDistribution,
+          ageDistribution: ageClasses.map((ageClass) => ({
+            ageClass,
+            count:
+              section.ageDistribution.find((a) => a.ageClass === ageClass)
+                ?.count || 0,
+          })),
+          categories: section.categories,
         })),
       })),
       regions: geoEntities,

@@ -277,7 +277,7 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
     return (
       <div className="fr-p-3w fr-mb-3w">
         <div className="fr-alert fr-alert--error fr-alert--sm">
-          <p>Erreur lors du chargement des données de typologie</p>
+          <p>Erreur lors du chargement des données des parités</p>
           <p className="fr-text--sm">{error.message}</p>
         </div>
       </div>

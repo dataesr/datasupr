@@ -184,13 +184,22 @@ export function useBreadcrumbItems(
     return null;
   })();
 
+  const addYearParam = (href: string) => {
+    if (!selectedYear) return href;
+    const url = new URL(href, window.location.origin);
+    url.searchParams.set("annee_universitaire", selectedYear);
+    return url.pathname + url.search;
+  };
+
   if (!contextId) {
     switch (context) {
       case "fields":
         return [
           {
             label: "Toutes les disciplines",
-            href: "/personnel-enseignant/discipline/vue-d'ensemble/",
+            href: addYearParam(
+              "/personnel-enseignant/discipline/vue-d'ensemble/"
+            ),
           },
           ...(currentPage ? [{ label: currentPage, href: "#" }] : []),
         ];
@@ -198,7 +207,7 @@ export function useBreadcrumbItems(
         return [
           {
             label: "Donnée nationale",
-            href: "/personnel-enseignant/geo/vue-d'ensemble/",
+            href: addYearParam("/personnel-enseignant/geo/vue-d'ensemble/"),
           },
           ...(currentPage ? [{ label: currentPage, href: "#" }] : []),
         ];
@@ -206,7 +215,9 @@ export function useBreadcrumbItems(
         return [
           {
             label: "Tous les établissements",
-            href: "/personnel-enseignant/universite/vue-d'ensemble/",
+            href: addYearParam(
+              "/personnel-enseignant/universite/vue-d'ensemble/"
+            ),
           },
           ...(currentPage ? [{ label: currentPage, href: "#" }] : []),
         ];
@@ -228,13 +239,15 @@ export function useBreadcrumbItems(
         ? "/personnel-enseignant/geo/vue-d'ensemble/"
         : "/personnel-enseignant/universite/vue-d'ensemble/";
 
-    const overviewHref = `${baseHref}?annee_universitaire=${selectedYear}&${
-      context === "fields"
-        ? `field_id=${contextId}`
-        : context === "geo"
-        ? `geo_id=${contextId}`
-        : `structure_id=${contextId}`
-    }`;
+    const overviewHref = addYearParam(
+      `${baseHref}?${
+        context === "fields"
+          ? `field_id=${contextId}`
+          : context === "geo"
+          ? `geo_id=${contextId}`
+          : `structure_id=${contextId}`
+      }`
+    );
 
     let name = isContextLoading
       ? "Chargement..."
@@ -246,10 +259,12 @@ export function useBreadcrumbItems(
     }
 
     if (context === "geo" && isAcademie && contextData?.region_name) {
-      const regionHref = `${baseHref}?annee_universitaire=${selectedYear}&geo_id=${contextData.region_id}`;
+      const regionHref = addYearParam(
+        `${baseHref}?geo_id=${contextData.region_id}`
+      );
 
       return [
-        { label: baseLabel, href: baseHref },
+        { label: baseLabel, href: addYearParam(baseHref) },
         { label: `Région ${contextData.region_name}`, href: regionHref },
         { label: name, href: overviewHref },
         ...(currentPage ? [{ label: currentPage, href: "#" }] : []),
@@ -257,13 +272,12 @@ export function useBreadcrumbItems(
     }
 
     return [
-      { label: baseLabel, href: baseHref },
+      { label: baseLabel, href: addYearParam(baseHref) },
       { label: name, href: overviewHref },
       ...(currentPage ? [{ label: currentPage, href: "#" }] : []),
     ];
   }
 }
-
 const rootStyles = getComputedStyle(document.documentElement);
 
 export const getColorForDiscipline = (discipline: string) => {

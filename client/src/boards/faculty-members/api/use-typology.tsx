@@ -48,7 +48,7 @@ export const useFacultyMembersTypology = ({
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error(
-          "Erreur lors de la récupération des données de typologie"
+          "Erreur lors de la récupération des données de la parité"
         );
       }
 

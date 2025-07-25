@@ -125,47 +125,61 @@ const FieldByStatus: React.FC = () => {
     <div
       style={{
         borderRadius: "8px",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        minHeight: "220px",
       }}
     >
-      <Row horizontalAlign="center">
-        <Title as="h3" look="h5">
-          Résumé des statuts
-          <Text
-            className="fr-text--sm fr-text--regular"
-            style={{
-              marginBottom: "0px",
-            }}
-          ></Text>
-        </Title>
-      </Row>
+      <div style={{ flex: 1 }}>
+        <Row horizontalAlign="center">
+          <Title as="h3" look="h5">
+            Résumé des statuts
+            <Text
+              className="fr-text--sm fr-text--regular"
+              style={{
+                marginBottom: "0px",
+              }}
+            ></Text>
+          </Title>
+        </Row>
 
-      {statusItems.map((item, index) => (
-        <div key={index} className="fr-mb-3w">
-          <Row horizontalAlign="center" className="fr-text--sm fr-text--bold">
-            {item.label}
-          </Row>
-          <Row horizontalAlign="center" className="fr-text--xs fr-text--grey">
-            {item.count.toLocaleString()} personnes
-          </Row>
-          <div
-            style={{
-              height: "8px",
-              backgroundColor: "#f5f5f5",
-              borderRadius: "4px",
-              overflow: "hidden",
-              marginTop: "0.5rem",
-            }}
-          >
+        {statusItems.map((item, index) => (
+          <div key={index} className="fr-mb-3w">
+            <Row horizontalAlign="center" className="fr-text--sm fr-text--bold">
+              {item.label}
+            </Row>
+            <Row horizontalAlign="center" className="fr-text--xs fr-text--grey">
+              {item.count.toLocaleString()} personnes
+            </Row>
             <div
               style={{
-                width: `${item.percent}%`,
-                backgroundColor: item.color,
-                height: "100%",
+                height: "8px",
+                backgroundColor: "#f5f5f5",
+                borderRadius: "4px",
+                overflow: "hidden",
+                marginTop: "0.5rem",
               }}
-            ></div>
+            >
+              <div
+                style={{
+                  width: `${item.percent}%`,
+                  backgroundColor: item.color,
+                  height: "100%",
+                }}
+              ></div>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
+      <Row horizontalAlign="center" style={{ marginTop: "auto" }}>
+        <Text size="sm">
+          <i>
+            Ces indicateurs sont calculés pour l'année universitaire{" "}
+            {selectedYear}.
+          </i>
+        </Text>
+      </Row>
     </div>
   );
 };

@@ -167,7 +167,7 @@ router.get(
       const collection = db.collection("faculty-members_main_staging");
 
       const matchStage = {
-        is_enseignant_chercheur: true,
+        is_titulaire: true,
       };
       if (annee_universitaire) {
         matchStage.annee_universitaire = annee_universitaire;
@@ -178,6 +178,13 @@ router.get(
           { etablissement_id_paysage_actuel: structure_id },
         ];
       }
+
+      const ageClasses = [
+        "35 ans et moins",
+        "36 à 55 ans",
+        "56 ans et plus",
+        "Non précisé",
+      ];
 
       const cnuData = await collection
         .aggregate([
@@ -191,6 +198,7 @@ router.get(
                 section_name: "$section_cnu",
                 gender: "$sexe",
                 age_class: "$classe_age3",
+                category_name: "$categorie_assimilation",
               },
               count: { $sum: "$effectif" },
             },
@@ -202,6 +210,7 @@ router.get(
                 group_name: "$_id.group_name",
                 section_code: "$_id.section_code",
                 section_name: "$_id.section_name",
+                age_class: "$_id.age_class",
               },
               maleCount: {
                 $sum: {
@@ -214,10 +223,83 @@ router.get(
                 },
               },
               totalCount: { $sum: "$count" },
+              categories: {
+                $push: {
+                  categoryName: "$_id.category_name",
+                  count: "$count",
+                },
+              },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                group_code: "$_id.group_code",
+                group_name: "$_id.group_name",
+                section_code: "$_id.section_code",
+                section_name: "$_id.section_name",
+              },
+              groupTotal: { $sum: "$totalCount" },
+              maleCount: { $sum: "$maleCount" },
+              femaleCount: { $sum: "$femaleCount" },
+              totalCount: { $sum: "$totalCount" },
               ageDistribution: {
                 $push: {
                   ageClass: "$_id.age_class",
-                  count: "$count",
+                  count: "$totalCount",
+                },
+              },
+              // Push the categories arrays for later flattening and consolidation
+              categories: {
+                $push: "$categories",
+              },
+            },
+          },
+          {
+            // Flatten the categories array (it's an array of arrays after $push)
+            $addFields: {
+              categories: {
+                $reduce: {
+                  input: "$categories",
+                  initialValue: [],
+                  in: { $concatArrays: ["$$value", "$$this"] },
+                },
+              },
+            },
+          },
+          {
+            // Consolidate categories by name and sum their counts for the sections
+            $addFields: {
+              categories: {
+                $filter: {
+                  input: {
+                    $map: {
+                      input: { $setUnion: "$categories.categoryName" }, // Get all unique category names
+                      as: "catName",
+                      in: {
+                        categoryName: "$$catName",
+                        count: {
+                          $sum: {
+                            $map: {
+                              input: {
+                                $filter: {
+                                  input: "$categories",
+                                  as: "cat",
+                                  cond: {
+                                    $eq: ["$$cat.categoryName", "$$catName"],
+                                  },
+                                },
+                              },
+                              as: "filteredCat",
+                              in: "$$filteredCat.count",
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  as: "cat",
+                  cond: { $ne: ["$$cat.categoryName", null] }, // Filter out null categories
                 },
               },
             },
@@ -239,8 +321,135 @@ router.get(
                   maleCount: "$maleCount",
                   femaleCount: "$femaleCount",
                   ageDistribution: "$ageDistribution",
+                  categories: "$categories", // This now contains the consolidated categories for the section
                 },
               },
+              // Push the consolidated categories arrays from sections for group-level consolidation
+              groupCategories: {
+                $push: "$categories",
+              },
+            },
+          },
+          {
+            // Flatten the groupCategories array of arrays
+            $addFields: {
+              groupCategories: {
+                $reduce: {
+                  input: "$groupCategories",
+                  initialValue: [],
+                  in: { $concatArrays: ["$$value", "$$this"] },
+                },
+              },
+            },
+          },
+          {
+            // Consolidate categories at the group level
+            $addFields: {
+              categories: {
+                // Renaming to 'categories' as requested in the output
+                $filter: {
+                  input: {
+                    $map: {
+                      input: { $setUnion: "$groupCategories.categoryName" },
+                      as: "catName",
+                      in: {
+                        categoryName: "$$catName",
+                        count: {
+                          $sum: {
+                            $map: {
+                              input: {
+                                $filter: {
+                                  input: "$groupCategories",
+                                  as: "cat",
+                                  cond: {
+                                    $eq: ["$$cat.categoryName", "$$catName"],
+                                  },
+                                },
+                              },
+                              as: "filteredCat",
+                              in: "$$filteredCat.count",
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                  as: "cat",
+                  cond: { $ne: ["$$cat.categoryName", null] },
+                },
+              },
+            },
+          },
+          { $project: { groupCategories: 0 } }, // Remove the temporary field
+          {
+            $addFields: {
+              ageDistribution: ageClasses.map((ageClass) => ({
+                ageClass,
+                count: {
+                  $sum: {
+                    $map: {
+                      input: "$sections",
+                      as: "section",
+                      in: {
+                        $sum: {
+                          $map: {
+                            input: {
+                              $filter: {
+                                input: "$$section.ageDistribution",
+                                as: "age",
+                                cond: { $eq: ["$$age.ageClass", ageClass] },
+                              },
+                            },
+                            as: "filteredAge",
+                            in: "$$filteredAge.count",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                percent: {
+                  $cond: {
+                    if: { $gt: ["$groupTotal", 0] },
+                    then: {
+                      $multiply: [
+                        {
+                          $divide: [
+                            {
+                              $sum: {
+                                $map: {
+                                  input: "$sections",
+                                  as: "section",
+                                  in: {
+                                    $sum: {
+                                      $map: {
+                                        input: {
+                                          $filter: {
+                                            input: "$$section.ageDistribution",
+                                            as: "age",
+                                            cond: {
+                                              $eq: ["$$age.ageClass", ageClass],
+                                            },
+                                          },
+                                        },
+                                        as: "filteredAge",
+                                        in: "$$filteredAge.count",
+                                      },
+                                    },
+                                  },
+                                },
+                              },
+                            },
+                            "$groupTotal",
+                          ],
+                        },
+                        100,
+                      ],
+                    },
+                    else: 0,
+                  },
+                },
+              })),
             },
           },
           { $sort: { groupTotal: -1 } },
@@ -368,68 +577,31 @@ router.get(
         })
         .filter(Boolean);
 
-      const fields = disciplinesData.map((item) => {
-        const maleCount =
-          item.genderBreakdown.find((g) => g.gender === "Masculin")?.count || 0;
-        const femaleCount =
-          item.genderBreakdown.find((g) => g.gender === "Féminin")?.count || 0;
-
-        return {
-          field_id: item._id.field_id,
-          fieldLabel: item._id.fieldLabel,
-          maleCount: maleCount,
-          femaleCount: femaleCount,
-          totalCount: item.totalCount,
-        };
-      });
-
       res.json({
-        cnuGroups: cnuData.map((group) => {
-          const ageClasses = [
-            "35 ans et moins",
-            "36 à 55 ans",
-            "56 ans et plus",
-            "Non précisé",
-          ];
-          const ageDistribution = ageClasses.map((ageClass) => {
-            let count = 0;
-
-            group.sections.forEach((section) => {
-              const ageData = section.ageDistribution.find(
-                (age) => age.ageClass === ageClass
-              );
-              if (ageData) {
-                count += ageData.count;
-              }
-            });
-
-            const percent =
-              group.groupTotal > 0 ? (count / group.groupTotal) * 100 : 0;
-
-            return {
+        cnuGroups: cnuData.map((group) => ({
+          cnuGroupId: group._id.group_code,
+          cnuGroupLabel: group._id.group_name,
+          maleCount: group.maleCount,
+          femaleCount: group.femaleCount,
+          totalCount: group.groupTotal,
+          ageDistribution: group.ageDistribution,
+          // Use the consolidated categories from the pipeline
+          categories: group.categories,
+          cnuSections: group.sections.map((section) => ({
+            cnuSectionId: section.sectionCode,
+            cnuSectionLabel: section.sectionName,
+            maleCount: section.maleCount,
+            femaleCount: section.femaleCount,
+            totalCount: section.totalCount,
+            ageDistribution: ageClasses.map((ageClass) => ({
               ageClass,
-              count,
-              percent,
-            };
-          });
-
-          return {
-            cnuGroupId: group._id.group_code,
-            cnuGroupLabel: group._id.group_name,
-            maleCount: group.maleCount,
-            femaleCount: group.femaleCount,
-            totalCount: group.groupTotal,
-            ageDistribution: ageDistribution,
-            cnuSections: group.sections.map((section) => ({
-              cnuSectionId: section.sectionCode,
-              cnuSectionLabel: section.sectionName,
-              maleCount: section.maleCount,
-              femaleCount: section.femaleCount,
-              totalCount: section.totalCount,
-              ageDistribution: section.ageDistribution,
+              count:
+                section.ageDistribution.find((a) => a.ageClass === ageClass)
+                  ?.count || 0,
             })),
-          };
-        }),
+            categories: section.categories, // This should be correct now
+          })),
+        })),
         structures: structures,
         categoryDistribution: categoryDistribution.map((cat) => ({
           categoryCode: cat._id.category_code,
@@ -445,7 +617,6 @@ router.get(
     }
   }
 );
-
 router.get("/faculty-members/structures/evolution", async (req, res) => {
   try {
     const { structure_id } = req.query;

@@ -9,7 +9,6 @@ import {
 } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useAgeDistribution } from "./use-age-distribution";
-import SubtitleWithContext from "../../pages/typology/utils/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -153,31 +152,30 @@ export function AgeDistributionPieChart() {
   }
 
   return (
-    <div>
-      <ChartWrapper
-        config={{
-          id: "age-distribution-chart",
-          idQuery: "age-distribution",
-          title: {
-            className: "fr-mt-0w",
-            look: "h6",
-            as: "h3",
-            fr: (
-              <>
-                La représentation du personnel enseignant par discipline&nbsp;
-                <i>
-                  <SubtitleWithContext classText="fr-text--lead" />
-                </i>
-              </>
-            ),
-          },
-
-          integrationURL: generateIntegrationURL(context, "age"),
-        }}
-        options={chartOptions}
-        legend={null}
-        renderData={() => <RenderData data={processedData.chartData} />}
-      />
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <div style={{ flex: 1 }}>
+        <ChartWrapper
+          config={{
+            id: "age-distribution-chart",
+            idQuery: "age-distribution",
+            title: {
+              className: "fr-mt-0w",
+              look: "h5",
+              as: "h3",
+              fr: <>Répartition par âge</>,
+            },
+            integrationURL: generateIntegrationURL(context, "age"),
+          }}
+          options={chartOptions}
+          legend={null}
+          renderData={() => <RenderData data={processedData.chartData} />}
+        />
+      </div>
+      <div>
+        <div className="fr-text--sm fr-text--center">
+          <i>Les effectifs sont répartis par tranches d'âge</i>
+        </div>
+      </div>
     </div>
   );
 }

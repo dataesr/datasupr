@@ -1,9 +1,25 @@
-import { Container, Link, Nav } from "@dataesr/dsfr-plus";
+import { Breadcrumb, Col, Container, Link, Nav, Row } from "@dataesr/dsfr-plus";
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
+import SubtitleWithContext from "../components/subtitle-with-context";
+import YearSelector from "../components/filters";
+import { useBreadcrumbItems, useContextDetection } from "../utils";
 import "./styles.scss";
-import { SearchBar } from "../components/search-bar";
 
 export function FacultyLayout() {
+  const { context, contextId, contextName } = useContextDetection();
+
+  function capitalize(word: string) {
+    return String(word).charAt(0).toUpperCase() + String(word).slice(1);
+  }
+
+  const contextNameCapital = capitalize(contextName);
+
+  const breadcrumbItems = useBreadcrumbItems(
+    context,
+    contextId,
+    contextNameCapital
+  );
+
   const location = useLocation();
   const path = location.pathname;
   const [searchParams] = useSearchParams();
@@ -24,10 +40,31 @@ export function FacultyLayout() {
 
   return (
     <>
-      <div className="layout-header-wrapper">
+      <div className="title-container">
         <Container>
-          <div className="layout-header">
-            <Nav className="layout-nav">
+          <Row>
+            <Col md={12}>
+              <SubtitleWithContext />
+            </Col>
+          </Row>
+          <Col md={12}>
+            <Breadcrumb className="fr-mb-0">
+              <Link href="/personnel-enseignant">
+                Accueil personnels enseignants
+              </Link>
+              {breadcrumbItems.map((item, index) => (
+                <Link key={index} href={item.href}>
+                  {item.label}
+                </Link>
+              ))}
+            </Breadcrumb>
+          </Col>
+        </Container>
+      </div>
+      <Container>
+        <Row className="fr-mb-4w fr-mt-3w">
+          <Col md={7} className="text-left">
+            <Nav>
               <Link
                 current={path.includes(`vue-d'ensemble`)}
                 href={buildContextualPath("vue-d'ensemble")}
@@ -38,7 +75,7 @@ export function FacultyLayout() {
                 current={path.includes(`typologie`)}
                 href={buildContextualPath("typologie")}
               >
-                Typologie
+                Parité Hommes / Femmes
               </Link>
               <Link
                 current={path.includes(`evolution`)}
@@ -53,13 +90,13 @@ export function FacultyLayout() {
                 Enseignants chercheurs
               </Link>
             </Nav>
-            <div className="layout-search">
-              <SearchBar />
-            </div>
-          </div>
-        </Container>
-      </div>
-      <Container>
+          </Col>
+          <Col md={5} className="text-right">
+            <YearSelector />
+          </Col>
+        </Row>
+      </Container>
+      <Container fluid>
         <Outlet />
       </Container>
     </>

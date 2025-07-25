@@ -5,7 +5,6 @@ import { useSearchParams } from "react-router-dom";
 import { useContextDetection } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useDisciplineDistribution } from "./use-discipline-distribution";
-import SubtitleWithContext from "../../pages/typology/utils/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -112,8 +111,8 @@ const DistributionBar: React.FC = () => {
       as: "h2",
       fr: (
         <>
-          Quelles sont les disciplines qui emploient le plus de personnel enseignant ?&nbsp;
-          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+          Quelles sont les disciplines qui emploient le plus de personnel
+          enseignant ?&nbsp;
         </>
       ),
     },
@@ -150,7 +149,7 @@ const DistributionBar: React.FC = () => {
       <div className="fr-mt-3w">
         <Text size="sm" className="text-center ">
           <Link href="/personnel-enseignant/discipline/typologie">
-            En savoir plus sur la typologie des enseignants
+            En savoir plus sur la parité hommes / femmes des enseignants
           </Link>
         </Text>
       </div>

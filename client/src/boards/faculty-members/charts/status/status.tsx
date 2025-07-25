@@ -1,11 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import StatusOptions from "./options";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { useContextDetection, generateIntegrationURL } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useStatusDistribution } from "./use-status-distribution";
-import SubtitleWithContext from "../../pages/typology/utils/subtitle-with-context";
+import { Button } from "@dataesr/dsfr-plus";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -33,11 +33,12 @@ function RenderData({ data }) {
           {data.map((item, index) => (
             <tr key={index}>
               <td>{item.fieldLabel || "Inconnu"}</td>
-              <td>{item.totalCount.toLocaleString()}</td>
-              <td>{item.nonTitulaires.toLocaleString()}</td>
-              <td>{item.titulairesNonChercheurs.toLocaleString()}</td>
-              <td>{item.enseignantsChercheurs.toLocaleString()}</td>
-              <td>{item.totalTitulaires.toLocaleString()}</td>
+              {/* Use toLocaleString for all numerical table values */}
+              <td>{item.totalCount.toLocaleString("fr-FR")}</td>
+              <td>{item.nonTitulaires.toLocaleString("fr-FR")}</td>
+              <td>{item.titulairesNonChercheurs.toLocaleString("fr-FR")}</td>
+              <td>{item.enseignantsChercheurs.toLocaleString("fr-FR")}</td>
+              <td>{item.totalTitulaires.toLocaleString("fr-FR")}</td>
             </tr>
           ))}
         </tbody>
@@ -50,6 +51,8 @@ const StatusDistribution: React.FC = () => {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId, contextName } = useContextDetection();
+
+  const [displayAsPercentage, setDisplayAsPercentage] = useState<boolean>(true);
 
   const {
     data: statusData,
@@ -120,6 +123,7 @@ const StatusDistribution: React.FC = () => {
 
   const chartOptions = StatusOptions({
     disciplines: chartData,
+    displayAsPercentage: displayAsPercentage,
   });
 
   if (isLoading) {
@@ -156,6 +160,24 @@ const StatusDistribution: React.FC = () => {
 
   return (
     <div>
+      <div className="fr-mb-2w fr-flex fr-flex--center">
+        <Button
+          size="sm"
+          onClick={() => setDisplayAsPercentage(true)}
+          variant={displayAsPercentage ? undefined : "secondary"}
+          className="fr-mr-2v"
+        >
+          Afficher en Pourcentage
+        </Button>
+        <Button
+          size="sm"
+          onClick={() => setDisplayAsPercentage(false)}
+          variant={!displayAsPercentage ? undefined : "secondary"}
+        >
+          Afficher en Effectifs
+        </Button>
+      </div>
+
       <ChartWrapper
         config={{
           id: "statusDistribution",
@@ -168,7 +190,6 @@ const StatusDistribution: React.FC = () => {
               <>
                 Quelle est la répartition des statuts du personnel enseignant
                 par discipline ?&nbsp;
-                <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
               </>
             ),
           },

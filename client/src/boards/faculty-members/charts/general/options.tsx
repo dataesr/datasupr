@@ -43,11 +43,13 @@ export default function OptionsColumnChart({
       malePercentage: Math.round((field.maleCount / field.totalCount) * 100),
     },
   }));
+
   const options: Highcharts.Options = {
     chart: {
       type: "column",
+      inverted: true,
       height: 450,
-      marginLeft: 0,
+      marginLeft: 150,
       style: {
         fontFamily: "Marianne, sans-serif",
       },
@@ -64,6 +66,7 @@ export default function OptionsColumnChart({
           color: "#333333",
           fontSize: "12px",
         },
+        align: "right",
       },
     },
     yAxis: {

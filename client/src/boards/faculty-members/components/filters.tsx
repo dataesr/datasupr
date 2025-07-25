@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   Col,
   Modal,
@@ -113,12 +114,25 @@ const YearSelector = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
+  useEffect(() => {
+    if (
+      yearsData?.last_complete_year &&
+      !searchParams.get("annee_universitaire")
+    ) {
+      searchParams.set("annee_universitaire", yearsData.last_complete_year);
+      navigate({ search: searchParams.toString() }, { replace: true });
+    }
+  }, [yearsData, searchParams, navigate]);
+
   const years = useMemo(
     () => yearsData?.academic_years || [],
     [yearsData?.academic_years]
   );
+  const lastCompleteYear = yearsData?.last_complete_year;
+
   const initialYear =
     searchParams.get("annee_universitaire") ||
+    lastCompleteYear ||
     (years.length > 0 ? years[0] : "");
 
   const [selectedYear, setSelectedYear] = useState(initialYear);
@@ -216,10 +230,7 @@ const YearSelector = () => {
           return;
       }
       navigate(`${path}?${params.toString()}`);
-    } 
-        // on garde ce else si juste l'année est changé, mais ça peut changer en fait
-
-    else if (selectedYear !== initialYear) {
+    } else if (selectedYear !== initialYear) {
       const newParams = new URLSearchParams(searchParams);
       newParams.set("annee_universitaire", selectedYear);
       navigate({ search: newParams.toString() }, { replace: true });
@@ -257,8 +268,9 @@ const YearSelector = () => {
         onClick={() => setIsOpen(true)}
         size="sm"
       >
-        Filtrer les données
+        Explorer les données
       </Button>
+
       <Modal isOpen={isOpen} hide={handleClose} size="lg">
         <ModalTitle>Filtrer les données</ModalTitle>
         <ModalContent>
@@ -277,9 +289,7 @@ const YearSelector = () => {
             style={{ marginBottom: "1rem" }}
           />
           <Tabs>
-            <Tab
-              label={`Disciplines (${filteredDisciplines.length})`}
-            >
+            <Tab label={`Disciplines (${filteredDisciplines.length})`}>
               <ContextFilter
                 type="discipline"
                 data={filteredDisciplines}
@@ -307,9 +317,7 @@ const YearSelector = () => {
                 selectedItem={selectedContextItem}
               />
             </Tab>
-            <Tab
-              label={`Établissements (${filteredStructures.length})`}
-            >
+            <Tab label={`Établissements (${filteredStructures.length})`}>
               <ContextFilter
                 type="structure"
                 data={filteredStructures}
@@ -321,18 +329,23 @@ const YearSelector = () => {
             </Tab>
           </Tabs>
         </ModalContent>
-        <ModalFooter >
-          <Button variant="secondary"  onClick={handleClose}>
+        <ModalFooter>
+          <Button size="sm" variant="secondary" onClick={handleClose}>
             Annuler
           </Button>
           <Button
+            size="sm"
             onClick={handleApplyFilters}
             disabled={!selectedContextItem && selectedYear === initialYear}
           >
-            Appliquer les filtres
+            Explorer
           </Button>
         </ModalFooter>
       </Modal>
+      <br />
+      <Badge className="fr-mt-1w" color="green-emeraude">
+        Année universitaire {selectedYear}
+      </Badge>
     </>
   );
 };

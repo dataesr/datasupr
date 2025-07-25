@@ -124,8 +124,21 @@ export const createAgeDistributionChartOptions = (
       },
     },
     tooltip: {
-      pointFormat:
-        "<b>{point.name}</b>: {point.percentage:.1f}% ({point.count} enseignants)",
+      useHTML: true,
+      pointFormatter: function (
+        this: Highcharts.PointOptionsObject & {
+          count?: number;
+          percentage?: number;
+        }
+      ) {
+        const count =
+          this.count?.toLocaleString("fr-FR") ??
+          this.y?.toLocaleString("fr-FR");
+        const percentage = this.percentage as number | undefined;
+        return `<b>${this.name}</b>: ${percentage?.toFixed(
+          1
+        )}% (${count} enseignants)`;
+      },
       headerFormat: "",
     },
     legend: {

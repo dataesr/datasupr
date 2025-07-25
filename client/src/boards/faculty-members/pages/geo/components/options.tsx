@@ -54,10 +54,11 @@ export const createMapOptions = ({
     map: mapDataIE,
     backgroundColor: "transparent",
     height: "550px",
-    spacing: [0, 0, 20, 0],
+    spacing: [0, 0, 0, 0],
     borderWidth: 0,
     plotBorderWidth: 0,
-    margin: [50, 10, 50, 10],
+    // Adjust margin to give more space for the wide colorAxis
+    margin: [20, 10, 80, 10], // Increased bottom margin from 50 to 80
     style: {
       fontFamily: "'Marianne', sans-serif",
     },
@@ -69,7 +70,6 @@ export const createMapOptions = ({
         ? `- ${annee_universitaire}`
         : ""
     }`,
-    align: "center",
     style: {
       color: "#000091",
       fontWeight: "bold",
@@ -103,8 +103,9 @@ export const createMapOptions = ({
         color: "#000091",
       },
     },
-    tickPositions: [0, stats.p25, stats.p50, stats.p75, stats.max_region_count],
+    tickPositions: [stats.p25, stats.p50, stats.p75, stats.max_region_count],
     layout: "horizontal",
+    width: "100%",
   },
   tooltip: {
     useHTML: true,

@@ -1,13 +1,4 @@
-import {
-  Container,
-  Row,
-  Col,
-  Title,
-  Breadcrumb,
-  Notice,
-  Link,
-  Text,
-} from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Title, Text } from "@dataesr/dsfr-plus";
 import FieldsDistributionBar from "../../charts/general/general";
 import CnuGroupsChart from "../../charts/cnu-group/cnu-chart";
 import StatusDistribution from "../../charts/status/status";
@@ -18,49 +9,13 @@ import DisciplineStatsSidebar from "../../components/top-indicators/top-fields-i
 import DisciplineStatusSummary from "../../components/fields-by-status";
 import FacultyMap from "./components/map";
 import NavigationCards from "../../components/fields-cards";
-import YearSelector from "../../components/filters";
-import { useBreadcrumbItems, useContextDetection } from "../../utils";
-import SubtitleWithContext from "../typology/utils/subtitle-with-context";
+import { useContextDetection } from "../../utils";
 
 export default function RegionsOverview() {
-  const { context, contextId, contextName } = useContextDetection();
-  const breadcrumbItems = useBreadcrumbItems(context, contextId, contextName);
+  const { contextId } = useContextDetection();
 
   return (
     <Container as="main">
-      <Row>
-        <Col md={9}>
-          <Breadcrumb className="fr-m-0 fr-mt-1w">
-            <Link href="/personnel-enseignant">
-              Accueil personnels enseignants
-            </Link>
-            {breadcrumbItems.map((item, index) => (
-              <Link key={index} href={item.href}>
-                {item.label}
-              </Link>
-            ))}
-          </Breadcrumb>
-        </Col>
-        <Col md={3} style={{ textAlign: "right" }}>
-          <YearSelector />
-        </Col>
-      </Row>
-      <Row className="fr-my-3w">
-        <Col md={12}>
-          <Notice closeMode={"disallow"} type={"warning"}>
-            Les données des personnels enseignants non permanents ne sont pas
-            prises en compte pour l'année car elles ne sont pas disponibles.
-          </Notice>
-        </Col>
-      </Row>
-
-      <Title as="h1" look="h3" className="fr-mt-2w fr-mb-3w">
-        La représentation du personnel enseignant par région
-        <i>
-          <SubtitleWithContext classText="fr-text--lead" />
-        </i>
-      </Title>
-
       <Row className="fr-mt-3w">
         <Col md={12}>
           <Text>
@@ -90,7 +45,6 @@ export default function RegionsOverview() {
                 <GeneralIndicatorsCard />
               </div>
             </div>
-
             {!contextId && (
               <div className="fr-col-md-3">
                 <div

@@ -75,104 +75,116 @@ const TopItemsIndicators: React.FC = () => {
     return null;
 
   return (
-    <div style={{ borderRadius: "8px" }}>
-      <Row horizontalAlign="center">
-        <Title as="h3" look="h5">
-          Top 3 {word}
-          <Text
-            className="fr-text--sm fr-text--regular"
-            style={{
-              marginBottom: "0px",
-            }}
-          ></Text>
-        </Title>
-      </Row>
+    <div
+      style={{
+        borderRadius: "8px",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+        minHeight: "220px",
+      }}
+    >
+      <div style={{ flex: 1 }}>
+        <Row horizontalAlign="center">
+          <Title as="h3" look="h5">
+            Top 3 {word}
+          </Title>
+        </Row>
 
-      {itemsData.slice(0, 3).map((item) => {
-        const femalePercent = Math.round(
-          ((item.femaleCount || 0) / (item.totalCount || 1)) * 100
-        );
-        const malePercent = 100 - femalePercent;
-        const truncatedName =
-          item.itemLabel.length > 20
-            ? item.itemLabel.substring(0, 30) + "..."
-            : item.itemLabel;
+        {itemsData.slice(0, 3).map((item) => {
+          const femalePercent = Math.round(
+            ((item.femaleCount || 0) / (item.totalCount || 1)) * 100
+          );
+          const malePercent = 100 - femalePercent;
+          const truncatedName =
+            item.itemLabel.length > 20
+              ? item.itemLabel.substring(0, 30) + "..."
+              : item.itemLabel;
 
-        return (
-          <div key={item.item_id}>
-            <div
-              style={{
-                textAlign: "center",
-                margin: 0,
-                padding: 0,
-                lineHeight: "1.2",
-              }}
-              className="fr-text--sm fr-text--bold"
-            >
-              {truncatedName}
-            </div>
-            <div
-              style={{
-                textAlign: "center",
-                margin: 0,
-                padding: 0,
-              }}
-              className="fr-text--xs fr-text--grey"
-            >
-              {item.totalCount.toLocaleString()} ens.
-            </div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                margin: 0,
-                padding: 0,
-              }}
-            >
+          return (
+            <div key={item.item_id}>
               <div
                 style={{
-                  height: "8px",
-                  display: "flex",
-                  borderRadius: "3px",
-                  overflow: "hidden",
-                  flex: 1,
+                  textAlign: "center",
                   margin: 0,
+                  padding: 0,
+                  lineHeight: "1.2",
+                }}
+                className="fr-text--sm fr-text--bold"
+              >
+                {truncatedName}
+              </div>
+              <div
+                style={{
+                  textAlign: "center",
+                  margin: 0,
+                  padding: 0,
+                }}
+                className="fr-text--xs fr-text--grey"
+              >
+                {item.totalCount.toLocaleString()} ens.
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  margin: 0,
+                  padding: 0,
                 }}
               >
                 <div
                   style={{
-                    width: `${femalePercent}%`,
-                    backgroundColor: "var(--women-color, #e18b76)",
-                    height: "100%",
+                    height: "8px",
+                    display: "flex",
+                    borderRadius: "3px",
+                    overflow: "hidden",
+                    flex: 1,
+                    margin: 0,
                   }}
-                ></div>
-                <div
-                  style={{
-                    width: `${malePercent}%`,
-                    backgroundColor: "var(--men-color, #efcb3a)",
-                    height: "100%",
-                  }}
-                ></div>
+                >
+                  <div
+                    style={{
+                      width: `${femalePercent}%`,
+                      backgroundColor: "var(--women-color, #e18b76)",
+                      height: "100%",
+                    }}
+                  ></div>
+                  <div
+                    style={{
+                      width: `${malePercent}%`,
+                      backgroundColor: "var(--men-color, #efcb3a)",
+                      height: "100%",
+                    }}
+                  ></div>
+                </div>
+              </div>
+              <div
+                className="fr-text--xs text-center"
+                style={{
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <span style={{ color: "var(--women-color, #e18b76)" }}>
+                  {femalePercent}%
+                </span>
+                {"/"}
+                <span style={{ color: "var(--men-color, #efcb3a)" }}>
+                  {malePercent}%
+                </span>
               </div>
             </div>
-            <div
-              className="fr-text--xs text-center"
-              style={{
-                whiteSpace: "nowrap",
-                lineHeight: "1",
-              }}
-            >
-              <span style={{ color: "var(--women-color, #e18b76)" }}>
-                {femalePercent}%
-              </span>
-              {"/"}
-              <span style={{ color: "var(--men-color, #efcb3a)" }}>
-                {malePercent}%
-              </span>
-            </div>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
+      <Row horizontalAlign="center" style={{ marginTop: "auto" }}>
+        <Text size="sm">
+          <i>
+            Ces indicateurs sont calculés pour l'année universitaire{" "}
+            {selectedYear} Dans l'effectif il y a tous les enseignants, tout
+            status confondus (titulaire, contractuel, vacataire, etc.)
+          </i>
+        </Text>
+      </Row>
     </div>
   );
 };

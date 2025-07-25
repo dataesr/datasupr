@@ -26,7 +26,6 @@ export default function NavigationCards({
 
   const { data: yearsData, isLoading: isYearsLoading } =
     useFacultyMembersYears();
-
   const yearToUse = useMemo(() => {
     if (selectedYearParam) return selectedYearParam;
     if (yearsData?.academic_years?.length > 0)

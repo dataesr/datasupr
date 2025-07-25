@@ -1,16 +1,9 @@
-import { useSearchParams } from "react-router-dom";
-import { Text } from "@dataesr/dsfr-plus";
-import { useContextDetection } from "../../../utils";
-import { useFacultyMembersTypology } from "../../../api/use-typology";
+import { Title } from "@dataesr/dsfr-plus";
+import { useContextDetection } from "../utils";
+import { useFacultyMembersTypology } from "../api/use-typology";
 
-interface SubtitleWithContextProps {
-  classText: string;
-}
-
-const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
-  const [searchParams] = useSearchParams();
+const SubtitleWithContext = () => {
   const { context, contextId, contextName } = useContextDetection();
-  const selectedYear = searchParams.get("annee_universitaire") || "";
 
   const isAcademie = context === "geo" && contextId?.toString().startsWith("A");
 
@@ -29,7 +22,7 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
         return {
           name: typologyData?.discipline?._id?.item_name,
           identifiant: typologyData?.discipline?._id?.item_code,
-          plural: "Toutes les disciplines",
+          plural: "Le personnel enseignants au niveau national",
         };
       case "geo":
         if (isAcademie) {
@@ -39,20 +32,20 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
               typologyData?.region?._id?.item_name,
             identifiant: null,
             prefix: "Académie de ",
-            plural: "Toutes les académies",
+            plural: "Le personnel enseignants au niveau national",
           };
         }
         return {
           name: typologyData?.region?._id?.item_name,
           identifiant: null,
-          prefix: "Région",
-          plural: "Toute la France",
+          prefix: "Région ",
+          plural: "Le personnel enseignants au niveau national",
         };
       case "structures":
         return {
           name: typologyData?.structure?._id?.item_name,
           identifiant: null,
-          plural: "Tous les établissements",
+          plural: "Le personnel enseignants au niveau national",
         };
       default:
         return {
@@ -64,15 +57,16 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
 
   const contextNameCapital = capitalize(contextName);
 
-  const { name, identifiant, prefix, plural = "" } = getContextParams();
+  const { name, prefix, plural = "" } = getContextParams();
 
   return (
-    <Text className={classText}>
-      Année universitaire {selectedYear}&nbsp;-&nbsp;
-      {!contextId && plural}
-      {contextId && prefix}
-      {name}&nbsp;{identifiant}
-    </Text>
+    <>
+      <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-3w">
+        {!contextId && plural}
+        {contextId && prefix}
+        {name}&nbsp; <br />
+      </Title>
+    </>
   );
 };
 
