@@ -1,7 +1,7 @@
 import { getLabel } from "../utils";
 
 export default function useQuery(currentLang) {
-  const list_wg = ["1", "2", "2_cross", "3"];
+  const list_wg = ["wg1", "wg2", "wg2_cross", "wg3"];
 
   const filter_ipcc = {
     body: {

@@ -109,6 +109,42 @@
       "EN": "Part of IPCC publications by country (top 20)"
     }
   },
+  "ipcc_institutions": {
+    "description": {
+      "FR": "La base de données s'appuie sur le rapport du GIEC, puis biblio-glutton nous permet de retrouver les identifiants de publication et enfin la base est complétée grâce à OpenAlex.",
+      "EN": "The data is based on the IPCC report, then biblio-glutton allows us to find publication identifiers and finally the database is completed using OpenAlex."
+    },
+    "integrationURL": "/teds/charts/ipcc_institutions",
+    "source": {
+      "FR": "Rapport du GIEC - OpenAlex",
+      "EN": "IPCC report - OpenAlex"
+    },
+    "sourceURL": "https://www.ipcc.ch",
+    "subtitle": {
+      "FR": "",
+      "EN": ""
+    },
+    "title_y_axis": {
+      "FR": "Nombre de publications",
+      "EN": "Number of publications"
+    },
+    "title_x_axis": {
+      "FR": "Institutions",
+      "EN": "Institutions"
+    },
+    "format1": {
+      "FR": "participe dans",
+      "EN": "is involved in"
+    },
+    "format2": {
+      "FR": "des publications du GIEC",
+      "EN": "of IPCC publications"
+    },
+    "title": {
+      "FR": "Les institutions françaises dans le GIEC (top 15)",
+      "EN": "Institutions of French IPCC publications (top 15)"
+    }
+  },
   "ipbes_all": {
     "description": {
       "FR": "La base de données s'appuie sur le rapport de l'IPBES, puis biblio-glutton nous permet de retrouver les identifiants de publication et enfin la base est complétée grâce à OpenAlex.",
