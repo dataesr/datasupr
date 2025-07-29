@@ -104,6 +104,18 @@ export function FacultyLayout() {
       </Container>
       <Container fluid>
         <Outlet />
+        <Col md={12} className="text-center fr-mt-4w">
+          <div className="fr-mt-1w">
+            <Link href="/personnel-enseignant/glossaire" className="fr-link">
+              <span
+                className="fr-icon-information-line fr-mr-1w"
+                aria-hidden="true"
+                style={{ fontSize: "1.1em" }}
+              />
+              Glossaire des termes
+            </Link>
+          </div>
+        </Col>
       </Container>
     </>
   );

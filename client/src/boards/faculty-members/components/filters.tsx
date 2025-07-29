@@ -2,7 +2,6 @@ import {
   Badge,
   Button,
   Col,
-  Link,
   Modal,
   ModalContent,
   ModalFooter,
@@ -347,20 +346,6 @@ const YearSelector = () => {
       <Badge className="fr-mt-1w" color="green-emeraude">
         Année universitaire {selectedYear}
       </Badge>
-      <div className="fr-mt-1w">
-        <Link
-          href="/personnel-enseignant/glossaire"
-          className="fr-link"
-          style={{ display: "inline-flex", alignItems: "center", gap: 6 }}
-        >
-          <span
-            className="fr-icon-information-line"
-            aria-hidden="true"
-            style={{ fontSize: "1.1em" }}
-          />
-          Glossaire des termes
-        </Link>
-      </div>
     </>
   );
 };

@@ -4,7 +4,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { generateIntegrationURL, useContextDetection } from "../../../../utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useResearchTeachersData } from "../../use-cnu-data";
-import { CnuGroupData, createCnuAgeOptions } from "./options";
+import { CnuGroupData, createCnuAgeCategoryOptions } from "./options"; // Assurez-vous d'importer la fonction mise à jour
 
 function RenderData({ data }: { data: CnuGroupData[] }) {
   if (!data || data.length === 0) {
@@ -20,7 +20,7 @@ function RenderData({ data }: { data: CnuGroupData[] }) {
   return (
     <div className="fr-table--sm fr-table fr-table--bordered">
       <caption className="fr-sr-only">
-        Répartition des enseignants-chercheurs par âge
+        Répartition des enseignants-chercheurs par âge et catégorie
       </caption>
       <table>
         <thead>
@@ -85,7 +85,9 @@ export function CnuAgeDistribution() {
         (group) =>
           group.cnuGroupId &&
           group.ageDistribution &&
-          group.ageDistribution.length > 0
+          group.ageDistribution.length > 0 &&
+          group.categories &&
+          group.categories.length > 0
       )
       .map((group) => ({
         cnuGroupId: group.cnuGroupId,
@@ -96,13 +98,14 @@ export function CnuAgeDistribution() {
         ),
         maleCount: group.maleCount,
         femaleCount: group.femaleCount,
+        categories: group.categories,
       }))
       .sort((a, b) => b.totalCount - a.totalCount);
   }, [researchTeachersData]);
 
   const chartOptions = useMemo(() => {
     if (!processedData) return null;
-    return createCnuAgeOptions(processedData);
+    return createCnuAgeCategoryOptions(processedData);
   }, [processedData]);
 
   if (isLoading) {
@@ -141,15 +144,15 @@ export function CnuAgeDistribution() {
     <div>
       <ChartWrapper
         config={{
-          id: "cnu-age-distribution",
-          idQuery: "cnu-age-distribution",
+          id: "cnu-age-category-distribution",
+          idQuery: "cnu-age-category-distribution",
           title: {
-            fr: "Age par groupe CNU",
+            fr: "Répartition des enseignants-chercheurs par tranche d'âge et par catégorie",
           },
           description: {
             fr: ``,
           },
-          integrationURL: generateIntegrationURL(context, "cnu-age"),
+          integrationURL: generateIntegrationURL(context, "cnu-age-category"),
         }}
         options={chartOptions}
         legend={null}

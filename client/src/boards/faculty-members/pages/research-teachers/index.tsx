@@ -8,7 +8,7 @@ import GeneralIndicatorsCard from "../../components/general-indicators-card/gene
 import { CnuAgeDistribution } from "./charts/age/pyra";
 import { CategoryDistribution } from "./charts/categories/categories";
 import { CategoryEvolutionChart } from "./charts/categories-evolution/evolution";
-import { GlossaryTooltip } from "../glossary/glossary-tooltip";
+import { GlossaryTerm } from "../glossary/glossary-tooltip";
 
 export function ResearchTeachers() {
   const [searchParams] = useSearchParams();
@@ -20,26 +20,26 @@ export function ResearchTeachers() {
       <Row gutters className="fr-mt-3w">
         <Col>
           <Text>
-            Un <GlossaryTooltip term="enseignant-chercheur" /> est un{" "}
-            <GlossaryTooltip term="personnel enseignant">
+            Un <GlossaryTerm term="enseignant-chercheur" /> est un{" "}
+            <GlossaryTerm term="personnel enseignant">
               enseignant titulaire
-            </GlossaryTooltip>{" "}
+            </GlossaryTerm>{" "}
             qui partage statutairement son activité entre{" "}
-            <GlossaryTooltip term="enseignement supérieur" /> et la recherche
+            <GlossaryTerm term="enseignement supérieur" /> et la recherche
             scientifique et qui exerce cette activité au sein d'un
-            <GlossaryTooltip term="établissement d'enseignement supérieur">
+            <GlossaryTerm term="établissement d'enseignement supérieur">
               établissement d'enseignement supérieur
-            </GlossaryTooltip>
+            </GlossaryTerm>
             . Il peut également se voir confier des charges administratives pour
             lesquelles il peut percevoir une prime pour charges administratives.
             Ces tâches administratives ne sont pas assimilables à un travail
             administratif effectué par d'autres personnels. À l'exception des
             enseignants-chercheurs associés, il s'agit de fonctionnaires. Bien
             qu'il existe plusieurs corps d'
-            <GlossaryTooltip term="enseignant-chercheur" />, l'expression
-            désigne principalement les enseignants-chercheurs relevant du
-            ministre chargé de l'
-            <GlossaryTooltip term="enseignement supérieur" /> et du décret
+            <GlossaryTerm term="enseignant-chercheur" />, l'expression désigne
+            principalement les enseignants-chercheurs relevant du ministre
+            chargé de l'
+            <GlossaryTerm term="enseignement supérieur" /> et du décret
             statutaire no 84-431 du 6 juin 1984 qui sont de loin les plus
             nombreux. À la rentrée 2012, ils sont 56 000 à enseigner dans les
             établissements publics sous tutelle du Ministère chargé de
