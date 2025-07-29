@@ -9,6 +9,7 @@ import { ResearchTeachers } from "./pages/research-teachers/index.tsx";
 import RegionsOverview from "./pages/geo/geo-overview.tsx";
 import { Layout } from "../../layout/layout.tsx";
 import { Typologie } from "./pages/typology/index.tsx";
+import Glossary from "./pages/glossary/index.tsx";
 
 export default function FacultyMembersRoutes() {
   return (
@@ -48,6 +49,7 @@ export default function FacultyMembersRoutes() {
             path="/discipline/enseignants-chercheurs/"
             element={<ResearchTeachers />}
           />
+          <Route path="/glossaire/" element={<Glossary />} />
         </Route>
       </Route>
     </Routes>

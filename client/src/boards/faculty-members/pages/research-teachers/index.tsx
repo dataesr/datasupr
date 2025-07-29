@@ -8,6 +8,7 @@ import GeneralIndicatorsCard from "../../components/general-indicators-card/gene
 import { CnuAgeDistribution } from "./charts/age/pyra";
 import { CategoryDistribution } from "./charts/categories/categories";
 import { CategoryEvolutionChart } from "./charts/categories-evolution/evolution";
+import { GlossaryTooltip } from "../glossary/glossary-tooltip";
 
 export function ResearchTeachers() {
   const [searchParams] = useSearchParams();
@@ -19,22 +20,30 @@ export function ResearchTeachers() {
       <Row gutters className="fr-mt-3w">
         <Col>
           <Text>
-            Un enseignant-chercheur est un enseignant titulaire qui partage
-            statutairement son activité entre l'enseignement supérieur et la
-            recherche scientifique et qui exerce cette activité au sein d'un
-            établissement d'enseignement supérieur[1]. Il peut également se voir
-            confier des charges administratives pour lesquelles il peut
-            percevoir une prime pour charges administratives. Ces tâches
-            administratives ne sont pas assimilables à un travail administratif
-            effectué par d'autres personnels[2]. À l'exception des
+            Un <GlossaryTooltip term="enseignant-chercheur" /> est un{" "}
+            <GlossaryTooltip term="personnel enseignant">
+              enseignant titulaire
+            </GlossaryTooltip>{" "}
+            qui partage statutairement son activité entre{" "}
+            <GlossaryTooltip term="enseignement supérieur" /> et la recherche
+            scientifique et qui exerce cette activité au sein d'un
+            <GlossaryTooltip term="établissement d'enseignement supérieur">
+              établissement d'enseignement supérieur
+            </GlossaryTooltip>
+            . Il peut également se voir confier des charges administratives pour
+            lesquelles il peut percevoir une prime pour charges administratives.
+            Ces tâches administratives ne sont pas assimilables à un travail
+            administratif effectué par d'autres personnels. À l'exception des
             enseignants-chercheurs associés, il s'agit de fonctionnaires. Bien
-            qu'il existe plusieurs corps d'enseignants-chercheurs, l'expression
+            qu'il existe plusieurs corps d'
+            <GlossaryTooltip term="enseignant-chercheur" />, l'expression
             désigne principalement les enseignants-chercheurs relevant du
-            ministre chargé de l'enseignement supérieur et du décret statutaire
-            no 84-431 du 6 juin 1984[3] qui sont de loin les plus nombreux. À la
-            rentrée 2012, ils sont 56 000 à enseigner dans les établissements
-            publics sous tutelle du Ministère chargé de l'Enseignement
-            supérieur[4]. L'expression est également utilisée dans
+            ministre chargé de l'
+            <GlossaryTooltip term="enseignement supérieur" /> et du décret
+            statutaire no 84-431 du 6 juin 1984 qui sont de loin les plus
+            nombreux. À la rentrée 2012, ils sont 56 000 à enseigner dans les
+            établissements publics sous tutelle du Ministère chargé de
+            l'Enseignement supérieur. L'expression est également utilisée dans
             l'enseignement supérieur privé afin de désigner les enseignants
             titulaires d'un doctorat ou de l'habilitation à diriger des
             recherches effectuant une activité de recherche au sein de leur

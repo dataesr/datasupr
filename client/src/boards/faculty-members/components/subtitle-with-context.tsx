@@ -1,9 +1,11 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useContextDetection } from "../utils";
 import { useFacultyMembersTypology } from "../api/use-typology";
+import { useLocation } from "react-router-dom";
 
 const SubtitleWithContext = () => {
   const { context, contextId, contextName } = useContextDetection();
+  const location = useLocation();
 
   const isAcademie = context === "geo" && contextId?.toString().startsWith("A");
 
@@ -58,6 +60,15 @@ const SubtitleWithContext = () => {
   const contextNameCapital = capitalize(contextName);
 
   const { name, prefix, plural = "" } = getContextParams();
+
+  // Affiche "Glossaire" si on est sur la page glossaire
+  if (location.pathname.startsWith("/personnel-enseignant/glossaire")) {
+    return (
+      <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-3w">
+        Glossaire
+      </Title>
+    );
+  }
 
   return (
     <>

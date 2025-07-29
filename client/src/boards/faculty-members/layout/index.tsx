@@ -52,46 +52,52 @@ export function FacultyLayout() {
               <Link href="/personnel-enseignant">
                 Accueil personnels enseignants
               </Link>
-              {breadcrumbItems.map((item, index) => (
-                <Link key={index} href={item.href}>
-                  {item.label}
-                </Link>
-              ))}
+              {path.startsWith("/personnel-enseignant/glossaire") ? (
+                <Link>Glossaire</Link>
+              ) : (
+                breadcrumbItems.map((item, index) => (
+                  <Link key={index} href={item.href}>
+                    {item.label}
+                  </Link>
+                ))
+              )}
             </Breadcrumb>
           </Col>
         </Container>
       </div>
       <Container>
         <Row className="fr-mb-4w fr-mt-3w">
-          <Col md={7} className="text-left">
-            <Nav>
-              <Link
-                current={path.includes(`vue-d'ensemble`)}
-                href={buildContextualPath("vue-d'ensemble")}
-              >
-                En un coup d'oeil
-              </Link>
-              <Link
-                current={path.includes(`typologie`)}
-                href={buildContextualPath("typologie")}
-              >
-                Parité Hommes / Femmes
-              </Link>
-              <Link
-                current={path.includes(`evolution`)}
-                href={buildContextualPath("evolution")}
-              >
-                Evolution
-              </Link>
-              <Link
-                current={path.includes(`enseignants-chercheurs`)}
-                href={buildContextualPath("enseignants-chercheurs")}
-              >
-                Enseignants chercheurs
-              </Link>
-            </Nav>
+          <Col md={8} className="text-left">
+            {!path.startsWith("/personnel-enseignant/glossaire") && (
+              <Nav>
+                <Link
+                  current={path.includes(`vue-d'ensemble`)}
+                  href={buildContextualPath("vue-d'ensemble")}
+                >
+                  En un coup d'oeil
+                </Link>
+                <Link
+                  current={path.includes(`typologie`)}
+                  href={buildContextualPath("typologie")}
+                >
+                  Parité Hommes / Femmes
+                </Link>
+                <Link
+                  current={path.includes(`evolution`)}
+                  href={buildContextualPath("evolution")}
+                >
+                  Evolution
+                </Link>
+                <Link
+                  current={path.includes(`enseignants-chercheurs`)}
+                  href={buildContextualPath("enseignants-chercheurs")}
+                >
+                  Enseignants chercheurs
+                </Link>
+              </Nav>
+            )}
           </Col>
-          <Col md={5} className="text-right">
+          <Col md={4} className="text-right">
             <YearSelector />
           </Col>
         </Row>
