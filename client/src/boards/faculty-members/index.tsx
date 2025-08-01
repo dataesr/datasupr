@@ -49,7 +49,7 @@ export function FacultyMembers() {
               "/personnel-enseignant/discipline/vue-d'ensemble"
             )}
           >
-            Par discipline
+            Par Grandes disciplines
           </Button>
           <div>
             <svg

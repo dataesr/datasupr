@@ -2,6 +2,7 @@ import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { AgeEvolutionChart } from "./chart/age-evolution/age-evolution";
 import { StatusEvolutionChart } from "./chart/status/status";
 import { TrendsChart } from "./chart/trend/trends";
+import { CategoryEvolutionChart } from "../research-teachers/charts/categories-evolution/evolution";
 
 export function Evolution() {
   return (
@@ -19,6 +20,11 @@ export function Evolution() {
       <Row gutters className="fr-mb-5w">
         <Col>
           <AgeEvolutionChart />
+        </Col>
+      </Row>
+      <Row gutters className="fr-mb-5w">
+        <Col>
+          <CategoryEvolutionChart />
         </Col>
       </Row>
     </Container>

@@ -8,7 +8,7 @@ import GeneralIndicatorsCard from "../../components/general-indicators-card/gene
 import { CnuAgeDistribution } from "./charts/age/pyra";
 import { CategoryDistribution } from "./charts/categories/categories";
 import { CategoryEvolutionChart } from "./charts/categories-evolution/evolution";
-import { GlossaryTerm } from "../glossary/glossary-tooltip";
+import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 
 export function ResearchTeachers() {
   const [searchParams] = useSearchParams();
@@ -51,11 +51,6 @@ export function ResearchTeachers() {
           </Text>
         </Col>
       </Row>
-      <Row>
-        <Col>
-          <CategoryEvolutionChart />
-        </Col>
-      </Row>
       <Row gutters className="fr-mt-4w">
         <Col md={4}>
           <div
@@ -82,6 +77,11 @@ export function ResearchTeachers() {
           >
             <CnuAgeDistribution />
           </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <CategoryEvolutionChart />
         </Col>
       </Row>
       <Row gutters className="fr-mt-4w">

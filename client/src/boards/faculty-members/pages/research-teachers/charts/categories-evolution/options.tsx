@@ -20,8 +20,7 @@ export interface CategoryEvolutionResponse {
 
 export const createCategoryEvolutionOptions = (
   evolutionByCategories: EvolutionSeriesData[],
-  academicYears: string[],
-  titleText: string = "Évolution du nombre d'enseignants par catégorie"
+  academicYears: string[]
 ): Highcharts.Options | null => {
   if (
     !evolutionByCategories ||
@@ -42,13 +41,7 @@ export const createCategoryEvolutionOptions = (
       },
     },
     title: {
-      text: titleText,
-      align: "left",
-      style: {
-        fontSize: "16px",
-        fontWeight: "bold",
-        color: "var(--text-title-grey)",
-      },
+      text: "",
     },
     xAxis: {
       categories: academicYears,

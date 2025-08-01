@@ -22,7 +22,7 @@ interface FieldItem extends BaseItem {
 
 interface RegionItem extends BaseItem {
   geo_id: string;
-  regionName: string;
+  geoName: string;
 }
 
 interface StructureItem extends BaseItem {
@@ -108,8 +108,7 @@ export default function ResearchTeachersOverviewTable({
       case "fields":
         return (item as FieldItem).fieldLabel;
       case "geo":
-        console.log(item);
-        return (item as RegionItem).regionName;
+        return (item as RegionItem).geoName;
       case "structures":
         return (item as StructureItem).structureName;
       default:

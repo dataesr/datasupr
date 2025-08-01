@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import { Modal, ModalTitle, ModalContent, Badge } from "@dataesr/dsfr-plus"; // Retire Button, Text, Link car ils ne sont plus utilisés dans ce composant
+import { Modal, ModalTitle, ModalContent, Badge } from "@dataesr/dsfr-plus";
 import { glossary } from "./definitions";
 
 type GlossaryTermProps = {

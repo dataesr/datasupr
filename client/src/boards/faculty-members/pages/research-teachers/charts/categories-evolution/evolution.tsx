@@ -21,16 +21,11 @@ export const CategoryEvolutionChart = () => {
     if (!evolutionData?.evolutionByCategories || !evolutionData.academicYears)
       return null;
 
-    const title = `Évolution du nombre d'enseignants par catégorie pour ${
-      contextName || "le contexte actuel"
-    }`;
-
     return createCategoryEvolutionOptions(
       evolutionData.evolutionByCategories,
-      evolutionData.academicYears,
-      title
+      evolutionData.academicYears
     );
-  }, [evolutionData, contextName]);
+  }, [evolutionData]);
 
   if (isLoading) {
     return <DefaultSkeleton />;
@@ -67,7 +62,7 @@ export const CategoryEvolutionChart = () => {
         id: "category-evolution-chart",
         idQuery: "category-evolution",
         title: {
-          fr: chartOptions.title?.text as string,
+          fr: "Évolution du nombre d'enseignants par catégorie",
         },
         description: {
           fr: `Ce graphique montre l'évolution du nombre d'enseignants-chercheurs par catégorie au fil des années universitaires.`,
