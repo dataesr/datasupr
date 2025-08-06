@@ -9,6 +9,7 @@ import { useContextDetection } from "../../../../utils";
 import { createGroupTreemapOptions } from "./options";
 import { formatToPercent } from "../../../../../../utils/format";
 import { Col, Row, Text, Title } from "@dataesr/dsfr-plus";
+import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 HighchartsTreemap(Highcharts);
 
@@ -269,10 +270,21 @@ export function GroupCNUTreemapChart() {
     id: `${context}-groups-treemap`,
     idQuery: `faculty-members-cnu`,
     title: {
-      fr: contextId
-        ? `Les sections CNU de la discipline ${cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_code}
-          - ${cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_name}`
-        : `Répartition par ${labels.singular}`,
+      className: "fr-mt-0w",
+      look: "h5" as const,
+      size: "h2" as const,
+      fr: contextId ? (
+        <>
+          Les sections CNU de la discipline&nbsp;
+          {cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_code}
+          &nbsp;-&nbsp;
+          {cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_name}
+          &nbsp;
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+        </>
+      ) : (
+        `Répartition par ${labels.singular}`
+      ),
     },
     subtitle: `Année universitaire ${selectedYear} - ${treemapData.length} ${
       treemapData.length > 1 ? `sections` : `section`

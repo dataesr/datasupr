@@ -8,6 +8,7 @@ import { CreateChartOptions } from "../../../../components/creat-chart-options";
 import { useContextDetection } from "../../../../utils";
 import { createBubbleOptions } from "./options";
 import { formatToPercent } from "../../../../../../utils/format";
+import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 HighchartsMore(Highcharts);
 
@@ -135,11 +136,7 @@ export function SectionsBubbleChart() {
 
   const labels = getLabels();
 
-  const {
-    data: bubbleData,
-    title,
-    sectionCount,
-  } = useMemo(() => {
+  const { data: bubbleData, sectionCount } = useMemo(() => {
     if (!cnuData) {
       return { data: [], title: "Répartition des effectifs", sectionCount: 0 };
     }
@@ -151,7 +148,6 @@ export function SectionsBubbleChart() {
       maleCount: number;
       femaleCount: number;
     }> = [];
-    let chartTitle = "";
     let totalSections = 0;
 
     if (groupId && contextId) {
@@ -196,10 +192,6 @@ export function SectionsBubbleChart() {
             });
 
             dataToProcess = sectionsData;
-            chartTitle = `${
-              labels.sectionPlural.charAt(0).toUpperCase() +
-              labels.sectionPlural.slice(1)
-            } - ${targetGroup.group_name}`;
           }
         }
       } else if (context === "geo" || context === "structures") {
@@ -246,7 +238,6 @@ export function SectionsBubbleChart() {
           if (allSectionsInGroup.length > 0) {
             totalSections = allSectionsInGroup.length;
             dataToProcess = allSectionsInGroup;
-            chartTitle = `Sections du groupe ${groupId}`;
           }
         }
       }
@@ -294,10 +285,6 @@ export function SectionsBubbleChart() {
 
           totalSections = allSections.length;
           dataToProcess = allSections;
-          chartTitle = `${
-            labels.sectionPlural.charAt(0).toUpperCase() +
-            labels.sectionPlural.slice(1)
-          } - ${targetItem._id.discipline_name}`;
         }
       } else if (context === "geo" || context === "structures") {
         if (
@@ -341,15 +328,6 @@ export function SectionsBubbleChart() {
 
           totalSections = allSections.length;
           dataToProcess = allSections;
-
-          const contextDisplayName =
-            context === "geo"
-              ? "région sélectionnée"
-              : "établissement sélectionné";
-          chartTitle = `${
-            labels.sectionPlural.charAt(0).toUpperCase() +
-            labels.sectionPlural.slice(1)
-          } - ${contextDisplayName}`;
         }
       }
     } else {
@@ -394,7 +372,7 @@ export function SectionsBubbleChart() {
 
         totalSections = allSections.length;
         dataToProcess = allSections;
-        chartTitle = `Toutes les ${labels.sectionPlural}`;
+        // chartTitle = `Toutes les ${labels.sectionPlural}`;
       }
     }
 
@@ -425,29 +403,37 @@ export function SectionsBubbleChart() {
 
     return {
       data: processedData,
-      title: chartTitle,
+      // title: chartTitle,
       sectionCount: totalSections,
     };
-  }, [cnuData, contextId, groupId, context, labels]);
+  }, [cnuData, contextId, groupId, context]);
 
   const config = {
     id: `${context}-sections-bubbles`,
     idQuery: `faculty-members-cnu`,
     title: {
-      fr: groupId
-        ? `${
-            labels.sectionPlural.charAt(0).toUpperCase() +
-            labels.sectionPlural.slice(1)
-          } du ${labels.groupSingular} sélectionné`
-        : contextId
-        ? `${
-            labels.sectionPlural.charAt(0).toUpperCase() +
-            labels.sectionPlural.slice(1)
-          } de ${labels.singular} sélectionnée`
-        : `Toutes les ${labels.sectionPlural}`,
-    },
-    description: {
-      fr: "Répartition par genre des effectifs (axe X: femmes, axe Y: hommes, taille: effectif total)",
+      className: "fr-mt-0w",
+      look: "h5" as const,
+      size: "h2" as const,
+      fr: groupId ? (
+        <>
+          {cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_code}
+          {labels.sectionPlural.charAt(0).toUpperCase() +
+            labels.sectionPlural.slice(1)}{" "}
+          du {labels.groupSingular} sélectionné &nbsp;
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+        </>
+      ) : contextId ? (
+        <>
+          Equilibre de la répartition Homme / Femme par sous-section CNU pour la
+          grande discipline&nbsp;
+          {cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_name} (
+          {cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_code})
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+        </>
+      ) : (
+        `Toutes les ${labels.sectionPlural}`
+      ),
     },
     integrationURL: `/personnel-enseignant/${labels.urlPath}/typologie`,
   };
@@ -563,15 +549,9 @@ export function SectionsBubbleChart() {
   const bubbleOptions = CreateChartOptions(
     "bubble",
     createBubbleOptions({
-      title,
-      selectedYear,
       bubbleData,
       maxValue,
       padding,
-      labels: {
-        sectionSingular: labels.sectionSingular,
-        sectionPlural: labels.sectionPlural,
-      },
     })
   );
 

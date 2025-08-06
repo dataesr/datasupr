@@ -7,6 +7,7 @@ import { CreateChartOptions } from "../../../../components/creat-chart-options";
 import { useContextDetection } from "../../../../utils";
 import { createTreemapOptions } from "./options";
 import { Notice, Row, Text } from "@dataesr/dsfr-plus";
+import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -174,16 +175,15 @@ export function ItemsTreemapChart() {
     id: `${context}-treemap`,
     idQuery: `faculty-members-cnu`,
     title: {
-      fr: `État de la parité du personnel enseignant par grande discipline`,
-      en: `Parity status of faculty members by major discipline`,
-    },
-    subtitle: `Année universitaire ${selectedYear}&nbsp;-&nbsp;
-      ${treemapData?.length}
-      grande${treemapData?.length > 1 ? "s" : ""}
-      discipline${treemapData?.length > 1 ? "s" : ""}`,
-    description: {
-      fr: `Visualisation hiérarchique des effectifs enseignants par discipline`,
-      en: `Hierarchical visualization of faculty members by discipline`,
+      className: "fr-mt-0w",
+      look: "h5" as const,
+      size: "h2" as const,
+      fr: (
+        <>
+          État de la parité du personnel enseignant par grande discipline&nbsp;
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+        </>
+      ),
     },
     integrationURL: `/personnel-enseignant/discipline/typologie`,
   };

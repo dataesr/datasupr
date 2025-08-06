@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useContextDetection } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useDisciplineDistribution } from "./use-discipline-distribution";
+import SubtitleWithContext from "../../components/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -113,6 +114,7 @@ const DistributionBar: React.FC = () => {
         <>
           Quelles sont les disciplines qui emploient le plus de personnel
           enseignant ?&nbsp;
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ),
     },

@@ -4,6 +4,7 @@ import { generateIntegrationURL, useContextDetection } from "../../../../utils";
 import { createCategoryEvolutionOptions } from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { useCategoryEvolution } from "./use-evolution";
+import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 export const CategoryEvolutionChart = () => {
   const { context, contextId, contextName } = useContextDetection();
@@ -62,7 +63,15 @@ export const CategoryEvolutionChart = () => {
         id: "category-evolution-chart",
         idQuery: "category-evolution",
         title: {
-          fr: "Évolution du nombre d'enseignants par catégorie",
+          className: "fr-mt-0w",
+          look: "h5",
+          size: "h3",
+          fr: (
+            <>
+              Évolution du nombre d'enseignants par catégorie&nbsp;
+              <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+            </>
+          ),
         },
         description: {
           fr: `Ce graphique montre l'évolution du nombre d'enseignants-chercheurs par catégorie au fil des années universitaires.`,

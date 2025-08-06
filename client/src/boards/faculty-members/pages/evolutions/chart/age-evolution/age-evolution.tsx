@@ -4,6 +4,7 @@ import { useFacultyMembersEvolution } from "../../../../api/use-evolution";
 import { createAgeEvolutionOptions } from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -134,7 +135,15 @@ export function AgeEvolutionChart() {
     id: "age-evolution-chart",
     idQuery: "faculty-members-evolution",
     title: {
-      fr: `Évolution par âge`,
+      className: "fr-mt-0w",
+      look: "h5" as const,
+      size: "h3" as const,
+      fr: (
+        <>
+          Evolution par âge&nbsp;
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+        </>
+      ),
     },
     description: {
       fr: "Évolution de la pyramide des âges du personnel enseignant",

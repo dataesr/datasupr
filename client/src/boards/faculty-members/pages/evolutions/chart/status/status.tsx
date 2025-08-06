@@ -4,6 +4,7 @@ import { useFacultyMembersEvolution } from "../../../../api/use-evolution";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createStatusEvolutionOptions } from "./options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -114,7 +115,15 @@ export function StatusEvolutionChart() {
     id: "status-evolution-chart",
     idQuery: "faculty-members-evolution",
     title: {
-      fr: `Évolution par statut `,
+      className: "fr-mt-0w",
+      look: "h5" as const,
+      size: "h3" as const,
+      fr: (
+        <>
+          Evolution par statut&nbsp;
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+        </>
+      ),
     },
     description: {
       fr: "Évolution de la répartition par statut professionnel du personnel enseignant",

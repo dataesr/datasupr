@@ -1,4 +1,4 @@
-import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
+import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { Link } from "@dataesr/dsfr-plus";
 import { GenderDataCard } from "./components/gender-info";
@@ -10,7 +10,7 @@ import { useContextDetection } from "../../utils";
 
 export function Typologie() {
   const [searchParams] = useSearchParams();
-  const { context, contextId, contextName } = useContextDetection();
+  const { context, contextId } = useContextDetection();
 
   const getLabels = () => {
     const labels = {
@@ -104,11 +104,6 @@ export function Typologie() {
         <>
           <GroupCNUTreemapChart />
           <Col md={12}>
-            <Title as="h2" look="h4" className="fr-mb-3w">
-              {labels.sectionPlural.charAt(0).toUpperCase() +
-                labels.sectionPlural.slice(1)}{" "}
-              - {contextName}
-            </Title>
             <SectionsBubbleChart />
           </Col>
         </>
@@ -116,11 +111,6 @@ export function Typologie() {
 
       {contextId && groupId && (
         <Col md={12}>
-          <Title as="h2" look="h4" className="fr-mb-3w">
-            {labels.sectionPlural.charAt(0).toUpperCase() +
-              labels.sectionPlural.slice(1)}{" "}
-            du {labels.groupSingular}
-          </Title>
           <SectionsBubbleChart />
         </Col>
       )}

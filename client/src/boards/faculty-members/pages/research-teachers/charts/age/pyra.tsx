@@ -5,6 +5,7 @@ import { generateIntegrationURL, useContextDetection } from "../../../../utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useResearchTeachersData } from "../../use-cnu-data";
 import { CnuGroupData, createCnuAgeCategoryOptions } from "./options"; // Assurez-vous d'importer la fonction mise à jour
+import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 function RenderData({ data }: { data: CnuGroupData[] }) {
   if (!data || data.length === 0) {
@@ -147,10 +148,16 @@ export function CnuAgeDistribution() {
           id: "cnu-age-category-distribution",
           idQuery: "cnu-age-category-distribution",
           title: {
-            fr: "Répartition des enseignants-chercheurs par tranche d'âge et par catégorie",
-          },
-          description: {
-            fr: ``,
+            className: "fr-mt-0w",
+            look: "h5",
+            as: "h2",
+            fr: (
+              <>
+                Répartition des enseignants-chercheurs par tranche d'âge et par
+                catégorie&nbsp;
+                <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+              </>
+            ),
           },
           integrationURL: generateIntegrationURL(context, "cnu-age-category"),
         }}

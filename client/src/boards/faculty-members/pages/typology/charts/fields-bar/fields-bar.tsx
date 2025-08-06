@@ -239,7 +239,7 @@ const ItemBarChart: React.FC = () => {
         <>
           Quelles sont les disciplines où le personnel enseignant est paritaire
           ?&nbsp;
-          <SubtitleWithContext />
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ),
     },

@@ -14,24 +14,15 @@ interface BubbleData {
 }
 
 interface BubbleOptionsParams {
-  title: string;
-  selectedYear: string;
   bubbleData: BubbleData[];
   maxValue: number;
   padding: number;
-  labels: {
-    sectionSingular: string;
-    sectionPlural: string;
-  };
 }
 
 export const createBubbleOptions = ({
-  title,
-  selectedYear,
   bubbleData,
   maxValue,
   padding,
-  labels,
 }: BubbleOptionsParams): Highcharts.Options => {
   const diagonalLine = {
     type: "line" as const,
@@ -58,21 +49,10 @@ export const createBubbleOptions = ({
     },
     exporting: { enabled: false },
     title: {
-      text: title,
-      style: {
-        color: "#000000",
-        fontSize: "18px",
-        fontWeight: "bold",
-      },
-      align: "left",
+      text: "",
     },
     subtitle: {
-      text: `Année universitaire ${selectedYear} - ${bubbleData.length} ${labels.sectionPlural}`,
-      style: {
-        color: "#666666",
-        fontSize: "14px",
-      },
-      align: "left",
+      text: "",
     },
     xAxis: {
       title: {

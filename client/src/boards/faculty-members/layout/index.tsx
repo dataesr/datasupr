@@ -13,7 +13,7 @@ import {
   useNavigate,
   useSearchParams,
 } from "react-router-dom";
-import SubtitleWithContext from "../components/subtitle-with-context";
+import TitleWithContext from "../components/title-with-context";
 import YearSelector from "../components/filters";
 import { useBreadcrumbItems, useContextDetection } from "../utils";
 import "./styles.scss";
@@ -68,7 +68,7 @@ export function FacultyLayout() {
         <Container>
           <Row>
             <Col md={12}>
-              <SubtitleWithContext />
+              <TitleWithContext />
             </Col>
           </Row>
           <Col md={12}>

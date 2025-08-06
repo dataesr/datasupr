@@ -6,6 +6,7 @@ import { useContextDetection, generateIntegrationURL } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useStatusDistribution } from "./use-status-distribution";
 import { Button } from "@dataesr/dsfr-plus";
+import SubtitleWithContext from "../../components/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -190,6 +191,7 @@ const StatusDistribution: React.FC = () => {
               <>
                 Quelle est la répartition des statuts du personnel enseignant
                 par discipline ?&nbsp;
+                <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
               </>
             ),
           },

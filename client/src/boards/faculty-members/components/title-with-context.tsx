@@ -1,15 +1,10 @@
-import { Title, Text } from "@dataesr/dsfr-plus";
+import { Title } from "@dataesr/dsfr-plus";
 import { useContextDetection } from "../utils";
 import { useFacultyMembersTypology } from "../api/use-typology";
-import { useLocation, useSearchParams } from "react-router-dom";
-interface SubtitleWithContextProps {
-  classText: string;
-}
+import { useLocation } from "react-router-dom";
 
-const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
-  const [searchParams] = useSearchParams();
+const TitleWithContext = () => {
   const { context, contextId, contextName } = useContextDetection();
-  const selectedYear = searchParams.get("annee_universitaire") || "";
   const location = useLocation();
 
   const isAcademie = context === "geo" && contextId?.toString().startsWith("A");
@@ -64,36 +59,26 @@ const SubtitleWithContext = ({ classText }: SubtitleWithContextProps) => {
 
   const contextNameCapital = capitalize(contextName);
 
-  const { name, identifiant, prefix, plural = "" } = getContextParams();
+  const { name, prefix, plural = "" } = getContextParams();
 
   // Affiche "Glossaire" si on est sur la page glossaire
   if (location.pathname.startsWith("/personnel-enseignant/glossaire")) {
     return (
-      <Title as="h2" look="h1" className={classText}>
-        {/* <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-3w"> */}
+      <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-3w">
         Glossaire
       </Title>
     );
   }
 
   return (
-    <Text className={classText}>
-      Année universitaire {selectedYear}&nbsp;-&nbsp;
-      {!contextId && plural}
-      {contextId && prefix}
-      {name}&nbsp;{identifiant}
-    </Text>
+    <>
+      <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-3w">
+        {!contextId && plural}
+        {contextId && prefix}
+        {name}&nbsp; <br />
+      </Title>
+    </>
   );
-
-  // return (
-  //   <>
-  //     <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-3w">
-  //       {!contextId && plural}
-  //       {contextId && prefix}
-  //       {name}&nbsp; <br />
-  //     </Title>
-  //   </>
-  // );
 };
 
-export default SubtitleWithContext;
+export default TitleWithContext;

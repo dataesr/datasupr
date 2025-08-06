@@ -5,6 +5,7 @@ import { generateIntegrationURL, useContextDetection } from "../../../../utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useFacultyMembersResearchTeachers } from "../../../../api/use-research-teachers";
 import { CategoryData, createCategoryOptions } from "./options";
+import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 function RenderData({ data }: { data: CategoryData[] }) {
   if (!data || data.length === 0) {
@@ -139,10 +140,15 @@ export const CategoryDistribution = () => {
         id: "category-distribution",
         idQuery: "category-distribution",
         title: {
-          fr: "Répartition par catégorie",
-        },
-        description: {
-          fr: ``,
+          className: "fr-mt-0w",
+          look: "h5",
+          as: "h2",
+          fr: (
+            <>
+              Répartition par catégorie&nbsp;
+              <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+            </>
+          ),
         },
         integrationURL: generateIntegrationURL(
           context,

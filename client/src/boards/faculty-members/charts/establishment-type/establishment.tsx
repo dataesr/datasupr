@@ -68,12 +68,12 @@ export function EstablishmentTypeChart() {
     title: {
       className: "fr-mt-0w",
       look: "h5" as const,
-      size: "h2" as const,
+      size: "h3" as const,
       fr: (
         <>
           Comment le personnel enseignant se répartit selon le type
           d'établissement ?&nbsp;
-          <SubtitleWithContext />
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ),
     },

@@ -5,6 +5,7 @@ import { createCnuGroupsChartOptions, getShade } from "./options";
 import { useFacultyMembersCNU } from "../../api/use-cnu";
 import { useContextDetection, getColorForDiscipline } from "../../utils";
 import ChartWrapper from "../../../../components/chart-wrapper";
+import SubtitleWithContext from "../../components/subtitle-with-context";
 
 function RenderData({ groupedData }) {
   if (!groupedData || groupedData.length === 0) {
@@ -310,12 +311,17 @@ export default function CnuGroupsChart() {
         config={{
           id: "cnu-groups-chart",
           idQuery: "cnu-groups",
-
           title: {
             className: "fr-mt-0w",
             look: "h5",
-            as: "h3",
-            fr: <>Groupes CNU</>,
+            size: "h3",
+            fr: (
+              <>
+                Comment le personnel enseignant se répartit par grande
+                discipline et catégorie CNU ?&nbsp;
+                <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+              </>
+            ),
           },
           description: {
             fr: "Il est composé de 11 groupes, eux-mêmes divisés en 52 sections, dont chacune correspond à une discipline. Chaque section comprend deux collèges où siègent en nombre égal d’une part, des représentants des professeurs des universités et personnels assimilés et, d’autre part, des représentants des maîtres de conférences et personnels assimilés.Ce graphique présente la répartition des enseignants-chercheurs par groupes CNU. La taille de chaque barre est proportionnelle au nombre d'enseignants-chercheurs dans le groupe. Les données incluent également la répartition par genre au sein de chaque groupe, permettant d'identifier les disparités hommes-femmes selon les disciplines scientifiques.",

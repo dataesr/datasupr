@@ -4,6 +4,7 @@ import { useFacultyMembersEvolution } from "../../../../api/use-evolution";
 import { createTrendsOptions } from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -111,12 +112,15 @@ export function TrendsChart() {
     id: "trends-evolution-chart",
     idQuery: "faculty-members-evolution",
     title: {
-      fr: "Évolution des effectifs",
-    },
-    description: {
-      fr: contextName
-        ? `Évolution du nombre d'enseignants pour ${contextName} au fil des années, répartis par genre`
-        : "Évolution du nombre d'enseignants au fil des années, répartis par genre",
+      className: "fr-mt-0w",
+      look: "h5" as const,
+      size: "h3" as const,
+      fr: (
+        <>
+          Evolution des effectifs&nbsp;
+          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
+        </>
+      ),
     },
   };
 
