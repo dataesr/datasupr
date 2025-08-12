@@ -36,7 +36,7 @@ function RenderData({ data }) {
                 {data.map((item, index) => (
                   <tr key={index}>
                     <td>{item.name}</td>
-                    <td>{item.y}%</td>
+                    <td>{item.y}&nbsp;%</td>
                     <td>{item.count.toLocaleString()}</td>
                   </tr>
                 ))}

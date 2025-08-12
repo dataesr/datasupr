@@ -40,7 +40,7 @@ export default function StatusOptions({
           dataLabels: {
             enabled: true,
             format: displayAsPercentage
-              ? "<b>{point.name}</b>: {point.percentage:.1f}%"
+              ? "<b>{point.name}</b>: {point.percentage:.1f} %"
               : "<b>{point.name}</b>: {point.y} personnes",
             style: {
               textOutline: "1px contrast",
@@ -60,7 +60,7 @@ export default function StatusOptions({
       },
       tooltip: {
         pointFormat: displayAsPercentage
-          ? "{point.name}: <b>{point.y} personnes</b> ({point.percentage:.1f}%)"
+          ? "{point.name}: <b>{point.y} personnes</b> ({point.percentage:.1f} %)"
           : "{point.name}: <b>{point.options.absoluteValue} personnes</b>",
         formatter: function () {
           const point = this.point as Highcharts.Point;
@@ -71,7 +71,7 @@ export default function StatusOptions({
               point.percentage !== undefined
                 ? point.percentage.toFixed(1)
                 : "0.0"
-            }%)`;
+            } %)`;
           } else {
             return `${point.name}: <b>${(point.y ?? 0).toLocaleString(
               "fr-FR"
@@ -113,7 +113,7 @@ export default function StatusOptions({
               dataLabels: {
                 enabled: true,
                 format: displayAsPercentage
-                  ? "<b>Enseignants-chercheurs</b>: {point.percentage:.1f}%<br/>({point.absoluteValue} pers.)"
+                  ? "<b>Enseignants-chercheurs</b>: {point.percentage:.1f} %<br/>({point.absoluteValue} pers.)"
                   : "<b>Enseignants-chercheurs</b>: {point.y} pers.",
               },
             } as HighchartsInstance.PointOptionsObject,
@@ -127,7 +127,7 @@ export default function StatusOptions({
               color: "var(--blue-cumulus-main-526)",
               dataLabels: {
                 format: displayAsPercentage
-                  ? "<b>Titulaires non-chercheurs</b>: {point.percentage:.1f}%<br/>({point.absoluteValue} pers.)"
+                  ? "<b>Titulaires non-chercheurs</b>: {point.percentage:.1f} %<br/>({point.absoluteValue} pers.)"
                   : "<b>Titulaires non-chercheurs</b>: {point.y} pers.",
               },
             } as HighchartsInstance.PointOptionsObject,
@@ -140,7 +140,7 @@ export default function StatusOptions({
               color: "var(--blue-ecume-moon-675)",
               dataLabels: {
                 format: displayAsPercentage
-                  ? "<b>Non-titulaires</b>: {point.percentage:.1f}%<br/>({point.absoluteValue} pers.)"
+                  ? "<b>Non-titulaires</b>: {point.percentage:.1f} %<br/>({point.absoluteValue} pers.)"
                   : "<b>Non-titulaires</b>: {point.y} pers.",
               },
             } as HighchartsInstance.PointOptionsObject,
@@ -212,10 +212,10 @@ export default function StatusOptions({
         },
       },
       labels: {
-        format: displayAsPercentage ? "{value}%" : "{value}",
+        format: displayAsPercentage ? "{value} %" : "{value}",
         formatter: function () {
           return displayAsPercentage
-            ? `${this.value}%`
+            ? `${this.value} %`
             : Number(this.value).toLocaleString("fr-FR");
         },
       },
@@ -243,7 +243,7 @@ export default function StatusOptions({
                 point.color
               }">\u25CF</span> ${seriesName}: <b>${(point.y ?? 0).toFixed(
                 1
-              )}%</b> (${absoluteValue.toLocaleString(
+              )} %</b> (${absoluteValue.toLocaleString(
                 "fr-FR"
               )} personnes)<br/>`;
             } else {
@@ -251,7 +251,7 @@ export default function StatusOptions({
                 point.color
               }">\u25CF</span> ${seriesName}: <b>${absoluteValue.toLocaleString(
                 "fr-FR"
-              )} personnes</b> (${percentage.toFixed(1)}%)<br/>`;
+              )} personnes</b> (${percentage.toFixed(1)} %)<br/>`;
             }
           });
         }
@@ -263,10 +263,10 @@ export default function StatusOptions({
         stacking: displayAsPercentage ? "normal" : undefined,
         dataLabels: {
           enabled: true,
-          format: displayAsPercentage ? "{y:.1f}%" : "{point.count}",
+          format: displayAsPercentage ? "{y:.1f} %" : "{point.count}",
           formatter: function () {
             if (displayAsPercentage) {
-              return `${(this.y ?? 0).toFixed(1)}%`;
+              return `${(this.y ?? 0).toFixed(1)} %`;
             } else {
               return Number(
                 (this.point as { count?: number }).count

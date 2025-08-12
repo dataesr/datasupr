@@ -1,4 +1,5 @@
 import Highcharts from "highcharts";
+import { formatToPercent } from "../../../../utils/format";
 
 interface DataPoint {
   name: string;
@@ -162,17 +163,17 @@ export const createCnuGroupsChartOptions = (
                 <table style="width:100%;border-collapse:collapse">
                   <tr>
                     <td style="padding:4px 0">👨 Hommes:</td>
-                    <td style="text-align:right;font-weight:bold">${point.maleCount.toLocaleString()}</td>
-                    <td style="text-align:right;width:40px;color:#666">${
+                    <td style="text-align:right;font-weight:bold">${point.maleCount.toLocaleString()}&nbsp;</td>
+                    <td style="text-align:right;width:40px;color:#666">${formatToPercent(
                       point.malePercent
-                    }%</td>
+                    )}&nbsp;</td>
                   </tr>
                   <tr>
                     <td style="padding:4px 0">👩 Femmes:</td>
-                    <td style="text-align:right;font-weight:bold">${point.femaleCount.toLocaleString()}</td>
-                    <td style="text-align:right;width:40px;color:#666">${
+                    <td style="text-align:right;font-weight:bold">${point.femaleCount.toLocaleString()}&nbsp;</td>
+                    <td style="text-align:right;width:40px;color:#666">${formatToPercent(
                       point.femalePercent
-                    }%</td>
+                    )}&nbsp;</td>
                   </tr>
                 </table>
                 </div>`;

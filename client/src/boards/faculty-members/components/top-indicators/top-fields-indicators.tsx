@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useContextDetection } from "../../utils";
 import { useTopIndicators } from "./use-top-indicators";
+import { formatToPercent } from "../../../../utils/format";
 import { Row, Text, Title } from "@dataesr/dsfr-plus";
 
 const TopItemsIndicators: React.FC = () => {
@@ -165,11 +166,11 @@ const TopItemsIndicators: React.FC = () => {
                 }}
               >
                 <span style={{ color: "var(--women-color, #e18b76)" }}>
-                  {femalePercent}%
+                  {formatToPercent(femalePercent)}
                 </span>
-                {"/"}
+                {" / "}
                 <span style={{ color: "var(--men-color, #efcb3a)" }}>
-                  {malePercent}%
+                  {formatToPercent(malePercent)}
                 </span>
               </div>
             </div>

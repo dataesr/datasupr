@@ -45,7 +45,7 @@ export const createAgeDistributionChartOptions = (
           cursor: "pointer",
           dataLabels: {
             enabled: true,
-            format: "<b>{point.name}</b>: {point.percentage:.1f}%",
+            format: "<b>{point.name}</b>: {point.percentage:.1f}&nbsp;%",
             style: {
               textOutline: "1px contrast",
             },
@@ -63,7 +63,7 @@ export const createAgeDistributionChartOptions = (
       },
       tooltip: {
         pointFormat:
-          "{point.name}: <b>{point.count} enseignants</b> ({point.percentage:.1f}%)",
+          "{point.name}: <b>{point.count} enseignants</b> ({point.percentage:.1f}&nbsp;%)",
       },
       legend: {
         enabled: true,
@@ -85,7 +85,7 @@ export const createAgeDistributionChartOptions = (
             count: item.count,
             color: colors[item.name] || "#CCCCCC",
             dataLabels: {
-              format: `<b>${item.name}</b>: {point.percentage:.1f}%<br/>({point.count} pers.)`,
+              format: `<b>${item.name}</b>: {point.percentage:.1f}&nbsp;%<br/>({point.count} pers.)`,
             },
           })),
         } as Highcharts.SeriesPieOptions,
@@ -137,7 +137,7 @@ export const createAgeDistributionChartOptions = (
         const percentage = this.percentage as number | undefined;
         return `<b>${this.name}</b>: ${percentage?.toFixed(
           1
-        )}% (${count} enseignants)`;
+        )}&nbsp;% (${count} enseignants)`;
       },
       headerFormat: "",
     },

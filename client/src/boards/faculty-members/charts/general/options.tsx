@@ -1,6 +1,7 @@
 import HighchartsInstance from "highcharts";
 import { CreateChartOptions } from "../../components/creat-chart-options";
 import { getColorForDiscipline } from "../../utils";
+import { formatToPercent } from "../../../../utils/format";
 
 interface Field {
   year: string;
@@ -37,10 +38,8 @@ export default function OptionsColumnChart({
     customData: {
       femaleCount: field.femaleCount,
       maleCount: field.maleCount,
-      femalePercentage: Math.round(
-        (field.femaleCount / field.totalCount) * 100
-      ),
-      malePercentage: Math.round((field.maleCount / field.totalCount) * 100),
+      femalePercentage: (field.femaleCount / field.totalCount) * 100,
+      malePercentage: (field.maleCount / field.totalCount) * 100,
     },
   }));
 
@@ -118,18 +117,18 @@ export default function OptionsColumnChart({
             <hr style="margin:5px 0;border:0;border-top:1px solid #eee">
             <table style="width:100%;border-collapse:collapse">
                   <tr>
-                    <td style="padding:4px 0">👨 Hommes:</td>
-                    <td style="text-align:right;font-weight:bold;font-size:14px">${p.customData.maleCount.toLocaleString()}</td>
-                    <td style="text-align:right;width:40px;color:#666;font-size:14px">${
+                    <td style="padding:4px 0">👨 Hommes:&nbsp;</td>
+                    <td style="text-align:right;font-weight:bold;font-size:14px">${p.customData.maleCount.toLocaleString()}&nbsp;</td>
+                    <td style="text-align:right;width:40px;color:#666;font-size:14px">${formatToPercent(
                       p.customData.malePercentage
-                    }%</td>
+                    )}&nbsp;</td>
                   </tr>
                   <tr>
-                    <td style="padding:4px 0">👩 Femmes:</td>
-                    <td style="text-align:right;font-weight:bold;font-size:14px">${p.customData.femaleCount.toLocaleString()}</td>
-                    <td style="text-align:right;width:40px;color:#666;font-size:14px">${
+                    <td style="padding:4px 0">👩 Femmes:&nbsp;</td>
+                    <td style="text-align:right;font-weight:bold;font-size:14px">${p.customData.femaleCount.toLocaleString()}&nbsp;</td>
+                    <td style="text-align:right;width:40px;color:#666;font-size:14px">${formatToPercent(
                       p.customData.femalePercentage
-                    }%</td>
+                    )}&nbsp;</td>
                   </tr>
                 </table>
           </div>
