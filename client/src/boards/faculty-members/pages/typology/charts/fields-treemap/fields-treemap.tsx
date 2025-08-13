@@ -49,8 +49,8 @@ function RenderData({ data }) {
                 <td>{totalCount.toLocaleString()}</td>
                 <td>{item.maleCount.toLocaleString()}</td>
                 <td>{item.femaleCount.toLocaleString()}</td>
-                <td>{malePercent}%</td>
-                <td>{femalePercent}%</td>
+                <td>{malePercent}&nbsp;%</td>
+                <td>{femalePercent}&nbsp;%</td>
               </tr>
             );
           })}

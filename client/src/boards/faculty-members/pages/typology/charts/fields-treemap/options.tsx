@@ -46,10 +46,10 @@ export const createTreemapOptions = ({
         : 0;
       return `<b>${point.name}</b><br>
              Effectif total: <b>${point.value.toLocaleString()}</b> enseignants<br>
-             <span style="color:#e18b76">♀ Femmes: ${point.femaleCount.toLocaleString()} (${femalePercent}%)</span><br>
+             <span style="color:#e18b76">♀ Femmes: ${point.femaleCount.toLocaleString()} (${femalePercent}&nbsp;%)</span><br>
              <span style="color:#efcb3a">♂ Hommes: ${point.maleCount.toLocaleString()} (${
         100 - femalePercent
-      }%)</span><br><br>
+      }&nbsp;%)</span><br><br>
       <em>Cliquez pour explorer en détail</em>`;
     },
   },
@@ -104,11 +104,11 @@ export const createTreemapOptions = ({
           if (point.value > 5000) {
             return `<b>${
               point.name
-            }</b><br>${point.value.toLocaleString()} enseignants<br>(${femalePercent}% ♀)`;
+            }</b><br>${point.value.toLocaleString()} enseignants<br>(${femalePercent}&nbsp;% ♀)`;
           } else if (point.value > 1000) {
             return `${
               point.name
-            }<br>${point.value.toLocaleString()}<br>${femalePercent}% ♀`;
+            }<br>${point.value.toLocaleString()}<br>${femalePercent}&nbsp;% ♀`;
           } else {
             return `${point.name}<br>${point.value.toLocaleString()}`;
           }

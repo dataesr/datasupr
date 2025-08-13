@@ -4,7 +4,6 @@ import { Title } from "@dataesr/dsfr-plus";
 import "./styles.scss";
 import { useFacultyMembersTypology } from "../../../api/use-typology";
 import { useContextDetection } from "../../../utils";
-import { formatToPercent } from "../../../../../utils/format";
 
 interface GenderDataCardProps {
   gender: "hommes" | "femmes";
@@ -318,7 +317,7 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
         </div>
         <div className="fr-col-auto">
           <div className={`gender-percentage gender-percentage-${genderClass}`}>
-            {specificGenderData.percent}%
+            {specificGenderData.percent}&nbsp;%
           </div>
           <div className="gender-count">
             {specificGenderData.total_count.toLocaleString()}
@@ -334,7 +333,7 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
             TITULAIRES
           </div>
           <div className={`stat-value stat-value-${genderClass}`}>
-            {specificGenderData.titulaires_percent}%
+            {specificGenderData.titulaires_percent}&nbsp;%
           </div>
           <div className={`stat-count stat-count-${genderClass}`}>
             {specificGenderData.titulaires_count?.toLocaleString()} personnes
@@ -346,7 +345,7 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
             ENSEIG.-CHERCHEURS
           </div>
           <div className={`stat-value stat-value-${genderClass}`}>
-            {specificGenderData.enseignants_chercheurs_percent}%
+            {specificGenderData.enseignants_chercheurs_percent}&nbsp;%
           </div>
           <div className={`stat-count stat-count-${genderClass}`}>
             {specificGenderData.enseignants_chercheurs_count?.toLocaleString()}{" "}
@@ -361,7 +360,7 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
           <div className={`stat-value stat-value-${genderClass}`}>
             {specificGenderData.quotite_distribution?.["Temps plein"]
               ?.percent || "N/A"}
-            %
+            &nbsp;%
           </div>
           <div className={`stat-count stat-count-${genderClass}`}>
             {specificGenderData.quotite_distribution?.[
@@ -389,9 +388,9 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
             .map(([age, data]) => {
               const ageData = data as { percent: number; count: number };
               const ageLabel = age
-                .replace(" ans et moins", "-")
-                .replace(" à ", "-")
-                .replace(" ans et plus", "+");
+                .replace("ans et moins", "-")
+                .replace("à", "-")
+                .replace("ans et plus", " et +");
 
               return (
                 <div
@@ -403,12 +402,10 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
                   }}
                   title={`${age}: ${
                     ageData.percent
-                  }% (${ageData.count.toLocaleString()} personnes)`}
+                  }&nbsp;% (${ageData.count.toLocaleString()} personnes)`}
                 >
                   <div className="age-label">{ageLabel}</div>
-                  <div className="age-percent">
-                    {formatToPercent(ageData.percent)}
-                  </div>
+                  <div className="age-percent">{ageData.percent}&nbsp;%</div>
                 </div>
               );
             })}

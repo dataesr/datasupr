@@ -46,8 +46,8 @@ function RenderData({ data }: { data: CnuGroupData[] }) {
                 return (
                   <td key={ageClass}>
                     {ageData
-                      ? `${ageData.percent.toFixed(1)}% (${ageData.count})`
-                      : "0% (0)"}
+                      ? `${ageData.percent.toFixed(1)} % (${ageData.count})`
+                      : "0 % (0)"}
                   </td>
                 );
               })}

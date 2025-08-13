@@ -203,7 +203,7 @@ export const createCnuAgeCategoryOptions = (
         return `<b>${point.categoryName}</b><br/>
                 Tranche d'âge: ${point.ageClass}<br/>
                 Nombre de personnes: <b>${point.y}</b><br/>
-                Représente <b>${point.percentOfAgeClass}%</b> de cette tranche d'âge (${point.totalInAgeClass} personnes au total).`;
+                Représente <b>${point.percentOfAgeClass}&nbsp;%</b> de cette tranche d'âge (${point.totalInAgeClass} personnes au total).`;
       },
       style: {
         fontSize: "11px",

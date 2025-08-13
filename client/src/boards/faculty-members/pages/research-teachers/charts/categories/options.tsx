@@ -66,7 +66,7 @@ export const createCategoryOptions = (
         const index = this.point.index;
         return `<b>${categories[index]}</b>: ${
           this.y?.toLocaleString() || 0
-        } enseignants-chercheurs (${percentages[index]}%)`;
+        } enseignants-chercheurs (${percentages[index]}&nbsp;%)`;
       },
     },
     plotOptions: {

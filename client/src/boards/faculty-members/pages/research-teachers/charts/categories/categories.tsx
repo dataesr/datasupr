@@ -40,7 +40,7 @@ function RenderData({ data }: { data: CategoryData[] }) {
               <td>{category.femaleCount.toLocaleString()}</td>
               <td>{category.maleCount.toLocaleString()}</td>
               <td>{category.totalCount.toLocaleString()}</td>
-              <td>{Math.round((category.totalCount / total) * 100)}%</td>
+              <td>{Math.round((category.totalCount / total) * 100)}&nbsp;%</td>
             </tr>
           ))}
           <tr className="fr-table--blue-france">
@@ -65,7 +65,7 @@ function RenderData({ data }: { data: CategoryData[] }) {
               <strong>{total.toLocaleString()}</strong>
             </td>
             <td>
-              <strong>100%</strong>
+              <strong>100 %</strong>
             </td>
           </tr>
         </tbody>

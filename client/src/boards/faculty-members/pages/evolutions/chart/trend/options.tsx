@@ -96,7 +96,7 @@ export function createTrendsOptions({ years, chartData }: TrendsOptionsParams) {
          <span style="color:${this.color}">●</span> ${
           this.series.name
         }: <b>${y.toLocaleString()}</b><br/>
-         <span style="color:#666666">Part: ${percent}% du total</span><br/>
+         <span style="color:#666666">Part: ${percent}&nbsp;% du total</span><br/>
          <span style="color:#000091">Total: ${total.toLocaleString()}</span>`;
       },
       backgroundColor: "rgba(255, 255, 255, 0.95)",

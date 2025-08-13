@@ -77,7 +77,7 @@ export function createAgeEvolutionOptions({
       },
       labels: {
         formatter: function () {
-          return this.value + "%";
+          return this.value + "&nbsp;%";
         },
         style: { fontSize: "11px" },
       },
@@ -95,7 +95,7 @@ export function createAgeEvolutionOptions({
         sortedPoints.forEach((point) => {
           tooltip += `<span style="color:${point.color}">●</span> ${
             point.series.name
-          }: <b>${(point.y || 0).toFixed(1)}%</b><br/>`;
+          }: <b>${(point.y || 0).toFixed(1)}&nbsp;%</b><br/>`;
         });
 
         return tooltip;

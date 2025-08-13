@@ -76,7 +76,9 @@ export const createBarChartOptions = ({
     },
     labels: {
       formatter: function () {
-        return stackType === "percent" ? `${this.value}%` : `${this.value}`;
+        return stackType === "percent"
+          ? `${this.value}&nbsp;%`
+          : `${this.value}`;
       },
     },
     tickAmount: 3,
@@ -145,7 +147,7 @@ export const createBarChartOptions = ({
         </div>
         <span style="color:${this.point.color}">\u25CF</span> ${
         this.series.name
-      }: ${value}${stackType === "percent" ? "%" : ""}<br/>
+      }: ${value}${stackType === "percent" ? "&nbsp;%" : ""}<br/>
       Total: ${itemData.totalCount.toLocaleString()} enseignants
       </div>`;
     },

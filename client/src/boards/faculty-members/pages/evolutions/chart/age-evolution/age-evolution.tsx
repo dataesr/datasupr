@@ -36,10 +36,10 @@ function RenderData({ data }) {
             <tr key={index}>
               <td>{item.year}</td>
               <td>{item.totalCount.toLocaleString()}</td>
-              <td>{item["35 ans et moins"].toFixed(1)}%</td>
-              <td>{item["36 à 55 ans"].toFixed(1)}%</td>
-              <td>{item["56 ans et plus"].toFixed(1)}%</td>
-              <td>{item["Non précisé"].toFixed(1)}%</td>
+              <td>{item["35 ans et moins"].toFixed(1)}&nbsp;%</td>
+              <td>{item["36 à 55 ans"].toFixed(1)}&nbsp;%</td>
+              <td>{item["56 ans et plus"].toFixed(1)}&nbsp;%</td>
+              <td>{item["Non précisé"].toFixed(1)}&nbsp;%</td>
             </tr>
           ))}
         </tbody>
