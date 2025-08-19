@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import IpbesAll from "./charts/ipbes-all";
 import IpccAll from "./charts/ipcc-all";
 import IpccInstitutions from "./charts/ipcc-institutions";
+import IpccLabs from "./charts/ipcc-labs";
 import Ipcc5Countries from "./charts/ipcc-for-five-countries";
 import PrctIpccPublicationsByCountryByWg1 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg1";
 import PrctIpccPublicationsByCountryByWg2 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg2";
@@ -56,6 +57,11 @@ export default function Welcome() {
         <Row gutters>
           <Col md={12}>
             <IpccInstitutions />
+          </Col>
+        </Row>
+        <Row gutters>
+          <Col md={12}>
+            <IpccLabs />
           </Col>
         </Row>
         <Row gutters>

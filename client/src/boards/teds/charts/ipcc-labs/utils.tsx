@@ -10,9 +10,9 @@ function getBuildQuery(bool, size) {
       bool,
     },
     aggs: {
-      by_french_tutelles: {
+      by_french_labs: {
         terms: {
-          field: "french_tutelles.name.keyword",
+          field: "french_labs.french_lab.keyword",
           size,
         },
       },
@@ -23,7 +23,7 @@ function getBuildQuery(bool, size) {
 
 function useQueryResponse(body, s, i) {
   const { data, isLoading } = useQuery({
-    queryKey: [`ipcc-references-${i}`],
+    queryKey: [`ipcc_references-${i}`],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=teds-bibliography`, {
         body: JSON.stringify(getBuildQuery(body, s)),
@@ -189,10 +189,10 @@ export const lab_regions = {
   "Centre de Cooperation Internationale en Recherche Agronomique pour le Developpement":
     "Organismes nationaux",
   "Université Panthéon-Sorbonne Paris 1": "Île-de-France",
+  "Laboratoire d'aérologie": "Occitanie",
 };
 
 const regions_colors = {
-  "Organismes nationaux": "#05445E",
   "Île-de-France": "#BE2125",
   "Auvergne-Rhône-Alpes": "#8B4513",
   Occitanie: "#32CD32",
@@ -203,7 +203,7 @@ const regions_colors = {
 };
 
 function getSeries(data, useAcronyms) {
-  const series = (data?.aggregations?.by_french_tutelles?.buckets ?? []).map(
+  const series = (data?.aggregations?.by_french_labs?.buckets ?? []).map(
     (item) => ({
       color: regions_colors[lab_regions[item.key]] ?? "#cccccc",
       name: useAcronyms ? dict_ipcc_labs[item.key] ?? item.key : item.key,
@@ -212,7 +212,7 @@ function getSeries(data, useAcronyms) {
   );
 
   const categories = series.map(
-    (french_tutelles) => `${french_tutelles.name} <br> (${french_tutelles.y})`
+    (french_lab) => `${french_lab.name} <br> (${french_lab.y})`
   );
 
   return { series, categories };
