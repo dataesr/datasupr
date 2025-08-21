@@ -34,6 +34,12 @@ function getOptions(
 
   return {
     ...generalOptions,
+    title: {
+      text: "",
+    },
+    exporting: {
+      enabled: false,
+    },
     tooltip: {
       format: `<b>{point.name}</b> ${format1} <b>{point.y:.2f}%</b> ${format2}`,
     },

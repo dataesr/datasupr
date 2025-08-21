@@ -18,5 +18,9 @@
   "ipbes-description": {
     "fr": "Plateforme intergouvernementale scientifique et politique sur la biodiversité et les services écosystémiques (IPBES).",
     "en": "The Intergovernmental Science-Policy Platform on Biodiversity and Ecosystem Services (IPBES) is an international body that assesses the state of biodiversity and ecosystem services."
+  },
+  "wg1-description": {
+      "fr": "Changement climatique 2021 : la base scientifique physique. La contribution du Groupe de travail I au Sixième Rapport d'évaluation aborde la compréhension physique la plus à jour du système climatique et du changement climatique, rassemblant les dernières avancées en science du climat.",
+      "en": "Climate Change 2021: The Physical Science Basis. The Working Group I contribution to the Sixth Assessment Report addresses the most up-to-date physical understanding of the climate system and climate change, bringing together the latest advances in climate science."
   }
 }

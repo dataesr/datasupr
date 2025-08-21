@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import i18n from "./i18n.json";
-import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Row, Title, Text } from "@dataesr/dsfr-plus";
 import IpccAll from "../../charts/ipcc-all";
 import PrctIpccPublicationsByCountryByWg1 from "../../charts/ipcc-wg/PrctIpccPublicationsByCountryByWg1";
 import PrctIpccPublicationsByCountryByWg2 from "../../charts/ipcc-wg/PrctIpccPublicationsByCountryByWg2";
@@ -17,6 +17,18 @@ function getI18nLabel(key, lang = "fr") {
 export default function Countries() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
+
+  function getNotice(children) {
+    return (
+      <div className="fr-notice fr-notice--info fr-mt-1w">
+        <div className="fr-container">
+          <div className="fr-notice__body">
+            <Text className="description">{children}</Text>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <Container as="main" className="fr-mt-5w">
@@ -39,15 +51,20 @@ export default function Countries() {
           <Callout colorFamily="blue-ecume">{getI18nLabel("ipcc-description", currentLang)}</Callout>
         </Col>
       </Row>
-      <Row>
+      <Row gutters className="chart-bg">
         <Col md={12}>
           <IpccAll />
         </Col>
       </Row>
-      <Row gutters>
+      <Row gutters className="fr-mt-5w chart-bg">
         <Col md={6}>
           <PrctIpccPublicationsByCountryByWg1 />
         </Col>
+        <Col md={6} className="fr-mt-10w">
+          {getNotice(getI18nLabel("wg1-description", currentLang))}
+        </Col>
+      </Row>
+      <Row gutters>
         <Col md={6}>
           <PrctIpccPublicationsByCountryByWg2 />
         </Col>

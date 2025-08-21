@@ -1,6 +1,5 @@
 import { useSearchParams } from "react-router-dom";
 
-
 import { useQueryResponse } from "../hooks";
 import { getLabel } from "../utils";
 import bool from "./query";

@@ -1,11 +1,11 @@
 import { getOptions, getSeries } from "./utils";
 
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
-import Template from "./template";
 import { getLabel } from "../utils";
 import { useQueryResponse } from "../hooks";
 import { useSearchParams } from "react-router-dom";
+import ChartWrapper from "../../../../components/chart-wrapper";
+
+import Template from "./template";
 
 export default function PrctIpccReferencesByCountry() {
   const [searchParams] = useSearchParams();
@@ -33,5 +33,13 @@ export default function PrctIpccReferencesByCountry() {
     getLabel("ipcc_wg", "title_y_axis", currentLang)
   );
 
-  return <HighchartsReact highcharts={Highcharts} options={options} />;
+  const chartConfig = {
+    id: "ipcc_wg1",
+    title: {
+      fr: "Groupe de travail 1 : La base scientifique physique",
+      en: "Working Group 1: The Physical Science Basis",
+    },
+  };
+
+  return <ChartWrapper config={chartConfig} options={options} legend={null} />;
 }
