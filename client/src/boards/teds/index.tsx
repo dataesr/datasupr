@@ -1,14 +1,5 @@
-import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Container, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
-
-import IpbesAll from "./charts/ipbes-all";
-import IpccAll from "./charts/ipcc-all";
-import IpccInstitutions from "./charts/ipcc-institutions";
-import Ipcc5Countries from "./charts/ipcc-for-five-countries";
-import PrctIpccPublicationsByCountryByWg1 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg1";
-import PrctIpccPublicationsByCountryByWg2 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg2";
-import PrctIpccPublicationsByCountryByWg2cross from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg2cross";
-import PrctIpccPublicationsByCountryByWg3 from "./charts/ipcc-wg/PrctIpccPublicationsByCountryByWg3";
 import { getLabel } from "./charts/utils";
 
 export default function Welcome() {
@@ -21,55 +12,6 @@ export default function Welcome() {
         <Title as="h1" className="fr-mb-2w">
           {getLabel("index", "title", currentLang)}
         </Title>
-        <Title as="h2" className="fr-mb-2w">
-          {getLabel("index", "ipcc", currentLang)}
-        </Title>
-        <Row gutters>
-          <Col md={12}>
-            <IpccAll />
-          </Col>
-        </Row>
-        <Title as="h3" look="h6" className="text-center">
-          {getLabel("index", "publications_by_group", currentLang)}
-        </Title>
-        <Row>
-          <Col md={6}>
-            <PrctIpccPublicationsByCountryByWg1 />
-          </Col>
-          <Col md={6}>
-            <PrctIpccPublicationsByCountryByWg2 />
-          </Col>
-        </Row>
-        <Row>
-          <Col md={6}>
-            <PrctIpccPublicationsByCountryByWg2cross />
-          </Col>
-          <Col md={6}>
-            <PrctIpccPublicationsByCountryByWg3 />
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col md={12}>
-            <Ipcc5Countries />
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col md={12}>
-            <IpccInstitutions />
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col md={12}>
-            <Title as="h2" className="fr-mb-2w">
-              {getLabel("index", "ipbes", currentLang)}
-            </Title>
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col md={12}>
-            <IpbesAll />
-          </Col>
-        </Row>
       </Container>
     </>
   );

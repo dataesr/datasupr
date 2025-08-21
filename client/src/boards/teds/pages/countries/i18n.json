@@ -1,0 +1,22 @@
+{
+  "title": {
+    "fr": "Classements des pays",
+    "en": "Country rankings"
+  },
+  "ipcc-title": {
+    "fr": "Classement des pays selon le GIEC",
+    "en": "Country rankings according to the IPCC"
+  },
+  "ipbes-title": {
+    "fr": "Classement des pays selon l'IPBES",
+    "en": "Country rankings according to the IPBES"
+  },
+  "ipcc-description": {
+    "fr": "Le Groupe d'experts intergouvernemental sur l'évolution du climat (GIEC) est l'organe des Nations Unies chargé d'évaluer la science liée au changement climatique.",
+    "en": "The Intergovernmental Panel on Climate Change (IPCC) is the United Nations body for assessing the science related to climate change"
+  },
+  "ipbes-description": {
+    "fr": "Plateforme intergouvernementale scientifique et politique sur la biodiversité et les services écosystémiques (IPBES).",
+    "en": "The Intergovernmental Science-Policy Platform on Biodiversity and Ecosystem Services (IPBES) is an international body that assesses the state of biodiversity and ecosystem services."
+  }
+}

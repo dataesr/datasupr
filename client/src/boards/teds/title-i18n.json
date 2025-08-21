@@ -1,0 +1,14 @@
+{
+  "home": {
+    "fr": "Teds - Accueil",
+    "en": "Teds - Home"
+  },
+  "countries": {
+    "fr": "Teds - Classements des pays",
+    "en": "Teds - Country rankings"
+  },
+  "entities": {
+    "fr": "Teds - Classements des entités françaises",
+    "en": "Teds - Rankings of French entities"
+  }
+}

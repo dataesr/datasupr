@@ -64,7 +64,7 @@ export type ChartConfig = {
   description?:
     | string
     | {
-        [key: string]: string;
+        [key: string]: React.ReactNode;
       }
     | null;
   integrationURL?: string;
