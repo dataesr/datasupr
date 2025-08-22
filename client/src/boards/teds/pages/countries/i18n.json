@@ -23,8 +23,16 @@
       "fr": "Changement climatique 2021 : la base scientifique physique. La contribution du Groupe de travail I au Sixième Rapport d'évaluation aborde la compréhension physique la plus à jour du système climatique et du changement climatique, rassemblant les dernières avancées en science du climat.",
       "en": "Climate Change 2021: The Physical Science Basis. The Working Group I contribution to the Sixth Assessment Report addresses the most up-to-date physical understanding of the climate system and climate change, bringing together the latest advances in climate science."
   },
+  "wg2-title": {
+    "fr": "Groupe de travail 2 : Impacts, adaptation et vulnérabilité",
+    "en": "Climate Change 2022: Impacts, Adaptation and Vulnerability"
+  },
   "wg2-description": {
-    "fr": "La contribution du Groupe de travail II au Sixième Rapport d'évaluation du GIEC évalue les impacts du changement climatique, en examinant les écosystèmes, la biodiversité et les communautés humaines à l'échelle mondiale et régionale. Elle passe également en revue les vulnérabilités et les capacités et limites du monde naturel et des sociétés humaines à s'adapter au changement climatique.",
+    "fr": "Le rapport du Groupe de travail II au Sixième Rapport d'évaluation du GIEC évalue les impacts du changement climatique, en examinant les écosystèmes, la biodiversité et les communautés humaines à l'échelle mondiale et régionale. Elle passe également en revue les vulnérabilités et les capacités et limites du monde naturel et des sociétés humaines à s'adapter au changement climatique.",
     "en": "The Working Group II contribution to the IPCC Sixth Assessment Report assesses the impacts of climate change, looking at ecosystems, biodiversity, and human communities at global and regional levels. It also reviews vulnerabilities and the capacities and limits of the natural world and human societies to adapt to climate change."
+  },
+  "wg3-description": {
+    "fr": "Le rapport du Groupe de travail III fournit une évaluation mondiale actualisée des progrès et des engagements en matière d'atténuation du changement climatique, et examine les sources des émissions mondiales. Il explique les développements dans les efforts de réduction des émissions et d'atténuation, en évaluant l'impact des engagements climatiques nationaux par rapport aux objectifs d'émissions à long terme.",
+    "en": "The Working Group III report provides an updated global assessment of climate change mitigation progress and pledges, and examines the sources of global emissions. It explains developments in emission reduction and mitigation efforts, assessing the impact of national climate pledges in relation to long-term emissions goals."
   }
 }

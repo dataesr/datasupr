@@ -58,29 +58,35 @@ export default function Countries() {
       </Row>
 
       <Row gutters className="fr-mt-5w chart-bg">
-        <Col md={6}>
+        <Col md={7}>
           <PrctIpccPublicationsByCountryByWg1 />
         </Col>
-        <Col md={6} className="fr-mt-10w">
+        <Col md={5} className="fr-mt-10w">
           {getNotice(getI18nLabel("wg1-description", currentLang))}
         </Col>
       </Row>
 
       <Row gutters className="fr-mt-5w chart-bg">
+        <Col md={12}>
+          <Title as="h2" look="h6">
+            {getI18nLabel("wg2-title", currentLang)}
+          </Title>
+        </Col>
         <Col md={6}>
           <PrctIpccPublicationsByCountryByWg2 />
         </Col>
-        <Col md={6} className="fr-mt-10w">
-          {getNotice(getI18nLabel("wg2-description", currentLang))}
-        </Col>
-      </Row>
-
-      <Row>
         <Col md={6}>
           <PrctIpccPublicationsByCountryByWg2cross />
         </Col>
-        <Col md={6}>
+        <Col md={12}>{getNotice(getI18nLabel("wg2-description", currentLang))}</Col>
+      </Row>
+
+      <Row gutters className="fr-mt-5w chart-bg">
+        <Col md={7}>
           <PrctIpccPublicationsByCountryByWg3 />
+        </Col>
+        <Col md={5} className="fr-mt-10w">
+          {getNotice(getI18nLabel("wg3-description", currentLang))}
         </Col>
       </Row>
 

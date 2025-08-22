@@ -36,8 +36,8 @@ export default function PrctIpccReferencesByCountry() {
   const chartConfig = {
     id: "ipcc_wg2",
     title: {
-      fr: "Groupe de travail 2 : Impacts, adaptation et vulnérabilité",
-      en: "Climate Change 2022: Impacts, Adaptation and Vulnerability",
+      fr: "Groupe de travail 2",
+      en: "Working Group 2",
     },
   };
 

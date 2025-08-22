@@ -1,7 +1,6 @@
 import { getOptions, getSeries } from "./utils";
 
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+import ChartWrapper from "../../../../components/chart-wrapper";
 import Template from "./template";
 import { getLabel } from "../utils";
 import { useQueryResponse } from "../hooks";
@@ -33,5 +32,13 @@ export default function PrctIpccReferencesByCountry() {
     getLabel("ipcc_wg", "title_y_axis", currentLang)
   );
 
-  return <HighchartsReact highcharts={Highcharts} options={options} />;
+  const chartConfig = {
+    id: "ipcc_wg3",
+    title: {
+      fr: "Groupe de travail 3 : Atténuation du changement climatique",
+      en: "Working Group 3: Mitigation of Climate Change",
+    },
+  };
+
+  return <ChartWrapper config={chartConfig} options={options} legend={null} />;
 }
