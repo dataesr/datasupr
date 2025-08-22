@@ -7,7 +7,18 @@
   }
 
   .chart-bg {
-    background-color: var(--green-bourgeon-975-75);
+    background-color: var(--background-alt-blue-ecume-hover);
     border-radius: 8px;
     padding: 16px;
+  }
+
+  .chart-bg2 {
+    background-color: var(--background-alt-green-bourgeon);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .bg2 {
+    background-color: var(--background-alt-green-bourgeon);
+    background-image: linear-gradient(0deg,var(--green-bourgeon-main-640),var(--green-bourgeon-main-640));
   }

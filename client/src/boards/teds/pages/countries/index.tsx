@@ -90,13 +90,13 @@ export default function Countries() {
         </Col>
       </Row>
 
-      <Row>
+      <Row gutters className="fr-mt-5w chart-bg">
         <Col md={12}>
           <Ipcc5countries />
         </Col>
       </Row>
 
-      <Row>
+      <Row className="fr-mt-7w">
         <Col md={12}>
           <Title as="h2" className="fr-mb-2w">
             {getI18nLabel("ipbes-title", currentLang)}
@@ -105,10 +105,10 @@ export default function Countries() {
       </Row>
       <Row>
         <Col md={12}>
-          <Callout colorFamily="blue-ecume">{getI18nLabel("ipbes-description", currentLang)}</Callout>
+          <Callout className="bg2">{getI18nLabel("ipbes-description", currentLang)}</Callout>
         </Col>
       </Row>
-      <Row>
+      <Row gutters className="fr-mt-5w chart-bg2">
         <Col md={12}>
           <IpbesAll />
         </Col>
