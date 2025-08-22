@@ -56,6 +56,7 @@ export default function Countries() {
           <IpccAll />
         </Col>
       </Row>
+
       <Row gutters className="fr-mt-5w chart-bg">
         <Col md={6}>
           <PrctIpccPublicationsByCountryByWg1 />
@@ -64,11 +65,16 @@ export default function Countries() {
           {getNotice(getI18nLabel("wg1-description", currentLang))}
         </Col>
       </Row>
-      <Row gutters>
+
+      <Row gutters className="fr-mt-5w chart-bg">
         <Col md={6}>
           <PrctIpccPublicationsByCountryByWg2 />
         </Col>
+        <Col md={6} className="fr-mt-10w">
+          {getNotice(getI18nLabel("wg2-description", currentLang))}
+        </Col>
       </Row>
+
       <Row>
         <Col md={6}>
           <PrctIpccPublicationsByCountryByWg2cross />
