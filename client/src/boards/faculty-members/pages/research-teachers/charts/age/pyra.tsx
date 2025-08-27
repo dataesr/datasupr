@@ -4,7 +4,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { generateIntegrationURL, useContextDetection } from "../../../../utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useResearchTeachersData } from "../../use-cnu-data";
-import { CnuGroupData, createCnuAgeCategoryOptions } from "./options"; // Assurez-vous d'importer la fonction mise à jour
+import { CnuGroupData, createCnuAgeCategoryOptions } from "./options"; 
 import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 function RenderData({ data }: { data: CnuGroupData[] }) {
