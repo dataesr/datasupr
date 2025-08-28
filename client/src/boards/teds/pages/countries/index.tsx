@@ -105,10 +105,10 @@ export default function Countries() {
       </Row>
       <Row>
         <Col md={12}>
-          <Callout className="bg2">{getI18nLabel("ipbes-description", currentLang)}</Callout>
+          <Callout colorFamily="blue-ecume">{getI18nLabel("ipbes-description", currentLang)}</Callout>
         </Col>
       </Row>
-      <Row gutters className="fr-mt-5w chart-bg2">
+      <Row gutters className="fr-mt-5w chart-bg">
         <Col md={12}>
           <IpbesAll />
         </Col>

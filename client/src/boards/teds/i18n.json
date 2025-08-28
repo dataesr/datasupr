@@ -1,0 +1,34 @@
+{
+  "title": {
+    "fr": "Tableau de bord TEDS",
+    "en": "TEDS Dashboard"
+  },
+  "teds-description": {
+    "fr": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam praesentium nisi nesciunt tempore asperiores non, architecto eaque aspernatur, distinctio similique inventore consectetur, nihil ullam sit impedit possimus facilis animi laboriosam!",
+    "en": "Description of the TEDS dashboard"
+  },
+  "title-countries": {
+    "fr": "Classements des pays",
+    "en": "Country rankings"
+  },
+  "description-countries": {
+    "fr": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam praesentium nisi nesciunt tempore asperiores non, architecto eaque aspernatur, distinctio similique inventore consectetur, nihil ullam sit impedit possimus facilis animi laboriosam!",
+    "en": "Description of the countries"
+  },
+  "button-countries": {
+    "fr": "Voir",
+    "en": "See"
+  },
+  "title-entities": {
+    "fr": "Classements des entités",
+    "en": "Entity rankings"
+  },
+  "description-entities": {
+    "fr": "Lorem ipsum dolor sit amet consectetur adipisicing elit. Veniam praesentium nisi nesciunt tempore asperiores non, architecto eaque aspernatur, distinctio similique inventore consectetur, nihil ullam sit impedit possimus facilis animi laboriosam!",
+    "en": "Description of the entities"
+  },
+  "button-entities": {
+    "fr": "Voir",
+    "en": "See"
+  }
+}

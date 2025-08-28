@@ -30,10 +30,10 @@ export default function Entities() {
       </Row>
       <Row>
         <Col md={12}>
-          <Callout colorFamily="blue-ecume">{getI18nLabel("description", currentLang)}</Callout>
+          <Callout className="bg2">{getI18nLabel("description", currentLang)}</Callout>
         </Col>
       </Row>
-      <Row gutters className="chart-bg">
+      <Row gutters className="chart-bg2">
         <Col md={12}>
           <IpccInstitutions />
         </Col>
