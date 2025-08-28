@@ -14,15 +14,27 @@ export default function Entities() {
 
   return (
     <Container as="main" className="fr-mt-5w">
-      <Title as="h1" className="fr-mb-2w">
-        {getI18nLabel("title", currentLang)}
-      </Title>
-      <Title as="h2" className="fr-mb-2w">
-        {getI18nLabel("subtitle", currentLang)}
-      </Title>
-      <Callout colorFamily="blue-ecume">{getI18nLabel("description", currentLang)}</Callout>
       <Row>
-        <Col>
+        <Col md={12}>
+          <Title as="h1" className="fr-mb-2w">
+            {getI18nLabel("title", currentLang)}
+          </Title>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={12}>
+          <Title as="h2" className="fr-mb-2w">
+            {getI18nLabel("subtitle", currentLang)}
+          </Title>
+        </Col>
+      </Row>
+      <Row>
+        <Col md={12}>
+          <Callout colorFamily="blue-ecume">{getI18nLabel("description", currentLang)}</Callout>
+        </Col>
+      </Row>
+      <Row gutters className="chart-bg">
+        <Col md={12}>
           <IpccInstitutions />
         </Col>
       </Row>
