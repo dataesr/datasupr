@@ -1,11 +1,11 @@
 {
   "title1": {
-    "fr": "Présentation du tableau des projets européens",
-    "en": "Presentation of the European projects dashboard"
+    "fr": "Tableau de bord des projets européens (Horizon Europe)",
+    "en": "European Projects Dashboard (Horizon Europe)"
   },
   "bloc1": {
-    "fr": "Ce tableau de bord présente les projets européens financés par l'Union européenne",
-    "en": "This dashboard presents European projects funded by the European Union"
+    "fr": "Le programme <b>Horizon Europe</b> repose sur <b>quatre piliers</b>complémentaires qui structurent son action en faveur de la recherche et de l’innovation en Europe.<br /><ol><li><b>Science d’excellence</b>: Ce pilier soutient la recherche fondamentale de haut niveau, en finançant les chercheurs et les projets les plus prometteurs, notamment à travers le Conseil européen de la recherche (ERC) et les bourses Marie Skłodowska-Curie. Il vise à renforcer l'excellence scientifique de l’Union.</li><li><b>Problématiques mondiales et compétitivité industrielle européenne</b>: Il finance des projets collaboratifs pour répondre aux grands défis sociétaux (santé, climat, énergie, sécurité, alimentation...) tout en stimulant l’innovation industrielle. Il est organisé en *clusters* thématiques favorisant les synergies entre les disciplines.</li><li><b>Europe innovante</b>: Ce pilier encourage l’émergence d’innovations de rupture et soutient les start-ups, les PME innovantes et les nouvelles technologies via des instruments comme le Conseil européen de l’innovation (EIC).</li><li><b>Élargir la participation et renforcer l’Espace européen de la recherche</b>: Ce dernier pilier vise à réduire les écarts entre les pays et régions de l’UE en matière de recherche et d’innovation. Il soutient les pays moins représentés dans les projets européens et renforce la coopération scientifique à l’échelle du continent.</li></ol><br />Ensemble, ces quatre piliers font de Horizon Europe un outil stratégique pour construire une Europe plus compétitive, durable et solidaire dans le domaine de la recherche et de l’innovation.",
+    "en": "The <b>Horizon Europe</b> program is based on <b>four complementary pillars</b> that structure its action in favor of research and innovation in Europe.<br /><ol><li><b>Excellent Science</b>: This pillar supports high-level fundamental research by funding the most promising researchers and projects, notably through the European Research Council (ERC) and Marie Skłodowska-Curie grants. It aims to strengthen the scientific excellence of the Union.</li><li><b>Global Challenges and European Industrial Competitiveness</b>: It funds collaborative projects to address major societal challenges (health, climate, energy, security, food...) while stimulating industrial innovation. It is organized into thematic *clusters* that promote synergies between disciplines.</li><li><b>Innovative Europe</b>: This pillar encourages the emergence of breakthrough innovations and supports start-ups, innovative SMEs, and new technologies through instruments such as the European Innovation Council (EIC).</li><li><b>Widening Participation and Strengthening the European Research Area</b>: This last pillar aims to reduce disparities between EU countries and regions in terms of research and innovation. It supports countries that are less represented in European projects and strengthens scientific cooperation across the continent.</li></ol><br />Together, these four pillars make Horizon Europe a strategic tool for building a more competitive, sustainable, and united Europe in the field of research and innovation."
   },
   "title2": {
     "fr": "Grands chiffres",
@@ -16,8 +16,8 @@
     "en": "Horizon-Europe represents 95% of European funding..."
   },
   "title3": {
-    "fr": "Explorer les projets européens",
-    "en": "Explore European projects"
+    "fr": "Présentation de l'arborescence",
+    "en": "Presentation of the tree structure"
   },
   "bloc3": {
     "fr": "Découvrez les projets européens financés par l'Union européenne<br /><a href='/european-projects/search'>Voir les projets</a>",
