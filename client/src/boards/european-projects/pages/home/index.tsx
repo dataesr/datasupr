@@ -13,7 +13,7 @@ import {
 } from "@dataesr/dsfr-plus";
 import { useState } from "react"; // Ajoutez cet import
 import i18n from "./i18n.json";
-import "./styles.css";
+import "./styles.scss";
 
 interface Program {
   title: string;
