@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Badge, Button, Checkbox, Col, Container, Row } from "@dataesr/dsfr-plus";
+import { Badge, Button, Checkbox, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import Cookies from "js-cookie";
 
@@ -20,6 +20,7 @@ export default function Search() {
   const [selectedPrograms, setSelectedPrograms] = useState<string[]>([]);
   const [selectedThematics, setSelectedThematics] = useState<string[]>([]);
   const [selectedDestinations, setSelectedDestinations] = useState<string[]>([]);
+  const [isFiltersVisible, setIsFiltersVisible] = useState<boolean>(false);
 
   const { data: dataPillars } = useQuery({
     queryKey: ["ep/get-filters-values", "pillars"],
@@ -164,6 +165,10 @@ export default function Search() {
   // Cookies.get("favoriteIds") || '';
   // Cookies.remove('favoriteIds');
 
+  const toggleFiltersVisibility = () => {
+    setIsFiltersVisible(!isFiltersVisible);
+  };
+
   const searchFunction = () => {
     // Sauvegarde des selections dans les cookies
     Cookies.set("selectedPillars", selectedPillars.join("|"));
@@ -181,12 +186,30 @@ export default function Search() {
 
   return (
     <>
-      <Container as="section" className="fr-mt-2w search">
+      <Container className="fr-mt-5w">
+        <Title as="h1" look="h3">
+          Sélection d'un périmètre d'analyse
+        </Title>
+        <Title as="h2" look="h4">
+          Par architecture thématique
+        </Title>
+        <Callout className="callout-style-search" colorFamily="blue-cumulus">
+          L'architecture thématiques est composé des <strong>piliers</strong>, <strong>programmes</strong>, <strong>thématiques</strong> et{" "}
+          <strong>destinations</strong>. Elle a pour but de faciliter la compréhension des financements accordés par la{" "}
+          <strong>commission européenne</strong>.
+          <br /> Par défaut, l'ensemble du programme cadre de la recherche et de l'innovation (PCRI) est sélectionné. Vous pouvez affiner votre
+          sélection en fonction de vos besoins.
+          <br />
+          <div className="text-right">
+            <Button size="sm" variant="secondary" className="fr-mr-2w" onClick={toggleFiltersVisibility}>
+              {isFiltersVisible ? "Masquer les critères" : "Personnaliser mes critères d'analyse"}
+            </Button>
+            <Button size="sm">Accéder à l'analyse générale</Button>
+          </div>
+        </Callout>
+      </Container>
+      <Container as="section" className={`search ${isFiltersVisible ? "visible" : "hidden"}`} id="filters">
         <div className="content">
-          <Callout className="callout-style-search">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi tenetur eius repellat hic, laborum placeat porro temporibus iusto magnam
-            excepturi numquam commodi nesciunt. Eaque cupiditate adipisci aspernatur dicta, fugit deleniti!
-          </Callout>
           <Row>
             <Col>
               <CustomTitle target="pillars" />
@@ -307,12 +330,17 @@ export default function Search() {
           </Row>
         </div>
       </Container>
-      <Container as="section" className="fr-mt-2w search">
-        <div className="content">
-          <Callout className="callout-style-search">
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi tenetur eius repellat hic, laborum placeat porro temporibus iusto magnam
-            excepturi numquam commodi nesciunt. Eaque cupiditate adipisci aspernatur dicta, fugit deleniti!
-          </Callout>
+      <Container className="fr-mt-5w">
+        <Title as="h2" look="h4">
+          Par entité
+        </Title>
+        <Callout className="callout-style-search" colorFamily="brown-cafe-creme">
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi tenetur eius repellat hic, laborum placeat porro temporibus iusto magnam
+          excepturi numquam commodi nesciunt. Eaque cupiditate adipisci aspernatur dicta, fugit deleniti!
+        </Callout>
+      </Container>
+      <Container as="section" className="search">
+        <div className="content2">
           <EntitySearchBar />
         </div>
       </Container>

@@ -137,10 +137,12 @@ export default function EntitySearchBar() {
           />
         </Col>
         <Col md={5} className="text-right fr-mt-4w">
-          <Button icon="delete-line" variant="secondary">
+          <Button icon="delete-line" size="sm" variant="secondary">
             {getI18nLabel("reset")}
           </Button>
-          <Button icon="search-line">{getI18nLabel("search")}</Button>
+          <Button icon="search-line" size="sm">
+            {getI18nLabel("search")}
+          </Button>
         </Col>
       </Row>
       {query.length >= 3 && (

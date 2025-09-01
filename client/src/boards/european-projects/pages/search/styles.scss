@@ -1,8 +1,29 @@
 .search {
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  overflow: hidden;
+
+  &.visible {
+    max-height: 2000px;
+    opacity: 1;
+  }
+
+  &.hidden {
+    max-height: 0;
+    opacity: 0;
+    
+    .content {
+      padding-top: 0;
+      padding-bottom: 0;
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+  }
+
   .content{
-    border: 1px solid var(--grey-1000-50-hover);
-    padding: 10px;
-    background-color: var(--background-default-grey);
+    // border: 1px solid var(--grey-1000-50-hover);
+    background-color: var(--blue-cumulus-925);
+    border-radius: 8px;
+    padding: 16px;
 
     .list-box {
       padding: 6px;
@@ -32,4 +53,10 @@
       color: var(--text-default-grey);
     }
   }
+
+    .content2 {
+      background-color: var(--brown-cafe-creme-925);
+      border-radius: 8px;
+      padding: 16px;
+    }
 }
