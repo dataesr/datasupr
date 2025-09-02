@@ -1,6 +1,13 @@
 .search {
-  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
-  overflow: hidden;
+  // Par défaut, permettre le débordement pour les dropdowns
+  overflow: visible;
+  
+  // Seulement pour les filtres avec animation
+  &.visible,
+  &.hidden {
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    overflow: hidden;
+  }
 
   &.visible {
     max-height: 2000px;
@@ -22,7 +29,8 @@
   .content{
     // border: 1px solid var(--grey-1000-50-hover);
     background-color: var(--blue-cumulus-925);
-    border-radius: 8px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
     padding: 16px;
 
     .list-box {
@@ -55,8 +63,10 @@
   }
 
     .content2 {
+      position: relative;
       background-color: var(--brown-cafe-creme-925);
-      border-radius: 8px;
+      border-bottom-left-radius: 8px;
+      border-bottom-right-radius: 8px;
       padding: 16px;
     }
 }

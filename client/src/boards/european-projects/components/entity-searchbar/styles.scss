@@ -5,7 +5,7 @@
   right: 0;
   background-color: var(--grey-1000-50-hover);
   box-shadow: 0 12px 14px rgba(0,0,0,0.2);
-  z-index: 1000;
+  z-index: 9999;
   max-height: 300px;
   overflow-y: auto;
   margin-top: 8px;
@@ -29,11 +29,9 @@
 }
 
 .results-dropdown.hidden {
-  transform: scaleY(0);
-  opacity: 0;
+  display: none;
 }
 
 .results-dropdown.visible {
-  transform: scaleY(1);
-  opacity: 1;
+  display: block;
 }

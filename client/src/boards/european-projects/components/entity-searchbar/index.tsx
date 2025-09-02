@@ -120,6 +120,13 @@ export default function EntitySearchBar() {
     setSelectedIndex(-1);
   }, [query]);
 
+  const handleResetClick = () => {
+    setQuery("");
+    setIsVisible(false);
+    setSelectedIndex(-1);
+    inputRef.current?.focus();
+  };
+
   return (
     <div style={{ position: "relative" }}>
       <Row>
@@ -127,22 +134,28 @@ export default function EntitySearchBar() {
           <label className="fr-label" htmlFor="entity-search-input">
             {getI18nLabel("find-entity")}
           </label>
-          <TextInput
-            id="entity-search-input"
-            onChange={(e) => setQuery(e.target.value)}
-            onKeyDown={handleKeyDown}
-            placeholder={getI18nLabel("find-entity-placeholder")}
-            ref={inputRef}
-            value={query}
-          />
-        </Col>
-        <Col md={5} className="text-right fr-mt-4w">
-          <Button icon="delete-line" size="sm" variant="secondary">
-            {getI18nLabel("reset")}
-          </Button>
-          <Button icon="search-line" size="sm">
-            {getI18nLabel("search")}
-          </Button>
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "flex-end" }}>
+            <div style={{ flex: 1 }}>
+              <TextInput
+                id="entity-search-input"
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={getI18nLabel("find-entity-placeholder")}
+                ref={inputRef}
+                value={query}
+              />
+            </div>
+            <Button
+              icon="delete-line"
+              size="sm"
+              variant="secondary"
+              onClick={handleResetClick}
+              disabled={query.length === 0}
+              className="fr-btn--icon-only"
+            >
+              {getI18nLabel("reset")}
+            </Button>
+          </div>
         </Col>
       </Row>
       {query.length >= 3 && (

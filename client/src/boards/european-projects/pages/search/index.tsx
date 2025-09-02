@@ -193,7 +193,7 @@ export default function Search() {
         <Title as="h2" look="h4">
           Par architecture thématique
         </Title>
-        <Callout className="callout-style-search" colorFamily="blue-cumulus">
+        <Callout className="callout-style-search fr-mb-1w" colorFamily="blue-cumulus">
           L'architecture thématiques est composé des <strong>piliers</strong>, <strong>programmes</strong>, <strong>thématiques</strong> et{" "}
           <strong>destinations</strong>. Elle a pour but de faciliter la compréhension des financements accordés par la{" "}
           <strong>commission européenne</strong>.
@@ -334,7 +334,7 @@ export default function Search() {
         <Title as="h2" look="h4">
           Par entité
         </Title>
-        <Callout className="callout-style-search" colorFamily="brown-cafe-creme">
+        <Callout className="callout-style-search fr-mb-1w" colorFamily="brown-cafe-creme">
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi tenetur eius repellat hic, laborum placeat porro temporibus iusto magnam
           excepturi numquam commodi nesciunt. Eaque cupiditate adipisci aspernatur dicta, fugit deleniti!
         </Callout>
