@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Badge, Button, Checkbox, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
@@ -21,6 +21,7 @@ export default function Search() {
   const [selectedThematics, setSelectedThematics] = useState<string[]>([]);
   const [selectedDestinations, setSelectedDestinations] = useState<string[]>([]);
   const [isFiltersVisible, setIsFiltersVisible] = useState<boolean>(false);
+  const [isInitialized, setIsInitialized] = useState<boolean>(false);
 
   const { data: dataPillars } = useQuery({
     queryKey: ["ep/get-filters-values", "pillars"],
@@ -42,6 +43,56 @@ export default function Search() {
     queryFn: () => getAll("destinations"),
   });
 
+  // Fonction pour charger les valeurs par défaut depuis les cookies
+  const loadDefaultValues = useCallback(() => {
+    const savedPillars = Cookies.get("selectedPillars");
+    const savedPrograms = Cookies.get("selectedPrograms");
+    const savedThematics = Cookies.get("selectedThematics");
+    const savedDestinations = Cookies.get("selectedDestinations");
+
+    if (savedPillars) {
+      setSelectedPillars(savedPillars.split("|").filter(Boolean));
+    }
+    if (savedPrograms) {
+      setSelectedPrograms(savedPrograms.split("|").filter(Boolean));
+    }
+    if (savedThematics) {
+      setSelectedThematics(savedThematics.split("|").filter(Boolean));
+    }
+    if (savedDestinations) {
+      setSelectedDestinations(savedDestinations.split("|").filter(Boolean));
+    }
+  }, []);
+
+  // Fonction pour définir toutes les valeurs par défaut si aucun cookie n'existe
+  const setAllAsDefault = useCallback(() => {
+    if (dataPillars && !Cookies.get("selectedPillars")) {
+      setSelectedPillars(dataPillars.map((p) => p.id));
+    }
+    if (allPrograms && !Cookies.get("selectedPrograms")) {
+      setSelectedPrograms(allPrograms.map((p) => p.id));
+    }
+    if (allThematics && !Cookies.get("selectedThematics")) {
+      setSelectedThematics(allThematics.map((t) => t.id));
+    }
+    if (allDestinations && !Cookies.get("selectedDestinations")) {
+      setSelectedDestinations(allDestinations.map((d) => d.id));
+    }
+  }, [dataPillars, allPrograms, allThematics, allDestinations]);
+
+  // Initialisation des valeurs par défaut
+  useEffect(() => {
+    if (!isInitialized && dataPillars && allPrograms && allThematics && allDestinations) {
+      // Charger d'abord les valeurs sauvegardées depuis les cookies
+      loadDefaultValues();
+
+      // Si aucune valeur n'est sauvegardée, sélectionner tout par défaut
+      setAllAsDefault();
+
+      setIsInitialized(true);
+    }
+  }, [dataPillars, allPrograms, allThematics, allDestinations, isInitialized, loadDefaultValues, setAllAsDefault]);
+
   const { data: dataPrograms } = useQuery({
     queryKey: ["ep/get-programs-from-pillars", selectedPillars],
     queryFn: () => getPrograms(selectedPillars),
@@ -58,22 +109,22 @@ export default function Search() {
   });
 
   useEffect(() => {
-    if (dataPrograms) {
+    if (dataPrograms && isInitialized) {
       setSelectedPrograms(dataPrograms.map((el) => el.id));
     }
-  }, [dataPrograms]);
+  }, [dataPrograms, isInitialized]);
 
   useEffect(() => {
-    if (dataThematics) {
+    if (dataThematics && isInitialized) {
       setSelectedThematics(dataThematics.map((el) => el.id));
     }
-  }, [dataThematics]);
+  }, [dataThematics, isInitialized]);
 
   useEffect(() => {
-    if (dataDestinations) {
+    if (dataDestinations && isInitialized) {
       setSelectedDestinations(dataDestinations.map((el) => el.id));
     }
-  }, [dataDestinations]);
+  }, [dataDestinations, isInitialized]);
 
   function getI18nLabel(key) {
     return i18n[key][currentLang];
@@ -313,6 +364,11 @@ export default function Search() {
                   setSelectedPrograms([]);
                   setSelectedThematics([]);
                   setSelectedDestinations([]);
+                  // Supprimer les cookies pour repartir sur une base propre
+                  Cookies.remove("selectedPillars");
+                  Cookies.remove("selectedPrograms");
+                  Cookies.remove("selectedThematics");
+                  Cookies.remove("selectedDestinations");
                 }}
                 variant="secondary"
               >
