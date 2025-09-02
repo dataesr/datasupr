@@ -255,7 +255,9 @@ export default function Search() {
             <Button size="sm" variant="secondary" className="fr-mr-2w" onClick={toggleFiltersVisibility}>
               {isFiltersVisible ? "Masquer les critères" : "Personnaliser mes critères d'analyse"}
             </Button>
-            <Button size="sm">Accéder à l'analyse générale</Button>
+            <Button size="sm" onClick={searchFunction} disabled={isFiltersVisible}>
+              Accéder à l'analyse générale
+            </Button>
           </div>
         </Callout>
       </Container>
@@ -370,6 +372,7 @@ export default function Search() {
                   Cookies.remove("selectedThematics");
                   Cookies.remove("selectedDestinations");
                 }}
+                size="sm"
                 variant="secondary"
               >
                 {getI18nLabel("reset")}
@@ -379,6 +382,7 @@ export default function Search() {
                 onClick={() => {
                   searchFunction();
                 }}
+                size="sm"
               >
                 {getI18nLabel("search")}
               </Button>
