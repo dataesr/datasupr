@@ -53,13 +53,13 @@ export default function CustomSideMenu() {
 
   // get cookies from the browser
   const selectedPillars = Cookies.get("selectedPillars");
-  const numberOfPillars = Cookies.get("numberOfPillars") || 0;
+  const numberOfPillars = Number(Cookies.get("numberOfPillars")) || 0;
   const selectedPrograms = Cookies.get("selectedPrograms");
-  const numberOfPrograms = Cookies.get("numberOfPrograms") || 0;
+  const numberOfPrograms = Number(Cookies.get("numberOfPrograms")) || 0;
   const selectedThematics = Cookies.get("selectedThematics");
-  const numberOfThematics = Cookies.get("numberOfThematics") || 0;
+  const numberOfThematics = Number(Cookies.get("numberOfThematics")) || 0;
   const selectedDestinations = Cookies.get("selectedDestinations");
-  const numberOfDestinations = Cookies.get("numberOfDestinations") || 0;
+  const numberOfDestinations = Number(Cookies.get("numberOfDestinations")) || 0;
 
   const numberOfActiveFilters =
     (selectedPillars ? selectedPillars.split("|").filter(Boolean).length : 0) +
@@ -74,22 +74,22 @@ export default function CustomSideMenu() {
     let all: Array<{ id: string; label_fr: string; label_en: string }> = [];
     let numberOf = 0;
     if (filterKey === "pillars") {
-      sellected = selectedPillars;
+      sellected = selectedPillars || "";
       all = allPillars;
       numberOf = numberOfPillars;
     }
     if (filterKey === "programs") {
-      sellected = selectedPrograms;
+      sellected = selectedPrograms || "";
       all = allPrograms;
       numberOf = numberOfPrograms;
     }
     if (filterKey === "thematics") {
-      sellected = selectedThematics;
+      sellected = selectedThematics || "";
       all = allThematics;
       numberOf = numberOfThematics;
     }
     if (filterKey === "destinations") {
-      sellected = selectedDestinations;
+      sellected = selectedDestinations || "";
       all = allDestinations;
       numberOf = numberOfDestinations;
     }
