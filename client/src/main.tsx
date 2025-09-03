@@ -9,6 +9,7 @@ import "remixicon/fonts/remixicon.css";
 import AppRoutes from "./router.js";
 import RouterLink from "./components/router-link.js";
 import { ScrollToTop } from "./components/scroll-to-top.js";
+import CookieConsent from "./components/cookie-consent";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -19,6 +20,8 @@ export const queryClient = new QueryClient({
   },
 });
 
+console.log("🚀 Main.tsx is loading...");
+
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <BrowserRouter>
@@ -28,6 +31,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
           <AppRoutes />
         </DSFRConfig>
         <ReactQueryDevtools initialIsOpen={false} />
+        <CookieConsent />
       </QueryClientProvider>
     </BrowserRouter>
   </React.StrictMode>

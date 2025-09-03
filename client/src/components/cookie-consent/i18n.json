@@ -1,0 +1,138 @@
+{
+  "banner": {
+    "title": {
+      "fr": "Gestion des cookies",
+      "en": "Cookie management"
+    },
+    "description": {
+      "fr": "Nous utilisons des cookies pour améliorer votre expérience de navigation et analyser l'utilisation de notre site. Vous pouvez choisir quels types de cookies accepter.",
+      "en": "We use cookies to improve your browsing experience and analyze the use of our site. You can choose which types of cookies to accept."
+    },
+    "acceptAll": {
+      "fr": "Tout accepter",
+      "en": "Accept all"
+    },
+    "refuseAll": {
+      "fr": "Tout refuser",
+      "en": "Refuse all"
+    },
+    "customize": {
+      "fr": "Personnaliser",
+      "en": "Customize"
+    }
+  },
+  "modal": {
+    "title": {
+      "fr": "Paramètres des cookies",
+      "en": "Cookie settings"
+    },
+    "description": {
+      "fr": "Gérez vos préférences de cookies. Vous pouvez modifier ces paramètres à tout moment.",
+      "en": "Manage your cookie preferences. You can change these settings at any time."
+    },
+    "save": {
+      "fr": "Enregistrer mes préférences",
+      "en": "Save my preferences"
+    },
+    "close": {
+      "fr": "Fermer",
+      "en": "Close"
+    }
+  },
+  "categories": {
+    "necessary": {
+      "title": {
+        "fr": "Cookies nécessaires",
+        "en": "Necessary cookies"
+      },
+      "description": {
+        "fr": "Ces cookies sont indispensables au fonctionnement du site et ne peuvent pas être désactivés. Ils permettent les fonctions de base comme la navigation et l'accès aux zones sécurisées.",
+        "en": "These cookies are essential for the website to function and cannot be disabled. They enable basic functions like navigation and access to secure areas."
+      },
+      "always": {
+        "fr": "Toujours actifs",
+        "en": "Always active"
+      }
+    },
+    "functional": {
+      "title": {
+        "fr": "Cookies fonctionnels",
+        "en": "Functional cookies"
+      },
+      "description": {
+        "fr": "Ces cookies permettent de sauvegarder vos préférences et filtres lors de votre navigation (ex: filtres des projets européens).",
+        "en": "These cookies allow us to save your preferences and filters during your navigation (e.g., European projects filters)."
+      }
+    },
+    "analytics": {
+      "title": {
+        "fr": "Cookies analytiques",
+        "en": "Analytics cookies"
+      },
+      "description": {
+        "fr": "Ces cookies nous aident à comprendre comment vous utilisez notre site en collectant des informations anonymes sur votre navigation.",
+        "en": "These cookies help us understand how you use our site by collecting anonymous information about your browsing."
+      }
+    }
+  },
+  "page": {
+    "title": {
+      "fr": "Politique de cookies",
+      "en": "Cookie policy"
+    },
+    "introduction": {
+      "fr": "Cette page vous explique comment nous utilisons les cookies sur notre site et comment vous pouvez contrôler leur utilisation.",
+      "en": "This page explains how we use cookies on our site and how you can control their use."
+    },
+    "whatAreCookies": {
+      "title": {
+        "fr": "Qu'est-ce qu'un cookie ?",
+        "en": "What is a cookie?"
+      },
+      "content": {
+        "fr": "Un cookie est un petit fichier texte stocké sur votre appareil lorsque vous visitez un site web. Il permet au site de mémoriser certaines informations sur votre visite.",
+        "en": "A cookie is a small text file stored on your device when you visit a website. It allows the site to remember certain information about your visit."
+      }
+    },
+    "cookieTypes": {
+      "title": {
+        "fr": "Types de cookies utilisés",
+        "en": "Types of cookies used"
+      }
+    },
+    "managePreferences": {
+      "title": {
+        "fr": "Gérer vos préférences",
+        "en": "Manage your preferences"
+      },
+      "content": {
+        "fr": "Vous pouvez à tout moment modifier vos préférences de cookies en utilisant le bouton ci-dessous :",
+        "en": "You can change your cookie preferences at any time using the button below:"
+      },
+      "button": {
+        "fr": "Modifier mes préférences",
+        "en": "Change my preferences"
+      }
+    },
+    "resetConsent": {
+      "button": {
+        "fr": "Réinitialiser les consentements",
+        "en": "Reset consents"
+      },
+      "confirm": {
+        "fr": "Êtes-vous sûr de vouloir réinitialiser tous vos consentements ? Cette action supprimera toutes vos préférences de cookies et la bannière de consentement s'affichera à nouveau.",
+        "en": "Are you sure you want to reset all your consents? This action will delete all your cookie preferences and the consent banner will appear again."
+      }
+    },
+    "contact": {
+      "title": {
+        "fr": "Contact",
+        "en": "Contact"
+      },
+      "content": {
+        "fr": "Si vous avez des questions concernant notre utilisation des cookies, vous pouvez nous contacter.",
+        "en": "If you have any questions about our use of cookies, you can contact us."
+      }
+    }
+  }
+}

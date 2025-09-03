@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { AtlasContext } from "./context";
+import { AtlasContext } from "./atlas-context";
 
 export function useAtlas() {
   const context = useContext(AtlasContext);

@@ -19,5 +19,8 @@
     "preview": "npm run build --mode=${npm_config_mode} && npm -w server start",
     "server": "npm -w server run dev",
     "start": "npm run dev"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.6"
   }
 }

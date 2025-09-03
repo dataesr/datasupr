@@ -4,6 +4,7 @@ import { Button, Header, Logo, Service, FastAccess } from "@dataesr/dsfr-plus";
 
 import Footer from "./footer";
 import SwitchTheme from "../components/switch-theme";
+import CookieConsent from "../components/cookie-consent/index";
 import i18n from "./i18n.json";
 
 export function Layout({ languageSelector = false }) {
@@ -41,11 +42,7 @@ export function Layout({ languageSelector = false }) {
           >
             {getI18nLabel("datasets")}
           </Button>
-          <Button
-            aria-controls="fr-theme-modal"
-            className="fr-btn fr-icon-theme-fill"
-            data-fr-opened="false"
-          >
+          <Button aria-controls="fr-theme-modal" className="fr-btn fr-icon-theme-fill" data-fr-opened="false">
             {getI18nLabel("themes")}
           </Button>
           {languageSelector && (
@@ -67,10 +64,7 @@ export function Layout({ languageSelector = false }) {
                     </>
                   )}
                 </button>
-                <div
-                  className="fr-collapse fr-translate__menu fr-menu"
-                  id="translate-1177"
-                >
+                <div className="fr-collapse fr-translate__menu fr-menu" id="translate-1177">
                   <ul className="fr-menu__list">
                     <li>
                       <Button
@@ -106,6 +100,7 @@ export function Layout({ languageSelector = false }) {
       <Outlet />
       <Footer />
       <SwitchTheme />
+      <CookieConsent />
     </>
   );
 }

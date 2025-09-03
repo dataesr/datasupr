@@ -1,5 +1,5 @@
 import { Button, Modal, ModalContent, ModalTitle } from "@dataesr/dsfr-plus";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
@@ -9,7 +9,7 @@ type ItemProps = {
   id: string;
   label_fr: string;
   label_en: string;
-}[];
+};
 
 export default function Filters() {
   const [filterId, setFilterId] = useState("");
@@ -17,7 +17,9 @@ export default function Filters() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [filters, setFilters] = useState({});
   const [title, setTitle] = useState();
-  const [values, setValues] = useState<ItemProps>([]);
+  const [values, setValues] = useState<ItemProps[]>([]);
+
+  const currentLang = useMemo(() => searchParams.get("language") || "fr", [searchParams]);
 
   const { data: filterCountries } = useQuery({
     queryKey: ["european-projects/get-filters-values", "countries"],
@@ -25,10 +27,7 @@ export default function Filters() {
   });
 
   const { data: filterExtraJointOrganization } = useQuery({
-    queryKey: [
-      "european-projects/get-filters-values",
-      "extra_joint_organization",
-    ],
+    queryKey: ["european-projects/get-filters-values", "extra_joint_organization"],
     queryFn: () => getFiltersValues("extra_joint_organization"),
   });
 
@@ -38,13 +37,8 @@ export default function Filters() {
   });
 
   const { data: filterThematics } = useQuery({
-    queryKey: [
-      "european-projects/get-filters-values",
-      "thematics",
-      searchParams.get("programs"),
-    ],
-    queryFn: () =>
-      getFiltersValues("thematics", searchParams.get("programs") || undefined),
+    queryKey: ["european-projects/get-filters-values", "thematics", searchParams.get("programs")],
+    queryFn: () => getFiltersValues("thematics", searchParams.get("programs") || undefined),
   });
 
   useEffect(() => {
@@ -78,10 +72,13 @@ export default function Filters() {
     if (filterThematics) {
       setFilters((prevFilters) => ({
         ...prevFilters,
-        thematics: filterThematics,
+        thematics: filterThematics.values.map((thematic: ItemProps) => ({
+          id: thematic.id,
+          label: thematic[`label_${currentLang}` as keyof ItemProps],
+        })),
       }));
       setSearchParams((prev) => {
-        if (searchParams.get("programs") === "all") {
+        if (filterThematics.values.length === 0) {
           prev.set("thematics", "all");
         } else {
           if (filterThematics.values.length === 1) {
@@ -93,7 +90,7 @@ export default function Filters() {
         return prev;
       });
     }
-  }, [filterThematics]);
+  }, [filterThematics, currentLang, setSearchParams]);
 
   // paramètre par défault
   if (!searchParams.get("country_code")) {
@@ -137,18 +134,8 @@ export default function Filters() {
         const filter = filters[key];
         if (!filter) return null;
         return (
-          <Button
-            className="fr-mr-1w"
-            color="purple-glycine"
-            icon={filter.icon}
-            key={key}
-            onClick={() => openModal(key)}
-            size="sm"
-          >
-            {`${filter.label_fr} : ${
-              filter.values.find((item) => item.id === value)?.label_fr ??
-              "inconnu"
-            }`}
+          <Button className="fr-mr-1w" color="purple-glycine" icon={filter.icon} key={key} onClick={() => openModal(key)} size="sm">
+            {`${filter.label_fr} : ${filter.values.find((item) => item.id === value)?.label_fr ?? "inconnu"}`}
           </Button>
         );
       })}

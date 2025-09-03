@@ -13,10 +13,7 @@ export default function Footer() {
       <div className="fr-container">
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
-            <a
-              href="/"
-              title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)"
-            >
+            <a href="/" title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
               <p className="fr-logo">
                 Ministère
                 <br />
@@ -102,7 +99,7 @@ export default function Footer() {
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="#">
+              <a className="fr-footer__bottom-link" href="/cookies">
                 {getI18nLabel("cookies")}
               </a>
             </li>

@@ -65,7 +65,7 @@ export default function Main() {
       searchParams.set("country_code", "FRA"); // default value
       setSearchParams(searchParams);
     }
-  }, []);
+  }, [searchParams, setSearchParams]);
 
   return (
     <main>

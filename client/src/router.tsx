@@ -11,6 +11,7 @@ import FinanceUniversityRoutes from "./boards/finance-university/routes.tsx";
 import GraduatesRoutes from "./boards/graduates/routes.tsx";
 import NotFoundPage from "./components/not-found-page.tsx";
 import FacultyMembersRoutes from "./boards/faculty-members/routes.tsx";
+import CookiePolicyPage from "./components/cookie-policy-page/index.tsx";
 
 export default function Router() {
   return (
@@ -19,18 +20,13 @@ export default function Router() {
       <Route path="/admin/*" element={<AdminRoutes />} />
       <Route path="/atlas/*" element={<AtlasRoutes />} />
       <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
-      <Route
-        path="/finance-universite/*"
-        element={<FinanceUniversityRoutes />}
-      />
+      <Route path="/finance-universite/*" element={<FinanceUniversityRoutes />} />
       <Route path="/integration" element={<Integration />} />
       <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
-      <Route
-        path="/personnel-enseignant/*"
-        element={<FacultyMembersRoutes />}
-      />
+      <Route path="/personnel-enseignant/*" element={<FacultyMembersRoutes />} />
       <Route path="/teds/*" element={<TedsRoutes />} />
       <Route path="/graduates/*" element={<GraduatesRoutes />} />
+      <Route path="/cookies" element={<CookiePolicyPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

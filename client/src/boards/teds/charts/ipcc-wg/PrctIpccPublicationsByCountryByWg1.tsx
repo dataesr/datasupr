@@ -18,7 +18,6 @@ export default function PrctIpccReferencesByCountry() {
 
   if (isLoading || !data) return Template();
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
   const { series, categories } = getSeries(data);
 
   const title = getLabel("ipcc_wg", "wg1", currentLang);
