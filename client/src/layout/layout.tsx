@@ -4,7 +4,7 @@ import { Button, Header, Logo, Service, FastAccess } from "@dataesr/dsfr-plus";
 
 import Footer from "./footer";
 import SwitchTheme from "../components/switch-theme";
-import CookieConsent from "../components/cookie-consent/index";
+import CookieConsent from "../components/cookies/cookie-consent/index";
 import i18n from "./i18n.json";
 
 export function Layout({ languageSelector = false }) {

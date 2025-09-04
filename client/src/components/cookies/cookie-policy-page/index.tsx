@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { CookieConsentModal } from "../cookie-consent/index";
-import { useCookieConsent } from "../../hooks/useCookieConsent";
+import { CookieConsentModalContent } from "../cookie-consent/index";
+import { useCookieConsent } from "../../../hooks/useCookieConsent";
 import i18n from "../cookie-consent/i18n.json";
+import Footer from "../../../layout/footer";
+import HeaderDatasupR from "../../../layout/header";
+import { Button, ButtonGroup, Col, Container, Row, Text, Title, Modal, ModalContent, ModalTitle } from "@dataesr/dsfr-plus";
 
 export default function CookiePolicyPage() {
   const [searchParams] = useSearchParams();
@@ -23,6 +26,25 @@ export default function CookiePolicyPage() {
     setIsModalOpen(true);
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleAcceptAllFromModal = () => {
+    acceptAll();
+    setIsModalOpen(false);
+  };
+
+  const handleRefuseAllFromModal = () => {
+    refuseAll();
+    setIsModalOpen(false);
+  };
+
+  const handleSavePreferences = (preferences: Parameters<typeof savePreferences>[0]) => {
+    savePreferences(preferences);
+    setIsModalOpen(false);
+  };
+
   const handleResetConsent = () => {
     if (confirm(getI18nLabel("page.resetConsent.confirm"))) {
       resetConsent();
@@ -30,40 +52,42 @@ export default function CookiePolicyPage() {
   };
 
   return (
-    <div className="fr-container cookie-policy-page">
-      <div className="fr-grid-row fr-grid-row--center">
-        <div className="fr-col-12 fr-col-md-10 fr-col-lg-8">
-          <nav role="navigation" className="fr-breadcrumb" aria-label="vous êtes ici :">
-            <button className="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
-              Voir le fil d'Ariane
-            </button>
-            <div className="fr-collapse" id="breadcrumb-1">
-              <ol className="fr-breadcrumb__list">
-                <li>
-                  <a className="fr-breadcrumb__link" href="/">
-                    Accueil
-                  </a>
-                </li>
-                <li>
-                  <a className="fr-breadcrumb__link" aria-current="page">
-                    {getI18nLabel("page.title")}
-                  </a>
-                </li>
-              </ol>
-            </div>
-          </nav>
+    <>
+      <HeaderDatasupR />
+      <Container>
+        <Row>
+          <Col>
+            <nav role="navigation" className="fr-breadcrumb" aria-label="vous êtes ici :">
+              <button className="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
+                Voir le fil d'Ariane
+              </button>
+              <div className="fr-collapse" id="breadcrumb-1">
+                <ol className="fr-breadcrumb__list">
+                  <li>
+                    <a className="fr-breadcrumb__link" href="/">
+                      Accueil
+                    </a>
+                  </li>
+                  <li>
+                    <a className="fr-breadcrumb__link" aria-current="page">
+                      {getI18nLabel("page.title")}
+                    </a>
+                  </li>
+                </ol>
+              </div>
+            </nav>
 
-          <h1 className="fr-h1">{getI18nLabel("page.title")}</h1>
+            <Title as="h1">{getI18nLabel("page.title")}</Title>
+            <Text size="lead">{getI18nLabel("page.introduction")}</Text>
 
-          <p className="fr-text--lead">{getI18nLabel("page.introduction")}</p>
+            <Title as="h2" look="h3">
+              {getI18nLabel("page.whatAreCookies.title")}
+            </Title>
+            <Text>{getI18nLabel("page.whatAreCookies.content")}</Text>
 
-          <div className="cookie-policy-section">
-            <h2 className="fr-h3">{getI18nLabel("page.whatAreCookies.title")}</h2>
-            <p>{getI18nLabel("page.whatAreCookies.content")}</p>
-          </div>
-
-          <div className="cookie-policy-section">
-            <h2 className="fr-h3">{getI18nLabel("page.cookieTypes.title")}</h2>
+            <Title as="h2" look="h3">
+              {getI18nLabel("page.cookieTypes.title")}
+            </Title>
 
             <div className="fr-accordion">
               <h3 className="fr-accordion__title">
@@ -141,24 +165,22 @@ export default function CookiePolicyPage() {
                 </div>
               </div>
             </div>
-          </div>
 
-          <div className="cookie-preferences-section">
-            <h3 className="fr-h4">{getI18nLabel("page.managePreferences.title")}</h3>
-            <p>{getI18nLabel("page.managePreferences.content")}</p>
-            <div className="fr-btns-group">
-              <button className="fr-btn" onClick={handleOpenPreferences}>
-                {getI18nLabel("page.managePreferences.button")}
-              </button>
-              <button className="fr-btn fr-btn--secondary" onClick={handleResetConsent}>
+            <Title as="h3" look="h4" className="fr-mt-4w">
+              {getI18nLabel("page.managePreferences.title")}
+            </Title>
+            <Text>{getI18nLabel("page.managePreferences.content")}</Text>
+            <ButtonGroup>
+              <Button onClick={handleOpenPreferences}>{getI18nLabel("page.managePreferences.button")}</Button>
+              <Button variant="secondary" onClick={handleResetConsent}>
                 {getI18nLabel("page.resetConsent.button")}
-              </button>
-            </div>
-          </div>
+              </Button>
+            </ButtonGroup>
 
-          <div className="cookie-policy-section">
-            <h2 className="fr-h3">Vos droits</h2>
-            <p>Conformément au RGPD et à la loi Informatique et Libertés, vous disposez des droits suivants :</p>
+            <Title as="h2" look="h3">
+              Vos droits
+            </Title>
+            <Text>Conformément au RGPD et à la loi Informatique et Libertés, vous disposez des droits suivants :</Text>
             <ul>
               <li>
                 <strong>Droit d'accès :</strong> Vous pouvez demander quelles données personnelles nous détenons sur vous
@@ -176,11 +198,11 @@ export default function CookiePolicyPage() {
                 <strong>Droit à la portabilité :</strong> Vous pouvez récupérer vos données dans un format structuré
               </li>
             </ul>
-          </div>
 
-          <div className="cookie-policy-section">
-            <h2 className="fr-h3">{getI18nLabel("page.contact.title")}</h2>
-            <p>{getI18nLabel("page.contact.content")}</p>
+            <Title as="h2" look="h3" className="fr-mt-4w">
+              {getI18nLabel("page.contact.title")}
+            </Title>
+            <Text>{getI18nLabel("page.contact.content")}</Text>
             <div className="fr-highlight">
               <p>
                 <strong>Contact :</strong>
@@ -193,24 +215,26 @@ export default function CookiePolicyPage() {
                 Email : <a href="mailto:contact@datasupr.fr">contact@datasupr.fr</a>
               </p>
             </div>
-          </div>
 
-          <div className="cookie-policy-section">
-            <p className="fr-text--sm">
+            <Text size="sm">
               <strong>Dernière mise à jour :</strong> {new Date().toLocaleDateString("fr-FR")}
-            </p>
-          </div>
-        </div>
-      </div>
+            </Text>
+          </Col>
+        </Row>
 
-      <CookieConsentModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onAcceptAll={acceptAll}
-        onRefuseAll={refuseAll}
-        onSavePreferences={savePreferences}
-        consent={consent}
-      />
-    </div>
+        <Modal isOpen={isModalOpen} hide={handleCloseModal} size="lg">
+          <ModalTitle>{getI18nLabel("modal.title")}</ModalTitle>
+          <ModalContent>
+            <CookieConsentModalContent
+              onAcceptAll={handleAcceptAllFromModal}
+              onRefuseAll={handleRefuseAllFromModal}
+              onSavePreferences={handleSavePreferences}
+              consent={consent}
+            />
+          </ModalContent>
+        </Modal>
+      </Container>
+      <Footer />
+    </>
   );
 }

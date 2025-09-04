@@ -81,48 +81,48 @@
   margin-top: 1.5rem;
 }
 
-// Page politique des cookies
-.cookie-policy-page {
-  .cookie-policy-section {
-    margin-bottom: 2rem;
+// // Page politique des cookies
+// .cookie-policy-page {
+//   .cookie-policy-section {
+//     margin-bottom: 2rem;
     
-    h2 {
-      margin-bottom: 1rem;
-      color: var(--text-title-grey);
-    }
+//     h2 {
+//       margin-bottom: 1rem;
+//       color: var(--text-title-grey);
+//     }
     
-    p {
-      line-height: 1.6;
-      margin-bottom: 1rem;
-    }
+//     p {
+//       line-height: 1.6;
+//       margin-bottom: 1rem;
+//     }
     
-    ul {
-      margin-left: 1rem;
-      margin-bottom: 1rem;
+//     ul {
+//       margin-left: 1rem;
+//       margin-bottom: 1rem;
       
-      li {
-        margin-bottom: 0.5rem;
-        line-height: 1.5;
-      }
-    }
-  }
+//       li {
+//         margin-bottom: 0.5rem;
+//         line-height: 1.5;
+//       }
+//     }
+//   }
   
-  .cookie-preferences-section {
-    background-color: var(--background-alt-grey);
-    padding: 1.5rem;
-    border-radius: 8px;
-    margin: 2rem 0;
-    text-align: center;
+//   .cookie-preferences-section {
+//     background-color: var(--background-alt-grey);
+//     padding: 1.5rem;
+//     border-radius: 8px;
+//     margin: 2rem 0;
+//     text-align: center;
     
-    h3 {
-      margin-bottom: 1rem;
-    }
+//     h3 {
+//       margin-bottom: 1rem;
+//     }
     
-    p {
-      margin-bottom: 1.5rem;
-    }
-  }
-}
+//     p {
+//       margin-bottom: 1.5rem;
+//     }
+//   }
+// }
 
 // Responsivité pour les petits écrans
 @media (max-width: 767px) {

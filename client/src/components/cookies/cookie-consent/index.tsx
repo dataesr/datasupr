@@ -1,19 +1,16 @@
 import { useState, useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
-import { useCookieConsent, CookieCategories } from "../../hooks/useCookieConsent";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import { useCookieConsent, CookieCategories } from "../../../hooks/useCookieConsent";
 import { Button, Text, Title, Container, Row, Col, Modal, ModalContent, ModalTitle } from "@dataesr/dsfr-plus";
 import "./styles.scss";
 
 // Interfaces pour les props des composants
 interface CookieConsentBannerProps {
-  onShowModal: () => void;
   onAcceptAll: () => void;
   onRefuseAll: () => void;
 }
 
-interface CookieConsentModalProps {
-  isOpen: boolean;
-  onClose: () => void;
+interface CookieConsentModalContentProps {
   onAcceptAll: () => void;
   onRefuseAll: () => void;
   onSavePreferences: (preferences: CookieCategories) => void;
@@ -82,10 +79,16 @@ const translations = {
 };
 
 // Composant Banner de consentement
-export function CookieConsentBanner({ onShowModal, onAcceptAll, onRefuseAll }: CookieConsentBannerProps) {
+export function CookieConsentBanner({ onAcceptAll, onRefuseAll }: CookieConsentBannerProps) {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const currentLang = searchParams.get("language") || "fr";
   const t = translations[currentLang as keyof typeof translations] || translations.fr;
+
+  const handleCustomize = () => {
+    onAcceptAll(); // Ferme la bannière
+    navigate("/cookies");
+  };
 
   return (
     <div className="cookie-consent-banner">
@@ -101,7 +104,7 @@ export function CookieConsentBanner({ onShowModal, onAcceptAll, onRefuseAll }: C
               <Button onClick={onRefuseAll} variant="secondary">
                 {t.banner.refuse}
               </Button>
-              <Button onClick={onShowModal} variant="tertiary">
+              <Button onClick={handleCustomize} variant="tertiary">
                 {t.banner.customize}
               </Button>
             </div>
@@ -112,8 +115,8 @@ export function CookieConsentBanner({ onShowModal, onAcceptAll, onRefuseAll }: C
   );
 }
 
-// Composant Modal de consentement
-export function CookieConsentModal({ isOpen, onClose, onAcceptAll, onRefuseAll, onSavePreferences, consent }: CookieConsentModalProps) {
+// Composant contenu de la modale de consentement (sans la modale elle-même)
+export function CookieConsentModalContent({ onAcceptAll, onRefuseAll, onSavePreferences, consent }: CookieConsentModalContentProps) {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const t = translations[currentLang as keyof typeof translations] || translations.fr;
@@ -127,88 +130,78 @@ export function CookieConsentModal({ isOpen, onClose, onAcceptAll, onRefuseAll, 
 
   const handleSave = () => {
     onSavePreferences(localConsent);
-    onClose();
   };
 
   const handleAcceptAll = () => {
     onAcceptAll();
-    onClose();
   };
 
   const handleRefuseAll = () => {
     onRefuseAll();
-    onClose();
   };
 
-  if (!isOpen) return null;
-
   return (
-    <Modal isOpen={isOpen} hide={onClose} size="lg" className="cookie-consent-modal">
-      <ModalTitle>{t.modal.title}</ModalTitle>
-      <ModalContent>
-        <Container>
-          <Row>
-            <Col xs={12}>
-              <Text>{t.modal.description}</Text>
+    <Container>
+      <Row>
+        <Col xs={12}>
+          <Text>{t.modal.description}</Text>
 
-              <div className="cookie-categories">
-                <div className="cookie-category">
-                  <div className="cookie-category__header">
-                    <h4 className="cookie-category__header__title">{t.modal.necessary.title}</h4>
-                    <input type="checkbox" checked={true} disabled={true} className="cookie-category__header__toggle" />
-                  </div>
-                  <Text size="sm" as="span" className="cookie-category__description">
-                    {t.modal.necessary.description}
-                  </Text>
-                </div>
-
-                <div className="cookie-category">
-                  <div className="cookie-category__header">
-                    <h4 className="cookie-category__header__title">{t.modal.functional.title}</h4>
-                    <input
-                      type="checkbox"
-                      checked={localConsent.functional}
-                      onChange={(e) => setLocalConsent({ ...localConsent, functional: e.target.checked })}
-                      className="cookie-category__header__toggle"
-                    />
-                  </div>
-                  <Text size="sm" as="span" className="cookie-category__description">
-                    {t.modal.functional.description}
-                  </Text>
-                </div>
-
-                <div className="cookie-category">
-                  <div className="cookie-category__header">
-                    <h4 className="cookie-category__header__title">{t.modal.analytics.title}</h4>
-                    <input
-                      type="checkbox"
-                      checked={localConsent.analytics}
-                      onChange={(e) => setLocalConsent({ ...localConsent, analytics: e.target.checked })}
-                      className="cookie-category__header__toggle"
-                    />
-                  </div>
-                  <Text size="sm" as="span" className="cookie-category__description">
-                    {t.modal.analytics.description}
-                  </Text>
-                </div>
+          <div className="cookie-categories">
+            <div className="cookie-category">
+              <div className="cookie-category__header">
+                <h4 className="cookie-category__header__title">{t.modal.necessary.title}</h4>
+                <input type="checkbox" checked={true} disabled={true} className="cookie-category__header__toggle" />
               </div>
+              <Text size="sm" as="span" className="cookie-category__description">
+                {t.modal.necessary.description}
+              </Text>
+            </div>
 
-              <div className="cookie-modal-actions">
-                <Button onClick={handleSave} size="sm">
-                  {t.modal.save}
-                </Button>
-                <Button onClick={handleAcceptAll} size="sm" variant="secondary">
-                  {t.modal.acceptAll}
-                </Button>
-                <Button onClick={handleRefuseAll} size="sm" variant="secondary">
-                  {t.modal.refuse}
-                </Button>
+            <div className="cookie-category">
+              <div className="cookie-category__header">
+                <h4 className="cookie-category__header__title">{t.modal.functional.title}</h4>
+                <input
+                  type="checkbox"
+                  checked={localConsent.functional}
+                  onChange={(e) => setLocalConsent({ ...localConsent, functional: e.target.checked })}
+                  className="cookie-category__header__toggle"
+                />
               </div>
-            </Col>
-          </Row>
-        </Container>
-      </ModalContent>
-    </Modal>
+              <Text size="sm" as="span" className="cookie-category__description">
+                {t.modal.functional.description}
+              </Text>
+            </div>
+
+            <div className="cookie-category">
+              <div className="cookie-category__header">
+                <h4 className="cookie-category__header__title">{t.modal.analytics.title}</h4>
+                <input
+                  type="checkbox"
+                  checked={localConsent.analytics}
+                  onChange={(e) => setLocalConsent({ ...localConsent, analytics: e.target.checked })}
+                  className="cookie-category__header__toggle"
+                />
+              </div>
+              <Text size="sm" as="span" className="cookie-category__description">
+                {t.modal.analytics.description}
+              </Text>
+            </div>
+          </div>
+
+          <div className="cookie-modal-actions">
+            <Button onClick={handleSave} size="sm">
+              {t.modal.save}
+            </Button>
+            <Button onClick={handleAcceptAll} size="sm" variant="secondary">
+              {t.modal.acceptAll}
+            </Button>
+            <Button onClick={handleRefuseAll} size="sm" variant="secondary">
+              {t.modal.refuse}
+            </Button>
+          </div>
+        </Col>
+      </Row>
+    </Container>
   );
 }
 
@@ -216,6 +209,9 @@ export function CookieConsentModal({ isOpen, onClose, onAcceptAll, onRefuseAll, 
 export default function CookieConsent() {
   const { showBanner, consent, acceptAll, refuseAll, savePreferences, resetConsent } = useCookieConsent();
   const [showModal, setShowModal] = useState(false);
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+  const t = translations[currentLang as keyof typeof translations] || translations.fr;
 
   // Mode debug - forcer l'affichage pour les tests (à supprimer en production)
   const isDebugMode = window.location.search.includes("debug-cookies");
@@ -271,16 +267,19 @@ export default function CookieConsent() {
         </button>
       )}
 
-      <CookieConsentBanner onShowModal={() => setShowModal(true)} onAcceptAll={acceptAll} onRefuseAll={refuseAll} />
+      <CookieConsentBanner onAcceptAll={acceptAll} onRefuseAll={refuseAll} />
 
-      <CookieConsentModal
-        isOpen={showModal}
-        onClose={handleCloseModal}
-        onAcceptAll={handleAcceptAllFromModal}
-        onRefuseAll={handleRefuseAllFromModal}
-        onSavePreferences={handleSavePreferences}
-        consent={consent}
-      />
+      <Modal isOpen={showModal} hide={handleCloseModal} size="lg">
+        <ModalTitle>{t.modal.title}</ModalTitle>
+        <ModalContent>
+          <CookieConsentModalContent
+            onAcceptAll={handleAcceptAllFromModal}
+            onRefuseAll={handleRefuseAllFromModal}
+            onSavePreferences={handleSavePreferences}
+            consent={consent}
+          />
+        </ModalContent>
+      </Modal>
     </>
   );
 }

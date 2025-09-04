@@ -1,4 +1,4 @@
-import { useCookieConsent } from "../../hooks/useCookieConsent";
+import { useCookieConsent } from "../../../hooks/useCookieConsent";
 
 export default function CookieDebugPanel() {
   const { consent, hasConsented, showBanner, resetConsent } = useCookieConsent();

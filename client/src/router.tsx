@@ -11,7 +11,7 @@ import FinanceUniversityRoutes from "./boards/finance-university/routes.tsx";
 import GraduatesRoutes from "./boards/graduates/routes.tsx";
 import NotFoundPage from "./components/not-found-page.tsx";
 import FacultyMembersRoutes from "./boards/faculty-members/routes.tsx";
-import CookiePolicyPage from "./components/cookie-policy-page/index.tsx";
+import CookiePolicyPage from "./components/cookies/cookie-policy-page/index.tsx";
 
 export default function Router() {
   return (

@@ -9,7 +9,7 @@ import "remixicon/fonts/remixicon.css";
 import AppRoutes from "./router.js";
 import RouterLink from "./components/router-link.js";
 import { ScrollToTop } from "./components/scroll-to-top.js";
-import CookieConsent from "./components/cookie-consent";
+import CookieConsent from "./components/cookies/cookie-consent/index.js";
 
 export const queryClient = new QueryClient({
   defaultOptions: {

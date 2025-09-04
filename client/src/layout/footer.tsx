@@ -3,7 +3,7 @@ import i18n from "./i18n.json";
 
 export default function Footer() {
   const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "FR";
+  const currentLang = searchParams.get("language") || "fr";
 
   function getI18nLabel(key) {
     return i18n[key][currentLang];
