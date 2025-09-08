@@ -88,11 +88,11 @@ export function Typologie() {
         </Col>
       </Row>
 
-      {!contextId && (
-        <>
           <Col md={12}>
             <ItemBarChart />
           </Col>
+      {!contextId && (
+        <>
 
           <Col md={12}>
             <ItemsTreemapChart />
