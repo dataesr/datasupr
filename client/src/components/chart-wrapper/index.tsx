@@ -4,7 +4,7 @@ import Highcharts from "highcharts";
 import HighchartsExporting from "highcharts/modules/exporting";
 import HighchartsOfflineExporting from "highcharts/modules/offline-exporting";
 import HighchartsReact from "highcharts-react-official";
-import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Text, Title } from "@dataesr/dsfr-plus";
+import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
 // Initialiser les modules d'export
 HighchartsExporting(Highcharts);
@@ -24,6 +24,23 @@ import translations from "./i18n.json";
 
 import "./styles.scss";
 import { useSearchParams } from "react-router-dom";
+import ChartFooter from "../chart-footer";
+
+// Import des types pour ChartFooter
+interface LocalizedContent {
+  fr: JSX.Element;
+  en: JSX.Element;
+}
+
+interface LocalizedUrl {
+  fr: string;
+  en: string;
+}
+
+interface Source {
+  label: LocalizedContent;
+  url: LocalizedUrl;
+}
 
 // Fonction utilitaire pour obtenir les traductions
 function getTranslation(key: keyof typeof translations, lang: string = "fr"): string {
@@ -73,8 +90,6 @@ export type ChartConfig = {
 export type HighchartsOptions = Highcharts.Options | null;
 
 const { VITE_APP_URL } = import.meta.env;
-const source = "Commission européenne, Cordis";
-const sourceURL = "https://cordis.europa.eu/";
 
 function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
   const [searchParams] = useSearchParams();
@@ -137,23 +152,17 @@ function MenuModal({ config, displayType, isOpen, setDisplayType, setIsOpen, set
         <hr />
         <ul>
           <li>
-            <Button
-              color="beige-gris-galet"
-              icon="file-download-line"
-              title="téléchargement des données du graphique"
-              variant="text"
-              onClick={downloadCSV}
-            >
+            <Button icon="file-download-line" title="téléchargement des données du graphique" variant="text" onClick={downloadCSV}>
               {getTranslation("downloadCSV", currentLang)}
             </Button>
           </li>
           <li>
-            <Button color="beige-gris-galet" icon="image-line" title="téléchargement de l'image" variant="text" onClick={downloadPNG}>
+            <Button icon="image-line" title="téléchargement de l'image" variant="text" onClick={downloadPNG}>
               {getTranslation("downloadPNG", currentLang)}
             </Button>
           </li>
           <li>
-            <Button color="beige-gris-galet" icon="printer-line" title="lancement de l'impression" variant="text" onClick={printChart}>
+            <Button icon="printer-line" title="lancement de l'impression" variant="text" onClick={printChart}>
               {getTranslation("print", currentLang)}
             </Button>
           </li>
@@ -166,18 +175,17 @@ function MenuModal({ config, displayType, isOpen, setDisplayType, setIsOpen, set
                 {getTranslation("share", currentLang)}
               </Title>
               <div className="share">
-                <Button color="beige-gris-galet" icon="twitter-x-fill" title="Twitter-X" variant="text" disabled />
-                <Button color="beige-gris-galet" icon="linkedin-box-fill" title="Linkedin" variant="text" disabled />
-                <Button color="beige-gris-galet" icon="facebook-circle-fill" title="Linkedin" variant="text" disabled />
+                <Button icon="twitter-x-fill" title="Twitter-X" variant="text" disabled />
+                <Button icon="linkedin-box-fill" title="Linkedin" variant="text" disabled />
+                <Button icon="facebook-circle-fill" title="Linkedin" variant="text" disabled />
               </div>
             </Col>
             <Col>
-              <Title as="h2" look="h6">
+              <Title as="h2" look="h6" className="text-right">
                 {getTranslation("integration", currentLang)}
               </Title>
-              <div className="share">
+              <div className="share text-right">
                 <Button
-                  color="beige-gris-galet"
                   icon="code-s-slash-line"
                   onClick={() => {
                     if (config.integrationURL) {
@@ -194,22 +202,10 @@ function MenuModal({ config, displayType, isOpen, setDisplayType, setIsOpen, set
               </div>
             </Col>
           </Row>
-          <hr />
-          <Row>
-            <Col>
-              <Text className="sources">
-                Sources :{" "}
-                <a href={sourceURL} target="_blank" rel="noreferrer noopener">
-                  {source}
-                </a>
-              </Text>
-            </Col>
-          </Row>
         </Container>
         <div className="fr-mt-2w text-right">
-          <Button color="beige-gris-galet" onClick={() => setIsOpen(false)} variant="secondary">
-            {getTranslation("close", currentLang)}
-          </Button>
+          <hr />
+          <Button onClick={() => setIsOpen(false)}>{getTranslation("close", currentLang)}</Button>
         </div>
       </ModalContent>
     </Modal>
@@ -227,7 +223,7 @@ function ChartTitle({ config, children = null }: { config: ChartConfig; children
   if (typeof config.title === "string") {
     return (
       <>
-        <Title as="h2" look="h6" className="fr-mt-2w fr-mb-3w">
+        <Title as="h2" look="h6" className="fr-m-0">
           {config.title}
         </Title>
         {children}
@@ -241,7 +237,7 @@ function ChartTitle({ config, children = null }: { config: ChartConfig; children
       <Title
         as={config.title.size ? config.title.size : "h2"}
         look={config.title.look ? config.title.look : "h6"}
-        className={config.title.className ? config.title.className : "fr-mt-2w fr-mb-3w"}
+        className={config.title.className ? config.title.className : "fr-my-0"}
       >
         {config.title[currentLang]}
       </Title>
@@ -256,12 +252,20 @@ export default function ChartWrapper({
   legend,
   renderData,
   hideTitle = false,
+  comment,
+  readingKey,
+  source,
+  updateDate,
 }: {
   config: ChartConfig;
   options: HighchartsOptions;
   legend: React.ReactNode;
   renderData?: (options: Highcharts.Options) => React.ReactNode;
   hideTitle?: boolean;
+  comment?: LocalizedContent;
+  readingKey?: LocalizedContent;
+  source?: Source;
+  updateDate?: Date;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
@@ -376,7 +380,7 @@ export default function ChartWrapper({
   };
 
   return (
-    <section>
+    <section className="chart-container">
       {!hideTitle && <ChartTitle config={config} />}
       <div className="actions">
         <Button
@@ -390,21 +394,15 @@ export default function ChartWrapper({
       </div>
       {displayType === "data" && renderData && options && <>{renderData(options)}</>}
       {displayType === "chart" && options && (
-        <figure>
+        <figure className="chart">
           <HighchartsReact highcharts={Highcharts} options={options} ref={chart} />
         </figure>
       )}
-      <div className="graph-footer fr-pt-1w">
+      <div className="fr-pt-1w">
         {legend}
-        {config.description && config.description !== null && (
-          <div className="fr-notice fr-notice--info fr-mt-1w">
-            <div className="fr-container">
-              <div className="fr-notice__body">
-                <Text className="description">{typeof config.description === "string" ? config.description : config.description[currentLang]}</Text>
-              </div>
-            </div>
-          </div>
-        )}
+        <div className="chart-footer">
+          <ChartFooter comment={comment} readingKey={readingKey} source={source} updateDate={updateDate} />
+        </div>
       </div>
       <MenuModal
         config={config}

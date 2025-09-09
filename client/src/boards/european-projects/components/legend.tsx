@@ -13,26 +13,24 @@ export function GetLegend(legendArray: [string, string][], legendId: string, cur
     : {};
 
   return (
-    <fieldset>
+    <fieldset className="legend">
       <legend>{getI18nLabel("legend")}</legend>
-      <div className="legend">
-        <ul className="legend" style={columnStyle}>
-          {legendArray.map((item, index) => (
-            <li
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "5px",
-                breakInside: "avoid",
-              }}
-              key={`${legendId}item[${index}]`}
-            >
-              <div style={{ background: item[1] }} />
-              <span>{item[0]}</span>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul className="legend" style={columnStyle}>
+        {legendArray.map((item, index) => (
+          <li
+            style={{
+              display: "flex",
+              alignItems: "center",
+              marginBottom: "5px",
+              breakInside: "avoid",
+            }}
+            key={`${legendId}item[${index}]`}
+          >
+            <div style={{ background: item[1] }} />
+            <span>{item[0]}</span>
+          </li>
+        ))}
+      </ul>
     </fieldset>
   );
 }

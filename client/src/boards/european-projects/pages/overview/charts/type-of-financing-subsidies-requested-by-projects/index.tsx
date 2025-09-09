@@ -76,28 +76,26 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
       </Row>
       <Row>
         <Col>
-          <fieldset>
+          <fieldset className="legend">
             <legend>{getI18nLabel("legend")}</legend>
-            <div className="legend">
-              <ul>
-                <li>
-                  <div
-                    style={{
-                      background: rootStyles.getPropertyValue("--evaluated-project-color"),
-                    }}
-                  />
-                  <span>{getI18nLabel("evaluated-projects")}</span>
-                </li>
-                <li>
-                  <div
-                    style={{
-                      background: rootStyles.getPropertyValue("--successful-project-color"),
-                    }}
-                  />
-                  <span>{getI18nLabel("successful-projects")}</span>
-                </li>
-              </ul>
-            </div>
+            <ul>
+              <li>
+                <div
+                  style={{
+                    background: rootStyles.getPropertyValue("--evaluated-project-color"),
+                  }}
+                />
+                <span>{getI18nLabel("evaluated-projects")}</span>
+              </li>
+              <li>
+                <div
+                  style={{
+                    background: rootStyles.getPropertyValue("--successful-project-color"),
+                  }}
+                />
+                <span>{getI18nLabel("successful-projects")}</span>
+              </li>
+            </ul>
           </fieldset>
         </Col>
       </Row>

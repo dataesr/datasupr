@@ -1,0 +1,18 @@
+{
+  "comment": {
+    "fr": "Commentaire :",
+    "en": "Comment:"
+  },
+  "readingKey": {
+    "fr": "Exemple de lecture :",
+    "en": "Reading example:"
+  },
+  "source": {
+    "fr": "Source :",
+    "en": "Source:"
+  },
+  "updateDate": {
+    "fr": "Date de mise à jour :",
+    "en": "Update date:"
+  }
+}

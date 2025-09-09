@@ -85,24 +85,22 @@ export default function TopicsFundingEvo3Years() {
   function Legend() {
     const rootStyles = getComputedStyle(document.documentElement);
     return (
-      <fieldset>
+      <fieldset className="legend">
         <legend>{getI18nLabel("legend")}</legend>
-        <div className="legend">
-          <ul>
-            {data
-              .find((item) => item.country !== "all")
-              .data[0].topics.map((item) => (
-                <li key={item.thema_code}>
-                  <div
-                    style={{
-                      background: rootStyles.getPropertyValue(`--topic-${normalizeIdForCssColorNames(item.thema_code)}-color`),
-                    }}
-                  />
-                  <span>{item[`thema_name_${currentLang}`]}</span>
-                </li>
-              ))}
-          </ul>
-        </div>
+        <ul>
+          {data
+            .find((item) => item.country !== "all")
+            .data[0].topics.map((item) => (
+              <li key={item.thema_code}>
+                <div
+                  style={{
+                    background: rootStyles.getPropertyValue(`--topic-${normalizeIdForCssColorNames(item.thema_code)}-color`),
+                  }}
+                />
+                <span>{item[`thema_name_${currentLang}`]}</span>
+              </li>
+            ))}
+        </ul>
       </fieldset>
     );
   }

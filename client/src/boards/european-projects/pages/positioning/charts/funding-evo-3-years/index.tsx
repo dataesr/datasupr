@@ -94,22 +94,20 @@ export default function FundingEvo3Years() {
   function Legend({ data }) {
     const rootStyles = getComputedStyle(document.documentElement);
     return (
-      <fieldset>
+      <fieldset className="legend">
         <legend>{getI18nLabel("legend")}</legend>
-        <div className="legend">
-          <ul>
-            {data.successful.map((country, index) => (
-              <li key={country.id}>
-                <div
-                  style={{
-                    background: rootStyles.getPropertyValue(`--scale-${index + 1}-color`),
-                  }}
-                />
-                <span>{country[`name_${currentLang}`]}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <ul>
+          {data.successful.map((country, index) => (
+            <li key={country.id}>
+              <div
+                style={{
+                  background: rootStyles.getPropertyValue(`--scale-${index + 1}-color`),
+                }}
+              />
+              <span>{country[`name_${currentLang}`]}</span>
+            </li>
+          ))}
+        </ul>
       </fieldset>
     );
   }

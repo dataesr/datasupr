@@ -87,9 +87,9 @@ export default function PillarsFundingEvo3Years() {
   function Legend() {
     const rootStyles = getComputedStyle(document.documentElement);
     return (
-      <fieldset>
+      <fieldset className="legend">
         <legend>{getI18nLabel("legend")}</legend>
-        <div className="legend">
+        <div>
           <ul>
             {data
               .find((item) => item.country !== "all")

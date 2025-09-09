@@ -53,28 +53,26 @@ export default function SuccessRateForAmountsByTypeOfFinancing() {
             config={config}
             options={options(data)}
             legend={
-              <fieldset>
+              <fieldset className="legend">
                 <legend>{getI18nLabel("legend")}</legend>
-                <div className="legend">
-                  <ul>
-                    <li>
-                      <div
-                        style={{
-                          background: rootStyles.getPropertyValue("--selected-country-color"),
-                        }}
-                      />
-                      <span>{getI18nLabel("selected-country")}</span>
-                    </li>
-                    <li>
-                      <div
-                        style={{
-                          background: rootStyles.getPropertyValue("--associated-countries-color"),
-                        }}
-                      />
-                      <span>{getI18nLabel("associated-countries")}</span>
-                    </li>
-                  </ul>
-                </div>
+                <ul>
+                  <li>
+                    <div
+                      style={{
+                        background: rootStyles.getPropertyValue("--selected-country-color"),
+                      }}
+                    />
+                    <span>{getI18nLabel("selected-country")}</span>
+                  </li>
+                  <li>
+                    <div
+                      style={{
+                        background: rootStyles.getPropertyValue("--associated-countries-color"),
+                      }}
+                    />
+                    <span>{getI18nLabel("associated-countries")}</span>
+                  </li>
+                </ul>
               </fieldset>
             }
             renderData={() => null} // TODO: add data table

@@ -86,18 +86,16 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
       </Row>
       <Row>
         <Col>
-          <fieldset>
+          <fieldset className="legend">
             <legend>{getI18nLabel("legend")}</legend>
-            <div className="legend">
-              <ul>
-                {actions.map((action) => (
-                  <li key={action.id}>
-                    <div style={{ background: `var(--project-type-${action.id}-color)` }} />
-                    <span>{`${action.name} (${action.id.toLocaleUpperCase()})`}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <ul>
+              {actions.map((action) => (
+                <li key={action.id}>
+                  <div style={{ background: `var(--project-type-${action.id}-color)` }} />
+                  <span>{`${action.name} (${action.id.toLocaleUpperCase()})`}</span>
+                </li>
+              ))}
+            </ul>
           </fieldset>
         </Col>
       </Row>

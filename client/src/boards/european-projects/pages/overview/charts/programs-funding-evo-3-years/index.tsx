@@ -90,28 +90,22 @@ export default function ProgramsFundingEvo3Years() {
   function Legend() {
     const rootStyles = getComputedStyle(document.documentElement);
     return (
-      <fieldset>
+      <fieldset className="legend">
         <legend>Légende</legend>
-        <div className="legend">
-          <ul>
-            {data
-              .find((item) => item.country !== "all")
-              .data[0].programs.map((item) => (
-                <li key={item.programme_code}>
-                  <div
-                    style={{
-                      background: rootStyles.getPropertyValue(
-                        `--program-${normalizeIdForCssColorNames(
-                          item.programme_code
-                        )}-color`
-                      ),
-                    }}
-                  />
-                  <span>{item[`programme_name_${currentLang}`]}</span>
-                </li>
-              ))}
-          </ul>
-        </div>
+        <ul>
+          {data
+            .find((item) => item.country !== "all")
+            .data[0].programs.map((item) => (
+              <li key={item.programme_code}>
+                <div
+                  style={{
+                    background: rootStyles.getPropertyValue(`--program-${normalizeIdForCssColorNames(item.programme_code)}-color`),
+                  }}
+                />
+                <span>{item[`programme_name_${currentLang}`]}</span>
+              </li>
+            ))}
+        </ul>
       </fieldset>
     );
   }

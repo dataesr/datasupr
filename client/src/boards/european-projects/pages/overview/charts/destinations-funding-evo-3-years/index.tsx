@@ -100,39 +100,29 @@ export default function DestinationsFundingEvo3Years() {
     const displayedItems = showAll ? destinations : destinations.slice(0, 5);
 
     return (
-      <fieldset>
+      <fieldset className="legend">
         <legend>{getI18nLabel("legend")}</legend>
-        <div className="legend">
-          <ul>
-            {displayedItems.map((item) => (
-              <li key={item.destination_code}>
-                <div
-                  style={{
-                    background: rootStyles.getPropertyValue(
-                      `--destination-${normalizeIdForCssColorNames(
-                        item.destination_code
-                      )}-color`
-                    ),
-                  }}
-                />
-                <span>
-                  {item[`destination_name_${currentLang}`]}
-                  {" - "}
-                  <b>{item[`destination_code`]}</b>
-                </span>
-              </li>
-            ))}
-          </ul>
-          {destinations.length > 5 && (
-            <Button
-              onClick={() => setShowAll(!showAll)}
-              size="sm"
-              variant="tertiary"
-            >
-              {showAll ? getI18nLabel("show-less") : getI18nLabel("show-more")}
-            </Button>
-          )}
-        </div>
+        <ul>
+          {displayedItems.map((item) => (
+            <li key={item.destination_code}>
+              <div
+                style={{
+                  background: rootStyles.getPropertyValue(`--destination-${normalizeIdForCssColorNames(item.destination_code)}-color`),
+                }}
+              />
+              <span>
+                {item[`destination_name_${currentLang}`]}
+                {" - "}
+                <b>{item[`destination_code`]}</b>
+              </span>
+            </li>
+          ))}
+        </ul>
+        {destinations.length > 5 && (
+          <Button onClick={() => setShowAll(!showAll)} size="sm" variant="tertiary">
+            {showAll ? getI18nLabel("show-less") : getI18nLabel("show-more")}
+          </Button>
+        )}
       </fieldset>
     );
   }
