@@ -4,7 +4,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { generateIntegrationURL, useContextDetection } from "../../../../utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useResearchTeachersData } from "../../use-cnu-data";
-import { CnuGroupData, createCnuAgeCategoryOptions } from "./options"; 
+import { CnuGroupData, createAgeCategoryOptions } from "./options";
 import SubtitleWithContext from "../../../../components/subtitle-with-context";
 
 function RenderData({ data }: { data: CnuGroupData[] }) {
@@ -62,7 +62,7 @@ function RenderData({ data }: { data: CnuGroupData[] }) {
   );
 }
 
-export function CnuAgeDistribution() {
+export function AgeDistribution() {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
 
@@ -104,9 +104,40 @@ export function CnuAgeDistribution() {
       .sort((a, b) => b.totalCount - a.totalCount);
   }, [researchTeachersData]);
 
+  type ExampleData = {
+    count: number;
+    categoryName: string;
+    ageClassName: string;
+  };
+
+  const exampleData = useMemo<ExampleData | null>(() => {
+    if (!processedData) return null;
+
+    let maxCount = -1;
+    let bestExample: ExampleData | null = null;
+
+    processedData.forEach((group) => {
+      group.ageDistribution.forEach((age) => {
+        const mainCategory = group.categories.sort(
+          (a, b) => b.count - a.count
+        )[0];
+        if (mainCategory && age.count > maxCount) {
+          maxCount = age.count;
+          bestExample = {
+            count: age.count,
+            categoryName: mainCategory.categoryName,
+            ageClassName: age.ageClass,
+          };
+        }
+      });
+    });
+
+    return bestExample;
+  }, [processedData]);
+
   const chartOptions = useMemo(() => {
     if (!processedData) return null;
-    return createCnuAgeCategoryOptions(processedData);
+    return createAgeCategoryOptions(processedData);
   }, [processedData]);
 
   if (isLoading) {
@@ -159,6 +190,40 @@ export function CnuAgeDistribution() {
               </>
             ),
           },
+          comment: {
+            fr: (
+              <>
+                Répartition des enseignants-chercheurs par tranche d'âge et par
+                catégorie. Les tranches d'âge sont les suivantes : 35 ans et moi
+                à gauche, 36 à 55 ans au milieu et 56 et plus à droite.
+              </>
+            ),
+          },
+          readingKey: {
+            fr:
+              exampleData && typeof exampleData.count === "number" ? (
+                <>
+                  Par exemple,pour l'année universitaire {selectedYear}, on
+                  dénombre{" "}
+                  <strong>{exampleData.count.toLocaleString("fr-FR")}</strong>{" "}
+                  <strong>{exampleData.categoryName}</strong> qui ont entre{" "}
+                  <strong>{exampleData.ageClassName}</strong>.
+                </>
+              ) : (
+                <></>
+              ),
+          },
+          source: {
+            label: {
+              fr: <>MESR-SIES, SISE</>,
+              en: <>MESR-SIES, SISE</>,
+            },
+            url: {
+              fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+              en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+            },
+          },
+          updateDate: new Date(),
           integrationURL: generateIntegrationURL(context, "cnu-age-category"),
         }}
         options={chartOptions}

@@ -7,6 +7,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useGeoMapData } from "../api/use-map";
 import { createMapOptions } from "./options";
 import MapSkeleton from "../../../../atlas/charts/skeletons/map";
+import { Row } from "@dataesr/dsfr-plus";
 
 highchartsMap(Highcharts);
 
@@ -91,12 +92,14 @@ export default function FacultyMap() {
   }
 
   return (
-    <div className="france-map-container">
-      <HighchartsReact
-        constructorType={"mapChart"}
-        highcharts={Highcharts}
-        options={mapOptions}
-      />
-    </div>
+    <Row gutters>
+      <div className="france-map-container">
+        <HighchartsReact
+          constructorType={"mapChart"}
+          highcharts={Highcharts}
+          options={mapOptions}
+        />
+      </div>
+    </Row>
   );
 }

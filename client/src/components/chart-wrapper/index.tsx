@@ -4,7 +4,17 @@ import Highcharts from "highcharts";
 import HighchartsExporting from "highcharts/modules/exporting";
 import HighchartsOfflineExporting from "highcharts/modules/offline-exporting";
 import HighchartsReact from "highcharts-react-official";
-import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Title } from "@dataesr/dsfr-plus";
+import {
+  Button,
+  Col,
+  Container,
+  Modal,
+  ModalContent,
+  ModalTitle,
+  Radio,
+  Row,
+  Title,
+} from "@dataesr/dsfr-plus";
 
 // Initialiser les modules d'export
 HighchartsExporting(Highcharts);
@@ -29,12 +39,12 @@ import ChartFooter from "../chart-footer";
 // Import des types pour ChartFooter
 interface LocalizedContent {
   fr: JSX.Element;
-  en: JSX.Element;
+  en?: JSX.Element;
 }
 
 interface LocalizedUrl {
   fr: string;
-  en: string;
+  en?: string;
 }
 
 interface Source {
@@ -43,8 +53,13 @@ interface Source {
 }
 
 // Fonction utilitaire pour obtenir les traductions
-function getTranslation(key: keyof typeof translations, lang: string = "fr"): string {
-  return translations[key]?.[lang as "fr" | "en"] || translations[key]?.["fr"] || key;
+function getTranslation(
+  key: keyof typeof translations,
+  lang: string = "fr"
+): string {
+  return (
+    translations[key]?.[lang as "fr" | "en"] || translations[key]?.["fr"] || key
+  );
 }
 
 // Fonction utilitaire pour extraire le texte d'un ReactNode
@@ -101,8 +116,15 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
 
   const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc=${VITE_APP_URL}${graphConfig.integrationURL}></iframe>`;
   return (
-    <Modal hide={() => setIsOpen(false)} isOpen={isOpen} key={`${modalId}-integrationModal`} size="lg">
-      <ModalTitle>{getTranslation("integrationModalTitle", currentLang)}</ModalTitle>
+    <Modal
+      hide={() => setIsOpen(false)}
+      isOpen={isOpen}
+      key={`${modalId}-integrationModal`}
+      size="lg"
+    >
+      <ModalTitle>
+        {getTranslation("integrationModalTitle", currentLang)}
+      </ModalTitle>
       <ModalContent>
         <div className="text-right">
           <CopyButton text={integrationCode} />
@@ -111,7 +133,11 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
           {integrationCode}
         </SyntaxHighlighter>
         <div className="fr-mt-2w text-right">
-          <Button color="beige-gris-galet" onClick={() => setIsOpen(false)} variant="secondary">
+          <Button
+            color="beige-gris-galet"
+            onClick={() => setIsOpen(false)}
+            variant="secondary"
+          >
             {getTranslation("close", currentLang)}
           </Button>
         </div>
@@ -120,20 +146,45 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
   );
 }
 
-function MenuModal({ config, displayType, isOpen, setDisplayType, setIsOpen, setIsOpenIntegration, modalId, downloadCSV, downloadPNG, printChart }) {
+function MenuModal({
+  config,
+  displayType,
+  isOpen,
+  setDisplayType,
+  setIsOpen,
+  setIsOpenIntegration,
+  modalId,
+  downloadCSV,
+  downloadPNG,
+  printChart,
+}) {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
   return (
-    <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="sm" key={modalId}>
+    <Modal
+      isOpen={isOpen}
+      hide={() => setIsOpen(false)}
+      size="sm"
+      key={modalId}
+    >
       <ModalContent className="modal-actions">
         <Title as="h1" look="h6">
-          <span className="fr-icon-bar-chart-box-line fr-mr-1w" aria-hidden="true" />
+          <span
+            className="fr-icon-bar-chart-box-line fr-mr-1w"
+            aria-hidden="true"
+          />
           {getTranslation("modalTitle", currentLang)}
         </Title>
 
-        <fieldset className="fr-fieldset" aria-labelledby="sélection du type d'affichage">
-          <legend className="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-hint-legend">
+        <fieldset
+          className="fr-fieldset"
+          aria-labelledby="sélection du type d'affichage"
+        >
+          <legend
+            className="fr-fieldset__legend--regular fr-fieldset__legend"
+            id="radio-hint-legend"
+          >
             {getTranslation("displayType", currentLang)}
           </legend>
           <div className="fr-fieldset__element">
@@ -156,17 +207,32 @@ function MenuModal({ config, displayType, isOpen, setDisplayType, setIsOpen, set
         <hr />
         <ul>
           <li>
-            <Button icon="file-download-line" title="téléchargement des données du graphique" variant="text" onClick={downloadCSV}>
+            <Button
+              icon="file-download-line"
+              title="téléchargement des données du graphique"
+              variant="text"
+              onClick={downloadCSV}
+            >
               {getTranslation("downloadCSV", currentLang)}
             </Button>
           </li>
           <li>
-            <Button icon="image-line" title="téléchargement de l'image" variant="text" onClick={downloadPNG}>
+            <Button
+              icon="image-line"
+              title="téléchargement de l'image"
+              variant="text"
+              onClick={downloadPNG}
+            >
               {getTranslation("downloadPNG", currentLang)}
             </Button>
           </li>
           <li>
-            <Button icon="printer-line" title="lancement de l'impression" variant="text" onClick={printChart}>
+            <Button
+              icon="printer-line"
+              title="lancement de l'impression"
+              variant="text"
+              onClick={printChart}
+            >
               {getTranslation("print", currentLang)}
             </Button>
           </li>
@@ -179,9 +245,24 @@ function MenuModal({ config, displayType, isOpen, setDisplayType, setIsOpen, set
                 {getTranslation("share", currentLang)}
               </Title>
               <div className="share">
-                <Button icon="twitter-x-fill" title="Twitter-X" variant="text" disabled />
-                <Button icon="linkedin-box-fill" title="Linkedin" variant="text" disabled />
-                <Button icon="facebook-circle-fill" title="Linkedin" variant="text" disabled />
+                <Button
+                  icon="twitter-x-fill"
+                  title="Twitter-X"
+                  variant="text"
+                  disabled
+                />
+                <Button
+                  icon="linkedin-box-fill"
+                  title="Linkedin"
+                  variant="text"
+                  disabled
+                />
+                <Button
+                  icon="facebook-circle-fill"
+                  title="Linkedin"
+                  variant="text"
+                  disabled
+                />
               </div>
             </Col>
             <Col>
@@ -209,7 +290,9 @@ function MenuModal({ config, displayType, isOpen, setDisplayType, setIsOpen, set
         </Container>
         <div className="fr-mt-2w text-right">
           <hr />
-          <Button onClick={() => setIsOpen(false)}>{getTranslation("close", currentLang)}</Button>
+          <Button onClick={() => setIsOpen(false)}>
+            {getTranslation("close", currentLang)}
+          </Button>
         </div>
       </ModalContent>
     </Modal>
@@ -217,7 +300,13 @@ function MenuModal({ config, displayType, isOpen, setDisplayType, setIsOpen, set
 }
 
 // Composant Title exportable séparément
-function ChartTitle({ config, children = null }: { config: ChartConfig; children?: React.ReactNode }) {
+function ChartTitle({
+  config,
+  children = null,
+}: {
+  config: ChartConfig;
+  children?: React.ReactNode;
+}) {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
@@ -295,7 +384,10 @@ export default function ChartWrapper({
         chart.current.chart.exportChart(
           {
             type: "image/png",
-            filename: config.title && typeof config.title === "string" ? config.title : "graphique",
+            filename:
+              config.title && typeof config.title === "string"
+                ? config.title
+                : "graphique",
             sourceWidth: 800,
             sourceHeight: 600,
             scale: 2, // Pour une meilleure qualité
@@ -309,7 +401,9 @@ export default function ChartWrapper({
       } catch (error) {
         console.error("Erreur lors de l'export PNG:", error);
         // Fallback alternatif : essayer avec la méthode print
-        alert("L'export PNG a échoué. Vous pouvez utiliser Ctrl+P pour imprimer la page.");
+        alert(
+          "L'export PNG a échoué. Vous pouvez utiliser Ctrl+P pour imprimer la page."
+        );
       }
     }
   };
@@ -321,7 +415,11 @@ export default function ChartWrapper({
         let chartTitle = "Graphique";
         if (config.title && typeof config.title === "string") {
           chartTitle = config.title;
-        } else if (config.title && typeof config.title === "object" && config.title[currentLang]) {
+        } else if (
+          config.title &&
+          typeof config.title === "object" &&
+          config.title[currentLang]
+        ) {
           // Si c'est un ReactNode, essayer d'extraire le texte
           const titleContent = config.title[currentLang];
           if (typeof titleContent === "string") {
@@ -388,16 +486,27 @@ export default function ChartWrapper({
           variant="text"
         />
       </div>
-      {displayType === "data" && renderData && options && <>{renderData(options)}</>}
+      {displayType === "data" && renderData && options && (
+        <>{renderData(options)}</>
+      )}
       {displayType === "chart" && options && (
         <figure className="chart">
-          <HighchartsReact highcharts={Highcharts} options={options} ref={chart} />
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={options}
+            ref={chart}
+          />
         </figure>
       )}
       <div className="fr-pt-1w">
         {legend}
         <div className="chart-footer">
-          <ChartFooter comment={config.comment} readingKey={config.readingKey} source={config.source} updateDate={config.updateDate} />
+          <ChartFooter
+            comment={config.comment}
+            readingKey={config.readingKey}
+            source={config.source}
+            updateDate={config.updateDate}
+          />
         </div>
       </div>
       <MenuModal

@@ -47,7 +47,6 @@ interface MapOptionsParams {
 export const createMapOptions = ({
   chartData,
   stats,
-  annee_universitaire,
   onRegionClick,
 }: MapOptionsParams): Highcharts.Options => ({
   chart: {
@@ -57,23 +56,14 @@ export const createMapOptions = ({
     spacing: [0, 0, 0, 0],
     borderWidth: 0,
     plotBorderWidth: 0,
-    // Adjust margin to give more space for the wide colorAxis
-    margin: [20, 10, 80, 10], // Increased bottom margin from 50 to 80
+    margin: [20, 10, 80, 10],
     style: {
       fontFamily: "'Marianne', sans-serif",
     },
   },
   exporting: { enabled: false },
   title: {
-    text: `Personnel enseignant par région ${
-      annee_universitaire !== "Toutes les années"
-        ? `- ${annee_universitaire}`
-        : ""
-    }`,
-    style: {
-      color: "#000091",
-      fontWeight: "bold",
-    },
+    text: "",
   },
 
   credits: { enabled: false },

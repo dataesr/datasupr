@@ -1,5 +1,4 @@
 import Highcharts from "highcharts";
-import { CreateChartOptions } from "../../../../components/creat-chart-options";
 
 export interface CategoryData {
   categoryCode: string;
@@ -19,10 +18,8 @@ export const createCategoryOptions = (
   );
 
   const categories = sortedData.map((item) => item.categoryName);
-  const counts = sortedData.map((item) => item.totalCount);
-
-  const total = counts.reduce((acc, curr) => acc + curr, 0);
-  const percentages = counts.map((count) => Math.round((count / total) * 100));
+  const womenData = sortedData.map((item) => item.femaleCount);
+  const menData = sortedData.map((item) => item.maleCount);
 
   const newOptions: Highcharts.Options = {
     chart: {
@@ -60,44 +57,51 @@ export const createCategoryOptions = (
         },
         overflow: "justify",
       },
+      stackLabels: {
+        enabled: true,
+        format: "{total:,.0f}",
+        style: {
+          fontSize: "10px",
+          fontWeight: "bold",
+          textOutline: "1px contrast",
+        },
+      },
     },
     tooltip: {
-      formatter: function () {
-        const index = this.point.index;
-        return `<b>${categories[index]}</b>: ${
-          this.y?.toLocaleString() || 0
-        } enseignants-chercheurs (${percentages[index]}&nbsp;%)`;
-      },
+      shared: true,
+      headerFormat: "<b>{point.key}</b><br/>",
+      pointFormat:
+        '<span style="color:{series.color}">\u25CF</span> {series.name}: {point.y:,.0f}<br/>',
+      footerFormat: "Total: {point.total:,.0f}",
     },
     plotOptions: {
       bar: {
+        stacking: "normal",
         dataLabels: {
-          enabled: true,
-          format: "{y:,.0f}",
-          style: {
-            fontSize: "10px",
-            fontWeight: "bold",
-            textOutline: "1px contrast",
-          },
+          enabled: false,
         },
-        colorByPoint: true,
-        colors: sortedData.map((_, i) =>
-          i === 0
-            ? "var(--blue-cumulus-main-526)"
-            : "var(--green-archipel-main-557)"
-        ),
       },
     },
     credits: { enabled: false },
-    legend: { enabled: false },
+    legend: {
+      enabled: true,
+      reversed: true,
+    },
     series: [
       {
-        name: "Effectif",
-        data: counts,
+        name: "Hommes",
+        data: menData,
         type: "bar",
+        color: "var(--men-color)",
+      },
+      {
+        name: "Femmes",
+        data: womenData,
+        type: "bar",
+        color: "var(--women-color)",
       },
     ],
   };
 
-  return CreateChartOptions("bar", newOptions);
+  return newOptions;
 };

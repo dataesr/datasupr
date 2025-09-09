@@ -7,6 +7,7 @@ import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useStatusDistribution } from "./use-status-distribution";
 import { Button } from "@dataesr/dsfr-plus";
 import SubtitleWithContext from "../../components/subtitle-with-context";
+import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -24,7 +25,7 @@ function RenderData({ data }) {
           <tr>
             <th>Nom</th>
             <th>Effectif total</th>
-            <th>Non-titulaires</th>
+            <th>Non-permanents</th>
             <th>Titulaires non-chercheurs</th>
             <th>Enseignants-chercheurs</th>
             <th>Total titulaires</th>
@@ -34,7 +35,6 @@ function RenderData({ data }) {
           {data.map((item, index) => (
             <tr key={index}>
               <td>{item.fieldLabel || "Inconnu"}</td>
-              {/* Use toLocaleString for all numerical table values */}
               <td>{item.totalCount.toLocaleString("fr-FR")}</td>
               <td>{item.nonTitulaires.toLocaleString("fr-FR")}</td>
               <td>{item.titulairesNonChercheurs.toLocaleString("fr-FR")}</td>
@@ -52,7 +52,6 @@ const StatusDistribution: React.FC = () => {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId, contextName } = useContextDetection();
-
   const [displayAsPercentage, setDisplayAsPercentage] = useState<boolean>(true);
 
   const {
@@ -99,12 +98,19 @@ const StatusDistribution: React.FC = () => {
     });
   }, [statusData]);
 
+  const exampleItem = useMemo(() => {
+    if (!processedData || processedData.length === 0) {
+      return null;
+    }
+    return processedData[0];
+  }, [processedData]);
+
   const chartData = useMemo(() => {
     return processedData.map((item) => ({
       ...item,
       series: [
         {
-          name: "Non-titulaires",
+          name: "Non-permanents",
           value: item.nonTitulaires,
           color: "var(--blue-ecume-moon-675)",
         },
@@ -126,6 +132,19 @@ const StatusDistribution: React.FC = () => {
     disciplines: chartData,
     displayAsPercentage: displayAsPercentage,
   });
+
+  const getContextLabel = (isPrefix = false) => {
+    switch (context) {
+      case "geo":
+        return isPrefix ? "la région" : "région";
+      case "fields":
+        return isPrefix ? "la grande discipline" : "grande discipline";
+      case "structures":
+        return isPrefix ? "l'établissement" : "établissement";
+      default:
+        return "discipline";
+    }
+  };
 
   if (isLoading) {
     return (
@@ -190,20 +209,67 @@ const StatusDistribution: React.FC = () => {
             fr: (
               <>
                 Quelle est la répartition des statuts du personnel enseignant
-                par discipline ?&nbsp;
+                par {getContextLabel()} ?&nbsp;
                 <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
               </>
             ),
           },
-          description: {
-            fr: `Ce graphique présente la répartition du personnel enseignant par statut selon les disciplines.
-
-La visualisation utilise trois niveaux de colonnes imbriquées : les enseignants-chercheurs au premier plan, les titulaires au niveau intermédiaire, et l'effectif total en arrière-plan.
-
-Les pourcentages affichés indiquent la proportion d'enseignants-chercheurs par rapport à l'effectif total pour chaque discipline.
-
-Cette représentation permet de comparer rapidement la composition des effectifs entre les différentes disciplines et d'identifier les écarts de répartition entre statuts.`,
+          comment: {
+            fr: (
+              <>
+                Répartition par statut des{" "}
+                <GlossaryTerm term="personnel enseignant">
+                  personnels enseignants
+                </GlossaryTerm>
+                , distinguant notamment les{" "}
+                <GlossaryTerm term="enseignant-chercheur">
+                  enseignants-chercheurs
+                </GlossaryTerm>
+                , les titulaires non-chercheurs et les{" "}
+                <GlossaryTerm term="permanent / non permanent">
+                  non-permanents
+                </GlossaryTerm>
+                .
+              </>
+            ),
           },
+          description: {
+            fr: "",
+          },
+          readingKey: {
+            fr: exampleItem ? (
+              <>
+                Par exemple, pour l'année universitaire {selectedYear} pour{" "}
+                {getContextLabel(true)}{" "}
+                <strong>{exampleItem.fieldLabel}</strong>, sur les{" "}
+                <strong>
+                  {exampleItem.totalCount.toLocaleString("fr-FR")}
+                </strong>{" "}
+                personnels enseignants,{" "}
+                <strong>
+                  {exampleItem.enseignantsChercheurs.toLocaleString("fr-FR")}
+                </strong>{" "}
+                sont enseignants-chercheurs et{" "}
+                <strong>
+                  {exampleItem.nonTitulaires.toLocaleString("fr-FR")}
+                </strong>{" "}
+                sont Non-permanents.
+              </>
+            ) : (
+              <></>
+            ),
+          },
+          source: {
+            label: {
+              fr: <>MESR-SIES, SISE</>,
+              en: <>MESR-SIES, SISE</>,
+            },
+            url: {
+              fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+              en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+            },
+          },
+          updateDate: new Date(),
           integrationURL: generateIntegrationURL(context, "statuts"),
         }}
         options={chartOptions}

@@ -62,7 +62,7 @@ ul {
   }
 }
 
-.fr-sidemenu__btn{
+.fr-sidemenu__btn {
   background-color: transparent !important;
 }
 
@@ -451,4 +451,25 @@ ul {
   --beneficiarie-type-PRC-color: var(--scale-2-color);
   --beneficiarie-type-HES-color: var(--scale-3-color);
   --beneficiarie-type-OTH-color: var(--scale-5-color);
+}
+
+.chart-container {
+  background-color: var(--blue-cumulus-925);
+  border-radius: 8px;
+  padding: 16px;
+
+  .chart-footer {
+    font-size: 0.8rem;
+    color: #6a6a6a;
+  }
+
+  .legend {
+    font-size: 0.8rem;
+    color: #6a6a6a;
+    background-color: white;
+  }
+
+  .chart {
+    background-color: white;
+  }
 }

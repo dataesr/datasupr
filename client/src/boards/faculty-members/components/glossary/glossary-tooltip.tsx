@@ -45,7 +45,6 @@ export function GlossaryTerm({ term, children }: GlossaryTermProps) {
           cursor: "help",
           color: "#0053b3",
           fontWeight: 500,
-          background: "rgba(0, 114, 243, 0.06)",
           padding: "0 2px",
         }}
       >

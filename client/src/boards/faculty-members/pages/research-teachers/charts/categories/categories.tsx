@@ -6,6 +6,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useFacultyMembersResearchTeachers } from "../../../../api/use-research-teachers";
 import { CategoryData, createCategoryOptions } from "./options";
 import SubtitleWithContext from "../../../../components/subtitle-with-context";
+import { GlossaryTerm } from "../../../../components/glossary/glossary-tooltip";
 
 function RenderData({ data }: { data: CategoryData[] }) {
   if (!data || data.length === 0) {
@@ -88,7 +89,7 @@ export const CategoryDistribution = () => {
     annee_universitaire: selectedYear,
     contextId,
   });
-  console.log(researchTeachersData);
+
   const categoryData = useMemo(() => {
     if (!researchTeachersData?.categoryDistribution) return null;
 
@@ -96,6 +97,19 @@ export const CategoryDistribution = () => {
       (a, b) => b.totalCount - a.totalCount
     );
   }, [researchTeachersData]);
+
+  const exampleData = useMemo(() => {
+    if (!categoryData || categoryData.length === 0) {
+      return null;
+    }
+    const largestCategory = categoryData[0];
+    return {
+      name: largestCategory.categoryName,
+      total: largestCategory.totalCount,
+      women: largestCategory.femaleCount,
+      men: largestCategory.maleCount,
+    };
+  }, [categoryData]);
 
   const chartOptions = useMemo(() => {
     if (!categoryData) return null;
@@ -145,11 +159,59 @@ export const CategoryDistribution = () => {
           as: "h2",
           fr: (
             <>
-              Répartition par catégorie&nbsp;
+              Comment se répartissent les enseignants-chercheurs par catégorie
+              ?&nbsp;
               <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
             </>
           ),
         },
+        comment: {
+          fr: (
+            <>
+              Répartition des enseignants-chercheurs par catégorie au sein de la
+              fonction publique d'État. Les enseignants-chercheurs sont répartis
+              en 3 catégories : les{" "}
+              <GlossaryTerm term="professeurs des universités">
+                professeurs des universités
+              </GlossaryTerm>{" "}
+              (PR), les{" "}
+              <GlossaryTerm term="maîtres de conférences">
+                maîtres de conférences
+              </GlossaryTerm>{" "}
+              (MCF) et les assistants (AST). Les enseignants-chercheurs associés
+              (ECA) et les enseignants-chercheurs invités (ECI) ne sont pas pris
+              en compte dans ce graphique car ils ne font pas partie des corps
+              de la fonction publique.
+            </>
+          ),
+        },
+        readingKey: {
+          fr: exampleData ? (
+            <>
+              Par exemple, pour l'année universitaire {selectedYear}, la
+              catégorie la plus représentée est "
+              <strong>{exampleData.name}</strong>" avec{" "}
+              <strong>{exampleData.total.toLocaleString("fr-FR")}</strong>{" "}
+              personnes, dont{" "}
+              <strong>{exampleData.women.toLocaleString("fr-FR")}</strong>{" "}
+              femmes et{" "}
+              <strong>{exampleData.men.toLocaleString("fr-FR")}</strong> hommes.
+            </>
+          ) : (
+            <></>
+          ),
+        },
+        source: {
+          label: {
+            fr: <>MESR-SIES, SISE</>,
+            en: <>MESR-SIES, SISE</>,
+          },
+          url: {
+            fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+            en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+          },
+        },
+        updateDate: new Date(),
         integrationURL: generateIntegrationURL(
           context,
           "category-distribution"

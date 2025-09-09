@@ -132,7 +132,7 @@ export default function StatusOptions({
               },
             } as HighchartsInstance.PointOptionsObject,
             {
-              name: "Non-titulaires",
+              name: "Non-permanents",
               y: displayAsPercentage
                 ? (discipline.nonTitulaires / discipline.totalCount) * 100
                 : discipline.nonTitulaires,
@@ -140,8 +140,8 @@ export default function StatusOptions({
               color: "var(--blue-ecume-moon-675)",
               dataLabels: {
                 format: displayAsPercentage
-                  ? "<b>Non-titulaires</b>: {point.percentage:.1f} %<br/>({point.absoluteValue} pers.)"
-                  : "<b>Non-titulaires</b>: {point.y} pers.",
+                  ? "<b>Non-permanents</b>: {point.percentage:.1f} %<br/>({point.absoluteValue} pers.)"
+                  : "<b>Non-permanents</b>: {point.y} pers.",
               },
             } as HighchartsInstance.PointOptionsObject,
           ],
@@ -312,7 +312,7 @@ export default function StatusOptions({
         type: "bar",
       },
       {
-        name: "Non-titulaires",
+        name: "Non-permanents",
         data: nonTitulairesData,
         color: "var(--blue-ecume-moon-675)",
         zIndex: 1,

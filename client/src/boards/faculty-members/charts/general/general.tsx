@@ -1,4 +1,3 @@
-import { Link, Text } from "@dataesr/dsfr-plus";
 import options from "./options";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { useSearchParams } from "react-router-dom";
@@ -6,8 +5,10 @@ import { useContextDetection } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useDisciplineDistribution } from "./use-discipline-distribution";
 import SubtitleWithContext from "../../components/subtitle-with-context";
+import { useMemo } from "react";
+import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 
-function RenderData({ data }) {
+function RenderData({ data, contextHeaderLabel }) {
   if (!data || data.length === 0) {
     return (
       <div className="fr-text--center fr-py-3w">
@@ -24,7 +25,7 @@ function RenderData({ data }) {
       >
         <thead>
           <tr>
-            <th>Discipline</th>
+            <th>{contextHeaderLabel}</th>
             <th>Effectif total</th>
             <th>Hommes</th>
             <th>Femmes</th>
@@ -75,11 +76,7 @@ const DistributionBar: React.FC = () => {
     contextId,
   });
 
-  if (context === "fields" && contextId) {
-    return null;
-  }
-
-  const itemsData = (() => {
+  const itemsData = useMemo(() => {
     if (!disciplineData || !disciplineData.discipline_distribution) return [];
 
     return disciplineData.discipline_distribution.map((item) => {
@@ -92,14 +89,49 @@ const DistributionBar: React.FC = () => {
 
       return {
         year: selectedYear,
-        field_id: item._id.discipline_code,
-        fieldLabel: item._id.discipline_name,
+        field_id:
+          item._id.discipline_code || item._id.geo_id || item._id.structure_id,
+        fieldLabel:
+          item._id.discipline_name ||
+          item._id.geo_name ||
+          item._id.structure_name,
         totalCount: item.total_count,
         maleCount: maleData?.count || 0,
         femaleCount: femaleData?.count || 0,
       };
     });
-  })();
+  }, [disciplineData, selectedYear]);
+
+  const largestItem = useMemo(() => {
+    if (!itemsData || itemsData.length === 0) return null;
+    return [...itemsData].sort((a, b) => b.totalCount - a.totalCount)[0];
+  }, [itemsData]);
+
+  const getContextualLabels = (ctx) => {
+    switch (ctx) {
+      case "geo":
+        return { singular: "la région", plural: "régions", header: "Région" };
+      case "structures":
+        return {
+          singular: "l'établissement",
+          plural: "établissements",
+          header: "Établissement",
+        };
+      case "fields":
+      default:
+        return {
+          singular: "la grande discipline",
+          plural: "disciplines",
+          header: "Grande Discipline",
+        };
+    }
+  };
+
+  const { singular, plural, header } = getContextualLabels(context);
+
+  if (context === "fields" && contextId) {
+    return null;
+  }
 
   const chartOptions = options({ fieldsData: itemsData, selectedYear });
 
@@ -112,15 +144,50 @@ const DistributionBar: React.FC = () => {
       as: "h2",
       fr: (
         <>
-          Quelles sont les disciplines qui emploient le plus de personnel
+          Quelles sont les {plural} qui emploient le plus de personnel
           enseignant ?&nbsp;
           <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ),
     },
-    description: {
-      fr: "Ce graphique présente la répartition des effectifs d'enseignants par grande discipline, avec une visualisation de l'équilibre femmes-hommes dans chaque domaine. Les barres horizontales permettent de comparer facilement les effectifs totaux entre disciplines, tandis que les segments colorés illustrent la proportion respective des enseignants par genre. Le tableau associé détaille les effectifs précis et les pourcentages par discipline.",
+    comment: {
+      fr: (
+        <>
+          Répartition des{" "}
+          <GlossaryTerm term="personnel enseignant">
+            personnels enseignants
+          </GlossaryTerm>{" "}
+          par{" "}
+          <GlossaryTerm term="grande discipline">
+            grande discipline
+          </GlossaryTerm>{" "}
+          avec visualisation de l'équilibre femmes-hommes.
+        </>
+      ),
     },
+    readingKey: {
+      fr: largestItem && (
+        <>
+          Par exemple, pour l'année universitaire {selectedYear}, pour{" "}
+          {singular} <strong>"{largestItem.fieldLabel}"</strong>, on dénombre{" "}
+          <strong>{largestItem.totalCount.toLocaleString()}</strong> personnels
+          enseignants, dont{" "}
+          <strong>{largestItem.maleCount.toLocaleString()}</strong> hommes et{" "}
+          <strong>{largestItem.femaleCount.toLocaleString()}</strong> femmes.
+        </>
+      ),
+    },
+    source: {
+      label: {
+        fr: <>MESR-SIES, SISE</>,
+        en: <>MESR-SIES, SISE</>,
+      },
+      url: {
+        fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+        en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+      },
+    },
+    updateDate: new Date(),
     integrationURL: "/personnel-enseignant/discipline/typologie",
   };
 
@@ -146,15 +213,10 @@ const DistributionBar: React.FC = () => {
         config={config}
         options={chartOptions}
         legend={null}
-        renderData={() => <RenderData data={itemsData} />}
+        renderData={() => (
+          <RenderData data={itemsData} contextHeaderLabel={header} />
+        )}
       />
-      <div className="fr-mt-3w">
-        <Text size="sm" className="text-center ">
-          <Link href="/personnel-enseignant/discipline/typologie">
-            En savoir plus sur la parité hommes / femmes des enseignants
-          </Link>
-        </Text>
-      </div>
     </>
   ) : null;
 };

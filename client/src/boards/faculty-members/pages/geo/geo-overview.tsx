@@ -10,6 +10,7 @@ import DisciplineStatusSummary from "../../components/fields-by-status";
 import FacultyMap from "./components/map";
 import NavigationCards from "../../components/fields-cards";
 import { useContextDetection } from "../../utils";
+import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 
 export default function RegionsOverview() {
   const { contextId } = useContextDetection();
@@ -18,26 +19,25 @@ export default function RegionsOverview() {
     <Container as="main">
       <Row className="fr-mt-3w">
         <Col md={12}>
-          <Text>
-            Descriptif de la répartition géographique des personnels enseignants
+          <Text size="sm">
+            Descriptif de la répartition géographique des{" "}
+            <GlossaryTerm term="personnel enseignant">
+              personnels enseignants
+            </GlossaryTerm>{" "}
             en France métropolitaine et d'outre-mer.
             <br />
             Cette page présente la répartition des personnels enseignants par
             région, avec une visualisation de l'équilibre femmes-hommes dans
             chaque région. Les données présentées sur cette page sont la sommes
-            des données des régions. Les barres horizontales permettent de
-            comparer facilement les effectifs totaux entre régions, tandis que
-            les segments colorés illustrent la proportion respective des
-            enseignants par genre.
+            des données des régions.
           </Text>
         </Col>
       </Row>
-      <Row className="fr-mt-3w fr-mb-4w">
+      <Row className="fr-mt-3w fr-mb-4w chart-container">
         <Col md={12}>
           <div className="fr-grid-row fr-grid-row--gutters">
             <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
               <div
-                className="fr-background-alt--blue-france fr-p-3w"
                 style={{
                   height: "100%",
                 }}
@@ -48,8 +48,11 @@ export default function RegionsOverview() {
             {!contextId && (
               <div className="fr-col-md-3">
                 <div
-                  className="fr-background-alt--blue-france fr-p-3w"
-                  style={{ height: "100%" }}
+                  style={{
+                    height: "100%",
+                    borderLeft: "1px solid white",
+                    paddingLeft: "1rem",
+                  }}
                 >
                   <DisciplineStatsSidebar />
                 </div>
@@ -58,9 +61,10 @@ export default function RegionsOverview() {
 
             <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
               <div
-                className="fr-background-alt--blue-france fr-p-3w"
                 style={{
                   height: "100%",
+                  borderLeft: "1px solid white",
+                  paddingLeft: "1rem",
                 }}
               >
                 <DisciplineStatusSummary />
@@ -69,9 +73,9 @@ export default function RegionsOverview() {
 
             <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
               <div
-                className="fr-background-alt--blue-france fr-p-3w"
                 style={{
-                  height: "100%",
+                  borderLeft: "1px solid white",
+                  paddingLeft: "1rem",
                 }}
               >
                 <AgeDistributionPieChart />
@@ -84,10 +88,6 @@ export default function RegionsOverview() {
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <FieldsDistributionBar />
-            <Text size="sm" className="fr-mt-2w">
-              Répartition des personnels enseignants par région avec
-              visualisation de l'équilibre femmes-hommes.
-            </Text>
           </div>
         </Col>
       </Row>
@@ -95,11 +95,6 @@ export default function RegionsOverview() {
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <StatusDistribution />
-            <Text size="sm" className="fr-mt-2w">
-              Répartition par statut des personnels enseignants, distinguant
-              notamment les enseignants-chercheurs, les titulaires
-              non-chercheurs et les non-titulaires.
-            </Text>
           </div>
         </Col>
       </Row>
@@ -107,33 +102,38 @@ export default function RegionsOverview() {
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <CnuGroupsChart />
-            <Text size="sm" className="fr-mt-2w">
-              Répartition des enseignants-chercheurs par groupe CNU. Cette
-              visualisation montre la distribution des effectifs selon les
-              principales disciplines académiques.
-            </Text>
           </div>
         </Col>
       </Row>
       <Row className="fr-background-alt--blue-france fr-mt-3w">
         <Col md={6} className="fr-pr-2w">
-          <div style={{ height: "100%" }}>
+          <div className="fr-background-alt--blue-france fr-p-3w">
             <EstablishmentTypeChart />
-            <Text size="sm" className="fr-mt-2w">
-              Distribution des personnels enseignants selon les différentes
-              catégories d'établissements d'enseignement supérieur.
-            </Text>
           </div>
         </Col>
         <Col md={6} className="fr-pl-2w">
-          <div
-            className="fr-background-alt--blue-france fr-p-3w"
-            style={{ height: "100%" }}
-          >
+          <div className="fr-background-alt--blue-france fr-p-3w">
+            <Title className="fr-mb-2w" look="h5">
+              Comment sont répartis les personnels enseignants en France ?
+            </Title>
             <FacultyMap />
-            <Text size="sm" className="fr-mt-2w">
-              Répartition géographique des personnels enseignants en France.
-              Cliquez sur une région pour afficher ses détails.
+
+            <Text
+              size="sm"
+              className="fr-fi-arrow-right-line fr-icon--sm fr-mt-3w"
+              aria-hidden="true"
+            >
+              <i>
+                Plus la couleur est foncée, plus il y a de personnels
+                enseignants.
+              </i>
+            </Text>
+            <Text size="sm">
+              Répartition géographique des{" "}
+              <GlossaryTerm term="personnel enseignant">
+                personnels enseignants
+              </GlossaryTerm>{" "}
+              en France. Cliquez sur une région pour afficher ses détails.
             </Text>
           </div>
         </Col>

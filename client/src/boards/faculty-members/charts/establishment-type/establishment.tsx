@@ -6,6 +6,7 @@ import { useContextDetection, generateIntegrationURL } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useEstablishmentTypeDistribution } from "./use-establishment-type";
 import SubtitleWithContext from "../../components/subtitle-with-context";
+import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -62,6 +63,18 @@ export function EstablishmentTypeChart() {
     contextId,
   });
 
+  const largestEstablishmentType = useMemo(() => {
+    if (
+      !establishmentData?.establishment_type_distribution ||
+      establishmentData.establishment_type_distribution.length === 0
+    ) {
+      return null;
+    }
+    return [...establishmentData.establishment_type_distribution].sort(
+      (a, b) => b.total_count - a.total_count
+    )[0];
+  }, [establishmentData]);
+
   const config = {
     id: "establishment-type-chart",
     idQuery: "establishment-type-distribution",
@@ -77,9 +90,49 @@ export function EstablishmentTypeChart() {
         </>
       ),
     },
-    description: {
-      fr: "",
+
+    comment: {
+      fr: (
+        <>
+          Répartition des{" "}
+          <GlossaryTerm term="personnel enseignant">
+            personnels enseignants
+          </GlossaryTerm>{" "}
+          selon les différentes catégories d'
+          <GlossaryTerm term="établissement d'enseignement supérieur">
+            établissements d'enseignement supérieur
+          </GlossaryTerm>
+          .
+        </>
+      ),
     },
+    readingKey: {
+      fr: (
+        <>
+          {largestEstablishmentType && (
+            <>
+              En {selectedYear}, on dénombre{" "}
+              <strong>
+                {largestEstablishmentType.total_count.toLocaleString()}
+              </strong>{" "}
+              personnels enseignants dans les établissements de type "
+              <strong>{largestEstablishmentType._id}</strong>".
+            </>
+          )}
+        </>
+      ),
+    },
+    source: {
+      label: {
+        fr: <>MESR-SIES, SISE</>,
+        en: <>MESR-SIES, SISE</>,
+      },
+      url: {
+        fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+        en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+      },
+    },
+    updateDate: new Date(),
     integrationURL: generateIntegrationURL(context, "etablissements"),
   };
 

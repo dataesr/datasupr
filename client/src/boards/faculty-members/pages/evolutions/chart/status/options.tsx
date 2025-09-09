@@ -144,7 +144,7 @@ export function createStatusEvolutionOptions({
     },
     series: [
       {
-        name: "Non-titulaires",
+        name: "Non-permanents",
         data: statusData.non_titulaire,
         color: "#EA526F",
         type: "area",

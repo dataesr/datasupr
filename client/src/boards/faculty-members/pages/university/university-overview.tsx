@@ -1,4 +1,4 @@
-import { Container, Row, Col, Title, Text } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Title, Text, Link } from "@dataesr/dsfr-plus";
 import FieldsDistributionBar from "../../charts/general/general";
 import CnuGroupsChart from "../../charts/cnu-group/cnu-chart";
 import StatusDistribution from "../../charts/status/status";
@@ -7,15 +7,23 @@ import GeneralIndicatorsCard from "../../components/general-indicators-card/gene
 import { EstablishmentTypeChart } from "../../charts/establishment-type/establishment";
 import DisciplineStatusSummary from "../../components/fields-by-status";
 import NavigationCards from "../../components/fields-cards";
+import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 
 export default function UniversityOverview() {
   return (
     <Container as="main">
       <Row className="fr-mt-3w">
         <Col md={12}>
-          <Text>
-            Descriptif de la répartition des personnels enseignants par
-            établissement d'enseignement supérieur.
+          <Text size="sm">
+            Descriptif de la répartition des{" "}
+            <GlossaryTerm term="personnel enseignant">
+              personnels enseignants
+            </GlossaryTerm>{" "}
+            par{" "}
+            <GlossaryTerm term="établissement d'enseignement supérieur">
+              établissement d'enseignement supérieur
+            </GlossaryTerm>
+            .
             <br />
             Cette page présente la répartition des personnels enseignants par
             université et composante, avec une visualisation de l'équilibre
@@ -27,12 +35,11 @@ export default function UniversityOverview() {
         </Col>
       </Row>
 
-      <Row className="fr-mt-3w fr-mb-4w">
+      <Row className="fr-mt-3w fr-mb-4w chart-container">
         <Col md={12}>
           <div className="fr-grid-row fr-grid-row--gutters">
             <Col md={4}>
               <div
-                className="fr-background-alt--blue-france fr-p-3w"
                 style={{
                   height: "100%",
                 }}
@@ -43,9 +50,10 @@ export default function UniversityOverview() {
 
             <Col md={4}>
               <div
-                className="fr-background-alt--blue-france fr-p-3w"
                 style={{
                   height: "100%",
+                  borderLeft: "1px solid white",
+                  paddingLeft: "1rem",
                 }}
               >
                 <DisciplineStatusSummary />
@@ -54,9 +62,9 @@ export default function UniversityOverview() {
 
             <Col md={4}>
               <div
-                className="fr-background-alt--blue-france fr-p-3w"
                 style={{
-                  height: "100%",
+                  borderLeft: "1px solid white",
+                  paddingLeft: "1rem",
                 }}
               >
                 <AgeDistributionPieChart />
@@ -70,9 +78,10 @@ export default function UniversityOverview() {
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <FieldsDistributionBar />
-            <Text size="sm" className="fr-mt-2w">
-              Répartition des personnels enseignants par établissement avec
-              visualisation de l'équilibre femmes-hommes.
+            <Text size="sm" className="text-center ">
+              <Link href="/personnel-enseignant/discipline/typologie">
+                En savoir plus sur la parité hommes / femmes des enseignants
+              </Link>
             </Text>
           </div>
         </Col>
@@ -82,11 +91,6 @@ export default function UniversityOverview() {
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <StatusDistribution />
-            <Text size="sm" className="fr-mt-2w">
-              Répartition par statut des personnels enseignants, distinguant
-              notamment les enseignants-chercheurs, les titulaires
-              non-chercheurs et les non-titulaires.
-            </Text>
           </div>
         </Col>
       </Row>
@@ -95,11 +99,6 @@ export default function UniversityOverview() {
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <CnuGroupsChart />
-            <Text size="sm" className="fr-mt-2w">
-              Répartition des enseignants-chercheurs par groupe CNU. Cette
-              visualisation montre la distribution des effectifs selon les
-              principales disciplines académiques dans les établissements.
-            </Text>
           </div>
         </Col>
       </Row>
@@ -108,10 +107,6 @@ export default function UniversityOverview() {
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <EstablishmentTypeChart />
-            <Text size="sm" className="fr-mt-2w">
-              Distribution des personnels enseignants selon les différentes
-              catégories d'établissements d'enseignement supérieur.
-            </Text>
           </div>
         </Col>
       </Row>

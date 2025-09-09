@@ -6,12 +6,12 @@ import i18n from "./i18n.json";
 
 interface LocalizedContent {
   fr: JSX.Element;
-  en: JSX.Element;
+  en?: JSX.Element;
 }
 
 interface LocalizedUrl {
   fr: string;
-  en: string;
+  en?: string;
 }
 
 interface Source {
@@ -33,36 +33,25 @@ interface ChartFooterProps {
  * ```tsx
  * <ChartFooter
  *   comment={{
- *     fr: <div>Ce graphique montre l'évolution des données sur 5 ans</div>,
- *     en: <div>This chart shows data evolution over 5 years</div>
+ *     fr: <div>Ce graphique montre l'évolution des données sur 5 ans</div>
  *   }}
- *   readingKey={{
- *     fr: <div>Chaque barre représente une année complète</div>,
- *     en: <div>Each bar represents a full year</div>
- *   }}
- *   source={{
- *     label: {
- *       fr: <div>Ministère de l'Enseignement Supérieur</div>,
- *       en: <div>Ministry of Higher Education</div>
- *     },
- *     url: {
- *       fr: "https://data.gouv.fr/dataset-fr",
- *       en: "https://data.gouv.fr/dataset-en"
- *     }
- *   }}
- *   updateDate={new Date('2024-09-08')}
+ *   // 'en' est maintenant optionnel
  * />
  * ```
  */
-export default function ChartFooter({ comment, readingKey, source, updateDate }: ChartFooterProps) {
+export default function ChartFooter({
+  comment,
+  readingKey,
+  source,
+  updateDate,
+}: ChartFooterProps) {
   const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
+  const currentLang = (searchParams.get("language") || "fr") as "fr" | "en";
 
   function getI18nLabel(key: string) {
     return i18n[key][currentLang];
   }
 
-  // Si aucune prop n'est fournie, ne rien afficher
   if (!comment && !readingKey && !source && !updateDate) {
     return null;
   }
@@ -72,24 +61,35 @@ export default function ChartFooter({ comment, readingKey, source, updateDate }:
       {comment && (
         <>
           <b>{getI18nLabel("comment")} </b>
-          <div>{comment[currentLang]}</div>
+          <div>{comment[currentLang] || comment.fr}</div>
         </>
       )}
 
       {readingKey && (
         <div>
           <b>{getI18nLabel("readingKey")} </b>
-          {readingKey[currentLang]}
+          {readingKey[currentLang] || readingKey.fr}
         </div>
       )}
 
       {(source || updateDate) && (
-        <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px solid #ccc", marginTop: "10px", paddingTop: "10px" }}>
+        <div
+          style={{
+            justifyContent: "space-between",
+            borderTop: "1px solid #ccc",
+            marginTop: "10px",
+            paddingTop: "10px",
+          }}
+        >
           {source && (
             <div>
               <b>{getI18nLabel("source")} </b>
-              <Link href={source.url[currentLang]} target="_blank" rel="noopener noreferrer">
-                {source.label[currentLang]}
+              <Link
+                href={source.url[currentLang] || source.url.fr}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {source.label[currentLang] || source.label.fr}
               </Link>
             </div>
           )}
@@ -97,7 +97,9 @@ export default function ChartFooter({ comment, readingKey, source, updateDate }:
           {updateDate && (
             <div>
               <b>{getI18nLabel("updateDate")} </b>
-              {updateDate.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")}
+              {updateDate.toLocaleDateString(
+                currentLang === "fr" ? "fr-FR" : "en-US"
+              )}
             </div>
           )}
         </div>

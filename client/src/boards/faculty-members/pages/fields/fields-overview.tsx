@@ -9,6 +9,7 @@ import DisciplineStatsSidebar from "../../components/top-indicators/top-fields-i
 import DisciplineStatusSummary from "../../components/fields-by-status";
 import NavigationCards from "../../components/fields-cards";
 import { useContextDetection } from "../../utils";
+import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 
 export default function FieldOverview() {
   const { contextId } = useContextDetection();
@@ -17,25 +18,31 @@ export default function FieldOverview() {
     <Container as="main">
       <Row className="fr-mt-3w">
         <Col md={12}>
-          <Text>
+          <Text size="sm">
             Descriptif de notre référentiel des disciplines, limites et
             périmètres. <br />
-            Cette page présente la répartition des personnels enseignants par
-            grande discipline, avec une visualisation de l'équilibre
-            femmes-hommes dans chaque domaine. Les barres horizontales
-            permettent de comparer facilement les effectifs totaux entre
-            disciplines, tandis que les segments colorés illustrent la
-            proportion respective des enseignants par genre. Le tableau associé
-            détaille les effectifs précis et les pourcentages par discipline.
+            Cette page présente la répartition des{" "}
+            <GlossaryTerm term="personnel enseignant">
+              personnels enseignants
+            </GlossaryTerm>{" "}
+            par{" "}
+            <GlossaryTerm term="grande discipline">
+              grande discipline
+            </GlossaryTerm>
+            , avec une visualisation de l'équilibre femmes-hommes dans chaque
+            domaine. Les barres horizontales permettent de comparer facilement
+            les effectifs totaux entre disciplines, tandis que les segments
+            colorés illustrent la proportion respective des enseignants par
+            genre. Le tableau associé détaille les effectifs précis et les
+            pourcentages par discipline.
           </Text>
         </Col>
       </Row>
-      <Row className="fr-mt-3w fr-mb-4w">
+      <Row className="fr-mt-3w fr-mb-4w chart-container">
         <Col md={12}>
           <div className="fr-grid-row fr-grid-row--gutters">
             <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
               <div
-                className="fr-background-alt--blue-france fr-p-3w"
                 style={{
                   height: "100%",
                 }}
@@ -47,8 +54,11 @@ export default function FieldOverview() {
             {!contextId && (
               <div className="fr-col-md-3">
                 <div
-                  className="fr-background-alt--blue-france fr-p-3w"
-                  style={{ height: "100%" }}
+                  style={{
+                    height: "100%",
+                    borderLeft: "1px solid white",
+                    paddingLeft: "1rem",
+                  }}
                 >
                   <DisciplineStatsSidebar />
                 </div>
@@ -57,20 +67,20 @@ export default function FieldOverview() {
 
             <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
               <div
-                className="fr-background-alt--blue-france fr-p-3w"
                 style={{
                   height: "100%",
+                  borderLeft: "1px solid white",
+                  paddingLeft: "1rem",
                 }}
               >
                 <DisciplineStatusSummary />
               </div>
             </div>
-
             <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
               <div
-                className="fr-background-alt--blue-france fr-p-3w"
                 style={{
-                  height: "100%",
+                  borderLeft: "1px solid white",
+                  paddingLeft: "1rem",
                 }}
               >
                 <AgeDistributionPieChart />
@@ -84,10 +94,6 @@ export default function FieldOverview() {
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <FieldsDistributionBar />
-            <Text size="sm" className="fr-mt-2w">
-              Répartition des personnels enseignants par discipline avec
-              visualisation de l'équilibre femmes-hommes.
-            </Text>
           </div>
         </Col>
       </Row>
@@ -96,11 +102,6 @@ export default function FieldOverview() {
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <StatusDistribution />
-            <Text size="sm" className="fr-mt-2w">
-              Répartition par statut des personnels enseignants, distinguant
-              notamment les enseignants-chercheurs, les titulaires
-              non-chercheurs et les non-titulaires.
-            </Text>
           </div>
         </Col>
       </Row>
@@ -109,11 +110,6 @@ export default function FieldOverview() {
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <CnuGroupsChart />
-            <Text size="sm" className="fr-mt-2w">
-              Répartition des enseignants-chercheurs par groupe CNU. Cette
-              visualisation montre la distribution des effectifs selon les
-              principales disciplines académiques.
-            </Text>
           </div>
         </Col>
       </Row>
@@ -122,10 +118,6 @@ export default function FieldOverview() {
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <EstablishmentTypeChart />
-            <Text size="sm" className="fr-mt-2w">
-              Distribution des personnels enseignants selon les différentes
-              catégories d'établissements d'enseignement supérieur.
-            </Text>
           </div>
         </Col>
       </Row>

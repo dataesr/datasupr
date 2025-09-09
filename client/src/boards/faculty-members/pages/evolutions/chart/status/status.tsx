@@ -26,7 +26,7 @@ function RenderData({ data }) {
             <th>Année</th>
             <th>Enseignants-chercheurs</th>
             <th>Titulaires non-chercheurs</th>
-            <th>Non-titulaires</th>
+            <th>Non-permanents</th>
             <th>Total</th>
           </tr>
         </thead>

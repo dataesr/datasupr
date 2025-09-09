@@ -22,7 +22,7 @@ export interface CnuGroupData {
   femaleCount?: number;
 }
 
-export const createCnuAgeCategoryOptions = (
+export const createAgeCategoryOptions = (
   cnuGroups: CnuGroupData[]
 ): Highcharts.Options | null => {
   if (!cnuGroups || cnuGroups.length === 0) return null;

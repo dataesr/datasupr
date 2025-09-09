@@ -6,6 +6,7 @@ import { useFacultyMembersCNU } from "../../api/use-cnu";
 import { useContextDetection, getColorForDiscipline } from "../../utils";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import SubtitleWithContext from "../../components/subtitle-with-context";
+import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 
 function RenderData({ groupedData }) {
   if (!groupedData || groupedData.length === 0) {
@@ -286,6 +287,13 @@ export default function CnuGroupsChart() {
     !isDisciplineContext
   );
 
+  const largestGroup = useMemo(() => {
+    if (!cnuGroups || cnuGroups.length === 0) {
+      return null;
+    }
+    return [...cnuGroups].sort((a, b) => b.totalCount - a.totalCount)[0];
+  }, [cnuGroups]);
+
   if (!cnuGroups || cnuGroups.length === 0) {
     return (
       <div className="fr-alert fr-alert--info fr-my-3w">
@@ -323,9 +331,51 @@ export default function CnuGroupsChart() {
               </>
             ),
           },
-          description: {
-            fr: "Il est composé de 11 groupes, eux-mêmes divisés en 52 sections, dont chacune correspond à une discipline. Chaque section comprend deux collèges où siègent en nombre égal d’une part, des représentants des professeurs des universités et personnels assimilés et, d’autre part, des représentants des maîtres de conférences et personnels assimilés.Ce graphique présente la répartition des enseignants-chercheurs par groupes CNU. La taille de chaque barre est proportionnelle au nombre d'enseignants-chercheurs dans le groupe. Les données incluent également la répartition par genre au sein de chaque groupe, permettant d'identifier les disparités hommes-femmes selon les disciplines scientifiques.",
+          comment: {
+            fr: largestGroup ? (
+              <>
+                Répartition des{" "}
+                <GlossaryTerm term="enseignant-chercheur">
+                  enseignants-chercheurs
+                </GlossaryTerm>{" "}
+                par <GlossaryTerm term="groupe cnu">groupe CNU</GlossaryTerm>.
+                Cette visualisation montre la distribution des effectifs selon
+                les groupes CNU .
+              </>
+            ) : (
+              <></>
+            ),
           },
+          readingKey: {
+            fr: (
+              <>
+                En {selectedYear}, on dénombre{" "}
+                {largestGroup && (
+                  <>
+                    {" "}
+                    pour le groupe CNU '{largestGroup.cnuGroupLabel}'{" "}
+                    <strong>{largestGroup.totalCount.toLocaleString()}</strong>{" "}
+                    personnes, dont{" "}
+                    <strong>{largestGroup.femaleCount.toLocaleString()}</strong>{" "}
+                    femmes et{" "}
+                    <strong>{largestGroup.maleCount.toLocaleString()}</strong>{" "}
+                    hommes.
+                  </>
+                )}
+              </>
+            ),
+          },
+          source: {
+            label: {
+              fr: <>MESR-SIES, SISE</>,
+              en: <>MESR-SIES, SISE</>,
+            },
+            url: {
+              fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+              en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+            },
+          },
+          updateDate: new Date(),
           integrationURL: "/integration-url",
         }}
         options={options}

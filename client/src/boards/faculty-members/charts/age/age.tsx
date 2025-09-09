@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import ChartWrapper from "../../../../components/chart-wrapper";
 import { createAgeDistributionChartOptions } from "./options";
 import {
   generateContextualTitle,
@@ -9,6 +8,9 @@ import {
 } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useAgeDistribution } from "./use-age-distribution";
+import ChartWrapper from "../../../../components/chart-wrapper";
+import { Col, Title } from "@dataesr/dsfr-plus";
+import "./styles.scss";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -152,30 +154,35 @@ export function AgeDistributionPieChart() {
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
-      <div style={{ flex: 1 }}>
+    <>
+      <Col className="ageFigure">
+        <Title as="h3" look="h5">
+          {processedData.title}{" "}
+        </Title>
         <ChartWrapper
           config={{
-            id: "age-distribution-chart",
+            id: "age-distribution-pie-chart",
             idQuery: "age-distribution",
             title: {
-              className: "fr-mt-0w",
-              look: "h5",
-              as: "h3",
-              fr: <>Répartition par âge</>,
+              fr: "",
             },
-            integrationURL: generateIntegrationURL(context, "age"),
+            comment: {
+              fr: <>Les effectifs sont répartis par tranches d'âge</>,
+            },
+            source: {
+              label: { fr: <>MESR-SIES, SISE</> },
+              url: {
+                fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+              },
+            },
+            updateDate: new Date(),
+            integrationURL: generateIntegrationURL(context, "age-distribution"),
           }}
+          legend={false}
           options={chartOptions}
-          legend={null}
           renderData={() => <RenderData data={processedData.chartData} />}
         />
-      </div>
-      <div>
-        <div className="fr-text--sm fr-text--center">
-          <i>Les effectifs sont répartis par tranches d'âge</i>
-        </div>
-      </div>
-    </div>
+      </Col>
+    </>
   );
 }
