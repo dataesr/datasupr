@@ -85,6 +85,10 @@ export type ChartConfig = {
       }
     | null;
   integrationURL?: string;
+  comment?: LocalizedContent;
+  readingKey?: LocalizedContent;
+  source?: Source;
+  updateDate?: Date;
 };
 
 export type HighchartsOptions = Highcharts.Options | null;
@@ -252,20 +256,12 @@ export default function ChartWrapper({
   legend,
   renderData,
   hideTitle = false,
-  comment,
-  readingKey,
-  source,
-  updateDate,
 }: {
   config: ChartConfig;
   options: HighchartsOptions;
   legend: React.ReactNode;
   renderData?: (options: Highcharts.Options) => React.ReactNode;
   hideTitle?: boolean;
-  comment?: LocalizedContent;
-  readingKey?: LocalizedContent;
-  source?: Source;
-  updateDate?: Date;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
@@ -401,7 +397,7 @@ export default function ChartWrapper({
       <div className="fr-pt-1w">
         {legend}
         <div className="chart-footer">
-          <ChartFooter comment={comment} readingKey={readingKey} source={source} updateDate={updateDate} />
+          <ChartFooter comment={config.comment} readingKey={config.readingKey} source={config.source} updateDate={config.updateDate} />
         </div>
       </div>
       <MenuModal
