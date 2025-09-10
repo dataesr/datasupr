@@ -15,11 +15,14 @@ interface Field {
 interface OptionsProps {
   fieldsData: Field[];
   selectedYear: string;
+  displayMode: "count" | "percentage";
+  e;
 }
 
 export default function OptionsColumnChart({
   fieldsData,
   selectedYear,
+  displayMode,
 }: OptionsProps): HighchartsInstance.Options | null {
   if (!fieldsData || fieldsData.length === 0) return null;
 
@@ -30,12 +33,21 @@ export default function OptionsColumnChart({
 
   const categories = sortedData.map((field) => field.fieldLabel);
 
+  const totalOfAllFields = yearData.reduce(
+    (acc, field) => acc + field.totalCount,
+    0
+  );
+
   const data = sortedData.map((field) => ({
     name: field.fieldLabel,
     code: field.field_id,
-    y: field.totalCount,
+    y:
+      displayMode === "percentage"
+        ? (field.totalCount / totalOfAllFields) * 100
+        : field.totalCount,
     color: getColorForDiscipline(field.fieldLabel),
     customData: {
+      totalCount: field.totalCount,
       femaleCount: field.femaleCount,
       maleCount: field.maleCount,
       femalePercentage: (field.femaleCount / field.totalCount) * 100,
@@ -71,7 +83,10 @@ export default function OptionsColumnChart({
     yAxis: {
       min: 0,
       title: {
-        text: "Nombre d'enseignants",
+        text:
+          displayMode === "percentage"
+            ? "Part des enseignants"
+            : "Nombre d'enseignants",
         style: {
           color: "#333333",
           fontSize: "14px",
@@ -83,6 +98,9 @@ export default function OptionsColumnChart({
           fontSize: "14px",
         },
         formatter() {
+          if (displayMode === "percentage") {
+            return `${this.value}%`;
+          }
           return Number(this.value) >= 1000
             ? `${Number(this.value) / 1000}k`
             : String(this.value);
@@ -99,6 +117,7 @@ export default function OptionsColumnChart({
         interface CustomPoint extends Highcharts.Point {
           code: string;
           customData: {
+            totalCount: number;
             femaleCount: number;
             maleCount: number;
             femalePercentage: number;
@@ -106,13 +125,20 @@ export default function OptionsColumnChart({
           };
         }
         const p = this.point as CustomPoint;
+        const valueDisplay =
+          displayMode === "percentage"
+            ? `${p.y?.toFixed(
+                1
+              )}% des enseignants (${p.customData.totalCount.toLocaleString()})`
+            : `${p.customData.totalCount.toLocaleString()} enseignants`;
+
         return `
           <div style="padding:10px">
             <div style="font-weight:bold;margin-bottom:8px;font-size:14px">
               ${p.name}&nbsp;${p.code}
             </div>
             <div style="margin:8px 0; font-size:14px; font-weight:bold;">
-              ${p.y !== undefined ? p.y.toLocaleString() : 0} enseignants
+              ${valueDisplay}
             </div>
             <hr style="margin:5px 0;border:0;border-top:1px solid #eee">
             <table style="width:100%;border-collapse:collapse">
@@ -140,6 +166,23 @@ export default function OptionsColumnChart({
         borderRadius: 4,
         borderWidth: 0,
         minPointLength: 1.5,
+        dataLabels: {
+          enabled: true,
+          inside: true,
+          align: "right",
+          style: {
+            color: "white",
+            textOutline: "none",
+            fontWeight: "bold",
+            fontSize: "11px",
+          },
+          formatter() {
+            if (displayMode === "percentage") {
+              return `${(this.y as number).toFixed(1)}%`;
+            }
+            return `${(this.y as number).toLocaleString("fr-FR")} enseignants`;
+          },
+        },
       },
     },
     series: [

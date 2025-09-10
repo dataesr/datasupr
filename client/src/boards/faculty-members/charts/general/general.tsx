@@ -5,8 +5,9 @@ import { useContextDetection } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useDisciplineDistribution } from "./use-discipline-distribution";
 import SubtitleWithContext from "../../components/subtitle-with-context";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
+import { Button } from "@dataesr/dsfr-plus";
 
 function RenderData({ data, contextHeaderLabel }) {
   if (!data || data.length === 0) {
@@ -65,6 +66,9 @@ const DistributionBar: React.FC = () => {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId } = useContextDetection();
+  const [displayMode, setDisplayMode] = useState<"count" | "percentage">(
+    "count"
+  );
 
   const {
     data: disciplineData,
@@ -133,8 +137,12 @@ const DistributionBar: React.FC = () => {
     return null;
   }
 
-  const chartOptions = options({ fieldsData: itemsData, selectedYear });
-
+  const chartOptions = options({
+    fieldsData: itemsData,
+    selectedYear,
+    displayMode,
+    e: undefined,
+  });
   const config = {
     id: "DistributionBar",
     idQuery: "discipline-distribution",
@@ -209,6 +217,23 @@ const DistributionBar: React.FC = () => {
 
   return chartOptions ? (
     <>
+      <div className="fr-mb-2w fr-flex fr-flex--center">
+        <Button
+          variant={displayMode === "count" ? "primary" : "secondary"}
+          onClick={() => setDisplayMode("count")}
+          size="sm"
+          className="fr-mr-2v"
+        >
+          Effectifs
+        </Button>
+        <Button
+          variant={displayMode === "percentage" ? "primary" : "secondary"}
+          onClick={() => setDisplayMode("percentage")}
+          size="sm"
+        >
+          Pourcentage
+        </Button>
+      </div>
       <ChartWrapper
         config={config}
         options={chartOptions}

@@ -183,18 +183,18 @@ const StatusDistribution: React.FC = () => {
       <div className="fr-mb-2w fr-flex fr-flex--center">
         <Button
           size="sm"
+          onClick={() => setDisplayAsPercentage(false)}
+          variant={!displayAsPercentage ? undefined : "secondary"}
+        >
+          Effectifs
+        </Button>
+        <Button
+          size="sm"
           onClick={() => setDisplayAsPercentage(true)}
           variant={displayAsPercentage ? undefined : "secondary"}
           className="fr-mr-2v"
         >
-          Afficher en Pourcentage
-        </Button>
-        <Button
-          size="sm"
-          onClick={() => setDisplayAsPercentage(false)}
-          variant={!displayAsPercentage ? undefined : "secondary"}
-        >
-          Afficher en Effectifs
+          Pourcentage
         </Button>
       </div>
 
