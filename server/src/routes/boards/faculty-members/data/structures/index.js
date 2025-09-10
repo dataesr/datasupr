@@ -12,7 +12,7 @@ router.get("/faculty-members/filters/structures", async (req, res) => {
         {
           $group: {
             _id: {
-              id: "$etablissement_id_paysage_actuel",
+              id: "$etablissement_id_paysage",
               lib: "$etablissement_lib",
             },
           },
@@ -60,7 +60,7 @@ router.get("/faculty-members/structures/cnu-analysis", async (req, res) => {
     if (structure_id) {
       matchStage.$or = [
         { etablissement_id_paysage: structure_id },
-        { etablissement_id_paysage_actuel: structure_id },
+        { etablissement_id_paysage: structure_id },
       ];
     }
 
@@ -175,7 +175,7 @@ router.get(
       if (structure_id) {
         matchStage.$or = [
           { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage_actuel: structure_id },
+          { etablissement_id_paysage: structure_id },
         ];
       }
 
@@ -530,7 +530,7 @@ router.get(
           {
             $group: {
               _id: {
-                structure_id: "$etablissement_id_paysage_actuel",
+                structure_id: "$etablissement_id_paysage",
                 structureName: "$etablissement_actuel_lib",
                 gender: "$sexe",
               },
@@ -627,7 +627,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
     if (structure_id) {
       matchStage.$or = [
         { etablissement_id_paysage: structure_id },
-        { etablissement_id_paysage_actuel: structure_id },
+        { etablissement_id_paysage: structure_id },
       ];
     }
 
@@ -746,7 +746,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
                 $group: {
                   _id: {
                     annee_universitaire: "$annee_universitaire",
-                    structure_id: "$etablissement_id_paysage_actuel",
+                    structure_id: "$etablissement_id_paysage",
                     structure_name: "$etablissement_actuel_lib",
                   },
                   total_count: { $sum: "$effectif" },
@@ -868,14 +868,14 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
             {
               $or: [
                 { etablissement_id_paysage: structure_id },
-                { etablissement_id_paysage_actuel: structure_id },
+                { etablissement_id_paysage: structure_id },
               ],
             },
             {
               projection: {
                 etablissement_lib: 1,
                 etablissement_actuel_lib: 1,
-                etablissement_id_paysage_actuel: 1,
+                etablissement_id_paysage: 1,
                 etablissement_type: 1,
                 etablissement_region: 1,
               },
@@ -946,7 +946,7 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
     let processedContextInfo = null;
     if (structure_id && contextInfo) {
       processedContextInfo = {
-        id: contextInfo.etablissement_id_paysage_actuel,
+        id: contextInfo.etablissement_id_paysage,
         name:
           contextInfo.etablissement_actuel_lib || contextInfo.etablissement_lib,
         type: "structure",
@@ -984,7 +984,7 @@ router.get("/faculty-members/structures/age-distribution", async (req, res) => {
     if (structure_id) {
       matchStage.$or = [
         { etablissement_id_paysage: structure_id },
-        { etablissement_id_paysage_actuel: structure_id },
+        { etablissement_id_paysage: structure_id },
       ];
     }
 
@@ -1007,7 +1007,7 @@ router.get("/faculty-members/structures/age-distribution", async (req, res) => {
         {
           $or: [
             { etablissement_id_paysage: structure_id },
-            { etablissement_id_paysage_actuel: structure_id },
+            { etablissement_id_paysage: structure_id },
           ],
         },
         {
@@ -1053,7 +1053,7 @@ router.get(
       if (structure_id) {
         matchStage.$or = [
           { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage_actuel: structure_id },
+          { etablissement_id_paysage: structure_id },
         ];
       }
 
@@ -1095,7 +1095,7 @@ router.get(
           {
             $or: [
               { etablissement_id_paysage: structure_id },
-              { etablissement_id_paysage_actuel: structure_id },
+              { etablissement_id_paysage: structure_id },
             ],
           },
           {
@@ -1142,7 +1142,7 @@ router.get(
       if (structure_id) {
         matchStage.$or = [
           { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage_actuel: structure_id },
+          { etablissement_id_paysage: structure_id },
         ];
       }
 
@@ -1184,7 +1184,7 @@ router.get(
           {
             $or: [
               { etablissement_id_paysage: structure_id },
-              { etablissement_id_paysage_actuel: structure_id },
+              { etablissement_id_paysage: structure_id },
             ],
           },
           {
@@ -1231,7 +1231,7 @@ router.get(
       if (structure_id) {
         matchStage.$or = [
           { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage_actuel: structure_id },
+          { etablissement_id_paysage: structure_id },
         ];
       }
 
@@ -1241,7 +1241,7 @@ router.get(
           {
             $group: {
               _id: {
-                structure_code: "$etablissement_id_paysage_actuel",
+                structure_code: "$etablissement_id_paysage",
                 structure_name: "$etablissement_actuel_lib",
                 status: {
                   $switch: {
@@ -1296,7 +1296,7 @@ router.get(
           {
             $or: [
               { etablissement_id_paysage: structure_id },
-              { etablissement_id_paysage_actuel: structure_id },
+              { etablissement_id_paysage: structure_id },
             ],
           },
           {
@@ -1343,7 +1343,7 @@ router.get(
       if (structure_id) {
         matchStage.$or = [
           { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage_actuel: structure_id },
+          { etablissement_id_paysage: structure_id },
         ];
       }
 
@@ -1380,7 +1380,7 @@ router.get(
           {
             $or: [
               { etablissement_id_paysage: structure_id },
-              { etablissement_id_paysage_actuel: structure_id },
+              { etablissement_id_paysage: structure_id },
             ],
           },
           {
@@ -1428,7 +1428,7 @@ router.get(
       if (structure_id) {
         matchStage.$or = [
           { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage_actuel: structure_id },
+          { etablissement_id_paysage: structure_id },
         ];
       }
 
@@ -1438,7 +1438,7 @@ router.get(
           {
             $group: {
               _id: {
-                structure_code: "$etablissement_id_paysage_actuel",
+                structure_code: "$etablissement_id_paysage",
                 structure_name: "$etablissement_actuel_lib",
                 gender: "$sexe",
               },
@@ -1470,7 +1470,7 @@ router.get(
           {
             $or: [
               { etablissement_id_paysage: structure_id },
-              { etablissement_id_paysage_actuel: structure_id },
+              { etablissement_id_paysage: structure_id },
             ],
           },
           {
@@ -1515,7 +1515,7 @@ router.get("/faculty-members/structures/top-indicators", async (req, res) => {
     if (structure_id) {
       matchStage.$or = [
         { etablissement_id_paysage: structure_id },
-        { etablissement_id_paysage_actuel: structure_id },
+        { etablissement_id_paysage: structure_id },
       ];
     }
 
@@ -1525,7 +1525,7 @@ router.get("/faculty-members/structures/top-indicators", async (req, res) => {
         {
           $group: {
             _id: {
-              structure_code: "$etablissement_id_paysage_actuel",
+              structure_code: "$etablissement_id_paysage",
               structure_name: "$etablissement_actuel_lib",
               gender: "$sexe",
             },
@@ -1557,7 +1557,7 @@ router.get("/faculty-members/structures/top-indicators", async (req, res) => {
         {
           $or: [
             { etablissement_id_paysage: structure_id },
-            { etablissement_id_paysage_actuel: structure_id },
+            { etablissement_id_paysage: structure_id },
           ],
         },
         {
