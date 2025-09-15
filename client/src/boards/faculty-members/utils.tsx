@@ -179,8 +179,8 @@ export function useBreadcrumbItems(
   const currentPage = (() => {
     if (location.pathname.includes("/typologie")) return "Typologie";
     if (location.pathname.includes("/evolution")) return "Évolution";
-    if (location.pathname.includes("/enseignants-chercheurs"))
-      return "Enseignants-chercheurs";
+    if (location.pathname.includes("/enseignants-permanents"))
+      return "Enseignants-permanents";
     return null;
   })();
 

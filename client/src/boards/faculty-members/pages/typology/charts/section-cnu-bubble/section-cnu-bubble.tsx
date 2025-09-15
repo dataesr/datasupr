@@ -372,7 +372,6 @@ export function SectionsBubbleChart() {
 
         totalSections = allSections.length;
         dataToProcess = allSections;
-        // chartTitle = `Toutes les ${labels.sectionPlural}`;
       }
     }
 
@@ -403,7 +402,6 @@ export function SectionsBubbleChart() {
 
     return {
       data: processedData,
-      // title: chartTitle,
       sectionCount: totalSections,
     };
   }, [cnuData, contextId, groupId, context]);
@@ -415,24 +413,11 @@ export function SectionsBubbleChart() {
       className: "fr-mt-0w",
       look: "h5" as const,
       size: "h2" as const,
-      fr: groupId ? (
+      fr: (
         <>
-          {cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_code}
-          {labels.sectionPlural.charAt(0).toUpperCase() +
-            labels.sectionPlural.slice(1)}{" "}
-          du {labels.groupSingular} sélectionné &nbsp;
+          Équilibre de la répartition Homme / Femme par sous-section CNU
           <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
-      ) : contextId ? (
-        <>
-          Equilibre de la répartition Homme / Femme par sous-section CNU pour la
-          grande discipline&nbsp;
-          {cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_name} (
-          {cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_code})
-          <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
-        </>
-      ) : (
-        `Toutes les ${labels.sectionPlural}`
       ),
     },
     integrationURL: `/personnel-enseignant/${labels.urlPath}/typologie`,

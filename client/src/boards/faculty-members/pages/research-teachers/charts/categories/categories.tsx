@@ -22,7 +22,7 @@ function RenderData({ data }: { data: CategoryData[] }) {
   return (
     <div className="fr-table--sm fr-table fr-table--bordered">
       <caption className="fr-sr-only">
-        Répartition des enseignants-chercheurs par catégorie
+        Répartition des enseignants permanents par catégorie
       </caption>
       <table>
         <thead>
@@ -159,7 +159,7 @@ export const CategoryDistribution = () => {
           as: "h2",
           fr: (
             <>
-              Comment se répartissent les enseignants-chercheurs par catégorie
+              Comment se répartissent les enseignants permanents par catégorie
               ?&nbsp;
               <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
             </>
@@ -168,8 +168,8 @@ export const CategoryDistribution = () => {
         comment: {
           fr: (
             <>
-              Répartition des enseignants-chercheurs par catégorie au sein de la
-              fonction publique d'État. Les enseignants-chercheurs sont répartis
+              Répartition des enseignants permanents par catégorie au sein de la
+              fonction publique d'État. Les enseignants permanents sont répartis
               en 3 catégories : les{" "}
               <GlossaryTerm term="professeurs des universités">
                 professeurs des universités
@@ -178,10 +178,10 @@ export const CategoryDistribution = () => {
               <GlossaryTerm term="maîtres de conférences">
                 maîtres de conférences
               </GlossaryTerm>{" "}
-              (MCF) et les assistants (AST). Les enseignants-chercheurs associés
-              (ECA) et les enseignants-chercheurs invités (ECI) ne sont pas pris
-              en compte dans ce graphique car ils ne font pas partie des corps
-              de la fonction publique.
+              (MCF) et les{" "}
+              <GlossaryTerm term="2nd degrés">
+                enseignants du 2nd degré et Arts et métiers.
+              </GlossaryTerm>{" "}
             </>
           ),
         },

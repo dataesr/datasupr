@@ -52,7 +52,7 @@ export default function ResearchTeachersOverviewTable({
   if (isLoading) {
     return (
       <div className="fr-text--center fr-py-3w">
-        Chargement des données d'enseignants-chercheurs...
+        Chargement des données d'enseignants permanents...
       </div>
     );
   }
@@ -68,7 +68,7 @@ export default function ResearchTeachersOverviewTable({
   if (!researchTeachersData) {
     return (
       <div className="fr-alert fr-alert--info">
-        <p>Aucune donnée d'enseignants-chercheurs disponible.</p>
+        <p>Aucune donnée d'enseignants permanents disponible.</p>
       </div>
     );
   }
@@ -81,17 +81,17 @@ export default function ResearchTeachersOverviewTable({
     case "fields":
       items = (researchTeachersData.fields || []) as FieldItem[];
       itemType = "discipline";
-      linkBase = "/personnel-enseignant/discipline/enseignants-chercheurs";
+      linkBase = "/personnel-enseignant/discipline/enseignants-permanents";
       break;
     case "geo":
       items = (researchTeachersData.regions || []) as RegionItem[];
       itemType = "région";
-      linkBase = "/personnel-enseignant/geo/enseignants-chercheurs";
+      linkBase = "/personnel-enseignant/geo/enseignants-permanents";
       break;
     case "structures":
       items = (researchTeachersData.structures || []) as StructureItem[];
       itemType = "établissement";
-      linkBase = "/personnel-enseignant/universite/enseignants-chercheurs";
+      linkBase = "/personnel-enseignant/universite/enseignants-permanents";
       break;
   }
 

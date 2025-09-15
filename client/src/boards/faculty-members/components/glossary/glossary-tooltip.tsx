@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import { Modal, ModalTitle, ModalContent, Badge } from "@dataesr/dsfr-plus";
+import React from "react";
+import { Modal, ModalTitle, ModalContent, Link } from "@dataesr/dsfr-plus";
 import { glossary } from "./definitions";
 
 type GlossaryTermProps = {
@@ -11,21 +11,6 @@ export function GlossaryTerm({ term, children }: GlossaryTermProps) {
   const entry = glossary.find(
     (item) => item.key.toLowerCase() === term.toLowerCase()
   );
-  const itemRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
-
-  useEffect(() => {
-    if (!entry) return;
-    const elementToScrollTo = itemRefs.current[entry.key.toLowerCase()];
-
-    if (elementToScrollTo) {
-      setTimeout(() => {
-        elementToScrollTo.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
-      }, 300);
-    }
-  });
 
   if (!entry) {
     return <>{children || term}</>;
@@ -67,39 +52,19 @@ export function GlossaryTerm({ term, children }: GlossaryTermProps) {
         </span>
       </span>
 
-      <Modal isOpen id={modalId} size="lg" hide={handleHideModal}>
-        <ModalTitle>
-          Glossaire
-          <Badge className="fr-ml-2w">{entry.title}</Badge>
-        </ModalTitle>
+      <Modal isOpen id={modalId} size="md" hide={handleHideModal}>
+        <ModalTitle>{entry.title}</ModalTitle>
         <ModalContent>
-          <div className="fr-grid-row fr-grid-row--gutters">
-            {glossary.map((item) => (
-              <div
-                className={`fr-col-12 fr-mb-2w ${
-                  item.key.toLowerCase() === entry.key.toLowerCase()
-                    ? "fr-background-alt--blue-france highlighted-glossary-card"
-                    : "glossary-card"
-                }`}
-                key={item.key}
-                ref={(el) => {
-                  itemRefs.current[item.key.toLowerCase()] = el;
-                }}
-              >
-                <div className="fr-card fr-enlarge-link fr-card--no-background fr-p-2w">
-                  <div className="fr-card__body fr-p-0">
-                    <div className="fr-card__content">
-                      <h3 className="fr-card__title fr-text--md fr-mb-1w fr-text--bold">
-                        {item.title}
-                      </h3>
-                      <p className="fr-card__desc fr-text--sm">
-                        {item.definition}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <p className="fr-text--sm">{entry.definition}</p>
+          <div className="fr-mt-1w text-center">
+            <Link href="/personnel-enseignant/glossaire" className="fr-link">
+              <span
+                className="fr-icon-information-line fr-mr-1w"
+                aria-hidden="true"
+                style={{ fontSize: "1.1em" }}
+              />
+              Glossaire des termes
+            </Link>
           </div>
         </ModalContent>
       </Modal>

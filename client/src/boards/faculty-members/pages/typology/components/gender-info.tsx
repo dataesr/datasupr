@@ -75,7 +75,19 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
               count: maleData?.temps_plein_count || 0,
             },
           },
-          age_distribution: maleData?.age_distribution || {},
+          age_distribution: Object.fromEntries(
+            Object.entries(maleData?.age_distribution || {}).map(
+              ([age, data]) => [
+                age,
+                {
+                  count: (data as { count: number }).count || 0,
+                  percent: Math.round(
+                    (data as { percent: number }).percent || 0
+                  ),
+                },
+              ]
+            )
+          ),
         },
         femmes: {
           total_count: femaleData?.count || 0,
@@ -95,7 +107,19 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
               count: femaleData?.temps_plein_count || 0,
             },
           },
-          age_distribution: femaleData?.age_distribution || {},
+          age_distribution: Object.fromEntries(
+            Object.entries(femaleData?.age_distribution || {}).map(
+              ([age, data]) => [
+                age,
+                {
+                  count: (data as { count: number }).count || 0,
+                  percent: Math.round(
+                    (data as { percent: number }).percent || 0
+                  ),
+                },
+              ]
+            )
+          ),
         },
         item: {
           name: itemData._id?.item_name,
@@ -342,7 +366,7 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
 
         <div className="fr-col-5">
           <div className={`stat-title stat-title-${genderClass}`}>
-            ENSEIG.-CHERCHEURS
+            ENSEIG.-CHERCHEUR
           </div>
           <div className={`stat-value stat-value-${genderClass}`}>
             {specificGenderData.enseignants_chercheurs_percent}&nbsp;%

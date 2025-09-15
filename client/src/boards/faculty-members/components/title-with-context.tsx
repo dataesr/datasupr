@@ -24,7 +24,8 @@ const TitleWithContext = () => {
         return {
           name: typologyData?.discipline?._id?.item_name,
           identifiant: typologyData?.discipline?._id?.item_code,
-          plural: "Le personnel enseignant au niveau national",
+          pluralMain: "Le personnel enseignant au niveau national",
+          pluralSub: "(toutes les disciplines)",
         };
       case "geo":
         if (isAcademie) {
@@ -34,20 +35,23 @@ const TitleWithContext = () => {
               typologyData?.region?._id?.item_name,
             identifiant: null,
             prefix: "Académie de ",
-            plural: "Le personnel enseignant au niveau national",
+            pluralMain: "Le personnel enseignant au niveau national",
+            pluralSub: "(toutes les académies)",
           };
         }
         return {
           name: typologyData?.region?._id?.item_name,
           identifiant: null,
           prefix: "Région ",
-          plural: "Le personnel enseignant au niveau national",
+          pluralMain: "Le personnel enseignant au niveau national",
+          pluralSub: "(toutes les régions)",
         };
       case "structures":
         return {
           name: typologyData?.structure?._id?.item_name,
           identifiant: null,
-          plural: "Le personnel enseignant au niveau national",
+          pluralMain: "Le personnel enseignant au niveau national",
+          pluralSub: "(tous les établissements)",
         };
       default:
         return {
@@ -59,9 +63,8 @@ const TitleWithContext = () => {
 
   const contextNameCapital = capitalize(contextName);
 
-  const { name, prefix, plural = "" } = getContextParams();
+  const { name, prefix, pluralMain, pluralSub } = getContextParams();
 
-  // Affiche "Glossaire" si on est sur la page glossaire
   if (location.pathname.startsWith("/personnel-enseignant/glossaire")) {
     return (
       <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-3w">
@@ -73,7 +76,14 @@ const TitleWithContext = () => {
   return (
     <>
       <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-3w">
-        {!contextId && plural}
+        {!contextId && (
+          <>
+            {pluralMain}{" "}
+            <span style={{ fontSize: "0.5em", verticalAlign: "middle" }}>
+              {pluralSub}
+            </span>
+          </>
+        )}
         {contextId && prefix}
         {name}&nbsp; <br />
       </Title>

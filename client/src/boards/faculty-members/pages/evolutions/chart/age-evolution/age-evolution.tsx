@@ -5,6 +5,7 @@ import { createAgeEvolutionOptions } from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import SubtitleWithContext from "../../../../components/subtitle-with-context";
+import { GlossaryTerm } from "../../../../components/glossary/glossary-tooltip";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -145,9 +146,28 @@ export function AgeEvolutionChart() {
         </>
       ),
     },
-    description: {
-      fr: "Évolution de la pyramide des âges du personnel enseignant",
+    comment: {
+      fr: (
+        <>
+          Le <GlossaryTerm term="personnel enseignant" /> rajeunit-il ou
+          vieillit-il ? Ce graphique suit l'évolution de la part de chaque
+          tranche d'âge au fil des ans. Chaque couleur représente une génération
+          : les plus jeunes (35 ans et moins), la génération intermédiaire (36 à
+          55 ans) et les plus expérimentés (56 ans et plus).
+        </>
+      ),
     },
+    source: {
+      label: {
+        fr: <>MESR-SIES, SISE</>,
+        en: <>MESR-SIES, SISE</>,
+      },
+      url: {
+        fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+        en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+      },
+    },
+    updateDate: new Date(),
   };
 
   if (isLoading) {

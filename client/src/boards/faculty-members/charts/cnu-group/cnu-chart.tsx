@@ -325,8 +325,8 @@ export default function CnuGroupsChart() {
             size: "h3",
             fr: (
               <>
-                Comment le personnel enseignant se répartit par grande
-                discipline et catégorie CNU ?&nbsp;
+                Comment le personnel enseignant se répartit par groupe CNU
+                ?&nbsp;
                 <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
               </>
             ),
@@ -335,8 +335,8 @@ export default function CnuGroupsChart() {
             fr: largestGroup ? (
               <>
                 Répartition des{" "}
-                <GlossaryTerm term="enseignant-chercheur">
-                  enseignants-chercheurs
+                <GlossaryTerm term="personnel enseignant">
+                  enseignants
                 </GlossaryTerm>{" "}
                 par <GlossaryTerm term="groupe cnu">groupe CNU</GlossaryTerm>.
                 Cette visualisation montre la distribution des effectifs selon

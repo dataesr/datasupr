@@ -102,7 +102,7 @@ const FieldByStatus: React.FC = () => {
 
   const statusItems = [
     {
-      label: "Titulaires",
+      label: "Permanents",
       percent: Math.round(titulairesPercent || 0),
       count: totalTitulaires,
       color: "var(--green-bourgeon-main-640)",
@@ -114,7 +114,7 @@ const FieldByStatus: React.FC = () => {
       color: "var(--orange-terre-battue-main-645)",
     },
     {
-      label: "Non titulaires",
+      label: "Non permanents",
       percent: Math.round(nonTitulairesPercent || 0),
       count: nonTitulaires,
       color: "var(--blue-ecume-moon-675)",

@@ -168,12 +168,12 @@ export default function OptionsColumnChart({
         minPointLength: 1.5,
         dataLabels: {
           enabled: true,
-          inside: true,
-          align: "right",
+          inside: false,
+          align: "left",
           style: {
-            color: "white",
             textOutline: "none",
-            fontWeight: "bold",
+            fontWeight: "normal",
+            color: "#333",
             fontSize: "11px",
           },
           formatter() {

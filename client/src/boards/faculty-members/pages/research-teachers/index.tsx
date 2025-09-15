@@ -13,7 +13,7 @@ import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 export function ResearchTeachers() {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
-  const { context, contextId } = useContextDetection();
+  const { context, contextId, contextName } = useContextDetection();
 
   return (
     <Container as="main">
@@ -62,39 +62,39 @@ export function ResearchTeachers() {
           </Text>
         </Col>
       </Row>
-      <Row gutters className="fr-mt-4w">
-        <Col md={4}>
+      <Row className="fr-mt-4w chart-container">
+        <Col xs={12} md={4}>
           <div
-            className="fr-background-alt--blue-france fr-p-3w"
+            className="fr-background-alt--blue-france fr-p-10w"
             style={{ height: "100%" }}
           >
             <GeneralIndicatorsCard type="research-teachers" />
           </div>
         </Col>
-        <Col md={8}>
+        <Col xs={12} md={8}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <CategoryDistribution />
           </div>
         </Col>
       </Row>
-      <Row>
-        <Col md={12} className="fr-mt-4w">
-          <div className="fr-background-alt--blue-france fr-p-3w">
+      <Row className="fr-mt-4w ">
+        <Col xs={12} className="fr-mt-4w">
+          <div className="fr-background-alt--blue-france fr-p-3w ">
             <AgeDistribution />
           </div>
         </Col>
       </Row>
       <Row>
-        <Col md={12} className="fr-mt-4w">
+        <Col xs={12} className="fr-mt-4w">
           <div className="fr-background-alt--blue-france fr-p-3w">
             <CategoryEvolutionChart />
           </div>
         </Col>
       </Row>
-      <Row gutters className="fr-mt-4w">
+      <Row className="fr-mt-4w ">
         <Col md={12}>
           {!contextId && (
-            <div>
+            <div className="fr-background-alt--blue-france fr-p-3w">
               <ResearchTeachersOverviewTable
                 context={context}
                 annee_universitaire={selectedYear}
@@ -104,36 +104,42 @@ export function ResearchTeachers() {
           )}
 
           {contextId && (
-            <>
+            <div className="fr-background-alt--blue-france fr-p-3w">
               <div className="text-center">
-                <Title as="h5" look="h6" className="fr-mb-1w">
-                  Répartition par groupes CNU
-                </Title>
-                <CnuGroupsTable
-                  context={context}
-                  contextId={contextId}
-                  annee_universitaire={selectedYear}
-                  showAgeDemographics={true}
-                />
+                <Col xs={12}>
+                  <Title as="h5" look="h6" className="fr-mb-1w">
+                    Répartition par groupes CNU{" "}
+                    {contextName && `- ${contextName}`} {selectedYear}
+                  </Title>
+                  <CnuGroupsTable
+                    context={context}
+                    contextId={contextId}
+                    annee_universitaire={selectedYear}
+                    showAgeDemographics={true}
+                  />
+                </Col>
               </div>
-            </>
+            </div>
           )}
         </Col>
       </Row>
       {contextId && (
-        <Row gutters className="fr-mt-4w">
-          <Col>
+        <Row className="fr-mt-4w ">
+          <Col xs={12}>
             <Title as="h5" look="h6" className="fr-mb-1w">
-              Répartition par sections CNU
+              Répartition par sections CNU {contextName && `- ${contextName}`}{" "}
+              {selectedYear}
             </Title>
-            <div style={{ width: "100%", overflowX: "auto" }}>
-              <CnuSectionsTable
-                context={context}
-                contextId={contextId}
-                annee_universitaire={selectedYear}
-                showDiscipline={false}
-                showAgeDemographics={true}
-              />
+            <div className="fr-background-alt--blue-france fr-p-3w">
+              <div style={{ width: "100%", overflowX: "auto" }}>
+                <CnuSectionsTable
+                  context={context}
+                  contextId={contextId}
+                  annee_universitaire={selectedYear}
+                  showDiscipline={false}
+                  showAgeDemographics={true}
+                />
+              </div>
             </div>
           </Col>
         </Row>

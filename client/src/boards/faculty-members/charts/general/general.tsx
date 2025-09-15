@@ -131,7 +131,7 @@ const DistributionBar: React.FC = () => {
     }
   };
 
-  const { singular, plural, header } = getContextualLabels(context);
+  const { singular, header } = getContextualLabels(context);
 
   if (context === "fields" && contextId) {
     return null;
@@ -152,8 +152,8 @@ const DistributionBar: React.FC = () => {
       as: "h2",
       fr: (
         <>
-          Quelles sont les {plural} qui emploient le plus de personnel
-          enseignant ?&nbsp;
+          Quelles sont les grandes disciplines qui emploient le plus de
+          personnel enseignant ?&nbsp;
           <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ),

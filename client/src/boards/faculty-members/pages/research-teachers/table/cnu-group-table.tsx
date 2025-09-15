@@ -2,6 +2,7 @@ import { Badge } from "@dataesr/dsfr-plus";
 import { useFacultyMembersResearchTeachers } from "../../../api/use-research-teachers";
 import { formatToPercent } from "../../../../../utils/format";
 import { useMemo } from "react";
+import { TrendIndicator } from "./tendances";
 
 interface CnuGroupsTableProps {
   context: "fields" | "geo" | "structures";
@@ -17,29 +18,121 @@ export default function CnuGroupsTable({
   showAgeDemographics = false,
 }: CnuGroupsTableProps) {
   const {
-    data: researchTeachersData,
-    isLoading,
-    error,
+    data: currentYearData,
+    isLoading: isLoadingCurrent,
+    error: errorCurrent,
   } = useFacultyMembersResearchTeachers({
     context,
     contextId,
     annee_universitaire,
   });
 
+  const previousYear = annee_universitaire
+    ? `${parseInt(annee_universitaire.split("-")[0]) - 1}-${
+        parseInt(annee_universitaire.split("-")[1]) - 1
+      }`
+    : undefined;
+
+  const {
+    data: previousYearData,
+    isLoading: isLoadingPrevious,
+    error: errorPrevious,
+  } = useFacultyMembersResearchTeachers({
+    context,
+    contextId,
+    annee_universitaire: previousYear,
+  });
+
   const cnuGroups = useMemo(
-    () => researchTeachersData?.cnuGroups || [],
-    [researchTeachersData]
+    () => currentYearData?.cnuGroups || [],
+    [currentYearData]
   );
 
   const allCategories = useMemo(() => {
-    return Array.from(
+    const uniqueCategories = Array.from(
       new Set(
         cnuGroups.flatMap((group) =>
           (group.categories || []).map((cat) => cat.categoryName)
         )
       )
     ).filter(Boolean);
+
+    const desiredOrder = [
+      "Maître de conférences et assimilés",
+      "Professeur et assimilés",
+      "enseignants du 2nd degré",
+    ];
+
+    uniqueCategories.sort((a, b) => {
+      const indexA = desiredOrder.indexOf(String(a));
+      const indexB = desiredOrder.indexOf(String(b));
+
+      if (indexA !== -1 && indexB !== -1) {
+        return indexA - indexB;
+      }
+      if (indexA !== -1) {
+        return -1;
+      }
+      if (indexB !== -1) {
+        return 1;
+      }
+      return String(a).localeCompare(String(b));
+    });
+
+    return uniqueCategories;
   }, [cnuGroups]);
+
+  interface CnuCategory {
+    categoryName: string;
+    count: number;
+  }
+
+  interface CnuGroup {
+    cnuGroupId: string;
+    cnuGroupLabel?: string;
+    totalCount?: number;
+    maleCount?: number;
+    femaleCount?: number;
+    categories?: CnuCategory[];
+    ageDistribution?: { ageClass: string; count: number }[];
+  }
+
+  const processedCnuGroups = useMemo(() => {
+    if (!cnuGroups) return [];
+    const prevGroupsMap = new Map<string, CnuGroup>(
+      (previousYearData?.cnuGroups as CnuGroup[] | undefined)?.map((g) => [
+        g.cnuGroupId,
+        g,
+      ]) ?? []
+    );
+
+    return cnuGroups.map((group: CnuGroup) => {
+      const prevGroup = prevGroupsMap.get(group.cnuGroupId);
+      const categoriesWithTrend = allCategories.map((cat) => {
+        const currentCat = group.categories?.find(
+          (c) => c.categoryName === cat
+        );
+        const prevCat = prevGroup?.categories?.find(
+          (c) => c.categoryName === cat
+        );
+        const currentCount = currentCat?.count || 0;
+        const prevCount = prevCat?.count || 0;
+        const trend = currentCount - prevCount;
+        return {
+          name: cat,
+          count: currentCount,
+          trend: trend,
+        };
+      });
+      return {
+        ...group,
+        categoriesWithTrend,
+      };
+    });
+  }, [cnuGroups, previousYearData, allCategories]);
+
+  const isLoading = isLoadingCurrent || isLoadingPrevious;
+  const error = errorCurrent || errorPrevious;
 
   if (isLoading) {
     return (
@@ -198,6 +291,7 @@ export default function CnuGroupsTable({
               )}
               {allCategories.map((cat) => (
                 <th
+                  key={String(cat)}
                   scope="col"
                   className="text-center"
                   style={{ minWidth: "80px", fontSize: "0.85em" }}
@@ -208,7 +302,7 @@ export default function CnuGroupsTable({
             </tr>
           </thead>
           <tbody>
-            {cnuGroups.map((group) => {
+            {processedCnuGroups.map((group) => {
               const groupTotalCount = group.totalCount || 0;
               const groupMaleCount = group.maleCount || 0;
               const groupFemaleCount = group.femaleCount || 0;
@@ -340,16 +434,12 @@ export default function CnuGroupsTable({
                       </div>
                     </td>
                   )}
-                  {allCategories.map((cat) => {
-                    const found = group.categories?.find(
-                      (c) => c.categoryName === cat
-                    );
-                    return (
-                      <td className="text-center">
-                        {found ? found.count.toLocaleString() : 0}
-                      </td>
-                    );
-                  })}
+                  {group.categoriesWithTrend.map((cat) => (
+                    <td key={String(cat.name)} className="text-center">
+                      {cat.count.toLocaleString()}
+                      {previousYearData && <TrendIndicator trend={cat.trend} />}
+                    </td>
+                  ))}
                 </tr>
               );
             })}

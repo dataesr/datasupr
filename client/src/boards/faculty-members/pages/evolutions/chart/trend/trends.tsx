@@ -5,6 +5,7 @@ import { createTrendsOptions } from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import SubtitleWithContext from "../../../../components/subtitle-with-context";
+import { GlossaryTerm } from "../../../../components/glossary/glossary-tooltip";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -122,6 +123,29 @@ export function TrendsChart() {
         </>
       ),
     },
+      comment: {
+      fr: (
+        <>
+          Ce graphique présente deux indicateurs clés sur l'évolution du{" "}
+          <GlossaryTerm term="personnel enseignant" /> : la croissance de
+          l'effectif total et l'évolution de la{" "}
+          <GlossaryTerm term="parité" />. Observez la tendance de l'effectif
+          global et voyez comment la proportion d'hommes et de femmes a changé
+          au fil des ans.
+        </>
+      ),
+    },
+    source: {
+      label: {
+        fr: <>MESR-SIES, SISE</>,
+        en: <>MESR-SIES, SISE</>,
+      },
+      url: {
+        fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+        en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+      },
+    },
+    updateDate: new Date(),
   };
 
   if (isLoading) {

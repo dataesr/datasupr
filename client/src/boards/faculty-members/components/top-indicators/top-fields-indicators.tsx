@@ -182,7 +182,7 @@ const TopItemsIndicators: React.FC = () => {
           <i>
             Ces indicateurs sont calculés pour l'année universitaire{" "}
             {selectedYear} Dans l'effectif il y a tous les enseignants, tout
-            status confondus (titulaire, contractuel, vacataire, etc.)
+            status confondus (permanents, contractuels, vacataires, etc.)
           </i>
         </Text>
       </Row>

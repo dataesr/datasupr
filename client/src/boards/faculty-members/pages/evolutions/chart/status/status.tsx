@@ -5,6 +5,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createStatusEvolutionOptions } from "./options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import SubtitleWithContext from "../../../../components/subtitle-with-context";
+import { GlossaryTerm } from "../../../../components/glossary/glossary-tooltip";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -125,9 +126,42 @@ export function StatusEvolutionChart() {
         </>
       ),
     },
-    description: {
-      fr: "Évolution de la répartition par statut professionnel du personnel enseignant",
+    comment: {
+      fr: (
+        <>
+          Évolution des effectifs du{" "}
+          <GlossaryTerm term="personnel enseignant" /> selon trois grandes
+          catégories de statut : les{" "}
+          <GlossaryTerm term="enseignant-chercheur">
+            enseignants-chercheurs
+          </GlossaryTerm>
+          , les{" "}
+          <GlossaryTerm term="titulaires non-chercheurs">
+            titulaires non-chercheurs
+          </GlossaryTerm>{" "}
+          (qui regroupent principalement les{" "}
+          <GlossaryTerm term="enseignant du second degré, arts et métiers">
+            enseignants du 2nd degré
+          </GlossaryTerm>{" "}
+          et les professeurs des Arts et Métiers), et les{" "}
+          <GlossaryTerm term="permanent / non permanent">
+            non-permanents
+          </GlossaryTerm>
+          .
+        </>
+      ),
     },
+    source: {
+      label: {
+        fr: <>MESR-SIES, SISE</>,
+        en: <>MESR-SIES, SISE</>,
+      },
+      url: {
+        fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+        en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+      },
+    },
+    updateDate: new Date(),
   };
 
   if (isLoading) {

@@ -18,7 +18,7 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const location = useLocation();
   const isEnseignantsChercheurs = location.pathname.includes(
-    "enseignants-chercheurs"
+    "enseignants-permanents"
   );
 
   const { context, contextId, contextName } = useContextDetection();
@@ -196,8 +196,8 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
             Ces indicateurs sont calculés pour l'année universitaire{" "}
             {selectedYear}.{" "}
             {isEnseignantsChercheurs
-              ? "Dans l'effectif il y a uniquement les enseignants-chercheurs."
-              : "Dans l'effectif il y a tous les enseignants, tout statut confondu (titulaire, contractuel, vacataire, etc.)."}
+              ? "Dans l'effectif il y a uniquement les enseignants permanents (enseignants-chercheurs, maîtres de conférences, professeurs des universités et enseignants du 2nd degré et Arts et métiers)."
+              : "Dans l'effectif il y a tous les enseignants, tout statut confondu (permanents, contractuels, vacataires, etc.)."}
           </i>
         </Text>
       </Row>

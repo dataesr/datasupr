@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { createEstablishmentTypeChartOptions } from "./options";
@@ -7,6 +7,7 @@ import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useEstablishmentTypeDistribution } from "./use-establishment-type";
 import SubtitleWithContext from "../../components/subtitle-with-context";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
+import { Button } from "@dataesr/dsfr-plus";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -52,6 +53,9 @@ export function EstablishmentTypeChart() {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId, contextName } = useContextDetection();
+  const [displayMode, setDisplayMode] = useState<"effectif" | "percentage">(
+    "effectif"
+  );
 
   const {
     data: establishmentData,
@@ -149,11 +153,17 @@ export function EstablishmentTypeChart() {
       return null;
     }
 
+    const total = validTypes.reduce((sum, et) => sum + et.total_count, 0);
     const categories = validTypes.map((et) => et._id || "Non précisé");
-    const data = validTypes.map((et) => et.total_count);
+    const data = validTypes.map((et) => {
+      if (displayMode === "percentage") {
+        return total > 0 ? (et.total_count / total) * 100 : 0;
+      }
+      return et.total_count;
+    });
 
-    return createEstablishmentTypeChartOptions(categories, data);
-  }, [establishmentData]);
+    return createEstablishmentTypeChartOptions(categories, data, displayMode);
+  }, [establishmentData, displayMode]);
 
   const tableData = useMemo(() => {
     if (!establishmentData?.establishment_type_distribution) return [];
@@ -202,6 +212,24 @@ export function EstablishmentTypeChart() {
 
   return (
     <div>
+      <div className="fr-mb-2w fr-flex fr-flex--center">
+        <Button
+          size="sm"
+          onClick={() => setDisplayMode("effectif")}
+          variant={displayMode === "effectif" ? undefined : "secondary"}
+          className="fr-mr-2v"
+        >
+          Effectifs
+        </Button>
+        <Button
+          size="sm"
+          onClick={() => setDisplayMode("percentage")}
+          variant={displayMode === "percentage" ? undefined : "secondary"}
+          className="fr-mr-2v"
+        >
+          Pourcentage
+        </Button>
+      </div>
       <ChartWrapper
         config={config}
         options={chartOptions}

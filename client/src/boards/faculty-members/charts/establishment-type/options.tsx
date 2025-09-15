@@ -2,7 +2,8 @@ import * as Highcharts from "highcharts";
 
 export const createEstablishmentTypeChartOptions = (
   categories: string[],
-  data: number[]
+  data: number[],
+  displayMode: "effectif" | "percentage"
 ): Highcharts.Options => ({
   chart: {
     type: "column" as const,
@@ -30,22 +31,31 @@ export const createEstablishmentTypeChartOptions = (
   },
   yAxis: {
     min: 0,
+    max: displayMode === "percentage" ? 100 : undefined,
     title: {
-      text: "Nombre d'enseignants",
+      text:
+        displayMode === "percentage"
+          ? "Part des enseignants"
+          : "Nombre d'enseignants",
       align: "high" as const,
     },
     labels: {
       overflow: "justify" as const,
+      format: displayMode === "percentage" ? "{value}%" : "{value}",
     },
   },
   tooltip: {
-    valueSuffix: " enseignants",
-    pointFormat: "<b>{point.category}</b>: {point.y:,.0f} enseignants",
+    pointFormat: `<b>{point.category}</b>: {point.y:,.${
+      displayMode === "percentage" ? 1 : 0
+    }f}${displayMode === "percentage" ? "%" : " enseignants"}`,
   },
   plotOptions: {
     column: {
       dataLabels: {
         enabled: true,
+        format: `{point.y:,.${displayMode === "percentage" ? 1 : 0}f}${
+          displayMode === "percentage" ? "%" : ""
+        }`,
         style: {
           fontWeight: "bold",
           color: "white",

@@ -76,9 +76,10 @@ export const createBarChartOptions = ({
     },
     labels: {
       formatter: function () {
-        return stackType === "percent"
-          ? `${this.value}&nbsp;%`
-          : `${this.value}`;
+        if (typeof this.value === "number") {
+          return `${this.value.toLocaleString("fr-FR")}`;
+        }
+        return "";
       },
     },
     tickAmount: 3,
@@ -137,8 +138,16 @@ export const createBarChartOptions = ({
     formatter: function () {
       const itemIndex = this.point.index!;
       const itemData = sortedItems[itemIndex];
-      const value = Number(this.point.y).toFixed(1);
       const isSelected = itemData?.isSelected;
+
+      let valueDisplay = "";
+      if (typeof this.point.y === "number") {
+        if (stackType === "percent") {
+          valueDisplay = `${this.point.y.toFixed(0)}&nbsp;%`;
+        } else {
+          valueDisplay = this.point.y.toLocaleString("fr-FR");
+        }
+      }
 
       return `
       <div style="padding:10px">
@@ -147,7 +156,7 @@ export const createBarChartOptions = ({
         </div>
         <span style="color:${this.point.color}">\u25CF</span> ${
         this.series.name
-      }: ${value}${stackType === "percent" ? "&nbsp;%" : ""}<br/>
+      }: ${valueDisplay}<br/>
       Total: ${itemData.totalCount.toLocaleString()} enseignants
       </div>`;
     },

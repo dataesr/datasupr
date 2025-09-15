@@ -1,10 +1,10 @@
 import {
   Breadcrumb,
   Button,
+  ButtonGroup,
   Col,
   Container,
   Link,
-  Nav,
   Row,
 } from "@dataesr/dsfr-plus";
 import {
@@ -48,6 +48,25 @@ export function FacultyLayout() {
     [navigate]
   );
 
+  const navItems = [
+    {
+      label: "En un coup d'oeil",
+      path: "vue-d'ensemble",
+    },
+    {
+      label: "Parité Hommes / Femmes",
+      path: "typologie",
+    },
+    {
+      label: "Evolution",
+      path: "evolution",
+    },
+    {
+      label: "Enseignants permanents",
+      path: "enseignants-permanents",
+    },
+  ];
+
   const buildContextualPath = (basePath: string) => {
     const currentPathParts = path.split("/");
     const currentObjectType = currentPathParts[2] || "";
@@ -90,35 +109,21 @@ export function FacultyLayout() {
         </Container>
       </div>
       <Container>
-        <Row className="fr-mb-4w fr-mt-3w">
-          <Col md={8} className="text-left">
+        <Row className="fr-mt-2w">
+          <Col md={8}>
             {!path.startsWith("/personnel-enseignant/glossaire") && (
-              <Nav>
-                <Link
-                  current={path.includes(`vue-d'ensemble`)}
-                  href={buildContextualPath("vue-d'ensemble")}
-                >
-                  En un coup d'oeil
-                </Link>
-                <Link
-                  current={path.includes(`typologie`)}
-                  href={buildContextualPath("typologie")}
-                >
-                  Parité Hommes / Femmes
-                </Link>
-                <Link
-                  current={path.includes(`evolution`)}
-                  href={buildContextualPath("evolution")}
-                >
-                  Evolution
-                </Link>
-                <Link
-                  current={path.includes(`enseignants-chercheurs`)}
-                  href={buildContextualPath("enseignants-chercheurs")}
-                >
-                  Enseignants chercheurs
-                </Link>
-              </Nav>
+              <ButtonGroup isInlineFrom="xs" size="sm">
+                {navItems.map((item) => (
+                  <Button
+                    size="sm"
+                    key={item.path}
+                    onClick={handleClick(buildContextualPath(item.path))}
+                    variant={path.includes(item.path) ? "primary" : "secondary"}
+                  >
+                    {item.label}
+                  </Button>
+                ))}
+              </ButtonGroup>
             )}
           </Col>
           <Col md={4} className="text-right">

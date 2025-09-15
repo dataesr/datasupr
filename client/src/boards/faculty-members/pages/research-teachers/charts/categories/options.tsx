@@ -43,6 +43,9 @@ export const createCategoryOptions = (
         },
       },
     },
+    exporting: {
+      enabled: false,
+    },
     yAxis: {
       min: 0,
       title: {

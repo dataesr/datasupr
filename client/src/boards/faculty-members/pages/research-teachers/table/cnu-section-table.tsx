@@ -2,6 +2,7 @@ import { Badge, Accordion, AccordionGroup } from "@dataesr/dsfr-plus";
 import { useFacultyMembersResearchTeachers } from "../../../api/use-research-teachers";
 import { useMemo } from "react";
 import { formatToPercent } from "../../../../../utils/format";
+import { TrendIndicator } from "./tendances";
 
 function groupBy<T, K extends string>(array: T[], getKey: (item: T) => K) {
   return array.reduce((acc, item) => {
@@ -20,46 +21,114 @@ export default function CnuSectionsTable({
   showAgeDemographics = true,
 }) {
   const {
-    data: researchTeachersData,
-    isLoading,
-    error,
+    data: currentYearData,
+    isLoading: isLoadingCurrent,
+    error: errorCurrent,
   } = useFacultyMembersResearchTeachers({
     context,
     contextId,
     annee_universitaire,
   });
 
-  type AgeDistribution = {
-    ageClass: string;
-    count: number;
-  };
+  const previousYear = annee_universitaire
+    ? `${parseInt(annee_universitaire.split("-")[0]) - 1}-${
+        parseInt(annee_universitaire.split("-")[1]) - 1
+      }`
+    : undefined;
 
-  type CnuSection = {
-    cnuSectionId: string;
-    cnuSectionLabel: string;
-    disciplineLabel?: string;
-    maleCount: number;
-    femaleCount: number;
-    totalCount: number;
-    ageDistribution?: AgeDistribution[];
-    cnuGroupId: string;
-    cnuGroupLabel: string;
-    categories?: Array<{
-      categoryName: string;
-      count: number;
-    }>;
-  };
+  const {
+    data: previousYearData,
+    isLoading: isLoadingPrevious,
+    error: errorPrevious,
+  } = useFacultyMembersResearchTeachers({
+    context,
+    contextId,
+    annee_universitaire: previousYear,
+  });
 
-  const cnuSections: CnuSection[] = useMemo(() => {
-    if (!researchTeachersData?.cnuGroups) return [];
-    return researchTeachersData.cnuGroups.flatMap((group) =>
+  const cnuSections = useMemo(() => {
+    if (!currentYearData?.cnuGroups) return [];
+    return currentYearData.cnuGroups.flatMap((group) =>
       (group.cnuSections || []).map((section) => ({
         ...section,
         cnuGroupId: group.cnuGroupId,
         cnuGroupLabel: group.cnuGroupLabel,
       }))
     );
-  }, [researchTeachersData]);
+  }, [currentYearData]);
+
+  const allCategories = useMemo(() => {
+    const uniqueCategories = Array.from(
+      new Set(
+        cnuSections.flatMap((section) =>
+          (section.categories || []).map((cat) => cat.categoryName)
+        )
+      )
+    ).filter(Boolean);
+
+    const desiredOrder = [
+      "Maître de conférences et assimilés",
+      "Professeur et assimilés",
+      "enseignants du 2nd degré",
+    ];
+
+    uniqueCategories.sort((a, b) => {
+      const indexA = desiredOrder.indexOf(String(a));
+      const indexB = desiredOrder.indexOf(String(b));
+
+      if (indexA !== -1 && indexB !== -1) {
+        return indexA - indexB;
+      }
+      if (indexA !== -1) {
+        return -1;
+      }
+      if (indexB !== -1) {
+        return 1;
+      }
+      return String(a).localeCompare(String(b));
+    });
+
+    return uniqueCategories;
+  }, [cnuSections]);
+
+  const processedCnuSections = useMemo(() => {
+    if (!cnuSections) return [];
+    const prevSectionsFlat =
+      previousYearData?.cnuGroups?.flatMap(
+        (group) => group.cnuSections || []
+      ) || [];
+    type SectionType = (typeof cnuSections)[number];
+    const prevSectionsMap = new Map<string, SectionType>(
+      prevSectionsFlat.map((s) => [s.cnuSectionId, s as SectionType])
+    );
+
+    return cnuSections.map((section) => {
+      const prevSection = prevSectionsMap.get(section.cnuSectionId);
+      const categoriesWithTrend = allCategories.map((cat) => {
+        const currentCat = section.categories?.find(
+          (c) => c.categoryName === cat
+        );
+        const prevCat = prevSection?.categories?.find(
+          (c) => c.categoryName === cat
+        );
+        const currentCount = currentCat?.count || 0;
+        const prevCount = prevCat?.count || 0;
+        const trend = currentCount - prevCount;
+        return {
+          name: cat,
+          count: currentCount,
+          trend: trend,
+        };
+      });
+      return {
+        ...section,
+        categoriesWithTrend,
+      };
+    });
+  }, [cnuSections, previousYearData, allCategories]);
+
+  const isLoading = isLoadingCurrent || isLoadingPrevious;
+  const error = errorCurrent || errorPrevious;
 
   if (isLoading) {
     return (
@@ -86,16 +155,9 @@ export default function CnuSectionsTable({
   }
 
   const groupedByGroup = groupBy(
-    cnuSections,
-    (section) => `${section.cnuGroupId} - ${section.cnuGroupLabel}`
-  );
-
-  const allCategories = Array.from(
-    new Set(
-      cnuSections.flatMap((section) =>
-        (section.categories || []).map((cat) => cat.categoryName)
-      )
-    )
+    processedCnuSections,
+    (section: (typeof processedCnuSections)[number]) =>
+      `${section.cnuGroupId} - ${section.cnuGroupLabel}`
   );
 
   return (
@@ -111,7 +173,7 @@ export default function CnuSectionsTable({
             <div
               style={{
                 overflowX: "auto",
-                maxHeight: "400px", // Keep max-height for vertical sticky header
+                maxHeight: "400px",
                 overflowY: "auto",
               }}
             >
@@ -119,7 +181,7 @@ export default function CnuSectionsTable({
                 className="fr-table fr-table--bordered fr-table--no-caption"
                 style={{
                   width: "100%",
-                  fontSize: "0.9em", // Increased base font size for the table
+                  fontSize: "0.9em",
                 }}
               >
                 <thead
@@ -163,7 +225,7 @@ export default function CnuSectionsTable({
                     <th
                       scope="col"
                       className="text-center"
-                      style={{ minWidth: "140px", fontSize: "0.85em" }} // Increased minWidth significantly
+                      style={{ minWidth: "140px", fontSize: "0.85em" }}
                     >
                       Répartition H/F
                     </th>
@@ -244,12 +306,12 @@ export default function CnuSectionsTable({
                     )}
                     {allCategories.map((cat) => (
                       <th
-                        key={cat}
+                        key={String(cat)}
                         scope="col"
                         className="text-center"
                         style={{ minWidth: "80px", fontSize: "0.85em" }}
                       >
-                        {cat}
+                        {String(cat)}
                       </th>
                     ))}
                   </tr>
@@ -273,14 +335,25 @@ export default function CnuSectionsTable({
                     const older56 = section.ageDistribution?.find(
                       (age) => age.ageClass === "56 ans et plus"
                     );
+                    const unspecifiedAge = section.ageDistribution?.find(
+                      (age) => age.ageClass === "Non précisé"
+                    );
 
-                    const total = section.totalCount || 1;
-                    const v35 = ((younger35?.count || 0) / total) * 100;
-                    const v36_55 = ((middle36_55?.count || 0) / total) * 100;
-                    const v56 = ((older56?.count || 0) / total) * 100;
-                    const p35 = Math.round(v35);
-                    const p36_55 = Math.round(v36_55);
-                    const p56 = Math.round(v56);
+                    const totalForAge =
+                      (younger35?.count || 0) +
+                        (middle36_55?.count || 0) +
+                        (older56?.count || 0) +
+                        (unspecifiedAge?.count || 0) || 1;
+
+                    const p35 = Math.round(
+                      ((younger35?.count || 0) / totalForAge) * 100
+                    );
+                    const p36_55 = Math.round(
+                      ((middle36_55?.count || 0) / totalForAge) * 100
+                    );
+                    const p56 = Math.round(
+                      ((older56?.count || 0) / totalForAge) * 100
+                    );
                     let pUnspecified = 100 - (p35 + p36_55 + p56);
                     if (pUnspecified < 0) pUnspecified = 0;
 
@@ -343,21 +416,27 @@ export default function CnuSectionsTable({
                               aria-label="Répartition par âge"
                             >
                               <div
-                                title="≤ 35 ans"
+                                title={`≤ 35 ans: ${
+                                  younger35?.count.toLocaleString() || 0
+                                }`}
                                 style={{
                                   background: "#6CB4E4",
                                   width: `${p35}%`,
                                 }}
                               />
                               <div
-                                title="36-55 ans"
+                                title={`36-55 ans: ${
+                                  middle36_55?.count.toLocaleString() || 0
+                                }`}
                                 style={{
                                   background: "#F5C16C",
                                   width: `${p36_55}%`,
                                 }}
                               />
                               <div
-                                title="≥ 56 ans"
+                                title={`≥ 56 ans: ${
+                                  older56?.count.toLocaleString() || 0
+                                }`}
                                 style={{
                                   background: "#E18B76",
                                   width: `${p56}%`,
@@ -365,7 +444,9 @@ export default function CnuSectionsTable({
                               />
                               {pUnspecified > 0 && (
                                 <div
-                                  title="Non précisé"
+                                  title={`Non précisé: ${
+                                    unspecifiedAge?.count.toLocaleString() || 0
+                                  }`}
                                   style={{
                                     background: "#CCCCCC",
                                     width: `${pUnspecified}%`,
@@ -375,16 +456,14 @@ export default function CnuSectionsTable({
                             </div>
                           </td>
                         )}
-                        {allCategories.map((cat) => {
-                          const found = section.categories?.find(
-                            (c) => c.categoryName === cat
-                          );
-                          return (
-                            <td key={cat} className="text-center">
-                              {found ? found.count.toLocaleString() : 0}
-                            </td>
-                          );
-                        })}
+                        {section.categoriesWithTrend.map((cat) => (
+                          <td key={String(cat.name)} className="text-center">
+                            {cat.count.toLocaleString()}
+                            {previousYearData && (
+                              <TrendIndicator trend={cat.trend} />
+                            )}
+                          </td>
+                        ))}
                       </tr>
                     );
                   })}

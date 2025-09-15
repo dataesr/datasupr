@@ -81,32 +81,44 @@ export function Typologie() {
     <Container as="main">
       <Row gutters className="fr-mb-4w">
         <Col md={6}>
-          <GenderDataCard gender="hommes" />
+          <div className="fr-background-alt--blue-france fr-p-3w">
+            <div className="chart-container">
+              <GenderDataCard gender="hommes" />
+            </div>
+          </div>
         </Col>
         <Col md={6}>
-          <GenderDataCard gender="femmes" />
+          <div className="fr-background-alt--blue-france fr-p-3w">
+            <div className="chart-container">
+              <GenderDataCard gender="femmes" />
+            </div>
+          </div>
         </Col>
       </Row>
 
+      {!contextId && (
+        <div className="fr-background-alt--blue-france fr-p-3w">
           <Col md={12}>
             <ItemBarChart />
           </Col>
-      {!contextId && (
-        <>
+        </div>
+      )}
 
+      {!contextId && (
+        <div className="fr-background-alt--blue-france fr-p-3w">
           <Col md={12}>
             <ItemsTreemapChart />
           </Col>
-        </>
+        </div>
       )}
 
       {contextId && !groupId && (
-        <>
+        <div className="fr-background-alt--blue-france fr-p-3w">
           <GroupCNUTreemapChart />
           <Col md={12}>
             <SectionsBubbleChart />
           </Col>
-        </>
+        </div>
       )}
 
       {contextId && groupId && (

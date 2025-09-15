@@ -22,7 +22,7 @@ export default function FacultyMembersRoutes() {
           <Route path="/geo/evolution/" element={<Evolution />} />
           <Route path="/geo/typologie/" element={<Typologie />} />
           <Route
-            path="/geo/enseignants-chercheurs/"
+            path="/geo/enseignants-permanents/"
             element={<ResearchTeachers />}
           />
 
@@ -34,7 +34,7 @@ export default function FacultyMembersRoutes() {
           <Route path="/universite/evolution/" element={<Evolution />} />
           <Route path="/universite/typologie/" element={<Typologie />} />
           <Route
-            path="/universite/enseignants-chercheurs/"
+            path="/universite/enseignants-permanents/"
             element={<ResearchTeachers />}
           />
 
@@ -46,7 +46,7 @@ export default function FacultyMembersRoutes() {
           <Route path="/discipline/evolution/" element={<Evolution />} />
           <Route path="/discipline/typologie/" element={<Typologie />} />
           <Route
-            path="/discipline/enseignants-chercheurs/"
+            path="/discipline/enseignants-permanents/"
             element={<ResearchTeachers />}
           />
           {/* GLOSSAIRE */}

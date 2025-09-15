@@ -8,8 +8,11 @@ import { EstablishmentTypeChart } from "../../charts/establishment-type/establis
 import DisciplineStatusSummary from "../../components/fields-by-status";
 import NavigationCards from "../../components/fields-cards";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
+import { useContextDetection } from "../../utils";
 
 export default function UniversityOverview() {
+  const { contextId, context } = useContextDetection();
+
   return (
     <Container as="main">
       <Row className="fr-mt-3w">
@@ -103,13 +106,15 @@ export default function UniversityOverview() {
         </Col>
       </Row>
 
-      <Row className="fr-mt-4w">
-        <Col md={12}>
-          <div className="fr-background-alt--blue-france fr-p-3w">
-            <EstablishmentTypeChart />
-          </div>
-        </Col>
-      </Row>
+      {context === "structures" && !contextId && (
+        <Row className="fr-mt-4w">
+          <Col md={12}>
+            <div className="fr-background-alt--blue-france fr-p-3w">
+              <EstablishmentTypeChart />
+            </div>
+          </Col>
+        </Row>
+      )}
 
       <Row className="fr-mt-5w fr-mb-5w">
         <Col md={12}>

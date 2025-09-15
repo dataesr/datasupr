@@ -12,7 +12,7 @@ import { useContextDetection } from "../../utils";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 
 export default function FieldOverview() {
-  const { contextId } = useContextDetection();
+  const { contextId, context } = useContextDetection();
 
   return (
     <Container as="main">
@@ -89,14 +89,15 @@ export default function FieldOverview() {
           </div>
         </Col>
       </Row>
-
-      <Row className="fr-mt-4w">
-        <Col md={12}>
-          <div className="fr-background-alt--blue-france fr-p-3w">
-            <FieldsDistributionBar />
-          </div>
-        </Col>
-      </Row>
+      {context === "fields" && !contextId && (
+        <Row className="fr-mt-4w">
+          <Col md={12}>
+            <div className="fr-background-alt--blue-france fr-p-3w">
+              <FieldsDistributionBar />
+            </div>
+          </Col>
+        </Row>
+      )}
 
       <Row className="fr-mt-4w">
         <Col md={12}>

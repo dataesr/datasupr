@@ -151,6 +151,9 @@ export function ItemsTreemapChart() {
     };
   }, [cnuData, context]);
 
+  const largestGroup =
+    treemapData && treemapData.length > 0 ? treemapData[0] : null;
+
   const treemapOptions = CreateChartOptions(
     "treemap",
     createTreemapOptions({
@@ -180,11 +183,46 @@ export function ItemsTreemapChart() {
       size: "h2" as const,
       fr: (
         <>
-          État de la parité du personnel enseignant par grande discipline&nbsp;
+          État de la parité du personnel enseignant par grande discipline
           <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ),
     },
+    readingKey: {
+      fr: (
+        <>
+          Par exemple, la discipline la plus représentée est "
+          <strong>{largestGroup?.name}</strong>" avec{" "}
+          <strong>{largestGroup?.value?.toLocaleString()}</strong> enseignants,
+          dont {largestGroup?.maleCount?.toLocaleString()} hommes et{" "}
+          {largestGroup?.femaleCount?.toLocaleString()} femmes.
+        </>
+      ),
+    },
+    comment: {
+      fr: (
+        <>
+          Les rectangles représentent les disciplines. La taille de chaque
+          rectangle est proportionnelle à l'effectif total d'enseignants qu'il
+          regroupe. La couleur indique la répartition hommes-femmes : un
+          rectangle rouge/orangé indique une majorité de femmes, un rectangle
+          jaune une majorité d'hommes et un rectangle gris une répartition
+          équilibrée.
+        </>
+      ),
+    },
+    source: {
+      label: {
+        fr: <>MESR-SIES, SISE</>,
+        en: <>MESR-SIES, SISE</>,
+      },
+      url: {
+        fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+        en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+      },
+    },
+    legend: false,
+    updateDate: new Date(),
     integrationURL: `/personnel-enseignant/discipline/typologie`,
   };
 

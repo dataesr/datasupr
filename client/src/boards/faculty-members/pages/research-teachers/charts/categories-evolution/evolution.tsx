@@ -116,7 +116,7 @@ export const CategoryEvolutionChart = () => {
         comment: {
           fr: (
             <>
-              Ce graphique montre l'évolution du nombre d'enseignants-chercheurs
+              Ce graphique montre l'évolution du nombre d'enseignants permanents
               par catégorie au fil des années universitaires.
             </>
           ),

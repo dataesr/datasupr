@@ -266,6 +266,9 @@ export function GroupCNUTreemapChart() {
     return { data: processedData, title: chartTitle, groupCount: totalGroups };
   }, [cnuData, contextId, context, contextName, labels]);
 
+  const largestGroup =
+    treemapData && treemapData.length > 0 ? treemapData[0] : null;
+
   const config = {
     id: `${context}-groups-treemap`,
     idQuery: `faculty-members-cnu`,
@@ -275,25 +278,53 @@ export function GroupCNUTreemapChart() {
       size: "h2" as const,
       fr: contextId ? (
         <>
-          Les sections CNU de la discipline&nbsp;
-          {cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_code}
-          &nbsp;-&nbsp;
-          {cnuData?.cnu_groups_with_sections?.[0]?._id?.discipline_name}
-          &nbsp;
+          Les sections CNU
           <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ) : (
         `Répartition par ${labels.singular}`
       ),
     },
-    subtitle: `Année universitaire ${selectedYear} - ${treemapData.length} ${
-      treemapData.length > 1 ? `sections` : `section`
-    }`,
-    description: {
-      fr: contextId
-        ? `Répartition des effectifs par ${labels.groupSingular} au sein de ${labels.singular}`
-        : `Répartition des effectifs enseignants par ${labels.singular}`,
+    readingKey: {
+      fr: (
+        <>
+          {largestGroup ? (
+            <>
+              Pour l'année universitaire {selectedYear}, le plus grand{" "}
+              {labels.groupSingular} représenté est{" "}
+              <strong>{largestGroup.name}</strong> avec{" "}
+              <strong>{largestGroup.value.toLocaleString()}</strong>{" "}
+              enseignants, dont {largestGroup.maleCount.toLocaleString()} hommes
+              et {largestGroup.femaleCount.toLocaleString()} femmes.
+            </>
+          ) : (
+            <>
+              Aucune donnée disponible pour le plus grand {labels.groupSingular}
+              .
+            </>
+          )}
+        </>
+      ),
     },
+    comment: {
+      fr: (
+        <>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic vero
+          beatae exercitationem, facere debitis consequuntur repellat minus
+          consequatur nemo! Sequi odio vel excepturi accusamus, rem voluptate
+          aliquam id nemo eos.
+        </>
+      ),
+    },
+
+    source: {
+      label: { fr: <>MESR-SIES, SISE</> },
+      url: {
+        fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+      },
+    },
+    legend: false,
+    updateDate: new Date(),
     integrationURL: `/personnel-enseignant/${labels.urlPath}/typologie`,
   };
 
@@ -410,9 +441,9 @@ export function GroupCNUTreemapChart() {
         renderData={() => <RenderData data={treemapData} />}
       />
 
-      <Row horizontalAlign="center" className="fr-mb-4w">
+      <Row horizontalAlign="center" className="fr-mb-4w fr-mt-1w">
         <Col className="text-center">
-          <span className="fr-mr-3w">
+          <Text size="sm" className="fr-mr-3w">
             <span
               style={{
                 display: "inline-block",
@@ -424,10 +455,10 @@ export function GroupCNUTreemapChart() {
               }}
             ></span>
             Majorité masculine (≥60%)
-          </span>
+          </Text>
         </Col>
         <Col className="text-center">
-          <span className="fr-mr-3w">
+          <Text size="sm" className="fr-mr-3w">
             <span
               style={{
                 display: "inline-block",
@@ -440,10 +471,10 @@ export function GroupCNUTreemapChart() {
               }}
             ></span>
             Parité (40-60%)
-          </span>
+          </Text>
         </Col>
         <Col className="text-center">
-          <span>
+          <Text size="sm" className="fr-mr-3w">
             <span
               style={{
                 display: "inline-block",
@@ -455,7 +486,7 @@ export function GroupCNUTreemapChart() {
               }}
             ></span>
             Majorité féminine (≥60%)
-          </span>
+          </Text>
         </Col>
       </Row>
     </>

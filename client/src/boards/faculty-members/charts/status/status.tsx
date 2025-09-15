@@ -185,6 +185,7 @@ const StatusDistribution: React.FC = () => {
           size="sm"
           onClick={() => setDisplayAsPercentage(false)}
           variant={!displayAsPercentage ? undefined : "secondary"}
+          className="fr-mr-2v"
         >
           Effectifs
         </Button>

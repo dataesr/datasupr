@@ -214,6 +214,8 @@ const ItemBarChart: React.FC = () => {
 
   const labels = getLabels();
 
+  const mostRepresentedItem = sortedItems.length > 0 ? sortedItems[0] : null;
+
   const handleItemClick = (itemCode: string) => {
     navigate(
       `/personnel-enseignant/${
@@ -243,7 +245,40 @@ const ItemBarChart: React.FC = () => {
         </>
       ),
     },
-    subtitle: "",
+    readingKey: {
+      fr: (
+        <>
+          Par exemple, pour l'année universitaire {selectedYear}, l'effectif le
+          plus important se trouve dans la catégorie "
+          <strong>{mostRepresentedItem?.itemName}</strong>" avec{" "}
+          <strong>{mostRepresentedItem?.totalCount.toLocaleString()}</strong>{" "}
+          personnes, dont {mostRepresentedItem?.hommesCount.toLocaleString()}{" "}
+          hommes et {mostRepresentedItem?.femmesCount.toLocaleString()} femmes.
+        </>
+      ),
+    },
+    comment: {
+      fr: (
+        <>
+          Les rectangles représentent les disciplines. La taille de chaque
+          rectangle est proportionnelle à l'effectif total d'enseignants qu'il
+          regroupe. La couleur indique la répartition hommes-femmes : un
+          rectangle rouge/orangé indique une majorité de femmes, un rectangle
+          jaune une majorité d'hommes et un rectangle gris une répartition
+          équilibrée.
+        </>
+      ),
+    },
+    source: {
+      label: {
+        fr: <>MESR-SIES, SISE</>,
+        en: <>MESR-SIES, SISE</>,
+      },
+      url: {
+        fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+        en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+      },
+    },
   };
 
   const options = createBarChartOptions({
@@ -306,7 +341,7 @@ const ItemBarChart: React.FC = () => {
   return (
     <>
       <ChartWrapper.Title config={config}>
-        <Row>
+        <Row gutters className="fr-mb-2w">
           <Col md={8}>
             <div className="fr-mr-1w" style={{ display: "inline" }}>
               Trier par effectif :
