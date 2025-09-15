@@ -8,7 +8,7 @@ export function Evolution() {
   return (
     <Container as="main">
       <Row gutters className="fr-mb-5w">
-        <Col>
+        <Col className="fr-mt-2w">
           <TrendsChart />
         </Col>
       </Row>
