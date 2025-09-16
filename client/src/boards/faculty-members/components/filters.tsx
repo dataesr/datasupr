@@ -109,24 +109,26 @@ const ContextFilter = ({
 };
 
 const YearSelector = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isYearModalOpen, setIsYearModalOpen] = useState(false);
+  const [isContextModalOpen, setIsContextModalOpen] = useState(false);
+
   const { data: yearsData, isLoading, error } = useFacultyMembersYears();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-
   useEffect(() => {
     if (
       yearsData?.last_complete_year &&
       !searchParams.get("annee_universitaire")
     ) {
-      searchParams.set("annee_universitaire", yearsData.last_complete_year);
-      navigate({ search: searchParams.toString() }, { replace: true });
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set("annee_universitaire", yearsData.last_complete_year);
+      navigate({ search: newParams.toString() }, { replace: true });
     }
   }, [yearsData, searchParams, navigate]);
 
   const years = useMemo(
-    () => yearsData?.academic_years || [],
-    [yearsData?.academic_years]
+    () => yearsData?.complete_years || [],
+    [yearsData?.complete_years]
   );
   const lastCompleteYear = yearsData?.last_complete_year;
 
@@ -143,22 +145,22 @@ const YearSelector = () => {
   const { data: disciplines } = useNavigation({
     type: "fields",
     annee_universitaire: selectedYear,
-    enabled: isOpen,
+    enabled: isContextModalOpen,
   });
   const { data: regions } = useNavigation({
     type: "regions",
     annee_universitaire: selectedYear,
-    enabled: isOpen,
+    enabled: isContextModalOpen,
   });
   const { data: academies } = useNavigation({
     type: "academies",
     annee_universitaire: selectedYear,
-    enabled: isOpen,
+    enabled: isContextModalOpen,
   });
   const { data: structures } = useNavigation({
     type: "structures",
     annee_universitaire: selectedYear,
-    enabled: isOpen,
+    enabled: isContextModalOpen,
   });
 
   const filteredDisciplines = useMemo(
@@ -194,23 +196,36 @@ const YearSelector = () => {
   );
 
   useEffect(() => {
-    if (isOpen) {
-      setSelectedYear(initialYear);
+    if (isContextModalOpen) {
       setSelectedContextItem(null);
       setSearchTerm("");
     }
-  }, [isOpen, initialYear]);
+  }, [isContextModalOpen]);
+
+  useEffect(() => {
+    if (isYearModalOpen) {
+      setSelectedYear(initialYear);
+    }
+  }, [isYearModalOpen, initialYear]);
 
   const handleYearChange = (newYear: string) => {
     setSelectedYear(newYear);
-    setSelectedContextItem(null);
   };
 
-  const handleApplyFilters = () => {
+  const handleApplyYearFilter = () => {
+    if (selectedYear !== initialYear) {
+      const newParams = new URLSearchParams(searchParams);
+      newParams.set("annee_universitaire", selectedYear);
+      navigate({ search: newParams.toString() }, { replace: true });
+    }
+    setIsYearModalOpen(false);
+  };
+
+  const handleApplyContextFilter = () => {
     if (selectedContextItem) {
       let path = "";
       const params = new URLSearchParams();
-      params.set("annee_universitaire", selectedYear);
+      params.set("annee_universitaire", initialYear);
 
       switch (selectedContextItem.type) {
         case "discipline":
@@ -230,20 +245,12 @@ const YearSelector = () => {
           return;
       }
       navigate(`${path}?${params.toString()}`);
-    } else if (selectedYear !== initialYear) {
-      const newParams = new URLSearchParams(searchParams);
-      newParams.set("annee_universitaire", selectedYear);
-      navigate({ search: newParams.toString() }, { replace: true });
     }
-    setIsOpen(false);
+    setIsContextModalOpen(false);
   };
 
   const handleContextSelect = (item: NavigationItem, type: string) => {
     setSelectedContextItem({ ...item, type });
-  };
-
-  const handleClose = () => {
-    setIsOpen(false);
   };
 
   if (isLoading)
@@ -260,26 +267,66 @@ const YearSelector = () => {
     );
 
   return (
-    <>
-      <Button
-        className="button"
-        color="blue-cumulus"
-        icon="filter-line"
-        onClick={() => setIsOpen(true)}
-        size="sm"
-      >
-        Explorer les données
-      </Button>
+    <div>
+      <div className="fr-grid-row fr-grid-row--right">
+        <Button
+          className="button fr-mr-2w"
+          color="blue-cumulus"
+          icon="calendar-line"
+          onClick={() => setIsYearModalOpen(true)}
+          size="sm"
+        ></Button>
 
-      <Modal isOpen={isOpen} hide={handleClose} size="lg">
-        <ModalTitle>Filtrer les données</ModalTitle>
+        <Button
+          className="button"
+          color="blue-cumulus"
+          icon="filter-line"
+          onClick={() => setIsContextModalOpen(true)}
+          size="sm"
+        ></Button>
+      </div>
+      <Badge className="fr-mt-1w" color="green-emeraude">
+        Année universitaire {initialYear}
+      </Badge>
+
+      <Modal
+        isOpen={isYearModalOpen}
+        hide={() => setIsYearModalOpen(false)}
+        size="md"
+      >
+        <ModalTitle>Changer l'année universitaire</ModalTitle>
         <ModalContent>
           <YearFilter
             years={years}
             selectedYear={selectedYear}
             onYearChange={handleYearChange}
           />
-          <hr />
+        </ModalContent>
+        <ModalFooter>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setIsYearModalOpen(false)}
+          >
+            Annuler
+          </Button>
+          <Button
+            size="sm"
+            onClick={handleApplyYearFilter}
+            disabled={selectedYear === initialYear}
+          >
+            Appliquer
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+      <Modal
+        isOpen={isContextModalOpen}
+        hide={() => setIsContextModalOpen(false)}
+        size="lg"
+      >
+        <ModalTitle>Explorer par entité</ModalTitle>
+        <ModalContent>
           <input
             type="search"
             placeholder="Rechercher..."
@@ -330,23 +377,24 @@ const YearSelector = () => {
           </Tabs>
         </ModalContent>
         <ModalFooter>
-          <Button size="sm" variant="secondary" onClick={handleClose}>
+          <Button
+            size="sm"
+            variant="secondary"
+            onClick={() => setIsContextModalOpen(false)}
+          >
             Annuler
           </Button>
           <Button
             size="sm"
-            onClick={handleApplyFilters}
-            disabled={!selectedContextItem && selectedYear === initialYear}
+            onClick={handleApplyContextFilter}
+            disabled={!selectedContextItem}
           >
             Explorer
           </Button>
         </ModalFooter>
       </Modal>
-      <br />
-      <Badge className="fr-mt-1w" color="green-emeraude">
-        Année universitaire {selectedYear}
-      </Badge>
-    </>
+    </div>
   );
 };
+
 export default YearSelector;

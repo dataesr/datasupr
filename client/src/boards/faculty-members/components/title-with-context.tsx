@@ -1,18 +1,24 @@
-import { Title } from "@dataesr/dsfr-plus";
+import { Title, Badge } from "@dataesr/dsfr-plus";
 import { useContextDetection } from "../utils";
 import { useFacultyMembersTypology } from "../api/use-typology";
 import { useLocation } from "react-router-dom";
+import { useFacultyMembersYears } from "../api/general-queries";
 
 const TitleWithContext = () => {
   const { context, contextId, contextName } = useContextDetection();
   const location = useLocation();
 
+  const { data: yearsData } = useFacultyMembersYears();
   const isAcademie = context === "geo" && contextId?.toString().startsWith("A");
 
   const { data: typologyData } = useFacultyMembersTypology({
     context,
     contextId: contextId || undefined,
   });
+
+  const isEstablishmentClosed =
+    context === "structures" && yearsData?.context?.has_closure_date;
+  const fermetureYear = yearsData?.context?.closure_year;
 
   function capitalize(word: string) {
     return String(word).charAt(0).toUpperCase() + String(word).slice(1);
@@ -22,17 +28,15 @@ const TitleWithContext = () => {
     switch (context) {
       case "fields":
         return {
-          name: typologyData?.discipline?._id?.item_name,
-          identifiant: typologyData?.discipline?._id?.item_code,
+          name: typologyData?.[0]?.name || contextName,
+          identifiant: typologyData?.[0]?.id,
           pluralMain: "Le personnel enseignant au niveau national",
           pluralSub: "(toutes les disciplines)",
         };
       case "geo":
         if (isAcademie) {
           return {
-            name:
-              typologyData?.academie?._id?.item_name ||
-              typologyData?.region?._id?.item_name,
+            name: typologyData?.[0]?.name || contextName,
             identifiant: null,
             prefix: "Académie de ",
             pluralMain: "Le personnel enseignant au niveau national",
@@ -40,7 +44,7 @@ const TitleWithContext = () => {
           };
         }
         return {
-          name: typologyData?.region?._id?.item_name,
+          name: typologyData?.[0]?.name || contextName,
           identifiant: null,
           prefix: "Région ",
           pluralMain: "Le personnel enseignant au niveau national",
@@ -48,7 +52,7 @@ const TitleWithContext = () => {
         };
       case "structures":
         return {
-          name: typologyData?.structure?._id?.item_name,
+          name: typologyData?.[0]?.name || contextName,
           identifiant: null,
           pluralMain: "Le personnel enseignant au niveau national",
           pluralSub: "(tous les établissements)",
@@ -75,7 +79,7 @@ const TitleWithContext = () => {
 
   return (
     <>
-      <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-3w">
+      <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-2w">
         {!contextId && (
           <>
             {pluralMain}{" "}
@@ -85,7 +89,21 @@ const TitleWithContext = () => {
           </>
         )}
         {contextId && prefix}
-        {name}&nbsp; <br />
+        <br />
+        {name}
+        {isEstablishmentClosed && (
+          <>
+            {" "}
+            <br />
+            <Badge
+              variant="error"
+              size="sm"
+              style={{ verticalAlign: "middle" }}
+            >
+              Fermé{fermetureYear ? ` depuis ${fermetureYear}` : ""}
+            </Badge>
+          </>
+        )}
       </Title>
     </>
   );

@@ -2,40 +2,154 @@ import { Router } from "express";
 import { db } from "../../../../../services/mongo.js";
 
 const router = Router();
-
 router.get("/faculty-members/filters/years", async (req, res) => {
   try {
+    const { structure_id, field_id, geo_id } = req.query;
     const collection = db.collection("faculty-members_main_staging");
 
-    const academicYears = await collection.distinct("annee_universitaire");
-    const sortedYears = academicYears.filter(Boolean).sort((a, b) => {
+    const allYears = await collection.distinct("annee_universitaire");
+
+    const sortedYears = allYears.filter(Boolean).sort((a, b) => {
       const yearA = parseInt(a.split("-")[0]);
       const yearB = parseInt(b.split("-")[0]);
       return yearB - yearA;
     });
 
-    const completeYears = [];
-    for (const year of sortedYears) {
-      const nonTitulaireCount = await collection.countDocuments({
-        annee_universitaire: year,
-        is_titulaire: false,
-      });
-      if (nonTitulaireCount > 0) {
-        completeYears.push(year);
+    if (structure_id) {
+      const etablissementInfo = await collection.findOne(
+        { etablissement_id_paysage: structure_id },
+        {
+          projection: {
+            etablissement_status: 1,
+            etablissement_fermeture: 1,
+            etablissement_lib: 1,
+          },
+        }
+      );
+
+      let fermetureDate = null;
+      let fermetureYear = null;
+      if (
+        etablissementInfo &&
+        etablissementInfo.etablissement_status === "inactive" &&
+        etablissementInfo.etablissement_fermeture
+      ) {
+        fermetureDate = new Date(etablissementInfo.etablissement_fermeture);
+        fermetureYear = fermetureDate.getFullYear();
+        console.log(`Établissement fermé en ${fermetureYear}`);
       }
+
+      const baseFilter = { etablissement_id_paysage: structure_id };
+
+      const availableYears = [];
+
+      for (const year of sortedYears) {
+        const yearStart = parseInt(year.split("-")[0]);
+
+        if (fermetureYear && yearStart > fermetureYear) {
+          continue;
+        }
+
+        const aggregationResult = await collection
+          .aggregate([
+            {
+              $match: {
+                annee_universitaire: year,
+                etablissement_id_paysage: structure_id,
+              },
+            },
+            {
+              $group: {
+                _id: null,
+                totalEffectif: { $sum: "$effectif" },
+              },
+            },
+          ])
+          .toArray();
+
+        const totalEffectif =
+          aggregationResult.length > 0 ? aggregationResult[0].totalEffectif : 0;
+
+        if (totalEffectif > 0) {
+          availableYears.push(year);
+        }
+      }
+
+      const lastAvailableYear =
+        availableYears.length > 0 ? availableYears[0] : null;
+
+      return res.json({
+        academic_years: sortedYears,
+        complete_years: availableYears,
+        last_complete_year: lastAvailableYear,
+        context: {
+          structure_id,
+          has_closure_date: fermetureDate !== null,
+          closure_date: fermetureDate
+            ? fermetureDate.toISOString().split("T")[0]
+            : null,
+          closure_year: fermetureYear,
+        },
+      });
+    } else {
+      const baseFilter = {};
+
+      if (field_id) {
+        baseFilter.code_grande_discipline = field_id;
+      } else if (geo_id) {
+        if (geo_id.toString().startsWith("A")) {
+          baseFilter.etablissement_code_academie = geo_id;
+        } else {
+          baseFilter.etablissement_code_region = geo_id;
+        }
+      }
+
+      const availableYears = [];
+
+      for (const year of sortedYears) {
+        const yearFilter = {
+          ...baseFilter,
+          annee_universitaire: year,
+        };
+
+        const aggregationResult = await collection
+          .aggregate([
+            { $match: yearFilter },
+            {
+              $group: {
+                _id: null,
+                totalEffectif: { $sum: "$effectif" },
+              },
+            },
+          ])
+          .toArray();
+
+        const totalEffectif =
+          aggregationResult.length > 0 ? aggregationResult[0].totalEffectif : 0;
+
+        if (totalEffectif > 0) {
+          availableYears.push(year);
+        }
+      }
+
+      const lastAvailableYear =
+        availableYears.length > 0 ? availableYears[0] : null;
+
+      return res.json({
+        academic_years: sortedYears,
+        complete_years: availableYears,
+        last_complete_year: lastAvailableYear,
+        context: {
+          field_id,
+          geo_id,
+        },
+      });
     }
-
-    const lastCompleteYear = completeYears[0] || null;
-
-    res.json({
-      academic_years: sortedYears,
-      complete_years: completeYears,
-      last_complete_year: lastCompleteYear,
-    });
   } catch (error) {
     console.error("Error fetching filters:", error);
     res.status(500).json({
       error: "Server error while fetching filters",
+      details: error.message,
     });
   }
 });
