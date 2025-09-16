@@ -27,6 +27,7 @@ export default function FieldOverview() {
             </GlossaryTerm>{" "}
             par{" "}
             <GlossaryTerm term="grande discipline">
+              {" "}
               grande discipline
             </GlossaryTerm>
             , avec une visualisation de l'équilibre femmes-hommes dans chaque

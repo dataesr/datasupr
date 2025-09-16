@@ -162,7 +162,7 @@ const DistributionBar: React.FC = () => {
       fr: (
         <>
           Répartition des{" "}
-          <GlossaryTerm term="personnel enseignant">
+          <GlossaryTerm term="personnels enseignants">
             personnels enseignants
           </GlossaryTerm>{" "}
           par{" "}

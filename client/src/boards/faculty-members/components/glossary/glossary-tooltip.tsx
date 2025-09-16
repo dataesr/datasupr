@@ -14,7 +14,6 @@ export function GlossaryTerm({ term, children }: GlossaryTermProps) {
     return <>{children || term}</>;
   }
   const tooltipId = `tooltip-${entry.key.replace(/\s/g, "-")}`;
-
   return (
     <>
       <span

@@ -143,7 +143,7 @@ export default function RegionsOverview() {
           <Title as="h4" look="h5">
             Explorer par région
           </Title>
-          <NavigationCards type="regions" maxItems={12} />
+          <NavigationCards type="regions" />
         </Col>
       </Row>
     </Container>

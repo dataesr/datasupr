@@ -219,7 +219,7 @@ const StatusDistribution: React.FC = () => {
             fr: (
               <>
                 Répartition par statut des{" "}
-                <GlossaryTerm term="personnel enseignant">
+                <GlossaryTerm term="personnels enseignants">
                   personnels enseignants
                 </GlossaryTerm>
                 , distinguant notamment les{" "}

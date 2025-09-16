@@ -278,7 +278,7 @@ export function GroupCNUTreemapChart() {
       size: "h2" as const,
       fr: contextId ? (
         <>
-          Les sections CNU
+          Les groupes CNU
           <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ) : (

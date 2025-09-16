@@ -1,6 +1,6 @@
 export const glossary = [
   {
-    key: "personnel enseignant",
+    key: "personnels enseignants",
     title: "Personnel enseignant",
     definition:
       "Ensemble des personnes exerçant des fonctions d’enseignement dans l’enseignement supérieur, qu’elles soient titulaires ou non, et quel que soit leur statut (enseignant-chercheur, enseignant du second degré, etc.).",

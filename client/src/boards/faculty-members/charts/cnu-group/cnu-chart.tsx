@@ -325,8 +325,8 @@ export default function CnuGroupsChart() {
             size: "h3",
             fr: (
               <>
-                Comment le personnel enseignant se répartit par groupe CNU
-                ?&nbsp;
+                Comment le personnel enseignant se répartit au sein d'une grande
+                discipline par groupe CNU ?&nbsp;
                 <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
               </>
             ),
