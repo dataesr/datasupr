@@ -5,6 +5,8 @@ const router = new express.Router();
 
 import { checkQuery } from "../utils.js";
 
+const rangeOfYears = ["2021", "2022", "2023"];
+
 router.route("/european-projects/overview/graph1").get(async (req, res) => {
   const filters = checkQuery(
     req.query,
@@ -193,6 +195,7 @@ router.route("/european-projects/overview/pillars-funding").get(async (req, res)
             pilier_name_en: "$pilier_name_en",
           },
           total_fund_eur: { $sum: "$fund_eur" },
+          count: { $sum: 1 },
         },
       },
       {
@@ -203,6 +206,7 @@ router.route("/european-projects/overview/pillars-funding").get(async (req, res)
           pilier_name_en: "$_id.pilier_name_en",
           stage: "$_id.stage",
           total_fund_eur: 1,
+          count: 1,
         },
       },
       { $sort: { total_fund_eur: -1 } },
@@ -339,16 +343,20 @@ router.route("/european-projects/overview/pillars-funding-proportion").get(async
 });
 
 router.route("/european-projects/overview/programs-funding").get(async (req, res) => {
-  const filters = checkQuery(req.query, ["country_code"], res);
+  const filters = checkQuery(req.query, ["country_code", "pillars"], res);
+
+  if( req.query.pillars) {
+    const pillars = req.query.pillars.split("|");
+    filters.pilier_code = { $in: pillars };
+  }
 
   if (req.query.programs) {
     const programs = req.query.programs.split("|");
     filters.programme_code = { $in: programs };
   }
-  delete filters.pilars;
+  delete filters.pillars;
   delete filters.thematics;
   delete filters.destinations;
-
   const data = await db
     .collection("fr-esr-all-projects-synthese")
     .aggregate([
@@ -362,6 +370,7 @@ router.route("/european-projects/overview/programs-funding").get(async (req, res
             programme_name_en: "$programme_name_en",
           },
           total_fund_eur: { $sum: "$fund_eur" },
+          count: { $sum: 1 },
         },
       },
       {
@@ -372,6 +381,7 @@ router.route("/european-projects/overview/programs-funding").get(async (req, res
           programme_name_en: "$_id.programme_name_en",
           stage: "$_id.stage",
           total_fund_eur: 1,
+          count: 1,
         },
       },
       { $sort: { total_fund_eur: -1 } },
@@ -402,8 +412,13 @@ router.route("/european-projects/overview/programs-funding").get(async (req, res
 });
 
 router.route("/european-projects/overview/programs-funding-proportion").get(async (req, res) => {
-  const filters = checkQuery(req.query, ["country_code"], res);
-  
+  const filters = checkQuery(req.query, ["country_code", "pillars"], res);
+
+  if( req.query.pillars) {
+    const pillars = req.query.pillars.split("|");
+    filters.pilier_code = { $in: pillars };
+  }
+
   if (req.query.programs) {
     const programs = req.query.programs.split("|");
     filters.programme_code = { $in: programs };
@@ -501,14 +516,22 @@ router.route("/european-projects/overview/programs-funding-proportion").get(asyn
 router.route("/european-projects/overview/topics-funding").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
 
-  if (req.query.thematics) {
-    const topics = req.query.thematics.split("|");
-    filters.thema_code = { $in: topics };
+  // if (req.query.thematics) {
+  //   const topics = req.query.thematics.split("|");
+  //   filters.thema_code = { $in: topics };
+  // }
+  if (req.query.pillars) {
+    filters.pilier_code = req.query.pillars;
   }
-  delete filters.pilars;
+  if (req.query.programs) {
+    filters.programme_code = req.query.programs;
+  }
+
+  delete filters.pillars;
   delete filters.programs;
   delete filters.destinations;
   console.log(filters);
+  
   const data = await db
     .collection("fr-esr-all-projects-synthese")
     .aggregate([
@@ -520,8 +543,11 @@ router.route("/european-projects/overview/topics-funding").get(async (req, res) 
             stage: "$stage",
             thema_name_fr: "$thema_name_fr",
             thema_name_en: "$thema_name_en",
+            pilier_code: "$pilier_code",
+            programme_code: "$programme_code",
           },
           total_fund_eur: { $sum: "$fund_eur" },
+          count: { $sum: 1 },
         },
       },
       {
@@ -532,6 +558,9 @@ router.route("/european-projects/overview/topics-funding").get(async (req, res) 
           thema_name_en: "$_id.thema_name_en",
           stage: "$_id.stage",
           total_fund_eur: 1,
+          pilier_code: "$_id.pilier_code",
+          programme_code: "$_id.programme_code",
+          count: 1,
         },
       },
       { $sort: { total_fund_eur: -1 } },
@@ -564,10 +593,17 @@ router.route("/european-projects/overview/topics-funding").get(async (req, res) 
 router.route("/european-projects/overview/topics-funding-proportion").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
   
-  if (req.query.thematics) {
-    const topics = req.query.thematics.split("|");
-    filters.thema_code = { $in: topics };
+  // if (req.query.thematics) {
+  //   const topics = req.query.thematics.split("|");
+  //   filters.thema_code = { $in: topics };
+  // }
+  if (req.query.pillars) {
+    filters.pilier_code = req.query.pillars;
   }
+  if (req.query.programs) {
+    filters.programme_code = req.query.programs;
+  }
+
   delete filters.pillars;
   delete filters.programs;
   delete filters.destinations;
@@ -671,12 +707,13 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
     filters.programme_code = { $in: programs };
   }
   if (req.query.thematics) {
-    const thematics = req.query.thematics.split("|");
+    const thematics = req.query.thematics.split(","); console.log(thematics);
+    
     const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
     filters.thema_code = { $in: filteredThematics };
   }
   if (req.query.destinations) {
-    const destinations = req.query.destinations.split("|");
+    const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
   }
 
@@ -731,8 +768,6 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
 router.route("/european-projects/overview/destination-funding-proportion").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
 
-  // test filters (thematics, programs, thematics, destinations)
-  
   if (req.query.pillars) {
     const pillars = req.query.pillars.split("|");
     filters.pilier_code = { $in: pillars };
@@ -742,12 +777,12 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
     filters.programme_code = { $in: programs };
   }
   if (req.query.thematics) {
-    const thematics = req.query.thematics.split("|");
+    const thematics = req.query.thematics.split(",");
     const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
     filters.thema_code = { $in: filteredThematics };
   }
   if (req.query.destinations) {
-    const destinations = req.query.destinations.split("|");
+    const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
   }
 
@@ -837,11 +872,7 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
   res.json({ data });
 });
 
-router
-  .route(
-    "/european-projects/overview/pillars-funding-evo-3-years"
-  )
-  .get(async (req, res) => {
+router.route("/european-projects/overview/pillars-funding-evo-3-years").get(async (req, res) => {
     const filters = checkQuery(req.query, ["country_code"], res);
     
     // cas de plusieurs piliers passés en paramètre
@@ -853,7 +884,7 @@ router
       filters.pilier_code = { $in: ["p1", "p2", "p3", "p4"] };
     }
 
-    const rangeOfYears = ["2021", "2022", "2023"];
+    
     filters.call_year = { $in: rangeOfYears };
 
     delete filters.thema_code
@@ -946,11 +977,7 @@ router
     ]);
   });
 
-router
-  .route(
-    "/european-projects/overview/programs-funding-evo-3-years"
-  )
-  .get(async (req, res) => {
+router.route("/european-projects/overview/programs-funding-evo-3-years").get(async (req, res) => {
     const filters = checkQuery(req.query, ["country_code"], res);
     
     // cas de plusieurs programmes passés en paramètre
@@ -960,7 +987,7 @@ router
       filters.programme_code = req.query.programme_code;
     }
 
-    const rangeOfYears = ["2021", "2022", "2023"];
+    
     filters.call_year = { $in: rangeOfYears };
 
     delete filters.pilier_code
@@ -1053,11 +1080,7 @@ router
     ]);
   });
 
-router
-  .route(
-    "/european-projects/overview/topics-funding-evo-3-years"
-  )
-  .get(async (req, res) => {
+router.route("/european-projects/overview/topics-funding-evo-3-years").get(async (req, res) => {
     const filters = checkQuery(req.query, ["country_code"], res);
     
     // cas de plusieurs thématiques passées en paramètre
@@ -1067,7 +1090,7 @@ router
       filters.thema_code = req.query.thema_code;
     }
 
-    const rangeOfYears = ["2021", "2022", "2023"];
+    
     filters.call_year = { $in: rangeOfYears };
 
     delete filters.pilier_code
@@ -1160,11 +1183,7 @@ router
     ]);
   });
 
-  router
-  .route(
-    "/european-projects/overview/destinations-funding-evo-3-years"
-  )
-  .get(async (req, res) => {
+  router.route("/european-projects/overview/destinations-funding-evo-3-years").get(async (req, res) => {
     const filters = checkQuery(req.query, ["country_code"], res);
     
     // cas de plusieurs thématiques passées en paramètre
@@ -1174,7 +1193,7 @@ router
       filters.destination_code = req.query.destination_code;
     }
 
-    const rangeOfYears = ["2021", "2022", "2023"];
+    
     filters.call_year = { $in: rangeOfYears };
 
     delete filters.pilier_code
@@ -1267,12 +1286,10 @@ router
     ]);
   });
 
-  router
-    .route("/european-projects/overview/projects-types-1")
-    .get(async (req, res) => {
-      const filters = checkQuery(req.query, ["country_code"], res);
-      // cas de plusieurs pilliers passés en paramètre
-      if (req.query.pilier_code?.split("|").length > 1) {
+  router.route("/european-projects/overview/projects-types-1").get(async (req, res) => {
+    const filters = checkQuery(req.query, ["country_code"], res);
+    // cas de plusieurs pilliers passés en paramètre
+    if (req.query.pilier_code?.split("|").length > 1) {
         filters.pilier_code = { $in: req.query.pilier_code.split("|") };
       } else if (req.query.pilier_code?.split("|").length === 1) {
         filters.pilier_code = req.query.pilier_code;
@@ -1431,8 +1448,7 @@ router
       return res.json({ country, all });
     });
 
-router.route("/european-projects/overview/projects-types-2")
-  .get(async (req, res) => {
+router.route("/european-projects/overview/projects-types-2").get(async (req, res) => {
     const filters = checkQuery(req.query, ["country_code"], res);
 
     // cas de plusieurs pilliers passés en paramètre
@@ -1460,7 +1476,7 @@ router.route("/european-projects/overview/projects-types-2")
       filters.destination_code = req.query.destination_code;
     }
     
-    const rangeOfYears = ["2021", "2022", "2023"]; //TODO: get the range of years from the database
+     //TODO: get the range of years from the database
     filters.call_year = { $in: rangeOfYears };
     const data_country = await db
       .collection("fr-esr-all-projects-synthese")
@@ -1594,11 +1610,7 @@ router.route("/european-projects/overview/projects-types-2")
     ]);
   });
 
-  router
-  .route(
-    "/european-projects/overview/projects-types-3"
-  )
-  .get(async (req, res) => {
+  router.route("/european-projects/overview/projects-types-3").get(async (req, res) => {
     const filters = checkQuery(req.query, ["country_code"], res);
 
     // cas de plusieurs pilliers passés en paramètre

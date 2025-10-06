@@ -66,7 +66,7 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
 
   return (
     <Container fluid>
-      <Row>
+      <Row gutters>
         <Col md={6}>
           <ChartWrapper
             config={configChart1}

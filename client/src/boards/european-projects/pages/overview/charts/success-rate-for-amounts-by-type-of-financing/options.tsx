@@ -34,7 +34,7 @@ export default function Options(data: ChartData): Highcharts.Options | null {
       backgroundColor: "transparent",
     },
     title: { text: "" },
-    legend: { enabled: false },
+    // legend: { enabled: false },
     credits: { enabled: false },
 
     xAxis: {

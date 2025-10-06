@@ -11,12 +11,10 @@ import { getDefaultParams } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
-import i18n from "../../../../i18n-global.json";
-
 const configChart1 = {
   id: "typeOfFinancingSubsidiesRequestedByProjects",
   title: "",
-  subtitle: "Subventions demandées et obtenues (M€)<br />&nbsp;",
+  subtitle: "Subventions demandées et obtenues (M€)",
   description: null,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-1",
 };
@@ -32,7 +30,6 @@ const configChart2 = {
 export default function TypeOfFinancingSubsidiesRequestedByProjects() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
-  const currentLang = searchParams.get("language") || "fr";
 
   const { data, isLoading } = useQuery({
     queryKey: [
@@ -48,15 +45,9 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
 
   if (isLoading || !data) return <DefaultSkeleton col={2} />;
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
-  const rootStyles = getComputedStyle(document.documentElement);
-
   return (
     <Container fluid>
-      <Row>
+      <Row gutters>
         <Col>
           <ChartWrapper
             config={configChart1}
@@ -72,31 +63,6 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
             legend={null}
             renderData={() => null} // TODO: add data table
           />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <fieldset className="legend">
-            <legend>{getI18nLabel("legend")}</legend>
-            <ul>
-              <li>
-                <div
-                  style={{
-                    background: rootStyles.getPropertyValue("--evaluated-project-color"),
-                  }}
-                />
-                <span>{getI18nLabel("evaluated-projects")}</span>
-              </li>
-              <li>
-                <div
-                  style={{
-                    background: rootStyles.getPropertyValue("--successful-project-color"),
-                  }}
-                />
-                <span>{getI18nLabel("successful-projects")}</span>
-              </li>
-            </ul>
-          </fieldset>
         </Col>
       </Row>
     </Container>

@@ -10,6 +10,7 @@ import i18n from "./i18n.json";
 import "./styles.scss";
 import EntitySearchBar from "../../components/entity-searchbar";
 import Callout from "../../../../components/callout";
+import PillarCard from "../../components/cards/pillars";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -235,12 +236,26 @@ export default function Search() {
     navigate(`/european-projects/synthese?country_code=${selectedCountry}&language=${currentLang}`);
   };
 
+  console.log(dataPillars);
+
   return (
     <>
       <Container className="fr-mt-5w">
         <Title as="h1" look="h3">
           Sélection d'un périmètre d'analyse
         </Title>
+        <Row gutters>
+          {dataPillars &&
+            dataPillars.map((pillar) => (
+              <Col key={pillar.id}>
+                <PillarCard
+                  description="Description de la carte"
+                  label={pillar[`label_${currentLang}`]}
+                  to={`/european-projects/overview?view=program&pillarId=${pillar.id}`}
+                />
+              </Col>
+            ))}
+        </Row>
         <Title as="h2" look="h4">
           Par architecture thématique
         </Title>

@@ -14,12 +14,7 @@ const config = {
     en: "Funding (M€)",
     fr: "Financements (M€)",
   },
-  description: {
-    fr: "Financements demandés et obtenus (M€)",
-    en: "Funding requested and obtained (M€)",
-  },
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding",
 };
 
 export default function DestinationFundingValues() {

@@ -7,8 +7,10 @@ export default function Options(data) {
   if (!data) return null;
 
   const rootStyles = getComputedStyle(document.documentElement);
-
+  const height = data.data.length * 50;
+  
   const newOptions: HighchartsInstance.Options = {
+    chart: { height: height },
     legend: { enabled: true },
     xAxis: {
       type: "category",
@@ -21,9 +23,7 @@ export default function Options(data) {
     },
     tooltip: {
       pointFormatter: function () {
-        return `Total des subventions : <b>${formatToMillions(
-          this.y ?? 0
-        )}</b>`;
+        return `Total des subventions : <b>${formatToMillions(this.y ?? 0)}</b>`;
       },
     },
     plotOptions: {
@@ -40,9 +40,7 @@ export default function Options(data) {
         name: "Projets évalués",
         color: rootStyles.getPropertyValue("--evaluated-project-color"),
         groupPadding: 0,
-        data: data.data
-          .filter((item) => item.stage === "evaluated")
-          .map((item) => [item.pilier_name_fr, item.total_fund_eur]),
+        data: data.data.filter((item) => item.stage === "evaluated").map((item) => [item.pilier_name_fr, item.total_fund_eur]),
         dataLabels: {
           formatter: function () {
             return formatToMillions(this.y ?? 0);
@@ -54,9 +52,7 @@ export default function Options(data) {
         name: "Projets lauréats",
         color: rootStyles.getPropertyValue("--successful-project-color"),
         groupPadding: 0,
-        data: data.data
-          .filter((item) => item.stage === "successful")
-          .map((item) => [item.pilier_name_fr, item.total_fund_eur]),
+        data: data.data.filter((item) => item.stage === "successful").map((item) => [item.pilier_name_fr, item.total_fund_eur]),
         dataLabels: {
           formatter: function () {
             return formatToMillions(this.y ?? 0);

@@ -1,8 +1,9 @@
 .ep-main-menu {
-  background-color: white !important; //TODO: mettre bg du dsfr
+  background-color: var(--background-default-grey-hover);
   position: sticky !important;
   top: 0 !important;
   z-index: 1000 !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2); 
 
   .actions {
     display: flex;

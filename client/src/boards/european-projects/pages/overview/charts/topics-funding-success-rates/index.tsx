@@ -9,17 +9,12 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 
 const config = {
   id: "topicsFundingSuccessRates",
-  idQuery: "TopicsFunding",
+  idQuery: "thematicsFunding",
   title: {
     fr: "Taux de succès",
     en: "Success rate",
   },
-  description: {
-    en: "Success rate on the amounts requested and obtained",
-    fr: "Taux de succès sur les montants demandés et obtenus",
-  },
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates",
 };
 
 export default function TopicsFundingSuccessRates() {

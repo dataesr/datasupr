@@ -40,11 +40,7 @@ export default function Overview() {
   }
   return (
     <Container as="main" className="fr-my-6w">
-      <Callout className="callout-style-overview">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum impedit in nisi quibusdam, consequuntur omnis. Qui at error aliquam atque
-        natus facilis, reiciendis alias perferendis tenetur minus quae rerum?
-      </Callout>
-
+      <Callout className="callout-style-overview">{getI18nLabel("callout-overview")}</Callout>
       <Title as="h2">Financements demandés & obtenus</Title>
       <label className="fr-label" htmlFor="select">
         {getI18nLabel("select-title")}
@@ -55,7 +51,6 @@ export default function Overview() {
         <option value="topics">{getI18nLabel("topics")}</option>
         <option value="destinations">{getI18nLabel("destinations")}</option>
       </select>
-
       {selectView === "pillars" && (
         <>
           <Title as="h3" className="fr-my-5w">
@@ -104,22 +99,18 @@ export default function Overview() {
           <DestinationsFundingEvo3Years />
         </>
       )}
-
       <Title as="h3" className="fr-my-5w">
         {getI18nLabel("title1-financing")}
       </Title>
       <TypeOfFinancingSubsidiesRequestedByProjects />
-
       <Title as="h3" className="fr-my-5w">
         {getI18nLabel("title2-financing")}
       </Title>
       <TypeOfFinancingSubsidiesRequestedLines />
-
       <Title as="h3" className="fr-my-5w">
         {getI18nLabel("title3-financing")}
       </Title>
       <SuccessRateForAmountsByTypeOfFinancing />
-
       {/* <SynthesisFocus />
       <div className="fr-my-5w" />
       <FundedObjectives />

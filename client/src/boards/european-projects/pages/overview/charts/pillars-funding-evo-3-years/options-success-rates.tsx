@@ -19,7 +19,12 @@ export default function Options(data, displayType): HighchartsOptions {
       backgroundColor: "transparent",
     },
     title: { text: "" },
-    legend: { enabled: false },
+    legend: {
+      enabled: true,
+      align: "center",
+      verticalAlign: "bottom",
+      layout: "horizontal",
+    },
     credits: { enabled: false },
     xAxis: [
       {

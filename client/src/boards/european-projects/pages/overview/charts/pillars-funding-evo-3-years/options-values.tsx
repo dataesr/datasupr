@@ -7,69 +7,70 @@ export default function Options(data, displayType): HighchartsOptions {
   const years = new Set();
 
   const filteredData = data.filter((item) => item.country !== "all")[0].data;
+  const evaluatedData = filteredData.find((item) => item.stage === "evaluated");
+  const successfulData = filteredData.find((item) => item.stage === "successful");
 
-  filteredData.find((item) => item.stage === "evaluated").pillars[0].years.forEach((year) => years.add(year.year));
+  evaluatedData.pillars[0].years.forEach((year) => years.add(year.year));
+
+  // Créer les catégories combinées : Année - Pilier
+  const categories: string[] = [];
+  const sortedYears = Array.from(years).sort();
+
+  sortedYears.forEach((year) => {
+    evaluatedData.pillars.forEach((pillar) => {
+      categories.push(`${year} - ${pillar.pilier_name_fr}`);
+    });
+  });
 
   return {
     chart: {
-      type: "line",
+      type: "column",
       height: 500,
       backgroundColor: "transparent",
     },
     title: { text: "" },
-    legend: { enabled: false },
     credits: { enabled: false },
-    xAxis: [
-      {
-        type: "category" as const,
-        categories: Array.from(years).map(String),
-        width: "48%",
-        title: {
-          text: "Projets évalués",
+    xAxis: {
+      categories: categories,
+      labels: {
+        rotation: -45,
+        style: {
+          fontSize: "10px",
         },
       },
-      {
-        type: "category" as const,
-        categories: Array.from(years).map(String),
-        offset: 0,
-        left: "50%",
-        width: "48%",
-        title: {
-          text: "Projets lauréats",
-        },
-      },
-    ],
+    },
     yAxis: [
       {
-        lineWidth: 1,
-        lineColor: "#E6E6E6",
         min: 0,
         title: {
-          text: "M€",
+          text: displayType === "total_fund_eur" ? "M€" : "Nombre",
         },
       },
       {
         min: 0,
+        max: 100,
         title: {
-          text: "",
+          text: "Taux de succès (%)",
         },
-        lineWidth: 1,
-        lineColor: "#E6E6E6",
-        left: "75%",
+        opposite: true,
+        labels: {
+          formatter: function (this: Highcharts.AxisLabelsFormatterContextObject) {
+            return `${this.value}%`;
+          },
+        },
       },
     ],
+    legend: {
+      shadow: false,
+    },
     tooltip: {
-      valueSuffix: " €",
+      shared: true,
     },
     plotOptions: {
-      line: {
-        marker: {
-          enabled: true,
-          symbol: "circle",
-          radius: 3,
-          lineWidth: 2,
-          lineColor: undefined,
-        },
+      column: {
+        grouping: false,
+        shadow: false,
+        borderWidth: 0,
         dataLabels: {
           enabled: true,
           formatter: function (this: Highcharts.TooltipFormatterContextObject) {
@@ -78,22 +79,77 @@ export default function Options(data, displayType): HighchartsOptions {
         },
       },
     },
-    series: filteredData
-      .find((item) => item.stage === "evaluated")
-      .pillars.map((pillar) => ({
-        name: pillar.pilier_name_fr,
-        data: pillar.years.map((year) => year[displayType]),
-        color: rootStyles.getPropertyValue(`--pillar-${pillar.pilier_code}-color`),
-      }))
-      .concat(
-        filteredData
-          .find((item) => item.stage === "successful")
-          .pillars.map((pillar) => ({
-            xAxis: 1,
-            name: pillar.pilier_name_fr,
-            data: pillar.years.map((year) => year[displayType]),
-            color: rootStyles.getPropertyValue(`--pillar-${pillar.pilier_code}-color`),
-          }))
-      ),
+    series: [
+      // Série pour les projets évalués
+      {
+        type: "column",
+        name: "Évalués",
+        color: rootStyles.getPropertyValue("--evaluated-project-color") || "#009099",
+        data: (() => {
+          const data: number[] = [];
+          sortedYears.forEach((year) => {
+            evaluatedData.pillars.forEach((pillar) => {
+              const yearData = pillar.years.find((y) => y.year === year);
+              data.push(yearData ? yearData[displayType] : 0);
+            });
+          });
+          return data;
+        })(),
+        pointPadding: 0.3,
+        pointPlacement: -0.2,
+      },
+      // Série pour les projets lauréats
+      {
+        type: "column",
+        name: "Lauréats",
+        color: rootStyles.getPropertyValue("--successful-project-color") || "#233e41",
+        data: (() => {
+          const data: number[] = [];
+          sortedYears.forEach((year) => {
+            successfulData.pillars.forEach((pillar) => {
+              const yearData = pillar.years.find((y) => y.year === year);
+              data.push(yearData ? yearData[displayType] : 0);
+            });
+          });
+          return data;
+        })(),
+        pointPadding: 0.3,
+        pointPlacement: 0.2,
+      },
+      // Série pour les taux de succès
+      {
+        type: "line",
+        name: "Taux de succès (%)",
+        color: rootStyles.getPropertyValue("--successRate-color") || "#1f8d49",
+        yAxis: 1,
+        data: (() => {
+          const data: number[] = [];
+          sortedYears.forEach((year) => {
+            evaluatedData.pillars.forEach((pillar) => {
+              const evaluatedYearData = pillar.years.find((y) => y.year === year);
+              const successfulPillar = successfulData.pillars.find((p) => p.pilier_code === pillar.pilier_code);
+              const successfulYearData = successfulPillar ? successfulPillar.years.find((y) => y.year === year) : null;
+
+              const evaluatedValue = evaluatedYearData ? evaluatedYearData[displayType] : 0;
+              const successfulValue = successfulYearData ? successfulYearData[displayType] : 0;
+
+              const successRate = evaluatedValue > 0 ? (successfulValue / evaluatedValue) * 100 : 0;
+              data.push(successRate);
+            });
+          });
+          return data;
+        })(),
+        marker: {
+          enabled: true,
+          radius: 4,
+        },
+        dataLabels: {
+          enabled: true,
+          formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+            return `${Number(this.y).toFixed(1)}%`;
+          },
+        },
+      },
+    ],
   } as HighchartsOptions;
 }

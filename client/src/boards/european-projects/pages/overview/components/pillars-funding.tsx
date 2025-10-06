@@ -1,4 +1,4 @@
-import { Col, Row } from "@dataesr/dsfr-plus";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import PillarsFundingValues from "../charts/pillars-funding";
 import PillarsFundingSuccessRates from "../charts/pillars-funding-success-rates";
 import PillarsFundingProportion from "../charts/pillars-funding-proportion";
@@ -7,8 +7,8 @@ import { EPChartsSource, EPChartsUpdateDate } from "../../../config";
 
 export default function PillarsFunding() {
   return (
-    <>
-      <Row className="chart-container" style={{ marginLeft: "var(--spacing-1w)", marginRight: "var(--spacing-1w)" }}>
+    <Container fluid>
+      <Row className="chart-container chart-container--pillars" style={{ marginLeft: "var(--spacing-1w)", marginRight: "var(--spacing-1w)" }}>
         <Col md={6}>
           <PillarsFundingValues />
         </Col>
@@ -51,11 +51,11 @@ export default function PillarsFunding() {
         </Col>
       </Row>
 
-      <Row className="fr-mt-5w">
+      <Row className="fr-mt-1w chart-container chart-container--pillars">
         <Col>
           <PillarsFundingProportion />
         </Col>
       </Row>
-    </>
+    </Container>
   );
 }

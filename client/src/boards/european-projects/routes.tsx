@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useSearchParams, useParams } from "react-route
 import Beneficiaries from "./pages/beneficiaries/index.tsx";
 import Collaborations from "./pages/collaborations/index.tsx";
 import Overview from "./pages/overview/index.tsx";
+import OverviewV2 from "./pages/overviewV2/index.tsx";
 import Positioning from "./pages/positioning/index.tsx";
 import ProjectsTypes from "./pages/projects-types/index.tsx";
 
@@ -47,6 +48,7 @@ export default function EuropeanProjectsRoutes() {
         <Route index element={<Navigate to="accueil" replace />} />
         <Route path="accueil" element={<RouteWithTitle titleKey="accueil" element={<Home />} />} />
         <Route path="search" element={<RouteWithTitle titleKey="search" element={<Search />} />} />
+        <Route path="overview" element={<RouteWithTitle titleKey="overview" element={<OverviewV2 />} />} />
         <Route element={<SidemenuLayout />}>
           <Route path="synthese" element={<RouteWithTitle titleKey="synthese" element={<Overview />} />} />
           <Route path="positionnement" element={<RouteWithTitle titleKey="positionnement" element={<Positioning />} />} />

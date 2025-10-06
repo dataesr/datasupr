@@ -18,11 +18,12 @@ const config = {
 
 export default function PillarsFundingValues() {
   const params = useGetParams();
+  
   const { data, isLoading } = useQuery({
     queryKey: [config.idQuery, params],
     queryFn: () => getData(params),
   });
-
+  
   if (isLoading || !data) return <DefaultSkeleton />;
 
   return (

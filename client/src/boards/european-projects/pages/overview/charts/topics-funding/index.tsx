@@ -9,17 +9,12 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 
 const config = {
   id: "topicsFundingValues",
-  idQuery: "topicsFunding",
+  idQuery: "thematicsFunding",
   title: {
     en: "Funding (M€)",
     fr: "Financements (M€)",
   },
-  description: {
-    fr: "Financements demandés et obtenus (M€)",
-    en: "Funding requested and obtained (M€)",
-  },
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/destination-funding",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding",
 };
 
 export default function TopicsFundingValues() {

@@ -19,6 +19,10 @@
     "fr": "Sélectionnez votre vue",
     "en": "Select your view"
   },
+  "callout-overview": {
+    "fr": "Cette vue d'ensemble présente les données sur les financements européens demandés et obtenus par les projets. Explorez les différentes dimensions (piliers, programmes, thématiques, destinations) pour analyser les tendances de financement.",
+    "en": "This overview presents data on European funding requested and obtained by projects. Explore the different dimensions (pillars, programs, topics, destinations) to analyze funding trends."
+  },
   "title1-pillars": {
     "fr": "Financements demandés et obtenus par pilier",
     "en": "Funding requested and obtained by pillar"

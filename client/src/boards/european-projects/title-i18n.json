@@ -56,7 +56,11 @@
     "en": "European project - Reference data"
   },
   "informations": {
-    "fr": "Projet européen - Informations",
+    "fr": "Projet européen - Informations", 
     "en": "European project - Information"
+  },
+  "overview": {
+    "fr": "Projet européen - Overview",
+    "en": "European project - Overview"
   }
 }

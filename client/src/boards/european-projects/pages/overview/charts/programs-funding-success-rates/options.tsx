@@ -7,8 +7,10 @@ export default function Options(data) {
   if (!data) return null;
 
   const rootStyles = getComputedStyle(document.documentElement);
-
+  const height = data.data.length * 50;
+  
   const newOptions: HighchartsInstance.Options = {
+    chart: { height: height },
     legend: { enabled: true },
     xAxis: {
       labels: {
@@ -40,10 +42,7 @@ export default function Options(data) {
         name: "Taux de succès",
         color: rootStyles.getPropertyValue("--successRate-color"),
         groupPadding: 0,
-        data: data.successRateByProgram.map((item) => [
-          item.program,
-          item.successRate,
-        ]),
+        data: data.successRateByProgram.map((item) => [item.program, item.successRate]),
         dataLabels: {
           formatter: function () {
             return formatToRates(this.y ?? 0);

@@ -10,8 +10,6 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams } from "./utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
-import i18n from "../../../../i18n-global.json";
-
 const config = {
   id: "successRateForAmountsByTypeOfFinancing",
   title: "",
@@ -23,7 +21,6 @@ const config = {
 export default function SuccessRateForAmountsByTypeOfFinancing() {
   const [searchParams] = useSearchParams();
   const params = getDefaultParams(searchParams);
-  const currentLang = searchParams.get("language") || "fr";
 
   const { data, isLoading } = useQuery({
     queryKey: [
@@ -39,12 +36,6 @@ export default function SuccessRateForAmountsByTypeOfFinancing() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
-  const rootStyles = getComputedStyle(document.documentElement);
-
   return (
     <Container fluid>
       <Row>
@@ -52,29 +43,7 @@ export default function SuccessRateForAmountsByTypeOfFinancing() {
           <ChartWrapper
             config={config}
             options={options(data)}
-            legend={
-              <fieldset className="legend">
-                <legend>{getI18nLabel("legend")}</legend>
-                <ul>
-                  <li>
-                    <div
-                      style={{
-                        background: rootStyles.getPropertyValue("--selected-country-color"),
-                      }}
-                    />
-                    <span>{getI18nLabel("selected-country")}</span>
-                  </li>
-                  <li>
-                    <div
-                      style={{
-                        background: rootStyles.getPropertyValue("--associated-countries-color"),
-                      }}
-                    />
-                    <span>{getI18nLabel("associated-countries")}</span>
-                  </li>
-                </ul>
-              </fieldset>
-            }
+            legend={null}
             renderData={() => null} // TODO: add data table
           />
         </Col>

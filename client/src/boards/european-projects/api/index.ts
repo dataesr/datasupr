@@ -36,6 +36,35 @@ export async function getDestinations(
   return values;
 }
 
+export async function getFilters({ filterKey, pillarId, programIds, thematicIds }: { 
+  filterKey: string; 
+  pillarId?: string; 
+  programIds?: string;
+  thematicIds?: string;
+}) {
+  let url = `${VITE_APP_SERVER_URL}/european-projects/filters-${filterKey}`;
+  
+  if (filterKey === "programs" && pillarId) {
+    url += `?pillarId=${pillarId}`;
+  } else if (filterKey === "thematics" && programIds) {
+    url += `?programIds=${programIds}`;
+  } else if (filterKey === "destinations" && thematicIds) {
+    // Utiliser l'endpoint existant pour les destinations
+    // Convertir les virgules en pipes car l'API attend le format pipe-separated
+    const thematicsFormatted = thematicIds.replace(/,/g, '|');
+    url = `${VITE_APP_SERVER_URL}/european-projects/destinations-from-thematics?thematics=${thematicsFormatted}`;
+  }
+  
+  const response = await fetch(url);
+  
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  
+  const values = await response.json();
+  return values;
+}
+
 export async function getFiltersValues(
   filterKey: string,
   programId?: string
@@ -136,4 +165,36 @@ export async function getFiltersValues(
     return values;
   }
   return [];
+}
+
+export async function getHierarchy({ pillarId }: { pillarId?: string }) {
+  try {
+    const url = `${VITE_APP_SERVER_URL}/european-projects/get-hierarchy${pillarId ? `?pillarId=${pillarId}` : ""}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const values = await response.json();
+    return values;
+  } catch (error) {
+    console.error('Error fetching hierarchy:', error);
+    // Retourner des données par défaut en cas d'erreur
+    return [
+      ["", "ep"],
+      ["ep", "PILLAR_1"],
+      ["ep", "PILLAR_2"], 
+      ["ep", "PILLAR_3"],
+      ["PILLAR_1", "EXCELLENT_SCIENCE_ERC"],
+      ["PILLAR_1", "EXCELLENT_SCIENCE_MSCA"],
+      ["PILLAR_2", "GLOBAL_CHALLENGES_HEALTH"],
+      ["PILLAR_2", "GLOBAL_CHALLENGES_DIGITAL"],
+      ["PILLAR_3", "INNOVATIVE_EUROPE_EIC"],
+      ["EXCELLENT_SCIENCE_ERC", "ERC_SYG", 4],
+      ["EXCELLENT_SCIENCE_ERC", "ERC_COG", 4],
+      ["EXCELLENT_SCIENCE_MSCA", "MSCA_DN", 4],
+      ["GLOBAL_CHALLENGES_HEALTH", "HEALTH_01", 4],
+      ["GLOBAL_CHALLENGES_DIGITAL", "DIGITAL_01", 4],
+      ["INNOVATIVE_EUROPE_EIC", "EIC_PATHFINDER", 4]
+    ];
+  }
 }

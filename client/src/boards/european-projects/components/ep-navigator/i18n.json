@@ -1,0 +1,186 @@
+{
+  "info_button_title": {
+    "fr": "Informations sur le navigateur",
+    "en": "Navigator information"
+  },
+  "pillar": {
+    "fr": "Pilier",
+    "en": "Pillar"
+  },
+  "program": {
+    "fr": "Programme",
+    "en": "Program"
+  },
+  "thematics": {
+    "fr": "Thématiques",
+    "en": "Thematics"
+  },
+  "destinations": {
+    "fr": "Destinations",
+    "en": "Destinations"
+  },
+  "no_pillar_selected": {
+    "fr": "Aucun pilier sélectionné",
+    "en": "No pillar selected"
+  },
+  "no_program_selected": {
+    "fr": "Aucun programme sélectionné",
+    "en": "No program selected"
+  },
+  "no_thematic_selected": {
+    "fr": "Aucune thématique sélectionnée",
+    "en": "No thematic selected"
+  },
+  "no_destination_selected": {
+    "fr": "Aucune destination sélectionnée",
+    "en": "No destination selected"
+  },
+  "modify": {
+    "fr": "Modifier",
+    "en": "Modify"
+  },
+  "select": {
+    "fr": "Sélectionner",
+    "en": "Select"
+  },
+  "pillar_selection_title": {
+    "fr": "Sélection d'un pilier",
+    "en": "Pillar selection"
+  },
+  "pillar_selection_button_title": {
+    "fr": "Sélection d'un pilier",
+    "en": "Pillar selection"
+  },
+  "program_selection_title": {
+    "fr": "Sélection du programme",
+    "en": "Program selection"
+  },
+  "program_selection_button_title": {
+    "fr": "Sélection d'un ou plusieurs programmes",
+    "en": "Selection of one or more programs"
+  },
+  "thematic_selection_title": {
+    "fr": "Sélection des thématiques",
+    "en": "Thematics selection"
+  },
+  "thematic_selection_button_title": {
+    "fr": "Sélection d'un ou plusieurs thématiques",
+    "en": "Selection of one or more thematics"
+  },
+  "destination_selection_title": {
+    "fr": "Sélection des destinations",
+    "en": "Destinations selection"
+  },
+  "destination_selection_button_title": {
+    "fr": "Sélection d'un ou plusieurs destinations",
+    "en": "Selection of one or more destinations"
+  },
+  "navigator_info_title": {
+    "fr": "Informations sur le navigateur",
+    "en": "Navigator information"
+  },
+  "choose_pillar": {
+    "fr": "Choisissez un pilier d'Horizon Europe",
+    "en": "Choose a Horizon Europe pillar"
+  },
+  "available_pillars": {
+    "fr": "Piliers disponibles",
+    "en": "Available pillars"
+  },
+  "select_pillar": {
+    "fr": "Sélectionner un pilier",
+    "en": "Select a pillar"
+  },
+  "choose_program": {
+    "fr": "Choisissez un programme du pilier",
+    "en": "Choose a program from pillar"
+  },
+  "available_programs": {
+    "fr": "Programmes disponibles",
+    "en": "Available programs"
+  },
+  "loading_programs": {
+    "fr": "Chargement des programmes...",
+    "en": "Loading programs..."
+  },
+  "no_programs_available": {
+    "fr": "Aucun programme disponible pour ce pilier.",
+    "en": "No programs available for this pillar."
+  },
+  "choose_thematics": {
+    "fr": "Choisissez une ou plusieurs thématiques",
+    "en": "Choose one or more thematics"
+  },
+  "available_thematics": {
+    "fr": "Thématiques disponibles",
+    "en": "Available thematics"
+  },
+  "loading_thematics": {
+    "fr": "Chargement des thématiques...",
+    "en": "Loading thematics..."
+  },
+  "no_thematics_available": {
+    "fr": "Aucune thématique disponible pour les programmes sélectionnés.",
+    "en": "No thematics available for the selected programs."
+  },
+  "choose_destinations": {
+    "fr": "Choisissez une ou plusieurs destinations",
+    "en": "Choose one or more destinations"
+  },
+  "available_destinations": {
+    "fr": "Destinations disponibles",
+    "en": "Available destinations"
+  },
+  "loading_destinations": {
+    "fr": "Chargement des destinations...",
+    "en": "Loading destinations..."
+  },
+  "no_destinations_available": {
+    "fr": "Aucune destination disponible pour les thématiques sélectionnées.",
+    "en": "No destinations available for the selected thematics."
+  },
+  "loading_error": {
+    "fr": "Erreur lors du chargement des destinations:",
+    "en": "Error loading destinations:"
+  },
+  "cancel": {
+    "fr": "Annuler",
+    "en": "Cancel"
+  },
+  "validate": {
+    "fr": "Valider",
+    "en": "Validate"
+  },
+  "clear_selection": {
+    "fr": "Supprimer la sélection",
+    "en": "Clear selection"
+  },
+  "close": {
+    "fr": "Fermer",
+    "en": "Close"
+  },
+  "about_navigator": {
+    "fr": "À propos du navigateur des projets européens",
+    "en": "About the European projects navigator"
+  },
+  "navigator_description": {
+    "fr": "Ce navigateur vous permet d'explorer les projets européens selon une hiérarchie structurée présentée ci-dessous :",
+    "en": "This navigator allows you to explore European projects according to a structured hierarchy presented below:"
+  },
+  "hierarchical_organization": {
+    "fr": "Organisation hiérarchique",
+    "en": "Hierarchical organization"
+  },
+  "loading_hierarchy": {
+    "fr": "Chargement de la hiérarchie...",
+    "en": "Loading hierarchy..."
+  },
+  "navigation_title": {
+    "fr": "Navigation",
+    "en": "Navigation"
+  },
+  "navigation_description": {
+    "fr": "La navigation se fait de manière progressive : vous devez d'abord sélectionner un pilier avant de pouvoir accéder aux programmes, puis aux thématiques et enfin aux destinations.",
+    "en": "Navigation is done progressively: you must first select a pillar before being able to access programs, then thematics and finally destinations."
+  }
+}

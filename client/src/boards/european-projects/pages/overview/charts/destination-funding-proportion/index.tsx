@@ -13,12 +13,7 @@ const config = {
     fr: "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
     en: "Funding requested and obtained by the country on all countries",
   },
-  description: {
-    fr: "Part des financements demandés et obtenus par le pays sur l'ensemble des pays",
-    en: "Funding requested and obtained by the country on all countries",
-  },
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
 };
 
 export default function DestinationFundingProportion() {

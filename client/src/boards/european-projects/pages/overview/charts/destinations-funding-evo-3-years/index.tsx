@@ -131,19 +131,10 @@ export default function DestinationsFundingEvo3Years() {
     <Container fluid>
       <Row className="fr-my-1w">
         <Col>
-          <select
-            className="fr-select"
-            onChange={(e) => setDisplayType(e.target.value)}
-          >
-            <option value="total_fund_eur">
-              {getI18nLabel("total-fund-eur")}
-            </option>
-            <option value="total_coordination_number">
-              {getI18nLabel("total-coordination-number")}
-            </option>
-            <option value="total_number_involved">
-              {getI18nLabel("total-number-involved")}
-            </option>
+          <select className="fr-select" onChange={(e) => setDisplayType(e.target.value)}>
+            <option value="total_fund_eur">{getI18nLabel("total-fund-eur")}</option>
+            <option value="total_coordination_number">{getI18nLabel("total-coordination-number")}</option>
+            <option value="total_number_involved">{getI18nLabel("total-number-involved")}</option>
           </select>
         </Col>
       </Row>

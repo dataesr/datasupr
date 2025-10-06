@@ -1,38 +1,21 @@
 import { useSearchParams } from "react-router-dom";
-import Cookies from "js-cookie";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
 
-  const params = [...searchParams]
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
+  const params: string[] = [];
 
-  let cleanParams = params.replace(/[?&]language=(fr|en)/g, "");
+  // Récupérer le paramètre country_code s'il existe
+  const countryCode = searchParams.get("country_code");
+  if (countryCode) {
+    params.push(`country_code=${countryCode}`);
+  }
 
-  const selectedPillars = Cookies.get("selectedPillars");
-  const selectedPrograms = Cookies.get("selectedPrograms");
-  const selectedThematics = Cookies.get("selectedThematics");
-  const selectedDestinations = Cookies.get("selectedDestinations");
+  // Récupérer le paramètre pillarId et l'ajouter comme pillars s'il existe
+  const pillarId = searchParams.get("pillarId");
+  if (pillarId) {
+    params.push(`pillars=${pillarId}`);
+  }
 
-  if (selectedPillars) {
-    cleanParams += `&pillars=${selectedPillars}`;
-  }
-  if (selectedPrograms) {
-    cleanParams += `&programs=${selectedPrograms}`;
-  }
-  if (selectedThematics) {
-    cleanParams += `&thematics=${selectedThematics}`;
-  }
-  if (selectedDestinations) {
-    cleanParams += `&destinations=${selectedDestinations}`;
-  }
-  cleanParams = cleanParams.startsWith("&")
-    ? cleanParams.substring(1)
-    : cleanParams;
-  cleanParams = cleanParams.endsWith("&")
-    ? cleanParams.substring(0, cleanParams.length - 1)
-    : cleanParams;
-
-  return cleanParams;
+  return params.join("&");
 }

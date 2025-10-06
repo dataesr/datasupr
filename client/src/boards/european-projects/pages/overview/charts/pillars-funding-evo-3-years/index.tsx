@@ -1,10 +1,10 @@
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import Cookies from "js-cookie";
 
 import { GetData } from "./query";
 import optionsSubsidiesValues from "./options-values";
-import optionsSubsidiesRates from "./options-rates";
 import optionsSubsidiesCountryRates from "./options-success-rates";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -16,33 +16,27 @@ import { useState } from "react";
 
 import i18nLocal from "./i18n.json";
 import i18nGlobal from "../../../../i18n-global.json";
+import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
 
 const configChart1 = {
   id: "pillarsEvolutionFundingLines",
   title: {
-    fr: "Pilliers - Evolution des financements demandés et obtenus (M€) <br />&nbsp;",
+    fr: "Pilliers - Evolution des financements demandés et obtenus (M€)",
     en: "Pilars - Financing applied for and obtained (€m)",
   },
-  description: {
-    fr: "",
-    en: "",
+  comment: {
+    fr: React.createElement(React.Fragment, null, "Les montants sont exprimés en M€ (millions d'euros)."),
+    en: React.createElement(React.Fragment, null, "Amounts are expressed in €m (millions of euros)."),
   },
-  subtitle: "",
+  readingKey: {
+    fr: React.createElement(React.Fragment, null, "Les barres représentent les montants demandés et les lignes les montants obtenus."),
+    en: React.createElement(React.Fragment, null, "The bars represent the amounts applied for and the lines the amounts obtained."),
+  },
+  source: EPChartsSource,
+  updateDate: EPChartsUpdateDate,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
-const configChart2 = {
-  id: "pillarsEvolutionFundingLinesRates",
-  title: {
-    fr: "Pilliers - Evolution du taux de succès des financements demandés et obtenus",
-    en: "Pilars - Trend in the success rate of financing applications and grants",
-  },
-  description: {
-    fr: "",
-    en: "",
-  },
-  subtitle: "",
-  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
-};
+
 const configChart3 = {
   id: "pillarsEvolutionFundingLinesSuccessRate",
   title: {
@@ -71,7 +65,7 @@ export default function PillarsFundingEvo3Years() {
   if (isLoading || !data)
     return (
       <>
-        <DefaultSkeleton col={2} />
+        <DefaultSkeleton />
         <DefaultSkeleton />
       </>
     );
@@ -82,31 +76,6 @@ export default function PillarsFundingEvo3Years() {
   };
   function getI18nLabel(key) {
     return i18n[key][currentLang];
-  }
-
-  function Legend() {
-    const rootStyles = getComputedStyle(document.documentElement);
-    return (
-      <fieldset className="legend">
-        <legend>{getI18nLabel("legend")}</legend>
-        <div>
-          <ul>
-            {data
-              .find((item) => item.country !== "all")
-              .data[0].pillars.map((item) => (
-                <li key={item.pilier_code}>
-                  <div
-                    style={{
-                      background: rootStyles.getPropertyValue(`--pillar-${item.pilier_code}-color`),
-                    }}
-                  />
-                  <span>{item[`pilier_name_${currentLang}`]}</span>
-                </li>
-              ))}
-          </ul>
-        </div>
-      </fieldset>
-    );
   }
 
   return (
@@ -121,7 +90,7 @@ export default function PillarsFundingEvo3Years() {
         </Col>
       </Row>
       <Row>
-        <Col md={6}>
+        <Col md={12}>
           <ChartWrapper
             config={configChart1}
             legend={null}
@@ -129,21 +98,8 @@ export default function PillarsFundingEvo3Years() {
             renderData={RenderDataSubsidiesValuesAndRates}
           />
         </Col>
-        <Col>
-          <ChartWrapper
-            config={configChart2}
-            legend={null}
-            options={optionsSubsidiesRates(data, displayType)}
-            renderData={RenderDataSubsidiesValuesAndRates}
-          />
-        </Col>
       </Row>
-      <Row>
-        <Col>
-          <Legend />
-        </Col>
-      </Row>
-      <Row>
+      <Row className="fr-my-1w">
         <Col>
           <ChartWrapper
             config={configChart3}
@@ -151,11 +107,6 @@ export default function PillarsFundingEvo3Years() {
             options={optionsSubsidiesCountryRates(data, displayType)}
             renderData={RenderDataSubsidiesValuesAndRates}
           />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Legend />
         </Col>
       </Row>
     </Container>

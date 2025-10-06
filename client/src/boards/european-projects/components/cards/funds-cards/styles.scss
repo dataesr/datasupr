@@ -1,0 +1,147 @@
+.ep-funds-card {
+  padding: 1rem;
+  padding-top: 40px;
+  border-radius: 8px;
+  background-color: var(--background-contrast-blue-cumulus);
+  // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  .label{
+    font-size: 1.1rem;
+    font-style: italic;
+    margin-bottom: 0.5rem;
+    color: var(--card-text-color, var(--text-default-grey));
+  }
+  
+  .nb{
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--card-primary-color, var(--text-label-blue-ecume));
+  }
+  
+  .funds{
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--card-primary-color, var(--text-label-blue-ecume));
+  }
+  
+  .part-container {
+    margin-top: 1rem;
+    
+    .part-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--card-text-color, var(--text-default-grey));
+      display: block;
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .part-bar-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      
+      .part-bar {
+        flex: 1;
+        height: 8px;
+        background-color: rgba(255, 255, 255, 0.3);
+        border-radius: 4px;
+        overflow: hidden;
+        
+        .part-fill {
+          height: 100%;
+          background-color: var(--card-primary-color, var(--text-label-blue-ecume));
+          border-radius: 4px;
+          transition: width 0.3s ease;
+        }
+      }
+      
+      .part-percentage {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--card-text-color, var(--text-default-grey));
+        min-width: 35px;
+        text-align: right;
+      }
+    }
+  }
+
+  // Variante pour les projets évalués
+  &.evaluated-card {
+    --card-primary-color: var(--evaluated-project-color);
+    --card-text-color: var(--text-default-grey);
+  }
+
+  // Variante pour les projets lauréats
+  &.successful-card {
+    --card-primary-color: var(--successful-project-color); // Vert pour les succès
+    --card-text-color: var(--text-default-grey);
+  }
+
+  &.success-rate-card {
+    --card-primary-color: var(--successRate-color); // Couleur spécifique pour le taux de succès
+    --card-text-color: var(--text-default-grey);
+  }
+
+  // Styles pour les loaders
+  .loader-skeleton {
+    background: linear-gradient(90deg, 
+      rgba(255, 255, 255, 0.1) 25%, 
+      rgba(255, 255, 255, 0.3) 50%, 
+      rgba(255, 255, 255, 0.1) 75%);
+    background-size: 200% 100%;
+    animation: loading-shimmer 1.5s infinite;
+    border-radius: 4px;
+    
+    &.loader-number {
+      height: 3rem;
+      width: 60%;
+      margin-bottom: 0.5rem;
+    }
+    
+    &.loader-label {
+      height: 1.1rem;
+      width: 40%;
+      margin-bottom: 0.5rem;
+    }
+    
+    &.loader-funds {
+      height: 2rem;
+      width: 70%;
+      margin-top: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    &.loader-funds-label {
+      height: 1.1rem;
+      width: 30%;
+    }
+    
+    &.loader-part-label {
+      height: 0.75rem;
+      width: 25%;
+      margin-bottom: 0.25rem;
+    }
+    
+    &.loader-part-bar {
+      height: 8px;
+      width: 100%;
+      flex: 1;
+    }
+    
+    &.loader-percentage {
+      height: 0.875rem;
+      width: 35px;
+    }
+  }
+  
+  @keyframes loading-shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+    100% {
+      background-position: 200% 0;
+    }
+  }
+}

@@ -16,7 +16,12 @@ export default function Options(data, displayType): HighchartsOptions {
       backgroundColor: "transparent",
     },
     title: { text: "" },
-    legend: { enabled: false },
+    legend: {
+      enabled: true,
+      align: "center",
+      verticalAlign: "bottom",
+      layout: "horizontal",
+    },
     credits: { enabled: false },
     xAxis: [
       {
@@ -28,27 +33,6 @@ export default function Options(data, displayType): HighchartsOptions {
         },
       },
     ],
-    // yAxis: [
-    //   {
-    //     lineWidth: 1,
-    //     lineColor: "#E6E6E6",
-    //     min: 0,
-    //     max: 100,
-    //     title: {
-    //       text: "%",
-    //     },
-    //   },
-    //   {
-    //     min: 0,
-    //     max: 100,
-    //     title: {
-    //       text: "",
-    //     },
-    //     lineWidth: 1,
-    //     lineColor: "#E6E6E6",
-    //     left: "75%",
-    //   },
-    // ],
     plotOptions: {
       line: {
         marker: {

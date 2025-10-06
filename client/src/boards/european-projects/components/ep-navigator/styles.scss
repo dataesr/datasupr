@@ -1,0 +1,267 @@
+// Variables pour les couleurs de sections
+$section-colors: (
+	pilier: (
+		background: var(--background-contrast-blue-ecume),
+		color: var(--text-label-blue-ecume),
+		border: var(--text-label-blue-ecume)
+	),
+	programmes: (
+		background: var(--background-contrast-purple-glycine),
+		color: var(--text-label-purple-glycine),
+		border: var(--text-label-purple-glycine)
+	),
+	thematiques: (
+		background: var(--background-contrast-green-menthe),
+		color: var(--text-label-green-menthe),
+		border: var(--text-label-green-menthe)
+	),
+	destinations: (
+		background: var(--background-contrast-orange-terre-battue),
+		color: var(--text-label-orange-terre-battue),
+		border: var(--text-label-orange-terre-battue)
+	)
+);
+
+// Mixin pour créer la flèche après chaque section
+@mixin arrow-after($color) {
+	&:after {
+		content: "";  
+		width: 0;
+		height: 0;
+		border-top: 55px solid transparent;
+		border-bottom: 55px solid transparent;
+		border-left: 55px solid $color;
+		position: absolute; 
+		right: -55px; 
+		top: 0;
+		z-index: 2;
+	}
+}
+
+// Mixin pour les styles de section active
+@mixin section-active($background, $color) {
+	background: $background;
+	color: $color;
+	@include arrow-after($background);
+}
+
+// Mixin pour les styles de label
+@mixin section-label($background, $color, $border) {
+	background: $background;
+	color: $color;
+	border-color: $border;
+}
+
+#crumbs {
+	width: 100%;
+	position: relative;
+	
+	.info-button-container {
+		position: absolute;
+		top: -20px;
+		right: -16px;
+		z-index: 10;
+		
+		.info-button {
+			background: var(--background-flat-blue-france);
+			border: 1px solid #ddd;
+			border-radius: 50%;
+			width: 32px;
+			height: 32px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			
+			&:hover {
+				background: #4ebe81;
+				box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        cursor: help;
+			}
+			
+			i {
+				font-size: 20px;
+				color: #fff;
+			}
+		}
+	}
+	
+	ul {
+		display: flex;
+		align-items: center;
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		width: 100%;
+		
+		li {
+			position: relative;
+			flex: 1;
+			
+			// Génération dynamique des styles pour chaque section
+			@each $section, $colors in $section-colors {
+				&.#{$section} div:not(.disabled):not(.no-selection) {
+					@include section-active(map-get($colors, background), map-get($colors, color));
+				}
+				
+				// Styles personnalisés pour les boutons de chaque section
+				&.#{$section} div button {
+					background: map-get($colors, background) !important;
+					color: map-get($colors, color) !important;
+					border: 1px solid map-get($colors, border) !important;
+					
+					&:hover {
+						background: map-get($colors, color) !important;
+						color: map-get($colors, background) !important;
+						border-color: map-get($colors, border) !important;
+					}
+				}
+				
+				// Styles pour les boutons des sections no-selection
+				&.#{$section} div.no-selection:not(.disabled) button {
+					background: var(--background-default-grey-hover) !important;
+					color: map-get($colors, color) !important;
+					border: 1px solid map-get($colors, border) !important;
+					opacity: 0.8;
+					
+					&:hover {
+						background: map-get($colors, background) !important;
+						color: map-get($colors, color) !important;
+						border-color: map-get($colors, border) !important;
+						opacity: 1;
+					}
+				}
+			}
+			
+			i {
+				position: absolute;
+				top: -15px;
+				left: 50%;
+				transform: translateX(-100%);
+				font-size: 12px;
+				font-style: normal;
+				color: var(--text-default-grey);
+				background: #e4f3df;
+				padding: 0 8px;
+				border-top-right-radius: 8px;
+				border-bottom-left-radius: 8px;
+				z-index: 10;
+				border: 1px solid #aaa;
+				width: 130px;
+				text-align: center;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+
+				// Génération dynamique des styles de labels pour chaque section
+				@each $section, $colors in $section-colors {
+					&.label-#{$section} {
+						@include section-label(
+							map-get($colors, background), 
+							map-get($colors, color), 
+							map-get($colors, border)
+						);
+					}
+				}
+			}
+			
+			div {
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				height: 110px;
+				background: var(--background-flat-blue-france);
+				padding: 18px 0px 8px 50px;
+				position: relative;
+				margin: 0 5px 0 0;
+				transition: all 0.3s ease;
+				width: 100%;
+				font-size: 0.8rem;
+				text-decoration: none;
+				color: #fff;
+
+				// Styles pour les boutons dans les liens actifs
+				button {
+					background: rgba(255, 255, 255, 0.8) !important;
+					color: inherit !important;
+					border: 1px solid currentColor !important;
+          padding: 0 8px !important;
+					
+					&:hover {
+						background: white !important;
+						border-color: currentColor !important;
+					}
+				}
+				
+				// Flèche par défaut
+				@include arrow-after(var(--background-flat-blue-france));
+
+				&:before {
+					content: "";  
+					width: 0;
+					height: 0;
+					border-top: 55px solid transparent;
+					border-bottom: 55px solid transparent;
+					border-left: 55px solid #fff;
+					position: absolute; 
+					left: 0; 
+					top: 0;
+					z-index: 1;
+				}
+
+				// États spéciaux avec mixin commun pour éviter la duplication
+				&.disabled,
+				&.no-selection:not(.disabled) {
+					background: var(--background-default-grey-hover);
+					color: #000;
+					@include arrow-after(var(--background-default-grey-hover));
+				}
+
+				// État désactivé spécifique
+				&.disabled {
+					cursor: not-allowed;
+					pointer-events: none;
+					
+					&:hover {
+						background: var(--background-alt-blue-france-hover);
+						transform: none;
+						@include arrow-after(var(--background-alt-blue-france-hover));
+					}
+
+					// Styles pour les boutons dans les liens désactivés
+					button {
+						background: var(--background-default-grey-hover) !important;
+						color: #777 !important;
+						border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            font-style: italic;
+					}
+				}
+			}
+
+			// Styles pour les étiquettes lorsque le lien est désactivé
+			&.section-disabled {
+				i {
+					background: var(--background-default-grey-hover) !important;
+					color: #999 !important;
+					border-color: #ccc !important;
+          font-style: italic;
+				}
+			}
+			
+			&:first-child div {
+				&:before {
+					display: none; 
+				}
+			}
+
+			&:last-child div {
+				padding-right: 80px;
+				
+				&:after {
+					display: none !important; 
+				}
+			}
+		}
+	}
+}
