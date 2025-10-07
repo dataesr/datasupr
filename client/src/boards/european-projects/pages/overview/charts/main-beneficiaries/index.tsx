@@ -10,12 +10,8 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 
 const config = {
   id: "mainBeneficiaries",
-  title: "",
-  subtitle:
-    "Principaux bénéficiaires qui concentrent 50 % des subventions allouées aux équipes",
-  description: "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries",
+  title: "Principaux bénéficiaires qui concentrent 50 % des subventions allouées aux équipes",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries",
 };
 
 export default function MainBeneficiaries() {
@@ -26,6 +22,8 @@ export default function MainBeneficiaries() {
     queryKey: [config.id, params],
     queryFn: () => GetData(params),
   });
+
+  return null;
 
   if (isLoading || !data) return <DefaultSkeleton />;
 

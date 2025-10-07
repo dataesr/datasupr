@@ -8,6 +8,7 @@ import PillarsOverview from "../../../overview/components/pillars-overview";
 import ProgramsOverview from "../../../overview/components/programs-overview";
 import ThematicsOverview from "../../../overview/components/destinations-overview";
 import DestinationsOverview from "../../../overview/components/destinations-overview";
+import MainPartners from "../../../overview/charts/main-partners";
 // import DestinationsFunding from "../../../overview/components/destinations-funding";
 
 interface SyntheseContentProps {
@@ -25,6 +26,8 @@ export default function SyntheseContent({ contentType, pillarId, programId, them
         <div>
           <Title as="h2">Comparaison de la répartition des financements par pilier</Title>
           <PillarsFunding />
+          <MainPartners />
+
           <p>Tableaux de synthèse des financements</p>
         </div>
       );
@@ -35,6 +38,7 @@ export default function SyntheseContent({ contentType, pillarId, programId, them
           {/* <PillarsFunding /> */}
           <Title as="h2">Détails du pilier {pillarId}</Title>
           <PillarsOverview />
+          <MainPartners />
 
           <Title as="h2">Composition du pilier</Title>
           <Title as="h3">Répartition des financements par programme</Title>
@@ -47,6 +51,7 @@ export default function SyntheseContent({ contentType, pillarId, programId, them
         <div>
           <p>Synthèse - Détails du programme {programId}</p>
           <ProgramsOverview />
+          <MainPartners />
 
           <p>Indicateurs de performance du programme</p>
           <Title as="h2">Composition du programme</Title>
@@ -60,7 +65,8 @@ export default function SyntheseContent({ contentType, pillarId, programId, them
         <div>
           <p>Synthèse - Détails des thématiques {thematicIds}</p>
           <ThematicsOverview />
-          <p>Analyse comparative des thématiques</p>
+          <MainPartners />
+
           <Title as="h2">Composition des thématiques</Title>
           <Title as="h3">Répartition des financements par destination</Title>
           <DestinationsFunding />
@@ -72,6 +78,8 @@ export default function SyntheseContent({ contentType, pillarId, programId, them
         <div>
           <p>Synthèse - Détails des destinations {destinationIds}</p>
           <DestinationsOverview />
+          <MainPartners />
+
           <p>Répartition budgétaire par destination</p>
         </div>
       );

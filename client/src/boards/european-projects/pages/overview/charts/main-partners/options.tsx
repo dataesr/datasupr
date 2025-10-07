@@ -1,11 +1,21 @@
 import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
+import { formatToMillions } from "../../../../../../utils/format";
 
-export default function Options(data) {
+import i18n from "./i18n.json";
+
+export default function Options(data, currentLang) {
   if (!data) return null;
 
+  function getI18nLabel(key) {
+    return i18n[key][currentLang];
+  }
+
   const newOptions: HighchartsInstance.Options = {
+    chart: {
+      height: 600,
+    },
     xAxis: {
       type: "category",
     },
@@ -16,7 +26,7 @@ export default function Options(data) {
       },
     },
     tooltip: {
-      pointFormat: "Total des subventions : <b>{point.y:.1f} €</b>",
+      pointFormat: getI18nLabel("total-subsidies") + "<b>{point.y:,.0f}</b> €",
     },
     series: [
       {
@@ -25,9 +35,21 @@ export default function Options(data) {
         colors: ["#1E3859"],
         colorByPoint: true,
         groupPadding: 0,
-        data: data.list.map((item) => [item.acronym, item.total_fund_eur]),
+        data: data.list.map((item) => [item.acronym || item.name, item.total_fund_eur]),
       },
     ],
+    plotOptions: {
+      series: {
+        animation: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            return formatToMillions(this.y ?? 0);
+          },
+        },
+      },
+    },
   };
 
   return CreateChartOptions("bar", newOptions);
