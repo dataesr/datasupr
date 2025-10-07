@@ -6,7 +6,8 @@ import TopicsFunding from "../../../overview/components/topics-funding";
 import DestinationsFunding from "../../../overview/components/destinations-funding";
 import PillarsOverview from "../../../overview/components/pillars-overview";
 import ProgramsOverview from "../../../overview/components/programs-overview";
-import ThematicsOverview from "../../../overview/components/thematics-overview";
+import ThematicsOverview from "../../../overview/components/destinations-overview";
+import DestinationsOverview from "../../../overview/components/destinations-overview";
 // import DestinationsFunding from "../../../overview/components/destinations-funding";
 
 interface SyntheseContentProps {
@@ -70,6 +71,7 @@ export default function SyntheseContent({ contentType, pillarId, programId, them
       return (
         <div>
           <p>Synthèse - Détails des destinations {destinationIds}</p>
+          <DestinationsOverview />
           <p>Répartition budgétaire par destination</p>
         </div>
       );

@@ -2,22 +2,22 @@ import { useQuery } from "@tanstack/react-query";
 
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { formatToMillions } from "../../../../../utils/format";
-import { getData } from "../charts/topics-funding/query";
-import { getData as getDataProportion } from "../charts/topics-funding-proportion/query";
-import { useGetParams } from "../charts/programs-funding/utils";
+import { getData } from "../charts/destination-funding/query";
+import { getData as getDataProportion } from "../charts/destination-funding-proportion/query";
+import { useGetParams } from "../charts/destination-funding/utils";
 import EvaluatedCard from "../../../components/cards/funds-cards/evaluated";
 import SuccessfulCard from "../../../components/cards/funds-cards/succesful";
 import SuccessRateCard from "../../../components/cards/funds-cards/success-rate";
 
-export default function ThematicsOverview() {
+export default function DestinationsOverview() {
   const params = useGetParams();
   const { data, isLoading } = useQuery({
-    queryKey: ["thematicsFunding", params],
+    queryKey: ["destinationsFunding", params],
     queryFn: () => getData(params),
   });
 
   const { data: dataProportion, isLoading: isLoadingProportion } = useQuery({
-    queryKey: ["thematicsFundingProportion", params],
+    queryKey: ["destinationsFundingProportion", params],
     queryFn: () => getDataProportion(params),
   });
 

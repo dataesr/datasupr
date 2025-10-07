@@ -516,10 +516,10 @@ router.route("/european-projects/overview/programs-funding-proportion").get(asyn
 router.route("/european-projects/overview/topics-funding").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
 
-  // if (req.query.thematics) {
-  //   const topics = req.query.thematics.split("|");
-  //   filters.thema_code = { $in: topics };
-  // }
+  if (req.query.thematics) {
+    const thematics = req.query.thematics.split(",");
+    filters.thema_code = { $in: thematics };
+  }
   if (req.query.pillars) {
     filters.pilier_code = req.query.pillars;
   }
@@ -530,7 +530,6 @@ router.route("/european-projects/overview/topics-funding").get(async (req, res) 
   delete filters.pillars;
   delete filters.programs;
   delete filters.destinations;
-  console.log(filters);
   
   const data = await db
     .collection("fr-esr-all-projects-synthese")
@@ -593,10 +592,10 @@ router.route("/european-projects/overview/topics-funding").get(async (req, res) 
 router.route("/european-projects/overview/topics-funding-proportion").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
   
-  // if (req.query.thematics) {
-  //   const topics = req.query.thematics.split("|");
-  //   filters.thema_code = { $in: topics };
-  // }
+  if (req.query.thematics) {
+    const thematics = req.query.thematics.split("|");
+    filters.thema_code = { $in: thematics };
+  }
   if (req.query.pillars) {
     filters.pilier_code = req.query.pillars;
   }
@@ -708,7 +707,6 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
   }
   if (req.query.thematics) {
     const thematics = req.query.thematics.split(","); console.log(thematics);
-    
     const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
     filters.thema_code = { $in: filteredThematics };
   }
@@ -728,6 +726,7 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
             stage: "$stage",
           },
           total_fund_eur: { $sum: "$fund_eur" },
+          count: { $sum: 1 },
         },
       },
       {
@@ -736,6 +735,7 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
           destination: "$_id.destination",
           stage: "$_id.stage",
           total_fund_eur: 1,
+          count: 1,
         },
       },
       { $sort: { total_fund_eur: -1 } },
