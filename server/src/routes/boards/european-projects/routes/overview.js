@@ -20,10 +20,32 @@ router.route("/european-projects/overview/graph1").get(async (req, res) => {
 });
 
 router.route("/european-projects/synthesis-focus").get(async (req, res) => {
+  // const filters = checkQuery(req.query, ["stage"], res);
+  const filters = {};
+  if (req.query.pillars) {
+    const pillars = req.query.pillars.split("|");
+    filters.pilier_code = { $in: pillars };
+  }
+  if (req.query.programs) {
+    const programs = req.query.programs.split("|");
+    filters.programme_code = { $in: programs };
+  }
+  if (req.query.thematics) {
+    const thematics = req.query.thematics.split(",");
+    filters.thema_code = { $in: thematics };
+  }
+  if (req.query.destinations) {
+    const destinations = req.query.destinations.split(",");
+    filters.destination_code = { $in: destinations };
+  }
+  
+console.log("filters" , filters);
+
+
   const dataSuccessful = await db
     .collection("fr-esr-all-projects-synthese")
     .aggregate([
-      { $match: { stage: "successful" } },
+      { $match: { ...filters, stage: "successful" } },
       {
         $group: {
           _id: "$country_code",
@@ -65,7 +87,7 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
   const dataEvaluated = await db
     .collection("fr-esr-all-projects-synthese")
     .aggregate([
-      { $match: { stage: "evaluated" } },
+      { $match: { ...filters, stage: "evaluated" } },
       {
         $group: {
           _id: "$country_code",
@@ -103,6 +125,7 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
       },
     ])
     .toArray();
+console.log(dataSuccessful, dataEvaluated);
 
   if (req.query.country_code) {
     res.json({

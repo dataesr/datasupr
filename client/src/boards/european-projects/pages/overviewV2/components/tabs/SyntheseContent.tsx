@@ -9,23 +9,26 @@ import ProgramsOverview from "../../../overview/components/programs-overview";
 import ThematicsOverview from "../../../overview/components/destinations-overview";
 import DestinationsOverview from "../../../overview/components/destinations-overview";
 import MainPartners from "../../../overview/charts/main-partners";
+import SynthesisFocus from "../../../overview/charts/synthesis-focus";
 // import DestinationsFunding from "../../../overview/components/destinations-funding";
 
 interface SyntheseContentProps {
   contentType: ContentType;
-  pillarId?: string | null;
-  programId?: string | null;
-  thematicIds?: string | null;
-  destinationIds?: string | null;
 }
 
-export default function SyntheseContent({ contentType, pillarId, programId, thematicIds, destinationIds }: SyntheseContentProps) {
+export default function SyntheseContent({ contentType }: SyntheseContentProps) {
   switch (contentType) {
     case "pillar-comparison":
       return (
         <div>
-          <Title as="h2">Comparaison de la répartition des financements par pilier</Title>
+          <SynthesisFocus />
+          <Title as="h2" className="fr-mt-5w">
+            Comparaison de la répartition des financements par pilier
+          </Title>
           <PillarsFunding />
+          <Title as="h2" className="fr-mt-5w">
+            Principaux bénéficiaires
+          </Title>
           <MainPartners />
 
           <p>Tableaux de synthèse des financements</p>
@@ -36,7 +39,9 @@ export default function SyntheseContent({ contentType, pillarId, programId, them
       return (
         <div>
           {/* <PillarsFunding /> */}
-          <Title as="h2">Détails du pilier {pillarId}</Title>
+          <SynthesisFocus />
+
+          {/* <Title as="h2">Détails du pilier {pillarId}</Title> */}
           <PillarsOverview />
           <MainPartners />
 
@@ -49,7 +54,8 @@ export default function SyntheseContent({ contentType, pillarId, programId, them
     case "program-detail":
       return (
         <div>
-          <p>Synthèse - Détails du programme {programId}</p>
+          <p>Synthèse - Détails du programme</p>
+          <SynthesisFocus />
           <ProgramsOverview />
           <MainPartners />
 
@@ -63,7 +69,8 @@ export default function SyntheseContent({ contentType, pillarId, programId, them
     case "thematic-detail":
       return (
         <div>
-          <p>Synthèse - Détails des thématiques {thematicIds}</p>
+          <p>Synthèse - Détails des thématiques</p>
+          <SynthesisFocus />
           <ThematicsOverview />
           <MainPartners />
 
@@ -76,7 +83,8 @@ export default function SyntheseContent({ contentType, pillarId, programId, them
     case "destination-detail":
       return (
         <div>
-          <p>Synthèse - Détails des destinations {destinationIds}</p>
+          <p>Synthèse - Détails des destinations</p>
+          <SynthesisFocus />
           <DestinationsOverview />
           <MainPartners />
 

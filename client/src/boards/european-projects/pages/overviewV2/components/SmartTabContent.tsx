@@ -10,17 +10,11 @@ interface SmartTabContentProps extends ViewConditions {
 }
 
 export default function SmartTabContent(props: SmartTabContentProps) {
-  const { pillarId, programId, thematicIds, destinationIds, tabType } = props;
+  const { tabType } = props;
   const contentType: ContentType = getContentType(props);
 
   const renderTabSpecificContent = () => {
-    const commonProps = {
-      contentType,
-      pillarId,
-      programId,
-      thematicIds,
-      destinationIds,
-    };
+    const commonProps = { contentType };
 
     switch (tabType) {
       case "synthese":

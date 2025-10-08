@@ -5,15 +5,45 @@
   background-color: var(--background-contrast-blue-cumulus);
   // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 
-  .label{
-    font-size: 1.1rem;
-    font-style: italic;
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
     margin-bottom: 0.5rem;
+  }
+
+  .label{
+    font-size: 1rem;
+    font-style: italic;
+    font-weight: 600;
+    margin: 0;
     color: var(--card-text-color, var(--text-default-grey));
+  }
+
+  .info-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    color: var(--card-text-color, var(--text-default-grey));
+    font-size: 1rem;
+    line-height: 1;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    &:focus {
+      outline: 2px solid var(--blue-france-main-525);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
   }
   
   .nb{
-    font-size: 3rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--card-primary-color, var(--text-label-blue-ecume));
   }
@@ -82,6 +112,16 @@
   &.success-rate-card {
     --card-primary-color: var(--successRate-color); // Couleur spécifique pour le taux de succès
     --card-text-color: var(--text-default-grey);
+  }
+
+  // Variante pour les cartes de taux (RateCard)
+  &.rate-card {
+    .label {
+      line-height: 1.3;
+      min-height: 2.6rem; /* 2 lignes × 1.3 line-height × 1rem font-size */
+      display: flex;
+      align-items: flex-start;
+    }
   }
 
   // Styles pour les loaders

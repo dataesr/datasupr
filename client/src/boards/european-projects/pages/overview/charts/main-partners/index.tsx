@@ -11,7 +11,7 @@ import { useSearchParams } from "react-router-dom";
 
 const config = {
   id: "mainPartners",
-  title: "Principaux bénéficiaires du pays sélectionné",
+  title: "Liste des principaux bénéficiaires récupérants 50% des financements",
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries",
 };
 
