@@ -259,12 +259,14 @@ const YearSelector = () => {
         Chargement...
       </Button>
     );
-  if (error)
+  if (error) {
+    console.log(error);
     return (
       <Button color="error" disabled size="sm">
-        {console.log(error)} Erreur
+        Erreur
       </Button>
     );
+  }
 
   return (
     <div>
