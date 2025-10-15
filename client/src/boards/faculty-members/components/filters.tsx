@@ -262,7 +262,7 @@ const YearSelector = () => {
   if (error)
     return (
       <Button color="error" disabled size="sm">
-        Erreur
+        {console.log(error)} Erreur
       </Button>
     );
 

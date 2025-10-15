@@ -249,14 +249,12 @@ router.get(
                   count: "$totalCount",
                 },
               },
-              // Push the categories arrays for later flattening and consolidation
               categories: {
                 $push: "$categories",
               },
             },
           },
           {
-            // Flatten the categories array (it's an array of arrays after $push)
             $addFields: {
               categories: {
                 $reduce: {
@@ -268,13 +266,12 @@ router.get(
             },
           },
           {
-            // Consolidate categories by name and sum their counts for the sections
             $addFields: {
               categories: {
                 $filter: {
                   input: {
                     $map: {
-                      input: { $setUnion: "$categories.categoryName" }, // Get all unique category names
+                      input: { $setUnion: "$categories.categoryName" }, 
                       as: "catName",
                       in: {
                         categoryName: "$$catName",
@@ -299,7 +296,7 @@ router.get(
                     },
                   },
                   as: "cat",
-                  cond: { $ne: ["$$cat.categoryName", null] }, // Filter out null categories
+                  cond: { $ne: ["$$cat.categoryName", null] }, 
                 },
               },
             },
@@ -321,17 +318,15 @@ router.get(
                   maleCount: "$maleCount",
                   femaleCount: "$femaleCount",
                   ageDistribution: "$ageDistribution",
-                  categories: "$categories", // This now contains the consolidated categories for the section
+                  categories: "$categories",
                 },
               },
-              // Push the consolidated categories arrays from sections for group-level consolidation
               groupCategories: {
                 $push: "$categories",
               },
             },
           },
           {
-            // Flatten the groupCategories array of arrays
             $addFields: {
               groupCategories: {
                 $reduce: {
@@ -343,10 +338,8 @@ router.get(
             },
           },
           {
-            // Consolidate categories at the group level
             $addFields: {
               categories: {
-                // Renaming to 'categories' as requested in the output
                 $filter: {
                   input: {
                     $map: {
@@ -380,7 +373,7 @@ router.get(
               },
             },
           },
-          { $project: { groupCategories: 0 } }, // Remove the temporary field
+          { $project: { groupCategories: 0 } },
           {
             $addFields: {
               ageDistribution: ageClasses.map((ageClass) => ({
@@ -585,7 +578,6 @@ router.get(
           femaleCount: group.femaleCount,
           totalCount: group.groupTotal,
           ageDistribution: group.ageDistribution,
-          // Use the consolidated categories from the pipeline
           categories: group.categories,
           cnuSections: group.sections.map((section) => ({
             cnuSectionId: section.sectionCode,
@@ -599,7 +591,7 @@ router.get(
                 section.ageDistribution.find((a) => a.ageClass === ageClass)
                   ?.count || 0,
             })),
-            categories: section.categories, // This should be correct now
+            categories: section.categories,
           })),
         })),
         structures: structures,
