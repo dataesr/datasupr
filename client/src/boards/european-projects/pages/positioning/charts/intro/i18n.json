@@ -2,5 +2,25 @@
   "intro":{
     "fr": " % des subventions allouées par Horizon Europe sont perçues par 10 pays: ",
     "en": "% of grants allocated by Horizon Europe are received by 10 countries:"
+  },
+  "ranking_masculine": {
+    "fr": "est en {position} de ce classement.",
+    "en": "ranks {position} in this ranking."
+  },
+  "ranking_feminine": {
+    "fr": "arrive en {position} de ce classement.",
+    "en": "ranks {position} in this ranking."
+  },
+  "ranking_position": {
+    "fr": {
+      "1": "1ère position",
+      "default": "{position}ème position"
+    },
+    "en": {
+      "1": "1st position",
+      "2": "2nd position",
+      "3": "3rd position",
+      "default": "{position}th position"
+    }
   }
 }

@@ -5,5 +5,5 @@ export async function getData(params: string) {
     return [];
   }
 
-  return fetch(`${VITE_APP_SERVER_URL}/european-projects/positioning/top-10-beneficiaries?${params}`).then((response) => response.json());
+  return fetch(`${VITE_APP_SERVER_URL}/european-projects/positioning/top-10-funding-ranking?${params}`).then((response) => response.json());
 }

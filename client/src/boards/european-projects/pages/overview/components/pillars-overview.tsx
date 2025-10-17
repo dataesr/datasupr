@@ -29,7 +29,6 @@ export default function PillarsOverview() {
 
   const partEvaluated = dataProportion?.data.find((item) => item.stage === "evaluated")?.proportion || 0;
   const partSuccessful = dataProportion?.data.find((item) => item.stage === "successful")?.proportion || 0;
-
   return (
     <Container fluid>
       <Row gutters>

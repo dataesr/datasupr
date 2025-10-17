@@ -35,8 +35,5 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
-  // Ajouter le paramètre stage par défaut
-  params.push("stage=successful");
-
   return params.join("&");
 }

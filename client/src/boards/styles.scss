@@ -295,6 +295,8 @@ ul {
   --collaboration-color: #f2b705; // collaboration
   --coordination-color: var(--blue-ecume-sun-247); // coordination
   --partner-color: var(--purple-glycine-sun-319); // partenaire
+  --candidats-color: #009099; // candidats
+  --participants-color: #233e41; // participants
 
   --pillar-p1-color: var(--scale-1-color); // pilier 1
   --pillar-p2-color: var(--scale-2-color); // pilier 2
@@ -454,8 +456,7 @@ ul {
 }
 
 .chart-container {
-  background-color: var(--blue-cumulus-925);
-  border-radius: 8px;
+  background-color: var(--background-contrast-blue-cumulus);
   padding: 16px;
 
   .chart-footer {
@@ -470,6 +471,6 @@ ul {
   }
 
   .chart {
-    background-color: white;
+    background-color: var(--background-default-grey-hover);
   }
 }

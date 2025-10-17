@@ -30,9 +30,6 @@ export default function Options(data) {
       series: {
         dataLabels: { enabled: true },
       },
-      // bar: {
-      //   pointWidth: 50,
-      // },
     },
     series: [
       {

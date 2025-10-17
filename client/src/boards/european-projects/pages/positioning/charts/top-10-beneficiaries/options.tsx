@@ -9,6 +9,9 @@ export default function Options(data, country_code, currentLang) {
     xAxis: {
       type: "category",
     },
+    legend: {
+      enabled: true,
+    },
     yAxis: [
       {
         title: {

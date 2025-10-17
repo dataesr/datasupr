@@ -16,17 +16,39 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useSearchParams } from "react-router-dom";
 
+import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
+
 import i18nGlobal from "../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
 
 const configChart1a = {
   id: "fundingRankingSub",
   title: {
-    fr: "Subventions demandées et obtenues (M€) par pays",
-    en: "Funding requested and obtained (M€) by country",
+    fr: "Classement des pays selon la part des montants demandés et obtenus (M€)",
+    en: "Ranking of countries by share of amounts requested and obtained (M€)",
   },
-  subtitle: "",
-  description: null,
+  comment: {
+    fr: (
+      <>
+        Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des montants demandés et obtenus. La
+        barre bleue correspond aux montants demandés, la barre verte aux montants obtenus. La part est obtenue en divisant le montant obtenu par le
+        montant demandé.
+      </>
+    ),
+    en: (
+      <>
+        This chart shows the positioning of the selected country compared to other countries based on the amounts requested and obtained. The blue bar
+        corresponds to the amounts requested, the green bar to the amounts obtained. The share is obtained by dividing the amount obtained by the
+        amount requested.
+      </>
+    ),
+  },
+  readingKey: {
+    fr: "Part des montants demandés et obtenus par pays",
+    en: "Share of amounts requested and obtained by country",
+  },
+  source: EPChartsSource,
+  updateDate: EPChartsUpdateDate,
   integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
 };
 const configChart1b = {
@@ -79,6 +101,37 @@ const configChart3b = {
   },
   subtitle: "",
   description: null,
+  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+};
+
+const configChartFundingRankingSubRates = {
+  id: "fundingRankingSub",
+  title: {
+    fr: "Classement des pays selon la part des montants demandés et obtenus (M€)",
+    en: "Ranking of countries by share of amounts requested and obtained (M€)",
+  },
+  comment: {
+    fr: (
+      <>
+        Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des montants demandés et obtenus. La
+        barre bleue correspond aux montants demandés, la barre verte aux montants obtenus. La part est obtenue en divisant le montant obtenu par le
+        montant demandé.
+      </>
+    ),
+    en: (
+      <>
+        This chart shows the positioning of the selected country compared to other countries based on the amounts requested and obtained. The blue bar
+        corresponds to the amounts requested, the green bar to the amounts obtained. The share is obtained by dividing the amount obtained by the
+        amount requested.
+      </>
+    ),
+  },
+  readingKey: {
+    fr: "Part des montants demandés et obtenus par pays",
+    en: "Share of amounts requested and obtained by country",
+  },
+  source: EPChartsSource,
+  updateDate: EPChartsUpdateDate,
   integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
 };
 
@@ -137,17 +190,15 @@ export default function FundingRanking() {
             {getI18nLabel("title")}
           </Title>
         </Col>
+      </Row>
+      <Row>
         <Col>
-          <select className="fr-select fr-mb-2w" onChange={(e) => setSelectedChart(e.target.value)} value={selectedChart}>
+          <select className="fr-select" onChange={(e) => setSelectedChart(e.target.value)} value={selectedChart}>
             <option value="fundingRankingSub">{getI18nLabel("focus-on-subsidies")}</option>
             <option value="fundingRankingCoordination">{getI18nLabel("focus-on-coordination")}</option>
             <option value="fundingRankingInvolved">{getI18nLabel("focus-on-participations")}</option>
             <option value="fundingRankingSubRates">{getI18nLabel("focus-on-rates")}</option>
           </select>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
           <fieldset className="fr-mb-2w">
             <legend>{getI18nLabel("sort-by")}</legend>
             <Radio
@@ -177,15 +228,8 @@ export default function FundingRanking() {
         <Row>
           <Col>
             <ChartWrapper
-              config={configChart1a}
-              legend={GetLegend(
-                [
-                  [getI18nLabel("evaluated-projects"), rootStyles.getPropertyValue("--evaluated-project-color")],
-                  [getI18nLabel("successful-projects"), rootStyles.getPropertyValue("--successful-project-color")],
-                ],
-                "FundingRanking",
-                currentLang
-              )}
+              config={configChartFundingRankingSubRates}
+              legend={null}
               options={optionsSubRates(prepareData(data, "total_successful"), currentLang)}
               renderData={() => null} // TODO: add data table
             />

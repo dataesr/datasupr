@@ -11,7 +11,7 @@ export default function OverviewV2() {
       <Container as="main" className="fr-mt-4w fr-mb-3w">
         <EpNavigator />
       </Container>
-      <Container as="section" fluid style={{ backgroundColor: "#f9f9f9" }} className="fr-py-1w">
+      <Container as="section" fluid className="fr-py-1w">
         <Container as="main">
           <TabsContent overviewParams={overviewParams} />
         </Container>

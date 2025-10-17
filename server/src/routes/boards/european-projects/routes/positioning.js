@@ -1,9 +1,8 @@
 import express from "express";
 import { db } from "../../../../services/mongo.js";
+import { checkQuery } from "../utils.js";
 
 const router = new express.Router();
-
-// import { checkQuery } from "../../utils";
 
 router
   .route("/european-projects/positioning/top-10-funding-ranking")
@@ -239,7 +238,9 @@ router
 router
   .route("/european-projects/positioning/top-10-beneficiaries")
   .get(async (req, res) => {
-    const filters = {framework: "Horizon Europe"};
+    const filters = { framework: "Horizon Europe" };
+
+    // test filters (pillars, programs, thematics, destinations) 
     if (req.query.pillars) {
       const pillars = req.query.pillars.split("|");
       filters.pilier_code = { $in: pillars };
@@ -249,11 +250,12 @@ router
       filters.programme_code = { $in: programs };
     }
     if (req.query.thematics) {
-      const thematics = req.query.thematics.split("|");
-      filters.thema_code = { $in: thematics };
+      const thematics = req.query.thematics.split(",");
+      const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
+      filters.thema_code = { $in: filteredThematics };
     }
     if (req.query.destinations) {
-      const destinations = req.query.destinations.split("|");
+      const destinations = req.query.destinations.split(",");
       filters.destination_code = { $in: destinations };
     }
 

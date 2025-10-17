@@ -1,3 +1,10 @@
+// import FundingRanking from "../../../positioning/charts/funding-ranking";
+import FundingRankingCoordination from "../../../positioning/charts/funding-ranking/coordination";
+import FundingRankingParticipations from "../../../positioning/charts/funding-ranking/participations";
+import FundingRankingRates from "../../../positioning/charts/funding-ranking/rates";
+import FundingRankingSubsidies from "../../../positioning/charts/funding-ranking/subsidies";
+import Intro from "../../../positioning/charts/intro";
+import Top10Beneficiaries from "../../../positioning/charts/top-10-beneficiaries";
 import { ContentType } from "../../utils/displayRules";
 
 interface PositionnementContentProps {
@@ -13,9 +20,12 @@ export default function PositionnementContent({ contentType, pillarId, programId
     case "pillar-comparison":
       return (
         <div>
-          <p>Positionnement - Cartographie des piliers</p>
-          <p>Analyse concurrentielle</p>
-          <p>Benchmarks européens</p>
+          <Intro />
+          <Top10Beneficiaries />
+          <FundingRankingRates />
+          <FundingRankingSubsidies />
+          <FundingRankingParticipations />
+          <FundingRankingCoordination />
         </div>
       );
 
