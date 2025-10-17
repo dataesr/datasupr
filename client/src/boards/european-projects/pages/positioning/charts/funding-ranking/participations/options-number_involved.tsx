@@ -23,7 +23,6 @@ export default function OptionsNumberInvolved(data: DataItem[], currentLang: str
     title: { text: "" },
     legend: { enabled: true, layout: "horizontal" },
     credits: { enabled: false },
-
     xAxis: {
       type: "category",
     },

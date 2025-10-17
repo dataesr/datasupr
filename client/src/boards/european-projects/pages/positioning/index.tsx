@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import Intro from "./charts/intro";
 import Top10Beneficiaries from "./charts/top-10-beneficiaries";
-import FundingRanking from "./charts/funding-ranking";
+// import FundingRanking from "./charts/funding-ranking";
 
 // import i18n from "./i18n.json";
 import Callout from "../../../../components/callout";
@@ -32,7 +32,7 @@ export default function Positioning() {
 
       <Intro />
       <Top10Beneficiaries />
-      <FundingRanking />
+      {/* <FundingRanking /> */}
       <FundingEvo3Years />
     </Container>
   );

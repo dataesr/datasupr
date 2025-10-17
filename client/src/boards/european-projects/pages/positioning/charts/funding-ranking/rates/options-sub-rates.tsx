@@ -1,6 +1,6 @@
 import HighchartsInstance from "highcharts";
 
-import { CreateChartOptions } from "../../../../components/chart-ep";
+import { CreateChartOptions } from "../../../../../components/chart-ep";
 
 export default function Options(data, currentLang) {
   if (!data) return null;

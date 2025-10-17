@@ -4,7 +4,7 @@ import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
 import { useGetParams } from "./utils";
-import optionsSubRates from "../options-sub-rates";
+import optionsSubRates from "./options-sub-rates";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
 import { useSearchParams } from "react-router-dom";
