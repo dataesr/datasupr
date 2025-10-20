@@ -7,6 +7,10 @@ export default function Options(data, currentLang) {
 
   const rootStyles = getComputedStyle(document.documentElement);
   const newOptions: HighchartsInstance.Options = {
+    legend: {
+      enabled: true,
+      layout: "horizontal",
+    },
     xAxis: {
       type: "category",
     },
@@ -26,10 +30,9 @@ export default function Options(data, currentLang) {
     },
     series: [
       {
+        name: "Projets évalués",
         type: "column",
-        // name: "Total subventions en euros",
-        colors: [rootStyles.getPropertyValue("--evaluated-project-color")],
-        colorByPoint: true,
+        color: rootStyles.getPropertyValue("--evaluated-project-color"),
         groupPadding: 0,
         data: data.map((item) => ({
           name: item[`name_${currentLang}`],
@@ -44,10 +47,9 @@ export default function Options(data, currentLang) {
         ],
       },
       {
+        name: "Projets lauréats",
         type: "column",
-        // name: "Total subventions en euros",
-        colors: [rootStyles.getPropertyValue("--successful-project-color")],
-        colorByPoint: true,
+        color: rootStyles.getPropertyValue("--successful-project-color"),
         groupPadding: 0,
         data: data.map((item) => ({
           name: item[`name_${currentLang}`],

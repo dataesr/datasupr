@@ -15,9 +15,14 @@ interface PositionnementContentProps {
   destinationIds?: string | null;
 }
 
-export default function PositionnementContent({ contentType, pillarId, programId, thematicIds, destinationIds }: PositionnementContentProps) {
+export default function PositionnementContent({ contentType }: PositionnementContentProps) {
+  // export default function PositionnementContent({ contentType, pillarId, programId, thematicIds, destinationIds }: PositionnementContentProps) {
   switch (contentType) {
     case "pillar-comparison":
+    case "pillar-detail":
+    case "program-detail":
+    case "thematic-detail":
+    case "destination-detail":
       return (
         <div>
           <Intro />
@@ -26,40 +31,6 @@ export default function PositionnementContent({ contentType, pillarId, programId
           <FundingRankingSubsidies />
           <FundingRankingParticipations />
           <FundingRankingCoordination />
-        </div>
-      );
-
-    case "pillar-detail":
-      return (
-        <div>
-          <p>Positionnement - Position du pilier {pillarId}</p>
-          <p>Comparaison avec les autres pays</p>
-          <p>Forces et faiblesses</p>
-        </div>
-      );
-
-    case "program-detail":
-      return (
-        <div>
-          <p>Positionnement - Position du programme {programId}</p>
-          <p>Ranking européen</p>
-          <p>Écarts de performance</p>
-        </div>
-      );
-
-    case "thematic-detail":
-      return (
-        <div>
-          <p>Positionnement - Position des thématiques {thematicIds}</p>
-          <p>Analyse comparative internationale</p>
-        </div>
-      );
-
-    case "destination-detail":
-      return (
-        <div>
-          <p>Positionnement - Position des destinations {destinationIds}</p>
-          <p>Attractivité relative</p>
         </div>
       );
 
