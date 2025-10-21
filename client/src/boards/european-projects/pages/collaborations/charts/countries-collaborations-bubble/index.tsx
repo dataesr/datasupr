@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import Cookies from "js-cookie";
 import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
-import { GetData } from "./query";
+import { useGetParams } from "./utils";
+import { getData } from "./query";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
@@ -15,11 +15,12 @@ HC_more(Highcharts);
 
 import i18nGlobal from "../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
+import Callout from "../../../../../../components/callout";
 
 export default function CountriesCollaborationsBubble() {
   const [searchParams] = useSearchParams();
+  const params = useGetParams();
   const currentLang = searchParams.get("language") || "fr";
-  const country_code = searchParams.get("country_code") || "FRA";
   const [nbToShow, setNbToShow] = useState(10); // Default number of countries to show
 
   const configChart = {
@@ -29,21 +30,12 @@ export default function CountriesCollaborationsBubble() {
       fr: `Top ${nbToShow} des pays ayant collaborés avec le pays sélectionné`,
       en: "Countries that collaborated with the selected country",
     },
-    subtitle: "",
-    description: undefined,
     integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      configChart.id,
-      country_code,
-      Cookies.get("selectedPillars"),
-      Cookies.get("selectedPrograms"),
-      Cookies.get("selectedThematics"),
-      Cookies.get("selectedDestinations"),
-    ],
-    queryFn: () => GetData(country_code),
+    queryKey: [configChart.id, params],
+    queryFn: () => getData(params),
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
@@ -65,6 +57,15 @@ export default function CountriesCollaborationsBubble() {
           <Button disabled={nbToShow >= data.length} onClick={() => setNbToShow((prev) => prev + 5)} size="sm" variant="secondary">
             {getI18nLabel("show_more_countries")}
           </Button>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <Callout>
+            Le graphique représente les pays ayant collaboré avec le pays sélectionné. La taille des bulles est proportionnelle au nombre de
+            collaborations réussies entre les pays. Vous pouvez augmenter le nombre de pays affichés en cliquant sur le bouton "Afficher plus de
+            pays".
+          </Callout>
         </Col>
       </Row>
       <Row>

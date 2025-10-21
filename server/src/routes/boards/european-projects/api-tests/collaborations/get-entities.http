@@ -1,1 +1,27 @@
+# Test avec entityName et country_code
 GET http://localhost:3000/api/european-projects/collaborations/get-entities?entityName=uni&country_code=FRA
+
+###
+
+# Test avec entityName seulement
+GET http://localhost:3000/api/european-projects/collaborations/get-entities?entityName=university
+
+###
+
+# Test avec country_code seulement
+GET http://localhost:3000/api/european-projects/collaborations/get-entities?country_code=ITA
+
+###
+
+# Test avec entityName trop court (devrait retourner une erreur 400)
+GET http://localhost:3000/api/european-projects/collaborations/get-entities?entityName=un
+
+###
+
+# Test sans paramètres (devrait retourner toutes les entités)
+GET http://localhost:3000/api/european-projects/collaborations/get-entities
+
+###
+
+# Test index creation
+GET http://localhost:3000/api/european-projects/collaborations/get-entities_indexes

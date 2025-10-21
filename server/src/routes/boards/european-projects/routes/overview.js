@@ -39,9 +39,6 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
     filters.destination_code = { $in: destinations };
   }
   
-console.log("filters" , filters);
-
-
   const dataSuccessful = await db
     .collection("fr-esr-all-projects-synthese")
     .aggregate([

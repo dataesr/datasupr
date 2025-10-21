@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
-import Cookies from "js-cookie";
 import { Badge, Button, Col, Container, Row, Title, Modal, ModalContent, Tag, TagGroup } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
 import { getCollaborations, getCollaborationsByCountry } from "./query";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { useGetParams } from "./utils";
 
 import i18nGlobal from "../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
@@ -29,6 +29,7 @@ type CollaborationDetail = {
 
 export default function CountriesCollaborationsTable() {
   const [searchParams] = useSearchParams();
+  const params = useGetParams();
   const navigate = useNavigate();
   const [sortDirection, setSortDirection] = useState("desc");
   const [sortColumn, setSortColumn] = useState("collaborations");
@@ -62,20 +63,13 @@ export default function CountriesCollaborationsTable() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: [
-      configChart.id,
-      country_code,
-      Cookies.get("selectedPillars"),
-      Cookies.get("selectedPrograms"),
-      Cookies.get("selectedThematics"),
-      Cookies.get("selectedDestinations"),
-    ],
-    queryFn: () => getCollaborations(country_code),
+    queryKey: [configChart.id, params],
+    queryFn: () => getCollaborations(params),
   });
 
   const { data: collaborationDetails, isLoading: isLoadingDetails } = useQuery<CollaborationDetail[]>({
-    queryKey: ["getCollaborationsByCountry", country_code, collabCountry?.country_code],
-    queryFn: () => getCollaborationsByCountry(country_code, collabCountry?.country_code),
+    queryKey: ["getCollaborationsByCountry", params, collabCountry?.country_code],
+    queryFn: () => getCollaborationsByCountry(params, collabCountry?.country_code),
     enabled: !!collabCountry,
   });
 

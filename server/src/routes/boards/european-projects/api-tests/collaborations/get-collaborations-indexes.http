@@ -1,0 +1,17 @@
+# Test de création d'index pour get-collaborations
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations_indexes
+
+###
+
+# Test de création d'index pour get-collaborations-by-country
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-country_indexes
+
+###
+
+# Test de création d'index pour get-entities
+GET http://localhost:3000/api/european-projects/collaborations/get-entities_indexes
+
+###
+
+# Test de création d'index pour get-collaborations-by-entity
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-entity_indexes

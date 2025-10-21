@@ -1,1 +1,22 @@
+# Test avec un entity_id valide
 GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-entity?entity_id=bxPQe
+
+###
+
+# Test avec un autre entity_id
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-entity?entity_id=example_entity_id
+
+###
+
+# Test sans entity_id (devrait retourner une erreur 400)
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-entity
+
+###
+
+# Test avec un entity_id inexistant (devrait retourner une erreur 404)
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-entity?entity_id=nonexistent_id
+
+###
+
+# Test index creation
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-entity_indexes

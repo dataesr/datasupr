@@ -1,5 +1,6 @@
 import express from "express";
 import { db } from "../../../../services/mongo.js";
+import { checkQuery } from "../utils.js";
 
 // Fonction utilitaire pour gérer les index
 async function recreateIndex(collection, indexSpec, indexName) {
@@ -106,33 +107,36 @@ router.route(routesPrefix + "/get-entities_indexes").get(async (req, res) => {
 });
 
 router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
-  const { country_code} = req.query;
-  // TODO: ajouter pilier_code, programme_code thema_code, destination_code depuis les filtres. Attention, pilier et programme n'existent pas dans la base. Penser à refaire l'index
-
-  if (!country_code) {
-    return res.status(400).json({ error: "Le code pays est requis" });
+  const filters = checkQuery(req.query, ["country_code"], res);
+  
+  if (req.query.pillars) {
+    const pillars = req.query.pillars.split("|");
+    filters.pilier_code = { $in: pillars };
+  }
+  if (req.query.programs) {
+    const programs = req.query.programs.split("|");
+    filters.programme_code = { $in: programs };
+  }
+  if (req.query.thematics) {
+    const thematics = req.query.thematics.split(",");
+    filters.thema_code = { $in: thematics };
+  }
+  if (req.query.destinations) {
+    const destinations = req.query.destinations.split(",");
+    filters.destination_code = { $in: destinations };
   }
 
   try {
     const collaborations = await db
       .collection("ep_collaborations_staging")
       .aggregate([
-        {
-          $match: {
-            country_code: country_code
-          }
-        },
+        { $match: { ...filters } },
         {
           $group: {
             _id: "$country_code_collab",
             country_name_fr: { $first: "$country_name_fr_collab" },
             country_name_en: { $first: "$country_name_en_collab" },
             total_collaborations: { $sum: 1 },
-            // projects: {
-            //   $addToSet: {
-            //     project_id: "$project_id",
-            //   }
-            // }
           }
         },
         {
@@ -142,7 +146,6 @@ router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
             country_name_fr: 1,
             country_name_en: 1,
             total_collaborations: 1,
-            // projects: 1
           }
           
         },
@@ -171,7 +174,10 @@ router.route(routesPrefix + "/get-collaborations_indexes").get(async (req, res) 
         country_code_collab: 1,
         country_name_fr_collab: 1,
         country_name_en_collab: 1,
-        project_id: 1,
+        pilier_code: 1,
+        programme_code: 1,
+        thema_code: 1,
+        destination_code: 1,
       },
       "idx_collaborations_covered"
     );
@@ -189,13 +195,31 @@ router.route(routesPrefix + "/get-collaborations-by-country").get(async (req, re
   if (!country_code || !country_code_collab) {
     return res.status(400).json({ error: "Les codes pays sont requis" });
   }
+
+
+  const filters = checkQuery(req.query, ["country_code", "country_code_collab"], res);
+  
+  if (req.query.pillars) {
+    const pillars = req.query.pillars.split("|");
+    filters.pilier_code = { $in: pillars };
+  }
+  if (req.query.programs) {
+    const programs = req.query.programs.split("|");
+    filters.programme_code = { $in: programs };
+  }
+  if (req.query.thematics) {
+    const thematics = req.query.thematics.split(",");
+    filters.thema_code = { $in: thematics };
+  }
+  if (req.query.destinations) {
+    const destinations = req.query.destinations.split(",");
+    filters.destination_code = { $in: destinations };
+  }
+
   try {
     const collaborations = await db
       .collection("ep_collaborations_staging")
-      .find({
-        country_code: country_code,
-        country_code_collab: country_code_collab
-      })
+      .find({ ...filters })
       .project({
         _id: 0,
         // abstract: 1,
@@ -228,25 +252,36 @@ router.route(routesPrefix + "/get-collaborations-by-country").get(async (req, re
 // Route de création de l'index pour les collaborations par pays
 router.route(routesPrefix + "/get-collaborations-by-country_indexes").get(async (req, res) => {
   try {
-    await db.collection("ep_collaborations_staging").createIndex(
-      { 
+    await recreateIndex(
+      db.collection("ep_collaborations_staging"),
+      {
         country_code: 1,
         country_code_collab: 1,
+        pilier_code: 1,
+        programme_code: 1,
+        thema_code: 1,
+        destination_code: 1,
+        call_year: 1,
+        flag_coordination: 1,
         participates_as: 1,
         participates_as_collab: 1,
         project_id: 1,
-        call_year: 1,
-        flag_coordination: 1,
         proposal_budget: 1,
         total_cost: 1,
-        // abstract: 1, // Si nécessaire, sinon à enlever pour optimiser
+        part_num: 1,
+        part_num_collab: 1,
+        participation_nuts: 1,
+        participation_nuts_collab: 1,
+        extra_joint_organizations: 1,
+        extra_joint_organizations_collab: 1,
       },
-      { name: "idx_collaborations-by-country_covered" }
+      "idx_collaborations-by-country_covered"
     );
-    res.status(201).json({ message: "Index créé avec succès" });
+    
+    res.status(201).json({ message: "Index recréé avec succès" });
   } catch (error) {
-    console.error("Erreur lors de la création de l'index:", error);
-    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    console.error("Erreur lors de la recréation de l'index:", error);
+    res.status(500).json({ error: "Erreur lors de la recréation de l'index" });
   }
 });
 

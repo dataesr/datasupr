@@ -1,1 +1,27 @@
+# Test basique avec les deux codes pays requis
 GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-country?country_code=FRA&country_code_collab=ITA
+
+###
+
+# Test avec tous les filtres possibles
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-country?country_code=FRA&country_code_collab=DEU&pillars=1|2&programs=HE&thematics=ERC,MSCA&destinations=DEST1,DEST2
+
+###
+
+# Test avec plusieurs pillars
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-country?country_code=ESP&country_code_collab=PRT&pillars=1|2|3
+
+###
+
+# Test avec plusieurs programs et thématiques
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-country?country_code=DEU&country_code_collab=NLD&programs=HE|FP7&thematics=ERC,MSCA,EXCELLENT
+
+###
+
+# Test sans paramètres requis (devrait retourner une erreur 400)
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-country?country_code=FRA
+
+###
+
+# Test index creation
+GET http://localhost:3000/api/european-projects/collaborations/get-collaborations-by-country_indexes

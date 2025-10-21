@@ -1,3 +1,5 @@
+import CountriesCollaborationsBubble from "../../../collaborations/charts/countries-collaborations-bubble";
+import CountriesCollaborationsTable from "../../../collaborations/charts/countries-collaborations-table";
 import { ContentType } from "../../utils/displayRules";
 
 interface CollaborationsContentProps {
@@ -8,48 +10,18 @@ interface CollaborationsContentProps {
   destinationIds?: string | null;
 }
 
-export default function CollaborationsContent({ contentType, pillarId, programId, thematicIds, destinationIds }: CollaborationsContentProps) {
+export default function CollaborationsContent({ contentType }: CollaborationsContentProps) {
+  // export default function CollaborationsContent({ contentType, pillarId, programId, thematicIds, destinationIds }: CollaborationsContentProps) {
   switch (contentType) {
     case "pillar-comparison":
-      return (
-        <div>
-          <p>Collaborations - Réseaux de partenaires par pilier</p>
-          <p>Cartographie des collaborations</p>
-          <p>Analyse des écosystèmes</p>
-        </div>
-      );
-
     case "pillar-detail":
-      return (
-        <div>
-          <p>Collaborations - Partenaires du pilier {pillarId}</p>
-          <p>Institutions collaboratrices</p>
-          <p>Projets conjoints</p>
-        </div>
-      );
-
     case "program-detail":
-      return (
-        <div>
-          <p>Collaborations - Partenaires du programme {programId}</p>
-          <p>Consortium principal</p>
-          <p>Réseaux d'excellence</p>
-        </div>
-      );
-
     case "thematic-detail":
-      return (
-        <div>
-          <p>Collaborations - Partenaires des thématiques {thematicIds}</p>
-          <p>Communautés de recherche</p>
-        </div>
-      );
-
     case "destination-detail":
       return (
         <div>
-          <p>Collaborations - Partenaires des destinations {destinationIds}</p>
-          <p>Alliances stratégiques</p>
+          <CountriesCollaborationsBubble />
+          <CountriesCollaborationsTable />
         </div>
       );
 
