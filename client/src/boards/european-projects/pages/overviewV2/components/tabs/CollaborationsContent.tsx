@@ -1,6 +1,9 @@
+import { Row, Col } from "@dataesr/dsfr-plus";
 import CountriesCollaborationsBubble from "../../../collaborations/charts/countries-collaborations-bubble";
 import CountriesCollaborationsTable from "../../../collaborations/charts/countries-collaborations-table";
+// import EntityVariablePie from "../../../collaborations/charts/entity-variable-pie";
 import { ContentType } from "../../utils/displayRules";
+import CountryNeighbourgs from "../../../collaborations/charts/country-neighbourgs";
 
 interface CollaborationsContentProps {
   contentType: ContentType;
@@ -21,7 +24,19 @@ export default function CollaborationsContent({ contentType }: CollaborationsCon
       return (
         <div>
           <CountriesCollaborationsBubble />
-          <CountriesCollaborationsTable />
+          <Row>
+            <Col>
+              <CountriesCollaborationsTable />
+            </Col>
+            <Col>
+              <CountryNeighbourgs />
+              <br />
+              <br />
+              <br />
+              Carte de flux à ajouter ici
+            </Col>
+          </Row>
+          {/* <EntityVariablePie /> */}
         </div>
       );
 

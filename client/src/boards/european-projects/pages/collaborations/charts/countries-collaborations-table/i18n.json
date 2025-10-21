@@ -35,6 +35,10 @@
     "fr": "Nombre de projets communs",
     "en": "Number of common projects"
   },
+  "country": {
+    "fr": "Pays",
+    "en": "Country"
+  },
   "collaborations-count": {
     "fr": "Collaborations",
     "en": "Collaborations"
@@ -43,16 +47,16 @@
     "fr": "Nombre total de collaborations : ",
     "en": "Total collaborations: "
   },
-  "neighbouring-countries": {
-    "fr": "Pays frontaliers",
-    "en": "Neighbouring countries"
+  "show-more": {
+    "fr": "Afficher plus",
+    "en": "Show more"
   },
-  "countries": {
-    "fr": "Pays",
-    "en": "Countries"
+  "show-less": {
+    "fr": "Afficher moins",
+    "en": "Show less"
   },
-  "neighbouring": {
-    "fr": "frontaliers",
-    "en": "neighbouring"
+  "download_data": {
+    "fr": "Télécharger les données",
+    "en": "Download data"
   }
 }

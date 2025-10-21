@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Badge, Button, Col, Container, Row, Title, Modal, ModalContent, Tag, TagGroup } from "@dataesr/dsfr-plus";
+import { Button, Col, Container, Row, Title, Modal, ModalContent, Tag, TagGroup } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 
@@ -105,14 +105,6 @@ export default function CountriesCollaborationsTable() {
 
   const sortedData = sortData(data);
   const displayedData = showAll ? sortedData : sortedData.slice(0, 10);
-  const neighbouringCountriesSum = dataCountries
-    ? dataCountries.reduce((acc, code) => {
-        const countryData = sortedData.find((item) => item.country_code === code);
-        return acc + (countryData ? countryData.total_collaborations : 0);
-      }, 0)
-    : 0;
-  const neighbouringCountriesSumWithCountry =
-    neighbouringCountriesSum + (data.find((item) => item.country_code === country_code)?.total_collaborations || 0);
 
   const total_collaborations = sortedData.reduce((acc, item) => acc + item.total_collaborations, 0);
 
@@ -181,7 +173,7 @@ export default function CountriesCollaborationsTable() {
   return (
     <Container fluid className="fr-mt-5w">
       <Row>
-        <Title as="h2" className="fr-mb-3w">
+        <Title as="h2" look="h4" className="fr-mb-3w">
           {configChart.title[currentLang]}
         </Title>
       </Row>
@@ -273,35 +265,6 @@ export default function CountriesCollaborationsTable() {
           >
             {getI18nLabel("download_data")}
           </Button>
-        </Col>
-        <Col>
-          <Row>
-            <div className="fr-tile fr-mt-2w">
-              <div className="fr-tile__body">
-                <div className="fr-tile__content">
-                  <h3 className="fr-tile__title">
-                    <span className="fr-icon-earth-fill fr-mr-1w" aria-hidden="true" />
-                    <br />
-                    {getI18nLabel("neighbouring-countries")}
-                    <br />
-                    <Badge>
-                      {dataCountries ? dataCountries.length : 0} {getI18nLabel("countries")}
-                      {" / "}
-                      {data.length}
-                    </Badge>
-                  </h3>
-                  <p className="fr-tile__desc">
-                    Les pays frontaliers comptabilisent <strong>{neighbouringCountriesSum.toLocaleString()}</strong> projets, soit{" "}
-                    <strong>{Math.floor((neighbouringCountriesSum / total_collaborations) * 100)} %</strong> des collaborations totales.
-                    <br />
-                    <br />
-                    <strong>{Math.floor((neighbouringCountriesSumWithCountry / total_collaborations) * 100)} %</strong> en prenant en compte le pays
-                    sélectionné ({getFlagEmoji(country_code)} {data.find((item) => item.country_code === country_code)?.country_name_fr}).
-                  </p>
-                </div>
-              </div>
-            </div>
-          </Row>
         </Col>
       </Row>
       <Modal isOpen={isModalOpen} hide={() => setIsModalOpen(false)} size="xl">

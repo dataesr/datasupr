@@ -50,7 +50,7 @@ export default function CountriesCollaborationsBubble() {
       <Row>
         <Col>
           <Title as="h2" look="h4">
-            {getI18nLabel("title")}
+            {getI18nLabel("title-1")}
           </Title>
         </Col>
         <Col className="text-right">

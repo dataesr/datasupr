@@ -1,7 +1,7 @@
 {
-  "title": {
-    "fr": "Classement par pays",
-    "en": "Country ranking"
+  "title-1": {
+    "fr": "Collaborations des pays",
+    "en": "Countries collaborations"
   },
   "focus-on-subsidies": {
     "fr": "Focus sur les subventions",
@@ -34,5 +34,9 @@
   "number-of-common-projects": {
     "fr": "Nombre de projets communs",
     "en": "Number of common projects"
+  },
+  "title-2": {
+    "fr": "Collaborations des entités du pays",
+    "en": "Entities collaborations"
   }
 }
