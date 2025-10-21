@@ -36,7 +36,6 @@ router.get("/faculty-members/filters/years", async (req, res) => {
       ) {
         fermetureDate = new Date(etablissementInfo.etablissement_fermeture);
         fermetureYear = fermetureDate.getFullYear();
-        console.log(`Établissement fermé en ${fermetureYear}`);
       }
 
       const baseFilter = { etablissement_id_paysage: structure_id };

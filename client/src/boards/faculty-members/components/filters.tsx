@@ -66,14 +66,14 @@ const ContextFilter = ({
         paddingRight: "1rem",
       }}
     >
-      {data.map((item) => {
+      {data.map((item, index) => {
         const isSelected = selectedItem?.id === item.id;
         const disciplineColor =
           type === "discipline" ? getColorForDiscipline(item.name) : undefined;
 
         return (
           <div
-            key={item.id}
+            key={`${type}-${item.id}-${index}`}
             onClick={() => onSelect(item)}
             style={{
               cursor: "pointer",
@@ -218,9 +218,14 @@ const YearSelector = () => {
 
   useEffect(() => {
     if (isYearModalOpen) {
-      setSelectedYear(initialYear);
+      const yearToUse = years.includes(initialYear)
+        ? initialYear
+        : years.length > 0
+        ? years[0]
+        : initialYear;
+      setSelectedYear(yearToUse);
     }
-  }, [isYearModalOpen, initialYear]);
+  }, [isYearModalOpen, initialYear, years]);
 
   const handleYearChange = (newYear: string) => {
     setSelectedYear(newYear);

@@ -89,23 +89,23 @@ export function FacultyLayout() {
             <Col md={12}>
               <TitleWithContext />
             </Col>
+            <Col md={12}>
+              <Breadcrumb className="fr-mb-0">
+                <Link href="/personnel-enseignant">
+                  Accueil personnels enseignants
+                </Link>
+                {path.startsWith("/personnel-enseignant/glossaire") ? (
+                  <Link>Glossaire</Link>
+                ) : (
+                  breadcrumbItems.map((item, index) => (
+                    <Link key={index} href={item.href}>
+                      {item.label}
+                    </Link>
+                  ))
+                )}
+              </Breadcrumb>
+            </Col>
           </Row>
-          <Col md={12}>
-            <Breadcrumb className="fr-mb-0">
-              <Link href="/personnel-enseignant">
-                Accueil personnels enseignants
-              </Link>
-              {path.startsWith("/personnel-enseignant/glossaire") ? (
-                <Link>Glossaire</Link>
-              ) : (
-                breadcrumbItems.map((item, index) => (
-                  <Link key={index} href={item.href}>
-                    {item.label}
-                  </Link>
-                ))
-              )}
-            </Breadcrumb>
-          </Col>
         </Container>
       </div>
       <Container>

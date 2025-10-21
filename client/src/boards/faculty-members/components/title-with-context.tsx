@@ -1,12 +1,13 @@
-import { Title, Badge } from "@dataesr/dsfr-plus";
+import { Title, Badge, Text } from "@dataesr/dsfr-plus";
 import { useContextDetection } from "../utils";
 import { useFacultyMembersTypology } from "../api/use-typology";
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useFacultyMembersYears } from "../api/general-queries";
 
 const TitleWithContext = () => {
   const { context, contextId, contextName } = useContextDetection();
   const location = useLocation();
+  const [searchParams] = useSearchParams();
 
   const { data: yearsData } = useFacultyMembersYears();
   const isAcademie = context === "geo" && contextId?.toString().startsWith("A");
@@ -15,6 +16,8 @@ const TitleWithContext = () => {
     context,
     contextId: contextId || undefined,
   });
+
+  const currentYear = searchParams.get("annee_universitaire");
 
   const isEstablishmentClosed =
     context === "structures" && yearsData?.context?.has_closure_date;
@@ -38,7 +41,6 @@ const TitleWithContext = () => {
           return {
             name: typologyData?.[0]?.name || contextName,
             identifiant: null,
-            prefix: "Académie de ",
             pluralMain: "Le personnel enseignant au niveau national",
             pluralSub: "(toutes les académies)",
           };
@@ -46,7 +48,6 @@ const TitleWithContext = () => {
         return {
           name: typologyData?.[0]?.name || contextName,
           identifiant: null,
-          prefix: "Région ",
           pluralMain: "Le personnel enseignant au niveau national",
           pluralSub: "(toutes les régions)",
         };
@@ -67,7 +68,7 @@ const TitleWithContext = () => {
 
   const contextNameCapital = capitalize(contextName);
 
-  const { name, prefix, pluralMain, pluralSub } = getContextParams();
+  const { name, pluralMain, pluralSub } = getContextParams();
 
   if (location.pathname.startsWith("/personnel-enseignant/glossaire")) {
     return (
@@ -79,30 +80,33 @@ const TitleWithContext = () => {
 
   return (
     <>
-      <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-2w">
+      <Title as="h2" look="h1" className="fr-text-title--blue-france">
         {!contextId && (
           <>
             {pluralMain}{" "}
             <span style={{ fontSize: "0.5em", verticalAlign: "middle" }}>
-              {pluralSub}
+              {pluralSub}{" "}
             </span>
           </>
         )}
-        {contextId && prefix}
         <br />
-        {name}
+        {name}{" "}
         {isEstablishmentClosed && (
-          <>
-            {" "}
-            <br />
+          <span style={{ marginLeft: "0.75rem" }}>
             <Badge
               variant="error"
               size="sm"
               style={{ verticalAlign: "middle" }}
             >
-              Fermé{fermetureYear ? ` depuis ${fermetureYear}` : ""}
+              Fermé(e){fermetureYear ? ` depuis ${fermetureYear}` : ""}
             </Badge>
-          </>
+          </span>
+        )}
+        {currentYear && (
+          <Text size="sm">
+            {" "}
+            <i>{currentYear}</i>{" "}
+          </Text>
         )}
       </Title>
     </>
