@@ -96,7 +96,6 @@ export default function CnuGroupsChart() {
     annee_universitaire: selectedYear,
     contextId,
   });
-
   const cnuGroups = useMemo(() => {
     if (!cnuData?.cnu_groups_with_sections || !selectedYear) {
       return [];
@@ -106,7 +105,10 @@ export default function CnuGroupsChart() {
 
     cnuData.cnu_groups_with_sections.forEach((item) => {
       const itemCode = item._id.discipline_code;
-      const itemName = item._id.discipline_name;
+      const itemNameLower = item._id.discipline_name?.toLowerCase();
+      const itemNameCapitalized = itemNameLower
+        ? itemNameLower.charAt(0).toUpperCase() + itemNameLower.slice(1)
+        : "";
 
       item.groups?.forEach((group) => {
         let maleCount = 0;
@@ -130,7 +132,7 @@ export default function CnuGroupsChart() {
           unknownCount: 0,
           totalCount: group.group_total,
           field_id: itemCode,
-          fieldLabel: itemName,
+          fieldLabel: itemNameCapitalized,
           cnuSections: group.sections || [],
         });
       });

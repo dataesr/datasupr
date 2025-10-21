@@ -4,7 +4,6 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export const useFacultyMembersYears = () => {
   const [searchParams] = useSearchParams();
-  console.log(VITE_APP_SERVER_URL);
   const structure_id = searchParams.get("structure_id");
   const field_id = searchParams.get("field_id");
   const geo_id = searchParams.get("geo_id");
