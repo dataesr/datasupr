@@ -463,7 +463,8 @@ router.get("/faculty-members/navigation/:type", async (req, res) => {
     const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {};
-    if (annee_universitaire)
+    // Pour les structures, on ne filtre pas par année car on veut toutes les structures à discuter avec les boss
+    if (annee_universitaire && type !== "structures")
       matchStage.annee_universitaire = annee_universitaire;
 
     let aggregation = [];
@@ -561,7 +562,6 @@ router.get("/faculty-members/navigation/:type", async (req, res) => {
 
       case "structures":
         aggregation = [
-          { $match: matchStage },
           {
             $group: {
               _id: {
@@ -569,8 +569,10 @@ router.get("/faculty-members/navigation/:type", async (req, res) => {
                 structure_name: "$etablissement_lib",
                 structure_type: "$etablissement_type",
                 region_name: "$etablissement_region",
+                status: "$etablissement_status",
               },
               total_count: { $sum: "$effectif" },
+              latest_year: { $max: "$annee_universitaire" },
             },
           },
           {
@@ -586,7 +588,10 @@ router.get("/faculty-members/navigation/:type", async (req, res) => {
               name: "$_id.structure_name",
               type: "$_id.structure_type",
               region: "$_id.region_name",
+              status: "$_id.status",
+              is_active: { $eq: ["$_id.status", "active"] },
               total_count: 1,
+              latest_year: 1,
             },
           },
           { $sort: { total_count: -1 } },

@@ -100,7 +100,21 @@ const ContextFilter = ({
               }
             }}
           >
-            {item.name}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                width: "100%",
+              }}
+            >
+              <span>{item.name}</span>
+              {type === "structure" && item.is_active === false && (
+                <Badge color="error" size="sm">
+                  Inactive
+                </Badge>
+              )}
+            </div>
           </div>
         );
       })}
@@ -159,7 +173,7 @@ const YearSelector = () => {
   });
   const { data: structures } = useNavigation({
     type: "structures",
-    annee_universitaire: selectedYear,
+    annee_universitaire: "", // Pas de filtre par année pour les structures
     enabled: isContextModalOpen,
   });
 
@@ -213,11 +227,9 @@ const YearSelector = () => {
   };
 
   const handleApplyYearFilter = () => {
-    if (selectedYear !== initialYear) {
-      const newParams = new URLSearchParams(searchParams);
-      newParams.set("annee_universitaire", selectedYear);
-      navigate({ search: newParams.toString() }, { replace: true });
-    }
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set("annee_universitaire", selectedYear);
+    navigate({ search: newParams.toString() }, { replace: true });
     setIsYearModalOpen(false);
   };
 
@@ -315,7 +327,7 @@ const YearSelector = () => {
           <Button
             size="sm"
             onClick={handleApplyYearFilter}
-            disabled={selectedYear === initialYear}
+            disabled={!selectedYear}
           >
             Appliquer
           </Button>

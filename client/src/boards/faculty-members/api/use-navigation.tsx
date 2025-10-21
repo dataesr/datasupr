@@ -10,6 +10,9 @@ interface NavigationItem {
   type?: string;
   region?: string;
   total_count: number;
+  status?: string;
+  is_active?: boolean;
+  latest_year?: string;
 }
 
 interface NavigationResponse {
