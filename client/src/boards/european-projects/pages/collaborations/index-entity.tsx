@@ -4,8 +4,8 @@ import { useSearchParams } from "react-router-dom";
 
 import Callout from "../../../../components/callout";
 import EntityVariablePie from "./charts/entity-variable-pie";
-import EntitySearchBar from "../../components/entity-searchbar";
-import EntitiesTable from "./charts/entities-table";
+// import EntitySearchBar from "../../components/entity-searchbar";
+// import EntitiesTable from "./charts/entities-table";
 // import i18n from "./i18n.json";
 
 export default function CollaborationsEntity({ entityId }) {
@@ -29,11 +29,11 @@ export default function CollaborationsEntity({ entityId }) {
         natus facilis, reiciendis alias perferendis tenetur minus quae rerum?
       </Callout>
 
-      {(!entityId || entityId === "entityId") && <EntitySearchBar />}
+      {/* {(!entityId || entityId === "entityId") && <EntitySearchBar />} */}
       {entityId && entityId !== "entityId" && (
         <>
           <EntityVariablePie />
-          <EntitiesTable />
+          {/* <EntitiesTable /> */}
         </>
       )}
     </Container>
