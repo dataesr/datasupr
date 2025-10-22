@@ -271,7 +271,7 @@ router.get(
                 $filter: {
                   input: {
                     $map: {
-                      input: { $setUnion: "$categories.categoryName" }, 
+                      input: { $setUnion: "$categories.categoryName" },
                       as: "catName",
                       in: {
                         categoryName: "$$catName",
@@ -296,7 +296,7 @@ router.get(
                     },
                   },
                   as: "cat",
-                  cond: { $ne: ["$$cat.categoryName", null] }, 
+                  cond: { $ne: ["$$cat.categoryName", null] },
                 },
               },
             },
@@ -1221,10 +1221,7 @@ router.get(
         matchStage.annee_universitaire = annee_universitaire;
       }
       if (structure_id) {
-        matchStage.$or = [
-          { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage: structure_id },
-        ];
+        matchStage.etablissement_id_paysage = structure_id;
       }
 
       const statusDistribution = await collection
@@ -1286,10 +1283,7 @@ router.get(
       if (structure_id) {
         const structureInfo = await collection.findOne(
           {
-            $or: [
-              { etablissement_id_paysage: structure_id },
-              { etablissement_id_paysage: structure_id },
-            ],
+            etablissement_id_paysage: structure_id,
           },
           {
             projection: {

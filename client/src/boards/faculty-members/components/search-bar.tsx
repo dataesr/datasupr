@@ -43,7 +43,25 @@ const getTypeLabel = (type: string, subtype?: string) => {
   return labels[type as keyof typeof labels] || "Autre";
 };
 
-export function SearchBar() {
+type SearchBarMode = "navigate" | "select";
+
+interface SearchBarProps {
+  mode?: SearchBarMode;
+  allowedTypes?: Array<"univ" | "region" | "academie" | "discipline">;
+  onSelect?: (item: SearchResult) => void;
+  placeholder?: string;
+  label?: string;
+  disabledPredicate?: (item: SearchResult) => boolean;
+}
+
+export function SearchBar({
+  mode = "navigate",
+  allowedTypes = ["univ", "region", "academie", "discipline"],
+  onSelect,
+  placeholder = "Rechercher un établissement, une région ou une discipline...",
+  label = "Rechercher",
+  disabledPredicate,
+}: SearchBarProps = {}) {
   const navigate = useNavigate();
   const [filterText, setFilterText] = useState("");
 
@@ -57,13 +75,13 @@ export function SearchBar() {
       ...data.regions,
       ...data.academies,
       ...data.fields,
-    ];
+    ].filter((r) => allowedTypes.includes(r.type));
 
     return allResults.map((result) => ({
       ...result,
       searchableText: normalizeText(result.name),
     }));
-  }, [data]);
+  }, [data, allowedTypes]);
 
   const filteredItems = useMemo(() => {
     if (!filterText.trim()) return [];
@@ -72,6 +90,7 @@ export function SearchBar() {
 
     return allItems
       .filter((item) => item.searchableText.includes(searchTerm))
+      .filter((item) => (disabledPredicate ? !disabledPredicate(item) : true))
       .sort((a, b) => {
         const aStartsWith = a.searchableText.startsWith(searchTerm);
         const bStartsWith = b.searchableText.startsWith(searchTerm);
@@ -81,7 +100,7 @@ export function SearchBar() {
         return b.total_count - a.total_count;
       })
       .slice(0, 10);
-  }, [allItems, filterText]);
+  }, [allItems, filterText, disabledPredicate]);
 
   const loadingState = isLoading ? "loading" : "idle";
 
@@ -90,7 +109,11 @@ export function SearchBar() {
 
     const selectedItem = filteredItems.find((item) => item.id === key);
     if (selectedItem) {
-      navigate(selectedItem.href);
+      if (mode === "navigate") {
+        navigate(selectedItem.href);
+      } else if (mode === "select" && onSelect) {
+        onSelect(selectedItem);
+      }
       setFilterText("");
     }
   };
@@ -117,14 +140,14 @@ export function SearchBar() {
   return (
     <div>
       <Autocomplete
-        label="Rechercher"
+        label={label}
         items={filteredItems}
         inputValue={filterText}
         onInputChange={handleInputChange}
         onSelectionChange={handleSelectionChange}
         onKeyDown={handleKeyDown}
         loadingState={loadingState}
-        placeholder="Rechercher un établissement, une région ou une discipline..."
+        placeholder={placeholder}
         menuTrigger="focus"
         size="md"
         allowsCustomValue={false}

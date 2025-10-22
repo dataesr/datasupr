@@ -24,9 +24,9 @@ export const createAgeDistributionChartOptions = (
   );
 
   const colors: { [key: string]: string } = {
-    "35 ans et moins": "#6EADFF",
-    "36 à 55 ans": "#000091",
-    "56 ans et plus": "#4B9DFF",
+    "35 ans et moins": "var(--blue-cumulus-main-526)",
+    "36 à 55 ans": "var(--blue-ecume-sun-247)",
+    "56 ans et plus": "var(--blue-cumulus-sun-368)",
   };
 
   if (isSingleDiscipline) {
@@ -50,7 +50,6 @@ export const createAgeDistributionChartOptions = (
               textOutline: "1px contrast",
             },
           },
-          showInLegend: true,
           size: "75%",
           borderWidth: 3,
           borderColor: "#FFFFFF",
@@ -76,7 +75,7 @@ export const createAgeDistributionChartOptions = (
       },
       series: [
         {
-          name: "Répartition par âge",
+          name: "",
           colorByPoint: true,
           type: "pie",
           data: sortedChartData.map((item) => ({
@@ -114,7 +113,6 @@ export const createAgeDistributionChartOptions = (
         dataLabels: {
           enabled: false,
         },
-        showInLegend: true,
         borderWidth: 0,
       },
       series: {
@@ -155,7 +153,7 @@ export const createAgeDistributionChartOptions = (
     },
     series: [
       {
-        name: "Âge",
+        name: "",
         colorByPoint: true,
         type: "pie",
         data: sortedChartData.map((item) => ({

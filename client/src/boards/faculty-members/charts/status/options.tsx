@@ -1,29 +1,28 @@
 import HighchartsInstance from "highcharts";
 import { CreateChartOptions } from "../../components/creat-chart-options";
-
-interface StatusOptionsProps {
-  disciplines: Array<{
-    fieldLabel: string;
-    totalCount: number;
-    nonTitulaires: number;
-    titulairesNonChercheurs: number;
-    enseignantsChercheurs: number;
-    totalTitulaires: number;
-  }>;
-  displayAsPercentage: boolean;
-}
+import { StatusOptionsProps } from "../../../../types/faculty-members";
 
 export default function StatusOptions({
   disciplines,
   displayAsPercentage,
+  alwaysIncludeLabels = [],
 }: StatusOptionsProps): HighchartsInstance.Options | null {
   if (!disciplines || disciplines.length === 0) return null;
 
   disciplines.sort((a, b) => b.totalCount - a.totalCount);
 
-  const sortedDisciplines = [...disciplines]
+  const topDisciplines = [...disciplines]
     .sort((a, b) => b.totalCount - a.totalCount)
     .slice(0, 10);
+
+  const includeSet = new Set<string>([
+    ...topDisciplines.map((d) => d?.fieldLabel),
+    ...alwaysIncludeLabels,
+  ]);
+
+  const sortedDisciplines = disciplines
+    ?.filter((d) => includeSet.has(d.fieldLabel))
+    ?.sort((a, b) => b.totalCount - a.totalCount);
 
   const categories = sortedDisciplines.map((d) => d.fieldLabel);
 

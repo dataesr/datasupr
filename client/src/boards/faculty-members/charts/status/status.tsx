@@ -8,6 +8,9 @@ import { useStatusDistribution } from "./use-status-distribution";
 import { Button } from "@dataesr/dsfr-plus";
 import SubtitleWithContext from "../../components/subtitle-with-context";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
+import { SearchBar as FacultySearchBar } from "../../components/search-bar";
+
+// const { VITE_APP_SERVER_URL } = import.meta.env;
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -53,6 +56,7 @@ const StatusDistribution: React.FC = () => {
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId, contextName } = useContextDetection();
   const [displayAsPercentage, setDisplayAsPercentage] = useState<boolean>(true);
+  const [addedLabels, setAddedLabels] = useState<string[]>([]);
 
   const {
     data: statusData,
@@ -131,7 +135,30 @@ const StatusDistribution: React.FC = () => {
   const chartOptions = StatusOptions({
     disciplines: chartData,
     displayAsPercentage: displayAsPercentage,
+    alwaysIncludeLabels: addedLabels,
   });
+
+  const baseTopLabels = useMemo(() => {
+    return [...processedData]
+      .sort((a, b) => b.totalCount - a.totalCount)
+      .slice(0, 10)
+      .map((d) => d.fieldLabel);
+  }, [processedData]);
+
+  const displayedLabels = useMemo(() => {
+    return new Set<string>([...baseTopLabels, ...addedLabels]);
+  }, [baseTopLabels, addedLabels]);
+
+  const onSelectStructure = (item: { id: string; name: string }) => {
+    const selected = { id: item.id, lib: item.name };
+    if (!selected) return;
+    const existsInData = processedData.some(
+      (d) => d.fieldLabel === selected.lib
+    );
+    if (existsInData && !addedLabels.includes(selected.lib)) {
+      setAddedLabels((prev) => [...prev, selected.lib]);
+    }
+  };
 
   const getContextLabel = (isPrefix = false) => {
     switch (context) {
@@ -198,6 +225,20 @@ const StatusDistribution: React.FC = () => {
           Pourcentage
         </Button>
       </div>
+      {context === "structures" && !contextId && (
+        <div className="fr-mb-2w">
+          <FacultySearchBar
+            mode="select"
+            allowedTypes={["univ"]}
+            label="Ajouter un établissement à comparer"
+            placeholder="Rechercher un établissement"
+            onSelect={(item) =>
+              onSelectStructure({ id: item.id, name: item.name })
+            }
+            disabledPredicate={(item) => displayedLabels.has(item.name)}
+          />
+        </div>
+      )}
 
       <ChartWrapper
         config={{
