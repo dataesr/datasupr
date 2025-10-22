@@ -6,19 +6,38 @@ import { getCollaborations } from "./query";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import EntitySearchBar from "../../../../components/entity-searchbar";
+import { useState } from "react";
+import EntitiesTable from "../entities-table";
 
 export default function EntityVariablePie() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
+  const [entityId, setEntityId] = useState<string>("");
 
-  const entityId = window.location.pathname.split("/").pop()?.split("?")[0] || "";
+  // const entityId = window.location.pathname.split("/").pop()?.split("?")[0] || "";
 
   const { data, isLoading } = useQuery({
     queryKey: ["EntitiesCollaborations", entityId],
     queryFn: () => getCollaborations(entityId),
   });
 
-  if (isLoading || !data) return <DefaultSkeleton />;
+  if (isLoading || !data)
+    return (
+      <Container fluid className="fr-mt-5w">
+        <Row>
+          <Col>
+            <EntitySearchBar setEntityId={setEntityId} />
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <DefaultSkeleton />
+          </Col>
+        </Row>
+      </Container>
+    );
+
   const configChart = {
     id: "EntitiesCollaborations",
     title: {
@@ -30,8 +49,27 @@ export default function EntityVariablePie() {
     integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
   };
 
+  if (!entityId)
+    return (
+      <Container fluid className="fr-mt-5w">
+        <Row>
+          <Col>
+            <EntitySearchBar setEntityId={setEntityId} />
+          </Col>
+        </Row>
+        <Row>
+          <Col>Veuillez sélectionner une entité pour afficher le graphique.</Col>
+        </Row>
+      </Container>
+    );
+
   return (
     <Container fluid className="fr-mt-5w">
+      <Row>
+        <Col>
+          <EntitySearchBar setEntityId={setEntityId} />
+        </Col>
+      </Row>
       <Row>
         <Col>
           <ChartWrapper
@@ -40,6 +78,11 @@ export default function EntityVariablePie() {
             options={options(data, currentLang)}
             renderData={() => null} // TODO: add data table
           />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <EntitiesTable entityId={entityId} />
         </Col>
       </Row>
     </Container>

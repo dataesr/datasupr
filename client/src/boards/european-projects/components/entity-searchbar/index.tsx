@@ -1,18 +1,19 @@
 import { useState, useEffect, useRef, KeyboardEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Row, Col, TextInput, Button, Link } from "@dataesr/dsfr-plus";
+import { Row, Col, TextInput, Button } from "@dataesr/dsfr-plus";
 
 import i18n from "./i18n.json";
 import "./styles.scss";
 
-export default function EntitySearchBar() {
+export default function EntitySearchBar({ setEntityId }) {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const country_code = searchParams.get("country_code") || "FRA";
   const [query, setQuery] = useState("");
   const [isVisible, setIsVisible] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedEntity, setSelectedEntity] = useState<{ entities_id: string; entities_name: string } | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -31,12 +32,12 @@ export default function EntitySearchBar() {
   });
 
   useEffect(() => {
-    if (query.length >= 3) {
+    if (query.length >= 3 && !selectedEntity) {
       setIsVisible(true);
     } else {
       setIsVisible(false);
     }
-  }, [query]);
+  }, [query, selectedEntity]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -54,6 +55,14 @@ export default function EntitySearchBar() {
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
+
+  const selectEntity = (entity) => {
+    setSelectedEntity(entity);
+    setQuery(entity.entities_name);
+    setEntityId(entity.entities_id);
+    setIsVisible(false);
+    setSelectedIndex(-1);
+  };
 
   const scrollSelectedIntoView = (index: number) => {
     if (index === -1) return;
@@ -103,9 +112,8 @@ export default function EntitySearchBar() {
         break;
       case "Enter":
         if (selectedIndex >= 0) {
-          const selectedEntity = data[selectedIndex];
-          // Naviguer vers la page de l'entité
-          window.location.href = `/european-projects/collaborations/${selectedEntity.entities_id}?language=${currentLang}&country_code=${country_code}`;
+          const entity = data[selectedIndex];
+          selectEntity(entity);
         }
         break;
       case "Escape":
@@ -120,10 +128,24 @@ export default function EntitySearchBar() {
     setSelectedIndex(-1);
   }, [query]);
 
+  const handleInputChange = (e) => {
+    const newQuery = e.target.value;
+    setQuery(newQuery);
+
+    // Si l'utilisateur commence à taper quelque chose de différent
+    // de l'entité sélectionnée, on réinitialise la sélection
+    if (selectedEntity && newQuery !== selectedEntity.entities_name) {
+      setSelectedEntity(null);
+      setEntityId(null);
+    }
+  };
+
   const handleResetClick = () => {
     setQuery("");
     setIsVisible(false);
     setSelectedIndex(-1);
+    setSelectedEntity(null);
+    setEntityId(null);
     inputRef.current?.focus();
   };
 
@@ -138,7 +160,7 @@ export default function EntitySearchBar() {
             <div style={{ flex: 1 }}>
               <TextInput
                 id="entity-search-input"
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 placeholder={getI18nLabel("find-entity-placeholder")}
                 ref={inputRef}
@@ -158,7 +180,7 @@ export default function EntitySearchBar() {
           </div>
         </Col>
       </Row>
-      {query.length >= 3 && (
+      {query.length >= 3 && !selectedEntity && (
         <div ref={resultsRef} className={`results-dropdown ${isVisible ? "visible" : "hidden"}`}>
           {isLoading ? (
             <div className="fr-p-2w">Loading...</div>
@@ -174,10 +196,10 @@ export default function EntitySearchBar() {
                       setSelectedIndex(-1);
                     }
                   }}
+                  onClick={() => selectEntity(entity)}
+                  style={{ cursor: "pointer" }}
                 >
-                  <Link href={`/european-projects/collaborations/${entity.entities_id}?language=${currentLang}&country_code=${country_code}`}>
-                    {entity.entities_name}
-                  </Link>
+                  {entity.entities_name}
                 </li>
               ))}
             </ul>

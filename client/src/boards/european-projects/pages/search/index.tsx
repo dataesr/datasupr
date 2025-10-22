@@ -8,7 +8,6 @@ import { getAll, getDestinations, getFiltersValues, getPrograms, getThematics } 
 
 import i18n from "./i18n.json";
 import "./styles.scss";
-import EntitySearchBar from "../../components/entity-searchbar";
 import Callout from "../../../../components/callout";
 import PillarCard from "../../components/cards/pillars";
 
@@ -413,11 +412,6 @@ export default function Search() {
           Lorem ipsum dolor, sit amet consectetur adipisicing elit. Sequi tenetur eius repellat hic, laborum placeat porro temporibus iusto magnam
           excepturi numquam commodi nesciunt. Eaque cupiditate adipisci aspernatur dicta, fugit deleniti!
         </Callout>
-      </Container>
-      <Container as="section" className="search">
-        <div className="content2">
-          <EntitySearchBar />
-        </div>
       </Container>
     </>
   );

@@ -13,11 +13,11 @@ interface Entity {
   projects: Array<{ project_id: string; role: string }>;
 }
 
-export default function EntitiesTable() {
+export default function EntitiesTable({ entityId }) {
   // const [searchParams] = useSearchParams();
   // const currentLang = searchParams.get("language") || "fr";
   // TODO: traduction
-  const entityId = window.location.pathname.split("/").pop()?.split("?")[0] || "";
+  // const entityId = window.location.pathname.split("/").pop()?.split("?")[0] || "";
 
   const { data, isLoading } = useQuery({
     queryKey: ["EntitiesCollaborations", entityId],
@@ -98,14 +98,13 @@ export default function EntitiesTable() {
           </select>
         </Col>
       </Row>
-
       <Row>
         <Col>
-          <div className="fr-table fr-table--sm fr-pt-0">
+          <div className="fr-table fr-table--sm fr-table--no-caption fr-pt-0">
             <div className="fr-table__wrapper">
               <div className="fr-table__container">
                 <div className="fr-table__content">
-                  <table>
+                  <table className="fr-table--layout-fixed">
                     <thead>
                       <tr>
                         <th>
@@ -178,11 +177,11 @@ export default function EntitiesTable() {
                 <Tag color="green-bourgeon">{selectedEntity.projects.filter((p) => p.role === "coordinator").length} coordinations</Tag>
               </TagGroup>
 
-              <div className="fr-table fr-table--sm fr-pt-0">
+              <div className="fr-table fr-table--sm fr-table--no-caption fr-pt-0">
                 <div className="fr-table__wrapper">
                   <div className="fr-table__container">
                     <div className="fr-table__content">
-                      <table>
+                      <table className="fr-table--layout-fixed">
                         <thead>
                           <tr>
                             <th>Projet ID</th>
