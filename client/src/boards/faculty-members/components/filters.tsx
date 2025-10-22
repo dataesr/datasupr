@@ -131,25 +131,32 @@ const YearSelector = () => {
   const navigate = useNavigate();
   useEffect(() => {
     if (
-      yearsData?.last_complete_year &&
+      yearsData?.complete_years &&
+      yearsData.complete_years.length > 0 &&
       !searchParams.get("annee_universitaire")
     ) {
       const newParams = new URLSearchParams(searchParams);
-      newParams.set("annee_universitaire", yearsData.last_complete_year);
+      newParams.set("annee_universitaire", yearsData.complete_years[0]);
       navigate({ search: newParams.toString() }, { replace: true });
     }
   }, [yearsData, searchParams, navigate]);
 
   const years = useMemo(
+    () => yearsData?.available_years || [],
+    [yearsData?.available_years]
+  );
+  const completeYears = useMemo(
     () => yearsData?.complete_years || [],
     [yearsData?.complete_years]
   );
-  const lastCompleteYear = yearsData?.last_complete_year;
 
   const initialYear =
     searchParams.get("annee_universitaire") ||
-    lastCompleteYear ||
-    (years.length > 0 ? years[0] : "");
+    (completeYears.length > 0
+      ? completeYears[0]
+      : years.length > 0
+      ? years[0]
+      : "");
 
   const [selectedYear, setSelectedYear] = useState(initialYear);
   const [selectedContextItem, setSelectedContextItem] =

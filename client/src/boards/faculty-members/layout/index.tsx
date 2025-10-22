@@ -20,7 +20,7 @@ import { useBreadcrumbItems, useContextDetection } from "../utils";
 import "./styles.scss";
 import { useCallback } from "react";
 import { SearchBar } from "../components/search-bar";
-import { useDataCompleteness } from "../hooks/useDataCompleteness";
+import { useDataCompleteness } from "../api/useDataCompleteness";
 
 export function FacultyLayout() {
   const { context, contextId, contextName } = useContextDetection();

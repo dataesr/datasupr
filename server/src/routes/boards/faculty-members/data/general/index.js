@@ -41,6 +41,7 @@ router.get("/faculty-members/filters/years", async (req, res) => {
       const baseFilter = { etablissement_id_paysage: structure_id };
 
       const availableYears = [];
+      const completeYears = [];
 
       for (const year of sortedYears) {
         const yearStart = parseInt(year.split("-")[0]);
@@ -71,16 +72,34 @@ router.get("/faculty-members/filters/years", async (req, res) => {
 
         if (totalEffectif > 0) {
           availableYears.push(year);
+
+          const nonPermanentCount = await collection.countDocuments({
+            annee_universitaire: year,
+            etablissement_id_paysage: structure_id,
+            is_titulaire: false,
+          });
+
+          if (nonPermanentCount > 0) {
+            completeYears.push(year);
+          }
         }
       }
 
+      const lastCompleteYear =
+        completeYears.length > 0
+          ? completeYears[0]
+          : availableYears.length > 0
+          ? availableYears[0]
+          : null;
       const lastAvailableYear =
         availableYears.length > 0 ? availableYears[0] : null;
 
       return res.json({
         academic_years: sortedYears,
-        complete_years: availableYears,
-        last_complete_year: lastAvailableYear,
+        available_years: availableYears,
+        complete_years: completeYears,
+        last_complete_year: lastCompleteYear,
+        last_available_year: lastAvailableYear,
         context: {
           structure_id,
           has_closure_date: fermetureDate !== null,
@@ -104,6 +123,7 @@ router.get("/faculty-members/filters/years", async (req, res) => {
       }
 
       const availableYears = [];
+      const completeYears = [];
 
       for (const year of sortedYears) {
         const yearFilter = {
@@ -128,16 +148,33 @@ router.get("/faculty-members/filters/years", async (req, res) => {
 
         if (totalEffectif > 0) {
           availableYears.push(year);
+
+          const nonPermanentCount = await collection.countDocuments({
+            ...yearFilter,
+            is_titulaire: false,
+          });
+
+          if (nonPermanentCount > 0) {
+            completeYears.push(year);
+          }
         }
       }
 
+      const lastCompleteYear =
+        completeYears.length > 0
+          ? completeYears[0]
+          : availableYears.length > 0
+          ? availableYears[0]
+          : null;
       const lastAvailableYear =
         availableYears.length > 0 ? availableYears[0] : null;
 
       return res.json({
         academic_years: sortedYears,
-        complete_years: availableYears,
-        last_complete_year: lastAvailableYear,
+        available_years: availableYears,
+        complete_years: completeYears,
+        last_complete_year: lastCompleteYear,
+        last_available_year: lastAvailableYear,
         context: {
           field_id,
           geo_id,

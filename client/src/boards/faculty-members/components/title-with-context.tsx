@@ -80,7 +80,7 @@ const TitleWithContext = () => {
 
   return (
     <>
-      <Title as="h2" look="h1" className="fr-text-title--blue-france">
+      <Title as="h2" look="h1" className="fr-text-title--blue-france fr-mt-2w">
         {!contextId && (
           <>
             {pluralMain}{" "}
@@ -89,18 +89,22 @@ const TitleWithContext = () => {
             </span>
           </>
         )}
-        <br />
-        {name}{" "}
-        {isEstablishmentClosed && (
-          <span style={{ marginLeft: "0.75rem" }}>
-            <Badge
-              variant="error"
-              size="sm"
-              style={{ verticalAlign: "middle" }}
-            >
-              Fermé(e){fermetureYear ? ` depuis ${fermetureYear}` : ""}
-            </Badge>
-          </span>
+        {contextId && (
+          <>
+            <br />
+            {name}{" "}
+            {isEstablishmentClosed && (
+              <span style={{ marginLeft: "0.75rem" }}>
+                <Badge
+                  variant="error"
+                  size="sm"
+                  style={{ verticalAlign: "middle" }}
+                >
+                  Fermé(e){fermetureYear ? ` depuis ${fermetureYear}` : ""}
+                </Badge>
+              </span>
+            )}
+          </>
         )}
         {currentYear && (
           <Text size="sm">

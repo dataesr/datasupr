@@ -18,9 +18,12 @@ export function FacultyMembers() {
   const handleClick =
     (url: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
       event.preventDefault();
-      const lastCompleteYear = yearsData?.last_complete_year;
-      if (lastCompleteYear) {
-        navigate(`${url}?annee_universitaire=${lastCompleteYear}`);
+
+      const yearToUse =
+        yearsData?.complete_years?.[0] || yearsData?.available_years?.[0];
+
+      if (yearToUse) {
+        navigate(`${url}?annee_universitaire=${yearToUse}`);
       } else {
         navigate(url);
       }
