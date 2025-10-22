@@ -5,12 +5,10 @@ import ChartWrapper from "../../../../components/chart-wrapper";
 import { useContextDetection, generateIntegrationURL } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useStatusDistribution } from "./use-status-distribution";
-import { Button } from "@dataesr/dsfr-plus";
+import { Button, Col, DismissibleTag, Row } from "@dataesr/dsfr-plus";
 import SubtitleWithContext from "../../components/subtitle-with-context";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 import { SearchBar as FacultySearchBar } from "../../components/search-bar";
-
-// const { VITE_APP_SERVER_URL } = import.meta.env;
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -206,8 +204,8 @@ const StatusDistribution: React.FC = () => {
   }
 
   return (
-    <div>
-      <div className="fr-mb-2w fr-flex fr-flex--center">
+    <Row>
+      <Col>
         <Button
           size="sm"
           onClick={() => setDisplayAsPercentage(false)}
@@ -224,19 +222,44 @@ const StatusDistribution: React.FC = () => {
         >
           Pourcentage
         </Button>
-      </div>
+      </Col>
       {context === "structures" && !contextId && (
         <div className="fr-mb-2w">
-          <FacultySearchBar
-            mode="select"
-            allowedTypes={["univ"]}
-            label="Ajouter un établissement à comparer"
-            placeholder="Rechercher un établissement"
-            onSelect={(item) =>
-              onSelectStructure({ id: item.id, name: item.name })
-            }
-            disabledPredicate={(item) => displayedLabels.has(item.name)}
-          />
+          <div className="text-right">
+            <div style={{ minWidth: 420, display: "inline-block" }}>
+              <FacultySearchBar
+                mode="select"
+                allowedTypes={["univ"]}
+                placeholder="Ajouter un établissement dans le graphique"
+                onSelect={(item) =>
+                  onSelectStructure({ id: item.id, name: item.name })
+                }
+                disabledPredicate={(item) => displayedLabels.has(item.name)}
+              />
+            </div>
+            {addedLabels.length > 0 && (
+              <div className="fr-mt-2w">
+                <div className="fr-text--sm fr-mb-1w">
+                  Établissements ajoutés :
+                </div>
+                <div>
+                  {addedLabels.map((label) => (
+                    <DismissibleTag
+                      color="blue-cumulus"
+                      aria-label={`Retirer ${label}`}
+                      onClick={() =>
+                        setAddedLabels((prev) =>
+                          prev.filter((l) => l !== label)
+                        )
+                      }
+                    >
+                      {label}
+                    </DismissibleTag>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       )}
 
@@ -318,7 +341,7 @@ const StatusDistribution: React.FC = () => {
         legend={null}
         renderData={() => <RenderData data={processedData} />}
       />
-    </div>
+    </Row>
   );
 };
 
