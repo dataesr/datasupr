@@ -826,6 +826,59 @@ router.get("/faculty-members/search-bar", async (req, res) => {
   }
 });
 
+router.get("/faculty-members/data-completeness", async (req, res) => {
+  try {
+    const { annee_universitaire, field_id, geo_id, structure_id } = req.query;
+    const collection = db.collection("faculty-members_main_staging");
+
+    if (!annee_universitaire) {
+      return res.status(400).json({
+        error: "annee_universitaire is required",
+      });
+    }
+
+    const matchStage = {
+      annee_universitaire: annee_universitaire,
+    };
+
+    if (field_id) {
+      matchStage.code_grande_discipline = field_id;
+    }
+    if (structure_id) {
+      matchStage.etablissement_id_paysage = structure_id;
+    }
+    if (geo_id) {
+      if (geo_id.toString().startsWith("A")) {
+        matchStage.etablissement_code_academie = geo_id;
+      } else {
+        matchStage.etablissement_code_region = geo_id;
+      }
+    }
+
+    const nonPermanentCount = await collection.countDocuments({
+      ...matchStage,
+      is_titulaire: false,
+    });
+
+    res.json({
+      has_non_permanent_staff: nonPermanentCount > 0,
+      non_permanent_count: nonPermanentCount,
+      annee_universitaire,
+      context: {
+        field_id,
+        geo_id,
+        structure_id,
+      },
+    });
+  } catch (error) {
+    console.error("Error checking data completeness:", error);
+    res.status(500).json({
+      error: "Server error while checking data completeness",
+      details: error.message,
+    });
+  }
+});
+
 router.get("/faculty-members/evolution/categories", async (req, res) => {
   try {
     const { context, contextId, start_year, end_year } = req.query;

@@ -5,6 +5,7 @@ import {
   Col,
   Container,
   Link,
+  Notice,
   Row,
 } from "@dataesr/dsfr-plus";
 import {
@@ -19,6 +20,7 @@ import { useBreadcrumbItems, useContextDetection } from "../utils";
 import "./styles.scss";
 import { useCallback } from "react";
 import { SearchBar } from "../components/search-bar";
+import { useDataCompleteness } from "../hooks/useDataCompleteness";
 
 export function FacultyLayout() {
   const { context, contextId, contextName } = useContextDetection();
@@ -26,6 +28,11 @@ export function FacultyLayout() {
   function capitalize(word: string) {
     return String(word).charAt(0).toUpperCase() + String(word).slice(1);
   }
+
+  const { hasNonPermanentStaff, isLoading: isLoadingCompleteness } =
+    useDataCompleteness();
+
+  const shouldShowNotice = !isLoadingCompleteness && !hasNonPermanentStaff;
 
   const contextNameCapital = capitalize(contextName);
 
@@ -126,9 +133,18 @@ export function FacultyLayout() {
               </ButtonGroup>
             )}
           </Col>
-          <Col md={4} className="text-right">
+          <Col md={4} className="text-right fr-mb-2w">
             <YearSelector />
           </Col>
+          {shouldShowNotice && (
+            <Notice type="info" className="fr-mb-4w" closeMode="disallow">
+              Les données pour cette année universitaire ne sont pas complètes.
+              Les informations relatives aux personnels enseignants{" "}
+              NON-PERMANENTS, sont encore en cours de collecte et de validation.
+              Les analyses présentées ici pourraient donc évoluer une fois
+              l'ensemble des données disponibles.
+            </Notice>
+          )}
         </Row>
       </Container>
       <Container fluid>

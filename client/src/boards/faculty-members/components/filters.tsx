@@ -173,7 +173,7 @@ const YearSelector = () => {
   });
   const { data: structures } = useNavigation({
     type: "structures",
-    annee_universitaire: "", // Pas de filtre par année pour les structures
+    annee_universitaire: "",
     enabled: isContextModalOpen,
   });
 

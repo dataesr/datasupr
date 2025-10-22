@@ -14,7 +14,7 @@ import { AgeDistributionPieChart } from "../../charts/age/age";
 import GeneralIndicatorsCard from "../../components/general-indicators-card/general-indicators-card";
 import { EstablishmentTypeChart } from "../../charts/establishment-type/establishment";
 import DisciplineStatusSummary from "../../components/fields-by-status";
-import NavigationCards from "../../components/fields-cards";
+import NavigationCards from "../../components/navigation-cards/navigation-cards";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 import { useContextDetection } from "../../utils";
 import { useFacultyMembersYears } from "../../api/general-queries";

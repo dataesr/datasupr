@@ -1,0 +1,111 @@
+.navigation-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.navigation-card {
+  background-color: inherit;
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  position: relative;
+  height: 100%;
+
+  &:hover {
+    transform: scale(1.03);
+  }
+}
+
+.navigation-card__avatar {
+  background-color: var(--background-default-grey);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  color: var(--text-action-high-blue-france);
+  margin-bottom: 0.5rem;
+}
+
+.navigation-card__title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-default-grey);
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+
+.navigation-card__count {
+  font-size: 0.75rem;
+  color: var(--text-mention-grey);
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  width: 100%;
+}
+.navigation-card__year {
+  font-size: 0.65rem;
+  color: var(--text-mention-grey);
+  font-weight: 500;
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+  align-items: flex-end;
+  width: 100%;
+}
+
+.navigation-card__meta {
+  font-size: 0.7rem;
+  color: var(--text-mention-grey);
+  margin-top: 0.25rem;
+}
+
+.loading-skeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.skeleton-item {
+  background-color: var(--background-default-grey);
+  border-radius: 12px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 100px;
+  animation: pulse 2s infinite;
+}
+
+.skeleton-avatar {
+  background-color: var(--background-default-grey-hover);
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  margin-bottom: 0.5rem;
+}
+
+.skeleton-text {
+  background-color: var(--background-default-grey-hover);
+  height: 16px;
+  width: 80%;
+  border-radius: 4px;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

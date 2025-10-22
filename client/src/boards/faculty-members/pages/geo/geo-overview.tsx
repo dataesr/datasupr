@@ -8,7 +8,7 @@ import { EstablishmentTypeChart } from "../../charts/establishment-type/establis
 import DisciplineStatsSidebar from "../../components/top-indicators/top-fields-indicators";
 import DisciplineStatusSummary from "../../components/fields-by-status";
 import FacultyMap from "./components/map";
-import NavigationCards from "../../components/fields-cards";
+import NavigationCards from "../../components/navigation-cards/navigation-cards";
 import { useContextDetection } from "../../utils";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 
