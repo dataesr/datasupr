@@ -26,12 +26,9 @@ export default function UniversityOverview() {
   const [searchParams] = useSearchParams();
 
   const selectedYear = searchParams.get("annee_universitaire") || "";
-  const isYearAvailable = yearsData?.complete_years?.includes(selectedYear);
+  const isYearAvailable = yearsData?.available_years?.includes(selectedYear);
 
-  const hasDataForSelectedYear =
-    isYearAvailable ||
-    (yearsData?.last_complete_year &&
-      selectedYear === yearsData.last_complete_year);
+  const hasDataForSelectedYear = isYearAvailable;
 
   return (
     <Container as="main">

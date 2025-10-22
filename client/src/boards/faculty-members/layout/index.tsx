@@ -21,6 +21,7 @@ import "./styles.scss";
 import { useCallback } from "react";
 import { SearchBar } from "../components/search-bar";
 import { useDataCompleteness } from "../api/useDataCompleteness";
+import { useFacultyMembersYears } from "../api/general-queries";
 
 export function FacultyLayout() {
   const { context, contextId, contextName } = useContextDetection();
@@ -32,7 +33,12 @@ export function FacultyLayout() {
   const { hasNonPermanentStaff, isLoading: isLoadingCompleteness } =
     useDataCompleteness();
 
-  const shouldShowNotice = !isLoadingCompleteness && !hasNonPermanentStaff;
+  const { data: yearsData } = useFacultyMembersYears();
+
+  const isStructureClosed =
+    context === "structures" && yearsData?.context?.has_closure_date;
+  const shouldShowNotice =
+    !isLoadingCompleteness && !hasNonPermanentStaff && !isStructureClosed;
 
   const contextNameCapital = capitalize(contextName);
 
