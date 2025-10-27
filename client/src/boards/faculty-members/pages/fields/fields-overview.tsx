@@ -91,7 +91,7 @@ export default function FieldOverview() {
         </Col>
       </Row>
       {context === "fields" && !contextId && (
-        <Row className="fr-mt-4w">
+        <Row className="fr-mt-3w fr-mb-4w chart-container">
           <Col md={12}>
             <div className="fr-background-alt--blue-france fr-p-3w">
               <FieldsDistributionBar />
@@ -100,7 +100,7 @@ export default function FieldOverview() {
         </Row>
       )}
 
-      <Row className="fr-mt-4w">
+      <Row className="fr-mt-3w fr-mb-4w chart-container">
         <Col md={12}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <StatusDistribution />

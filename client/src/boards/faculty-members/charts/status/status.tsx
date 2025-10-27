@@ -5,7 +5,7 @@ import ChartWrapper from "../../../../components/chart-wrapper";
 import { useContextDetection, generateIntegrationURL } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useStatusDistribution } from "./use-status-distribution";
-import { Button, Col, DismissibleTag, Row } from "@dataesr/dsfr-plus";
+import { Button, DismissibleTag } from "@dataesr/dsfr-plus";
 import SubtitleWithContext from "../../components/subtitle-with-context";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 import { SearchBar as FacultySearchBar } from "../../components/search-bar";
@@ -204,8 +204,8 @@ const StatusDistribution: React.FC = () => {
   }
 
   return (
-    <Row>
-      <Col>
+    <>
+      <div className="fr-mb-2w fr-flex fr-flex--center">
         <Button
           size="sm"
           onClick={() => setDisplayAsPercentage(false)}
@@ -222,7 +222,7 @@ const StatusDistribution: React.FC = () => {
         >
           Pourcentage
         </Button>
-      </Col>
+      </div>
       {context === "structures" && !contextId && (
         <div className="fr-mb-2w">
           <div className="text-right">
@@ -341,7 +341,7 @@ const StatusDistribution: React.FC = () => {
         legend={null}
         renderData={() => <RenderData data={processedData} />}
       />
-    </Row>
+    </>
   );
 };
 
