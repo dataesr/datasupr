@@ -10,6 +10,7 @@ import ThematicsOverview from "../../../overview/components/destinations-overvie
 import DestinationsOverview from "../../../overview/components/destinations-overview";
 import MainPartners from "../../../overview/charts/main-partners";
 import SynthesisFocus from "../../../overview/charts/synthesis-focus";
+import Callout from "../../../../../../components/callout";
 // import DestinationsFunding from "../../../overview/components/destinations-funding";
 
 interface SyntheseContentProps {
@@ -38,14 +39,19 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
     case "pillar-detail":
       return (
         <div>
-          {/* <PillarsFunding /> */}
           <SynthesisFocus />
-
-          {/* <Title as="h2">Détails du pilier {pillarId}</Title> */}
           <PillarsOverview />
+          <Title as="h2" className="fr-mt-5w">
+            Principaux bénéficiaires
+          </Title>
           <MainPartners />
-
-          <Title as="h2">Composition du pilier</Title>
+          <Title as="h2" className="fr-mt-5w">
+            Composition du pilier
+          </Title>
+          <Callout>
+            Visualisez la répartition des financements du pilier sélectionné par programme.
+            <br /> Cela vous permet d'identifier les programmes les plus financés et de comprendre leur contribution au sein du pilier.
+          </Callout>
           <Title as="h3">Répartition des financements par programme</Title>
           <ProgramsFunding />
         </div>
@@ -54,13 +60,19 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
     case "program-detail":
       return (
         <div>
-          <p>Synthèse - Détails du programme</p>
           <SynthesisFocus />
           <ProgramsOverview />
+          <Title as="h2" className="fr-mt-5w">
+            Principaux bénéficiaires
+          </Title>
           <MainPartners />
-
-          <p>Indicateurs de performance du programme</p>
-          <Title as="h2">Composition du programme</Title>
+          <Title as="h2" className="fr-mt-5w">
+            Composition du programme
+          </Title>
+          <Callout>
+            Visualisez la répartition des financements du programme sélectionné par thématique.
+            <br /> Cela vous permet d'identifier les thématiques les plus financées et de comprendre leur contribution au sein du programme.
+          </Callout>
           <Title as="h3">Répartition des financements par thématique</Title>
           <TopicsFunding />
         </div>
@@ -69,12 +81,20 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
     case "thematic-detail":
       return (
         <div>
-          <p>Synthèse - Détails des thématiques</p>
           <SynthesisFocus />
           <ThematicsOverview />
+          <Title as="h2" className="fr-mt-5w">
+            Principaux bénéficiaires
+          </Title>
           <MainPartners />
-
-          <Title as="h2">Composition des thématiques</Title>
+          <Title as="h2" className="fr-mt-5w">
+            Composition du ou des thématiques
+          </Title>
+          <Callout>
+            Visualisez la répartition des financements de la ou des thématiques sélectionnée(s) par destination.
+            <br /> Cela vous permet d'identifier les destinations les plus financées et de comprendre leur contribution au sein de la ou des
+            thématiques.
+          </Callout>
           <Title as="h3">Répartition des financements par destination</Title>
           <DestinationsFunding />
         </div>
@@ -83,12 +103,12 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
     case "destination-detail":
       return (
         <div>
-          <p>Synthèse - Détails des destinations</p>
           <SynthesisFocus />
           <DestinationsOverview />
+          <Title as="h2" className="fr-mt-5w">
+            Principaux bénéficiaires
+          </Title>
           <MainPartners />
-
-          <p>Répartition budgétaire par destination</p>
         </div>
       );
 

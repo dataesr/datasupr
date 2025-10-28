@@ -196,7 +196,6 @@ router.route(routesPrefix + "/get-collaborations-by-country").get(async (req, re
     return res.status(400).json({ error: "Les codes pays sont requis" });
   }
 
-
   const filters = checkQuery(req.query, ["country_code", "country_code_collab"], res);
   
   if (req.query.pillars) {
@@ -215,6 +214,7 @@ router.route(routesPrefix + "/get-collaborations-by-country").get(async (req, re
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
   }
+console.log("filters", filters);
 
   try {
     const collaborations = await db

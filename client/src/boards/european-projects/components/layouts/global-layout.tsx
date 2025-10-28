@@ -142,7 +142,9 @@ export default function GlobalLayout({ languageSelector = false }) {
               <Link current={is("/european-projects/erc")} href={`/european-projects/erc?${filtersParams}`}>
                 ERC
               </Link>
+              <Link href="/european-projects/evolution-des-programmes">Evolution des programmes</Link>
             </Nav>
+            YearSelector {/* TODO : add year selector in url*/}
             <CountrySelector />
           </div>
         </Container>

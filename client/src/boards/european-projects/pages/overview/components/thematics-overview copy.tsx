@@ -55,7 +55,6 @@ export default function ThematicsOverview() {
           <SuccessRateCard loading={isLoading} nb={successRate} />
         </Col>
       </Row>
-      <p>Vue d'ensemble des piliers</p>
     </Container>
   );
 }

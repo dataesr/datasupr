@@ -2,19 +2,52 @@ import { Col, Row } from "@dataesr/dsfr-plus";
 import DestinationFundingValues from "../charts/destination-funding";
 import DestinationFundingSuccessRates from "../charts/destination-funding-success-rates";
 import DestinationFundingProportion from "../charts/destination-funding-proportion";
+import ChartFooter from "../../../../../components/chart-footer";
+import { EPChartsSource, EPChartsUpdateDate } from "../../../config";
 
 export default function DestinationsFunding() {
   return (
     <>
-      <Row gutters>
-        <Col>
+      <Row className="chart-container chart-container--thematics" style={{ marginLeft: "var(--spacing-1w)", marginRight: "var(--spacing-1w)" }}>
+        <Col md={6}>
           <DestinationFundingValues />
         </Col>
-        <Col>
+        <Col md={6}>
           <DestinationFundingSuccessRates />
         </Col>
+        <Col md={12} className="chart-footer">
+          <ChartFooter
+            comment={{
+              fr: (
+                <>
+                  Ce graphique affiche la répartition des financements demandés et obtenus (en M€) par destination, ainsi que le taux de succès
+                  associé (montants obtenus / montants demandés).
+                </>
+              ),
+              en: (
+                <>
+                  This chart displays the distribution of requested and obtained funding (in M€) by destination, as well as the associated success
+                  rate (amounts obtained / amounts requested).
+                </>
+              ),
+            }}
+            readingKey={{
+              fr: (
+                <>
+                  Pour la thématique "Excellence Scientifique", les projets ont demandé X M€ de financements, et en ont obtenu Y M€, soit un taux de
+                  succès de Z %.
+                </>
+              ),
+              en: (
+                <>For the "Scientific Excellence" topic, projects requested X M€ in funding and obtained Y M€, representing a success rate of Z%.</>
+              ),
+            }}
+            source={EPChartsSource}
+            updateDate={EPChartsUpdateDate}
+          />
+        </Col>
       </Row>
-      <Row>
+      <Row className="fr-mt-1w chart-container chart-container--thematics">
         <Col>
           <DestinationFundingProportion />
         </Col>
