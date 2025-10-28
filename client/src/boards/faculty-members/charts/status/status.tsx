@@ -91,6 +91,13 @@ const StatusDistribution: React.FC = () => {
       return {
         fieldLabel:
           item._id.structure_name || item._id.field_name || item._id.geo_name,
+        itemId:
+          item._id.field_code || item._id.geo_code || item._id.structure_code,
+        itemType: item._id.field_code
+          ? ("fields" as const)
+          : item._id.geo_code
+          ? ("geo" as const)
+          : ("structures" as const),
         totalCount,
         nonTitulaires,
         titulairesNonChercheurs,

@@ -15,19 +15,16 @@ export function FacultyMembers() {
   const navigate = useNavigate();
   const { data: yearsData } = useFacultyMembersYears();
 
-  const handleClick =
-    (url: string) => (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
+  const goTo = (url: string) => {
+    const yearToUse =
+      yearsData?.complete_years?.[0] || yearsData?.available_years?.[0];
 
-      const yearToUse =
-        yearsData?.complete_years?.[0] || yearsData?.available_years?.[0];
-
-      if (yearToUse) {
-        navigate(`${url}?annee_universitaire=${yearToUse}`);
-      } else {
-        navigate(url);
-      }
-    };
+    if (yearToUse) {
+      navigate(`${url}?annee_universitaire=${yearToUse}`);
+    } else {
+      navigate(url);
+    }
+  };
 
   return (
     <Container>
@@ -48,13 +45,27 @@ export function FacultyMembers() {
       <Row gutters className="fr-mt-5w">
         <Col style={{ textAlign: "center" }}>
           <Button
-            onClick={handleClick(
-              "/personnel-enseignant/discipline/vue-d'ensemble"
-            )}
+            onClick={() =>
+              goTo("/personnel-enseignant/discipline/vue-d'ensemble")
+            }
           >
             Par Grandes disciplines
           </Button>
-          <div>
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="Accéder à la vue par grandes disciplines"
+            onClick={() =>
+              goTo("/personnel-enseignant/discipline/vue-d'ensemble")
+            }
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                goTo("/personnel-enseignant/discipline/vue-d'ensemble");
+              }
+            }}
+            style={{ cursor: "pointer" }}
+          >
             <svg
               className="fr-artwork"
               aria-hidden="true"
@@ -79,11 +90,23 @@ export function FacultyMembers() {
         </Col>
         <Col style={{ textAlign: "center" }}>
           <Button
-            onClick={handleClick("/personnel-enseignant/geo/vue-d'ensemble")}
+            onClick={() => goTo("/personnel-enseignant/geo/vue-d'ensemble")}
           >
             Par géographie
           </Button>
-          <div>
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="Accéder à la vue par géographie"
+            onClick={() => goTo("/personnel-enseignant/geo/vue-d'ensemble")}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                goTo("/personnel-enseignant/geo/vue-d'ensemble");
+              }
+            }}
+            style={{ cursor: "pointer" }}
+          >
             <svg
               className="fr-artwork"
               aria-hidden="true"
@@ -108,13 +131,27 @@ export function FacultyMembers() {
         </Col>
         <Col style={{ textAlign: "center" }}>
           <Button
-            onClick={handleClick(
-              "/personnel-enseignant/universite/vue-d'ensemble/"
-            )}
+            onClick={() =>
+              goTo("/personnel-enseignant/universite/vue-d'ensemble/")
+            }
           >
             Par université
           </Button>
-          <div>
+          <div
+            role="button"
+            tabIndex={0}
+            aria-label="Accéder à la vue par université"
+            onClick={() =>
+              goTo("/personnel-enseignant/universite/vue-d'ensemble/")
+            }
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                goTo("/personnel-enseignant/universite/vue-d'ensemble/");
+              }
+            }}
+            style={{ cursor: "pointer" }}
+          >
             <svg
               className="fr-artwork"
               aria-hidden="true"

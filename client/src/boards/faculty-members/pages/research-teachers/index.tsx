@@ -9,11 +9,14 @@ import { AgeDistribution } from "./charts/age/pyra";
 import { CategoryDistribution } from "./charts/categories/categories";
 import { CategoryEvolutionChart } from "./charts/categories-evolution/evolution";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
+import NavigationInfo from "../../components/navigation-info";
+import { getLabels } from "../../components/navigation-utils";
 
 export function ResearchTeachers() {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId, contextName } = useContextDetection();
+  const labels = getLabels(context);
 
   return (
     <Container as="main">
@@ -143,6 +146,9 @@ export function ResearchTeachers() {
             </div>
           </Col>
         </Row>
+      )}
+      {contextId && (
+        <NavigationInfo urlPath={labels.urlPath} plural={labels.plural} />
       )}
     </Container>
   );

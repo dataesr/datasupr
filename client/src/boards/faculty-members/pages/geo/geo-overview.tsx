@@ -11,6 +11,7 @@ import FacultyMap from "./components/map";
 import NavigationCards from "../../components/navigation-cards/navigation-cards";
 import { useContextDetection } from "../../utils";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
+import Callout from "../../../../components/callout";
 
 export default function RegionsOverview() {
   const { contextId } = useContextDetection();
@@ -19,18 +20,20 @@ export default function RegionsOverview() {
     <Container as="main">
       <Row className="fr-mt-3w">
         <Col md={12}>
-          <Text size="sm">
-            Descriptif de la répartition géographique des{" "}
-            <GlossaryTerm term="personnel enseignant">
-              personnels enseignants
-            </GlossaryTerm>{" "}
-            en France métropolitaine et d'outre-mer.
-            <br />
-            Cette page présente la répartition des personnels enseignants par
-            région, avec une visualisation de l'équilibre femmes-hommes dans
-            chaque région. Les données présentées sur cette page sont la sommes
-            des données des régions.
-          </Text>
+          <Callout className="callout-style-geo">
+            <Text size="sm">
+              Descriptif de la répartition géographique des{" "}
+              <GlossaryTerm term="personnel enseignant">
+                personnels enseignants
+              </GlossaryTerm>{" "}
+              en France métropolitaine et d'outre-mer.
+              <br />
+              Cette page présente la répartition des personnels enseignants par
+              région, avec une visualisation de l'équilibre femmes-hommes dans
+              chaque région. Les données présentées sur cette page sont la
+              sommes des données des régions.
+            </Text>
+          </Callout>
         </Col>
       </Row>
       <Row className="fr-mt-3w fr-mb-4w chart-container">

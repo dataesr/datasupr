@@ -153,3 +153,13 @@
 .text-right {
   text-align: right;
 }
+
+.callout-style-fields {
+  background-image: linear-gradient(var(--fields-color));
+}
+.callout-style-geo {
+  background-image: linear-gradient(var(--geo-color));
+}
+.callout-style-university {
+  background-image: linear-gradient(var(--university-color));
+}

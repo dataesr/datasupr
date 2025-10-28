@@ -22,9 +22,11 @@ import { useCallback } from "react";
 import { SearchBar } from "../components/search-bar";
 import { useDataCompleteness } from "../api/useDataCompleteness";
 import { useFacultyMembersYears } from "../api/general-queries";
+import { useTitle } from "../../../hooks/usePageTitle";
 
 export function FacultyLayout() {
   const { context, contextId, contextName } = useContextDetection();
+  useTitle(`dataSupR - ${capitalize(contextName)} - Personnel enseignant`);
 
   function capitalize(word: string) {
     return String(word).charAt(0).toUpperCase() + String(word).slice(1);

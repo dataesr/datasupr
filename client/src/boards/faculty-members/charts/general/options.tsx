@@ -2,22 +2,7 @@ import HighchartsInstance from "highcharts";
 import { CreateChartOptions } from "../../components/creat-chart-options";
 import { getColorForDiscipline } from "../../utils";
 import { formatToPercent } from "../../../../utils/format";
-
-interface Field {
-  year: string;
-  field_id: string;
-  fieldLabel: string;
-  maleCount: number;
-  femaleCount: number;
-  totalCount: number;
-}
-
-interface OptionsProps {
-  fieldsData: Field[];
-  selectedYear: string;
-  displayMode: "count" | "percentage";
-  e;
-}
+import { OptionsProps } from "../../../../types/faculty-members";
 
 export default function OptionsColumnChart({
   fieldsData,
@@ -78,6 +63,14 @@ export default function OptionsColumnChart({
           fontSize: "12px",
         },
         align: "right",
+        formatter(this: Highcharts.AxisLabelsFormatterContextObject) {
+          const idx = this.pos as number;
+          const label = String(this.value);
+          const fieldId = sortedData[idx]?.field_id;
+          if (!fieldId) return label;
+          const href = `/personnel-enseignant/discipline/vue-d'ensemble?annee_universitaire=${selectedYear}&field_id=${fieldId}`;
+          return `<a href="${href}" >${label}</a>`;
+        },
       },
     },
     yAxis: {

@@ -65,6 +65,38 @@ export default function StatusOptions({
           fontSize: "11px",
           fontWeight: "500",
         },
+        formatter(this: Highcharts.AxisLabelsFormatterContextObject) {
+          const idx = this.pos as number;
+          const label = String(this.value ?? "");
+          const d = sortedDisciplines[
+            idx
+          ] as (typeof sortedDisciplines)[number] & {
+            itemId?: string;
+            itemType?: "fields" | "geo" | "structures";
+          };
+          const id = d?.itemId;
+          const type = d?.itemType;
+          if (!id || !type) return label;
+
+          const sp = new URLSearchParams(window.location.search);
+          const year = sp.get("annee_universitaire");
+
+          let basePath = "/personnel-enseignant/discipline/vue-d'ensemble";
+          let paramName = "field_id";
+          if (type === "geo") {
+            basePath = "/personnel-enseignant/geo/vue-d'ensemble";
+            paramName = "geo_id";
+          } else if (type === "structures") {
+            basePath = "/personnel-enseignant/universite/vue-d'ensemble";
+            paramName = "structure_id";
+          }
+
+          const qp = new URLSearchParams();
+          if (year) qp.set("annee_universitaire", year);
+          qp.set(paramName, id);
+          const href = `${basePath}?${qp.toString()}`;
+          return `<a href="${href}" >${label}</a>`;
+        },
       },
     },
     yAxis: {

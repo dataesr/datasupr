@@ -10,6 +10,7 @@ import DisciplineStatusSummary from "../../components/fields-by-status";
 import NavigationCards from "../../components/navigation-cards/navigation-cards";
 import { useContextDetection } from "../../utils";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
+import Callout from "../../../../components/callout";
 
 export default function FieldOverview() {
   const { contextId, context } = useContextDetection();
@@ -18,25 +19,27 @@ export default function FieldOverview() {
     <Container as="main">
       <Row className="fr-mt-3w">
         <Col md={12}>
-          <Text size="sm">
-            Descriptif de notre référentiel des disciplines, limites et
-            périmètres. <br />
-            Cette page présente la répartition des{" "}
-            <GlossaryTerm term="personnel enseignant">
-              personnels enseignants
-            </GlossaryTerm>{" "}
-            par{" "}
-            <GlossaryTerm term="grande discipline">
-              {" "}
-              grande discipline
-            </GlossaryTerm>
-            , avec une visualisation de l'équilibre femmes-hommes dans chaque
-            domaine. Les barres horizontales permettent de comparer facilement
-            les effectifs totaux entre disciplines, tandis que les segments
-            colorés illustrent la proportion respective des enseignants par
-            genre. Le tableau associé détaille les effectifs précis et les
-            pourcentages par discipline.
-          </Text>
+          <Callout className="callout-style-fields">
+            <Text size="sm">
+              Descriptif de notre référentiel des disciplines, limites et
+              périmètres. <br />
+              Cette page présente la répartition des{" "}
+              <GlossaryTerm term="personnel enseignant">
+                personnels enseignants
+              </GlossaryTerm>{" "}
+              par{" "}
+              <GlossaryTerm term="grande discipline">
+                {" "}
+                grande discipline
+              </GlossaryTerm>
+              , avec une visualisation de l'équilibre femmes-hommes dans chaque
+              domaine. Les barres horizontales permettent de comparer facilement
+              les effectifs totaux entre disciplines, tandis que les segments
+              colorés illustrent la proportion respective des enseignants par
+              genre. Le tableau associé détaille les effectifs précis et les
+              pourcentages par discipline.
+            </Text>
+          </Callout>
         </Col>
       </Row>
       <Row className="fr-mt-3w fr-mb-4w chart-container">

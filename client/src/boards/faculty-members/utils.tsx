@@ -1,15 +1,7 @@
 import { useSearchParams, useParams, useLocation } from "react-router-dom";
 import { useMemo } from "react";
 import { useContext } from "./pages/research-teachers/utils/use-context";
-
-export type ContextType = "fields" | "geo" | "structures";
-
-export interface ContextInfo {
-  context: ContextType;
-  contextId: string | undefined;
-  contextName: string;
-  isAcademie?: boolean;
-}
+import { ContextInfo, ContextType } from "../../types/faculty-members";
 
 export function useContextDetection(): ContextInfo {
   const [searchParams] = useSearchParams();

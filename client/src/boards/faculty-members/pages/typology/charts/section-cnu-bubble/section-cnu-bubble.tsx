@@ -141,6 +141,27 @@ export function SectionsBubbleChart() {
       return { data: [], title: "Répartition des effectifs", sectionCount: 0 };
     }
 
+    const safeLabel = (
+      ...parts: Array<string | number | undefined | null>
+    ): string => {
+      const allPresent = parts.every(
+        (p) => p !== undefined && p !== null && String(p).trim().length > 0
+      );
+      return allPresent ? parts.join(" - ") : "Non précisé";
+    };
+
+    const safeId = (
+      ...parts: Array<string | number | undefined | null>
+    ): string => {
+      const present = parts
+        .filter(
+          (p) => p !== undefined && p !== null && String(p).trim().length > 0
+        )
+        .map((p) => String(p));
+      const joined = present.join("_");
+      return joined || "";
+    };
+
     let dataToProcess: Array<{
       item_id: string;
       itemLabel: string;
@@ -183,8 +204,11 @@ export function SectionsBubbleChart() {
               }
 
               return {
-                item_id: section.section_code,
-                itemLabel: `${section.section_code} - ${section.section_name}`,
+                item_id: safeId(section.section_code),
+                itemLabel: safeLabel(
+                  section.section_code,
+                  section.section_name
+                ),
                 totalCount: section.section_total || 0,
                 maleCount,
                 femaleCount,
@@ -225,8 +249,15 @@ export function SectionsBubbleChart() {
                 }
 
                 allSectionsInGroup.push({
-                  item_id: `${discipline._id.discipline_code}_${section.section_code}`,
-                  itemLabel: `${discipline._id.discipline_name} - ${section.section_code} - ${section.section_name}`,
+                  item_id: safeId(
+                    discipline._id.discipline_code,
+                    section.section_code
+                  ),
+                  itemLabel: safeLabel(
+                    discipline._id.discipline_name,
+                    section.section_code,
+                    section.section_name
+                  ),
                   totalCount: section.section_total || 0,
                   maleCount,
                   femaleCount,
@@ -273,8 +304,11 @@ export function SectionsBubbleChart() {
                 }
 
                 allSections.push({
-                  item_id: section.section_code,
-                  itemLabel: `${section.section_code} - ${section.section_name}`,
+                  item_id: safeId(section.section_code),
+                  itemLabel: safeLabel(
+                    section.section_code,
+                    section.section_name
+                  ),
                   totalCount: section.section_total || 0,
                   maleCount,
                   femaleCount,
@@ -316,8 +350,16 @@ export function SectionsBubbleChart() {
                 }
 
                 allSections.push({
-                  item_id: `${discipline._id.discipline_code}_${group.group_code}_${section.section_code}`,
-                  itemLabel: `${discipline._id.discipline_name} - ${group.group_name} - ${section.section_name}`,
+                  item_id: safeId(
+                    discipline._id.discipline_code,
+                    group.group_code,
+                    section.section_code
+                  ),
+                  itemLabel: safeLabel(
+                    discipline._id.discipline_name,
+                    group.group_name,
+                    section.section_name
+                  ),
                   totalCount: section.section_total || 0,
                   maleCount,
                   femaleCount,
@@ -360,8 +402,11 @@ export function SectionsBubbleChart() {
               }
 
               allSections.push({
-                item_id: section.section_code,
-                itemLabel: `${section.section_code} - ${section.section_name}`,
+                item_id: safeId(section.section_code),
+                itemLabel: safeLabel(
+                  section.section_code,
+                  section.section_name
+                ),
                 totalCount: section.section_total || 0,
                 maleCount,
                 femaleCount,
@@ -405,7 +450,7 @@ export function SectionsBubbleChart() {
       sectionCount: totalSections,
     };
   }, [cnuData, contextId, groupId, context]);
-
+  console.log(cnuData);
   const config = {
     id: `${context}-sections-bubbles`,
     idQuery: `faculty-members-cnu`,
@@ -415,11 +460,89 @@ export function SectionsBubbleChart() {
       size: "h2" as const,
       fr: (
         <>
-          Équilibre de la répartition Homme / Femme par sous-section CNU
+          Équilibre de la répartition Homme / Femme par section CNU
           <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ),
     },
+    comment: {
+      fr: (
+        <>
+          <div className="fr-text--xs fr-mt-2w">
+            <div className="fr-grid-row fr-grid-row--gutters">
+              <div className="fr-col-12 fr-col-md-8">
+                <div className="fr-text--center">
+                  <span className="fr-mr-3w">
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: "12px",
+                        height: "12px",
+                        backgroundColor: "#efcb3a",
+                        marginRight: "5px",
+                        borderRadius: "50%",
+                      }}
+                    ></span>
+                    Majorité d'hommes (&lt;40% femmes)
+                  </span>
+                  <span className="fr-mr-3w">
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: "12px",
+                        height: "12px",
+                        backgroundColor: "#9BB7D4",
+                        marginRight: "5px",
+                        borderRadius: "50%",
+                      }}
+                    ></span>
+                    Parité (40-60% femmes)
+                  </span>
+                  <span>
+                    <span
+                      style={{
+                        display: "inline-block",
+                        width: "12px",
+                        height: "12px",
+                        backgroundColor: "#e18b76",
+                        marginRight: "5px",
+                        borderRadius: "50%",
+                      }}
+                    ></span>
+                    Majorité de femmes (&gt;60% femmes)
+                  </span>
+                </div>
+              </div>
+              <div className="fr-col-12 fr-col-md-4">
+                <div className="fr-text--center">
+                  <em>Taille des bulles = effectif total</em>
+                </div>
+              </div>
+            </div>
+
+            <div className="fr-text--center fr-mt-2w">
+              <div className="fr-text--sm" style={{ color: "#666" }}>
+                📍 La ligne diagonale pointillée représente la parité parfaite
+                <br />• Au-dessus : plus d'hommes • En-dessous : plus de femmes
+              </div>
+            </div>
+          </div>
+          Seul les enseignants titulaires sont pris en compte dans cette
+          analyse.
+        </>
+      ),
+    },
+    source: {
+      label: {
+        fr: <>MESR-SIES, SISE</>,
+        en: <>MESR-SIES, SISE</>,
+      },
+      url: {
+        fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+        en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+      },
+    },
+    updateDate: new Date(),
     integrationURL: `/personnel-enseignant/${labels.urlPath}/typologie`,
   };
 
@@ -548,66 +671,6 @@ export function SectionsBubbleChart() {
         legend={null}
         renderData={() => <RenderData data={bubbleData} />}
       />
-
-      <div className="fr-text--xs fr-mt-2w">
-        <div className="fr-grid-row fr-grid-row--gutters">
-          <div className="fr-col-12 fr-col-md-8">
-            <div className="fr-text--center">
-              <span className="fr-mr-3w">
-                <span
-                  style={{
-                    display: "inline-block",
-                    width: "12px",
-                    height: "12px",
-                    backgroundColor: "#efcb3a",
-                    marginRight: "5px",
-                    borderRadius: "50%",
-                  }}
-                ></span>
-                Majorité d'hommes (&lt;40% femmes)
-              </span>
-              <span className="fr-mr-3w">
-                <span
-                  style={{
-                    display: "inline-block",
-                    width: "12px",
-                    height: "12px",
-                    backgroundColor: "#9BB7D4",
-                    marginRight: "5px",
-                    borderRadius: "50%",
-                  }}
-                ></span>
-                Parité (40-60% femmes)
-              </span>
-              <span>
-                <span
-                  style={{
-                    display: "inline-block",
-                    width: "12px",
-                    height: "12px",
-                    backgroundColor: "#e18b76",
-                    marginRight: "5px",
-                    borderRadius: "50%",
-                  }}
-                ></span>
-                Majorité de femmes (&gt;60% femmes)
-              </span>
-            </div>
-          </div>
-          <div className="fr-col-12 fr-col-md-4">
-            <div className="fr-text--center">
-              <em>Taille des bulles = effectif total</em>
-            </div>
-          </div>
-        </div>
-
-        <div className="fr-text--center fr-mt-2w">
-          <div className="fr-text--sm" style={{ color: "#666" }}>
-            📍 La ligne diagonale pointillée représente la parité parfaite
-            <br />• Au-dessus : plus d'hommes • En-dessous : plus de femmes
-          </div>
-        </div>
-      </div>
     </>
   );
 }

@@ -19,6 +19,7 @@ import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 import { useContextDetection } from "../../utils";
 import { useFacultyMembersYears } from "../../api/general-queries";
 import { useSearchParams } from "react-router-dom";
+import Callout from "../../../../components/callout";
 
 export default function UniversityOverview() {
   const { contextId, context } = useContextDetection();
@@ -36,24 +37,27 @@ export default function UniversityOverview() {
         <>
           <Row className="fr-mt-3w">
             <Col md={12}>
-              <Text size="sm">
-                Descriptif de la répartition des{" "}
-                <GlossaryTerm term="personnel enseignant">
-                  personnels enseignants
-                </GlossaryTerm>{" "}
-                par{" "}
-                <GlossaryTerm term="établissement d'enseignement supérieur">
-                  établissement d'enseignement supérieur
-                </GlossaryTerm>
-                .
-                <br />
-                Cette page présente la répartition des personnels enseignants
-                par université et composante, avec une visualisation de
-                l'équilibre femmes-hommes dans chaque établissement. Les barres
-                horizontales permettent de comparer facilement les effectifs
-                totaux entre universités, tandis que les segments colorés
-                illustrent la proportion respective des enseignants par genre.
-              </Text>
+              <Callout className="callout-style-university">
+                <Text size="sm">
+                  Descriptif de la répartition des{" "}
+                  <GlossaryTerm term="personnel enseignant">
+                    personnels enseignants
+                  </GlossaryTerm>{" "}
+                  par{" "}
+                  <GlossaryTerm term="établissement d'enseignement supérieur">
+                    établissement d'enseignement supérieur
+                  </GlossaryTerm>
+                  .
+                  <br />
+                  Cette page présente la répartition des personnels enseignants
+                  par université et composante, avec une visualisation de
+                  l'équilibre femmes-hommes dans chaque établissement. Les
+                  barres horizontales permettent de comparer facilement les
+                  effectifs totaux entre universités, tandis que les segments
+                  colorés illustrent la proportion respective des enseignants
+                  par genre.
+                </Text>
+              </Callout>
             </Col>
           </Row>
           <Row className="fr-mt-3w fr-mb-4w chart-container">
