@@ -69,7 +69,7 @@ export function FacultyLayout() {
       path: "vue-d'ensemble",
     },
     {
-      label: "Parité Hommes / Femmes",
+      label: "Parité Femmes/Hommes",
       path: "typologie",
     },
     {

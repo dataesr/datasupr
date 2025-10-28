@@ -21,14 +21,14 @@ export function Typologie() {
         <Col md={6}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <div className="chart-container">
-              <GenderDataCard gender="hommes" />
+              <GenderDataCard gender="femmes" />
             </div>
           </div>
         </Col>
         <Col md={6}>
           <div className="fr-background-alt--blue-france fr-p-3w">
             <div className="chart-container">
-              <GenderDataCard gender="femmes" />
+              <GenderDataCard gender="hommes" />
             </div>
           </div>
         </Col>

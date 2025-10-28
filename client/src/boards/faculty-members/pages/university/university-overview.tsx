@@ -105,7 +105,7 @@ export default function UniversityOverview() {
                 <FieldsDistributionBar />
                 <Text size="sm" className="text-center ">
                   <Link href="/personnel-enseignant/discipline/typologie">
-                    En savoir plus sur la parité hommes / femmes des enseignants
+                    En savoir plus sur la parité Femmes/Hommes des enseignants
                   </Link>
                 </Text>
               </div>
