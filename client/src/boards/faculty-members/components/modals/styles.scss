@@ -1,0 +1,66 @@
+.context-explorer__search {
+  margin-bottom: 1rem;
+}
+
+.context-filter-list {
+  height: 350px;
+  overflow-y: auto;
+  padding-right: 1rem;
+}
+
+.context-filter-item {
+  cursor: pointer;
+  padding: 0.75rem 1rem;
+  border-left: 4px solid var(--border-default-grey);
+  margin-bottom: 0.25rem;
+  transition: background-color 0.2s ease-in-out;
+
+  &:hover {
+    background-color: var(--background-alt-grey);
+  }
+
+  &.selected {
+    background-color: var(--background-action-low-blue-france);
+  }
+}
+
+.context-filter-item--discipline {
+  border-left-color: var(--fields-color);
+}
+.context-filter-item--region,
+.context-filter-item--academie {
+  border-left-color: var(--geo-color);
+}
+.context-filter-item--structure {
+  border-left-color: var(--university-color);
+}
+
+.context-filter-item__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.context-filter-skeleton {
+  padding-right: 1rem;
+}
+.context-filter-skeleton .skeleton-item {
+  height: 12px;
+  background: var(--background-alt-grey);
+  border-radius: 4px;
+  margin: 0.5rem 0;
+  animation: context-skeleton-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes context-skeleton-pulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}

@@ -597,41 +597,89 @@ router.get("/faculty-members/navigation/:type", async (req, res) => {
         break;
 
       case "structures":
-        aggregation = [
-          {
-            $group: {
-              _id: {
-                structure_id: "$etablissement_id_paysage",
-                structure_name: "$etablissement_lib",
-                structure_type: "$etablissement_type",
-                region_name: "$etablissement_region",
-                status: "$etablissement_status",
+        if (annee_universitaire) {
+          aggregation = [
+            {
+              $group: {
+                _id: {
+                  structure_id: "$etablissement_id_paysage",
+                  structure_name: "$etablissement_lib",
+                  structure_type: "$etablissement_type",
+                  region_name: "$etablissement_region",
+                  status: "$etablissement_status",
+                },
+                total_count_all: { $sum: "$effectif" },
+                selected_year_count: {
+                  $sum: {
+                    $cond: [
+                      { $eq: ["$annee_universitaire", annee_universitaire] },
+                      "$effectif",
+                      0,
+                    ],
+                  },
+                },
+                latest_year: { $max: "$annee_universitaire" },
               },
-              total_count: { $sum: "$effectif" },
-              latest_year: { $max: "$annee_universitaire" },
             },
-          },
-          {
-            $match: {
-              "_id.structure_id": { $ne: null, $ne: "" },
-              "_id.structure_name": { $ne: null, $ne: "" },
+            {
+              $match: {
+                "_id.structure_id": { $ne: null, $ne: "" },
+                "_id.structure_name": { $ne: null, $ne: "" },
+              },
             },
-          },
-          {
-            $project: {
-              _id: 0,
-              id: "$_id.structure_id",
-              name: "$_id.structure_name",
-              type: "$_id.structure_type",
-              region: "$_id.region_name",
-              status: "$_id.status",
-              is_active: { $eq: ["$_id.status", "active"] },
-              total_count: 1,
-              latest_year: 1,
+            {
+              $project: {
+                _id: 0,
+                id: "$_id.structure_id",
+                name: "$_id.structure_name",
+                type: "$_id.structure_type",
+                region: "$_id.region_name",
+                status: "$_id.status",
+                is_active: { $eq: ["$_id.status", "active"] },
+                total_count: "$selected_year_count",
+                total_count_all: "$total_count_all",
+                latest_year: 1,
+              },
             },
-          },
-          { $sort: { total_count: -1 } },
-        ];
+            { $sort: { total_count: -1 } },
+          ];
+        } else {
+          aggregation = [
+            {
+              $group: {
+                _id: {
+                  structure_id: "$etablissement_id_paysage",
+                  structure_name: "$etablissement_lib",
+                  structure_type: "$etablissement_type",
+                  region_name: "$etablissement_region",
+                  status: "$etablissement_status",
+                },
+                total_count: { $sum: "$effectif" },
+                latest_year: { $max: "$annee_universitaire" },
+              },
+            },
+            {
+              $match: {
+                "_id.structure_id": { $ne: null, $ne: "" },
+                "_id.structure_name": { $ne: null, $ne: "" },
+              },
+            },
+            {
+              $project: {
+                _id: 0,
+                id: "$_id.structure_id",
+                name: "$_id.structure_name",
+                type: "$_id.structure_type",
+                region: "$_id.region_name",
+                status: "$_id.status",
+                is_active: { $eq: ["$_id.status", "active"] },
+                total_count: 1,
+                latest_year: 1,
+              },
+            },
+            { $sort: { total_count: -1 } },
+          ];
+        }
         break;
 
       default:

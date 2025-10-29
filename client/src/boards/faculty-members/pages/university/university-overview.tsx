@@ -159,7 +159,7 @@ export default function UniversityOverview() {
           <Title as="h4" look="h5">
             Explorer par établissement
           </Title>
-          <NavigationCards type="structures" maxItems={12} />
+          <NavigationCards type="structures" maxItems={20} />
         </Col>
       </Row>
     </Container>

@@ -23,14 +23,12 @@ import { SearchBar } from "../components/search-bar";
 import { useDataCompleteness } from "../api/useDataCompleteness";
 import { useFacultyMembersYears } from "../api/general-queries";
 import { useTitle } from "../../../hooks/usePageTitle";
+import { capitalize } from "../../../utils/format";
+import Glossary from "../components/glossary";
 
 export function FacultyLayout() {
   const { context, contextId, contextName } = useContextDetection();
   useTitle(`dataSupR - ${capitalize(contextName)} - Personnel enseignant`);
-
-  function capitalize(word: string) {
-    return String(word).charAt(0).toUpperCase() + String(word).slice(1);
-  }
 
   const { hasNonPermanentStaff, isLoading: isLoadingCompleteness } =
     useDataCompleteness();
@@ -125,7 +123,16 @@ export function FacultyLayout() {
       </div>
       <Container>
         <Row className="fr-mt-2w">
-          <Col md={8}>
+          {shouldShowNotice && !path.includes("/glossaire") && (
+            <Notice type="info" className="fr-mb-4w" closeMode="disallow">
+              Les données pour cette année universitaire ne sont pas complètes.
+              Les informations relatives aux personnels enseignants
+              NON-PERMANENTS, sont encore en cours de collecte et de validation.
+              Les analyses présentées ici pourraient donc évoluer une fois
+              l'ensemble des données disponibles.
+            </Notice>
+          )}
+          <Col md={12}>
             {!path.startsWith("/personnel-enseignant/glossaire") && (
               <ButtonGroup isInlineFrom="xs" size="sm">
                 {navItems.map((item) => (
@@ -141,24 +148,12 @@ export function FacultyLayout() {
               </ButtonGroup>
             )}
           </Col>
-          <Col md={4} className="text-right fr-mb-2w">
-            <YearSelector />
-          </Col>
-          {shouldShowNotice && (
-            <Notice type="info" className="fr-mb-4w" closeMode="disallow">
-              Les données pour cette année universitaire ne sont pas complètes.
-              Les informations relatives aux personnels enseignants{" "}
-              NON-PERMANENTS, sont encore en cours de collecte et de validation.
-              Les analyses présentées ici pourraient donc évoluer une fois
-              l'ensemble des données disponibles.
-            </Notice>
-          )}
         </Row>
       </Container>
       <Container fluid>
-        <Outlet />
         {path.includes("/glossaire") ? (
           <Container>
+            <Glossary />
             <Row gutters className="fr-mt-4w">
               <Col md={12}>
                 <SearchBar />
@@ -261,18 +256,31 @@ export function FacultyLayout() {
             </Row>
           </Container>
         ) : (
-          <Col md={12} className="text-center fr-mt-4w">
-            <div className="fr-mt-1w">
-              <Link href="/personnel-enseignant/glossaire" className="fr-link">
-                <span
-                  className="fr-icon-information-line fr-mr-1w"
-                  aria-hidden="true"
-                  style={{ fontSize: "1.1em" }}
-                />
-                Glossaire des termes
-              </Link>
-            </div>
-          </Col>
+          <Container>
+            <Row gutters>
+              <Col md={12} className="content-with-overlay">
+                <div className="year-selector-overlay">
+                  <YearSelector />
+                </div>
+                <Outlet />
+                <div className="text-center fr-mt-4w">
+                  <div className="fr-mt-1w">
+                    <Link
+                      href="/personnel-enseignant/glossaire"
+                      className="fr-link"
+                    >
+                      <span
+                        className="fr-icon-information-line fr-mr-1w"
+                        aria-hidden="true"
+                        style={{ fontSize: "1.1em" }}
+                      />
+                      Glossaire des termes
+                    </Link>
+                  </div>
+                </div>
+              </Col>
+            </Row>
+          </Container>
         )}
       </Container>
     </>

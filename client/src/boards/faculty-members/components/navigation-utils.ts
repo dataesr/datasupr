@@ -4,7 +4,6 @@ import { useContextDetection } from "../utils";
 export function useContextParams() {
   const [searchParams] = useSearchParams();
   const { context } = useContextDetection();
-  console.log(context);
   switch (context) {
     case "fields":
       return {

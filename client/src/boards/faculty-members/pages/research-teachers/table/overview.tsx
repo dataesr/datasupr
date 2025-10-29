@@ -2,33 +2,12 @@ import { Badge, Link } from "@dataesr/dsfr-plus";
 import { useFacultyMembersResearchTeachers } from "../../../api/use-research-teachers";
 import { useSearchParams } from "react-router-dom";
 import { formatToPercent } from "../../../../../utils/format";
-
-interface ResearchTeachersOverviewTableProps {
-  context: "fields" | "geo" | "structures";
-  annee_universitaire?: string;
-  contextId?: string;
-}
-
-interface BaseItem {
-  maleCount: number;
-  femaleCount: number;
-  totalCount: number;
-}
-
-interface FieldItem extends BaseItem {
-  field_id: string;
-  fieldLabel: string;
-}
-
-interface RegionItem extends BaseItem {
-  geo_id: string;
-  geoName: string;
-}
-
-interface StructureItem extends BaseItem {
-  structure_id: string;
-  structureName: string;
-}
+import {
+  FieldItem,
+  RegionItem,
+  ResearchTeachersOverviewTableProps,
+  StructureItem,
+} from "../../../../../types/faculty-members";
 
 type TableItem = FieldItem | RegionItem | StructureItem;
 

@@ -3,6 +3,7 @@ import { useFacultyMembersResearchTeachers } from "../../../api/use-research-tea
 import { useMemo } from "react";
 import { formatToPercent } from "../../../../../utils/format";
 import { TrendIndicator } from "./tendances";
+import "./cnu-tables.scss";
 
 function groupBy<T, K extends string>(array: T[], getKey: (item: T) => K) {
   return array.reduce((acc, item) => {
@@ -19,6 +20,12 @@ export default function CnuSectionsTable({
   annee_universitaire,
   showDiscipline = false,
   showAgeDemographics = true,
+}: {
+  context: "fields" | "geo" | "structures";
+  contextId: string;
+  annee_universitaire?: string;
+  showDiscipline?: boolean;
+  showAgeDemographics?: boolean;
 }) {
   const {
     data: currentYearData,
@@ -161,7 +168,7 @@ export default function CnuSectionsTable({
   );
 
   return (
-    <div style={{ width: "100%", maxWidth: "100%" }}>
+    <div className="cnu-table-root">
       <AccordionGroup>
         {Object.entries(groupedByGroup).map(([groupKey, sections]) => (
           <Accordion
@@ -170,136 +177,45 @@ export default function CnuSectionsTable({
             titleAs="h4"
             defaultExpanded={false}
           >
-            <div
-              style={{
-                overflowX: "auto",
-                maxHeight: "400px",
-                overflowY: "auto",
-              }}
-            >
-              <table
-                className="fr-table fr-table--bordered fr-table--no-caption"
-                style={{
-                  width: "100%",
-                  fontSize: "0.9em",
-                }}
-              >
-                <thead
-                  style={{
-                    position: "sticky",
-                    top: 0,
-                    backgroundColor: "var(--background-default-grey)",
-                    zIndex: 1,
-                  }}
-                >
+            <div className="cnu-table-scroll cnu-table-scroll--sm">
+              <table className="fr-table fr-table--bordered fr-table--no-caption cnu-table">
+                <thead className="cnu-table__head">
                   <tr>
                     {showDiscipline && (
-                      <th scope="col" style={{ fontSize: "0.85em" }}>
+                      <th scope="col" className="th--label">
                         Discipline
                       </th>
                     )}
-                    <th scope="col" style={{ fontSize: "0.85em" }}>
+                    <th scope="col" className="th--label">
                       Section CNU
                     </th>
-                    <th
-                      scope="col"
-                      className="text-center"
-                      style={{ minWidth: "60px", fontSize: "0.85em" }}
-                    >
+                    <th scope="col" className="text-center th--min60">
                       Hommes
                     </th>
-                    <th
-                      scope="col"
-                      className="text-center"
-                      style={{ minWidth: "60px", fontSize: "0.85em" }}
-                    >
+                    <th scope="col" className="text-center th--min60">
                       Femmes
                     </th>
-                    <th
-                      scope="col"
-                      className="text-center"
-                      style={{ minWidth: "60px", fontSize: "0.85em" }}
-                    >
+                    <th scope="col" className="text-center th--min60">
                       Total
                     </th>
-                    <th
-                      scope="col"
-                      className="text-center"
-                      style={{ minWidth: "140px", fontSize: "0.85em" }}
-                    >
+                    <th scope="col" className="text-center th--min140">
                       Répartition H/F
                     </th>
                     {showAgeDemographics && (
-                      <th
-                        scope="col"
-                        className="text-center"
-                        style={{ minWidth: "140px", fontSize: "0.85em" }}
-                      >
+                      <th scope="col" className="text-center th--min140">
                         Répartition par âge
-                        <div
-                          style={{
-                            fontSize: "0.8em",
-                            marginTop: 4,
-                            display: "flex",
-                            gap: 6,
-                            justifyContent: "center",
-                          }}
-                        >
+                        <div className="age-legend">
                           <span title="≤ 35 ans">
-                            <span
-                              style={{
-                                display: "inline-block",
-                                width: 14,
-                                height: 8,
-                                background: "#6CB4E4",
-                                borderRadius: 2,
-                                marginRight: 2,
-                                verticalAlign: "middle",
-                              }}
-                            />{" "}
-                            ≤35
+                            <span className="legend-color age-35" /> ≤35
                           </span>
                           <span title="36-55 ans">
-                            <span
-                              style={{
-                                display: "inline-block",
-                                width: 14,
-                                height: 8,
-                                background: "#F5C16C",
-                                borderRadius: 2,
-                                marginRight: 2,
-                                verticalAlign: "middle",
-                              }}
-                            />{" "}
-                            36-55
+                            <span className="legend-color age-36-55" /> 36-55
                           </span>
                           <span title="≥ 56 ans">
-                            <span
-                              style={{
-                                display: "inline-block",
-                                width: 14,
-                                height: 8,
-                                background: "#E18B76",
-                                borderRadius: 2,
-                                marginRight: 2,
-                                verticalAlign: "middle",
-                              }}
-                            />{" "}
-                            ≥56
+                            <span className="legend-color age-56" /> ≥56
                           </span>
                           <span title="Non précisé">
-                            <span
-                              style={{
-                                display: "inline-block",
-                                width: 14,
-                                height: 8,
-                                background: "#CCCCCC",
-                                borderRadius: 2,
-                                marginRight: 2,
-                                verticalAlign: "middle",
-                              }}
-                            />{" "}
-                            NP
+                            <span className="legend-color age-np" /> NP
                           </span>
                         </div>
                       </th>
@@ -308,8 +224,7 @@ export default function CnuSectionsTable({
                       <th
                         key={String(cat)}
                         scope="col"
-                        className="text-center"
-                        style={{ minWidth: "80px", fontSize: "0.85em" }}
+                        className="text-center th--min80"
                       >
                         {String(cat)}
                       </th>
@@ -378,15 +293,8 @@ export default function CnuSectionsTable({
                         <td className="text-center">
                           {section.totalCount?.toLocaleString()}
                         </td>
-                        <td
-                          className="text-center"
-                          style={{ whiteSpace: "nowrap" }}
-                        >
-                          {" "}
-                          <div
-                            className="progress-container"
-                            style={{ minWidth: "60px", margin: "0 auto" }}
-                          >
+                        <td className="text-center nowrap">
+                          <div className="progress-container">
                             <div
                               className="progress-bar male"
                               style={{ width: `${malePercent}%` }}
@@ -404,53 +312,37 @@ export default function CnuSectionsTable({
                         {showAgeDemographics && (
                           <td className="text-center">
                             <div
-                              style={{
-                                display: "flex",
-                                height: "18px",
-                                width: "100%",
-                                borderRadius: "8px",
-                                overflow: "hidden",
-                                border: "1px solid #ddd",
-                                margin: "0 auto",
-                              }}
+                              className="age-bars"
                               aria-label="Répartition par âge"
                             >
-                              <div
+                              <span
+                                className="age-segment age-35"
                                 title={`≤ 35 ans: ${
                                   younger35?.count.toLocaleString() || 0
                                 }`}
-                                style={{
-                                  background: "#6CB4E4",
-                                  width: `${p35}%`,
-                                }}
+                                style={{ width: `${p35}%` }}
                               />
-                              <div
+                              <span
+                                className="age-segment age-36-55"
                                 title={`36-55 ans: ${
                                   middle36_55?.count.toLocaleString() || 0
                                 }`}
-                                style={{
-                                  background: "#F5C16C",
-                                  width: `${p36_55}%`,
-                                }}
+                                style={{ width: `${p36_55}%` }}
                               />
-                              <div
+                              <span
+                                className="age-segment age-56"
                                 title={`≥ 56 ans: ${
                                   older56?.count.toLocaleString() || 0
                                 }`}
-                                style={{
-                                  background: "#E18B76",
-                                  width: `${p56}%`,
-                                }}
+                                style={{ width: `${p56}%` }}
                               />
                               {pUnspecified > 0 && (
-                                <div
+                                <span
+                                  className="age-segment age-np"
                                   title={`Non précisé: ${
                                     unspecifiedAge?.count.toLocaleString() || 0
                                   }`}
-                                  style={{
-                                    background: "#CCCCCC",
-                                    width: `${pUnspecified}%`,
-                                  }}
+                                  style={{ width: `${pUnspecified}%` }}
                                 />
                               )}
                             </div>

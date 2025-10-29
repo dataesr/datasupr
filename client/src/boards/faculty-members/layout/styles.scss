@@ -3,3 +3,27 @@
   animation: slideDown 0.3s ease-in-out;
   background-color: var(--background-alt-blue-france);
 }
+
+.content-with-overlay {
+  position: relative;
+}
+
+.year-selector-overlay {
+  position: sticky;
+  top: 1rem;
+  z-index: 10;
+  display: block;
+  margin-left: auto;
+  width: max-content;
+  margin-top: -3rem;
+}
+
+@media (max-width: 48em) {
+  .year-selector-overlay {
+    position: static;
+    margin-top: 0;
+    margin-left: 0;
+    width: 100%;
+    background: transparent;
+  }
+}

@@ -162,13 +162,17 @@ export function SectionsBubbleChart() {
       return joined || "";
     };
 
-    let dataToProcess: Array<{
+    type Item = {
       item_id: string;
       itemLabel: string;
       totalCount: number;
       maleCount: number;
       femaleCount: number;
-    }> = [];
+      groupCode?: string;
+      groupName?: string;
+    };
+
+    let dataToProcess: Item[] = [];
     let totalSections = 0;
 
     if (groupId && contextId) {
@@ -189,7 +193,8 @@ export function SectionsBubbleChart() {
           ) {
             totalSections = targetGroup.sections.length;
 
-            const sectionsData = targetGroup.sections.map((section) => {
+            const sectionsData: Item[] = [];
+            targetGroup.sections.forEach((section) => {
               let maleCount = 0;
               let femaleCount = 0;
 
@@ -203,7 +208,7 @@ export function SectionsBubbleChart() {
                 });
               }
 
-              return {
+              sectionsData.push({
                 item_id: safeId(section.section_code),
                 itemLabel: safeLabel(
                   section.section_code,
@@ -212,7 +217,9 @@ export function SectionsBubbleChart() {
                 totalCount: section.section_total || 0,
                 maleCount,
                 femaleCount,
-              };
+                groupCode: targetGroup.group_code,
+                groupName: targetGroup.group_name,
+              } as Item);
             });
 
             dataToProcess = sectionsData;
@@ -220,13 +227,7 @@ export function SectionsBubbleChart() {
         }
       } else if (context === "geo" || context === "structures") {
         if (cnuData.cnu_groups_with_sections) {
-          const allSectionsInGroup: Array<{
-            item_id: string;
-            itemLabel: string;
-            totalCount: number;
-            maleCount: number;
-            femaleCount: number;
-          }> = [];
+          const allSectionsInGroup: Item[] = [];
 
           cnuData.cnu_groups_with_sections.forEach((discipline) => {
             const targetGroup = discipline.groups?.find(
@@ -261,6 +262,8 @@ export function SectionsBubbleChart() {
                   totalCount: section.section_total || 0,
                   maleCount,
                   femaleCount,
+                  groupCode: targetGroup.group_code,
+                  groupName: targetGroup.group_name,
                 });
               });
             }
@@ -285,6 +288,8 @@ export function SectionsBubbleChart() {
             totalCount: number;
             maleCount: number;
             femaleCount: number;
+            groupCode?: string;
+            groupName?: string;
           }> = [];
 
           targetItem.groups.forEach((group) => {
@@ -312,6 +317,8 @@ export function SectionsBubbleChart() {
                   totalCount: section.section_total || 0,
                   maleCount,
                   femaleCount,
+                  groupCode: group.group_code,
+                  groupName: group.group_name,
                 });
               });
             }
@@ -331,6 +338,8 @@ export function SectionsBubbleChart() {
             totalCount: number;
             maleCount: number;
             femaleCount: number;
+            groupCode?: string;
+            groupName?: string;
           }> = [];
 
           cnuData.cnu_groups_with_sections.forEach((discipline) => {
@@ -363,6 +372,8 @@ export function SectionsBubbleChart() {
                   totalCount: section.section_total || 0,
                   maleCount,
                   femaleCount,
+                  groupCode: group.group_code,
+                  groupName: group.group_name,
                 });
               });
             });
@@ -379,6 +390,8 @@ export function SectionsBubbleChart() {
         totalCount: number;
         maleCount: number;
         femaleCount: number;
+        groupCode?: string;
+        groupName?: string;
       }> = [];
 
       if (
@@ -410,6 +423,8 @@ export function SectionsBubbleChart() {
                 totalCount: section.section_total || 0,
                 maleCount,
                 femaleCount,
+                groupCode: group.group_code,
+                groupName: group.group_name,
               });
             });
           });
@@ -420,37 +435,88 @@ export function SectionsBubbleChart() {
       }
     }
 
-    const getColor = (femalePercent: number) => {
-      if (femalePercent < 40) return "#efcb3a";
-      if (femalePercent > 60) return "#e18b76";
-      return "#9BB7D4";
+    const getDsfrScaleVarNames = (count: number) =>
+      Array.from({ length: count }, (_, i) => `--scale-${i + 1}-color`);
+
+    const resolveCssVarColors = (varNames: string[]): string[] => {
+      if (typeof window === "undefined") return [];
+      const el = document.createElement("div");
+      el.style.display = "none";
+      document.body.appendChild(el);
+      const resolved: string[] = [];
+      try {
+        varNames.forEach((v) => {
+          el.style.color = `var(${v})`;
+          const col = getComputedStyle(el).color;
+          if (col && col !== "rgba(0, 0, 0, 0)" && col !== "inherit") {
+            resolved.push(col);
+          }
+        });
+      } finally {
+        document.body.removeChild(el);
+      }
+      return resolved;
     };
 
-    const processedData = dataToProcess.map((item) => {
-      const femalePercent =
-        item.totalCount > 0 ? (item.femaleCount / item.totalCount) * 100 : 50;
+    const dsfrVarNames = getDsfrScaleVarNames(20);
+    const dsfrColors = resolveCssVarColors(dsfrVarNames);
+    const fallbackPalette = [
+      "#1f77b4",
+      "#ff7f0e",
+      "#2ca02c",
+      "#d62728",
+      "#9467bd",
+      "#8c564b",
+      "#e377c2",
+      "#7f7f7f",
+      "#bcbd22",
+      "#17becf",
+      "#393b79",
+      "#637939",
+      "#8c6d31",
+      "#843c39",
+      "#7b4173",
+    ];
+    const palette = dsfrColors.length > 0 ? dsfrColors : fallbackPalette;
 
+    const filteredItems = dataToProcess.filter(
+      (d) => d.itemLabel !== "Non précisé"
+    );
+
+    const uniqGroupCodes = Array.from(
+      new Set(
+        filteredItems.map((d) => (d.groupCode ? String(d.groupCode) : "autre"))
+      )
+    );
+    const groupColorMap: Record<string, string> = {};
+    uniqGroupCodes.forEach((code, idx) => {
+      groupColorMap[code] = palette[idx % palette.length];
+    });
+
+    const processedData = filteredItems.map((item) => {
+      const colorKey = item.groupCode ? String(item.groupCode) : "autre";
       return {
         x: item.femaleCount,
         y: item.maleCount,
         z: item.totalCount,
         name: item.itemLabel,
-        color: getColor(femalePercent),
+        color: groupColorMap[colorKey],
         maleCount: item.maleCount,
         femaleCount: item.femaleCount,
         totalCount: item.totalCount,
         sectionCode: item.item_id,
+        groupCode: item.groupCode,
+        groupName: item.groupName,
       };
     });
 
     processedData.sort((a, b) => b.z - a.z);
-
+    void totalSections;
     return {
       data: processedData,
-      sectionCount: totalSections,
+      sectionCount: filteredItems.length,
     };
   }, [cnuData, contextId, groupId, context]);
-  console.log(cnuData);
   const config = {
     id: `${context}-sections-bubbles`,
     idQuery: `faculty-members-cnu`,
@@ -472,45 +538,10 @@ export function SectionsBubbleChart() {
             <div className="fr-grid-row fr-grid-row--gutters">
               <div className="fr-col-12 fr-col-md-8">
                 <div className="fr-text--center">
-                  <span className="fr-mr-3w">
-                    <span
-                      style={{
-                        display: "inline-block",
-                        width: "12px",
-                        height: "12px",
-                        backgroundColor: "#efcb3a",
-                        marginRight: "5px",
-                        borderRadius: "50%",
-                      }}
-                    ></span>
-                    Majorité d'hommes (&lt;40% femmes)
-                  </span>
-                  <span className="fr-mr-3w">
-                    <span
-                      style={{
-                        display: "inline-block",
-                        width: "12px",
-                        height: "12px",
-                        backgroundColor: "#9BB7D4",
-                        marginRight: "5px",
-                        borderRadius: "50%",
-                      }}
-                    ></span>
-                    Parité (40-60% femmes)
-                  </span>
-                  <span>
-                    <span
-                      style={{
-                        display: "inline-block",
-                        width: "12px",
-                        height: "12px",
-                        backgroundColor: "#e18b76",
-                        marginRight: "5px",
-                        borderRadius: "50%",
-                      }}
-                    ></span>
-                    Majorité de femmes (&gt;60% femmes)
-                  </span>
+                  Chaque couleur représente un groupe CNU. Les points d'une même
+                  couleur appartiennent au même groupe. Les points représentent
+                  les sections CNU, positionnées en fonction de leur effectif
+                  féminin (axe des X) et masculin (axe des Y).
                 </div>
               </div>
               <div className="fr-col-12 fr-col-md-4">
@@ -521,10 +552,8 @@ export function SectionsBubbleChart() {
             </div>
 
             <div className="fr-text--center fr-mt-2w">
-              <div className="fr-text--sm" style={{ color: "#666" }}>
-                📍 La ligne diagonale pointillée représente la parité parfaite
-                <br />• Au-dessus : plus d'hommes • En-dessous : plus de femmes
-              </div>
+              📍 La ligne diagonale pointillée représente la parité parfaite
+              <br />• Au-dessus : plus d'hommes • En-dessous : plus de femmes
             </div>
           </div>
           Seul les enseignants titulaires sont pris en compte dans cette

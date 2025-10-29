@@ -17,7 +17,9 @@ export default function NavigationCards({
   const yearToUse = useMemo(() => {
     const paramYear = searchParams.get("annee_universitaire");
     if (paramYear) return paramYear;
-    return yearsData?.academic_years?.[0] || "";
+    return (
+      yearsData?.complete_years?.[0] || yearsData?.available_years?.[0] || ""
+    );
   }, [searchParams, yearsData]);
 
   const { data, isLoading, error } = useNavigation({

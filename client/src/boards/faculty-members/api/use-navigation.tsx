@@ -31,9 +31,10 @@ interface UseNavigationParams {
 export const useNavigation = ({
   type,
   annee_universitaire,
+  enabled = true,
 }: UseNavigationParams) => {
   return useQuery({
-    queryKey: ["faculty-navigation", type],
+    queryKey: ["faculty-navigation", type, annee_universitaire || "all"],
     queryFn: async (): Promise<NavigationResponse> => {
       const params = new URLSearchParams();
       if (annee_universitaire)
@@ -51,6 +52,7 @@ export const useNavigation = ({
 
       return response.json();
     },
+    enabled,
   });
 };
 

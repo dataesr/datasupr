@@ -1,12 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
+import { UseCnuDataProps } from "../../../../types/faculty-members";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
-
-interface UseCnuDataProps {
-  context: "fields" | "geo" | "structures";
-  contextId?: string;
-  annee_universitaire?: string;
-}
 
 export function useResearchTeachersData({
   context,
