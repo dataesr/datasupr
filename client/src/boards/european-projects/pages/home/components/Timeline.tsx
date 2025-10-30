@@ -1,0 +1,111 @@
+import React from "react";
+import "./Timeline.scss";
+
+interface TimelinePeriod {
+  id: string;
+  period: string;
+  years: string;
+  program: string;
+  description: string;
+  color: string;
+}
+
+interface TimelineProps {
+  currentLang: string;
+}
+
+export default function Timeline({ currentLang }: TimelineProps) {
+  const timelinePeriods: TimelinePeriod[] = [
+    {
+      id: "fp7",
+      period: "2007-2013",
+      years: "7 ans",
+      program: "FP7",
+      description:
+        currentLang === "fr"
+          ? "7e Programme-cadre de recherche et développement technologique"
+          : "7th Framework Programme for Research and Technological Development",
+      color: "#0078d4",
+    },
+    {
+      id: "h2020",
+      period: "2014-2020",
+      years: "7 ans",
+      program: "Horizon 2020",
+      description:
+        currentLang === "fr"
+          ? "Programme de recherche et d'innovation de l'Union européenne"
+          : "Research and Innovation programme of the European Union",
+      color: "#8b5cf6",
+    },
+    {
+      id: "he",
+      period: "2021-2027",
+      years: "7 ans",
+      program: "Horizon Europe",
+      description:
+        currentLang === "fr"
+          ? "Programme de recherche et d'innovation de l'UE pour 2021-2027"
+          : "EU's research and innovation programme for 2021-2027",
+      color: "#f59e0b",
+    },
+  ];
+
+  return (
+    <div className="timeline-container">
+      <div className="timeline-header">
+        <h3 className="timeline-title">
+          {currentLang === "fr" ? "Évolution des programmes européens de recherche" : "Evolution of European research programmes"}
+        </h3>
+        <p className="timeline-subtitle">
+          {currentLang === "fr" ? "De 2007 à aujourd'hui : trois générations de programmes" : "From 2007 to today: three generations of programmes"}
+        </p>
+      </div>
+
+      <div className="timeline">
+        <div className="timeline-line"></div>
+
+        {timelinePeriods.map((period) => (
+          <div
+            key={period.id}
+            className={`timeline-item timeline-item--${period.id}`}
+            style={{ "--period-color": period.color } as React.CSSProperties}
+          >
+            <div className="timeline-chevron">
+              <div className="chevron-inner"></div>
+            </div>
+
+            <div className="timeline-content">
+              <div className="timeline-badge">
+                <span className="timeline-years">{period.period}</span>
+                <span className="timeline-duration">{period.years}</span>
+              </div>
+
+              <div className="timeline-info">
+                <h4 className="timeline-program">{period.program}</h4>
+                <p className="timeline-description">{period.description}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="timeline-footer">
+        <div className="timeline-legend">
+          <span className="timeline-legend-item">
+            <span className="legend-dot" style={{ backgroundColor: "#0078d4" }}></span>
+            FP7
+          </span>
+          <span className="timeline-legend-item">
+            <span className="legend-dot" style={{ backgroundColor: "#8b5cf6" }}></span>
+            Horizon 2020
+          </span>
+          <span className="timeline-legend-item">
+            <span className="legend-dot" style={{ backgroundColor: "#f59e0b" }}></span>
+            Horizon Europe
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}

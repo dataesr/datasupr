@@ -235,8 +235,6 @@ export default function Search() {
     navigate(`/european-projects/synthese?country_code=${selectedCountry}&language=${currentLang}`);
   };
 
-  console.log(dataPillars);
-
   return (
     <>
       <Container className="fr-mt-5w">
@@ -249,7 +247,7 @@ export default function Search() {
               <Col key={pillar.id}>
                 <PillarCard
                   description="Description de la carte"
-                  label={pillar[`label_${currentLang}`]}
+                  title={pillar[`label_${currentLang}`]}
                   to={`/european-projects/overview?view=program&pillarId=${pillar.id}`}
                 />
               </Col>

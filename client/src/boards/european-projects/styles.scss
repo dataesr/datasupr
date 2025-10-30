@@ -16,14 +16,17 @@
 }
 
 .ep-bg1 {
-  background-color: var(--background-contrast-blue-ecume);
-  border-radius: 8px;
+  background-color: color-mix(in srgb, var(--background-contrast-blue-france-hover) 50%, transparent);
   padding: 16px;
 }
 
 .ep-bg2 {
-  background-color: var(--background-contrast-pink-macaron);
-  border-radius: 8px;
+  background-color: color-mix(in srgb, var(--background-contrast-blue-france-hover) 35%, transparent);
+  padding: 16px;
+}
+
+.ep-bg3 {
+  background-color: color-mix(in srgb, var(--background-contrast-blue-france-hover) 20%, transparent);
   padding: 16px;
 }
 

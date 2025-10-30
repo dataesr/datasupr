@@ -1,0 +1,279 @@
+// Variables CSS pour les couleurs
+:root {
+  --fp7-color: #0078d4;
+  --h2020-color: #8b5cf6;
+  --he-color: #f59e0b;
+  --timeline-line-color: #e5e7eb;
+  --timeline-bg: #f8fafc;
+  --timeline-text: #374151;
+  --timeline-text-light: #6b7280;
+}
+
+.timeline-container {
+  padding: 2rem 1rem;
+  background: var(--timeline-bg);
+  border-radius: 12px;
+  margin: 2rem 0;
+  
+  @media (max-width: 768px) {
+    padding: 1.5rem 0.75rem;
+  }
+}
+
+.timeline-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  
+  .timeline-title {
+    font-size: 1.75rem;
+    font-weight: 700;
+    color: var(--timeline-text);
+    margin-bottom: 0.5rem;
+    
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .timeline-subtitle {
+    color: var(--timeline-text-light);
+    font-size: 1.1rem;
+    margin: 0;
+    
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+}
+
+.timeline {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  
+  @media (max-width: 768px) {
+    flex-direction: column;
+    gap: 2rem;
+  }
+}
+
+.timeline-line {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(
+    to right,
+    var(--fp7-color) 0%,
+    var(--fp7-color) 33%,
+    var(--h2020-color) 33%,
+    var(--h2020-color) 66%,
+    var(--he-color) 66%,
+    var(--he-color) 100%
+  );
+  border-radius: 2px;
+  z-index: 1;
+  
+  @media (max-width: 768px) {
+    display: none;
+  }
+}
+
+.timeline-item {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2;
+  
+  @media (max-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+.timeline-chevron {
+  position: relative;
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1rem;
+  
+  @media (max-width: 768px) {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+  
+  .chevron-inner {
+    width: 100%;
+    height: 100%;
+    background: var(--period-color);
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    
+    &::before {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border: 3px solid white;
+      border-left: transparent;
+      border-bottom: transparent;
+      transform: rotate(45deg);
+      
+      @media (max-width: 768px) {
+        width: 18px;
+        height: 18px;
+        border-width: 2px;
+      }
+    }
+    
+    &:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+    }
+  }
+}
+
+.timeline-content {
+  text-align: center;
+  
+  @media (max-width: 768px) {
+    text-align: left;
+    flex: 1;
+  }
+}
+
+.timeline-badge {
+  background: white;
+  border: 2px solid var(--period-color);
+  border-radius: 20px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  display: inline-block;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  .timeline-years {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--period-color);
+    display: block;
+    
+    @media (max-width: 768px) {
+      font-size: 1rem;
+    }
+  }
+  
+  .timeline-duration {
+    font-size: 0.875rem;
+    color: var(--timeline-text-light);
+    display: block;
+    margin-top: 0.25rem;
+  }
+}
+
+.timeline-info {
+  .timeline-program {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--timeline-text);
+    margin: 0 0 0.5rem 0;
+    
+    @media (max-width: 768px) {
+      font-size: 1.1rem;
+    }
+  }
+  
+  .timeline-description {
+    font-size: 0.95rem;
+    color: var(--timeline-text-light);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 200px;
+    
+    @media (max-width: 768px) {
+      font-size: 0.875rem;
+      max-width: none;
+    }
+  }
+}
+
+// Couleurs spécifiques pour chaque période
+.timeline-item--fp7 {
+  --period-color: var(--fp7-color);
+}
+
+.timeline-item--h2020 {
+  --period-color: var(--h2020-color);
+}
+
+.timeline-item--he {
+  --period-color: var(--he-color);
+}
+
+.timeline-footer {
+  margin-top: 3rem;
+  text-align: center;
+  
+  @media (max-width: 768px) {
+    margin-top: 2rem;
+  }
+}
+
+.timeline-legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  
+  @media (max-width: 768px) {
+    gap: 1rem;
+  }
+  
+  .timeline-legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--timeline-text);
+    
+    .legend-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: block;
+    }
+  }
+}
+
+// Animation d'entrée
+.timeline-item {
+  animation: fadeInUp 0.6s ease-out;
+  animation-fill-mode: both;
+  
+  &:nth-child(1) { animation-delay: 0.1s; }
+  &:nth-child(2) { animation-delay: 0.2s; }
+  &:nth-child(3) { animation-delay: 0.3s; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
