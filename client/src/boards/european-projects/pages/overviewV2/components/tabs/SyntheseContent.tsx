@@ -48,7 +48,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
           <Title as="h2" className="fr-mt-5w">
             Composition du pilier
           </Title>
-          <Callout>
+          <Callout className="callout-style">
             Visualisez la répartition des financements du pilier sélectionné par programme.
             <br /> Cela vous permet d'identifier les programmes les plus financés et de comprendre leur contribution au sein du pilier.
           </Callout>
@@ -69,7 +69,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
           <Title as="h2" className="fr-mt-5w">
             Composition du programme
           </Title>
-          <Callout>
+          <Callout className="callout-style">
             Visualisez la répartition des financements du programme sélectionné par thématique.
             <br /> Cela vous permet d'identifier les thématiques les plus financées et de comprendre leur contribution au sein du programme.
           </Callout>
@@ -90,7 +90,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
           <Title as="h2" className="fr-mt-5w">
             Composition du ou des thématiques
           </Title>
-          <Callout>
+          <Callout className="callout-style">
             Visualisez la répartition des financements de la ou des thématiques sélectionnée(s) par destination.
             <br /> Cela vous permet d'identifier les destinations les plus financées et de comprendre leur contribution au sein de la ou des
             thématiques.

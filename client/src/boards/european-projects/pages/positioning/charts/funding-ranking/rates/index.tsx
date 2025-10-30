@@ -91,7 +91,7 @@ export default function FundingRankingRates() {
           <Title as="h2" look="h4">
             {getI18nLabel("title")}
           </Title>
-          <Callout>
+          <Callout className="callout-style">
             La part des montants demandés et obtenus est calculée en divisant le montant total obtenu par le montant total demandé pour chaque pays.
             Cet indicateur permet de mesurer l'efficacité des pays dans l'obtention de financements par rapport à leurs demandes. Plus la part est
             élevée, meilleure est la performance du pays en matière de financement.

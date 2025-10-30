@@ -42,7 +42,7 @@ export default function CollaborationsContent({ contentType }: CollaborationsCon
               <Title as="h2" look="h4">
                 Répartition des collaborations par entité
               </Title>
-              <Callout>
+              <Callout className="callout-style">
                 Visualisez la répartition des collaborations du pilier/programme/thématique/destination sélectionné(e) par entité.
                 <br /> Vous pouvez rechercher une entité spécifique pour voir ses collaborations.
                 <br /> Par exemple, si vous recherchez une université, vous verrez la part des collaborations impliquant cette université par rapport

@@ -73,7 +73,7 @@ export default function FundingRankingSubsidies() {
           <Title as="h2" look="h4">
             {getI18nLabel("title")}
           </Title>
-          <Callout>
+          <Callout className="callout-style">
             La comparaison des montants demandés et obtenus permet d'évaluer l'efficacité des pays dans l'obtention de financements pour leurs
             projets. Plus la différence entre les deux montants est faible, meilleure est la performance du pays en matière de financement.
             <br />

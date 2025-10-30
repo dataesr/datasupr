@@ -61,7 +61,7 @@ export default function CountriesCollaborationsBubble() {
       </Row>
       <Row>
         <Col>
-          <Callout>
+          <Callout className="callout-style">
             Le graphique représente les pays ayant collaboré avec le pays sélectionné. La taille des bulles est proportionnelle au nombre de
             collaborations réussies entre les pays. Vous pouvez augmenter le nombre de pays affichés en cliquant sur le bouton "Afficher plus de
             pays".

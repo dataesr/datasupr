@@ -24,7 +24,7 @@ export default function CollaborationsEntity({ entityId }) {
 
   return (
     <Container as="main" className="fr-my-6w">
-      <Callout className="callout-style-collaboration-entity">
+      <Callout className="callout-style">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem dolorum impedit in nisi quibusdam, consequuntur omnis. Qui at error aliquam atque
         natus facilis, reiciendis alias perferendis tenetur minus quae rerum?
       </Callout>

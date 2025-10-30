@@ -40,7 +40,7 @@ export default function Overview() {
   }
   return (
     <Container as="main" className="fr-my-6w">
-      <Callout className="callout-style-overview">{getI18nLabel("callout-overview")}</Callout>
+      <Callout className="callout-style">{getI18nLabel("callout-overview")}</Callout>
       <Title as="h2">Financements demandés & obtenus</Title>
       <label className="fr-label" htmlFor="select">
         {getI18nLabel("select-title")}

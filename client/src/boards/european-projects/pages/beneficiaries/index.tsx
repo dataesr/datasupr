@@ -21,7 +21,7 @@ export default function Beneficiaries() {
       <Title as="h1" look="h3">
         Entités bénéficiaires
       </Title>
-      <Callout>
+      <Callout className="callout-style">
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellendus hic inventore ipsum pariatur possimus est voluptatibus ut aspernatur
         itaque quae. Eveniet, numquam? Soluta fugit cupiditate et molestias. Tenetur, quod eligendi!
       </Callout>

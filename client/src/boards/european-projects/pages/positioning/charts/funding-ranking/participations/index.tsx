@@ -73,7 +73,7 @@ export default function FundingRankingParticipations() {
           <Title as="h2" look="h4">
             {getI18nLabel("title")}
           </Title>
-          <Callout>
+          <Callout className="callout-style">
             Ce graphique illustre le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de participants impliqués
             dans les projets évalués et réussis (lauréats). La barre bleue représente le nombre de participants dans les projets évalués, tandis que
             la barre verte indique le nombre de participants dans les projets réussis. Le classement est basé sur ces deux critères, offrant une
