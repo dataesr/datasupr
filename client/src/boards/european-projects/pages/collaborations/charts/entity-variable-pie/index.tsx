@@ -53,12 +53,9 @@ export default function EntityVariablePie() {
     return (
       <Container fluid className="fr-mt-5w">
         <Row>
-          <Col>
+          <Col style={{ height: "400px" }}>
             <EntitySearchBar setEntityId={setEntityId} />
           </Col>
-        </Row>
-        <Row>
-          <Col>Veuillez sélectionner une entité pour afficher le graphique.</Col>
         </Row>
       </Container>
     );

@@ -206,6 +206,11 @@ export default function EntitySearchBar({ setEntityId }) {
           )}
         </div>
       )}
+      {query.length < 3 && (
+        <Row className="fr-mt-2w">
+          <Col>Veuillez sélectionner une entité pour afficher le graphique.</Col>
+        </Row>
+      )}
     </div>
   );
 }
