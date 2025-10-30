@@ -7,7 +7,6 @@ interface TimelinePeriod {
   years: string;
   program: string;
   description: string;
-  color: string;
 }
 
 interface TimelineProps {
@@ -25,7 +24,6 @@ export default function Timeline({ currentLang }: TimelineProps) {
         currentLang === "fr"
           ? "7e Programme-cadre de recherche et développement technologique"
           : "7th Framework Programme for Research and Technological Development",
-      color: "#0078d4",
     },
     {
       id: "h2020",
@@ -36,7 +34,6 @@ export default function Timeline({ currentLang }: TimelineProps) {
         currentLang === "fr"
           ? "Programme de recherche et d'innovation de l'Union européenne"
           : "Research and Innovation programme of the European Union",
-      color: "#8b5cf6",
     },
     {
       id: "he",
@@ -47,7 +44,6 @@ export default function Timeline({ currentLang }: TimelineProps) {
         currentLang === "fr"
           ? "Programme de recherche et d'innovation de l'UE pour 2021-2027"
           : "EU's research and innovation programme for 2021-2027",
-      color: "#f59e0b",
     },
   ];
 
@@ -66,11 +62,7 @@ export default function Timeline({ currentLang }: TimelineProps) {
         <div className="timeline-line"></div>
 
         {timelinePeriods.map((period) => (
-          <div
-            key={period.id}
-            className={`timeline-item timeline-item--${period.id}`}
-            style={{ "--period-color": period.color } as React.CSSProperties}
-          >
+          <div key={period.id} className={`timeline-item timeline-item--${period.id}`}>
             <div className="timeline-chevron">
               <div className="chevron-inner"></div>
             </div>
@@ -88,23 +80,6 @@ export default function Timeline({ currentLang }: TimelineProps) {
             </div>
           </div>
         ))}
-      </div>
-
-      <div className="timeline-footer">
-        <div className="timeline-legend">
-          <span className="timeline-legend-item">
-            <span className="legend-dot" style={{ backgroundColor: "#0078d4" }}></span>
-            FP7
-          </span>
-          <span className="timeline-legend-item">
-            <span className="legend-dot" style={{ backgroundColor: "#8b5cf6" }}></span>
-            Horizon 2020
-          </span>
-          <span className="timeline-legend-item">
-            <span className="legend-dot" style={{ backgroundColor: "#f59e0b" }}></span>
-            Horizon Europe
-          </span>
-        </div>
       </div>
     </div>
   );

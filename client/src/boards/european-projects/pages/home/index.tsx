@@ -100,7 +100,7 @@ Le seul critère de sélection est celui de l'excellence scientifique."
         </Col>
       </Row>
 
-      <Row className="fr-mb-5w">
+      <Row className="fr-mb-5w ep-bg2" gutters>
         <Col md={12}>
           <Timeline currentLang={currentLang} />
         </Col>
