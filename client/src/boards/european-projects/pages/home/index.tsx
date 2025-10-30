@@ -9,6 +9,8 @@ import Timeline from "./components/Timeline";
 import i18n from "./i18n.json";
 import "./styles.scss";
 import PillarCard from "../../components/cards/pillars";
+import ErcCard from "../../components/cards/erc";
+import MscaCard from "../../components/cards/msca";
 
 interface Program {
   title: string;
@@ -77,7 +79,7 @@ export default function Home() {
 
       <Row className="fr-my-5w ep-bg2" gutters>
         <Col>
-          <PillarCard
+          <MscaCard
             title="MSCA"
             subtitle="Actions Marie Sklodowska-Curie"
             description="Le programme européen « Actions Marie Skłodowska-Curie » (MSCA) est le programme de référence de l’Union européenne pour la mobilité, la formation et le développement de la carrière des chercheurs. Au sein du programme-cadre « Horizon Europe », il est intégré au pilier 1 dédié à la science d’excellence."
@@ -90,7 +92,7 @@ export default function Home() {
       <Row className="fr-my-5w ep-bg3" gutters>
         <Col>Grands chiffres ERC</Col>
         <Col>
-          <PillarCard
+          <ErcCard
             title="ERC"
             subtitle="Le Conseil Européen de la Recherche"
             description="L'ERC (European Research Council) finance des projets de recherche exploratoire, aux frontières de la connaissance, dans tous les domaines de la science et de la technologie.
