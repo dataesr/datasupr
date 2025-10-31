@@ -11,6 +11,7 @@ import DestinationsOverview from "../../../overview/components/destinations-over
 import MainPartners from "../../../overview/charts/main-partners";
 import SynthesisFocus from "../../../overview/charts/synthesis-focus";
 import Callout from "../../../../../../components/callout";
+import PillarsFundingEvo3Years from "../../../overview/charts/pillars-funding-evo-3-years";
 // import DestinationsFunding from "../../../overview/components/destinations-funding";
 
 interface SyntheseContentProps {
@@ -45,6 +46,17 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
             Principaux bénéficiaires
           </Title>
           <MainPartners />
+          <Title as="h2" className="fr-mt-5w">
+            Détails du pilier sur les 3 dernières années
+          </Title>
+          <Callout className="callout-style">
+            Visualisez l'évolution des financements demandés et obtenus pour le pilier sélectionné sur les trois dernières années du programme Horizon
+            Europe.
+            <br /> Cela vous permet d'analyser les tendances de financement et d'évaluer la performance du pilier au fil du temps.
+            <br /> Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre
+            total de participations.
+          </Callout>
+          <PillarsFundingEvo3Years />
           <Title as="h2" className="fr-mt-5w">
             Composition du pilier
           </Title>

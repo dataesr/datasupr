@@ -1,4 +1,3 @@
-import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -17,20 +16,41 @@ import { useState } from "react";
 import i18nLocal from "./i18n.json";
 import i18nGlobal from "../../../../i18n-global.json";
 import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
-
+// TODO: adapter les commentaires en fonction du selecteur
+// TODO: fix renderDataTable()
 const configChart1 = {
   id: "pillarsEvolutionFundingLines",
   title: {
-    fr: "Pilliers - Evolution des financements demandés et obtenus (M€)",
-    en: "Pilars - Financing applied for and obtained (€m)",
+    fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe - 3 dernières années",
+    en: "Financing applied for and obtained (€m) evolution on Horizon Europe - last 3 years",
   },
   comment: {
-    fr: React.createElement(React.Fragment, null, "Les montants sont exprimés en M€ (millions d'euros)."),
-    en: React.createElement(React.Fragment, null, "Amounts are expressed in €m (millions of euros)."),
+    fr: (
+      <>
+        Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe sur les trois dernières
+        années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de succès correspondant.
+      </>
+    ),
+    en: (
+      <>
+        This chart shows the evolution of funding applied for and obtained for the pillars of the Horizon Europe programme over the last three years.
+        The bars represent the amounts applied for and obtained. The line indicates the corresponding success rate.
+      </>
+    ),
   },
   readingKey: {
-    fr: React.createElement(React.Fragment, null, "Les barres représentent les montants demandés et les lignes les montants obtenus."),
-    en: React.createElement(React.Fragment, null, "The bars represent the amounts applied for and the lines the amounts obtained."),
+    fr: (
+      <>
+        Pour l'année 2021, les subventions sur les projets évalués s'élèvent à 34,6 M€ alors que sur les projets lauréats, celles-ci sont de 11,7 M€.
+        Cela représente un taux de succès de 33,8%.
+      </>
+    ),
+    en: (
+      <>
+        For the year 2021, subsidies on evaluated projects amount to €34.6m while for successful projects, they amount to €11.7m. This represents a
+        success rate of 33.8%.
+      </>
+    ),
   },
   source: EPChartsSource,
   updateDate: EPChartsUpdateDate,
@@ -40,14 +60,19 @@ const configChart1 = {
 const configChart3 = {
   id: "pillarsEvolutionFundingLinesSuccessRate",
   title: {
-    fr: "Pilliers - Part des financements du pays demandés et obtenus par rapport au total des participants",
-    en: "Pilars - Percentage of country funding applied for and obtained as a proportion of total participants",
+    fr: "Part des financements du pays demandés et obtenus par rapport au total des participants",
+    en: "Percentage of country funding applied for and obtained as a proportion of total participants",
   },
-  description: {
-    fr: "",
-    en: "",
+  comment: {
+    fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
+    en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
   },
-  subtitle: "",
+  readingKey: {
+    fr: <>Les barres représentent les montants demandés et les lignes les montants obtenus.</>,
+    en: <>The bars represent the amounts applied for and the lines the amounts obtained.</>,
+  },
+  source: EPChartsSource,
+  updateDate: EPChartsUpdateDate,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 
@@ -79,7 +104,7 @@ export default function PillarsFundingEvo3Years() {
   }
 
   return (
-    <Container fluid>
+    <Container fluid className="chart-container chart-container--pillars">
       <Row className="fr-my-1w">
         <Col>
           <select className="fr-select" onChange={(e) => setDisplayType(e.target.value)}>

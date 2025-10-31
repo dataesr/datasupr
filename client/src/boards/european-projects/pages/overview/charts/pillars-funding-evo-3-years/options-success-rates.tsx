@@ -1,5 +1,6 @@
+import HighchartsInstance from "highcharts";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 // import { formatToPercentage } from "../../../../../../utils/format";
-
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
 export default function Options(data, displayType): HighchartsOptions {
@@ -12,12 +13,12 @@ export default function Options(data, displayType): HighchartsOptions {
 
   filteredData.find((item) => item.stage === "evaluated").pillars[0].years.forEach((year) => years.add(year.year));
 
-  return {
-    chart: {
-      type: "line",
-      height: 500,
-      backgroundColor: "transparent",
-    },
+  const newOptions: HighchartsInstance.Options = {
+    // chart: {
+    //   type: "line",
+    //   height: 500,
+    //   backgroundColor: "transparent",
+    // },
     title: { text: "" },
     legend: {
       enabled: true,
@@ -46,33 +47,6 @@ export default function Options(data, displayType): HighchartsOptions {
         },
       },
     ],
-    // yAxis: [
-    //   {
-    //     lineWidth: 1,
-    //     lineColor: "#E6E6E6",
-    //     min: 0,
-    //     max: 100,
-    //     title: {
-    //       text: "%",
-    //     },
-    //   },
-    //   {
-    //     min: 0,
-    //     max: 100,
-    //     title: {
-    //       text: "",
-    //     },
-    //     lineWidth: 1,
-    //     lineColor: "#E6E6E6",
-    //     left: "50%",
-    //   },
-    // ],
-    // tooltip: {
-    //   valueSuffix: "%",
-    //   formatter: function () {
-    //     return `${this.series.name}: ${Number(this.y).toFixed(1)}%`;
-    //   },
-    // },
     plotOptions: {
       line: {
         marker: {
@@ -121,5 +95,6 @@ export default function Options(data, displayType): HighchartsOptions {
             };
           })
       ),
-  } as HighchartsOptions;
+  };
+  return CreateChartOptions("line", newOptions);
 }

@@ -556,8 +556,6 @@ router.route("/european-projects/get-hierarchy").get(async (req, res) => {
       treeData.push([`THEMA_${destination._id.thema_code}`, `DEST_${destination._id.destination_code}`, 4]);
     });
 
-    console.log(`Hierarchy built with ${treeData.length} nodes for pillarId: ${pillarId}`);
-    
     res.json(treeData);
     
   } catch (error) {

@@ -1,8 +1,12 @@
+import HighchartsInstance from "highcharts";
+import { CreateChartOptions } from "../../../../components/chart-ep";
+
 import { formatToMillions } from "../../../../../../utils/format";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
 export default function Options(data, displayType): HighchartsOptions {
   if (!data) return null;
+  // TODO: translations
   const rootStyles = getComputedStyle(document.documentElement);
   const years = new Set();
 
@@ -22,14 +26,7 @@ export default function Options(data, displayType): HighchartsOptions {
     });
   });
 
-  return {
-    chart: {
-      type: "column",
-      height: 500,
-      backgroundColor: "transparent",
-    },
-    title: { text: "" },
-    credits: { enabled: false },
+  const newOptions: HighchartsInstance.Options = {
     xAxis: {
       categories: categories,
       labels: {
@@ -61,7 +58,7 @@ export default function Options(data, displayType): HighchartsOptions {
       },
     ],
     legend: {
-      shadow: false,
+      enabled: true,
     },
     tooltip: {
       shared: true,
@@ -83,7 +80,7 @@ export default function Options(data, displayType): HighchartsOptions {
       // Série pour les projets évalués
       {
         type: "column",
-        name: "Évalués",
+        name: "Projets évalués",
         color: rootStyles.getPropertyValue("--evaluated-project-color") || "#009099",
         data: (() => {
           const data: number[] = [];
@@ -101,7 +98,7 @@ export default function Options(data, displayType): HighchartsOptions {
       // Série pour les projets lauréats
       {
         type: "column",
-        name: "Lauréats",
+        name: "Projets lauréats",
         color: rootStyles.getPropertyValue("--successful-project-color") || "#233e41",
         data: (() => {
           const data: number[] = [];
@@ -129,10 +126,8 @@ export default function Options(data, displayType): HighchartsOptions {
               const evaluatedYearData = pillar.years.find((y) => y.year === year);
               const successfulPillar = successfulData.pillars.find((p) => p.pilier_code === pillar.pilier_code);
               const successfulYearData = successfulPillar ? successfulPillar.years.find((y) => y.year === year) : null;
-
               const evaluatedValue = evaluatedYearData ? evaluatedYearData[displayType] : 0;
               const successfulValue = successfulYearData ? successfulYearData[displayType] : 0;
-
               const successRate = evaluatedValue > 0 ? (successfulValue / evaluatedValue) * 100 : 0;
               data.push(successRate);
             });
@@ -151,5 +146,7 @@ export default function Options(data, displayType): HighchartsOptions {
         },
       },
     ],
-  } as HighchartsOptions;
+  };
+
+  return CreateChartOptions("column", newOptions);
 }
