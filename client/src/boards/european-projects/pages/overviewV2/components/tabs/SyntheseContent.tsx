@@ -56,7 +56,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
             <br /> Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre
             total de participations.
           </Callout>
-          <PillarsFundingEvo3Years />
+          <PillarsFundingEvo3Years /> {/* reading key ok */}
           <Title as="h2" className="fr-mt-5w">
             Composition du pilier
           </Title>

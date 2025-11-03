@@ -4,12 +4,18 @@ import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
-export default function Options(data, displayType): HighchartsOptions {
+import i18nGlobal from "../../../../i18n-global.json";
+
+export default function Options(data, displayType, currentLang): HighchartsOptions {
   if (!data) return null;
   // TODO: translations
   const rootStyles = getComputedStyle(document.documentElement);
-  const years = new Set();
 
+  function getI18nLabel(key) {
+    return i18nGlobal[key][currentLang];
+  }
+
+  const years = new Set();
   const filteredData = data.filter((item) => item.country !== "all")[0].data;
   const evaluatedData = filteredData.find((item) => item.stage === "evaluated");
   const successfulData = filteredData.find((item) => item.stage === "successful");
@@ -28,7 +34,8 @@ export default function Options(data, displayType): HighchartsOptions {
 
   const newOptions: HighchartsInstance.Options = {
     xAxis: {
-      categories: categories,
+      // categories: categories,
+      categories: sortedYears.map(String),
       labels: {
         rotation: -45,
         style: {
@@ -47,7 +54,7 @@ export default function Options(data, displayType): HighchartsOptions {
         min: 0,
         max: 100,
         title: {
-          text: "Taux de succès (%)",
+          text: `${getI18nLabel("success-rate")} (%)`,
         },
         opposite: true,
         labels: {
@@ -80,7 +87,7 @@ export default function Options(data, displayType): HighchartsOptions {
       // Série pour les projets évalués
       {
         type: "column",
-        name: "Projets évalués",
+        name: getI18nLabel("evaluated-projects"),
         color: rootStyles.getPropertyValue("--evaluated-project-color") || "#009099",
         data: (() => {
           const data: number[] = [];
@@ -98,7 +105,7 @@ export default function Options(data, displayType): HighchartsOptions {
       // Série pour les projets lauréats
       {
         type: "column",
-        name: "Projets lauréats",
+        name: getI18nLabel("successful-projects"),
         color: rootStyles.getPropertyValue("--successful-project-color") || "#233e41",
         data: (() => {
           const data: number[] = [];
@@ -116,7 +123,7 @@ export default function Options(data, displayType): HighchartsOptions {
       // Série pour les taux de succès
       {
         type: "line",
-        name: "Taux de succès (%)",
+        name: `${getI18nLabel("success-rate")} (%)`,
         color: rootStyles.getPropertyValue("--successRate-color") || "#1f8d49",
         yAxis: 1,
         data: (() => {

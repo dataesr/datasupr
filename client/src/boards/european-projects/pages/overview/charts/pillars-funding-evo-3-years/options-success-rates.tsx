@@ -14,11 +14,6 @@ export default function Options(data, displayType): HighchartsOptions {
   filteredData.find((item) => item.stage === "evaluated").pillars[0].years.forEach((year) => years.add(year.year));
 
   const newOptions: HighchartsInstance.Options = {
-    // chart: {
-    //   type: "line",
-    //   height: 500,
-    //   backgroundColor: "transparent",
-    // },
     title: { text: "" },
     legend: {
       enabled: true,
@@ -62,6 +57,18 @@ export default function Options(data, displayType): HighchartsOptions {
             return `${Number(this.y).toFixed(1)}%`;
           },
         },
+      },
+    },
+    tooltip: {
+      shared: true,
+      formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+        let s = `<b>${this.x}</b>`; // annee
+
+        this.points?.forEach((point) => {
+          s += `<br/><span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${Number(point.y).toFixed(1)}%</b>`;
+        });
+
+        return s;
       },
     },
     series: filteredData

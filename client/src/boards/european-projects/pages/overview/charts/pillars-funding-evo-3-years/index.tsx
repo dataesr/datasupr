@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import Cookies from "js-cookie";
 
 import { GetData } from "./query";
 import optionsSubsidiesValues from "./options-values";
 import optionsSubsidiesCountryRates from "./options-success-rates";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { getDefaultParams } from "./utils";
+import { getDefaultParams, successRatesReadingKey, valuesSuccessReadingKey } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { RenderDataSubsidiesValuesAndRates } from "./render-data";
@@ -18,63 +17,6 @@ import i18nGlobal from "../../../../i18n-global.json";
 import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
 // TODO: adapter les commentaires en fonction du selecteur
 // TODO: fix renderDataTable()
-const configChart1 = {
-  id: "pillarsEvolutionFundingLines",
-  title: {
-    fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe - 3 dernières années",
-    en: "Financing applied for and obtained (€m) evolution on Horizon Europe - last 3 years",
-  },
-  comment: {
-    fr: (
-      <>
-        Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe sur les trois dernières
-        années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de succès correspondant.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the evolution of funding applied for and obtained for the pillars of the Horizon Europe programme over the last three years.
-        The bars represent the amounts applied for and obtained. The line indicates the corresponding success rate.
-      </>
-    ),
-  },
-  readingKey: {
-    fr: (
-      <>
-        Pour l'année 2021, les subventions sur les projets évalués s'élèvent à 34,6 M€ alors que sur les projets lauréats, celles-ci sont de 11,7 M€.
-        Cela représente un taux de succès de 33,8%.
-      </>
-    ),
-    en: (
-      <>
-        For the year 2021, subsidies on evaluated projects amount to €34.6m while for successful projects, they amount to €11.7m. This represents a
-        success rate of 33.8%.
-      </>
-    ),
-  },
-  source: EPChartsSource,
-  updateDate: EPChartsUpdateDate,
-  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
-};
-
-const configChart3 = {
-  id: "pillarsEvolutionFundingLinesSuccessRate",
-  title: {
-    fr: "Part des financements du pays demandés et obtenus par rapport au total des participants",
-    en: "Percentage of country funding applied for and obtained as a proportion of total participants",
-  },
-  comment: {
-    fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
-    en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
-  },
-  readingKey: {
-    fr: <>Les barres représentent les montants demandés et les lignes les montants obtenus.</>,
-    en: <>The bars represent the amounts applied for and the lines the amounts obtained.</>,
-  },
-  source: EPChartsSource,
-  updateDate: EPChartsUpdateDate,
-  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
-};
 
 export default function PillarsFundingEvo3Years() {
   const [searchParams] = useSearchParams();
@@ -83,7 +25,7 @@ export default function PillarsFundingEvo3Years() {
   const [displayType, setDisplayType] = useState("total_fund_eur");
 
   const { data, isLoading } = useQuery({
-    queryKey: ["PillarsFundingEvo3Years", params, Cookies.get("selectedPillars")],
+    queryKey: ["PillarsFundingEvo3Years", params],
     queryFn: () => GetData(params),
   });
 
@@ -95,10 +37,53 @@ export default function PillarsFundingEvo3Years() {
       </>
     );
 
+  const configChart1 = {
+    id: "pillarsEvolutionFundingLines",
+    title: {
+      fr: "Evolution des financements demandés et obtenus (M€) sur Horizon Europe - 3 dernières années",
+      en: "Financing applied for and obtained (€m) evolution on Horizon Europe - last 3 years",
+    },
+    comment: {
+      fr: (
+        <>
+          Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe sur les trois dernières
+          années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de succès correspondant.
+        </>
+      ),
+      en: (
+        <>
+          This chart shows the evolution of funding applied for and obtained for the pillars of the Horizon Europe programme over the last three
+          years. The bars represent the amounts applied for and obtained. The line indicates the corresponding success rate.
+        </>
+      ),
+    },
+    readingKey: valuesSuccessReadingKey(data),
+    source: EPChartsSource,
+    updateDate: EPChartsUpdateDate,
+    integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  };
+
+  const configChart3 = {
+    id: "pillarsEvolutionFundingLinesSuccessRate",
+    title: {
+      fr: "Part des financements du pays demandés et obtenus par rapport au total des participants",
+      en: "Percentage of country funding applied for and obtained as a proportion of total participants",
+    },
+    comment: {
+      fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
+      en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
+    },
+    readingKey: successRatesReadingKey(data),
+    source: EPChartsSource,
+    updateDate: EPChartsUpdateDate,
+    integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  };
+
   const i18n = {
     ...i18nLocal,
     ...i18nGlobal,
   };
+
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
@@ -119,7 +104,7 @@ export default function PillarsFundingEvo3Years() {
           <ChartWrapper
             config={configChart1}
             legend={null}
-            options={optionsSubsidiesValues(data, displayType)}
+            options={optionsSubsidiesValues(data, displayType, currentLang)}
             renderData={RenderDataSubsidiesValuesAndRates}
           />
         </Col>
