@@ -8,7 +8,6 @@ import i18nGlobal from "../../../../i18n-global.json";
 
 export default function Options(data, displayType, currentLang): HighchartsOptions {
   if (!data) return null;
-  // TODO: translations
   const rootStyles = getComputedStyle(document.documentElement);
 
   function getI18nLabel(key) {

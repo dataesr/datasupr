@@ -114,7 +114,7 @@ export default function PillarsFundingEvo3Years() {
           <ChartWrapper
             config={configChart3}
             legend={null}
-            options={optionsSubsidiesCountryRates(data, displayType)}
+            options={optionsSubsidiesCountryRates(data, displayType, currentLang)}
             renderData={RenderDataSubsidiesValuesAndRates}
           />
         </Col>
