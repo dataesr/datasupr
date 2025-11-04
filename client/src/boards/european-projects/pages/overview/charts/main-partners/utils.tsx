@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { formatToMillions } from "../../../../../../utils/format";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -46,4 +47,32 @@ export function getDefaultParams(searchParams) {
   const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
 
   return params + "&stage=successful";
+}
+
+export function readingKey(data) {
+  const rondomPartner = data?.list?.[Math.floor(Math.random() * data.list.length)];
+  const partnerName = rondomPartner?.name || "unknown";
+  const partnerAcronym = rondomPartner?.acronym || "unknown";
+  const totalFundEur = rondomPartner?.total_fund_eur || 0;
+
+  return {
+    fr: (
+      <>
+        Dans le programme Horizon Europe,{" "}
+        <strong>
+          {partnerAcronym} ({partnerName})
+        </strong>{" "}
+        a reçu un total de <strong>{formatToMillions(totalFundEur)}</strong> de subventions.
+      </>
+    ),
+    en: (
+      <>
+        In the Horizon Europe programme,{" "}
+        <strong>
+          {partnerAcronym} ({partnerName})
+        </strong>{" "}
+        received a total of <strong>{formatToMillions(totalFundEur)}</strong> in grants.
+      </>
+    ),
+  };
 }

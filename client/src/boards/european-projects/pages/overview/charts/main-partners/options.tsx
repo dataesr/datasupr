@@ -22,7 +22,7 @@ const newOptions: HighchartsInstance.Options = {
   yAxis: {
     min: 0,
     title: {
-      text: "Euros € (millions)",
+      text: "Euros (M€)",
     },
   },
   tooltip: {
@@ -31,9 +31,8 @@ const newOptions: HighchartsInstance.Options = {
   series: [
     {
       type: "bar",
-      name: "Total subventions en euros",
-      colors: ["#1E3859"],
-      colorByPoint: true,
+      name: "Total subventions (€)",
+      color: "#4d2b5aff",
       groupPadding: 0,
       data: data.list.map((item) => [item.acronym || item.name, item.total_fund_eur]),
     },

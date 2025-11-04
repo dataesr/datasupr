@@ -4,50 +4,13 @@ import { GetData } from "./query";
 import options from "./options";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { useGetParams } from "./utils";
+import { readingKey, useGetParams } from "./utils";
 import { RenderData } from "./render-data";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useSearchParams } from "react-router-dom";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
 
 import { EPChartsSource, EPChartsUpdateDate } from "../../../../config";
-
-const config = {
-  id: "mainPartners",
-  title: "Liste des principaux bénéficiaires récupérants 50% des financements",
-  comment: {
-    fr: (
-      <>
-        Ce graphique présente les principaux bénéficiaires des financements européens, en mettant en évidence ceux qui reçoivent 50% des fonds
-        alloués. Il permet d'identifier les acteurs clés dans la répartition des financements et d'analyser leur rôle dans le contexte des projets
-        européens.
-      </>
-    ),
-    en: (
-      <>
-        This chart presents the main beneficiaries of European funding, highlighting those who receive 50% of the allocated funds. It helps identify
-        key players in the distribution of funding and analyze their role in the context of European projects.
-      </>
-    ),
-  },
-  readingKey: {
-    fr: (
-      <>
-        Chaque barre représente un bénéficiaire, avec la longueur de la barre indiquant le montant total des financements reçus. Les bénéficiaires
-        sont classés par ordre décroissant de financement, permettant ainsi d'identifier rapidement les acteurs les plus importants.
-      </>
-    ),
-    en: (
-      <>
-        Each bar represents a beneficiary, with the length of the bar indicating the total amount of funding received. Beneficiaries are ranked in
-        descending order of funding, allowing for quick identification of the most important actors.
-      </>
-    ),
-  },
-  source: EPChartsSource,
-  updateDate: EPChartsUpdateDate,
-  integrationURL: "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries",
-};
 
 export default function MainPartners() {
   const params = useGetParams();
@@ -56,11 +19,38 @@ export default function MainPartners() {
   const color = useChartColor();
 
   const { data, isLoading } = useQuery({
-    queryKey: [config.id, params],
+    queryKey: ["mainPartners", params],
     queryFn: () => GetData(params),
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
+
+  const config = {
+    id: "mainPartners",
+    title: "Liste des principaux bénéficiaires récupérants 50% des financements",
+    comment: {
+      fr: (
+        <>
+          Ce graphique présente les principaux bénéficiaires des financements européens, en mettant en évidence ceux qui reçoivent 50% des fonds
+          alloués. Il permet d'identifier les acteurs clés dans la répartition des financements et d'analyser leur rôle dans le contexte des projets
+          européens. Chaque barre représente un bénéficiaire, avec la longueur de la barre indiquant le montant total des financements reçus. Les
+          bénéficiaires sont classés par ordre décroissant de financement, permettant ainsi d'identifier rapidement les acteurs les plus importants.
+        </>
+      ),
+      en: (
+        <>
+          This chart presents the main beneficiaries of European funding, highlighting those who receive 50% of the allocated funds. It helps identify
+          key players in the distribution of funding and analyze their role in the context of European projects. Each bar represents a beneficiary,
+          with the length of the bar indicating the total amount of funding received. Beneficiaries are ranked in descending order of funding,
+          allowing for quick identification of the most important actors.
+        </>
+      ),
+    },
+    readingKey: readingKey(data),
+    source: EPChartsSource,
+    updateDate: EPChartsUpdateDate,
+    integrationURL: "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries",
+  };
 
   return (
     <div className={`chart-container chart-container--${color}`}>
