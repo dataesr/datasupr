@@ -9,10 +9,21 @@ import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
 import "./styles.scss";
 import RateCard from "../../../../components/cards/funds-cards/rate";
+import i18n from "./i18n.json";
 
 export default function SynthesisFocus() {
   const [searchParams] = useSearchParams();
   const params = useGetParams();
+  const currentLang = searchParams.get("language") || "fr";
+
+  function getI18nLabel(key: string) {
+    const keys = key.split(".");
+    let value: Record<string, unknown> = i18n;
+    for (const k of keys) {
+      value = value?.[k] as Record<string, unknown>;
+    }
+    return (value as Record<string, string>)?.[currentLang] || key;
+  }
 
   const { data, isLoading } = useQuery({
     queryKey: ["SynthesisFocus", params],
@@ -30,52 +41,52 @@ export default function SynthesisFocus() {
     <Container as="section" fluid className="fr-mb-2w">
       <Title as="h2">Grands chiffres</Title>
       <Row gutters>
-        <Col md={4}>
+        <Col md={6}>
           <RateCard
             nb={dataCurrentCountry_successful.total_fund_eur / dataSuccessful.total_fund_eur}
-            label="part capté par les participants du pays"
+            label={getI18nLabel("fundsShare.label")}
             loading={false}
-            tooltipText="Part des financements obtenus par les participants du pays par rapport au total des financements obtenus par tous les participants (toutes nationalités confondues)."
+            tooltipText={getI18nLabel("fundsShare.tooltip")}
           />
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <RateCard
             nb={dataCurrentCountry_successful.total_involved / dataSuccessful.total_involved}
-            label="part des participants lauréats du pays"
+            label={getI18nLabel("participantsShare.label")}
             loading={false}
-            tooltipText="Part des participants du pays parmi l'ensemble des participants (toutes nationalités confondues) ayant obtenu un financement."
+            tooltipText={getI18nLabel("participantsShare.tooltip")}
           />
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <RateCard
             nb={dataCurrentCountry_successful.total_coordination_number / dataSuccessful.total_coordination_number}
-            label="part des coordinations de projets du pays"
+            label={getI18nLabel("coordinationsShare.label")}
             loading={false}
-            tooltipText="Part des projets coordonnés par un participant du pays parmi l'ensemble des projets financés (toutes nationalités confondues)."
+            tooltipText={getI18nLabel("coordinationsShare.tooltip")}
           />
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <RateCard
             nb={dataCurrentCountry_successful.total_fund_eur / dataCurrentCountry_evaluated.total_fund_eur}
-            label="taux de succès sur les montants"
+            label={getI18nLabel("fundsSuccessRate.label")}
             loading={false}
-            tooltipText="Part des financements obtenus par les participants du pays parmi l'ensemble des financements demandés par ces mêmes participants."
+            tooltipText={getI18nLabel("fundsSuccessRate.tooltip")}
           />
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <RateCard
             nb={dataCurrentCountry_successful.total_involved / dataCurrentCountry_evaluated.total_involved}
-            label="taux de succès individuel des participants du pays"
+            label={getI18nLabel("participantsSuccessRate.label")}
             loading={false}
-            tooltipText="Part des participants du pays ayant obtenu un financement parmi l'ensemble des participants du pays ayant déposé un projet."
+            tooltipText={getI18nLabel("participantsSuccessRate.tooltip")}
           />
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <RateCard
             nb={dataCurrentCountry_successful.total_coordination_number / dataCurrentCountry_evaluated.total_coordination_number}
-            label="taux de succès sur le nombre de projets"
+            label={getI18nLabel("projectsSuccessRate.label")}
             loading={false}
-            tooltipText="Part des projets coordonnés par un participant du pays parmi l'ensemble des projets déposés par ces mêmes participants."
+            tooltipText={getI18nLabel("projectsSuccessRate.tooltip")}
           />
         </Col>
       </Row>

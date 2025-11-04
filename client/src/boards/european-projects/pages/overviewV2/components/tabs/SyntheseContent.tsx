@@ -1,7 +1,7 @@
 import { ContentType } from "../../utils/displayRules";
 import PillarsFunding from "../../../overview/components/pillars-funding";
 import ProgramsFunding from "../../../overview/components/programs-funding";
-import { Title } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
 import TopicsFunding from "../../../overview/components/topics-funding";
 import DestinationsFunding from "../../../overview/components/destinations-funding";
 import PillarsOverview from "../../../overview/components/pillars-overview";
@@ -39,9 +39,15 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
 
     case "pillar-detail":
       return (
-        <div>
-          <SynthesisFocus />
-          <PillarsOverview />
+        <Container fluid>
+          <Row>
+            <Col md={8}>
+              <SynthesisFocus />
+            </Col>
+            <Col className="fr-mt-8w fr-pl-2w">
+              <PillarsOverview />
+            </Col>
+          </Row>
           <Title as="h2" className="fr-mt-5w">
             Principaux bénéficiaires
           </Title>
@@ -66,7 +72,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
           </Callout>
           <Title as="h3">Répartition des financements par programme</Title>
           <ProgramsFunding />
-        </div>
+        </Container>
       );
 
     case "program-detail":

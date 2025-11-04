@@ -9,8 +9,8 @@ export default function RateCard({ nb, label, loading, tooltipText }: { nb: numb
     <div className="ep-funds-card rate-card">
       {loading ? (
         <>
-          <div className="loader-skeleton loader-label"></div>
           <div className="loader-skeleton loader-number"></div>
+          <div className="loader-skeleton loader-label"></div>
           <div className="loader-skeleton loader-bottom-bar"></div>
         </>
       ) : (

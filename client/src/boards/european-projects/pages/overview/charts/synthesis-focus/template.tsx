@@ -6,24 +6,23 @@ export default function Template() {
   return (
     <Container as="section" fluid className="synthesis-focus-template">
       <div className="fake-title" />
-      <p className="fake-source" />
       <Row gutters>
-        <Col md={4}>
+        <Col md={6}>
           <div className="fake-tile" />
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <div className="fake-tile" />
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <div className="fake-tile" />
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <div className="fake-tile" />
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <div className="fake-tile" />
         </Col>
-        <Col md={4}>
+        <Col md={6}>
           <div className="fake-tile" />
         </Col>
       </Row>

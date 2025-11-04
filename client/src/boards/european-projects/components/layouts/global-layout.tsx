@@ -144,7 +144,7 @@ export default function GlobalLayout({ languageSelector = false }) {
               </Link>
               <Link href="/european-projects/evolution-des-programmes">Evolution des programmes</Link>
             </Nav>
-            YearSelector {/* TODO : add year selector in url*/}
+            Lexique {/* TODO : add */}
             <CountrySelector />
           </div>
         </Container>

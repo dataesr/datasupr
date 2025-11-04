@@ -39,6 +39,10 @@
     "fr": "Taux de succès",
     "en": "Success rate"
   },
+  "success-rate-info" :{
+    "fr": "Projets lauréats / Projets évalués",
+    "en": "Successful projects / Evaluated projects"
+  },
   "sort-by": {
     "fr": "Trier par",
     "en": "Sort by"

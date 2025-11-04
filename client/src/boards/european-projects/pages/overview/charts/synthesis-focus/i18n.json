@@ -1,0 +1,62 @@
+{
+  "fundsShare": {
+    "label": {
+      "fr": "part captée par les participants du pays",
+      "en": "share captured by participants from the country"
+    },
+    "tooltip": {
+      "fr": "Part des financements obtenus par les participants du pays par rapport au total des financements obtenus par tous les participants (toutes nationalités confondues).",
+      "en": "Share of funding obtained by participants from the country compared to the total funding obtained by all participants (all nationalities combined)."
+    }
+  },
+  "participantsShare": {
+    "label": {
+      "fr": "part des participants lauréats du pays",
+      "en": "share of winning participants from the country"
+    },
+    "tooltip": {
+      "fr": "Part des participants du pays parmi l'ensemble des participants (toutes nationalités confondues) ayant obtenu un financement.",
+      "en": "Share of participants from the country among all participants (all nationalities combined) who obtained funding."
+    }
+  },
+  "coordinationsShare": {
+    "label": {
+      "fr": "part des coordinations de projets du pays",
+      "en": "share of project coordinations from the country"
+    },
+    "tooltip": {
+      "fr": "Part des projets coordonnés par un participant du pays parmi l'ensemble des projets financés (toutes nationalités confondues).",
+      "en": "Share of projects coordinated by a participant from the country among all funded projects (all nationalities combined)."
+    }
+  },
+  "fundsSuccessRate": {
+    "label": {
+      "fr": "taux de succès sur les montants",
+      "en": "success rate on amounts"
+    },
+    "tooltip": {
+      "fr": "Part des financements obtenus par les participants du pays parmi l'ensemble des financements demandés par ces mêmes participants.",
+      "en": "Share of funding obtained by participants from the country among all funding requested by these same participants."
+    }
+  },
+  "participantsSuccessRate": {
+    "label": {
+      "fr": "taux de succès individuel des participants du pays",
+      "en": "individual success rate of participants from the country"
+    },
+    "tooltip": {
+      "fr": "Part des participants du pays ayant obtenu un financement parmi l'ensemble des participants du pays ayant déposé un projet.",
+      "en": "Share of participants from the country who obtained funding among all participants from the country who submitted a project."
+    }
+  },
+  "projectsSuccessRate": {
+    "label": {
+      "fr": "taux de succès sur le nombre de projets",
+      "en": "success rate on number of projects"
+    },
+    "tooltip": {
+      "fr": "Part des projets coordonnés par un participant du pays parmi l'ensemble des projets déposés par ces mêmes participants.",
+      "en": "Share of projects coordinated by a participant from the country among all projects submitted by these same participants."
+    }
+  }
+}
