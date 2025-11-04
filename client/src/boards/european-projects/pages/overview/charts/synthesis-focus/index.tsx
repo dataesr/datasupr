@@ -27,7 +27,7 @@ export default function SynthesisFocus() {
   const dataCurrentCountry_evaluated = dataEvaluated.countries.find((el) => el.country_code === searchParams.get("country_code"));
 
   return (
-    <Container as="section" fluid>
+    <Container as="section" fluid className="fr-mb-2w">
       <Title as="h2">Grands chiffres</Title>
       <Row gutters>
         <Col md={4}>

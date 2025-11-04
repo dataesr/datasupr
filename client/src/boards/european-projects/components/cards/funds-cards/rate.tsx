@@ -11,40 +11,29 @@ export default function RateCard({ nb, label, loading, tooltipText }: { nb: numb
         <>
           <div className="loader-skeleton loader-label"></div>
           <div className="loader-skeleton loader-number"></div>
-
-          <div className="part-container">
-            <div className="loader-skeleton loader-part-label"></div>
-            <div className="part-bar-container">
-              <div className="loader-skeleton loader-part-bar"></div>
-              <div className="loader-skeleton loader-percentage"></div>
-            </div>
-          </div>
+          <div className="loader-skeleton loader-bottom-bar"></div>
         </>
       ) : (
         <>
-          <div className="card-header">
-            <p className="label">{label}</p>
-            {tooltipText && (
-              <div className="fr-tooltip__container">
-                <button className="info-button" aria-describedby={tooltipId} type="button">
-                  <span className="fr-icon-information-line" aria-hidden="true"></span>
-                </button>
-                <span className="fr-tooltip fr-placement" id={tooltipId} role="tooltip" aria-hidden="true">
-                  {tooltipText}
-                </span>
-              </div>
-            )}
-          </div>
-          <p className="nb">{formatToRates(nb)}</p>
-
-          <div className="part-container">
-            <span className="part-label">taux</span>
-            <div className="part-bar-container">
-              <div className="part-bar">
-                <div className="part-fill" style={{ width: `${nb * 100}%` }}></div>
-              </div>
-              <span className="part-percentage">{formatToRates(nb)}</span>
+          <div className="card-content">
+            <div className="card-header">
+              <p className="label">{label}</p>
+              {tooltipText && (
+                <div className="fr-tooltip__container">
+                  <button className="info-button" aria-describedby={tooltipId} type="button">
+                    <span className="fr-icon-information-line" aria-hidden="true"></span>
+                  </button>
+                  <span className="fr-tooltip fr-placement" id={tooltipId} role="tooltip" aria-hidden="true">
+                    {tooltipText}
+                  </span>
+                </div>
+              )}
             </div>
+            <p className="nb">{formatToRates(nb)}</p>
+          </div>
+
+          <div className="bottom-progress-bar">
+            <div className="progress-fill" style={{ width: `${nb * 100}%` }}></div>
           </div>
         </>
       )}
