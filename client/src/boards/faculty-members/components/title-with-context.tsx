@@ -47,8 +47,7 @@ const TitleWithContext = () => {
         return {
           name: typologyData?.[0]?.name || contextName,
           identifiant: null,
-          pluralMain: "Le personnel enseignant au niveau national",
-          pluralSub: "(toutes les régions)",
+          pluralMain: "France métropolitaine et départements d'outre-mer",
         };
       case "structures":
         return {

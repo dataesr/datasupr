@@ -11,6 +11,7 @@ import { useAgeDistribution } from "./use-age-distribution";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import { Col, Title } from "@dataesr/dsfr-plus";
 import "./styles.scss";
+import { useDataCompleteness } from "../../api/useDataCompleteness";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -56,6 +57,7 @@ export function AgeDistributionPieChart() {
   const selectedYear = searchParams.get("annee_universitaire") || "";
 
   const { context, contextId, contextName } = useContextDetection();
+  const { hasNonPermanentStaff } = useDataCompleteness();
 
   const {
     data: ageData,
@@ -167,7 +169,24 @@ export function AgeDistributionPieChart() {
               fr: "",
             },
             comment: {
-              fr: <>Les effectifs sont répartis par tranches d'âge</>,
+              fr: (
+                <>
+                  Les effectifs{" "}
+                  {hasNonPermanentStaff
+                    ? "du personnel enseignant"
+                    : "des enseignants permanents"}{" "}
+                  sont répartis par tranches d'âge.
+                  {!hasNonPermanentStaff && (
+                    <>
+                      <br />
+                      <strong>Note :</strong> Les données présentées ne
+                      concernent que les enseignants permanents. Les données
+                      relatives aux enseignants non-permanents ne sont pas
+                      disponibles pour cette période.
+                    </>
+                  )}
+                </>
+              ),
             },
             source: {
               label: { fr: <>MESR-SIES, SISE</> },

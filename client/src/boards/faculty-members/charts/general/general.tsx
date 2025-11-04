@@ -8,6 +8,7 @@ import SubtitleWithContext from "../../components/subtitle-with-context";
 import { useMemo, useState } from "react";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 import { Button } from "@dataesr/dsfr-plus";
+import { useDataCompleteness } from "../../api/useDataCompleteness";
 
 function RenderData({ data, contextHeaderLabel }) {
   if (!data || data.length === 0) {
@@ -69,6 +70,7 @@ const DistributionBar: React.FC = () => {
   const [displayMode, setDisplayMode] = useState<"count" | "percentage">(
     "count"
   );
+  const { hasNonPermanentStaff } = useDataCompleteness();
 
   const {
     data: disciplineData,
@@ -152,8 +154,10 @@ const DistributionBar: React.FC = () => {
       as: "h2",
       fr: (
         <>
-          Quelles sont les grandes disciplines qui emploient le plus de
-          personnel enseignant ?&nbsp;
+          {hasNonPermanentStaff
+            ? "Quelles sont les grandes disciplines qui emploient le plus de personnel enseignant ?"
+            : "Quelles sont les grandes disciplines qui emploient le plus d'enseignants permanents ?"}
+          &nbsp;
           <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ),
@@ -162,14 +166,28 @@ const DistributionBar: React.FC = () => {
       fr: (
         <>
           Répartition des{" "}
-          <GlossaryTerm term="personnels enseignants">
-            personnels enseignants
-          </GlossaryTerm>{" "}
+          {hasNonPermanentStaff ? (
+            <GlossaryTerm term="personnels enseignants">
+              personnels enseignants
+            </GlossaryTerm>
+          ) : (
+            <GlossaryTerm term="enseignants permanents">
+              enseignants permanents
+            </GlossaryTerm>
+          )}{" "}
           par{" "}
           <GlossaryTerm term="grande discipline">
             grande discipline
           </GlossaryTerm>{" "}
           avec visualisation de l'équilibre femmes-hommes.
+          {!hasNonPermanentStaff && (
+            <>
+              <br />
+              <strong>Note :</strong> Les données présentées ne concernent que
+              les enseignants permanents. Les données relatives aux enseignants
+              non-permanents ne sont pas disponibles pour cette période.
+            </>
+          )}
         </>
       ),
     },
@@ -178,10 +196,13 @@ const DistributionBar: React.FC = () => {
         <>
           Par exemple, pour l'année universitaire {selectedYear}, pour{" "}
           {singular} <strong>"{largestItem.fieldLabel}"</strong>, on dénombre{" "}
-          <strong>{largestItem.totalCount.toLocaleString()}</strong> personnels
-          enseignants, dont{" "}
-          <strong>{largestItem.maleCount.toLocaleString()}</strong> hommes et{" "}
-          <strong>{largestItem.femaleCount.toLocaleString()}</strong> femmes.
+          <strong>{largestItem.totalCount.toLocaleString()}</strong>{" "}
+          {hasNonPermanentStaff
+            ? "personnels enseignants"
+            : "enseignants permanents"}
+          , dont <strong>{largestItem.maleCount.toLocaleString()}</strong>{" "}
+          hommes et <strong>{largestItem.femaleCount.toLocaleString()}</strong>{" "}
+          femmes.
         </>
       ),
     },

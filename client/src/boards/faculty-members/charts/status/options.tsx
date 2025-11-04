@@ -202,7 +202,7 @@ export default function StatusOptions({
         type: "bar",
       },
       {
-        name: "Titulaires non-chercheurs",
+        name: "Enseignant du Secondaire Affecté dans le Supérieur (ESAS)",
         data: titulairesNonChercheursData,
         color: "var(--green-bourgeon-main-640)",
         zIndex: 2,

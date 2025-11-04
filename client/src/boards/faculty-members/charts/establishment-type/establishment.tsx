@@ -8,6 +8,7 @@ import { useEstablishmentTypeDistribution } from "./use-establishment-type";
 import SubtitleWithContext from "../../components/subtitle-with-context";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 import { Button } from "@dataesr/dsfr-plus";
+import { useDataCompleteness } from "../../api/useDataCompleteness";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -56,6 +57,7 @@ export function EstablishmentTypeChart() {
   const [displayMode, setDisplayMode] = useState<"effectif" | "percentage">(
     "effectif"
   );
+  const { hasNonPermanentStaff } = useDataCompleteness();
 
   const {
     data: establishmentData,
@@ -88,8 +90,10 @@ export function EstablishmentTypeChart() {
       size: "h3" as const,
       fr: (
         <>
-          Comment le personnel enseignant se répartit selon le type
-          d'établissement ?&nbsp;
+          {hasNonPermanentStaff
+            ? "Comment le personnel enseignant se répartit selon le type d'établissement ?"
+            : "Comment les enseignants permanents se répartissent selon le type d'établissement ?"}
+          &nbsp;
           <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ),
@@ -99,14 +103,28 @@ export function EstablishmentTypeChart() {
       fr: (
         <>
           Répartition des{" "}
-          <GlossaryTerm term="personnel enseignant">
-            personnels enseignants
-          </GlossaryTerm>{" "}
+          {hasNonPermanentStaff ? (
+            <GlossaryTerm term="personnel enseignant">
+              personnels enseignants
+            </GlossaryTerm>
+          ) : (
+            <GlossaryTerm term="enseignants permanents">
+              enseignants permanents
+            </GlossaryTerm>
+          )}{" "}
           selon les différentes catégories d'
           <GlossaryTerm term="établissement d'enseignement supérieur">
             établissements d'enseignement supérieur
           </GlossaryTerm>
           .
+          {!hasNonPermanentStaff && (
+            <>
+              <br />
+              <strong>Note :</strong> Les données présentées ne concernent que
+              les enseignants permanents. Les données relatives aux enseignants
+              non-permanents ne sont pas disponibles pour cette période.
+            </>
+          )}
         </>
       ),
     },
@@ -119,7 +137,10 @@ export function EstablishmentTypeChart() {
               <strong>
                 {largestEstablishmentType.total_count.toLocaleString()}
               </strong>{" "}
-              personnels enseignants dans les établissements de type "
+              {hasNonPermanentStaff
+                ? "personnels enseignants"
+                : "enseignants permanents"}{" "}
+              dans les établissements de type "
               <strong>{largestEstablishmentType._id}</strong>".
             </>
           )}

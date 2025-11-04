@@ -26,7 +26,7 @@ function RenderData({ data }) {
           <tr>
             <th>Année</th>
             <th>Enseignants-chercheurs</th>
-            <th>Titulaires non-chercheurs</th>
+            <th>Enseignant du Secondaire Affecté dans le Supérieur</th>
             <th>Non-permanents</th>
             <th>Total</th>
           </tr>
@@ -136,8 +136,8 @@ export function StatusEvolutionChart() {
             enseignants-chercheurs
           </GlossaryTerm>
           , les{" "}
-          <GlossaryTerm term="titulaires non-chercheurs">
-            titulaires non-chercheurs
+          <GlossaryTerm term="enseignant du secondaire affecté dans le supérieur">
+            enseignants du secondaire affecté dans le supérieur
           </GlossaryTerm>{" "}
           (qui regroupent principalement les{" "}
           <GlossaryTerm term="enseignant du second degré, arts et métiers">

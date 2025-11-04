@@ -9,6 +9,7 @@ import { Button, DismissibleTag } from "@dataesr/dsfr-plus";
 import SubtitleWithContext from "../../components/subtitle-with-context";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 import { SearchBar as FacultySearchBar } from "../../components/search-bar";
+import { useDataCompleteness } from "../../api/useDataCompleteness";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -27,7 +28,7 @@ function RenderData({ data }) {
             <th>Nom</th>
             <th>Effectif total</th>
             <th>Non-permanents</th>
-            <th>Titulaires non-chercheurs</th>
+            <th>Enseignant du Secondaire Affecté dans le Supérieur</th>
             <th>Enseignants-chercheurs</th>
             <th>Total titulaires</th>
           </tr>
@@ -55,6 +56,7 @@ const StatusDistribution: React.FC = () => {
   const { context, contextId, contextName } = useContextDetection();
   const [displayAsPercentage, setDisplayAsPercentage] = useState<boolean>(true);
   const [addedLabels, setAddedLabels] = useState<string[]>([]);
+  const { hasNonPermanentStaff } = useDataCompleteness();
 
   const {
     data: statusData,
@@ -280,8 +282,10 @@ const StatusDistribution: React.FC = () => {
             as: "h2",
             fr: (
               <>
-                Quelle est la répartition des statuts du personnel enseignant
-                par {getContextLabel()} ?&nbsp;
+                {hasNonPermanentStaff
+                  ? `Quelle est la répartition des statuts du personnel enseignant par ${getContextLabel()} ?`
+                  : `Quelle est la répartition des statuts des enseignants permanents par ${getContextLabel()} ?`}
+                &nbsp;
                 <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
               </>
             ),
@@ -290,18 +294,40 @@ const StatusDistribution: React.FC = () => {
             fr: (
               <>
                 Répartition par statut des{" "}
-                <GlossaryTerm term="personnels enseignants">
-                  personnels enseignants
-                </GlossaryTerm>
+                {hasNonPermanentStaff ? (
+                  <GlossaryTerm term="personnels enseignants">
+                    personnels enseignants
+                  </GlossaryTerm>
+                ) : (
+                  <GlossaryTerm term="enseignants permanents">
+                    enseignants permanents
+                  </GlossaryTerm>
+                )}
                 , distinguant notamment les{" "}
                 <GlossaryTerm term="enseignant-chercheur">
                   enseignants-chercheurs
                 </GlossaryTerm>
-                , les titulaires non-chercheurs et les{" "}
-                <GlossaryTerm term="permanent / non permanent">
-                  non-permanents
-                </GlossaryTerm>
+                {hasNonPermanentStaff && (
+                  <>
+                    , les enseignants du secondaire affectés dans le supérieur
+                    et les{" "}
+                    <GlossaryTerm term="permanent / non permanent">
+                      non-permanents
+                    </GlossaryTerm>
+                  </>
+                )}
+                {!hasNonPermanentStaff &&
+                  " et les Enseignant du Secondaire Affecté dans le Supérieur"}
                 .
+                {!hasNonPermanentStaff && (
+                  <>
+                    <br />
+                    <strong>Note :</strong> Les données présentées ne concernent
+                    que les enseignants permanents. Les données relatives aux
+                    enseignants non-permanents ne sont pas disponibles pour
+                    cette période.
+                  </>
+                )}
               </>
             ),
           },
@@ -317,15 +343,24 @@ const StatusDistribution: React.FC = () => {
                 <strong>
                   {exampleItem.totalCount.toLocaleString("fr-FR")}
                 </strong>{" "}
-                personnels enseignants,{" "}
+                {hasNonPermanentStaff
+                  ? "personnels enseignants"
+                  : "enseignants permanents"}
+                ,{" "}
                 <strong>
                   {exampleItem.enseignantsChercheurs.toLocaleString("fr-FR")}
                 </strong>{" "}
-                sont enseignants-chercheurs et{" "}
-                <strong>
-                  {exampleItem.nonTitulaires.toLocaleString("fr-FR")}
-                </strong>{" "}
-                sont Non-permanents.
+                sont enseignants-chercheurs
+                {hasNonPermanentStaff && (
+                  <>
+                    {" et "}
+                    <strong>
+                      {exampleItem.nonTitulaires.toLocaleString("fr-FR")}
+                    </strong>{" "}
+                    sont non-permanents
+                  </>
+                )}
+                .
               </>
             ) : (
               <></>

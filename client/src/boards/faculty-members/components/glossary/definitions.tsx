@@ -6,6 +6,12 @@ export const glossary = [
       "Ensemble des personnes exerçant des fonctions d’enseignement dans l’enseignement supérieur, qu’elles soient titulaires ou non, et quel que soit leur statut (enseignant-chercheur, enseignant du second degré, etc.).",
   },
   {
+    key: "enseignant du secondaire affecté dans le supérieur",
+    title: "Enseignant du Secondaire Affecté dans le Supérieur",
+    definition:
+      "Personnel enseignant du second degré affecté dans un établissement d'enseignement supérieur.",
+  },
+  {
     key: "enseignant-chercheur",
     title: "Enseignant-chercheur",
     definition:
@@ -57,7 +63,7 @@ export const glossary = [
     key: "recherche scientifique",
     title: "Recherche scientifique",
     definition:
-      "Activité systématique visant à produire de nouvelles connaissances. Dans le contexte universitaire, elle est menée par les enseignants-chercheurs et les chercheurs.",
+      "Activité systématique visant à produire de nouvelles connaissances. Dans le contexte universitaire, elle est menée par les enseignants-chercheurs et les chercheurs, avec le soutien de personnels de support.",
   },
   {
     key: "charges administratives",

@@ -120,7 +120,7 @@ export function ContextExplorerModal({
 
   return (
     <Modal isOpen={isOpen} hide={onClose} size="lg">
-      <ModalTitle>Explorer par entité</ModalTitle>
+      <ModalTitle>Explorer</ModalTitle>
       <ModalContent>
         <input
           type="search"

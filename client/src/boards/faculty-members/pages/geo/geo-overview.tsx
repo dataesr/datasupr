@@ -22,16 +22,14 @@ export default function RegionsOverview() {
         <Col md={12}>
           <Callout className="callout-style-geo">
             <Text size="sm">
-              Descriptif de la répartition géographique des{" "}
-              <GlossaryTerm term="personnel enseignant">
+              Cette page présente la répartition du{" "}
+              <GlossaryTerm term="personnels enseignants">
                 personnels enseignants
               </GlossaryTerm>{" "}
-              en France métropolitaine et d'outre-mer.
+              par région, avec une visualisation de l'équilibre femmes-hommes
+              dans chaque région. Les données présentées sur cette page sont la
+              somme des données des régions. <br />
               <br />
-              Cette page présente la répartition des personnels enseignants par
-              région, avec une visualisation de l'équilibre femmes-hommes dans
-              chaque région. Les données présentées sur cette page sont la
-              sommes des données des régions.
             </Text>
           </Callout>
         </Col>

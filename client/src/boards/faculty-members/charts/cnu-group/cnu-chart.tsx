@@ -7,6 +7,7 @@ import { useContextDetection, getColorForDiscipline } from "../../utils";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import SubtitleWithContext from "../../components/subtitle-with-context";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
+import { useDataCompleteness } from "../../api/useDataCompleteness";
 
 function RenderData({ groupedData }) {
   if (!groupedData || groupedData.length === 0) {
@@ -90,6 +91,7 @@ export default function CnuGroupsChart() {
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId, contextName } = useContextDetection();
   const isDisciplineContext = context === "fields" && !!contextId;
+  const { hasNonPermanentStaff } = useDataCompleteness();
 
   const { data: cnuData } = useFacultyMembersCNU({
     context,
@@ -327,8 +329,10 @@ export default function CnuGroupsChart() {
             size: "h3",
             fr: (
               <>
-                Comment le personnel enseignant se répartit au sein d'une grande
-                discipline par groupe CNU ?&nbsp;
+                {hasNonPermanentStaff
+                  ? "Comment le personnel enseignant se répartit au sein d'une grande discipline par groupe CNU ?"
+                  : "Comment les enseignants permanents se répartissent au sein d'une grande discipline par groupe CNU ?"}
+                &nbsp;
                 <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
               </>
             ),
@@ -337,12 +341,27 @@ export default function CnuGroupsChart() {
             fr: largestGroup ? (
               <>
                 Répartition des{" "}
-                <GlossaryTerm term="personnel enseignant">
-                  enseignants
-                </GlossaryTerm>{" "}
+                {hasNonPermanentStaff ? (
+                  <GlossaryTerm term="personnel enseignant">
+                    enseignants
+                  </GlossaryTerm>
+                ) : (
+                  <GlossaryTerm term="enseignants permanents">
+                    enseignants permanents
+                  </GlossaryTerm>
+                )}{" "}
                 par <GlossaryTerm term="groupe cnu">groupe CNU</GlossaryTerm>.
                 Cette visualisation montre la distribution des effectifs selon
-                les groupes CNU .
+                les groupes CNU.
+                {!hasNonPermanentStaff && (
+                  <>
+                    <br />
+                    <strong>Note :</strong> Les données présentées ne concernent
+                    que les enseignants permanents. Les données relatives aux
+                    enseignants non-permanents ne sont pas disponibles pour
+                    cette période.
+                  </>
+                )}
               </>
             ) : (
               <></>
