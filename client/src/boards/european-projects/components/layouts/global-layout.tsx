@@ -1,15 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
-import {
-  Button,
-  Header,
-  Logo,
-  Service,
-  FastAccess,
-  Container,
-  Nav,
-  Link,
-} from "@dataesr/dsfr-plus";
+import { Button, Header, Logo, Service, FastAccess, Container, Nav, Link } from "@dataesr/dsfr-plus";
 
 import Footer from "./footer";
 import SwitchTheme from "../../../../components/switch-theme";
@@ -22,6 +13,7 @@ export default function GlobalLayout({ languageSelector = false }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const filtersParams = searchParams.toString();
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     if (!searchParams.get("language") && languageSelector) {
@@ -119,33 +111,46 @@ export default function GlobalLayout({ languageSelector = false }) {
       <div className="ep-main-menu">
         <Container>
           <div className="actions">
-            <Nav aria-label="Main navigation">
-              <Link current={is("/european-projects/accueil")} href="/european-projects/accueil">
-                <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
-                {getI18nLabel("home")}
-              </Link>
-              <Link
-                current={
-                  is("/european-projects/search") ||
-                  is("/european-projects/synthese") ||
-                  is("/european-projects/positionnement") ||
-                  is("/european-projects/collaborations") ||
-                  is("/european-projects/beneficiaires")
-                }
-                href="/european-projects/search"
-              >
-                {getI18nLabel("main")}
-              </Link>
-              <Link current={is("/european-projects/msca")} href={`/european-projects/msca?${filtersParams}`}>
-                MSCA
-              </Link>
-              <Link current={is("/european-projects/erc")} href={`/european-projects/erc?${filtersParams}`}>
-                ERC
-              </Link>
-              <Link href="/european-projects/evolution-des-programmes">Evolution des programmes</Link>
-            </Nav>
-            Lexique {/* TODO : add */}
-            <CountrySelector />
+            <button
+              className="ep-menu-toggle fr-btn fr-btn--tertiary"
+              onClick={() => setMenuOpen(!menuOpen)}
+              aria-expanded={menuOpen}
+              aria-controls="ep-main-nav"
+            >
+              {menuOpen ? <i className="ri-close-line" /> : <i className="ri-menu-line" />}
+              Menu
+            </button>
+            <div className={`ep-nav-wrapper ${menuOpen ? "ep-nav-open" : ""}`} id="ep-main-nav">
+              <Nav aria-label="Main navigation">
+                <Link current={is("/european-projects/accueil")} href="/european-projects/accueil">
+                  <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
+                  {getI18nLabel("home")}
+                </Link>
+                <Link
+                  current={
+                    is("/european-projects/search") ||
+                    is("/european-projects/synthese") ||
+                    is("/european-projects/positionnement") ||
+                    is("/european-projects/collaborations") ||
+                    is("/european-projects/beneficiaires")
+                  }
+                  href="/european-projects/search"
+                >
+                  {getI18nLabel("main")}
+                </Link>
+                <Link current={is("/european-projects/msca")} href={`/european-projects/msca?${filtersParams}`}>
+                  MSCA
+                </Link>
+                <Link current={is("/european-projects/erc")} href={`/european-projects/erc?${filtersParams}`}>
+                  ERC
+                </Link>
+                <Link href="/european-projects/evolution-des-programmes">Evolution des programmes</Link>
+              </Nav>
+              <div className="ep-extra-items">
+                <span>Lexique</span> {/* TODO : add */}
+                <CountrySelector />
+              </div>
+            </div>
           </div>
         </Container>
       </div>
