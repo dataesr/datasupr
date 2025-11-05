@@ -2,49 +2,37 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getData } from "./query";
 import options from "./options";
-import { useGetParams } from "./utils";
+import { readingKey, useGetParams } from "./utils";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
 
-// TODO: clé de lecture + commentaires
-const config = {
-  id: "programsFundingProportion",
-  comment: {
-    fr: <>Part des financement demandés et obtenus par le pays sur l'ensemble des pays</>,
-    en: <>Funding requested and obtained by the country on all countries</>,
-  },
-  readingKey: {
-    fr: (
-      <>
-        Pour le pilier "Excellence Scientifique", les projets ont demandé 5 835 M€ de financements, et en ont obtenu 1 154.3 M€, soit un taux de
-        succès de 19.80 %.
-      </>
-    ),
-    en: (
-      <>
-        For the "Scientific Excellence" pillar, projects requested 5,835 M€ in funding and obtained 1,154.3 M€, representing a success rate of 19.8%.
-      </>
-    ),
-  },
-  source: EPChartsSource,
-  updateDate: EPChartsUpdateDate,
-  title: {
-    fr: <>Part des financement demandés et obtenus par le pays sur l'ensemble des pays</>,
-    en: <>Funding requested and obtained by the country on all countries</>,
-  },
-  integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
-};
-
 export default function ProgramsFundingProportion() {
   const params = useGetParams();
   const { data, isLoading } = useQuery({
-    queryKey: [config.id, params],
+    queryKey: ["programsFundingProportion", params],
     queryFn: () => getData(params),
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
+
+  // TODO: commentaires
+  const config = {
+    id: "programsFundingProportion",
+    comment: {
+      fr: <>Part des financement demandés et obtenus par le pays sur l'ensemble des pays</>,
+      en: <>Funding requested and obtained by the country on all countries</>,
+    },
+    readingKey: readingKey(data, isLoading),
+    source: EPChartsSource,
+    updateDate: EPChartsUpdateDate,
+    title: {
+      fr: <>Part des financement demandés et obtenus par le pays sur l'ensemble des pays</>,
+      en: <>Funding requested and obtained by the country on all countries</>,
+    },
+    integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
+  };
 
   return (
     <ChartWrapper
