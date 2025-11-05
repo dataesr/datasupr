@@ -57,7 +57,7 @@ export default function PillarsFundingEvo3Years() {
         </>
       ),
     },
-    readingKey: valuesSuccessReadingKey(data),
+    readingKey: valuesSuccessReadingKey(data, displayType),
     source: EPChartsSource,
     updateDate: EPChartsUpdateDate,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
@@ -73,7 +73,7 @@ export default function PillarsFundingEvo3Years() {
       fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
       en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
     },
-    readingKey: successRatesReadingKey(data),
+    readingKey: successRatesReadingKey(data, displayType),
     source: EPChartsSource,
     updateDate: EPChartsUpdateDate,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
