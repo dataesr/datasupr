@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { formatToMillions, formatToRates } from "../../../../../../utils/format";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -18,4 +19,53 @@ export function useGetParams() {
   }
 
   return params.join("&");
+}
+
+export function readingKey(data, isLoading) {
+  if (isLoading) {
+    return { fr: <></>, en: <></> };
+  }
+
+  const rawData = data.data;
+  const successRates = data.successRateByProgram || [];
+
+  // Identifier le programme avec le taux de succès le plus élevé
+  const bestProgram = successRates.reduce((max, current) => (current.successRate > max.successRate ? current : max), successRates[0]);
+
+  // Récupérer les informations du programme avec le meilleur taux
+  const bestProgramEvaluated = rawData.find((item) => item.program === bestProgram.program && item.stage === "evaluated");
+  const bestProgramSuccessful = rawData.find((item) => item.program === bestProgram.program && item.stage === "successful");
+
+  if (!bestProgramEvaluated || !bestProgramSuccessful) {
+    return { fr: <></>, en: <></> };
+  }
+
+  const programNameFr = bestProgramEvaluated.programme_name_fr;
+  const programNameEn = bestProgramEvaluated.programme_name_en;
+  const evaluatedFunding = bestProgramEvaluated.total_fund_eur || 0;
+  const successfulFunding = bestProgramSuccessful.total_fund_eur || 0;
+  const evaluatedCount = bestProgramEvaluated.count || 0;
+  const successfulCount = bestProgramSuccessful.count || 0;
+  const successRate = bestProgram.successRate;
+
+  const fr = (
+    <>
+      Le programme <strong>{programNameFr}</strong> présente le meilleur taux de succès avec <strong>{formatToRates(successRate)}</strong>. Sur les{" "}
+      <strong>{evaluatedCount}</strong> projets évalués représentant <strong>{formatToMillions(evaluatedFunding)}</strong> de financement demandé,
+      <strong> {successfulCount}</strong> projets ont été lauréats pour un montant total de <strong>{formatToMillions(successfulFunding)}</strong>.
+    </>
+  );
+
+  const en = (
+    <>
+      The <strong>{programNameEn}</strong> program has the highest success rate at <strong>{formatToRates(successRate)}</strong>. Out of{" "}
+      <strong>{evaluatedCount}</strong> evaluated projects representing <strong>{formatToMillions(evaluatedFunding)}</strong> in requested funding,{" "}
+      <strong>{successfulCount}</strong> projects were successful for a total amount of <strong>{formatToMillions(successfulFunding)}</strong>.
+    </>
+  );
+
+  return {
+    fr: fr,
+    en: en,
+  };
 }

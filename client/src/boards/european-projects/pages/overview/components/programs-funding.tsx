@@ -1,11 +1,21 @@
+import { useQuery } from "@tanstack/react-query";
 import { Col, Row } from "@dataesr/dsfr-plus";
+
 import ProgramsFundingValues from "../charts/programs-funding";
 import ProgramsFundingSuccessRates from "../charts/programs-funding-success-rates";
 import ProgramsFundingProportion from "../charts/programs-funding-proportion";
 import ChartFooter from "../../../../../components/chart-footer";
 import { EPChartsSource, EPChartsUpdateDate } from "../../../config";
+import { readingKey, useGetParams } from "../charts/programs-funding/utils";
+import { getData } from "../charts/programs-funding/query";
 
 export default function ProgramsFunding() {
+  const params = useGetParams();
+  const { data, isLoading } = useQuery({
+    queryKey: ["programsFunding", params],
+    queryFn: () => getData(params),
+  });
+
   return (
     <>
       <Row className="chart-container chart-container--pillars" style={{ marginLeft: "var(--spacing-1w)", marginRight: "var(--spacing-1w)" }}>
@@ -31,20 +41,7 @@ export default function ProgramsFunding() {
                 </>
               ),
             }}
-            readingKey={{
-              fr: (
-                <>
-                  Pour le pilier "Excellence Scientifique", les projets ont demandé 5 835 M€ de financements, et en ont obtenu 1 154.3 M€, soit un
-                  taux de succès de 19.8 %.
-                </>
-              ),
-              en: (
-                <>
-                  For the "Scientific Excellence" pillar, projects requested 5,835 M€ in funding and obtained 1,154.3 M€, representing a success rate
-                  of 19.8%.
-                </>
-              ),
-            }}
+            readingKey={readingKey(data, isLoading)}
             source={EPChartsSource}
             updateDate={EPChartsUpdateDate}
           />

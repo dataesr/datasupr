@@ -7,8 +7,6 @@ export function getDefaultParams(searchParams) {
 }
 
 export function successRatesReadingKey(data, displayType) {
-  console.log("successRatesReadingKey", displayType);
-
   const dataSelectedCountry = data?.filter((item) => item.country !== "all")[0];
   const year = dataSelectedCountry?.data[0]?.pillars[0]?.years[0]?.year || "2021";
   const pillar_name_fr = dataSelectedCountry?.data[0]?.pillars[0]?.pilier_name_fr || "unknown";
