@@ -14,36 +14,7 @@ import { EPChartsSource, EPChartsUpdateDate } from "../../../../../config.js";
 import i18nGlobal from "../../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
 import Callout from "../../../../../../../components/callout.js";
-
-const configChartFundingRankingSubRates = {
-  id: "fundingRankingSub",
-  title: {
-    fr: "Classement des pays selon la part des montants demandés et obtenus (M€)",
-    en: "Ranking of countries by share of amounts requested and obtained (M€)",
-  },
-  comment: {
-    fr: (
-      <>
-        Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction de la part des montants demandés et
-        obtenus. Il montre le pourcentage de réussite de chaque pays en divisant le montant obtenu par le montant demandé.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the positioning of the selected country compared to other countries based on the share of amounts requested and obtained. It
-        shows the success percentage of each country by dividing the amount obtained by the amount requested.
-      </>
-    ),
-  },
-  readingKey: {
-    //TODO: update readingKey
-    fr: <span>Part des montants demandés et obtenus par pays</span>,
-    en: <span>Share of amounts requested and obtained by country</span>,
-  },
-  source: EPChartsSource,
-  updateDate: EPChartsUpdateDate,
-  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
-};
+import { readingKey } from "./utils.js";
 
 export default function FundingRankingRates() {
   const [searchParams] = useSearchParams();
@@ -57,6 +28,40 @@ export default function FundingRankingRates() {
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
+
+  const configChartFundingRankingSubRates = {
+    id: "fundingRankingSub",
+    title: {
+      fr: "Classement des pays selon la part des montants demandés et obtenus (M€)",
+      en: "Ranking of countries by share of amounts requested and obtained (M€)",
+    },
+    comment: {
+      fr: (
+        <>
+          Ce graphique présente deux colonnes par pays : la colonne <strong style={{ color: "var(--evaluated-project-color)" }}>bleue</strong>{" "}
+          représente la part des montants demandés (projets évalués) et la colonne{" "}
+          <strong style={{ color: "var(--successful-project-color)" }}>verte</strong> la part des montants obtenus (projets lauréats). Le chiffre
+          affiché sur chaque colonne indique le <strong>rang du pays</strong> dans le classement européen pour cette catégorie. Un écart important
+          entre les deux colonnes d'un même pays signale une différence de performance entre sa capacité à déposer des demandes et à obtenir des
+          financements. Vous avez la possibilité de trier le classement soit par montant total évalué, soit par montant total obtenu.
+        </>
+      ),
+      en: (
+        <>
+          This chart shows two columns per country: the <strong style={{ color: "var(--evaluated-project-color)" }}>blue</strong> column represents
+          the share of requested amounts (evaluated projects) and the <strong style={{ color: "var(--successful-project-color)" }}>green</strong>{" "}
+          column shows the share of obtained amounts (successful projects). The number displayed on each column indicates the country's{" "}
+          <strong>rank</strong> in the European ranking for that category. A significant gap between the two columns of the same country indicates a
+          difference in performance between its ability to submit applications and to obtain funding. You can sort the ranking either by total
+          evaluated amount or by total obtained amount.
+        </>
+      ),
+    },
+    readingKey: readingKey(data),
+    source: EPChartsSource,
+    updateDate: EPChartsUpdateDate,
+    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+  };
 
   const prepareData = (data, sortKey) => {
     data.sort((a, b) => b[sortKey] - a[sortKey]);
