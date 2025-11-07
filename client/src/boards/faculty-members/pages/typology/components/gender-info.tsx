@@ -354,13 +354,14 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
       <div className="fr-grid-row fr-grid-row--gutters fr-mt-2w">
         <div className="fr-col-4">
           <div className={`stat-title stat-title-${genderClass}`}>
-            TITULAIRES
+            PERMANENTS
           </div>
           <div className={`stat-value stat-value-${genderClass}`}>
             {specificGenderData.titulaires_percent}&nbsp;%
           </div>
           <div className={`stat-count stat-count-${genderClass}`}>
-            {specificGenderData.titulaires_count?.toLocaleString()} personnes
+            {specificGenderData.titulaires_count?.toLocaleString()}{" "}
+            {isMale ? "hommes" : "femmes"}
           </div>
         </div>
 
@@ -373,14 +374,12 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
           </div>
           <div className={`stat-count stat-count-${genderClass}`}>
             {specificGenderData.enseignants_chercheurs_count?.toLocaleString()}{" "}
-            personnes
+            {isMale ? "hommes" : "femmes"}
           </div>
         </div>
 
         <div className="fr-col-3">
-          <div className={`stat-title stat-title-${genderClass}`}>
-            TEMPS PLEIN
-          </div>
+          <div className={`stat-title stat-title-${genderClass}`}>T. PLEIN</div>
           <div className={`stat-value stat-value-${genderClass}`}>
             {specificGenderData.quotite_distribution?.["Temps plein"]
               ?.percent || "N/A"}
@@ -390,7 +389,7 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
             {specificGenderData.quotite_distribution?.[
               "Temps plein"
             ]?.count?.toLocaleString() || "-"}{" "}
-            personnes
+            {isMale ? "hommes" : "femmes"}
           </div>
         </div>
       </div>
@@ -426,7 +425,9 @@ export const GenderDataCard = ({ gender }: GenderDataCardProps) => {
                   }}
                   title={`${age}: ${
                     ageData.percent
-                  }&nbsp;% (${ageData.count.toLocaleString()} personnes)`}
+                  }&nbsp;% (${ageData.count.toLocaleString()} ${
+                    isMale ? "hommes" : "femmes"
+                  })`}
                 >
                   <div className="age-label">{ageLabel}</div>
                   <div className="age-percent">{ageData.percent}&nbsp;%</div>

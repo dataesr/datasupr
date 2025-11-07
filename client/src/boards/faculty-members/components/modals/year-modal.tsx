@@ -9,6 +9,7 @@ import {
   Col,
 } from "@dataesr/dsfr-plus";
 import { YearModalProps } from "../../../../types/faculty-members";
+import "./styles.scss";
 
 export function YearModal({
   isOpen,
@@ -29,26 +30,25 @@ export function YearModal({
     <Modal isOpen={isOpen} hide={onClose} size="md">
       <ModalTitle>Changer l'année universitaire</ModalTitle>
       <ModalContent>
-        <Row>
-          <Col className="fr-select-group">
-            <label className="fr-label" htmlFor="year-select">
-              Sélectionnez l'année universitaire
-            </label>
-            <select
-              className="fr-select text-center"
-              value={selectedYear}
-              id="year-select"
-              name="year-select"
-              onChange={(e) => setSelectedYear(e.target.value)}
-            >
-              {years?.map((value: string) => (
-                <option key={value} value={value}>
-                  {`Année universitaire ${value}`}
-                </option>
-              ))}
-            </select>
-          </Col>
-        </Row>
+        <div className="year-modal__content">
+          <Row>
+            <Col className="year-modal__select-group">
+              <select
+                className="year-modal__select fr-select"
+                value={selectedYear}
+                id="year-select"
+                name="year-select"
+                onChange={(e) => setSelectedYear(e.target.value)}
+              >
+                {years?.map((value: string) => (
+                  <option key={value} value={value}>
+                    {`Année universitaire ${value}`}
+                  </option>
+                ))}
+              </select>
+            </Col>
+          </Row>
+        </div>
       </ModalContent>
       <ModalFooter>
         <Button size="sm" variant="secondary" onClick={onClose}>

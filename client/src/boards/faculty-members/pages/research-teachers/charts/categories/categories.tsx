@@ -159,7 +159,7 @@ export const CategoryDistribution = () => {
           as: "h2",
           fr: (
             <>
-              Comment se répartissent les enseignants permanents par catégorie
+              Comment se répartissent les enseignants permanents par genre
               ?&nbsp;
               <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
             </>
@@ -188,9 +188,8 @@ export const CategoryDistribution = () => {
         readingKey: {
           fr: exampleData ? (
             <>
-              Par exemple, pour l'année universitaire {selectedYear}, la
-              catégorie la plus représentée est "
-              <strong>{exampleData.name}</strong>" avec{" "}
+              Pour l'année universitaire {selectedYear}, la catégorie la plus
+              représentée est "<strong>{exampleData.name}</strong>" avec{" "}
               <strong>{exampleData.total.toLocaleString("fr-FR")}</strong>{" "}
               personnes, dont{" "}
               <strong>{exampleData.women.toLocaleString("fr-FR")}</strong>{" "}

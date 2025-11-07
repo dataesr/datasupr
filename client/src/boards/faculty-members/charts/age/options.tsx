@@ -34,6 +34,7 @@ export const createAgeDistributionChartOptions = (
       chart: {
         type: "pie",
         height: 400,
+        backgroundColor: "transparent",
       },
       title: {
         text: "",

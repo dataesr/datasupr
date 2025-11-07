@@ -20,7 +20,10 @@ import { useBreadcrumbItems, useContextDetection } from "../utils";
 import "./styles.scss";
 import { useCallback } from "react";
 import { SearchBar } from "../components/search-bar";
-import { useDataCompleteness } from "../api/useDataCompleteness";
+import {
+  useDataCompleteness,
+  useHasHistoricalNonPermanents,
+} from "../api/useDataCompleteness";
 import { useFacultyMembersYears } from "../api/general-queries";
 import { useTitle } from "../../../hooks/usePageTitle";
 import { capitalize } from "../../../utils/format";
@@ -33,12 +36,20 @@ export function FacultyLayout() {
   const { hasNonPermanentStaff, isLoading: isLoadingCompleteness } =
     useDataCompleteness();
 
+  const { hasHistoricalNonPermanents, isLoading: isLoadingHistory } =
+    useHasHistoricalNonPermanents();
+
   const { data: yearsData } = useFacultyMembersYears();
 
   const isStructureClosed =
     context === "structures" && yearsData?.context?.has_closure_date;
+
   const shouldShowNotice =
-    !isLoadingCompleteness && !hasNonPermanentStaff && !isStructureClosed;
+    !isLoadingCompleteness &&
+    !isLoadingHistory &&
+    !hasNonPermanentStaff &&
+    hasHistoricalNonPermanents &&
+    !isStructureClosed;
 
   const contextNameCapital = capitalize(contextName);
 
@@ -150,9 +161,9 @@ export function FacultyLayout() {
           </Col>
         </Row>
       </Container>
-      <Container fluid>
+      <Container className="fr-mt-4w">
         {path.includes("/glossaire") ? (
-          <Container>
+          <div>
             <Glossary />
             <Row gutters className="fr-mt-4w">
               <Col md={12}>
@@ -254,10 +265,10 @@ export function FacultyLayout() {
                 </div>
               </Col>
             </Row>
-          </Container>
+          </div>
         ) : (
-          <Container>
-            <Row gutters>
+          <Container fluid>
+            <Row>
               <Col md={12} className="content-with-overlay">
                 <div className="year-selector-overlay">
                   <YearSelector />

@@ -372,7 +372,7 @@ router.get("/faculty-members/geo/map-data", async (req, res) => {
 
 router.get("/faculty-members/geo/evolution", async (req, res) => {
   try {
-    const { geo_id } = req.query;
+    const { geo_id, permanent_category } = req.query;
     const collection = db.collection("faculty-members_main_staging");
 
     let isAcademie = false;
@@ -385,6 +385,19 @@ router.get("/faculty-members/geo/evolution", async (req, res) => {
         baseMatch.etablissement_code_academie = geo_id;
       } else {
         baseMatch.etablissement_code_region = geo_id;
+      }
+    }
+
+    if (permanent_category) {
+      if (permanent_category === "professeurs") {
+        baseMatch.categorie_assimilation = "Professeur et assimilés";
+      } else if (permanent_category === "maitres_conferences") {
+        baseMatch.categorie_assimilation = "Maître de conférences et assimilés";
+      } else if (permanent_category === "enseignants_2nd_degre") {
+        baseMatch.categorie_assimilation =
+          "Enseignants du 2nd degré et Arts et métiers";
+      } else if (permanent_category === "non_permanents") {
+        baseMatch.is_titulaire = false;
       }
     }
 
@@ -1164,12 +1177,22 @@ router.get(
   "/faculty-members/geo/establishment-type-distribution",
   async (req, res) => {
     try {
-      const { annee_universitaire, geo_id } = req.query;
+      const { annee_universitaire, geo_id, status_filter } = req.query;
       const collection = db.collection("faculty-members_main_staging");
 
       const matchStage = {};
       if (annee_universitaire) {
         matchStage.annee_universitaire = annee_universitaire;
+      }
+      if (status_filter) {
+        if (status_filter === "enseignant_chercheur") {
+          matchStage.is_enseignant_chercheur = true;
+        } else if (status_filter === "titulaire_non_chercheur") {
+          matchStage.is_titulaire = true;
+          matchStage.is_enseignant_chercheur = false;
+        } else if (status_filter === "non_titulaire") {
+          matchStage.is_titulaire = false;
+        }
       }
 
       let isAcademie = false;

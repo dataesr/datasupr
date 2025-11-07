@@ -184,7 +184,7 @@ export function AgeDistribution() {
             as: "h2",
             fr: (
               <>
-                Répartition des enseignants-chercheurs par tranche d'âge et par
+                Répartition des enseignants permanents par tranche d'âge et par
                 catégorie&nbsp;
                 <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
               </>
@@ -203,8 +203,7 @@ export function AgeDistribution() {
             fr:
               exampleData && typeof exampleData.count === "number" ? (
                 <>
-                  Par exemple,pour l'année universitaire {selectedYear}, on
-                  dénombre{" "}
+                  Pour l'année universitaire {selectedYear}, on dénombre{" "}
                   <strong>{exampleData.count.toLocaleString("fr-FR")}</strong>{" "}
                   <strong>{exampleData.categoryName}</strong> qui ont entre{" "}
                   <strong>{exampleData.ageClassName}</strong>.

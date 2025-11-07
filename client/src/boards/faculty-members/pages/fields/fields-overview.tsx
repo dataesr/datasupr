@@ -1,4 +1,4 @@
-import { Container, Row, Col, Title, Text } from "@dataesr/dsfr-plus";
+import { Row, Col, Title, Text } from "@dataesr/dsfr-plus";
 import FieldsDistributionBar from "../../charts/general/general";
 import CnuGroupsChart from "../../charts/cnu-group/cnu-chart";
 import StatusDistribution from "../../charts/status/status";
@@ -11,130 +11,131 @@ import NavigationCards from "../../components/navigation-cards/navigation-cards"
 import { useContextDetection } from "../../utils";
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 import Callout from "../../../../components/callout";
+import "../styles.scss";
 
 export default function FieldOverview() {
   const { contextId, context } = useContextDetection();
 
   return (
-    <Container as="main">
-      <Row className="fr-mt-3w">
+    <>
+      <Row className="fr-mt-4w fr-mb-5w">
         <Col md={12}>
           <Callout className="callout-style-fields">
             <Text size="sm">
               Descriptif de notre référentiel des disciplines, limites et
-              périmètres. <br />
+              périmètres.
+              <br />
               Cette page présente la répartition des{" "}
               <GlossaryTerm term="personnel enseignant">
                 personnels enseignants
               </GlossaryTerm>{" "}
               par{" "}
               <GlossaryTerm term="grande discipline">
-                {" "}
                 grande discipline
               </GlossaryTerm>
               , avec une visualisation de l'équilibre femmes-hommes dans chaque
               domaine. Les barres horizontales permettent de comparer facilement
               les effectifs totaux entre disciplines, tandis que les segments
               colorés illustrent la proportion respective des enseignants par
-              genre. Le tableau associé détaille les effectifs précis et les
-              pourcentages par discipline.
+              genre.
             </Text>
           </Callout>
         </Col>
       </Row>
-      <Row className="fr-mt-3w fr-mb-4w chart-container">
-        <Col md={12}>
-          <div className="fr-grid-row fr-grid-row--gutters">
-            <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
-              <div
-                style={{
-                  height: "100%",
-                }}
-              >
-                <GeneralIndicatorsCard />
-              </div>
-            </div>
 
-            {!contextId && (
-              <div className="fr-col-md-3">
-                <div
-                  style={{
-                    height: "100%",
-                    borderLeft: "1px solid white",
-                    paddingLeft: "1rem",
-                  }}
-                >
-                  <DisciplineStatsSidebar />
+      <Row className="fr-mb-6w">
+        <Col md={12}>
+          <div className="indicatorsSection">
+            <Title as="h2" look="h4" className="indicatorsTitle">
+              📊 Vue d'ensemble des indicateurs clés
+            </Title>
+            <div className="fr-grid-row fr-grid-row--gutters">
+              <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
+                <div className="indicatorCard">
+                  <GeneralIndicatorsCard />
                 </div>
               </div>
-            )}
 
-            <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
-              <div
-                style={{
-                  height: "100%",
-                  borderLeft: "1px solid white",
-                  paddingLeft: "1rem",
-                }}
-              >
-                <DisciplineStatusSummary />
+              {!contextId && (
+                <div className="fr-col-md-3">
+                  <div className="indicatorCardWithBorder">
+                    <DisciplineStatsSidebar />
+                  </div>
+                </div>
+              )}
+
+              <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
+                <div className="indicatorCardWithBorder">
+                  <DisciplineStatusSummary />
+                </div>
+              </div>
+
+              <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
+                <div className="indicatorCardWithBorder">
+                  <AgeDistributionPieChart />
+                </div>
               </div>
             </div>
-            <div className={contextId ? "fr-col-md-4" : "fr-col-md-3"}>
-              <div
-                style={{
-                  borderLeft: "1px solid white",
-                  paddingLeft: "1rem",
-                }}
-              >
-                <AgeDistributionPieChart />
-              </div>
-            </div>
+            <Row className="fr-mt-3w">
+              <Col md={12}>
+                <Text size="sm" className="indicatorsNote">
+                  <i>
+                    Ces indicateurs sont calculés pour l'année universitaire
+                    2023-24. Dans l'effectif il y a tous les enseignants, tout
+                    statut confondu (permanents, contractuels, vacataires,
+                    etc.).
+                  </i>
+                </Text>
+              </Col>
+            </Row>
           </div>
         </Col>
       </Row>
+
       {context === "fields" && !contextId && (
-        <Row className="fr-mt-3w fr-mb-4w chart-container">
+        <Row className="fr-mb-6w">
           <Col md={12}>
-            <div className="fr-background-alt--blue-france fr-p-3w">
+            <div className="chartSection">
               <FieldsDistributionBar />
             </div>
           </Col>
         </Row>
       )}
 
-      <Row className="fr-mt-3w fr-mb-4w chart-container">
+      <Row className="fr-mb-6w">
         <Col md={12}>
-          <div className="fr-background-alt--blue-france fr-p-3w">
+          <div className="chartSection">
             <StatusDistribution />
           </div>
         </Col>
       </Row>
 
-      <Row className="fr-mt-4w">
+      <Row className="fr-mb-6w">
         <Col md={12}>
-          <div className="fr-background-alt--blue-france fr-p-3w">
+          <div className="chartSection">
             <CnuGroupsChart />
           </div>
         </Col>
       </Row>
 
-      <Row className="fr-mt-4w">
+      <Row className="fr-mb-6w">
         <Col md={12}>
-          <div className="fr-background-alt--blue-france fr-p-3w">
+          <div className="chartSection">
             <EstablishmentTypeChart />
           </div>
         </Col>
       </Row>
 
-      <Row className="fr-mt-5w fr-mb-5w">
+      <Row className="fr-mt-7w fr-mb-6w">
         <Col md={12}>
-          <Title as="h4" look="h5">
-            Explorer par discipline
-          </Title>
-          <NavigationCards type="fields" maxItems={25} />
+          <div className="navigationSection">
+            <Title as="h3" look="h4" className="navigationTitle">
+              🔍 Explorer par discipline
+            </Title>
+            <NavigationCards type="fields" maxItems={25} />
+          </div>
         </Col>
       </Row>
-    </Container>
+    </>
   );
 }

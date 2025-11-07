@@ -1,11 +1,11 @@
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useMemo } from "react";
 import { useContextDetection } from "../../utils";
 import { useGeneralIndicators } from "./use-general-indicators";
 import { useFacultyMembersResearchTeachers } from "../../api/use-research-teachers";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { formatToPercent } from "../../../../utils/format";
-import { Row, Text, Title } from "@dataesr/dsfr-plus";
+import { Row, Title } from "@dataesr/dsfr-plus";
 
 interface GeneralIndicatorsCardProps {
   type?: "general" | "research-teachers";
@@ -16,10 +16,6 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
 }) => {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
-  const location = useLocation();
-  const isEnseignantsChercheurs = location.pathname.includes(
-    "enseignants-permanents"
-  );
 
   const { context, contextId, contextName } = useContextDetection();
 
@@ -190,17 +186,6 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
           </div>
         </div>
       </div>
-      <Row horizontalAlign="center" style={{ marginTop: "auto" }}>
-        <Text size="sm">
-          <i>
-            Ces indicateurs sont calculés pour l'année universitaire{" "}
-            {selectedYear}.{" "}
-            {isEnseignantsChercheurs
-              ? "Dans l'effectif il y a uniquement les enseignants permanents (enseignants-chercheurs, maîtres de conférences, professeurs des universités et enseignants du 2nd degré et Arts et métiers)."
-              : "Dans l'effectif il y a tous les enseignants, tout statut confondu (permanents, contractuels, vacataires, etc.)."}
-          </i>
-        </Text>
-      </Row>
     </div>
   );
 };

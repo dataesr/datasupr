@@ -6,12 +6,12 @@ import {
   ModalContent,
   ModalFooter,
   ModalTitle,
-  Tab,
-  Tabs,
 } from "@dataesr/dsfr-plus";
 import { NavigationItem, useNavigation } from "../../api/use-navigation";
 import { ContextExplorerModalProps } from "../../../../types/faculty-members";
 import "./styles.scss";
+
+type ContextType = "discipline" | "region" | "academie" | "structure";
 
 function ContextFilter({
   data,
@@ -25,21 +25,36 @@ function ContextFilter({
   type: "discipline" | "region" | "academie" | "structure";
 }) {
   return (
-    <div className={`context-filter-list context-filter-list--${type}`}>
+    <div className="context-filter-list">
       {data.map((item, index) => {
         const isSelected = selectedItem?.id === item.id;
         return (
           <div
             key={`${type}-${item.id}-${index}`}
             onClick={() => onSelect(item)}
-            className={`context-filter-item context-filter-item--${type} ${
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onSelect(item);
+              }
+            }}
+            role="button"
+            tabIndex={0}
+            aria-pressed={isSelected}
+            className={`context-filter-item context-filter-item--${type} fr-mt-3w  ${
               isSelected ? "selected" : ""
             }`}
           >
             <div className="context-filter-item__row">
-              <span>{item.name}</span>
+              <span className="context-filter-item__name fr-ml-2w">
+                {item.name}
+              </span>
               {type === "structure" && item.is_active === false && (
-                <Badge color="error" size="sm">
+                <Badge
+                  color="error"
+                  size="sm"
+                  className="context-filter-item__badge"
+                >
                   Inactive
                 </Badge>
               )}
@@ -60,6 +75,7 @@ export function ContextExplorerModal({
   const [selectedContextItem, setSelectedContextItem] =
     useState<NavigationItem | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeTab, setActiveTab] = useState<ContextType>("discipline");
 
   const { data: disciplines, isLoading: loadingDisciplines } = useNavigation({
     type: "fields",
@@ -115,8 +131,46 @@ export function ContextExplorerModal({
     if (isOpen) {
       setSelectedContextItem(null);
       setSearchTerm("");
+      setActiveTab("discipline");
     }
   }, [isOpen]);
+
+  const tabs = [
+    {
+      id: "discipline" as ContextType,
+      label: "Disciplines",
+      icon: "📚",
+      count: filteredDisciplines.length,
+      loading: loadingDisciplines,
+      data: filteredDisciplines,
+    },
+    {
+      id: "region" as ContextType,
+      label: "Régions",
+      icon: "🗺️",
+      count: filteredRegions.length,
+      loading: loadingRegions,
+      data: filteredRegions,
+    },
+    {
+      id: "academie" as ContextType,
+      label: "Académies",
+      icon: "🏛️",
+      count: filteredAcademies.length,
+      loading: loadingAcademies,
+      data: filteredAcademies,
+    },
+    {
+      id: "structure" as ContextType,
+      label: "Établissements",
+      icon: "🏫",
+      count: filteredStructures.length,
+      loading: loadingStructures,
+      data: filteredStructures,
+    },
+  ];
+
+  const currentTab = tabs.find((tab) => tab.id === activeTab);
 
   return (
     <Modal isOpen={isOpen} hide={onClose} size="lg">
@@ -127,106 +181,47 @@ export function ContextExplorerModal({
           placeholder="Rechercher..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="fr-input context-explorer__search"
+          className="fr-input context-explorer__search fr-mb-3w"
         />
-        <div className="context-explorer-tabs">
-          <Tabs>
-            <Tab
-              icon="edit-box-fill"
-              label={`Disciplines (${
-                loadingDisciplines ? "…" : filteredDisciplines.length
-              })`}
+
+        <div className="context-explorer-nav">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`context-nav-button context-nav-button--${tab.id} ${
+                activeTab === tab.id ? "active" : ""
+              }`}
+              type="button"
             >
-              {loadingDisciplines ? (
-                <div className="context-filter-skeleton">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="skeleton-item" />
-                  ))}
-                </div>
-              ) : (
-                <ContextFilter
-                  type="discipline"
-                  data={filteredDisciplines}
-                  onSelect={(item) =>
-                    item &&
-                    setSelectedContextItem({ ...item, type: "discipline" })
-                  }
-                  selectedItem={selectedContextItem}
-                />
-              )}
-            </Tab>
-            <Tab
-              label={`Régions (${
-                loadingRegions ? "…" : filteredRegions.length
-              })`}
-              icon="earth-fill"
-            >
-              {loadingRegions ? (
-                <div className="context-filter-skeleton">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="skeleton-item" />
-                  ))}
-                </div>
-              ) : (
-                <ContextFilter
-                  type="region"
-                  data={filteredRegions}
-                  onSelect={(item) =>
-                    item && setSelectedContextItem({ ...item, type: "region" })
-                  }
-                  selectedItem={selectedContextItem}
-                />
-              )}
-            </Tab>
-            <Tab
-              label={`Académies (${
-                loadingAcademies ? "…" : filteredAcademies.length
-              })`}
-              icon="earth-fill"
-            >
-              {loadingAcademies ? (
-                <div className="context-filter-skeleton">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="skeleton-item" />
-                  ))}
-                </div>
-              ) : (
-                <ContextFilter
-                  type="academie"
-                  data={filteredAcademies}
-                  onSelect={(item) =>
-                    item &&
-                    setSelectedContextItem({ ...item, type: "academie" })
-                  }
-                  selectedItem={selectedContextItem}
-                />
-              )}
-            </Tab>
-            <Tab
-              label={`Établissements (${
-                loadingStructures ? "…" : filteredStructures.length
-              })`}
-              icon="building-fill"
-            >
-              {loadingStructures ? (
-                <div className="context-filter-skeleton">
-                  {Array.from({ length: 6 }).map((_, i) => (
-                    <div key={i} className="skeleton-item" />
-                  ))}
-                </div>
-              ) : (
-                <ContextFilter
-                  type="structure"
-                  data={filteredStructures}
-                  onSelect={(item) =>
-                    item &&
-                    setSelectedContextItem({ ...item, type: "structure" })
-                  }
-                  selectedItem={selectedContextItem}
-                />
-              )}
-            </Tab>
-          </Tabs>
+              <span className="context-nav-button__icon">{tab.icon}</span>
+              <span className="context-nav-button__label">
+                {tab.label}
+                <span className="context-nav-button__count">
+                  {tab.loading ? "…" : tab.count}
+                </span>
+              </span>
+            </button>
+          ))}
+        </div>
+
+        <div className="context-explorer-content">
+          {currentTab?.loading ? (
+            <div className="context-filter-skeleton">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="skeleton-item" />
+              ))}
+            </div>
+          ) : (
+            <ContextFilter
+              type={activeTab}
+              data={currentTab?.data || []}
+              onSelect={(item) =>
+                item && setSelectedContextItem({ ...item, type: activeTab })
+              }
+              selectedItem={selectedContextItem}
+            />
+          )}
         </div>
       </ModalContent>
       <ModalFooter>

@@ -1,0 +1,121 @@
+.glossary-container {
+  padding: var(--spacing-4v) 0;
+}
+
+.glossary-header {
+  margin-bottom: var(--spacing-6v);
+  text-align: center;
+}
+
+.glossary-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-title-grey);
+  margin-bottom: var(--spacing-2v);
+}
+
+.glossary-subtitle {
+  font-size: 1rem;
+  color: var(--text-mention-grey);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.glossary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: var(--spacing-6v);
+  row-gap: var(--spacing-8v);
+}
+
+.glossary-card {
+  background: var(--background-default-grey);
+  border: 1px solid var(--border-default-grey);
+  border-radius: var(--radius-2);
+  padding: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(
+      90deg,
+      var(--border-action-high-blue-france),
+      var(--fields-color)
+    );
+    transform: translateY(-3px);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+    border-color: var(--border-action-high-blue-france);
+
+    &::before {
+      transform: translateY(0);
+    }
+
+    .glossary-card__title {
+      color: var(--text-action-high-blue-france);
+    }
+  }
+}
+
+.glossary-card__title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--text-title-grey);
+  line-height: 1.4;
+  margin: 0 0 var(--spacing-4v) 0;
+  transition: color 0.3s ease;
+}
+
+.glossary-card__definition {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--text-default-grey);
+  margin: 0;
+}
+
+@media (max-width: 992px) {
+  .glossary-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--spacing-5v);
+    row-gap: var(--spacing-6v);
+  }
+}
+
+@media (max-width: 768px) {
+  .glossary-header {
+    margin-bottom: var(--spacing-4v);
+  }
+
+  .glossary-title {
+    font-size: 1.5rem;
+  }
+
+  .glossary-grid {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-4v);
+    row-gap: var(--spacing-5v);
+  }
+
+  .glossary-card {
+    padding: var(--spacing-6v) var(--spacing-5v);
+  }
+
+  .glossary-card__title {
+    font-size: 1.125rem;
+  }
+
+  .glossary-card__definition {
+    font-size: 0.875rem;
+  }
+}

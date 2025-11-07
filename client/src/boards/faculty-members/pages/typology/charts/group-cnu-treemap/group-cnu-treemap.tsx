@@ -309,10 +309,12 @@ export function GroupCNUTreemapChart() {
     comment: {
       fr: (
         <>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic vero
-          beatae exercitationem, facere debitis consequuntur repellat minus
-          consequatur nemo! Sequi odio vel excepturi accusamus, rem voluptate
-          aliquam id nemo eos.
+          Ce graphique représente la répartition des enseignants-chercheurs par
+          groupe CNU. La taille de chaque rectangle est proportionnelle au
+          nombre d'enseignants dans le groupe. La couleur indique la parité :
+          jaune pour une surreprésentation masculine (moins de 40% de femmes),
+          gris pour une parité équilibrée (entre 40% et 60%), et rose pour une
+          surreprésentation féminine (plus de 60% de femmes).
         </>
       ),
     },

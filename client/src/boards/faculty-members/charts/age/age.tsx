@@ -1,17 +1,12 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { createAgeDistributionChartOptions } from "./options";
-import {
-  generateContextualTitle,
-  generateIntegrationURL,
-  useContextDetection,
-} from "../../utils";
+import { generateIntegrationURL, useContextDetection } from "../../utils";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useAgeDistribution } from "./use-age-distribution";
 import ChartWrapper from "../../../../components/chart-wrapper";
-import { Col, Title } from "@dataesr/dsfr-plus";
+import { Col, Row, Title } from "@dataesr/dsfr-plus";
 import "./styles.scss";
-import { useDataCompleteness } from "../../api/useDataCompleteness";
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {
@@ -57,7 +52,6 @@ export function AgeDistributionPieChart() {
   const selectedYear = searchParams.get("annee_universitaire") || "";
 
   const { context, contextId, contextName } = useContextDetection();
-  const { hasNonPermanentStaff } = useDataCompleteness();
 
   const {
     data: ageData,
@@ -92,22 +86,13 @@ export function AgeDistributionPieChart() {
         count: ageData.count,
       }));
 
-    const chartTitle = generateContextualTitle(
-      "Répartition par âge",
-      context,
-      contextId,
-      ageData,
-      isLoading
-    );
-
     return {
       chartData,
-      title: chartTitle,
       totalCount,
       isSpecific: !!contextId,
       contextName: ageData.context_info?.name || contextName,
     };
-  }, [ageData, contextId, context, contextName, isLoading]);
+  }, [ageData, contextId, context, contextName]);
 
   const chartOptions = useMemo(() => {
     if (!processedData) return null;
@@ -156,52 +141,42 @@ export function AgeDistributionPieChart() {
   }
 
   return (
-    <>
-      <Col className="ageFigure">
-        <Title as="h3" look="h5">
-          {processedData.title}{" "}
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <Row horizontalAlign="center" className="fr-mb-0">
+        <Title as="h3" look="h5" className="fr-mb-1w">
+          Répartition par âge
         </Title>
-        <ChartWrapper
-          config={{
-            id: "age-distribution-pie-chart",
-            idQuery: "age-distribution",
-            title: {
-              fr: "",
-            },
-            comment: {
-              fr: (
-                <>
-                  Les effectifs{" "}
-                  {hasNonPermanentStaff
-                    ? "du personnel enseignant"
-                    : "des enseignants permanents"}{" "}
-                  sont répartis par tranches d'âge.
-                  {!hasNonPermanentStaff && (
-                    <>
-                      <br />
-                      <strong>Note :</strong> Les données présentées ne
-                      concernent que les enseignants permanents. Les données
-                      relatives aux enseignants non-permanents ne sont pas
-                      disponibles pour cette période.
-                    </>
-                  )}
-                </>
-              ),
-            },
-            source: {
-              label: { fr: <>MESR-SIES, SISE</> },
-              url: {
-                fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+      </Row>
+      <div style={{ flex: 1, marginTop: "-0.5rem" }}>
+        <Col className="ageFigure">
+          <ChartWrapper
+            config={{
+              id: "age-distribution-pie-chart",
+              idQuery: "age-distribution",
+              title: {
+                look: "h5" as const,
+                size: "h3" as const,
+                fr: null,
               },
-            },
-            updateDate: new Date(),
-            integrationURL: generateIntegrationURL(context, "age-distribution"),
-          }}
-          legend={false}
-          options={chartOptions}
-          renderData={() => <RenderData data={processedData.chartData} />}
-        />
-      </Col>
-    </>
+
+              source: {
+                label: { fr: <>MESR-SIES, SISE</> },
+                url: {
+                  fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
+                },
+              },
+              updateDate: new Date(),
+              integrationURL: generateIntegrationURL(
+                context,
+                "age-distribution"
+              ),
+            }}
+            legend={false}
+            options={chartOptions}
+            renderData={() => <RenderData data={processedData.chartData} />}
+          />
+        </Col>
+      </div>
+    </div>
   );
 }

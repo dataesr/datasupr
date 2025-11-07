@@ -6,10 +6,12 @@ export const useEstablishmentTypeDistribution = ({
   context,
   annee_universitaire,
   contextId,
+  status_filter,
 }: {
   context: "structures" | "fields" | "geo";
   annee_universitaire?: string;
   contextId?: string;
+  status_filter?: string;
 }) => {
   return useQuery({
     queryKey: [
@@ -17,12 +19,17 @@ export const useEstablishmentTypeDistribution = ({
       context,
       annee_universitaire,
       contextId,
+      status_filter,
     ],
     queryFn: async () => {
       const params = new URLSearchParams();
 
       if (annee_universitaire) {
         params.append("annee_universitaire", annee_universitaire);
+      }
+
+      if (status_filter) {
+        params.append("status_filter", status_filter);
       }
 
       if (contextId) {

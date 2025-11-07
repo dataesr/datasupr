@@ -191,11 +191,20 @@ export function ItemsTreemapChart() {
     readingKey: {
       fr: (
         <>
-          Par exemple, la discipline la plus représentée est "
-          <strong>{largestGroup?.name}</strong>" avec{" "}
-          <strong>{largestGroup?.value?.toLocaleString()}</strong> enseignants,
-          dont {largestGroup?.maleCount?.toLocaleString()} hommes et{" "}
-          {largestGroup?.femaleCount?.toLocaleString()} femmes.
+          {largestGroup && (
+            <>
+              La discipline la plus représentée est "
+              <strong>{largestGroup.name}</strong>" avec{" "}
+              <strong>{largestGroup.value.toLocaleString()}</strong>{" "}
+              enseignants, dont {largestGroup.maleCount.toLocaleString()} hommes
+              ({Math.round((largestGroup.maleCount / largestGroup.value) * 100)}
+              % ♂) et {largestGroup.femaleCount.toLocaleString()} femmes (
+              {Math.round(
+                (largestGroup.femaleCount / largestGroup.value) * 100
+              )}
+              % ♀).
+            </>
+          )}
         </>
       ),
     },
@@ -208,6 +217,74 @@ export function ItemsTreemapChart() {
           rectangle rouge/orangé indique une majorité de femmes, un rectangle
           jaune une majorité d'hommes et un rectangle gris une répartition
           équilibrée.
+          <div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                gap: "1rem",
+                marginTop: "1rem",
+              }}
+            >
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "40px",
+                    height: "24px",
+                    backgroundColor: "#efcb3a",
+                    marginRight: "10px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                  }}
+                ></span>
+                <span className="fr-text--sm">
+                  <br />
+                  <span style={{ fontSize: "0.85rem", color: "#666" }}>
+                    Majorité masculine (≥60% ♂)
+                  </span>
+                </span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "40px",
+                    height: "24px",
+                    backgroundColor: "#EFEFEF",
+                    marginRight: "10px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                  }}
+                ></span>
+                <span className="fr-text--sm">
+                  <br />
+                  <span style={{ fontSize: "0.85rem", color: "#666" }}>
+                    Parité hommes-femmes
+                  </span>
+                </span>
+              </div>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "40px",
+                    height: "24px",
+                    backgroundColor: "#e18b76",
+                    marginRight: "10px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
+                  }}
+                ></span>
+                <span className="fr-text--sm">
+                  <br />
+                  <span style={{ fontSize: "0.85rem", color: "#666" }}>
+                    Majorité féminine (≥60% ♀)
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
         </>
       ),
     },
@@ -252,12 +329,14 @@ export function ItemsTreemapChart() {
   }
 
   return (
-    <ChartWrapper
-      config={config}
-      options={treemapOptions}
-      legend={null}
-      renderData={() => <RenderData data={treemapData} />}
-    />
+    <>
+      <ChartWrapper
+        config={config}
+        options={treemapOptions}
+        legend={null}
+        renderData={() => <RenderData data={treemapData} />}
+      />
+    </>
   );
 }
 

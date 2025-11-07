@@ -185,11 +185,25 @@ router.get("/faculty-members/fields/cnu-analysis", async (req, res) => {
 
 router.get("/faculty-members/fields/evolution", async (req, res) => {
   try {
-    const { field_id } = req.query;
+    const { field_id, permanent_category } = req.query;
     const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {};
     if (field_id) matchStage.code_grande_discipline = field_id;
+
+    if (permanent_category) {
+      if (permanent_category === "professeurs") {
+        matchStage.categorie_assimilation = "Professeur et assimilés";
+      } else if (permanent_category === "maitres_conferences") {
+        matchStage.categorie_assimilation =
+          "Maître de conférences et assimilés";
+      } else if (permanent_category === "enseignants_2nd_degre") {
+        matchStage.categorie_assimilation =
+          "Enseignants du 2nd degré et Arts et métiers";
+      } else if (permanent_category === "non_permanents") {
+        matchStage.is_titulaire = false;
+      }
+    }
 
     const [
       years,
@@ -832,7 +846,7 @@ router.get(
   "/faculty-members/fields/establishment-type-distribution",
   async (req, res) => {
     try {
-      const { annee_universitaire, field_id } = req.query;
+      const { annee_universitaire, field_id, status_filter } = req.query;
       const collection = db.collection("faculty-members_main_staging");
 
       const matchStage = {};
@@ -841,6 +855,16 @@ router.get(
       }
       if (field_id) {
         matchStage.code_grande_discipline = field_id;
+      }
+      if (status_filter) {
+        if (status_filter === "enseignant_chercheur") {
+          matchStage.is_enseignant_chercheur = true;
+        } else if (status_filter === "titulaire_non_chercheur") {
+          matchStage.is_titulaire = true;
+          matchStage.is_enseignant_chercheur = false;
+        } else if (status_filter === "non_titulaire") {
+          matchStage.is_titulaire = false;
+        }
       }
 
       const establishmentTypeDistribution = await collection

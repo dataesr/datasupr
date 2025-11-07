@@ -108,7 +108,7 @@ export const CategoryEvolutionChart = () => {
           size: "h3",
           fr: (
             <>
-              Évolution du nombre d'enseignants par catégorie&nbsp;
+              Évolution du nombre d'enseignants parmanents par catégorie&nbsp;
               <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
             </>
           ),
@@ -124,8 +124,8 @@ export const CategoryEvolutionChart = () => {
         readingKey: {
           fr: exampleCategory ? (
             <>
-              Par exemple, pour la catégorie{" "}
-              <strong>"{exampleCategory.name}"</strong>, l'effectif est passé de{" "}
+              Pour la catégorie <strong>"{exampleCategory.name}"</strong>,
+              l'effectif est passé de{" "}
               <strong>
                 {exampleCategory.startValue.toLocaleString("fr-FR")}
               </strong>{" "}

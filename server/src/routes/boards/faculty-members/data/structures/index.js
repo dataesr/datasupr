@@ -612,7 +612,7 @@ router.get(
 
 router.get("/faculty-members/structures/evolution", async (req, res) => {
   try {
-    const { structure_id } = req.query;
+    const { structure_id, permanent_category } = req.query;
     const collection = db.collection("faculty-members_main_staging");
 
     const matchStage = {};
@@ -621,6 +621,20 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
         { etablissement_id_paysage: structure_id },
         { etablissement_id_paysage: structure_id },
       ];
+    }
+
+    if (permanent_category) {
+      if (permanent_category === "professeurs") {
+        matchStage.categorie_assimilation = "Professeur et assimilés";
+      } else if (permanent_category === "maitres_conferences") {
+        matchStage.categorie_assimilation =
+          "Maître de conférences et assimilés";
+      } else if (permanent_category === "enseignants_2nd_degre") {
+        matchStage.categorie_assimilation =
+          "Enseignants du 2nd degré et Arts et métiers";
+      } else if (permanent_category === "non_permanents") {
+        matchStage.statut = "non_titulaire";
+      }
     }
 
     const [
@@ -1035,7 +1049,7 @@ router.get(
   "/faculty-members/structures/establishment-type-distribution",
   async (req, res) => {
     try {
-      const { annee_universitaire, structure_id } = req.query;
+      const { annee_universitaire, structure_id, status_filter } = req.query;
       const collection = db.collection("faculty-members_main_staging");
 
       const matchStage = {};
@@ -1047,6 +1061,16 @@ router.get(
           { etablissement_id_paysage: structure_id },
           { etablissement_id_paysage: structure_id },
         ];
+      }
+      if (status_filter) {
+        if (status_filter === "enseignant_chercheur") {
+          matchStage.is_enseignant_chercheur = true;
+        } else if (status_filter === "titulaire_non_chercheur") {
+          matchStage.is_titulaire = true;
+          matchStage.is_enseignant_chercheur = false;
+        } else if (status_filter === "non_titulaire") {
+          matchStage.is_titulaire = false;
+        }
       }
 
       const establishmentTypeDistribution = await collection

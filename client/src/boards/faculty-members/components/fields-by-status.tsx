@@ -172,14 +172,6 @@ const FieldByStatus: React.FC = () => {
           </div>
         ))}
       </div>
-      <Row horizontalAlign="center" style={{ marginTop: "auto" }}>
-        <Text size="sm">
-          <i>
-            Ces indicateurs sont calculés pour l'année universitaire{" "}
-            {selectedYear}.
-          </i>
-        </Text>
-      </Row>
     </div>
   );
 };

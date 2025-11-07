@@ -8,6 +8,7 @@ export default function OptionsColumnChart({
   fieldsData,
   selectedYear,
   displayMode,
+  context = "fields",
 }: OptionsProps): HighchartsInstance.Options | null {
   if (!fieldsData || fieldsData.length === 0) return null;
 
@@ -16,7 +17,9 @@ export default function OptionsColumnChart({
 
   const sortedData = [...yearData].sort((a, b) => b.totalCount - a.totalCount);
 
-  const categories = sortedData.map((field) => field.fieldLabel);
+  const categories = sortedData.map(
+    (field) => field.fieldLabel || "Non spécifié"
+  );
 
   const totalOfAllFields = yearData.reduce(
     (acc, field) => acc + field.totalCount,
@@ -24,13 +27,16 @@ export default function OptionsColumnChart({
   );
 
   const data = sortedData.map((field) => ({
-    name: field.fieldLabel,
+    name: field.fieldLabel || "Non spécifié",
     code: field.field_id,
     y:
       displayMode === "percentage"
         ? (field.totalCount / totalOfAllFields) * 100
         : field.totalCount,
-    color: getColorForDiscipline(field.fieldLabel),
+    color:
+      context === "fields"
+        ? getColorForDiscipline(field.fieldLabel)
+        : undefined,
     customData: {
       totalCount: field.totalCount,
       femaleCount: field.femaleCount,
@@ -46,9 +52,6 @@ export default function OptionsColumnChart({
       inverted: true,
       height: 450,
       marginLeft: 150,
-      style: {
-        fontFamily: "Marianne, sans-serif",
-      },
     },
     exporting: { enabled: false },
     title: {
@@ -68,8 +71,17 @@ export default function OptionsColumnChart({
           const label = String(this.value);
           const fieldId = sortedData[idx]?.field_id;
           if (!fieldId) return label;
-          const href = `/personnel-enseignant/discipline/vue-d'ensemble?annee_universitaire=${selectedYear}&field_id=${fieldId}`;
-          return `<a href="${href}" >${label}</a>`;
+
+          let href = "";
+          if (context === "fields") {
+            href = `/personnel-enseignant/discipline/vue-d'ensemble?annee_universitaire=${selectedYear}&field_id=${fieldId}`;
+          } else if (context === "geo") {
+            href = `/personnel-enseignant/region/vue-d'ensemble?annee_universitaire=${selectedYear}&geo_id=${fieldId}`;
+          } else if (context === "structures") {
+            href = `/personnel-enseignant/etablissement/vue-d'ensemble?annee_universitaire=${selectedYear}&structure_id=${fieldId}`;
+          }
+
+          return href ? `<a href="${href}" >${label}</a>` : label;
         },
       },
     },

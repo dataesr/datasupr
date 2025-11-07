@@ -136,7 +136,11 @@ export function SectionsBubbleChart() {
 
   const labels = getLabels();
 
-  const { data: bubbleData, sectionCount } = useMemo(() => {
+  const {
+    data: bubbleData,
+    sectionCount,
+    groupsLegend,
+  } = useMemo(() => {
     if (!cnuData) {
       return { data: [], title: "Répartition des effectifs", sectionCount: 0 };
     }
@@ -511,10 +515,23 @@ export function SectionsBubbleChart() {
     });
 
     processedData.sort((a, b) => b.z - a.z);
+
+    const groupsLegend = uniqGroupCodes
+      .map((code) => {
+        const item = filteredItems.find((d) => String(d.groupCode) === code);
+        return {
+          code,
+          name: item?.groupName || "Autre",
+          color: groupColorMap[code],
+        };
+      })
+      .sort((a, b) => a.code.localeCompare(b.code));
+
     void totalSections;
     return {
       data: processedData,
       sectionCount: filteredItems.length,
+      groupsLegend,
     };
   }, [cnuData, contextId, groupId, context]);
   const config = {
@@ -555,8 +572,53 @@ export function SectionsBubbleChart() {
               📍 La ligne diagonale pointillée représente la parité parfaite
               <br />• Au-dessus : plus d'hommes • En-dessous : plus de femmes
             </div>
+
+            {groupsLegend && groupsLegend.length > 0 && (
+              <div className="fr-mt-3w">
+                <div className="fr-text--bold fr-text--center fr-mb-1w">
+                  Groupes CNU
+                </div>
+                <div
+                  className="fr-grid-row fr-grid-row--gutters"
+                  style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    gap: "0.5rem",
+                  }}
+                >
+                  {groupsLegend.map((group) => (
+                    <div
+                      key={group.code}
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "0.25rem",
+                        padding: "0.25rem 0.5rem",
+                        backgroundColor: "#f6f6f6",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: "inline-block",
+                          width: "12px",
+                          height: "12px",
+                          backgroundColor: group.color,
+                          borderRadius: "50%",
+                          flexShrink: 0,
+                        }}
+                      />
+                      <span style={{ fontSize: "0.75rem" }}>
+                        {group.code} - {group.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-          Seul les enseignants titulaires sont pris en compte dans cette
+          Seul les enseignants permanents sont pris en compte dans cette
           analyse.
         </>
       ),

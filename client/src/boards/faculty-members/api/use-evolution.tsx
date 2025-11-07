@@ -7,14 +7,21 @@ type EvolutionContext = "fields" | "geo" | "structures";
 interface UseEvolutionParams {
   context: EvolutionContext;
   contextId?: string;
+  permanent_category?: string;
 }
 
 export const useFacultyMembersEvolution = ({
   context,
   contextId,
+  permanent_category,
 }: UseEvolutionParams) => {
   return useQuery({
-    queryKey: ["faculty-members-evolution", context, contextId],
+    queryKey: [
+      "faculty-members-evolution",
+      context,
+      contextId,
+      permanent_category,
+    ],
     queryFn: async () => {
       const params = new URLSearchParams();
 
@@ -30,6 +37,10 @@ export const useFacultyMembersEvolution = ({
             params.append("structure_id", contextId);
             break;
         }
+      }
+
+      if (permanent_category) {
+        params.append("permanent_category", permanent_category);
       }
 
       const endpoint = `${VITE_APP_SERVER_URL}/faculty-members/${context}/evolution`;

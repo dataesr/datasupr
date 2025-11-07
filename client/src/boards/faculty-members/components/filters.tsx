@@ -1,4 +1,4 @@
-import { Badge, Button } from "@dataesr/dsfr-plus";
+import { Badge, BadgeGroup, Button } from "@dataesr/dsfr-plus";
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useFacultyMembersYears } from "../api/general-queries";
@@ -107,6 +107,11 @@ const YearSelector = () => {
   return (
     <div>
       <div className="fr-grid-row fr-grid-row--right">
+        <BadgeGroup className="fr-mr-1w">
+          <Badge className="fr-mt-1w" size="sm" color="green-emeraude">
+            {initialYear} {badgeText}
+          </Badge>
+        </BadgeGroup>
         <Button
           className="button fr-mr-2w"
           color="blue-cumulus"
@@ -122,15 +127,6 @@ const YearSelector = () => {
           onClick={() => setIsContextModalOpen(true)}
           size="sm"
         ></Button>
-      </div>
-      <div style={{ textAlign: "right" }}>
-        <Badge size="sm" className="fr-mt-1w" color="green-emeraude">
-          {initialYear}
-        </Badge>
-        <br />
-        <Badge size="sm" color="green-emeraude">
-          {badgeText}
-        </Badge>
       </div>
       <YearModal
         isOpen={isYearModalOpen}

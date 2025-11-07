@@ -133,7 +133,7 @@ const DistributionBar: React.FC = () => {
     }
   };
 
-  const { singular, header } = getContextualLabels(context);
+  const { header } = getContextualLabels(context);
 
   if (context === "fields" && contextId) {
     return null;
@@ -194,8 +194,8 @@ const DistributionBar: React.FC = () => {
     readingKey: {
       fr: largestItem && (
         <>
-          Par exemple, pour l'année universitaire {selectedYear}, pour{" "}
-          {singular} <strong>"{largestItem.fieldLabel}"</strong>, on dénombre{" "}
+          Pour l'année universitaire {selectedYear} la grande discipline{" "}
+          <strong>"{largestItem.fieldLabel}"</strong> dénombre{" "}
           <strong>{largestItem.totalCount.toLocaleString()}</strong>{" "}
           {hasNonPermanentStaff
             ? "personnels enseignants"

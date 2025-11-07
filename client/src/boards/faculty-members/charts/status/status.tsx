@@ -90,16 +90,26 @@ const StatusDistribution: React.FC = () => {
             break;
         }
       });
+      let fieldLabel, itemId, itemType;
+
+      if (context === "fields") {
+        fieldLabel = item._id.field_name;
+        itemId = item._id.field_code;
+        itemType = "fields" as const;
+      } else if (context === "geo") {
+        fieldLabel = item._id.geo_name;
+        itemId = item._id.geo_code;
+        itemType = "geo" as const;
+      } else {
+        fieldLabel = item._id.structure_name;
+        itemId = item._id.structure_code;
+        itemType = "structures" as const;
+      }
+
       return {
-        fieldLabel:
-          item._id.structure_name || item._id.field_name || item._id.geo_name,
-        itemId:
-          item._id.field_code || item._id.geo_code || item._id.structure_code,
-        itemType: item._id.field_code
-          ? ("fields" as const)
-          : item._id.geo_code
-          ? ("geo" as const)
-          : ("structures" as const),
+        fieldLabel,
+        itemId,
+        itemType,
         totalCount,
         nonTitulaires,
         titulairesNonChercheurs,
@@ -159,6 +169,7 @@ const StatusDistribution: React.FC = () => {
   const onSelectStructure = (item: { id: string; name: string }) => {
     const selected = { id: item.id, lib: item.name };
     if (!selected) return;
+
     const existsInData = processedData.some(
       (d) => d.fieldLabel === selected.lib
     );
@@ -167,9 +178,12 @@ const StatusDistribution: React.FC = () => {
     }
   };
 
-  const getContextLabel = (isPrefix = false) => {
+  const getContextLabel = (isPrefix = false, itemId?: string) => {
     switch (context) {
       case "geo":
+        if (itemId && itemId.toString().startsWith("A")) {
+          return isPrefix ? "l'académie" : "académie";
+        }
         return isPrefix ? "la région" : "région";
       case "fields":
         return isPrefix ? "la grande discipline" : "grande discipline";
@@ -179,6 +193,121 @@ const StatusDistribution: React.FC = () => {
         return "discipline";
     }
   };
+
+  const getContextLabelWithName = () => {
+    if (!contextId || !contextName) {
+      return getContextLabel();
+    }
+
+    switch (context) {
+      case "geo":
+        const lowerName = contextName
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+        if (
+          lowerName.startsWith("region") ||
+          contextName.toLowerCase().startsWith("région")
+        ) {
+          const regionName = contextName.replace(/^Région\s+/i, "");
+          return `dans la région ${regionName}`;
+        }
+        if (
+          lowerName.startsWith("academie") ||
+          contextName.toLowerCase().startsWith("académie")
+        ) {
+          const academyName = contextName.replace(/^Académie\s+/i, "");
+          return `dans l'académie ${academyName}`;
+        }
+        if (contextName.toLowerCase().includes("académie")) {
+          return `Académie ${contextName}`;
+        }
+        return `Région ${contextName}`;
+
+      case "structures":
+        const lowerStructureName = contextName.toLowerCase();
+        if (
+          lowerStructureName.includes("université") ||
+          lowerStructureName.includes("universite")
+        ) {
+          return `à ${contextName}`;
+        }
+        if (
+          lowerStructureName.includes("école") ||
+          lowerStructureName.includes("ecole")
+        ) {
+          return `à l'${contextName}`;
+        }
+        if (lowerStructureName.includes("institut")) {
+          return `à l'${contextName}`;
+        }
+        return `à ${contextName}`;
+
+      case "fields":
+        return `en ${contextName}`;
+
+      default:
+        return contextName;
+    }
+  };
+
+  const contextLabelForTitle = getContextLabelWithName();
+
+  const getContextLabelForPrefix = () => {
+    if (!contextId || !contextName) {
+      return getContextLabel(true);
+    }
+
+    switch (context) {
+      case "geo":
+        const lowerName = contextName
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+        if (
+          lowerName.startsWith("region") ||
+          contextName.toLowerCase().startsWith("région")
+        ) {
+          const regionName = contextName.replace(/^Région\s+/i, "");
+          return `la région ${regionName}`;
+        }
+        if (
+          lowerName.startsWith("academie") ||
+          contextName.toLowerCase().startsWith("académie")
+        ) {
+          const academyName = contextName.replace(/^Académie\s+/i, "");
+          return `l'académie ${academyName}`;
+        }
+        return `la région ${contextName}`;
+
+      case "structures":
+        const lowerStructureName = contextName.toLowerCase();
+        if (
+          lowerStructureName.includes("université") ||
+          lowerStructureName.includes("universite")
+        ) {
+          return contextName;
+        }
+        if (
+          lowerStructureName.includes("école") ||
+          lowerStructureName.includes("ecole")
+        ) {
+          return `l'${contextName}`;
+        }
+        if (lowerStructureName.includes("institut")) {
+          return `l'${contextName}`;
+        }
+        return contextName;
+
+      case "fields":
+        return `la grande discipline ${contextName}`;
+
+      default:
+        return contextName;
+    }
+  };
+
+  const contextLabelForPrefix = getContextLabelForPrefix();
 
   if (isLoading) {
     return (
@@ -271,6 +400,43 @@ const StatusDistribution: React.FC = () => {
           </div>
         </div>
       )}
+      {context === "geo" && !contextId && (
+        <div className="fr-mb-2w">
+          <div className="text-right">
+            <div style={{ minWidth: 420, display: "inline-block" }}>
+              <FacultySearchBar
+                mode="select"
+                allowedTypes={["region"]}
+                placeholder="Ajouter une région dans le graphique"
+                onSelect={(item) =>
+                  onSelectStructure({ id: item.id, name: item.name })
+                }
+                disabledPredicate={(item) => displayedLabels.has(item.name)}
+              />
+            </div>
+            {addedLabels.length > 0 && (
+              <div className="fr-mt-2w">
+                <div className="fr-text--sm fr-mb-1w">Régions ajoutées :</div>
+                <div>
+                  {addedLabels.map((label) => (
+                    <DismissibleTag
+                      color="blue-cumulus"
+                      aria-label={`Retirer ${label}`}
+                      onClick={() =>
+                        setAddedLabels((prev) =>
+                          prev.filter((l) => l !== label)
+                        )
+                      }
+                    >
+                      {label}
+                    </DismissibleTag>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       <ChartWrapper
         config={{
@@ -283,8 +449,20 @@ const StatusDistribution: React.FC = () => {
             fr: (
               <>
                 {hasNonPermanentStaff
-                  ? `Quelle est la répartition des statuts du personnel enseignant par ${getContextLabel()} ?`
-                  : `Quelle est la répartition des statuts des enseignants permanents par ${getContextLabel()} ?`}
+                  ? `Quelle est la répartition des statuts du personnel enseignant ${
+                      contextLabelForTitle.startsWith("dans") ||
+                      contextLabelForTitle.startsWith("à") ||
+                      contextLabelForTitle.startsWith("en")
+                        ? contextLabelForTitle
+                        : `par ${contextLabelForTitle}`
+                    } ?`
+                  : `Quelle est la répartition des statuts des enseignants permanents ${
+                      contextLabelForTitle.startsWith("dans") ||
+                      contextLabelForTitle.startsWith("à") ||
+                      contextLabelForTitle.startsWith("en")
+                        ? contextLabelForTitle
+                        : `par ${contextLabelForTitle}`
+                    } ?`}
                 &nbsp;
                 <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
               </>
@@ -337,30 +515,80 @@ const StatusDistribution: React.FC = () => {
           readingKey: {
             fr: exampleItem ? (
               <>
-                Par exemple, pour l'année universitaire {selectedYear} pour{" "}
-                {getContextLabel(true)}{" "}
-                <strong>{exampleItem.fieldLabel}</strong>, sur les{" "}
-                <strong>
-                  {exampleItem.totalCount.toLocaleString("fr-FR")}
-                </strong>{" "}
-                {hasNonPermanentStaff
-                  ? "personnels enseignants"
-                  : "enseignants permanents"}
-                ,{" "}
-                <strong>
-                  {exampleItem.enseignantsChercheurs.toLocaleString("fr-FR")}
-                </strong>{" "}
-                sont enseignants-chercheurs
-                {hasNonPermanentStaff && (
+                {displayAsPercentage ? (
                   <>
-                    {" et "}
+                    Pour l'année universitaire {selectedYear} pour{" "}
+                    {contextId
+                      ? contextLabelForPrefix
+                      : getContextLabel(true, exampleItem.itemId)}{" "}
+                    {!contextId && <strong>"{exampleItem.fieldLabel}"</strong>},
+                    la répartition des{" "}
+                    {hasNonPermanentStaff
+                      ? "personnels enseignants"
+                      : "enseignants permanents"}{" "}
+                    par statut est la suivante :{" "}
                     <strong>
-                      {exampleItem.nonTitulaires.toLocaleString("fr-FR")}
+                      {(
+                        (exampleItem.enseignantsChercheurs /
+                          exampleItem.totalCount) *
+                        100
+                      ).toFixed(1)}
+                      %
                     </strong>{" "}
-                    sont non-permanents
+                    sont des enseignants-chercheurs
+                    {hasNonPermanentStaff && (
+                      <>
+                        {" et "}
+                        <strong>
+                          {(
+                            (exampleItem.nonTitulaires /
+                              exampleItem.totalCount) *
+                            100
+                          ).toFixed(1)}
+                          %
+                        </strong>{" "}
+                        sont des non-permanents
+                      </>
+                    )}
+                    .
+                  </>
+                ) : (
+                  <>
+                    Pour l'année universitaire {selectedYear} pour{" "}
+                    {contextId
+                      ? contextLabelForPrefix
+                      : getContextLabel(true, exampleItem.itemId)}{" "}
+                    {!contextId && (
+                      <>
+                        <strong>"{exampleItem.fieldLabel}"</strong>, on dénombre{" "}
+                      </>
+                    )}
+                    {contextId && ", on dénombre "}
+                    <strong>
+                      {exampleItem.totalCount.toLocaleString("fr-FR")}
+                    </strong>{" "}
+                    {hasNonPermanentStaff
+                      ? "personnels enseignants"
+                      : "enseignants permanents"}
+                    , dont{" "}
+                    <strong>
+                      {exampleItem.enseignantsChercheurs.toLocaleString(
+                        "fr-FR"
+                      )}
+                    </strong>{" "}
+                    enseignants-chercheurs
+                    {hasNonPermanentStaff && (
+                      <>
+                        {" et "}
+                        <strong>
+                          {exampleItem.nonTitulaires.toLocaleString("fr-FR")}
+                        </strong>{" "}
+                        non-permanents
+                      </>
+                    )}
+                    .
                   </>
                 )}
-                .
               </>
             ) : (
               <></>

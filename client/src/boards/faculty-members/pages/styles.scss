@@ -1,0 +1,122 @@
+.indicatorsSection {
+  background: linear-gradient(
+    135deg,
+    var(--background-alt-blue-france) 0%,
+    var(--background-contrast-blue-france) 100%
+  );
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  margin-bottom: 3rem;
+}
+
+.indicatorsTitle {
+  color: var(--text-title-blue-france);
+  margin-bottom: 2rem;
+}
+
+.indicatorCard {
+  height: 380px;
+  overflow: hidden;
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.indicatorCardWithBorder {
+  height: 380px;
+  overflow: hidden;
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  border-left: 1px solid var(--border-default-grey);
+  padding-left: 1rem;
+}
+
+.indicatorsNote {
+  text-align: center;
+  opacity: 0.8;
+  margin-top: 1.5rem;
+}
+
+.chartSection {
+  background: var(--background-alt-blue-france);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.chartSectionWithLink {
+  background: var(--background-alt-blue-france);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.mapSection {
+  background: var(--background-alt-blue-france);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  height: 100%;
+}
+
+.mapTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.mapInfoBox {
+  padding: 1rem;
+  background: var(--background-contrast-info);
+  border-left: 4px solid var(--border-default-info);
+  border-radius: 0.25rem;
+  margin-top: 1.5rem;
+}
+
+.mapInfoTitle {
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.navigationSection {
+  padding: 2rem;
+  background: var(--background-contrast-grey);
+  border-radius: 0.5rem;
+  border-top: 4px solid var(--border-default-blue-france);
+  margin-top: 3.5rem;
+  margin-bottom: 3rem;
+}
+
+.navigationTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.genderSection {
+  background: var(--background-alt-blue-france);
+  border-radius: 0.5rem;
+  padding: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  }
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-title-blue-france);
+  margin-bottom: 1.5rem;
+}

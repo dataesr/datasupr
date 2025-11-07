@@ -230,6 +230,19 @@ const ItemBarChart: React.FC = () => {
     );
   };
 
+  const getTitleText = () => {
+    switch (context) {
+      case "fields":
+        return "Quelles sont les disciplines où le personnel enseignant est paritaire ?";
+      case "geo":
+        return "Quelles sont les régions où le personnel enseignant est paritaire ?";
+      case "structures":
+        return "Quels sont les établissements où le personnel enseignant est paritaire ?";
+      default:
+        return "Où le personnel enseignant est-il paritaire ?";
+    }
+  };
+
   const config = {
     id: "gender-distribution-chart",
     idQuery: "gender-distribution",
@@ -239,8 +252,7 @@ const ItemBarChart: React.FC = () => {
       size: "h2" as const,
       fr: (
         <>
-          Quelles sont les disciplines où le personnel enseignant est paritaire
-          ?&nbsp;
+          {getTitleText()}&nbsp;
           <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
         </>
       ),
@@ -248,8 +260,8 @@ const ItemBarChart: React.FC = () => {
     readingKey: {
       fr: (
         <>
-          Par exemple, pour l'année universitaire {selectedYear}, l'effectif le
-          plus important se trouve dans la catégorie "
+          Pour l'année universitaire {selectedYear}, l'effectif le plus
+          important se trouve dans la catégorie "
           <strong>{mostRepresentedItem?.itemName}</strong>" avec{" "}
           <strong>{mostRepresentedItem?.totalCount.toLocaleString()}</strong>{" "}
           personnes, dont {mostRepresentedItem?.hommesCount.toLocaleString()}{" "}

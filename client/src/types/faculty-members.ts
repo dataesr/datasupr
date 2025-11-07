@@ -38,6 +38,7 @@ export interface OptionsProps {
   fieldsData: Field[];
   selectedYear: string;
   displayMode: "count" | "percentage";
+  context?: ContextType;
   e;
 }
 export type ContextType = "fields" | "geo" | "structures";

@@ -1,12 +1,4 @@
-import {
-  Container,
-  Row,
-  Col,
-  Title,
-  Text,
-  Link,
-  Alert,
-} from "@dataesr/dsfr-plus";
+import { Row, Col, Title, Text, Link, Alert } from "@dataesr/dsfr-plus";
 import FieldsDistributionBar from "../../charts/general/general";
 import CnuGroupsChart from "../../charts/cnu-group/cnu-chart";
 import StatusDistribution from "../../charts/status/status";
@@ -20,6 +12,7 @@ import { useContextDetection } from "../../utils";
 import { useFacultyMembersYears } from "../../api/general-queries";
 import { useSearchParams } from "react-router-dom";
 import Callout from "../../../../components/callout";
+import "../styles.scss";
 
 export default function UniversityOverview() {
   const { contextId, context } = useContextDetection();
@@ -32,10 +25,10 @@ export default function UniversityOverview() {
   const hasDataForSelectedYear = isYearAvailable;
 
   return (
-    <Container as="main">
+    <>
       {hasDataForSelectedYear ? (
         <>
-          <Row className="fr-mt-3w">
+          <Row className="fr-mt-4w fr-mb-5w">
             <Col md={12}>
               <Callout className="callout-style-university">
                 <Text size="sm">
@@ -60,50 +53,53 @@ export default function UniversityOverview() {
               </Callout>
             </Col>
           </Row>
-          <Row className="fr-mt-3w fr-mb-4w chart-container">
+
+          <Row className="fr-mb-6w">
             <Col md={12}>
-              <div className="fr-grid-row fr-grid-row--gutters">
-                <Col md={4}>
-                  <div
-                    style={{
-                      height: "100%",
-                    }}
-                  >
-                    <GeneralIndicatorsCard />
+              <div className="indicatorsSection">
+                <Title as="h2" look="h4" className="indicatorsTitle">
+                  📊 Vue d'ensemble des indicateurs clés
+                </Title>
+                <div className="fr-grid-row fr-grid-row--gutters">
+                  <div className="fr-col-md-4">
+                    <div className="indicatorCard">
+                      <GeneralIndicatorsCard />
+                    </div>
                   </div>
-                </Col>
 
-                <Col md={4}>
-                  <div
-                    style={{
-                      height: "100%",
-                      borderLeft: "1px solid white",
-                      paddingLeft: "1rem",
-                    }}
-                  >
-                    <DisciplineStatusSummary />
+                  <div className="fr-col-md-4">
+                    <div className="indicatorCardWithBorder">
+                      <DisciplineStatusSummary />
+                    </div>
                   </div>
-                </Col>
 
-                <Col md={4}>
-                  <div
-                    style={{
-                      borderLeft: "1px solid white",
-                      paddingLeft: "1rem",
-                    }}
-                  >
-                    <AgeDistributionPieChart />
+                  <div className="fr-col-md-4">
+                    <div className="indicatorCardWithBorder">
+                      <AgeDistributionPieChart />
+                    </div>
                   </div>
-                </Col>
+                </div>
+                <Row className="fr-mt-3w">
+                  <Col md={12}>
+                    <Text size="sm" className="indicatorsNote">
+                      <i>
+                        Ces indicateurs sont calculés pour l'année universitaire
+                        2023-24. Dans l'effectif il y a tous les enseignants,
+                        tout statut confondu (permanents, contractuels,
+                        vacataires, etc.).
+                      </i>
+                    </Text>
+                  </Col>
+                </Row>
               </div>
             </Col>
           </Row>
 
-          <Row className="fr-mt-4w">
+          <Row className="fr-mb-6w">
             <Col md={12}>
-              <div className="fr-background-alt--blue-france fr-p-3w">
+              <div className="chartSectionWithLink">
                 <FieldsDistributionBar />
-                <Text size="sm" className="text-center ">
+                <Text size="sm" className="text-center fr-mt-3w">
                   <Link href="/personnel-enseignant/discipline/typologie">
                     En savoir plus sur la parité Femmes/Hommes des enseignants
                   </Link>
@@ -112,26 +108,26 @@ export default function UniversityOverview() {
             </Col>
           </Row>
 
-          <Row className="fr-mt-4w">
+          <Row className="fr-mb-6w">
             <Col md={12}>
-              <div className="fr-background-alt--blue-france fr-p-3w">
+              <div className="chartSection">
                 <StatusDistribution />
               </div>
             </Col>
           </Row>
 
-          <Row className="fr-mt-4w">
+          <Row className="fr-mb-6w">
             <Col md={12}>
-              <div className="fr-background-alt--blue-france fr-p-3w">
+              <div className="chartSection">
                 <CnuGroupsChart />
               </div>
             </Col>
           </Row>
 
           {context === "structures" && !contextId && (
-            <Row className="fr-mt-4w">
+            <Row className="fr-mb-6w">
               <Col md={12}>
-                <div className="fr-background-alt--blue-france fr-p-3w">
+                <div className="chartSection">
                   <EstablishmentTypeChart />
                 </div>
               </Col>
@@ -154,14 +150,16 @@ export default function UniversityOverview() {
         </Row>
       )}
 
-      <Row className="fr-mt-5w fr-mb-5w">
+      <Row className="fr-mt-7w fr-mb-6w">
         <Col md={12}>
-          <Title as="h4" look="h5">
-            Explorer par établissement
-          </Title>
-          <NavigationCards type="structures" maxItems={20} />
+          <div className="navigationSection">
+            <Title as="h3" look="h4" className="navigationTitle">
+              🏛️ Explorer par établissement
+            </Title>
+            <NavigationCards type="structures" maxItems={20} />
+          </div>
         </Col>
       </Row>
-    </Container>
+    </>
   );
 }

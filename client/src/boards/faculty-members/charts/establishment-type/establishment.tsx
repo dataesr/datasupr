@@ -53,10 +53,13 @@ function RenderData({ data }) {
 export function EstablishmentTypeChart() {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
-  const { context, contextId, contextName } = useContextDetection();
+  const { context, contextId } = useContextDetection();
   const [displayMode, setDisplayMode] = useState<"effectif" | "percentage">(
     "effectif"
   );
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "enseignant_chercheur" | "titulaire_non_chercheur" | "non_titulaire"
+  >("all");
   const { hasNonPermanentStaff } = useDataCompleteness();
 
   const {
@@ -67,6 +70,28 @@ export function EstablishmentTypeChart() {
     context,
     annee_universitaire: selectedYear,
     contextId,
+    status_filter: statusFilter !== "all" ? statusFilter : undefined,
+  });
+
+  const { data: enseignantChercheurData } = useEstablishmentTypeDistribution({
+    context,
+    annee_universitaire: selectedYear,
+    contextId,
+    status_filter: "enseignant_chercheur",
+  });
+
+  const { data: titulaireNonChercheurData } = useEstablishmentTypeDistribution({
+    context,
+    annee_universitaire: selectedYear,
+    contextId,
+    status_filter: "titulaire_non_chercheur",
+  });
+
+  const { data: nonTitulaireData } = useEstablishmentTypeDistribution({
+    context,
+    annee_universitaire: selectedYear,
+    contextId,
+    status_filter: "non_titulaire",
   });
 
   const largestEstablishmentType = useMemo(() => {
@@ -90,7 +115,13 @@ export function EstablishmentTypeChart() {
       size: "h3" as const,
       fr: (
         <>
-          {hasNonPermanentStaff
+          {statusFilter === "enseignant_chercheur"
+            ? "Comment les enseignants-chercheurs se répartissent selon le type d'établissement ?"
+            : statusFilter === "titulaire_non_chercheur"
+            ? "Comment les enseignants du secondaire affectés dans le supérieur se répartissent selon le type d'établissement ?"
+            : statusFilter === "non_titulaire"
+            ? "Comment les enseignants non permanents se répartissent selon le type d'établissement ?"
+            : hasNonPermanentStaff
             ? "Comment le personnel enseignant se répartit selon le type d'établissement ?"
             : "Comment les enseignants permanents se répartissent selon le type d'établissement ?"}
           &nbsp;
@@ -103,7 +134,17 @@ export function EstablishmentTypeChart() {
       fr: (
         <>
           Répartition des{" "}
-          {hasNonPermanentStaff ? (
+          {statusFilter === "enseignant_chercheur" ? (
+            <GlossaryTerm term="enseignant-chercheur">
+              enseignants-chercheurs
+            </GlossaryTerm>
+          ) : statusFilter === "titulaire_non_chercheur" ? (
+            <GlossaryTerm term="enseignant du secondaire affecté dans le supérieur">
+              enseignants du secondaire affectés dans le supérieur
+            </GlossaryTerm>
+          ) : statusFilter === "non_titulaire" ? (
+            <>enseignants non permanents</>
+          ) : hasNonPermanentStaff ? (
             <GlossaryTerm term="personnel enseignant">
               personnels enseignants
             </GlossaryTerm>
@@ -117,7 +158,7 @@ export function EstablishmentTypeChart() {
             établissements d'enseignement supérieur
           </GlossaryTerm>
           .
-          {!hasNonPermanentStaff && (
+          {!hasNonPermanentStaff && statusFilter === "all" && (
             <>
               <br />
               <strong>Note :</strong> Les données présentées ne concernent que
@@ -137,9 +178,25 @@ export function EstablishmentTypeChart() {
               <strong>
                 {largestEstablishmentType.total_count.toLocaleString()}
               </strong>{" "}
-              {hasNonPermanentStaff
-                ? "personnels enseignants"
-                : "enseignants permanents"}{" "}
+              {statusFilter === "enseignant_chercheur" ? (
+                <GlossaryTerm term="enseignant-chercheur">
+                  enseignants-chercheurs
+                </GlossaryTerm>
+              ) : statusFilter === "titulaire_non_chercheur" ? (
+                <GlossaryTerm term="enseignant du secondaire affecté dans le supérieur">
+                  enseignants du secondaire affectés dans le supérieur
+                </GlossaryTerm>
+              ) : statusFilter === "non_titulaire" ? (
+                <>enseignants non permanents</>
+              ) : hasNonPermanentStaff ? (
+                <GlossaryTerm term="personnels enseignants">
+                  personnels enseignants
+                </GlossaryTerm>
+              ) : (
+                <GlossaryTerm term="enseignants permanents">
+                  enseignants permanents
+                </GlossaryTerm>
+              )}{" "}
               dans les établissements de type "
               <strong>{largestEstablishmentType._id}</strong>".
             </>
@@ -201,6 +258,80 @@ export function EstablishmentTypeChart() {
     }));
   }, [establishmentData]);
 
+  const hasEnseignantChercheur = useMemo(() => {
+    return (
+      enseignantChercheurData?.establishment_type_distribution &&
+      enseignantChercheurData.establishment_type_distribution.length > 0 &&
+      enseignantChercheurData.establishment_type_distribution.some(
+        (et) => et.total_count > 0
+      )
+    );
+  }, [enseignantChercheurData]);
+
+  const hasTitulaireNonChercheur = useMemo(() => {
+    return (
+      titulaireNonChercheurData?.establishment_type_distribution &&
+      titulaireNonChercheurData.establishment_type_distribution.length > 0 &&
+      titulaireNonChercheurData.establishment_type_distribution.some(
+        (et) => et.total_count > 0
+      )
+    );
+  }, [titulaireNonChercheurData]);
+
+  const hasNonTitulaire = useMemo(() => {
+    return (
+      nonTitulaireData?.establishment_type_distribution &&
+      nonTitulaireData.establishment_type_distribution.length > 0 &&
+      nonTitulaireData.establishment_type_distribution.some(
+        (et) => et.total_count > 0
+      )
+    );
+  }, [nonTitulaireData]);
+
+  const availableStatusCount = useMemo(() => {
+    let count = 0;
+    if (hasEnseignantChercheur) count++;
+    if (hasTitulaireNonChercheur) count++;
+    if (hasNonTitulaire) count++;
+    return count;
+  }, [hasEnseignantChercheur, hasTitulaireNonChercheur, hasNonTitulaire]);
+
+  const shouldShowStatusFilters = availableStatusCount > 1;
+
+  const hasCurrentStatusData = useMemo(() => {
+    if (statusFilter === "all") return true;
+    if (statusFilter === "enseignant_chercheur") return hasEnseignantChercheur;
+    if (statusFilter === "titulaire_non_chercheur")
+      return hasTitulaireNonChercheur;
+    if (statusFilter === "non_titulaire") return hasNonTitulaire;
+    return false;
+  }, [
+    statusFilter,
+    hasEnseignantChercheur,
+    hasTitulaireNonChercheur,
+    hasNonTitulaire,
+  ]);
+
+  useMemo(() => {
+    if (!hasCurrentStatusData) {
+      if (availableStatusCount > 1) {
+        setStatusFilter("all");
+      } else if (hasEnseignantChercheur) {
+        setStatusFilter("enseignant_chercheur");
+      } else if (hasTitulaireNonChercheur) {
+        setStatusFilter("titulaire_non_chercheur");
+      } else if (hasNonTitulaire) {
+        setStatusFilter("non_titulaire");
+      }
+    }
+  }, [
+    hasCurrentStatusData,
+    availableStatusCount,
+    hasEnseignantChercheur,
+    hasTitulaireNonChercheur,
+    hasNonTitulaire,
+  ]);
+
   if (context === "structures" && contextId) {
     return null;
   }
@@ -221,12 +352,14 @@ export function EstablishmentTypeChart() {
     );
   }
 
+  if (!chartOptions && availableStatusCount === 0) {
+    return null;
+  }
+
   if (!chartOptions) {
     return (
       <div className="fr-text--center fr-py-3w">
-        <p>Aucune donnée disponible pour les types d'établissement</p>
-        {selectedYear && <p>Année : {selectedYear}</p>}
-        {contextId && <p>Contexte : {contextName} sélectionnée</p>}
+        <DefaultSkeleton />
       </div>
     );
   }
@@ -234,11 +367,62 @@ export function EstablishmentTypeChart() {
   return (
     <div>
       <div className="fr-mb-2w fr-flex fr-flex--center">
+        {shouldShowStatusFilters && (
+          <div className="fr-mr-4v">
+            <Button
+              size="sm"
+              onClick={() => setStatusFilter("all")}
+              variant={statusFilter === "all" ? undefined : "secondary"}
+              className="fr-mr-1v"
+            >
+              Tous
+            </Button>
+            {hasEnseignantChercheur && (
+              <Button
+                size="sm"
+                onClick={() => setStatusFilter("enseignant_chercheur")}
+                variant={
+                  statusFilter === "enseignant_chercheur"
+                    ? undefined
+                    : "secondary"
+                }
+                className="fr-mr-1v"
+              >
+                Ens.-chercheurs
+              </Button>
+            )}
+            {hasTitulaireNonChercheur && (
+              <Button
+                size="sm"
+                onClick={() => setStatusFilter("titulaire_non_chercheur")}
+                variant={
+                  statusFilter === "titulaire_non_chercheur"
+                    ? undefined
+                    : "secondary"
+                }
+                className="fr-mr-1v"
+              >
+                Ens. du 2nd degré
+              </Button>
+            )}
+            {hasNonTitulaire && (
+              <Button
+                size="sm"
+                onClick={() => setStatusFilter("non_titulaire")}
+                variant={
+                  statusFilter === "non_titulaire" ? undefined : "secondary"
+                }
+              >
+                Non permanents
+              </Button>
+            )}
+          </div>
+        )}
         <Button
           size="sm"
           onClick={() => setDisplayMode("effectif")}
           variant={displayMode === "effectif" ? undefined : "secondary"}
-          className="fr-mr-2v"
+          className="fr-mr-2v fr-mt-1w"
         >
           Effectifs
         </Button>
@@ -246,7 +430,7 @@ export function EstablishmentTypeChart() {
           size="sm"
           onClick={() => setDisplayMode("percentage")}
           variant={displayMode === "percentage" ? undefined : "secondary"}
-          className="fr-mr-2v"
+          className="fr-mr-2v fr-mt-1w"
         >
           Pourcentage
         </Button>

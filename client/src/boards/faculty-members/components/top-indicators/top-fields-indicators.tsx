@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useContextDetection } from "../../utils";
 import { useTopIndicators } from "./use-top-indicators";
 import { formatToPercent } from "../../../../utils/format";
-import { Row, Text, Title } from "@dataesr/dsfr-plus";
+import { Row, Title } from "@dataesr/dsfr-plus";
 
 const TopItemsIndicators: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -177,15 +177,6 @@ const TopItemsIndicators: React.FC = () => {
           );
         })}
       </div>
-      <Row horizontalAlign="center" style={{ marginTop: "auto" }}>
-        <Text size="sm">
-          <i>
-            Ces indicateurs sont calculés pour l'année universitaire{" "}
-            {selectedYear} Dans l'effectif il y a tous les enseignants, tout
-            status confondus (permanents, contractuels, vacataires, etc.)
-          </i>
-        </Text>
-      </Row>
     </div>
   );
 };

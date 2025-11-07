@@ -33,7 +33,7 @@ export function GlossaryTerm({ term, children }: GlossaryTermProps) {
           {children || entry.title}
         </span>
         <span
-          className="fr-tooltip fr-placement"
+          className="fr-tooltip fr-placement fr-tooltip--bottom"
           id={tooltipId}
           role="tooltip"
           aria-hidden="true"
