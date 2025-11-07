@@ -2,43 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import { getData } from "./query";
-import { useGetParams } from "./utils";
+import { readingKey, useGetParams } from "./utils";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
-
-const config = {
-  id: "top10beneficiaries",
-  idQuery: "top10beneficiaries",
-  comment: {
-    fr: (
-      <>
-        Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des subventions reçues. La courbe
-        correspond au cumul des subventions allouées.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the positioning of the selected country compared to other countries based on the subsidies received. The curve corresponds to
-        the cumulative subsidies allocated.
-      </>
-    ),
-  },
-  readingKey: {
-    //TODO: add reading key
-    fr: <>readingKey</>,
-    en: <>readingKey en</>,
-  },
-  source: EPChartsSource,
-  updateDate: EPChartsUpdateDate,
-  title: {
-    fr: "Classement des bénéficiaires",
-    en: "Beneficiaries ranking",
-  },
-  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-beneficiaries",
-};
 
 export default function Top10Beneficiaries() {
   const [searchParams] = useSearchParams();
@@ -46,11 +15,40 @@ export default function Top10Beneficiaries() {
   const params = useGetParams();
 
   const { data, isLoading } = useQuery({
-    queryKey: [config.idQuery, params],
+    queryKey: ["top10beneficiaries", params],
     queryFn: () => getData(params),
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
+
+  const config = {
+    id: "top10beneficiaries",
+    idQuery: "top10beneficiaries",
+    comment: {
+      fr: (
+        <>
+          Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des subventions reçues. La courbe
+          correspond au cumul des subventions allouées. Seuls les 10 premiers bénéficiaires sont affichés, le pays sélectionné étant ajouté en 10ème
+          position s'il n'en fait pas partie.
+        </>
+      ),
+      en: (
+        <>
+          This chart shows the positioning of the selected country compared to other countries based on the subsidies received. The curve corresponds
+          to the cumulative subsidies allocated. Only the top 10 beneficiaries are displayed, with the selected country added in 10th position if it
+          is not already included.
+        </>
+      ),
+    },
+    readingKey: readingKey(data),
+    source: EPChartsSource,
+    updateDate: EPChartsUpdateDate,
+    title: {
+      fr: "Classement des bénéficiaires",
+      en: "Beneficiaries ranking",
+    },
+    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-beneficiaries",
+  };
 
   const prepareData = (data) => {
     // Add selected country if it is not in the top 10
