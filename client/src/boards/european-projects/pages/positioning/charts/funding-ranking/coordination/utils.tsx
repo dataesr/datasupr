@@ -37,3 +37,33 @@ export function useGetParams() {
 
   return params.join("&");
 }
+
+export function readingKey(data) {
+  if (!data || data.length === 0) {
+    return {
+      fr: <></>,
+      en: <></>,
+    };
+  }
+
+  // Trouver les pays avec le nombre de coordinations le plus élevé
+  const topEvaluated = data.find((item) => item.rank_coordination_number_evaluated === 1);
+  const topSuccessful = data.find((item) => item.rank_coordination_number_successful === 1);
+
+  return {
+    fr: (
+      <>
+        Le pays "<strong>{topEvaluated.name_fr}</strong>" est le pays qui a le plus grand nombre de coordinations évaluées (
+        <strong>{topEvaluated.total_coordination_number_evaluated}</strong>) tandis que le pays "<strong>{topSuccessful.name_fr}</strong>" est celui
+        qui a le plus grand nombre de coordinations réussies (<strong>{topSuccessful.total_coordination_number_successful}</strong>).
+      </>
+    ),
+    en: (
+      <>
+        In this ranking, the country "<strong>{topEvaluated.name_en}</strong>" has the highest number of evaluated coordinations (
+        <strong>{topEvaluated.total_coordination_number_evaluated}</strong>), while the country "<strong>{topSuccessful.name_en}</strong>" has the
+        highest number of successful coordinations (<strong>{topSuccessful.total_coordination_number_successful}</strong>).
+      </>
+    ),
+  };
+}

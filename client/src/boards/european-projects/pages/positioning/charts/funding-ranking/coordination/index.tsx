@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
-import { useGetParams } from "./utils";
+import { readingKey, useGetParams } from "./utils";
 import optionsCoordinationNumber from "./options-coordination_number";
 import optionCoordinationNumberSuccessRate from "./options-coordination_number-succes-rate";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
@@ -17,16 +17,6 @@ import i18nLocal from "./i18n.json";
 import ChartFooter from "../../../../../../../components/chart-footer/index.js";
 import Callout from "../../../../../../../components/callout.js";
 
-const configChart2a = {
-  id: "fundingRankingCoordination",
-  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
-};
-
-const configChart2b = {
-  id: "fundingRankingCoordinationSuccessRate",
-  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
-};
-
 export default function FundingRankingCoordination() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
@@ -39,6 +29,16 @@ export default function FundingRankingCoordination() {
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
+
+  const configChart2a = {
+    id: "fundingRankingCoordination",
+    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+  };
+
+  const configChart2b = {
+    id: "fundingRankingCoordinationSuccessRate",
+    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+  };
 
   const prepareData = (data, sortKey) => {
     data.sort((a, b) => b[sortKey] - a[sortKey]);
@@ -111,7 +111,7 @@ export default function FundingRankingCoordination() {
         </Col>
       </Row>
       <Row className="chart-container chart-container--pillars">
-        <Col>
+        <Col md={6}>
           <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
             {getI18nLabel("configChart2a-title")}
           </Title>
@@ -122,7 +122,7 @@ export default function FundingRankingCoordination() {
             renderData={() => null} // TODO: add data table
           />
         </Col>
-        <Col>
+        <Col md={6}>
           <Title as="h3" look="h5" style={{ minHeight: "4.5rem", lineHeight: "1.5rem" }} className="fr-mb-0">
             {getI18nLabel("configChart2b-title")}
           </Title>
@@ -151,21 +151,7 @@ export default function FundingRankingCoordination() {
                 </>
               ),
             }}
-            readingKey={{
-              fr: (
-                <>
-                  Le pays "..." se place en 1ère position du classement en ce qui concerne le nombre de coordinations de projets déposés et se classe
-                  3ème en ce qui concerne le nombre de coordinations lauréates. Le taux de succès correspondant est de ...%. Ce graphique affiche
-                  aussi la moyenne des taux de succès, elle est de ...%.
-                </>
-              ),
-              en: (
-                <>
-                  The country "..." ranks 1st in the ranking for the number of project coordinations submitted and ranks 3rd for winning
-                  coordinations. The corresponding success rate is ...%. This chart also shows the average success rates, which is ...%.
-                </>
-              ),
-            }}
+            readingKey={readingKey(data)}
             source={EPChartsSource}
             updateDate={EPChartsUpdateDate}
           />
