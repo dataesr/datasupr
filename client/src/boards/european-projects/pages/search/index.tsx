@@ -248,7 +248,7 @@ export default function Search() {
                 <PillarCard
                   description="Description de la carte"
                   title={pillar[`label_${currentLang}`]}
-                  to={`/european-projects/overview?view=program&pillarId=${pillar.id}`}
+                  to={`/european-projects/overview?view=synthesis|program&pillarId=${pillar.id}`}
                 />
               </Col>
             ))}

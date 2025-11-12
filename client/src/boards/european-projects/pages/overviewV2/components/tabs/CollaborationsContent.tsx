@@ -24,18 +24,21 @@ export default function CollaborationsContent({ contentType }: CollaborationsCon
     case "destination-detail":
       return (
         <div>
-          <CountriesCollaborationsBubble />
+          <Row>
+            <Col>Carte de flux à ajouter ici</Col>
+          </Row>
           <Row>
             <Col>
               <CountriesCollaborationsTable />
             </Col>
             <Col>
               <CountryNeighbourgs />
-              <br />
-              <br />
-              <br />
-              Carte de flux à ajouter ici
             </Col>
+            <Row>
+              <Col>
+                <CountriesCollaborationsBubble />
+              </Col>
+            </Row>
           </Row>
           <Row className="fr-mt-5w">
             <Col>

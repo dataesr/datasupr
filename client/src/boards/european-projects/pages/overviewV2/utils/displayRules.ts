@@ -1,5 +1,6 @@
 // Types pour les conditions d'affichage
 export interface ViewConditions {
+  activeTab: "synthesis" | "positioning" | "collaborations";
   view: string;
   pillarId: string | null;
   programId: string | null;

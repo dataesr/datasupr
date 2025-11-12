@@ -17,7 +17,11 @@ interface FilterItem {
 export default function EpNavigator() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const view = searchParams.get("view");
+  const viewParam = searchParams.get("view") || "";
+
+  // Extraire le tab et la vue du paramètre composé (ex: "synthesis|program")
+  const [activeTab, view] = viewParam.includes("|") ? viewParam.split("|") : ["synthesis", viewParam || "pillar"];
+
   const pillarId = searchParams.get("pillarId") || undefined;
   const programId = searchParams.get("programId") || undefined;
   const thematicIds = searchParams.get("thematicIds") || undefined;
@@ -124,17 +128,22 @@ export default function EpNavigator() {
         newSearchParams.delete(param);
       });
 
-      // Ajouter les paramètres corrigés
+      // Ajouter les paramètres corrigés avec le format tab|view
       Object.entries(cleanParams(correctedParams)).forEach(([key, value]) => {
         if (value) {
-          newSearchParams.set(key, value);
+          if (key === "view") {
+            // Reconstruire le paramètre view avec le tab actif
+            newSearchParams.set(key, buildViewParam(value, activeTab));
+          } else {
+            newSearchParams.set(key, value);
+          }
         }
       });
 
       // Mettre à jour l'URL sans déclencher une navigation
       setSearchParams(newSearchParams);
     }
-  }, [view, pillarId, programId, thematicIds, destinationIds, searchParams, setSearchParams]);
+  }, [view, pillarId, programId, thematicIds, destinationIds, searchParams, setSearchParams, activeTab]);
 
   // Synchroniser les états temporaires avec les paramètres d'URL
   useEffect(() => {
@@ -186,6 +195,11 @@ export default function EpNavigator() {
     setSearchParams(newParams);
   };
 
+  // Fonction helper pour construire le paramètre view composé (tab|view)
+  const buildViewParam = (contentView: string, tab: string = "synthesis") => {
+    return `${tab}|${contentView}`;
+  };
+
   // Fonctions pour ouvrir/fermer les modales
   const openModal = (modalType: keyof typeof modals) => {
     // Réinitialiser les sélections temporaires avec les valeurs actuelles avant d'ouvrir la modale
@@ -214,7 +228,7 @@ export default function EpNavigator() {
 
       updateUrlParams({
         pillarId: selectedPillar,
-        view: "program",
+        view: buildViewParam("program", activeTab),
         // Reset des paramètres suivants
         programId: undefined,
         thematicIds: undefined,
@@ -232,7 +246,7 @@ export default function EpNavigator() {
 
       updateUrlParams({
         programId: selectedProgram,
-        view: "thematic",
+        view: buildViewParam("thematic", activeTab),
         // Reset des paramètres suivants
         thematicIds: undefined,
         destinationIds: undefined,
@@ -248,7 +262,7 @@ export default function EpNavigator() {
 
       updateUrlParams({
         thematicIds: selectedThematics.join(","),
-        view: "destination",
+        view: buildViewParam("destination", activeTab),
         // Reset des paramètres suivants
         destinationIds: undefined,
       });
@@ -260,7 +274,7 @@ export default function EpNavigator() {
     if (selectedDestinations.length > 0) {
       updateUrlParams({
         destinationIds: selectedDestinations.join(","),
-        view: "destination",
+        view: buildViewParam("destination", activeTab),
       });
     }
     closeModal("destinations");
@@ -278,7 +292,7 @@ export default function EpNavigator() {
       programId: undefined,
       thematicIds: undefined,
       destinationIds: undefined,
-      view: "pillar",
+      view: buildViewParam("pillar", activeTab),
     });
     closeModal("pillar");
   };
@@ -292,7 +306,7 @@ export default function EpNavigator() {
       programId: undefined,
       thematicIds: undefined,
       destinationIds: undefined,
-      view: "program",
+      view: buildViewParam("program", activeTab),
     });
     closeModal("programs");
   };
@@ -304,7 +318,7 @@ export default function EpNavigator() {
     updateUrlParams({
       thematicIds: undefined,
       destinationIds: undefined,
-      view: "thematic",
+      view: buildViewParam("thematic", activeTab),
     });
     closeModal("thematiques");
   };

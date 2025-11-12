@@ -71,7 +71,7 @@ export default function Home() {
                 description={getI18nLabel(`${pillar.id}-description`)}
                 title={pillar[`label_${currentLang}`]}
                 subtitle={pillar.id}
-                to={`/european-projects/overview?view=program&pillarId=${pillar.id}`}
+                to={`/european-projects/overview?view=synthesis|program&pillarId=${pillar.id}`}
               />
             </Col>
           ))}
