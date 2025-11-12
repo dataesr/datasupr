@@ -46,29 +46,81 @@ export function readingKey(data) {
     };
   }
 
-  // Trouver les pays avec les montants de subventions les plus élevés
-  const topEvaluated = data.find((item) => item.rank_evaluated === 1);
-  const topSuccessful = data.find((item) => item.rank_successful === 1);
+  // Prendre le premier pays de la liste
+  const firstCountry = data[0];
 
-  // Formater les montants en millions d'euros
-  const formatAmount = (amount) => {
-    return (amount / 1000000).toFixed(1);
+  // Fonction pour obtenir le suffixe ordinal
+  const getOrdinal = (rank, lang) => {
+    if (lang === "fr") {
+      return rank === 1 ? "ère" : "ème";
+    }
+    if (rank === 1) return "st";
+    if (rank === 2) return "nd";
+    if (rank === 3) return "rd";
+    return "th";
   };
 
   return {
     fr: (
       <>
-        Le pays "<strong>{topEvaluated.name_fr}</strong>" est le pays qui a demandé le montant le plus élevé de subventions pour les projets évalués (
-        <strong>{formatAmount(topEvaluated.total_evaluated)} M€</strong>) tandis que le pays "<strong>{topSuccessful.name_fr}</strong>" est celui qui
-        a obtenu le montant le plus élevé de subventions pour les projets réussis (<strong>{formatAmount(topSuccessful.total_successful)} M€</strong>
-        ).
+        {firstCountry.rank_evaluated === firstCountry.rank_successful ? (
+          <>
+            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            <strong>
+              {firstCountry.rank_evaluated}
+              {getOrdinal(firstCountry.rank_evaluated, "fr")}
+            </strong>{" "}
+            position pour la demande de subventions (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) ainsi que pour les
+            subventions allouées (<strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>). Son taux de succès est de{" "}
+            <strong>{firstCountry.ratio.toFixed(1)}%</strong>.
+          </>
+        ) : (
+          <>
+            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            <strong>
+              {firstCountry.rank_evaluated}
+              {getOrdinal(firstCountry.rank_evaluated, "fr")}
+            </strong>{" "}
+            position pour la demande de subventions (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) alors qu'il arrive en{" "}
+            <strong>
+              {firstCountry.rank_successful}
+              {getOrdinal(firstCountry.rank_successful, "fr")}
+            </strong>{" "}
+            position pour les subventions allouées (<strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>). Le taux de succès est
+            de <strong>{firstCountry.ratio.toFixed(1)}%</strong>.
+          </>
+        )}
       </>
     ),
     en: (
       <>
-        In this ranking, the country "<strong>{topEvaluated.name_en}</strong>" has requested the highest amount of subsidies for evaluated projects (
-        <strong>{formatAmount(topEvaluated.total_evaluated)} M€</strong>), while the country "<strong>{topSuccessful.name_en}</strong>" has obtained
-        the highest amount of subsidies for successful projects (<strong>{formatAmount(topSuccessful.total_successful)} M€</strong>).
+        {firstCountry.rank_evaluated === firstCountry.rank_successful ? (
+          <>
+            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            <strong>
+              {firstCountry.rank_evaluated}
+              {getOrdinal(firstCountry.rank_evaluated, "en")}
+            </strong>{" "}
+            for subsidy requests (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) as well as for allocated subsidies (
+            <strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>). Its success rate is{" "}
+            <strong>{firstCountry.ratio.toFixed(1)}%</strong>.
+          </>
+        ) : (
+          <>
+            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            <strong>
+              {firstCountry.rank_evaluated}
+              {getOrdinal(firstCountry.rank_evaluated, "en")}
+            </strong>{" "}
+            for subsidy requests (<strong>{(firstCountry.total_evaluated / 1000000).toFixed(1)} M€</strong>) while it ranks{" "}
+            <strong>
+              {firstCountry.rank_successful}
+              {getOrdinal(firstCountry.rank_successful, "en")}
+            </strong>{" "}
+            for allocated subsidies (<strong>{(firstCountry.total_successful / 1000000).toFixed(1)} M€</strong>). The success rate is{" "}
+            <strong>{firstCountry.ratio.toFixed(1)}%</strong>.
+          </>
+        )}
       </>
     ),
   };

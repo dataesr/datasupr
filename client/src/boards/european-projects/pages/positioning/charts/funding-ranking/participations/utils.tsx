@@ -45,24 +45,82 @@ export function readingKey(data) {
       en: <></>,
     };
   }
+  // Prendre le premier pays de la liste
+  const firstCountry = data[0];
 
-  // Trouver les pays avec le nombre de participants le plus élevé
-  const topEvaluated = data.find((item) => item.rank_involved_evaluated === 1);
-  const topSuccessful = data.find((item) => item.rank_involved_successful === 1);
+  // Fonction pour obtenir le suffixe ordinal
+  const getOrdinal = (rank, lang) => {
+    if (lang === "fr") {
+      return rank === 1 ? "ère" : "ème";
+    }
+    if (rank === 1) return "st";
+    if (rank === 2) return "nd";
+    if (rank === 3) return "rd";
+    return "th";
+  };
 
   return {
     fr: (
       <>
-        Le pays "<strong>{topEvaluated.name_fr}</strong>" est le pays qui a le plus grand nombre de participants impliqués dans les projets évalués (
-        <strong>{topEvaluated.total_number_involved_evaluated}</strong>) tandis que le pays "<strong>{topSuccessful.name_fr}</strong>" est celui qui a
-        le plus grand nombre de participants impliqués dans les projets réussis (<strong>{topSuccessful.total_number_involved_successful}</strong>).
+        {firstCountry.rank_involved_evaluated === firstCountry.rank_involved_successful ? (
+          <>
+            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            <strong>
+              {firstCountry.rank_involved_evaluated}
+              {getOrdinal(firstCountry.rank_involved_evaluated, "fr")}
+            </strong>{" "}
+            position pour le nombre de participants dans les projets évalués (<strong>{firstCountry.total_number_involved_evaluated}</strong>) ainsi
+            que pour les participants dans les projets réussis (<strong>{firstCountry.total_number_involved_successful}</strong>). Son taux de succès
+            est de <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
+          </>
+        ) : (
+          <>
+            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            <strong>
+              {firstCountry.rank_involved_evaluated}
+              {getOrdinal(firstCountry.rank_involved_evaluated, "fr")}
+            </strong>{" "}
+            position pour le nombre de participants dans les projets évalués (<strong>{firstCountry.total_number_involved_evaluated}</strong>) alors
+            qu'il arrive en{" "}
+            <strong>
+              {firstCountry.rank_involved_successful}
+              {getOrdinal(firstCountry.rank_involved_successful, "fr")}
+            </strong>{" "}
+            position pour les participants dans les projets réussis (<strong>{firstCountry.total_number_involved_successful}</strong>). Le taux de
+            succès est de <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
+          </>
+        )}
       </>
     ),
     en: (
       <>
-        In this ranking, the country "<strong>{topEvaluated.name_en}</strong>" has the highest number of participants involved in evaluated projects (
-        <strong>{topEvaluated.total_number_involved_evaluated}</strong>), while the country "<strong>{topSuccessful.name_en}</strong>" has the highest
-        number of participants involved in successful projects (<strong>{topSuccessful.total_number_involved_successful}</strong>).
+        {firstCountry.rank_involved_evaluated === firstCountry.rank_involved_successful ? (
+          <>
+            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            <strong>
+              {firstCountry.rank_involved_evaluated}
+              {getOrdinal(firstCountry.rank_involved_evaluated, "en")}
+            </strong>{" "}
+            for the number of participants in evaluated projects (<strong>{firstCountry.total_number_involved_evaluated}</strong>) as well as for
+            participants in successful projects (<strong>{firstCountry.total_number_involved_successful}</strong>). Its success rate is{" "}
+            <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
+          </>
+        ) : (
+          <>
+            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            <strong>
+              {firstCountry.rank_involved_evaluated}
+              {getOrdinal(firstCountry.rank_involved_evaluated, "en")}
+            </strong>{" "}
+            for the number of participants in evaluated projects (<strong>{firstCountry.total_number_involved_evaluated}</strong>) while it ranks{" "}
+            <strong>
+              {firstCountry.rank_involved_successful}
+              {getOrdinal(firstCountry.rank_involved_successful, "en")}
+            </strong>{" "}
+            for participants in successful projects (<strong>{firstCountry.total_number_involved_successful}</strong>). The success rate is{" "}
+            <strong>{firstCountry.ratio_involved.toFixed(1)}%</strong>.
+          </>
+        )}
       </>
     ),
   };

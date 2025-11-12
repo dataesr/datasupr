@@ -46,23 +46,82 @@ export function readingKey(data) {
     };
   }
 
-  // Trouver les pays avec le nombre de coordinations le plus élevé
-  const topEvaluated = data.find((item) => item.rank_coordination_number_evaluated === 1);
-  const topSuccessful = data.find((item) => item.rank_coordination_number_successful === 1);
+  // Prendre le premier pays de la liste
+  const firstCountry = data[0];
+
+  // Fonction pour obtenir le suffixe ordinal
+  const getOrdinal = (rank, lang) => {
+    if (lang === "fr") {
+      return rank === 1 ? "ère" : "ème";
+    }
+    if (rank === 1) return "st";
+    if (rank === 2) return "nd";
+    if (rank === 3) return "rd";
+    return "th";
+  };
 
   return {
     fr: (
       <>
-        Le pays "<strong>{topEvaluated.name_fr}</strong>" est le pays qui a le plus grand nombre de coordinations évaluées (
-        <strong>{topEvaluated.total_coordination_number_evaluated}</strong>) tandis que le pays "<strong>{topSuccessful.name_fr}</strong>" est celui
-        qui a le plus grand nombre de coordinations réussies (<strong>{topSuccessful.total_coordination_number_successful}</strong>).
+        {firstCountry.rank_coordination_number_evaluated === firstCountry.rank_coordination_number_successful ? (
+          <>
+            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            <strong>
+              {firstCountry.rank_coordination_number_evaluated}
+              {getOrdinal(firstCountry.rank_coordination_number_evaluated, "fr")}
+            </strong>{" "}
+            position pour le nombre de coordinations évaluées (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) ainsi que pour les
+            coordinations réussies (<strong>{firstCountry.total_coordination_number_successful}</strong>). Son taux de succès est de{" "}
+            <strong>{firstCountry.ratio_coordination_number.toFixed(1)}%</strong>.
+          </>
+        ) : (
+          <>
+            Le pays "<strong>{firstCountry.name_fr}</strong>" arrive en{" "}
+            <strong>
+              {firstCountry.rank_coordination_number_evaluated}
+              {getOrdinal(firstCountry.rank_coordination_number_evaluated, "fr")}
+            </strong>{" "}
+            position pour le nombre de coordinations évaluées (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) alors qu'il arrive
+            en{" "}
+            <strong>
+              {firstCountry.rank_coordination_number_successful}
+              {getOrdinal(firstCountry.rank_coordination_number_successful, "fr")}
+            </strong>{" "}
+            position pour les coordinations réussies (<strong>{firstCountry.total_coordination_number_successful}</strong>). Le taux de succès est de{" "}
+            <strong>{firstCountry.ratio_coordination_number.toFixed(1)}%</strong>.
+          </>
+        )}
       </>
     ),
     en: (
       <>
-        In this ranking, the country "<strong>{topEvaluated.name_en}</strong>" has the highest number of evaluated coordinations (
-        <strong>{topEvaluated.total_coordination_number_evaluated}</strong>), while the country "<strong>{topSuccessful.name_en}</strong>" has the
-        highest number of successful coordinations (<strong>{topSuccessful.total_coordination_number_successful}</strong>).
+        {firstCountry.rank_coordination_number_evaluated === firstCountry.rank_coordination_number_successful ? (
+          <>
+            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            <strong>
+              {firstCountry.rank_coordination_number_evaluated}
+              {getOrdinal(firstCountry.rank_coordination_number_evaluated, "en")}
+            </strong>{" "}
+            for the number of evaluated coordinations (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) as well as for successful
+            coordinations (<strong>{firstCountry.total_coordination_number_successful}</strong>). Its success rate is{" "}
+            <strong>{firstCountry.ratio_coordination_number.toFixed(1)}%</strong>.
+          </>
+        ) : (
+          <>
+            The country "<strong>{firstCountry.name_en}</strong>" ranks{" "}
+            <strong>
+              {firstCountry.rank_coordination_number_evaluated}
+              {getOrdinal(firstCountry.rank_coordination_number_evaluated, "en")}
+            </strong>{" "}
+            for the number of evaluated coordinations (<strong>{firstCountry.total_coordination_number_evaluated}</strong>) while it ranks{" "}
+            <strong>
+              {firstCountry.rank_coordination_number_successful}
+              {getOrdinal(firstCountry.rank_coordination_number_successful, "en")}
+            </strong>{" "}
+            for successful coordinations (<strong>{firstCountry.total_coordination_number_successful}</strong>). The success rate is{" "}
+            <strong>{firstCountry.ratio_coordination_number.toFixed(1)}%</strong>.
+          </>
+        )}
       </>
     ),
   };
