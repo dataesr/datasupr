@@ -37,3 +37,33 @@ export function useGetParams() {
 
   return params.join("&");
 }
+
+export function readingKey(data) {
+  if (!data || data.length === 0) {
+    return {
+      fr: <></>,
+      en: <></>,
+    };
+  }
+
+  // Trouver les pays avec le nombre de participants le plus élevé
+  const topEvaluated = data.find((item) => item.rank_involved_evaluated === 1);
+  const topSuccessful = data.find((item) => item.rank_involved_successful === 1);
+
+  return {
+    fr: (
+      <>
+        Le pays "<strong>{topEvaluated.name_fr}</strong>" est le pays qui a le plus grand nombre de participants impliqués dans les projets évalués (
+        <strong>{topEvaluated.total_number_involved_evaluated}</strong>) tandis que le pays "<strong>{topSuccessful.name_fr}</strong>" est celui qui a
+        le plus grand nombre de participants impliqués dans les projets réussis (<strong>{topSuccessful.total_number_involved_successful}</strong>).
+      </>
+    ),
+    en: (
+      <>
+        In this ranking, the country "<strong>{topEvaluated.name_en}</strong>" has the highest number of participants involved in evaluated projects (
+        <strong>{topEvaluated.total_number_involved_evaluated}</strong>), while the country "<strong>{topSuccessful.name_en}</strong>" has the highest
+        number of participants involved in successful projects (<strong>{topSuccessful.total_number_involved_successful}</strong>).
+      </>
+    ),
+  };
+}

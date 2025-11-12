@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
-import { useGetParams } from "./utils";
+import { readingKey, useGetParams } from "./utils";
 import optionsNumberInvolved from "./options-number_involved";
 import optionNumberInvolvedSuccessRate from "./options-number_involved-succes-rate";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
@@ -139,34 +139,20 @@ export default function FundingRankingParticipations() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de candidats et de
-                  participants. La barre bleue correspond aux candidats, la barre verte aux participants. Le taux de succès compare le pays
-                  sélectionné avec la moyenne européenne.
+                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction du nombre de participants
+                  impliqués dans les projets évalués et réussis. La barre bleue correspond aux participants dans les projets évalués, la barre verte
+                  aux participants dans les projets réussis. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the number of candidates and
-                  participants. The blue bar corresponds to candidates, the green bar to participants. The success rate compares the selected country
-                  with the European average.
+                  This chart shows the positioning of the selected country compared to other countries based on the number of participants involved in
+                  evaluated and successful projects. The blue bar corresponds to participants in evaluated projects, the green bar to participants in
+                  successful projects. The success rate compares the selected country with the European average.
                 </>
               ),
             }}
-            readingKey={{
-              fr: (
-                <>
-                  Le pays "..." se place en 1ère position du classement en ce qui concerne le nombre de candidats et se classe 3ème en ce qui concerne
-                  le nombre de participants. Le taux de succès correspondant est de ...%. Ce graphique affiche aussi la moyenne des taux de succès,
-                  elle est de ...%.
-                </>
-              ),
-              en: (
-                <>
-                  The country "..." ranks 1st in the ranking for the number of candidates and ranks 3rd for the number of participants. The
-                  corresponding success rate is ...%. This chart also shows the average success rates, which is ...%.
-                </>
-              ),
-            }}
+            readingKey={readingKey(data)}
             source={EPChartsSource}
             updateDate={EPChartsUpdateDate}
           />
