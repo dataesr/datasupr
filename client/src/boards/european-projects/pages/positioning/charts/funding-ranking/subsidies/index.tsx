@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
-import { useGetParams } from "./utils";
+import { readingKey, useGetParams } from "./utils";
 import optionsSub from "./options";
 import optionSubSuccessRate from "./options-succes-rate";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
@@ -137,34 +137,20 @@ export default function FundingRankingSubsidies() {
             comment={{
               fr: (
                 <>
-                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des montants demandés et
-                  obtenus. La barre bleue correspond aux montants demandés, la barre verte aux montants obtenus. La part est obtenue en divisant le
-                  montant obtenu par le montant demandé.
+                  Ce graphique représente le positionnement du pays sélectionné par rapport aux autres pays en fonction des montants de subventions
+                  demandés et obtenus. La barre bleue correspond aux montants demandés pour les projets évalués, la barre verte aux montants obtenus
+                  pour les projets réussis. Le taux de succès compare le pays sélectionné avec la moyenne européenne.
                 </>
               ),
               en: (
                 <>
-                  This chart shows the positioning of the selected country compared to other countries based on the amounts requested and obtained.
-                  The blue bar corresponds to the amounts requested, the green bar to the amounts obtained. The share is obtained by dividing the
-                  amount obtained by the amount requested.
+                  This chart shows the positioning of the selected country compared to other countries based on the amounts of subsidies requested and
+                  obtained. The blue bar corresponds to the amounts requested for evaluated projects, the green bar to the amounts obtained for
+                  successful projects. The success rate compares the selected country with the European average.
                 </>
               ),
             }}
-            readingKey={{
-              fr: (
-                <>
-                  Le pays "..." se place en 1ère position du classement en ce qui concerne les demandes de financements des projets évalués et se
-                  classe 3ème en ce qui concerne les financements obtenus. Le taux de succès corespondant est de ...%. Ce graphique affiche aussi la
-                  moyenne des taux de succès, elle est de ...%.
-                </>
-              ),
-              en: (
-                <>
-                  The country "..." ranks 1st in the ranking for funding requests of evaluated projects and ranks 3rd for obtained funding. The
-                  corresponding success rate is ...%. This chart also shows the average success rates, which is ...%.
-                </>
-              ),
-            }}
+            readingKey={readingKey(data)}
             source={EPChartsSource}
             updateDate={EPChartsUpdateDate}
           />

@@ -37,3 +37,39 @@ export function useGetParams() {
 
   return params.join("&");
 }
+
+export function readingKey(data) {
+  if (!data || data.length === 0) {
+    return {
+      fr: <></>,
+      en: <></>,
+    };
+  }
+
+  // Trouver les pays avec les montants de subventions les plus élevés
+  const topEvaluated = data.find((item) => item.rank_evaluated === 1);
+  const topSuccessful = data.find((item) => item.rank_successful === 1);
+
+  // Formater les montants en millions d'euros
+  const formatAmount = (amount) => {
+    return (amount / 1000000).toFixed(1);
+  };
+
+  return {
+    fr: (
+      <>
+        Le pays "<strong>{topEvaluated.name_fr}</strong>" est le pays qui a demandé le montant le plus élevé de subventions pour les projets évalués (
+        <strong>{formatAmount(topEvaluated.total_evaluated)} M€</strong>) tandis que le pays "<strong>{topSuccessful.name_fr}</strong>" est celui qui
+        a obtenu le montant le plus élevé de subventions pour les projets réussis (<strong>{formatAmount(topSuccessful.total_successful)} M€</strong>
+        ).
+      </>
+    ),
+    en: (
+      <>
+        In this ranking, the country "<strong>{topEvaluated.name_en}</strong>" has requested the highest amount of subsidies for evaluated projects (
+        <strong>{formatAmount(topEvaluated.total_evaluated)} M€</strong>), while the country "<strong>{topSuccessful.name_en}</strong>" has obtained
+        the highest amount of subsidies for successful projects (<strong>{formatAmount(topSuccessful.total_successful)} M€</strong>).
+      </>
+    ),
+  };
+}
