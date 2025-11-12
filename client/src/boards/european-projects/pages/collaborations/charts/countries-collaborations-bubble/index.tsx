@@ -26,10 +26,6 @@ export default function CountriesCollaborationsBubble() {
   const configChart = {
     id: "CountriesCollaborationsBubble",
     queryId: "CountriesCollaborations",
-    title: {
-      fr: `Top ${nbToShow} des pays ayant collaborés avec le pays sélectionné`,
-      en: "Countries that collaborated with the selected country",
-    },
     integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
   };
 
@@ -48,9 +44,11 @@ export default function CountriesCollaborationsBubble() {
   return (
     <Container fluid className="fr-mt-5w">
       <Row>
-        <Col>
+        <Col md={8}>
           <Title as="h2" look="h4">
-            {getI18nLabel("title-1")}
+            {`Top ${nbToShow} ${
+              currentLang === "fr" ? "des pays ayant collaborés avec le pays sélectionné" : "of countries that collaborated with the selected country"
+            }`}
           </Title>
         </Col>
         <Col className="text-right">
