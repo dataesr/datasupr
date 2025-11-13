@@ -24,9 +24,12 @@ export default function CollaborationsContent({ contentType }: CollaborationsCon
     case "destination-detail":
       return (
         <div>
+          {/* TODO: Ajouter une carte de flux entre pays
           <Row>
-            <Col>Carte de flux à ajouter ici</Col>
-          </Row>
+            <Col>
+            <MapOfEuropeCollaborations />
+            </Col>
+          </Row> */}
           <Row>
             <Col>
               <CountriesCollaborationsTable />

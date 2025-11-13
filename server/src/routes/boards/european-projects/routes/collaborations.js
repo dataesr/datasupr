@@ -214,7 +214,6 @@ router.route(routesPrefix + "/get-collaborations-by-country").get(async (req, re
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
   }
-console.log("filters", filters);
 
   try {
     const collaborations = await db

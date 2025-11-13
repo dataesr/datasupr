@@ -1,6 +1,5 @@
-import { Badge, Breadcrumb, Button, Col, Container, Link, Modal, ModalContent, ModalTitle, Row, Text, Title } from "@dataesr/dsfr-plus";
-// import { useMutation, useQuery } from "@tanstack/react-query";
-import { useQuery } from "@tanstack/react-query";
+import { Badge, Breadcrumb, Button, Col, Container, Link, Row, Text, Title } from "@dataesr/dsfr-plus";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { queryClient } from "../../main";
 import { useState } from "react";
@@ -20,66 +19,108 @@ const formatCreationDate = (timestamp: number | null) => {
   });
 };
 
-// function DashboardCard({ dashboard, nbMessages }) {
-//   return (
-//     <div className="fr-card fr-enlarge-link">
-//       <div className="fr-card__body">
-//         <div className="fr-card__content">
-//           <h2 className="fr-card__title">
-//             <Link href={`/admin/${dashboard.id}`}>{dashboard.name}</Link>
-//             <br />
-//             <Badge color="green-emeraude">{`${dashboard?.data?.length} collections`}</Badge>
-//             <p className="fr-m-0">
-//               {nbMessages > 0 && (
-//                 <Badge className="fr-mt-1w" color="brown-caramel" icon="mail-line">
-//                   {`${nbMessages} message${nbMessages > 1 ? "s" : ""} ticketOffice`}
-//                 </Badge>
-//               )}
-//             </p>
-//           </h2>
-//           <p>{dashboard.description}</p>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
-
 export default function Home() {
+  const [successMessages, setSuccessMessages] = useState<Map<string, string>>(new Map());
+  const [copyingCollections, setCopyingCollections] = useState<Set<string>>(new Set());
+  const [selectedDashboard, setSelectedDashboard] = useState<string>("");
+  const [selectedCollection, setSelectedCollection] = useState<string>("");
+  const [selectedField, setSelectedField] = useState<string>("");
+  const [associatedRoute, setAssociatedRoute] = useState<string>("");
+  const [newDashboard, setNewDashboard] = useState({
+    name: "",
+    id: "",
+    description: "",
+    url: "",
+    api_url: "",
+  });
+
   const { data, isLoading } = useQuery({
     queryKey: ["list-dashboards"],
     queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`).then((response) => response.json()),
   });
 
-  const { data: boards, isLoading: isLoadingBoards } = useQuery({
-    queryKey: ["list-boards"],
-    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-boards`).then((response) => response.json()),
+  const { data: allCollections, isLoading: isLoadingAllCollections } = useQuery({
+    queryKey: ["list-all-collections"],
+    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-all-collections`).then((response) => response.json()),
   });
 
-  // const deleteFilesMutation = useMutation({
-  //   mutationFn: () =>
-  //     fetch(`${VITE_APP_SERVER_URL}/admin/delete-uploaded-files`, {
-  //       method: "DELETE",
-  //     }).then((response) => response.json()),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ["list-uploaded-files"] });
-  //   },
-  // });
-
-  const { data: filesData } = useQuery({
-    queryKey: ["list-uploaded-files"],
-    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-uploaded-files`).then((response) => response.json()),
+  const { data: collectionFields, isLoading: isLoadingCollectionFields } = useQuery({
+    queryKey: ["list-collection-fields", selectedDashboard, selectedCollection],
+    queryFn: () =>
+      fetch(`${VITE_APP_SERVER_URL}/admin/list-collection-fields?collectionName=${selectedDashboard}_${selectedCollection}_staging`).then(
+        (response) => response.json()
+      ),
+    enabled: !!selectedDashboard && !!selectedCollection,
   });
 
-  // const { data: messages } = useQuery({
-  //   queryKey: ["get-ticket-office-messages"],
-  //   queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/get-ticket-office-messages`).then((response) => response.json()),
-  // });
+  const { data: characterizations, isLoading: isLoadingCharacterizations } = useQuery({
+    queryKey: ["list-characterizations"],
+    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-characterizations`).then((response) => response.json()),
+  });
 
-  const [sortedFiles, setSortedFiles] = useState(filesData);
-  const [successMessages, setSuccessMessages] = useState<Map<string, string>>(new Map());
-  const [copyingCollections, setCopyingCollections] = useState<Set<string>>(new Set());
+  const addDashboardMutation = useMutation({
+    mutationFn: async (dashboard: typeof newDashboard) => {
+      const response = await fetch(`${VITE_APP_SERVER_URL}/admin/add-dashboard`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(dashboard),
+      });
 
-  const groupedBoards: Record<string, Record<string, Record<string, string>>> = boards?.reduce((acc, board) => {
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Erreur lors de l'ajout du tableau de bord");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["list-dashboards"] });
+      setNewDashboard({
+        name: "",
+        id: "",
+        description: "",
+        url: "",
+        api_url: "",
+      });
+      alert("Tableau de bord ajouté avec succès");
+    },
+    onError: (error: Error) => {
+      alert(error.message);
+    },
+  });
+
+  const characterizeFieldMutation = useMutation({
+    mutationFn: async (params: { boardId: string; collectionId: string; field: string; associatedRoute: string }) => {
+      const response = await fetch(`${VITE_APP_SERVER_URL}/admin/characterize-field`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Erreur lors de la caractérisation du champ");
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["list-characterizations"] });
+      alert(`Champ caractérisé avec succès: ${data.count} valeurs distinctes trouvées`);
+      // Réinitialiser les sélections
+      setSelectedField("");
+      setAssociatedRoute("");
+    },
+    onError: (error: Error) => {
+      alert(error.message);
+    },
+  });
+
+  const groupedBoards: Record<string, Record<string, Record<string, string>>> = allCollections?.reduce((acc, board) => {
     if (!acc[board.boardName]) {
       acc[board.boardName] = {};
     }
@@ -95,23 +136,10 @@ export default function Home() {
     return acc;
   }, {} as Record<string, Record<string, Record<string, string>>>);
 
+  // Filtrer les collections du dashboard sélectionné
+  const availableCollections = selectedDashboard && groupedBoards?.[selectedDashboard] ? Object.keys(groupedBoards[selectedDashboard]).sort() : [];
+
   if (isLoading || !data) return <>Loading ...</>;
-
-  const sortFiles = (key, order) => {
-    const sorted = [...filesData].sort((a, b) => {
-      if (order === "asc") {
-        return a[key] > b[key] ? 1 : -1;
-      } else {
-        return a[key] < b[key] ? 1 : -1;
-      }
-    });
-    setSortedFiles(sorted);
-  };
-
-  // let totalFilesSize = 0;
-  // if (filesData) {
-  //   totalFilesSize = filesData?.reduce((acc, file) => acc + Number(file.size), 0);
-  // }
 
   const stagingToProd = async (collectionName, prodTimestamp) => {
     setCopyingCollections((prev) => new Set(prev).add(collectionName));
@@ -223,7 +251,15 @@ export default function Home() {
     }
   };
 
-  const files = sortedFiles || filesData;
+  const add_dashboard = () => {
+    // Vérifier que tous les champs sont remplis
+    if (!newDashboard.name || !newDashboard.id || !newDashboard.description || !newDashboard.url || !newDashboard.api_url) {
+      alert("Tous les champs sont obligatoires");
+      return;
+    }
+
+    addDashboardMutation.mutate(newDashboard);
+  };
 
   return (
     <Container fluid className="fr-mx-10w">
@@ -237,6 +273,225 @@ export default function Home() {
           </Breadcrumb>
         </Col>
       </Row>
+      <h2 className="fr-mb-2w">Gestion des tableaux de bord</h2>
+      <h3 className="fr-mb-2w">〉Ajout des tableaux de bords</h3>
+      <Row gutters>
+        <Col>
+          <input
+            type="text"
+            className="fr-input fr-mb-2w"
+            placeholder="Nom du tableau de bord"
+            value={newDashboard.name}
+            onChange={(e) => setNewDashboard({ ...newDashboard, name: e.target.value })}
+          />
+        </Col>
+        <Col>
+          <input
+            type="text"
+            className="fr-input fr-mb-2w"
+            placeholder="Identifiant du tableau de bord"
+            value={newDashboard.id}
+            onChange={(e) => setNewDashboard({ ...newDashboard, id: e.target.value })}
+          />
+        </Col>
+        <Col>
+          <input
+            type="text"
+            className="fr-input fr-mb-2w"
+            placeholder="Description du tableau de bord"
+            value={newDashboard.description}
+            onChange={(e) => setNewDashboard({ ...newDashboard, description: e.target.value })}
+          />
+        </Col>
+        <Col>
+          <input
+            type="text"
+            className="fr-input fr-mb-2w"
+            placeholder="URL du tableau"
+            value={newDashboard.url}
+            onChange={(e) => setNewDashboard({ ...newDashboard, url: e.target.value })}
+          />
+        </Col>
+        <Col>
+          <input
+            type="text"
+            className="fr-input fr-mb-2w"
+            placeholder="URL de l'API"
+            value={newDashboard.api_url}
+            onChange={(e) => setNewDashboard({ ...newDashboard, api_url: e.target.value })}
+          />
+        </Col>
+        <Col md={1} className="text-right">
+          <Button color="blue-cumulus" onClick={() => add_dashboard()} disabled={addDashboardMutation.isPending}>
+            {addDashboardMutation.isPending ? "..." : "Ajoutez"}
+          </Button>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <div className="fr-table fr-table--layout-fixed">
+            <table>
+              <thead>
+                <tr>
+                  <th>Nom</th>
+                  <th>Identifiant</th>
+                  <th>Description</th>
+                  <th>URL du tableau</th>
+                  <th>URL de l'API</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((dashboard) => (
+                  <tr key={dashboard.id}>
+                    <td>{dashboard.name}</td>
+                    <td>{dashboard.id}</td>
+                    <td>{dashboard.description}</td>
+                    <td>{dashboard.url}</td>
+                    <td>{dashboard.api_url}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Col>
+      </Row>
+
+      <h3 className="fr-mb-2w">〉Ajout des collections</h3>
+      <Callout>
+        Pour ajouter une nouvelle collection à un tableau de bord, il suffit de créer la collection dans MongoDB avec le nom suivant :
+        nom-du-tableau_nom-de-la-collection_version.
+        <br />
+        Exemple : ep_collaborations_staging
+      </Callout>
+
+      <h3 className="fr-my-2w">〉Caractérisation d'un tableau de bord</h3>
+      <Callout>
+        Afin de caractériser un tableau de bord, il est nécessaire de definir toutes les clés de chaque collection et leur route associée. Cela a pour
+        but de mettre en base toutes les valeurs qui pourront être utilisées comme filtres.
+      </Callout>
+      <Row gutters className="fr-my-1w">
+        <Col>
+          <select
+            name="dashboard-select"
+            id="dashboard-select"
+            className="fr-mb-2w fr-select"
+            value={selectedDashboard}
+            onChange={(e) => setSelectedDashboard(e.target.value)}
+          >
+            <option value="">Sélectionnez un tableau de bord</option>
+            {data.map((dashboard) => (
+              <option key={dashboard.id} value={dashboard.id}>
+                {dashboard.name}
+              </option>
+            ))}
+          </select>
+        </Col>
+        <Col>
+          <select
+            name="collection-select"
+            id="collection-select"
+            className="fr-mb-2w fr-select"
+            disabled={!selectedDashboard}
+            value={selectedCollection}
+            onChange={(e) => setSelectedCollection(e.target.value)}
+          >
+            <option value="">Sélectionnez une collection</option>
+            {availableCollections.map((collectionName) => (
+              <option key={collectionName} value={collectionName}>
+                {collectionName}
+              </option>
+            ))}
+          </select>
+        </Col>
+        <Col>
+          <select
+            name="field-select"
+            id="field-select"
+            className="fr-mb-2w fr-select"
+            disabled={!selectedCollection || isLoadingCollectionFields}
+            value={selectedField}
+            onChange={(e) => setSelectedField(e.target.value)}
+          >
+            <option value="">Sélectionnez un champ</option>
+            {collectionFields?.fields?.map((field) => (
+              <option key={field.name} value={field.name}>
+                {field.name} ({field.types.join(", ")})
+              </option>
+            ))}
+          </select>
+        </Col>
+        <Col>
+          <input
+            type="text"
+            className="fr-input fr-mb-2w"
+            placeholder="Route du tableau"
+            value={associatedRoute}
+            onChange={(e) => setAssociatedRoute(e.target.value)}
+            disabled={!selectedField}
+          />
+        </Col>
+        <Col md={1} className="text-right">
+          <Button
+            color="blue-cumulus"
+            onClick={() => {
+              if (!selectedDashboard || !selectedCollection || !selectedField || !associatedRoute) {
+                alert("Tous les champs sont obligatoires");
+                return;
+              }
+              characterizeFieldMutation.mutate({
+                boardId: selectedDashboard,
+                collectionId: selectedCollection,
+                field: selectedField,
+                associatedRoute: associatedRoute,
+              });
+            }}
+            disabled={!selectedDashboard || !selectedCollection || !selectedField || !associatedRoute || characterizeFieldMutation.isPending}
+          >
+            {characterizeFieldMutation.isPending ? "..." : "Caractérisez"}
+          </Button>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <div className="fr-table fr-table--layout-fixed">
+            <table>
+              <thead>
+                <tr>
+                  <th>Tableau de bord</th>
+                  <th>Collection</th>
+                  <th>Champ</th>
+                  <th>Route</th>
+                  <th>Nb de valeurs</th>
+                </tr>
+              </thead>
+              <tbody>
+                {isLoadingCharacterizations ? (
+                  <tr>
+                    <td colSpan={5}>Chargement...</td>
+                  </tr>
+                ) : characterizations && characterizations.length > 0 ? (
+                  characterizations.map((char, index) => (
+                    <tr key={`${char.boardId}-${char.collectionId}-${char.field}-${index}`}>
+                      <td>{char.boardId}</td>
+                      <td>{char.collectionId}</td>
+                      <td>{char.field}</td>
+                      <td>{char.associatedRoute}</td>
+                      <td>
+                        <Badge color="blue-cumulus">{char.count}</Badge>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan={5}>Aucune caractérisation pour le moment</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </Col>
+      </Row>
+
       {/* 
       <Row gutters>
         <Col xs={12} sm={6} md={4}>
@@ -270,17 +525,17 @@ export default function Home() {
         ))}
       </Row>
       */}
-      <h2 className="fr-mb-2w">Administration des versions</h2>
-      <Callout>
+      <h3 className="fr-mb-2w">〉Administration des versions</h3>
+      {/* <Callout>
         Règles de nommage des collections :<br />
         nom-du-tableau_nom-de-la-collection_version <br />
         - Le nom de la collection doit être préfixé par le nom du tableau
         <br />- Le nom de la collection doit être suffixé par la version (staging-previous, staging, prod-previous, prod)
-      </Callout>
+      </Callout> */}
       <Row>
         <Col>
-          {isLoadingBoards ? (
-            <p>Loading boards...</p>
+          {isLoadingAllCollections ? (
+            <p>Loading allCollections...</p>
           ) : (
             <div className="fr-table fr-table--layout-fixed">
               <table>
@@ -302,7 +557,7 @@ export default function Home() {
                         .sort(([a], [b]) => a.localeCompare(b))
                         .map(([collectionName, versions]) => {
                           const getVersionInfo = (version) =>
-                            boards?.find((b) => b.boardName === boardName && b.collectionName === collectionName && b.version === version);
+                            allCollections?.find((b) => b.boardName === boardName && b.collectionName === collectionName && b.version === version);
 
                           return (
                             <>
@@ -386,49 +641,6 @@ export default function Home() {
           )}
         </Col>
       </Row>
-
-      <Modal isOpen id="list-of-files-modal-id" hide={() => {}} size="lg">
-        <ModalTitle>List of files</ModalTitle>
-        <ModalContent>
-          <div className="fr-table--sm fr-table fr-table">
-            <div className="fr-table__wrapper">
-              <div className="fr-table__container">
-                <div className="fr-table__content"></div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>
-                        File Name
-                        <Button variant="text" size="sm" icon="arrow-up-s-fill" onClick={() => sortFiles("name", "asc")} />
-                        <Button variant="text" size="sm" icon="arrow-down-s-fill" onClick={() => sortFiles("name", "desc")} />
-                      </th>
-                      <th>
-                        Size (Mo)
-                        <Button variant="text" size="sm" icon="arrow-up-s-fill" onClick={() => sortFiles("size", "asc")} />
-                        <Button variant="text" size="sm" icon="arrow-down-s-fill" onClick={() => sortFiles("size", "desc")} />
-                      </th>
-                      <th>
-                        Date
-                        <Button variant="text" size="sm" icon="arrow-up-s-fill" onClick={() => sortFiles("date", "asc")} />
-                        <Button variant="text" size="sm" icon="arrow-down-s-fill" onClick={() => sortFiles("date", "desc")} />
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {files?.map((file) => (
-                      <tr key={file.id}>
-                        <td>{file.name.split("_").slice(1).join("_")}</td>
-                        <td>{file.size}</td>
-                        <td>{new Date(Number(file.name.split("_")[0])).toLocaleString()}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </ModalContent>
-      </Modal>
     </Container>
   );
 }

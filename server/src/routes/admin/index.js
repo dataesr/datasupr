@@ -18,7 +18,39 @@ router.route("/admin/list-dashboards").get(async (req, res) => {
   res.json(response);
 });
 
-router.route("/admin/list-boards").get(async (req, res) => {
+// add a new dashboard
+router.route("/admin/add-dashboard").post(async (req, res) => {
+  const filters = checkQuery(req.body, ["name", "id", "description", "url", "api_url"], res);
+  const { name, id, description, url, api_url } = filters;
+
+  try {
+    // Vérifier si un dashboard avec cet ID existe déjà
+    const existingDashboard = await db.collection("boards").findOne({ id });
+    if (existingDashboard) {
+      return res.status(409).json({ error: "A dashboard with this ID already exists" });
+    }
+
+    // Créer le nouveau dashboard
+    const newDashboard = {
+      name,
+      id,
+      description,
+      url,
+      api_url,
+      data: [],
+      constants: [],
+      createdAt: new Date().toISOString()
+    };
+
+    await db.collection("boards").insertOne(newDashboard);
+    res.json({ message: "Dashboard added successfully", dashboard: newDashboard });
+  } catch (error) {
+    console.error("Error adding dashboard:", error);
+    res.status(500).json({ error: "Unable to add dashboard", details: error.message });
+  }
+});
+
+router.route("/admin/list-all-collections").get(async (req, res) => {
   try {
     // Liste de toutes les collections
     const collections = await db.listCollections().toArray();
@@ -461,6 +493,171 @@ router.route("/admin/get-constants").get(async (req, res) => {
 //     });
 //   }
 // });
+
+// Get collection fields with their types
+router.route("/admin/list-collection-fields").get(async (req, res) => {
+  const collectionName = req.query.collectionName;
+  if (!collectionName) {
+    return res.status(400).json({ error: "Collection name is required" });
+  }
+
+  try {
+    // Vérifier si la collection existe
+    const collectionExists = await db.listCollections({ name: collectionName }).hasNext();
+    if (!collectionExists) {
+      return res.status(404).json({ error: "Collection not found" });
+    }
+
+    // Récupérer un échantillon de documents pour analyser les champs
+    const sampleSize = 100;
+    const documents = await db.collection(collectionName).find({}).limit(sampleSize).toArray();
+    
+    if (documents.length === 0) {
+      return res.json({ fields: [] });
+    }
+
+    // Analyser les champs et leurs types
+    const fieldsMap = new Map();
+
+    documents.forEach(doc => {
+      Object.entries(doc).forEach(([key, value]) => {
+        if (key === '_id') return; // Ignorer le champ _id
+
+        let type = typeof value;
+        if (Array.isArray(value)) {
+          type = 'array';
+        } else if (value === null) {
+          type = 'null';
+        } else if (value instanceof Date) {
+          type = 'date';
+        }
+
+        if (fieldsMap.has(key)) {
+          const existingTypes = fieldsMap.get(key);
+          if (!existingTypes.includes(type)) {
+            existingTypes.push(type);
+          }
+        } else {
+          fieldsMap.set(key, [type]);
+        }
+      });
+    });
+
+    // Convertir en tableau et trier
+    const fields = Array.from(fieldsMap.entries())
+      .map(([name, types]) => ({
+        name,
+        types: types.sort()
+      }))
+      .sort((a, b) => a.name.localeCompare(b.name));
+
+    res.json({ fields });
+  } catch (error) {
+    console.error("Error listing collection fields:", error);
+    res.status(500).json({ 
+      error: "Unable to list collection fields", 
+      details: error.message 
+    });
+  }
+});
+
+// Characterize a field - store all distinct values in cross-boards collection
+router.route("/admin/characterize-field").post(async (req, res) => {
+  const filters = checkQuery(req.body, ["boardId", "collectionId", "field", "associatedRoute"], res);
+  const { boardId, collectionId, field, associatedRoute } = filters;
+
+  try {
+    // Construire le nom complet de la collection (on utilise staging par défaut)
+    const fullCollectionName = `${boardId}_${collectionId}_staging`;
+
+    // Vérifier si la collection existe
+    const collectionExists = await db.listCollections({ name: fullCollectionName }).hasNext();
+    if (!collectionExists) {
+      return res.status(404).json({ error: `Collection ${fullCollectionName} not found` });
+    }
+
+    // Récupérer toutes les valeurs distinctes du champ
+    const distinctValues = await db.collection(fullCollectionName).distinct(field);
+
+    // Supprimer les anciennes entrées pour ce champ
+    await db.collection("cross-boards").deleteMany({
+      boardId,
+      collectionId,
+      field
+    });
+
+    // Insérer chaque valeur distincte dans la collection cross-boards
+    const documents = distinctValues.map(value => ({
+      boardId,
+      collectionId,
+      field,
+      value,
+      associatedRoute,
+      createdAt: new Date().toISOString()
+    }));
+
+    if (documents.length > 0) {
+      await db.collection("cross-boards").insertMany(documents);
+    }
+
+    res.json({ 
+      message: "Field characterized successfully",
+      count: documents.length,
+      boardId,
+      collectionId,
+      field
+    });
+  } catch (error) {
+    console.error("Error characterizing field:", error);
+    res.status(500).json({ 
+      error: "Unable to characterize field", 
+      details: error.message 
+    });
+  }
+});
+
+// Get all characterizations
+router.route("/admin/list-characterizations").get(async (req, res) => {
+  try {
+    // Récupérer toutes les caractérisations uniques (sans les valeurs)
+    const characterizations = await db.collection("cross-boards").aggregate([
+      {
+        $group: {
+          _id: {
+            boardId: "$boardId",
+            collectionId: "$collectionId",
+            field: "$field",
+            associatedRoute: "$associatedRoute"
+          },
+          count: { $sum: 1 },
+          createdAt: { $first: "$createdAt" }
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          boardId: "$_id.boardId",
+          collectionId: "$_id.collectionId",
+          field: "$_id.field",
+          associatedRoute: "$_id.associatedRoute",
+          count: 1,
+          createdAt: 1
+        }
+      },
+      {
+        $sort: { boardId: 1, collectionId: 1, field: 1 }
+      }
+    ]).toArray();
+
+    res.json(characterizations);
+  } catch (error) {
+    console.error("Error listing characterizations:", error);
+    res.status(500).json({ 
+      error: "Unable to list characterizations", 
+      details: error.message 
+    });
+  }
+});
 
 // Get collection size
 router.route("/admin/collection-size/:name").get(async (req, res) => {
