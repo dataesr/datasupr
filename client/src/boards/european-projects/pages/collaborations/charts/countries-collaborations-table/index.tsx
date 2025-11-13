@@ -63,7 +63,7 @@ export default function CountriesCollaborationsTable() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: [configChart.id, params],
+    queryKey: ["CountriesCollaborationsTable", params],
     queryFn: () => getCollaborations(params),
   });
 

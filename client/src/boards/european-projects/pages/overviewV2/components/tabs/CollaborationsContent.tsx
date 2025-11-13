@@ -1,3 +1,6 @@
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
+
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import CountriesCollaborationsBubble from "../../../collaborations/charts/countries-collaborations-bubble";
 import CountriesCollaborationsTable from "../../../collaborations/charts/countries-collaborations-table";
@@ -5,6 +8,9 @@ import EntityVariablePie from "../../../collaborations/charts/entity-variable-pi
 import { ContentType } from "../../utils/displayRules";
 import CountryNeighbourgs from "../../../collaborations/charts/country-neighbourgs";
 import Callout from "../../../../../../components/callout";
+import MapOfEuropeCollaborationsFlow from "../../../collaborations/charts/map-of-europe-collaborations-flow";
+import { useGetParams } from "../../../collaborations/charts/countries-collaborations-table/utils";
+import { getCollaborations } from "../../../collaborations/charts/countries-collaborations-table/query";
 
 interface CollaborationsContentProps {
   contentType: ContentType;
@@ -15,7 +21,18 @@ interface CollaborationsContentProps {
 }
 
 export default function CollaborationsContent({ contentType }: CollaborationsContentProps) {
-  // export default function CollaborationsContent({ contentType, pillarId, programId, thematicIds, destinationIds }: CollaborationsContentProps) {
+  const [searchParams] = useSearchParams();
+  const params = useGetParams();
+  const currentCountryCode = searchParams.get("country_code") || "FRA";
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["CountriesCollaborationsTable", params],
+    queryFn: () => getCollaborations(params),
+  });
+
+  const dataMap =
+    isLoading || !data ? [] : data.map((item) => ({ from: currentCountryCode, to: item.country_code, weight: item.total_collaborations }));
+
   switch (contentType) {
     case "pillar-comparison":
     case "pillar-detail":
@@ -24,12 +41,18 @@ export default function CollaborationsContent({ contentType }: CollaborationsCon
     case "destination-detail":
       return (
         <div>
-          {/* TODO: Ajouter une carte de flux entre pays
-          <Row>
-            <Col>
-            <MapOfEuropeCollaborations />
-            </Col>
-          </Row> */}
+          {isLoading ? (
+            <Row>
+              {/* TODO: skeleton */}
+              <Col>Chargement de la carte des collaborations entre pays...</Col>
+            </Row>
+          ) : (
+            <Row>
+              <Col>
+                <MapOfEuropeCollaborationsFlow data={dataMap} />
+              </Col>
+            </Row>
+          )}
           <Row>
             <Col>
               <CountriesCollaborationsTable />
