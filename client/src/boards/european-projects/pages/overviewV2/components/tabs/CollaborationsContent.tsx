@@ -11,6 +11,7 @@ import Callout from "../../../../../../components/callout";
 import MapOfEuropeCollaborationsFlow from "../../../collaborations/charts/map-of-europe-collaborations-flow";
 import { useGetParams } from "../../../collaborations/charts/countries-collaborations-table/utils";
 import { getCollaborations } from "../../../collaborations/charts/countries-collaborations-table/query";
+import MapSkeleton from "../../../../../../components/charts-skeletons/map";
 
 interface CollaborationsContentProps {
   contentType: ContentType;
@@ -43,8 +44,9 @@ export default function CollaborationsContent({ contentType }: CollaborationsCon
         <div>
           {isLoading ? (
             <Row>
-              {/* TODO: skeleton */}
-              <Col>Chargement de la carte des collaborations entre pays...</Col>
+              <Col>
+                <MapSkeleton />
+              </Col>
             </Row>
           ) : (
             <Row>
