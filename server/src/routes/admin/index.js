@@ -659,6 +659,55 @@ router.route("/admin/list-characterizations").get(async (req, res) => {
   }
 });
 
+// Search cross-boards by URL parameters
+router.route("/admin/search-cross-boards").get(async (req, res) => {
+  try {
+    // Récupérer tous les paramètres de l'URL
+    const urlParams = req.query;
+    
+    if (Object.keys(urlParams).length === 0) {
+      return res.json([]);
+    }
+
+    // Construire les requêtes pour chaque paramètre
+    const searchQueries = Object.entries(urlParams).map(([field, value]) => ({
+      field,
+      value
+    }));
+
+    // Rechercher dans cross-boards toutes les correspondances
+    const results = await db.collection("cross-boards").find({
+      $or: searchQueries
+    }).toArray();
+
+    // Grouper les résultats par boardId et associatedRoute
+    const grouped = results.reduce((acc, item) => {
+      const key = `${item.boardId}_${item.associatedRoute}`;
+      if (!acc[key]) {
+        acc[key] = {
+          boardId: item.boardId,
+          associatedRoute: item.associatedRoute,
+          matches: []
+        };
+      }
+      acc[key].matches.push({
+        field: item.field,
+        value: item.value,
+        collectionId: item.collectionId
+      });
+      return acc;
+    }, {});
+
+    res.json(Object.values(grouped));
+  } catch (error) {
+    console.error("Error searching cross-boards:", error);
+    res.status(500).json({ 
+      error: "Unable to search cross-boards", 
+      details: error.message 
+    });
+  }
+});
+
 // Get collection size
 router.route("/admin/collection-size/:name").get(async (req, res) => {
   try {

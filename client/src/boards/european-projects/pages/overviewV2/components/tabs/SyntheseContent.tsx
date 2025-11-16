@@ -12,6 +12,7 @@ import MainPartners from "../../../overview/charts/main-partners";
 import SynthesisFocus from "../../../overview/charts/synthesis-focus";
 import Callout from "../../../../../../components/callout";
 import PillarsFundingEvo3Years from "../../../overview/charts/pillars-funding-evo-3-years";
+import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
 // import DestinationsFunding from "../../../overview/components/destinations-funding";
 
 interface SyntheseContentProps {
@@ -72,6 +73,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
           </Callout>
           <Title as="h3">Répartition des financements par programme</Title>
           <ProgramsFunding />
+          <BoardsSuggestComponent />
         </Container>
       );
 
