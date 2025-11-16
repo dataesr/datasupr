@@ -25,18 +25,24 @@ export default function CountrySelector() {
   const currentLang = searchParams.get("language") || "fr";
   const selectedCountry = searchParams.get("country_code") || "FRA";
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: countriesWithData } = useQuery({
+  const { data: countries } = useQuery({
     queryKey: ["atlas/get-filters-values"],
     queryFn: () => getCountriesWithData(),
   });
 
   useEffect(() => {
-    if (!countriesWithData) return;
-    countriesWithData.sort((a, b) =>
-      a[`label_${currentLang}`].localeCompare(b[`label_${currentLang}`])
-    );
-  }, [currentLang, countriesWithData]);
+    if (!countries) return;
+    countries.sort((a, b) => a[`label_${currentLang}`].localeCompare(b[`label_${currentLang}`]));
+  }, [currentLang, countries]);
+
+  // Filtrer les pays en fonction de la recherche
+  const filteredCountries = countries?.filter((country) => {
+    if (!searchQuery) return true;
+    const countryLabel = country[`label_${currentLang}`].toLowerCase();
+    return countryLabel.includes(searchQuery.toLowerCase());
+  });
 
   const baseUrl =
     pathname +
@@ -63,11 +69,29 @@ export default function CountrySelector() {
       >
         {getI18nLabel("selectedCountry")} {getFlagEmoji(getIso2(selectedCountry))}
       </Button>
+
       <Modal isOpen={isModalOpen} hide={() => setIsModalOpen(false)}>
         <ModalTitle>{getI18nLabel("selectACountry")}</ModalTitle>
         <ModalContent>
+          <div className="fr-mb-2w">
+            <div className="fr-search-bar" role="search">
+              <input
+                className="fr-input"
+                placeholder={getI18nLabel("searchCountry")}
+                type="search"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+              {searchQuery && (
+                <Button className="fr-mt-1w" size="sm" variant="secondary" onClick={() => setSearchQuery("")} icon="close-line">
+                  {getI18nLabel("clearSearch")}
+                </Button>
+              )}
+            </div>
+          </div>
+
           <ul>
-            {countriesWithData?.map((country) => (
+            {filteredCountries?.map((country) => (
               <li key={country.id}>
                 <Link href={`${baseUrl}&country_code=${country.id}`}>
                   {getFlagEmoji(getIso2(country.id))} {country[`label_${currentLang}`]}
