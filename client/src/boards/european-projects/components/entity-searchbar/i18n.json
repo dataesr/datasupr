@@ -14,5 +14,13 @@
   "search":{
     "fr":"Accéder aux données de l'entité",
     "en":"Access entity data"
+  },
+  "suggestions-label":{
+    "fr":"Suggestions :",
+    "en":"Suggestions:"
+  },
+  "select-entity-message":{
+    "fr":"Veuillez sélectionner une entité pour afficher le graphique.",
+    "en":"Please select an entity to display the chart."
   }
 }

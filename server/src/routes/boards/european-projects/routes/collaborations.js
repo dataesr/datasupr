@@ -86,6 +86,53 @@ router.route(routesPrefix + "/get-entities").get(async (req, res) => {
     }
   });
 
+// Route pour obtenir les suggestions d'entités (top 5 par nombre de projets)
+router.route(routesPrefix + "/get-suggested-entities").get(async (req, res) => {
+  const { country_code } = req.query;
+
+  try {
+    const suggestedEntities = await db
+      .collection("ep_projects-entities_staging")
+      .aggregate([
+        {
+          $match: {
+            ...(country_code && { country_code })
+          }
+        },
+        {
+          $group: {
+            _id: "$entities_id",
+            entities_name: { $first: "$entities_name" },
+            entities_id: { $first: "$entities_id" },
+            count: { $sum: 1 }
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            entities_name: 1,
+            entities_id: 1,
+            count: 1
+          }
+        },
+        {
+          $sort: { 
+            count: -1 // Tri par ordre décroissant du nombre de projets
+          }
+        },
+        {
+          $limit: 5 // Limiter à 5 suggestions
+        }
+      ])
+      .toArray();
+
+    res.status(200).json(suggestedEntities);
+  } catch (error) {
+    console.error("Error fetching suggested entities:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Route pour créer l'index pour get-entities
 router.route(routesPrefix + "/get-entities_indexes").get(async (req, res) => {
   try {

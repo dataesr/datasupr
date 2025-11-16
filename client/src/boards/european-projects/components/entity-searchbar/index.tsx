@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, KeyboardEvent } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Row, Col, TextInput, Button } from "@dataesr/dsfr-plus";
+import { Row, Col, TextInput, Button, Badge, BadgeGroup } from "@dataesr/dsfr-plus";
 
 import i18n from "./i18n.json";
 import "./styles.scss";
@@ -16,6 +16,18 @@ export default function EntitySearchBar({ setEntityId }) {
   const [selectedEntity, setSelectedEntity] = useState<{ entities_id: string; entities_name: string } | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  // Récupération des suggestions depuis la base de données
+  const { data: suggestedEntities = [] } = useQuery({
+    queryKey: ["ep/get-suggested-entities", country_code],
+    queryFn: async () => {
+      const response = await fetch(`http://localhost:3000/api/european-projects/collaborations/get-suggested-entities?country_code=${country_code}`);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    },
+  });
 
   const { data = [], isLoading } = useQuery({
     queryKey: ["ep/get-entities", "pillars", query, country_code],
@@ -207,9 +219,23 @@ export default function EntitySearchBar({ setEntityId }) {
         </div>
       )}
       {query.length < 3 && (
-        <Row className="fr-mt-2w">
-          <Col>Veuillez sélectionner une entité pour afficher le graphique.</Col>
-        </Row>
+        <>
+          <Row className="fr-mt-2w">
+            <Col>
+              <p className="fr-text--sm fr-mb-1w">{getI18nLabel("suggestions-label")}</p>
+              <BadgeGroup>
+                {suggestedEntities.map((entity) => (
+                  <Badge key={entity.entities_id} color="blue-ecume" onClick={() => selectEntity(entity)} style={{ cursor: "pointer" }}>
+                    {entity.entities_name}
+                  </Badge>
+                ))}
+              </BadgeGroup>
+            </Col>
+          </Row>
+          <Row className="fr-mt-2w">
+            <Col>{getI18nLabel("select-entity-message")}</Col>
+          </Row>
+        </>
       )}
     </div>
   );
