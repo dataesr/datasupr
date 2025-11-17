@@ -37,11 +37,6 @@ export default function BoardsSuggestComponent() {
     enabled: !!queryString, // Ne faire la requête que si on a des paramètres
   });
 
-  // Afficher dans la console
-  console.log("Paramètres d'URL:", params);
-  console.log("Suggestions trouvées:", suggestions);
-  console.log("Chargement:", isLoading);
-
   // Si pas de paramètres d'URL
   if (!queryString) {
     return null;

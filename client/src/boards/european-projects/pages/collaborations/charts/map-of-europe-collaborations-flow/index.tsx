@@ -2,14 +2,9 @@ import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
 import highchartsFlowMap from "highcharts/modules/flowmap";
-
 highchartsFlowMap(Highcharts);
 
 import dataCountries from "../../../../../../assets/countriesCentroids.json";
-// import data from "./data.json";
-// import mapData from "./mapData.json";
-
-// import topology from "../../../../../../assets/europe.topo.json";
 import topology from "../../../../../../assets/world.topo.json";
 
 export default function MapOfEuropeCollaborationsFlow(data) {
@@ -19,36 +14,29 @@ export default function MapOfEuropeCollaborationsFlow(data) {
     },
 
     title: {
-      text: "Highmaps basic flowmap demo",
+      text: "Collaborations avec les pays",
     },
-
-    subtitle: {
-      text: "Highcharts Maps flow map",
-    },
-
     mapNavigation: {
       enabled: true,
     },
-
     legend: {
       enabled: false,
     },
-
+    credits: {
+      enabled: false,
+    },
     accessibility: {
       point: {
         valueDescriptionFormat: "{xDescription}.",
       },
     },
-
     plotOptions: {
       mappoint: {
         tooltip: {
           headerFormat: "{point.point.name}<br>",
-          pointFormat: "Lat: {point.lat} Lon: {point.lon}",
         },
       },
     },
-
     series: [
       {
         name: "Basemap",
@@ -70,10 +58,10 @@ export default function MapOfEuropeCollaborationsFlow(data) {
       },
       {
         type: "flowmap",
-        name: "Flow route",
-        accessibility: {
-          description: "This is a demonstration of the flowmap using weighted links.",
-        },
+        name: "Common projects",
+        // accessibility: {
+        //   description: "This is a demonstration of the flowmap using weighted links.",
+        // },
         linkedTo: ":previous",
         minWidth: 5,
         maxWidth: 15,
