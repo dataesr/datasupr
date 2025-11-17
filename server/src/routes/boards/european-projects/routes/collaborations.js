@@ -47,7 +47,7 @@ router.route(routesPrefix + "/get-entities").get(async (req, res) => {
 
     try {
       const entities = await db
-        .collection("ep_projects-entities_staging")
+        .collection("european-projects_projects-entities_staging")
         .aggregate([
           {
             $match: {
@@ -92,7 +92,7 @@ router.route(routesPrefix + "/get-suggested-entities").get(async (req, res) => {
 
   try {
     const suggestedEntities = await db
-      .collection("ep_projects-entities_staging")
+      .collection("european-projects_projects-entities_staging")
       .aggregate([
         {
           $match: {
@@ -137,7 +137,7 @@ router.route(routesPrefix + "/get-suggested-entities").get(async (req, res) => {
 router.route(routesPrefix + "/get-entities_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("ep_projects-entities_staging"),
+      db.collection("european-projects_projects-entities_staging"),
       {
         entities_name: 1,
         country_code: 1,
@@ -175,7 +175,7 @@ router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
 
   try {
     const collaborations = await db
-      .collection("ep_collaborations_staging")
+      .collection("european-projects_collaborations_staging")
       .aggregate([
         { $match: { ...filters } },
         {
@@ -215,7 +215,7 @@ router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
 router.route(routesPrefix + "/get-collaborations_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("ep_collaborations_staging"),
+      db.collection("european-projects_collaborations_staging"),
       {
         country_code: 1,
         country_code_collab: 1,
@@ -264,7 +264,7 @@ router.route(routesPrefix + "/get-collaborations-by-country").get(async (req, re
 
   try {
     const collaborations = await db
-      .collection("ep_collaborations_staging")
+      .collection("european-projects_collaborations_staging")
       .find({ ...filters })
       .project({
         _id: 0,
@@ -299,7 +299,7 @@ router.route(routesPrefix + "/get-collaborations-by-country").get(async (req, re
 router.route(routesPrefix + "/get-collaborations-by-country_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("ep_collaborations_staging"),
+      db.collection("european-projects_collaborations_staging"),
       {
         country_code: 1,
         country_code_collab: 1,
@@ -342,7 +342,7 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
   try {
     // Récupérer d'abord les informations de l'entité
     const entityInfo = await db
-      .collection("ep_projects-entities_staging")
+      .collection("european-projects_projects-entities_staging")
       .findOne(
         { entities_id: entity_id },
         { projection: { _id: 0, entities_name: 1 } }
@@ -353,7 +353,7 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
     }
 
     const entityCollaborations = await db
-      .collection("ep_projects-entities_staging")
+      .collection("european-projects_projects-entities_staging")
       .aggregate([
         // Étape 1 : Récupérer tous les project_ids de l'entité
         {
@@ -370,7 +370,7 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
         // Étape 2 : Rechercher toutes les entités qui collaborent sur ces projets
         {
           $lookup: {
-            from: "ep_projects-entities_staging",
+            from: "european-projects_projects-entities_staging",
             let: { projectIds: "$project_ids" },
             pipeline: [
               {
@@ -406,7 +406,7 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
               // Ajout d'une étape pour compter le nombre total de projets
               {
                 $lookup: {
-                  from: "ep_projects-entities_staging",
+                  from: "european-projects_projects-entities_staging",
                   let: { entityId: "$_id" },
                   pipeline: [
                     {
@@ -480,7 +480,7 @@ router.route(routesPrefix + "/get-collaborations-by-entity_indexes").get(async (
   try {
     await Promise.all([
       recreateIndex(
-        db.collection("ep_projects-entities_staging"),
+        db.collection("european-projects_projects-entities_staging"),
         {
           entities_id: 1,
           project_id: 1,
@@ -491,7 +491,7 @@ router.route(routesPrefix + "/get-collaborations-by-entity_indexes").get(async (
         "idx_entity_collaborations_main"
       ),
       recreateIndex(
-        db.collection("ep_projects-entities_staging"),
+        db.collection("european-projects_projects-entities_staging"),
         {
           entities_id: 1,
           project_id: 1

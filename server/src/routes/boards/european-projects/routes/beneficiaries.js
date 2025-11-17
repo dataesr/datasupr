@@ -36,7 +36,7 @@ router.route(routesPrefix + "/main-beneficiaries-pct-50").get(async (req, res) =
     filters.framework = "Horizon Europe";
     
     const data = await db
-      .collection("ep_projects-entities_staging")
+      .collection("european-projects_projects-entities_staging")
       .aggregate([
         {
           $match: filters,
@@ -87,7 +87,7 @@ router.route(routesPrefix + "/main-beneficiaries-pct-50").get(async (req, res) =
 router.route(routesPrefix + "/main-beneficiaries-pct-50_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("ep_projects-entities_staging"),
+      db.collection("european-projects_projects-entities_staging"),
       {
         // Champs de filtrage (ordre optimisé pour la sélectivité)
         country_code: 1,
@@ -138,7 +138,7 @@ router.route(routesPrefix + "/beneficiaries-by-role").get(async (req, res) => {
     }
 
     const data = await db
-      .collection("ep_projects-entities_staging")
+      .collection("european-projects_projects-entities_staging")
       .aggregate([
         {
           $match: filters,
@@ -252,7 +252,7 @@ router.route(routesPrefix + "/beneficiaries-by-role").get(async (req, res) => {
 router.route(routesPrefix + "/beneficiaries-by-role_indexes").get(async (req, res) => {
   try {
     await recreateIndex(
-      db.collection("ep_projects-entities_staging"),
+      db.collection("european-projects_projects-entities_staging"),
       {
         // Champs de filtrage
         framework: 1,

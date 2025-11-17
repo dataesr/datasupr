@@ -260,7 +260,7 @@ router
     }
 
     const data = await db
-      .collection("ep_projects-entities_staging")
+      .collection("european-projects_projects-entities_staging")
       .aggregate([
         { $match: filters },
         {
