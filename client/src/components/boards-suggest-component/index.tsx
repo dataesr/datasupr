@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Badge, Container, Row, Col, Text, Title, Link } from "@dataesr/dsfr-plus";
 import "./styles.scss";
@@ -18,8 +18,23 @@ interface CrossBoardResult {
   matches: CrossBoardMatch[];
 }
 
+interface Dashboard {
+  id: string;
+  name: string;
+  description?: string;
+  isMultilingual?: boolean;
+}
+
 export default function BoardsSuggestComponent() {
   const [searchParams] = useSearchParams();
+  const location = useLocation();
+
+  // Extraire la base de la route actuelle (ex: /european-projects depuis /european-projects/overview)
+  const currentRouteBase = useMemo(() => {
+    const pathParts = location.pathname.split("/").filter(Boolean);
+    // Prendre tout sauf le dernier segment (ex: european-projects)
+    return pathParts.length > 1 ? `/${pathParts[0]}` : location.pathname;
+  }, [location.pathname]);
 
   // Convertir les paramètres d'URL en objet
   const params = useMemo(() => Object.fromEntries(searchParams.entries()), [searchParams]);
@@ -30,12 +45,129 @@ export default function BoardsSuggestComponent() {
     return new URLSearchParams(params).toString();
   }, [params]);
 
+  // Récupérer la liste des dashboards pour savoir lesquels sont multilingues
+  const { data: dashboards } = useQuery<Dashboard[]>({
+    queryKey: ["list-dashboards"],
+    queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-dashboards`).then((response) => response.json()),
+  });
+
   // Rechercher dans cross-boards
-  const { data: suggestions, isLoading } = useQuery<CrossBoardResult[]>({
+  const { data: suggestionsData, isLoading } = useQuery<CrossBoardResult[]>({
     queryKey: ["search-cross-boards", queryString],
     queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/search-cross-boards?${queryString}`).then((response) => response.json()),
     enabled: !!queryString, // Ne faire la requête que si on a des paramètres
   });
+
+  // Regrouper et filtrer les suggestions pour exclure le tableau en cours
+  const suggestions = useMemo(() => {
+    if (!suggestionsData) return [];
+
+    // Regrouper les suggestions par boardId
+    const groupedByBoard = suggestionsData.reduce((acc, suggestion) => {
+      const boardId = suggestion.boardId;
+
+      if (!acc[boardId]) {
+        acc[boardId] = {
+          boardId,
+          associatedRoutes: [],
+          matches: [],
+        };
+      }
+
+      acc[boardId].associatedRoutes.push(suggestion.associatedRoute);
+      acc[boardId].matches.push(...suggestion.matches);
+
+      return acc;
+    }, {} as Record<string, { boardId: string; associatedRoutes: string[]; matches: CrossBoardMatch[] }>);
+
+    // Convertir en tableau et filtrer
+    return Object.values(groupedByBoard)
+      .filter((suggestion) => {
+        // Prendre la première route pour déterminer la base
+        const suggestedRouteFull = suggestion.associatedRoutes[0].split("?")[0];
+        const suggestedPathParts = suggestedRouteFull.split("/").filter(Boolean);
+        const suggestedRouteBase = suggestedPathParts.length > 0 ? `/${suggestedPathParts[0]}` : suggestedRouteFull;
+
+        // Exclure si la base de la route correspond à la route actuelle
+        return suggestedRouteBase !== currentRouteBase;
+      })
+      .map((suggestion) => ({
+        boardId: suggestion.boardId,
+        associatedRoute: suggestion.associatedRoutes[0], // On prendra la route la plus complexe
+        matches: suggestion.matches,
+      }))
+      .sort((a, b) => {
+        // Trier par nombre de matches décroissant (le plus de matches en premier)
+        return b.matches.length - a.matches.length;
+      });
+  }, [suggestionsData, currentRouteBase]);
+
+  // Construire la route complète avec les paramètres matchés
+  const buildRouteWithParams = (suggestion: { boardId: string; associatedRoute: string; matches: CrossBoardMatch[] }) => {
+    // Trouver la route la plus complexe (celle avec le plus de paramètres)
+    const allRoutes = suggestionsData?.filter((s) => s.boardId === suggestion.boardId).map((s) => s.associatedRoute) || [suggestion.associatedRoute];
+
+    const mostComplexRoute = allRoutes.reduce((prev, current) => {
+      return current.length > prev.length ? current : prev;
+    }, allRoutes[0] || suggestion.associatedRoute);
+
+    let finalRoute = mostComplexRoute;
+
+    // Trier les matches : d'abord ceux qui ont un champ explicite dans la route, puis les autres
+    const sortedMatches = [...suggestion.matches].sort((a, b) => {
+      const aHasField = finalRoute.includes(`${a.field}=`);
+      const bHasField = finalRoute.includes(`${b.field}=`);
+      if (aHasField && !bHasField) return -1;
+      if (!aHasField && bHasField) return 1;
+      return 0;
+    });
+
+    // Pour chaque match, vérifier si le champ est présent dans associatedRoute
+    sortedMatches.forEach((match) => {
+      // Cas 1: Si match.value est "$value", il faut le remplacer par la vraie valeur du paramètre
+      const actualValue = match.value.startsWith("$") ? params[match.field] : match.value;
+
+      // Cas 2: Chercher le pattern field=$value ou field=$xxx dans les query params avec ?&
+      const fieldParamPattern = new RegExp(`([?&])${match.field}=\\$\\w+`, "g");
+
+      if (fieldParamPattern.test(finalRoute)) {
+        // Si on trouve field=$value, remplacer par field=valeur_réelle
+        finalRoute = finalRoute.replace(new RegExp(`([?&])${match.field}=\\$\\w+`, "g"), `$1${match.field}=${actualValue}`);
+      } else {
+        // Cas 3: Chercher field=$value dans le path (sans ? ou &), par exemple /pillarId=$value
+        const pathParamPattern = new RegExp(`\\b${match.field}=\\$\\w+`, "g");
+        if (pathParamPattern.test(finalRoute)) {
+          finalRoute = finalRoute.replace(pathParamPattern, `${match.field}=${actualValue}`);
+        } else {
+          // Cas 4: Chercher $value seul dans le path (ex: /pays/$value/profil)
+          // Seulement si le champ n'est pas explicitement présent dans la route
+          const hasFieldInRoute = finalRoute.includes(`${match.field}=`);
+          const hasValuePlaceholder = finalRoute.includes("$value");
+
+          if (!hasFieldInRoute && hasValuePlaceholder) {
+            // Remplacer la première occurrence de $value par la valeur du match
+            finalRoute = finalRoute.replace("$value", actualValue || match.value);
+          }
+        }
+      }
+    });
+
+    // Vérifier si le tableau de bord cible est multilingue
+    const targetDashboard = dashboards?.find((dashboard) => dashboard.id === suggestion.boardId);
+
+    // Ajouter le paramètre language uniquement si le tableau de bord est multilingue
+    if (params.language && targetDashboard?.isMultilingual) {
+      // Vérifier si la route contient déjà des paramètres
+      const separator = finalRoute.includes("?") ? "&" : "?";
+
+      // Vérifier si language n'est pas déjà présent
+      if (!finalRoute.includes("language=")) {
+        finalRoute = `${finalRoute}${separator}language=${params.language}`;
+      }
+    }
+
+    return finalRoute;
+  };
 
   // Si pas de paramètres d'URL
   if (!queryString) {
@@ -63,11 +195,11 @@ export default function BoardsSuggestComponent() {
   }
 
   return (
-    <aside className="inline-suggest">
+    <aside className="inline-suggest fr-mt-3w">
       <Container fluid>
         <Row gutters>
           <Col xs="12">
-            <Title as="h6" look="h6">
+            <Title as="h6" look="h6" className="fr-mb-1w">
               💡 Tableaux de bord suggérés
             </Title>
           </Col>
@@ -84,27 +216,26 @@ export default function BoardsSuggestComponent() {
             </div>
           </Col>
           <Col xs="12">
-            {suggestions.map((suggestion, index) => (
-              <div key={index} className="fr-card fr-card--sm fr-mb-2w">
-                <div className="fr-card__body">
-                  <div className="fr-card__content">
-                    <Title as="h6" look="h6" className="fr-card__title">
-                      <Link href={suggestion.associatedRoute}>{suggestion.boardId.toUpperCase()}</Link>
-                    </Title>
-                    <div className="fr-card__desc">
-                      <Badge color="green-menthe" size="sm" className="fr-mr-1v">
-                        {suggestion.matches.length} correspondance{suggestion.matches.length > 1 ? "s" : ""}
+            {suggestions.map((suggestion, index) => {
+              const targetDashboard = dashboards?.find((dashboard) => dashboard.id === suggestion.boardId);
+
+              return (
+                <Link key={index} href={buildRouteWithParams(suggestion)} target="_blank" rel="noopener noreferrer" className="suggestion-card">
+                  <h6 className="suggestion-card__title">{suggestion.boardId.toUpperCase()}</h6>
+                  {targetDashboard?.description && <p className="suggestion-card__description">{targetDashboard.description}</p>}
+                  <div className="suggestion-card__badges">
+                    <Badge color="green-menthe" size="sm" className="fr-mr-1v">
+                      {suggestion.matches.length} correspondance{suggestion.matches.length > 1 ? "s" : ""}
+                    </Badge>
+                    {suggestion.matches.map((match, matchIndex) => (
+                      <Badge key={matchIndex} color="purple-glycine" size="sm">
+                        {match.field}: {match.value}
                       </Badge>
-                      {suggestion.matches.map((match, matchIndex) => (
-                        <Badge key={matchIndex} color="purple-glycine" size="sm" className="fr-mr-1v fr-mb-1v">
-                          {match.field}: {match.value}
-                        </Badge>
-                      ))}
-                    </div>
+                    ))}
                   </div>
-                </div>
-              </div>
-            ))}
+                </Link>
+              );
+            })}
           </Col>
         </Row>
       </Container>

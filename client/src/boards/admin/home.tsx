@@ -1,9 +1,10 @@
-import { Badge, Breadcrumb, Button, Col, Container, Link, Row, Text, Title } from "@dataesr/dsfr-plus";
+import { Badge, Breadcrumb, Button, Col, Container, Link, Modal, ModalContent, ModalTitle, Row, Text, TextInput, Title } from "@dataesr/dsfr-plus";
 import { useMutation, useQuery } from "@tanstack/react-query";
 
 import { queryClient } from "../../main";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Callout from "../atlas/components/callout";
+import "./styles.scss";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -26,12 +27,26 @@ export default function Home() {
   const [selectedCollection, setSelectedCollection] = useState<string>("");
   const [selectedField, setSelectedField] = useState<string>("");
   const [associatedRoute, setAssociatedRoute] = useState<string>("");
+  const [manualFieldName, setManualFieldName] = useState<string>("");
+  const [manualFieldValue, setManualFieldValue] = useState<string>("");
+  const [manualRoute, setManualRoute] = useState<string>("");
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [selectedCharacterization, setSelectedCharacterization] = useState<{
+    boardId: string;
+    collectionId: string;
+    field: string;
+    associatedRoute: string;
+    count: number;
+    values?: string[];
+  } | null>(null);
+  const [searchValue, setSearchValue] = useState<string>("");
   const [newDashboard, setNewDashboard] = useState({
     name: "",
     id: "",
     description: "",
     url: "",
     api_url: "",
+    isMultilingual: false,
   });
 
   const { data, isLoading } = useQuery({
@@ -58,6 +73,26 @@ export default function Home() {
     queryFn: () => fetch(`${VITE_APP_SERVER_URL}/admin/list-characterizations`).then((response) => response.json()),
   });
 
+  // Filtrer les valeurs en fonction de la recherche
+  const filteredValues = useMemo(() => {
+    if (!selectedCharacterization?.values) return [];
+    if (!searchValue.trim()) return selectedCharacterization.values;
+
+    return selectedCharacterization.values.filter((value: string) => value.toLowerCase().includes(searchValue.toLowerCase()));
+  }, [selectedCharacterization, searchValue]);
+
+  const handleOpenModal = (char: typeof selectedCharacterization) => {
+    setSelectedCharacterization(char);
+    setSearchValue("");
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+    setSelectedCharacterization(null);
+    setSearchValue("");
+  };
+
   const addDashboardMutation = useMutation({
     mutationFn: async (dashboard: typeof newDashboard) => {
       const response = await fetch(`${VITE_APP_SERVER_URL}/admin/add-dashboard`, {
@@ -83,6 +118,7 @@ export default function Home() {
         description: "",
         url: "",
         api_url: "",
+        isMultilingual: false,
       });
       alert("Tableau de bord ajouté avec succès");
     },
@@ -114,6 +150,62 @@ export default function Home() {
       // Réinitialiser les sélections
       setSelectedField("");
       setAssociatedRoute("");
+    },
+    onError: (error: Error) => {
+      alert(error.message);
+    },
+  });
+
+  const addManualCharacterizationMutation = useMutation({
+    mutationFn: async (params: { boardId: string; field: string; value: string; associatedRoute: string }) => {
+      const response = await fetch(`${VITE_APP_SERVER_URL}/admin/add-manual-characterization`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Erreur lors de l'ajout de la caractérisation manuelle");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["list-characterizations"] });
+      alert("Caractérisation manuelle ajoutée avec succès");
+      // Réinitialiser les champs
+      setManualFieldName("");
+      setManualFieldValue("");
+      setManualRoute("");
+    },
+    onError: (error: Error) => {
+      alert(error.message);
+    },
+  });
+
+  const refreshCharacterizationMutation = useMutation({
+    mutationFn: async (params: { boardId: string; collectionId: string; field: string; associatedRoute: string }) => {
+      const response = await fetch(`${VITE_APP_SERVER_URL}/admin/refresh-characterization`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Erreur lors du rafraîchissement de la caractérisation");
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ["list-characterizations"] });
+      alert(`Caractérisation rafraîchie avec succès: ${data.count} valeurs distinctes trouvées`);
     },
     onError: (error: Error) => {
       alert(error.message);
@@ -262,7 +354,7 @@ export default function Home() {
   };
 
   return (
-    <Container fluid className="fr-mx-10w">
+    <Container fluid className="fr-mx-10w admin-home">
       <Row className="fr-mb-5w">
         <Col>
           <Breadcrumb className="fr-m-0 fr-mt-1w">
@@ -274,59 +366,74 @@ export default function Home() {
         </Col>
       </Row>
       <h2 className="fr-mb-2w">Gestion des tableaux de bord</h2>
-      <h3 className="fr-mb-2w">〉Ajout des tableaux de bords</h3>
-      <Row gutters>
-        <Col>
-          <input
-            type="text"
-            className="fr-input fr-mb-2w"
-            placeholder="Nom du tableau de bord"
-            value={newDashboard.name}
-            onChange={(e) => setNewDashboard({ ...newDashboard, name: e.target.value })}
-          />
-        </Col>
-        <Col>
-          <input
-            type="text"
-            className="fr-input fr-mb-2w"
-            placeholder="Identifiant du tableau de bord"
-            value={newDashboard.id}
-            onChange={(e) => setNewDashboard({ ...newDashboard, id: e.target.value })}
-          />
-        </Col>
-        <Col>
-          <input
-            type="text"
-            className="fr-input fr-mb-2w"
-            placeholder="Description du tableau de bord"
-            value={newDashboard.description}
-            onChange={(e) => setNewDashboard({ ...newDashboard, description: e.target.value })}
-          />
-        </Col>
-        <Col>
-          <input
-            type="text"
-            className="fr-input fr-mb-2w"
-            placeholder="URL du tableau"
-            value={newDashboard.url}
-            onChange={(e) => setNewDashboard({ ...newDashboard, url: e.target.value })}
-          />
-        </Col>
-        <Col>
-          <input
-            type="text"
-            className="fr-input fr-mb-2w"
-            placeholder="URL de l'API"
-            value={newDashboard.api_url}
-            onChange={(e) => setNewDashboard({ ...newDashboard, api_url: e.target.value })}
-          />
-        </Col>
-        <Col md={1} className="text-right">
-          <Button color="blue-cumulus" onClick={() => add_dashboard()} disabled={addDashboardMutation.isPending}>
-            {addDashboardMutation.isPending ? "..." : "Ajoutez"}
-          </Button>
-        </Col>
-      </Row>
+      <div className="form-section">
+        <h3 className="fr-mb-2w">〉Ajout des tableaux de bords</h3>
+        <Row gutters className="form-row">
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="Nom du tableau de bord"
+              value={newDashboard.name}
+              onChange={(e) => setNewDashboard({ ...newDashboard, name: e.target.value })}
+            />
+          </Col>
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="Identifiant du tableau de bord"
+              value={newDashboard.id}
+              onChange={(e) => setNewDashboard({ ...newDashboard, id: e.target.value })}
+            />
+          </Col>
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="Description du tableau de bord"
+              value={newDashboard.description}
+              onChange={(e) => setNewDashboard({ ...newDashboard, description: e.target.value })}
+            />
+          </Col>
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="URL du tableau"
+              value={newDashboard.url}
+              onChange={(e) => setNewDashboard({ ...newDashboard, url: e.target.value })}
+            />
+          </Col>
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="URL de l'API"
+              value={newDashboard.api_url}
+              onChange={(e) => setNewDashboard({ ...newDashboard, api_url: e.target.value })}
+            />
+          </Col>
+          <Col>
+            <div className="fr-checkbox-group">
+              <input
+                type="checkbox"
+                id="isMultilingual"
+                checked={newDashboard.isMultilingual}
+                onChange={(e) => setNewDashboard({ ...newDashboard, isMultilingual: e.target.checked })}
+              />
+              <label className="fr-label" htmlFor="isMultilingual">
+                Multilingue
+              </label>
+            </div>
+          </Col>
+          <Col md={1} className="text-right">
+            <Button color="blue-cumulus" onClick={() => add_dashboard()} disabled={addDashboardMutation.isPending}>
+              {addDashboardMutation.isPending ? "..." : "Ajouter"}
+            </Button>
+          </Col>
+        </Row>
+      </div>
       <Row>
         <Col>
           <div className="fr-table fr-table--layout-fixed">
@@ -338,6 +445,7 @@ export default function Home() {
                   <th>Description</th>
                   <th>URL du tableau</th>
                   <th>URL de l'API</th>
+                  <th>Multilingue</th>
                 </tr>
               </thead>
               <tbody>
@@ -348,6 +456,9 @@ export default function Home() {
                     <td>{dashboard.description}</td>
                     <td>{dashboard.url}</td>
                     <td>{dashboard.api_url}</td>
+                    <td>
+                      <Badge color={dashboard.isMultilingual ? "success" : "error"}>{dashboard.isMultilingual ? "Oui" : "Non"}</Badge>
+                    </td>
                   </tr>
                 ))}
               </tbody>
@@ -365,92 +476,162 @@ export default function Home() {
       </Callout>
 
       <h3 className="fr-my-2w">〉Caractérisation d'un tableau de bord</h3>
-      <Callout>
-        Afin de caractériser un tableau de bord, il est nécessaire de definir toutes les clés de chaque collection et leur route associée. Cela a pour
-        but de mettre en base toutes les valeurs qui pourront être utilisées comme filtres.
-      </Callout>
-      <Row gutters className="fr-my-1w">
-        <Col>
-          <select
-            name="dashboard-select"
-            id="dashboard-select"
-            className="fr-mb-2w fr-select"
-            value={selectedDashboard}
-            onChange={(e) => setSelectedDashboard(e.target.value)}
-          >
-            <option value="">Sélectionnez un tableau de bord</option>
-            {data.map((dashboard) => (
-              <option key={dashboard.id} value={dashboard.id}>
-                {dashboard.name}
-              </option>
-            ))}
-          </select>
-        </Col>
-        <Col>
-          <select
-            name="collection-select"
-            id="collection-select"
-            className="fr-mb-2w fr-select"
-            disabled={!selectedDashboard}
-            value={selectedCollection}
-            onChange={(e) => setSelectedCollection(e.target.value)}
-          >
-            <option value="">Sélectionnez une collection</option>
-            {availableCollections.map((collectionName) => (
-              <option key={collectionName} value={collectionName}>
-                {collectionName}
-              </option>
-            ))}
-          </select>
-        </Col>
-        <Col>
-          <select
-            name="field-select"
-            id="field-select"
-            className="fr-mb-2w fr-select"
-            disabled={!selectedCollection || isLoadingCollectionFields}
-            value={selectedField}
-            onChange={(e) => setSelectedField(e.target.value)}
-          >
-            <option value="">Sélectionnez un champ</option>
-            {collectionFields?.fields?.map((field) => (
-              <option key={field.name} value={field.name}>
-                {field.name} ({field.types.join(", ")})
-              </option>
-            ))}
-          </select>
-        </Col>
-        <Col>
-          <input
-            type="text"
-            className="fr-input fr-mb-2w"
-            placeholder="Route du tableau"
-            value={associatedRoute}
-            onChange={(e) => setAssociatedRoute(e.target.value)}
-            disabled={!selectedField}
-          />
-        </Col>
-        <Col md={1} className="text-right">
-          <Button
-            color="blue-cumulus"
-            onClick={() => {
-              if (!selectedDashboard || !selectedCollection || !selectedField || !associatedRoute) {
-                alert("Tous les champs sont obligatoires");
-                return;
-              }
-              characterizeFieldMutation.mutate({
-                boardId: selectedDashboard,
-                collectionId: selectedCollection,
-                field: selectedField,
-                associatedRoute: associatedRoute,
-              });
-            }}
-            disabled={!selectedDashboard || !selectedCollection || !selectedField || !associatedRoute || characterizeFieldMutation.isPending}
-          >
-            {characterizeFieldMutation.isPending ? "..." : "Caractérisez"}
-          </Button>
-        </Col>
-      </Row>
+      <div className="characterization-section">
+        <Callout>
+          Afin de caractériser un tableau de bord, il est nécessaire de definir toutes les clés de chaque collection et leur route associée. Cela a
+          pour but de mettre en base toutes les valeurs qui pourront être utilisées comme filtres.
+        </Callout>
+        <Row gutters className="fr-my-1w form-row">
+          <Col>
+            <select
+              name="dashboard-select"
+              id="dashboard-select"
+              className="fr-mb-2w fr-select"
+              value={selectedDashboard}
+              onChange={(e) => setSelectedDashboard(e.target.value)}
+            >
+              <option value="">Sélectionnez un tableau de bord</option>
+              {data.map((dashboard) => (
+                <option key={dashboard.id} value={dashboard.id}>
+                  {dashboard.name}
+                </option>
+              ))}
+            </select>
+          </Col>
+          <Col>
+            <select
+              name="collection-select"
+              id="collection-select"
+              className="fr-mb-2w fr-select"
+              disabled={!selectedDashboard}
+              value={selectedCollection}
+              onChange={(e) => setSelectedCollection(e.target.value)}
+            >
+              <option value="">Sélectionnez une collection</option>
+              {availableCollections.map((collectionName) => (
+                <option key={collectionName} value={collectionName}>
+                  {collectionName}
+                </option>
+              ))}
+            </select>
+          </Col>
+          <Col>
+            <select
+              name="field-select"
+              id="field-select"
+              className="fr-mb-2w fr-select"
+              disabled={!selectedCollection || isLoadingCollectionFields}
+              value={selectedField}
+              onChange={(e) => setSelectedField(e.target.value)}
+            >
+              <option value="">Sélectionnez un champ</option>
+              {collectionFields?.fields?.map((field) => (
+                <option key={field.name} value={field.name}>
+                  {field.name} ({field.types.join(", ")})
+                </option>
+              ))}
+            </select>
+          </Col>
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="Route du tableau"
+              value={associatedRoute}
+              onChange={(e) => setAssociatedRoute(e.target.value)}
+              disabled={!selectedField}
+            />
+          </Col>
+          <Col md={1} className="text-right">
+            <Button
+              color="blue-cumulus"
+              onClick={() => {
+                if (!selectedDashboard || !selectedCollection || !selectedField || !associatedRoute) {
+                  alert("Tous les champs sont obligatoires");
+                  return;
+                }
+                characterizeFieldMutation.mutate({
+                  boardId: selectedDashboard,
+                  collectionId: selectedCollection,
+                  field: selectedField,
+                  associatedRoute: associatedRoute,
+                });
+              }}
+              disabled={!selectedDashboard || !selectedCollection || !selectedField || !associatedRoute || characterizeFieldMutation.isPending}
+            >
+              {characterizeFieldMutation.isPending ? "..." : "Caractériser"}
+            </Button>
+          </Col>
+        </Row>
+        <Row gutters className="form-row">
+          <Col>
+            <select
+              name="dashboard-select"
+              id="dashboard-select"
+              className="fr-mb-2w fr-select"
+              value={selectedDashboard}
+              onChange={(e) => setSelectedDashboard(e.target.value)}
+            >
+              <option value="">Sélectionnez un tableau de bord</option>
+              {data.map((dashboard) => (
+                <option key={dashboard.id} value={dashboard.id}>
+                  {dashboard.name}
+                </option>
+              ))}
+            </select>
+          </Col>
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="Nom du champ libre"
+              value={manualFieldName}
+              onChange={(e) => setManualFieldName(e.target.value)}
+              disabled={!selectedDashboard}
+            />
+          </Col>
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="Valeur de comparaison"
+              value={manualFieldValue}
+              onChange={(e) => setManualFieldValue(e.target.value)}
+              disabled={!selectedDashboard}
+            />
+          </Col>
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="Route du tableau"
+              value={manualRoute}
+              onChange={(e) => setManualRoute(e.target.value)}
+              disabled={!selectedDashboard}
+            />
+          </Col>
+          <Col md={1} className="text-right">
+            <Button
+              color="blue-cumulus"
+              onClick={() => {
+                if (!selectedDashboard || !manualFieldName || !manualFieldValue || !manualRoute) {
+                  alert("Tous les champs sont obligatoires");
+                  return;
+                }
+                addManualCharacterizationMutation.mutate({
+                  boardId: selectedDashboard,
+                  field: manualFieldName,
+                  value: manualFieldValue,
+                  associatedRoute: manualRoute,
+                });
+              }}
+              disabled={!selectedDashboard || !manualFieldName || !manualFieldValue || !manualRoute || addManualCharacterizationMutation.isPending}
+            >
+              {addManualCharacterizationMutation.isPending ? "..." : "Caractériser"}
+            </Button>
+          </Col>
+        </Row>
+      </div>
       <Row>
         <Col>
           <div className="fr-table fr-table--layout-fixed">
@@ -462,12 +643,13 @@ export default function Home() {
                   <th>Champ</th>
                   <th>Route</th>
                   <th>Nb de valeurs</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {isLoadingCharacterizations ? (
                   <tr>
-                    <td colSpan={5}>Chargement...</td>
+                    <td colSpan={6}>Chargement...</td>
                   </tr>
                 ) : characterizations && characterizations.length > 0 ? (
                   characterizations.map((char, index) => (
@@ -477,13 +659,38 @@ export default function Home() {
                       <td>{char.field}</td>
                       <td>{char.associatedRoute}</td>
                       <td>
-                        <Badge color="blue-cumulus">{char.count}</Badge>
+                        <Badge color="blue-cumulus" style={{ cursor: "pointer" }} onClick={() => handleOpenModal(char)}>
+                          {char.count}
+                        </Badge>
+                      </td>
+                      <td>
+                        {char.collectionId && (
+                          <Button
+                            size="sm"
+                            variant="tertiary"
+                            icon="refresh-line"
+                            title="Rafraîchir les valeurs depuis la collection"
+                            onClick={() => {
+                              if (window.confirm(`Rafraîchir les valeurs de ${char.field} depuis la collection ${char.collectionId} ?`)) {
+                                refreshCharacterizationMutation.mutate({
+                                  boardId: char.boardId,
+                                  collectionId: char.collectionId,
+                                  field: char.field,
+                                  associatedRoute: char.associatedRoute,
+                                });
+                              }
+                            }}
+                            disabled={refreshCharacterizationMutation.isPending}
+                          >
+                            {refreshCharacterizationMutation.isPending ? "..." : "Mettre à jour"}
+                          </Button>
+                        )}
                       </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan={5}>Aucune caractérisation pour le moment</td>
+                    <td colSpan={6}>Aucune caractérisation pour le moment</td>
                   </tr>
                 )}
               </tbody>
@@ -526,121 +733,163 @@ export default function Home() {
       </Row>
       */}
       <h3 className="fr-mb-2w">〉Administration des versions</h3>
-      {/* <Callout>
-        Règles de nommage des collections :<br />
-        nom-du-tableau_nom-de-la-collection_version <br />
-        - Le nom de la collection doit être préfixé par le nom du tableau
-        <br />- Le nom de la collection doit être suffixé par la version (staging-previous, staging, prod-previous, prod)
-      </Callout> */}
-      <Row>
-        <Col>
-          {isLoadingAllCollections ? (
-            <p>Loading allCollections...</p>
-          ) : (
-            <div className="fr-table fr-table--layout-fixed">
-              <table>
-                <thead>
-                  <tr>
-                    <th>Board Name</th>
-                    <th>Collection</th>
-                    <th>staging-previous</th>
-                    <th>staging</th>
-                    <th>prod-previous</th>
-                    <th>prod</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Object.entries(groupedBoards || {})
-                    .sort(([a], [b]) => a.localeCompare(b))
-                    .map(([boardName, collections]) =>
-                      Object.entries(collections)
-                        .sort(([a], [b]) => a.localeCompare(b))
-                        .map(([collectionName, versions]) => {
-                          const getVersionInfo = (version) =>
-                            allCollections?.find((b) => b.boardName === boardName && b.collectionName === collectionName && b.version === version);
+      <div className="version-admin-section">
+        {/* <Callout>
+          Règles de nommage des collections :<br />
+          nom-du-tableau_nom-de-la-collection_version <br />
+          - Le nom de la collection doit être préfixé par le nom du tableau
+          <br />- Le nom de la collection doit être suffixé par la version (staging-previous, staging, prod-previous, prod)
+        </Callout> */}
+        <Row>
+          <Col>
+            {isLoadingAllCollections ? (
+              <p>Loading allCollections...</p>
+            ) : (
+              <div className="fr-table fr-table--layout-fixed">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Board Name</th>
+                      <th>Collection</th>
+                      <th>staging-previous</th>
+                      <th>staging</th>
+                      <th>prod-previous</th>
+                      <th>prod</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {Object.entries(groupedBoards || {})
+                      .sort(([a], [b]) => a.localeCompare(b))
+                      .map(([boardName, collections]) =>
+                        Object.entries(collections)
+                          .sort(([a], [b]) => a.localeCompare(b))
+                          .map(([collectionName, versions]) => {
+                            const getVersionInfo = (version) =>
+                              allCollections?.find((b) => b.boardName === boardName && b.collectionName === collectionName && b.version === version);
 
-                          return (
-                            <>
-                              <tr key={`${boardName}-${collectionName}`}>
-                                <td rowSpan={2}>
-                                  <Title as="h3" look="h6">
-                                    {boardName}
-                                  </Title>
-                                </td>
-                                <td>
-                                  <Text className="fr-text--bold fr-text--lg">{collectionName}</Text>
-                                </td>
-                                <td>
-                                  {getVersionInfo("staging-previous")?.createdAt && (
-                                    <Badge className="fr-ml-1w" color="blue-cumulus">
-                                      <div className="fr-hint-text">Créé le {formatCreationDate(getVersionInfo("staging-previous").createdAt)}</div>
-                                    </Badge>
-                                  )}
-                                </td>
-                                <td>
-                                  {getVersionInfo("staging")?.createdAt && (
-                                    <Badge className="fr-ml-1w" color="blue-cumulus">
-                                      <div className="fr-hint-text">Créé le {formatCreationDate(getVersionInfo("staging").createdAt)}</div>
-                                    </Badge>
-                                  )}
-                                  {successMessages.get(`${boardName}_${collectionName}`) && (
-                                    <Badge className="fr-ml-1w" color="success">
-                                      {successMessages.get(`${boardName}_${collectionName}`)}
-                                    </Badge>
-                                  )}
-                                </td>
-                                <td>
-                                  {getVersionInfo("prod-previous")?.createdAt && (
-                                    <Badge className="fr-ml-1w" color="blue-cumulus">
-                                      <div className="fr-hint-text">Créé le {formatCreationDate(getVersionInfo("prod-previous").createdAt)}</div>
-                                    </Badge>
-                                  )}
-                                </td>
-                                <td rowSpan={2} style={{ verticalAlign: "top" }}>
-                                  {versions["prod"] && getVersionInfo("prod")?.createdAt && (
-                                    <Badge className="fr-ml-1w" color="pink-tuile">
-                                      <div className="fr-hint-text">Créé le {formatCreationDate(getVersionInfo("prod").createdAt)}</div>
-                                    </Badge>
-                                  )}
-                                </td>
-                              </tr>
-                              <tr key={`${boardName}-${collectionName}`}>
-                                <td>
-                                  <Button size="sm" color="blue-cumulus">
-                                    Nouvelle version
-                                  </Button>
-                                </td>
-                                <td>
-                                  <Button color="blue-cumulus" disabled={!versions["staging-previous"]} size="sm">
-                                    Restaurer vers staging
-                                  </Button>
-                                </td>
-                                <td>
-                                  <Button
-                                    color="pink-tuile"
-                                    disabled={!versions["staging"] || copyingCollections.has(`${boardName}_${collectionName}`)}
-                                    onClick={() => stagingToProd(`${boardName}_${collectionName}`, getVersionInfo("prod").createdAt)}
-                                    size="sm"
-                                  >
-                                    {copyingCollections.has(`${boardName}_${collectionName}`) ? "Copie en cours..." : "Mettre en production"}
-                                  </Button>
-                                </td>
-                                <td>
-                                  <Button color="green-emeraude" disabled={!versions["prod-previous"]} size="sm">
-                                    Restaurer vers prod
-                                  </Button>
-                                </td>
-                              </tr>
-                            </>
-                          );
-                        })
-                    )}
-                </tbody>
-              </table>
+                            return (
+                              <>
+                                <tr key={`${boardName}-${collectionName}`}>
+                                  <td rowSpan={2}>
+                                    <Title as="h3" look="h6">
+                                      {boardName}
+                                    </Title>
+                                  </td>
+                                  <td>
+                                    <Text className="fr-text--bold fr-text--lg">{collectionName}</Text>
+                                  </td>
+                                  <td>
+                                    {getVersionInfo("staging-previous")?.createdAt && (
+                                      <Badge className="fr-ml-1w" color="blue-cumulus">
+                                        <div className="fr-hint-text">Créé le {formatCreationDate(getVersionInfo("staging-previous").createdAt)}</div>
+                                      </Badge>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {getVersionInfo("staging")?.createdAt && (
+                                      <Badge className="fr-ml-1w" color="blue-cumulus">
+                                        <div className="fr-hint-text">Créé le {formatCreationDate(getVersionInfo("staging").createdAt)}</div>
+                                      </Badge>
+                                    )}
+                                    {successMessages.get(`${boardName}_${collectionName}`) && (
+                                      <Badge className="fr-ml-1w" color="success">
+                                        {successMessages.get(`${boardName}_${collectionName}`)}
+                                      </Badge>
+                                    )}
+                                  </td>
+                                  <td>
+                                    {getVersionInfo("prod-previous")?.createdAt && (
+                                      <Badge className="fr-ml-1w" color="blue-cumulus">
+                                        <div className="fr-hint-text">Créé le {formatCreationDate(getVersionInfo("prod-previous").createdAt)}</div>
+                                      </Badge>
+                                    )}
+                                  </td>
+                                  <td rowSpan={2} style={{ verticalAlign: "top" }}>
+                                    {versions["prod"] && getVersionInfo("prod")?.createdAt && (
+                                      <Badge className="fr-ml-1w" color="pink-tuile">
+                                        <div className="fr-hint-text">Créé le {formatCreationDate(getVersionInfo("prod").createdAt)}</div>
+                                      </Badge>
+                                    )}
+                                  </td>
+                                </tr>
+                                <tr key={`${boardName}-${collectionName}`}>
+                                  <td>
+                                    <Button size="sm" color="blue-cumulus">
+                                      Nouvelle version
+                                    </Button>
+                                  </td>
+                                  <td>
+                                    <Button color="blue-cumulus" disabled={!versions["staging-previous"]} size="sm">
+                                      Restaurer vers staging
+                                    </Button>
+                                  </td>
+                                  <td>
+                                    <Button
+                                      color="pink-tuile"
+                                      disabled={!versions["staging"] || copyingCollections.has(`${boardName}_${collectionName}`)}
+                                      onClick={() => stagingToProd(`${boardName}_${collectionName}`, getVersionInfo("prod").createdAt)}
+                                      size="sm"
+                                    >
+                                      {copyingCollections.has(`${boardName}_${collectionName}`) ? "Copie en cours..." : "Mettre en production"}
+                                    </Button>
+                                  </td>
+                                  <td>
+                                    <Button color="green-emeraude" disabled={!versions["prod-previous"]} size="sm">
+                                      Restaurer vers prod
+                                    </Button>
+                                  </td>
+                                </tr>
+                              </>
+                            );
+                          })
+                      )}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </Col>
+        </Row>
+      </div>
+
+      {/* Modale pour afficher les valeurs avec recherche */}
+      <Modal isOpen={modalOpen} hide={handleCloseModal} size="lg">
+        <ModalTitle>
+          Valeurs de caractérisation
+          {selectedCharacterization && (
+            <div className="fr-text--sm fr-mt-1w">
+              <strong>Tableau :</strong> {selectedCharacterization.boardId} |<strong> Collection :</strong> {selectedCharacterization.collectionId} |
+              <strong> Champ :</strong> {selectedCharacterization.field}
             </div>
           )}
-        </Col>
-      </Row>
+        </ModalTitle>
+        <ModalContent>
+          <TextInput
+            label="Rechercher une valeur"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            placeholder="Tapez pour filtrer les valeurs..."
+          />
+          <div className="fr-mt-2w" style={{ maxHeight: "400px", overflowY: "auto" }}>
+            {filteredValues.length > 0 ? (
+              <ul className="fr-raw-list">
+                {filteredValues.map((value: string, idx: number) => (
+                  <li key={idx} className="fr-py-1v" style={{ borderBottom: "1px solid #ddd" }}>
+                    {value}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="fr-text--sm">{searchValue ? "Aucune valeur ne correspond à votre recherche." : "Aucune valeur disponible."}</p>
+            )}
+          </div>
+          {selectedCharacterization && (
+            <div className="fr-mt-2w fr-text--sm">
+              <strong>Total : {filteredValues.length}</strong> valeur{filteredValues.length > 1 ? "s" : ""}
+              {searchValue && ` (sur ${selectedCharacterization.values?.length || 0})`}
+            </div>
+          )}
+        </ModalContent>
+      </Modal>
     </Container>
   );
 }

@@ -21,7 +21,7 @@ router.route("/admin/list-dashboards").get(async (req, res) => {
 // add a new dashboard
 router.route("/admin/add-dashboard").post(async (req, res) => {
   const filters = checkQuery(req.body, ["name", "id", "description", "url", "api_url"], res);
-  const { name, id, description, url, api_url } = filters;
+  const { name, id, description, url, api_url, isMultilingual } = req.body;
 
   try {
     // Vérifier si un dashboard avec cet ID existe déjà
@@ -37,6 +37,7 @@ router.route("/admin/add-dashboard").post(async (req, res) => {
       description,
       url,
       api_url,
+      isMultilingual: isMultilingual || false,
       data: [],
       constants: [],
       createdAt: new Date().toISOString()
@@ -616,10 +617,44 @@ router.route("/admin/characterize-field").post(async (req, res) => {
   }
 });
 
+// Add manual characterization - add a single value to cross-boards collection
+router.route("/admin/add-manual-characterization").post(async (req, res) => {
+  const filters = checkQuery(req.body, ["boardId", "field", "value", "associatedRoute"], res);
+  const { boardId, field, value, associatedRoute } = filters;
+
+  try {
+    // Insérer la valeur dans la collection cross-boards
+    const document = {
+      boardId,
+      collectionId: null, // Pas de collection spécifique pour les champs manuels
+      field,
+      value,
+      associatedRoute,
+      createdAt: new Date().toISOString(),
+      isManual: true // Marquer comme ajout manuel
+    };
+
+    await db.collection("cross-boards").insertOne(document);
+
+    res.json({ 
+      message: "Manual characterization added successfully",
+      boardId,
+      field,
+      value
+    });
+  } catch (error) {
+    console.error("Error adding manual characterization:", error);
+    res.status(500).json({ 
+      error: "Unable to add manual characterization", 
+      details: error.message 
+    });
+  }
+});
+
 // Get all characterizations
 router.route("/admin/list-characterizations").get(async (req, res) => {
   try {
-    // Récupérer toutes les caractérisations uniques (sans les valeurs)
+    // Récupérer toutes les caractérisations avec leurs valeurs
     const characterizations = await db.collection("cross-boards").aggregate([
       {
         $group: {
@@ -630,6 +665,7 @@ router.route("/admin/list-characterizations").get(async (req, res) => {
             associatedRoute: "$associatedRoute"
           },
           count: { $sum: 1 },
+          values: { $push: "$value" },
           createdAt: { $first: "$createdAt" }
         }
       },
@@ -641,6 +677,7 @@ router.route("/admin/list-characterizations").get(async (req, res) => {
           field: "$_id.field",
           associatedRoute: "$_id.associatedRoute",
           count: 1,
+          values: 1,
           createdAt: 1
         }
       },
@@ -670,10 +707,13 @@ router.route("/admin/search-cross-boards").get(async (req, res) => {
     }
 
     // Construire les requêtes pour chaque paramètre
-    const searchQueries = Object.entries(urlParams).map(([field, value]) => ({
-      field,
-      value
-    }));
+    // Chercher soit la valeur exacte, soit les champs avec des valeurs commençant par $
+    const searchQueries = Object.entries(urlParams).flatMap(([field, value]) => [
+      // Match exact sur field et value
+      { field, value },
+      // Match sur field uniquement si value commence par $
+      { field, value: { $regex: /^\$/ } }
+    ]);
 
     // Rechercher dans cross-boards toutes les correspondances
     const results = await db.collection("cross-boards").find({
@@ -690,9 +730,13 @@ router.route("/admin/search-cross-boards").get(async (req, res) => {
           matches: []
         };
       }
+      
+      // Si la valeur commence par $, utiliser la valeur du paramètre d'URL
+      const actualValue = item.value.startsWith('$') ? urlParams[item.field] : item.value;
+      
       acc[key].matches.push({
         field: item.field,
-        value: item.value,
+        value: actualValue,
         collectionId: item.collectionId
       });
       return acc;
@@ -703,6 +747,61 @@ router.route("/admin/search-cross-boards").get(async (req, res) => {
     console.error("Error searching cross-boards:", error);
     res.status(500).json({ 
       error: "Unable to search cross-boards", 
+      details: error.message 
+    });
+  }
+});
+
+// Refresh characterization - delete and recreate values for a specific field
+router.route("/admin/refresh-characterization").post(async (req, res) => {
+  const filters = checkQuery(req.body, ["boardId", "collectionId", "field", "associatedRoute"], res);
+  const { boardId, collectionId, field, associatedRoute } = filters;
+
+  try {
+    // Construire le nom complet de la collection (on utilise staging par défaut)
+    const fullCollectionName = `${boardId}_${collectionId}_staging`;
+
+    // Vérifier si la collection existe
+    const collectionExists = await db.listCollections({ name: fullCollectionName }).hasNext();
+    if (!collectionExists) {
+      return res.status(404).json({ error: `Collection ${fullCollectionName} not found` });
+    }
+
+    // Supprimer les anciennes entrées pour ce champ
+    await db.collection("cross-boards").deleteMany({
+      boardId,
+      collectionId,
+      field
+    });
+
+    // Récupérer toutes les valeurs distinctes du champ
+    const distinctValues = await db.collection(fullCollectionName).distinct(field);
+
+    // Insérer chaque valeur distincte dans la collection cross-boards
+    const documents = distinctValues.map(value => ({
+      boardId,
+      collectionId,
+      field,
+      value,
+      associatedRoute,
+      createdAt: new Date().toISOString()
+    }));
+
+    if (documents.length > 0) {
+      await db.collection("cross-boards").insertMany(documents);
+    }
+
+    res.json({ 
+      message: "Characterization refreshed successfully",
+      count: documents.length,
+      boardId,
+      collectionId,
+      field
+    });
+  } catch (error) {
+    console.error("Error refreshing characterization:", error);
+    res.status(500).json({ 
+      error: "Unable to refresh characterization", 
       details: error.message 
     });
   }
