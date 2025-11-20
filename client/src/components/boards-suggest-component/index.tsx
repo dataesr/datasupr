@@ -160,15 +160,6 @@ export default function BoardsSuggestComponent() {
     // Vérifier si le tableau de bord cible est multilingue
     const targetDashboard = dashboards?.find((dashboard) => dashboard.id === suggestion.boardId);
 
-    console.log(
-      "buildRouteWithParams - language:",
-      language,
-      "targetDashboard:",
-      targetDashboard,
-      "isMultilingual:",
-      targetDashboard?.isMultilingual
-    );
-
     // Si le tableau de bord cible est multilingue, gérer le paramètre language
     if (targetDashboard?.isMultilingual) {
       // D'abord, supprimer le paramètre language existant s'il y en a un
@@ -185,8 +176,6 @@ export default function BoardsSuggestComponent() {
       // Ajouter le paramètre language avec la langue actuelle
       const separator = finalRoute.includes("?") ? "&" : "?";
       finalRoute = `${finalRoute}${separator}language=${language}`;
-
-      console.log("finalRoute avec language:", finalRoute);
     }
 
     return finalRoute;
