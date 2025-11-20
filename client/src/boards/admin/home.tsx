@@ -31,6 +31,7 @@ export default function Home() {
   const [manualFieldValue, setManualFieldValue] = useState<string>("");
   const [manualRoute, setManualRoute] = useState<string>("");
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [characterizationMode, setCharacterizationMode] = useState<"collection" | "manual">("collection");
   const [selectedCharacterization, setSelectedCharacterization] = useState<{
     boardId: string;
     collectionId: string;
@@ -481,156 +482,208 @@ export default function Home() {
           Afin de caractériser un tableau de bord, il est nécessaire de definir toutes les clés de chaque collection et leur route associée. Cela a
           pour but de mettre en base toutes les valeurs qui pourront être utilisées comme filtres.
         </Callout>
-        <Row gutters className="fr-my-1w form-row">
+
+        <Row className="fr-mt-1w">
           <Col>
-            <select
-              name="dashboard-select"
-              id="dashboard-select"
-              className="fr-mb-2w fr-select"
-              value={selectedDashboard}
-              onChange={(e) => setSelectedDashboard(e.target.value)}
-            >
-              <option value="">Sélectionnez un tableau de bord</option>
-              {data.map((dashboard) => (
-                <option key={dashboard.id} value={dashboard.id}>
-                  {dashboard.name}
-                </option>
-              ))}
-            </select>
-          </Col>
-          <Col>
-            <select
-              name="collection-select"
-              id="collection-select"
-              className="fr-mb-2w fr-select"
-              disabled={!selectedDashboard}
-              value={selectedCollection}
-              onChange={(e) => setSelectedCollection(e.target.value)}
-            >
-              <option value="">Sélectionnez une collection</option>
-              {availableCollections.map((collectionName) => (
-                <option key={collectionName} value={collectionName}>
-                  {collectionName}
-                </option>
-              ))}
-            </select>
-          </Col>
-          <Col>
-            <select
-              name="field-select"
-              id="field-select"
-              className="fr-mb-2w fr-select"
-              disabled={!selectedCollection || isLoadingCollectionFields}
-              value={selectedField}
-              onChange={(e) => setSelectedField(e.target.value)}
-            >
-              <option value="">Sélectionnez un champ</option>
-              {collectionFields?.fields?.map((field) => (
-                <option key={field.name} value={field.name}>
-                  {field.name} ({field.types.join(", ")})
-                </option>
-              ))}
-            </select>
-          </Col>
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
-              placeholder="Route du tableau"
-              value={associatedRoute}
-              onChange={(e) => setAssociatedRoute(e.target.value)}
-              disabled={!selectedField}
-            />
-          </Col>
-          <Col md={1} className="text-right">
-            <Button
-              color="blue-cumulus"
-              onClick={() => {
-                if (!selectedDashboard || !selectedCollection || !selectedField || !associatedRoute) {
-                  alert("Tous les champs sont obligatoires");
-                  return;
-                }
-                characterizeFieldMutation.mutate({
-                  boardId: selectedDashboard,
-                  collectionId: selectedCollection,
-                  field: selectedField,
-                  associatedRoute: associatedRoute,
-                });
-              }}
-              disabled={!selectedDashboard || !selectedCollection || !selectedField || !associatedRoute || characterizeFieldMutation.isPending}
-            >
-              {characterizeFieldMutation.isPending ? "..." : "Caractériser"}
-            </Button>
+            <div className="fr-form-group">
+              <fieldset className="fr-fieldset">
+                <legend className="fr-fieldset__legend">Mode de caractérisation</legend>
+                <div className="fr-fieldset__content">
+                  <div className="fr-grid-row fr-grid-row--gutters">
+                    <div className="fr-col-12 fr-col-md-6">
+                      <div className="fr-radio-group fr-radio-rich">
+                        <input
+                          type="radio"
+                          id="mode-collection"
+                          name="characterization-mode"
+                          value="collection"
+                          checked={characterizationMode === "collection"}
+                          onChange={(e) => setCharacterizationMode(e.target.value as "collection" | "manual")}
+                        />
+                        <label className="fr-label" htmlFor="mode-collection">
+                          Caractériser depuis une collection
+                          <span className="fr-hint-text">Sélectionner un champ existant dans une collection</span>
+                        </label>
+                      </div>
+                    </div>
+                    <div className="fr-col-12 fr-col-md-6">
+                      <div className="fr-radio-group fr-radio-rich">
+                        <input
+                          type="radio"
+                          id="mode-manual"
+                          name="characterization-mode"
+                          value="manual"
+                          checked={characterizationMode === "manual"}
+                          onChange={(e) => setCharacterizationMode(e.target.value as "collection" | "manual")}
+                        />
+                        <label className="fr-label" htmlFor="mode-manual">
+                          Caractériser depuis un champ libre
+                          <span className="fr-hint-text">Ajouter manuellement un champ et sa valeur</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
           </Col>
         </Row>
-        <Row gutters className="form-row">
-          <Col>
-            <select
-              name="dashboard-select"
-              id="dashboard-select"
-              className="fr-mb-2w fr-select"
-              value={selectedDashboard}
-              onChange={(e) => setSelectedDashboard(e.target.value)}
-            >
-              <option value="">Sélectionnez un tableau de bord</option>
-              {data.map((dashboard) => (
-                <option key={dashboard.id} value={dashboard.id}>
-                  {dashboard.name}
-                </option>
-              ))}
-            </select>
-          </Col>
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
-              placeholder="Nom du champ libre"
-              value={manualFieldName}
-              onChange={(e) => setManualFieldName(e.target.value)}
-              disabled={!selectedDashboard}
-            />
-          </Col>
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
-              placeholder="Valeur de comparaison"
-              value={manualFieldValue}
-              onChange={(e) => setManualFieldValue(e.target.value)}
-              disabled={!selectedDashboard}
-            />
-          </Col>
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
-              placeholder="Route du tableau"
-              value={manualRoute}
-              onChange={(e) => setManualRoute(e.target.value)}
-              disabled={!selectedDashboard}
-            />
-          </Col>
-          <Col md={1} className="text-right">
-            <Button
-              color="blue-cumulus"
-              onClick={() => {
-                if (!selectedDashboard || !manualFieldName || !manualFieldValue || !manualRoute) {
-                  alert("Tous les champs sont obligatoires");
-                  return;
-                }
-                addManualCharacterizationMutation.mutate({
-                  boardId: selectedDashboard,
-                  field: manualFieldName,
-                  value: manualFieldValue,
-                  associatedRoute: manualRoute,
-                });
-              }}
-              disabled={!selectedDashboard || !manualFieldName || !manualFieldValue || !manualRoute || addManualCharacterizationMutation.isPending}
-            >
-              {addManualCharacterizationMutation.isPending ? "..." : "Caractériser"}
-            </Button>
-          </Col>
-        </Row>
+
+        {characterizationMode === "collection" && (
+          <Row gutters className="form-row">
+            <Col>
+              <select
+                name="dashboard-select"
+                id="dashboard-select"
+                className="fr-mb-2w fr-select"
+                value={selectedDashboard}
+                onChange={(e) => setSelectedDashboard(e.target.value)}
+              >
+                <option value="">Sélectionnez un tableau de bord</option>
+                {data.map((dashboard) => (
+                  <option key={dashboard.id} value={dashboard.id}>
+                    {dashboard.name}
+                  </option>
+                ))}
+              </select>
+            </Col>
+            <Col>
+              <select
+                name="collection-select"
+                id="collection-select"
+                className="fr-mb-2w fr-select"
+                disabled={!selectedDashboard}
+                value={selectedCollection}
+                onChange={(e) => setSelectedCollection(e.target.value)}
+              >
+                <option value="">Sélectionnez une collection</option>
+                {availableCollections.map((collectionName) => (
+                  <option key={collectionName} value={collectionName}>
+                    {collectionName}
+                  </option>
+                ))}
+              </select>
+            </Col>
+            <Col>
+              <select
+                name="field-select"
+                id="field-select"
+                className="fr-mb-2w fr-select"
+                disabled={!selectedCollection || isLoadingCollectionFields}
+                value={selectedField}
+                onChange={(e) => setSelectedField(e.target.value)}
+              >
+                <option value="">Sélectionnez un champ</option>
+                {collectionFields?.fields?.map((field) => (
+                  <option key={field.name} value={field.name}>
+                    {field.name} ({field.types.join(", ")})
+                  </option>
+                ))}
+              </select>
+            </Col>
+            <Col>
+              <input
+                type="text"
+                className="fr-input fr-mb-2w"
+                placeholder="Route du tableau"
+                value={associatedRoute}
+                onChange={(e) => setAssociatedRoute(e.target.value)}
+                disabled={!selectedField}
+              />
+            </Col>
+            <Col md={1} className="text-right">
+              <Button
+                color="blue-cumulus"
+                onClick={() => {
+                  if (!selectedDashboard || !selectedCollection || !selectedField || !associatedRoute) {
+                    alert("Tous les champs sont obligatoires");
+                    return;
+                  }
+                  characterizeFieldMutation.mutate({
+                    boardId: selectedDashboard,
+                    collectionId: selectedCollection,
+                    field: selectedField,
+                    associatedRoute: associatedRoute,
+                  });
+                }}
+                disabled={!selectedDashboard || !selectedCollection || !selectedField || !associatedRoute || characterizeFieldMutation.isPending}
+              >
+                {characterizeFieldMutation.isPending ? "..." : "Caractériser"}
+              </Button>
+            </Col>
+          </Row>
+        )}
+
+        {characterizationMode === "manual" && (
+          <Row gutters className="form-row">
+            <Col>
+              <select
+                name="dashboard-select-manual"
+                id="dashboard-select-manual"
+                className="fr-mb-2w fr-select"
+                value={selectedDashboard}
+                onChange={(e) => setSelectedDashboard(e.target.value)}
+              >
+                <option value="">Sélectionnez un tableau de bord</option>
+                {data.map((dashboard) => (
+                  <option key={dashboard.id} value={dashboard.id}>
+                    {dashboard.name}
+                  </option>
+                ))}
+              </select>
+            </Col>
+            <Col>
+              <input
+                type="text"
+                className="fr-input fr-mb-2w"
+                placeholder="Nom du champ libre"
+                value={manualFieldName}
+                onChange={(e) => setManualFieldName(e.target.value)}
+                disabled={!selectedDashboard}
+              />
+            </Col>
+            <Col>
+              <input
+                type="text"
+                className="fr-input fr-mb-2w"
+                placeholder="Valeur de comparaison"
+                value={manualFieldValue}
+                onChange={(e) => setManualFieldValue(e.target.value)}
+                disabled={!selectedDashboard}
+              />
+            </Col>
+            <Col>
+              <input
+                type="text"
+                className="fr-input fr-mb-2w"
+                placeholder="Route du tableau"
+                value={manualRoute}
+                onChange={(e) => setManualRoute(e.target.value)}
+                disabled={!selectedDashboard}
+              />
+            </Col>
+            <Col md={1} className="text-right">
+              <Button
+                color="blue-cumulus"
+                onClick={() => {
+                  if (!selectedDashboard || !manualFieldName || !manualFieldValue || !manualRoute) {
+                    alert("Tous les champs sont obligatoires");
+                    return;
+                  }
+                  addManualCharacterizationMutation.mutate({
+                    boardId: selectedDashboard,
+                    field: manualFieldName,
+                    value: manualFieldValue,
+                    associatedRoute: manualRoute,
+                  });
+                }}
+                disabled={!selectedDashboard || !manualFieldName || !manualFieldValue || !manualRoute || addManualCharacterizationMutation.isPending}
+              >
+                {addManualCharacterizationMutation.isPending ? "..." : "Caractériser"}
+              </Button>
+            </Col>
+          </Row>
+        )}
       </div>
       <Row>
         <Col>
