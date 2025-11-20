@@ -20,14 +20,19 @@ interface CrossBoardResult {
 
 interface Dashboard {
   id: string;
-  name: string;
-  description?: string;
+  name_fr: string;
+  name_en: string;
+  description_fr?: string;
+  description_en?: string;
   isMultilingual?: boolean;
 }
 
 export default function BoardsSuggestComponent() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
+
+  // Extraire la langue depuis les paramètres d'URL (par défaut 'fr')
+  const language = searchParams.get("language") || "fr";
 
   // Extraire la base de la route actuelle (ex: /european-projects depuis /european-projects/overview)
   const currentRouteBase = useMemo(() => {
@@ -219,10 +224,19 @@ export default function BoardsSuggestComponent() {
             {suggestions.map((suggestion, index) => {
               const targetDashboard = dashboards?.find((dashboard) => dashboard.id === suggestion.boardId);
 
+              // Déterminer le nom et la description en fonction de la langue
+              const dashboardName =
+                language === "en" && targetDashboard?.name_en
+                  ? targetDashboard.name_en
+                  : targetDashboard?.name_fr || suggestion.boardId.toUpperCase();
+
+              const dashboardDescription =
+                language === "en" && targetDashboard?.description_en ? targetDashboard.description_en : targetDashboard?.description_fr;
+
               return (
                 <Link key={index} href={buildRouteWithParams(suggestion)} target="_blank" rel="noopener noreferrer" className="suggestion-card">
-                  <h6 className="suggestion-card__title">{suggestion.boardId.toUpperCase()}</h6>
-                  {targetDashboard?.description && <p className="suggestion-card__description">{targetDashboard.description}</p>}
+                  <h6 className="suggestion-card__title">{dashboardName}</h6>
+                  {dashboardDescription && <p className="suggestion-card__description">{dashboardDescription}</p>}
                   <div className="suggestion-card__badges">
                     <Badge color="green-menthe" size="sm" className="fr-mr-1v">
                       {suggestion.matches.length} correspondance{suggestion.matches.length > 1 ? "s" : ""}
