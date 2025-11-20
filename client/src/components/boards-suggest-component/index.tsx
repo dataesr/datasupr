@@ -160,15 +160,33 @@ export default function BoardsSuggestComponent() {
     // Vérifier si le tableau de bord cible est multilingue
     const targetDashboard = dashboards?.find((dashboard) => dashboard.id === suggestion.boardId);
 
-    // Ajouter le paramètre language uniquement si le tableau de bord est multilingue
-    if (params.language && targetDashboard?.isMultilingual) {
-      // Vérifier si la route contient déjà des paramètres
-      const separator = finalRoute.includes("?") ? "&" : "?";
+    console.log(
+      "buildRouteWithParams - language:",
+      language,
+      "targetDashboard:",
+      targetDashboard,
+      "isMultilingual:",
+      targetDashboard?.isMultilingual
+    );
 
-      // Vérifier si language n'est pas déjà présent
-      if (!finalRoute.includes("language=")) {
-        finalRoute = `${finalRoute}${separator}language=${params.language}`;
-      }
+    // Si le tableau de bord cible est multilingue, gérer le paramètre language
+    if (targetDashboard?.isMultilingual) {
+      // D'abord, supprimer le paramètre language existant s'il y en a un
+      finalRoute = finalRoute.replace(/[?&]language=[^&]*/g, "");
+
+      // Nettoyer les éventuels problèmes de séparateurs
+      // Si on a ?& remplacer par ?
+      finalRoute = finalRoute.replace(/\?&/g, "?");
+      // Si on a && remplacer par &
+      finalRoute = finalRoute.replace(/&&/g, "&");
+      // Si on a & au début des query params (sans ?), remplacer par ?
+      finalRoute = finalRoute.replace(/([^?&])&/, "$1?");
+
+      // Ajouter le paramètre language avec la langue actuelle
+      const separator = finalRoute.includes("?") ? "&" : "?";
+      finalRoute = `${finalRoute}${separator}language=${language}`;
+
+      console.log("finalRoute avec language:", finalRoute);
     }
 
     return finalRoute;
