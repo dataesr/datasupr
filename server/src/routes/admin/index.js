@@ -20,8 +20,8 @@ router.route("/admin/list-dashboards").get(async (req, res) => {
 
 // add a new dashboard
 router.route("/admin/add-dashboard").post(async (req, res) => {
-  const filters = checkQuery(req.body, ["name", "id", "description", "url", "api_url"], res);
-  const { name, id, description, url, api_url, isMultilingual } = req.body;
+  const filters = checkQuery(req.body, ["name_fr", "name_en", "id", "description_fr", "description_en", "url", "api_url"], res);
+  const { name_fr, name_en, id, description_fr, description_en, url, api_url, isMultilingual } = req.body;
 
   try {
     // Vérifier si un dashboard avec cet ID existe déjà
@@ -32,9 +32,11 @@ router.route("/admin/add-dashboard").post(async (req, res) => {
 
     // Créer le nouveau dashboard
     const newDashboard = {
-      name,
+      name_fr,
+      name_en,
       id,
-      description,
+      description_fr,
+      description_en,
       url,
       api_url,
       isMultilingual: isMultilingual || false,

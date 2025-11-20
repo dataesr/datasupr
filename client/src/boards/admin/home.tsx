@@ -42,9 +42,11 @@ export default function Home() {
   } | null>(null);
   const [searchValue, setSearchValue] = useState<string>("");
   const [newDashboard, setNewDashboard] = useState({
-    name: "",
+    name_fr: "",
+    name_en: "",
     id: "",
-    description: "",
+    description_fr: "",
+    description_en: "",
     url: "",
     api_url: "",
     isMultilingual: false,
@@ -114,9 +116,11 @@ export default function Home() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["list-dashboards"] });
       setNewDashboard({
-        name: "",
+        name_fr: "",
+        name_en: "",
         id: "",
-        description: "",
+        description_fr: "",
+        description_en: "",
         url: "",
         api_url: "",
         isMultilingual: false,
@@ -346,7 +350,15 @@ export default function Home() {
 
   const add_dashboard = () => {
     // Vérifier que tous les champs sont remplis
-    if (!newDashboard.name || !newDashboard.id || !newDashboard.description || !newDashboard.url || !newDashboard.api_url) {
+    if (
+      !newDashboard.name_fr ||
+      !newDashboard.name_en ||
+      !newDashboard.id ||
+      !newDashboard.description_fr ||
+      !newDashboard.description_en ||
+      !newDashboard.url ||
+      !newDashboard.api_url
+    ) {
       alert("Tous les champs sont obligatoires");
       return;
     }
@@ -374,15 +386,6 @@ export default function Home() {
             <input
               type="text"
               className="fr-input fr-mb-2w"
-              placeholder="Nom du tableau de bord"
-              value={newDashboard.name}
-              onChange={(e) => setNewDashboard({ ...newDashboard, name: e.target.value })}
-            />
-          </Col>
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
               placeholder="Identifiant du tableau de bord"
               value={newDashboard.id}
               onChange={(e) => setNewDashboard({ ...newDashboard, id: e.target.value })}
@@ -392,9 +395,51 @@ export default function Home() {
             <input
               type="text"
               className="fr-input fr-mb-2w"
-              placeholder="Description du tableau de bord"
-              value={newDashboard.description}
-              onChange={(e) => setNewDashboard({ ...newDashboard, description: e.target.value })}
+              placeholder="Nom du tableau de bord (FR)"
+              value={newDashboard.name_fr}
+              onChange={(e) => setNewDashboard({ ...newDashboard, name_fr: e.target.value })}
+            />
+          </Col>
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="Nom du tableau de bord (EN)"
+              value={newDashboard.name_en}
+              onChange={(e) => setNewDashboard({ ...newDashboard, name_en: e.target.value })}
+            />
+          </Col>
+          <Col>
+            <div className="fr-checkbox-group">
+              <input
+                type="checkbox"
+                id="isMultilingual"
+                checked={newDashboard.isMultilingual}
+                onChange={(e) => setNewDashboard({ ...newDashboard, isMultilingual: e.target.checked })}
+              />
+              <label className="fr-label" htmlFor="isMultilingual">
+                Multilingue
+              </label>
+            </div>
+          </Col>
+        </Row>
+        <Row gutters className="form-row">
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="Description du tableau de bord (FR)"
+              value={newDashboard.description_fr}
+              onChange={(e) => setNewDashboard({ ...newDashboard, description_fr: e.target.value })}
+            />
+          </Col>
+          <Col>
+            <input
+              type="text"
+              className="fr-input fr-mb-2w"
+              placeholder="Description du tableau de bord (EN)"
+              value={newDashboard.description_en}
+              onChange={(e) => setNewDashboard({ ...newDashboard, description_en: e.target.value })}
             />
           </Col>
           <Col>
@@ -415,19 +460,6 @@ export default function Home() {
               onChange={(e) => setNewDashboard({ ...newDashboard, api_url: e.target.value })}
             />
           </Col>
-          <Col>
-            <div className="fr-checkbox-group">
-              <input
-                type="checkbox"
-                id="isMultilingual"
-                checked={newDashboard.isMultilingual}
-                onChange={(e) => setNewDashboard({ ...newDashboard, isMultilingual: e.target.checked })}
-              />
-              <label className="fr-label" htmlFor="isMultilingual">
-                Multilingue
-              </label>
-            </div>
-          </Col>
           <Col md={1} className="text-right">
             <Button color="blue-cumulus" onClick={() => add_dashboard()} disabled={addDashboardMutation.isPending}>
               {addDashboardMutation.isPending ? "..." : "Ajouter"}
@@ -441,9 +473,11 @@ export default function Home() {
             <table>
               <thead>
                 <tr>
-                  <th>Nom</th>
                   <th>Identifiant</th>
-                  <th>Description</th>
+                  <th>Nom (FR)</th>
+                  <th>Nom (EN)</th>
+                  <th>Description (FR)</th>
+                  <th>Description (EN)</th>
                   <th>URL du tableau</th>
                   <th>URL de l'API</th>
                   <th>Multilingue</th>
@@ -452,9 +486,11 @@ export default function Home() {
               <tbody>
                 {data.map((dashboard) => (
                   <tr key={dashboard.id}>
-                    <td>{dashboard.name}</td>
                     <td>{dashboard.id}</td>
-                    <td>{dashboard.description}</td>
+                    <td>{dashboard.name_fr}</td>
+                    <td>{dashboard.name_en}</td>
+                    <td>{dashboard.description_fr}</td>
+                    <td>{dashboard.description_en}</td>
                     <td>{dashboard.url}</td>
                     <td>{dashboard.api_url}</td>
                     <td>
@@ -542,7 +578,7 @@ export default function Home() {
                 <option value="">Sélectionnez un tableau de bord</option>
                 {data.map((dashboard) => (
                   <option key={dashboard.id} value={dashboard.id}>
-                    {dashboard.name}
+                    {dashboard.name_fr}
                   </option>
                 ))}
               </select>
@@ -627,7 +663,7 @@ export default function Home() {
                 <option value="">Sélectionnez un tableau de bord</option>
                 {data.map((dashboard) => (
                   <option key={dashboard.id} value={dashboard.id}>
-                    {dashboard.name}
+                    {dashboard.name_fr}
                   </option>
                 ))}
               </select>
@@ -691,7 +727,7 @@ export default function Home() {
             <table>
               <thead>
                 <tr>
-                  <th>Tableau de bord</th>
+                  <th>Tableau de bord (ID)</th>
                   <th>Collection</th>
                   <th>Champ</th>
                   <th>Route</th>
@@ -802,7 +838,7 @@ export default function Home() {
                 <table>
                   <thead>
                     <tr>
-                      <th>Board Name</th>
+                      <th>Tableau de bord (ID)</th>
                       <th>Collection</th>
                       <th>staging-previous</th>
                       <th>staging</th>
