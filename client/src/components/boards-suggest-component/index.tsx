@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { Badge, Container, Row, Col, Text, Title, Link } from "@dataesr/dsfr-plus";
@@ -30,6 +30,7 @@ interface Dashboard {
 export default function BoardsSuggestComponent() {
   const [searchParams] = useSearchParams();
   const location = useLocation();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Extraire la langue depuis les paramètres d'URL (par défaut 'fr')
   const language = searchParams.get("language") || "fr";
@@ -207,57 +208,95 @@ export default function BoardsSuggestComponent() {
   }
 
   return (
-    <aside className="inline-suggest fr-mt-3w">
+    <aside className={`inline-suggest fr-mt-3w ${isExpanded ? "inline-suggest--expanded" : ""}`}>
       <Container fluid>
         <Row gutters>
           <Col xs="12">
-            <Title as="h6" look="h6" className="fr-mb-1w">
-              💡 Tableaux de bord suggérés
-            </Title>
-          </Col>
-          <Col xs="12">
-            <Text size="sm" bold className="fr-mb-1w">
-              Paramètres détectés :
-            </Text>
-            <div className="fr-mb-2w">
-              {Object.entries(params).map(([key, value]) => (
-                <Badge key={key} color="blue-ecume" size="sm" className="fr-mr-1v fr-mb-1v">
-                  {key} = {value}
-                </Badge>
-              ))}
+            <div className="inline-suggest__header" onClick={() => setIsExpanded(!isExpanded)}>
+              <Title as="h6" look="h6" className="fr-mb-0">
+                💡 {suggestions.length} tableau{suggestions.length > 1 ? "x" : ""} de bord suggéré{suggestions.length > 1 ? "s" : ""}
+              </Title>
+              <button className="inline-suggest__toggle" aria-label={isExpanded ? "Réduire" : "Agrandir"}>
+                {isExpanded ? "−" : "+"}
+              </button>
             </div>
           </Col>
-          <Col xs="12">
-            {suggestions.map((suggestion, index) => {
-              const targetDashboard = dashboards?.find((dashboard) => dashboard.id === suggestion.boardId);
 
-              // Déterminer le nom et la description en fonction de la langue
-              const dashboardName =
-                language === "en" && targetDashboard?.name_en
-                  ? targetDashboard.name_en
-                  : targetDashboard?.name_fr || suggestion.boardId.toUpperCase();
+          {!isExpanded && (
+            <Col xs="12">
+              <div className="inline-suggest__quick-links">
+                {suggestions.map((suggestion, index) => {
+                  const targetDashboard = dashboards?.find((dashboard) => dashboard.id === suggestion.boardId);
+                  const dashboardName =
+                    language === "en" && targetDashboard?.name_en
+                      ? targetDashboard.name_en
+                      : targetDashboard?.name_fr || suggestion.boardId.toUpperCase();
 
-              const dashboardDescription =
-                language === "en" && targetDashboard?.description_en ? targetDashboard.description_en : targetDashboard?.description_fr;
+                  return (
+                    <Link
+                      key={index}
+                      href={buildRouteWithParams(suggestion)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-suggest__quick-link"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {dashboardName}
+                      <span className="inline-suggest__quick-link-count">{suggestion.matches.length}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </Col>
+          )}
 
-              return (
-                <Link key={index} href={buildRouteWithParams(suggestion)} target="_blank" rel="noopener noreferrer" className="suggestion-card">
-                  <h6 className="suggestion-card__title">{dashboardName}</h6>
-                  {dashboardDescription && <p className="suggestion-card__description">{dashboardDescription}</p>}
-                  <div className="suggestion-card__badges">
-                    <Badge color="green-menthe" size="sm" className="fr-mr-1v">
-                      {suggestion.matches.length} correspondance{suggestion.matches.length > 1 ? "s" : ""}
+          {isExpanded && (
+            <>
+              <Col xs="12">
+                <Text size="sm" bold className="fr-mb-1w">
+                  Paramètres détectés :
+                </Text>
+                <div className="fr-mb-2w">
+                  {Object.entries(params).map(([key, value]) => (
+                    <Badge key={key} color="blue-ecume" size="sm" className="fr-mr-1v fr-mb-1v">
+                      {key} = {value}
                     </Badge>
-                    {suggestion.matches.map((match, matchIndex) => (
-                      <Badge key={matchIndex} color="purple-glycine" size="sm">
-                        {match.field}: {match.value}
-                      </Badge>
-                    ))}
-                  </div>
-                </Link>
-              );
-            })}
-          </Col>
+                  ))}
+                </div>
+              </Col>
+              <Col xs="12">
+                {suggestions.map((suggestion, index) => {
+                  const targetDashboard = dashboards?.find((dashboard) => dashboard.id === suggestion.boardId);
+
+                  // Déterminer le nom et la description en fonction de la langue
+                  const dashboardName =
+                    language === "en" && targetDashboard?.name_en
+                      ? targetDashboard.name_en
+                      : targetDashboard?.name_fr || suggestion.boardId.toUpperCase();
+
+                  const dashboardDescription =
+                    language === "en" && targetDashboard?.description_en ? targetDashboard.description_en : targetDashboard?.description_fr;
+
+                  return (
+                    <Link key={index} href={buildRouteWithParams(suggestion)} target="_blank" rel="noopener noreferrer" className="suggestion-card">
+                      <h6 className="suggestion-card__title">{dashboardName}</h6>
+                      {dashboardDescription && <p className="suggestion-card__description">{dashboardDescription}</p>}
+                      <div className="suggestion-card__badges">
+                        <Badge color="green-menthe" size="sm" className="fr-mr-1v">
+                          {suggestion.matches.length} correspondance{suggestion.matches.length > 1 ? "s" : ""}
+                        </Badge>
+                        {suggestion.matches.map((match, matchIndex) => (
+                          <Badge key={matchIndex} color="purple-glycine" size="sm">
+                            {match.field}: {match.value}
+                          </Badge>
+                        ))}
+                      </div>
+                    </Link>
+                  );
+                })}
+              </Col>
+            </>
+          )}
         </Row>
       </Container>
     </aside>
