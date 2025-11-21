@@ -54,5 +54,17 @@
   "download_data": {
     "fr": "Télécharger les données",
     "en": "Download data"
+  },
+  "synthesis": {
+    "fr": "Synthèse",
+    "en": "Synthesis"
+  },
+  "positioning": {
+    "fr": "Positionnement",
+    "en": "Positioning"
+  },
+  "collaborations": {
+    "fr": "Collaborations",
+    "en": "Collaborations"
   }
 }

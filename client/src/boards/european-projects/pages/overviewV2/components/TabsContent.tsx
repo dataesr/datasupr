@@ -2,6 +2,8 @@ import SmartTabContent from "./SmartTabContent";
 import { ViewConditions } from "../utils/displayRules";
 import { useSearchParams } from "react-router-dom";
 
+import i18n from "../../../i18n-global.json";
+
 interface TabsContentProps {
   overviewParams: ViewConditions;
 }
@@ -9,6 +11,11 @@ interface TabsContentProps {
 export default function TabsContent({ overviewParams }: TabsContentProps) {
   const { activeTab, view } = overviewParams;
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "en";
+
+  function getIntlLabel(key: string): string {
+    return i18n[key][currentLang as "fr" | "en"] || i18n[key]["en"];
+  }
 
   // Fonction pour changer d'onglet
   const handleTabChange = (newTab: "synthesis" | "positioning" | "collaborations") => {
@@ -19,7 +26,7 @@ export default function TabsContent({ overviewParams }: TabsContentProps) {
 
   return (
     <div className="fr-tabs">
-      <ul className="fr-tabs__list" role="tablist" aria-label="[A modifier | nom du système d'onglet]">
+      <ul className="fr-tabs__list" role="tablist" aria-label="Sélection des onglets">
         <li role="presentation">
           <button
             type="button"
@@ -31,7 +38,7 @@ export default function TabsContent({ overviewParams }: TabsContentProps) {
             aria-controls="tab-1-panel"
             onClick={() => handleTabChange("synthesis")}
           >
-            Synthèse
+            {getIntlLabel("synthesis")}
           </button>
         </li>
         <li role="presentation">
@@ -45,7 +52,7 @@ export default function TabsContent({ overviewParams }: TabsContentProps) {
             aria-controls="tab-2-panel"
             onClick={() => handleTabChange("positioning")}
           >
-            Positionnement
+            {getIntlLabel("positioning")}
           </button>
         </li>
         <li role="presentation">
@@ -59,7 +66,7 @@ export default function TabsContent({ overviewParams }: TabsContentProps) {
             aria-controls="tab-3-panel"
             onClick={() => handleTabChange("collaborations")}
           >
-            Collaborations
+            {getIntlLabel("collaborations")}
           </button>
         </li>
       </ul>
