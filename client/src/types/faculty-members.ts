@@ -114,3 +114,20 @@ export interface UseCnuDataProps {
   contextId?: string;
   annee_universitaire?: string;
 }
+export interface BubbleData {
+  x: number;
+  y: number;
+  z: number;
+  name: string;
+  color: string;
+  maleCount: number;
+  femaleCount: number;
+  totalCount: number;
+  sectionCode: string;
+}
+
+export interface BubbleOptionsParams {
+  bubbleData: BubbleData[];
+  maxValue: number;
+  padding: number;
+}
