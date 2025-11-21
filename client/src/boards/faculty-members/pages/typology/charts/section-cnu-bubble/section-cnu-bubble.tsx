@@ -465,21 +465,21 @@ export function SectionsBubbleChart() {
     const dsfrVarNames = getDsfrScaleVarNames(20);
     const dsfrColors = resolveCssVarColors(dsfrVarNames);
     const fallbackPalette = [
-      "#1f77b4",
-      "#ff7f0e",
-      "#2ca02c",
-      "#d62728",
-      "#9467bd",
-      "#8c564b",
-      "#e377c2",
-      "#7f7f7f",
-      "#bcbd22",
-      "#17becf",
-      "#393b79",
-      "#637939",
-      "#8c6d31",
-      "#843c39",
-      "#7b4173",
+      "var(--scale-1-color)",
+      "var(--scale-2-color)",
+      "var(--scale-3-color)",
+      "var(--scale-4-color)",
+      "var(--scale-5-color)",
+      "var(--scale-6-color)",
+      "var(--scale-7-color)",
+      "var(--scale-8-color)",
+      "var(--scale-9-color)",
+      "var(--scale-10-color)",
+      "var(--scale-11-color)",
+      "var(--scale-12-color)",
+      "var(--scale-13-color)",
+      "var(--scale-14-color)",
+      "var(--scale-15-color)",
     ];
     const palette = dsfrColors.length > 0 ? dsfrColors : fallbackPalette;
 

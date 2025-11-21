@@ -1,23 +1,9 @@
 import Highcharts from "highcharts";
 import { formatToPercent } from "../../../../../../utils/format";
-
-interface BubbleData {
-  x: number;
-  y: number;
-  z: number;
-  name: string;
-  color: string;
-  maleCount: number;
-  femaleCount: number;
-  totalCount: number;
-  sectionCode: string;
-}
-
-interface BubbleOptionsParams {
-  bubbleData: BubbleData[];
-  maxValue: number;
-  padding: number;
-}
+import {
+  BubbleData,
+  BubbleOptionsParams,
+} from "../../../../../../types/faculty-members";
 
 export const createBubbleOptions = ({
   bubbleData,
@@ -30,7 +16,7 @@ export const createBubbleOptions = ({
       [0, 0],
       [maxValue, maxValue],
     ],
-    color: "#cccccc",
+    color: "var(--unspecified-field-color)",
     dashStyle: "Dash" as const,
     lineWidth: 2,
     marker: { enabled: false },
@@ -44,8 +30,8 @@ export const createBubbleOptions = ({
       height: 700,
       style: {
         fontFamily: "Marianne, sans-serif",
+        color: "var(--text-default-grey)",
       },
-      backgroundColor: "#ffffff",
     },
     exporting: { enabled: false },
     title: {
@@ -65,7 +51,7 @@ export const createBubbleOptions = ({
       min: -padding,
       max: maxValue + padding,
       gridLineWidth: 1,
-      gridLineColor: "#f0f0f0",
+      gridLineColor: "var(--background-default-grey-hover)",
     },
     yAxis: {
       title: {
@@ -78,7 +64,7 @@ export const createBubbleOptions = ({
       min: -padding,
       max: maxValue + padding,
       gridLineWidth: 1,
-      gridLineColor: "#f0f0f0",
+      gridLineColor: "var(--background-default-grey-hover)",
     },
     tooltip: {
       useHTML: true,
@@ -89,26 +75,25 @@ export const createBubbleOptions = ({
             ? Math.round((point.femaleCount / point.totalCount) * 100)
             : 0;
         const malePercent = 100 - femalePercent;
-
         return `
-          <div style="padding: 10px; background: white; border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-            <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #000091;">
+          <div style="padding: 10px; background: var(--background-default-grey); border-radius: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+            <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px; color: var(--blue-cumulus-main-526);">
               ${point.sectionCode}
             </div>
-            <div style="font-size: 12px; margin-bottom: 8px; color: #666;">
+            <div style="font-size: 12px; margin-bottom: 8px; color: var(--label-color);">
               ${point.name.split(" - ")[1] || point.name}
             </div>
             <div style="margin-bottom: 5px;">
               <strong>Effectif total:</strong> ${point.totalCount.toLocaleString()} enseignants
             </div>
             <div style="display: flex; justify-content: space-between; margin-bottom: 3px;">
-              <span style="color: #e18b76;">♀ Femmes:</span>
+              <span style="color: var(--women-color);">♀ Femmes:</span>
               <span><strong>${point.femaleCount.toLocaleString()}</strong> (${formatToPercent(
           femalePercent
         )})</span>
             </div>
             <div style="display: flex; justify-content: space-between;">
-              <span style="color: #efcb3a;">♂ Hommes:</span>
+              <span style="color: var(--men-color);">♂ Hommes:</span>
               <span><strong>${point.maleCount.toLocaleString()}</strong> (${formatToPercent(
           malePercent
         )})</span>
