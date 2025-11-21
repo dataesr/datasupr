@@ -1,4 +1,5 @@
 // import FundingRanking from "../../../positioning/charts/funding-ranking";
+import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
 import FundingRankingCoordination from "../../../positioning/charts/funding-ranking/coordination";
 import FundingRankingParticipations from "../../../positioning/charts/funding-ranking/participations";
 import FundingRankingRates from "../../../positioning/charts/funding-ranking/rates";
@@ -31,6 +32,7 @@ export default function PositionnementContent({ contentType }: PositionnementCon
           <FundingRankingSubsidies />
           <FundingRankingParticipations />
           <FundingRankingCoordination />
+          <BoardsSuggestComponent />
         </div>
       );
 

@@ -3,6 +3,7 @@ import i18n from "./i18n.json";
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import IpccInstitutions from "../../charts/ipcc-institutions";
 import Callout from "../../../../components/callout";
+import BoardsSuggestComponent from "../../../../components/boards-suggest-component";
 
 function getI18nLabel(key, lang = "fr") {
   return i18n[key] ? i18n[key][lang] || i18n[key]["fr"] : "";
@@ -38,6 +39,7 @@ export default function Entities() {
           <IpccInstitutions />
         </Col>
       </Row>
+      <BoardsSuggestComponent />
     </Container>
   );
 }

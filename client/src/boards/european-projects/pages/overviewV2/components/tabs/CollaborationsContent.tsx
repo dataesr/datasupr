@@ -12,6 +12,7 @@ import MapOfEuropeCollaborationsFlow from "../../../collaborations/charts/map-of
 import { useGetParams } from "../../../collaborations/charts/countries-collaborations-table/utils";
 import { getCollaborations } from "../../../collaborations/charts/countries-collaborations-table/query";
 import MapSkeleton from "../../../../../../components/charts-skeletons/map";
+import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
 
 interface CollaborationsContentProps {
   contentType: ContentType;
@@ -88,6 +89,7 @@ export default function CollaborationsContent({ contentType }: CollaborationsCon
               <EntityVariablePie />
             </Col>
           </Row>
+          <BoardsSuggestComponent />
         </div>
       );
 

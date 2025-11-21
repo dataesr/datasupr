@@ -9,6 +9,7 @@ import PrctIpccPublicationsByCountryByWg3 from "../../charts/ipcc-wg/PrctIpccPub
 import IpbesAll from "../../charts/ipbes-all";
 import Ipcc5countries from "../../charts/ipcc-for-five-countries";
 import Callout from "../../../../components/callout";
+import BoardsSuggestComponent from "../../../../components/boards-suggest-component";
 
 function getI18nLabel(key, lang = "fr") {
   return i18n[key] ? i18n[key][lang] || i18n[key]["fr"] : "";
@@ -113,6 +114,7 @@ export default function Countries() {
           <IpbesAll />
         </Col>
       </Row>
+      <BoardsSuggestComponent />
     </Container>
   );
 }

@@ -95,6 +95,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
           </Callout>
           <Title as="h3">Répartition des financements par thématique</Title>
           <TopicsFunding />
+          <BoardsSuggestComponent />
         </div>
       );
 
@@ -117,6 +118,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
           </Callout>
           <Title as="h3">Répartition des financements par destination</Title>
           <DestinationsFunding />
+          <BoardsSuggestComponent />
         </div>
       );
 
@@ -129,6 +131,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
             Principaux bénéficiaires
           </Title>
           <MainPartners />
+          <BoardsSuggestComponent />
         </div>
       );
 
