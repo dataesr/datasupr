@@ -15,7 +15,7 @@ import Callout from "../../../../components/callout";
 import "../styles.scss";
 
 export default function RegionsOverview() {
-  const { contextId } = useContextDetection();
+  const { contextId, contextName } = useContextDetection();
 
   return (
     <>
@@ -23,13 +23,27 @@ export default function RegionsOverview() {
         <Col md={12}>
           <Callout className="callout-style-geo">
             <Text size="sm">
-              Cette page présente la répartition du{" "}
-              <GlossaryTerm term="personnels enseignants">
-                personnels enseignants
-              </GlossaryTerm>{" "}
-              par région, avec une visualisation de l'équilibre femmes-hommes
-              dans chaque région. Les données présentées sur cette page sont la
-              somme des données des régions.
+              {contextId ? (
+                <>
+                  Cette page présente la répartition des{" "}
+                  <GlossaryTerm term="personnels enseignants">
+                    personnels enseignants
+                  </GlossaryTerm>{" "}
+                  pour la <strong>{contextName}</strong>, avec une visualisation
+                  de l'équilibre femmes-hommes et les indicateurs détaillés pour
+                  cette région.
+                </>
+              ) : (
+                <>
+                  Cette page présente la répartition du{" "}
+                  <GlossaryTerm term="personnels enseignants">
+                    personnels enseignants
+                  </GlossaryTerm>{" "}
+                  par région, avec une visualisation de l'équilibre
+                  femmes-hommes dans chaque région. Les données présentées sur
+                  cette page sont la somme des données des régions.
+                </>
+              )}
             </Text>
           </Callout>
         </Col>
