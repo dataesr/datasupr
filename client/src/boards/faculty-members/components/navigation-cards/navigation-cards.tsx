@@ -33,12 +33,12 @@ export default function NavigationCards({
         return {
           basePath: "/personnel-enseignant/discipline/vue-d'ensemble",
           colors: [
-            "var(--purple-glycine-975)",
-            "var(--blue-cumulus-975)",
-            "var(--purple-glycine-950)",
-            "var(--green-emeraude-975)",
-            "var(--yellow-moutarde-975)",
-            "var(--pink-macaron-975)",
+            "var(--background-contrast-purple-glycine)",
+            "var(--background-contrast-blue-cumulus)",
+            "var(--background-alt-purple-glycine)",
+            "var(--background-contrast-green-emeraude)",
+            "var(--background-contrast-yellow-moutarde)",
+            "var(--background-contrast-pink-macaron)",
           ],
           emptyMessage: "Aucune discipline disponible",
         };
@@ -46,12 +46,12 @@ export default function NavigationCards({
         return {
           basePath: "/personnel-enseignant/geo/vue-d'ensemble",
           colors: [
-            "var(--green-emeraude-975)",
-            "var(--blue-cumulus-975)",
-            "var(--yellow-moutarde-975)",
-            "var(--pink-macaron-975)",
-            "var(--purple-glycine-975)",
-            "var(--purple-glycine-950)",
+            "var(--background-contrast-green-emeraude)",
+            "var(--background-contrast-blue-cumulus)",
+            "var(--background-contrast-yellow-moutarde)",
+            "var(--background-contrast-pink-macaron)",
+            "var(--background-contrast-purple-glycine)",
+            "var(--background-alt-purple-glycine)",
           ],
           emptyMessage: "Aucune région disponible",
         };
@@ -59,12 +59,12 @@ export default function NavigationCards({
         return {
           basePath: "/personnel-enseignant/universite/vue-d'ensemble",
           colors: [
-            "var(--yellow-moutarde-975)",
-            "var(--pink-macaron-975)",
-            "var(--green-emeraude-975)",
-            "var(--blue-cumulus-975)",
-            "var(--purple-glycine-950)",
-            "var(--purple-glycine-975)",
+            "var(--background-contrast-yellow-moutarde)",
+            "var(--background-contrast-pink-macaron)",
+            "var(--background-contrast-green-emeraude)",
+            "var(--background-contrast-blue-cumulus)",
+            "var(--background-alt-purple-glycine)",
+            "var(--background-contrast-purple-glycine)",
           ],
           emptyMessage: "Aucun établissement disponible",
         };
