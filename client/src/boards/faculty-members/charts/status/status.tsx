@@ -54,7 +54,8 @@ const StatusDistribution: React.FC = () => {
   const [searchParams] = useSearchParams();
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const { context, contextId, contextName } = useContextDetection();
-  const [displayAsPercentage, setDisplayAsPercentage] = useState<boolean>(true);
+  const [displayAsPercentage, setDisplayAsPercentage] =
+    useState<boolean>(false);
   const [addedLabels, setAddedLabels] = useState<string[]>([]);
   const { hasNonPermanentStaff } = useDataCompleteness();
 
@@ -117,7 +118,7 @@ const StatusDistribution: React.FC = () => {
         totalTitulaires: enseignantsChercheurs + titulairesNonChercheurs,
       };
     });
-  }, [statusData]);
+  }, [statusData, context]);
 
   const exampleItem = useMemo(() => {
     if (!processedData || processedData.length === 0) {
@@ -200,7 +201,7 @@ const StatusDistribution: React.FC = () => {
     }
 
     switch (context) {
-      case "geo":
+      case "geo": {
         const lowerName = contextName
           .toLowerCase()
           .normalize("NFD")
@@ -223,8 +224,9 @@ const StatusDistribution: React.FC = () => {
           return `Académie ${contextName}`;
         }
         return `Région ${contextName}`;
+      }
 
-      case "structures":
+      case "structures": {
         const lowerStructureName = contextName.toLowerCase();
         if (
           lowerStructureName.includes("université") ||
@@ -242,6 +244,7 @@ const StatusDistribution: React.FC = () => {
           return `à l'${contextName}`;
         }
         return `à ${contextName}`;
+      }
 
       case "fields":
         return `en ${contextName}`;
@@ -259,7 +262,7 @@ const StatusDistribution: React.FC = () => {
     }
 
     switch (context) {
-      case "geo":
+      case "geo": {
         const lowerName = contextName
           .toLowerCase()
           .normalize("NFD")
@@ -279,8 +282,9 @@ const StatusDistribution: React.FC = () => {
           return `l'académie ${academyName}`;
         }
         return `la région ${contextName}`;
+      }
 
-      case "structures":
+      case "structures": {
         const lowerStructureName = contextName.toLowerCase();
         if (
           lowerStructureName.includes("université") ||
@@ -298,6 +302,7 @@ const StatusDistribution: React.FC = () => {
           return `l'${contextName}`;
         }
         return contextName;
+      }
 
       case "fields":
         return `la grande discipline ${contextName}`;
