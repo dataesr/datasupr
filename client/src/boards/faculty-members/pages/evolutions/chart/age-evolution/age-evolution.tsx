@@ -207,7 +207,7 @@ export function AgeEvolutionChart() {
 
     const yearlyData = yearsToProcess
       .map((year) => {
-        let yearData = dataSource.age_evolution.find(
+        const yearData = dataSource.age_evolution.find(
           (item) => item._id === year
         );
 
@@ -357,24 +357,8 @@ export function AgeEvolutionChart() {
 
   if (!chartOptions || !processedData) {
     return (
-      <div className="fr-alert fr-alert--info fr-my-3w">
-        <p>Aucune donnée d'évolution par âge disponible pour cette période.</p>
-        <details className="fr-mt-2w">
-          <summary>Détails de debug</summary>
-          <pre className="fr-text--xs">
-            {JSON.stringify(
-              {
-                hasEvolutionData: !!evolutionData,
-                hasAgeEvolution: !!evolutionData?.age_evolution,
-                hasYears: !!evolutionData?.years,
-                yearsCount: evolutionData?.years?.length || 0,
-                ageEvolutionCount: evolutionData?.age_evolution?.length || 0,
-              },
-              null,
-              2
-            )}
-          </pre>
-        </details>
+      <div className="fr-alert fr-alert--error fr-my-3w">
+        <p>Erreur lors du chargement des données </p>
       </div>
     );
   }
