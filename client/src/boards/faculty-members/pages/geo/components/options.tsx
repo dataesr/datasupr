@@ -1,31 +1,9 @@
 import Highcharts from "highcharts";
 import mapDataIE from "../../../../../assets/regions.json";
-
-interface RegionMapData {
-  geo_id: string;
-  geo_nom: string;
-  total_count: number;
-  male_count: number;
-  female_count: number;
-  male_percent: number;
-  female_percent: number;
-}
-
-interface RegionMapPoint extends Highcharts.Point {
-  options: RegionMapData & {
-    "hc-key": string;
-    value: number;
-  };
-}
-
-interface MapStatistics {
-  total_count: number;
-  regions_count: number;
-  max_region_count: number;
-  p25: number;
-  p50: number;
-  p75: number;
-}
+import {
+  MapStatistics,
+  RegionMapPoint,
+} from "../../../../../types/faculty-members";
 
 interface MapOptionsParams {
   chartData: Array<{

@@ -33,6 +33,7 @@ export default function FacultyMap() {
       const queryString = currentParams.toString();
       const url = `/personnel-enseignant/geo/vue-d'ensemble?${queryString}`;
       navigate(url);
+      window.scrollTo({ top: 0, behavior: "smooth" });
     },
     [navigate, searchParams]
   );
