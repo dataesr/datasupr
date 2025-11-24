@@ -63,7 +63,7 @@ $section-colors: (
 		top: 60px; // Juste en dessous du menu principal (ep-main-menu)
 		z-index: 998; // En dessous du sidemenu (999) et du menu principal (1000)
 		background: white;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		// box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 		
 		.navigator-full {
 			opacity: 0;
@@ -102,7 +102,7 @@ $section-colors: (
 	.navigator-minified {
 		padding: 10px 16px;
 		background: white;
-		border-bottom: 2px solid var(--border-default-grey);
+		border-bottom: 1px solid var(--border-default-grey);
 
 		.minified-badges {
 			display: grid;
@@ -146,7 +146,7 @@ $section-colors: (
 
 				&:hover:not([style*="not-allowed"]) {
 					transform: translateY(-1px);
-					box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+					// box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
 					
 					&::after {
 						opacity: 0.8;
@@ -171,7 +171,7 @@ $section-colors: (
 				&.pilier-badge {
 					background: var(--background-contrast-blue-ecume);
 					color: var(--text-label-blue-ecume);
-					border: 2px solid var(--text-label-blue-ecume);
+					border: 1px solid var(--text-label-blue-ecume);
 					
 					&:hover {
 						background: var(--text-label-blue-ecume);
@@ -182,7 +182,7 @@ $section-colors: (
 				&.programmes-badge {
 					background: var(--background-contrast-purple-glycine);
 					color: var(--text-label-purple-glycine);
-					border: 2px solid var(--text-label-purple-glycine);
+					border: 1px solid var(--text-label-purple-glycine);
 					
 					&:hover {
 						background: var(--text-label-purple-glycine);
@@ -193,7 +193,7 @@ $section-colors: (
 				&.thematiques-badge {
 					background: var(--background-contrast-green-menthe);
 					color: var(--text-label-green-menthe);
-					border: 2px solid var(--text-label-green-menthe);
+					border: 1px solid var(--text-label-green-menthe);
 					
 					&:hover {
 						background: var(--text-label-green-menthe);
@@ -204,7 +204,7 @@ $section-colors: (
 				&.destinations-badge {
 					background: var(--background-contrast-orange-terre-battue);
 					color: var(--text-label-orange-terre-battue);
-					border: 2px solid var(--text-label-orange-terre-battue);
+					border: 1px solid var(--text-label-orange-terre-battue);
 					
 					&:hover {
 						background: var(--text-label-orange-terre-battue);
