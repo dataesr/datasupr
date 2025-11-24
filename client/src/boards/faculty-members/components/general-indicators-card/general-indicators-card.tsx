@@ -136,11 +136,16 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
   return (
     <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
       <Row horizontalAlign="center">
-        <Title as="h3" look="h5">
+        <Title
+          as="h3"
+          look="h5"
+          className="fr-mb-1w"
+          style={{ color: "var(--text-title-grey)" }}
+        >
           Effectif
         </Title>
       </Row>
-      <Row horizontalAlign="center" className="fr-text--lead fr-text--bold ">
+      <Row horizontalAlign="center" className="fr-text--lead fr-text--bold">
         {totalCount.toLocaleString()}
       </Row>
       <Row horizontalAlign="center" className="fr-text--sm fr-mb-2w">
@@ -152,7 +157,7 @@ const GeneralIndicatorsCard: React.FC<GeneralIndicatorsCardProps> = ({
           style={{
             textAlign: "center",
             flex: 1,
-            borderRight: "1px solid #ddd",
+            borderRight: "1px solid var(--border-default-grey)",
             paddingRight: "1rem",
           }}
         >

@@ -196,7 +196,7 @@ export function ContextExplorerModal({
             >
               <span className="context-nav-button__icon">{tab.icon}</span>
               <span className="context-nav-button__label">
-                {tab.label}
+                {tab.label}{" "}
                 <span className="context-nav-button__count">
                   {tab.loading ? "…" : tab.count}
                 </span>
