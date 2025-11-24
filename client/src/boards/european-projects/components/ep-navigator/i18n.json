@@ -20,24 +20,24 @@
     "en": "Destinations"
   },
   "no_pillar_selected": {
-    "fr": "Aucun pilier sélectionné",
+    "fr": "0 pilier sélectionné",
     "en": "No pillar selected"
   },
   "no_program_selected": {
-    "fr": "Aucun programme sélectionné",
+    "fr": "0 programme sélectionné",
     "en": "No program selected"
   },
   "no_thematic_selected": {
-    "fr": "Aucune thématique sélectionnée",
+    "fr": "0 thématique sélectionnée",
     "en": "No thematic selected"
   },
   "no_destination_selected": {
-    "fr": "Aucune destination sélectionnée",
+    "fr": "0 destination sélectionnée",
     "en": "No destination selected"
   },
   "modify": {
-    "fr": "Modifier",
-    "en": "Modify"
+    "fr": "✎",
+    "en": "✎"
   },
   "select": {
     "fr": "Sélectionner",

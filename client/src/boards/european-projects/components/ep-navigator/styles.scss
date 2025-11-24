@@ -55,6 +55,183 @@ $section-colors: (
 #crumbs {
 	width: 100%;
 	position: relative;
+	transition: all 0.3s ease;
+
+	// État minifié sticky
+	&.minified {
+		position: sticky;
+		top: 60px; // Juste en dessous du menu principal (ep-main-menu)
+		z-index: 998; // En dessous du sidemenu (999) et du menu principal (1000)
+		background: white;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+		
+		.navigator-full {
+			opacity: 0;
+			height: 0;
+			overflow: hidden;
+		}
+		
+		.navigator-minified {
+			animation: slideDown 0.3s ease-out;
+		}
+	}
+
+	@keyframes slideDown {
+		from {
+			opacity: 0;
+			transform: translateY(-5px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes slideUp {
+		from {
+			opacity: 0;
+			max-height: 0;
+		}
+		to {
+			opacity: 1;
+			max-height: 500px;
+		}
+	}
+
+	// Version minifiée avec badges
+	.navigator-minified {
+		padding: 10px 16px;
+		background: white;
+		border-bottom: 2px solid var(--border-default-grey);
+
+		.minified-badges {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+			gap: 10px;
+			align-items: stretch;
+
+			.minified-badge {
+				cursor: pointer;
+				padding: 8px 12px;
+				font-size: 0.8rem;
+				transition: all 0.2s ease;
+				border-radius: 4px;
+				position: relative;
+				text-align: left;
+				
+				// Limitation à 1 ligne
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				line-height: 1.3;
+
+				strong {
+					display: inline;
+					margin-right: 4px;
+					font-weight: 700;
+					font-size: 0.75rem;
+					text-transform: uppercase;
+				}
+				
+				// Indicateur visuel de clic
+				&::after {
+					content: "✎";
+					position: absolute;
+					right: 8px;
+					top: 8px;
+					opacity: 0;
+					transition: opacity 0.2s ease;
+					font-size: 0.9rem;
+				}
+
+				&:hover:not([style*="not-allowed"]) {
+					transform: translateY(-1px);
+					box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+					
+					&::after {
+						opacity: 0.8;
+					}
+				}
+
+				&:active {
+					transform: translateY(0);
+				}
+				
+				// État désactivé
+				&[style*="not-allowed"] {
+					filter: grayscale(30%);
+				}
+				
+				// Responsive
+				@media (max-width: 768px) {
+					grid-column: 1 / -1;
+				}
+
+				// Couleurs spécifiques aux badges
+				&.pilier-badge {
+					background: var(--background-contrast-blue-ecume);
+					color: var(--text-label-blue-ecume);
+					border: 2px solid var(--text-label-blue-ecume);
+					
+					&:hover {
+						background: var(--text-label-blue-ecume);
+						color: white;
+					}
+				}
+
+				&.programmes-badge {
+					background: var(--background-contrast-purple-glycine);
+					color: var(--text-label-purple-glycine);
+					border: 2px solid var(--text-label-purple-glycine);
+					
+					&:hover {
+						background: var(--text-label-purple-glycine);
+						color: white;
+					}
+				}
+
+				&.thematiques-badge {
+					background: var(--background-contrast-green-menthe);
+					color: var(--text-label-green-menthe);
+					border: 2px solid var(--text-label-green-menthe);
+					
+					&:hover {
+						background: var(--text-label-green-menthe);
+						color: white;
+					}
+				}
+
+				&.destinations-badge {
+					background: var(--background-contrast-orange-terre-battue);
+					color: var(--text-label-orange-terre-battue);
+					border: 2px solid var(--text-label-orange-terre-battue);
+					
+					&:hover {
+						background: var(--text-label-orange-terre-battue);
+						color: white;
+					}
+				}
+			}
+		}
+	}
+
+	// Version complète
+	.navigator-full {
+		transition: opacity 0.3s ease, max-height 0.3s ease;
+		max-height: 1000px;
+		opacity: 1;
+		overflow: visible;
+
+		&.hidden {
+			max-height: 0;
+			opacity: 0;
+			overflow: hidden;
+		}
+		
+		&:not(.hidden) {
+			animation: slideUp 0.3s ease-out;
+		}
+	}
 	
 	.info-button-container {
 		position: absolute;
@@ -105,17 +282,17 @@ $section-colors: (
 				}
 				
 				// Styles personnalisés pour les boutons de chaque section
-				&.#{$section} div button {
-					background: map-get($colors, background) !important;
-					color: map-get($colors, color) !important;
-					border: 1px solid map-get($colors, border) !important;
+				// &.#{$section} div button {
+				// 	background: map-get($colors, background) !important;
+				// 	color: map-get($colors, color) !important;
+				// 	border: 1px solid map-get($colors, border) !important;
 					
-					&:hover {
-						background: map-get($colors, color) !important;
-						color: map-get($colors, background) !important;
-						border-color: map-get($colors, border) !important;
-					}
-				}
+				// 	&:hover {
+				// 		background: map-get($colors, color) !important;
+				// 		color: map-get($colors, background) !important;
+				// 		border-color: map-get($colors, border) !important;
+				// 	}
+				// }
 				
 				// Styles pour les boutons des sections no-selection
 				&.#{$section} div.no-selection:not(.disabled) button {
@@ -181,17 +358,19 @@ $section-colors: (
 				text-decoration: none;
 				color: #fff;
 
-				// Styles pour les boutons dans les liens actifs
+				// // Styles pour les boutons dans les liens actifs
 				button {
-					background: rgba(255, 255, 255, 0.8) !important;
-					color: inherit !important;
-					border: 1px solid currentColor !important;
-          padding: 0 8px !important;
+					font-weight: normal !important;
+					color: var(--text-default-grey) !important;
+					// background: rgba(255, 255, 255, 0.8) !important;
+					// color: inherit !important;
+					// border: 1px solid currentColor !important;
+          // padding: 0 8px !important;
 					
-					&:hover {
-						background: white !important;
-						border-color: currentColor !important;
-					}
+					// &:hover {
+					// 	background: white !important;
+					// 	border-color: currentColor !important;
+					// }
 				}
 				
 				// Flèche par défaut

@@ -1,6 +1,6 @@
 import { Button, Modal, ModalContent, Badge } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getHierarchy, getFilters, getPrograms, getThematics, getDestinations } from "../../api";
 import { autoCorrectUrl, cleanParams, type UrlParams } from "./url-validation";
@@ -18,6 +18,10 @@ export default function EpNavigator() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const viewParam = searchParams.get("view") || "";
+
+  // État pour détecter si le navigateur est en mode minifié (sticky)
+  const [isMinified, setIsMinified] = useState(false);
+  const navigatorRef = useRef<HTMLDivElement>(null);
 
   // Extraire le tab et la vue du paramètre composé (ex: "synthesis|program")
   const [activeTab, view] = viewParam.includes("|") ? viewParam.split("|") : ["synthesis", viewParam || "pillar"];
@@ -152,6 +156,60 @@ export default function EpNavigator() {
     setSelectedThematics(thematicIds ? thematicIds.split(",") : []);
     setSelectedDestinations(destinationIds ? destinationIds.split(",") : []);
   }, [pillarId, programId, thematicIds, destinationIds]);
+
+  // Gestion du scroll pour le mode sticky minifié
+  useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+    let initialTop: number | null = null;
+
+    const handleScroll = () => {
+      // Debounce léger pour améliorer la performance
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        if (navigatorRef.current) {
+          // Capturer la position initiale une seule fois
+          if (initialTop === null) {
+            const rect = navigatorRef.current.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            initialTop = rect.top + scrollTop;
+          }
+
+          const epMainMenu = document.querySelector(".ep-main-menu");
+          const currentHeaderHeight = epMainMenu ? epMainMenu.clientHeight : 60;
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+          // Devient minifié quand on a scrollé assez pour que le navigateur
+          // soit à la position du menu principal
+          const scrollThreshold = initialTop - currentHeaderHeight - 10;
+          const shouldMinify = scrollTop >= scrollThreshold;
+
+          console.log("EP Navigator Debug:", {
+            scrollTop,
+            initialTop,
+            currentHeaderHeight,
+            scrollThreshold,
+            shouldMinify,
+            isCurrentlyMinified: isMinified,
+          });
+
+          // Éviter les re-renders inutiles
+          setIsMinified((prev) => (prev !== shouldMinify ? shouldMinify : prev));
+        }
+      }, 10);
+    };
+
+    // Vérifier au montage avec un petit délai pour s'assurer que le DOM est rendu
+    setTimeout(handleScroll, 100);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, []);
 
   // Réinitialiser les sélections en cascade quand le pilier change
   useEffect(() => {
@@ -428,7 +486,26 @@ export default function EpNavigator() {
     return destinationsData && Array.isArray(destinationsData) ? destinationsData.length : 0;
   };
 
-  // Fonctions pour obtenir les comptages d'éléments sélectionnés
+  // Fonction pour tronquer le texte à 2 lignes maximum
+  const truncateText = (text: string | null, maxLines: number = 2): string => {
+    if (!text) return "";
+    // Approximation: environ 45 caractères par ligne pour la version minifiée
+    const maxChars = maxLines * 45;
+    if (text.length <= maxChars) return text;
+    return text.substring(0, maxChars - 3) + "...";
+  };
+
+  // Fonction pour obtenir le texte court pour les badges minifiés
+  const getShortText = (fullText: string | null | undefined, fallbackKey: keyof typeof i18n): string => {
+    if (!fullText) {
+      const fallbackText = getI18nLabel(fallbackKey);
+      // Raccourcir "Aucun pilier sélectionné" en "Aucun"
+      return fallbackText.split(" ")[0]; // Prend juste le premier mot (Aucun/None/etc)
+    }
+    return truncateText(fullText);
+  };
+
+  // // Fonctions pour obtenir les comptages d'éléments sélectionnés
   const getSelectedPillarsCount = () => {
     return pillarId ? 1 : 0;
   };
@@ -448,129 +525,160 @@ export default function EpNavigator() {
   const navState = getNavigationState();
 
   return (
-    <div id="crumbs">
-      <div className="info-button-container">
-        <Button
-          size="sm"
-          variant="tertiary"
-          title={getI18nLabel("info_button_title")}
-          onClick={() => openModal("information")}
-          className="info-button"
-        >
-          <i className="ri-information-line" aria-hidden="true"></i>
-        </Button>
-      </div>
-      <ul>
-        <li className={`pilier ${!navState.pillar.linkEnabled ? "section-disabled" : ""}`}>
-          <i className="label-pilier">
-            {getI18nLabel("pillar")}{" "}
-            {getPillarsCount() > 0 && (
-              <Badge size="sm" className="fr-ml-1w" color="blue-cumulus">
-                {getPillarsCount()}
-              </Badge>
-            )}
-          </i>
-          <div className={`${!navState.pillar.linkEnabled ? "disabled" : ""} ${!pillarId ? "no-selection" : ""}`}>
-            {getPillarName() || getI18nLabel("no_pillar_selected")}
-            <Button
-              size="sm"
-              title={getI18nLabel("pillar_selection_button_title")}
-              disabled={!navState.pillar.buttonEnabled}
+    <div id="crumbs" ref={navigatorRef} className={isMinified ? "minified" : ""}>
+      {/* Version minifiée sticky */}
+      {isMinified && (
+        <div className="navigator-minified">
+          <div className="minified-badges">
+            <div
+              className="minified-badge pilier-badge"
+              role="button"
+              tabIndex={0}
               onClick={() => openModal("pillar")}
+              onKeyPress={(e) => e.key === "Enter" && openModal("pillar")}
             >
-              {pillarId ? getI18nLabel("modify") : getI18nLabel("select")}{" "}
-              {getSelectedPillarsCount() > 0 && (
+              <strong>{getI18nLabel("pillar")}:</strong> {getShortText(getPillarName(), "no_pillar_selected")}
+            </div>
+            <div
+              className="minified-badge programmes-badge"
+              role="button"
+              tabIndex={0}
+              onClick={() => navState.programs.buttonEnabled && openModal("programs")}
+              onKeyPress={(e) => e.key === "Enter" && navState.programs.buttonEnabled && openModal("programs")}
+              style={{ opacity: navState.programs.buttonEnabled ? 1 : 0.6, cursor: navState.programs.buttonEnabled ? "pointer" : "not-allowed" }}
+            >
+              <strong>{getI18nLabel("program")}:</strong> {getShortText(getProgramName(), "no_program_selected")}
+            </div>
+            <div
+              className="minified-badge thematiques-badge"
+              role="button"
+              tabIndex={0}
+              onClick={() => navState.thematiques.buttonEnabled && openModal("thematiques")}
+              onKeyPress={(e) => e.key === "Enter" && navState.thematiques.buttonEnabled && openModal("thematiques")}
+              style={{
+                opacity: navState.thematiques.buttonEnabled ? 1 : 0.6,
+                cursor: navState.thematiques.buttonEnabled ? "pointer" : "not-allowed",
+              }}
+            >
+              <strong>{getI18nLabel("thematics")}:</strong> {getShortText(getThematicsNames(), "no_thematic_selected")}
+            </div>
+            <div
+              className="minified-badge destinations-badge"
+              role="button"
+              tabIndex={0}
+              onClick={() => navState.destinations.buttonEnabled && openModal("destinations")}
+              onKeyPress={(e) => e.key === "Enter" && navState.destinations.buttonEnabled && openModal("destinations")}
+              style={{
+                opacity: navState.destinations.buttonEnabled ? 1 : 0.6,
+                cursor: navState.destinations.buttonEnabled ? "pointer" : "not-allowed",
+              }}
+            >
+              <strong>{getI18nLabel("destinations")}:</strong> {getShortText(getDestinationsNames(), "no_destination_selected")}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Version complète */}
+      <div className={`navigator-full ${isMinified ? "hidden" : ""}`}>
+        <div className="info-button-container">
+          <Button
+            size="sm"
+            variant="tertiary"
+            title={getI18nLabel("info_button_title")}
+            onClick={() => openModal("information")}
+            className="info-button"
+          >
+            <i className="ri-information-line" aria-hidden="true"></i>
+          </Button>
+        </div>
+        <ul>
+          <li className={`pilier ${!navState.pillar.linkEnabled ? "section-disabled" : ""}`}>
+            <i className="label-pilier">
+              {getI18nLabel("pillar")}{" "}
+              {getPillarsCount() > 0 && (
                 <Badge size="sm" className="fr-ml-1w" color="blue-cumulus">
-                  {getSelectedPillarsCount()}
+                  {getPillarsCount()}
                 </Badge>
               )}
-            </Button>
-          </div>
-        </li>
-        <li className={`programmes ${!navState.programs.linkEnabled ? "section-disabled" : ""}`}>
-          <i className="label-programmes">
-            {getI18nLabel("program")}{" "}
-            {getProgramsCount() > 0 && (
-              <Badge size="sm" className="fr-ml-1w" color="purple-glycine">
-                {getProgramsCount()}
-              </Badge>
-            )}
-          </i>
-          <div className={`${!navState.programs.linkEnabled ? "disabled" : ""} ${!programId ? "no-selection" : ""}`}>
-            {getProgramName() || getI18nLabel("no_program_selected")}
-            <br />
-            <Button
-              size="sm"
-              title={getI18nLabel("program_selection_button_title")}
-              variant="tertiary"
-              disabled={!navState.programs.buttonEnabled}
-              onClick={() => openModal("programs")}
-            >
-              {programId ? getI18nLabel("modify") : getI18nLabel("select")}{" "}
-              {getSelectedProgramsCount() > 0 && (
-                <Badge size="sm" color="purple-glycine" className="fr-ml-1w">
-                  {getSelectedProgramsCount()}
+            </i>
+            <div className={`${!navState.pillar.linkEnabled ? "disabled" : ""} ${!pillarId ? "no-selection" : ""}`}>
+              <Button
+                disabled={!navState.pillar.buttonEnabled}
+                onClick={() => openModal("pillar")}
+                size="sm"
+                title={getI18nLabel("pillar_selection_button_title")}
+                variant="text"
+              >
+                {getSelectedPillarsCount() > 0 ? getPillarName() : getI18nLabel("select")}
+              </Button>
+            </div>
+          </li>
+          <li className={`programmes ${!navState.programs.linkEnabled ? "section-disabled" : ""}`}>
+            <i className="label-programmes">
+              {getI18nLabel("program")}{" "}
+              {getProgramsCount() > 0 && (
+                <Badge size="sm" className="fr-ml-1w" color="purple-glycine">
+                  {getProgramsCount()}
                 </Badge>
               )}
-            </Button>
-          </div>
-        </li>
-        <li className={`thematiques ${!navState.thematiques.linkEnabled ? "section-disabled" : ""}`}>
-          <i className="label-thematiques">
-            {getI18nLabel("thematics")}{" "}
-            {getThematicsCount() > 0 && (
-              <Badge size="sm" className="fr-ml-1w" color="green-menthe">
-                {getThematicsCount()}
-              </Badge>
-            )}
-          </i>
-          <div className={`${!navState.thematiques.linkEnabled ? "disabled" : ""} ${!thematicIds ? "no-selection" : ""}`}>
-            {getThematicsNames() || getI18nLabel("no_thematic_selected")}
-            <br />
-            <Button
-              disabled={!navState.thematiques.buttonEnabled}
-              size="sm"
-              title={getI18nLabel("thematic_selection_button_title")}
-              variant="tertiary"
-              onClick={() => openModal("thematiques")}
-            >
-              {thematicIds ? getI18nLabel("modify") : getI18nLabel("select")}{" "}
-              {getSelectedThematicsCount() > 0 && (
+            </i>
+            <div className={`${!navState.programs.linkEnabled ? "disabled" : ""} ${!programId ? "no-selection" : ""}`}>
+              <Button
+                disabled={!navState.programs.buttonEnabled}
+                onClick={() => openModal("programs")}
+                size="sm"
+                title={getI18nLabel("program_selection_button_title")}
+                variant="text"
+              >
+                {getSelectedProgramsCount() > 0 ? getProgramName() : getI18nLabel("select")}
+              </Button>
+            </div>
+          </li>
+          <li className={`thematiques ${!navState.thematiques.linkEnabled ? "section-disabled" : ""}`}>
+            <i className="label-thematiques">
+              {getI18nLabel("thematics")}{" "}
+              {getThematicsCount() > 0 && (
                 <Badge size="sm" className="fr-ml-1w" color="green-menthe">
-                  {getSelectedThematicsCount()}
+                  {getThematicsCount()}
                 </Badge>
               )}
-            </Button>
-          </div>
-        </li>
-        <li className={`destinations ${!navState.destinations.linkEnabled ? "section-disabled" : ""}`}>
-          <i className="label-destinations">
-            {getI18nLabel("destinations")}{" "}
-            {getDestinationsCount() > 0 && (
-              <Badge size="sm" className="fr-ml-1w" color="orange-terre-battue">
-                {getDestinationsCount()}
-              </Badge>
-            )}
-          </i>
-          <div className={`${!navState.destinations.linkEnabled ? "disabled" : ""} ${!destinationIds ? "no-selection" : ""}`}>
-            {getDestinationsNames() || getI18nLabel("no_destination_selected")}
-            <Button
-              disabled={!navState.destinations.buttonEnabled}
-              size="sm"
-              title={getI18nLabel("destination_selection_button_title")}
-              variant="tertiary"
-              onClick={() => openModal("destinations")}
-            >
-              {destinationIds ? getI18nLabel("modify") : getI18nLabel("select")}{" "}
-              {getSelectedDestinationsCount() > 0 && (
+            </i>
+            <div className={`${!navState.thematiques.linkEnabled ? "disabled" : ""} ${!thematicIds ? "no-selection" : ""}`}>
+              <Button
+                disabled={!navState.thematiques.buttonEnabled}
+                onClick={() => openModal("thematiques")}
+                size="sm"
+                title={getI18nLabel("thematic_selection_button_title")}
+                variant="text"
+              >
+                {getSelectedThematicsCount() > 0 ? getThematicsNames() : getI18nLabel("select")}
+              </Button>
+            </div>
+          </li>
+          <li className={`destinations ${!navState.destinations.linkEnabled ? "section-disabled" : ""}`}>
+            <i className="label-destinations">
+              {getI18nLabel("destinations")}{" "}
+              {getDestinationsCount() > 0 && (
                 <Badge size="sm" className="fr-ml-1w" color="orange-terre-battue">
-                  {getSelectedDestinationsCount()}
+                  {getDestinationsCount()}
                 </Badge>
               )}
-            </Button>
-          </div>
-        </li>
-      </ul>
+            </i>
+            <div className={`${!navState.destinations.linkEnabled ? "disabled" : ""} ${!destinationIds ? "no-selection" : ""}`}>
+              <Button
+                disabled={!navState.destinations.buttonEnabled}
+                onClick={() => openModal("destinations")}
+                size="sm"
+                title={getI18nLabel("destination_selection_button_title")}
+                variant="text"
+              >
+                {getSelectedDestinationsCount() > 0 ? getDestinationsNames() : getI18nLabel("select")}
+              </Button>
+            </div>
+          </li>
+        </ul>
+      </div>
 
       {/* Modales */}
       <Modal isOpen={modals.pillar} hide={() => closeModal("pillar")} title={getI18nLabel("pillar_selection_title")} size="lg">
