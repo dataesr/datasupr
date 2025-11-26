@@ -1,22 +1,9 @@
 import Highcharts from "highcharts";
 import { CreateChartOptions } from "../../../../components/creat-chart-options";
-
-export interface EvolutionSeriesDataPoint {
-  y: number;
-  maleCount: number;
-  femaleCount: number;
-  annee_universitaire: string;
-}
-
-export interface EvolutionSeriesData {
-  name: string;
-  data: EvolutionSeriesDataPoint[];
-}
-
-export interface CategoryEvolutionResponse {
-  evolutionByCategories: EvolutionSeriesData[];
-  academicYears: string[];
-}
+import {
+  EvolutionSeriesData,
+  EvolutionSeriesDataPoint,
+} from "../../../../../../types/faculty-members";
 
 export const createCategoryEvolutionOptions = (
   evolutionByCategories: EvolutionSeriesData[],
@@ -49,25 +36,28 @@ export const createCategoryEvolutionOptions = (
         text: "Année universitaire",
         style: {
           fontSize: "11px",
+          color: "var(--text-default-grey)",
         },
       },
       labels: {
         style: {
           fontSize: "10px",
+          color: "var(--text-default-grey)",
         },
       },
     },
     yAxis: {
-      min: 0,
       title: {
         text: "Nombre d'enseignants",
         style: {
           fontSize: "11px",
+          color: "var(--text-default-grey)",
         },
       },
       labels: {
         style: {
           fontSize: "10px",
+          color: "var(--text-default-grey)",
         },
       },
     },
@@ -101,7 +91,6 @@ export const createCategoryEvolutionOptions = (
           enabled: false,
         },
       },
-      series: {},
     },
     credits: { enabled: false },
     legend: {
@@ -111,6 +100,7 @@ export const createCategoryEvolutionOptions = (
       verticalAlign: "bottom",
       itemStyle: {
         fontSize: "11px",
+        color: "var(--text-default-grey)",
       },
     },
     series: evolutionByCategories.map(

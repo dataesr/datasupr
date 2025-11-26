@@ -62,7 +62,7 @@ export default function OptionsColumnChart({
       crosshair: true,
       labels: {
         style: {
-          color: "#333333",
+          color: "var(--text-default-grey)",
           fontSize: "12px",
         },
         align: "right",
@@ -93,13 +93,13 @@ export default function OptionsColumnChart({
             ? "Part des enseignants"
             : "Nombre d'enseignants",
         style: {
-          color: "#333333",
+          color: "var(--text-default-grey)",
           fontSize: "14px",
         },
       },
       labels: {
         style: {
-          color: "#333333",
+          color: "var(--text-default-grey)",
           fontSize: "14px",
         },
         formatter() {
@@ -178,7 +178,7 @@ export default function OptionsColumnChart({
           style: {
             textOutline: "none",
             fontWeight: "normal",
-            color: "#333",
+            color: "var(--text-default-grey)",
             fontSize: "11px",
           },
           formatter() {

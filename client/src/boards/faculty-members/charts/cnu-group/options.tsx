@@ -89,6 +89,7 @@ export const createCnuGroupsChartOptions = (
         y: 20,
         style: {
           fontSize: "13px",
+          color: "var(--text-default-grey)",
         },
         formatter: function () {
           return `<div style="width: 100px; text-align: center; white-space: normal;">${this.value}</div>`;
@@ -96,22 +97,30 @@ export const createCnuGroupsChartOptions = (
         useHTML: true,
       },
       lineWidth: 1,
-      lineColor: "#E0E0E0",
+      lineColor: "var(--border-default-grey)",
       tickWidth: 1,
-      tickColor: "#E0E0E0",
+      tickColor: "var(--border-default-grey)",
       tickLength: 5,
     },
     yAxis: {
       title: {
         text: "Effectifs",
+        style: {
+          color: "var(--text-default-grey)",
+        },
       },
-      gridLineColor: "#F0F0F0",
+      labels: {
+        style: {
+          color: "var(--text-default-grey)",
+        },
+      },
+      gridLineColor: "var(--border-default-grey)",
     },
     tooltip: {
       useHTML: true,
-      backgroundColor: "#FFFFFF",
+      backgroundColor: "var(--background-default-grey)",
       borderWidth: 1,
-      borderColor: "#E0E0E0",
+      borderColor: "var(--border-default-grey)",
       borderRadius: 8,
       shadow: false,
       positioner: function (labelWidth, labelHeight, point) {

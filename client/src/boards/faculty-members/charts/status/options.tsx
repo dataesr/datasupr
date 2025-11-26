@@ -64,6 +64,7 @@ export default function StatusOptions({
         style: {
           fontSize: "11px",
           fontWeight: "500",
+          color: "var(--text-default-grey)",
         },
         formatter(this: Highcharts.AxisLabelsFormatterContextObject) {
           const idx = this.pos as number;
@@ -106,10 +107,14 @@ export default function StatusOptions({
         text: displayAsPercentage ? "Pourcentage (%)" : "Nombre d'enseignants",
         style: {
           fontSize: "12px",
+          color: "var(--text-default-grey)",
         },
       },
       labels: {
         format: displayAsPercentage ? "{value} %" : "{value}",
+        style: {
+          color: "var(--text-default-grey)",
+        },
         formatter: function () {
           return displayAsPercentage
             ? `${this.value} %`
@@ -173,7 +178,8 @@ export default function StatusOptions({
           style: {
             fontSize: "10px",
             fontWeight: "bold",
-            textOutline: "1px contrast",
+            color: "var(--text-inverted-grey)",
+            textOutline: "none",
           },
           filter: {
             property: "y",
@@ -191,6 +197,7 @@ export default function StatusOptions({
       itemStyle: {
         fontWeight: "normal",
         fontSize: "11px",
+        color: "var(--text-default-grey)",
       },
     },
     series: [

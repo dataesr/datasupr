@@ -156,3 +156,25 @@ export interface MapStatistics {
   p50: number;
   p75: number;
 }
+export interface EvolutionSeriesDataPoint {
+  y: number;
+  maleCount: number;
+  femaleCount: number;
+  annee_universitaire: string;
+}
+
+export interface EvolutionSeriesData {
+  name: string;
+  data: EvolutionSeriesDataPoint[];
+}
+
+export interface CategoryEvolutionResponse {
+  evolutionByCategories: EvolutionSeriesData[];
+  academicYears: string[];
+}
+export interface CategoryEvolutionParams {
+  context: "fields" | "geo" | "structures" | undefined;
+  contextId: string | undefined;
+  start_year?: string;
+  end_year?: string;
+}

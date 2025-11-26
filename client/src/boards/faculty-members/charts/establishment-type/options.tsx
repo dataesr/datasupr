@@ -26,6 +26,7 @@ export const createEstablishmentTypeChartOptions = (
     labels: {
       style: {
         fontSize: "12px",
+        color: "var(--text-default-grey)",
       },
     },
   },
@@ -38,10 +39,16 @@ export const createEstablishmentTypeChartOptions = (
           ? "Part des enseignants"
           : "Nombre d'enseignants",
       align: "high" as const,
+      style: {
+        color: "var(--text-default-grey)",
+      },
     },
     labels: {
       overflow: "justify" as const,
       format: displayMode === "percentage" ? "{value}%" : "{value}",
+      style: {
+        color: "var(--text-default-grey)",
+      },
     },
   },
   tooltip: {
@@ -58,8 +65,8 @@ export const createEstablishmentTypeChartOptions = (
         }`,
         style: {
           fontWeight: "bold",
-          color: "white",
-          textOutline: "1px contrast",
+          color: "var(--text-inverted-grey)",
+          textOutline: "none",
         },
       },
       colorByPoint: true,

@@ -1,75 +1,44 @@
-.context-explorer__search {
-  margin-bottom: var(--spacing-4v);
-  width: 100%;
-
-  &::placeholder {
-    color: var(--text-mention-grey);
-    font-style: italic;
-  }
-
-  &:focus {
-    outline: 2px solid var(--border-action-high-blue-france);
-    outline-offset: 2px;
-  }
-}
-
 .context-explorer-nav {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: var(--spacing-2v);
+  gap: 0;
   margin-bottom: var(--spacing-4v);
 }
 
 .context-nav-button {
   background: var(--background-default-grey);
-  border: 2px solid var(--border-default-grey);
-  border-radius: var(--radius-2);
-  padding: var(--spacing-3v) var(--spacing-4v);
+  border: 1px solid var(--border-default-grey);
+  border-right: none;
+  padding: var(--spacing-3v) var(--spacing-2v);
   cursor: pointer;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--spacing-2v);
-  position: relative;
-  overflow: hidden;
+  transition: background-color 0.3s, border-color 0.3s;
+  text-align: center;
 
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: var(--border-default-grey);
-    transform: translateY(-4px);
-    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  &:first-child {
+    border-radius: var(--radius) 0 0 0;
   }
 
-  &:hover {
-    background: var(--background-contrast-grey);
-    border-color: var(--border-plain-grey);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  &:last-child {
+    border-right: 1px solid var(--border-default-grey);
+    border-radius: 0 var(--radius) 0 0;
+  }
 
-    &::before {
-      transform: translateY(0);
-    }
+  &:hover:not(.active) {
+    background: var(--background-contrast-grey);
   }
 
   &.active {
     background: var(--background-action-low-blue-france);
     border-color: var(--border-action-high-blue-france);
-    box-shadow: 0 4px 12px rgba(0, 0, 145, 0.15);
-
-    &::before {
-      transform: translateY(0);
-      background: var(--border-action-high-blue-france);
-    }
+    border-bottom: 2px solid var(--border-action-high-blue-france);
 
     .context-nav-button__label {
       color: var(--text-action-high-blue-france);
-      font-weight: 600;
+    }
+
+    .context-nav-button__count {
+      background: var(--background-action-high-blue-france);
+      color: var(--text-inverted-grey);
     }
   }
 
@@ -79,86 +48,33 @@
   }
 }
 
-.context-nav-button--discipline.active {
-  background: linear-gradient(
-    135deg,
-    rgba(106, 90, 205, 0.08) 0%,
-    var(--background-action-low-blue-france) 100%
-  );
-  border-color: var(--fields-color);
-
-  &::before {
-    background: var(--fields-color);
-  }
-}
-
-.context-nav-button--region.active,
-.context-nav-button--academie.active {
-  background: linear-gradient(
-    135deg,
-    rgba(34, 139, 34, 0.08) 0%,
-    var(--background-action-low-blue-france) 100%
-  );
-  border-color: var(--geo-color);
-
-  &::before {
-    background: var(--geo-color);
-  }
-}
-
-.context-nav-button--structure.active {
-  background: linear-gradient(
-    135deg,
-    rgba(220, 20, 60, 0.06) 0%,
-    var(--background-action-low-blue-france) 100%
-  );
-  border-color: rgba(220, 20, 60, 0.5);
-
-  &::before {
-    background: var(--university-color);
-  }
-}
-
 .context-nav-button__icon {
-  font-size: 1.75rem;
-  line-height: 1;
-  filter: grayscale(0.3);
-  transition: filter 0.25s ease;
-
-  .active & {
-    filter: grayscale(0);
-  }
+  font-size: 1.5rem;
+  display: block;
+  margin-bottom: var(--spacing-1v);
 }
 
 .context-nav-button__label {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--text-default-grey);
-  text-align: center;
-  line-height: 1.3;
-  display: flex;
-  flex-direction: column;
-  gap: var(--spacing-1v);
-  transition: color 0.25s ease;
+  display: block;
+  margin-bottom: var(--spacing-1v);
 }
 
 .context-nav-button__count {
   display: inline-block;
   font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--text-mention-grey);
   background: var(--background-contrast-grey);
-  padding: 2px 8px;
-  border-radius: 12px;
-  margin-top: var(--spacing-1v);
-
-  .active & {
-    background: rgba(0, 0, 145, 0.15);
-    color: var(--text-action-high-blue-france);
-  }
+  color: var(--text-mention-grey);
+  padding: 0.125rem 0.5rem;
+  border-radius: 1rem;
 }
 
 .context-explorer-content {
+  border: 1px solid var(--border-default-grey);
+  border-top: none;
+  border-radius: 0 0 var(--radius) var(--radius);
   min-height: 400px;
 }
 
@@ -295,14 +211,9 @@
 
   &.selected {
     background: rgba(220, 20, 60, 0.08);
-    border-color: rgba(220, 20, 60, 0.5);
 
     &::before {
       background: var(--university-color);
-    }
-
-    .context-filter-item__name {
-      color: rgba(180, 20, 50, 0.95);
     }
   }
 }

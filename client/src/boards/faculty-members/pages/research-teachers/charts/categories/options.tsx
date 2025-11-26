@@ -40,6 +40,7 @@ export const createCategoryOptions = (
         style: {
           fontSize: "11px",
           fontWeight: "500",
+          color: "var(--text-default-grey)",
         },
       },
     },
@@ -52,11 +53,13 @@ export const createCategoryOptions = (
         text: "Nombre d'enseignants",
         style: {
           fontSize: "11px",
+          color: "var(--text-default-grey)",
         },
       },
       labels: {
         style: {
           fontSize: "10px",
+          color: "var(--text-default-grey)",
         },
         overflow: "justify",
       },
@@ -66,7 +69,8 @@ export const createCategoryOptions = (
         style: {
           fontSize: "10px",
           fontWeight: "bold",
-          textOutline: "1px contrast",
+          color: "var(--text-inverted-grey)",
+          textOutline: "none",
         },
       },
     },
@@ -89,6 +93,10 @@ export const createCategoryOptions = (
     legend: {
       enabled: true,
       reversed: true,
+      itemStyle: {
+        fontSize: "11px",
+        color: "var(--text-default-grey)",
+      },
     },
     series: [
       {

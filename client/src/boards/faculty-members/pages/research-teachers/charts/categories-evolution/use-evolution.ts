@@ -1,14 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { CategoryEvolutionResponse } from "./options";
+import {
+  CategoryEvolutionParams,
+  CategoryEvolutionResponse,
+} from "../../../../../../types/faculty-members";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
-
-interface CategoryEvolutionParams {
-  context: "fields" | "geo" | "structures" | undefined;
-  contextId: string | undefined;
-  start_year?: string;
-  end_year?: string;
-}
 
 export const useCategoryEvolution = ({
   context,

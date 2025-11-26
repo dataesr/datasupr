@@ -23,6 +23,7 @@ export function FacultyMembers() {
       navigate(url);
     }
   };
+  console.log("yearsData", yearsData);
 
   return (
     <>
@@ -276,7 +277,7 @@ export function FacultyMembers() {
               </Title>
               <Text className="quickAccessSubtitle fr-mb-4w">
                 Découvrez directement les effectifs du personnel enseignant
-                selon une entité précise
+                selon une entité précise, exemple :
               </Text>
               <Row gutters>
                 <Col md={4}>

@@ -142,12 +142,14 @@ export const createAgeCategoryOptions = (
         text: "Tranche d'âge",
         style: {
           fontSize: "11px",
+          color: "var(--text-default-grey)",
         },
       },
       labels: {
         style: {
           fontSize: "11px",
           fontWeight: "500",
+          color: "var(--text-default-grey)",
         },
       },
     },
@@ -157,12 +159,14 @@ export const createAgeCategoryOptions = (
         text: "Nombre de personnes",
         style: {
           fontSize: "11px",
+          color: "var(--text-default-grey)",
         },
       },
       labels: {
         format: "{value}",
         style: {
           fontSize: "10px",
+          color: "var(--text-default-grey)",
         },
       },
       allowDecimals: false,
@@ -175,6 +179,7 @@ export const createAgeCategoryOptions = (
       itemStyle: {
         fontSize: "10px",
         fontWeight: "normal",
+        color: "var(--text-default-grey)",
       },
       itemHoverStyle: {
         color: "var(--blue-france-sun-113-625)",
@@ -207,6 +212,7 @@ export const createAgeCategoryOptions = (
       },
       style: {
         fontSize: "11px",
+        color: "var(--text-default-grey)",
       },
     },
     plotOptions: {
@@ -220,7 +226,8 @@ export const createAgeCategoryOptions = (
           style: {
             fontSize: "10px",
             fontWeight: "bold",
-            textOutline: "1px contrast",
+            color: "var(--text-inverted-grey)",
+            textOutline: "none",
           },
           filter: {
             property: "y",

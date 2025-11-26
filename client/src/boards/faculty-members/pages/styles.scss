@@ -18,18 +18,19 @@
 .indicatorCard {
   height: 380px;
   overflow: hidden;
-  background: white;
   border-radius: 0.5rem;
   padding: 1.5rem;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  border-right: 1px solid var(--border-default-grey);
 }
 
 .indicatorCardWithBorder {
   height: 380px;
   overflow: hidden;
-  background: white;
   border-radius: 0.5rem;
   padding: 1.5rem;
+  border-right: 1px solid var(--border-default-grey);
+
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
   border-left: 1px solid var(--border-default-grey);
   padding-left: 1rem;

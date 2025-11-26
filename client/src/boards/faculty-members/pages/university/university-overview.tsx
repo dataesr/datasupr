@@ -10,19 +10,23 @@ import NavigationCards from "../../components/navigation-cards/navigation-cards"
 import { GlossaryTerm } from "../../components/glossary/glossary-tooltip";
 import { useContextDetection } from "../../utils";
 import { useFacultyMembersYears } from "../../api/general-queries";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { useSearchParams } from "react-router-dom";
 import Callout from "../../../../components/callout";
 import "../styles.scss";
 
 export default function UniversityOverview() {
   const { contextId, context } = useContextDetection();
-  const { data: yearsData } = useFacultyMembersYears();
+  const { data: yearsData, isLoading } = useFacultyMembersYears();
   const [searchParams] = useSearchParams();
 
   const selectedYear = searchParams.get("annee_universitaire") || "";
   const isYearAvailable = yearsData?.available_years?.includes(selectedYear);
-
   const hasDataForSelectedYear = isYearAvailable;
+
+  if (isLoading) {
+    return <DefaultSkeleton height="300px" />;
+  }
 
   return (
     <>
