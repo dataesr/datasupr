@@ -23,10 +23,11 @@ export default function CountriesCollaborationsBubble() {
   const currentLang = searchParams.get("language") || "fr";
   const [nbToShow, setNbToShow] = useState(10); // Default number of countries to show
 
+  const chartId = "CountriesCollaborationsBubble";
   const configChart = {
-    id: "CountriesCollaborationsBubble",
+    id: chartId,
     queryId: "CountriesCollaborations",
-    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+    integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };
 
   const { data, isLoading } = useQuery({

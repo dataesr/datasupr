@@ -1,7 +1,9 @@
-import React, { Suspense } from "react";
+import { Suspense } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Container, Row, Col } from "@dataesr/dsfr-plus";
 
 import Template from "./template";
+import { getChart, isValidChartId } from "./charts-registry";
 
 export default function Integration() {
   const [searchParams] = useSearchParams();
@@ -11,13 +13,42 @@ export default function Integration() {
 
   if (!chartId) return <Template />;
 
-  const integrationURL = `url_de_${chartId}`;
-  const LazyComponent = React.lazy(
-    () => import(/* @vite-ignore */ integrationURL)
-  );
+  // Vérification de la validité du chart_id
+  if (!isValidChartId(chartId)) {
+    return (
+      <Container className="fr-mt-5w">
+        <Row>
+          <Col>
+            <div className="fr-alert fr-alert--error">
+              <h3 className="fr-alert__title">Graphique non trouvé</h3>
+              <p>Le graphique avec l'ID "{chartId}" n'existe pas ou n'est pas disponible pour l'intégration.</p>
+            </div>
+            <p className="fr-mt-2w">
+              <a href="/integration">Retour à la liste des graphiques disponibles</a>
+            </p>
+          </Col>
+        </Row>
+      </Container>
+    );
+  }
+
+  const LazyComponent = getChart(chartId);
+
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <LazyComponent />
-    </Suspense>
+    <Container className="fr-mt-5w">
+      <Row>
+        <Col>
+          <Suspense
+            fallback={
+              <div className="fr-callout">
+                <p className="fr-callout__text">Chargement du graphique...</p>
+              </div>
+            }
+          >
+            <LazyComponent />
+          </Suspense>
+        </Col>
+      </Row>
+    </Container>
   );
 }

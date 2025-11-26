@@ -33,16 +33,14 @@ import { useAtlas } from "../useAtlas.tsx";
 
 import "./styles.scss";
 import Callout from "../components/callout.tsx";
+import BoardsSuggestComponent from "../../../components/boards-suggest-component/index.tsx";
 
 export function General() {
   const [searchParams] = useSearchParams();
-  const params = [...searchParams]
-    .map(([key, value]) => `${key}=${value}`)
-    .join("&");
+  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
   const geoId = searchParams.get("geo_id") || "";
   const { DEFAULT_CURRENT_YEAR } = useAtlas();
-  const currentYear =
-    searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
+  const currentYear = searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;
 
   const { data, isLoading } = useQuery({
     queryKey: ["atlas/number-of-students", params],
@@ -55,11 +53,7 @@ export function General() {
   });
 
   const { data: dataHistoric, isLoading: isLoadingHistoric } = useQuery({
-    queryKey: [
-      "atlas/number-of-students-historic-by-level",
-      geoId,
-      currentYear,
-    ],
+    queryKey: ["atlas/number-of-students-historic-by-level", geoId, currentYear],
     queryFn: () => getNumberOfStudentsHistoricByLevel(geoId, currentYear),
   });
 
@@ -72,21 +66,13 @@ export function General() {
     return <div>Chargement ...</div>;
   }
 
-  const effectifPU =
-    dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)
-      ?.effectif_pu || 0;
-  const effectifPR =
-    dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)
-      ?.effectif_pr || 0;
+  const effectifPU = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pu || 0;
+  const effectifPR = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_pr || 0;
   const pctPU = Math.round((effectifPU / (effectifPU + effectifPR)) * 100);
   const pctPR = Math.round((effectifPR / (effectifPU + effectifPR)) * 100);
 
-  const effectifM =
-    dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)
-      ?.effectif_masculin || 0;
-  const effectifF =
-    dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)
-      ?.effectif_feminin || 0;
+  const effectifM = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_masculin || 0;
+  const effectifF = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_feminin || 0;
   const pctM = Math.round((effectifM / (effectifM + effectifF)) * 100);
   const pctF = Math.round((effectifF / (effectifM + effectifF)) * 100);
 
@@ -110,14 +96,7 @@ export function General() {
   };
 
   function MapSelector() {
-    if (
-      isLoadingPolygons ||
-      !polygonsData ||
-      !polygonsData.length ||
-      isLoadingHistoric ||
-      !dataHistoric?.data ||
-      !dataHistoric?.data.length
-    ) {
+    if (isLoadingPolygons || !polygonsData || !polygonsData.length || isLoadingHistoric || !dataHistoric?.data || !dataHistoric?.data.length) {
       return <MapSkeleton />;
     }
 
@@ -131,9 +110,7 @@ export function General() {
           case "D988":
           case "A40":
             mapbubbleData.push({
-              z:
-                item.data.find((d) => d.annee_universitaire === currentYear)
-                  ?.effectif || 0,
+              z: item.data.find((d) => d.annee_universitaire === currentYear)?.effectif || 0,
               name: item.geo_nom,
               lat: -21.7,
               lon: 166,
@@ -144,9 +121,7 @@ export function General() {
           case "D987":
           case "A41":
             mapbubbleData.push({
-              z:
-                item.data.find((d) => d.annee_universitaire === currentYear)
-                  ?.effectif || 0,
+              z: item.data.find((d) => d.annee_universitaire === currentYear)?.effectif || 0,
               name: item.geo_nom,
               lat: -17.6,
               lon: -149.5,
@@ -157,9 +132,7 @@ export function General() {
           case "978":
           case "D978":
             mapbubbleData.push({
-              z:
-                item.data.find((d) => d.annee_universitaire === currentYear)
-                  ?.effectif || 0,
+              z: item.data.find((d) => d.annee_universitaire === currentYear)?.effectif || 0,
               name: item.geo_nom,
               lat: 18.07,
               lon: -63.1,
@@ -170,9 +143,7 @@ export function General() {
           case "D986":
           case "A42":
             mapbubbleData.push({
-              z:
-                item.data.find((d) => d.annee_universitaire === currentYear)
-                  ?.effectif || 0,
+              z: item.data.find((d) => d.annee_universitaire === currentYear)?.effectif || 0,
               name: item.geo_nom,
               lat: -13.3,
               lon: -178,
@@ -180,15 +151,11 @@ export function General() {
             break;
 
           default:
-            polygon =
-              polygonsData.find((d) => d.originalId === item.geo_id)
-                ?.geometry || null;
+            polygon = polygonsData.find((d) => d.originalId === item.geo_id)?.geometry || null;
             if (polygon !== "undefined" && polygon !== null) {
               const calculateCenter = turf.centerOfMass(polygon);
               mapbubbleData.push({
-                z:
-                  item.data.find((d) => d.annee_universitaire === currentYear)
-                    ?.effectif || 0,
+                z: item.data.find((d) => d.annee_universitaire === currentYear)?.effectif || 0,
                 name: item.geo_nom,
                 lat: calculateCenter.geometry.coordinates[1],
                 lon: calculateCenter.geometry.coordinates[0],
@@ -204,10 +171,7 @@ export function General() {
           <Row className="fr-mt-5w">
             <Col>
               <Title as="h3" look="h5">
-                <span
-                  className="fr-icon-pie-chart-2-fill fr-mr-1w"
-                  aria-hidden="true"
-                />
+                <span className="fr-icon-pie-chart-2-fill fr-mr-1w" aria-hidden="true" />
                 {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
               </Title>
             </Col>
@@ -346,10 +310,7 @@ export function General() {
             <Row className="fr-my-5w">
               <Col>
                 <Title as="h3" look="h5">
-                  <span
-                    className="fr-icon-pie-chart-2-fill fr-mr-1w"
-                    aria-hidden="true"
-                  />
+                  <span className="fr-icon-pie-chart-2-fill fr-mr-1w" aria-hidden="true" />
                   Répartition des effectifs étudiants à Paris
                 </Title>
               </Col>
@@ -376,12 +337,8 @@ export function General() {
             <Row className="fr-my-5w">
               <Col>
                 <Title as="h3" look="h5">
-                  <span
-                    className="fr-icon-pie-chart-2-fill fr-mr-1w"
-                    aria-hidden="true"
-                  />
-                  Répartition des effectifs étudiants dans les collectivités
-                  d'outre-mer
+                  <span className="fr-icon-pie-chart-2-fill fr-mr-1w" aria-hidden="true" />
+                  Répartition des effectifs étudiants dans les collectivités d'outre-mer
                 </Title>
               </Col>
             </Row>
@@ -452,10 +409,7 @@ export function General() {
             <Row className="fr-my-5w">
               <Col>
                 <Title as="h3" look="h5">
-                  <span
-                    className="fr-icon-pie-chart-2-fill fr-mr-1w"
-                    aria-hidden="true"
-                  />
+                  <span className="fr-icon-pie-chart-2-fill fr-mr-1w" aria-hidden="true" />
                   {`Répartition des effectifs étudiants par ${getSubLevelName()}`}
                 </Title>
               </Col>
@@ -503,23 +457,17 @@ export function General() {
     }
   }
 
-  const nbStudents =
-    dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)
-      ?.effectif_total || 0;
+  const nbStudents = dataByYear?.find((el: DataByYear) => el.annee_universitaire === currentYear)?.effectif_total || 0;
 
   return (
     <Container as="section" fluid>
       {geoId === "PAYS_100" && (
         <div className="fr-mb-3w">
           <Callout>
-            L’Atlas comprend le niveau géographique « France » comme l’agrégat
-            regroupant la France métropolitaine, les départements et régions
-            d’Outre-mer (DROM), et les autres collectivités d’outre-mer (COM) et
-            la Nouvelle-Calédonie. Les effectifs d’étudiants inscrits dans une
-            implantation à l’étranger d’un établissement dont le siège est situé
-            en France ne sont comptabilisés ni au niveau de la France ni aux
-            différents niveaux géographiques (unité urbaine ou commune rurale,
-            département, académie, région) auxquelles appartient l’établissement
+            L’Atlas comprend le niveau géographique « France » comme l’agrégat regroupant la France métropolitaine, les départements et régions
+            d’Outre-mer (DROM), et les autres collectivités d’outre-mer (COM) et la Nouvelle-Calédonie. Les effectifs d’étudiants inscrits dans une
+            implantation à l’étranger d’un établissement dont le siège est situé en France ne sont comptabilisés ni au niveau de la France ni aux
+            différents niveaux géographiques (unité urbaine ou commune rurale, département, académie, région) auxquelles appartient l’établissement
             d’origine.
           </Callout>
         </div>
@@ -527,30 +475,16 @@ export function General() {
       <Row gutters>
         <Col md={6}>
           <StudentsCardWithTrend
-            descriptionNode={
-              <Badge color="yellow-tournesol">{currentYear}</Badge>
-            }
+            descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
             number={nbStudents}
-            label={`Étudiant${nbStudents > 1 ? "s" : ""} inscrit${
-              nbStudents > 1 ? "s" : ""
-            }`}
-            trendGraph={
-              <TrendCard
-                color="#e18b76"
-                data={dataByYear?.map((item) => item.effectif_total)}
-              />
-            }
+            label={`Étudiant${nbStudents > 1 ? "s" : ""} inscrit${nbStudents > 1 ? "s" : ""}`}
+            trendGraph={<TrendCard color="#e18b76" data={dataByYear?.map((item) => item.effectif_total)} />}
           />
         </Col>
         <Col md={6}>
           <FieldsMainCard
-            descriptionNode={
-              <Badge color="yellow-tournesol">{currentYear}</Badge>
-            }
-            number={
-              data?.filieres?.filter((el) => el.effectif_PR || el.effectif_PU)
-                .length || 0
-            }
+            descriptionNode={<Badge color="yellow-tournesol">{currentYear}</Badge>}
+            number={data?.filieres?.filter((el) => el.effectif_PR || el.effectif_PU).length || 0}
             label="Nombre de filières représentées sur le territoire"
             to={`/atlas/effectifs-par-filiere?${params}`}
           />
@@ -565,16 +499,14 @@ export function General() {
             Répartition des effectifs étudiants par secteur
           </Title>
           <Text>
-            Les effectifs étudiants sont répartis entre le secteur public et le
-            secteur privé.
+            Les effectifs étudiants sont répartis entre le secteur public et le secteur privé.
             <br />
             <br />
             {effectifPU === 0 ? (
               <>Il n'y a pas d'étudiant inscrit dans le secteur public</>
             ) : (
               <>
-                <strong>{effectifPU.toLocaleString()}</strong> étudiants sont
-                inscrits dans le secteur public
+                <strong>{effectifPU.toLocaleString()}</strong> étudiants sont inscrits dans le secteur public
               </>
             )}{" "}
             et{" "}
@@ -582,31 +514,20 @@ export function General() {
               <>il n'y a pas d'étudiant inscrit dans le secteur privé</>
             ) : (
               <>
-                <strong>{effectifPR.toLocaleString()}</strong> étudiants sont
-                inscrits dans le secteur privé
+                <strong>{effectifPR.toLocaleString()}</strong> étudiants sont inscrits dans le secteur privé
               </>
             )}
-            , soit une répartition de <strong>{pctPU.toFixed(1)}&nbsp;%</strong>{" "}
-            dans le secteur public et <strong>{pctPR.toFixed(1)}&nbsp;%</strong>{" "}
-            dans le secteur privé pour l'année universitaire{" "}
-            <Badge color="yellow-tournesol">{currentYear}</Badge>.
+            , soit une répartition de <strong>{pctPU.toFixed(1)}&nbsp;%</strong> dans le secteur public et <strong>{pctPR.toFixed(1)}&nbsp;%</strong>{" "}
+            dans le secteur privé pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
-          <Link href={`/atlas/effectifs-par-secteur?${params}`}>
-            Voir le détail des effectifs par secteur
-          </Link>
+          <Link href={`/atlas/effectifs-par-secteur?${params}`}>Voir le détail des effectifs par secteur</Link>
         </Col>
         <Col md={6}>
           <SectorsCard
             currentYear={currentYear}
             values={{
-              labels:
-                data?.secteurs
-                  ?.filter((item) => item.label !== undefined)
-                  .map((item) => item.label) || [],
-              values:
-                data?.secteurs
-                  ?.filter((item) => item.value !== 0)
-                  .map((item) => item.value) || [],
+              labels: data?.secteurs?.filter((item) => item.label !== undefined).map((item) => item.label) || [],
+              values: data?.secteurs?.filter((item) => item.value !== 0).map((item) => item.value) || [],
             }}
           />
         </Col>
@@ -617,16 +538,14 @@ export function General() {
             Répartition des effectifs étudiants par genre
           </Title>
           <Text>
-            Les effectifs étudiants sont répartis entre les genres masculin et
-            féminin.
+            Les effectifs étudiants sont répartis entre les genres masculin et féminin.
             <br />
             <br />
             {effectifM === 0 ? (
               <>Il n'y a pas d'étudiant de genre masculin</>
             ) : (
               <>
-                <strong>{effectifM.toLocaleString()}</strong> étudiants sont de
-                genre masculin
+                <strong>{effectifM.toLocaleString()}</strong> étudiants sont de genre masculin
               </>
             )}{" "}
             et{" "}
@@ -634,34 +553,26 @@ export function General() {
               <>il n'y a pas d'étudiant de genre féminin</>
             ) : (
               <>
-                <strong>{effectifF.toLocaleString()}</strong> étudiants sont de
-                genre féminin
+                <strong>{effectifF.toLocaleString()}</strong> étudiants sont de genre féminin
               </>
             )}
-            , soit une répartition de <strong>{pctM.toFixed(1)}&nbsp;%</strong>{" "}
-            dans le genre masculin et <strong>{pctF.toFixed(1)}&nbsp;%</strong>{" "}
-            dans le genre féminin pour l'année universitaire{" "}
-            <Badge color="yellow-tournesol">{currentYear}</Badge>.
+            , soit une répartition de <strong>{pctM.toFixed(1)}&nbsp;%</strong> dans le genre masculin et <strong>{pctF.toFixed(1)}&nbsp;%</strong>{" "}
+            dans le genre féminin pour l'année universitaire <Badge color="yellow-tournesol">{currentYear}</Badge>.
           </Text>
-          <Link href={`/atlas/effectifs-par-genre?${params}`}>
-            Voir le détail des effectifs par genre
-          </Link>
+          <Link href={`/atlas/effectifs-par-genre?${params}`}>Voir le détail des effectifs par genre</Link>
         </Col>
         <Col md={6}>
           <GendersCard
             currentYear={currentYear}
             values={{
-              labels:
-                data?.gender
-                  ?.filter((item) => item.label !== undefined)
-                  .map((item) => item.label) || [],
-              values:
-                data?.gender
-                  ?.filter((item) => item.value !== 0)
-                  .map((item) => item.value) || [],
+              labels: data?.gender?.filter((item) => item.label !== undefined).map((item) => item.label) || [],
+              values: data?.gender?.filter((item) => item.value !== 0).map((item) => item.value) || [],
             }}
           />
         </Col>
+      </Row>
+      <Row>
+        <BoardsSuggestComponent />
       </Row>
     </Container>
   );
