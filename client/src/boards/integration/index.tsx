@@ -34,6 +34,14 @@ export default function Integration() {
 
   const LazyComponent = getChart(chartId);
 
+  // Extraction de tous les paramètres URL (sauf chart_id et theme) pour les passer au composant
+  const componentProps: Record<string, string> = {};
+  searchParams.forEach((value, key) => {
+    if (key !== "chart_id" && key !== "theme") {
+      componentProps[key] = value;
+    }
+  });
+
   return (
     <Container className="fr-mt-5w">
       <Row>
@@ -45,7 +53,7 @@ export default function Integration() {
               </div>
             }
           >
-            <LazyComponent />
+            <LazyComponent {...componentProps} />
           </Suspense>
         </Col>
       </Row>

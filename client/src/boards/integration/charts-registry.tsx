@@ -7,6 +7,7 @@ import { lazy } from "react";
 export const chartsRegistry = {
   // European Projects
   CountriesCollaborationsBubble: lazy(() => import("../european-projects/pages/collaborations/charts/countries-collaborations-bubble")),
+  CollaborationsEntityVariablePie: lazy(() => import("../european-projects/pages/collaborations/charts/entity-variable-pie")),
 
   // Ajoutez d'autres graphiques ici selon vos besoins
   // "ep-autre-graph": lazy(() => import("../european-projects/pages/...")),

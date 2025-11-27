@@ -10,19 +10,21 @@ import EntitySearchBar from "../../../../components/entity-searchbar";
 import { useState } from "react";
 import EntitiesTable from "../entities-table";
 
-export default function EntityVariablePie() {
+export default function EntityVariablePie({ entity_id }: { entity_id?: string }) {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  const [entityId, setEntityId] = useState<string>("");
+  const [entityId, setEntityId] = useState<string>(entity_id || "");
+  console.log("jer", entity_id);
 
-  // const entityId = window.location.pathname.split("/").pop()?.split("?")[0] || "";
+  const chartId = "CollaborationsEntityVariablePie";
+  const queryId = "EntitiesCollaborations";
 
   const { data, isLoading } = useQuery({
-    queryKey: ["EntitiesCollaborations", entityId],
+    queryKey: [queryId, entityId],
     queryFn: () => getCollaborations(entityId),
   });
 
-  if (isLoading || !data)
+  if (isLoading || !data) {
     return (
       <Container fluid className="fr-mt-5w">
         <Row>
@@ -37,19 +39,9 @@ export default function EntityVariablePie() {
         </Row>
       </Container>
     );
+  }
 
-  const configChart = {
-    id: "EntitiesCollaborations",
-    title: {
-      fr: `Top 20 des entités ayant collaboré avec ${data.name_fr}`,
-      en: `Top 20 entities collaborating with ${data.name_en}`,
-    },
-    subtitle: "",
-    description: null,
-    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
-  };
-
-  if (!entityId)
+  if (!entityId) {
     return (
       <Container fluid className="fr-mt-5w">
         <Row>
@@ -59,6 +51,19 @@ export default function EntityVariablePie() {
         </Row>
       </Container>
     );
+  }
+
+  const configChart = {
+    id: chartId,
+    queryId: queryId,
+    title: {
+      fr: `Top 20 des entités ayant collaboré avec ${data.name_fr}`,
+      en: `Top 20 entities collaborating with ${data.name_en}`,
+    },
+    subtitle: "",
+    description: null,
+    integrationURL: `/integration?chart_id=${chartId}&entity_id=${entityId}`,
+  };
 
   return (
     <Container fluid className="fr-mt-5w">
