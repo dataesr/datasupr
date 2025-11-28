@@ -22,15 +22,16 @@ export default function FundingRankingRates() {
   const [sortBy, setSortBy] = useState("evaluated");
   const params = useGetParams();
 
+  const chartId = "fundingRankingRates";
   const { data, isLoading } = useQuery({
-    queryKey: ["fundingRankingRates", params],
+    queryKey: [chartId, params],
     queryFn: () => getData(params),
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
   const configChartFundingRankingSubRates = {
-    id: "fundingRankingSub",
+    id: chartId,
     title: {
       fr: "Classement des pays selon la part des montants demandés et obtenus (M€)",
       en: "Ranking of countries by share of amounts requested and obtained (M€)",
@@ -60,7 +61,7 @@ export default function FundingRankingRates() {
     readingKey: readingKey(data),
     source: EPChartsSource,
     updateDate: EPChartsUpdateDate,
-    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+    integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };
 
   const prepareData = (data, sortKey) => {

@@ -32,12 +32,12 @@ export default function FundingRankingCoordination() {
 
   const configChart2a = {
     id: "fundingRankingCoordination",
-    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+    integrationURL: `/integration?chart_id=FundingRankingCoordination&${params}`,
   };
 
   const configChart2b = {
     id: "fundingRankingCoordinationSuccessRate",
-    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
+    integrationURL: `/integration?chart_id=FundingRankingCoordination&${params}`,
   };
 
   const prepareData = (data, sortKey) => {

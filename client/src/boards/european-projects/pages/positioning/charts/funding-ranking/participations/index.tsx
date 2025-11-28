@@ -17,21 +17,21 @@ import i18nLocal from "./i18n.json";
 import ChartFooter from "../../../../../../../components/chart-footer/index.js";
 import Callout from "../../../../../../../components/callout.js";
 
-const configChart3a = {
-  id: "fundingRankingInvolved",
-  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
-};
-
-const configChart3b = {
-  id: "fundingRankingInvolvedSuccessRate",
-  integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-participating-organizations",
-};
-
 export default function FundingRankingParticipations() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const [sortBy, setSortBy] = useState("evaluated");
   const params = useGetParams();
+
+  const configChart3a = {
+    id: "fundingRankingInvolved",
+    integrationURL: `/integration/chart_id=FundingRankingParticipations&${params}`,
+  };
+
+  const configChart3b = {
+    id: "fundingRankingInvolvedSuccessRate",
+    integrationURL: `/integration/chart_id=FundingRankingParticipations&${params}`,
+  };
 
   const { data, isLoading } = useQuery({
     queryKey: ["fundingRankingParticipations", params],

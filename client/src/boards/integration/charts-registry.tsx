@@ -5,9 +5,18 @@ import { lazy } from "react";
  * Ajoutez ici tous les graphiques que vous souhaitez rendre disponibles via l'API d'intégration
  */
 export const chartsRegistry = {
-  // European Projects
+  // European Projects - Collaborations
+  // MapOfEuropeCollaborationsFlow: lazy(() => import("../european-projects/pages/collaborations/charts/map-of-europe-collaborations-flow")),
+  // CountryNeighbourgs: lazy(() => import("../european-projects/pages/collaborations/charts/country-neighbourgs")),
   CountriesCollaborationsBubble: lazy(() => import("../european-projects/pages/collaborations/charts/countries-collaborations-bubble")),
   CollaborationsEntityVariablePie: lazy(() => import("../european-projects/pages/collaborations/charts/entity-variable-pie")),
+
+  // European Projects - Positioning
+  top10beneficiaries: lazy(() => import("../european-projects/pages/positioning/charts/top-10-beneficiaries")),
+  fundingRankingRates: lazy(() => import("../european-projects/pages/positioning/charts/funding-ranking/rates")),
+  FundingRankingSubsidies: lazy(() => import("../european-projects/pages/positioning/charts/funding-ranking/subsidies")),
+  FundingRankingParticipations: lazy(() => import("../european-projects/pages/positioning/charts/funding-ranking/participations")),
+  fundingRankingCoordination: lazy(() => import("../european-projects/pages/positioning/charts/funding-ranking/coordination")),
 
   // Ajoutez d'autres graphiques ici selon vos besoins
   // "ep-autre-graph": lazy(() => import("../european-projects/pages/...")),

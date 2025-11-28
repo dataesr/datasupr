@@ -21,8 +21,9 @@ export default function Top10Beneficiaries() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
+  const chartId = "top10beneficiaries";
   const config = {
-    id: "top10beneficiaries",
+    id: chartId,
     idQuery: "top10beneficiaries",
     comment: {
       fr: (
@@ -47,7 +48,7 @@ export default function Top10Beneficiaries() {
       fr: "Classement des bénéficiaires",
       en: "Beneficiaries ranking",
     },
-    integrationURL: "/european-projects/components/pages/analysis/positioning/charts/top-10-beneficiaries",
+    integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };
 
   const prepareData = (data) => {

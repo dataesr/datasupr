@@ -26,7 +26,7 @@ export default function PositionnementContent({ contentType }: PositionnementCon
     case "destination-detail":
       return (
         <div>
-          <Intro />
+          <Intro /> {/** TODO: Permettre l'intégration comme pour le chartWrapper */}
           <Top10Beneficiaries />
           <FundingRankingRates />
           <FundingRankingSubsidies />
