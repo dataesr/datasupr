@@ -23,7 +23,6 @@ export function FacultyMembers() {
       navigate(url);
     }
   };
-  console.log("yearsData", yearsData);
 
   return (
     <>
