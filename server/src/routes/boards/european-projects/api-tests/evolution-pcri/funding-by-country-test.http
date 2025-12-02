@@ -1,0 +1,35 @@
+# Test du graphique funding-by-country
+# Ces requêtes permettent de tester l'API utilisée par le composant
+
+# Test avec la France
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=FRA&stages=successful
+
+###
+
+# Test avec l'Allemagne
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=DEU&stages=successful
+
+###
+
+# Test avec l'Espagne
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=ESP&stages=successful
+
+###
+
+# Test avec l'Italie
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=ITA&stages=successful
+
+###
+
+# Test avec la Norvège
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=NOR&stages=successful
+
+###
+
+# Test avec filtre framework spécifique (Horizon Europe uniquement)
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=FRA&stages=successful&frameworks=Horizon%20Europe
+
+###
+
+# Test avec plusieurs frameworks
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=FRA&stages=successful&frameworks=Horizon%202020|Horizon%20Europe

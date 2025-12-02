@@ -1,0 +1,104 @@
+# =============================================================================
+# TESTS DES ROUTES EVOLUTION PCRI
+# =============================================================================
+
+# =============================================================================
+# 1. GET-EVOLUTION-BY-COUNTRY
+# =============================================================================
+
+# Test basique avec country_code uniquement
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=FRA
+
+###
+
+# Test avec filtres frameworks
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=FRA&frameworks=Horizon%202020|Horizon%20Europe
+
+###
+
+# Test avec filtres stages
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=DEU&stages=successful|evaluated
+
+###
+
+# Test avec tous les filtres
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=ESP&frameworks=FP7&stages=successful&call_years=2010|2011|2012
+
+###
+
+# Test avec un autre pays
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=ITA&frameworks=Horizon%20Europe
+
+###
+
+# Test Norvège
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=NOR
+
+###
+
+# =============================================================================
+# 2. GET-EVOLUTION-GLOBAL
+# =============================================================================
+
+# Test évolution globale tous pays
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-global
+
+###
+
+# Test évolution globale avec filtres frameworks
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-global?frameworks=Horizon%202020|Horizon%20Europe
+
+###
+
+# Test évolution globale avec filtres stages
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-global?stages=successful
+
+###
+
+# Test évolution globale avec call_years
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-global?call_years=2020|2021|2022|2023
+
+###
+
+# Test évolution globale FP7
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-global?frameworks=FP7&stages=successful
+
+###
+
+# =============================================================================
+# 3. GET-EVOLUTION-BY-FRAMEWORK
+# =============================================================================
+
+# Test évolution par framework sans filtre
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-framework
+
+###
+
+# Test évolution par framework pour un pays
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-framework?country_code=FRA
+
+###
+
+# Test évolution par framework avec stages
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-framework?country_code=DEU&stages=successful
+
+###
+
+# Test évolution par framework pour plusieurs pays
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-framework?country_code=ESP&stages=successful|evaluated
+
+###
+
+# Test pour Norvège
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-framework?country_code=NOR
+
+###
+
+# =============================================================================
+# 4. CRÉATION D'INDEX
+# =============================================================================
+
+# Test de création d'index pour get-evolution-by-country
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country_indexes
+
+###

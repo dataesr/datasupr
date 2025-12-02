@@ -1,0 +1,27 @@
+.funding-legend {
+  .legend-items {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .legend-color {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 3px;
+  }
+
+  .legend-label {
+    font-size: 0.9rem;
+    color: var(--text-default-grey);
+  }
+}

@@ -18,6 +18,8 @@ export const chartsRegistry = {
   FundingRankingParticipations: lazy(() => import("../european-projects/pages/positioning/charts/funding-ranking/participations")),
   fundingRankingCoordination: lazy(() => import("../european-projects/pages/positioning/charts/funding-ranking/coordination")),
 
+  // European Projects - Synthesis
+
   // Ajoutez d'autres graphiques ici selon vos besoins
   // "ep-autre-graph": lazy(() => import("../european-projects/pages/...")),
   // "atlas-map": lazy(() => import("../atlas/...")),

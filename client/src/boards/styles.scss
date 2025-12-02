@@ -453,9 +453,15 @@ ul {
   // beneficiaries-types colors
   --beneficiarie-type-REC-color: var(--scale-1-color);
   --beneficiarie-type-PUB-color: var(--scale-4-color);
-  --beneficiarie-type-PRC-color: var(--scale-2-color);
+  --beneficiarie-type-PRC-color: 
   --beneficiarie-type-HES-color: var(--scale-3-color);
   --beneficiarie-type-OTH-color: var(--scale-5-color);
+
+  // framework colors
+  --framework-fp6-color: var(--scale-1-color);
+  --framework-fp7-color: var(--scale-2-color);
+  --framework-horizon2020-color: var(--scale-3-color);
+  --framework-horizoneurope-color: var(--scale-4-color);
 }
 
 .chart-container {

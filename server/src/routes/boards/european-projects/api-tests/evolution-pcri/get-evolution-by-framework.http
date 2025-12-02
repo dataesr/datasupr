@@ -1,0 +1,22 @@
+# Test évolution par framework sans filtre
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-framework
+
+###
+
+# Test évolution par framework pour un pays
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-framework?country_code=FRA
+
+###
+
+# Test évolution par framework avec stages
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-framework?country_code=DEU&stages=successful
+
+###
+
+# Test évolution par framework pour plusieurs pays
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-framework?country_code=ESP&stages=successful|evaluated
+
+###
+
+# Test pour Norvège
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-framework?country_code=NOR

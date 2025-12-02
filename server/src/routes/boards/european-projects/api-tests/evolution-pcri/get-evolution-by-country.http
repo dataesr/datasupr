@@ -1,0 +1,27 @@
+# Test basique avec country_code uniquement
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=FRA
+
+###
+
+# Test avec filtres frameworks
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=FRA&frameworks=Horizon%202020|Horizon%20Europe
+
+###
+
+# Test avec filtres stages
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=DEU&stages=successful|evaluated
+
+###
+
+# Test avec tous les filtres
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=ESP&frameworks=FP7&stages=successful&call_years=2010|2011|2012
+
+###
+
+# Test avec un autre pays
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=ITA&frameworks=Horizon%20Europe
+
+###
+
+# Test Norvège
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=NOR

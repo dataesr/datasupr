@@ -1,0 +1,2 @@
+# Test de création d'index pour get-evolution-by-country
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country_indexes

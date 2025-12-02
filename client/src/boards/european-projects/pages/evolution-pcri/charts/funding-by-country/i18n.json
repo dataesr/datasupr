@@ -1,0 +1,38 @@
+{
+  "chart-title": {
+    "en": "Funding evolution from FP6 to Horizon Europe",
+    "fr": "Évolution des financements de FP6 à Horizon Europe"
+  },
+  "x-axis-title": {
+    "en": "Year",
+    "fr": "Année"
+  },
+  "y-axis-title": {
+    "en": "Funding (M€)",
+    "fr": "Financement (M€)"
+  },
+  "tooltip-funding": {
+    "en": "Funding",
+    "fr": "Financement"
+  },
+  "series-name": {
+    "en": "Funding",
+    "fr": "Financement"
+  },
+  "framework-fp6": {
+    "en": "FP6",
+    "fr": "FP6"
+  },
+  "framework-fp7": {
+    "en": "FP7",
+    "fr": "FP7"
+  },
+  "framework-horizon2020": {
+    "en": "Horizon 2020",
+    "fr": "Horizon 2020"
+  },
+  "framework-horizoneurope": {
+    "en": "Horizon Europe",
+    "fr": "Horizon Europe"
+  }
+}

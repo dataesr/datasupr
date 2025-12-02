@@ -126,7 +126,7 @@ export default function GlobalLayout({ languageSelector = false }) {
                   <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
                   {getI18nLabel("home")}
                 </Link>
-                <Link
+                {/* <Link
                   current={
                     is("/european-projects/search") ||
                     is("/european-projects/synthese") ||
@@ -137,14 +137,14 @@ export default function GlobalLayout({ languageSelector = false }) {
                   href="/european-projects/search"
                 >
                   {getI18nLabel("main")}
-                </Link>
+                </Link> */}
                 <Link current={is("/european-projects/msca")} href={`/european-projects/msca?${filtersParams}`}>
                   MSCA
                 </Link>
                 <Link current={is("/european-projects/erc")} href={`/european-projects/erc?${filtersParams}`}>
                   ERC
                 </Link>
-                <Link href="/european-projects/evolution-des-programmes">Evolution des programmes</Link>
+                <Link href="/european-projects/evolution-pcri">Evolution du PCRI</Link>
               </Nav>
               <div className="ep-extra-items">
                 <span>Lexique</span> {/* TODO : add */}

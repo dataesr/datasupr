@@ -19,6 +19,7 @@ import { useTitle } from "../../hooks/usePageTitle.tsx";
 import i18n from "./title-i18n.json";
 import CollaborationsEntity from "./pages/collaborations/index-entity.tsx";
 import TypeOfBeneficiaries from "./pages/type-of-beneficiaries/index.tsx";
+import EvolutionPcri from "./pages/evolution-pcri/index.tsx";
 
 const useRouteTitle = (path: string) => {
   const [searchParams] = useSearchParams();
@@ -65,6 +66,7 @@ export default function EuropeanProjectsRoutes() {
         <Route path="appel-a-projets" element={<RouteWithTitle titleKey="appel-a-projets" element={<div>Appel à projets</div>} />} />
         <Route path="donnees-reference" element={<RouteWithTitle titleKey="donnees-reference" element={<div>Données de référence</div>} />} />
         <Route path="informations" element={<RouteWithTitle titleKey="informations" element={<Informations />} />} />
+        <Route path="evolution-pcri" element={<RouteWithTitle titleKey="evolution-pcri" element={<EvolutionPcri />} />} />
       </Route>
     </Routes>
   );
