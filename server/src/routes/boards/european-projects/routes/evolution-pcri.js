@@ -37,7 +37,12 @@ const router = new express.Router();
 const routesPrefix = "/european-projects/evolution-pcri";
 
 router.route(routesPrefix + "/get-evolution-by-country").get(async (req, res) => {
-  const filters = checkQuery(req.query, ["country_code"], res);
+  const filters = {};
+  
+  // Filtre optionnel pour country_code
+  if (req.query.country_code) {
+    filters.country_code = req.query.country_code.toUpperCase();
+  }
   
   // Filtres optionnels
   if (req.query.frameworks) {

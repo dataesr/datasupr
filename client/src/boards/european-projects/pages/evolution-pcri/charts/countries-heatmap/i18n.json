@@ -1,0 +1,30 @@
+{
+  "title": {
+    "fr": "Part du financement par pays et par framework",
+    "en": "Funding share by country and framework"
+  },
+  "comment": {
+    "fr": "Heatmap montrant la part relative du financement obtenu par chaque pays à travers les différents frameworks.",
+    "en": "Heatmap showing the relative share of funding obtained by each country across different frameworks."
+  },
+  "x-axis-title": {
+    "fr": "Framework",
+    "en": "Framework"
+  },
+  "y-axis-title": {
+    "fr": "Pays",
+    "en": "Country"
+  },
+  "tooltip-country": {
+    "fr": "Pays",
+    "en": "Country"
+  },
+  "tooltip-framework": {
+    "fr": "Framework",
+    "en": "Framework"
+  },
+  "tooltip-share": {
+    "fr": "Part du financement",
+    "en": "Funding share"
+  }
+}

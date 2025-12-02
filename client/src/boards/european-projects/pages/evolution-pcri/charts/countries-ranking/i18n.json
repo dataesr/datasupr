@@ -1,0 +1,30 @@
+{
+  "title": {
+    "fr": "Évolution du classement des pays par framework",
+    "en": "Evolution of country rankings by framework"
+  },
+  "comment": {
+    "fr": "Bump chart montrant l'évolution du classement des pays en termes de financement obtenu à travers les frameworks successifs.",
+    "en": "Bump chart showing the evolution of country rankings in terms of funding obtained across successive frameworks."
+  },
+  "x-axis-title": {
+    "fr": "Framework",
+    "en": "Framework"
+  },
+  "y-axis-title": {
+    "fr": "Classement",
+    "en": "Ranking"
+  },
+  "tooltip-country": {
+    "fr": "Pays",
+    "en": "Country"
+  },
+  "tooltip-rank": {
+    "fr": "Classement",
+    "en": "Rank"
+  },
+  "tooltip-funding": {
+    "fr": "Financement",
+    "en": "Funding"
+  }
+}

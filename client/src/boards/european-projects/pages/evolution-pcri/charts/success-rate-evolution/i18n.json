@@ -1,0 +1,34 @@
+{
+  "title": {
+    "fr": "Évolution du taux de succès par framework",
+    "en": "Evolution of success rate by framework"
+  },
+  "comment": {
+    "fr": "Évolution du taux de succès (projets réussis / projets évalués) au fil du temps pour chaque framework.",
+    "en": "Evolution of success rate (successful projects / evaluated projects) over time for each framework."
+  },
+  "x-axis-title": {
+    "fr": "Année",
+    "en": "Year"
+  },
+  "y-axis-title": {
+    "fr": "Taux de succès (%)",
+    "en": "Success rate (%)"
+  },
+  "tooltip-year": {
+    "fr": "Année",
+    "en": "Year"
+  },
+  "tooltip-success-rate": {
+    "fr": "Taux de succès",
+    "en": "Success rate"
+  },
+  "tooltip-evaluated": {
+    "fr": "Projets évalués",
+    "en": "Evaluated projects"
+  },
+  "tooltip-successful": {
+    "fr": "Projets réussis",
+    "en": "Successful projects"
+  }
+}

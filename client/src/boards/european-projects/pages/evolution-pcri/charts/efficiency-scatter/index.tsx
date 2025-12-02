@@ -1,0 +1,38 @@
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
+
+import { getData } from "./query.js";
+import options from "./options.js";
+import { useGetParams, readingKey } from "./utils.js";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import i18n from "./i18n.json";
+
+export default function EfficiencyScatter() {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+  const params = useGetParams();
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["efficiencyScatter", params],
+    queryFn: () => getData(params),
+  });
+
+  if (isLoading || !data) return <DefaultSkeleton />;
+
+  const config = {
+    id: "efficiencyScatter",
+    title: {
+      fr: i18n.title.fr,
+      en: i18n.title.en,
+    },
+    comment: {
+      fr: <>{i18n.comment.fr}</>,
+      en: <>{i18n.comment.en}</>,
+    },
+    readingKey: readingKey(data, isLoading),
+    integrationURL: "/european-projects/components/pages/evolution-pcri/charts/efficiency-scatter",
+  };
+
+  return <ChartWrapper config={config} legend={null} options={options(data, currentLang)} renderData={() => null} />;
+}

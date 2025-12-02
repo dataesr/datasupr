@@ -1,5 +1,10 @@
 import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
 import FundingByCountry from "./charts/funding-by-country";
+import FundingStackedArea from "./charts/funding-stacked-area";
+import CountriesHeatmap from "./charts/countries-heatmap";
+import CountriesRanking from "./charts/countries-ranking";
+import EfficiencyScatter from "./charts/efficiency-scatter";
+import SuccessRateEvolution from "./charts/success-rate-evolution";
 
 export default function EvolutionPcri() {
   return (
@@ -9,13 +14,36 @@ export default function EvolutionPcri() {
           <Title as="h2">Evolution des financements de FP6 à Horizon Europe</Title>
         </Col>
       </Row>
+
+      <Row>
+        <Col>
+          <FundingStackedArea />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <SuccessRateEvolution />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <CountriesHeatmap />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <CountriesRanking />
+        </Col>
+      </Row>
+      <Row>
+        <Col>
+          <EfficiencyScatter />
+        </Col>
+      </Row>
       <Row>
         <Col>
           <FundingByCountry />
         </Col>
-      </Row>
-      <Row>
-        <Col>Cumul des financements obtenus depuis FP6 - Top 10 des pays</Col>
       </Row>
     </Container>
   );

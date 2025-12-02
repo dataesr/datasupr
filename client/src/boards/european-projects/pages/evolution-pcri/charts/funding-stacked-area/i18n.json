@@ -1,0 +1,30 @@
+{
+  "title": {
+    "fr": "Évolution globale du financement par framework",
+    "en": "Global funding evolution by framework"
+  },
+  "comment": {
+    "fr": "Évolution du financement cumulé de tous les pays participants, par framework et par année.",
+    "en": "Evolution of cumulative funding for all participating countries, by framework and year."
+  },
+  "x-axis-title": {
+    "fr": "Année",
+    "en": "Year"
+  },
+  "y-axis-title": {
+    "fr": "Financement total (M€)",
+    "en": "Total funding (M€)"
+  },
+  "tooltip-year": {
+    "fr": "Année",
+    "en": "Year"
+  },
+  "tooltip-funding": {
+    "fr": "Financement",
+    "en": "Funding"
+  },
+  "tooltip-total": {
+    "fr": "Total",
+    "en": "Total"
+  }
+}

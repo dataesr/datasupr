@@ -25,3 +25,8 @@ GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-
 
 # Test Norvège
 GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?country_code=NOR
+
+###
+
+# Test basique sans country_code
+GET http://localhost:3000/api/european-projects/evolution-pcri/get-evolution-by-country?localhost:3000/api/european-projects/collaborations/get-collaborations-by-country?country_code=FRA&country_code=ALL&stage=successful

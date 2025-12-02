@@ -1,0 +1,24 @@
+### Test 1: Get all evolution data (successful projects only)
+GET http://localhost:3001/boards/european-projects/evolution-pcri/get-evolution-by-country?stages=successful
+
+###
+
+### Test 2: Get evolution data for both evaluated and successful
+GET http://localhost:3001/boards/european-projects/evolution-pcri/get-evolution-by-country?stages=evaluated|successful
+
+###
+
+### Test 3: Get evolution data for a specific country (France)
+GET http://localhost:3001/boards/european-projects/evolution-pcri/get-evolution-by-country?stages=successful&country_code=FRA
+
+###
+
+### Test 4: Get evolution data for ALL countries (explicit)
+GET http://localhost:3001/boards/european-projects/evolution-pcri/get-evolution-by-country?stages=successful&country_code=ALL
+
+###
+
+### Test 5: Get evolution data with multiple filters
+GET http://localhost:3001/boards/european-projects/evolution-pcri/get-evolution-by-country?stages=successful&frameworks=Horizon 2020|Horizon Europe
+
+###
