@@ -2,8 +2,15 @@ import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
+import { getFlagEmoji } from "../../../../../../utils";
+import allCountries from "../../../../../../components/country-selector/all-countries.json";
 import type { EvolutionDataItem } from "./types";
 import i18n from "./i18n.json";
+
+// Fonction pour convertir ISO3 vers ISO2
+function getIso2(iso3: string): string | undefined {
+  return allCountries.find((country) => country.cca3 === iso3)?.cca2;
+}
 
 export default function Options(data: EvolutionDataItem[], currentLang: string = "fr") {
   if (!data || data.length === 0) return null;
@@ -64,9 +71,39 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
   // Créer une série par pays
   const series = Array.from(allTopCountries).map((countryCode) => {
     const countryName = data.find((d) => d.country_code === countryCode)?.country_name_fr || countryCode;
-    const countryData = frameworkOrder.map((framework) => {
+    const iso2 = getIso2(countryCode);
+    const flag = iso2 ? getFlagEmoji(iso2) : "";
+
+    const countryData = frameworkOrder.map((framework, index) => {
       const rank = rankings[framework]?.find((r) => r.countryCode === countryCode);
-      return rank ? rank.rank : null; // null si le pays n'est pas dans le top 15
+      const isLastPoint = index === frameworkOrder.length - 1;
+
+      if (!rank) return null;
+
+      // Pour le dernier point, ajouter le drapeau comme dataLabel
+      if (isLastPoint) {
+        return {
+          y: rank.rank,
+          dataLabels: {
+            enabled: true,
+            format: flag,
+            style: {
+              fontSize: "20px",
+              textOutline: "none",
+            },
+            align: "left", // Aligner à gauche du point
+            verticalAlign: "middle", // Centrer verticalement
+            y: 0,
+            x: 10, // Décalage de 10px à droite du point
+          },
+          marker: {
+            enabled: true, // Afficher le marker pour le dernier point
+            radius: 4,
+          },
+        };
+      }
+
+      return rank.rank;
     });
 
     return {
@@ -80,6 +117,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     chart: {
       type: "line",
       height: 600,
+      spacingTop: 30, // Augmente la marge supérieure pour afficher le premier drapeau
     },
     title: {
       text: undefined,
@@ -129,6 +167,11 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
           radius: 4,
         },
         lineWidth: 2,
+        dataLabels: {
+          allowOverlap: true, // Permet aux labels de se chevaucher
+          crop: false, // Ne coupe pas les labels qui dépassent
+          overflow: "allow", // Permet aux labels de dépasser la zone du graphique
+        },
       },
     },
     series: series,
