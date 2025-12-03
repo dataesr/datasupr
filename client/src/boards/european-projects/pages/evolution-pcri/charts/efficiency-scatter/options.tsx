@@ -80,8 +80,8 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
       text: undefined,
     },
     xAxis: {
-      min: 10,
-      max: 30,
+      min: 15,
+      max: 25,
       title: {
         text: getI18nLabel("x-axis-title"),
       },
