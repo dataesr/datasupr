@@ -144,7 +144,7 @@ export default function GlobalLayout({ languageSelector = false }) {
                 <Link current={is("/european-projects/erc")} href={`/european-projects/erc?${filtersParams}`}>
                   ERC
                 </Link>
-                <Link href="/european-projects/evolution-pcri">Evolution du PCRI</Link>
+                <Link href="/european-projects/evolution-pcri">Evolution des PCRI</Link>
               </Nav>
               <div className="ep-extra-items">
                 <span>Lexique</span> {/* TODO : add */}

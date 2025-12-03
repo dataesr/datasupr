@@ -6,12 +6,14 @@ import options from "./options.js";
 import { useGetParams, readingKey } from "./utils.js";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { useChartColor } from "../../../../../../hooks/useChartColor";
 import i18n from "./i18n.json";
 
 export default function CountriesHeatmap() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const params = useGetParams();
+  const color = useChartColor();
 
   const { data, isLoading } = useQuery({
     queryKey: ["countriesHeatmap", params],
@@ -34,5 +36,10 @@ export default function CountriesHeatmap() {
     integrationURL: "/european-projects/components/pages/evolution-pcri/charts/countries-heatmap",
   };
 
-  return <ChartWrapper config={config} legend={null} options={options(data, currentLang)} renderData={() => null} />;
+  return (
+    <div className={`chart-container chart-container--${color}`}>
+      <span className="chart-badge">Top 15</span>
+      <ChartWrapper config={config} legend={null} options={options(data, currentLang)} renderData={() => null} />
+    </div>
+  );
 }

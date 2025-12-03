@@ -128,7 +128,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     colorAxis: {
       min: 0,
       minColor: "#FFFFFF",
-      maxColor: "#dc3545",
+      maxColor: "#0aad5c",
       labels: {
         format: "{value}%",
       },

@@ -6,12 +6,14 @@ import options from "./options.js";
 import { useGetParams, readingKey } from "./utils.js";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { useChartColor } from "../../../../../../hooks/useChartColor";
 import Legend from "./legend";
 
 export default function FundingByCountry() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const params = useGetParams();
+  const color = useChartColor();
 
   const { data, isLoading } = useQuery({
     queryKey: ["fundingByCountry", params],
@@ -35,7 +37,7 @@ export default function FundingByCountry() {
   };
 
   return (
-    <>
+    <div className={`chart-container chart-container--${color}`}>
       <ChartWrapper
         config={config}
         legend={null}
@@ -43,6 +45,6 @@ export default function FundingByCountry() {
         renderData={() => null} // TODO: add data table
       />
       <Legend />
-    </>
+    </div>
   );
 }
