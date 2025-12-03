@@ -21,6 +21,11 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     successRate: number;
   }
 
+  // Calculer le total global du financement (country_code = ALL)
+  const totalFunding = data
+    .filter((item) => item.country_code === "ALL" && item.stage === "successful")
+    .reduce((sum, item) => sum + (item.funding || 0), 0);
+
   // Grouper les données par pays
   const dataByCountry: Record<string, CountryData> = data
     .filter((item) => item.country_code !== "ALL" && item.country_code !== "UE") // Exclure "Tous pays" et "Etats membres & associés"
@@ -41,15 +46,17 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
       } else if (item.stage === "successful") {
         acc[item.country_code].successful += item.project_number || 0;
         acc[item.country_code].successfulFunding += item.funding || 0;
-        acc[item.country_code].successfulShare += item.share_funding || 0;
       }
       return acc;
     }, {} as Record<string, CountryData>);
 
-  // Calculer le taux de succès
+  // Calculer le taux de succès et recalculer les parts correctement
   Object.values(dataByCountry).forEach((country) => {
     if (country.evaluated > 0) {
       country.successRate = (country.successful / country.evaluated) * 100;
+    }
+    if (totalFunding > 0) {
+      country.successfulShare = (country.successfulFunding / totalFunding) * 100;
     }
   });
 
@@ -62,12 +69,12 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
   // Préparer les données pour le scatter
   const scatterData = validCountries.map((country) => ({
     x: country.successRate,
-    y: country.successfulShare * 100, // Convertir en pourcentage
+    y: country.successfulShare, // Déjà en pourcentage
     z: country.successful, // Taille de la bulle = nombre de projets
     name: country.country,
     country: country.country,
     successRate: country.successRate,
-    fundingShare: country.successfulShare * 100,
+    fundingShare: country.successfulShare,
     projects: country.successful,
   }));
 
