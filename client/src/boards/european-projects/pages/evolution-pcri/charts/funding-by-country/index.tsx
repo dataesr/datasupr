@@ -7,11 +7,19 @@ import { useGetParams, readingKey } from "./utils.js";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
+import { getFlagEmoji } from "../../../../../../utils";
+import allCountries from "../../../../../../components/country-selector/all-countries.json";
 import Legend from "./legend";
+
+// Fonction pour convertir ISO3 vers ISO2
+function getIso2(iso3) {
+  return allCountries.find((country) => country.cca3 === iso3)?.cca2;
+}
 
 export default function FundingByCountry() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
+  const countryCode = searchParams.get("country_code");
   const params = useGetParams();
   const color = useChartColor();
 
@@ -21,6 +29,11 @@ export default function FundingByCountry() {
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
+
+  // Récupérer le nom du pays depuis les données
+  const countryName = data.length > 0 ? data[0].country_name_fr : "";
+  const iso2Code = countryCode ? getIso2(countryCode) : "";
+  const flagEmoji = iso2Code ? getFlagEmoji(iso2Code) : "";
 
   const config = {
     id: "fundingByCountryEvolution",
@@ -38,6 +51,11 @@ export default function FundingByCountry() {
 
   return (
     <div className={`chart-container chart-container--${color}`}>
+      {countryCode && (
+        <span className="chart-badge">
+          {flagEmoji} {countryName}
+        </span>
+      )}
       <ChartWrapper
         config={config}
         legend={null}
