@@ -57,7 +57,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
   const validCountries = Object.values(dataByCountry)
     .filter((c) => c.successRate > 0 && c.successfulFunding > 0)
     .sort((a, b) => b.successfulFunding - a.successfulFunding)
-    .slice(0, 20);
+    .slice(0, 15);
 
   // Préparer les données pour le scatter
   const scatterData = validCountries.map((country) => ({
@@ -80,12 +80,15 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
       text: undefined,
     },
     xAxis: {
-      min: 0,
-      max: 100,
+      min: 10,
+      max: 30,
       title: {
         text: getI18nLabel("x-axis-title"),
       },
       gridLineWidth: 1,
+      labels: {
+        format: "{value}%",
+      },
     },
     yAxis: {
       min: 0,
