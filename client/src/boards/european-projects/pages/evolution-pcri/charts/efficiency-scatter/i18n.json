@@ -4,8 +4,8 @@
     "en": "Country performance: success rate vs funding share"
   },
   "comment": {
-    "fr": "Graphique en bulles comparant le taux de succès et la part de financement obtenue par pays. La taille des bulles représente le nombre de projets. Seuls les 15 premiers pays (classés par financement total obtenu) sont affichés. Pour améliorer la lisibilité, l'échelle des taux de succès va de 15% à 25%.",
-    "en": "Bubble chart comparing success rate and funding share obtained by country. Bubble size represents the number of projects. Only the top 15 countries (ranked by total funding obtained) are displayed. To improve readability, the success rate scale ranges from 15% to 25%."
+    "fr": "Graphique en bulles comparant le taux de succès et la part de financement obtenue par pays, tous frameworks confondus (FP6, FP7, Horizon 2020, Horizon Europe). Le taux de succès est calculé comme le ratio entre les projets réussis et les projets évalués (successful/evaluated × 100). La part de financement représente le pourcentage du financement total obtenu par chaque pays. La taille des bulles représente le nombre de projets réussis. Seuls les 15 premiers pays (classés par financement total obtenu) sont affichés. Pour améliorer la lisibilité, l'échelle des taux de succès va de 15% à 25%.",
+    "en": "Bubble chart comparing success rate and funding share obtained by country, across all frameworks (FP6, FP7, Horizon 2020, Horizon Europe). Success rate is calculated as the ratio between successful projects and evaluated projects (successful/evaluated × 100). Funding share represents the percentage of total funding obtained by each country. Bubble size represents the number of successful projects. Only the top 15 countries (ranked by total funding obtained) are displayed. To improve readability, the success rate scale ranges from 15% to 25%."
   },
   "x-axis-title": {
     "fr": "Taux de succès (%)",
