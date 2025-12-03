@@ -12,6 +12,7 @@ import i18n from "./i18n.json";
 export default function CountriesHeatmap() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
+  const countryCode = searchParams.get("country_code"); // Récupérer le country_code de l'URL
   const params = useGetParams();
   const color = useChartColor();
 
@@ -39,7 +40,7 @@ export default function CountriesHeatmap() {
   return (
     <div className={`chart-container chart-container--${color}`}>
       <span className="chart-badge">Top 15</span>
-      <ChartWrapper config={config} legend={null} options={options(data, currentLang)} renderData={() => null} />
+      <ChartWrapper config={config} legend={null} options={options(data, currentLang, countryCode)} renderData={() => null} />
     </div>
   );
 }

@@ -10,7 +10,7 @@ if (typeof HighchartsInstance === "function") {
   HighchartsHeatmap(HighchartsInstance);
 }
 
-export default function Options(data: EvolutionDataItem[], currentLang: string = "fr") {
+export default function Options(data: EvolutionDataItem[], currentLang: string = "fr", highlightCountryCode?: string | null) {
   if (!data || data.length === 0) return null;
 
   function getI18nLabel(key: string): string {
@@ -92,15 +92,37 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
   });
 
   // Préparer les données pour la heatmap
-  const heatmapData: [number, number, number][] = [];
+  const heatmapData: Array<{ x: number; y: number; value: number; dataLabels?: { style?: { fontWeight?: string; textOutline?: string } } }> = [];
 
   filteredData.forEach((item) => {
     const x = frameworkOrder.indexOf(item.framework);
     const y = countries.indexOf(item.country);
     if (x !== -1 && y !== -1) {
-      heatmapData.push([x, y, item.share]); // Déjà en pourcentage
+      const isHighlighted = highlightCountryCode && item.countryCode === highlightCountryCode;
+
+      heatmapData.push({
+        x,
+        y,
+        value: item.share,
+        ...(isHighlighted && {
+          dataLabels: {
+            style: {
+              fontWeight: "bold",
+              textOutline: "none",
+            },
+          },
+        }),
+      });
     }
   });
+
+  // Trouver l'index du pays à mettre en évidence
+  const highlightCountryIndex = highlightCountryCode
+    ? countries.findIndex((countryName) => {
+        const countryCode = filteredData.find((d) => d.country === countryName)?.countryCode;
+        return countryCode === highlightCountryCode;
+      })
+    : -1;
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
@@ -124,6 +146,32 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
         text: getI18nLabel("y-axis-title"),
       },
       reversed: true,
+      labels: {
+        formatter: function () {
+          const countryName = this.value as string;
+          const countryCode = filteredData.find((d) => d.country === countryName)?.countryCode;
+          // Ajouter une icône flèche noire pour le pays sélectionné
+          if (highlightCountryCode && countryCode === highlightCountryCode) {
+            return `<span style="color: #000;">▶</span> ${countryName}`;
+          }
+          return countryName;
+        },
+        useHTML: true,
+        style: {
+          color: "#666666", // Couleur par défaut des labels
+        },
+      },
+      plotLines:
+        highlightCountryIndex !== -1
+          ? [
+              {
+                color: "rgba(0, 0, 145, 0.08)", // Bleu France très transparent
+                width: countries.length > 0 ? 600 / countries.length : 40, // Hauteur d'une ligne
+                value: highlightCountryIndex - 0.5, // Positionner entre les lignes
+                zIndex: 0,
+              },
+            ]
+          : [],
     },
     colorAxis: {
       min: 0,
@@ -160,12 +208,19 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
           enabled: true,
           color: "#000000",
           formatter: function () {
-            const value = this.point.value as number;
-            return value > 0 ? `${value.toFixed(1)}%` : "";
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const point = this.point as any;
+            const value = point.value as number;
+
+            if (value > 0) {
+              return `${value.toFixed(1)}%`;
+            }
+            return "";
           },
           style: {
             fontSize: "9px",
             fontWeight: "normal",
+            textOutline: "2px contrast", // Contour blanc par défaut
           },
         },
       },
