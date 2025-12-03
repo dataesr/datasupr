@@ -50,13 +50,15 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
   });
 
   // Trier par année
-  const sortedData = Object.values(dataByYearFramework).sort((a, b) => parseInt(a.year) - parseInt(b.year));
+  const sortedData = Object.values(dataByYearFramework)
+    .filter((item) => item.framework !== "FP6") // Exclure FP6 (pas de données evaluated)
+    .sort((a, b) => parseInt(a.year) - parseInt(b.year));
 
   // Extraire les années uniques
   const years = [...new Set(sortedData.map((d) => d.year))].sort();
 
-  // Créer les séries par framework
-  const frameworkOrder = ["FP6", "FP7", "Horizon 2020", "Horizon Europe"];
+  // Créer les séries par framework (sans FP6)
+  const frameworkOrder = ["FP7", "Horizon 2020", "Horizon Europe"];
   const series = frameworkOrder.map((framework) => {
     const frameworkData = years.map((year) => {
       const item = sortedData.find((d) => d.year === year && d.framework === framework);

@@ -4,8 +4,8 @@
     "en": "Evolution of success rate by framework"
   },
   "comment": {
-    "fr": "Évolution du taux de succès (projets réussis / projets évalués) au fil du temps pour chaque framework.",
-    "en": "Evolution of success rate (successful projects / evaluated projects) over time for each framework."
+    "fr": "Évolution du taux de succès (projets réussis / projets évalués) au fil du temps pour chaque framework. Note : FP6 n'est pas affiché car les données sur les propositions évaluées ne sont pas disponibles, rendant impossible le calcul du taux de succès.",
+    "en": "Evolution of success rate (successful projects / evaluated projects) over time for each framework. Note: FP6 is not displayed because data on evaluated proposals is not available, making it impossible to calculate the success rate."
   },
   "x-axis-title": {
     "fr": "Année",
