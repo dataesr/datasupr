@@ -56,31 +56,49 @@ export function readingKey(data, isLoading) {
 
   const allData = Object.values(dataByCountryFramework);
 
-  // Identifier le pays avec la plus forte croissance de part entre FP6 et HE
-  const countryGrowth: Record<string, { fp6: number; he: number; growth: number }> = {};
-
+  // Calculer la part totale par pays (somme de tous les frameworks) pour identifier le top 15
+  const countryTotals: Record<string, { name: string; total: number }> = {};
   allData.forEach((item) => {
-    if (!countryGrowth[item.country]) {
-      countryGrowth[item.country] = { fp6: 0, he: 0, growth: 0 };
+    if (!countryTotals[item.country]) {
+      countryTotals[item.country] = { name: item.country, total: 0 };
     }
-    if (item.framework === "FP6") {
-      countryGrowth[item.country].fp6 = item.share;
-    } else if (item.framework === "Horizon Europe") {
-      countryGrowth[item.country].he = item.share;
-    }
+    countryTotals[item.country].total += item.funding;
   });
+
+  // Identifier les top 15 pays
+  const top15Countries = Object.values(countryTotals)
+    .sort((a, b) => b.total - a.total)
+    .slice(0, 15)
+    .map((c) => c.name);
+
+  // Identifier le pays avec la plus forte croissance de part entre FP7 et Horizon 2020 (frameworks complets)
+  // uniquement parmi les pays du top 15
+  const countryGrowth: Record<string, { fp7: number; h2020: number; growth: number }> = {};
+
+  allData
+    .filter((item) => top15Countries.includes(item.country)) // Filtrer uniquement les top 15
+    .forEach((item) => {
+      if (!countryGrowth[item.country]) {
+        countryGrowth[item.country] = { fp7: 0, h2020: 0, growth: 0 };
+      }
+      if (item.framework === "FP7") {
+        countryGrowth[item.country].fp7 = item.share;
+      } else if (item.framework === "Horizon 2020") {
+        countryGrowth[item.country].h2020 = item.share;
+      }
+    });
 
   // Calculer la croissance
   Object.keys(countryGrowth).forEach((country) => {
     const data = countryGrowth[country];
-    if (data.fp6 > 0) {
-      data.growth = ((data.he - data.fp6) / data.fp6) * 100;
+    if (data.fp7 > 0) {
+      data.growth = ((data.h2020 - data.fp7) / data.fp7) * 100;
     }
   });
 
-  // Trouver le pays avec la plus forte croissance
+  // Trouver le pays avec la plus forte croissance (parmi le top 15)
   const topGrowthCountry = Object.entries(countryGrowth)
-    .filter(([, data]) => data.fp6 > 0 && data.he > 0)
+    .filter(([, data]) => data.fp7 > 0 && data.h2020 > 0)
     .sort((a, b) => b[1].growth - a[1].growth)[0];
 
   const formatToPercent = (value: number) => `${value.toFixed(2)}%`;
@@ -93,18 +111,19 @@ export function readingKey(data, isLoading) {
 
   const fr = (
     <>
-      <strong>{countryName}</strong> affiche la plus forte progression de part de financement entre FP6 et Horizon Europe, passant de{" "}
-      <strong>{formatToPercent(growthData.fp6)}</strong> à <strong>{formatToPercent(growthData.he)}</strong>, soit une croissance de{" "}
-      <strong>{growthData.growth.toFixed(1)}%</strong>. Cette heatmap révèle les tendances d'évolution de chaque pays à travers les frameworks
-      successifs.
+      Parmi les 15 premiers pays, <strong>{countryName}</strong> affiche la plus forte progression de part de financement entre FP7 et Horizon 2020
+      (frameworks complets), passant de <strong>{formatToPercent(growthData.fp7)}</strong> à <strong>{formatToPercent(growthData.h2020)}</strong>,
+      soit une croissance de <strong>{growthData.growth.toFixed(1)}%</strong>. Cette heatmap révèle les tendances d'évolution de chaque pays à travers
+      les frameworks successifs.
     </>
   );
 
   const en = (
     <>
-      <strong>{countryName}</strong> shows the strongest growth in funding share between FP6 and Horizon Europe, increasing from{" "}
-      <strong>{formatToPercent(growthData.fp6)}</strong> to <strong>{formatToPercent(growthData.he)}</strong>, a growth of{" "}
-      <strong>{growthData.growth.toFixed(1)}%</strong>. This heatmap reveals the evolution trends of each country across successive frameworks.
+      Among the top 15 countries, <strong>{countryName}</strong> shows the strongest growth in funding share between FP7 and Horizon 2020 (completed
+      frameworks), increasing from <strong>{formatToPercent(growthData.fp7)}</strong> to <strong>{formatToPercent(growthData.h2020)}</strong>, a
+      growth of <strong>{growthData.growth.toFixed(1)}%</strong>. This heatmap reveals the evolution trends of each country across successive
+      frameworks.
     </>
   );
 
