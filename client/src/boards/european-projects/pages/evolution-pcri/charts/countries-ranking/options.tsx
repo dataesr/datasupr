@@ -38,14 +38,14 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
 
   const frameworkOrder = ["FP6", "FP7", "Horizon 2020", "Horizon Europe"];
 
-  // Calculer le classement pour chaque framework et ne garder que les top 10
+  // Calculer le classement pour chaque framework et ne garder que les top 15
   const rankings: Record<string, Array<{ country: string; countryCode: string; funding: number; rank: number }>> = {};
 
   frameworkOrder.forEach((framework) => {
     const frameworkData = Object.values(dataByCountryFramework)
       .filter((item) => item.framework === framework)
       .sort((a, b) => b.funding - a.funding)
-      .slice(0, 10) // Top 10
+      .slice(0, 15) // Top 15
       .map((item, index) => ({
         country: item.country,
         countryCode: item.countryCode,
@@ -55,7 +55,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     rankings[framework] = frameworkData;
   });
 
-  // Identifier tous les pays qui apparaissent dans au moins un top 10
+  // Identifier tous les pays qui apparaissent dans au moins un top 15
   const allTopCountries = new Set<string>();
   Object.values(rankings).forEach((rankList) => {
     rankList.forEach((item) => allTopCountries.add(item.countryCode));
@@ -66,7 +66,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     const countryName = data.find((d) => d.country_code === countryCode)?.country_name_fr || countryCode;
     const countryData = frameworkOrder.map((framework) => {
       const rank = rankings[framework]?.find((r) => r.countryCode === countryCode);
-      return rank ? rank.rank : null; // null si le pays n'est pas dans le top 10
+      return rank ? rank.rank : null; // null si le pays n'est pas dans le top 15
     });
 
     return {
@@ -79,7 +79,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
   const newOptions: HighchartsInstance.Options = {
     chart: {
       type: "line",
-      height: 500,
+      height: 600,
     },
     title: {
       text: undefined,
@@ -92,7 +92,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     },
     yAxis: {
       min: 1,
-      max: 10,
+      max: 15,
       reversed: true, // Le 1er est en haut
       title: {
         text: getI18nLabel("y-axis-title"),

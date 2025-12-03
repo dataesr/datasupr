@@ -4,8 +4,8 @@
     "en": "Evolution of country rankings by framework"
   },
   "comment": {
-    "fr": "Bump chart montrant l'évolution du classement des pays en termes de financement obtenu à travers les frameworks successifs.",
-    "en": "Bump chart showing the evolution of country rankings in terms of funding obtained across successive frameworks."
+    "fr": "Bump chart montrant l'évolution du classement des 15 premiers pays en termes de financement obtenu à travers les frameworks successifs.",
+    "en": "Bump chart showing the evolution of the top 15 country rankings in terms of funding obtained across successive frameworks."
   },
   "x-axis-title": {
     "fr": "Framework",
