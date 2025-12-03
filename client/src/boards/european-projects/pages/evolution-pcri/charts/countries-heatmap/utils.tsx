@@ -19,6 +19,17 @@ export function readingKey(data, isLoading) {
     funding: number;
   }
 
+  // Calculer les totaux par framework (country_code = ALL)
+  const totalsByFramework: Record<string, number> = data
+    .filter((item) => item.country_code === "ALL")
+    .reduce((acc, item) => {
+      if (!acc[item.framework]) {
+        acc[item.framework] = 0;
+      }
+      acc[item.framework] += item.funding || 0;
+      return acc;
+    }, {} as Record<string, number>);
+
   // Grouper les données par pays et framework
   const dataByCountryFramework: Record<string, CountryFrameworkData> = data
     .filter((item) => item.country_code !== "ALL" && item.country_code !== "UE") // Exclure "Tous pays" et "Etats membres & associés"
@@ -32,10 +43,16 @@ export function readingKey(data, isLoading) {
           funding: 0,
         };
       }
-      acc[key].share += item.share_funding || 0;
       acc[key].funding += item.funding || 0;
       return acc;
     }, {} as Record<string, CountryFrameworkData>);
+
+  // Recalculer les parts correctement
+  Object.keys(dataByCountryFramework).forEach((key) => {
+    const item = dataByCountryFramework[key];
+    const total = totalsByFramework[item.framework] || 1;
+    item.share = (item.funding / total) * 100;
+  });
 
   const allData = Object.values(dataByCountryFramework);
 
@@ -66,7 +83,7 @@ export function readingKey(data, isLoading) {
     .filter(([, data]) => data.fp6 > 0 && data.he > 0)
     .sort((a, b) => b[1].growth - a[1].growth)[0];
 
-  const formatToPercent = (value: number) => `${(value * 100).toFixed(2)}%`;
+  const formatToPercent = (value: number) => `${value.toFixed(2)}%`;
 
   if (!topGrowthCountry) {
     return { fr: <></>, en: <></> };

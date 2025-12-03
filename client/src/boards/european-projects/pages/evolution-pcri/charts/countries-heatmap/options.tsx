@@ -22,7 +22,19 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     countryCode: string;
     framework: string;
     share: number;
+    funding: number;
   }
+
+  // Calculer les totaux par framework (country_code = ALL)
+  const totalsByFramework: Record<string, number> = data
+    .filter((item) => item.country_code === "ALL")
+    .reduce((acc, item) => {
+      if (!acc[item.framework]) {
+        acc[item.framework] = 0;
+      }
+      acc[item.framework] += item.funding || 0;
+      return acc;
+    }, {} as Record<string, number>);
 
   // Grouper les données par pays et framework
   const dataByCountryFramework: Record<string, CountryFrameworkData> = data
@@ -35,11 +47,19 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
           countryCode: item.country_code,
           framework: item.framework,
           share: 0,
+          funding: 0,
         };
       }
-      acc[key].share += item.share_funding || 0;
+      acc[key].funding += item.funding || 0;
       return acc;
     }, {} as Record<string, CountryFrameworkData>);
+
+  // Recalculer les parts correctement
+  Object.keys(dataByCountryFramework).forEach((key) => {
+    const item = dataByCountryFramework[key];
+    const total = totalsByFramework[item.framework] || 1;
+    item.share = (item.funding / total) * 100;
+  });
 
   const allData = Object.values(dataByCountryFramework);
 
@@ -49,7 +69,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     if (!countryTotals[item.countryCode]) {
       countryTotals[item.countryCode] = 0;
     }
-    countryTotals[item.countryCode] += item.share;
+    countryTotals[item.countryCode] += item.funding;
   });
 
   // Trier les pays par part totale et prendre les top 15
@@ -78,7 +98,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     const x = frameworkOrder.indexOf(item.framework);
     const y = countries.indexOf(item.country);
     if (x !== -1 && y !== -1) {
-      heatmapData.push([x, y, item.share * 100]); // Convertir en pourcentage
+      heatmapData.push([x, y, item.share]); // Déjà en pourcentage
     }
   });
 
