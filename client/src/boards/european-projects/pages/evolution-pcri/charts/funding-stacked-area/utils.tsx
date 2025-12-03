@@ -55,34 +55,43 @@ export function readingKey(data, isLoading) {
     return { fr: <></>, en: <></> };
   }
 
-  const firstYear = years[0];
-  const lastYear = years[years.length - 1];
-  const totalGrowth = (((lastYear.total - firstYear.total) / firstYear.total) * 100).toFixed(1);
+  // Comparer les frameworks complets : FP7 vs Horizon 2020
+  const fp7Years = years.filter((y) => Object.keys(y.frameworks).includes("FP7"));
+  const h2020Years = years.filter((y) => Object.keys(y.frameworks).includes("Horizon 2020"));
 
-  // Identifier le framework dominant dans la dernière année
-  const lastYearFrameworks = Object.entries(lastYear.frameworks);
-  const dominantFramework = lastYearFrameworks.reduce((max, current) => (current[1] > max[1] ? current : max), lastYearFrameworks[0]);
+  if (fp7Years.length === 0 || h2020Years.length === 0) {
+    return { fr: <></>, en: <></> };
+  }
+
+  // Calculer les totaux par framework
+  const fp7Total = fp7Years.reduce((sum, year) => sum + (year.frameworks["FP7"] || 0), 0);
+  const h2020Total = h2020Years.reduce((sum, year) => sum + (year.frameworks["Horizon 2020"] || 0), 0);
+  const growth = (((h2020Total - fp7Total) / fp7Total) * 100).toFixed(1);
 
   const formatToMillions = (value: number) => {
     const millions = value / 1000000;
-    return `${millions.toFixed(2)} M€`;
+    return new Intl.NumberFormat("fr-FR", { maximumFractionDigits: 0 }).format(millions) + " M€";
+  };
+
+  const formatToMillionsEN = (value: number) => {
+    const millions = value / 1000000;
+    return new Intl.NumberFormat("en-US", { maximumFractionDigits: 0 }).format(millions) + " M€";
   };
 
   const fr = (
     <>
-      Entre <strong>{firstYear.year}</strong> et <strong>{lastYear.year}</strong>, le financement global des projets européens est passé de{" "}
-      <strong>{formatToMillions(firstYear.total)}</strong> à <strong>{formatToMillions(lastYear.total)}</strong>, soit une croissance de{" "}
-      <strong>{totalGrowth}%</strong>. En {lastYear.year}, <strong>{dominantFramework[0]}</strong> représente la plus grande part avec{" "}
-      <strong>{formatToMillions(dominantFramework[1])}</strong>.
+      Comparaison des frameworks complets : <strong>FP7</strong> (2007-2013) a généré un financement total de{" "}
+      <strong>{formatToMillions(fp7Total)}</strong>, tandis que <strong>Horizon 2020</strong> (2014-2020) a atteint{" "}
+      <strong>{formatToMillions(h2020Total)}</strong>, soit une croissance de <strong>{growth}%</strong>. Les données pour Horizon Europe sont encore
+      partielles.
     </>
   );
 
   const en = (
     <>
-      Between <strong>{firstYear.year}</strong> and <strong>{lastYear.year}</strong>, the overall funding for European projects increased from{" "}
-      <strong>{formatToMillions(firstYear.total)}</strong> to <strong>{formatToMillions(lastYear.total)}</strong>, representing a growth of{" "}
-      <strong>{totalGrowth}%</strong>. In {lastYear.year}, <strong>{dominantFramework[0]}</strong> accounts for the largest share with{" "}
-      <strong>{formatToMillions(dominantFramework[1])}</strong>.
+      Comparison of completed frameworks: <strong>FP7</strong> (2007-2013) generated total funding of <strong>{formatToMillionsEN(fp7Total)}</strong>,
+      while <strong>Horizon 2020</strong> (2014-2020) reached <strong>{formatToMillionsEN(h2020Total)}</strong>, representing a growth of{" "}
+      <strong>{growth}%</strong>. Data for Horizon Europe is still partial.
     </>
   );
 
