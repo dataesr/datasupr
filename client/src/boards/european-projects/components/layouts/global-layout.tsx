@@ -36,8 +36,8 @@ export default function GlobalLayout({ languageSelector = false }) {
   return (
     <>
       <Header>
-        <Logo text="Ministère|chargé|de l'enseignement|supérieur|et de la recherche" />
-        <Service name="dataSupR" tagline={getI18nLabel("tagline")} />
+        <Logo text="Ministère|de l'Enseignement|supérieur,|de la Recherche|et de l'Espace" />
+        <Service name="DataSupR" tagline={getI18nLabel("tagline")} />
         <FastAccess>
           <Button as="a" href="/" icon="github-fill" size="sm" variant="text">
             {getI18nLabel("explore")}

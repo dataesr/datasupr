@@ -17,13 +17,13 @@ export default function Footer() {
               <p className="fr-logo">
                 Ministère
                 <br />
-                chargé
-                <br />
                 de l'enseignement
                 <br />
                 supérieur
                 <br />
-                et de la recherche
+                de la recherche
+                <br />
+                et de l'espace
               </p>
             </a>
           </div>

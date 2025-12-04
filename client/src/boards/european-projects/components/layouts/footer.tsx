@@ -13,20 +13,17 @@ export default function Footer() {
       <div className="fr-container">
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
-            <a
-              href="/"
-              title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)"
-            >
+            <a href="/" title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
               <p className="fr-logo">
                 Ministère
-                <br />
-                chargé
                 <br />
                 de l'enseignement
                 <br />
                 supérieur
                 <br />
-                et de la recherche
+                de la recherche
+                <br />
+                et de l'espace
               </p>
             </a>
           </div>

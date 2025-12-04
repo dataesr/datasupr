@@ -41,7 +41,7 @@ export default function HomePage() {
         <Row className="fr-mt-5w">
           <Col>
             <Title as="h2" className="fr-mb-2w">
-              dataSupR - Tableaux de bord de l'enseignement supérieur, de la recherche et de l'innovation
+              DataSupR - Tableaux de bord de l'enseignement supérieur, de la recherche et de l'innovation
             </Title>
             <Text>
               Bienvenue sur dataSupR, la plateforme de visualisation des données de l'enseignement supérieur, de la recherche et de l'innovation.
