@@ -61,7 +61,7 @@ export default function ChartFooter({
       {comment && (
         <>
           <b>{getI18nLabel("comment")} </b>
-          <div>{comment[currentLang] || comment.fr}</div>
+          {comment[currentLang] || comment.fr}
         </>
       )}
 
@@ -75,6 +75,7 @@ export default function ChartFooter({
       {(source || updateDate) && (
         <div
           style={{
+            display: "flex",
             justifyContent: "space-between",
             borderTop: "1px solid #ccc",
             marginTop: "10px",
@@ -84,11 +85,7 @@ export default function ChartFooter({
           {source && (
             <div>
               <b>{getI18nLabel("source")} </b>
-              <Link
-                href={source.url[currentLang] || source.url.fr}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
+              <Link href={source.url[currentLang] || source.url.fr} target="_blank" rel="noopener noreferrer">
                 {source.label[currentLang] || source.label.fr}
               </Link>
             </div>
@@ -97,9 +94,7 @@ export default function ChartFooter({
           {updateDate && (
             <div>
               <b>{getI18nLabel("updateDate")} </b>
-              {updateDate.toLocaleDateString(
-                currentLang === "fr" ? "fr-FR" : "en-US"
-              )}
+              {updateDate.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")}
             </div>
           )}
         </div>
