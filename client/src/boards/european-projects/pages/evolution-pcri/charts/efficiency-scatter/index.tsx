@@ -7,6 +7,8 @@ import { useGetParams, readingKey } from "./utils.js";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
+import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
+
 import i18n from "./i18n.json";
 
 export default function EfficiencyScatter() {
@@ -22,8 +24,9 @@ export default function EfficiencyScatter() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
+  const chartId = "efficiencyScatter";
   const config = {
-    id: "efficiencyScatter",
+    id: chartId,
     title: {
       fr: i18n.title.fr,
       en: i18n.title.en,
@@ -33,7 +36,9 @@ export default function EfficiencyScatter() {
       en: <>{i18n.comment.en}</>,
     },
     readingKey: readingKey(data, isLoading),
-    integrationURL: "/european-projects/components/pages/evolution-pcri/charts/efficiency-scatter",
+    source: EPChartsSource,
+    updateDate: EPChartsUpdateDate,
+    integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };
 
   return (

@@ -7,6 +7,9 @@ import { useGetParams, readingKey } from "./utils.js";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
+
+import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
+
 import i18n from "./i18n.json";
 
 export default function FundingStackedArea() {
@@ -15,11 +18,6 @@ export default function FundingStackedArea() {
   const params = useGetParams();
   const color = useChartColor();
 
-  // const { data, isLoading } = useQuery({
-  //   queryKey: ["fundingStackedArea", params],
-  //   queryFn: () => getData(params),
-  // });
-
   const { data, isLoading } = useQuery({
     queryKey: ["fundingByCountry", params],
     queryFn: () => getData(params),
@@ -27,8 +25,9 @@ export default function FundingStackedArea() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
+  const chartId = "fundingStackedArea";
   const config = {
-    id: "fundingStackedArea",
+    id: chartId,
     title: {
       fr: i18n.title.fr,
       en: i18n.title.en,
@@ -38,13 +37,14 @@ export default function FundingStackedArea() {
       en: <>{i18n.comment.en}</>,
     },
     readingKey: readingKey(data, isLoading),
-    integrationURL: "/european-projects/components/pages/evolution-pcri/charts/funding-stacked-area",
+    source: EPChartsSource,
+    updateDate: EPChartsUpdateDate,
+    integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };
 
   return (
     <div className={`chart-container chart-container--${color}`}>
       <span className="chart-badge">Global</span>
-
       <ChartWrapper config={config} legend={null} options={options(data, currentLang)} renderData={() => null} />
     </div>
   );

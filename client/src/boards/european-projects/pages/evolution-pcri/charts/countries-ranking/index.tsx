@@ -7,6 +7,8 @@ import { useGetParams, readingKey } from "./utils.js";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
+import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
+
 import i18n from "./i18n.json";
 
 export default function CountriesRanking() {
@@ -22,8 +24,9 @@ export default function CountriesRanking() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
+  const chartId = "countriesRanking";
   const config = {
-    id: "countriesRanking",
+    id: chartId,
     title: {
       fr: i18n.title.fr,
       en: i18n.title.en,
@@ -33,7 +36,9 @@ export default function CountriesRanking() {
       en: <>{i18n.comment.en}</>,
     },
     readingKey: readingKey(data, isLoading),
-    integrationURL: "/european-projects/components/pages/evolution-pcri/charts/countries-ranking",
+    source: EPChartsSource,
+    updateDate: EPChartsUpdateDate,
+    integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };
 
   return (

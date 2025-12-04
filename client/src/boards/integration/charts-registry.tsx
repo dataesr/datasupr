@@ -19,11 +19,15 @@ export const chartsRegistry = {
   fundingRankingCoordination: lazy(() => import("../european-projects/pages/positioning/charts/funding-ranking/coordination")),
 
   // European Projects - Synthesis
+  // TODO
 
-  // Ajoutez d'autres graphiques ici selon vos besoins
-  // "ep-autre-graph": lazy(() => import("../european-projects/pages/...")),
-  // "atlas-map": lazy(() => import("../atlas/...")),
-  // etc.
+  // European Projects - Evolution PCRI
+  fundingStackedArea: lazy(() => import("../european-projects/pages/evolution-pcri/charts/funding-stacked-area")),
+  successRateEvolution: lazy(() => import("../european-projects/pages/evolution-pcri/charts/success-rate-evolution")),
+  countriesHeatmap: lazy(() => import("../european-projects/pages/evolution-pcri/charts/countries-heatmap")),
+  countriesRanking: lazy(() => import("../european-projects/pages/evolution-pcri/charts/countries-ranking")),
+  fundingByCountry: lazy(() => import("../european-projects/pages/evolution-pcri/charts/funding-by-country")),
+  efficiencyScatter: lazy(() => import("../european-projects/pages/evolution-pcri/charts/efficiency-scatter")),
 };
 
 export type ChartId = keyof typeof chartsRegistry;

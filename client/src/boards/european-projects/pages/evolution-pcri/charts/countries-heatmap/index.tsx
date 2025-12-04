@@ -7,6 +7,9 @@ import { useGetParams, readingKey } from "./utils.js";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
+
+import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
+
 import i18n from "./i18n.json";
 
 export default function CountriesHeatmap() {
@@ -23,8 +26,9 @@ export default function CountriesHeatmap() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
+  const chartId = "countriesHeatmap";
   const config = {
-    id: "countriesHeatmap",
+    id: chartId,
     title: {
       fr: i18n.title.fr,
       en: i18n.title.en,
@@ -34,7 +38,9 @@ export default function CountriesHeatmap() {
       en: <>{i18n.comment.en}</>,
     },
     readingKey: readingKey(data, isLoading),
-    integrationURL: "/european-projects/components/pages/evolution-pcri/charts/countries-heatmap",
+    source: EPChartsSource,
+    updateDate: EPChartsUpdateDate,
+    integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };
 
   return (

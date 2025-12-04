@@ -10,6 +10,7 @@ import { useChartColor } from "../../../../../../hooks/useChartColor";
 import { getFlagEmoji } from "../../../../../../utils";
 import allCountries from "../../../../../../components/country-selector/all-countries.json";
 import Legend from "./legend";
+import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
 
 // Fonction pour convertir ISO3 vers ISO2
 function getIso2(iso3) {
@@ -35,8 +36,9 @@ export default function FundingByCountry() {
   const iso2Code = countryCode ? getIso2(countryCode) : "";
   const flagEmoji = iso2Code ? getFlagEmoji(iso2Code) : "";
 
+  const chartId = "fundingByCountryEvolution";
   const config = {
-    id: "fundingByCountryEvolution",
+    id: chartId,
     title: {
       fr: "Évolution des financements de FP6 à Horizon Europe",
       en: "Funding evolution from FP6 to Horizon Europe",
@@ -46,7 +48,9 @@ export default function FundingByCountry() {
       en: <>Evolution of cumulative funding obtained by countries from FP6 to Horizon Europe.</>,
     },
     readingKey: readingKey(data, isLoading),
-    integrationURL: "/european-projects/components/pages/evolution-pcri/charts/funding-by-country",
+    source: EPChartsSource,
+    updateDate: EPChartsUpdateDate,
+    integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };
 
   return (
