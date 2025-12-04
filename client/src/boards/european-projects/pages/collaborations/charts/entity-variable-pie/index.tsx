@@ -14,7 +14,6 @@ export default function EntityVariablePie({ entity_id }: { entity_id?: string })
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const [entityId, setEntityId] = useState<string>(entity_id || "");
-  console.log("jer", entity_id);
 
   const chartId = "CollaborationsEntityVariablePie";
   const queryId = "EntitiesCollaborations";

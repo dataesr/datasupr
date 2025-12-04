@@ -183,15 +183,6 @@ export default function EpNavigator() {
           const scrollThreshold = initialTop - currentHeaderHeight - 10;
           const shouldMinify = scrollTop >= scrollThreshold;
 
-          console.log("EP Navigator Debug:", {
-            scrollTop,
-            initialTop,
-            currentHeaderHeight,
-            scrollThreshold,
-            shouldMinify,
-            isCurrentlyMinified: isMinified,
-          });
-
           // Éviter les re-renders inutiles
           setIsMinified((prev) => (prev !== shouldMinify ? shouldMinify : prev));
         }
