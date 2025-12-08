@@ -1,10 +1,11 @@
 // Variables CSS pour les couleurs
 :root {
-  --fp7-color: #000;
-  --h2020-color: #000;
-  --he-color: #000;
+  --fp6-color: var(--framework-fp6-color);
+  --fp7-color: var(--framework-fp7-color);
+  --h2020-color: var(--framework-horizon2020-color);
+  --he-color: var(--framework-horizoneurope-color);
   --timeline-line-color: #f00;
-  --timeline-text: #374151;
+  --timeline-text: var(--text-default-grey);;
   --timeline-text-light: var(--text-default-grey);
 }
 
@@ -64,6 +65,8 @@
   height: 4px;
   background: linear-gradient(
     to right,
+    var(--fp6-color) 0%,
+    var(--fp6-color) 33%,
     var(--fp7-color) 0%,
     var(--fp7-color) 33%,
     var(--h2020-color) 33%,
@@ -207,6 +210,10 @@
 }
 
 // Couleurs spécifiques pour chaque période
+.timeline-item--fp6 {
+  --period-color: var(--fp6-color);
+}
+
 .timeline-item--fp7 {
   --period-color: var(--fp7-color);
 }

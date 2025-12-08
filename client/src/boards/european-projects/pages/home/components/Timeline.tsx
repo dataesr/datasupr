@@ -15,6 +15,16 @@ interface TimelineProps {
 export default function Timeline({ currentLang }: TimelineProps) {
   const timelinePeriods: TimelinePeriod[] = [
     {
+      id: "fp6",
+      period: "2002-2006",
+      years: "5 ans",
+      program: "FP6",
+      description:
+        currentLang === "fr"
+          ? "6 Programme-cadre de recherche et développement technologique"
+          : "6th Framework Programme for Research and Technological Development",
+    },
+    {
       id: "fp7",
       period: "2007-2013",
       years: "7 ans",
@@ -41,8 +51,8 @@ export default function Timeline({ currentLang }: TimelineProps) {
       program: "Horizon Europe",
       description:
         currentLang === "fr"
-          ? "Programme de recherche et d'innovation de l'UE pour 2021-2027"
-          : "EU's research and innovation programme for 2021-2027",
+          ? "En cours : Programme de recherche et d'innovation de l'UE pour 2021-2027"
+          : "In progress : EU's research and innovation programme for 2021-2027",
     },
   ];
 
@@ -53,7 +63,7 @@ export default function Timeline({ currentLang }: TimelineProps) {
           {currentLang === "fr" ? "Évolution des programmes européens de recherche" : "Evolution of European research programmes"}
         </h3>
         <p className="timeline-subtitle">
-          {currentLang === "fr" ? "De 2007 à aujourd'hui : trois générations de programmes" : "From 2007 to today: three generations of programmes"}
+          {currentLang === "fr" ? "De 2002 à aujourd'hui : quatre générations de programmes" : "From 2002 to today: four generations of programmes"}
         </p>
       </div>
 
