@@ -100,3 +100,111 @@ export function readingKey(data, isLoading) {
     en: en,
   };
 }
+
+/**
+ * Génère un composant de tableau accessible avec les données de financement par framework et par année
+ * @param data - Les données brutes de l'évolution du financement
+ * @param currentLang - La langue actuelle ('fr' ou 'en')
+ * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
+ */
+export function renderDataTable(data: { call_year: string; framework: string; funding: number }[], currentLang: string = "fr") {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
+      </div>
+    );
+  }
+
+  interface YearFrameworkData {
+    year: string;
+    frameworks: Record<string, number>;
+    total: number;
+  }
+
+  // Grouper les données par année et framework
+  const dataByYear: Record<string, YearFrameworkData> = data.reduce((acc, item) => {
+    if (!acc[item.call_year]) {
+      acc[item.call_year] = {
+        year: item.call_year,
+        frameworks: {},
+        total: 0,
+      };
+    }
+    if (!acc[item.call_year].frameworks[item.framework]) {
+      acc[item.call_year].frameworks[item.framework] = 0;
+    }
+    acc[item.call_year].frameworks[item.framework] += item.funding || 0;
+    acc[item.call_year].total += item.funding || 0;
+    return acc;
+  }, {} as Record<string, YearFrameworkData>);
+
+  // Trier par année
+  const sortedYears = Object.values(dataByYear).sort((a, b) => parseInt(a.year) - parseInt(b.year));
+
+  // Liste des frameworks dans l'ordre chronologique
+  const frameworkOrder = ["FP6", "FP7", "Horizon 2020", "Horizon Europe"];
+  
+  // Obtenir uniquement les frameworks qui ont des données
+  const availableFrameworks = frameworkOrder.filter((framework) =>
+    sortedYears.some((yearData) => yearData.frameworks[framework] && yearData.frameworks[framework] > 0)
+  );
+
+  const formatToMillions = (value: number) => {
+    const millions = value / 1000000;
+    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", { 
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2 
+    }).format(millions);
+  };
+
+  const labels = {
+    year: currentLang === "fr" ? "Année" : "Year",
+    total: currentLang === "fr" ? "Total" : "Total",
+    unit: "M€",
+    caption: currentLang === "fr" 
+      ? "Évolution du financement par programme-cadre européen (en millions d'euros)" 
+      : "Evolution of funding by European framework programme (in millions of euros)",
+  };
+
+  return (
+    <div style={{ width: "100%" }}>
+      <div className="fr-table-responsive">
+        <table
+          className="fr-table fr-table--bordered fr-table--sm"
+          style={{ width: "100%" }}
+        >
+          <caption className="fr-sr-only">{labels.caption}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{labels.year}</th>
+              {availableFrameworks.map((framework) => (
+                <th scope="col" key={framework}>
+                  {framework}
+                </th>
+              ))}
+              <th scope="col">{labels.total}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedYears.map((yearData, index) => (
+              <tr key={index}>
+                <th scope="row">{yearData.year}</th>
+                {availableFrameworks.map((framework) => (
+                  <td key={framework}>
+                    {yearData.frameworks[framework] 
+                      ? `${formatToMillions(yearData.frameworks[framework])} ${labels.unit}` 
+                      : "—"}
+                  </td>
+                ))}
+                <td>
+                  <strong>{formatToMillions(yearData.total)} {labels.unit}</strong>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
