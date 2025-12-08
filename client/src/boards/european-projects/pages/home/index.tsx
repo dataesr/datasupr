@@ -108,7 +108,7 @@ Le seul critère de sélection est celui de l'excellence scientifique."
         </Col>
         <Col md={12} className="text-center">
           <Link href="/european-projects/evolution-pcri" className="fr-link fr-link--icon-right">
-            Visualisez et analisez l'évolution des programmes européens de recherche
+            Visualisez et analysez l'évolution des programmes européens de recherche
             <span className="fr-fi-arrow-right-line fr-link__icon fr-link__icon--right" />
           </Link>
         </Col>
