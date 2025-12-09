@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getData } from "./query";
 import options from "./options";
-import { useGetParams } from "./utils";
+import { useGetParams, renderDataTable } from "./utils";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
@@ -18,7 +18,7 @@ const config = {
 };
 
 export default function ProgramsFundingValues() {
-  const params = useGetParams();
+  const { params, currentLang } = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: [config.idQuery, params],
     queryFn: () => getData(params),
@@ -26,12 +26,5 @@ export default function ProgramsFundingValues() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return (
-    <ChartWrapper
-      config={config}
-      legend={null}
-      options={options(data)}
-      renderData={() => null} // TODO: add data table
-    />
-  );
+  return <ChartWrapper config={config} legend={null} options={options(data)} renderData={() => renderDataTable(data, currentLang)} />;
 }

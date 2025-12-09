@@ -2,14 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getData } from "./query";
 import options from "./options";
-import { readingKey, useGetParams } from "./utils";
+import { readingKey, useGetParams, renderDataTable } from "./utils";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
 
 export default function ProgramsFundingProportion() {
-  const params = useGetParams();
+  const { params, currentLang } = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: ["programsFundingProportion", params],
     queryFn: () => getData(params),
@@ -34,12 +34,5 @@ export default function ProgramsFundingProportion() {
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
   };
 
-  return (
-    <ChartWrapper
-      config={config}
-      legend={null}
-      options={options(data)}
-      renderData={() => null} // TODO: add data table
-    />
-  );
+  return <ChartWrapper config={config} legend={null} options={options(data)} renderData={() => renderDataTable(data, currentLang)} />;
 }

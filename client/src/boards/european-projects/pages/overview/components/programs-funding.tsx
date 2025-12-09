@@ -10,7 +10,7 @@ import { readingKey, useGetParams } from "../charts/programs-funding/utils";
 import { getData } from "../charts/programs-funding/query";
 
 export default function ProgramsFunding() {
-  const params = useGetParams();
+  const { params } = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: ["programsFunding", params],
     queryFn: () => getData(params),
