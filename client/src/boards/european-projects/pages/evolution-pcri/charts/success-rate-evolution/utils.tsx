@@ -105,3 +105,152 @@ export function readingKey(data, isLoading) {
     en: en,
   };
 }
+
+/**
+ * Génère un composant de tableau accessible avec les données de taux de succès par framework et par année
+ * @param data - Les données brutes de l'évolution du taux de succès
+ * @param currentLang - La langue actuelle ('fr' ou 'en')
+ * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
+ */
+export function renderDataTable(data: { call_year: string; framework: string; stage: string; project_number: number; country_code: string }[], currentLang: string = "fr") {
+  if (!data || data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
+      </div>
+    );
+  }
+
+  interface YearFrameworkData {
+    year: string;
+    framework: string;
+    evaluated: number;
+    successful: number;
+    successRate: number;
+  }
+
+  // Grouper les données par année et framework
+  const dataByYearFramework: Record<string, YearFrameworkData> = data
+    .filter((item) => item.country_code === "ALL") // Uniquement les totaux
+    .reduce((acc, item) => {
+      const key = `${item.call_year}_${item.framework}`;
+      if (!acc[key]) {
+        acc[key] = {
+          year: item.call_year,
+          framework: item.framework,
+          evaluated: 0,
+          successful: 0,
+          successRate: 0,
+        };
+      }
+      if (item.stage === "evaluated") {
+        acc[key].evaluated = item.project_number || 0;
+      } else if (item.stage === "successful") {
+        acc[key].successful = item.project_number || 0;
+      }
+      return acc;
+    }, {} as Record<string, YearFrameworkData>);
+
+  // Calculer le taux de succès
+  Object.values(dataByYearFramework).forEach((item) => {
+    if (item.evaluated > 0) {
+      item.successRate = (item.successful / item.evaluated) * 100;
+    }
+  });
+
+  // Trier par année
+  const sortedData = Object.values(dataByYearFramework)
+    .filter((item) => item.framework !== "FP6") // Exclure FP6 (pas de données evaluated)
+    .sort((a, b) => parseInt(a.year) - parseInt(b.year));
+
+  // Extraire les années uniques
+  const years = [...new Set(sortedData.map((d) => d.year))].sort();
+
+  // Liste des frameworks (sans FP6)
+  const frameworkOrder = ["FP7", "Horizon 2020", "Horizon Europe"];
+  
+  // Obtenir uniquement les frameworks qui ont des données
+  const availableFrameworks = frameworkOrder.filter((framework) =>
+    sortedData.some((item) => item.framework === framework && item.successRate > 0)
+  );
+
+  const formatNumber = (value: number) => {
+    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", { 
+      maximumFractionDigits: 0
+    }).format(value);
+  };
+
+  const formatPercentage = (value: number) => {
+    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", { 
+      maximumFractionDigits: 1,
+      minimumFractionDigits: 1 
+    }).format(value) + " %";
+  };
+
+  const labels = {
+    year: currentLang === "fr" ? "Année" : "Year",
+    evaluated: currentLang === "fr" ? "Évalués" : "Evaluated",
+    successful: currentLang === "fr" ? "Retenus" : "Successful",
+    successRate: currentLang === "fr" ? "Taux de succès" : "Success rate",
+    caption: currentLang === "fr" 
+      ? "Évolution du taux de succès par programme-cadre européen" 
+      : "Evolution of success rate by European framework programme",
+  };
+
+  return (
+    <div style={{ width: "100%" }}>
+      <div className="fr-table-responsive">
+        <table
+          className="fr-table fr-table--bordered fr-table--sm"
+          style={{ width: "100%" }}
+        >
+          <caption className="fr-sr-only">{labels.caption}</caption>
+          <thead>
+            <tr>
+              <th scope="col" rowSpan={2}>{labels.year}</th>
+              {availableFrameworks.map((framework) => (
+                <th scope="col" colSpan={3} key={framework} style={{ textAlign: "center" }}>
+                  {framework}
+                </th>
+              ))}
+            </tr>
+            <tr>
+              {availableFrameworks.map((framework) => (
+                <>
+                  <th scope="col" key={`${framework}-evaluated`}>{labels.evaluated}</th>
+                  <th scope="col" key={`${framework}-successful`}>{labels.successful}</th>
+                  <th scope="col" key={`${framework}-rate`}>{labels.successRate}</th>
+                </>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {years.map((year, index) => (
+              <tr key={index}>
+                <th scope="row">{year}</th>
+                {availableFrameworks.map((framework) => {
+                  const item = sortedData.find((d) => d.year === year && d.framework === framework);
+                  return (
+                    <>
+                      <td key={`${framework}-evaluated`}>
+                        {item && item.evaluated > 0 ? formatNumber(item.evaluated) : "—"}
+                      </td>
+                      <td key={`${framework}-successful`}>
+                        {item && item.successful > 0 ? formatNumber(item.successful) : "—"}
+                      </td>
+                      <td key={`${framework}-rate`}>
+                        {item && item.successRate > 0 ? (
+                          <strong>{formatPercentage(item.successRate)}</strong>
+                        ) : "—"}
+                      </td>
+                    </>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
