@@ -1,15 +1,12 @@
+import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { GetData } from "./query";
 import options from "./options";
-
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { readingKey, useGetParams } from "./utils";
-import { RenderData } from "./render-data";
+import { readingKey, useGetParams, renderDataTable } from "./utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { useSearchParams } from "react-router-dom";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
-
 import { EPChartsSource, EPChartsUpdateDate } from "../../../../config";
 
 export default function MainPartners() {
@@ -54,7 +51,7 @@ export default function MainPartners() {
 
   return (
     <div className={`chart-container chart-container--${color}`}>
-      <ChartWrapper config={config} legend={null} options={options(data, currentLang)} renderData={RenderData} />
+      <ChartWrapper config={config} legend={null} options={options(data, currentLang)} renderData={() => renderDataTable(data, currentLang)} />
     </div>
   );
 }
