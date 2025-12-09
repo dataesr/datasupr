@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { getData } from "./query.js";
 import options from "./options.js";
-import { useGetParams, readingKey } from "./utils.js";
+import { useGetParams, readingKey, renderDataTable } from "./utils.js";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
@@ -60,12 +60,7 @@ export default function FundingByCountry() {
           {flagEmoji} {countryName}
         </span>
       )}
-      <ChartWrapper
-        config={config}
-        legend={null}
-        options={options(data, currentLang)}
-        renderData={() => null} // TODO: add data table
-      />
+      <ChartWrapper config={config} legend={null} options={options(data, currentLang)} renderData={() => renderDataTable(data, currentLang)} />
       <Legend />
     </div>
   );
