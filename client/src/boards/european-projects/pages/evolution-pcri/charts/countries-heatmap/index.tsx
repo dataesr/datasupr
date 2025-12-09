@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { getData } from "./query.js";
 import options from "./options.js";
-import { useGetParams, readingKey } from "./utils.js";
+import { useGetParams, readingKey, renderDataTable } from "./utils.js";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
@@ -46,7 +46,12 @@ export default function CountriesHeatmap() {
   return (
     <div className={`chart-container chart-container--${color}`}>
       <span className="chart-badge">Top 15</span>
-      <ChartWrapper config={config} legend={null} options={options(data, currentLang, countryCode)} renderData={() => null} />
+      <ChartWrapper
+        config={config}
+        legend={null}
+        options={options(data, currentLang, countryCode)}
+        renderData={() => renderDataTable(data, currentLang)}
+      />
     </div>
   );
 }
