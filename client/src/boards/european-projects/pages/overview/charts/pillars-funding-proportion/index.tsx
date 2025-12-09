@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import { getData } from "./query";
 import options from "./options";
-import { useGetParams } from "./utils";
+import { useGetParams, renderDataTable } from "./utils";
 import { EPChartsSource, EPChartsUpdateDate } from "../../../../config";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -50,12 +50,5 @@ export default function PillarsFundingProportion() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return (
-    <ChartWrapper
-      config={config}
-      legend={null}
-      options={options(data)}
-      renderData={() => null} // TODO: add data table
-    />
-  );
+  return <ChartWrapper config={config} legend={null} options={options(data)} renderData={() => renderDataTable(data, "fr")} />;
 }

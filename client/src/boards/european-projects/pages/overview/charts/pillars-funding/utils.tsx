@@ -19,3 +19,112 @@ export function useGetParams() {
 
   return params.join("&");
 }
+
+/**
+ * Génère un composant de tableau accessible avec les données de financement par pilier
+ * @param data - Les données de financement par pilier
+ * @param currentLang - La langue actuelle ('fr' ou 'en')
+ * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
+ */
+export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; stage: string; total_fund_eur: number }> }, currentLang: string = "fr") {
+  if (!data || !data.data || data.data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
+      </div>
+    );
+  }
+
+  interface PillarData {
+    pillar: string;
+    evaluated: number;
+    successful: number;
+    successRate: number;
+  }
+
+  // Grouper les données par pilier
+  const dataByPillar: Record<string, PillarData> = {};
+
+  data.data.forEach((item) => {
+    if (!dataByPillar[item.pilier_name_fr]) {
+      dataByPillar[item.pilier_name_fr] = {
+        pillar: item.pilier_name_fr,
+        evaluated: 0,
+        successful: 0,
+        successRate: 0,
+      };
+    }
+    if (item.stage === "evaluated") {
+      dataByPillar[item.pilier_name_fr].evaluated = item.total_fund_eur;
+    } else if (item.stage === "successful") {
+      dataByPillar[item.pilier_name_fr].successful = item.total_fund_eur;
+    }
+  });
+
+  // Calculer le taux de succès
+  Object.values(dataByPillar).forEach((pillar) => {
+    if (pillar.evaluated > 0) {
+      pillar.successRate = (pillar.successful / pillar.evaluated) * 100;
+    }
+  });
+
+  // Trier par financement successful (décroissant)
+  const sortedPillars = Object.values(dataByPillar).sort((a, b) => b.successful - a.successful);
+
+  const formatToMillions = (value: number) => {
+    const millions = value / 1000000;
+    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", { 
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2 
+    }).format(millions);
+  };
+
+  const formatPercentage = (value: number) => {
+    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", { 
+      maximumFractionDigits: 1,
+      minimumFractionDigits: 1 
+    }).format(value) + " %";
+  };
+
+  const labels = {
+    pillar: currentLang === "fr" ? "Pilier" : "Pillar",
+    evaluated: currentLang === "fr" ? "Projets évalués" : "Evaluated projects",
+    successful: currentLang === "fr" ? "Projets lauréats" : "Successful projects",
+    successRate: currentLang === "fr" ? "Taux de succès" : "Success rate",
+    unit: "M€",
+    caption: currentLang === "fr" 
+      ? "Financement par pilier : projets évalués et projets lauréats (en millions d'euros)" 
+      : "Funding by pillar: evaluated and successful projects (in millions of euros)",
+  };
+
+  return (
+    <div style={{ width: "100%" }}>
+      <div className="fr-table-responsive">
+        <table
+          className="fr-table fr-table--bordered fr-table--sm"
+          style={{ width: "100%" }}
+        >
+          <caption className="fr-sr-only">{labels.caption}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{labels.pillar}</th>
+              <th scope="col">{labels.evaluated}</th>
+              <th scope="col">{labels.successful}</th>
+              <th scope="col">{labels.successRate}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedPillars.map((pillar, index) => (
+              <tr key={index}>
+                <th scope="row">{pillar.pillar}</th>
+                <td>{formatToMillions(pillar.evaluated)} {labels.unit}</td>
+                <td><strong>{formatToMillions(pillar.successful)} {labels.unit}</strong></td>
+                <td>{pillar.successRate > 0 ? formatPercentage(pillar.successRate) : "—"}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}

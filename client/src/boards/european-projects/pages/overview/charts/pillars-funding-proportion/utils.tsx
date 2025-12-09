@@ -19,3 +19,91 @@ export function useGetParams() {
 
   return params.join("&");
 }
+
+/**
+ * Génère un composant de tableau accessible avec les données de proportion de financement par pilier
+ * @param data - Les données de proportion de financement par pilier
+ * @param currentLang - La langue actuelle ('fr' ou 'en')
+ * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
+ */
+export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; stage: string; proportion: number }> }, currentLang: string = "fr") {
+  if (!data || !data.data || data.data.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
+      </div>
+    );
+  }
+
+  interface PillarData {
+    pillar: string;
+    evaluatedProportion: number;
+    successfulProportion: number;
+  }
+
+  // Grouper les données par pilier
+  const dataByPillar: Record<string, PillarData> = {};
+
+  data.data.forEach((item) => {
+    if (!dataByPillar[item.pilier_name_fr]) {
+      dataByPillar[item.pilier_name_fr] = {
+        pillar: item.pilier_name_fr,
+        evaluatedProportion: 0,
+        successfulProportion: 0,
+      };
+    }
+    if (item.stage === "evaluated") {
+      dataByPillar[item.pilier_name_fr].evaluatedProportion = item.proportion;
+    } else if (item.stage === "successful") {
+      dataByPillar[item.pilier_name_fr].successfulProportion = item.proportion;
+    }
+  });
+
+  // Trier par proportion successful (décroissant)
+  const sortedPillars = Object.values(dataByPillar).sort((a, b) => b.successfulProportion - a.successfulProportion);
+
+  const formatPercentage = (value: number) => {
+    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", { 
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2 
+    }).format(value) + " %";
+  };
+
+  const labels = {
+    pillar: currentLang === "fr" ? "Pilier" : "Pillar",
+    evaluated: currentLang === "fr" ? "Part projets évalués" : "Evaluated projects share",
+    successful: currentLang === "fr" ? "Part projets lauréats" : "Successful projects share",
+    caption: currentLang === "fr" 
+      ? "Part de financement par pilier : projets évalués et projets lauréats (en pourcentage)" 
+      : "Funding share by pillar: evaluated and successful projects (in percentage)",
+  };
+
+  return (
+    <div style={{ width: "100%" }}>
+      <div className="fr-table-responsive">
+        <table
+          className="fr-table fr-table--bordered fr-table--sm"
+          style={{ width: "100%" }}
+        >
+          <caption className="fr-sr-only">{labels.caption}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{labels.pillar}</th>
+              <th scope="col">{labels.evaluated}</th>
+              <th scope="col">{labels.successful}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {sortedPillars.map((pillar, index) => (
+              <tr key={index}>
+                <th scope="row">{pillar.pillar}</th>
+                <td>{formatPercentage(pillar.evaluatedProportion)}</td>
+                <td><strong>{formatPercentage(pillar.successfulProportion)}</strong></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
