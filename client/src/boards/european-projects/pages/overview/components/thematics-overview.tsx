@@ -13,7 +13,7 @@ export default function ThematicsOverview() {
   const params = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: ["thematicsFunding", params],
-    queryFn: () => getData(params),
+    queryFn: () => getData(params.params),
   });
 
   // const { data: dataProportion, isLoading: isLoadingProportion } = useQuery({

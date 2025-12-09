@@ -13,7 +13,7 @@ export default function ProgramsOverview() {
   const params = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: ["programsFunding", params],
-    queryFn: () => getData(params),
+    queryFn: () => getData(params.params),
   });
 
   // const { data: dataProportion, isLoading: isLoadingProportion } = useQuery({
