@@ -206,3 +206,199 @@ export function valuesSuccessReadingKey(data, displayType) {
   };
 }
 
+export function renderDataTable(data, currentLang, displayType) {
+  if (!data) return null;
+
+  const filteredData = data.filter((item) => item.country !== "all")[0].data;
+  const evaluatedData = filteredData.find((item) => item.stage === "evaluated");
+  const successfulData = filteredData.find((item) => item.stage === "successful");
+
+  const years = new Set();
+  evaluatedData.pillars[0].years.forEach((year) => years.add(year.year));
+  const sortedYears = Array.from(years).sort();
+
+  const labels = {
+    caption:
+      currentLang === "fr" ? "Évolution des financements par pilier sur les 3 dernières années" : "Funding evolution by pillar over the last 3 years",
+    pillar: currentLang === "fr" ? "Pilier" : "Pillar",
+    evaluated: currentLang === "fr" ? "Évalués" : "Evaluated",
+    successful: currentLang === "fr" ? "Lauréats" : "Successful",
+    successRate: currentLang === "fr" ? "Taux de succès" : "Success rate",
+  };
+
+  // Fonction pour formater les valeurs selon le type d'affichage
+  const formatValue = (value: number) => {
+    if (displayType === "total_fund_eur") {
+      return formatToMillions(value);
+    }
+    return value.toLocaleString(currentLang === "fr" ? "fr-FR" : "en-US");
+  };
+
+  return (
+    <div className="fr-table fr-table--bordered fr-table--sm">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table>
+              <caption className="fr-sr-only">{labels.caption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col" rowSpan={2}>
+                    {labels.pillar}
+                  </th>
+                  {sortedYears.map((year) => (
+                    <th key={`year-${year}`} scope="col" colSpan={3} style={{ textAlign: "center" }}>
+                      {String(year)}
+                    </th>
+                  ))}
+                </tr>
+                <tr>
+                  {sortedYears.map((year) => (
+                    <>
+                      <th key={`eval-${year}`} scope="col">
+                        {labels.evaluated}
+                      </th>
+                      <th key={`succ-${year}`} scope="col">
+                        {labels.successful}
+                      </th>
+                      <th key={`rate-${year}`} scope="col">
+                        {labels.successRate}
+                      </th>
+                    </>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {evaluatedData.pillars.map((pillar) => {
+                  const pillarName = currentLang === "fr" ? pillar.pilier_name_fr : pillar.pilier_name_en;
+                  const successfulPillar = successfulData.pillars.find((p) => p.pilier_code === pillar.pilier_code);
+
+                  return (
+                    <tr key={pillar.pilier_code}>
+                      <th scope="row">{pillarName}</th>
+                      {sortedYears.map((year) => {
+                        const evaluatedYearData = pillar.years.find((y) => y.year === year);
+                        const successfulYearData = successfulPillar?.years.find((y) => y.year === year);
+
+                        const evaluatedValue = evaluatedYearData ? evaluatedYearData[displayType] : 0;
+                        const successfulValue = successfulYearData ? successfulYearData[displayType] : 0;
+                        const successRate = evaluatedValue > 0 ? ((successfulValue / evaluatedValue) * 100).toFixed(1) : "0.0";
+
+                        return (
+                          <>
+                            <td key={`eval-${year}-${pillar.pilier_code}`}>{formatValue(evaluatedValue)}</td>
+                            <td key={`succ-${year}-${pillar.pilier_code}`}>{formatValue(successfulValue)}</td>
+                            <td key={`rate-${year}-${pillar.pilier_code}`}>{successRate} %</td>
+                          </>
+                        );
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function renderDataTableRates(data, currentLang, displayType) {
+  if (!data) return null;
+
+  const filteredData = data.filter((item) => item.country !== "all")[0].data;
+  const allData = data.find((item) => item.country === "all").data;
+  const evaluatedData = filteredData.find((item) => item.stage === "evaluated");
+  const successfulData = filteredData.find((item) => item.stage === "successful");
+  const evaluatedAllData = allData.find((item) => item.stage === "evaluated");
+  const successfulAllData = allData.find((item) => item.stage === "successful");
+
+  const years = new Set();
+  evaluatedData.pillars[0].years.forEach((year) => years.add(year.year));
+  const sortedYears = Array.from(years).sort();
+
+  const labels = {
+    caption:
+      currentLang === "fr"
+        ? "Part des financements du pays par rapport au total des participants"
+        : "Percentage of country funding as a proportion of total participants",
+    pillar: currentLang === "fr" ? "Pilier" : "Pillar",
+    evaluated: currentLang === "fr" ? "Projets évalués" : "Evaluated projects",
+    successful: currentLang === "fr" ? "Projets lauréats" : "Successful projects",
+  };
+
+  return (
+    <div className="fr-table fr-table--bordered fr-table--sm">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table>
+              <caption className="fr-sr-only">{labels.caption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col" rowSpan={2}>
+                    {labels.pillar}
+                  </th>
+                  <th scope="col" colSpan={sortedYears.length} style={{ textAlign: "center" }}>
+                    {labels.evaluated}
+                  </th>
+                  <th scope="col" colSpan={sortedYears.length} style={{ textAlign: "center" }}>
+                    {labels.successful}
+                  </th>
+                </tr>
+                <tr>
+                  {sortedYears.map((year) => (
+                    <th key={`eval-${year}`} scope="col">
+                      {String(year)}
+                    </th>
+                  ))}
+                  {sortedYears.map((year) => (
+                    <th key={`succ-${year}`} scope="col">
+                      {String(year)}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {evaluatedData.pillars.map((pillar) => {
+                  const pillarName = currentLang === "fr" ? pillar.pilier_name_fr : pillar.pilier_name_en;
+                  const successfulPillar = successfulData.pillars.find((p) => p.pilier_code === pillar.pilier_code);
+                  const evaluatedAllPillar = evaluatedAllData.pillars.find((p) => p.pilier_code === pillar.pilier_code);
+                  const successfulAllPillar = successfulAllData.pillars.find((p) => p.pilier_code === pillar.pilier_code);
+
+                  return (
+                    <tr key={pillar.pilier_code}>
+                      <th scope="row">{pillarName}</th>
+                      {/* Projets évalués */}
+                      {sortedYears.map((year, index) => {
+                        const yearData = pillar.years.find((y) => y.year === year);
+                        const allYearData = evaluatedAllPillar?.years[index];
+                        const countryValue = yearData ? yearData[displayType] : 0;
+                        const totalValue = allYearData ? allYearData[displayType] : 1;
+                        const percentage = totalValue > 0 ? ((countryValue / totalValue) * 100).toFixed(1) : "0.0";
+
+                        return <td key={`eval-${year}-${pillar.pilier_code}`}>{percentage} %</td>;
+                      })}
+                      {/* Projets lauréats */}
+                      {sortedYears.map((year, index) => {
+                        const yearData = successfulPillar?.years.find((y) => y.year === year);
+                        const allYearData = successfulAllPillar?.years[index];
+                        const countryValue = yearData ? yearData[displayType] : 0;
+                        const totalValue = allYearData ? allYearData[displayType] : 1;
+                        const percentage = totalValue > 0 ? ((countryValue / totalValue) * 100).toFixed(1) : "0.0";
+
+                        return <td key={`succ-${year}-${pillar.pilier_code}`}>{percentage} %</td>;
+                      })}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+

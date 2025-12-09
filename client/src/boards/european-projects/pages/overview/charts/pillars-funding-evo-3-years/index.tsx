@@ -6,10 +6,9 @@ import optionsSubsidiesValues from "./options-values";
 import optionsSubsidiesCountryRates from "./options-success-rates";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { getDefaultParams, successRatesReadingKey, valuesSuccessReadingKey } from "./utils";
+import { getDefaultParams, successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { RenderDataSubsidiesValuesAndRates } from "./render-data";
 import { useState } from "react";
 
 import i18nLocal from "./i18n.json";
@@ -105,7 +104,7 @@ export default function PillarsFundingEvo3Years() {
             config={configChart1}
             legend={null}
             options={optionsSubsidiesValues(data, displayType, currentLang)}
-            renderData={RenderDataSubsidiesValuesAndRates}
+            renderData={() => renderDataTable(data, currentLang, displayType)}
           />
         </Col>
       </Row>
@@ -115,7 +114,7 @@ export default function PillarsFundingEvo3Years() {
             config={configChart3}
             legend={null}
             options={optionsSubsidiesCountryRates(data, displayType, currentLang)}
-            renderData={RenderDataSubsidiesValuesAndRates}
+            renderData={() => renderDataTableRates(data, currentLang, displayType)}
           />
         </Col>
       </Row>
