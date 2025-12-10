@@ -7,7 +7,7 @@ import HomePage from "./boards/home-page.tsx";
 import Integration from "./boards/integration/index.tsx";
 import OpenAlexRoutes from "./boards/open-alex/routes.tsx";
 import TedsRoutes from "./boards/teds/routes.tsx";
-import FinanceUniversityRoutes from "./boards/finance-university/routes.tsx";
+// import FinanceUniversityRoutes from "./boards/finance-university/routes.tsx";
 import GraduatesRoutes from "./boards/graduates/routes.tsx";
 import NotFoundPage from "./components/not-found-page.tsx";
 import FacultyMembersRoutes from "./boards/faculty-members/routes.tsx";
@@ -20,7 +20,7 @@ export default function Router() {
       <Route path="/admin/*" element={<AdminRoutes />} />
       <Route path="/atlas/*" element={<AtlasRoutes />} />
       <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
-      <Route path="/finance-universite/*" element={<FinanceUniversityRoutes />} />
+      {/* <Route path="/finance-universite/*" element={<FinanceUniversityRoutes />} /> */}
       <Route path="/integration" element={<Integration />} />
       <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
       <Route path="/personnel-enseignant/*" element={<FacultyMembersRoutes />} />
