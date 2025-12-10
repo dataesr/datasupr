@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
-import { useGetParams } from "./utils";
+import { useGetParams, renderDataTable } from "./utils";
 import optionsSubRates from "./options-sub-rates";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
@@ -137,7 +137,7 @@ export default function FundingRankingRates() {
             config={configChartFundingRankingSubRates}
             legend={null}
             options={optionsSubRates(prepareData(data, "total_successful"), currentLang)}
-            renderData={() => null} // TODO: add data table
+            renderData={() => renderDataTable(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
       </Row>

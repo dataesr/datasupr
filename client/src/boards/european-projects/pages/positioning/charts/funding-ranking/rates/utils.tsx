@@ -1,5 +1,4 @@
 import { useSearchParams } from "react-router-dom";
-// import { formatToMillions } from "../../../../../../../utils/format";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -67,4 +66,74 @@ export function readingKey(data) {
       </>
     ),
   };
+}
+
+export function renderDataTable(data, currentLang, selectedCountryCode) {
+  if (!data || data.length === 0) return null;
+
+  const labels = {
+    caption:
+      currentLang === "fr"
+        ? "Classement des pays selon la part des montants demandés et obtenus"
+        : "Ranking of countries by share of amounts requested and obtained",
+    position: currentLang === "fr" ? "Position" : "Position",
+    country: currentLang === "fr" ? "Pays" : "Country",
+    ratioEvaluated: currentLang === "fr" ? "Part demandée (%)" : "Share requested (%)",
+    rankEvaluated: currentLang === "fr" ? "Rang (demandés)" : "Rank (requested)",
+    ratioSuccessful: currentLang === "fr" ? "Part obtenue (%)" : "Share obtained (%)",
+    rankSuccessful: currentLang === "fr" ? "Rang (obtenus)" : "Rank (obtained)",
+  };
+
+  return (
+    <div className="fr-table fr-table--bordered fr-table--sm">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table>
+              <caption className="fr-sr-only">{labels.caption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{labels.position}</th>
+                  <th scope="col">{labels.country}</th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.ratioEvaluated}
+                  </th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.rankEvaluated}
+                  </th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.ratioSuccessful}
+                  </th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.rankSuccessful}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((item, index) => {
+                  const countryName = currentLang === "fr" ? item.name_fr : item.name_en;
+                  const isSelectedCountry = item.id === selectedCountryCode;
+
+                  return (
+                    <tr
+                      key={item.id}
+                      style={isSelectedCountry ? { fontWeight: "bold" } : undefined}
+                      aria-current={isSelectedCountry ? "true" : undefined}
+                    >
+                      <th scope="row">{index + 1}</th>
+                      <td>{countryName}</td>
+                      <td style={{ textAlign: "right" }}>{item.total_evaluated_ratio} %</td>
+                      <td style={{ textAlign: "right" }}>{item.rank_evaluated}e</td>
+                      <td style={{ textAlign: "right" }}>{item.total_successful_ratio} %</td>
+                      <td style={{ textAlign: "right" }}>{item.rank_successful}e</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
