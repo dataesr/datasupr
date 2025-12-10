@@ -13,7 +13,7 @@ export default function DestinationsOverview() {
   const params = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: ["destinationsFunding", params],
-    queryFn: () => getData(params),
+    queryFn: () => getData(params.params),
   });
 
   // const { data: dataProportion, isLoading: isLoadingProportion } = useQuery({
