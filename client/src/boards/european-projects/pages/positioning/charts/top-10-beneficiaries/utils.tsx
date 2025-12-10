@@ -82,3 +82,52 @@ export function readingKey(data) {
     ),
   };
 }
+
+export function renderDataTable(data, currentLang, selectedCountryCode) {
+  if (!data || data.length === 0) return null;
+
+  const labels = {
+    caption: currentLang === "fr" ? "Classement des 10 premiers bénéficiaires" : "Top 10 beneficiaries ranking",
+    rank: currentLang === "fr" ? "Rang" : "Rank",
+    country: currentLang === "fr" ? "Pays" : "Country",
+    funding: currentLang === "fr" ? "Total subventions" : "Total subsidies",
+    influence: currentLang === "fr" ? "Poids du cumul (%)" : "Cumulative weight (%)",
+  };
+
+  return (
+    <div className="fr-table fr-table--bordered fr-table--sm">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table>
+              <caption className="fr-sr-only">{labels.caption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{labels.rank}</th>
+                  <th scope="col">{labels.country}</th>
+                  <th scope="col">{labels.funding}</th>
+                  <th scope="col">{labels.influence}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((item, index) => {
+                  const countryName = currentLang === "fr" ? item.name_fr : item.name_en;
+                  const isSelectedCountry = item.id === selectedCountryCode;
+
+                  return (
+                    <tr key={item.id} style={isSelectedCountry ? { fontWeight: "bold" } : undefined}>
+                      <th scope="row">{index + 1}</th>
+                      <td>{countryName}</td>
+                      <td>{formatToMillions(item.total_fund_eur)}</td>
+                      <td>{item.influence?.toFixed(1)} %</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import { getData } from "./query";
-import { readingKey, useGetParams } from "./utils";
+import { readingKey, useGetParams, renderDataTable } from "./utils";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
@@ -71,7 +71,7 @@ export default function Top10Beneficiaries() {
       config={config}
       legend={null}
       options={options(prepareData(data), searchParams.get("country_code") ?? null, currentLang)}
-      renderData={() => null} // TODO: add data table
+      renderData={() => renderDataTable(prepareData(data), currentLang, searchParams.get("country_code") ?? null)}
     />
   );
 }
