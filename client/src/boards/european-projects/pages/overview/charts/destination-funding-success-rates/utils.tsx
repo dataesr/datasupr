@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import { formatToRates } from "../../../../../../utils/format";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -29,5 +30,51 @@ export function useGetParams() {
     params.push(`thematics=${thematicIds}`);
   }
 
-  return params.join("&");
+  const currentLang = searchParams.get("language") || "fr";
+
+  return { params: params.join("&"), currentLang };
+}
+
+export function renderDataTable(data, currentLang) {
+  if (!data) return null;
+
+  const successRates = data.successRateByDestination || [];
+
+  const labels = {
+    caption: currentLang === "fr" ? "Taux de succès par destination" : "Success rate by destination",
+    destination: currentLang === "fr" ? "Destination" : "Destination",
+    successRate: currentLang === "fr" ? "Taux de succès" : "Success rate",
+  };
+
+  return (
+    <div className="fr-table fr-table--bordered fr-table--sm">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table>
+              <caption className="fr-sr-only">{labels.caption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{labels.destination}</th>
+                  <th scope="col">{labels.successRate}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {successRates.map((item) => {
+                  const destinationName = item.destination;
+
+                  return (
+                    <tr key={item.destination}>
+                      <th scope="row">{destinationName}</th>
+                      <td>{formatToRates(item.successRate)}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
