@@ -25,12 +25,12 @@ router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries").get(asy
       filters.programme_code = { $in: programs };
     }
     if (req.query.thematics) {
-      const thematics = req.query.thematics.split("|");
+      const thematics = req.query.thematics.split(",");
       const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
       filters.thema_code = { $in: filteredThematics };
     }
     if (req.query.destinations) {
-      const destinations = req.query.destinations.split("|");
+      const destinations = req.query.destinations.split(",");
       filters.destination_code = { $in: destinations };
     }
     if (req.query.years) {
@@ -111,12 +111,12 @@ router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries").get(asy
       baseFilters.programme_code = { $in: programs };
     }
     if (req.query.thematics) {
-      const thematics = req.query.thematics.split("|");
+      const thematics = req.query.thematics.split(",");
       const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
       baseFilters.thema_code = { $in: filteredThematics };
     }
     if (req.query.destinations) {
-      const destinations = req.query.destinations.split("|");
+      const destinations = req.query.destinations.split(",");
       baseFilters.destination_code = { $in: destinations };
     }
 
@@ -285,12 +285,12 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
       filters.programme_code = { $in: programs };
     }
     if (req.query.thematics) {
-      const thematics = req.query.thematics.split("|");
+      const thematics = req.query.thematics.split(",");
       const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
       filters.thema_code = { $in: filteredThematics };
     }
     if (req.query.destinations) {
-      const destinations = req.query.destinations.split("|");
+      const destinations = req.query.destinations.split(",");
       filters.destination_code = { $in: destinations };
     }
     if (req.query.years) {
@@ -397,12 +397,12 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
       evolutionFilters.programme_code = { $in: programs };
     }
     if (req.query.thematics) {
-      const thematics = req.query.thematics.split("|");
+      const thematics = req.query.thematics.split(",");
       const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
       evolutionFilters.thema_code = { $in: filteredThematics };
     }
     if (req.query.destinations) {
-      const destinations = req.query.destinations.split("|");
+      const destinations = req.query.destinations.split(",");
       evolutionFilters.destination_code = { $in: destinations };
     }
 
@@ -473,8 +473,8 @@ router.route(routesPrefix + "/type-beneficiaries-evolution").get(async (req, res
               cordis_type_entity_code: targetEntityType,
               ...(req.query.pillars && { pilier_code: { $in: req.query.pillars.split("|") } }),
               ...(req.query.programs && { programme_code: { $in: req.query.programs.split("|") } }),
-              ...(req.query.thematics && { thema_code: { $in: req.query.thematics.split("|").filter(thematic => !['ERC', 'MSCA'].includes(thematic)) } }),
-              ...(req.query.destinations && { destination_code: { $in: req.query.destinations.split("|") } }),
+              ...(req.query.thematics && { thema_code: { $in: req.query.thematics.split(",").filter(thematic => !['ERC', 'MSCA'].includes(thematic)) } }),
+              ...(req.query.destinations && { destination_code: { $in: req.query.destinations.split(",") } }),
             },
           },
           {

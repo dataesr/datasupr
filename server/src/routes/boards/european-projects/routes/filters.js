@@ -397,7 +397,7 @@ router.route("/european-projects/destinations-from-thematics").get(async (req, r
     const data = await db.collection("european-projects_projects-entities_staging").aggregate([
       {
         $match: {
-          thema_code: { $in: req.query.thematics.split("|") },
+          thema_code: { $in: req.query.thematics.split(",") },
           destination_code: { $ne: null },
           destination_name_en: { $ne: null }
         }

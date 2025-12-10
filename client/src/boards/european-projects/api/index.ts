@@ -31,7 +31,7 @@ export async function getThematics(
 export async function getDestinations(
   thematics: string[]
 ) {  
-  const url = `${VITE_APP_SERVER_URL}/european-projects/destinations-from-thematics?thematics=${thematics.join("|")}`;
+  const url = `${VITE_APP_SERVER_URL}/european-projects/destinations-from-thematics?thematics=${thematics.join(",")}`;
   const values = await fetch(url).then((response) => response.json());
   return values;
 }
@@ -50,9 +50,7 @@ export async function getFilters({ filterKey, pillarId, programIds, thematicIds 
     url += `?programIds=${programIds}`;
   } else if (filterKey === "destinations" && thematicIds) {
     // Utiliser l'endpoint existant pour les destinations
-    // Convertir les virgules en pipes car l'API attend le format pipe-separated
-    const thematicsFormatted = thematicIds.replace(/,/g, '|');
-    url = `${VITE_APP_SERVER_URL}/european-projects/destinations-from-thematics?thematics=${thematicsFormatted}`;
+    url = `${VITE_APP_SERVER_URL}/european-projects/destinations-from-thematics?thematics=${thematicIds}`;
   }
   
   const response = await fetch(url);

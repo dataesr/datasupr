@@ -128,12 +128,12 @@ router.route(routesPrefix + "/beneficiaries-by-role").get(async (req, res) => {
       filters.programme_code = { $in: programs };
     }
     if (req.query.thematics) {
-      const thematics = req.query.thematics.split("|");
+      const thematics = req.query.thematics.split(",");
       const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
       filters.thema_code = { $in: filteredThematics };
     }
     if (req.query.destinations) {
-      const destinations = req.query.destinations.split("|");
+      const destinations = req.query.destinations.split(",");
       filters.destination_code = { $in: destinations };
     }
 

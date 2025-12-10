@@ -613,7 +613,7 @@ router.route("/european-projects/overview/topics-funding-proportion").get(async 
   const filters = checkQuery(req.query, ["country_code"], res);
   
   if (req.query.thematics) {
-    const thematics = req.query.thematics.split("|");
+    const thematics = req.query.thematics.split(",");
     filters.thema_code = { $in: thematics };
   }
   if (req.query.pillars) {

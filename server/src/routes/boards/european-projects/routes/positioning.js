@@ -17,11 +17,11 @@ router
       filters.programme_code = { $in: programs };
     }
     if (req.query.thematics) {
-      const thematics = req.query.thematics.split("|");
+      const thematics = req.query.thematics.split(",");
       filters.thema_code = { $in: thematics };
     }
     if (req.query.destinations) {
-      const destinations = req.query.destinations.split("|");
+      const destinations = req.query.destinations.split(",");
       filters.destination_code = { $in: destinations };
     }
     filters.country_code = { $nin: ["ZOE", "ZOI"] };
@@ -323,11 +323,11 @@ router
         filters.programme_code = { $in: programs };
       }
       if (req.query.thematics) {
-        const thematics = req.query.thematics.split("|");
+        const thematics = req.query.thematics.split(",");
         filters.thema_code = { $in: thematics };
       }
       if (req.query.destinations) {
-        const destinations = req.query.destinations.split("|");
+        const destinations = req.query.destinations.split(",");
         filters.destination_code = { $in: destinations };
       }
       filters.country_code = { $nin: ["ZOE", "ZOI"] };
