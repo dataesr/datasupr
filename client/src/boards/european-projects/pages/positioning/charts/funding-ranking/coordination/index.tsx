@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
-import { readingKey, useGetParams } from "./utils";
+import { readingKey, useGetParams, renderDataTableCoordination, renderDataTableCoordinationSuccessRate } from "./utils";
 import optionsCoordinationNumber from "./options-coordination_number";
 import optionCoordinationNumberSuccessRate from "./options-coordination_number-succes-rate";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
@@ -119,7 +119,13 @@ export default function FundingRankingCoordination() {
             config={configChart2a}
             legend={null}
             options={optionsCoordinationNumber(prepareData(data, "total_coordination_number_successful"), currentLang)}
-            renderData={() => null} // TODO: add data table
+            renderData={() =>
+              renderDataTableCoordination(
+                prepareData(data, "total_coordination_number_successful"),
+                currentLang,
+                searchParams.get("country_code") ?? null
+              )
+            }
           />
         </Col>
         <Col md={6}>
@@ -130,7 +136,13 @@ export default function FundingRankingCoordination() {
             config={configChart2b}
             legend={null}
             options={optionCoordinationNumberSuccessRate(prepareData(data, "total_coordination_number_successful"))}
-            renderData={() => null} // TODO: add data table
+            renderData={() =>
+              renderDataTableCoordinationSuccessRate(
+                prepareData(data, "total_coordination_number_successful"),
+                currentLang,
+                searchParams.get("country_code") ?? null
+              )
+            }
           />
         </Col>
         <Col md={12} className="chart-footer">

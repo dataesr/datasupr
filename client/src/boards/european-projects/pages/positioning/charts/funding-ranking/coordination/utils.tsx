@@ -126,3 +126,134 @@ export function readingKey(data) {
     ),
   };
 }
+export function renderDataTableCoordination(data, currentLang, selectedCountryCode) {
+  if (!data || data.length === 0) return null;
+
+  const labels = {
+    caption:
+      currentLang === "fr"
+        ? "Classement des pays selon le nombre de coordinations"
+        : "Ranking of countries by number of coordinations",
+    position: currentLang === "fr" ? "Position" : "Position",
+    country: currentLang === "fr" ? "Pays" : "Country",
+    coordEvaluated: currentLang === "fr" ? "Coordinations déposées" : "Submitted coordinations",
+    rankEvaluated: currentLang === "fr" ? "Rang (déposées)" : "Rank (submitted)",
+    coordSuccessful: currentLang === "fr" ? "Coordinations lauréates" : "Winning coordinations",
+    rankSuccessful: currentLang === "fr" ? "Rang (lauréates)" : "Rank (winning)",
+  };
+
+  return (
+    <div className="fr-table fr-table--bordered fr-table--sm">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table>
+              <caption className="fr-sr-only">{labels.caption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{labels.position}</th>
+                  <th scope="col">{labels.country}</th>
+                  <th scope="col" style={{ textAlign: "right" }}>{labels.coordEvaluated}</th>
+                  <th scope="col" style={{ textAlign: "right" }}>{labels.rankEvaluated}</th>
+                  <th scope="col" style={{ textAlign: "right" }}>{labels.coordSuccessful}</th>
+                  <th scope="col" style={{ textAlign: "right" }}>{labels.rankSuccessful}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((item, index) => {
+                  const countryName = currentLang === "fr" ? item.name_fr : item.name_en;
+                  const isSelectedCountry = item.id === selectedCountryCode;
+
+                  return (
+                    <tr 
+                      key={item.id} 
+                      style={isSelectedCountry ? { fontWeight: "bold" } : undefined}
+                      aria-current={isSelectedCountry ? "true" : undefined}
+                    >
+                      <th scope="row">{index + 1}</th>
+                      <td>{countryName}</td>
+                      <td style={{ textAlign: "right" }}>{item.total_coordination_number_evaluated}</td>
+                      <td style={{ textAlign: "right" }}>{item.rank_coordination_number_evaluated}e</td>
+                      <td style={{ textAlign: "right" }}>{item.total_coordination_number_successful}</td>
+                      <td style={{ textAlign: "right" }}>{item.rank_coordination_number_successful}e</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function renderDataTableCoordinationSuccessRate(data, currentLang, selectedCountryCode) {
+  if (!data || data.length === 0) return null;
+
+  // Calculer le taux moyen
+  const total = data.reduce((acc, el) => acc + el.ratio_coordination_number, 0);
+  const average = total / data.length;
+
+  const labels = {
+    caption:
+      currentLang === "fr"
+        ? "Taux de succès des coordinations par pays"
+        : "Coordination success rate by country",
+    position: currentLang === "fr" ? "Position" : "Position",
+    country: currentLang === "fr" ? "Pays" : "Country",
+    successRate: currentLang === "fr" ? "Taux de succès (%)" : "Success rate (%)",
+    vsAverage: currentLang === "fr" ? "vs Moyenne" : "vs Average",
+    average: currentLang === "fr" ? `Moyenne : ${average.toFixed(1)} %` : `Average: ${average.toFixed(1)} %`,
+  };
+
+  return (
+    <div className="fr-table fr-table--bordered fr-table--sm">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table>
+              <caption className="fr-sr-only">{labels.caption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{labels.position}</th>
+                  <th scope="col">{labels.country}</th>
+                  <th scope="col" style={{ textAlign: "right" }}>{labels.successRate}</th>
+                  <th scope="col" style={{ textAlign: "right" }}>{labels.vsAverage}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((item, index) => {
+                  const countryName = currentLang === "fr" ? item.name_fr : item.name_en;
+                  const isSelectedCountry = item.id === selectedCountryCode;
+                  const diff = item.ratio_coordination_number - average;
+                  const diffSign = diff >= 0 ? "+" : "";
+
+                  return (
+                    <tr 
+                      key={item.id} 
+                      style={isSelectedCountry ? { fontWeight: "bold" } : undefined}
+                      aria-current={isSelectedCountry ? "true" : undefined}
+                    >
+                      <th scope="row">{index + 1}</th>
+                      <td>{countryName}</td>
+                      <td style={{ textAlign: "right" }}>{item.ratio_coordination_number.toFixed(1)} %</td>
+                      <td style={{ textAlign: "right" }}>{diffSign}{diff.toFixed(1)} %</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={4} style={{ textAlign: "center", fontStyle: "italic" }}>
+                    {labels.average}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
