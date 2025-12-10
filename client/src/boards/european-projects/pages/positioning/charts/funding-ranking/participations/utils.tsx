@@ -125,3 +125,144 @@ export function readingKey(data) {
     ),
   };
 }
+
+export function renderDataTableParticipations(data, currentLang, selectedCountryCode) {
+  if (!data || data.length === 0) return null;
+
+  const labels = {
+    caption: currentLang === "fr" ? "Classement des pays selon le nombre de participants" : "Ranking of countries by number of participants",
+    position: currentLang === "fr" ? "Position" : "Position",
+    country: currentLang === "fr" ? "Pays" : "Country",
+    candidats: currentLang === "fr" ? "Candidats" : "Candidates",
+    rankCandidats: currentLang === "fr" ? "Rang (candidats)" : "Rank (candidates)",
+    participants: currentLang === "fr" ? "Participants" : "Participants",
+    rankParticipants: currentLang === "fr" ? "Rang (participants)" : "Rank (participants)",
+  };
+
+  return (
+    <div className="fr-table fr-table--bordered fr-table--sm">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table>
+              <caption className="fr-sr-only">{labels.caption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{labels.position}</th>
+                  <th scope="col">{labels.country}</th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.candidats}
+                  </th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.rankCandidats}
+                  </th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.participants}
+                  </th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.rankParticipants}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((item, index) => {
+                  const countryName = currentLang === "fr" ? item.name_fr : item.name_en;
+                  const isSelectedCountry = item.id === selectedCountryCode;
+
+                  return (
+                    <tr
+                      key={item.id}
+                      style={isSelectedCountry ? { fontWeight: "bold" } : undefined}
+                      aria-current={isSelectedCountry ? "true" : undefined}
+                    >
+                      <th scope="row">{index + 1}</th>
+                      <td>{countryName}</td>
+                      <td style={{ textAlign: "right" }}>{item.total_number_involved_evaluated}</td>
+                      <td style={{ textAlign: "right" }}>{item.rank_involved_evaluated}e</td>
+                      <td style={{ textAlign: "right" }}>{item.total_number_involved_successful}</td>
+                      <td style={{ textAlign: "right" }}>{item.rank_involved_successful}e</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function renderDataTableParticipationsSuccessRate(data, currentLang, selectedCountryCode) {
+  if (!data || data.length === 0) return null;
+
+  // Calculer le taux moyen
+  const total = data.reduce((acc, el) => acc + el.ratio_involved, 0);
+  const average = total / data.length;
+
+  const labels = {
+    caption: currentLang === "fr" ? "Taux de succès des participants par pays" : "Participants success rate by country",
+    position: currentLang === "fr" ? "Position" : "Position",
+    country: currentLang === "fr" ? "Pays" : "Country",
+    successRate: currentLang === "fr" ? "Taux de succès (%)" : "Success rate (%)",
+    vsAverage: currentLang === "fr" ? "vs Moyenne" : "vs Average",
+    average: currentLang === "fr" ? `Moyenne : ${average.toFixed(1)} %` : `Average: ${average.toFixed(1)} %`,
+  };
+
+  return (
+    <div className="fr-table fr-table--bordered fr-table--sm">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table>
+              <caption className="fr-sr-only">{labels.caption}</caption>
+              <thead>
+                <tr>
+                  <th scope="col">{labels.position}</th>
+                  <th scope="col">{labels.country}</th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.successRate}
+                  </th>
+                  <th scope="col" style={{ textAlign: "right" }}>
+                    {labels.vsAverage}
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((item, index) => {
+                  const countryName = currentLang === "fr" ? item.name_fr : item.name_en;
+                  const isSelectedCountry = item.id === selectedCountryCode;
+                  const diff = item.ratio_involved - average;
+                  const diffSign = diff >= 0 ? "+" : "";
+
+                  return (
+                    <tr
+                      key={item.id}
+                      style={isSelectedCountry ? { fontWeight: "bold" } : undefined}
+                      aria-current={isSelectedCountry ? "true" : undefined}
+                    >
+                      <th scope="row">{index + 1}</th>
+                      <td>{countryName}</td>
+                      <td style={{ textAlign: "right" }}>{item.ratio_involved.toFixed(1)} %</td>
+                      <td style={{ textAlign: "right" }}>
+                        {diffSign}
+                        {diff.toFixed(1)} %
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <td colSpan={4} style={{ textAlign: "center", fontStyle: "italic" }}>
+                    {labels.average}
+                  </td>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

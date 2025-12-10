@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
-import { readingKey, useGetParams } from "./utils";
+import { readingKey, useGetParams, renderDataTableParticipations, renderDataTableParticipationsSuccessRate } from "./utils";
 import optionsNumberInvolved from "./options-number_involved";
 import optionNumberInvolvedSuccessRate from "./options-number_involved-succes-rate";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
@@ -120,7 +120,13 @@ export default function FundingRankingParticipations() {
             config={configChart3a}
             legend={null}
             options={optionsNumberInvolved(prepareData(data, "total_number_involved_successful"), currentLang)}
-            renderData={() => null} // TODO: add data table
+            renderData={() =>
+              renderDataTableParticipations(
+                prepareData(data, "total_number_involved_successful"),
+                currentLang,
+                searchParams.get("country_code") ?? null
+              )
+            }
           />
         </Col>
         <Col>
@@ -131,7 +137,13 @@ export default function FundingRankingParticipations() {
             config={configChart3b}
             legend={null}
             options={optionNumberInvolvedSuccessRate(prepareData(data, "total_number_involved_successful"), currentLang)}
-            renderData={() => null} // TODO: add data table
+            renderData={() =>
+              renderDataTableParticipationsSuccessRate(
+                prepareData(data, "total_number_involved_successful"),
+                currentLang,
+                searchParams.get("country_code") ?? null
+              )
+            }
           />
         </Col>
         <Col md={12} className="chart-footer">
