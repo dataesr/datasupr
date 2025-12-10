@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Col, Container, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
 import { getData } from "./query";
-import { readingKey, useGetParams } from "./utils";
+import { readingKey, useGetParams, renderDataTableSubsidies, renderDataTableSuccessRate } from "./utils";
 import optionsSub from "./options";
 import optionSubSuccessRate from "./options-succes-rate";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
@@ -118,7 +118,7 @@ export default function FundingRankingSubsidies() {
             config={configChart1a}
             legend={null}
             options={optionsSub(prepareData(data, "total_successful"), currentLang)}
-            renderData={() => null} // TODO: add data table
+            renderData={() => renderDataTableSubsidies(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
         </Col>
         <Col>
@@ -129,7 +129,9 @@ export default function FundingRankingSubsidies() {
             config={configChart1b}
             legend={null}
             options={optionSubSuccessRate(prepareData(data, "total_successful"), currentLang)}
-            renderData={() => null} // TODO: add data table
+            renderData={() =>
+              renderDataTableSuccessRate(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)
+            }
           />
         </Col>
         <Col md={12} className="chart-footer">
