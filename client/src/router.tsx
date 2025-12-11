@@ -12,6 +12,7 @@ import GraduatesRoutes from "./boards/graduates/routes.tsx";
 import NotFoundPage from "./components/not-found-page.tsx";
 import FacultyMembersRoutes from "./boards/faculty-members/routes.tsx";
 import CookiePolicyPage from "./components/cookies/cookie-policy-page/index.tsx";
+import ScanRRoutes from "./boards/scanr/routes.tsx";
 
 export default function Router() {
   return (
@@ -26,6 +27,7 @@ export default function Router() {
       <Route path="/personnel-enseignant/*" element={<FacultyMembersRoutes />} />
       <Route path="/teds/*" element={<TedsRoutes />} />
       <Route path="/graduates/*" element={<GraduatesRoutes />} />
+      <Route path="/scanr/*" element={<ScanRRoutes />} />
       <Route path="/cookies" element={<CookiePolicyPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
