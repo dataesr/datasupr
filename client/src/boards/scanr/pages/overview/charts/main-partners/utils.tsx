@@ -1,0 +1,111 @@
+import { formatToMillions } from "../../../../../../utils/format";
+
+export function useGetParams() {
+  const params: string[] = [];
+
+  params.push(`country_code=FRA`);
+
+  return params.join("&");
+}
+
+export function getDefaultParams(searchParams) {
+  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
+
+  return params + "&stage=successful";
+}
+
+export function readingKey(data) {
+  const rondomPartner = data?.list?.[Math.floor(Math.random() * data.list.length)];
+  const partnerName = rondomPartner?.name || "unknown";
+  const partnerAcronym = rondomPartner?.acronym || "unknown";
+  const totalFundEur = rondomPartner?.total_fund_eur || 0;
+
+  return {
+    fr: (
+      <>
+        Dans le programme Horizon Europe,{" "}
+        <strong>
+          {partnerAcronym} ({partnerName})
+        </strong>{" "}
+        a reçu un total de <strong>{formatToMillions(totalFundEur)}</strong> de subventions.
+      </>
+    ),
+    en: (
+      <>
+        In the Horizon Europe programme,{" "}
+        <strong>
+          {partnerAcronym} ({partnerName})
+        </strong>{" "}
+        received a total of <strong>{formatToMillions(totalFundEur)}</strong> in grants.
+      </>
+    ),
+  };
+}
+
+/**
+ * Génère un composant de tableau accessible avec les données des principaux bénéficiaires
+ * @param data - Les données des principaux bénéficiaires
+ * @param currentLang - La langue actuelle ('fr' ou 'en')
+ * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
+ */
+export function renderDataTable(
+  data: { list: Array<{ id: string; name: string; acronym: string; country_name: string; total_fund_eur: number }> },
+  currentLang: string = "fr"
+) {
+  if (!data || !data.list || data.list.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
+      </div>
+    );
+  }
+
+  const formatToMillions = (value: number) => {
+    const millions = value / 1000000;
+    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", {
+      maximumFractionDigits: 2,
+      minimumFractionDigits: 2,
+    }).format(millions);
+  };
+
+  const labels = {
+    partner: currentLang === "fr" ? "Bénéficiaire" : "Beneficiary",
+    acronym: currentLang === "fr" ? "Acronyme" : "Acronym",
+    funding: currentLang === "fr" ? "Financement total" : "Total funding",
+    unit: "M€",
+    caption:
+      currentLang === "fr"
+        ? "Liste des principaux bénéficiaires récupérant 50% des financements (en millions d'euros)"
+        : "List of main beneficiaries receiving 50% of funding (in millions of euros)",
+  };
+
+  return (
+    <div style={{ width: "100%" }}>
+      <div className="fr-table-responsive">
+        <table className="fr-table fr-table--bordered fr-table--sm" style={{ width: "100%" }}>
+          <caption className="fr-sr-only">{labels.caption}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{labels.acronym}</th>
+              <th scope="col">{labels.partner}</th>
+              <th scope="col">{labels.funding}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.list.map((item, index) => (
+              <tr key={item.id || index}>
+                <th scope="row">{item.acronym || "—"}</th>
+                <td>{item.name}</td>
+                <td>
+                  <strong>
+                    {formatToMillions(item.total_fund_eur)} {labels.unit}
+                  </strong>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
