@@ -1,111 +1,107 @@
-import { formatToMillions } from "../../../../../../utils/format";
+// import translations from "../../charts-config.json";
+import { useQuery } from "@tanstack/react-query";
 
-export function useGetParams() {
-  const params: string[] = [];
+const { VITE_APP_SERVER_URL } = import.meta.env;
 
-  params.push(`country_code=FRA`);
-
-  return params.join("&");
-}
-
-export function getDefaultParams(searchParams) {
-  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
-
-  return params + "&stage=successful";
-}
-
-export function readingKey(data) {
-  const rondomPartner = data?.list?.[Math.floor(Math.random() * data.list.length)];
-  const partnerName = rondomPartner?.name || "unknown";
-  const partnerAcronym = rondomPartner?.acronym || "unknown";
-  const totalFundEur = rondomPartner?.total_fund_eur || 0;
-
+function getBuildQuery(bool: object, size: number) {
   return {
-    fr: (
-      <>
-        Dans le programme Horizon Europe,{" "}
-        <strong>
-          {partnerAcronym} ({partnerName})
-        </strong>{" "}
-        a reçu un total de <strong>{formatToMillions(totalFundEur)}</strong> de subventions.
-      </>
-    ),
-    en: (
-      <>
-        In the Horizon Europe programme,{" "}
-        <strong>
-          {partnerAcronym} ({partnerName})
-        </strong>{" "}
-        received a total of <strong>{formatToMillions(totalFundEur)}</strong> in grants.
-      </>
-    ),
+    size: 0,
+    query: {
+      bool,
+    },
+    aggs: {
+      by_structure: {
+        terms: {
+          field: "participants.structure.id_name.keyword",
+          size,
+        },
+      },
+    },
+    track_total_hits: true,
   };
 }
 
-/**
- * Génère un composant de tableau accessible avec les données des principaux bénéficiaires
- * @param data - Les données des principaux bénéficiaires
- * @param currentLang - La langue actuelle ('fr' ou 'en')
- * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
- */
-export function renderDataTable(
-  data: { list: Array<{ id: string; name: string; acronym: string; country_name: string; total_fund_eur: number }> },
-  currentLang: string = "fr"
-) {
-  if (!data || !data.list || data.list.length === 0) {
-    return (
-      <div className="fr-text--center fr-py-3w">
-        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
-      </div>
-    );
-  }
+function useQueryResponse(body: object, s: number, i: string) {
+  const { data, isLoading } = useQuery({
+    queryKey: [`scanr-lalilou-${i}`],
+    queryFn: () =>
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-projects`, {
+        body: JSON.stringify(getBuildQuery(body, s)),
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        method: "POST",
+      }).then((response) => response.json()),
+  });
+  return { data, isLoading };
+}
 
-  const formatToMillions = (value: number) => {
-    const millions = value / 1000000;
-    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", {
-      maximumFractionDigits: 2,
-      minimumFractionDigits: 2,
-    }).format(millions);
+
+function getGeneralOptions(title: any, categories: any, title_x_axis: any, title_y_axis: any) {
+  return {
+    title: { text: title },
+    chart: { type: "bar" },
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        colorByPoint: true,
+        dataLabels: {
+          enabled: true,
+          format: "{point.y}",
+        },
+      },
+    },
+    xAxis: { categories, title: { text: title_x_axis } },
+    yAxis: {
+      title: { text: title_y_axis },
+    },
+    credits: {
+      enabled: false,
+    },
   };
+}
 
-  const labels = {
-    partner: currentLang === "fr" ? "Bénéficiaire" : "Beneficiary",
-    acronym: currentLang === "fr" ? "Acronyme" : "Acronym",
-    funding: currentLang === "fr" ? "Financement total" : "Total funding",
-    unit: "M€",
-    caption:
-      currentLang === "fr"
-        ? "Liste des principaux bénéficiaires récupérant 50% des financements (en millions d'euros)"
-        : "List of main beneficiaries receiving 50% of funding (in millions of euros)",
-  };
-
-  return (
-    <div style={{ width: "100%" }}>
-      <div className="fr-table-responsive">
-        <table className="fr-table fr-table--bordered fr-table--sm" style={{ width: "100%" }}>
-          <caption className="fr-sr-only">{labels.caption}</caption>
-          <thead>
-            <tr>
-              <th scope="col">{labels.acronym}</th>
-              <th scope="col">{labels.partner}</th>
-              <th scope="col">{labels.funding}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.list.map((item, index) => (
-              <tr key={item.id || index}>
-                <th scope="row">{item.acronym || "—"}</th>
-                <td>{item.name}</td>
-                <td>
-                  <strong>
-                    {formatToMillions(item.total_fund_eur)} {labels.unit}
-                  </strong>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
+function getSeries(data: { aggregations: { by_structure: { buckets: any; }; }; }) {
+  const series = (data?.aggregations?.by_structure?.buckets ?? []).map(
+    (item: { key: string | number; doc_count: number; }) => ({
+      color: "#cccccc",
+      name: item.key.toString().split('_')[1].split('|')[0],
+      y: item.doc_count,
+    })
   );
+
+  const categories = series.map((item: { name: any; }) => item.name);
+
+  return { series, categories };
 }
+
+function getOptions(
+  series: any,
+  categories: any,
+  title: string,
+  format1: string,
+  format2: string,
+  title_x_axis: string,
+  title_y_axis: string
+) {
+  const generalOptions = getGeneralOptions(
+    title,
+    categories,
+    title_x_axis,
+    title_y_axis
+  );
+  return {
+    ...generalOptions,
+    tooltip: {
+      format: `<b>{point.name}</b> ${format1} <b>{point.y}</b> ${format2}`,
+    },
+    series: [{ data: series }],
+  };
+}
+
+export {
+  getSeries,
+  getOptions,
+  useQueryResponse,
+};

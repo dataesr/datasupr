@@ -2,7 +2,7 @@ import { Routes, Route, Navigate, useSearchParams } from "react-router-dom";
 
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 import Home from "./pages//home/index.tsx";
-// import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
+import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
 
 import "./styles.scss";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
@@ -30,11 +30,11 @@ export default function ScanRRoutes() {
   return (
     <Routes>
       <Route element={<GlobalLayout languageSelector />}>
-        <Route index element={<Navigate to="accueil" replace />} />
+        <Route index element={<Navigate to="home" replace />} />
         <Route path="home" element={<RouteWithTitle titleKey="home" element={<Home />} />} />
-        {/* <Route element={<SidemenuLayout />}> */}
-        <Route path="overview" element={<RouteWithTitle titleKey="overview" element={<Overview />} />} />
-        {/* </Route> */}
+        <Route element={<SidemenuLayout />}>
+          <Route path="overview" element={<RouteWithTitle titleKey="overview" element={<Overview />} />} />
+        </Route>
       </Route>
     </Routes>
   );

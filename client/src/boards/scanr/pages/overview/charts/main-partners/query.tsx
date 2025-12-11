@@ -1,10 +1,19 @@
-const { VITE_APP_SERVER_URL } = import.meta.env;
+const bool = {
+  filter: [
+    {
+      range: {
+        year: {
+          gte: 2022,
+          lte: 2024
+        }
+      }
+    },
+    {
+      term: {
+        "participants.structure.isFrench": true
+      }
+    }
+  ]
+};
 
-export async function GetData(params: string) {
-  let url = `${VITE_APP_SERVER_URL}/european-projects/beneficiaries/main-beneficiaries-pct-50`;
-  if (params !== "") {
-    url = `${VITE_APP_SERVER_URL}/european-projects/beneficiaries/main-beneficiaries-pct-50?${params}`;
-  }
-
-  return fetch(url).then((response) => response.json());
-}
+export default bool;

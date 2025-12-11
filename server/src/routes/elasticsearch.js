@@ -4,11 +4,17 @@ const router = new express.Router();
 
 router.route('/elasticsearch')
   .post(async (req, res) => {
+    const es_index = req?.query?.index;
+    const es_url = 'https://cluster-production.elasticsearch.dataesr.ovh';
     const query = req?.body ?? {};
-    const ES_URL = 'https://cluster-production.elasticsearch.dataesr.ovh';
-    const headers = new Headers({ 'Authorization': `Basic ${process.env.ES_TEDS_TOKEN}`, 'content-type': 'application/json' });
+    let auth_token = false;
+    if (es_index === "teds-bibliography") auth_token = `Basic ${process.env.ES_TOKEN_TEDS}`;
+    if (es_index === "scanr-projects") auth_token = `Basic ${process.env.ES_TOKEN_SCANR}`;
+    const headersTmp = { 'content-type': 'application/json' };
+    if (auth_token) headersTmp['Authorization'] = auth_token;
+    const headers = new Headers(headersTmp);
     const response = await fetch(
-      `${ES_URL}/${req?.query?.index}/_search`,
+      `${es_url}/${es_index}/_search`,
       { method: 'POST', headers, body: JSON.stringify(query) },
     );
     const data = await response.json();
