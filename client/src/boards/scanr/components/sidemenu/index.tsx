@@ -8,8 +8,8 @@ export default function CustomSideMenu() {
       <Link href="#funded-structures">
         Nombre de financements par structure
       </Link>
-      <Link href="#funded-structures-amount">
-        Montants de financement par structure
+      <Link href="#top-funders-by-structure">
+        Top financeurs par structure
       </Link>
     </SideMenu>
   );
