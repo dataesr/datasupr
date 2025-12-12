@@ -1,47 +1,7 @@
-// import translations from "../../charts-config.json";
-import { useQuery } from "@tanstack/react-query";
-
-const { VITE_APP_SERVER_URL } = import.meta.env;
-
-function getBuildQuery(bool: object, size: number) {
-  return {
-    size: 0,
-    query: {
-      bool,
-    },
-    aggs: {
-      by_structure: {
-        terms: {
-          field: "participants.structure.id_name.keyword",
-          size,
-        },
-      },
-    },
-    track_total_hits: true,
-  };
-}
-
-function useQueryResponse(body: object, s: number, i: string) {
-  const { data, isLoading } = useQuery({
-    queryKey: [`scanr-lalilou-${i}`],
-    queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-projects`, {
-        body: JSON.stringify(getBuildQuery(body, s)),
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        method: "POST",
-      }).then((response) => response.json()),
-  });
-  return { data, isLoading };
-}
-
-
 function getGeneralOptions(title: any, categories: any, title_x_axis: any, title_y_axis: any) {
   return {
     title: { text: title },
-    chart: { type: "bar" },
+    chart: { height: "600px", type: "bar" },
     legend: { enabled: false },
     plotOptions: {
       column: {
@@ -103,5 +63,4 @@ function getOptions(
 export {
   getSeries,
   getOptions,
-  useQueryResponse,
 };

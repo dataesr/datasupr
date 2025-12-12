@@ -1,5 +1,5 @@
 import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
-import MainPartners from "./charts/main-partners";
+import FundedStructures from "./charts/funded-structures";
 
 export default function Overview() {
   return (
@@ -7,7 +7,7 @@ export default function Overview() {
       <Title>Overview Page</Title>
       <Row>
         <Col>
-          <MainPartners />
+          <FundedStructures />
         </Col>
       </Row>
     </Container>
