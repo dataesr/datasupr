@@ -37,6 +37,11 @@ export default function FundedStructuresBudget() {
             term: {
               participant_status: "active"
             }
+          },
+          {
+            term: {
+              participant_type: "institution"
+            }
           }
         ]
       }
@@ -76,7 +81,7 @@ export default function FundedStructuresBudget() {
   const config = {
     id: "fundedStructuresBudget",
     integrationURL: "/integration?chart_id=fundedStructuresBudget",
-    title: `Top 25 des structures françaises par montants des financements des projets auxquels elles participent sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    title: `Top 25 des structures françaises par montant des financements des projets auxquels elles participent sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = getOptions(
@@ -84,7 +89,7 @@ export default function FundedStructuresBudget() {
     categories,
     '',
     'a participé à des projets financés au total ',
-    `sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    `€ sur la période ${selectedYearStart}-${selectedYearEnd}`,
     '',
     'Montant des financements des projets auxquels la structure a participé',
   );

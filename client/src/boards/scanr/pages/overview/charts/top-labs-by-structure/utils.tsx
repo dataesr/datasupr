@@ -25,12 +25,10 @@ function getGeneralOptions(title: any, categories: any, title_x_axis: any, title
 
 function getSeries(data: { aggregations: { by_funder_type: { buckets: any; }; }; }) {
   const series = (data?.aggregations?.by_funder_type?.buckets ?? []).map(
-    (item: {
-      unique_projects: any; key: string; doc_count: number;
-}) => ({
+    (item: { key: string; doc_count: number; }) => ({
       color: "#cccccc",
       name: item.key,
-      y: item.unique_projects.value,
+      y: item.doc_count,
     })
   );
 

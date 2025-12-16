@@ -10,7 +10,7 @@ import { getOptions, getSeries } from "./utils.tsx";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function FundedStructures() {
+export default function FundedLabs() {
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
@@ -40,7 +40,7 @@ export default function FundedStructures() {
           },
           {
             term: {
-              participant_type: "institution"
+              participant_type: "laboratory"
             }
           }
         ]
@@ -57,7 +57,7 @@ export default function FundedStructures() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: [`scanr-funded-structures`, selectedYearEnd, selectedYearStart],
+    queryKey: [`scanr-funded-labs`, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -72,9 +72,9 @@ export default function FundedStructures() {
   const { categories, series } = getSeries(data);
 
   const config = {
-    id: "fundedStructures",
-    integrationURL: "/integration?chart_id=fundedStructures",
-    title: `Top 25 des structures françaises par nombre de financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    id: "fundedLabs",
+    integrationURL: "/integration?chart_id=fundedLabs",
+    title: `Top 25 des laboratoires français par nombre de financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = getOptions(
@@ -90,7 +90,7 @@ export default function FundedStructures() {
   const years = Array.from(Array(25).keys()).map((item) => item + 2000);
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="funded-structures">
+    <div className={`chart-container chart-container--${color}`} id="funded-labs">
       <Row gutters className="form-row">
         <Col md={6}>
           <select

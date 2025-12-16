@@ -31,7 +31,22 @@ export default function TopFundersByStructure() {
           },
           {
             term: {
-              participant_id: selectedStructure
+              participant_isFrench: true
+            }
+          },
+          {
+            term: {
+              participant_status: "active"
+            }
+          },
+          {
+            term: {
+              participant_type: "institution"
+            }
+          },
+          {
+            term: {
+              "participant_id.keyword": selectedStructure
             }
           }
         ]
@@ -41,6 +56,13 @@ export default function TopFundersByStructure() {
       by_funder_type: {
         terms: {
           field: "project_type.keyword"
+        },
+        aggs: {
+          unique_projects: {
+            cardinality: {
+              field: "project_id.keyword"
+            }
+          }
         }
       }
     }

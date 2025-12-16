@@ -10,7 +10,7 @@ import { getOptions, getSeries } from "./utils.tsx";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function FundedStructures() {
+export default function FundedStructuresEurope() {
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
@@ -30,7 +30,7 @@ export default function FundedStructures() {
           },
           {
             term: {
-              participant_isFrench: true
+              participant_isFrench: false
             }
           },
           {
@@ -57,7 +57,7 @@ export default function FundedStructures() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: [`scanr-funded-structures`, selectedYearEnd, selectedYearStart],
+    queryKey: [`scanr-funded-structures-europe`, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -72,9 +72,9 @@ export default function FundedStructures() {
   const { categories, series } = getSeries(data);
 
   const config = {
-    id: "fundedStructures",
-    integrationURL: "/integration?chart_id=fundedStructures",
-    title: `Top 25 des structures françaises par nombre de financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    id: "fundedStructuresEurope",
+    integrationURL: "/integration?chart_id=fundedStructuresEurope",
+    title: `Top 25 des structures NON françaises par nombre de financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = getOptions(

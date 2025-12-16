@@ -23,16 +23,16 @@ function getGeneralOptions(title: any, categories: any, title_x_axis: any, title
   };
 }
 
-function getSeries(data: { aggregations: { by_funder_type: { buckets: any; }; }; }) {
-  const series = (data?.aggregations?.by_funder_type?.buckets ?? []).map(
+function getSeries(data: { aggregations: { by_participant: { buckets: any; }; }; }) {
+  const series = (data?.aggregations?.by_participant?.buckets ?? []).map(
     (item: {
-      unique_projects: any; key: string; doc_count: number;
+      sum_budget: any; key: string | number; doc_count: number; 
 }) => ({
       color: "#cccccc",
-      name: item.key,
-      y: item.unique_projects.value,
+      name: item.key.toString().split('_')[1].split('|')[0],
+      y: item.sum_budget.value,
     })
-  );
+  ).sort((a, b) => b.y - a.y);
 
   const categories = series.map((item: { name: any; }) => item.name);
 
