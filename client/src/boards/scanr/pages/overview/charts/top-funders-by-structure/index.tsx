@@ -13,7 +13,7 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 export default function TopFundersByStructure() {
   const [selectedStructure, setSelectedStructure] = useState<string>("180089013");
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
-  const [selectedYearStart, setSelectedYearStart] = useState<string>("2000");
+  const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
 
   const body = {
@@ -23,7 +23,7 @@ export default function TopFundersByStructure() {
         filter: [
           {
             range: {
-              year: {
+              project_year: {
                 gte: selectedYearStart,
                 lte: selectedYearEnd
               }
@@ -31,16 +31,16 @@ export default function TopFundersByStructure() {
           },
           {
             term: {
-              "participants.structure.id": selectedStructure
+              participant_id: selectedStructure
             }
           }
         ]
       }
     },
     aggs: {
-      by_funder: {
+      by_funder_type: {
         terms: {
-          field: "type.keyword"
+          field: "project_type.keyword"
         }
       }
     }
@@ -49,7 +49,7 @@ export default function TopFundersByStructure() {
   const { data, isLoading } = useQuery({
     queryKey: [`scanr-top-funders-by-structure`, selectedStructure, selectedYearEnd, selectedYearStart],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-projects`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -59,11 +59,11 @@ export default function TopFundersByStructure() {
       }).then((response) => response.json()),
   });
   if (isLoading || !data) return <DefaultSkeleton />;
-  const { series, categories } = getSeries(data);
+  const { categories, series } = getSeries(data);
 
   const config = {
-    id: "fundedStructures",
-    integrationURL: "/scanr/components/pages/overview/charts/top-funders-by-structure",
+    id: "topFundersByStructure",
+    integrationURL: "/integration?chart_id=topFundersByStructure",
     title: `Principaux financeurs pour ${selectedStructure} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 

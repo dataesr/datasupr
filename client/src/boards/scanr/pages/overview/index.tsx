@@ -1,6 +1,7 @@
 import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
 
 import FundedStructures from "./charts/funded-structures";
+import FundedStructuresBudget from "./charts/funded-structures-budget";
 import TopFundersByStructure from "./charts/top-funders-by-structure";
 
 export default function Overview() {
@@ -10,6 +11,11 @@ export default function Overview() {
       <Row gutters>
         <Col>
           <FundedStructures />
+        </Col>
+      </Row>
+      <Row gutters>
+        <Col>
+          <FundedStructuresBudget />
         </Col>
       </Row>
       <Row gutters>

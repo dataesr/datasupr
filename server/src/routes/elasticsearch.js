@@ -9,7 +9,7 @@ router.route('/elasticsearch')
     const query = req?.body ?? {};
     let auth_token = false;
     if (es_index === "teds-bibliography") auth_token = `Basic ${process.env.ES_TOKEN_TEDS}`;
-    if (es_index === "scanr-projects") auth_token = `Basic ${process.env.ES_TOKEN_SCANR}`;
+    if (es_index === "scanr-participations") auth_token = `Basic ${process.env.ES_TOKEN_SCANR}`;
     const headersTmp = { 'content-type': 'application/json' };
     if (auth_token) headersTmp['Authorization'] = auth_token;
     const headers = new Headers(headersTmp);

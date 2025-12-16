@@ -10,7 +10,7 @@ import { getOptions, getSeries } from "./utils.tsx";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function FundedStructures() {
+export default function FundedStructuresBudget() {
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
@@ -46,13 +46,20 @@ export default function FundedStructures() {
         terms: {
           field: "participant_id_name.keyword",
           size: 25
+        },
+        aggs: {
+          sum_budget: {
+            sum: {
+              field: "project_budgetTotal"
+            }
+          }
         }
       }
     }
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: [`scanr-funded-structures`, selectedYearEnd, selectedYearStart],
+    queryKey: [`scanr-funded-structures-budget`, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -67,25 +74,25 @@ export default function FundedStructures() {
   const { categories, series } = getSeries(data);
 
   const config = {
-    id: "fundedStructures",
-    integrationURL: "/integration?chart_id=fundedStructures",
-    title: `Top 25 des structures françaises par nombre de financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    id: "fundedStructuresBudget",
+    integrationURL: "/integration?chart_id=fundedStructuresBudget",
+    title: `Top 25 des structures françaises par montants des financements des projets auxquels elles participent sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = getOptions(
     series,
     categories,
     '',
-    'a obtenu',
-    `financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    'a participé à des projets financés au total ',
+    `sur la période ${selectedYearStart}-${selectedYearEnd}`,
     '',
-    'Nombre de projets financés',
+    'Montant des financements des projets auxquels la structure a participé',
   );
 
   const years = Array.from(Array(25).keys()).map((item) => item + 2000);
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="funded-structures">
+    <div className={`chart-container chart-container--${color}`} id="funded-structures-budget">
       <Row gutters className="form-row">
         <Col md={6}>
           <select

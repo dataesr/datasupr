@@ -25,12 +25,14 @@ function getGeneralOptions(title: any, categories: any, title_x_axis: any, title
 
 function getSeries(data: { aggregations: { by_participant: { buckets: any; }; }; }) {
   const series = (data?.aggregations?.by_participant?.buckets ?? []).map(
-    (item: { key: string | number; doc_count: number; }) => ({
+    (item: {
+      sum_budget: any; key: string | number; doc_count: number; 
+}) => ({
       color: "#cccccc",
       name: item.key.toString().split('_')[1].split('|')[0],
-      y: item.doc_count,
+      y: item.sum_budget.value,
     })
-  );
+  ).sort((a, b) => b.y - a.y);
 
   const categories = series.map((item: { name: any; }) => item.name);
 

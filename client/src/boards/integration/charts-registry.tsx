@@ -28,6 +28,11 @@ export const chartsRegistry = {
   countriesRanking: lazy(() => import("../european-projects/pages/evolution-pcri/charts/countries-ranking")),
   fundingByCountry: lazy(() => import("../european-projects/pages/evolution-pcri/charts/funding-by-country")),
   efficiencyScatter: lazy(() => import("../european-projects/pages/evolution-pcri/charts/efficiency-scatter")),
+
+  // scanR
+  fundedStructures: lazy(() => import("../scanr/pages/overview/charts/funded-structures")),
+  fundedStructuresBudget: lazy(() => import("../scanr/pages/overview/charts/funded-structures-budget")),
+  topFundersByStructure: lazy(() => import("../scanr/pages/overview/charts/top-funders-by-structure")),
 };
 
 export type ChartId = keyof typeof chartsRegistry;

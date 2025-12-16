@@ -3,6 +3,7 @@ function getGeneralOptions(title: any, categories: any, title_x_axis: any, title
     title: { text: title },
     chart: { height: "600px", type: "bar" },
     legend: { enabled: false },
+    exporting: { enabled: false },
     plotOptions: {
       column: {
         colorByPoint: true,
@@ -22,8 +23,8 @@ function getGeneralOptions(title: any, categories: any, title_x_axis: any, title
   };
 }
 
-function getSeries(data: { aggregations: { by_funder: { buckets: any; }; }; }) {
-  const series = (data?.aggregations?.by_funder?.buckets ?? []).map(
+function getSeries(data: { aggregations: { by_funder_type: { buckets: any; }; }; }) {
+  const series = (data?.aggregations?.by_funder_type?.buckets ?? []).map(
     (item: { key: string; doc_count: number; }) => ({
       color: "#cccccc",
       name: item.key,
@@ -33,7 +34,7 @@ function getSeries(data: { aggregations: { by_funder: { buckets: any; }; }; }) {
 
   const categories = series.map((item: { name: any; }) => item.name);
 
-  return { series, categories };
+  return { categories, series };
 }
 
 function getOptions(
