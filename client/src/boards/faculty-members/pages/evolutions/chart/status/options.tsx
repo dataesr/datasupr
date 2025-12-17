@@ -88,7 +88,7 @@ export function createStatusEvolutionOptions({
       shared: false,
       formatter: function () {
         const y = this.y || 0;
-        const pointIndex = this.point?.index || 0;
+        const pointIndex = this.index || 0;
 
         const total =
           (statusData.enseignant_chercheur[pointIndex] || 0) +

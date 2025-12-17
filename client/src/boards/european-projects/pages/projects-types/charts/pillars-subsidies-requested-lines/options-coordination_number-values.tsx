@@ -69,7 +69,7 @@ export default function Options(data) {
         },
         dataLabels: {
           enabled: true,
-          formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+          formatter: function (this: any) {
             return this.y as number;
           },
         },
@@ -78,9 +78,7 @@ export default function Options(data) {
     series: [
       {
         name: "Europe plus innovante",
-        data: filteredData
-          .filter((item) => item.pilier_name_fr === "Europe plus innovante")
-          .map((item) => item.total_coordination_number_evaluated),
+        data: filteredData.filter((item) => item.pilier_name_fr === "Europe plus innovante").map((item) => item.total_coordination_number_evaluated),
         color: "#A558A0",
       },
       {
@@ -93,22 +91,14 @@ export default function Options(data) {
       {
         name: "Problématiques mondiales et compétitivité industrielle européenne",
         data: filteredData
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Problématiques mondiales et compétitivité industrielle européenne"
-          )
+          .filter((item) => item.pilier_name_fr === "Problématiques mondiales et compétitivité industrielle européenne")
           .map((item) => item.total_coordination_number_evaluated),
         color: "#223F3A",
       },
       {
         name: "Élargir la participation et renforcer l'espace européen de la recherche",
         data: filteredData
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Élargir la participation et renforcer l'espace européen de la recherche"
-          )
+          .filter((item) => item.pilier_name_fr === "Élargir la participation et renforcer l'espace européen de la recherche")
           .map((item) => item.total_coordination_number_evaluated),
         color: "#E4794A",
       },
@@ -116,9 +106,7 @@ export default function Options(data) {
       {
         name: "Europe plus innovante",
         xAxis: 1,
-        data: filteredData
-          .filter((item) => item.pilier_name_fr === "Europe plus innovante")
-          .map((item) => item.total_coordination_number_successful),
+        data: filteredData.filter((item) => item.pilier_name_fr === "Europe plus innovante").map((item) => item.total_coordination_number_successful),
         color: "#A558A0",
       },
       {
@@ -133,11 +121,7 @@ export default function Options(data) {
         name: "Problématiques mondiales et compétitivité industrielle européenne",
         xAxis: 1,
         data: filteredData
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Problématiques mondiales et compétitivité industrielle européenne"
-          )
+          .filter((item) => item.pilier_name_fr === "Problématiques mondiales et compétitivité industrielle européenne")
           .map((item) => item.total_coordination_number_successful),
         color: "#223F3A",
       },
@@ -145,11 +129,7 @@ export default function Options(data) {
         name: "Élargir la participation et renforcer l'espace européen de la recherche",
         xAxis: 1,
         data: filteredData
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Élargir la participation et renforcer l'espace européen de la recherche"
-          )
+          .filter((item) => item.pilier_name_fr === "Élargir la participation et renforcer l'espace européen de la recherche")
           .map((item) => item.total_coordination_number_successful),
         color: "#E4794A",
       },

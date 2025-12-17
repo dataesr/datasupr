@@ -69,7 +69,7 @@ export default function Options(data) {
         },
         dataLabels: {
           enabled: true,
-          formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+          formatter: function (this: any) {
             return (this.y as number).toFixed(1);
           },
         },
@@ -78,37 +78,25 @@ export default function Options(data) {
     series: [
       {
         name: "Europe plus innovante",
-        data: filteredData
-          .filter((item) => item.pilier_name_fr === "Europe plus innovante")
-          .map((item) => item.total_evaluated / 1000000),
+        data: filteredData.filter((item) => item.pilier_name_fr === "Europe plus innovante").map((item) => item.total_evaluated / 1000000),
         color: "#A558A0",
       },
       {
         name: "Excellence scientifique",
-        data: filteredData
-          .filter((item) => item.pilier_name_fr === "Excellence scientifique")
-          .map((item) => item.total_evaluated / 1000000),
+        data: filteredData.filter((item) => item.pilier_name_fr === "Excellence scientifique").map((item) => item.total_evaluated / 1000000),
         color: "#21AB8E",
       },
       {
         name: "Problématiques mondiales et compétitivité industrielle européenne",
         data: filteredData
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Problématiques mondiales et compétitivité industrielle européenne"
-          )
+          .filter((item) => item.pilier_name_fr === "Problématiques mondiales et compétitivité industrielle européenne")
           .map((item) => item.total_evaluated / 1000000),
         color: "#223F3A",
       },
       {
         name: "Élargir la participation et renforcer l'espace européen de la recherche",
         data: filteredData
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Élargir la participation et renforcer l'espace européen de la recherche"
-          )
+          .filter((item) => item.pilier_name_fr === "Élargir la participation et renforcer l'espace européen de la recherche")
           .map((item) => item.total_evaluated / 1000000),
         color: "#E4794A",
       },
@@ -116,28 +104,20 @@ export default function Options(data) {
       {
         name: "Europe plus innovante",
         xAxis: 1,
-        data: filteredData
-          .filter((item) => item.pilier_name_fr === "Europe plus innovante")
-          .map((item) => item.total_successful / 1000000),
+        data: filteredData.filter((item) => item.pilier_name_fr === "Europe plus innovante").map((item) => item.total_successful / 1000000),
         color: "#A558A0",
       },
       {
         name: "Excellence scientifique",
         xAxis: 1,
-        data: filteredData
-          .filter((item) => item.pilier_name_fr === "Excellence scientifique")
-          .map((item) => item.total_successful / 1000000),
+        data: filteredData.filter((item) => item.pilier_name_fr === "Excellence scientifique").map((item) => item.total_successful / 1000000),
         color: "#21AB8E",
       },
       {
         name: "Problématiques mondiales et compétitivité industrielle européenne",
         xAxis: 1,
         data: filteredData
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Problématiques mondiales et compétitivité industrielle européenne"
-          )
+          .filter((item) => item.pilier_name_fr === "Problématiques mondiales et compétitivité industrielle européenne")
           .map((item) => item.total_successful / 1000000),
         color: "#223F3A",
       },
@@ -145,11 +125,7 @@ export default function Options(data) {
         name: "Élargir la participation et renforcer l'espace européen de la recherche",
         xAxis: 1,
         data: filteredData
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Élargir la participation et renforcer l'espace européen de la recherche"
-          )
+          .filter((item) => item.pilier_name_fr === "Élargir la participation et renforcer l'espace européen de la recherche")
           .map((item) => item.total_successful / 1000000),
         color: "#E4794A",
       },

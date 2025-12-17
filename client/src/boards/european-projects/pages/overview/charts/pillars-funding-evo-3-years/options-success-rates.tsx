@@ -58,7 +58,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
           },
           dataLabels: {
             enabled: true,
-            formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+            formatter: function () {
               return `${Number(this.y).toFixed(1)}%`;
             },
           },
@@ -66,7 +66,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       },
       tooltip: {
         shared: true,
-        formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+        formatter: function () {
           let s = `<b>${this.x}</b>`; // annee
 
           this.points?.forEach((point) => {

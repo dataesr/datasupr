@@ -155,7 +155,7 @@ export const createCnuGroupsChartOptions = (
         };
       },
       formatter: function () {
-        const point = this.point as Highcharts.Point & DataPoint;
+        const point = this as Highcharts.Point & DataPoint;
         const disciplineInfo = groupedData[point.disciplineIndex];
         const disciplineTotal = disciplineInfo.totalCount;
         const disciplineName = disciplineInfo.discipline;

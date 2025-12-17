@@ -69,7 +69,7 @@ export const createBubbleOptions = ({
     tooltip: {
       useHTML: true,
       formatter: function () {
-        const point = this.point as unknown as BubbleData;
+        const point = this as unknown as BubbleData;
         const femalePercent =
           point.totalCount > 0
             ? Math.round((point.femaleCount / point.totalCount) * 100)

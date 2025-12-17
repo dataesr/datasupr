@@ -198,7 +198,7 @@ export const createAgeCategoryOptions = (
     },
     tooltip: {
       formatter: function () {
-        const point = this.point as Highcharts.Point & {
+        const point = this as Highcharts.Point & {
           count: number;
           ageClass: string;
           categoryName: string;

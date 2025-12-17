@@ -9,7 +9,6 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useSearchParams } from "react-router-dom";
 
-import Highcharts from "highcharts";
 import "highcharts/highcharts-more";
 
 import i18nGlobal from "../../../../i18n-global.json";

@@ -29,7 +29,7 @@ export default function Options(data) {
       },
     },
     tooltip: {
-      formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+      formatter: function (this: any) {
         return (this.x ?? "") + " : " + (this.y as number).toFixed(1) + " %";
       },
     },
@@ -42,22 +42,12 @@ export default function Options(data) {
     series: [
       {
         name: "Projets évalués",
-        data: filteredData.map(
-          (item) =>
-            (item.total_evaluated /
-              data.all.find((el) => el.id === item.id).total_evaluated) *
-            100
-        ),
+        data: filteredData.map((item) => (item.total_evaluated / data.all.find((el) => el.id === item.id).total_evaluated) * 100),
         color: "#009099",
       },
       {
         name: "Projets lauréats",
-        data: filteredData.map(
-          (item) =>
-            (item.total_successful /
-              data.all.find((el) => el.id === item.id).total_successful) *
-            100
-        ),
+        data: filteredData.map((item) => (item.total_successful / data.all.find((el) => el.id === item.id).total_successful) * 100),
         color: "#233E41",
       },
     ],

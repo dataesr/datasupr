@@ -1,6 +1,5 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import Highcharts from "highcharts";
 import "highcharts/modules/treemap";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { useFacultyMembersCNU } from "../../../../api/use-cnu";

@@ -67,7 +67,7 @@ export const createCategoryEvolutionOptions = (
         let tooltipHtml = `<b>Année: ${this.x}</b><br/>`;
 
         this.points?.forEach((point) => {
-          const customData = point.point.options as EvolutionSeriesDataPoint;
+          const customData = point.options as EvolutionSeriesDataPoint;
 
           const total = customData.y?.toLocaleString() || 0;
           const male = customData.maleCount?.toLocaleString() || 0;

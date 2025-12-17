@@ -88,7 +88,7 @@ export function createTrendsOptions({ years, chartData }: TrendsOptionsParams) {
       shared: false,
       formatter: function () {
         const y = this.y || 0;
-        const pointIndex = this.point?.index || 0;
+        const pointIndex = this.index || 0;
         const total = totalData[pointIndex] || 1;
         const percent = ((y / total) * 100).toFixed(1);
 

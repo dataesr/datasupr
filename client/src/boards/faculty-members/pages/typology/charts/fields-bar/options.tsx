@@ -136,16 +136,16 @@ export const createBarChartOptions = ({
       fontSize: "14px",
     },
     formatter: function () {
-      const itemIndex = this.point.index!;
+      const itemIndex = this.index!;
       const itemData = sortedItems[itemIndex];
       const isSelected = itemData?.isSelected;
 
       let valueDisplay = "";
-      if (typeof this.point.y === "number") {
+      if (typeof this.y === "number") {
         if (stackType === "percent") {
-          valueDisplay = `${this.point.y.toFixed(0)}&nbsp;%`;
+          valueDisplay = `${this.y.toFixed(0)}&nbsp;%`;
         } else {
-          valueDisplay = this.point.y.toLocaleString("fr-FR");
+          valueDisplay = this.y.toLocaleString("fr-FR");
         }
       }
 
@@ -154,9 +154,7 @@ export const createBarChartOptions = ({
         <div style="font-weight:bold;margin-bottom:8px;font-size:14px">
           <b>${itemData.itemName}${isSelected ? " (sélectionnée)" : ""}</b><br/>
         </div>
-        <span style="color:${this.point.color}">\u25CF</span> ${
-        this.series.name
-      }: ${valueDisplay}<br/>
+        <span style="color:${this.color}">\u25CF</span> ${this.series.name}: ${valueDisplay}<br/>
       Total: ${itemData.totalCount.toLocaleString()} enseignants
       </div>`;
     },

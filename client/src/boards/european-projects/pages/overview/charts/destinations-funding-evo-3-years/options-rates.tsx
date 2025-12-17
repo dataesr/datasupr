@@ -62,7 +62,7 @@ export default function Options(data, displayType): HighchartsOptions {
         },
         dataLabels: {
           enabled: true,
-          formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+          formatter: function () {
             return `${Number(this.y).toFixed(1)}%`;
           },
         },

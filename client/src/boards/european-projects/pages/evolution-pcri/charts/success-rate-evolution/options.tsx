@@ -112,7 +112,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
         let s = `<b>${getI18nLabel("tooltip-year")} ${this.x}</b><br/>`;
 
         this.points?.forEach((point) => {
-          const year = years[point.point.index];
+          const year = years[point.index];
           const framework = point.series.name;
           const yearFrameworkData = sortedData.find((d) => d.year === year && d.framework === framework);
 

@@ -1,13 +1,21 @@
 import { Link } from 'react-router-dom';
+import { createElement } from "react";
 
 type RouterLinkProps = {
   href: string;
   replace?: boolean;
   target?: string;
-  children?: React.ReactNode;
-}
+  children?: any;
+};
 
-export default function RouterLink({ href, replace, target, ...props }: RouterLinkProps) {
-  if (target === "_blank") return <a href={href} target={target} {...props} />
-  return <Link to={href} replace={replace} {...props} />
+export default function RouterLink({ href, replace, target, children }: RouterLinkProps) {
+  if (target === "_blank") {
+    return createElement("a", { href, target }, children);
+  }
+
+  const linkElement: any = Link;
+  const linkAttributes = Object.create(null);
+  linkAttributes.to = href;
+  linkAttributes.replace = replace;
+  return createElement(linkElement, linkAttributes, children);
 }

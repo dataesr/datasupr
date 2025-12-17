@@ -40,7 +40,7 @@ export default function Options(data: ChartData): Highcharts.Options | null {
       },
     },
     tooltip: {
-      formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+      formatter: function () {
         return (this.x ?? "") + " : " + (this.y as number).toFixed(1) + " %";
       },
     },

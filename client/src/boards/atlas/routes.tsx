@@ -14,7 +14,6 @@ import CookieManagement from "./pages/static-pages/cookie-management.tsx";
 import Contact from "./pages/static-pages/contact.tsx";
 import { AtlasProvider } from "./context.tsx";
 
-import Highcharts from "highcharts";
 import "highcharts/modules/accessibility";
 import "highcharts/modules/exporting";
 import "highcharts/modules/export-data";

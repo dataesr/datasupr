@@ -38,7 +38,7 @@ export const createTreemapOptions = ({
   },
   tooltip: {
     formatter: function () {
-      const point = this.point as unknown as TreemapData;
+      const point = this as unknown as TreemapData;
       const femalePercent = point.femaleCount
         ? Math.round(
             (point.femaleCount / (point.femaleCount + point.maleCount)) * 100
@@ -95,7 +95,7 @@ export const createTreemapOptions = ({
           color: "#000000",
         },
         formatter: function () {
-          const point = this.point as unknown as TreemapData;
+          const point = this as unknown as TreemapData;
           const femalePercent =
             point.value > 0
               ? Math.round((point.femaleCount / point.value) * 100)

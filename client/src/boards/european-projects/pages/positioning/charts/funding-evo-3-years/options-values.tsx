@@ -81,7 +81,7 @@ export default function Options(data, currentLang): HighchartsOptions {
         },
         dataLabels: {
           enabled: true,
-          formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+          formatter: function () {
             return formatToMillions(this.y as number);
           },
         },

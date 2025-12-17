@@ -1,11 +1,12 @@
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
 import * as turf from '@turf/turf';
+import type { Feature, Point, Polygon, MultiPolygon, Position, BBox } from "geojson";
 
 type PolygonCoordinatesProps = {
-  type: string,
-  coordinates: [number, number] | [number, number][]
-}[]
+  type: string;
+  coordinates: Position[][] | Position[][][];
+}[];
 
 export default function Map({
   autoCenter = false,
@@ -20,24 +21,26 @@ export default function Map({
   width: string,
   zoomControl: boolean,
 }) {
-  let poly;
-  let calculateCenter = {};
-  let bbox = [];
+  let poly: Feature<Polygon | MultiPolygon> | undefined;
+  let calculateCenter: Feature<Point> | undefined;
+  let bbox: BBox = [0, 0, 0, 0];
 
   if (polygonCoordinates) {
-    if (polygonCoordinates[0]?.type === 'MultiPolygon') {
-      poly = turf.multiPolygon(polygonCoordinates[0]?.coordinates);
-    } else if (polygonCoordinates[0]?.type === 'Polygon') {
-      poly = turf.polygon(polygonCoordinates[0]?.coordinates);
+    if (polygonCoordinates[0]?.type === "MultiPolygon") {
+      poly = turf.multiPolygon(polygonCoordinates[0]?.coordinates as Position[][][]);
+    } else if (polygonCoordinates[0]?.type === "Polygon") {
+      poly = turf.polygon(polygonCoordinates[0]?.coordinates as Position[][]);
     }
 
-    calculateCenter = turf.centerOfMass(poly);
-    bbox = turf.bbox(poly);
+    if (poly) {
+      calculateCenter = turf.centerOfMass(poly);
+      bbox = turf.bbox(poly);
+    }
   }
 
   let center = [46.71109, 1.719103] as [number, number];
-  if (autoCenter) {
-    center = (calculateCenter as turf.Feature<turf.Point>)?.geometry?.coordinates?.reverse();
+  if (autoCenter && calculateCenter) {
+    center = [...calculateCenter.geometry.coordinates].reverse() as [number, number];
   }
   if (center === undefined) {
     center = [46.71109, 1.719103];
@@ -45,8 +48,26 @@ export default function Map({
 
   // union of polygons
   if (polygonCoordinates.length > 1) {
-    const union = polygonCoordinates.reduce((acc, curr) => curr ? turf.union(acc, curr) : acc, polygonCoordinates[0])
-    bbox = turf.bbox(union);
+    let union: Feature<Polygon | MultiPolygon> | null = poly || null;
+    for (let i = 1; i < polygonCoordinates.length; i++) {
+      const curr = polygonCoordinates[i];
+      if (curr) {
+        let currFeature: Feature<Polygon | MultiPolygon>;
+        if (curr.type === "MultiPolygon") {
+          currFeature = turf.multiPolygon(curr.coordinates as Position[][][]);
+        } else {
+          currFeature = turf.polygon(curr.coordinates as Position[][]);
+        }
+        if (union) {
+          union = turf.union(turf.featureCollection([union, currFeature]));
+        } else {
+          union = currFeature;
+        }
+      }
+    }
+    if (union) {
+      bbox = turf.bbox(union);
+    }
   }
 
   const conditionalAttributes = {};

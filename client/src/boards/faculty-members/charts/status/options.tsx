@@ -132,26 +132,20 @@ export default function StatusOptions({
         if (this.points) {
           type CustomPoint = Highcharts.Point & { count?: number };
           this.points.forEach(function (point) {
-            totalSum += (point.point as CustomPoint).count ?? 0;
+            totalSum += (point as CustomPoint).count ?? 0;
           });
 
           this.points.forEach(function (point) {
             const seriesName = point.series.name;
-            const absoluteValue = (point.point as CustomPoint).count ?? 0;
+            const absoluteValue = (point as CustomPoint).count ?? 0;
             const percentage = (absoluteValue / totalSum) * 100;
 
             if (displayAsPercentage) {
-              s += `<span style="color:${
-                point.color
-              }">\u25CF</span> ${seriesName}: <b>${(point.y ?? 0).toFixed(
+              s += `<span style="color:${point.color}">\u25CF</span> ${seriesName}: <b>${(point.y ?? 0).toFixed(
                 1
-              )} %</b> (${absoluteValue.toLocaleString(
-                "fr-FR"
-              )} personnes)<br/>`;
+              )} %</b> (${absoluteValue.toLocaleString("fr-FR")} personnes)<br/>`;
             } else {
-              s += `<span style="color:${
-                point.color
-              }">\u25CF</span> ${seriesName}: <b>${absoluteValue.toLocaleString(
+              s += `<span style="color:${point.color}">\u25CF</span> ${seriesName}: <b>${absoluteValue.toLocaleString(
                 "fr-FR"
               )} personnes</b> (${percentage.toFixed(1)} %)<br/>`;
             }
@@ -170,9 +164,7 @@ export default function StatusOptions({
             if (displayAsPercentage) {
               return `${(this.y ?? 0).toFixed(1)} %`;
             } else {
-              return Number(
-                (this.point as { count?: number }).count
-              ).toLocaleString("fr-FR");
+              return Number((this as { count?: number }).count).toLocaleString("fr-FR");
             }
           },
           style: {

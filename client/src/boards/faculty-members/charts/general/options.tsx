@@ -129,7 +129,7 @@ export default function OptionsColumnChart({
             malePercentage: number;
           };
         }
-        const p = this.point as CustomPoint;
+        const p = this as CustomPoint;
         const valueDisplay =
           displayMode === "percentage"
             ? `${p.y?.toFixed(

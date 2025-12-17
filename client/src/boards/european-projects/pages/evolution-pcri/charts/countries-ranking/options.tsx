@@ -145,7 +145,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     },
     tooltip: {
       formatter: function () {
-        const frameworkIndex = this.point.index;
+        const frameworkIndex = this.index;
         const framework = frameworkOrder[frameworkIndex];
         const countryName = this.series.name;
         const rank = this.y;

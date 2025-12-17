@@ -85,7 +85,7 @@ export default function Options(data, currentLang): HighchartsOptions {
         },
         dataLabels: {
           enabled: true,
-          formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+          formatter: function () {
             return formatToPercent(this.y as number);
           },
         },

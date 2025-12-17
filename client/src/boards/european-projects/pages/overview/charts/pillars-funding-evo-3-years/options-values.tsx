@@ -76,7 +76,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         borderWidth: 0,
         dataLabels: {
           enabled: true,
-          formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+          formatter: function () {
             return displayType === "total_fund_eur" ? formatToMillions(this.y as number) : (this.y as number);
           },
         },
@@ -146,7 +146,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         },
         dataLabels: {
           enabled: true,
-          formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+          formatter: function () {
             return `${Number(this.y).toFixed(1)}%`;
           },
         },

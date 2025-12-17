@@ -71,7 +71,7 @@ export default function Options(data) {
         },
         dataLabels: {
           enabled: true,
-          formatter: function (this: Highcharts.TooltipFormatterContextObject) {
+          formatter: function (this: any) {
             return (this.y as number).toFixed(1) + " %";
           },
         },
@@ -86,11 +86,7 @@ export default function Options(data) {
             (item) =>
               Math.round(
                 ((item.total_evaluated * 100) /
-                  filteredDataAll.find(
-                    (itemAll) =>
-                      itemAll.year === item.year &&
-                      itemAll.pilier_name_fr === item.pilier_name_fr
-                  ).total_evaluated) *
+                  filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.pilier_name_fr === item.pilier_name_fr).total_evaluated) *
                   10
               ) / 10
           ),
@@ -103,49 +99,29 @@ export default function Options(data) {
           .map(
             (item) =>
               (item.total_evaluated * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_evaluated
+              filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.pilier_name_fr === item.pilier_name_fr).total_evaluated
           ),
         color: "#21AB8E",
       },
       {
         name: "Problématiques mondiales et compétitivité industrielle européenne",
         data: filteredDataCountry
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Problématiques mondiales et compétitivité industrielle européenne"
-          )
+          .filter((item) => item.pilier_name_fr === "Problématiques mondiales et compétitivité industrielle européenne")
           .map(
             (item) =>
               (item.total_evaluated * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_evaluated
+              filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.pilier_name_fr === item.pilier_name_fr).total_evaluated
           ),
         color: "#223F3A",
       },
       {
         name: "Élargir la participation et renforcer l'espace européen de la recherche",
         data: filteredDataCountry
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Élargir la participation et renforcer l'espace européen de la recherche"
-          )
+          .filter((item) => item.pilier_name_fr === "Élargir la participation et renforcer l'espace européen de la recherche")
           .map(
             (item) =>
               (item.total_evaluated * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_evaluated
+              filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.pilier_name_fr === item.pilier_name_fr).total_evaluated
           ),
         color: "#E4794A",
       },
@@ -159,11 +135,7 @@ export default function Options(data) {
             (item) =>
               Math.round(
                 ((item.total_successful * 100) /
-                  filteredDataAll.find(
-                    (itemAll) =>
-                      itemAll.year === item.year &&
-                      itemAll.pilier_name_fr === item.pilier_name_fr
-                  ).total_successful) *
+                  filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.pilier_name_fr === item.pilier_name_fr).total_successful) *
                   10
               ) / 10
           ),
@@ -177,11 +149,7 @@ export default function Options(data) {
           .map(
             (item) =>
               (item.total_successful * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_successful
+              filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.pilier_name_fr === item.pilier_name_fr).total_successful
           ),
         color: "#21AB8E",
       },
@@ -189,19 +157,11 @@ export default function Options(data) {
         name: "Problématiques mondiales et compétitivité industrielle européenne",
         xAxis: 1,
         data: filteredDataCountry
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Problématiques mondiales et compétitivité industrielle européenne"
-          )
+          .filter((item) => item.pilier_name_fr === "Problématiques mondiales et compétitivité industrielle européenne")
           .map(
             (item) =>
               (item.total_successful * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_successful
+              filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.pilier_name_fr === item.pilier_name_fr).total_successful
           ),
         color: "#223F3A",
       },
@@ -209,19 +169,11 @@ export default function Options(data) {
         name: "Élargir la participation et renforcer l'espace européen de la recherche",
         xAxis: 1,
         data: filteredDataCountry
-          .filter(
-            (item) =>
-              item.pilier_name_fr ===
-              "Élargir la participation et renforcer l'espace européen de la recherche"
-          )
+          .filter((item) => item.pilier_name_fr === "Élargir la participation et renforcer l'espace européen de la recherche")
           .map(
             (item) =>
               (item.total_successful * 100) /
-              filteredDataAll.find(
-                (itemAll) =>
-                  itemAll.year === item.year &&
-                  itemAll.pilier_name_fr === item.pilier_name_fr
-              ).total_successful
+              filteredDataAll.find((itemAll) => itemAll.year === item.year && itemAll.pilier_name_fr === item.pilier_name_fr).total_successful
           ),
         color: "#E4794A",
       },
