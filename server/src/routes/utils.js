@@ -35,14 +35,17 @@ export async function recreateIndex(collection, indexSpec, indexName) {
       }
 
       // Comparer les spécifications de l'index (pour les autres index)
-      const isSpecMatch = Object.entries(indexSpec).every(
-        ([key, value]) => index.key[key] === value
-      ) && Object.keys(index.key).length === Object.keys(indexSpec).length;
+      const isSpecMatch =
+        Object.entries(indexSpec).every(
+          ([key, value]) => index.key[key] === value
+        ) && Object.keys(index.key).length === Object.keys(indexSpec).length;
 
       if (isSpecMatch) {
         // Si l'index existe avec des spécifications identiques mais un nom différent, le supprimer
         await collection.dropIndex(index.name);
-        console.log(`Index existant ${index.name} supprimé car spécifications identiques`);
+        console.log(
+          `Index existant ${index.name} supprimé car spécifications identiques`
+        );
       }
     }
 

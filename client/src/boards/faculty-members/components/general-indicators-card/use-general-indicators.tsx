@@ -6,10 +6,12 @@ export const useGeneralIndicators = ({
   context,
   annee_universitaire,
   contextId,
+  enabled = true,
 }: {
   context: "structures" | "fields" | "geo";
   annee_universitaire?: string;
   contextId?: string;
+  enabled?: boolean;
 }) => {
   return useQuery({
     queryKey: ["general-indicators", context, annee_universitaire, contextId],
@@ -52,6 +54,8 @@ export const useGeneralIndicators = ({
       }
       return response.json();
     },
-    enabled: !!context,
+    enabled: enabled && !!context,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 };

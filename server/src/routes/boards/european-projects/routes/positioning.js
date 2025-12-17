@@ -1,6 +1,5 @@
 import express from "express";
 import { db } from "../../../../services/mongo.js";
-import { checkQuery } from "../utils.js";
 
 const router = new express.Router();
 
@@ -130,16 +129,16 @@ router
         },
       ])
       .toArray();
-    
-      const total_evaluated_all_country = data.reduce(
-        (acc, el) => acc + el.total_evaluated,
-        0
-      );
-      const total_successful_all_country = data.reduce(
-        (acc, el) => acc + el.total_successful,
-        0
-      );
-    
+
+    const total_evaluated_all_country = data.reduce(
+      (acc, el) => acc + el.total_evaluated,
+      0
+    );
+    const total_successful_all_country = data.reduce(
+      (acc, el) => acc + el.total_successful,
+      0
+    );
+
     const dataWithRatio = data.map((el) => {
       if (el.total_evaluated === 0) {
         return { ...el, ratio: 0 };
@@ -240,7 +239,7 @@ router
   .get(async (req, res) => {
     const filters = { framework: "Horizon Europe" };
 
-    // test filters (pillars, programs, thematics, destinations) 
+    // test filters (pillars, programs, thematics, destinations)
     if (req.query.pillars) {
       const pillars = req.query.pillars.split("|");
       filters.pilier_code = { $in: pillars };
@@ -251,7 +250,9 @@ router
     }
     if (req.query.thematics) {
       const thematics = req.query.thematics.split(",");
-      const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
+      const filteredThematics = thematics.filter(
+        (thematic) => !["ERC", "MSCA"].includes(thematic)
+      );
       filters.thema_code = { $in: filteredThematics };
     }
     if (req.query.destinations) {
@@ -302,39 +303,37 @@ router
             };
           }
         })
-        .filter((el) => el)
+        .filter((el) => el),
     };
 
     return res.json(dataReturn);
   });
 
-  router
-    .route(
-      "/european-projects/positionning/funding-evo-3-years"
-    )
-    .get(async (req, res) => {
-      const filters = {};
-      if (req.query.pillars) {
-        const pillars = req.query.pillars.split("|");
-        filters.pilier_code = { $in: pillars };
-      }
-      if (req.query.programs) {
-        const programs = req.query.programs.split("|");
-        filters.programme_code = { $in: programs };
-      }
-      if (req.query.thematics) {
-        const thematics = req.query.thematics.split(",");
-        filters.thema_code = { $in: thematics };
-      }
-      if (req.query.destinations) {
-        const destinations = req.query.destinations.split(",");
-        filters.destination_code = { $in: destinations };
-      }
-      filters.country_code = { $nin: ["ZOE", "ZOI"] };
-      filters.call_year = { $in: ["2021", "2022", "2023"] };
-  
-      const query = () => {
-        return db
+router
+  .route("/european-projects/positionning/funding-evo-3-years")
+  .get(async (req, res) => {
+    const filters = {};
+    if (req.query.pillars) {
+      const pillars = req.query.pillars.split("|");
+      filters.pilier_code = { $in: pillars };
+    }
+    if (req.query.programs) {
+      const programs = req.query.programs.split("|");
+      filters.programme_code = { $in: programs };
+    }
+    if (req.query.thematics) {
+      const thematics = req.query.thematics.split(",");
+      filters.thema_code = { $in: thematics };
+    }
+    if (req.query.destinations) {
+      const destinations = req.query.destinations.split(",");
+      filters.destination_code = { $in: destinations };
+    }
+    filters.country_code = { $nin: ["ZOE", "ZOI"] };
+    filters.call_year = { $in: ["2021", "2022", "2023"] };
+
+    const query = () => {
+      return db
         .collection("fr-esr-all-projects-synthese")
         .aggregate([
           {
@@ -367,10 +366,10 @@ router
                   year: "$_id.call_year",
                   total_fund_eur: "$total_fund_eur",
                   total_coordination_number: "$total_coordination_number",
-                  total_number_involved: "$total_number_involved"
-                }
-              }
-            }
+                  total_number_involved: "$total_number_involved",
+                },
+              },
+            },
           },
           {
             $project: {
@@ -379,18 +378,18 @@ router
               name_fr: "$_id.name_fr",
               name_en: "$_id.name_en",
               stage: "$_id.stage",
-              data: 1
-            }
+              data: 1,
+            },
           },
           {
-            $sort: { "data.year": 1 }
+            $sort: { "data.year": 1 },
           },
         ])
         .toArray();
-      }
-  
-      const data = await query();
-      return res.json(data);
-    });
+    };
+
+    const data = await query();
+    return res.json(data);
+  });
 
 export default router;

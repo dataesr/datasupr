@@ -1,9 +1,29 @@
 import { Router } from "express";
 import { db } from "../../../../../services/mongo.js";
+import { recreateIndex } from "../../../../utils.js";
 
 const router = Router();
+
+// Small in-memory cache to speed up first loads on heavy endpoints
+const GENERAL_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const generalCache = new Map();
+const makeCacheKey = (path, query) => {
+  const params = new URLSearchParams();
+  Object.entries(query || {}).forEach(([k, v]) => {
+    if (v !== undefined) params.append(k, String(v));
+  });
+  const qs = params.toString();
+  return qs ? `${path}?${qs}` : path;
+};
 router.get("/faculty-members/filters/years", async (req, res) => {
   try {
+    const now = Date.now();
+    const cacheKey = makeCacheKey(req.path, req.query);
+    const cached = generalCache.get(cacheKey);
+    if (cached && now - cached.ts < GENERAL_CACHE_TTL) {
+      return res.json(cached.data);
+    }
+
     const { structure_id, field_id, geo_id } = req.query;
     const collection = db.collection("faculty-members_main_staging");
 
@@ -94,7 +114,7 @@ router.get("/faculty-members/filters/years", async (req, res) => {
       const lastAvailableYear =
         availableYears.length > 0 ? availableYears[0] : null;
 
-      return res.json({
+      const payload = {
         academic_years: sortedYears,
         available_years: availableYears,
         complete_years: completeYears,
@@ -108,7 +128,10 @@ router.get("/faculty-members/filters/years", async (req, res) => {
             : null,
           closure_year: fermetureYear,
         },
-      });
+      };
+
+      generalCache.set(cacheKey, { ts: now, data: payload });
+      return res.json(payload);
     } else {
       const baseFilter = {};
 
@@ -169,7 +192,7 @@ router.get("/faculty-members/filters/years", async (req, res) => {
       const lastAvailableYear =
         availableYears.length > 0 ? availableYears[0] : null;
 
-      return res.json({
+      const payload = {
         academic_years: sortedYears,
         available_years: availableYears,
         complete_years: completeYears,
@@ -179,7 +202,10 @@ router.get("/faculty-members/filters/years", async (req, res) => {
           field_id,
           geo_id,
         },
-      });
+      };
+
+      generalCache.set(cacheKey, { ts: now, data: payload });
+      return res.json(payload);
     }
   } catch (error) {
     console.error("Error fetching filters:", error);
@@ -192,6 +218,13 @@ router.get("/faculty-members/filters/years", async (req, res) => {
 
 router.get("/faculty-members/typology/:context", async (req, res) => {
   try {
+    const now = Date.now();
+    const cacheKey = makeCacheKey(req.path, req.query);
+    const cached = generalCache.get(cacheKey);
+    if (cached && now - cached.ts < GENERAL_CACHE_TTL) {
+      return res.json(cached.data);
+    }
+
     const { context } = req.params;
     const { annee_universitaire, field_id, geo_id, structure_id } = req.query;
 
@@ -468,16 +501,19 @@ router.get("/faculty-members/typology/:context", async (req, res) => {
         },
       };
 
+      generalCache.set(cacheKey, { ts: now, data: globalStats });
       res.json(globalStats);
     } else {
-      res.json({
+      const payload = {
         [itemName]: results[0] || null,
         context,
         item_type: itemName,
         geo_type:
           context === "geo" ? (isAcademie ? "academie" : "region") : undefined,
         annee_universitaire: annee_universitaire || "current",
-      });
+      };
+      generalCache.set(cacheKey, { ts: now, data: payload });
+      res.json(payload);
     }
   } catch (error) {
     console.error(
@@ -913,6 +949,13 @@ router.get("/faculty-members/search-bar", async (req, res) => {
 
 router.get("/faculty-members/data-completeness", async (req, res) => {
   try {
+    const now = Date.now();
+    const cacheKey = makeCacheKey(req.path, req.query);
+    const cached = generalCache.get(cacheKey);
+    if (cached && now - cached.ts < GENERAL_CACHE_TTL) {
+      return res.json(cached.data);
+    }
+
     const { annee_universitaire, field_id, geo_id, structure_id } = req.query;
     const collection = db.collection("faculty-members_main_staging");
 
@@ -945,7 +988,7 @@ router.get("/faculty-members/data-completeness", async (req, res) => {
       is_titulaire: false,
     });
 
-    res.json({
+    const payload = {
       has_non_permanent_staff: nonPermanentCount > 0,
       non_permanent_count: nonPermanentCount,
       annee_universitaire,
@@ -954,7 +997,10 @@ router.get("/faculty-members/data-completeness", async (req, res) => {
         geo_id,
         structure_id,
       },
-    });
+    };
+
+    generalCache.set(cacheKey, { ts: now, data: payload });
+    res.json(payload);
   } catch (error) {
     console.error("Error checking data completeness:", error);
     res.status(500).json({
@@ -1080,5 +1126,177 @@ router.get("/faculty-members/evolution/categories", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+router.get("/faculty-members/filters/years_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        annee_universitaire: 1,
+        etablissement_id_paysage: 1,
+        code_grande_discipline: 1,
+        etablissement_code_academie: 1,
+        etablissement_code_region: 1,
+        is_titulaire: 1,
+        effectif: 1,
+      },
+      "idx_filters_years"
+    );
+    res.status(201).json({
+      message: "Index créé avec succès",
+      indexName: "idx_filters_years",
+    });
+  } catch (error) {
+    console.error("Erreur lors de la création de l'index:", error);
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+  }
+});
+
+router.get("/faculty-members/typology_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        annee_universitaire: 1,
+        code_grande_discipline: 1,
+        grande_discipline: 1,
+        etablissement_code_academie: 1,
+        etablissement_academie: 1,
+        etablissement_code_region: 1,
+        etablissement_region: 1,
+        etablissement_id_paysage: 1,
+        sexe: 1,
+        quotite: 1,
+        is_titulaire: 1,
+        is_enseignant_chercheur: 1,
+        classe_age3: 1,
+        effectif: 1,
+      },
+      "idx_typology"
+    );
+    res.status(201).json({
+      message: "Index créé avec succès",
+      indexName: "idx_typology",
+    });
+  } catch (error) {
+    console.error("Erreur lors de la création de l'index:", error);
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+  }
+});
+
+router.get("/faculty-members/navigation_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        annee_universitaire: 1,
+        code_grande_discipline: 1,
+        grande_discipline: 1,
+        etablissement_code_academie: 1,
+        etablissement_academie: 1,
+        etablissement_code_region: 1,
+        etablissement_region: 1,
+        etablissement_id_paysage: 1,
+        etablissement_lib: 1,
+        etablissement_type: 1,
+        etablissement_status: 1,
+        effectif: 1,
+      },
+      "idx_navigation"
+    );
+    res.status(201).json({
+      message: "Index créé avec succès",
+      indexName: "idx_navigation",
+    });
+  } catch (error) {
+    console.error("Erreur lors de la création de l'index:", error);
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+  }
+});
+
+router.get("/faculty-members/search-bar_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        annee_universitaire: 1,
+        etablissement_id_paysage_actuel: 1,
+        etablissement_actuel_lib: 1,
+        etablissement_type: 1,
+        etablissement_region: 1,
+        etablissement_code_region: 1,
+        etablissement_region: 1,
+        etablissement_code_academie: 1,
+        etablissement_academie: 1,
+        code_grande_discipline: 1,
+        grande_discipline: 1,
+        effectif: 1,
+      },
+      "idx_search_bar"
+    );
+    res.status(201).json({
+      message: "Index créé avec succès",
+      indexName: "idx_search_bar",
+    });
+  } catch (error) {
+    console.error("Erreur lors de la création de l'index:", error);
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+  }
+});
+
+router.get("/faculty-members/data-completeness_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        annee_universitaire: 1,
+        code_grande_discipline: 1,
+        etablissement_id_paysage: 1,
+        etablissement_code_academie: 1,
+        etablissement_code_region: 1,
+        is_titulaire: 1,
+      },
+      "idx_data_completeness"
+    );
+    res.status(201).json({
+      message: "Index créé avec succès",
+      indexName: "idx_data_completeness",
+    });
+  } catch (error) {
+    console.error("Erreur lors de la création de l'index:", error);
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+  }
+});
+
+router.get(
+  "/faculty-members/evolution/categories_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          is_titulaire: 1,
+          etablissement_code_academie: 1,
+          etablissement_code_region: 1,
+          etablissement_id_paysage: 1,
+          etablissement_id_paysage_actuel: 1,
+          code_grande_discipline: 1,
+          annee_universitaire: 1,
+          categorie_assimilation: 1,
+          sexe: 1,
+          effectif: 1,
+        },
+        "idx_evolution_categories"
+      );
+      res.status(201).json({
+        message: "Index créé avec succès",
+        indexName: "idx_evolution_categories",
+      });
+    } catch (error) {
+      console.error("Erreur lors de la création de l'index:", error);
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
 
 export default router;

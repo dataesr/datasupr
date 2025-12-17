@@ -4,6 +4,7 @@ import { useContextDetection } from "../../utils";
 import { useTopIndicators } from "./use-top-indicators";
 import { formatToPercent } from "../../../../utils/format";
 import { Row, Title } from "@dataesr/dsfr-plus";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 
 const TopItemsIndicators: React.FC = () => {
   const [searchParams] = useSearchParams();
@@ -72,8 +73,15 @@ const TopItemsIndicators: React.FC = () => {
       .sort((a, b) => b.totalCount - a.totalCount);
   }, [genderData, selectedYear, contextId, context]);
 
-  if (contextId || isLoading || error || !itemsData || itemsData.length === 0)
-    return null;
+  if (contextId || error || !itemsData || itemsData.length === 0) return null;
+
+  if (isLoading) {
+    return (
+      <>
+        <DefaultSkeleton />
+      </>
+    );
+  }
 
   return (
     <div

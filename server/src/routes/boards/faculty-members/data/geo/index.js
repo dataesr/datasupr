@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { db } from "../../../../../services/mongo.js";
+import { recreateIndex } from "../../../../utils.js";
 
 const router = Router();
 
@@ -1665,6 +1666,408 @@ router.get("/faculty-members/geo/top-indicators", async (req, res) => {
   } catch (error) {
     console.error("Error fetching top indicators for geo:", error);
     res.status(500).json({ error: "Server error" });
+  }
+});
+
+// Index routes
+
+router.get("/faculty-members/filters/regions_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        etablissement_code_region: 1,
+        etablissement_region: 1,
+      },
+      "idx_regions_filters"
+    );
+
+    res.status(201).json({
+      message: "Index pour regions filters créé avec succès",
+      indexName: "idx_regions_filters",
+    });
+  } catch (error) {
+    console.error(
+      "Erreur lors de la création de l'index regions filters:",
+      error
+    );
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+  }
+});
+
+router.get("/faculty-members/filters/academies_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        etablissement_code_academie: 1,
+        etablissement_academie: 1,
+        etablissement_code_region: 1,
+        etablissement_region: 1,
+      },
+      "idx_academies_filters"
+    );
+
+    res.status(201).json({
+      message: "Index pour academies filters créé avec succès",
+      indexName: "idx_academies_filters",
+    });
+  } catch (error) {
+    console.error(
+      "Erreur lors de la création de l'index academies filters:",
+      error
+    );
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+  }
+});
+
+router.get("/faculty-members/geo/cnu-analysis_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        annee_universitaire: 1,
+        etablissement_code_academie: 1,
+        etablissement_code_region: 1,
+        code_grande_discipline: 1,
+        grande_discipline: 1,
+        code_groupe_cnu: 1,
+        groupe_cnu: 1,
+        code_section_cnu: 1,
+        section_cnu: 1,
+        sexe: 1,
+        classe_age3: 1,
+        effectif: 1,
+      },
+      "idx_geo_cnu_analysis"
+    );
+
+    res.status(201).json({
+      message: "Index pour geo cnu-analysis créé avec succès",
+      indexName: "idx_geo_cnu_analysis",
+    });
+  } catch (error) {
+    console.error(
+      "Erreur lors de la création de l'index geo cnu-analysis:",
+      error
+    );
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+  }
+});
+
+router.get("/faculty-members/geo/map-data_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        annee_universitaire: 1,
+        etablissement_code_region: 1,
+        etablissement_region: 1,
+        sexe: 1,
+        effectif: 1,
+      },
+      "idx_geo_map_data"
+    );
+
+    res.status(201).json({
+      message: "Index pour geo map-data créé avec succès",
+      indexName: "idx_geo_map_data",
+    });
+  } catch (error) {
+    console.error("Erreur lors de la création de l'index geo map-data:", error);
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+  }
+});
+
+router.get("/faculty-members/geo/evolution_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        etablissement_code_academie: 1,
+        etablissement_code_region: 1,
+        categorie_assimilation: 1,
+        is_titulaire: 1,
+        annee_universitaire: 1,
+        code_grande_discipline: 1,
+        grande_discipline: 1,
+        sexe: 1,
+        classe_age3: 1,
+        is_enseignant_chercheur: 1,
+        etablissement_region: 1,
+        etablissement_academie: 1,
+        effectif: 1,
+      },
+      "idx_geo_evolution"
+    );
+
+    res.status(201).json({
+      message: "Index pour geo evolution créé avec succès",
+      indexName: "idx_geo_evolution",
+    });
+  } catch (error) {
+    console.error(
+      "Erreur lors de la création de l'index geo evolution:",
+      error
+    );
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+  }
+});
+
+router.get(
+  "/faculty-members/geo/research-teachers_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_code_academie: 1,
+          etablissement_code_region: 1,
+          is_titulaire: 1,
+          code_groupe_cnu: 1,
+          groupe_cnu: 1,
+          code_section_cnu: 1,
+          section_cnu: 1,
+          sexe: 1,
+          classe_age3: 1,
+          categorie_assimilation: 1,
+          code_categorie_assimil: 1,
+          code_grande_discipline: 1,
+          grande_discipline: 1,
+          etablissement_academie: 1,
+          etablissement_region: 1,
+          effectif: 1,
+        },
+        "idx_geo_research_teachers"
+      );
+
+      res.status(201).json({
+        message: "Index pour geo research-teachers créé avec succès",
+        indexName: "idx_geo_research_teachers",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index geo research-teachers:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/geo/establishment-type-distribution_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_code_academie: 1,
+          etablissement_code_region: 1,
+          is_enseignant_chercheur: 1,
+          is_titulaire: 1,
+          etablissement_type: 1,
+          sexe: 1,
+          effectif: 1,
+        },
+        "idx_geo_establishment_type_distribution"
+      );
+
+      res.status(201).json({
+        message:
+          "Index pour geo establishment-type-distribution créé avec succès",
+        indexName: "idx_geo_establishment_type_distribution",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index geo establishment-type-distribution:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/geo/age-distribution_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_code_academie: 1,
+          etablissement_code_region: 1,
+          classe_age3: 1,
+          effectif: 1,
+        },
+        "idx_geo_age_distribution"
+      );
+
+      res.status(201).json({
+        message: "Index pour geo age-distribution créé avec succès",
+        indexName: "idx_geo_age_distribution",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index geo age-distribution:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/geo/discipline-distribution_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_code_academie: 1,
+          etablissement_code_region: 1,
+          code_grande_discipline: 1,
+          grande_discipline: 1,
+          sexe: 1,
+          effectif: 1,
+        },
+        "idx_geo_discipline_distribution"
+      );
+
+      res.status(201).json({
+        message: "Index pour geo discipline-distribution créé avec succès",
+        indexName: "idx_geo_discipline_distribution",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index geo discipline-distribution:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/geo/status-distribution_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_code_academie: 1,
+          etablissement_code_region: 1,
+          is_enseignant_chercheur: 1,
+          is_titulaire: 1,
+          sexe: 1,
+          effectif: 1,
+        },
+        "idx_geo_status_distribution"
+      );
+
+      res.status(201).json({
+        message: "Index pour geo status-distribution créé avec succès",
+        indexName: "idx_geo_status_distribution",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index geo status-distribution:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/geo/general-indicators_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_code_academie: 1,
+          etablissement_code_region: 1,
+          sexe: 1,
+          effectif: 1,
+        },
+        "idx_geo_general_indicators"
+      );
+
+      res.status(201).json({
+        message: "Index pour geo general-indicators créé avec succès",
+        indexName: "idx_geo_general_indicators",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index geo general-indicators:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/geo/gender-distribution_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_code_academie: 1,
+          etablissement_code_region: 1,
+          sexe: 1,
+          effectif: 1,
+        },
+        "idx_geo_gender_distribution"
+      );
+
+      res.status(201).json({
+        message: "Index pour geo gender-distribution créé avec succès",
+        indexName: "idx_geo_gender_distribution",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index geo gender-distribution:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get("/faculty-members/geo/top-indicators_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        annee_universitaire: 1,
+        etablissement_code_academie: 1,
+        etablissement_code_region: 1,
+        sexe: 1,
+        effectif: 1,
+      },
+      "idx_geo_top_indicators"
+    );
+
+    res.status(201).json({
+      message: "Index pour geo top-indicators créé avec succès",
+      indexName: "idx_geo_top_indicators",
+    });
+  } catch (error) {
+    console.error(
+      "Erreur lors de la création de l'index geo top-indicators:",
+      error
+    );
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
   }
 });
 

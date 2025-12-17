@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { db } from "../../../../../services/mongo.js";
+import { recreateIndex } from "../../../../utils.js";
 
 const router = Router();
 
@@ -1598,5 +1599,389 @@ router.get("/faculty-members/structures/top-indicators", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
+
+// Index routes
+
+router.get("/faculty-members/filters/structures_indexes", async (req, res) => {
+  try {
+    await recreateIndex(
+      db.collection("faculty-members_main_staging"),
+      {
+        etablissement_id_paysage: 1,
+        etablissement_lib: 1,
+      },
+      "idx_structures_filters"
+    );
+
+    res.status(201).json({
+      message: "Index pour structures filters créé avec succès",
+      indexName: "idx_structures_filters",
+    });
+  } catch (error) {
+    console.error(
+      "Erreur lors de la création de l'index structures filters:",
+      error
+    );
+    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+  }
+});
+
+router.get(
+  "/faculty-members/structures/cnu-analysis_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_id_paysage: 1,
+          code_grande_discipline: 1,
+          grande_discipline: 1,
+          code_groupe_cnu: 1,
+          groupe_cnu: 1,
+          code_section_cnu: 1,
+          section_cnu: 1,
+          sexe: 1,
+          classe_age3: 1,
+          effectif: 1,
+        },
+        "idx_cnu_analysis"
+      );
+
+      res.status(201).json({
+        message: "Index pour cnu-analysis créé avec succès",
+        indexName: "idx_cnu_analysis",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index cnu-analysis:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/research-teachers_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_id_paysage: 1,
+          is_titulaire: 1,
+          code_groupe_cnu: 1,
+          groupe_cnu: 1,
+          code_section_cnu: 1,
+          section_cnu: 1,
+          sexe: 1,
+          classe_age3: 1,
+          categorie_assimilation: 1,
+          code_grande_discipline: 1,
+          grande_discipline: 1,
+          etablissement_actuel_lib: 1,
+          effectif: 1,
+        },
+        "idx_research_teachers"
+      );
+
+      res.status(201).json({
+        message: "Index pour research-teachers créé avec succès",
+        indexName: "idx_research_teachers",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index research-teachers:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/evolution_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          etablissement_id_paysage: 1,
+          categorie_assimilation: 1,
+          statut: 1,
+          annee_universitaire: 1,
+          sexe: 1,
+          classe_age3: 1,
+          is_enseignant_chercheur: 1,
+          is_titulaire: 1,
+          code_grande_discipline: 1,
+          grande_discipline: 1,
+          etablissement_actuel_lib: 1,
+          etablissement_type: 1,
+          categorie_personnels: 1,
+          etablissement_lib: 1,
+          etablissement_region: 1,
+          effectif: 1,
+        },
+        "idx_evolution"
+      );
+
+      res.status(201).json({
+        message: "Index pour evolution créé avec succès",
+        indexName: "idx_evolution",
+      });
+    } catch (error) {
+      console.error("Erreur lors de la création de l'index evolution:", error);
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/age-distribution_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_id_paysage: 1,
+          classe_age3: 1,
+          etablissement_lib: 1,
+          etablissement_actuel_lib: 1,
+          etablissement_type: 1,
+          etablissement_region: 1,
+          effectif: 1,
+        },
+        "idx_age_distribution"
+      );
+
+      res.status(201).json({
+        message: "Index pour age-distribution créé avec succès",
+        indexName: "idx_age_distribution",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index age-distribution:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/establishment-type-distribution_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_id_paysage: 1,
+          is_enseignant_chercheur: 1,
+          is_titulaire: 1,
+          etablissement_type: 1,
+          sexe: 1,
+          etablissement_lib: 1,
+          etablissement_actuel_lib: 1,
+          etablissement_region: 1,
+          effectif: 1,
+        },
+        "idx_establishment_type_distribution"
+      );
+
+      res.status(201).json({
+        message: "Index pour establishment-type-distribution créé avec succès",
+        indexName: "idx_establishment_type_distribution",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index establishment-type-distribution:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/discipline-distribution_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_id_paysage: 1,
+          code_grande_discipline: 1,
+          grande_discipline: 1,
+          sexe: 1,
+          is_enseignant_chercheur: 1,
+          is_titulaire: 1,
+          etablissement_lib: 1,
+          etablissement_actuel_lib: 1,
+          etablissement_type: 1,
+          etablissement_region: 1,
+          effectif: 1,
+        },
+        "idx_discipline_distribution"
+      );
+
+      res.status(201).json({
+        message: "Index pour discipline-distribution créé avec succès",
+        indexName: "idx_discipline_distribution",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index discipline-distribution:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/status-distribution_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_id_paysage: 1,
+          is_enseignant_chercheur: 1,
+          is_titulaire: 1,
+          sexe: 1,
+          etablissement_lib: 1,
+          etablissement_actuel_lib: 1,
+          etablissement_type: 1,
+          etablissement_region: 1,
+          effectif: 1,
+        },
+        "idx_status_distribution"
+      );
+
+      res.status(201).json({
+        message: "Index pour status-distribution créé avec succès",
+        indexName: "idx_status_distribution",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index status-distribution:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/general-indicators_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_id_paysage: 1,
+          sexe: 1,
+          is_enseignant_chercheur: 1,
+          is_titulaire: 1,
+          classe_age3: 1,
+          etablissement_lib: 1,
+          etablissement_actuel_lib: 1,
+          etablissement_type: 1,
+          etablissement_region: 1,
+          effectif: 1,
+        },
+        "idx_general_indicators"
+      );
+
+      res.status(201).json({
+        message: "Index pour general-indicators créé avec succès",
+        indexName: "idx_general_indicators",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index general-indicators:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/gender-distribution_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_id_paysage: 1,
+          is_enseignant_chercheur: 1,
+          is_titulaire: 1,
+          sexe: 1,
+          etablissement_lib: 1,
+          etablissement_actuel_lib: 1,
+          etablissement_type: 1,
+          etablissement_region: 1,
+          effectif: 1,
+        },
+        "idx_gender_distribution"
+      );
+
+      res.status(201).json({
+        message: "Index pour gender-distribution créé avec succès",
+        indexName: "idx_gender_distribution",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index gender-distribution:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
+
+router.get(
+  "/faculty-members/structures/top-indicators_indexes",
+  async (req, res) => {
+    try {
+      await recreateIndex(
+        db.collection("faculty-members_main_staging"),
+        {
+          annee_universitaire: 1,
+          etablissement_id_paysage: 1,
+          code_grande_discipline: 1,
+          grande_discipline: 1,
+          sexe: 1,
+          is_enseignant_chercheur: 1,
+          is_titulaire: 1,
+          classe_age3: 1,
+          effectif: 1,
+        },
+        "idx_top_indicators"
+      );
+
+      res.status(201).json({
+        message: "Index pour top-indicators créé avec succès",
+        indexName: "idx_top_indicators",
+      });
+    } catch (error) {
+      console.error(
+        "Erreur lors de la création de l'index top-indicators:",
+        error
+      );
+      res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    }
+  }
+);
 
 export default router;
