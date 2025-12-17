@@ -96,7 +96,7 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
-  const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc=${VITE_APP_URL}${graphConfig.integrationURL}></iframe>`;
+  const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc="${VITE_APP_URL}${graphConfig.integrationURL}"></iframe>`;
   return (
     <Modal
       hide={() => setIsOpen(false)}

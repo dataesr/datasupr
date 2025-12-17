@@ -25,7 +25,7 @@ import "./styles.scss";
 const { VITE_APP_URL } = import.meta.env;
 
 function IntegrationModal({ isOpen, setIsOpen, graphConfig }) {
-  const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc=${VITE_APP_URL}${graphConfig.integrationURL}></iframe>`;
+  const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc="${VITE_APP_URL}${graphConfig.integrationURL}"></iframe>`;
   return (
     <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="lg">
       <ModalTitle>Intégrer ce graphique dans un autre site</ModalTitle>
