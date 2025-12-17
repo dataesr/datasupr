@@ -1,3 +1,5 @@
+import { formatCompactNumber } from '../../../../utils';
+
 function getGeneralOptions(title: any, categories: any, title_x_axis: any, title_y_axis: any) {
   return {
     title: { text: title },
@@ -23,12 +25,12 @@ function getGeneralOptions(title: any, categories: any, title_x_axis: any, title
   };
 }
 
-function getSeries(data: { aggregations: { unique_projects: { buckets: any; }; }; }) {
-  const series = (data?.aggregations?.unique_projects?.buckets ?? []).map(
-    (item: { key: string; doc_count: number; }) => ({
-      color: "#cccccc",
-      name: item.key,
-      y: item.doc_count,
+function getSeries(data: { hits: { hits: any[]; }; }) {
+  const series = (data?.hits?.hits ?? []).map(
+    (hit) => ({
+      name: hit._source.label.en,
+      type: hit._source.type,
+      y: hit._source.budgetTotal,
     })
   );
 
@@ -41,8 +43,7 @@ function getOptions(
   series: any,
   categories: any,
   title: string,
-  format1: string,
-  format2: string,
+  selectedStructure: string,
   title_x_axis: string,
   title_y_axis: string
 ) {
@@ -55,7 +56,9 @@ function getOptions(
   return {
     ...generalOptions,
     tooltip: {
-      format: `<b>{point.name}</b> ${format1} <b>{point.y}</b> ${format2}`,
+      formatter: function (this: any) {
+        return `${selectedStructure} a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par ${this.point.type}.`
+      },
     },
     series: [{ data: series }],
   };

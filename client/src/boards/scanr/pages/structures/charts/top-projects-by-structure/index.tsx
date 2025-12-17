@@ -17,13 +17,13 @@ export default function TopProjectsByStructure() {
   const color = useChartColor();
 
   const body = {
-    size: 0,
+    size: 25,
     query: {
       bool: {
         filter: [
           {
             range: {
-              project_year: {
+              year: {
                 gte: selectedYearStart,
                 lte: selectedYearEnd
               }
@@ -31,40 +31,23 @@ export default function TopProjectsByStructure() {
           },
           {
             term: {
-              participant_isFrench: true
-            }
-          },
-          {
-            term: {
-              participant_status: "active"
-            }
-          },
-          {
-            term: {
-              participant_type: "institution"
-            }
-          },
-          {
-            term: {
-              "participant_id.keyword": selectedStructure
+              "participants.structure.id.keyword": selectedStructure
             }
           }
         ]
       }
     },
-    aggs: {
-      unique_projects: {
-        cardinality: {
-          field: "project_id.keyword"
-        }
+    sort: [
+      {
+        budgetTotal: { order: "desc" }
       }
-    }
+    ]
   }
 
   const { data, isLoading } = useQuery({
     queryKey: [`scanr-top-projects-by-structure`, selectedStructure, selectedYearEnd, selectedYearStart],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-projects`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -79,17 +62,16 @@ export default function TopProjectsByStructure() {
   const config = {
     id: "topProjectsByStructure",
     integrationURL: "/integration?chart_id=topProjectsByStructure",
-    title: `Principaux projets pour ${selectedStructure} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    title: `Top 25 projets pour ${selectedStructure} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = getOptions(
     series,
     categories,
     '',
-    'a financé',
-    `projet(s) auquel(s) prend part ${selectedStructure} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    selectedStructure,
     '',
-    'Nombre de projets financés',
+    'Budget total',
   );
 
   const structures = [

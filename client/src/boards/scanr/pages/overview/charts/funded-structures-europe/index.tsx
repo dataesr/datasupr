@@ -5,6 +5,7 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import { getYears } from "../../../../utils";
 import { getOptions, getSeries } from "./utils.tsx";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -51,6 +52,13 @@ export default function FundedStructuresEurope() {
         terms: {
           field: "participant_id_name.keyword",
           size: 25
+        },
+        aggs: {
+          by_type: {
+            terms: {
+              field: "project_type.keyword"
+            }
+          }
         }
       }
     }
@@ -87,18 +95,18 @@ export default function FundedStructuresEurope() {
     'Nombre de projets financés',
   );
 
-  const years = Array.from(Array(25).keys()).map((item) => item + 2000);
+  const years = getYears();
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="funded-structures">
+    <div className={`chart-container chart-container--${color}`} id="funded-structures-europe">
       <Row gutters className="form-row">
         <Col md={6}>
           <select
-            name="scanr-year-start"
-            id="scanr-year-start"
             className="fr-mb-2w fr-select"
-            value={selectedYearStart}
+            id="scanr-year-start"
+            name="scanr-year-start"
             onChange={(e) => setSelectedYearStart(e.target.value)}
+            value={selectedYearStart}
           >
             <option disabled value="">Sélectionnez une année de début</option>
             {years.map((year) => (
@@ -110,11 +118,11 @@ export default function FundedStructuresEurope() {
         </Col>
         <Col md={6}>
           <select
-            name="scanr-year-end"
-            id="scanr-year-end"
             className="fr-mb-2w fr-select"
-            value={selectedYearEnd}
+            id="scanr-year-end"
+            name="scanr-year-end"
             onChange={(e) => setSelectedYearEnd(e.target.value)}
+            value={selectedYearEnd}
           >
             <option disabled value="">Sélectionnez une année de fin</option>
             {years.map((year) => (

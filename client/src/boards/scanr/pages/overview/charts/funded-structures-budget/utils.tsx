@@ -1,41 +1,14 @@
-function getGeneralOptions(title: any, categories: any, title_x_axis: any, title_y_axis: any) {
-  return {
-    title: { text: title },
-    chart: { height: "600px", type: "bar" },
-    legend: { enabled: false },
-    exporting: { enabled: false },
-    plotOptions: {
-      column: {
-        colorByPoint: true,
-        dataLabels: {
-          enabled: true,
-          format: "{point.y}",
-        },
-      },
-    },
-    xAxis: { categories, title: { text: title_x_axis } },
-    yAxis: {
-      title: { text: title_y_axis },
-    },
-    credits: {
-      enabled: false,
-    },
-  };
-}
+import { formatCompactNumber, getGeneralOptions, getLabelFromName } from '../../../../utils';
 
-function getSeries(data: { aggregations: { by_participant: { buckets: any; }; }; }) {
-  const series = (data?.aggregations?.by_participant?.buckets ?? []).map(
-    (item: {
-      sum_budget: any; key: string | number; doc_count: number; 
-}) => ({
-      color: "#cccccc",
-      name: item.key.toString().split('_')[1].split('|')[0],
-      y: item.sum_budget.value,
-    })
-  ).sort((a, b) => b.y - a.y);
-
-  const categories = series.map((item: { name: any; }) => item.name);
-
+function getSeries(data: { aggregations: { by_participant: { buckets: any[]; }; }; }) {
+  const buckets = data?.aggregations?.by_participant?.buckets ?? [];
+  const categories = buckets.map((item: { key: string; }) => getLabelFromName(item.key));
+  let allTypes = buckets.map((items) => items.by_type.buckets.map((item: { key: string; }) => item.key)).flat();
+  allTypes = Array.from(new Set(allTypes)).reverse();
+  const series = allTypes.map((type) => ({
+    name: type,
+    data: buckets.map((item: { by_type: { buckets: any[]; }; }) => item.by_type.buckets.find((i) => i.key === type)?.sum_budget.value ?? 0),
+  }));
   return { categories, series };
 }
 
@@ -43,8 +16,8 @@ function getOptions(
   series: any,
   categories: any,
   title: string,
-  format1: string,
-  format2: string,
+  selectedYearEnd: string,
+  selectedYearStart: string,
   title_x_axis: string,
   title_y_axis: string
 ) {
@@ -57,9 +30,11 @@ function getOptions(
   return {
     ...generalOptions,
     tooltip: {
-      format: `<b>{point.name}</b> ${format1} <b>{point.y}</b> ${format2}`,
+      formatter: function (this: any) {
+        return `<b>${this.key}</b> a participé à des projets financés par ${this.series.name}, à hauteur de <b>${formatCompactNumber(this.y)} €</b> sur la période ${selectedYearStart}-${selectedYearEnd}`
+      }
     },
-    series: [{ data: series }],
+    series,
   };
 }
 

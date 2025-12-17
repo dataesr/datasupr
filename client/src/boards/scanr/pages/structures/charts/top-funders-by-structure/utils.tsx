@@ -28,7 +28,6 @@ function getSeries(data: { aggregations: { by_funder_type: { buckets: any; }; };
     (item: {
       unique_projects: any; key: string; doc_count: number;
 }) => ({
-      color: "#cccccc",
       name: item.key,
       y: item.unique_projects.value,
     })

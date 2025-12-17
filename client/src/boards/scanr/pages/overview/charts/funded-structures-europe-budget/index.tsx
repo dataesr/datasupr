@@ -5,6 +5,7 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import { getYears } from "../../../../utils";
 import { getOptions, getSeries } from "./utils.tsx";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -53,9 +54,16 @@ export default function FundedStructuresEuropeBudget() {
           size: 25
         },
         aggs: {
-          sum_budget: {
-            sum: {
-              field: "project_budgetTotal"
+          by_type: {
+            terms: {
+              field: "project_type.keyword"
+            },
+            aggs: {
+              sum_budget: {
+                sum: {
+                  field: "project_budgetTotal"
+                }
+              }
             }
           }
         }
@@ -88,13 +96,13 @@ export default function FundedStructuresEuropeBudget() {
     series,
     categories,
     '',
-    'a participé à des projets financés au total ',
-    `€ sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    selectedYearEnd,
+    selectedYearStart,
     '',
     'Montant des financements des projets auxquels la structure a participé',
   );
 
-  const years = Array.from(Array(25).keys()).map((item) => item + 2000);
+  const years = getYears();
 
   return (
     <div className={`chart-container chart-container--${color}`} id="funded-structures-europe-budget">
