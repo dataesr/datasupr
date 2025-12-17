@@ -36,9 +36,9 @@ export const chartsRegistry = {
   fundedStructuresBudget: lazy(() => import("../scanr/pages/overview/charts/funded-structures-budget")),
   fundedStructuresEurope: lazy(() => import("../scanr/pages/overview/charts/funded-structures-europe")),
   fundedStructuresEuropeBudget: lazy(() => import("../scanr/pages/overview/charts/funded-structures-europe-budget")),
-  topFundersByStructure: lazy(() => import("../scanr/pages/overview/charts/top-funders-by-structure")),
-  topLabsByStructure: lazy(() => import("../scanr/pages/overview/charts/top-labs-by-structure")),
-  topProjectsByStructure: lazy(() => import("../scanr/pages/overview/charts/top-projects-by-structure")),
+  topFundersByStructure: lazy(() => import("../scanr/pages/structures/charts/top-funders-by-structure")),
+  topLabsByStructure: lazy(() => import("../scanr/pages/structures/charts/top-labs-by-structure")),
+  topProjectsByStructure: lazy(() => import("../scanr/pages/structures/charts/top-projects-by-structure")),
 };
 
 export type ChartId = keyof typeof chartsRegistry;

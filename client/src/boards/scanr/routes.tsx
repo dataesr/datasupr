@@ -9,6 +9,7 @@ import { useTitle } from "../../hooks/usePageTitle.tsx";
 
 import i18n from "./title-i18n.json";
 import Overview from "./pages/overview/index.tsx";
+import Structures from "./pages/structures/index.tsx";
 
 const useRouteTitle = (path: string) => {
   const [searchParams] = useSearchParams();
@@ -35,6 +36,7 @@ export default function ScanRRoutes() {
         <Route element={<SidemenuLayout />}>
           <Route path="overview" element={<RouteWithTitle titleKey="overview" element={<Overview />} />} />
         </Route>
+        <Route path="structures" element={<RouteWithTitle titleKey="structures" element={<Structures />} />} />
       </Route>
     </Routes>
   );

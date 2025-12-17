@@ -23,8 +23,8 @@ function getGeneralOptions(title: any, categories: any, title_x_axis: any, title
   };
 }
 
-function getSeries(data: { aggregations: { by_project_id: { buckets: any; }; }; }) {
-  const series = (data?.aggregations?.by_project_id?.buckets ?? []).map(
+function getSeries(data: { aggregations: { unique_projects: { buckets: any; }; }; }) {
+  const series = (data?.aggregations?.unique_projects?.buckets ?? []).map(
     (item: { key: string; doc_count: number; }) => ({
       color: "#cccccc",
       name: item.key,

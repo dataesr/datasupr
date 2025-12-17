@@ -20,8 +20,12 @@
     "en": "Explore dashboards"
   },
   "overview": {
-    "fr": "Synthèse",
-    "en": "Overview"
+    "fr": "National",
+    "en": "National"
+  },
+  "structures": {
+    "fr": "Par structure",
+    "en": "Par structure"
   },
   "home": {
     "fr": "Accueil",
@@ -48,8 +52,8 @@
     "en": "Sitemap"
   },
   "tagline": {
-    "fr": "tagline à définir",
-    "en": "tagline to be defined"
+    "fr": "Tableau de bord financements scanR",
+    "en": "Dashboard fundings scanR"
   },
   "themes": {
     "fr": "Thèmes",

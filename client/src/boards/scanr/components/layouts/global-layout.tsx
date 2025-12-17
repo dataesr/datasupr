@@ -117,6 +117,9 @@ export default function GlobalLayout({ languageSelector = false }) {
                 <Link current={is("/scanr/overview")} href="/scanr/overview">
                   {getI18nLabel("overview")}
                 </Link>
+                <Link current={is("/scanr/structures")} href="/scanr/structures">
+                  {getI18nLabel("structures")}
+                </Link>
               </Nav>
             </div>
           </div>
