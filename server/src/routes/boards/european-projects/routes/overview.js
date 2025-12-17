@@ -121,10 +121,6 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
       },
     ])
     .toArray();
-<<<<<<< Updated upstream
-=======
-  console.log(dataSuccessful, dataEvaluated);
->>>>>>> Stashed changes
 
   if (req.query.country_code) {
     res.json({
@@ -193,7 +189,6 @@ router.route("/european-projects/funded-objectives").get(async (req, res) => {
   res.json(data);
 });
 
-<<<<<<< Updated upstream
 router.route("/european-projects/overview/pillars-funding").get(async (req, res) => {
   const filters = checkQuery(req.query, ["country_code"], res);
 
@@ -896,11 +891,6 @@ router.route("/european-projects/overview/destination-funding-proportion").get(a
 });
 
 router.route("/european-projects/overview/pillars-funding-evo-3-years").get(async (req, res) => {
-=======
-router
-  .route("/european-projects/overview/pillars-funding")
-  .get(async (req, res) => {
->>>>>>> Stashed changes
     const filters = checkQuery(req.query, ["country_code"], res);
 
     if (req.query.pillars) {
