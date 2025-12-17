@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
-import HighchartsTreemap from "highcharts/modules/treemap";
+import "highcharts/modules/treemap";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { useFacultyMembersCNU } from "../../../../api/use-cnu";
 import { CreateChartOptions } from "../../../../components/creat-chart-options";
@@ -10,8 +10,6 @@ import { createGroupTreemapOptions } from "./options";
 import { formatToPercent } from "../../../../../../utils/format";
 import { Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 import SubtitleWithContext from "../../../../components/subtitle-with-context";
-
-HighchartsTreemap(Highcharts);
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {

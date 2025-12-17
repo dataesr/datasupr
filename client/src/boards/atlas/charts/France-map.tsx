@@ -1,10 +1,8 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import highchartsMap from "highcharts/modules/map";
+import "highcharts/modules/map";
 import mapDataIE from "../../../assets/regions.json";
 import Template from "../../../components/template";
-
-highchartsMap(Highcharts);
 
 type DataProps = {
   reg_id: string;

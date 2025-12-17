@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import highchartsMap from "highcharts/modules/map";
+import "highcharts/modules/map";
 import mapDataIE from "../../../../../assets/regions.json";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState, useCallback } from "react";
@@ -8,8 +8,6 @@ import { useGeoMapData } from "../api/use-map";
 import { createMapOptions } from "./options";
 import MapSkeleton from "../../../../atlas/charts/skeletons/map";
 import { Row } from "@dataesr/dsfr-plus";
-
-highchartsMap(Highcharts);
 
 export default function FacultyMap() {
   const navigate = useNavigate();

@@ -380,7 +380,7 @@ export default function Home() {
       </Row>
       <h2 className="fr-mb-2w">Gestion des tableaux de bord</h2>
       <div className="form-section">
-        <h3 className="fr-mb-2w">〉Ajout des tableaux de bords</h3>
+        <h3 className="fr-mb-2w">〉Ajout des tableaux de bord</h3>
         <Row gutters className="form-row">
           <Col>
             <input

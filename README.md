@@ -4,7 +4,7 @@
 
 DatasupR is fully functional in development.
 
-node: 20.17.0
+node: 24
 
 Please build the app before starting it:
 `npm ci --silent && npm run build --mode=staging`

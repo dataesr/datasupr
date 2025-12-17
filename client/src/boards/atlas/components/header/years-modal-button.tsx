@@ -10,7 +10,6 @@ export default function YearsModalButton() {
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams] = useSearchParams();
   const { DEFAULT_CURRENT_YEAR } = useAtlas();
-  console.log("DEFAULT_CURRENT_YEAR", DEFAULT_CURRENT_YEAR);
 
   const currentYear =
     searchParams.get("annee_universitaire") || DEFAULT_CURRENT_YEAR;

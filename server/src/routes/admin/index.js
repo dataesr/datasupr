@@ -5,6 +5,7 @@ import path from "path";
 import { db } from "../../services/mongo.js";
 import { checkQuery } from "./utils.js";
 import uploadVersionRoute from "./upload/upload-version.js";
+import { getEmbeddings } from "./vectors.js";
 
 const router = new express.Router();
 
@@ -22,6 +23,8 @@ router.route("/admin/list-dashboards").get(async (req, res) => {
 router.route("/admin/add-dashboard").post(async (req, res) => {
   const filters = checkQuery(req.body, ["name_fr", "name_en", "id", "description_fr", "description_en", "url", "api_url"], res);
   const { name_fr, name_en, id, description_fr, description_en, url, api_url, isMultilingual } = req.body;
+
+  getEmbeddings([name_fr, name_en, description_fr, description_en]).catch(console.error);
 
   try {
     // Vérifier si un dashboard avec cet ID existe déjà
@@ -42,7 +45,7 @@ router.route("/admin/add-dashboard").post(async (req, res) => {
       isMultilingual: isMultilingual || false,
       data: [],
       constants: [],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     };
 
     await db.collection("boards").insertOne(newDashboard);

@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import highchartsMap from "highcharts/modules/map";
+import "highcharts/modules/map";
 // import { MapBubbleDataProps, PolygonsDataProps } from "../../../../types/atlas";
 
 import data from "./data.json";
@@ -10,8 +10,6 @@ import mapData from "./mapData.json";
 // data.libColor = "rgba(240,190,50,0.80)"
 // data.grnColor = "rgba(90,200,90,0.80)"
 // data.repColor = "rgba(220,71,71,0.80)"
-
-highchartsMap(Highcharts);
 
 export default function MapWithPolygonHighchartsPie() {
   // Compute max votes to find relative sizes of bubbles

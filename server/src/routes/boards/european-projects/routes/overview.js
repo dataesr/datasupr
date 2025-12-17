@@ -122,7 +122,6 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
       },
     ])
     .toArray();
-console.log(dataSuccessful, dataEvaluated);
 
   if (req.query.country_code) {
     res.json({
@@ -726,7 +725,7 @@ router.route("/european-projects/overview/destination-funding").get(async (req, 
     filters.programme_code = { $in: programs };
   }
   if (req.query.thematics) {
-    const thematics = req.query.thematics.split(","); console.log(thematics);
+    const thematics = req.query.thematics.split(",");
     const filteredThematics = thematics.filter(thematic => !['ERC', 'MSCA'].includes(thematic));
     filters.thema_code = { $in: filteredThematics };
   }

@@ -35,7 +35,7 @@ app.use(function (req, res, next) {
 });
 
 // https://ui.dev/react-router-cannot-get-url-refresh
-app.get("/*", function (_, res) {
+app.get(/.*/, function (_, res) {
   res.sendFile(path.join(path.resolve(), "dist", "index.html"), function (err) {
     if (err) {
       res.status(500).send(err);

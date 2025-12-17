@@ -15,13 +15,10 @@ import Contact from "./pages/static-pages/contact.tsx";
 import { AtlasProvider } from "./context.tsx";
 
 import Highcharts from "highcharts";
-import HCAccessibility from "highcharts/modules/accessibility";
-import HCExporting from "highcharts/modules/exporting";
-import HCExportingData from "highcharts/modules/export-data";
+import "highcharts/modules/accessibility";
+import "highcharts/modules/exporting";
+import "highcharts/modules/export-data";
 import Methodology from "./pages/static-pages/methodology.tsx";
-HCAccessibility(Highcharts);
-HCExporting(Highcharts);
-HCExportingData(Highcharts);
 
 export default function AtlasRoutes() {
   return (

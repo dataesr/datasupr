@@ -10,8 +10,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useSearchParams } from "react-router-dom";
 
 import Highcharts from "highcharts";
-import HC_more from "highcharts/highcharts-more";
-HC_more(Highcharts);
+import "highcharts/highcharts-more";
 
 import i18nGlobal from "../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";

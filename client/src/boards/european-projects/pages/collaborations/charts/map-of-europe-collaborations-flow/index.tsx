@@ -1,8 +1,7 @@
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 
-import highchartsFlowMap from "highcharts/modules/flowmap";
-highchartsFlowMap(Highcharts);
+import "highcharts/modules/flowmap";
 
 import dataCountries from "../../../../../../assets/countriesCentroids.json";
 import topology from "../../../../../../assets/world.topo.json";

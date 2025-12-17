@@ -1,24 +1,10 @@
 import { useId, useRef, useState } from "react";
 import React from "react";
 import Highcharts from "highcharts";
-import HighchartsExporting from "highcharts/modules/exporting";
-import HighchartsOfflineExporting from "highcharts/modules/offline-exporting";
+import "highcharts/modules/exporting";
+import "highcharts/modules/offline-exporting";
 import HighchartsReact from "highcharts-react-official";
-import {
-  Button,
-  Col,
-  Container,
-  Modal,
-  ModalContent,
-  ModalTitle,
-  Radio,
-  Row,
-  Title,
-} from "@dataesr/dsfr-plus";
-
-// Initialiser les modules d'export
-HighchartsExporting(Highcharts);
-HighchartsOfflineExporting(Highcharts);
+import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
 // Configuration globale pour l'export offline
 Highcharts.setOptions({
@@ -53,13 +39,8 @@ interface Source {
 }
 
 // Fonction utilitaire pour obtenir les traductions
-function getTranslation(
-  key: keyof typeof translations,
-  lang: string = "fr"
-): string {
-  return (
-    translations[key]?.[lang as "fr" | "en"] || translations[key]?.["fr"] || key
-  );
+function getTranslation(key: keyof typeof translations, lang: string = "fr"): string {
+  return translations[key]?.[lang as "fr" | "en"] || translations[key]?.["fr"] || key;
 }
 
 // Fonction utilitaire pour extraire le texte d'un ReactNode
@@ -68,11 +49,12 @@ function extractTextFromReactNode(node: React.ReactNode): string {
     return String(node);
   }
   if (React.isValidElement(node)) {
-    if (node.props.children) {
-      if (Array.isArray(node.props.children)) {
-        return node.props.children.map(extractTextFromReactNode).join("");
+    const props = node.props as { children?: React.ReactNode };
+    if (props.children) {
+      if (Array.isArray(props.children)) {
+        return props.children.map(extractTextFromReactNode).join("");
       }
-      return extractTextFromReactNode(node.props.children);
+      return extractTextFromReactNode(props.children);
     }
   }
   if (Array.isArray(node)) {
@@ -372,40 +354,42 @@ export default function ChartWrapper({
   }
 
   const downloadCSV = () => {
-    if (chart && chart.current && chart.current.chart) {
-      chart.current.chart.downloadCSV();
-    }
+    // if (chart && chart.current && chart.current.chart) {
+    //   chart.current.chart.downloadCSV();
+    // }
+    console.log("downloadCSV called");
   };
 
   const downloadPNG = () => {
-    if (chart && chart.current && chart.current.chart) {
-      try {
-        // Utiliser l'export offline
-        chart.current.chart.exportChart(
-          {
-            type: "image/png",
-            filename:
-              config.title && typeof config.title === "string"
-                ? config.title
-                : "graphique",
-            sourceWidth: 800,
-            sourceHeight: 600,
-            scale: 2, // Pour une meilleure qualité
-          },
-          {
-            exporting: {
-              fallbackToExportServer: false,
-            },
-          }
-        );
-      } catch (error) {
-        console.error("Erreur lors de l'export PNG:", error);
-        // Fallback alternatif : essayer avec la méthode print
-        alert(
-          "L'export PNG a échoué. Vous pouvez utiliser Ctrl+P pour imprimer la page."
-        );
-      }
-    }
+    console;
+    // if (chart && chart.current && chart.current.chart) {
+    //   try {
+    //     // Utiliser l'export offline
+    //     chart.current.chart.exportChart(
+    //       {
+    //         type: "image/png",
+    //         filename:
+    //           config.title && typeof config.title === "string"
+    //             ? config.title
+    //             : "graphique",
+    //         sourceWidth: 800,
+    //         sourceHeight: 600,
+    //         scale: 2, // Pour une meilleure qualité
+    //       },
+    //       {
+    //         exporting: {
+    //           fallbackToExportServer: false,
+    //         },
+    //       }
+    //     );
+    //   } catch (error) {
+    //     console.error("Erreur lors de l'export PNG:", error);
+    //     // Fallback alternatif : essayer avec la méthode print
+    //     alert(
+    //       "L'export PNG a échoué. Vous pouvez utiliser Ctrl+P pour imprimer la page."
+    //     );
+    //   }
+    // }
   };
 
   const printChart = () => {
@@ -415,11 +399,7 @@ export default function ChartWrapper({
         let chartTitle = "Graphique";
         if (config.title && typeof config.title === "string") {
           chartTitle = config.title;
-        } else if (
-          config.title &&
-          typeof config.title === "object" &&
-          config.title[currentLang]
-        ) {
+        } else if (config.title && typeof config.title === "object" && config.title[currentLang]) {
           // Si c'est un ReactNode, essayer d'extraire le texte
           const titleContent = config.title[currentLang];
           if (typeof titleContent === "string") {
@@ -449,7 +429,8 @@ export default function ChartWrapper({
         );
 
         // Imprimer
-        chart.current.chart.print();
+        // chart.current.chart.print();
+        console.log("printChart called");
 
         // Restaurer le titre original après un délai
         setTimeout(() => {

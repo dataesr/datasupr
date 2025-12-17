@@ -1,8 +1,7 @@
 import HighchartsInstance from "highcharts";
-import Highcharts from "highcharts";
+// import Highcharts from "highcharts";
 
-import variablePie from "highcharts/modules/variable-pie.js";
-variablePie(Highcharts);
+import "highcharts/modules/variable-pie.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "./i18n.json";

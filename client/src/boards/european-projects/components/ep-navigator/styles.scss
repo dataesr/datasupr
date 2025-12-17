@@ -1,3 +1,5 @@
+@use 'sass:map';
+
 // Variables pour les couleurs de sections
 $section-colors: (
 	pilier: (
@@ -278,7 +280,7 @@ $section-colors: (
 			// Génération dynamique des styles pour chaque section
 			@each $section, $colors in $section-colors {
 				&.#{$section} div:not(.disabled):not(.no-selection) {
-					@include section-active(map-get($colors, background), map-get($colors, color));
+					@include section-active(map.get($colors, background), map.get($colors, color));
 				}
 				
 				// Styles personnalisés pour les boutons de chaque section
@@ -297,14 +299,14 @@ $section-colors: (
 				// Styles pour les boutons des sections no-selection
 				&.#{$section} div.no-selection:not(.disabled) button {
 					background: var(--background-default-grey-hover) !important;
-					color: map-get($colors, color) !important;
-					border: 1px solid map-get($colors, border) !important;
+					color: map.get($colors, color) !important;
+					border: 1px solid map.get($colors, border) !important;
 					opacity: 0.8;
 					
 					&:hover {
-						background: map-get($colors, background) !important;
-						color: map-get($colors, color) !important;
-						border-color: map-get($colors, border) !important;
+						background: map.get($colors, background) !important;
+						color: map.get($colors, color) !important;
+						border-color: map.get($colors, border) !important;
 						opacity: 1;
 					}
 				}
@@ -334,9 +336,9 @@ $section-colors: (
 				@each $section, $colors in $section-colors {
 					&.label-#{$section} {
 						@include section-label(
-							map-get($colors, background), 
-							map-get($colors, color), 
-							map-get($colors, border)
+							map.get($colors, background), 
+							map.get($colors, color), 
+							map.get($colors, border)
 						);
 					}
 				}

@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
-import HighchartsMore from "highcharts/highcharts-more";
+import "highcharts/highcharts-more";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { useFacultyMembersCNU } from "../../../../api/use-cnu";
 import { CreateChartOptions } from "../../../../components/creat-chart-options";
@@ -9,8 +9,6 @@ import { useContextDetection } from "../../../../utils";
 import { createBubbleOptions } from "./options";
 import { formatToPercent } from "../../../../../../utils/format";
 import SubtitleWithContext from "../../../../components/subtitle-with-context";
-
-HighchartsMore(Highcharts);
 
 function RenderData({ data }) {
   if (!data || data.length === 0) {

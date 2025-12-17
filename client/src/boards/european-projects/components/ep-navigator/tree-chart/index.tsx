@@ -1,14 +1,9 @@
 import Highcharts from "highcharts";
-import HighchartsExporting from "highcharts/modules/exporting";
-import HighchartsOfflineExporting from "highcharts/modules/offline-exporting";
+import "highcharts/modules/exporting";
+import "highcharts/modules/offline-exporting";
 import HighchartsReact from "highcharts-react-official";
-import Treemap from "highcharts/modules/treemap";
-import Treegraph from "highcharts/modules/treegraph";
-
-Treemap(Highcharts);
-Treegraph(Highcharts);
-HighchartsExporting(Highcharts);
-HighchartsOfflineExporting(Highcharts);
+import "highcharts/modules/treemap";
+import "highcharts/modules/treegraph";
 
 interface TreeChartProps {
   data?: Array<[string, string, number?]>;

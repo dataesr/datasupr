@@ -1,13 +1,11 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import React from "react";
 import Highcharts from "highcharts";
-import mapModule from "highcharts/modules/map";
+import "highcharts/modules/map";
 import HighchartsReact from "highcharts-react-official";
 import * as turf from "@turf/turf";
 
 import MapSkeleton from "../skeletons/map";
-
-mapModule(Highcharts);
 
 export default function MapPieGenders({
   currentYear,

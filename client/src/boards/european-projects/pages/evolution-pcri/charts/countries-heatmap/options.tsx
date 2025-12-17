@@ -1,14 +1,9 @@
 import HighchartsInstance from "highcharts";
-import HighchartsHeatmap from "highcharts/modules/heatmap";
+import "highcharts/modules/heatmap";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { EvolutionDataItem } from "./types";
 import i18n from "./i18n.json";
-
-// Initialiser le module heatmap
-if (typeof HighchartsInstance === "function") {
-  HighchartsHeatmap(HighchartsInstance);
-}
 
 export default function Options(data: EvolutionDataItem[], currentLang: string = "fr", highlightCountryCode?: string | null) {
   if (!data || data.length === 0) return null;

@@ -1,12 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
-import highchartsMap from "highcharts/modules/map";
+import "highcharts/modules/map";
 
 import { MapBubbleDataProps, PolygonsDataProps } from "../../../types/atlas";
 import MapSkeleton from "./skeletons/map";
-
-highchartsMap(Highcharts);
 
 export default function MapWithPolygonAndBubbles({
   currentYear,
