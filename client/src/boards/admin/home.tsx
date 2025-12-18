@@ -113,7 +113,7 @@ export default function Home() {
 
       return response.json();
     },
-    onSuccess: async (data, variables) => {
+    onSuccess: async (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["list-dashboards"] });
 
       const shouldInitializeStructure = window.confirm(
