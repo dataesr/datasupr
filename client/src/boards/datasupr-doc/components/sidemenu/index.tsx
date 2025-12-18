@@ -5,8 +5,11 @@ import "./styles.scss";
 export default function CustomSideMenu() {
   return (
     <SideMenu title="" sticky fullHeight className="padded-sidemenu">
-      <Link href="#id1">Menu1 (ancre)</Link>
-      <Link href="#id2">Menu2 (ancre)</Link>
+      <Link href="#id1">Gestion des URLs</Link>
+      <Link href="#id2">Liste des ids</Link>
+      <Link href="#id2">Ajout d'un graphique</Link>
+      <Link href="#id2">Liste des composants</Link>
+      <Link href="#id2">Serveur</Link>
     </SideMenu>
   );
 }
