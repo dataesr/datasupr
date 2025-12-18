@@ -113,8 +113,39 @@ export default function Home() {
 
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: async (data, variables) => {
       queryClient.invalidateQueries({ queryKey: ["list-dashboards"] });
+
+      const shouldInitializeStructure = window.confirm(
+        `Tableau de bord ajouté avec succès !\n\nVoulez-vous initialiser l'arborescence de fichiers pour ce dashboard ?\n\nCela créera automatiquement tous les fichiers nécessaires à partir du template.`
+      );
+
+      if (shouldInitializeStructure) {
+        try {
+          const structureResponse = await fetch(`${VITE_APP_SERVER_URL}/admin/initialize-dashboard-structure`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ dashboardId: variables.id }),
+          });
+
+          if (!structureResponse.ok) {
+            const error = await structureResponse.json();
+            throw new Error(error.error || "Erreur lors de l'initialisation de la structure");
+          }
+
+          const structureData = await structureResponse.json();
+          alert(
+            `Structure du dashboard initialisée avec succès !\n\nRépertoire client : ${structureData.clientDir}\nRépertoire serveur : ${structureData.serverDir}\n\nN'oubliez pas de redémarrer le serveur de développement.`
+          );
+        } catch (structureError) {
+          alert(`Erreur lors de l'initialisation de la structure : ${(structureError as Error).message}`);
+        }
+      } else {
+        alert("Tableau de bord ajouté avec succès (sans initialisation de la structure)");
+      }
+
       setNewDashboard({
         name_fr: "",
         name_en: "",
@@ -125,7 +156,6 @@ export default function Home() {
         api_url: "",
         isMultilingual: false,
       });
-      alert("Tableau de bord ajouté avec succès");
     },
     onError: (error: Error) => {
       alert(error.message);
@@ -366,6 +396,8 @@ export default function Home() {
     addDashboardMutation.mutate(newDashboard);
   };
 
+  const isLocalhost = window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1";
+
   return (
     <Container fluid className="fr-mx-10w admin-home">
       <Row className="fr-mb-5w">
@@ -379,94 +411,96 @@ export default function Home() {
         </Col>
       </Row>
       <h2 className="fr-mb-2w">Gestion des tableaux de bord</h2>
-      <div className="form-section">
-        <h3 className="fr-mb-2w">〉Ajout des tableaux de bord</h3>
-        <Row gutters className="form-row">
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
-              placeholder="Identifiant du tableau de bord"
-              value={newDashboard.id}
-              onChange={(e) => setNewDashboard({ ...newDashboard, id: e.target.value })}
-            />
-          </Col>
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
-              placeholder="Nom du tableau de bord (FR)"
-              value={newDashboard.name_fr}
-              onChange={(e) => setNewDashboard({ ...newDashboard, name_fr: e.target.value })}
-            />
-          </Col>
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
-              placeholder="Nom du tableau de bord (EN)"
-              value={newDashboard.name_en}
-              onChange={(e) => setNewDashboard({ ...newDashboard, name_en: e.target.value })}
-            />
-          </Col>
-          <Col>
-            <div className="fr-checkbox-group">
+      {isLocalhost && (
+        <div className="form-section">
+          <h3 className="fr-mb-2w">〉Ajout des tableaux de bord</h3>
+          <Row gutters className="form-row">
+            <Col>
               <input
-                type="checkbox"
-                id="isMultilingual"
-                checked={newDashboard.isMultilingual}
-                onChange={(e) => setNewDashboard({ ...newDashboard, isMultilingual: e.target.checked })}
+                type="text"
+                className="fr-input fr-mb-2w"
+                placeholder="Identifiant du tableau de bord"
+                value={newDashboard.id}
+                onChange={(e) => setNewDashboard({ ...newDashboard, id: e.target.value })}
               />
-              <label className="fr-label" htmlFor="isMultilingual">
-                Multilingue
-              </label>
-            </div>
-          </Col>
-        </Row>
-        <Row gutters className="form-row">
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
-              placeholder="Description du tableau de bord (FR)"
-              value={newDashboard.description_fr}
-              onChange={(e) => setNewDashboard({ ...newDashboard, description_fr: e.target.value })}
-            />
-          </Col>
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
-              placeholder="Description du tableau de bord (EN)"
-              value={newDashboard.description_en}
-              onChange={(e) => setNewDashboard({ ...newDashboard, description_en: e.target.value })}
-            />
-          </Col>
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
-              placeholder="URL du tableau"
-              value={newDashboard.url}
-              onChange={(e) => setNewDashboard({ ...newDashboard, url: e.target.value })}
-            />
-          </Col>
-          <Col>
-            <input
-              type="text"
-              className="fr-input fr-mb-2w"
-              placeholder="URL de l'API"
-              value={newDashboard.api_url}
-              onChange={(e) => setNewDashboard({ ...newDashboard, api_url: e.target.value })}
-            />
-          </Col>
-          <Col md={1} className="text-right">
-            <Button color="blue-cumulus" onClick={() => add_dashboard()} disabled={addDashboardMutation.isPending}>
-              {addDashboardMutation.isPending ? "..." : "Ajouter"}
-            </Button>
-          </Col>
-        </Row>
-      </div>
+            </Col>
+            <Col>
+              <input
+                type="text"
+                className="fr-input fr-mb-2w"
+                placeholder="Nom du tableau de bord (FR)"
+                value={newDashboard.name_fr}
+                onChange={(e) => setNewDashboard({ ...newDashboard, name_fr: e.target.value })}
+              />
+            </Col>
+            <Col>
+              <input
+                type="text"
+                className="fr-input fr-mb-2w"
+                placeholder="Nom du tableau de bord (EN)"
+                value={newDashboard.name_en}
+                onChange={(e) => setNewDashboard({ ...newDashboard, name_en: e.target.value })}
+              />
+            </Col>
+            <Col>
+              <div className="fr-checkbox-group">
+                <input
+                  type="checkbox"
+                  id="isMultilingual"
+                  checked={newDashboard.isMultilingual}
+                  onChange={(e) => setNewDashboard({ ...newDashboard, isMultilingual: e.target.checked })}
+                />
+                <label className="fr-label" htmlFor="isMultilingual">
+                  Multilingue
+                </label>
+              </div>
+            </Col>
+          </Row>
+          <Row gutters className="form-row">
+            <Col>
+              <input
+                type="text"
+                className="fr-input fr-mb-2w"
+                placeholder="Description du tableau de bord (FR)"
+                value={newDashboard.description_fr}
+                onChange={(e) => setNewDashboard({ ...newDashboard, description_fr: e.target.value })}
+              />
+            </Col>
+            <Col>
+              <input
+                type="text"
+                className="fr-input fr-mb-2w"
+                placeholder="Description du tableau de bord (EN)"
+                value={newDashboard.description_en}
+                onChange={(e) => setNewDashboard({ ...newDashboard, description_en: e.target.value })}
+              />
+            </Col>
+            <Col>
+              <input
+                type="text"
+                className="fr-input fr-mb-2w"
+                placeholder="URL du tableau"
+                value={newDashboard.url}
+                onChange={(e) => setNewDashboard({ ...newDashboard, url: e.target.value })}
+              />
+            </Col>
+            <Col>
+              <input
+                type="text"
+                className="fr-input fr-mb-2w"
+                placeholder="URL de l'API"
+                value={newDashboard.api_url}
+                onChange={(e) => setNewDashboard({ ...newDashboard, api_url: e.target.value })}
+              />
+            </Col>
+            <Col md={1} className="text-right">
+              <Button color="blue-cumulus" onClick={() => add_dashboard()} disabled={addDashboardMutation.isPending}>
+                {addDashboardMutation.isPending ? "..." : "Ajouter"}
+              </Button>
+            </Col>
+          </Row>
+        </div>
+      )}
       <Row>
         <Col>
           <div className="fr-table fr-table--layout-fixed">
@@ -486,7 +520,11 @@ export default function Home() {
               <tbody>
                 {data.map((dashboard) => (
                   <tr key={dashboard.id}>
-                    <td>{dashboard.id}</td>
+                    <td>
+                      <Link href={dashboard.url} target="_blank" rel="noopener noreferrer">
+                        {dashboard.id}
+                      </Link>
+                    </td>
                     <td>{dashboard.name_fr}</td>
                     <td>{dashboard.name_en}</td>
                     <td>{dashboard.description_fr}</td>

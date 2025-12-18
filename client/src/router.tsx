@@ -13,6 +13,8 @@ import NotFoundPage from "./components/not-found-page.tsx";
 import FacultyMembersRoutes from "./boards/faculty-members/routes.tsx";
 import CookiePolicyPage from "./components/cookies/cookie-policy-page/index.tsx";
 import ScanRRoutes from "./boards/scanr/routes.tsx";
+import DatasuprDocRoutes from "./boards/datasupr-doc/routes.tsx";
+import TemplateRoutes from "./boards/template/routes.tsx";
 
 export default function Router() {
   return (
@@ -29,6 +31,8 @@ export default function Router() {
       <Route path="/graduates/*" element={<GraduatesRoutes />} />
       <Route path="/scanr/*" element={<ScanRRoutes />} />
       <Route path="/cookies" element={<CookiePolicyPage />} />
+      <Route path="/template/*" element={<TemplateRoutes />} />
+      <Route path="/datasupr-doc/*" element={<DatasuprDocRoutes />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

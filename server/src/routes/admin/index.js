@@ -1,11 +1,16 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
 import { db } from "../../services/mongo.js";
 import { checkQuery } from "./utils.js";
 import uploadVersionRoute from "./upload/upload-version.js";
 import { getEmbeddings } from "./vectors.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const router = new express.Router();
 
@@ -837,6 +842,157 @@ router.route("/admin/copy-progress/:name").get(async (req, res) => {
     console.error("Error getting copy progress:", error);
     res.status(500).json({ 
       error: "Unable to get copy progress", 
+      details: error.message 
+    });
+  }
+});
+
+// Initialize dashboard structure from template
+router.route("/admin/initialize-dashboard-structure").post(async (req, res) => {
+  // Vérifier que l'on est en localhost
+  const host = req.get('host');
+  if (!host || !host.includes('localhost')) {
+    return res.status(403).json({ 
+      error: "This operation is only allowed on localhost" 
+    });
+  }
+
+  const filters = checkQuery(req.body, ["dashboardId"], res);
+  const { dashboardId } = filters;
+
+  try {
+    // Convertir l'ID en différents formats
+    const dashboardIdKebab = dashboardId.toLowerCase().replace(/_/g, '-');
+    const dashboardIdCamel = dashboardId
+      .split(/[-_]/)
+      .map((word, index) => {
+        const lowerWord = word.toLowerCase();
+        return index === 0 ? lowerWord : lowerWord.charAt(0).toUpperCase() + lowerWord.slice(1);
+      })
+      .join('');
+    const dashboardIdPascal = dashboardId
+      .split(/[-_]/)
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join('');
+
+    // Chemins des répertoires
+    const projectRoot = path.resolve(__dirname, '../../../..');
+    const clientTemplateDir = path.join(projectRoot, 'client/src/boards/template');
+    const serverTemplateDir = path.join(projectRoot, 'server/src/routes/boards/template');
+    
+    const clientTargetDir = path.join(projectRoot, `client/src/boards/${dashboardIdKebab}`);
+    const serverTargetDir = path.join(projectRoot, `server/src/routes/boards/${dashboardIdKebab}`);
+
+    // Vérifier que les répertoires template existent
+    if (!fs.existsSync(clientTemplateDir)) {
+      return res.status(404).json({ error: "Client template directory not found" });
+    }
+    if (!fs.existsSync(serverTemplateDir)) {
+      return res.status(404).json({ error: "Server template directory not found" });
+    }
+
+    // Vérifier que le dashboard n'existe pas déjà
+    if (fs.existsSync(clientTargetDir)) {
+      return res.status(409).json({ error: "Client dashboard directory already exists" });
+    }
+    if (fs.existsSync(serverTargetDir)) {
+      return res.status(409).json({ error: "Server dashboard directory already exists" });
+    }
+
+    // Fonction pour copier récursivement en remplaçant les templates
+    const copyAndReplace = (srcDir, destDir) => {
+      if (!fs.existsSync(destDir)) {
+        fs.mkdirSync(destDir, { recursive: true });
+      }
+
+      const entries = fs.readdirSync(srcDir, { withFileTypes: true });
+
+      for (const entry of entries) {
+        const srcPath = path.join(srcDir, entry.name);
+        const destPath = path.join(destDir, entry.name);
+
+        if (entry.isDirectory()) {
+          copyAndReplace(srcPath, destPath);
+        } else {
+          let content = fs.readFileSync(srcPath, 'utf8');
+          
+          // Remplacements
+          content = content.replace(/template/g, dashboardIdKebab);
+          content = content.replace(/Template/g, dashboardIdPascal);
+          
+          fs.writeFileSync(destPath, content, 'utf8');
+        }
+      }
+    };
+
+    // Copier les structures
+    copyAndReplace(clientTemplateDir, clientTargetDir);
+    copyAndReplace(serverTemplateDir, serverTargetDir);
+
+    // Modifier client/src/router.tsx
+    const clientRouterPath = path.join(projectRoot, 'client/src/router.tsx');
+    let clientRouterContent = fs.readFileSync(clientRouterPath, 'utf8');
+    
+    // Ajouter l'import
+    const importLine = `import ${dashboardIdPascal}Routes from "./boards/${dashboardIdKebab}/routes.tsx";`;
+    const importInsertionPoint = clientRouterContent.indexOf('import TemplateRoutes');
+    if (importInsertionPoint !== -1) {
+      clientRouterContent = 
+        clientRouterContent.slice(0, importInsertionPoint) + 
+        importLine + '\n' +
+        clientRouterContent.slice(importInsertionPoint);
+    }
+    
+    // Ajouter la route
+    const routeLine = `      <Route path="/${dashboardIdKebab}/*" element={<${dashboardIdPascal}Routes />} />`;
+    const routeInsertionPoint = clientRouterContent.indexOf('<Route path="/template/*"');
+    if (routeInsertionPoint !== -1) {
+      const lineEnd = clientRouterContent.indexOf('\n', routeInsertionPoint);
+      clientRouterContent = 
+        clientRouterContent.slice(0, lineEnd + 1) + 
+        routeLine + '\n' +
+        clientRouterContent.slice(lineEnd + 1);
+    }
+    
+    fs.writeFileSync(clientRouterPath, clientRouterContent, 'utf8');
+
+    // Modifier server/src/router.js
+    const serverRouterPath = path.join(projectRoot, 'server/src/router.js');
+    let serverRouterContent = fs.readFileSync(serverRouterPath, 'utf8');
+    
+    // Ajouter l'import (utiliser camelCase pour le nom de variable)
+    const serverImportLine = `import ${dashboardIdCamel}Router from "./routes/boards/${dashboardIdKebab}/index.js";`;
+    const serverImportInsertionPoint = serverRouterContent.indexOf('import templateRouter');
+    if (serverImportInsertionPoint !== -1) {
+      serverRouterContent = 
+        serverRouterContent.slice(0, serverImportInsertionPoint) + 
+        serverImportLine + '\n' +
+        serverRouterContent.slice(serverImportInsertionPoint);
+    }
+    
+    // Ajouter l'utilisation du router
+    const useRouterLine = `router.use(${dashboardIdCamel}Router);`;
+    const useRouterInsertionPoint = serverRouterContent.indexOf('router.use(templateRouter)');
+    if (useRouterInsertionPoint !== -1) {
+      const lineEnd = serverRouterContent.indexOf('\n', useRouterInsertionPoint);
+      serverRouterContent = 
+        serverRouterContent.slice(0, lineEnd + 1) + 
+        useRouterLine + '\n' +
+        serverRouterContent.slice(lineEnd + 1);
+    }
+    
+    fs.writeFileSync(serverRouterPath, serverRouterContent, 'utf8');
+
+    res.json({ 
+      message: "Dashboard structure initialized successfully",
+      dashboardId,
+      clientDir: clientTargetDir,
+      serverDir: serverTargetDir
+    });
+  } catch (error) {
+    console.error("Error initializing dashboard structure:", error);
+    res.status(500).json({ 
+      error: "Unable to initialize dashboard structure", 
       details: error.message 
     });
   }
