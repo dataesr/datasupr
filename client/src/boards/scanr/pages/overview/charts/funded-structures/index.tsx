@@ -5,8 +5,8 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getYears } from "../../../../utils";
-import { getOptions, getSeries } from "./utils.tsx";
+import { getCategoriesAndSeries, getYears } from "../../../../utils";
+import { getOptions } from "./utils.tsx";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -54,7 +54,7 @@ export default function FundedStructures() {
           size: 25
         },
         aggs: {
-          by_type: {
+          by_funder: {
             terms: {
               field: "project_type.keyword"
             }
@@ -77,7 +77,7 @@ export default function FundedStructures() {
       }).then((response) => response.json()),
   });
   if (isLoading || !data) return <DefaultSkeleton />;
-  const { categories, series } = getSeries(data);
+  const { categories, series } = getCategoriesAndSeries(data);
 
   const config = {
     id: "fundedStructures",

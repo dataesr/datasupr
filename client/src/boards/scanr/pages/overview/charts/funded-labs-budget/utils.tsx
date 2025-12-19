@@ -1,16 +1,4 @@
-import { formatCompactNumber, getGeneralOptions, getLabelFromName } from '../../../../utils';
-
-function getSeries(data: { aggregations: { by_participant: { buckets: any[]; }; }; }) {
-  const buckets = data?.aggregations?.by_participant?.buckets ?? [];
-  const categories = buckets.map((item: { key: string; }) => getLabelFromName(item.key));
-  let allTypes = buckets.map((items) => items.by_type.buckets.map((item: { key: string; }) => item.key)).flat();
-  allTypes = Array.from(new Set(allTypes)).reverse();
-  const series = allTypes.map((type) => ({
-    name: type,
-    data: buckets.map((item: { by_type: { buckets: any[]; }; }) => item.by_type.buckets.find((i) => i.key === type)?.sum_budget.value ?? 0),
-  }));
-  return { categories, series };
-}
+import { formatCompactNumber, getGeneralOptions } from '../../../../utils';
 
 function getOptions(
   series: any,
@@ -39,6 +27,5 @@ function getOptions(
 }
 
 export {
-  getSeries,
   getOptions,
 };
