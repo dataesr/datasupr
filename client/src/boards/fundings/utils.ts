@@ -22,7 +22,7 @@ const formatCompactNumber = (number: number) => {
   return formatter.format(number);
 }
 
-const getCategoriesAndSeries = (data: { aggregations: { by_participant: { buckets: any[]; }; }; }) => {
+const getCategoriesAndSeries2 = (data: { aggregations: { by_participant: { buckets: any[]; }; }; }, getKey) => {
   const buckets = data?.aggregations?.by_participant?.buckets ?? [];
   const categories = buckets.map((item: { key: string; }) => getLabelFromName(item.key));
   let funders = buckets.map((items) => items.by_funder.buckets.map((item: { key: string; }) => item.key)).flat();
@@ -31,30 +31,20 @@ const getCategoriesAndSeries = (data: { aggregations: { by_participant: { bucket
   // Sort accordung to object sortedFunders
   funders = Object.keys(sortedFunders).map((sortedFunder) => funders.find((funder) => sortedFunder === funder.toLowerCase()));
   funders = funders.filter((funder) => !!funder).reverse();
-  const series = funders.map((type) => ({
+  const series: any[] = funders.map((type) => ({
     color: getColorFromFunder(type),
-    data: buckets.map((item: { by_funder: { buckets: any[]; }; }) => item.by_funder.buckets.find((i) => i.key === type)?.doc_count ?? 0),
+    data: buckets.map((item: { by_funder: { buckets: any[]; }; }) => {
+      const tmp =  item.by_funder.buckets.find((i) => i.key === type);
+      return getKey(tmp);
+    }),
     name: type,
   }));
   return { categories, series };
 }
 
-const getCategoriesAndSeriesBudget = (data: { aggregations: { by_participant: { buckets: any[]; }; }; }) => {
-  const buckets = data?.aggregations?.by_participant?.buckets ?? [];
-  const categories = buckets.map((item: { key: string; }) => getLabelFromName(item.key));
-  let funders = buckets.map((items) => items.by_funder.buckets.map((item: { key: string; }) => item.key)).flat();
-  // Remove duplicates
-  funders =  [...new Set(funders)];
-  // Sort accordung to object sortedFunders
-  funders = Object.keys(sortedFunders).map((sortedFunder) => funders.find((funder) => sortedFunder === funder.toLowerCase()));
-  funders = funders.filter((funder) => !!funder).reverse();
-  const series = funders.map((type) => ({
-    color: getColorFromFunder(type),
-    data: buckets.map((item: { by_funder: { buckets: any[]; }; }) => item.by_funder.buckets.find((i) => i.key === type)?.sum_budget.value ?? 0),
-    name: type,
-  }));
-  return { categories, series };
-}
+const getCategoriesAndSeries = (data: { aggregations: { by_participant: { buckets: any[]; }; }; }) => getCategoriesAndSeries2(data, (item) => item?.doc_count ?? 0);
+
+const getCategoriesAndSeriesBudget = (data: { aggregations: { by_participant: { buckets: any[]; }; }; }) => getCategoriesAndSeries2(data, (item) => item?.sum_budget?.value ?? 0)
 
 const getColorFromFunder = (funder: string) => {
   const funderLowerCase = funder.toLowerCase();
