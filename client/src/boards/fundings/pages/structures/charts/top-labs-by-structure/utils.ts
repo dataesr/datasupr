@@ -1,5 +1,3 @@
-import { getGeneralOptions } from '../../../../utils';
-
 function getCategoriesAndSeries(data: { aggregations: { by_funder_type: { buckets: any; }; }; }) {
   const series = (data?.aggregations?.by_funder_type?.buckets ?? []).map(
     (item: { key: string; doc_count: number; }) => ({
