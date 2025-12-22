@@ -1,33 +1,11 @@
-function getGeneralOptions(title: any, categories: any, title_x_axis: any, title_y_axis: any) {
-  return {
-    title: { text: title },
-    chart: { height: "600px", type: "bar" },
-    legend: { enabled: false },
-    exporting: { enabled: false },
-    plotOptions: {
-      column: {
-        colorByPoint: true,
-        dataLabels: {
-          enabled: true,
-          format: "{point.y}",
-        },
-      },
-    },
-    xAxis: { categories, title: { text: title_x_axis } },
-    yAxis: {
-      title: { text: title_y_axis },
-    },
-    credits: {
-      enabled: false,
-    },
-  };
-}
+import { getColorFromFunder, getGeneralOptions } from "../../../../utils";
 
-function getSeries(data: { aggregations: { by_funder_type: { buckets: any; }; }; }) {
+function getCategoriesAndSeries(data: { aggregations: { by_funder_type: { buckets: any; }; }; }) {
   const series = (data?.aggregations?.by_funder_type?.buckets ?? []).map(
     (item: {
       unique_projects: any; key: string; doc_count: number;
 }) => ({
+      color: getColorFromFunder(item.key),
       name: item.key,
       y: item.unique_projects.value,
     })
@@ -55,14 +33,24 @@ function getOptions(
   );
   return {
     ...generalOptions,
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        colorByPoint: true,
+        dataLabels: {
+          enabled: true,
+          format: "{point.y}",
+        },
+      },
+    },
+    series: [{ data: series }],
     tooltip: {
       format: `<b>{point.name}</b> ${format1} <b>{point.y}</b> ${format2}`,
     },
-    series: [{ data: series }],
   };
 }
 
 export {
-  getSeries,
+  getCategoriesAndSeries,
   getOptions,
 };

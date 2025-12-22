@@ -6,7 +6,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getCategoriesAndSeries, getYears } from "../../../../utils";
-import { getOptions } from "./utils.tsx";
+import { getOptions } from "./utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 

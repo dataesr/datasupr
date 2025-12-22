@@ -53,21 +53,18 @@ const getColorFromFunder = (funder: string) => {
 
 const getGeneralOptions = (title: string, categories: any[], title_x_axis: string, title_y_axis: string) => {
   return {
-    title: { text: title },
     chart: { height: "800px", type: "bar" },
     credits: { enabled: false },
     exporting: { enabled: false },
     legend: { reversed: true },
-    plotOptions: {
-      series: {
-        stacking: "normal"
-      }
-    },
+    plotOptions: { series: { stacking: "normal" } },
+    title: { text: title },
     xAxis: { categories, title: { text: title_x_axis } },
     yAxis: { title: { text: title_y_axis } },
   };
 }
 
+const getIdFromName = (label: string | number) => label.toString().split('###')[0];
 const getLabelFromName = (label: string | number) => label.toString().split('_')[1].split('|')[0];
 
 const getYears = () => Array.from(Array(25).keys()).map((item) => item + 2000);
@@ -78,6 +75,7 @@ export {
   getCategoriesAndSeriesBudget,
   getColorFromFunder,
   getGeneralOptions,
+  getIdFromName,
   getLabelFromName,
   getYears,
   sortedFunders,
