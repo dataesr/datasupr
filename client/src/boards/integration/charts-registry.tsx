@@ -29,16 +29,16 @@ export const chartsRegistry = {
   fundingByCountry: lazy(() => import("../european-projects/pages/evolution-pcri/charts/funding-by-country")),
   efficiencyScatter: lazy(() => import("../european-projects/pages/evolution-pcri/charts/efficiency-scatter")),
 
-  // scanR
-  fundedLabs: lazy(() => import("../scanr/pages/overview/charts/funded-labs")),
-  fundedLabsBudget: lazy(() => import("../scanr/pages/overview/charts/funded-labs-budget")),
-  fundedStructures: lazy(() => import("../scanr/pages/overview/charts/funded-structures")),
-  fundedStructuresBudget: lazy(() => import("../scanr/pages/overview/charts/funded-structures-budget")),
-  fundedStructuresEurope: lazy(() => import("../scanr/pages/overview/charts/funded-structures-europe")),
-  fundedStructuresEuropeBudget: lazy(() => import("../scanr/pages/overview/charts/funded-structures-europe-budget")),
-  topFundersByStructure: lazy(() => import("../scanr/pages/structures/charts/top-funders-by-structure")),
-  topLabsByStructure: lazy(() => import("../scanr/pages/structures/charts/top-labs-by-structure")),
-  topProjectsByStructure: lazy(() => import("../scanr/pages/structures/charts/top-projects-by-structure")),
+  // Fundings
+  fundedLabs: lazy(() => import("../fundings/pages/overview/charts/funded-labs")),
+  fundedLabsBudget: lazy(() => import("../fundings/pages/overview/charts/funded-labs-budget")),
+  fundedStructures: lazy(() => import("../fundings/pages/overview/charts/funded-structures")),
+  fundedStructuresBudget: lazy(() => import("../fundings/pages/overview/charts/funded-structures-budget")),
+  fundedStructuresEurope: lazy(() => import("../fundings/pages/overview/charts/funded-structures-europe")),
+  fundedStructuresEuropeBudget: lazy(() => import("../fundings/pages/overview/charts/funded-structures-europe-budget")),
+  topFundersByStructure: lazy(() => import("../fundings/pages/structures/charts/top-funders-by-structure")),
+  topLabsByStructure: lazy(() => import("../fundings/pages/structures/charts/top-labs-by-structure")),
+  topProjectsByStructure: lazy(() => import("../fundings/pages/structures/charts/top-projects-by-structure")),
 };
 
 export type ChartId = keyof typeof chartsRegistry;

@@ -69,7 +69,7 @@ export default function TopLabsByStructure() {
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: [`scanr-top-funders-by-structure`, selectedStructure, selectedYearEnd, selectedYearStart],
+    queryKey: [`fundings-top-funders-by-structure`, selectedStructure, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -110,8 +110,8 @@ export default function TopLabsByStructure() {
       <Row gutters className="form-row">
         <Col md={12}>
           <select
-            name="scanr-structure"
-            id="scanr-structure"
+            name="fundings-structure"
+            id="fundings-structure"
             className="fr-mb-2w fr-select"
             value={selectedStructure}
             onChange={(e) => setSelectedStructure(e.target.value)}
@@ -128,8 +128,8 @@ export default function TopLabsByStructure() {
       <Row gutters className="form-row">
         <Col md={6}>
           <select
-            name="scanr-year-start"
-            id="scanr-year-start"
+            name="fundings-year-start"
+            id="fundings-year-start"
             className="fr-mb-2w fr-select"
             value={selectedYearStart}
             onChange={(e) => setSelectedYearStart(e.target.value)}
@@ -144,8 +144,8 @@ export default function TopLabsByStructure() {
         </Col>
         <Col md={6}>
           <select
-            name="scanr-year-end"
-            id="scanr-year-end"
+            name="fundings-year-end"
+            id="fundings-year-end"
             className="fr-mb-2w fr-select"
             value={selectedYearEnd}
             onChange={(e) => setSelectedYearEnd(e.target.value)}

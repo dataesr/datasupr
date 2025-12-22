@@ -5,12 +5,13 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getOptions, getSeries } from "./utils.tsx";
+import { getCategoriesAndSeriesBudget, getYears } from "../../../../utils";
+import { getOptions } from "./utils.tsx";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function FundedStructures() {
+export default function FundedLabsBudget() {
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
@@ -40,7 +41,7 @@ export default function FundedStructures() {
           },
           {
             term: {
-              participant_type: "institution"
+              participant_type: "laboratory"
             }
           }
         ]
@@ -51,13 +52,27 @@ export default function FundedStructures() {
         terms: {
           field: "participant_id_name.keyword",
           size: 25
+        },
+        aggs: {
+          by_funder: {
+            terms: {
+              field: "project_type.keyword"
+            },
+            aggs: {
+              sum_budget: {
+                sum: {
+                  field: "project_budgetTotal"
+                }
+              }
+            }
+          }
         }
       }
     }
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: [`fundings-funded-structures`, selectedYearEnd, selectedYearStart],
+    queryKey: [`fundings-funded-labs-budget`, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -69,28 +84,28 @@ export default function FundedStructures() {
       }).then((response) => response.json()),
   });
   if (isLoading || !data) return <DefaultSkeleton />;
-  const { categories, series } = getSeries(data);
+  const { categories, series } = getCategoriesAndSeriesBudget(data);
 
   const config = {
-    id: "fundedStructures",
-    integrationURL: "/integration?chart_id=fundedStructures",
-    title: `Top 25 des structures françaises par nombre de financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    id: "fundedLabsBudget",
+    integrationURL: "/integration?chart_id=fundedLabsBudget",
+    title: `Top 25 des laboratoires français par montant des financements des projets auxquels elles participent sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = getOptions(
     series,
     categories,
     '',
-    'a obtenu',
-    `financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    selectedYearEnd,
+    selectedYearStart,
     '',
-    'Nombre de projets financés',
+    'Montant des financements des projets auxquels le laboratoire a participé',
   );
 
-  const years = Array.from(Array(25).keys()).map((item) => item + 2000);
+  const years = getYears();
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="funded-structures">
+    <div className={`chart-container chart-container--${color}`} id="funded-labs-budget">
       <Row gutters className="form-row">
         <Col md={6}>
           <select

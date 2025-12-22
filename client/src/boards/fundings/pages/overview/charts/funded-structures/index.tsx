@@ -5,7 +5,8 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getOptions, getSeries } from "./utils.tsx";
+import { getCategoriesAndSeries, getYears } from "../../../../utils";
+import { getOptions } from "./utils.tsx";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -51,6 +52,13 @@ export default function FundedStructures() {
         terms: {
           field: "participant_id_name.keyword",
           size: 25
+        },
+        aggs: {
+          by_funder: {
+            terms: {
+              field: "project_type.keyword"
+            }
+          }
         }
       }
     }
@@ -69,7 +77,7 @@ export default function FundedStructures() {
       }).then((response) => response.json()),
   });
   if (isLoading || !data) return <DefaultSkeleton />;
-  const { categories, series } = getSeries(data);
+  const { categories, series } = getCategoriesAndSeries(data);
 
   const config = {
     id: "fundedStructures",
@@ -87,18 +95,18 @@ export default function FundedStructures() {
     'Nombre de projets financés',
   );
 
-  const years = Array.from(Array(25).keys()).map((item) => item + 2000);
+  const years = getYears();
 
   return (
     <div className={`chart-container chart-container--${color}`} id="funded-structures">
       <Row gutters className="form-row">
         <Col md={6}>
           <select
-            name="fundings-year-start"
-            id="fundings-year-start"
             className="fr-mb-2w fr-select"
-            value={selectedYearStart}
+            id="fundings-year-start"
+            name="fundings-year-start"
             onChange={(e) => setSelectedYearStart(e.target.value)}
+            value={selectedYearStart}
           >
             <option disabled value="">Sélectionnez une année de début</option>
             {years.map((year) => (
@@ -110,11 +118,11 @@ export default function FundedStructures() {
         </Col>
         <Col md={6}>
           <select
-            name="fundings-year-end"
-            id="fundings-year-end"
             className="fr-mb-2w fr-select"
-            value={selectedYearEnd}
+            id="fundings-year-end"
+            name="fundings-year-end"
             onChange={(e) => setSelectedYearEnd(e.target.value)}
+            value={selectedYearEnd}
           >
             <option disabled value="">Sélectionnez une année de fin</option>
             {years.map((year) => (

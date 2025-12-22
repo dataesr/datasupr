@@ -151,6 +151,15 @@ export default function HomePage() {
             />
           </Col>
         </Row>
+        <Row gutters>
+          <Col>
+            <GenericCard
+              description="Tableau de bord des financements"
+              title="Financements"
+              to="/fundings"
+            />
+          </Col>
+        </Row>
       </Container>
       <Footer />
     </>

@@ -57,7 +57,7 @@ export default function FundedLabs() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: [`scanr-funded-labs`, selectedYearEnd, selectedYearStart],
+    queryKey: [`fundings-funded-labs`, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -94,8 +94,8 @@ export default function FundedLabs() {
       <Row gutters className="form-row">
         <Col md={6}>
           <select
-            name="scanr-year-start"
-            id="scanr-year-start"
+            name="fundings-year-start"
+            id="fundings-year-start"
             className="fr-mb-2w fr-select"
             value={selectedYearStart}
             onChange={(e) => setSelectedYearStart(e.target.value)}
@@ -110,8 +110,8 @@ export default function FundedLabs() {
         </Col>
         <Col md={6}>
           <select
-            name="scanr-year-end"
-            id="scanr-year-end"
+            name="fundings-year-end"
+            id="fundings-year-end"
             className="fr-mb-2w fr-select"
             value={selectedYearEnd}
             onChange={(e) => setSelectedYearEnd(e.target.value)}

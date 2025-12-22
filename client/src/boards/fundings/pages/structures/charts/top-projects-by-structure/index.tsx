@@ -10,19 +10,20 @@ import { getOptions, getSeries } from "./utils.tsx";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function FundedStructures() {
+export default function TopProjectsByStructure() {
+  const [selectedStructure, setSelectedStructure] = useState<string>("180089013");
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
 
   const body = {
-    size: 0,
+    size: 25,
     query: {
       bool: {
         filter: [
           {
             range: {
-              project_year: {
+              year: {
                 gte: selectedYearStart,
                 lte: selectedYearEnd
               }
@@ -30,36 +31,23 @@ export default function FundedStructures() {
           },
           {
             term: {
-              participant_isFrench: true
-            }
-          },
-          {
-            term: {
-              participant_status: "active"
-            }
-          },
-          {
-            term: {
-              participant_type: "institution"
+              "participants.structure.id.keyword": selectedStructure
             }
           }
         ]
       }
     },
-    aggs: {
-      by_participant: {
-        terms: {
-          field: "participant_id_name.keyword",
-          size: 25
-        }
+    sort: [
+      {
+        budgetTotal: { order: "desc" }
       }
-    }
-  };
+    ]
+  }
 
   const { data, isLoading } = useQuery({
-    queryKey: [`fundings-funded-structures`, selectedYearEnd, selectedYearStart],
+    queryKey: [`fundings-top-projects-by-structure`, selectedStructure, selectedYearEnd, selectedYearStart],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-projects`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -72,25 +60,46 @@ export default function FundedStructures() {
   const { categories, series } = getSeries(data);
 
   const config = {
-    id: "fundedStructures",
-    integrationURL: "/integration?chart_id=fundedStructures",
-    title: `Top 25 des structures françaises par nombre de financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    id: "topProjectsByStructure",
+    integrationURL: "/integration?chart_id=topProjectsByStructure",
+    title: `Top 25 projets pour ${selectedStructure} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = getOptions(
     series,
     categories,
     '',
-    'a obtenu',
-    `financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    selectedStructure,
     '',
-    'Nombre de projets financés',
+    'Budget total',
   );
 
+  const structures = [
+    { name: "Centre national de la recherche scientifique", id: "180089013" },
+    { name: "Université de Montpellier", id: "130029796" }
+  ]
   const years = Array.from(Array(25).keys()).map((item) => item + 2000);
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="funded-structures">
+    <div className={`chart-container chart-container--${color}`} id="top-funders-by-structure">
+      <Row gutters className="form-row">
+        <Col md={12}>
+          <select
+            name="fundings-structure"
+            id="fundings-structure"
+            className="fr-mb-2w fr-select"
+            value={selectedStructure}
+            onChange={(e) => setSelectedStructure(e.target.value)}
+          >
+            <option disabled value="">Sélectionnez une structure</option>
+            {structures.map((structure) => (
+              <option key={structure.id} value={structure.id}>
+                {structure.name}
+              </option>
+            ))}
+          </select>
+        </Col>
+      </Row>
       <Row gutters className="form-row">
         <Col md={6}>
           <select
