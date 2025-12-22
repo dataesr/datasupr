@@ -5,8 +5,8 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getIdFromName, getLabelFromName, getYears } from "../../../../utils.ts";
-import { getCategoriesAndSeries, getOptions } from "./utils.ts";
+import { getGeneralOptions, getIdFromName, getLabelFromName, getYears } from "../../../../utils.ts";
+import { getCategoriesAndSeries } from "./utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -83,7 +83,7 @@ export default function TopFundersByStructure() {
       }).then((response) => response.json()),
   });
 
-  const body2 = {
+  const bodyStructures = {
     size: 0,
     query: {
       bool: {
@@ -111,11 +111,11 @@ export default function TopFundersByStructure() {
     }
   }
 
-  const { data: data2, isLoading: isLoading2 } = useQuery({
+  const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
     queryKey: [`fundings-structures`, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
-        body: JSON.stringify(body2),
+        body: JSON.stringify(bodyStructures),
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -124,9 +124,9 @@ export default function TopFundersByStructure() {
       }).then((response) => response.json()),
   });
 
-  if (isLoading || isLoading2 || !data || !data2) return <DefaultSkeleton />;
+  if (isLoading || isLoadingStructures || !data || !dataStructures) return <DefaultSkeleton />;
 
-  const structures = data2.aggregations.by_structure.buckets.map((structure) => ({ id: getIdFromName(structure.key), name: getLabelFromName(structure.key) }));
+  const structures = dataStructures.aggregations.by_structure.buckets.map((structure) => ({ id: getIdFromName(structure.key), name: getLabelFromName(structure.key) }));
   const { categories, series } = getCategoriesAndSeries(data);
 
   const getNameFromId = (structureId: string): string => structures.find((item) => item.id === structureId).name;
@@ -137,15 +137,28 @@ export default function TopFundersByStructure() {
     title: `Top 25 financeurs pour ${getNameFromId(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
-  const options: object = getOptions(
-    series,
-    categories,
-    '',
-    'a financé',
-    `projet(s) auquel(s) prend part ${getNameFromId(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
-    '',
-    'Nombre de projets financés',
-  );
+  const options: object = {
+    ...getGeneralOptions(
+      '',
+      categories,
+      '',
+      'Nombre de projets financés'
+    ),
+    legend: { enabled: false },
+    plotOptions: {
+      column: {
+        colorByPoint: true,
+        dataLabels: {
+          enabled: true,
+          format: "{point.y}",
+        },
+      },
+    },
+    series: [{ data: series }],
+    tooltip: {
+      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part ${getNameFromId(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    },
+  }
 
   const years = getYears();
 

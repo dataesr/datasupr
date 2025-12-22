@@ -1,14 +1,14 @@
 {
   "home": {
-    "fr": "Financements - Accueil",
-    "en": "Fundings - Home"
+    "en": "Fundings - Home",
+    "fr": "Financements - Accueil"
   },
   "overview": {
-    "fr": "Financements - Overview",
-    "en": "Fundings - Overview"
+    "en": "Fundings - Overview",
+    "fr": "Financements - Overview"
   },
   "structures": {
-    "fr": "Financements - Par structure",
-    "en": "Fundings - Par structure"
+    "en": "Fundings - By structure",
+    "fr": "Financements - Par structure"
   }
 }

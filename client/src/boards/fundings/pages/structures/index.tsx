@@ -2,6 +2,7 @@ import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
 import TopFundersByStructure from "./charts/top-funders-by-structure";
 // import TopLabsByStructure from "./charts/top-labs-by-structure";
+import TopCountyByStructures from "./charts/top-county-by-structure";
 import TopProjectsByStructure from "./charts/top-projects-by-structure";
 
 export default function Structures() {
@@ -23,6 +24,9 @@ export default function Structures() {
           <TopLabsByStructure />
         </Col>
       </Row> */}
+      <Row gutters>
+        <TopCountyByStructures />
+      </Row>
     </Container>
   );
 }

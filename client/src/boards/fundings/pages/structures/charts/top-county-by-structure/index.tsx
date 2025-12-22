@@ -1,30 +1,36 @@
 import { Col, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 import { useState } from "react";
 
-import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getGeneralOptions, getIdFromName, getLabelFromName, getYears } from "../../../../utils";
-import { getCategoriesAndSeries } from "./utils.ts";
+import { getGeneralOptions } from "../../../../utils";
+import { getIdFromName, getLabelFromName, getYears } from "../../../../utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function TopProjectsByStructure() {
-  const [selectedStructureId, setSelectedStructureId] = useState<string>("180089013");
+export default function TopCountyByStructures() {
+  const [selectedStructureId, setSelectedStructureId] = useState<string>("180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research");
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
 
+  const { data: topology, isLoading: isLoadingTopology } = useQuery({
+    queryKey: ['topo-fr'],
+    queryFn: () => fetch('https://code.highcharts.com/mapdata/countries/fr/fr-all.topo.json').then((response) => response.json()),
+  });
+
   const body = {
-    size: 25,
+    size: 0,
     query: {
       bool: {
         filter: [
           {
             range: {
-              year: {
+              project_year: {
                 gte: selectedYearStart,
                 lte: selectedYearEnd
               }
@@ -32,23 +38,26 @@ export default function TopProjectsByStructure() {
           },
           {
             term: {
-              "participants.structure.id.keyword": selectedStructureId
+              "co_partners_fr_inst.keyword": selectedStructureId
             }
           }
         ]
       }
     },
-    sort: [
-      {
-        budgetTotal: { order: "desc" }
+    aggs: {
+      by_county: {
+        terms: {
+          field: "address.region.keyword",
+          size: 50
+        }
       }
-    ]
+    }
   }
 
-  const { data, isLoading } = useQuery({
-    queryKey: [`fundings-top-projects-by-structure`, selectedStructureId, selectedYearEnd, selectedYearStart],
+  const { data: dataCounty, isLoading: isLoadingCounty } = useQuery({
+    queryKey: ['fundings-top-county', selectedStructureId, selectedYearEnd, selectedYearStart],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-projects`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -99,48 +108,65 @@ export default function TopProjectsByStructure() {
       }).then((response) => response.json()),
   });
 
-  if (isLoading || isLoadingStructures || !data || !dataStructures) return <DefaultSkeleton />;
+  if (isLoadingTopology || !topology || isLoadingCounty || !dataCounty || isLoadingStructures || !dataStructures) return <DefaultSkeleton />;
 
-  const structures = dataStructures.aggregations.by_structure.buckets.map((structure) => ({ id: getIdFromName(structure.key), name: getLabelFromName(structure.key) }));
-  const { categories, series } = getCategoriesAndSeries(data);
+  const data = dataCounty.aggregations.by_county.buckets.map((bucket) => {
+    let county = bucket.key;
+    if (county === 'Guyane') county = 'Guyane française';
+    if (county === "Provence-Alpes-Côte d'Azur") county = "Provence-Alpes-Côte-d'Azur";
+    const county_id = topology.objects.default.geometries.find((item) => item.properties.name === county)?.properties?.['hc-key'];
+    return [county_id, bucket.doc_count]
+  });
 
-  const getNameFromId = (structureId: string): string => structures.find((item) => item.id === structureId).name;
+  const structures = dataStructures.aggregations.by_structure.buckets.map((structure) => ({ id: getIdFromName(structure.key), key: structure.key, name: getLabelFromName(structure.key) }));
 
-  const config = {
-    id: "topProjectsByStructure",
-    integrationURL: "/integration?chart_id=topProjectsByStructure",
-    title: `Top 25 projets pour ${getNameFromId(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
-  };
-
-  const options: object = {
-    ...getGeneralOptions(
-      '',
-      categories,
-      '',
-      'Budget total'
-    ),
-    legend: { enabled: false },
-    plotOptions: {
-      column: {
-        colorByPoint: true,
-        dataLabels: {
-          enabled: true,
-          format: "{point.y}",
-        },
-      },
+  const options = {
+    ...getGeneralOptions('', [], '', ''),
+    chart: {
+      backgroundColor: 'transparent',
+      margin: 0
     },
-    series: [{ data: series }],
-    tooltip: {
-      formatter: function (this: any) {
-        return `${getNameFromId(selectedStructureId)} a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par ${this.point.type}.`
-      },
+    title: {
+      text: null
     },
+    mapView: {
+      padding: [30, 0, 0, 0]
+    },
+    mapNavigation: {
+      enabled: true,
+      buttonOptions: {
+        align: 'right',
+        alignTo: 'spacingBox'
+      }
+    },
+    navigation: {
+      buttonOptions: {
+        theme: {
+          stroke: '#e6e6e6'
+        }
+      }
+    },
+    legend: {
+      layout: 'vertical',
+      align: 'right'
+    },
+    colorAxis: {
+      minColor: '#ffffff',
+      maxColor: '#4ba5a6'
+    },
+    series: [
+      {
+        name: topology.title || 'Map',
+        mapData: topology,
+        data
+      }
+    ]
   };
 
   const years = getYears();
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="top-funders-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="top-county-by-structure">
       <Row gutters className="form-row">
         <Col md={12}>
           <select
@@ -152,7 +178,7 @@ export default function TopProjectsByStructure() {
           >
             <option disabled value="">Sélectionnez une structure</option>
             {structures.map((structure) => (
-              <option key={structure.id} value={structure.id}>
+              <option key={structure.key} value={structure.key}>
                 {structure.name}
               </option>
             ))}
@@ -193,11 +219,11 @@ export default function TopProjectsByStructure() {
           </select>
         </Col>
       </Row>
-      <ChartWrapper
-        config={config}
-        legend={null}
+      <HighchartsReact
+        highcharts={Highcharts}
         options={options}
+        constructorType={"mapChart"}
       />
     </div>
   );
-}
+};

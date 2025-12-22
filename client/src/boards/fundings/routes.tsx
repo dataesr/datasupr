@@ -1,15 +1,14 @@
-import { Routes, Route, Navigate, useSearchParams } from "react-router-dom";
+import { Navigate, Route, Routes, useSearchParams } from "react-router-dom";
 
-import GlobalLayout from "./components/layouts/global-layout.tsx";
-import Home from "./pages//home/index.tsx";
-import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
-
-import "./styles.scss";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
-
-import i18n from "./title-i18n.json";
+import GlobalLayout from "./components/layouts/global-layout.tsx";
+import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
+import Home from "./pages/home/index.tsx";
 import Overview from "./pages/overview/index.tsx";
 import Structures from "./pages/structures/index.tsx";
+import i18n from "./title-i18n.json";
+
+import "./styles.scss";
 
 const useRouteTitle = (path: string) => {
   const [searchParams] = useSearchParams();

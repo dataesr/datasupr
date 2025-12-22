@@ -1,17 +1,15 @@
+import { Button, Container, FastAccess, Header, Link, Logo, Nav, Service } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
-import { Button, Header, Logo, Service, FastAccess, Container, Nav, Link } from "@dataesr/dsfr-plus";
 
-import Footer from "./footer";
 import SwitchTheme from "../../../../components/switch-theme";
+import Footer from "./footer";
 import i18n from "./i18n.json";
-// import "../styles.scss";
 
 export default function GlobalLayout({ languageSelector = false }) {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  // const filtersParams = searchParams.toString();
   const [menuOpen, setMenuOpen] = useState(false);
 
   if (!pathname) return null;
