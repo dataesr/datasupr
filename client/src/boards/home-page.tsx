@@ -2,7 +2,15 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-import { Badge, Button, Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
+import {
+  Badge,
+  Button,
+  Col,
+  Container,
+  Row,
+  Text,
+  Title,
+} from "@dataesr/dsfr-plus";
 
 import GenericCard from "../components/cards/generic-card/index.tsx";
 
@@ -26,7 +34,9 @@ export default function HomePage() {
   useEffect(() => {
     //Call API to get the list of dashboards
     const getData = async () => {
-      const response = await fetch(`${VITE_APP_SERVER_URL}/tableaux?tag=` + searchText);
+      const response = await fetch(
+        `${VITE_APP_SERVER_URL}/tableaux?tag=` + searchText
+      );
       const data = await response.json();
       setSearchResults(data);
     };
@@ -41,13 +51,17 @@ export default function HomePage() {
         <Row className="fr-mt-5w">
           <Col>
             <Title as="h2" className="fr-mb-2w">
-              DataSupR - Tableaux de bord de l'enseignement supérieur, de la recherche et de l'innovation
+              DataSupR - Tableaux de bord de l'enseignement supérieur, de la
+              recherche et de l'innovation
             </Title>
             <Text>
-              Bienvenue sur dataSupR, la plateforme de visualisation des données de l'enseignement supérieur, de la recherche et de l'innovation.
+              Bienvenue sur dataSupR, la plateforme de visualisation des données
+              de l'enseignement supérieur, de la recherche et de l'innovation.
               <br />
-              Vous y trouverez des tableaux de bord interactifs, des cartes, des graphiques et des données brutes sur les effectifs étudiants, les
-              ressources humaines, les formations, les diplômes, la recherche, les publications, les brevets, les finances, etc.
+              Vous y trouverez des tableaux de bord interactifs, des cartes, des
+              graphiques et des données brutes sur les effectifs étudiants, les
+              ressources humaines, les formations, les diplômes, la recherche,
+              les publications, les brevets, les finances, etc.
             </Text>
           </Col>
         </Row>
@@ -61,9 +75,17 @@ export default function HomePage() {
         <Row>
           <Col md={10} className="search">
             <label className="fr-label" htmlFor="text-input-text">
-              Saisissez un mot clé pour rechercher un tableau de bord. Par exemple : "étudiants", "atlas", "France", "recherche", "finances", etc ...
+              Saisissez un mot clé pour rechercher un tableau de bord. Par
+              exemple : "étudiants", "atlas", "France", "recherche", "finances",
+              etc ...
             </label>
-            <input className="fr-input" type="text" id="text-input-text" name="text-input-text" onChange={(e) => setSearchText(e.target.value)} />
+            <input
+              className="fr-input"
+              type="text"
+              id="text-input-text"
+              name="text-input-text"
+              onChange={(e) => setSearchText(e.target.value)}
+            />
             {searchResults?.length > 0 ? (
               <ul className="search-results">
                 {searchResults.map((result: TDBDefinitionTypes) => (
@@ -96,7 +118,12 @@ export default function HomePage() {
             ) : null}
           </Col>
           <Col md={2}>
-            <Button className="fr-mt-4w" color="pink-tuile" icon="search-line" onClick={() => {}}>
+            <Button
+              className="fr-mt-4w"
+              color="pink-tuile"
+              icon="search-line"
+              onClick={() => {}}
+            >
               Rechercher
             </Button>
           </Col>
@@ -119,27 +146,47 @@ export default function HomePage() {
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="Projets européens" title="Projets européens" to="/european-projects?datasupr=true" />
+            <GenericCard
+              description="Projets européens"
+              title="Projets européens"
+              to="/european-projects?datasupr=true"
+            />
           </Col>
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="Open Alex" title="Open Alex" to="/open-alex?datasupr=true" />
+            <GenericCard
+              description="Open Alex"
+              title="Open Alex"
+              to="/open-alex?datasupr=true"
+            />
           </Col>
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="TEDS" title="TEDS" to="/teds?datasupr=true" />
+            <GenericCard
+              description="TEDS"
+              title="TEDS"
+              to="/teds?datasupr=true"
+            />
           </Col>
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="Tableau de bord financier des universités" title="Finance" to="/finance-universite?datasupr=true" />
+            <GenericCard
+              description="Tableau de bord financier des universités"
+              title="Finance"
+              to="/structures-finance?datasupr=true"
+            />
           </Col>
         </Row>
         <Row gutters>
           <Col>
-            <GenericCard description="Diplomés" title="Diplomés" to="/graduates" />
+            <GenericCard
+              description="Diplomés"
+              title="Diplomés"
+              to="/graduates"
+            />
           </Col>
         </Row>
         <Row gutters>

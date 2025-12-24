@@ -1,6 +1,5 @@
 import { Route, Routes } from "react-router-dom";
 
-// import FinanceUniversityRoutes from "./boards/finance-university/routes.tsx";
 import AdminRoutes from "./boards/admin/routes.tsx";
 import AtlasRoutes from "./boards/atlas/routes.tsx";
 import CookiePolicyPage from "./components/cookies/cookie-policy-page/index.tsx";
@@ -14,16 +13,8 @@ import Integration from "./boards/integration/index.tsx";
 import NotFoundPage from "./components/not-found-page.tsx";
 import OpenAlexRoutes from "./boards/open-alex/routes.tsx";
 import TedsRoutes from "./boards/teds/routes.tsx";
-<<<<<<< Updated upstream
 import TemplateRoutes from "./boards/template/routes.tsx";
-=======
-import FinanceUniversityRoutes from "./boards/finance-university/routes.tsx";
-import GraduatesRoutes from "./boards/graduates/routes.tsx";
-import NotFoundPage from "./components/not-found-page.tsx";
-import FacultyMembersRoutes from "./boards/faculty-members/routes.tsx";
-import CookiePolicyPage from "./components/cookies/cookie-policy-page/index.tsx";
-import ScanRRoutes from "./boards/scanr/routes.tsx";
->>>>>>> Stashed changes
+import StructuresFinanceRoutes from "./boards/structures-finance/routes.tsx";
 
 export default function Router() {
   return (
@@ -32,10 +23,6 @@ export default function Router() {
       <Route path="/admin/*" element={<AdminRoutes />} />
       <Route path="/atlas/*" element={<AtlasRoutes />} />
       <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
-      <Route
-        path="/finance-universite/*"
-        element={<FinanceUniversityRoutes />}
-      />
       <Route path="/integration" element={<Integration />} />
       <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
       <Route
@@ -47,6 +34,10 @@ export default function Router() {
       <Route path="/fundings/*" element={<FundingsRoutes />} />
       <Route path="/cookies" element={<CookiePolicyPage />} />
       <Route path="/template/*" element={<TemplateRoutes />} />
+      <Route
+        path="/structures-finance/*"
+        element={<StructuresFinanceRoutes />}
+      />
       <Route path="/datasupr-doc/*" element={<DatasuprDocRoutes />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

@@ -1,0 +1,5 @@
+### Get comparison filters for a specific year
+GET http://localhost:3000/api/structures-finance/comparisons/filters?annee=2023
+
+###
+GET http://localhost:3000/api/structures-finance/comparisons/filters

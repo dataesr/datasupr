@@ -1,5 +1,6 @@
 import express from "express";
-import financeRoutes from "../structures-finance/routes/index.js";
+
+import financeRoutes from "./routes/index.js";
 
 const router = new express.Router();
 

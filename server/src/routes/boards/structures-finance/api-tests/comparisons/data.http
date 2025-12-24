@@ -1,0 +1,3 @@
+GET http://localhost:3000/api/structures-finance/comparisons/data?annee=2023
+
+GET http://localhost:3000/api/structures-finance/comparisons/data

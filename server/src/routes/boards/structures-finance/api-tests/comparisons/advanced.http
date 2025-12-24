@@ -1,0 +1,5 @@
+GET http://localhost:3000/api/structures-finance/comparisons/advanced?annee=2023&type=Université&typologie=Pluridisciplinaire&region=Île-de-France
+
+GET http://localhost:3000/api/structures-finance/comparisons/advanced?annee=2023
+
+GET http://localhost:3000/api/structures-finance/comparisons/advanced?annee=2023&type=Université

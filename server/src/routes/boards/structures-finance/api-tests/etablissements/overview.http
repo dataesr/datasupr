@@ -1,0 +1,3 @@
+GET http://localhost:3000/api/structures-finance/etablissements/{id}/overview?annee=2023
+
+GET http://localhost:3000/api/structures-finance/etablissements/example-id/overview

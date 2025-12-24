@@ -1,0 +1,8 @@
+.padded-sidemenu {
+  .fr-sidemenu__inner {
+    box-shadow: inset 0 0 0 0;
+  }
+}
+.padded-sidemenu .fr-sidemenu__inner {
+  padding-top: 0 !important;
+}
