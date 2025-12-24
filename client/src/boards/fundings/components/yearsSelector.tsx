@@ -1,7 +1,5 @@
 import { Col, Row } from "@dataesr/dsfr-plus";
 
-import { getYears } from "../../../utils";
-
 
 export default function YearsSelector({
   selectedYearEnd,
@@ -9,7 +7,7 @@ export default function YearsSelector({
   setSelectedYearEnd,
   setSelectedYearStart
 }) {
-  const years = getYears();
+  const years = Array.from(Array(25).keys()).map((item) => item + 2000);
 
   return (
     <Row gutters className="form-row">

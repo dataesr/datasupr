@@ -7,9 +7,9 @@ import { getLabelFromName } from "../../../utils";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function LaboratoriesSelector({
-  selectedLaboratoryId,
-  setSelectedLaboratoryId
+export default function StructuresSelector({
+  selectedStructureId,
+  setSelectedStructureId
 }) {
   const body = {
     size: 0,
@@ -28,14 +28,14 @@ export default function LaboratoriesSelector({
           },
           {
             term: {
-              participant_type: "laboratory"
+              participant_type: "institution"
             }
           }
         ]
       }
     },
     aggregations: {
-      by_laboratory: {
+      by_structure: {
         terms: {
           field: "participant_id_name.keyword",
           size: 100
@@ -45,7 +45,7 @@ export default function LaboratoriesSelector({
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-laboratories'],
+    queryKey: ['fundings-structures'],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -58,23 +58,22 @@ export default function LaboratoriesSelector({
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
-
-  const laboratories = data.aggregations.by_laboratory.buckets.map((laboratory) => ({ id: laboratory.key, name: getLabelFromName(laboratory.key) }));
+  const structures = data.aggregations.by_structure.buckets.map((structure) => ({ id: structure.key, name: getLabelFromName(structure.key) }));
 
   return (
     <Row gutters className="form-row">
       <Col md={12}>
         <select
-          name="fundings-laboratory"
-          id="fundings-laboratory"
+          name="fundings-structure"
+          id="fundings-structure"
           className="fr-mb-2w fr-select"
-          value={selectedLaboratoryId}
-          onChange={(e) => setSelectedLaboratoryId(e.target.value)}
+          value={selectedStructureId}
+          onChange={(e) => setSelectedStructureId(e.target.value)}
         >
-          <option disabled value="">Sélectionnez un laboratoire</option>
-          {laboratories.map((laboratory) => (
-            <option key={laboratory.id} value={laboratory.id}>
-              {laboratory.name}
+          <option disabled value="">Sélectionnez une structure</option>
+          {structures.map((structure) => (
+            <option key={structure.id} value={structure.id}>
+              {structure.name}
             </option>
           ))}
         </select>

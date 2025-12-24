@@ -7,7 +7,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getGeneralOptions } from "../../../../utils.ts";
 import LaboratoriesSelector from "../../components/laboratoriesSelector";
-import YearsSelector from "../../components/yearsSelector";
+import YearsSelector from "../../../../components/yearsSelector";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -38,7 +38,7 @@ export default function TopCountyByLaboratory() {
           },
           {
             term: {
-              "co_partners_fr_inst.keyword": selectedLaboratoryId
+              "co_partners_fr_labs.keyword": selectedLaboratoryId
             }
           }
         ]

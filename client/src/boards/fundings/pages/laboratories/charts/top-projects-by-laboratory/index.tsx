@@ -4,16 +4,16 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getGeneralOptions, getLabelFromName } from "../../../../utils.ts";
 import LaboratoriesSelector from "../../components/laboratoriesSelector";
-import YearsSelector from "../../components/yearsSelector";
+import YearsSelector from "../../../../components/yearsSelector";
 import { getCategoriesAndSeries } from "./utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function TopProjectsByLaboratory() {
-  const [selectedLaboratoryId, setSelectedLaboratoryId] = useState<string>("265906719");
+  const [selectedLaboratoryId, setSelectedLaboratoryId] = useState<string>("265906719###FR_Centre hospitalier régional universitaire de Lille");
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
@@ -33,7 +33,7 @@ export default function TopProjectsByLaboratory() {
           },
           {
             term: {
-              "participants.structure.id.keyword": selectedLaboratoryId
+              "participants.structure.id_name.keyword": selectedLaboratoryId
             }
           }
         ]
@@ -47,7 +47,7 @@ export default function TopProjectsByLaboratory() {
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: [`fundings-top-projects-by-laboratory`, selectedLaboratoryId, selectedYearEnd, selectedYearStart],
+    queryKey: ['fundings-top-projects-by-laboratory', selectedLaboratoryId, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-projects`, {
         body: JSON.stringify(body),
@@ -68,7 +68,7 @@ export default function TopProjectsByLaboratory() {
   const config = {
     id: "topProjectsByLaboratory",
     integrationURL: "/integration?chart_id=topProjectsByLaboratory",
-    title: `Top 25 projets pour ${selectedLaboratoryId} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    title: `Top 25 projets pour ${getLabelFromName(selectedLaboratoryId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = {
@@ -91,7 +91,7 @@ export default function TopProjectsByLaboratory() {
     series: [{ data: series }],
     tooltip: {
       formatter: function (this: any) {
-        return `${selectedLaboratoryId} a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par ${this.point.type}.`
+        return `${getLabelFromName(selectedLaboratoryId)} a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par ${this.point.type}.`
       },
     },
   };

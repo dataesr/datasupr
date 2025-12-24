@@ -4,16 +4,16 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getGeneralOptions } from "../../../../utils";
+import { getGeneralOptions, getLabelFromName } from "../../../../utils";
 import LaboratoriesSelector from "../../components/laboratoriesSelector";
-import YearsSelector from "../../components/yearsSelector";
+import YearsSelector from "../../../../components/yearsSelector";
 import { getCategoriesAndSeries } from "./utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function TopFundersByLaboratory() {
-  const [selectedLaboratoryId, setSelectedLaboratoryId] = useState<string>("265906719");
+  const [selectedLaboratoryId, setSelectedLaboratoryId] = useState<string>("265906719###FR_Centre hospitalier régional universitaire de Lille");
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
@@ -43,7 +43,7 @@ export default function TopFundersByLaboratory() {
           },
           {
             term: {
-              "participant_id.keyword": selectedLaboratoryId
+              "participant_id_name.keyword": selectedLaboratoryId
             }
           }
         ]
@@ -83,12 +83,10 @@ export default function TopFundersByLaboratory() {
 
   const { categories, series } = getCategoriesAndSeries(data);
 
-  // const getNameFromId = (laboratoryId: string): string => laboratories.find((item) => item.id === laboratoryId).name;
-
   const config = {
     id: "topFundersByLaboratory",
     integrationURL: "/integration?chart_id=topFundersByLaboratory",
-    title: `Top 25 financeurs pour ${selectedLaboratoryId} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    title: `Top 25 financeurs pour ${getLabelFromName(selectedLaboratoryId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = {
@@ -110,7 +108,7 @@ export default function TopFundersByLaboratory() {
     },
     series: [{ data: series }],
     tooltip: {
-      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part ${selectedLaboratoryId} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part ${getLabelFromName(selectedLaboratoryId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
     },
   }
 

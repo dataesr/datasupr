@@ -64,10 +64,7 @@ const getGeneralOptions = (title: string, categories: any[], title_x_axis: strin
   };
 }
 
-const getIdFromName = (label: string | number) => label.toString().split('###')[0];
 const getLabelFromName = (label: string | number) => label.toString().split('_')[1].split('|')[0];
-
-const getYears = () => Array.from(Array(25).keys()).map((item) => item + 2000);
 
 export {
   formatCompactNumber,
@@ -75,8 +72,6 @@ export {
   getCategoriesAndSeriesBudget,
   getColorFromFunder,
   getGeneralOptions,
-  getIdFromName,
   getLabelFromName,
-  getYears,
   sortedFunders,
 };

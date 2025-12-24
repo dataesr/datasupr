@@ -1,11 +1,11 @@
-import { Col, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getCategoriesAndSeriesBudget, getYears } from "../../../../utils";
+import YearsSelector from "../../../../components/yearsSelector";
+import { getCategoriesAndSeriesBudget } from "../../../../utils";
 import { getOptions } from "./utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -102,44 +102,14 @@ export default function FundedStructuresEuropeBudget() {
     'Montant des financements des projets auxquels la structure a participé',
   );
 
-  const years = getYears();
-
   return (
     <div className={`chart-container chart-container--${color}`} id="funded-structures-europe-budget">
-      <Row gutters className="form-row">
-        <Col md={6}>
-          <select
-            name="fundings-year-start"
-            id="fundings-year-start"
-            className="fr-mb-2w fr-select"
-            value={selectedYearStart}
-            onChange={(e) => setSelectedYearStart(e.target.value)}
-          >
-            <option disabled value="">Sélectionnez une année de début</option>
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </Col>
-        <Col md={6}>
-          <select
-            name="fundings-year-end"
-            id="fundings-year-end"
-            className="fr-mb-2w fr-select"
-            value={selectedYearEnd}
-            onChange={(e) => setSelectedYearEnd(e.target.value)}
-          >
-            <option disabled value="">Sélectionnez une année de fin</option>
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </Col>
-      </Row>
+      <YearsSelector
+        selectedYearEnd={selectedYearEnd}
+        selectedYearStart={selectedYearStart}
+        setSelectedYearEnd={setSelectedYearEnd}
+        setSelectedYearStart={setSelectedYearStart}
+      />
       <ChartWrapper
         config={config}
         legend={null}
