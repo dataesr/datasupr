@@ -53,7 +53,7 @@ export default function AccueilView() {
         "Analyse globale des données financières des établissements d'enseignement supérieur en France. Visualisez les tendances nationales et les agrégations par type et région.",
       icon: "ri-dashboard-line",
       color: CHART_COLORS.primary,
-      path: "/structures-finance/vue-nationale",
+      path: "/structures-finance/national",
       stats: "Vue d'ensemble et évolution temporelle",
     },
     {
