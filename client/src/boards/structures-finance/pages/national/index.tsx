@@ -178,7 +178,7 @@ export default function NationalView() {
                 aria-selected={activeTab === "encadrement"}
                 onClick={() => handleTabChange("encadrement")}
               >
-                👥 Taux d'encadrement
+                👥 Effectifs par niveaux
               </button>
             </li>
           </ul>

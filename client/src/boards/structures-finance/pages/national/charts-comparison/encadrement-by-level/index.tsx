@@ -266,7 +266,7 @@ export default function EncadrementByLevelChart({
               paddingLeft: "1rem",
             }}
           >
-            Taux d'encadrement selon les effectifs par niveau
+            Effectifs par niveau
           </h3>
           <p
             className="fr-text--xs fr-mb-0"
@@ -276,10 +276,10 @@ export default function EncadrementByLevelChart({
               paddingLeft: "1rem",
             }}
           >
-            Le taux d'encadrement global de l'établissement (emplois totaux /
-            effectifs totaux) est affiché en fonction des effectifs au niveau
-            sélectionné. Seuls les établissements ayant des effectifs pour le
-            niveau choisi sont affichés.
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique
+            sapiente obcaecati accusamus at in ipsam quod itaque, tempora facere
+            saepe cumque a explicabo sint ea tempore, repudiandae inventore
+            provident laboriosam.
           </p>
         </div>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
