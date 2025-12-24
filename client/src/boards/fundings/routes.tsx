@@ -2,10 +2,12 @@ import { Navigate, Route, Routes, useSearchParams } from "react-router-dom";
 
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
-import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
 import Home from "./pages/home/index.tsx";
+import SidemenuLaboratories from "./pages/laboratories/components/sidemenu";
 import Laboratories from "./pages/laboratories/index.tsx";
 import National from "./pages/national";
+import SidemenuNational from "./pages/national/components/sidemenu";
+import SidemenuStructures from "./pages/structures/components/sidemenu";
 import Structures from "./pages/structures/index.tsx";
 import i18n from "./title-i18n.json";
 
@@ -33,11 +35,15 @@ export default function FundingsRoutes() {
       <Route element={<GlobalLayout languageSelector />}>
         <Route index element={<Navigate to="home" replace />} />
         <Route path="home" element={<RouteWithTitle titleKey="home" element={<Home />} />} />
-        <Route element={<SidemenuLayout />}>
+        <Route element={<SidemenuNational />}>
           <Route path="national" element={<RouteWithTitle titleKey="national" element={<National />} />} />
         </Route>
-        <Route path="structures" element={<RouteWithTitle titleKey="structures" element={<Structures />} />} />
-        <Route path="laboratories" element={<RouteWithTitle titleKey="laboratories" element={<Laboratories />} />} />
+        <Route element={<SidemenuStructures />}>
+          <Route path="structures" element={<RouteWithTitle titleKey="structures" element={<Structures />} />} />
+        </Route>
+        <Route element={<SidemenuLaboratories />}>
+          <Route path="laboratories" element={<RouteWithTitle titleKey="laboratories" element={<Laboratories />} />} />
+        </Route>
       </Route>
     </Routes>
   );
