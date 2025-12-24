@@ -42,11 +42,6 @@ export default function TopFundersByStructure() {
           },
           {
             term: {
-              participant_type: "institution"
-            }
-          },
-          {
-            term: {
               "participant_id.keyword": selectedStructureId
             }
           }
@@ -96,6 +91,11 @@ export default function TopFundersByStructure() {
           {
             term: {
               participant_status: "active"
+            }
+          },
+          {
+            term: {
+              participant_type: "institution"
             }
           }
         ]

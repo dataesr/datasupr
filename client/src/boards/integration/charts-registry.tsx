@@ -39,6 +39,8 @@ export const chartsRegistry = {
   topFundersByStructure: lazy(() => import("../fundings/pages/structures/charts/top-funders-by-structure")),
   topLabsByStructure: lazy(() => import("../fundings/pages/structures/charts/top-labs-by-structure")),
   topProjectsByStructure: lazy(() => import("../fundings/pages/structures/charts/top-projects-by-structure")),
+  topFundersByLaboratory: lazy(() => import("../fundings/pages/laboratories/charts/top-funders-by-laboratory")),
+  topProjectsByLaboratory: lazy(() => import("../fundings/pages/laboratories/charts/top-projects-by-laboratory")),
 };
 
 export type ChartId = keyof typeof chartsRegistry;

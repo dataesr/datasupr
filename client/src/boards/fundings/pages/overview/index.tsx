@@ -6,6 +6,7 @@ import FundedStructures from "./charts/funded-structures";
 import FundedStructuresBudget from "./charts/funded-structures-budget";
 import FundedStructuresEurope from "./charts/funded-structures-europe";
 import FundedStructuresEuropeBudget from "./charts/funded-structures-europe-budget";
+import TopCounty from "./charts/top-county";
 
 export default function Overview() {
   return (
@@ -38,6 +39,11 @@ export default function Overview() {
       <Row gutters>
         <Col>
           <FundedStructuresEuropeBudget />
+        </Col>
+      </Row>
+      <Row gutters>
+        <Col>
+          <TopCounty />
         </Col>
       </Row>
     </Container>

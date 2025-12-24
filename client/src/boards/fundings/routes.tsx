@@ -4,6 +4,7 @@ import { useTitle } from "../../hooks/usePageTitle.tsx";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
 import Home from "./pages/home/index.tsx";
+import Laboratories from "./pages/laboratories/index.tsx";
 import Overview from "./pages/overview/index.tsx";
 import Structures from "./pages/structures/index.tsx";
 import i18n from "./title-i18n.json";
@@ -36,6 +37,7 @@ export default function FundingsRoutes() {
           <Route path="overview" element={<RouteWithTitle titleKey="overview" element={<Overview />} />} />
         </Route>
         <Route path="structures" element={<RouteWithTitle titleKey="structures" element={<Structures />} />} />
+        <Route path="laboratories" element={<RouteWithTitle titleKey="laboratories" element={<Laboratories />} />} />
       </Route>
     </Routes>
   );

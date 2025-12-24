@@ -19,13 +19,17 @@
     "fr": "Explorer d'autres tableaux de bord",
     "en": "Explore dashboards"
   },
+  "laboratories": {
+    "fr": "Par laboratoire",
+    "en": "By laboratory"
+  },
   "overview": {
     "fr": "National",
     "en": "National"
   },
   "structures": {
     "fr": "Par structure",
-    "en": "Par structure"
+    "en": "By structure"
   },
   "home": {
     "fr": "Accueil",

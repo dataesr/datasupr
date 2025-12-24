@@ -42,11 +42,6 @@ export default function TopLabsByStructure() {
           },
           {
             term: {
-              participant_type: "institution"
-            }
-          },
-          {
-            term: {
               "participant_id.keyword": selectedStructureId
             }
           }
@@ -95,6 +90,11 @@ export default function TopLabsByStructure() {
           {
             term: {
               participant_status: "active"
+            }
+          },
+          {
+            term: {
+              participant_type: "institution"
             }
           }
         ]

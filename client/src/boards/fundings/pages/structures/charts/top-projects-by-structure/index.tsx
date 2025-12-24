@@ -72,6 +72,11 @@ export default function TopProjectsByStructure() {
             term: {
               participant_status: "active"
             }
+          },
+          {
+            term: {
+              participant_type: "institution"
+            }
           }
         ]
       }

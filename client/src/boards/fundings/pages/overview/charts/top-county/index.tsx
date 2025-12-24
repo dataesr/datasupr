@@ -6,14 +6,13 @@ import { useState } from "react";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getGeneralOptions } from "../../../../utils";
-import { getIdFromName, getLabelFromName, getYears } from "../../../../utils.ts";
+import { getGeneralOptions } from "../../../../utils.ts";
+import { getYears } from "../../../../utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function TopCountyByStructure() {
-  const [selectedStructureId, setSelectedStructureId] = useState<string>("180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research");
+export default function TopCounty() {
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
@@ -35,11 +34,6 @@ export default function TopCountyByStructure() {
                 lte: selectedYearEnd
               }
             }
-          },
-          {
-            term: {
-              "co_partners_fr_inst.keyword": selectedStructureId
-            }
           }
         ]
       }
@@ -55,7 +49,7 @@ export default function TopCountyByStructure() {
   }
 
   const { data: dataCounty, isLoading: isLoadingCounty } = useQuery({
-    queryKey: ['fundings-top-county', selectedStructureId, selectedYearEnd, selectedYearStart],
+    queryKey: ['fundings-top-county', selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -67,53 +61,7 @@ export default function TopCountyByStructure() {
       }).then((response) => response.json()),
   });
 
-  const bodyStructures = {
-    size: 0,
-    query: {
-      bool: {
-        filter: [
-          {
-            term: {
-              participant_isFrench: true
-            }
-          },
-          {
-            term: {
-              participant_status: "active"
-            }
-          },
-          {
-            term: {
-              participant_type: "institution"
-            }
-          }
-        ]
-      }
-    },
-    aggregations: {
-      by_structure: {
-        terms: {
-          field: "participant_id_name.keyword",
-          size: 100
-        }
-      }
-    }
-  }
-
-  const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
-    queryKey: [`fundings-structures`, selectedYearEnd, selectedYearStart],
-    queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
-        body: JSON.stringify(bodyStructures),
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        method: "POST",
-      }).then((response) => response.json()),
-  });
-
-  if (isLoadingTopology || !topology || isLoadingCounty || !dataCounty || isLoadingStructures || !dataStructures) return <DefaultSkeleton />;
+  if (isLoadingTopology || !topology || isLoadingCounty || !dataCounty) return <DefaultSkeleton />;
 
   const data = dataCounty.aggregations.by_county.buckets.map((bucket) => {
     let county = bucket.key;
@@ -122,8 +70,6 @@ export default function TopCountyByStructure() {
     const county_id = topology.objects.default.geometries.find((item) => item.properties.name === county)?.properties?.['hc-key'];
     return [county_id, bucket.doc_count]
   });
-
-  const structures = dataStructures.aggregations.by_structure.buckets.map((structure) => ({ id: getIdFromName(structure.key), key: structure.key, name: getLabelFromName(structure.key) }));
 
   const options = {
     ...getGeneralOptions('', [], '', ''),
@@ -171,25 +117,7 @@ export default function TopCountyByStructure() {
   const years = getYears();
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="top-county-by-structure">
-      <Row gutters className="form-row">
-        <Col md={12}>
-          <select
-            name="fundings-structure"
-            id="fundings-structure"
-            className="fr-mb-2w fr-select"
-            value={selectedStructureId}
-            onChange={(e) => setSelectedStructureId(e.target.value)}
-          >
-            <option disabled value="">Sélectionnez une structure</option>
-            {structures.map((structure) => (
-              <option key={structure.key} value={structure.key}>
-                {structure.name}
-              </option>
-            ))}
-          </select>
-        </Col>
-      </Row>
+    <div className={`chart-container chart-container--${color}`} id="top-county">
       <Row gutters className="form-row">
         <Col md={6}>
           <select
