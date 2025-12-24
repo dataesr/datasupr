@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import YearsSelector from "../../../../components/yearsSelector";
+import YearsSelector from "../../../../components/yearsSelector.tsx";
 import { getGeneralOptions } from "../../../../utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -72,45 +72,18 @@ export default function TopCounty() {
 
   const options = {
     ...getGeneralOptions('', [], '', ''),
-    chart: {
-      backgroundColor: 'transparent',
-      margin: 0
-    },
-    title: {
-      text: null
-    },
-    mapView: {
-      padding: [30, 0, 0, 0]
-    },
-    mapNavigation: {
-      enabled: true,
-      buttonOptions: {
-        align: 'right',
-        alignTo: 'spacingBox'
-      }
-    },
-    navigation: {
-      buttonOptions: {
-        theme: {
-          stroke: '#e6e6e6'
-        }
-      }
-    },
-    legend: {
-      layout: 'vertical',
-      align: 'right'
-    },
-    colorAxis: {
-      minColor: '#ffffff',
-      maxColor: '#4ba5a6'
-    },
+    chart: { backgroundColor: 'transparent', margin: 0 },
+    colorAxis: { maxColor: '#4ba5a6', minColor: '#ffffff' },
+    legend: { align: 'right', layout: 'vertical' },
+    mapView: { padding: [30, 0, 0, 0] },
     series: [
       {
         name: topology.title || 'Map',
         mapData: topology,
         data
       }
-    ]
+    ],
+    title: { text: `Nombre de participations par région sur la période ${selectedYearStart}-${selectedYearEnd}` }
   };
 
   return (

@@ -7,7 +7,7 @@ export default function YearsSelector({
   setSelectedYearEnd,
   setSelectedYearStart
 }) {
-  const years = Array.from(Array(25).keys()).map((item) => item + 2000);
+  const years = Array.from(Array(26).keys()).map((item) => item + 2000);
 
   return (
     <Row gutters className="form-row">

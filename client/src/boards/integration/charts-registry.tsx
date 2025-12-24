@@ -30,12 +30,12 @@ export const chartsRegistry = {
   efficiencyScatter: lazy(() => import("../european-projects/pages/evolution-pcri/charts/efficiency-scatter")),
 
   // Fundings
-  fundedLabs: lazy(() => import("../fundings/pages/overview/charts/funded-labs")),
-  fundedLabsBudget: lazy(() => import("../fundings/pages/overview/charts/funded-labs-budget")),
-  fundedStructures: lazy(() => import("../fundings/pages/overview/charts/funded-structures")),
-  fundedStructuresBudget: lazy(() => import("../fundings/pages/overview/charts/funded-structures-budget")),
-  fundedStructuresEurope: lazy(() => import("../fundings/pages/overview/charts/funded-structures-europe")),
-  fundedStructuresEuropeBudget: lazy(() => import("../fundings/pages/overview/charts/funded-structures-europe-budget")),
+  fundedLabs: lazy(() => import("../fundings/pages/national/charts/funded-labs")),
+  fundedLabsBudget: lazy(() => import("../fundings/pages/national/charts/funded-labs-budget")),
+  fundedStructures: lazy(() => import("../fundings/pages/national/charts/funded-structures")),
+  fundedStructuresBudget: lazy(() => import("../fundings/pages/national/charts/funded-structures-budget")),
+  fundedStructuresEurope: lazy(() => import("../fundings/pages/national/charts/funded-structures-europe")),
+  fundedStructuresEuropeBudget: lazy(() => import("../fundings/pages/national/charts/funded-structures-europe-budget")),
   topFundersByStructure: lazy(() => import("../fundings/pages/structures/charts/top-funders-by-structure")),
   topLabsByStructure: lazy(() => import("../fundings/pages/structures/charts/top-labs-by-structure")),
   topProjectsByStructure: lazy(() => import("../fundings/pages/structures/charts/top-projects-by-structure")),

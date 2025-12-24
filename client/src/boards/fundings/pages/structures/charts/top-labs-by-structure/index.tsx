@@ -5,9 +5,8 @@ import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector";
-import { getGeneralOptions, getLabelFromName } from "../../../../utils.ts";
+import { getGeneralOptions, getLabelFromName } from "../../../../utils";
 import StructuresSelector from "../../components/structuresSelector";
-import { getCategoriesAndSeries } from "./utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -79,7 +78,14 @@ export default function TopLabsByStructure() {
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
-  const { categories, series } = getCategoriesAndSeries(data);
+  
+  const series = (data?.aggregations?.by_funder_type?.buckets ?? []).map(
+    (item: { key: string; doc_count: number; }) => ({
+      name: item.key,
+      y: item.doc_count,
+    })
+  );
+  const categories = series.map((item: { name: any; }) => item.name);
 
   const config = {
     id: "topFundersByStructure",

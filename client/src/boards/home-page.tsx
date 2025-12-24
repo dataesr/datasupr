@@ -203,7 +203,7 @@ export default function HomePage() {
             <GenericCard
               description="Tableau de bord des financements"
               title="Financements"
-              to="/fundings"
+              to="/fundings/national"
             />
           </Col>
         </Row>

@@ -4,10 +4,9 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getGeneralOptions, getLabelFromName } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils";
 import LaboratoriesSelector from "../../components/laboratoriesSelector";
 import YearsSelector from "../../../../components/yearsSelector";
-import { getCategoriesAndSeries } from "./utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -61,9 +60,15 @@ export default function TopProjectsByLaboratory() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  const { categories, series } = getCategoriesAndSeries(data);
-
-  // const getNameFromId = (laboratoryId: string): string => laboratories.find((item) => item.id === laboratoryId).name;
+  const series = (data?.hits?.hits ?? []).map(
+    (hit) => ({
+      color: getColorFromFunder(hit._source.type),
+      name: hit._source.label?.fr ?? hit._source.label?.en,
+      type: hit._source.type,
+      y: hit._source.budgetTotal,
+    })
+  );
+  const categories = series.map((item: { name: any; }) => item.name);
 
   const config = {
     id: "topProjectsByLaboratory",

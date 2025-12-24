@@ -19,7 +19,9 @@ export default function Structures() {
         </Col>
       </Row>
       <Row gutters>
-        <TopCountyByLaboratory />
+        <Col>
+          <TopCountyByLaboratory />
+        </Col>
       </Row>
     </Container>
   );

@@ -5,9 +5,8 @@ import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector";
-import { formatCompactNumber, getGeneralOptions, getLabelFromName } from "../../../../utils";
+import { formatCompactNumber, getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils";
 import StructuresSelector from "../../components/structuresSelector";
-import { getCategoriesAndSeries } from "./utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -47,7 +46,7 @@ export default function TopProjectsByStructure() {
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: [`fundings-top-projects-by-structure`, selectedStructureId, selectedYearEnd, selectedYearStart],
+    queryKey: ['fundings-top-projects-by-structure', selectedStructureId, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-projects`, {
         body: JSON.stringify(body),
@@ -60,7 +59,15 @@ export default function TopProjectsByStructure() {
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
-  const { categories, series } = getCategoriesAndSeries(data);
+  const series = (data?.hits?.hits ?? []).map(
+    (hit) => ({
+      color: getColorFromFunder(hit._source.type),
+      name: hit._source.label?.fr ?? hit._source.label?.en,
+      type: hit._source.type,
+      y: hit._source.budgetTotal,
+    })
+  );
+  const categories = series.map((item: { name: any; }) => item.name);
 
   const config = {
     id: "topProjectsByStructure",

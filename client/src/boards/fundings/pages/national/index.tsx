@@ -6,6 +6,8 @@ import FundedStructures from "./charts/funded-structures";
 import FundedStructuresBudget from "./charts/funded-structures-budget";
 import FundedStructuresEurope from "./charts/funded-structures-europe";
 import FundedStructuresEuropeBudget from "./charts/funded-structures-europe-budget";
+import ParticipationsOverTime from "./charts/participations-over-time";
+import ParticipationsOverTimeBudget from "./charts/participations-over-time-budget";
 import TopCounty from "./charts/top-county";
 
 export default function Overview() {
@@ -44,6 +46,16 @@ export default function Overview() {
       <Row gutters>
         <Col>
           <TopCounty />
+        </Col>
+      </Row>
+      <Row gutters>
+        <Col>
+          <ParticipationsOverTime />
+        </Col>
+      </Row>
+      <Row gutters>
+        <Col>
+          <ParticipationsOverTimeBudget />
         </Col>
       </Row>
     </Container>

@@ -4,14 +4,13 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import YearsSelector from "../../../../components/yearsSelector";
-import { getCategoriesAndSeriesBudget } from "../../../../utils";
-import { getOptions } from "./utils.ts";
+import YearsSelector from "../../../../components/yearsSelector.tsx";
+import { formatCompactNumber, getCategoriesAndSeriesBudget, getGeneralOptions } from "../../../../utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function FundedLabsBudget() {
+export default function FundedStructuresEuropeBudget() {
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
@@ -31,7 +30,7 @@ export default function FundedLabsBudget() {
           },
           {
             term: {
-              participant_isFrench: true
+              participant_isFrench: false
             }
           },
           {
@@ -41,7 +40,7 @@ export default function FundedLabsBudget() {
           },
           {
             term: {
-              participant_type: "laboratory"
+              participant_type: "institution"
             }
           }
         ]
@@ -72,7 +71,7 @@ export default function FundedLabsBudget() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: [`fundings-funded-labs-budget`, selectedYearEnd, selectedYearStart],
+    queryKey: ['fundings-funded-structures-europe-budget', selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -87,23 +86,23 @@ export default function FundedLabsBudget() {
   const { categories, series } = getCategoriesAndSeriesBudget(data);
 
   const config = {
-    id: "fundedLabsBudget",
-    integrationURL: "/integration?chart_id=fundedLabsBudget",
-    title: `Top 25 des laboratoires français par montant des financements des projets auxquels elles participent sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    id: "fundedStructuresEuropeBudget",
+    integrationURL: "/integration?chart_id=fundedStructuresEuropeBudget",
+    title: `Top 25 des structures NON françaises par montant des financements des projets auxquels elles participent sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
-  const options: object = getOptions(
+  const options: object = {
+    ...getGeneralOptions('', categories, '', 'Montant des financements des projets auxquels la structure a participé'),
+    tooltip: {
+      formatter: function (this: any) {
+        return `<b>${this.key}</b> a participé à des projets financés par ${this.series.name}, à hauteur de <b>${formatCompactNumber(this.y)} €</b> sur la période ${selectedYearStart}-${selectedYearEnd}`
+      }
+    },
     series,
-    categories,
-    '',
-    selectedYearEnd,
-    selectedYearStart,
-    '',
-    'Montant des financements des projets auxquels le laboratoire a participé',
-  );
+  };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="funded-labs-budget">
+    <div className={`chart-container chart-container--${color}`} id="funded-structures-europe-budget">
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}

@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getGeneralOptions } from "../../../../utils.ts";
+import { getGeneralOptions } from "../../../../utils";
 import LaboratoriesSelector from "../../components/laboratoriesSelector";
 import YearsSelector from "../../../../components/yearsSelector";
 
