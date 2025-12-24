@@ -13,6 +13,7 @@ import geoRouter from "./routes/geo.js";
 import graduatesRouter from "./routes/boards/graduates/index.js";
 import datasuprDocRouter from "./routes/boards/datasupr-doc/index.js";
 import templateRouter from "./routes/boards/template/index.js";
+import financeRouter from "./routes/boards/finance/index.js";
 
 const router = new express.Router();
 
@@ -27,9 +28,8 @@ router.use(searchRouter);
 router.use(tableauxRouter);
 router.use(geoRouter);
 router.use(graduatesRouter);
-
 router.use(templateRouter);
 router.use(datasuprDocRouter);
-
+router.use(financeRouter);
 
 export default router;

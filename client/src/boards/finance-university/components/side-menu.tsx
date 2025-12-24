@@ -1,48 +1,95 @@
-import { SideMenu, Link, Container, Row, Col } from '@dataesr/dsfr-plus';
-import { Outlet, useLocation } from 'react-router-dom';
-import './styles.scss';
+import { useLocation } from "react-router-dom";
+import "./styles.scss";
 
-export default function CustomSideMenu() {
+export default function Layout() {
   const { pathname } = useLocation();
 
   if (!pathname) return null;
 
-  const is = (str: string): boolean => pathname?.startsWith(str)
+  const isActive = (path: string) => pathname === path;
+
   return (
-    <Container as="nav">
-      <Row>
-        <Col xs={12} md={3} className="fr-pl-2w">
-          <SideMenu title="" sticky fullHeight className="padded-sidemenu">
-            <Link
-              current={is('/finance-universite/grands-indicateurs')}
-              href={'/finance-universite/grands-indicateurs'}
+    <nav className="fr-sidemenu" aria-labelledby="fr-sidemenu-title">
+      <div className="fr-sidemenu__inner">
+        <div className="fr-collapse">
+          <ul className="fr-sidemenu__list">
+            <li
+              className={`fr-sidemenu__item ${
+                isActive("/finance-universite/accueil")
+                  ? "fr-sidemenu__item--active"
+                  : ""
+              }`}
             >
-              Grands indicateurs
-            </Link>
-            <Link
-              current={is('/finance-universite/recettes-propres')}
-              href={'/finance-universite/recettes-propres'}
+              <a
+                className="fr-sidemenu__link"
+                href="/finance-universite/accueil"
+                aria-current={
+                  isActive("/finance-universite/accueil") ? "page" : undefined
+                }
+              >
+                Accueil
+              </a>
+            </li>
+            <li
+              className={`fr-sidemenu__item ${
+                isActive("/finance-universite/etablissements")
+                  ? "fr-sidemenu__item--active"
+                  : ""
+              }`}
             >
-              Recettes Propres
-            </Link>
-            <Link
-              current={is('/finance-universite/masse-salariale')}
-              href={'/finance-universite/masse-salariale'}
+              <a
+                className="fr-sidemenu__link"
+                href="/finance-universite/etablissements"
+                aria-current={
+                  isActive("/finance-universite/etablissements")
+                    ? "page"
+                    : undefined
+                }
+              >
+                Etablissement
+              </a>
+            </li>
+            <li
+              className={`fr-sidemenu__item ${
+                isActive("/finance-universite/vue-nationale")
+                  ? "fr-sidemenu__item--active"
+                  : ""
+              }`}
             >
-              Masse salariale
-            </Link>
-            <Link
-              current={is('/finance-universite/consommation')}
-              href={'/finance-universite/consommation'}
+              <a
+                className="fr-sidemenu__link"
+                href="/finance-universite/vue-nationale"
+                aria-current={
+                  isActive("/finance-universite/vue-nationale")
+                    ? "page"
+                    : undefined
+                }
+              >
+                Vue nationale
+              </a>
+            </li>
+            <li
+              className={`fr-sidemenu__item ${
+                isActive("/finance-universite/evolutions")
+                  ? "fr-sidemenu__item--active"
+                  : ""
+              }`}
             >
-              Consommation
-            </Link>
-          </SideMenu>
-        </Col>
-        <Col xs={12} md={8} className="fr-pt-6w">
-          <Outlet />
-        </Col>
-      </Row>
-    </Container>
-  )
+              <a
+                className="fr-sidemenu__link"
+                href="/finance-universite/evolutions"
+                aria-current={
+                  isActive("/finance-universite/evolutions")
+                    ? "page"
+                    : undefined
+                }
+              >
+                Evolutions
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  );
 }

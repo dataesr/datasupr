@@ -1,28 +1,18 @@
-import { Container, Row, Col } from "@dataesr/dsfr-plus";
-import { useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import CustomSideMenu from "./components/side-menu";
-import Filters from "./components/filters";
+import { Outlet } from "react-router-dom";
 
-export default function Main() {
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  useEffect(() => {
-    if (!searchParams.get('structure_code')) {
-      setSearchParams({ structure_code: '0752744A' });
-    }
-  }, [searchParams, setSearchParams]);
-
+export default function FinanceUniversityRoutes() {
   return (
-    <main>
-      <Container>
-        <Row>
-          <Col className="fr-ml-1w">
-            <Filters />
-          </Col>
-        </Row>
-      </Container>
-      <CustomSideMenu />
-    </main>
+    <Container>
+      <Row>
+        <Col md="3">
+          <CustomSideMenu />
+        </Col>
+        <Col md="9">
+          <Outlet />
+        </Col>
+      </Row>
+    </Container>
   );
 }

@@ -397,7 +397,8 @@ export default function CnuGroupsChart() {
             },
           },
           updateDate: new Date(),
-          integrationURL: "/integration-url",
+          integrationURL:
+            "/integration-url/faculty-members/${context}/cnu-group${année_universitaire}?${contextId}",
         }}
         options={options}
         legend={null}
