@@ -4,7 +4,7 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils";
+import { getColorFromFunder, getGeneralOptions, getLabelFromName, sortedFunders } from "../../../../utils";
 import LaboratoriesSelector from "../../components/laboratoriesSelector";
 import YearsSelector from "../../../../components/yearsSelector";
 
@@ -121,7 +121,30 @@ export default function TopFundersByLaboratory() {
       />
       <ChartWrapper
         config={config}
-        legend={null}
+        legend={
+          <ul className="legend">
+            {categories.map((category) => (
+              <li
+                key={category}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "5px",
+                }}
+              >
+                <div
+                  style={{
+                    background: sortedFunders?.[category.toLowerCase()] ?? '#00ff00',
+                    height: "20px",
+                    marginRight: "10px",
+                    width: "20px"
+                  }}
+                ></div>
+                <span>{category}</span>
+              </li>
+            ))}
+          </ul>
+        }
         options={options}
       />
     </div>

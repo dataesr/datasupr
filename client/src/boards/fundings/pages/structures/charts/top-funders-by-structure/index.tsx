@@ -5,7 +5,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector";
-import { getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils";
+import { getColorFromFunder, getGeneralOptions, getLabelFromName, sortedFunders } from "../../../../utils";
 import StructuresSelector from "../../components/structuresSelector";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -98,22 +98,8 @@ export default function TopFundersByStructure() {
   };
 
   const options: object = {
-    ...getGeneralOptions(
-      '',
-      categories,
-      '',
-      'Nombre de projets financés'
-    ),
+    ...getGeneralOptions('', categories, '', 'Nombre de projets financés'),
     legend: { enabled: false },
-    plotOptions: {
-      column: {
-        colorByPoint: true,
-        dataLabels: {
-          enabled: true,
-          format: "{point.y}",
-        },
-      },
-    },
     series: [{ data: series }],
     tooltip: {
       format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(selectedStructureId)}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
@@ -134,7 +120,30 @@ export default function TopFundersByStructure() {
       />
       <ChartWrapper
         config={config}
-        legend={null}
+        legend={
+          <ul className="legend">
+            {categories.map((category) => (
+              <li
+                key={category}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "5px",
+                }}
+              >
+                <div
+                  style={{
+                    background: sortedFunders?.[category.toLowerCase()] ?? '#00ff00',
+                    height: "20px",
+                    marginRight: "10px",
+                    width: "20px"
+                  }}
+                ></div>
+                <span>{category}</span>
+              </li>
+            ))}
+          </ul>
+        }
         options={options}
       />
     </div>

@@ -7,7 +7,7 @@ import TopProjectsLaboratory from "./charts/top-projects-by-laboratory";
 export default function Structures() {
   return (
     <Container>
-      <Title>Laboratories Page</Title>
+      <Title>Vue par laboratoire</Title>
       <Row gutters>
         <Col>
           <TopFundersByLaboratory />

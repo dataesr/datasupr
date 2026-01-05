@@ -4,7 +4,7 @@ import { useState } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils";
+import { formatCompactNumber, getColorFromFunder, getGeneralOptions, getLabelFromName, sortedFunders } from "../../../../utils";
 import LaboratoriesSelector from "../../components/laboratoriesSelector";
 import YearsSelector from "../../../../components/yearsSelector";
 
@@ -60,7 +60,7 @@ export default function TopProjectsByLaboratory() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  const series = (data?.hits?.hits ?? []).map(
+  const series: { color: string, name: string, type: string, y: number }[] = (data?.hits?.hits ?? []).map(
     (hit) => ({
       color: getColorFromFunder(hit._source.type),
       name: hit._source.label?.fr ?? hit._source.label?.en,
@@ -69,6 +69,7 @@ export default function TopProjectsByLaboratory() {
     })
   );
   const categories = series.map((item: { name: any; }) => item.name);
+  const funders: string[] = [...new Set(series.map((serie) => serie.type))];
 
   const config = {
     id: "topProjectsByLaboratory",
@@ -82,7 +83,7 @@ export default function TopProjectsByLaboratory() {
     series: [{ data: series }],
     tooltip: {
       formatter: function (this: any) {
-        return `<b>${getLabelFromName(selectedLaboratoryId)}</b> a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par <b>${this.point.type}</b>`
+        return `<b>${getLabelFromName(selectedLaboratoryId)}</b> a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par <b>${this.point.type}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
       },
     },
   };
@@ -101,7 +102,30 @@ export default function TopProjectsByLaboratory() {
       />
       <ChartWrapper
         config={config}
-        legend={null}
+        legend={
+          <ul className="legend">
+            {funders.map((funder) => (
+              <li
+                key={funder}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginBottom: "5px",
+                }}
+              >
+                <div
+                  style={{
+                    background: sortedFunders?.[funder.toLowerCase()] ?? '#00ff00',
+                    height: "20px",
+                    marginRight: "10px",
+                    width: "20px"
+                  }}
+                ></div>
+                <span>{funder}</span>
+              </li>
+            ))}
+          </ul>
+        }
         options={options}
       />
     </div>

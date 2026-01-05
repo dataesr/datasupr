@@ -11,7 +11,7 @@ import TopProjectsByStructure from "./charts/top-projects-by-structure";
 export default function Structures() {
   return (
     <Container>
-      <Title>Structures Page</Title>
+      <Title>Vue par structure</Title>
       <Row gutters>
         <Col>
           <TopFundersByStructure />

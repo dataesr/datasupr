@@ -36,7 +36,6 @@ const getCategoriesAndSeries2 = (data: { aggregations: { by_participant: { bucke
     data: buckets.map((item: { by_funder: { buckets: any[]; }; }) => getKey(item.by_funder.buckets.find((i) => i.key === type))),
     name: type
   }));
-  console.log(series);
   return { categories, series };
 }
 
