@@ -6,7 +6,7 @@ import { useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector";
-import { getGeneralOptions } from "../../../../utils";
+import { getGeneralOptions, getLabelFromName } from "../../../../utils";
 import StructuresSelector from "../../components/structuresSelector";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -79,45 +79,25 @@ export default function TopCountyByStructure() {
 
   const options = {
     ...getGeneralOptions('', [], '', ''),
-    chart: {
-      backgroundColor: 'transparent',
-      margin: 0
-    },
-    title: {
-      text: null
-    },
-    mapView: {
-      padding: [30, 0, 0, 0]
-    },
-    mapNavigation: {
-      enabled: true,
-      buttonOptions: {
-        align: 'right',
-        alignTo: 'spacingBox'
-      }
-    },
-    navigation: {
-      buttonOptions: {
-        theme: {
-          stroke: '#e6e6e6'
-        }
-      }
-    },
-    legend: {
-      layout: 'vertical',
-      align: 'right'
-    },
-    colorAxis: {
-      minColor: '#ffffff',
-      maxColor: '#4ba5a6'
-    },
+    chart: { backgroundColor: 'transparent', margin: 0 },
+    colorAxis: { maxColor: '#4ba5a6', minColor: '#ffffff' },
+    legend: { align: 'right', layout: 'vertical' },
+    mapView: { padding: [50, 0, 30, 0] },
+    plotOptions: { map: { states: { hover: { borderColor: '#1e2538' } } } },
     series: [
       {
-        name: mapData.title || 'Map',
+        data,
         mapData,
-        data
+        name: mapData.title || 'Map'
       }
-    ]
+    ],
+    title: {
+      style: { color: '#ffffff' },
+      text: `Nombre de participations pour ${getLabelFromName(selectedStructureId)} par région sur la période ${selectedYearStart}-${selectedYearEnd}`
+    },
+    tooltip: {
+      format: `La structure <b>${getLabelFromName(selectedStructureId)}</b> a participé à <b>{point.value}</b> projets en région <b>{point.name}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
+    }
   };
 
   return (

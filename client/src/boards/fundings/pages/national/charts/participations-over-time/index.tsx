@@ -91,7 +91,7 @@ export default function ParticipationsOverTime() {
   const options: object = {
     ...getGeneralOptions('', [], 'Année de début du projet', 'Nombre de projets'),
     tooltip: {
-      format: `<b>{point.y}</b> projets ont débuté en <b>{key}</b> grâce au financement de <b>{series.name}</b> dont au moins un participant est une institution française active.`,
+      format: `<b>{point.y}</b> projets ont débuté en <b>{key}</b> grâce au financement de <b>{series.name}</b> dont au moins un participant est une institution française active`,
     },
     chart: {
       height: '600px',

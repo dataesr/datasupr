@@ -14,33 +14,28 @@ export default function SidemenuStructures() {
             <div>
               <ul>
                 <li>
-                  <a href="#funded-structures" className={`${location.hash === "#funded-structures" ? "selected" : ""}`}>
-                    Top 25 des structures françaises par nombre de financements
+                  <a href="#top-funders-by-structure" className={`${location.hash === "#top-funders-by-structure" ? "selected" : ""}`}>
+                    Top 25 des financeurs par structure
                   </a>
                 </li>
                 <li>
-                  <a href="#funded-structures-budget" className={`${location.hash === "#funded-structures-budget" ? "selected" : ""}`}>
-                    Top 25 des structures françaises par montant des financements des projets auxquels elles participent
+                  <a href="#top-projects-by-structure" className={`${location.hash === "#top-projects-by-structure" ? "selected" : ""}`}>
+                    Top 25 des projets par structure
                   </a>
                 </li>
                 <li>
-                  <a href="#funded-labs" className={`${location.hash === "#funded-labs" ? "selected" : ""}`}>
-                    Top 25 des laboratoires français par nombre de financements
+                  <a href="#top-county-by-structure" className={`${location.hash === "#top-county-by-structure" ? "selected" : ""}`}>
+                    Nombre de participations par structure
                   </a>
                 </li>
                 <li>
-                  <a href="#funded-labs-budget" className={`${location.hash === "#funded-labs-budget" ? "selected" : ""}`}>
-                    Top 25 des laboratoires français par montant des financements des projets auxquels elles participent
+                  <a href="#french-partners-by-structure" className={`${location.hash === "#french-partners-by-structure" ? "selected" : ""}`}>
+                    Partenaires français, institutionnels et actifs
                   </a>
                 </li>
                 <li>
-                  <a href="#funded-structures-europe" className={`${location.hash === "#funded-structures-europe" ? "selected" : ""}`}>
-                    Top 25 des structures NON françaises par nombre de financements
-                  </a>
-                </li>
-                <li>
-                  <a href="#funded-structures-europe-budget" className={`${location.hash === "#funded-structures-europe-budget" ? "selected" : ""}`}>
-                    Top 25 des structures NON françaises par montant des financements des projets auxquels elles participent
+                  <a href="#international-partners-by-structure" className={`${location.hash === "#international-partners-by-structure" ? "selected" : ""}`}>
+                    Partenaires internationaux, institutionnels et actifs
                   </a>
                 </li>
               </ul>

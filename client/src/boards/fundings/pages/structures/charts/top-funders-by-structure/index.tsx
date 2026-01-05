@@ -94,7 +94,7 @@ export default function TopFundersByStructure() {
   const config = {
     id: "topFundersByStructure",
     integrationURL: "/integration?chart_id=topFundersByStructure",
-    title: `Top 25 financeurs pour ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    title: `Top 25 des financeurs pour ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = {
@@ -116,7 +116,7 @@ export default function TopFundersByStructure() {
     },
     series: [{ data: series }],
     tooltip: {
-      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(selectedStructureId)}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
     },
   }
 

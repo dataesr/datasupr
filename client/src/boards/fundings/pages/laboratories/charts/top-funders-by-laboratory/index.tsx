@@ -68,7 +68,7 @@ export default function TopFundersByLaboratory() {
   const { data, isLoading } = useQuery({
     queryKey: [`fundings-top-funders-by-laboratory`, selectedLaboratoryId, selectedYearEnd, selectedYearStart],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-20251213`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,9 @@ export default function TopFundersByLaboratory() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  const series = (data?.aggregations?.by_funder_type?.buckets ?? []).map(
+  const buckets = data?.aggregations?.by_funder_type?.buckets ?? [];
+  const categories = buckets.map((item: { key: string; }) => item.key);
+  const series = buckets.map(
     (item: {
       unique_projects: any; key: string; doc_count: number;
     }) => ({
@@ -89,34 +91,19 @@ export default function TopFundersByLaboratory() {
       y: item.unique_projects.value,
     })
   );
-  const categories = series.map((item: { name: any; }) => item.name);
 
   const config = {
     id: "topFundersByLaboratory",
     integrationURL: "/integration?chart_id=topFundersByLaboratory",
-    title: `Top 25 financeurs pour ${getLabelFromName(selectedLaboratoryId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    title: `Top 25 des financeurs pour ${getLabelFromName(selectedLaboratoryId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = {
-    ...getGeneralOptions(
-      '',
-      categories,
-      '',
-      'Nombre de projets financés'
-    ),
+    ...getGeneralOptions('', categories, '', 'Nombre de projets financés'),
     legend: { enabled: false },
-    plotOptions: {
-      column: {
-        colorByPoint: true,
-        dataLabels: {
-          enabled: true,
-          format: "{point.y}",
-        },
-      },
-    },
     series: [{ data: series }],
     tooltip: {
-      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part ${getLabelFromName(selectedLaboratoryId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(selectedLaboratoryId)}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
     },
   }
 

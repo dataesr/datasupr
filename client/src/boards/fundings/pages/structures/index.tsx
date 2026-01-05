@@ -2,9 +2,9 @@ import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
 import TopFundersByStructure from "./charts/top-funders-by-structure";
 // import TopLabsByStructure from "./charts/top-labs-by-structure";
+import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
+import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
 import TopCountyByStructure from "./charts/top-county-by-structure";
-import TopFrenchPartnersByStructure from "./charts/top-french-partners-by-structure";
-import TopInternationalPartnersByStructure from "./charts/top-international-partners-by-structure";
 import TopProjectsByStructure from "./charts/top-projects-by-structure";
 
 
@@ -34,12 +34,12 @@ export default function Structures() {
       </Row>
       <Row gutters>
         <Col>
-          <TopFrenchPartnersByStructure />
+          <FrenchPartnersByStructure />
         </Col>
       </Row>
       <Row gutters>
         <Col>
-          <TopInternationalPartnersByStructure />
+          <InternationalPartnersByStructure />
         </Col>
       </Row>
     </Container>

@@ -81,13 +81,13 @@ export default function FundedStructuresEurope() {
   const config = {
     id: "fundedStructuresEurope",
     integrationURL: "/integration?chart_id=fundedStructuresEurope",
-    title: `Top 25 des structures NON françaises par nombre de financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    title: `Top 25 des structures européennes (hors France) par nombre de financements sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = {
     ...getGeneralOptions('', categories, '', 'Nombre de projets financés'),
     tooltip: {
-      format: `<b>{key}</b> a obtenu <b>{point.y}</b> financements sur la période ${selectedYearStart}-${selectedYearEnd} de la part <b>{series.name}</b>`,
+      format: `<b>{key}</b> a obtenu <b>{point.y}</b> financements de la part <b>{series.name}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
     },
     series,
   };

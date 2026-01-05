@@ -75,15 +75,22 @@ export default function TopCounty() {
     chart: { backgroundColor: 'transparent', margin: 0 },
     colorAxis: { maxColor: '#4ba5a6', minColor: '#ffffff' },
     legend: { align: 'right', layout: 'vertical' },
-    mapView: { padding: [30, 0, 0, 0] },
+    mapView: { padding: [50, 0, 30, 0] },
+    plotOptions: { map: { states: { hover: { borderColor: '#1e2538' } } } },
     series: [
       {
-        name: topology.title || 'Map',
+        data,
         mapData: topology,
-        data
+        name: topology.title || 'Map'
       }
     ],
-    title: { text: `Nombre de participations par région sur la période ${selectedYearStart}-${selectedYearEnd}` }
+    title: {
+      style: { color: '#ffffff' },
+      text: `Nombre de participations par région sur la période ${selectedYearStart}-${selectedYearEnd}`
+    },
+    tooltip: {
+      format: `La région <b>{point.name}</b> a participé à {point.value} projets sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
+    }
   };
 
   return (
@@ -94,6 +101,7 @@ export default function TopCounty() {
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
+      {/* TODO: use  normal chartWrapper */}
       <HighchartsReact
         highcharts={Highcharts}
         options={options}

@@ -92,7 +92,7 @@ export default function ParticipationsOverTimeBudget() {
     ...getGeneralOptions('', [], 'Année de début du projet', 'Montant total des projets'),
     tooltip: {
       formatter: function(this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés en <b>${this.key}</b> dont au moins un participant est une institution française active.`
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés en <b>${this.key}</b> dont au moins un participant est une institution française active`
       }
     },
     chart: {

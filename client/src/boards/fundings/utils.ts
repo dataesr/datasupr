@@ -28,17 +28,15 @@ const getCategoriesAndSeries2 = (data: { aggregations: { by_participant: { bucke
   let funders = buckets.map((items) => items.by_funder.buckets.map((item: { key: string; }) => item.key)).flat();
   // Remove duplicates
   funders =  [...new Set(funders)];
-  // Sort accordung to object sortedFunders
+  // Sort according to object sortedFunders
   funders = Object.keys(sortedFunders).map((sortedFunder) => funders.find((funder) => sortedFunder === funder.toLowerCase()));
   funders = funders.filter((funder) => !!funder).reverse();
   const series: any[] = funders.map((type) => ({
     color: getColorFromFunder(type),
-    data: buckets.map((item: { by_funder: { buckets: any[]; }; }) => {
-      const tmp =  item.by_funder.buckets.find((i) => i.key === type);
-      return getKey(tmp);
-    }),
-    name: type,
+    data: buckets.map((item: { by_funder: { buckets: any[]; }; }) => getKey(item.by_funder.buckets.find((i) => i.key === type))),
+    name: type
   }));
+  console.log(series);
   return { categories, series };
 }
 
@@ -53,11 +51,11 @@ const getColorFromFunder = (funder: string) => {
 
 const getGeneralOptions = (title: string, categories: any[], title_x_axis: string, title_y_axis: string) => {
   return {
-    chart: { height: "800px", type: "bar" },
+    chart: { height: '800px', type: 'bar' },
     credits: { enabled: false },
     exporting: { enabled: false },
     legend: { reversed: true },
-    plotOptions: { series: { stacking: "normal" } },
+    plotOptions: { series: { stacking: 'normal' } },
     title: { text: title },
     xAxis: { categories, title: { text: title_x_axis } },
     yAxis: { title: { text: title_y_axis } },

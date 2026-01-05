@@ -12,15 +12,15 @@ import StructuresSelector from "../../components/structuresSelector.tsx";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function TopInternationalPartnersByStructure() {
+export default function FrenchPartnersByStructure() {
   const [selectedStructureId, setSelectedStructureId] = useState<string>("180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research");
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
 
   const { data: mapData, isLoading: isLoadingTopology } = useQuery({
-    queryKey: ['topo-world'],
-    queryFn: () => fetch('https://code.highcharts.com/mapdata/custom/world.topo.json').then((response) => response.json()),
+    queryKey: ['topo-fr'],
+    queryFn: () => fetch('https://code.highcharts.com/mapdata/countries/fr/fr-all.topo.json').then((response) => response.json()),
   });
 
   const body = {
@@ -38,7 +38,7 @@ export default function TopInternationalPartnersByStructure() {
           },
           {
             term: {
-              participant_isFrench: false
+              participant_isFrench: true
             }
           },
           {
@@ -78,7 +78,7 @@ export default function TopInternationalPartnersByStructure() {
   }
 
   const { data: dataPartners, isLoading: isLoadingPartners } = useQuery({
-    queryKey: ['fundings-top-partners', selectedStructureId, selectedYearEnd, selectedYearStart],
+    queryKey: ['fundings-french-partners', selectedStructureId, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -102,7 +102,7 @@ export default function TopInternationalPartnersByStructure() {
     ...getGeneralOptions('', [], '', ''),
     chart: { backgroundColor: 'transparent', margin: 0 },
     legend: { enabled: false },
-    mapView: { padding: [30, 0, 0, 0] },
+    mapView: { padding: [50, 0, 30, 0] },
     series: [
       {
         name: mapData.title || 'France',
@@ -117,11 +117,14 @@ export default function TopInternationalPartnersByStructure() {
         }
       }
     ],
-    title: { text: `Partenaires internationaux, insitutionnels et actifs sur la période ${selectedYearStart}-${selectedYearEnd}` }
+    title: {
+      style: { color: '#ffffff' },
+      text: `Partenaires français, insitutionnels et actifs sur la période ${selectedYearStart}-${selectedYearEnd}`
+    }
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="top-partners-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="french-partners-by-structure">
       <StructuresSelector
         selectedStructureId={selectedStructureId}
         setSelectedStructureId={setSelectedStructureId}

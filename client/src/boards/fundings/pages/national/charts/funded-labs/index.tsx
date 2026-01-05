@@ -87,7 +87,7 @@ export default function FundedLabs() {
   const options: object = {
     ...getGeneralOptions('', categories, '', 'Nombre de projets financés'),
     tooltip: {
-      format: `<b>{key}</b> a obtenu <b>{point.y}</b> financements sur la période ${selectedYearStart}-${selectedYearEnd} de la part <b>{series.name}</b>`,
+      format: `<b>{key}</b> a obtenu <b>{point.y}</b> financements de la part <b>{series.name}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
     },
     series,
   };

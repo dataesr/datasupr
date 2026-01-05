@@ -72,7 +72,7 @@ export default function TopProjectsByStructure() {
   const config = {
     id: "topProjectsByStructure",
     integrationURL: "/integration?chart_id=topProjectsByStructure",
-    title: `Top 25 projets pour ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    title: `Top 25 des projets pour ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = {
@@ -95,13 +95,13 @@ export default function TopProjectsByStructure() {
     series: [{ data: series }],
     tooltip: {
       formatter: function (this: any) {
-        return `${getLabelFromName(selectedStructureId)} a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par ${this.point.type}.`
+        return `<b>${getLabelFromName(selectedStructureId)}</b> a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par <b>${this.point.type}</b>`
       },
     },
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="top-funders-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="top-projects-by-structure">
       <StructuresSelector
         selectedStructureId={selectedStructureId}
         setSelectedStructureId={setSelectedStructureId}

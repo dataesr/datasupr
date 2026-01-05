@@ -73,36 +73,22 @@ export default function TopProjectsByLaboratory() {
   const config = {
     id: "topProjectsByLaboratory",
     integrationURL: "/integration?chart_id=topProjectsByLaboratory",
-    title: `Top 25 projets pour ${getLabelFromName(selectedLaboratoryId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    title: `Top 25 des projets pour ${getLabelFromName(selectedLaboratoryId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = {
-    ...getGeneralOptions(
-      '',
-      categories,
-      '',
-      'Budget total'
-    ),
+    ...getGeneralOptions('', categories, '', 'Budget total'),
     legend: { enabled: false },
-    plotOptions: {
-      column: {
-        colorByPoint: true,
-        dataLabels: {
-          enabled: true,
-          format: "{point.y}",
-        },
-      },
-    },
     series: [{ data: series }],
     tooltip: {
       formatter: function (this: any) {
-        return `${getLabelFromName(selectedLaboratoryId)} a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par ${this.point.type}.`
+        return `<b>${getLabelFromName(selectedLaboratoryId)}</b> a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par <b>${this.point.type}</b>`
       },
     },
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="top-funders-by-laboratory">
+    <div className={`chart-container chart-container--${color}`} id="top-projects-by-laboratory">
       <LaboratoriesSelector
         selectedLaboratoryId={selectedLaboratoryId}
         setSelectedLaboratoryId={setSelectedLaboratoryId}

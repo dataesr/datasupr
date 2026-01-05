@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getGeneralOptions } from "../../../../utils";
+import { getGeneralOptions, getLabelFromName } from "../../../../utils";
 import LaboratoriesSelector from "../../components/laboratoriesSelector";
 import YearsSelector from "../../../../components/yearsSelector";
 
@@ -57,7 +57,7 @@ export default function TopCountyByLaboratory() {
   const { data: dataCounty, isLoading: isLoadingCounty } = useQuery({
     queryKey: ['fundings-top-county', selectedLaboratoryId, selectedYearEnd, selectedYearStart],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-20251213`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -79,45 +79,25 @@ export default function TopCountyByLaboratory() {
 
   const options = {
     ...getGeneralOptions('', [], '', ''),
-    chart: {
-      backgroundColor: 'transparent',
-      margin: 0
-    },
-    title: {
-      text: null
-    },
-    mapView: {
-      padding: [30, 0, 0, 0]
-    },
-    mapNavigation: {
-      enabled: true,
-      buttonOptions: {
-        align: 'right',
-        alignTo: 'spacingBox'
-      }
-    },
-    navigation: {
-      buttonOptions: {
-        theme: {
-          stroke: '#e6e6e6'
-        }
-      }
-    },
-    legend: {
-      layout: 'vertical',
-      align: 'right'
-    },
-    colorAxis: {
-      minColor: '#ffffff',
-      maxColor: '#4ba5a6'
-    },
+    chart: { backgroundColor: 'transparent', margin: 0 },
+    colorAxis: { maxColor: '#4ba5a6', minColor: '#ffffff' },
+    legend: { align: 'right', layout: 'vertical' },
+    mapView: { padding: [50, 0, 30, 0] },
+    plotOptions: { map: { states: { hover: { borderColor: '#1e2538' } } } },
     series: [
       {
-        name: topology.title || 'Map',
+        data,
         mapData: topology,
-        data
+        name: topology.title || 'Map'
       }
-    ]
+    ],
+    title: {
+      style: { color: '#ffffff' },
+      text: `Nombre de participations pour ${getLabelFromName(selectedLaboratoryId)} par région sur la période ${selectedYearStart}-${selectedYearEnd}`
+    },
+    tooltip: {
+      format: `Le laboratoire <b>${getLabelFromName(selectedLaboratoryId)}</b> a participé à <b>{point.value}</b> projets en région <b>{point.name}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
+    }
   };
 
   return (

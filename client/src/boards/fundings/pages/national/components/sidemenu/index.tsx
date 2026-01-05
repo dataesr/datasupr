@@ -35,12 +35,12 @@ export default function SidemenuLaboratories() {
                 </li>
                 <li>
                   <a href="#funded-structures-europe" className={`${location.hash === "#funded-structures-europe" ? "selected" : ""}`}>
-                    Top 25 des structures NON françaises par nombre de financements
+                    Top 25 des structures européennes (hors France) par nombre de financements
                   </a>
                 </li>
                 <li>
                   <a href="#funded-structures-europe-budget" className={`${location.hash === "#funded-structures-europe-budget" ? "selected" : ""}`}>
-                    Top 25 des structures NON françaises par montant des financements des projets auxquels elles participent
+                    Top 25 des structures européennes (hors France) par montant des financements des projets auxquels elles participent
                   </a>
                 </li>
                 <li>
@@ -50,12 +50,12 @@ export default function SidemenuLaboratories() {
                 </li>
                 <li>
                   <a href="#participations-over-time" className={`${location.hash === "#participations-over-time" ? "selected" : ""}`}>
-                    Nombre de projets par financeur sur la période 2000-2025, par année de début du projet
+                    Nombre de projets par financeur par année de début du projet
                   </a>
                 </li>
                 <li>
                   <a href="#participations-over-time-budget" className={`${location.hash === "#participations-over-time-budget" ? "selected" : ""}`}>
-                    Montant total des projets par financeur sur la période 2000-2025, par année de début du projet
+                    Montant total des projets par financeur par année de début du projet
                   </a>
                 </li>
               </ul>

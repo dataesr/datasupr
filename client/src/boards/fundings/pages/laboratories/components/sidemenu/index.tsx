@@ -14,48 +14,18 @@ export default function SidemenuLaboratories() {
             <div>
               <ul>
                 <li>
-                  <a href="#funded-structures" className={`${location.hash === "#funded-structures" ? "selected" : ""}`}>
-                    Top 25 des structures françaises par nombre de financements
+                  <a href="#top-funders-by-laboratory" className={`${location.hash === "#top-funders-by-laboratory" ? "selected" : ""}`}>
+                    Top 25 des financeurs par laboratoire
                   </a>
                 </li>
                 <li>
-                  <a href="#funded-structures-budget" className={`${location.hash === "#funded-structures-budget" ? "selected" : ""}`}>
-                    Top 25 des structures françaises par montant des financements des projets auxquels elles participent
+                  <a href="#top-projects-by-laboratory" className={`${location.hash === "#top-projects-by-laboratory" ? "selected" : ""}`}>
+                    Top 25 des projets par laboratoire
                   </a>
                 </li>
                 <li>
-                  <a href="#funded-labs" className={`${location.hash === "#funded-labs" ? "selected" : ""}`}>
-                    Top 25 des laboratoires français par nombre de financements
-                  </a>
-                </li>
-                <li>
-                  <a href="#funded-labs-budget" className={`${location.hash === "#funded-labs-budget" ? "selected" : ""}`}>
-                    Top 25 des laboratoires français par montant des financements des projets auxquels elles participent
-                  </a>
-                </li>
-                <li>
-                  <a href="#funded-structures-europe" className={`${location.hash === "#funded-structures-europe" ? "selected" : ""}`}>
-                    Top 25 des structures NON françaises par nombre de financements
-                  </a>
-                </li>
-                <li>
-                  <a href="#funded-structures-europe-budget" className={`${location.hash === "#funded-structures-europe-budget" ? "selected" : ""}`}>
-                    Top 25 des structures NON françaises par montant des financements des projets auxquels elles participent
-                  </a>
-                </li>
-                <li>
-                  <a href="#top-county" className={`${location.hash === "#top-county" ? "selected" : ""}`}>
-                    Nombre de participations par région
-                  </a>
-                </li>
-                <li>
-                  <a href="#participations-over-time" className={`${location.hash === "#participations-over-time" ? "selected" : ""}`}>
-                    Nombre de projets par financeur sur la période 2000-2025, par année de début du projet
-                  </a>
-                </li>
-                <li>
-                  <a href="#participations-over-time-budget" className={`${location.hash === "#participations-over-time-budget" ? "selected" : ""}`}>
-                    Montant total des projets par financeur sur la période 2000-2025, par année de début du projet
+                  <a href="#top-county-by-laboratory" className={`${location.hash === "#top-county-by-laboratory" ? "selected" : ""}`}>
+                    Nombre de participations de laboratoires par région
                   </a>
                 </li>
               </ul>

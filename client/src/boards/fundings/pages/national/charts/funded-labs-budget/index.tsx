@@ -88,14 +88,14 @@ export default function FundedLabsBudget() {
   const config = {
     id: "fundedLabsBudget",
     integrationURL: "/integration?chart_id=fundedLabsBudget",
-    title: `Top 25 des laboratoires français par montant des financements des projets auxquels elles participent sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    title: `Top 25 des laboratoires français par montant des financements des projets auxquels ils participent sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = {
     ...getGeneralOptions('', categories, '', 'Montant des financements des projets auxquels le laboratoire a participé'),
     tooltip: {
       formatter: function (this: any) {
-        return `<b>${this.key}</b> a participé à des projets financés par ${this.series.name}, à hauteur de <b>${formatCompactNumber(this.y)} €</b> sur la période ${selectedYearStart}-${selectedYearEnd}`
+        return `<b>${this.key}</b> a participé à des projets financés par <b>${this.series.name}</b>, à hauteur de <b>${formatCompactNumber(this.y)} €</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
       }
     },
     series,

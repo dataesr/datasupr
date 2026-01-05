@@ -90,7 +90,7 @@ export default function TopLabsByStructure() {
   const config = {
     id: "topFundersByStructure",
     integrationURL: "/integration?chart_id=topFundersByStructure",
-    title: `Top 20 laboratoires pour ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+    title: `Top 25 des laboratoires pour ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = {
@@ -112,7 +112,7 @@ export default function TopLabsByStructure() {
     },
     series: [{ data: series }],
     tooltip: {
-      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
+      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(selectedStructureId)}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
     },
   }
 

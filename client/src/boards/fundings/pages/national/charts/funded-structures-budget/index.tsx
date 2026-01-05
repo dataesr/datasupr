@@ -95,7 +95,7 @@ export default function FundedStructuresBudget() {
     ...getGeneralOptions('', categories, '', 'Montant des financements des projets auxquels la structure a participé'),
     tooltip: {
       formatter: function (this: any) {
-        return `<b>${this.key}</b> a participé à des projets financés par ${this.series.name}, à hauteur de <b>${formatCompactNumber(this.y)} €</b> sur la période ${selectedYearStart}-${selectedYearEnd}`
+        return `<b>${this.key}</b> a participé à des projets financés par <b>${this.series.name}</b>, à hauteur de <b>${formatCompactNumber(this.y)} €</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
       }
     },
     series,
