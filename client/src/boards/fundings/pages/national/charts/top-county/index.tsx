@@ -15,7 +15,7 @@ export default function TopCounty() {
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
-
+  const nbYears = Number(selectedYearEnd) - Number(selectedYearStart);
   const { data: topology, isLoading: isLoadingTopology } = useQuery({
     queryKey: ['topo-fr'],
     queryFn: () => fetch('https://code.highcharts.com/mapdata/countries/fr/fr-all.topo.json').then((response) => response.json()),
@@ -73,7 +73,15 @@ export default function TopCounty() {
   const options = {
     ...getGeneralOptions('', [], '', ''),
     chart: { backgroundColor: 'transparent', margin: 0 },
-    colorAxis: { maxColor: '#4ba5a6', minColor: '#ffffff' },
+    colorAxis: {
+        dataClasses: [
+            { from: 0, to: 100*nbYears, color: '#f2f2f2' },
+            { from: 100*nbYears, to: 300*nbYears, color: '#dbe4ee' },
+            { from: 300*nbYears, to: 1000*nbYears, color: '#9ebcda' },
+            { from: 1000*nbYears, to: 3000*nbYears, color: '#f2b8a2' },
+            { from: 3000*nbYears, color: '#e07a5f' }
+        ]
+    },
     legend: { align: 'right', layout: 'vertical' },
     mapView: { padding: [50, 0, 30, 0] },
     plotOptions: { map: { states: { hover: { borderColor: '#1e2538' } } } },
@@ -85,7 +93,7 @@ export default function TopCounty() {
       }
     ],
     title: {
-      style: { color: '#ffffff' },
+      style: { color: 'black' },
       text: `Nombre de participations par région sur la période ${selectedYearStart}-${selectedYearEnd}`
     },
     tooltip: {

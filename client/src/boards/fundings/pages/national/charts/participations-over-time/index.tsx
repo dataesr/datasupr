@@ -10,12 +10,19 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function ParticipationsOverTime() {
   const color = useChartColor();
-
+  const startYear = 2011;
   const body = {
     size: 0,
     query: {
       bool: {
         filter: [
+          {
+            range: {
+              project_year: {
+                gte: startYear,
+              }
+            }
+          },
           {
             term: {
               participant_isFrench: true
@@ -38,7 +45,8 @@ export default function ParticipationsOverTime() {
       by_project_type: {
         terms: {
           field: "project_type.keyword",
-          size: 30
+          size: 30,
+          order: { "_count": "asc" }
         },
         aggregations: {
           by_project_year: {
@@ -72,9 +80,11 @@ export default function ParticipationsOverTime() {
       }).then((response) => response.json()),
   });
 
-  const years = Array.from(Array(26).keys()).map((item) => item + 2000);
-
   if (isLoading || !data) return <DefaultSkeleton />;
+  const allYears = data.aggregations.by_project_type.buckets
+    .flatMap(bucket => bucket.by_project_year.buckets.map(b => b.key));
+  const maxYear = Math.max(...allYears);
+  const years = Array.from(Array(maxYear-startYear+1).keys()).map((item) => item + startYear);
   const series = data.aggregations.by_project_type.buckets.map((bucket) => ({
     color: getColorFromFunder(bucket.key),
     data: years.map((year) => bucket.by_project_year.buckets.find((item) => item.key === year)?.unique_projects.value ?? 0),
