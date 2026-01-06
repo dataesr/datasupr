@@ -1,8 +1,8 @@
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
 import { useState } from "react";
 
+import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector";
@@ -11,16 +11,17 @@ import StructuresSelector from "../../components/structuresSelector";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-
 export default function TopCountyByStructure() {
-  const [selectedStructureId, setSelectedStructureId] = useState<string>("180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research");
+  const [selectedStructureId, setSelectedStructureId] = useState<string>(
+    "180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research"
+  );
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
 
   const { data: mapData, isLoading: isLoadingTopology } = useQuery({
-    queryKey: ['topo-fr'],
-    queryFn: () => fetch('https://code.highcharts.com/mapdata/countries/fr/fr-all.topo.json').then((response) => response.json()),
+    queryKey: ["topo-fr"],
+    queryFn: () => fetch("https://code.highcharts.com/mapdata/countries/fr/fr-all.topo.json").then((response) => response.json()),
   });
 
   const body = {
@@ -32,30 +33,30 @@ export default function TopCountyByStructure() {
             range: {
               project_year: {
                 gte: selectedYearStart,
-                lte: selectedYearEnd
-              }
-            }
+                lte: selectedYearEnd,
+              },
+            },
           },
           {
             term: {
-              "co_partners_fr_inst.keyword": selectedStructureId
-            }
-          }
-        ]
-      }
+              "co_partners_fr_inst.keyword": selectedStructureId,
+            },
+          },
+        ],
+      },
     },
     aggs: {
       by_county: {
         terms: {
           field: "address.region.keyword",
-          size: 50
-        }
-      }
-    }
-  }
+          size: 50,
+        },
+      },
+    },
+  };
 
   const { data: dataCounty, isLoading: isLoadingCounty } = useQuery({
-    queryKey: ['fundings-top-county', selectedStructureId, selectedYearEnd, selectedYearStart],
+    queryKey: ["fundings-top-county", selectedStructureId, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -78,45 +79,45 @@ export default function TopCountyByStructure() {
   });
 
   const options = {
-    ...getGeneralOptions('', [], '', ''),
-    chart: { backgroundColor: 'transparent', margin: 0 },
-    colorAxis: { maxColor: '#4ba5a6', minColor: '#ffffff' },
-    legend: { align: 'right', layout: 'vertical' },
+    ...getGeneralOptions("", [], "", ""),
+    chart: { backgroundColor: "transparent", margin: 0 },
+    colorAxis: { maxColor: "#4ba5a6", minColor: "#ffffff" },
+    legend: { align: "right", layout: "vertical" },
     mapView: { padding: [50, 0, 30, 0] },
-    plotOptions: { map: { states: { hover: { borderColor: '#1e2538' } } } },
+    plotOptions: { map: { states: { hover: { borderColor: "#1e2538" } } } },
     series: [
       {
         data,
         mapData,
-        name: mapData.title || 'Map'
-      }
+        name: mapData.title || "Map",
+      },
     ],
-    title: {
-      style: { color: '#ffffff' },
-      text: `Nombre de participations pour ${getLabelFromName(selectedStructureId)} par région sur la période ${selectedYearStart}-${selectedYearEnd}`
-    },
+    title: { text: "" },
     tooltip: {
-      format: `La structure <b>${getLabelFromName(selectedStructureId)}</b> a participé à <b>{point.value}</b> projets en région <b>{point.name}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
-    }
+      format: `La structure <b>${getLabelFromName(
+        selectedStructureId
+      )}</b> a participé à <b>{point.value}</b> projets en région <b>{point.name}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
+    },
+  };
+
+  const config = {
+    id: "topCountryByStructure",
+    integrationURL: "/integration?chart_id=topCountryByStructure",
   };
 
   return (
     <div className={`chart-container chart-container--${color}`} id="top-county-by-structure">
-      <StructuresSelector
-        selectedStructureId={selectedStructureId}
-        setSelectedStructureId={setSelectedStructureId}
-      />
+      <Title as="h3" look="h6">
+        {`Nombre de participations pour ${getLabelFromName(selectedStructureId)} par région sur la période ${selectedYearStart}-${selectedYearEnd}`}
+      </Title>
+      <StructuresSelector selectedStructureId={selectedStructureId} setSelectedStructureId={setSelectedStructureId} />
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={options}
-        constructorType={"mapChart"}
-      />
+      <ChartWrapper config={config} options={options} legend={null} constructorType="mapChart" />
     </div>
   );
-};
+}

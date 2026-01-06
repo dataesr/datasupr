@@ -3,6 +3,7 @@ import React from "react";
 import Highcharts from "highcharts";
 import "highcharts/modules/exporting";
 import "highcharts/modules/offline-exporting";
+import "highcharts/modules/map";
 import HighchartsReact from "highcharts-react-official";
 import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Title } from "@dataesr/dsfr-plus";
 
@@ -88,7 +89,7 @@ export type ChartConfig = {
   updateDate?: Date;
 };
 
-export type HighchartsOptions = Highcharts.Options | null;
+export type HighchartsOptions = Highcharts.Options | any | null;
 
 const { VITE_APP_URL } = import.meta.env;
 
@@ -327,12 +328,14 @@ export default function ChartWrapper({
   legend,
   renderData,
   hideTitle = false,
+  constructorType,
 }: {
   config: ChartConfig;
   options: HighchartsOptions;
   legend: React.ReactNode;
   renderData?: (options: Highcharts.Options) => React.ReactNode;
   hideTitle?: boolean;
+  constructorType?: "chart" | "stockChart" | "mapChart";
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
@@ -467,27 +470,16 @@ export default function ChartWrapper({
           variant="text"
         />
       </div>
-      {displayType === "data" && renderData && options && (
-        <>{renderData(options)}</>
-      )}
+      {displayType === "data" && renderData && options && <>{renderData(options)}</>}
       {displayType === "chart" && options && (
         <figure className="chart">
-          <HighchartsReact
-            highcharts={Highcharts}
-            options={options}
-            ref={chart}
-          />
+          <HighchartsReact highcharts={Highcharts} options={options} ref={chart} constructorType={constructorType} />
         </figure>
       )}
       <div className="fr-pt-1w">
         {legend}
         <div className="chart-footer">
-          <ChartFooter
-            comment={config.comment}
-            readingKey={config.readingKey}
-            source={config.source}
-            updateDate={config.updateDate}
-          />
+          <ChartFooter comment={config.comment} readingKey={config.readingKey} source={config.source} updateDate={config.updateDate} />
         </div>
       </div>
       <MenuModal
