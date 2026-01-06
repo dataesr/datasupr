@@ -98,13 +98,15 @@ export default function TopFundersByStructure() {
   };
 
   const options: object = {
-    ...getGeneralOptions('', categories, '', 'Nombre de projets financés'),
-    legend: { enabled: false },
+    ...getGeneralOptions("", categories, "", "Nombre de projets financés"),
+    // legend: { enabled: false },
     series: [{ data: series }],
     tooltip: {
-      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(selectedStructureId)}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
+      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(
+        selectedStructureId
+      )}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
     },
-  }
+  };
 
   return (
     <div className={`chart-container chart-container--${color}`} id="top-funders-by-structure">

@@ -58,7 +58,8 @@ export default function StructuresSelector({
   });
 
   if (isLoading || !data) return <DefaultSkeleton />;
-  const structures = data.aggregations.by_structure.buckets.map((structure) => ({ id: structure.key, name: getLabelFromName(structure.key) }));
+  const structures =
+    data.aggregations?.by_structure?.buckets.map((structure) => ({ id: structure.key, name: getLabelFromName(structure.key) })) || [];
 
   return (
     <Row gutters className="form-row">
