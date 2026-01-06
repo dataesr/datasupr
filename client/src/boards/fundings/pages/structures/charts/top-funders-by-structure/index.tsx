@@ -5,7 +5,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector";
-import { getColorFromFunder, getGeneralOptions, getLabelFromName, sortedFunders } from "../../../../utils";
+import { getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils";
 import StructuresSelector from "../../components/structuresSelector";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
