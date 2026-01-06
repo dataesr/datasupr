@@ -50,9 +50,17 @@ export default function FundedStructuresBudget() {
       by_participant: {
         terms: {
           field: "participant_id_name.keyword",
-          size: 25
+          size: 25,
+          order: {
+            "sum_budget": "desc"
+          }
         },
         aggs: {
+          sum_budget: {
+            sum: {
+              field: "project_budgetTotal"
+            }
+          },
           by_funder: {
             terms: {
               field: "project_type.keyword"

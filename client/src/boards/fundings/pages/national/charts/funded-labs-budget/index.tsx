@@ -50,9 +50,17 @@ export default function FundedLabsBudget() {
       by_participant: {
         terms: {
           field: "participant_id_name.keyword",
-          size: 25
+          size: 25,
+          order: {
+            "sum_budget": "desc"
+          }
         },
         aggs: {
+          sum_budget: {
+            sum: {
+              field: "project_budgetTotal"
+            }
+          },
           by_funder: {
             terms: {
               field: "project_type.keyword"
@@ -69,6 +77,7 @@ export default function FundedLabsBudget() {
       }
     }
   };
+
 
   const { data, isLoading } = useQuery({
     queryKey: ['fundings-funded-labs-budget', selectedYearEnd, selectedYearStart],
