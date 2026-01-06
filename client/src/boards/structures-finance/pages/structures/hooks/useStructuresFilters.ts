@@ -5,12 +5,14 @@ interface UseStructuresFiltersParams {
   selectedYear: string | number;
   selectedType?: string;
   selectedRegion?: string;
+  selectedTypologie?: string;
 }
 
 interface UseStructuresFiltersReturn {
   allEtablissements: any[];
   availableTypes: string[];
   availableRegions: string[];
+  availableTypologies: string[];
   filteredEtablissements: any[];
   defaultType: string | null;
   isLoading: boolean;
@@ -20,6 +22,7 @@ export function useStructuresFilters({
   selectedYear,
   selectedType,
   selectedRegion,
+  selectedTypologie,
 }: UseStructuresFiltersParams): UseStructuresFiltersReturn {
   const { data: etablissementsData, isLoading } = useFinanceEtablissements(
     String(selectedYear),
@@ -32,7 +35,6 @@ export function useStructuresFilters({
     return etablissementsData.data || etablissementsData.etablissements || [];
   }, [etablissementsData]);
 
-  // Extraire les types uniques
   const availableTypes = useMemo(() => {
     const types = new Set<string>();
     allEtablissements.forEach((etab: any) => {
@@ -66,9 +68,18 @@ export function useStructuresFilters({
     return Array.from(regions).sort();
   }, [allEtablissements]);
 
+  const availableTypologies = useMemo(() => {
+    const typologies = new Set<string>();
+    allEtablissements.forEach((etab: any) => {
+      if (etab.typologie && etab.typologie.trim()) {
+        typologies.add(etab.typologie.trim());
+      }
+    });
+    return Array.from(typologies).sort();
+  }, [allEtablissements]);
+
   const defaultType = useMemo(() => {
     if (availableTypes.length === 0) return null;
-    // Chercher "Université" en priorité
     const universiteType = availableTypes.find(
       (t) =>
         t.toLowerCase().includes("université") ||
@@ -95,13 +106,22 @@ export function useStructuresFilters({
       );
     }
 
+    if (selectedTypologie && selectedTypologie !== "toutes") {
+      filtered = filtered.filter(
+        (etab: any) =>
+          etab.typologie?.toLowerCase().trim() ===
+          selectedTypologie.toLowerCase().trim()
+      );
+    }
+
     return filtered;
-  }, [allEtablissements, selectedType, selectedRegion]);
+  }, [allEtablissements, selectedType, selectedRegion, selectedTypologie]);
 
   return {
     allEtablissements,
     availableTypes,
     availableRegions,
+    availableTypologies,
     filteredEtablissements,
     defaultType,
     isLoading,

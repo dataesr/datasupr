@@ -1,11 +1,10 @@
-import { Row, Col, Badge } from "@dataesr/dsfr-plus";
+import { Row, Col } from "@dataesr/dsfr-plus";
 import { CHART_COLORS, DSFR_COLORS } from "../../../../constants/colors";
+import RessourcesPropresChart from "../../charts/ressources-propres";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
 const pct = (n?: number) => (n != null ? `${n.toFixed(2)} %` : "—");
-const num = (n?: number) =>
-  n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 2 }) : "—";
 
 interface MetricCardProps {
   title: string;
@@ -90,42 +89,51 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
 
   const scspCards = [
     {
-      title: "SCSP",
+      title: "Ressources hors opérations en capital",
+      value: `${euro(data.produits_de_fonctionnement_encaissables)} €`,
+      detail: "Produits de fonctionnement encaissables",
+      color: CHART_COLORS.primary,
+    },
+    {
+      title: "Subvention pour charge de service public",
       value: `${euro(data.scsp)} €`,
-      detail: "Subvention pour charges de service public",
+      detail:
+        data.produits_de_fonctionnement_encaissables && data.scsp
+          ? `${(
+              (data.scsp / data.produits_de_fonctionnement_encaissables) *
+              100
+            ).toFixed(1)} % des ressources`
+          : "Part des ressources",
       color: CHART_COLORS.primary,
     },
     {
-      title: "Étudiants (SCSP)",
-      value: num(data.scsp_etudiants),
-      detail: "Effectif de référence pour le SCSP",
-      color: CHART_COLORS.primary,
-    },
-    {
-      title: "SCSP par étudiant",
-      value: `${euro(data.scsp_par_etudiants)} €`,
-      detail: "Ratio SCSP / étudiants",
+      title: "Ressources propres",
+      value: `${euro(data.recettes_propres)} €`,
+      detail:
+        data.produits_de_fonctionnement_encaissables && data.recettes_propres
+          ? `${(
+              (data.recettes_propres /
+                data.produits_de_fonctionnement_encaissables) *
+              100
+            ).toFixed(1)} % des ressources`
+          : "Part des ressources",
       color: CHART_COLORS.primary,
     },
   ];
 
   const emploiCards = [
     {
-      title: "Emplois (ETPT)",
-      value: num(data.emploi_etpt),
-      detail: "Équivalent temps plein travaillé",
+      title: "SCSP",
+      value: `${euro(data.scsp)} €`,
+      detail: "Subvention pour charges de service public",
       color: CHART_COLORS.secondary,
     },
     {
-      title: "Étudiants",
-      value: num(data.emploi_etpt_etudiants),
-      detail: "Effectif de référence pour les emplois",
-      color: CHART_COLORS.secondary,
-    },
-    {
-      title: "Taux d'encadrement",
-      value: pct(data.taux_encadrement),
-      detail: "Ratio emplois / étudiants",
+      title: "SCSP par étudiant",
+      value: `${euro(data.scsp_par_etudiants)} €`,
+      detail: data.scsp_etudiants
+        ? `Pour ${data.scsp_etudiants.toLocaleString("fr-FR")} étudiants`
+        : "Ratio SCSP / étudiants",
       color: CHART_COLORS.secondary,
     },
   ];
@@ -153,74 +161,6 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
 
   return (
     <div>
-      {/* Encart RCE et niveaux d'études */}
-      <div className="fr-mb-4w">
-        <div
-          className="fr-p-3w"
-          style={{
-            backgroundColor: "var(--background-contrast-info)",
-            borderRadius: "8px",
-            borderLeft: `4px solid ${CHART_COLORS.primary}`,
-          }}
-        >
-          <Row>
-            <Col md="6">
-              <h4
-                className="fr-h6 fr-mb-2w"
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-              >
-                🏛️ Responsabilités et Compétences Élargies (RCE)
-              </h4>
-              <p className="fr-text--sm" style={{ marginBottom: "0.5rem" }}>
-                <strong style={{ color: DSFR_COLORS.textDefault }}>
-                  Statut RCE :
-                </strong>{" "}
-                {data.rce ? (
-                  <Badge color="success">Oui</Badge>
-                ) : (
-                  <Badge color="warning">Non</Badge>
-                )}
-              </p>
-              {data.date_passage_rce && (
-                <p className="fr-text--sm fr-mb-0">
-                  <strong style={{ color: DSFR_COLORS.textDefault }}>
-                    Date de passage :
-                  </strong>{" "}
-                  {new Date(data.date_passage_rce).toLocaleDateString("fr-FR")}
-                </p>
-              )}
-            </Col>
-            <Col md="6">
-              <h4
-                className="fr-h6 fr-mb-2w"
-                style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-              >
-                🎓 Niveaux d'études disponibles
-              </h4>
-              {niveauxDisponibles.length > 0 ? (
-                <div
-                  style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}
-                >
-                  {niveauxDisponibles.map((niveau) => (
-                    <Badge key={niveau.key} color="info">
-                      {niveau.niveau}
-                    </Badge>
-                  ))}
-                </div>
-              ) : (
-                <p
-                  className="fr-text--sm fr-mb-0"
-                  style={{ color: DSFR_COLORS.textDefault }}
-                >
-                  Aucune donnée disponible
-                </p>
-              )}
-            </Col>
-          </Row>
-        </div>
-      </div>
-
-      {/* Section SCSP */}
       <div className="fr-mb-4w">
         <h3
           className="fr-h5 fr-mb-3w"
@@ -229,7 +169,7 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
             paddingLeft: "1rem",
           }}
         >
-          💰 SCSP (Subvention pour charges de service public)
+          SCSP (Subvention pour charges de service public)
         </h3>
         <Row gutters>
           {scspCards.map((card) => (
@@ -248,11 +188,11 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
             paddingLeft: "1rem",
           }}
         >
-          👥 Emplois et encadrement
+          Subvention pour charges de service public
         </h3>
         <Row gutters>
           {emploiCards.map((card) => (
-            <Col key={card.title} md="4">
+            <Col key={card.title} md="6">
               <MetricCard {...card} />
             </Col>
           ))}
@@ -267,7 +207,7 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
             paddingLeft: "1rem",
           }}
         >
-          💵 Masse salariale
+          Masse salariale
         </h3>
         <Row gutters>
           {masseSalarialeCards.map((card) => (
@@ -276,6 +216,10 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
             </Col>
           ))}
         </Row>
+      </div>
+
+      <div className="fr-mb-4w">
+        <RessourcesPropresChart data={data} />
       </div>
     </div>
   );

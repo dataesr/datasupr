@@ -13,7 +13,7 @@ export default function CustomSideMenu() {
       <div className="fr-sidemenu__inner">
         <div className="fr-collapse">
           <ul className="fr-sidemenu__list">
-            <li
+            {/* <li
               className={`fr-sidemenu__item ${
                 isActive("/structures-finance/accueil")
                   ? "fr-sidemenu__item--active"
@@ -29,7 +29,7 @@ export default function CustomSideMenu() {
               >
                 Accueil
               </a>
-            </li>
+            </li> */}
             <li
               className={`fr-sidemenu__item ${
                 isActive("/structures-finance/etablissements")

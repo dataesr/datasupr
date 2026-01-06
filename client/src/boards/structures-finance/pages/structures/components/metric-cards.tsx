@@ -152,7 +152,7 @@ export default function MetricCards({
             paddingLeft: "1rem",
           }}
         >
-          💰 SCSP (Subvention pour charges de service public)
+          SCSP (Subvention pour charges de service public)
         </h3>
         <Row gutters>
           {scspCards.map((card) => (
@@ -171,7 +171,7 @@ export default function MetricCards({
             paddingLeft: "1rem",
           }}
         >
-          👥 Emplois et encadrement
+          Emplois et encadrement
         </h3>
         <Row gutters>
           {emploiCards.map((card) => (
@@ -190,7 +190,7 @@ export default function MetricCards({
             paddingLeft: "1rem",
           }}
         >
-          💵 Masse salariale
+          Masse salariale
         </h3>
         <Row gutters>
           {masseSalarialeCards.map((card) => (

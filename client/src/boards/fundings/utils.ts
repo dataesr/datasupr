@@ -50,11 +50,11 @@ const getColorFromFunder = (funder: string) => {
 
 const getGeneralOptions = (title: string, categories: any[], title_x_axis: string, title_y_axis: string) => {
   return {
-    chart: { height: '800px', type: 'bar' },
+    chart: { height: "800px", type: "bar" },
     credits: { enabled: false },
     exporting: { enabled: false },
     legend: { reversed: true },
-    plotOptions: { series: { stacking: 'normal' } },
+    plotOptions: { series: { stacking: "normal" } },
     title: { text: title },
     xAxis: { categories, title: { text: title_x_axis } },
     yAxis: { title: { text: title_y_axis } },

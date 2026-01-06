@@ -7,19 +7,16 @@ import {
   useFinanceAdvancedComparison,
 } from "../../api";
 import SectionHeader from "../../components/layouts/section-header";
-import EvolutionNationaleChart from "./charts/evolution";
-import AutonomieChart from "./charts/autonomie";
-import AdvancedScatterChart from "./charts-comparison/advanced-scatter";
-import AnalysisConfig from "./components-comparison/analysis-config";
-import EncadrementByLevelChart from "./charts-comparison/encadrement-by-level";
 import { DSFR_COLORS, CHART_COLORS } from "../../constants/colors";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
 
 export default function NationalView() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: yearsData } = useFinanceYears();
   const years = useMemo(() => yearsData?.years || [], [yearsData]);
   const yearFromUrl = searchParams.get("year") || "";
-  const activeTab = searchParams.get("tab") || "comparative";
+  const activeTab = searchParams.get("tab") || "scatter1";
   const [selectedYear, setSelectedYear] = useState<string | number>(
     yearFromUrl
   );
@@ -27,16 +24,6 @@ export default function NationalView() {
   const [selectedType, setSelectedType] = useState<string>("");
   const [selectedTypologie, setSelectedTypologie] = useState<string>("");
   const [selectedRegion, setSelectedRegion] = useState<string>("");
-
-  const [xAxis, setXAxis] = useState<string>("taux_encadrement");
-  const [yAxis, setYAxis] = useState<string>("scsp_par_etudiants");
-  const [sizeMetric, setSizeMetric] = useState<string>("effectif_sans_cpge");
-  const [colorMetric, setColorMetric] = useState<string>(
-    "part_ressources_propres"
-  );
-  const [colorBy, setColorBy] = useState<
-    "region" | "type" | "typologie" | "metric"
-  >("metric");
 
   const { data: filtersData } = useFinanceComparisonFilters(
     String(selectedYear),
@@ -51,8 +38,7 @@ export default function NationalView() {
         typologie: selectedTypologie,
         region: selectedRegion,
       },
-      !!selectedYear &&
-        (activeTab === "comparative" || activeTab === "encadrement")
+      !!selectedYear
     );
 
   const allItems = useMemo(() => {
@@ -87,38 +73,178 @@ export default function NationalView() {
     }
   }, [filtersData, selectedType]);
 
-  const yearFilter = (
-    <div className="fr-input-group fr-mb-0" style={{ minWidth: "240px" }}>
-      <label className="fr-label" htmlFor="annee-exercice">
-        Année d'exercice
-      </label>
-      <select
-        className="fr-select"
-        id="annee-exercice"
-        name="annee-exercice"
-        value={selectedYear}
-        onChange={(e) => {
-          setSelectedYear(e.target.value);
-          const next = new URLSearchParams(searchParams);
-          next.set("year", e.target.value);
-          setSearchParams(next);
-        }}
-        disabled={!years.length}
-      >
-        {!years.length && <option>Chargement...</option>}
-        {years.map((year) => (
-          <option key={year} value={String(year)}>
-            {`Exercice ${year}`}
-          </option>
-        ))}
-      </select>
-    </div>
-  );
-
   const handleTabChange = (newTab: string) => {
     const next = new URLSearchParams(searchParams);
     next.set("tab", newTab);
     setSearchParams(next);
+  };
+
+  const scatterConfigs = [
+    {
+      title: "Produits de fonctionnement vs Effectifs",
+      xMetric: "produits_de_fonctionnement_encaissables",
+      yMetric: "effectif_sans_cpge",
+      xLabel: "Produits de fonctionnement encaissables (€)",
+      yLabel: "Effectif étudiants (sans CPGE)",
+    },
+    {
+      title: "SCSP par étudiant vs Taux d'encadrement",
+      xMetric: "scsp_par_etudiants",
+      yMetric: "taux_encadrement",
+      xLabel: "SCSP par étudiant (€)",
+      yLabel: "Taux d'encadrement (%)",
+    },
+    {
+      title: "SCSP vs Ressources propres",
+      xMetric: "scsp",
+      yMetric: "ressources_propres",
+      xLabel: "SCSP (€)",
+      yLabel: "Ressources propres (€)",
+    },
+  ];
+
+  const createScatterOptions = (
+    config: {
+      title: string;
+      xMetric: string;
+      yMetric: string;
+      xLabel: string;
+      yLabel: string;
+    },
+    data: any[]
+  ): Highcharts.Options => {
+    // Grouper par région
+    const regionGroups = new Map<string, any[]>();
+
+    data
+      .filter(
+        (item) => item[config.xMetric] != null && item[config.yMetric] != null
+      )
+      .forEach((item) => {
+        const region = item.region || "Non spécifié";
+        if (!regionGroups.has(region)) {
+          regionGroups.set(region, []);
+        }
+
+        const etablissementName =
+          item.etablissement_lib ||
+          item.etablissement_actuel_lib ||
+          "Établissement inconnu";
+
+        regionGroups.get(region)!.push({
+          x: item[config.xMetric],
+          y: item[config.yMetric],
+          z: Math.sqrt(item[config.yMetric]) / 10, // Taille basée sur Y
+          name: etablissementName,
+          region: item.region,
+          type: item.type,
+        });
+      });
+
+    const colors = CHART_COLORS.palette;
+    const series = Array.from(regionGroups.entries()).map(
+      ([region, items], index) => ({
+        name: region,
+        type: "bubble" as const,
+        data: items,
+        color: colors[index % colors.length],
+      })
+    );
+
+    return {
+      chart: {
+        type: "bubble",
+        height: 600,
+        backgroundColor: "transparent",
+      },
+      title: {
+        text: config.title,
+        align: "left",
+        style: {
+          fontSize: "18px",
+          fontWeight: "600",
+        },
+      },
+      xAxis: {
+        title: {
+          text: config.xLabel,
+          style: {
+            fontSize: "13px",
+            fontWeight: "500",
+          },
+        },
+        gridLineWidth: 1,
+        gridLineColor: "#e5e5e5",
+      },
+      yAxis: {
+        title: {
+          text: config.yLabel,
+          style: {
+            fontSize: "13px",
+            fontWeight: "500",
+          },
+        },
+        gridLineColor: "#e5e5e5",
+      },
+      tooltip: {
+        useHTML: true,
+        backgroundColor: "var(--background-default-grey)",
+        borderWidth: 1,
+        borderColor: "var(--border-default-grey)",
+        borderRadius: 8,
+        shadow: false,
+        formatter: function () {
+          const point = this as any;
+          return `
+            <div style="padding:10px">
+              <div style="font-weight:bold;margin-bottom:8px;font-size:14px">${
+                point.name
+              }</div>
+              <div style="margin-bottom:4px;color:#666;font-size:12px">${
+                point.type
+              } • ${point.region}</div>
+              <div style="margin-top:8px;padding-top:8px;border-top:1px solid #e5e5e5">
+                <div style="margin-bottom:4px"><strong>${
+                  config.xLabel
+                }:</strong> ${Highcharts.numberFormat(
+            point.x,
+            0,
+            ",",
+            " "
+          )}</div>
+                <div><strong>${
+                  config.yLabel
+                }:</strong> ${Highcharts.numberFormat(
+            point.y,
+            2,
+            ",",
+            " "
+          )}</div>
+              </div>
+            </div>
+          `;
+        },
+      },
+      plotOptions: {
+        bubble: {
+          minSize: 5,
+          maxSize: 40,
+        },
+      },
+      legend: {
+        enabled: true,
+        align: "right",
+        verticalAlign: "middle",
+        layout: "vertical",
+        itemStyle: {
+          fontSize: "11px",
+        },
+      },
+      credits: {
+        enabled: false,
+      },
+      series: series,
+    };
   };
 
   return (
@@ -131,284 +257,175 @@ export default function NationalView() {
             <li role="presentation">
               <button
                 className={`fr-tabs__tab ${
-                  activeTab === "comparative" ? "fr-tabs__tab--selected" : ""
+                  activeTab === "scatter1" ? "fr-tabs__tab--selected" : ""
                 }`}
                 type="button"
                 role="tab"
-                aria-selected={activeTab === "comparative"}
-                onClick={() => handleTabChange("comparative")}
+                aria-selected={activeTab === "scatter1"}
+                onClick={() => handleTabChange("scatter1")}
               >
-                📊 Analyse comparative
+                Produits vs Effectifs
               </button>
             </li>
             <li role="presentation">
               <button
                 className={`fr-tabs__tab ${
-                  activeTab === "evolution" ? "fr-tabs__tab--selected" : ""
+                  activeTab === "scatter2" ? "fr-tabs__tab--selected" : ""
                 }`}
                 type="button"
                 role="tab"
-                aria-selected={activeTab === "evolution"}
-                onClick={() => handleTabChange("evolution")}
+                aria-selected={activeTab === "scatter2"}
+                onClick={() => handleTabChange("scatter2")}
               >
-                📈 Évolution temporelle
+                SCSP vs Encadrement
               </button>
             </li>
             <li role="presentation">
               <button
                 className={`fr-tabs__tab ${
-                  activeTab === "autonomie" ? "fr-tabs__tab--selected" : ""
+                  activeTab === "scatter3" ? "fr-tabs__tab--selected" : ""
                 }`}
                 type="button"
                 role="tab"
-                aria-selected={activeTab === "autonomie"}
-                onClick={() => handleTabChange("autonomie")}
+                aria-selected={activeTab === "scatter3"}
+                onClick={() => handleTabChange("scatter3")}
               >
-                💡 Autonomie & Efficience
-              </button>
-            </li>
-
-            <li role="presentation">
-              <button
-                className={`fr-tabs__tab ${
-                  activeTab === "encadrement" ? "fr-tabs__tab--selected" : ""
-                }`}
-                type="button"
-                role="tab"
-                aria-selected={activeTab === "encadrement"}
-                onClick={() => handleTabChange("encadrement")}
-              >
-                👥 Effectifs par niveaux
+                SCSP vs Ressources propres
               </button>
             </li>
           </ul>
         </div>
       </div>
 
-      {(activeTab === "comparative" || activeTab === "encadrement") && (
-        <div
-          className="fr-p-3w fr-mb-3w"
-          style={{
-            backgroundColor: DSFR_COLORS.backgroundDefaultHover,
-            borderRadius: "8px",
-            border: `1px solid ${DSFR_COLORS.borderDefault}`,
-          }}
-        >
-          <Row gutters>
-            <Col md="3">
-              <div className="fr-select-group">
-                <label className="fr-label">
-                  <strong>Année d'exercice</strong>
-                </label>
-                <select
-                  className="fr-select"
-                  value={selectedYear}
-                  onChange={(e) => setSelectedYear(e.target.value)}
-                >
-                  {years.map((year) => (
-                    <option key={year} value={year}>
-                      Exercice {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </Col>
+      <div
+        className="fr-p-3w fr-mb-3w"
+        style={{
+          backgroundColor: DSFR_COLORS.backgroundDefaultHover,
+          borderRadius: "8px",
+          border: `1px solid ${DSFR_COLORS.borderDefault}`,
+        }}
+      >
+        <Row gutters>
+          <Col md="3">
+            <div className="fr-select-group">
+              <label className="fr-label">
+                <strong>Année</strong>
+              </label>
+              <select
+                className="fr-select"
+                value={selectedYear}
+                onChange={(e) => {
+                  setSelectedYear(e.target.value);
+                  const next = new URLSearchParams(searchParams);
+                  next.set("year", e.target.value);
+                  setSearchParams(next);
+                }}
+              >
+                {years.map((year) => (
+                  <option key={year} value={year}>
+                    Exercice {year}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </Col>
 
-            <Col md="3">
-              <div className="fr-select-group">
-                <label className="fr-label">
-                  <strong>Type d'établissement</strong>
-                </label>
-                <select
-                  className="fr-select"
-                  value={selectedType}
-                  onChange={(e) => setSelectedType(e.target.value)}
-                >
-                  <option value="">Tous les types</option>
-                  {(filtersData?.types || []).map((type: string) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </Col>
+          <Col md="3">
+            <div className="fr-select-group">
+              <label className="fr-label">
+                <strong>Type d'établissement</strong>
+              </label>
+              <select
+                className="fr-select"
+                value={selectedType}
+                onChange={(e) => setSelectedType(e.target.value)}
+              >
+                <option value="">Tous les types</option>
+                {(filtersData?.types || []).map((type: string) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </Col>
 
-            <Col md="3">
-              <div className="fr-select-group">
-                <label className="fr-label">
-                  <strong>Typologie</strong>
-                </label>
-                <select
-                  className="fr-select"
-                  value={selectedTypologie}
-                  onChange={(e) => setSelectedTypologie(e.target.value)}
-                >
-                  <option value="">Toutes les typologies</option>
-                  {(filtersData?.typologies || []).map((typo: string) => (
-                    <option key={typo} value={typo}>
-                      {typo}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </Col>
+          <Col md="3">
+            <div className="fr-select-group">
+              <label className="fr-label">
+                <strong>Typologie</strong>
+              </label>
+              <select
+                className="fr-select"
+                value={selectedTypologie}
+                onChange={(e) => setSelectedTypologie(e.target.value)}
+              >
+                <option value="">Toutes les typologies</option>
+                {(filtersData?.typologies || []).map((typo: string) => (
+                  <option key={typo} value={typo}>
+                    {typo}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </Col>
 
-            <Col md="3">
-              <div className="fr-select-group">
-                <label className="fr-label">
-                  <strong>Région</strong>
-                </label>
-                <select
-                  className="fr-select"
-                  value={selectedRegion}
-                  onChange={(e) => setSelectedRegion(e.target.value)}
-                >
-                  <option value="">Toutes les régions</option>
-                  {(filtersData?.regions || []).map((region: string) => (
-                    <option key={region} value={region}>
-                      {region}
-                    </option>
-                  ))}
-                </select>
-              </div>
+          <Col md="3">
+            <div className="fr-select-group">
+              <label className="fr-label">
+                <strong>Région</strong>
+              </label>
+              <select
+                className="fr-select"
+                value={selectedRegion}
+                onChange={(e) => setSelectedRegion(e.target.value)}
+              >
+                <option value="">Toutes les régions</option>
+                {(filtersData?.regions || []).map((region: string) => (
+                  <option key={region} value={region}>
+                    {region}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </Col>
+        </Row>
+
+        {allItems.length > 0 && (
+          <Row className="fr-mt-2w">
+            <Col>
+              <Badge
+                color="info"
+                style={{ fontSize: "14px", padding: "0.5rem 1rem" }}
+              >
+                {allItems.length} établissement
+                {allItems.length > 1 ? "s" : ""} sélectionné
+                {allItems.length > 1 ? "s" : ""}
+              </Badge>
             </Col>
           </Row>
+        )}
+      </div>
 
-          {allItems.length > 0 && (
-            <Row className="fr-mt-2w">
-              <Col>
-                <div
-                  style={{ display: "flex", alignItems: "center", gap: "1rem" }}
-                >
-                  <Badge
-                    color="info"
-                    style={{ fontSize: "14px", padding: "0.5rem 1rem" }}
-                  >
-                    {allItems.length} établissement
-                    {allItems.length > 1 ? "s" : ""} sélectionné
-                    {allItems.length > 1 ? "s" : ""}
-                  </Badge>
-                </div>
-              </Col>
-            </Row>
-          )}
+      {isLoadingComparison && (
+        <div className="fr-alert fr-alert--info">
+          <p>Chargement des données...</p>
         </div>
       )}
 
-      {isLoadingComparison &&
-        (activeTab === "comparative" || activeTab === "encadrement") && (
-          <div className="fr-alert fr-alert--info">
-            <p>Chargement des données...</p>
-          </div>
-        )}
+      {!isLoadingComparison && allItems.length === 0 && (
+        <div className="fr-alert fr-alert--warning">
+          <p>
+            Aucun établissement ne correspond aux filtres sélectionnés. Essayez
+            de modifier vos critères.
+          </p>
+        </div>
+      )}
 
-      {!isLoadingComparison &&
-        allItems.length === 0 &&
-        (activeTab === "comparative" || activeTab === "encadrement") && (
-          <div className="fr-alert fr-alert--warning">
-            <p>
-              Aucun établissement ne correspond aux filtres sélectionnés.
-              Essayez de modifier vos critères.
-            </p>
-          </div>
-        )}
-
-      {activeTab === "vue-ensemble" && (
+      {!isLoadingComparison && allItems.length > 0 && (
         <>
-          <div
-            className="fr-mb-3w fr-p-3w"
-            style={{
-              backgroundColor: DSFR_COLORS.backgroundDefaultHover,
-              borderRadius: "8px",
-              border: `1px solid ${DSFR_COLORS.borderDefault}`,
-            }}
-          >
-            <Row>
-              <div style={{ flex: 1 }}>
-                <h3
-                  className="fr-h6 fr-mb-0"
-                  style={{
-                    borderLeft: "4px solid #0078f3",
-                    paddingLeft: "1rem",
-                  }}
-                >
-                  Filtres de sélection
-                </h3>
-              </div>
-              <div style={{ minWidth: "240px" }}>{yearFilter}</div>
-            </Row>
-          </div>
-        </>
-      )}
-
-      {activeTab === "evolution" && (
-        <div
-          className="fr-p-3w"
-          style={{
-            backgroundColor: DSFR_COLORS.backgroundDefault,
-            borderRadius: "8px",
-            border: `1px solid ${DSFR_COLORS.borderDefault}`,
-          }}
-        >
-          <EvolutionNationaleChart selectedYear={String(selectedYear)} />
-        </div>
-      )}
-
-      {activeTab === "autonomie" && (
-        <div
-          className="fr-p-3w"
-          style={{
-            backgroundColor: DSFR_COLORS.backgroundDefault,
-            borderRadius: "8px",
-            border: `1px solid ${DSFR_COLORS.borderDefault}`,
-          }}
-        >
-          <AutonomieChart selectedYear={String(selectedYear)} />
-        </div>
-      )}
-
-      {activeTab === "comparative" &&
-        !isLoadingComparison &&
-        allItems.length > 0 && (
-          <>
+          {activeTab === "scatter1" && (
             <Row className="fr-mb-3w">
-              <Col>
-                <div
-                  className="fr-p-3w"
-                  style={{
-                    backgroundColor: DSFR_COLORS.backgroundDefault,
-                    borderRadius: "8px",
-                    border: `1px solid ${DSFR_COLORS.borderDefault}`,
-                  }}
-                >
-                  <h3
-                    className="fr-h6 fr-mb-3w"
-                    style={{
-                      borderLeft: `4px solid ${CHART_COLORS.secondary}`,
-                      paddingLeft: "1rem",
-                    }}
-                  >
-                    Configuration de l'analyse
-                  </h3>
-                  <AnalysisConfig
-                    xAxis={xAxis}
-                    yAxis={yAxis}
-                    sizeMetric={sizeMetric}
-                    colorMetric={colorMetric}
-                    colorBy={colorBy}
-                    data={allItems}
-                    onXAxisChange={setXAxis}
-                    onYAxisChange={setYAxis}
-                    onSizeMetricChange={setSizeMetric}
-                    onColorMetricChange={setColorMetric}
-                    onColorByChange={setColorBy}
-                  />
-                </div>
-              </Col>
-            </Row>
-
-            <Row gutters>
               <Col xs="12">
                 <div
                   className="fr-p-3w"
@@ -418,46 +435,56 @@ export default function NationalView() {
                     border: `1px solid ${DSFR_COLORS.borderDefault}`,
                   }}
                 >
-                  <AdvancedScatterChart
-                    data={allItems}
-                    xAxis={xAxis}
-                    yAxis={yAxis}
-                    sizeMetric={sizeMetric}
-                    colorMetric={colorMetric}
-                    colorBy={colorBy}
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={createScatterOptions(scatterConfigs[0], allItems)}
                   />
                 </div>
               </Col>
             </Row>
-          </>
-        )}
+          )}
 
-      {activeTab === "encadrement" &&
-        !isLoadingComparison &&
-        allItems.length > 0 && (
-          <Row gutters>
-            <Col xs="12">
-              <div
-                className="fr-p-3w"
-                style={{
-                  backgroundColor: DSFR_COLORS.backgroundDefault,
-                  borderRadius: "8px",
-                  border: `1px solid ${DSFR_COLORS.borderDefault}`,
-                }}
-              >
-                <EncadrementByLevelChart
-                  data={allItems}
-                  filters={{
-                    annee: String(selectedYear),
-                    type: selectedType,
-                    typologie: selectedTypologie,
-                    region: selectedRegion,
+          {activeTab === "scatter2" && (
+            <Row className="fr-mb-3w">
+              <Col xs="12">
+                <div
+                  className="fr-p-3w"
+                  style={{
+                    backgroundColor: DSFR_COLORS.backgroundDefault,
+                    borderRadius: "8px",
+                    border: `1px solid ${DSFR_COLORS.borderDefault}`,
                   }}
-                />
-              </div>
-            </Col>
-          </Row>
-        )}
+                >
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={createScatterOptions(scatterConfigs[1], allItems)}
+                  />
+                </div>
+              </Col>
+            </Row>
+          )}
+
+          {activeTab === "scatter3" && (
+            <Row className="fr-mb-3w">
+              <Col xs="12">
+                <div
+                  className="fr-p-3w"
+                  style={{
+                    backgroundColor: DSFR_COLORS.backgroundDefault,
+                    borderRadius: "8px",
+                    border: `1px solid ${DSFR_COLORS.borderDefault}`,
+                  }}
+                >
+                  <HighchartsReact
+                    highcharts={Highcharts}
+                    options={createScatterOptions(scatterConfigs[2], allItems)}
+                  />
+                </div>
+              </Col>
+            </Row>
+          )}
+        </>
+      )}
     </Container>
   );
 }

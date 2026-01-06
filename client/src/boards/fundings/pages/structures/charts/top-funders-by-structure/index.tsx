@@ -5,7 +5,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector";
-import { getColorFromFunder, getGeneralOptions, getLabelFromName, sortedFunders } from "../../../../utils";
+import { getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils";
 import StructuresSelector from "../../components/structuresSelector";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -80,16 +80,12 @@ export default function TopFundersByStructure() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  const series = (data?.aggregations?.by_funder_type?.buckets ?? []).map(
-    (item: {
-      unique_projects: any; key: string; doc_count: number;
-    }) => ({
-      color: getColorFromFunder(item.key),
-      name: item.key,
-      y: item.unique_projects.value,
-    })
-  );
-  const categories = series.map((item: { name: any; }) => item.name);
+  const series = (data?.aggregations?.by_funder_type?.buckets ?? []).map((item: { unique_projects: any; key: string; doc_count: number }) => ({
+    color: getColorFromFunder(item.key),
+    name: item.key,
+    data: [item.unique_projects.value],
+  }));
+  const categories = series.map((item: { name: any }) => item.name);
 
   const config = {
     id: "topFundersByStructure",
@@ -98,11 +94,31 @@ export default function TopFundersByStructure() {
   };
 
   const options: object = {
-    ...getGeneralOptions("", categories, "", "Nombre de projets financés"),
-    // legend: { enabled: false },
-    series: [{ data: series }],
+    ...getGeneralOptions("", categories, "Financeurs", "Nombre de projets financés"),
+    xAxis: {
+      categories,
+      labels: { enabled: false },
+      title: { text: "Financeurs" },
+    },
+    legend: {
+      enabled: true,
+      reversed: false,
+      layout: "horizontal",
+      align: "center",
+      verticalAlign: "bottom",
+    },
+    plotOptions: {
+      series: {
+        stacking: undefined,
+        dataLabels: {
+          enabled: true,
+          format: "{series.name}",
+        },
+      },
+    },
+    series: series,
     tooltip: {
-      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(
+      format: `<b>{series.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(
         selectedStructureId
       )}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
     },
@@ -110,44 +126,14 @@ export default function TopFundersByStructure() {
 
   return (
     <div className={`chart-container chart-container--${color}`} id="top-funders-by-structure">
-      <StructuresSelector
-        selectedStructureId={selectedStructureId}
-        setSelectedStructureId={setSelectedStructureId}
-      />
+      <StructuresSelector selectedStructureId={selectedStructureId} setSelectedStructureId={setSelectedStructureId} />
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      <ChartWrapper
-        config={config}
-        legend={
-          <ul className="legend">
-            {categories.map((category) => (
-              <li
-                key={category}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "5px",
-                }}
-              >
-                <div
-                  style={{
-                    background: sortedFunders?.[category.toLowerCase()] ?? '#00ff00',
-                    height: "20px",
-                    marginRight: "10px",
-                    width: "20px"
-                  }}
-                ></div>
-                <span>{category}</span>
-              </li>
-            ))}
-          </ul>
-        }
-        options={options}
-      />
+      <ChartWrapper config={config} options={options} legend={null} />
     </div>
   );
 }

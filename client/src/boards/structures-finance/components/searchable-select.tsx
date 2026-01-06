@@ -2,7 +2,12 @@ import { useState, useRef, useEffect } from "react";
 import "./searchable-select.scss";
 
 interface SearchableSelectProps {
-  options: Array<{ id: string; label: string }>;
+  options: Array<{
+    id: string;
+    label: string;
+    searchableText?: string;
+    subtitle?: string;
+  }>;
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
@@ -21,9 +26,10 @@ export default function SearchableSelect({
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const filteredOptions = options.filter((option) =>
-    option.label.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredOptions = options.filter((option) => {
+    const searchText = option.searchableText || option.label;
+    return searchText.toLowerCase().includes(searchTerm.toLowerCase());
+  });
 
   const selectedOption = options.find((opt) => opt.id === value);
 
@@ -100,7 +106,18 @@ export default function SearchableSelect({
                     option.id === value ? "selected" : ""
                   }`}
                 >
-                  {option.label}
+                  <div>{option.label}</div>
+                  {option.subtitle && (
+                    <div
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "var(--text-mention-grey)",
+                        marginTop: "0.25rem",
+                      }}
+                    >
+                      {option.subtitle}
+                    </div>
+                  )}
                 </div>
               ))
             )}

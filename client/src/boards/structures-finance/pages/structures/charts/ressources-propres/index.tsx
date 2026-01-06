@@ -1,70 +1,14 @@
 import { useMemo, useState } from "react";
 import Highcharts from "highcharts";
-import { Row, Col, Button } from "@dataesr/dsfr-plus";
+import "highcharts/modules/treemap";
+import { Button } from "@dataesr/dsfr-plus";
 import { createRessourcesPropresChartOptions } from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { CHART_COLORS, DSFR_COLORS } from "../../../../constants/colors";
+import { CHART_COLORS } from "../../../../constants/colors";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
-const pct = (n?: number) => (n != null ? `${n.toFixed(2)} %` : "—");
-
-interface MetricCardProps {
-  title: string;
-  value: string;
-  detail?: string;
-  color?: string;
-}
-
-function MetricCard({
-  title,
-  value,
-  detail,
-  color = CHART_COLORS.primary,
-}: MetricCardProps) {
-  return (
-    <div
-      className="fr-card fr-enlarge-link"
-      style={{
-        height: "100%",
-        borderTop: `4px solid ${color}`,
-        borderLeft: "none",
-        borderRight: "none",
-        borderBottom: "none",
-        backgroundColor: DSFR_COLORS.backgroundAlt,
-      }}
-    >
-      <div className="fr-card__body fr-p-2w">
-        <div className="fr-card__content">
-          <p
-            className="fr-text--sm fr-text--bold fr-mb-1v"
-            style={{
-              color: DSFR_COLORS.textDefault,
-              textTransform: "uppercase",
-              letterSpacing: "0.5px",
-            }}
-          >
-            {title}
-          </p>
-          <p
-            className="fr-h5 fr-mb-1v"
-            style={{ fontWeight: 700, color: "#000" }}
-          >
-            {value}
-          </p>
-          {detail && (
-            <p
-              className="fr-text--sm"
-              style={{ color: DSFR_COLORS.textDefault, margin: 0 }}
-            >
-              {detail}
-            </p>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+const pct = (n?: number) => (n != null ? `${n.toFixed(1)} %` : "—");
 
 interface RessourcesPropresChartProps {
   data: any;
@@ -77,7 +21,7 @@ export default function RessourcesPropresChart({
   selectedYear,
   etablissementName,
 }: RessourcesPropresChartProps) {
-  const [viewMode, setViewMode] = useState<"chart" | "cards">("chart");
+  const [viewMode, setViewMode] = useState<"chart" | "table">("chart");
 
   const options = useMemo(() => {
     if (!data) return {} as Highcharts.Options;
@@ -160,27 +104,71 @@ export default function RessourcesPropresChart({
 
   if (!data) return null;
 
-  const renderCards = () => (
-    <Row gutters className="fr-mb-3w">
-      {ressourcesPropresDecomposition.map((item) => (
-        <Col key={item.label} md="3" sm="6" xs="12">
-          <MetricCard
-            title={item.label}
-            value={`${euro(item.value)} €`}
-            detail={pct(item.part)}
-            color={item.color}
-          />
-        </Col>
-      ))}
-      <Col md="3" sm="6" xs="12">
-        <MetricCard
-          title="Total ressources propres"
-          value={`${euro(totalRessources)} €`}
-          detail="Somme des ressources propres"
-          color={CHART_COLORS.secondary}
-        />
-      </Col>
-    </Row>
+  const renderTable = () => (
+    <div className="fr-table fr-table--bordered fr-mb-3w">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table>
+              <thead>
+                <tr>
+                  <th style={{ width: "50%" }}>Catégorie</th>
+                  <th style={{ width: "30%", textAlign: "right" }}>Montant</th>
+                  <th style={{ width: "20%", textAlign: "right" }}>Part</th>
+                </tr>
+              </thead>
+              <tbody>
+                {ressourcesPropresDecomposition
+                  .sort((a, b) => (b.value || 0) - (a.value || 0))
+                  .map((item) => (
+                    <tr key={item.label}>
+                      <td>
+                        <div
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "8px",
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: "12px",
+                              height: "12px",
+                              backgroundColor: item.color,
+                              borderRadius: "2px",
+                            }}
+                          />
+                          <span>{item.label}</span>
+                        </div>
+                      </td>
+                      <td style={{ textAlign: "right", fontWeight: 600 }}>
+                        {euro(item.value)} €
+                      </td>
+                      <td style={{ textAlign: "right" }}>{pct(item.part)}</td>
+                    </tr>
+                  ))}
+                <tr
+                  style={{
+                    backgroundColor: "var(--background-contrast-grey)",
+                    fontWeight: 700,
+                  }}
+                >
+                  <td>
+                    <strong>Total ressources propres</strong>
+                  </td>
+                  <td style={{ textAlign: "right" }}>
+                    <strong>{euro(totalRessources)} €</strong>
+                  </td>
+                  <td style={{ textAlign: "right" }}>
+                    <strong>100 %</strong>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 
   const renderChart = () => (
@@ -247,35 +235,7 @@ export default function RessourcesPropresChart({
   );
 
   return (
-    <div>
-      {data.is_rce && data.rce && (
-        <div
-          className="fr-alert fr-alert--info fr-mb-3w"
-          style={{
-            backgroundColor: "var(--background-contrast-info)",
-            border: `1px solid ${CHART_COLORS.primary}`,
-            borderLeft: `4px solid ${CHART_COLORS.primary}`,
-          }}
-        >
-          <h4 className="fr-alert__title" style={{ fontSize: "14px" }}>
-            🏛️ Responsabilités et Compétences Élargies (RCE)
-          </h4>
-          <p className="fr-text--sm" style={{ marginBottom: "0.5rem" }}>
-            Cet établissement a obtenu la <strong>RCE en {data.rce}</strong>.
-            Depuis cette date, il gère de manière autonome le paiement de son
-            personnel, une responsabilité auparavant assumée directement par
-            l'État.
-          </p>
-          <p
-            className="fr-text--xs"
-            style={{ color: DSFR_COLORS.textDefault, marginBottom: 0 }}
-          >
-            Cette autonomie de gestion influence la structure des charges de
-            personnel et la répartition des ressources financières.
-          </p>
-        </div>
-      )}
-
+    <>
       <div
         className="fr-mb-2w"
         style={{ display: "flex", gap: "1rem", alignItems: "center" }}
@@ -287,9 +247,7 @@ export default function RessourcesPropresChart({
             paddingLeft: "1rem",
             flex: 1,
           }}
-        >
-          Ressources propres — Analyse détaillée
-        </h3>
+        ></h3>
         <div className="fr-btns-group fr-btns-group--sm fr-btns-group--inline">
           <Button
             size="sm"
@@ -300,15 +258,15 @@ export default function RessourcesPropresChart({
           </Button>
           <Button
             size="sm"
-            variant={viewMode === "cards" ? "primary" : "secondary"}
-            onClick={() => setViewMode("cards")}
+            variant={viewMode === "table" ? "primary" : "secondary"}
+            onClick={() => setViewMode("table")}
           >
-            Cartes
+            Tableau
           </Button>
         </div>
       </div>
 
-      {viewMode === "chart" ? renderChart() : renderCards()}
-    </div>
+      {viewMode === "chart" ? renderChart() : renderTable()}
+    </>
   );
 }
