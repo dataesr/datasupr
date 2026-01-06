@@ -92,11 +92,15 @@ export default function InternationalPartnersByStructure() {
 
   if (isLoadingTopology || !mapData || isLoadingPartners || !dataPartners) return <DefaultSkeleton />;
 
-  const data = dataPartners.aggregations.by_lat.buckets.map((lat) => lat.by_lon.buckets.map((lon) => ({
-    lat: lat.key,
-    lon: lon.key,
-    z: lon.doc_count,
-  }))).flat();
+  const data = dataPartners.aggregations?.by_lat?.buckets
+    .map((lat) =>
+      lat.by_lon.buckets.map((lon) => ({
+        lat: lat.key,
+        lon: lon.key,
+        z: lon.doc_count,
+      }))
+    )
+    .flat();
 
   const options = {
     ...getGeneralOptions('', [], '', ''),

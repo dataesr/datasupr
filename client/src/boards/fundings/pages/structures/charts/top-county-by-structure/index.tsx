@@ -69,12 +69,12 @@ export default function TopCountyByStructure() {
 
   if (isLoadingTopology || !mapData || isLoadingCounty || !dataCounty) return <DefaultSkeleton />;
 
-  const data = dataCounty.aggregations.by_county.buckets.map((bucket) => {
+  const data = dataCounty.aggregations?.by_county?.buckets.map((bucket) => {
     let county = bucket.key;
-    if (county === 'Guyane') county = 'Guyane française';
+    if (county === "Guyane") county = "Guyane française";
     if (county === "Provence-Alpes-Côte d'Azur") county = "Provence-Alpes-Côte-d'Azur";
-    const county_id = mapData.objects.default.geometries.find((item) => item.properties.name === county)?.properties?.['hc-key'];
-    return [county_id, bucket.doc_count]
+    const county_id = mapData.objects.default.geometries.find((item) => item.properties.name === county)?.properties?.["hc-key"];
+    return [county_id, bucket.doc_count];
   });
 
   const options = {
