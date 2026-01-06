@@ -143,21 +143,123 @@ export const createEffectifsNiveauChartOptions = (
   };
 };
 
-export const createEffectifsFiliereChartOptions = (
+export const createEffectifsSpecifiquesChartOptions = (
   data: EffectifsData
 ): Highcharts.Options => {
   const colors = CHART_COLORS.palette;
 
-  const filieres = [
+  const specifiques = [
     {
-      name: "DSA",
+      name: "IUT",
+      y: data.effectif_sans_cpge_iut || 0,
+      has: data.has_effectif_iut,
+      color: colors[0],
+    },
+    {
+      name: "Ingénieur",
+      y: data.effectif_sans_cpge_ing || 0,
+      has: data.has_effectif_ing,
+      color: colors[10],
+    },
+    {
+      name: "Santé",
+      y: data.effectif_sans_cpge_sante || 0,
+      has: data.has_effectif_sante,
+      color: colors[7],
+    },
+  ].filter((item) => item.has && item.y > 0);
+
+  return {
+    chart: {
+      type: "pie",
+      height: 400,
+      backgroundColor: "transparent",
+    },
+    title: {
+      text: undefined,
+    },
+    exporting: {
+      enabled: false,
+    },
+    tooltip: {
+      useHTML: true,
+      backgroundColor: "var(--background-default-grey)",
+      borderWidth: 1,
+      borderColor: "var(--border-default-grey)",
+      borderRadius: 8,
+      shadow: false,
+      formatter: function () {
+        const point = this as any;
+        return `<div style="padding:10px">
+                <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
+                  point.name
+                }</div>
+                <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
+                  point.y,
+                  0,
+                  ",",
+                  " "
+                )} étudiants</div>
+                </div>`;
+      },
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: "pointer",
+        dataLabels: {
+          enabled: true,
+          useHTML: true,
+          formatter: function () {
+            const point = this as any;
+            return `<b>${point.name}</b><br>${Highcharts.numberFormat(
+              point.y,
+              0,
+              ",",
+              " "
+            )} étudiants`;
+          },
+          style: {
+            fontSize: "13px",
+            textOutline: "none",
+          },
+        },
+        showInLegend: true,
+      },
+    },
+    legend: {
+      align: "right",
+      verticalAlign: "middle",
+      layout: "vertical",
+    },
+    credits: {
+      enabled: false,
+    },
+    series: [
+      {
+        name: "Effectifs",
+        type: "pie",
+        data: specifiques,
+      },
+    ],
+  };
+};
+
+export const createEffectifsDisciplinesChartOptions = (
+  data: EffectifsData
+): Highcharts.Options => {
+  const colors = CHART_COLORS.palette;
+
+  const disciplines = [
+    {
+      name: "Droit, Sciences Éco, AES",
       y: data.effectif_sans_cpge_dsa || 0,
       percentage: data.part_effectif_sans_cpge_dsa || 0,
       has: data.has_effectif_dsa,
       color: colors[1],
     },
     {
-      name: "LLSH",
+      name: "Lettres, Langues, SHS",
       y: data.effectif_sans_cpge_llsh || 0,
       percentage: data.part_effectif_sans_cpge_llsh || 0,
       has: data.has_effectif_llsh,
@@ -171,7 +273,7 @@ export const createEffectifsFiliereChartOptions = (
       color: colors[4],
     },
     {
-      name: "Sciences",
+      name: "Sciences et Ingénierie",
       y: data.effectif_sans_cpge_si || 0,
       percentage: data.part_effectif_sans_cpge_si || 0,
       has: data.has_effectif_si,
@@ -183,13 +285,6 @@ export const createEffectifsFiliereChartOptions = (
       percentage: data.part_effectif_sans_cpge_staps || 0,
       has: data.has_effectif_staps,
       color: colors[6],
-    },
-    {
-      name: "Santé",
-      y: data.effectif_sans_cpge_sante || 0,
-      percentage: data.part_effectif_sans_cpge_sante || 0,
-      has: data.has_effectif_sante,
-      color: colors[7],
     },
     {
       name: "Vétérinaire",
@@ -239,7 +334,7 @@ export const createEffectifsFiliereChartOptions = (
                   " "
                 )} étudiants</div>
                 <div style="color:#666;font-size:13px">${point.percentage.toFixed(
-                  2
+                  1
                 )}% du total</div>
                 </div>`;
       },
@@ -250,7 +345,11 @@ export const createEffectifsFiliereChartOptions = (
         cursor: "pointer",
         dataLabels: {
           enabled: true,
-          format: "<b>{point.name}</b><br>{point.percentage:.1f}%",
+          useHTML: true,
+          formatter: function () {
+            const point = this as any;
+            return `<b>${point.name}</b><br>${point.percentage.toFixed(1)}%`;
+          },
           style: {
             fontSize: "13px",
             textOutline: "none",
@@ -271,7 +370,7 @@ export const createEffectifsFiliereChartOptions = (
       {
         name: "Effectifs",
         type: "pie",
-        data: filieres,
+        data: disciplines,
       },
     ],
   };

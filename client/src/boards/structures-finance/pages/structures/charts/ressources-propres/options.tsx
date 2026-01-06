@@ -75,14 +75,14 @@ export const createRessourcesPropresChartOptions = (
 
   const seriesData = categories.map((cat, idx) => ({
     name: cat,
-    y: values[idx],
+    value: values[idx],
     color: colors[idx],
     percentage: percentages[idx],
   }));
 
   return {
     chart: {
-      type: "bar",
+      type: "treemap",
       height: 500,
       backgroundColor: "transparent",
     },
@@ -91,34 +91,6 @@ export const createRessourcesPropresChartOptions = (
     },
     exporting: {
       enabled: false,
-    },
-    xAxis: {
-      categories,
-      labels: {
-        style: {
-          fontSize: "13px",
-          color: "var(--text-default-grey)",
-        },
-      },
-      lineWidth: 1,
-      lineColor: "var(--border-default-grey)",
-    },
-    yAxis: {
-      title: {
-        text: "Montant (€)",
-        style: {
-          color: "var(--text-default-grey)",
-        },
-      },
-      labels: {
-        style: {
-          color: "var(--text-default-grey)",
-        },
-        formatter: function () {
-          return Highcharts.numberFormat(Number(this.value), 0, ",", " ");
-        },
-      },
-      gridLineColor: "var(--border-default-grey)",
     },
     tooltip: {
       useHTML: true,
@@ -134,7 +106,7 @@ export const createRessourcesPropresChartOptions = (
                   point.name
                 }</div>
                 <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
-                  point.y,
+                  point.value,
                   0,
                   ",",
                   " "
@@ -146,19 +118,32 @@ export const createRessourcesPropresChartOptions = (
       },
     },
     plotOptions: {
-      bar: {
-        borderWidth: 0,
-        borderRadius: 3,
+      treemap: {
+        layoutAlgorithm: "squarified",
         dataLabels: {
           enabled: true,
+          useHTML: true,
           formatter: function () {
             const point = this as any;
-            return `${point.percentage.toFixed(1)}%`;
+            if (point.value === 0) return null;
+            return `<div style="text-align:center">
+                      <div style="font-weight:bold;font-size:12px;margin-bottom:2px">${
+                        point.name
+                      }</div>
+                      <div style="font-size:11px">${Highcharts.numberFormat(
+                        point.value,
+                        0,
+                        ",",
+                        " "
+                      )} €</div>
+                      <div style="font-size:10px">${point.percentage.toFixed(
+                        1
+                      )}%</div>
+                    </div>`;
           },
           style: {
-            fontSize: "12px",
-            fontWeight: "bold",
             textOutline: "none",
+            color: "#ffffff",
           },
         },
       },
@@ -172,7 +157,7 @@ export const createRessourcesPropresChartOptions = (
     series: [
       {
         name: "Ressources propres",
-        type: "bar",
+        type: "treemap",
         data: seriesData,
       },
     ],

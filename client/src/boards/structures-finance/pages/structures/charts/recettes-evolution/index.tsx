@@ -83,9 +83,7 @@ export default function RecettesEvolutionChart({
             borderLeft: `4px solid ${CHART_COLORS.primary}`,
             paddingLeft: "1rem",
           }}
-        >
-          Évolution des ressources propres
-        </h3>
+        ></h3>
         <div className="fr-btns-group fr-btns-group--sm fr-btns-group--inline">
           <Button
             size="sm"
