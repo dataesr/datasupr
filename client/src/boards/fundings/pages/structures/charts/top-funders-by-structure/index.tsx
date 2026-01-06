@@ -92,7 +92,7 @@ export default function TopFundersByStructure() {
     integrationURL: "/integration?chart_id=topFundersByStructure",
     title: `Top 25 des financeurs pour ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
-  console.log(series, categories);
+
   const options: object = {
     ...getGeneralOptions("", categories, "Financeurs", "Nombre de projets financés"),
     xAxis: {
