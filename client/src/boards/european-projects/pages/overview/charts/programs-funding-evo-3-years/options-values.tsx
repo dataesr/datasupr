@@ -73,7 +73,7 @@ export default function Options(data, displayType): HighchartsOptions {
         },
         dataLabels: {
           enabled: true,
-          formatter: function () {
+          formatter: function (this: any) {
             return displayType === "total_fund_eur" ? formatToMillions(this.y as number) : (this.y as number);
           },
         },

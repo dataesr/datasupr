@@ -80,7 +80,7 @@ export default function Options(data, displayType): HighchartsOptions {
         },
         dataLabels: {
           enabled: true,
-          formatter: function () {
+          formatter: function (this: any) {
             return `${Number(this.y).toFixed(1)}%`;
           },
         },
