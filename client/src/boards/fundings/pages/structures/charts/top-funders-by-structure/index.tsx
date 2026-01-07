@@ -111,7 +111,7 @@ export default function TopFundersByStructure() {
         stacking: undefined,
       },
     },
-    series: series,
+    series,
     tooltip: {
       format: `<b>{series.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(
         selectedStructureId

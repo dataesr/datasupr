@@ -12,7 +12,7 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function TopProjectsByLaboratory() {
-  const [selectedLaboratoryId, setSelectedLaboratoryId] = useState<string>("265906719###FR_Centre hospitalier régional universitaire de Lille");
+  const [selectedLaboratoryId, setSelectedLaboratoryId] = useState<string>("200610854B###FR_Observatoire de Paris - PSL");
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();

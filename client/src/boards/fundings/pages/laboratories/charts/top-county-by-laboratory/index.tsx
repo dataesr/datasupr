@@ -13,7 +13,7 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function TopCountyByLaboratory() {
-  const [selectedLaboratoryId, setSelectedLaboratoryId] = useState<string>("265906719###FR_Centre hospitalier régional universitaire de Lille");
+  const [selectedLaboratoryId, setSelectedLaboratoryId] = useState<string>("200610854B###FR_Observatoire de Paris - PSL");
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
@@ -57,7 +57,7 @@ export default function TopCountyByLaboratory() {
   const { data: dataCounty, isLoading: isLoadingCounty } = useQuery({
     queryKey: ['fundings-top-county', selectedLaboratoryId, selectedYearEnd, selectedYearStart],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-20251213`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
