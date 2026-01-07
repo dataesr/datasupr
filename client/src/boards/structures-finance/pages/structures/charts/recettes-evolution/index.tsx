@@ -3,6 +3,7 @@ import { Button } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "../../../../api";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createRecettesEvolutionChartOptions } from "./options";
+import { RenderData } from "./render-data";
 import { CHART_COLORS } from "../../../../constants/colors";
 
 interface RecettesEvolutionChartProps {
@@ -155,6 +156,7 @@ export default function RecettesEvolutionChart({
         }}
         options={chartOptions}
         legend={null}
+        renderData={() => <RenderData data={recettesData} mode={viewMode} />}
       />
     </div>
   );

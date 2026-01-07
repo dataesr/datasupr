@@ -1,0 +1,35 @@
+.tab-container {
+  background-color: var(--background-default-grey);
+  border-radius: 8px;
+  border: 1px solid var(--border-default-grey);
+}
+
+.section-title {
+  border-left: 4px solid;
+  padding-left: 1rem;
+}
+
+.metric-card {
+  height: 100%;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  border-top: 4px solid;
+  background-color: var(--background-alt-grey);
+}
+
+.metric-label {
+  color: var(--text-default-grey);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metric-value {
+  font-weight: 700;
+  color: #000;
+}
+
+.metric-description {
+  color: var(--text-default-grey);
+  margin: 0;
+}

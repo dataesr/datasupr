@@ -1,22 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Container, Row, Col, Badge } from "@dataesr/dsfr-plus";
-import {
-  useFinanceYears,
-  useFinanceComparisonFilters,
-  useFinanceAdvancedComparison,
-} from "../../api";
+import { useFinanceYears, useFinanceAdvancedComparison } from "../../api";
 import SectionHeader from "../../components/layouts/section-header";
-import { DSFR_COLORS, CHART_COLORS } from "../../constants/colors";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
+import { TabButton } from "../../components/tab-button";
+import { DSFR_COLORS } from "../../constants/colors";
+import ScatterChart from "./charts/scatter";
+import { ScatterConfig } from "./charts/scatter/options";
+import ComparisonBarChart from "./charts/comparison-bar";
 
 export default function NationalView() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: yearsData } = useFinanceYears();
   const years = useMemo(() => yearsData?.years || [], [yearsData]);
   const yearFromUrl = searchParams.get("year") || "";
-  const activeTab = searchParams.get("tab") || "scatter1";
+  const [activeTab, setActiveTab] = useState<string>("scatter1");
   const [selectedYear, setSelectedYear] = useState<string | number>(
     yearFromUrl
   );
@@ -25,18 +23,13 @@ export default function NationalView() {
   const [selectedTypologie, setSelectedTypologie] = useState<string>("");
   const [selectedRegion, setSelectedRegion] = useState<string>("");
 
-  const { data: filtersData } = useFinanceComparisonFilters(
-    String(selectedYear),
-    !!selectedYear
-  );
-
   const { data: comparisonData, isLoading: isLoadingComparison } =
     useFinanceAdvancedComparison(
       {
         annee: String(selectedYear),
-        type: selectedType,
-        typologie: selectedTypologie,
-        region: selectedRegion,
+        type: "",
+        typologie: "",
+        region: "",
       },
       !!selectedYear
     );
@@ -45,6 +38,100 @@ export default function NationalView() {
     if (!comparisonData || !comparisonData.items) return [];
     return comparisonData.items;
   }, [comparisonData]);
+
+  const availableTypes = useMemo(() => {
+    if (!allItems.length) return [];
+
+    let itemsToConsider = allItems;
+
+    if (selectedTypologie) {
+      itemsToConsider = itemsToConsider.filter(
+        (item: any) => item.etablissement_actuel_typologie === selectedTypologie
+      );
+    }
+    if (selectedRegion) {
+      itemsToConsider = itemsToConsider.filter(
+        (item: any) => item.region === selectedRegion
+      );
+    }
+
+    const types = new Set<string>();
+    itemsToConsider.forEach((item: any) => {
+      if (item.type) types.add(item.type);
+    });
+    return Array.from(types).sort((a, b) =>
+      a.localeCompare(b, "fr", { sensitivity: "base" })
+    );
+  }, [allItems, selectedTypologie, selectedRegion]);
+
+  const availableTypologies = useMemo(() => {
+    if (!allItems.length) return [];
+
+    let itemsToConsider = allItems;
+
+    if (selectedType) {
+      itemsToConsider = itemsToConsider.filter(
+        (item: any) => item.type === selectedType
+      );
+    }
+    if (selectedRegion) {
+      itemsToConsider = itemsToConsider.filter(
+        (item: any) => item.region === selectedRegion
+      );
+    }
+
+    const typologies = new Set<string>();
+    itemsToConsider.forEach((item: any) => {
+      if (item.etablissement_actuel_typologie)
+        typologies.add(item.etablissement_actuel_typologie);
+    });
+    return Array.from(typologies).sort((a, b) =>
+      a.localeCompare(b, "fr", { sensitivity: "base" })
+    );
+  }, [allItems, selectedType, selectedRegion]);
+
+  const availableRegions = useMemo(() => {
+    if (!allItems.length) return [];
+
+    let itemsToConsider = allItems;
+
+    if (selectedType) {
+      itemsToConsider = itemsToConsider.filter(
+        (item: any) => item.type === selectedType
+      );
+    }
+    if (selectedTypologie) {
+      itemsToConsider = itemsToConsider.filter(
+        (item: any) => item.etablissement_actuel_typologie === selectedTypologie
+      );
+    }
+
+    const regions = new Set<string>();
+    itemsToConsider.forEach((item: any) => {
+      if (item.region) regions.add(item.region);
+    });
+    return Array.from(regions).sort((a, b) =>
+      a.localeCompare(b, "fr", { sensitivity: "base" })
+    );
+  }, [allItems, selectedType, selectedTypologie]);
+
+  const filteredItems = useMemo(() => {
+    let items = allItems;
+
+    if (selectedType) {
+      items = items.filter((item: any) => item.type === selectedType);
+    }
+    if (selectedTypologie) {
+      items = items.filter(
+        (item: any) => item.etablissement_actuel_typologie === selectedTypologie
+      );
+    }
+    if (selectedRegion) {
+      items = items.filter((item: any) => item.region === selectedRegion);
+    }
+
+    return items;
+  }, [allItems, selectedType, selectedTypologie, selectedRegion]);
 
   useEffect(() => {
     if (!years.length) return;
@@ -68,18 +155,36 @@ export default function NationalView() {
   }, [years, yearFromUrl, selectedYear, searchParams, setSearchParams]);
 
   useEffect(() => {
-    if (filtersData && !selectedType && filtersData.types?.length) {
-      setSelectedType(filtersData.types[0]);
+    if (availableTypes.length && !selectedType) {
+      const universiteType = availableTypes.find(
+        (t) =>
+          t.toLowerCase().includes("université") ||
+          t.toLowerCase().includes("universite")
+      );
+      setSelectedType(universiteType || availableTypes[0]);
     }
-  }, [filtersData, selectedType]);
+  }, [availableTypes, selectedType]);
 
-  const handleTabChange = (newTab: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("tab", newTab);
-    setSearchParams(next);
-  };
+  useEffect(() => {
+    if (selectedType && !availableTypes.includes(selectedType)) {
+      setSelectedType("");
+    }
+    if (selectedTypologie && !availableTypologies.includes(selectedTypologie)) {
+      setSelectedTypologie("");
+    }
+    if (selectedRegion && !availableRegions.includes(selectedRegion)) {
+      setSelectedRegion("");
+    }
+  }, [
+    availableTypes,
+    availableTypologies,
+    availableRegions,
+    selectedType,
+    selectedTypologie,
+    selectedRegion,
+  ]);
 
-  const scatterConfigs = [
+  const scatterConfigs: ScatterConfig[] = [
     {
       title: "Produits de fonctionnement vs Effectifs",
       xMetric: "produits_de_fonctionnement_encaissables",
@@ -103,215 +208,75 @@ export default function NationalView() {
     },
   ];
 
-  const createScatterOptions = (
-    config: {
-      title: string;
-      xMetric: string;
-      yMetric: string;
-      xLabel: string;
-      yLabel: string;
-    },
-    data: any[]
-  ): Highcharts.Options => {
-    // Grouper par région
-    const regionGroups = new Map<string, any[]>();
-
-    data
-      .filter(
-        (item) => item[config.xMetric] != null && item[config.yMetric] != null
-      )
-      .forEach((item) => {
-        const region = item.region || "Non spécifié";
-        if (!regionGroups.has(region)) {
-          regionGroups.set(region, []);
-        }
-
-        const etablissementName =
-          item.etablissement_lib ||
-          item.etablissement_actuel_lib ||
-          "Établissement inconnu";
-
-        regionGroups.get(region)!.push({
-          x: item[config.xMetric],
-          y: item[config.yMetric],
-          z: Math.sqrt(item[config.yMetric]) / 10, // Taille basée sur Y
-          name: etablissementName,
-          region: item.region,
-          type: item.type,
-        });
-      });
-
-    const colors = CHART_COLORS.palette;
-    const series = Array.from(regionGroups.entries()).map(
-      ([region, items], index) => ({
-        name: region,
-        type: "bubble" as const,
-        data: items,
-        color: colors[index % colors.length],
-      })
-    );
-
-    return {
-      chart: {
-        type: "bubble",
-        height: 600,
-        backgroundColor: "transparent",
-      },
-      title: {
-        text: config.title,
-        align: "left",
-        style: {
-          fontSize: "18px",
-          fontWeight: "600",
-        },
-      },
-      xAxis: {
-        title: {
-          text: config.xLabel,
-          style: {
-            fontSize: "13px",
-            fontWeight: "500",
-          },
-        },
-        gridLineWidth: 1,
-        gridLineColor: "#e5e5e5",
-      },
-      yAxis: {
-        title: {
-          text: config.yLabel,
-          style: {
-            fontSize: "13px",
-            fontWeight: "500",
-          },
-        },
-        gridLineColor: "#e5e5e5",
-      },
-      tooltip: {
-        useHTML: true,
-        backgroundColor: "var(--background-default-grey)",
-        borderWidth: 1,
-        borderColor: "var(--border-default-grey)",
-        borderRadius: 8,
-        shadow: false,
-        formatter: function () {
-          const point = this as any;
-          return `
-            <div style="padding:10px">
-              <div style="font-weight:bold;margin-bottom:8px;font-size:14px">${
-                point.name
-              }</div>
-              <div style="margin-bottom:4px;color:#666;font-size:12px">${
-                point.type
-              } • ${point.region}</div>
-              <div style="margin-top:8px;padding-top:8px;border-top:1px solid #e5e5e5">
-                <div style="margin-bottom:4px"><strong>${
-                  config.xLabel
-                }:</strong> ${Highcharts.numberFormat(
-            point.x,
-            0,
-            ",",
-            " "
-          )}</div>
-                <div><strong>${
-                  config.yLabel
-                }:</strong> ${Highcharts.numberFormat(
-            point.y,
-            2,
-            ",",
-            " "
-          )}</div>
-              </div>
-            </div>
-          `;
-        },
-      },
-      plotOptions: {
-        bubble: {
-          minSize: 5,
-          maxSize: 40,
-        },
-      },
-      legend: {
-        enabled: true,
-        align: "right",
-        verticalAlign: "middle",
-        layout: "vertical",
-        itemStyle: {
-          fontSize: "11px",
-        },
-      },
-      credits: {
-        enabled: false,
-      },
-      series: series,
-    };
-  };
-
   return (
     <Container fluid className="fr-px-2w fr-py-2w">
       <SectionHeader title="Vue nationale" />
 
+      <p className="fr-text--lead fr-mb-3w">
+        Visualisez et comparez les indicateurs financiers et d'effectifs des
+        établissements d'enseignement supérieur au niveau national.
+      </p>
+
       <div className="fr-mb-3w">
         <div className="fr-tabs">
-          <ul className="fr-tabs__list" role="tablist">
-            <li role="presentation">
-              <button
-                className={`fr-tabs__tab ${
-                  activeTab === "scatter1" ? "fr-tabs__tab--selected" : ""
-                }`}
-                type="button"
-                role="tab"
-                aria-selected={activeTab === "scatter1"}
-                onClick={() => handleTabChange("scatter1")}
-              >
-                Produits vs Effectifs
-              </button>
-            </li>
-            <li role="presentation">
-              <button
-                className={`fr-tabs__tab ${
-                  activeTab === "scatter2" ? "fr-tabs__tab--selected" : ""
-                }`}
-                type="button"
-                role="tab"
-                aria-selected={activeTab === "scatter2"}
-                onClick={() => handleTabChange("scatter2")}
-              >
-                SCSP vs Encadrement
-              </button>
-            </li>
-            <li role="presentation">
-              <button
-                className={`fr-tabs__tab ${
-                  activeTab === "scatter3" ? "fr-tabs__tab--selected" : ""
-                }`}
-                type="button"
-                role="tab"
-                aria-selected={activeTab === "scatter3"}
-                onClick={() => handleTabChange("scatter3")}
-              >
-                SCSP vs Ressources propres
-              </button>
-            </li>
+          <ul
+            className="fr-tabs__list"
+            role="tablist"
+            aria-label="Analyses disponibles"
+          >
+            <TabButton
+              id="tab-scatter1"
+              label="Produits vs Effectifs"
+              isActive={activeTab === "scatter1"}
+              tabPanelId="tabpanel-scatter1"
+              onClick={() => setActiveTab("scatter1")}
+            />
+            <TabButton
+              id="tab-scatter2"
+              label="SCSP vs Encadrement"
+              isActive={activeTab === "scatter2"}
+              tabPanelId="tabpanel-scatter2"
+              onClick={() => setActiveTab("scatter2")}
+            />
+            <TabButton
+              id="tab-scatter3"
+              label="SCSP vs Ressources propres"
+              isActive={activeTab === "scatter3"}
+              tabPanelId="tabpanel-scatter3"
+              onClick={() => setActiveTab("scatter3")}
+            />
+            <TabButton
+              id="tab-comparison"
+              label="Comparaison de métriques"
+              isActive={activeTab === "comparison"}
+              tabPanelId="tabpanel-comparison"
+              onClick={() => setActiveTab("comparison")}
+            />
           </ul>
         </div>
       </div>
 
-      <div
+      <section
         className="fr-p-3w fr-mb-3w"
         style={{
           backgroundColor: DSFR_COLORS.backgroundDefaultHover,
           borderRadius: "8px",
           border: `1px solid ${DSFR_COLORS.borderDefault}`,
         }}
+        aria-labelledby="filters-title"
       >
+        <h2 id="filters-title" className="fr-h6 fr-mb-3w">
+          Filtres de sélection
+        </h2>
         <Row gutters>
-          <Col md="3">
+          <Col xs="12" sm="6" md="3">
             <div className="fr-select-group">
-              <label className="fr-label">
+              <label className="fr-label" htmlFor="select-year">
                 <strong>Année</strong>
+                <span className="fr-hint-text">Année de référence</span>
               </label>
               <select
+                id="select-year"
                 className="fr-select"
                 value={selectedYear}
                 onChange={(e) => {
@@ -320,6 +285,7 @@ export default function NationalView() {
                   next.set("year", e.target.value);
                   setSearchParams(next);
                 }}
+                aria-required="true"
               >
                 {years.map((year) => (
                   <option key={year} value={year}>
@@ -330,18 +296,26 @@ export default function NationalView() {
             </div>
           </Col>
 
-          <Col md="3">
+          <Col xs="12" sm="6" md="3">
             <div className="fr-select-group">
-              <label className="fr-label">
+              <label className="fr-label" htmlFor="select-type">
                 <strong>Type d'établissement</strong>
+                <span className="fr-hint-text">
+                  Filtrer par type (optionnel)
+                </span>
               </label>
               <select
+                id="select-type"
                 className="fr-select"
                 value={selectedType}
-                onChange={(e) => setSelectedType(e.target.value)}
+                onChange={(e) => {
+                  setSelectedType(e.target.value);
+                  setSelectedTypologie("");
+                  setSelectedRegion("");
+                }}
               >
                 <option value="">Tous les types</option>
-                {(filtersData?.types || []).map((type: string) => (
+                {availableTypes.map((type: string) => (
                   <option key={type} value={type}>
                     {type}
                   </option>
@@ -350,18 +324,22 @@ export default function NationalView() {
             </div>
           </Col>
 
-          <Col md="3">
+          <Col xs="12" sm="6" md="3">
             <div className="fr-select-group">
-              <label className="fr-label">
+              <label className="fr-label" htmlFor="select-typologie">
                 <strong>Typologie</strong>
+                <span className="fr-hint-text">
+                  Filtrer par typologie (optionnel)
+                </span>
               </label>
               <select
+                id="select-typologie"
                 className="fr-select"
                 value={selectedTypologie}
                 onChange={(e) => setSelectedTypologie(e.target.value)}
               >
                 <option value="">Toutes les typologies</option>
-                {(filtersData?.typologies || []).map((typo: string) => (
+                {availableTypologies.map((typo: string) => (
                   <option key={typo} value={typo}>
                     {typo}
                   </option>
@@ -370,18 +348,22 @@ export default function NationalView() {
             </div>
           </Col>
 
-          <Col md="3">
+          <Col xs="12" sm="6" md="3">
             <div className="fr-select-group">
-              <label className="fr-label">
+              <label className="fr-label" htmlFor="select-region">
                 <strong>Région</strong>
+                <span className="fr-hint-text">
+                  Filtrer par région (optionnel)
+                </span>
               </label>
               <select
+                id="select-region"
                 className="fr-select"
                 value={selectedRegion}
                 onChange={(e) => setSelectedRegion(e.target.value)}
               >
                 <option value="">Toutes les régions</option>
-                {(filtersData?.regions || []).map((region: string) => (
+                {availableRegions.map((region: string) => (
                   <option key={region} value={region}>
                     {region}
                   </option>
@@ -391,97 +373,137 @@ export default function NationalView() {
           </Col>
         </Row>
 
-        {allItems.length > 0 && (
+        {filteredItems.length > 0 && (
           <Row className="fr-mt-2w">
             <Col>
-              <Badge
-                color="info"
-                style={{ fontSize: "14px", padding: "0.5rem 1rem" }}
-              >
-                {allItems.length} établissement
-                {allItems.length > 1 ? "s" : ""} sélectionné
-                {allItems.length > 1 ? "s" : ""}
-              </Badge>
+              <div role="status" aria-live="polite">
+                <Badge
+                  color="info"
+                  style={{ fontSize: "14px", padding: "0.5rem 1rem" }}
+                >
+                  {filteredItems.length} établissement
+                  {filteredItems.length > 1 ? "s" : ""} sélectionné
+                  {filteredItems.length > 1 ? "s" : ""}
+                </Badge>
+              </div>
             </Col>
           </Row>
         )}
-      </div>
+      </section>
 
       {isLoadingComparison && (
-        <div className="fr-alert fr-alert--info">
-          <p>Chargement des données...</p>
+        <div
+          className="fr-alert fr-alert--info"
+          role="status"
+          aria-live="polite"
+        >
+          <p className="fr-alert__title">Chargement en cours</p>
+          <p>Chargement des données d'analyse...</p>
         </div>
       )}
 
-      {!isLoadingComparison && allItems.length === 0 && (
-        <div className="fr-alert fr-alert--warning">
+      {!isLoadingComparison && filteredItems.length === 0 && (
+        <div className="fr-alert fr-alert--warning" role="alert">
+          <p className="fr-alert__title">Aucun résultat</p>
           <p>
             Aucun établissement ne correspond aux filtres sélectionnés. Essayez
-            de modifier vos critères.
+            de modifier vos critères de recherche.
           </p>
         </div>
       )}
 
-      {!isLoadingComparison && allItems.length > 0 && (
+      {!isLoadingComparison && filteredItems.length > 0 && (
         <>
           {activeTab === "scatter1" && (
-            <Row className="fr-mb-3w">
-              <Col xs="12">
-                <div
-                  className="fr-p-3w"
-                  style={{
-                    backgroundColor: DSFR_COLORS.backgroundDefault,
-                    borderRadius: "8px",
-                    border: `1px solid ${DSFR_COLORS.borderDefault}`,
-                  }}
-                >
-                  <HighchartsReact
-                    highcharts={Highcharts}
-                    options={createScatterOptions(scatterConfigs[0], allItems)}
+            <section
+              id="tabpanel-scatter1"
+              role="tabpanel"
+              aria-labelledby="tab-scatter1"
+              tabIndex={0}
+              className="fr-mb-3w"
+            >
+              <Row>
+                <Col xs="12">
+                  <div className="fr-sr-only">
+                    Graphique de corrélation entre les produits de
+                    fonctionnement encaissables et les effectifs étudiants pour{" "}
+                    {filteredItems.length} établissement
+                    {filteredItems.length > 1 ? "s" : ""}
+                  </div>
+                  <ScatterChart
+                    config={scatterConfigs[0]}
+                    data={filteredItems}
                   />
-                </div>
-              </Col>
-            </Row>
+                </Col>
+              </Row>
+            </section>
           )}
 
           {activeTab === "scatter2" && (
-            <Row className="fr-mb-3w">
-              <Col xs="12">
-                <div
-                  className="fr-p-3w"
-                  style={{
-                    backgroundColor: DSFR_COLORS.backgroundDefault,
-                    borderRadius: "8px",
-                    border: `1px solid ${DSFR_COLORS.borderDefault}`,
-                  }}
-                >
-                  <HighchartsReact
-                    highcharts={Highcharts}
-                    options={createScatterOptions(scatterConfigs[1], allItems)}
+            <section
+              id="tabpanel-scatter2"
+              role="tabpanel"
+              aria-labelledby="tab-scatter2"
+              tabIndex={0}
+              className="fr-mb-3w"
+            >
+              <Row>
+                <Col xs="12">
+                  <div className="fr-sr-only">
+                    Graphique de corrélation entre le SCSP par étudiant et le
+                    taux d'encadrement pour {filteredItems.length} établissement
+                    {filteredItems.length > 1 ? "s" : ""}
+                  </div>
+                  <ScatterChart
+                    config={scatterConfigs[1]}
+                    data={filteredItems}
                   />
-                </div>
-              </Col>
-            </Row>
+                </Col>
+              </Row>
+            </section>
           )}
 
           {activeTab === "scatter3" && (
-            <Row className="fr-mb-3w">
-              <Col xs="12">
-                <div
-                  className="fr-p-3w"
-                  style={{
-                    backgroundColor: DSFR_COLORS.backgroundDefault,
-                    borderRadius: "8px",
-                    border: `1px solid ${DSFR_COLORS.borderDefault}`,
-                  }}
-                >
-                  <HighchartsReact
-                    highcharts={Highcharts}
-                    options={createScatterOptions(scatterConfigs[2], allItems)}
+            <section
+              id="tabpanel-scatter3"
+              role="tabpanel"
+              aria-labelledby="tab-scatter3"
+              tabIndex={0}
+              className="fr-mb-3w"
+            >
+              <Row>
+                <Col xs="12">
+                  <div className="fr-sr-only">
+                    Graphique de corrélation entre le SCSP et les ressources
+                    propres pour {filteredItems.length} établissement
+                    {filteredItems.length > 1 ? "s" : ""}
+                  </div>
+                  <ScatterChart
+                    config={scatterConfigs[2]}
+                    data={filteredItems}
                   />
-                </div>
-              </Col>
-            </Row>
+                </Col>
+              </Row>
+            </section>
+          )}
+
+          {activeTab === "comparison" && (
+            <section
+              id="tabpanel-comparison"
+              role="tabpanel"
+              aria-labelledby="tab-comparison"
+              tabIndex={0}
+              className="fr-mb-3w"
+            >
+              <Row>
+                <Col xs="12">
+                  <div className="fr-sr-only">
+                    Graphique de comparaison de métriques entre établissements
+                  </div>
+                  <ComparisonBarChart data={filteredItems} />
+                </Col>
+              </Row>
+            </section>
           )}
         </>
       )}

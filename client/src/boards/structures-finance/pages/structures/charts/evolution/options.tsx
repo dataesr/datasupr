@@ -20,7 +20,6 @@ export const createEvolutionChartOptions = (
 ): Highcharts.Options => {
   const sortedData = [...data].sort((a, b) => a.exercice - b.exercice);
 
-  // Calculate base 100 values if needed
   const baseValues: Record<string, number> = {};
   if (isBase100 && sortedData.length > 0) {
     selectedMetrics.forEach((metricKey) => {
@@ -39,26 +38,23 @@ export const createEvolutionChartOptions = (
         const value = item[metricKey];
         if (typeof value !== "number") return null;
 
-        // Apply base 100 transformation if enabled
         if (isBase100 && baseValues[metricKey]) {
           return (value / baseValues[metricKey]) * 100;
         }
         return value;
       }),
       color: config.color,
-      yAxis: selectedMetrics.length > 1 && index === 1 ? 1 : 0,
+      yAxis: isBase100 ? 0 : selectedMetrics.length > 1 && index === 1 ? 1 : 0,
       type: "line" as const,
     };
   });
 
   const yAxisConfig =
-    selectedMetrics.length > 1
+    selectedMetrics.length > 1 && !isBase100
       ? [
           {
             title: {
-              text: isBase100
-                ? "Index (base 100)"
-                : metricsConfig[selectedMetrics[0]].label,
+              text: metricsConfig[selectedMetrics[0]].label,
               style: {
                 color: metricsConfig[selectedMetrics[0]].color,
               },
@@ -69,9 +65,6 @@ export const createEvolutionChartOptions = (
               },
               formatter: function (this: any) {
                 const value = this.value as number;
-                if (isBase100) {
-                  return value.toFixed(1);
-                }
                 const format = metricsConfig[selectedMetrics[0]].format;
                 if (format === "euro") {
                   return `€${Highcharts.numberFormat(value, 0, ",", " ")}`;
@@ -89,9 +82,7 @@ export const createEvolutionChartOptions = (
           },
           {
             title: {
-              text: isBase100
-                ? "Index (base 100)"
-                : metricsConfig[selectedMetrics[1]].label,
+              text: metricsConfig[selectedMetrics[1]].label,
               style: {
                 color: metricsConfig[selectedMetrics[1]].color,
               },
@@ -103,9 +94,6 @@ export const createEvolutionChartOptions = (
               },
               formatter: function (this: any) {
                 const value = this.value as number;
-                if (isBase100) {
-                  return value.toFixed(1);
-                }
                 const format = metricsConfig[selectedMetrics[1]].format;
                 if (format === "euro") {
                   return `€${Highcharts.numberFormat(value, 0, ",", " ")}`;
@@ -125,7 +113,7 @@ export const createEvolutionChartOptions = (
       : {
           title: {
             text: isBase100
-              ? "Index (base 100)"
+              ? "Index (base 100 = première année)"
               : selectedMetrics.length > 0
               ? metricsConfig[selectedMetrics[0]].label
               : "Valeur",
@@ -214,7 +202,6 @@ export const createEvolutionChartOptions = (
 
           let valueStr = "";
           if (isBase100) {
-            // Show index value and original value
             const originalValue =
               yearIndex >= 0 ? sortedData[yearIndex][metricKey!] : null;
             valueStr = `${point.y.toFixed(1)} (base 100)`;
@@ -243,7 +230,6 @@ export const createEvolutionChartOptions = (
               valueStr += `<br/><span style="font-size:11px;color:var(--text-mention-grey)">${originalStr}</span>`;
             }
           } else {
-            // Normal display
             if (config?.format === "euro") {
               valueStr = `${Highcharts.numberFormat(point.y, 0, ",", " ")} €`;
             } else if (config?.format === "percent") {

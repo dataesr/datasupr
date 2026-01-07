@@ -1,8 +1,10 @@
 import "./styles.scss";
 import { useLocation } from "react-router-dom";
+import { useState } from "react";
 
 export default function CustomSideMenu() {
   const { pathname } = useLocation();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   if (!pathname) return null;
 
@@ -11,7 +13,18 @@ export default function CustomSideMenu() {
   return (
     <nav className="fr-sidemenu" aria-labelledby="fr-sidemenu-title">
       <div className="fr-sidemenu__inner">
-        <div className="fr-collapse">
+        <button
+          className="fr-sidemenu__btn"
+          aria-controls="fr-sidemenu-wrapper"
+          aria-expanded={isExpanded}
+          onClick={() => setIsExpanded(!isExpanded)}
+        >
+          Navigation
+        </button>
+        <div
+          className={`fr-collapse ${isExpanded ? "fr-collapse--expanded" : ""}`}
+          id="fr-sidemenu-wrapper"
+        >
           <ul className="fr-sidemenu__list">
             {/* <li
               className={`fr-sidemenu__item ${

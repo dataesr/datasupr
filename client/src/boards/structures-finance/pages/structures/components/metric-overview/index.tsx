@@ -1,6 +1,5 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import { CHART_COLORS, DSFR_COLORS } from "../../../../constants/colors";
-import RessourcesPropresChart from "../../charts/ressources-propres";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
@@ -22,6 +21,9 @@ function MetricCard({
   return (
     <div
       className="fr-card fr-enlarge-link"
+      tabIndex={0}
+      role="article"
+      aria-label={`${title}: ${value}${detail ? `, ${detail}` : ""}`}
       style={{
         height: "100%",
         borderTop: `4px solid ${color}`,
@@ -216,10 +218,6 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
             </Col>
           ))}
         </Row>
-      </div>
-
-      <div className="fr-mb-4w">
-        <RessourcesPropresChart data={data} />
       </div>
     </div>
   );

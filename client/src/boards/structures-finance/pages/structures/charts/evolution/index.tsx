@@ -3,6 +3,7 @@ import { Row, Col, Button, ButtonGroup } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "../../../../api";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createEvolutionChartOptions } from "./options";
+import { RenderDataSingle, RenderDataBase100 } from "./render-data";
 import { METRIC_COLORS, CHART_COLORS } from "../../../../constants/colors";
 
 interface EvolutionChartProps {
@@ -38,7 +39,6 @@ const METRICS_CONFIG = {
     category: "Effectifs",
   },
 
-  // Taux et ratios
   taux_encadrement: {
     label: "Taux d'encadrement",
     format: "percent" as const,
@@ -60,7 +60,6 @@ const METRICS_CONFIG = {
     suffix: "%",
   },
 
-  // Finances
   scsp: {
     label: "SCSP",
     format: "euro" as const,
@@ -92,7 +91,6 @@ const METRICS_CONFIG = {
     category: "Finances",
   },
 
-  // Recherche
   anr_hors_investissements_d_avenir: {
     label: "ANR (hors IA)",
     format: "euro" as const,
@@ -112,7 +110,6 @@ const METRICS_CONFIG = {
     category: "Recherche",
   },
 
-  // Formation
   droits_d_inscription: {
     label: "Droits d'inscription",
     format: "euro" as const,
@@ -125,8 +122,43 @@ const METRICS_CONFIG = {
     color: METRIC_COLORS.formationContinue,
     category: "Formation",
   },
+  taxe_d_apprentissage: {
+    label: "Taxe d'apprentissage",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[5],
+    category: "Formation",
+  },
+  valorisation: {
+    label: "Valorisation",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[6],
+    category: "Recherche",
+  },
+  anr_investissements_d_avenir: {
+    label: "ANR investissements d'avenir",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[7],
+    category: "Recherche",
+  },
+  subventions_de_la_region: {
+    label: "Subventions régionales",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[8],
+    category: "Recherche",
+  },
+  autres_ressources_propres: {
+    label: "Autres ressources propres",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[9],
+    category: "Finances",
+  },
+  autres_subventions: {
+    label: "Autres subventions",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[10],
+    category: "Finances",
+  },
 
-  // Parts (%)
   part_droits_d_inscription: {
     label: "Part droits d'inscription",
     format: "percent" as const,
@@ -151,7 +183,6 @@ const METRICS_CONFIG = {
 } as const;
 
 const PREDEFINED_ANALYSES = {
-  // Ressources
   "ressources-total": {
     label: "Total des ressources",
     metrics: ["produits_de_fonctionnement_encaissables"],
@@ -177,8 +208,73 @@ const PREDEFINED_ANALYSES = {
     category: "Ressources",
     showBase100: true,
   },
+  "ressources-droits-inscription": {
+    label: "Droits d'inscription",
+    metrics: ["droits_d_inscription"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "ressources-formation-continue": {
+    label: "Formation continue et VAE",
+    metrics: ["formation_continue_diplomes_propres_et_vae"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "ressources-taxe-apprentissage": {
+    label: "Taxe d'apprentissage",
+    metrics: ["taxe_d_apprentissage"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "ressources-valorisation": {
+    label: "Valorisation",
+    metrics: ["valorisation"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "ressources-anr-hors-ia": {
+    label: "ANR hors investissements d'avenir",
+    metrics: ["anr_hors_investissements_d_avenir"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "ressources-anr-ia": {
+    label: "ANR investissements d'avenir",
+    metrics: ["anr_investissements_d_avenir"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "ressources-contrats-recherche": {
+    label: "Contrats et prestations de recherche",
+    metrics: ["contrats_et_prestations_de_recherche_hors_anr"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "ressources-subventions-region": {
+    label: "Subventions régionales",
+    metrics: ["subventions_de_la_region"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "ressources-subventions-ue": {
+    label: "Subventions de l'Union Européenne",
+    metrics: ["subventions_union_europeenne"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "ressources-autres-propres": {
+    label: "Autres ressources propres",
+    metrics: ["autres_ressources_propres"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "ressources-autres-subventions": {
+    label: "Autres subventions",
+    metrics: ["autres_subventions"],
+    category: "Ressources",
+    showBase100: false,
+  },
 
-  // SCSP
   "scsp-simple": {
     label: "SCSP",
     metrics: ["scsp"],
@@ -198,7 +294,6 @@ const PREDEFINED_ANALYSES = {
     showBase100: true,
   },
 
-  // Masse salariale
   "masse-salariale": {
     label: "Dépenses relatives à la masse salariale",
     metrics: ["charges_de_personnel"],
@@ -221,7 +316,6 @@ const PREDEFINED_ANALYSES = {
     showBase100: true,
   },
 
-  // Personnel enseignants
   "enseignants-emplois": {
     label: "Nombre d'emplois d'enseignants permanents (ETPT)",
     metrics: ["emploi_etpt"],
@@ -533,12 +627,18 @@ export default function EvolutionChart({
           }}
           options={chartOptions}
           legend={null}
+          renderData={() => (
+            <RenderDataSingle
+              data={data}
+              metricKey={selectedMetrics[0]}
+              metricConfig={METRICS_CONFIG[selectedMetrics[0]]}
+            />
+          )}
         />
       )}
 
       {selectedAnalysis && selectedMetrics.length === 2 && (
         <>
-          {/* Graphique 1 : Première métrique */}
           {chartOptions && (
             <>
               <ChartWrapper
@@ -584,11 +684,17 @@ export default function EvolutionChart({
                   false
                 )}
                 legend={null}
+                renderData={() => (
+                  <RenderDataSingle
+                    data={data}
+                    metricKey={selectedMetrics[0]}
+                    metricConfig={METRICS_CONFIG[selectedMetrics[0]]}
+                  />
+                )}
               />
 
               <div className="fr-mt-5w" />
 
-              {/* Graphique 2 : Deuxième métrique */}
               <ChartWrapper
                 config={{
                   id: "evolution-chart-metric2",
@@ -632,11 +738,17 @@ export default function EvolutionChart({
                   false
                 )}
                 legend={null}
+                renderData={() => (
+                  <RenderDataSingle
+                    data={data}
+                    metricKey={selectedMetrics[1]}
+                    metricConfig={METRICS_CONFIG[selectedMetrics[1]]}
+                  />
+                )}
               />
 
               <div className="fr-mt-5w" />
 
-              {/* Graphique 3 : Comparaison en base 100 */}
               {chartOptionsBase100 && (
                 <ChartWrapper
                   config={{
@@ -677,6 +789,15 @@ export default function EvolutionChart({
                   }}
                   options={chartOptionsBase100}
                   legend={null}
+                  renderData={() => (
+                    <RenderDataBase100
+                      data={data}
+                      metric1Key={selectedMetrics[0]}
+                      metric1Config={METRICS_CONFIG[selectedMetrics[0]]}
+                      metric2Key={selectedMetrics[1]}
+                      metric2Config={METRICS_CONFIG[selectedMetrics[1]]}
+                    />
+                  )}
                 />
               )}
             </>

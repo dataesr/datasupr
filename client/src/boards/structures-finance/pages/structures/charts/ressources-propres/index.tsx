@@ -1,8 +1,8 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Highcharts from "highcharts";
 import "highcharts/modules/treemap";
-import { Button } from "@dataesr/dsfr-plus";
 import { createRessourcesPropresChartOptions } from "./options";
+import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { CHART_COLORS } from "../../../../constants/colors";
 
@@ -21,8 +21,6 @@ export default function RessourcesPropresChart({
   selectedYear,
   etablissementName,
 }: RessourcesPropresChartProps) {
-  const [viewMode, setViewMode] = useState<"chart" | "table">("chart");
-
   const options = useMemo(() => {
     if (!data) return {} as Highcharts.Options;
     return createRessourcesPropresChartOptions(data);
@@ -104,74 +102,7 @@ export default function RessourcesPropresChart({
 
   if (!data) return null;
 
-  const renderTable = () => (
-    <div className="fr-table fr-table--bordered fr-mb-3w">
-      <div className="fr-table__wrapper">
-        <div className="fr-table__container">
-          <div className="fr-table__content">
-            <table>
-              <thead>
-                <tr>
-                  <th style={{ width: "50%" }}>Catégorie</th>
-                  <th style={{ width: "30%", textAlign: "right" }}>Montant</th>
-                  <th style={{ width: "20%", textAlign: "right" }}>Part</th>
-                </tr>
-              </thead>
-              <tbody>
-                {ressourcesPropresDecomposition
-                  .sort((a, b) => (b.value || 0) - (a.value || 0))
-                  .map((item) => (
-                    <tr key={item.label}>
-                      <td>
-                        <div
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "8px",
-                          }}
-                        >
-                          <div
-                            style={{
-                              width: "12px",
-                              height: "12px",
-                              backgroundColor: item.color,
-                              borderRadius: "2px",
-                            }}
-                          />
-                          <span>{item.label}</span>
-                        </div>
-                      </td>
-                      <td style={{ textAlign: "right", fontWeight: 600 }}>
-                        {euro(item.value)} €
-                      </td>
-                      <td style={{ textAlign: "right" }}>{pct(item.part)}</td>
-                    </tr>
-                  ))}
-                <tr
-                  style={{
-                    backgroundColor: "var(--background-contrast-grey)",
-                    fontWeight: 700,
-                  }}
-                >
-                  <td>
-                    <strong>Total ressources propres</strong>
-                  </td>
-                  <td style={{ textAlign: "right" }}>
-                    <strong>{euro(totalRessources)} €</strong>
-                  </td>
-                  <td style={{ textAlign: "right" }}>
-                    <strong>100 %</strong>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  const renderChart = () => (
+  return (
     <ChartWrapper
       config={{
         id: "ressources-propres-chart",
@@ -231,42 +162,7 @@ export default function RessourcesPropresChart({
       }}
       options={options}
       legend={null}
+      renderData={() => <RenderData data={data} />}
     />
-  );
-
-  return (
-    <>
-      <div
-        className="fr-mb-2w"
-        style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-      >
-        <h3
-          className="fr-h5 fr-mb-0"
-          style={{
-            borderLeft: `4px solid ${CHART_COLORS.tertiary}`,
-            paddingLeft: "1rem",
-            flex: 1,
-          }}
-        ></h3>
-        <div className="fr-btns-group fr-btns-group--sm fr-btns-group--inline">
-          <Button
-            size="sm"
-            variant={viewMode === "chart" ? "primary" : "secondary"}
-            onClick={() => setViewMode("chart")}
-          >
-            Graphique
-          </Button>
-          <Button
-            size="sm"
-            variant={viewMode === "table" ? "primary" : "secondary"}
-            onClick={() => setViewMode("table")}
-          >
-            Tableau
-          </Button>
-        </div>
-      </div>
-
-      {viewMode === "chart" ? renderChart() : renderTable()}
-    </>
   );
 }

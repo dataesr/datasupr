@@ -169,9 +169,15 @@ export const createEffectifsSpecifiquesChartOptions = (
     },
   ].filter((item) => item.has && item.y > 0);
 
+  const categories = specifiques.map((item) => item.name);
+  const values = specifiques.map((item) => ({
+    y: item.y,
+    color: item.color,
+  }));
+
   return {
     chart: {
-      type: "pie",
+      type: "column",
       height: 400,
       backgroundColor: "transparent",
     },
@@ -180,6 +186,29 @@ export const createEffectifsSpecifiquesChartOptions = (
     },
     exporting: {
       enabled: false,
+    },
+    xAxis: {
+      categories: categories,
+      crosshair: true,
+      labels: {
+        style: {
+          fontSize: "13px",
+        },
+      },
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: "Nombre d'étudiants",
+        style: {
+          fontSize: "13px",
+        },
+      },
+      labels: {
+        formatter: function () {
+          return Highcharts.numberFormat(this.value as number, 0, ",", " ");
+        },
+      },
     },
     tooltip: {
       useHTML: true,
@@ -192,7 +221,7 @@ export const createEffectifsSpecifiquesChartOptions = (
         const point = this as any;
         return `<div style="padding:10px">
                 <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
-                  point.name
+                  point.x
                 }</div>
                 <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
                   point.y,
@@ -204,33 +233,24 @@ export const createEffectifsSpecifiquesChartOptions = (
       },
     },
     plotOptions: {
-      pie: {
-        allowPointSelect: true,
-        cursor: "pointer",
+      column: {
+        pointPadding: 0.2,
+        borderWidth: 0,
         dataLabels: {
           enabled: true,
-          useHTML: true,
           formatter: function () {
-            const point = this as any;
-            return `<b>${point.name}</b><br>${Highcharts.numberFormat(
-              point.y,
-              0,
-              ",",
-              " "
-            )} étudiants`;
+            return Highcharts.numberFormat(this.y as number, 0, ",", " ");
           },
           style: {
             fontSize: "13px",
+            fontWeight: "bold",
             textOutline: "none",
           },
         },
-        showInLegend: true,
       },
     },
     legend: {
-      align: "right",
-      verticalAlign: "middle",
-      layout: "vertical",
+      enabled: false,
     },
     credits: {
       enabled: false,
@@ -238,8 +258,9 @@ export const createEffectifsSpecifiquesChartOptions = (
     series: [
       {
         name: "Effectifs",
-        type: "pie",
-        data: specifiques,
+        type: "column",
+        data: values,
+        colorByPoint: true,
       },
     ],
   };

@@ -6,6 +6,11 @@ import {
   createEffectifsSpecifiquesChartOptions,
   createEffectifsDisciplinesChartOptions,
 } from "./options";
+import {
+  RenderDataNiveau,
+  RenderDataSpecifiques,
+  RenderDataDisciplines,
+} from "./render-data";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { CHART_COLORS } from "../../../../constants/colors";
 
@@ -123,6 +128,7 @@ export default function EffectifsChart({
       }}
       options={cursusOptions}
       legend={null}
+      renderData={() => <RenderDataNiveau data={data} />}
     />
   );
 
@@ -173,6 +179,7 @@ export default function EffectifsChart({
       }}
       options={specifiquesOptions}
       legend={null}
+      renderData={() => <RenderDataSpecifiques data={data} />}
     />
   );
 
@@ -226,6 +233,7 @@ export default function EffectifsChart({
       }}
       options={disciplinesOptions}
       legend={null}
+      renderData={() => <RenderDataDisciplines data={data} />}
     />
   );
 

@@ -59,24 +59,62 @@ export function useStructuresFilters({
   }, [allEtablissements]);
 
   const availableRegions = useMemo(() => {
+    let etabsToConsider = allEtablissements;
+
+    if (selectedType && selectedType !== "tous") {
+      etabsToConsider = etabsToConsider.filter(
+        (etab: any) =>
+          etab.type?.toLowerCase().trim() === selectedType.toLowerCase().trim()
+      );
+    }
+    if (selectedTypologie && selectedTypologie !== "toutes") {
+      etabsToConsider = etabsToConsider.filter(
+        (etab: any) =>
+          etab.typologie?.toLowerCase().trim() ===
+          selectedTypologie.toLowerCase().trim()
+      );
+    }
+
     const regions = new Set<string>();
-    allEtablissements.forEach((etab: any) => {
+    etabsToConsider.forEach((etab: any) => {
       if (etab.region && etab.region.trim()) {
         regions.add(etab.region.trim());
       }
     });
-    return Array.from(regions).sort();
-  }, [allEtablissements]);
+
+    return Array.from(regions).sort((a, b) => {
+      return a.localeCompare(b, "fr", { sensitivity: "base" });
+    });
+  }, [allEtablissements, selectedType, selectedTypologie]);
 
   const availableTypologies = useMemo(() => {
+    let etabsToConsider = allEtablissements;
+
+    if (selectedType && selectedType !== "tous") {
+      etabsToConsider = etabsToConsider.filter(
+        (etab: any) =>
+          etab.type?.toLowerCase().trim() === selectedType.toLowerCase().trim()
+      );
+    }
+    if (selectedRegion && selectedRegion !== "toutes") {
+      etabsToConsider = etabsToConsider.filter(
+        (etab: any) =>
+          etab.region?.toLowerCase().trim() ===
+          selectedRegion.toLowerCase().trim()
+      );
+    }
+
     const typologies = new Set<string>();
-    allEtablissements.forEach((etab: any) => {
+    etabsToConsider.forEach((etab: any) => {
       if (etab.typologie && etab.typologie.trim()) {
         typologies.add(etab.typologie.trim());
       }
     });
-    return Array.from(typologies).sort();
-  }, [allEtablissements]);
+
+    return Array.from(typologies).sort((a, b) => {
+      return a.localeCompare(b, "fr", { sensitivity: "base" });
+    });
+  }, [allEtablissements, selectedType, selectedRegion]);
 
   const defaultType = useMemo(() => {
     if (availableTypes.length === 0) return null;

@@ -6,10 +6,10 @@ export default function SidemenuLayout() {
   return (
     <Container>
       <Row>
-        <Col md={3}>
+        <Col xs={12} md={3} className="fr-mb-3w fr-mb-md-0">
           <CustomSideMenu />
         </Col>
-        <Col>
+        <Col xs={12} md={9}>
           <Outlet />
         </Col>
       </Row>
