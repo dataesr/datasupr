@@ -23,3 +23,18 @@
     }
   }
 }
+
+code {
+  background-color: rgb(85, 102, 114);
+  padding: .3rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  border: 1px solid #535353;
+  border-radius: 5px;
+}
+
+.components-list {
+  li {
+    margin-bottom: 1.5rem;
+  }
+}
