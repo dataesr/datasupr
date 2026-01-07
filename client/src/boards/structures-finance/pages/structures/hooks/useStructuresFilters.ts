@@ -31,14 +31,47 @@ export function useStructuresFilters({
 
   const allEtablissements = useMemo(() => {
     if (!etablissementsData) return [];
-    if (Array.isArray(etablissementsData)) return etablissementsData;
-    return etablissementsData.data || etablissementsData.etablissements || [];
+    let etabs = Array.isArray(etablissementsData)
+      ? etablissementsData
+      : etablissementsData.data || etablissementsData.etablissements || [];
+
+    const totalBefore = etabs.length;
+
+    const etabsMap = new Map();
+    etabs.forEach((etab: any) => {
+      // Utiliser l'ID actuel, ou l'ID normal si pas d'ID actuel
+      const currentId =
+        etab.etablissement_id_paysage_actuel ||
+        etab.etablissement_id_paysage ||
+        etab.id;
+      if (!currentId) return;
+
+      // Privilégier l'entrée où etablissement_id_paysage === etablissement_id_paysage_actuel
+      const existing = etabsMap.get(currentId);
+      if (
+        !existing ||
+        etab.etablissement_id_paysage === etab.etablissement_id_paysage_actuel
+      ) {
+        etabsMap.set(currentId, etab);
+      }
+    });
+
+    etabs = Array.from(etabsMap.values());
+
+    console.log(
+      `Établissements dédupliqués: ${totalBefore} -> ${etabs.length} (par établissement actuel)`,
+      `Exemple:`,
+      etabs[0]
+    );
+
+    return etabs;
   }, [etablissementsData]);
 
   const availableTypes = useMemo(() => {
     const types = new Set<string>();
     allEtablissements.forEach((etab: any) => {
       const typeValue =
+        etab.etablissement_actuel_type ||
         etab.type ||
         etab.typologie ||
         etab.type_etablissement ||
@@ -64,21 +97,25 @@ export function useStructuresFilters({
     if (selectedType && selectedType !== "tous") {
       etabsToConsider = etabsToConsider.filter(
         (etab: any) =>
-          etab.type?.toLowerCase().trim() === selectedType.toLowerCase().trim()
+          (etab.etablissement_actuel_type || etab.type)
+            ?.toLowerCase()
+            .trim() === selectedType.toLowerCase().trim()
       );
     }
     if (selectedTypologie && selectedTypologie !== "toutes") {
       etabsToConsider = etabsToConsider.filter(
         (etab: any) =>
-          etab.typologie?.toLowerCase().trim() ===
-          selectedTypologie.toLowerCase().trim()
+          (etab.etablissement_actuel_typologie || etab.typologie)
+            ?.toLowerCase()
+            .trim() === selectedTypologie.toLowerCase().trim()
       );
     }
 
     const regions = new Set<string>();
     etabsToConsider.forEach((etab: any) => {
-      if (etab.region && etab.region.trim()) {
-        regions.add(etab.region.trim());
+      const region = etab.etablissement_actuel_region || etab.region;
+      if (region && region.trim()) {
+        regions.add(region.trim());
       }
     });
 
@@ -93,21 +130,25 @@ export function useStructuresFilters({
     if (selectedType && selectedType !== "tous") {
       etabsToConsider = etabsToConsider.filter(
         (etab: any) =>
-          etab.type?.toLowerCase().trim() === selectedType.toLowerCase().trim()
+          (etab.etablissement_actuel_type || etab.type)
+            ?.toLowerCase()
+            .trim() === selectedType.toLowerCase().trim()
       );
     }
     if (selectedRegion && selectedRegion !== "toutes") {
       etabsToConsider = etabsToConsider.filter(
         (etab: any) =>
-          etab.region?.toLowerCase().trim() ===
-          selectedRegion.toLowerCase().trim()
+          (etab.etablissement_actuel_region || etab.region)
+            ?.toLowerCase()
+            .trim() === selectedRegion.toLowerCase().trim()
       );
     }
 
     const typologies = new Set<string>();
     etabsToConsider.forEach((etab: any) => {
-      if (etab.typologie && etab.typologie.trim()) {
-        typologies.add(etab.typologie.trim());
+      const typologie = etab.etablissement_actuel_typologie || etab.typologie;
+      if (typologie && typologie.trim()) {
+        typologies.add(typologie.trim());
       }
     });
 
@@ -132,23 +173,27 @@ export function useStructuresFilters({
     if (selectedType && selectedType !== "tous") {
       filtered = filtered.filter(
         (etab: any) =>
-          etab.type?.toLowerCase().trim() === selectedType.toLowerCase().trim()
+          (etab.etablissement_actuel_type || etab.type)
+            ?.toLowerCase()
+            .trim() === selectedType.toLowerCase().trim()
       );
     }
 
     if (selectedRegion && selectedRegion !== "toutes") {
       filtered = filtered.filter(
         (etab: any) =>
-          etab.region?.toLowerCase().trim() ===
-          selectedRegion.toLowerCase().trim()
+          (etab.etablissement_actuel_region || etab.region)
+            ?.toLowerCase()
+            .trim() === selectedRegion.toLowerCase().trim()
       );
     }
 
     if (selectedTypologie && selectedTypologie !== "toutes") {
       filtered = filtered.filter(
         (etab: any) =>
-          etab.typologie?.toLowerCase().trim() ===
-          selectedTypologie.toLowerCase().trim()
+          (etab.etablissement_actuel_typologie || etab.typologie)
+            ?.toLowerCase()
+            .trim() === selectedTypologie.toLowerCase().trim()
       );
     }
 

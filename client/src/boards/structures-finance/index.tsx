@@ -4,12 +4,12 @@ import CustomSideMenu from "./components/sidemenu";
 
 export default function FinanceUniversityRoutes() {
   return (
-    <Container>
+    <Container fluid>
       <Row>
-        <Col xs="12" md="3" className="fr-mb-3w fr-mb-md-0">
+        <Col xs="12" md="2" className="fr-mb-3w fr-mb-md-0">
           <CustomSideMenu />
         </Col>
-        <Col xs="12" md="9">
+        <Col xs="12" md="10">
           <Outlet />
         </Col>
       </Row>

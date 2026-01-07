@@ -61,7 +61,7 @@ export function RenderData({ data }: RenderDataProps) {
       color: CHART_COLORS.palette[3],
     },
     {
-      label: "ANR hors investissements",
+      label: "ANR hors investissements d'avenir",
       value: data?.anr_hors_investissements_d_avenir,
       part: data?.part_anr_hors_investissements_d_avenir,
       color: CHART_COLORS.palette[4],

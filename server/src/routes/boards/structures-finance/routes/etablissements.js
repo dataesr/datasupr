@@ -36,12 +36,19 @@ router.get("/structures-finance/etablissements", async (req, res) => {
 
     const payload = items.map((x) => ({
       id: x._id,
+      etablissement_id_paysage: x._id,
       nom: x.etablissement_lib,
+      etablissement_lib: x.etablissement_lib,
       id_actuel: x.etablissement_id_paysage_actuel,
+      etablissement_id_paysage_actuel: x.etablissement_id_paysage_actuel,
       nom_actuel: x.etablissement_actuel_lib,
+      etablissement_actuel_lib: x.etablissement_actuel_lib,
       region: x.region,
+      etablissement_actuel_region: x.region,
       type: x.type,
+      etablissement_actuel_type: x.type,
       typologie: x.typologie,
+      etablissement_actuel_typologie: x.typologie,
     }));
 
     setCached(key, payload);

@@ -106,19 +106,29 @@ export function useStructuresState() {
   const etablissementOptions = useMemo(
     () =>
       filteredEtablissements.map((etab: any) => {
-        const displayName = etab.etablissement_actuel_lib || etab.nom;
+        const displayName =
+          etab.etablissement_actuel_lib || etab.etablissement_lib || etab.nom;
         const searchText = [
           displayName,
+          etab.etablissement_lib,
+          etab.etablissement_actuel_lib,
           etab.nom,
           etab.champ_recherche,
-          etab.region,
+          etab.etablissement_actuel_region || etab.region,
         ]
           .filter(Boolean)
           .join(" ");
 
         return {
-          id: etab.id,
-          label: `${displayName}${etab.region ? ` — ${etab.region}` : ""}`,
+          id:
+            etab.etablissement_id_paysage ||
+            etab.etablissement_id_paysage_actuel ||
+            etab.id,
+          label: `${displayName}${
+            etab.etablissement_actuel_region || etab.region
+              ? ` — ${etab.etablissement_actuel_region || etab.region}`
+              : ""
+          }`,
           searchableText: searchText,
           subtitle: etab.champ_recherche,
         };

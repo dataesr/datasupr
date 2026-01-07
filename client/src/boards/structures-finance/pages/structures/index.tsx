@@ -80,7 +80,7 @@ export default function StructuresView() {
               className="fr-text--lg fr-mb-0"
               style={{ fontWeight: 700, flex: 1 }}
             >
-              {detailData.etablissement_lib}
+              {detailData.etablissement_actuel_lib}
             </h4>
             {detailData.etablissement_id_paysage !==
               detailData.etablissement_id_paysage_actuel &&

@@ -346,6 +346,7 @@ export default function EvolutionChart({
     null
   );
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [isSelectionExpanded, setIsSelectionExpanded] = useState<boolean>(true);
 
   const { data, isLoading } = useFinanceEtablissementEvolution(etablissementId);
 
@@ -456,136 +457,165 @@ export default function EvolutionChart({
   return (
     <div>
       <div
-        className="fr-mb-3w fr-p-3w"
+        className="fr-mb-3w"
         style={{
           backgroundColor: "var(--background-default-grey-hover)",
           borderRadius: "8px",
           border: "1px solid var(--border-default-grey)",
         }}
       >
-        <h3
-          className="fr-h6 fr-mb-3w"
+        <button
+          aria-expanded={isSelectionExpanded}
+          aria-controls="evolution-selection-panel"
+          onClick={() => setIsSelectionExpanded(!isSelectionExpanded)}
           style={{
-            borderLeft: `4px solid ${CHART_COLORS.primary}`,
-            paddingLeft: "1rem",
+            width: "100%",
+            textAlign: "left",
+            padding: "1rem 1.5rem",
+            backgroundColor: "transparent",
+            border: "none",
+            borderBottom: isSelectionExpanded
+              ? "1px solid var(--border-default-grey)"
+              : "none",
+            cursor: "pointer",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          Sélection de l'analyse
-        </h3>
-
-        <div className="fr-mb-3w">
-          <p className="fr-text--sm fr-mb-2v">
-            <strong>Période disponible :</strong> {periodText}
-          </p>
-          <p className="fr-text--sm fr-mb-2v">
-            <strong>Analyses disponibles :</strong> {analysesWithData.size}{" "}
-            analyse{analysesWithData.size > 1 ? "s" : ""} avec des données
-          </p>
-        </div>
-
-        <div className="fr-mb-3w">
-          <label className="fr-label fr-mb-1w">
-            <strong>Catégorie</strong>
-          </label>
-          <ButtonGroup size="sm" isInlineFrom="md">
-            {categories.map((cat) => (
-              <Button
-                key={cat}
-                onClick={() => {
-                  setSelectedCategory(cat);
-                  setSelectedAnalysis(null);
+          <div>
+            <h3
+              className="fr-h6 fr-mb-1v"
+              style={{
+                borderLeft: `4px solid ${CHART_COLORS.primary}`,
+                paddingLeft: "1rem",
+                margin: 0,
+              }}
+            >
+              Sélection de l'analyse
+            </h3>
+            {selectedAnalysis && (
+              <p
+                className="fr-text--sm fr-mt-1v"
+                style={{
+                  margin: 0,
+                  paddingLeft: "1rem",
+                  color: "var(--text-mention-grey)",
                 }}
-                variant={selectedCategory === cat ? "primary" : "secondary"}
-                size="sm"
               >
-                {cat === "all"
-                  ? `Toutes (${analysesWithData.size})`
-                  : `${cat} (${
-                      Array.from(analysesWithData).filter(
-                        (m) => PREDEFINED_ANALYSES[m].category === cat
-                      ).length
-                    })`}
-              </Button>
-            ))}
-          </ButtonGroup>
-        </div>
+                {PREDEFINED_ANALYSES[selectedAnalysis].label}
+              </p>
+            )}
+          </div>
+          <span
+            className="fr-icon-arrow-down-s-line"
+            style={{
+              transition: "transform 0.3s",
+              transform: isSelectionExpanded ? "rotate(180deg)" : "rotate(0)",
+            }}
+          />
+        </button>
 
-        <Row gutters>
-          {availableAnalyses.length === 0 && (
-            <Col md="12">
-              <div className="fr-alert fr-alert--info fr-alert--sm">
-                <p className="fr-text--sm">
-                  Aucune analyse disponible dans cette catégorie
-                </p>
-              </div>
-            </Col>
-          )}
-          {availableAnalyses.map((analysisKey) => {
-            const analysis = PREDEFINED_ANALYSES[analysisKey];
-            const isSelected = selectedAnalysis === analysisKey;
-
-            return (
-              <Col key={analysisKey} md="6" sm="12">
-                <button
-                  className="fr-btn fr-btn--sm"
-                  style={{
-                    width: "100%",
-                    textAlign: "left",
-                    marginBottom: "0.5rem",
-                    backgroundColor: isSelected
-                      ? CHART_COLORS.primary
-                      : "var(--background-default-grey)",
-                    color: isSelected
-                      ? "var(--text-inverted-grey)"
-                      : "var(--text-action-high-grey)",
-                    border: `1px solid ${
-                      isSelected
-                        ? CHART_COLORS.primary
-                        : "var(--border-default-grey)"
-                    }`,
-                    cursor: "pointer",
-                    padding: "0.75rem 1rem",
-                  }}
-                  onClick={() => setSelectedAnalysis(analysisKey)}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.5rem",
-                    }}
-                  >
-                    <span style={{ fontSize: "16px" }}>
-                      {isSelected ? "●" : "○"}
-                    </span>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: 600 }}>{analysis.label}</div>
-                      <div
-                        style={{
-                          fontSize: "11px",
-                          opacity: 0.8,
-                          marginTop: "0.25rem",
-                        }}
-                      >
-                        {analysis.metrics.length} métrique
-                        {analysis.metrics.length > 1 ? "s" : ""}
-                        {analysis.showBase100 && " • Comparaison avec base 100"}
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              </Col>
-            );
-          })}
-        </Row>
-
-        {!selectedAnalysis && (
-          <div className="fr-alert fr-alert--info fr-alert--sm fr-mt-2w">
-            <p className="fr-text--sm">
-              Sélectionnez une analyse pour afficher le(s) graphique(s)
+        <div
+          id="evolution-selection-panel"
+          className={`fr-collapse ${
+            isSelectionExpanded ? "fr-collapse--expanded" : ""
+          }`}
+          style={{
+            padding: isSelectionExpanded ? "1.5rem" : "0 1.5rem",
+          }}
+        >
+          <div className="fr-mb-2w">
+            <p className="fr-text--sm fr-mb-1v">
+              <strong>Période :</strong> {periodText} •{" "}
+              <strong>{analysesWithData.size}</strong> analyse
+              {analysesWithData.size > 1 ? "s" : ""}
             </p>
           </div>
-        )}
+
+          <div className="fr-mb-2w">
+            <ButtonGroup size="sm" isInlineFrom="md">
+              {categories.map((cat) => (
+                <Button
+                  key={cat}
+                  onClick={() => {
+                    setSelectedCategory(cat);
+                    setSelectedAnalysis(null);
+                  }}
+                  variant={selectedCategory === cat ? "primary" : "secondary"}
+                  size="sm"
+                >
+                  {cat === "all"
+                    ? `Toutes (${analysesWithData.size})`
+                    : `${cat} (${
+                        Array.from(analysesWithData).filter(
+                          (m) => PREDEFINED_ANALYSES[m].category === cat
+                        ).length
+                      })`}
+                </Button>
+              ))}
+            </ButtonGroup>
+          </div>
+
+          <Row gutters>
+            {availableAnalyses.length === 0 && (
+              <Col md="12">
+                <div className="fr-alert fr-alert--info fr-alert--sm">
+                  <p className="fr-text--sm">
+                    Aucune analyse disponible dans cette catégorie
+                  </p>
+                </div>
+              </Col>
+            )}
+            {availableAnalyses.map((analysisKey) => {
+              const analysis = PREDEFINED_ANALYSES[analysisKey];
+              const isSelected = selectedAnalysis === analysisKey;
+
+              return (
+                <Col key={analysisKey} md="4" sm="12">
+                  <button
+                    className="fr-btn fr-btn--sm"
+                    style={{
+                      width: "100%",
+                      textAlign: "left",
+                      marginBottom: "0.25rem",
+                      backgroundColor: isSelected
+                        ? CHART_COLORS.primary
+                        : "var(--background-default-grey)",
+                      color: isSelected
+                        ? "var(--text-inverted-grey)"
+                        : "var(--text-action-high-grey)",
+                      border: `1px solid ${
+                        isSelected
+                          ? CHART_COLORS.primary
+                          : "var(--border-default-grey)"
+                      }`,
+                      cursor: "pointer",
+                      padding: "0.35rem 0.5rem",
+                      fontSize: "12px",
+                      fontWeight: isSelected ? 600 : 400,
+                      lineHeight: "1.3",
+                    }}
+                    onClick={() => {
+                      setSelectedAnalysis(analysisKey);
+                      setIsSelectionExpanded(false);
+                    }}
+                  >
+                    {analysis.label}
+                  </button>
+                </Col>
+              );
+            })}
+          </Row>
+
+          {!selectedAnalysis && (
+            <div className="fr-alert fr-alert--info fr-alert--sm fr-mt-2w">
+              <p className="fr-text--sm">
+                Sélectionnez une analyse pour afficher le(s) graphique(s)
+              </p>
+            </div>
+          )}
+        </div>
       </div>
 
       {selectedAnalysis && selectedMetrics.length === 1 && chartOptions && (
@@ -639,168 +669,176 @@ export default function EvolutionChart({
 
       {selectedAnalysis && selectedMetrics.length === 2 && (
         <>
-          {chartOptions && (
+          {chartOptionsBase100 && (
             <>
               <ChartWrapper
                 config={{
-                  id: "evolution-chart-metric1",
-                  idQuery: "evolution-metric1",
+                  id: "evolution-chart-comparison",
+                  idQuery: "evolution-comparison",
                   title: {
                     className: "fr-mt-0w",
                     look: "h5",
                     size: "h3",
-                    fr: (
-                      <>
-                        {METRICS_CONFIG[selectedMetrics[0]].label} —{" "}
-                        {etablissementName}
-                      </>
-                    ),
+                    fr: <>Comparaison en base 100 — {etablissementName}</>,
                   },
                   comment: {
                     fr: (
                       <>
-                        Évolution de{" "}
+                        Comparaison de l'évolution de{" "}
                         {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()}{" "}
-                        sur la période {periodText}.
+                        et{" "}
+                        {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()}{" "}
+                        en base 100 (première année = 100).
                       </>
                     ),
                   },
                   readingKey: {
                     fr: (
                       <>
-                        Évolution historique de{" "}
-                        {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()}{" "}
-                        sur {years.length} années.
+                        Ce graphique permet de comparer les dynamiques
+                        d'évolution des deux indicateurs sur une échelle
+                        normalisée.
                       </>
                     ),
                   },
                   updateDate: new Date(),
                   integrationURL: "/integration-url",
                 }}
-                options={createEvolutionChartOptions(
-                  data,
-                  [selectedMetrics[0]] as MetricKey[],
-                  METRICS_CONFIG,
-                  false
-                )}
+                options={chartOptionsBase100}
                 legend={null}
                 renderData={() => (
-                  <RenderDataSingle
+                  <RenderDataBase100
                     data={data}
-                    metricKey={selectedMetrics[0]}
-                    metricConfig={METRICS_CONFIG[selectedMetrics[0]]}
+                    metric1Key={selectedMetrics[0]}
+                    metric1Config={METRICS_CONFIG[selectedMetrics[0]]}
+                    metric2Key={selectedMetrics[1]}
+                    metric2Config={METRICS_CONFIG[selectedMetrics[1]]}
                   />
                 )}
               />
 
               <div className="fr-mt-5w" />
+            </>
+          )}
 
-              <ChartWrapper
-                config={{
-                  id: "evolution-chart-metric2",
-                  idQuery: "evolution-metric2",
-                  title: {
-                    className: "fr-mt-0w",
-                    look: "h5",
-                    size: "h3",
-                    fr: (
-                      <>
-                        {METRICS_CONFIG[selectedMetrics[1]].label} —{" "}
-                        {etablissementName}
-                      </>
-                    ),
-                  },
-                  comment: {
-                    fr: (
-                      <>
-                        Évolution de{" "}
-                        {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()}{" "}
-                        sur la période {periodText}.
-                      </>
-                    ),
-                  },
-                  readingKey: {
-                    fr: (
-                      <>
-                        Évolution historique de{" "}
-                        {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()}{" "}
-                        sur {years.length} années.
-                      </>
-                    ),
-                  },
-                  updateDate: new Date(),
-                  integrationURL: "/integration-url",
-                }}
-                options={createEvolutionChartOptions(
-                  data,
-                  [selectedMetrics[1]] as MetricKey[],
-                  METRICS_CONFIG,
-                  false
-                )}
-                legend={null}
-                renderData={() => (
-                  <RenderDataSingle
-                    data={data}
-                    metricKey={selectedMetrics[1]}
-                    metricConfig={METRICS_CONFIG[selectedMetrics[1]]}
-                  />
-                )}
-              />
-
-              <div className="fr-mt-5w" />
-
-              {chartOptionsBase100 && (
+          {chartOptions && (
+            <Row gutters>
+              <Col md="6" sm="12">
                 <ChartWrapper
                   config={{
-                    id: "evolution-chart-comparison",
-                    idQuery: "evolution-comparison",
+                    id: "evolution-chart-metric1",
+                    idQuery: "evolution-metric1",
                     title: {
                       className: "fr-mt-0w",
                       look: "h5",
                       size: "h3",
-                      fr: <>Comparaison en base 100 — {etablissementName}</>,
+                      fr: (
+                        <>
+                          {METRICS_CONFIG[selectedMetrics[0]].label} —{" "}
+                          {etablissementName}
+                        </>
+                      ),
                     },
                     comment: {
                       fr: (
                         <>
-                          Comparaison de l'évolution de{" "}
+                          Évolution de{" "}
                           {METRICS_CONFIG[
                             selectedMetrics[0]
                           ].label.toLowerCase()}{" "}
-                          et{" "}
-                          {METRICS_CONFIG[
-                            selectedMetrics[1]
-                          ].label.toLowerCase()}{" "}
-                          en base 100 (première année = 100).
+                          sur la période {periodText}.
                         </>
                       ),
                     },
                     readingKey: {
                       fr: (
                         <>
-                          Ce graphique permet de comparer les dynamiques
-                          d'évolution des deux indicateurs sur une échelle
-                          normalisée.
+                          Évolution historique de{" "}
+                          {METRICS_CONFIG[
+                            selectedMetrics[0]
+                          ].label.toLowerCase()}{" "}
+                          sur {years.length} années.
                         </>
                       ),
                     },
                     updateDate: new Date(),
                     integrationURL: "/integration-url",
                   }}
-                  options={chartOptionsBase100}
+                  options={createEvolutionChartOptions(
+                    data,
+                    [selectedMetrics[0]] as MetricKey[],
+                    METRICS_CONFIG,
+                    false
+                  )}
                   legend={null}
                   renderData={() => (
-                    <RenderDataBase100
+                    <RenderDataSingle
                       data={data}
-                      metric1Key={selectedMetrics[0]}
-                      metric1Config={METRICS_CONFIG[selectedMetrics[0]]}
-                      metric2Key={selectedMetrics[1]}
-                      metric2Config={METRICS_CONFIG[selectedMetrics[1]]}
+                      metricKey={selectedMetrics[0]}
+                      metricConfig={METRICS_CONFIG[selectedMetrics[0]]}
                     />
                   )}
                 />
-              )}
-            </>
+              </Col>
+
+              <Col md="6" sm="12">
+                <ChartWrapper
+                  config={{
+                    id: "evolution-chart-metric2",
+                    idQuery: "evolution-metric2",
+                    title: {
+                      className: "fr-mt-0w",
+                      look: "h5",
+                      size: "h3",
+                      fr: (
+                        <>
+                          {METRICS_CONFIG[selectedMetrics[1]].label} —{" "}
+                          {etablissementName}
+                        </>
+                      ),
+                    },
+                    comment: {
+                      fr: (
+                        <>
+                          Évolution de{" "}
+                          {METRICS_CONFIG[
+                            selectedMetrics[1]
+                          ].label.toLowerCase()}{" "}
+                          sur la période {periodText}.
+                        </>
+                      ),
+                    },
+                    readingKey: {
+                      fr: (
+                        <>
+                          Évolution historique de{" "}
+                          {METRICS_CONFIG[
+                            selectedMetrics[1]
+                          ].label.toLowerCase()}{" "}
+                          sur {years.length} années.
+                        </>
+                      ),
+                    },
+                    updateDate: new Date(),
+                    integrationURL: "/integration-url",
+                  }}
+                  options={createEvolutionChartOptions(
+                    data,
+                    [selectedMetrics[1]] as MetricKey[],
+                    METRICS_CONFIG,
+                    false
+                  )}
+                  legend={null}
+                  renderData={() => (
+                    <RenderDataSingle
+                      data={data}
+                      metricKey={selectedMetrics[1]}
+                      metricConfig={METRICS_CONFIG[selectedMetrics[1]]}
+                    />
+                  )}
+                />
+              </Col>
+            </Row>
           )}
         </>
       )}

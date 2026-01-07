@@ -269,8 +269,8 @@ export default function EtablissementInfo({ data }: EtablissementInfoProps) {
             }}
           >
             <span style={{ color: "var(--text-default-warning)" }}>
-              → Actuellement : <strong>{data.etablissement_actuel_lib}</strong>{" "}
-              ({data.etablissement_actuel_type})
+              → Anciennement : <strong>{data.etablissement_lib}</strong> (
+              {data.etablissement_actuel_type})
             </span>
           </div>
         )}

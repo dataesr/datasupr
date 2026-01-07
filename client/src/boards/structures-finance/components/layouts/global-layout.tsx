@@ -64,6 +64,14 @@ export default function GlobalLayout() {
           </Button>
         </FastAccess>
       </Header>
+      {/* A CHANGER SI CA PUE */}
+      <style>{`
+        .fr-header .fr-container {
+          max-width: 100% !important;
+          padding-left: 1.5rem;
+          padding-right: 1.5rem;
+        }
+      `}</style>
       <Outlet />
       <Footer />
       <SwitchTheme />

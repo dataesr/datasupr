@@ -3,13 +3,14 @@ import { CHART_COLORS, DSFR_COLORS } from "../../../../constants/colors";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
-const pct = (n?: number) => (n != null ? `${n.toFixed(2)} %` : "—");
+const pct = (n?: number) => (n != null ? `${n.toFixed(1)} %` : "—");
 
 interface MetricCardProps {
   title: string;
   value: string;
   detail?: string;
   color?: string;
+  sparklineData?: number[];
 }
 
 function MetricCard({
@@ -17,7 +18,55 @@ function MetricCard({
   value,
   detail,
   color = CHART_COLORS.primary,
+  sparklineData,
 }: MetricCardProps) {
+  // Créer un path SVG pour la sparkline
+  const createSparklinePath = (data: number[]) => {
+    if (!data || data.length < 2) return "";
+
+    const width = 200;
+    const height = 80;
+    const padding = 5;
+
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+    const range = max - min || 1;
+
+    const points = data.map((value, index) => {
+      const x = padding + (index / (data.length - 1)) * (width - 2 * padding);
+      const y =
+        height - padding - ((value - min) / range) * (height - 2 * padding);
+      return { x, y };
+    });
+
+    // Créer une courbe lisse avec des courbes de Bézier cubiques plus subtiles
+    let path = `M ${points[0].x},${points[0].y}`;
+
+    for (let i = 0; i < points.length - 1; i++) {
+      const current = points[i];
+      const next = points[i + 1];
+
+      // Points de contrôle plus proches pour des courbes plus douces
+      const tension = 0.3; // Facteur de tension (0 = ligne droite, 1 = très courbé)
+      const cp1x = current.x + (next.x - current.x) * tension;
+      const cp1y = current.y;
+      const cp2x = next.x - (next.x - current.x) * tension;
+      const cp2y = next.y;
+
+      path += ` C ${cp1x},${cp1y} ${cp2x},${cp2y} ${next.x},${next.y}`;
+    }
+
+    return path;
+  };
+
+  const sparklinePath = sparklineData ? createSparklinePath(sparklineData) : "";
+
+  // Créer un ID unique pour éviter les conflits
+  const gradientId = `gradient-${title.replace(
+    /[^a-zA-Z0-9]/g,
+    "-"
+  )}-${Math.random().toString(36).substr(2, 9)}`;
+
   return (
     <div
       className="fr-card fr-enlarge-link"
@@ -31,9 +80,50 @@ function MetricCard({
         borderRight: "none",
         borderBottom: "none",
         backgroundColor: DSFR_COLORS.backgroundAlt,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      <div className="fr-card__body fr-p-2w">
+      {sparklineData && sparklineData.length > 1 && (
+        <svg
+          style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            width: "100%",
+            height: "90px",
+            pointerEvents: "none",
+          }}
+          viewBox="0 0 200 80"
+          preserveAspectRatio="none"
+        >
+          <defs>
+            <linearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor={color} stopOpacity="0.8" />
+              <stop offset="40%" stopColor={color} stopOpacity="0.15" />
+              <stop offset="100%" stopColor={color} stopOpacity="0.02" />
+            </linearGradient>
+          </defs>
+          <path
+            d={`${sparklinePath} L 200,80 L 0,80 Z`}
+            fill={`url(#${gradientId})`}
+            stroke="none"
+          />
+          <path
+            d={sparklinePath}
+            fill="none"
+            stroke={color}
+            strokeWidth="3"
+            strokeOpacity="0.8"
+          />
+        </svg>
+      )}
+
+      <div
+        className="fr-card__body fr-p-2w"
+        style={{ position: "relative", zIndex: 1 }}
+      >
         <div className="fr-card__content">
           <p
             className="fr-text--sm fr-text--bold fr-mb-1v"
@@ -45,12 +135,7 @@ function MetricCard({
           >
             {title}
           </p>
-          <p
-            className="fr-h5 fr-mb-1v"
-            style={{ fontWeight: 700, color: "#000" }}
-          >
-            {value}
-          </p>
+          <p className="fr-h5 fr-mb-1v">{value}</p>
           {detail && (
             <p
               className="fr-text--sm"
@@ -67,10 +152,23 @@ function MetricCard({
 
 interface MetricOverviewProps {
   data: any;
+  evolutionData?: any[];
 }
 
-export default function MetricOverview({ data }: MetricOverviewProps) {
+export default function MetricOverview({
+  data,
+  evolutionData,
+}: MetricOverviewProps) {
   if (!data) return null;
+
+  // Extraire les données d'évolution pour chaque métrique
+  const getEvolutionData = (metricKey: string) => {
+    if (!evolutionData || evolutionData.length === 0) return undefined;
+    return evolutionData
+      .sort((a, b) => a.exercice - b.exercice)
+      .map((item) => item[metricKey])
+      .filter((val): val is number => val != null && !isNaN(val));
+  };
 
   const niveauxDisponibles: Array<{ niveau: string; key: string }> = [];
   if (data.effectif_sans_cpge_l && data.effectif_sans_cpge_l > 0) {
@@ -91,10 +189,13 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
 
   const scspCards = [
     {
-      title: "Ressources hors opérations en capital",
+      title: "Total des ressources",
       value: `${euro(data.produits_de_fonctionnement_encaissables)} €`,
-      detail: "Produits de fonctionnement encaissables",
+      detail: "Hors opérations en capital",
       color: CHART_COLORS.primary,
+      sparklineData: getEvolutionData(
+        "produits_de_fonctionnement_encaissables"
+      ),
     },
     {
       title: "Subvention pour charge de service public",
@@ -107,6 +208,7 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
             ).toFixed(1)} % des ressources`
           : "Part des ressources",
       color: CHART_COLORS.primary,
+      sparklineData: getEvolutionData("scsp"),
     },
     {
       title: "Ressources propres",
@@ -120,6 +222,7 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
             ).toFixed(1)} % des ressources`
           : "Part des ressources",
       color: CHART_COLORS.primary,
+      sparklineData: getEvolutionData("recettes_propres"),
     },
   ];
 
@@ -129,6 +232,7 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
       value: `${euro(data.scsp)} €`,
       detail: "Subvention pour charges de service public",
       color: CHART_COLORS.secondary,
+      sparklineData: getEvolutionData("scsp"),
     },
     {
       title: "SCSP par étudiant",
@@ -137,6 +241,7 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
         ? `Pour ${data.scsp_etudiants.toLocaleString("fr-FR")} étudiants`
         : "Ratio SCSP / étudiants",
       color: CHART_COLORS.secondary,
+      sparklineData: getEvolutionData("scsp_par_etudiants"),
     },
   ];
 
@@ -146,18 +251,23 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
       value: `${euro(data.charges_de_personnel)} €`,
       detail: "Masse salariale totale",
       color: CHART_COLORS.tertiary,
+      sparklineData: getEvolutionData("charges_de_personnel"),
     },
     {
       title: "Charges / Produits encaissables",
       value: pct(data.charges_de_personnel_produits_encaissables),
       detail: "Part des charges dans les produits",
       color: CHART_COLORS.tertiary,
+      sparklineData: getEvolutionData(
+        "charges_de_personnel_produits_encaissables"
+      ),
     },
     {
       title: "Taux rémunération permanents",
       value: pct(data.taux_de_remuneration_des_permanents),
       detail: "Ratio rémunération des permanents",
       color: CHART_COLORS.tertiary,
+      sparklineData: getEvolutionData("taux_de_remuneration_des_permanents"),
     },
   ];
 
@@ -171,7 +281,7 @@ export default function MetricOverview({ data }: MetricOverviewProps) {
             paddingLeft: "1rem",
           }}
         >
-          SCSP (Subvention pour charges de service public)
+          Les ressources de l'établissement
         </h3>
         <Row gutters>
           {scspCards.map((card) => (

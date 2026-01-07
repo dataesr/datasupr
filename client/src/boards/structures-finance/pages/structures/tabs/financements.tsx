@@ -1,3 +1,4 @@
+import { useFinanceEtablissementEvolution } from "../../../api";
 import MetricOverview from "../components/metric-overview";
 import "./styles.scss";
 
@@ -6,6 +7,10 @@ interface FinancementsTabProps {
 }
 
 export function FinancementsTab({ data }: FinancementsTabProps) {
+  const { data: evolutionData } = useFinanceEtablissementEvolution(
+    data?.etablissement_id_paysage
+  );
+
   return (
     <div
       id="tabpanel-financements"
@@ -13,7 +18,7 @@ export function FinancementsTab({ data }: FinancementsTabProps) {
       aria-labelledby="tab-financements"
       className="fr-p-3w tab-container"
     >
-      <MetricOverview data={data} />
+      <MetricOverview data={data} evolutionData={evolutionData} />
     </div>
   );
 }

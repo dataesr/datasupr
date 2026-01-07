@@ -61,7 +61,7 @@ export const CHART_COLORS = {
     DSFR_COLORS.greenEmeraude,
     DSFR_COLORS.pinkTuile,
     DSFR_COLORS.yellowMoutarde,
-    DSFR_COLORS.purpleGlycine,
+    DSFR_COLORS.greenBourgeon,
     DSFR_COLORS.orangeTerreBattue,
     DSFR_COLORS.greenMenthe,
     DSFR_COLORS.brownCaramel,

@@ -39,14 +39,6 @@ export const createComparisonBarOptions = (
         color: "var(--text-title-grey)",
       },
     },
-    subtitle: {
-      text: `Top ${chartData.length} établissements`,
-      align: "left",
-      style: {
-        fontSize: "14px",
-        color: "var(--text-mention-grey)",
-      },
-    },
     accessibility: {
       enabled: true,
       description: `Graphique en barres comparant ${config.metricLabel} pour ${chartData.length} établissements`,
@@ -106,7 +98,6 @@ export const createComparisonBarOptions = (
           : value.toLocaleString("fr-FR");
         return `
           <div style="padding:10px">
-            <div style="font-weight:bold;margin-bottom:8px;font-size:14px">${this.x}</div>
             <div style="margin-top:8px">
               <strong>${config.metricLabel}:</strong> <span style="font-size:15px;font-weight:600">${formatted}</span>
             </div>
