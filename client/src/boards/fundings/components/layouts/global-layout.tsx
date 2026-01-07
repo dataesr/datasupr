@@ -5,6 +5,7 @@ import { Outlet, useLocation, useSearchParams } from "react-router-dom";
 import SwitchTheme from "../../../../components/switch-theme";
 import Footer from "./footer";
 import i18n from "./i18n.json";
+import "../styles.scss";
 
 export default function GlobalLayout({ languageSelector = false }) {
   const { pathname } = useLocation();
@@ -94,19 +95,19 @@ export default function GlobalLayout({ languageSelector = false }) {
           )}
         </FastAccess>
       </Header>
-      <div className="ep-main-menu">
+      <div className="fd-main-menu">
         <Container>
           <div className="actions">
             <button
-              className="ep-menu-toggle fr-btn fr-btn--tertiary"
+              className="fd-menu-toggle fr-btn fr-btn--tertiary"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-expanded={menuOpen}
-              aria-controls="ep-main-nav"
+              aria-controls="fd-main-nav"
             >
               {menuOpen ? <i className="ri-close-line" /> : <i className="ri-menu-line" />}
               Menu
             </button>
-            <div className={`ep-nav-wrapper ${menuOpen ? "ep-nav-open" : ""}`} id="ep-main-nav">
+            <div className={`fd-nav-wrapper ${menuOpen ? "fd-nav-open" : ""}`} id="fd-main-nav">
               <Nav aria-label="Main navigation">
                 <Link current={is("/fundings/home")} href="/fundings/home">
                   <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />

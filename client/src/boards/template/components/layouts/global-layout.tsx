@@ -5,7 +5,7 @@ import { Button, Header, Logo, Service, FastAccess, Container, Nav, Link } from 
 import Footer from "./footer";
 import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
-// import "../styles.scss";
+import "../styles.scss";
 
 export default function GlobalLayout({ languageSelector = false }) {
   const { pathname } = useLocation();
@@ -96,19 +96,19 @@ export default function GlobalLayout({ languageSelector = false }) {
           )}
         </FastAccess>
       </Header>
-      <div className="ep-main-menu">
+      <div className="tm-main-menu">
         <Container>
           <div className="actions">
             <button
-              className="ep-menu-toggle fr-btn fr-btn--tertiary"
+              className="tm-menu-toggle fr-btn fr-btn--tertiary"
               onClick={() => setMenuOpen(!menuOpen)}
               aria-expanded={menuOpen}
-              aria-controls="ep-main-nav"
+              aria-controls="tm-main-nav"
             >
               {menuOpen ? <i className="ri-close-line" /> : <i className="ri-menu-line" />}
               Menu
             </button>
-            <div className={`ep-nav-wrapper ${menuOpen ? "ep-nav-open" : ""}`} id="ep-main-nav">
+            <div className={`tm-nav-wrapper ${menuOpen ? "tm-nav-open" : ""}`} id="tm-main-nav">
               <Nav aria-label="Main navigation">
                 <Link current={is("/template/home")} href="/template/home">
                   <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
