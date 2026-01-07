@@ -1,0 +1,25 @@
+// Fix pour que les blocs de code ne débordent pas
+.fr-callout {
+  code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    display: inline-block;
+    max-width: 100%;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow-x: auto;
+    max-width: 100%;
+
+    code {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      display: block;
+    }
+  }
+}

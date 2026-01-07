@@ -1,6 +1,12 @@
 .padded-sidemenu {
+  margin-top: 1rem;
   .fr-sidemenu__inner {
     box-shadow: inset 0 0 0 0;
+  }
+  
+  a {
+    display: block;
+    margin-bottom: 1rem;
   }
 }
 .padded-sidemenu .fr-sidemenu__inner {
