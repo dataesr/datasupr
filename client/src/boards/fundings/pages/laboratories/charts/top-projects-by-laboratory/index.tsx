@@ -63,7 +63,7 @@ export default function TopProjectsByLaboratory() {
   const series: { color: string, name: string, type: string, y: number }[] = (data?.hits?.hits ?? []).map(
     (hit) => ({
       color: getColorFromFunder(hit._source.type),
-      name: hit._source.label?.fr ?? hit._source.label?.en,
+      name: hit._source.label?.default ?? hit._source.label?.fr ?? hit._source.label?.en,
       type: hit._source.type,
       y: hit._source.budgetTotal,
     })
