@@ -1,14 +1,89 @@
-.padded-sidemenu {
-  margin-top: 1rem;
-  .fr-sidemenu__inner {
-    box-shadow: inset 0 0 0 0;
+.sidemenu {
+  --li-bottom: 0;
+  --ol-content: none;
+  --ol-start: 0;
+  --ol-type: none;
+  --text-spacing: 0;
+  --title-spacing: 0;
+  --ul-start: 0;
+  --ul-type: none;
+  --underline-img: none;
+  --xl-block: 0;
+  box-shadow: inset -1px 0 0 0 var(--border-default-grey);
+  display: block;
+  height: 100%;
+  margin-left: -1rem;
+  margin-right: -1rem;
+  overflow: auto;
+  padding-top: 0.5rem;
+  padding: 0 1.5rem 0 0;
+  position: relative;
+  unicode-bidi: isolate;
+
+  &.sticky {
+    height: 100vh;
+    position: sticky;
+    top: 0;
+
+    > div {
+      height: 100%;
+      overflow: auto;
+      padding-top: 3rem;
+    }
   }
-  
-  a {
-    display: block;
-    margin-bottom: 1rem;
+
+  ul {
+    --xl-size: var(--xl-base);
+    font-weight: 700;
+    list-style: none;
+    margin: 0;
+    margin-block-end: var(--xl-block);
+    margin-block-start: var(--xl-block);
+    padding: 0;
+    padding-inline-start: var(--ul-start);
+    padding-left: 0;
+
+    li {
+      --xl-base: calc(var(--xl-size) * 0.9);
+      display: list-item;
+      font-weight: 700;
+      padding-bottom: var(--li-bottom);
+      position: relative;
+      unicode-bidi: isolate;
+
+      a {
+        --active-tint: var(--active);
+        --hover-tint: var(--hover);
+        align-items: center;
+        color: var(--text-action-high-grey);
+        display: flex;
+        flex-direction: row;
+        font-size: 1rem;
+        font-weight: 700;
+        line-height: 1.5rem;
+        margin: 0;
+        padding: 0.75rem 1rem;
+        position: relative;
+        text-align: left;
+        width: 100%;
+
+        &.selected {
+          color: var(--text-active-blue-france);
+
+          &::before {
+            --active: var(--border-active-blue-france-active);
+            --hover: var(--border-active-blue-france-hover);
+            --idle: transparent;
+            background-color: var(--border-active-blue-france);
+            bottom: 0.75rem;
+            content: "";
+            left: 0;
+            position: absolute;
+            top: 0.75rem;
+            width: 2px;
+          }
+        }
+      }
+    }
   }
-}
-.padded-sidemenu .fr-sidemenu__inner {
-    padding-top: 0 !important;
 }

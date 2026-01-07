@@ -9,7 +9,7 @@ export default function SidemenuLayout() {
         <Col xs={12} md={3}>
           <CustomSideMenu />
         </Col>
-        <Col xs={12} md={9}>
+        <Col xs={12} md={9} style={{ paddingLeft: "2rem" }}>
           <Outlet />
         </Col>
       </Row>
