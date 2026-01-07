@@ -30,6 +30,7 @@ export const chartsRegistry = {
   efficiencyScatter: lazy(() => import("../european-projects/pages/evolution-pcri/charts/efficiency-scatter")),
 
   // Fundings
+  frenchPartnersByLaboratory: lazy(() => import("../fundings/pages/laboratories/charts/french-partners-by-laboratory")),
   frenchPartnersByStructure: lazy(() => import("../fundings/pages/structures/charts/french-partners-by-structure")),
   fundedLabs: lazy(() => import("../fundings/pages/national/charts/funded-labs")),
   fundedLabsBudget: lazy(() => import("../fundings/pages/national/charts/funded-labs-budget")),
@@ -37,6 +38,7 @@ export const chartsRegistry = {
   fundedStructuresBudget: lazy(() => import("../fundings/pages/national/charts/funded-structures-budget")),
   fundedStructuresEurope: lazy(() => import("../fundings/pages/national/charts/funded-structures-europe")),
   fundedStructuresEuropeBudget: lazy(() => import("../fundings/pages/national/charts/funded-structures-europe-budget")),
+  internationalPartnersByLaboratory: lazy(() => import("../fundings/pages/laboratories/charts/international-partners-by-laboratory")),
   internationalPartnersByStructure: lazy(() => import("../fundings/pages/structures/charts/international-partners-by-structure")),
   participationsOverTime: lazy(() => import("../fundings/pages/national/charts/participations-over-time")),
   participationsOverTimeBudget: lazy(() => import("../fundings/pages/national/charts/participations-over-time-budget")),

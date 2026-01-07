@@ -30,12 +30,12 @@ export default function SidemenuStructures() {
                 </li>
                 <li>
                   <a href="#french-partners-by-structure" className={`${location.hash === "#french-partners-by-structure" ? "selected" : ""}`}>
-                    Partenaires français, institutionnels et actifs
+                    Partenaires français
                   </a>
                 </li>
                 <li>
                   <a href="#international-partners-by-structure" className={`${location.hash === "#international-partners-by-structure" ? "selected" : ""}`}>
-                    Partenaires internationaux, institutionnels et actifs
+                    Partenaires internationaux
                   </a>
                 </li>
               </ul>

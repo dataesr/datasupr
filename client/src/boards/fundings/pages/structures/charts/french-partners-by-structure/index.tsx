@@ -6,7 +6,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector.tsx";
-import { getGeneralOptions } from "../../../../utils.ts";
+import { getGeneralOptions, getLabelFromGps, getLabelFromName } from "../../../../utils.ts";
 import StructuresSelector from "../../components/structuresSelector.tsx";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -60,18 +60,10 @@ export default function FrenchPartnersByStructure() {
       }
     },
     aggs: {
-      by_lat: {
+      by_gps: {
         terms: {
-          field: "address.gps.lat",
-          size: 1000
-        },
-        aggs: {
-          by_lon: {
-            terms: {
-              field: "address.gps.lon",
-              size: 1000
-            }
-          }
+          field: "address.gps_id_name.keyword",
+          size: 10000
         }
       }
     }
@@ -92,15 +84,13 @@ export default function FrenchPartnersByStructure() {
 
   if (isLoadingTopology || !mapData || isLoadingPartners || !dataPartners) return <DefaultSkeleton />;
 
-  const data = dataPartners.aggregations?.by_lat?.buckets
-    .map((lat) =>
-      lat.by_lon.buckets.map((lon) => ({
-        lat: lat.key,
-        lon: lon.key,
-        z: lon.doc_count,
-      }))
-    )
-    .flat();
+  const data = dataPartners.aggregations?.by_gps?.buckets
+  .map((bucket) => ({
+    lat: parseInt(bucket.key.split("_")[0]),
+    lon: parseInt(bucket.key.split("_")[1]),
+    name: getLabelFromGps(bucket.key),
+    z: bucket.doc_count,
+  }));
 
   const config = {
     id: "frenchPartnersByStructure",
@@ -119,10 +109,10 @@ export default function FrenchPartnersByStructure() {
       }, {
         type: 'mapbubble',
         mapData,
-        name: 'Nombre de participations communes',
+        name: 'Nombre de projets communs',
         data,
         tooltip: {
-          pointFormat: '{point.z} participation(s)'
+          pointFormat: `<b>${getLabelFromName(selectedStructureId)}</b> et <b>{point.name}</b> ont collaboré sur <b>{point.z} projet(s)</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
         }
       }
     ],
@@ -132,7 +122,7 @@ export default function FrenchPartnersByStructure() {
   return (
     <div className={`chart-container chart-container--${color}`} id="french-partners-by-structure">
       <Title as="h3" look="h6">
-        {`Nombre de participations par région sur la période ${selectedYearStart}-${selectedYearEnd}`}
+        {`Partenaires français de la structure ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`}
       </Title>
       <StructuresSelector
         selectedStructureId={selectedStructureId}

@@ -7,20 +7,20 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector.tsx";
 import { getGeneralOptions, getLabelFromGps, getLabelFromName } from "../../../../utils.ts";
-import StructuresSelector from "../../components/structuresSelector.tsx";
+import LaboratoriesSelector from "../../components/laboratoriesSelector";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function InternationalPartnersByStructure() {
-  const [selectedStructureId, setSelectedStructureId] = useState<string>("180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research");
+export default function FrenchPartnersByLaboratory() {
+  const [selectedLaboratoryId, setSelectedLaboratoryId] = useState<string>("200610854B###FR_Observatoire de Paris - PSL");
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
   const color = useChartColor();
 
   const { data: mapData, isLoading: isLoadingTopology } = useQuery({
-    queryKey: ['topo-world'],
-    queryFn: () => fetch('https://code.highcharts.com/mapdata/custom/world.topo.json').then((response) => response.json()),
+    queryKey: ['topo-fr'],
+    queryFn: () => fetch('https://code.highcharts.com/mapdata/countries/fr/fr-all.topo.json').then((response) => response.json()),
   });
 
   const body = {
@@ -38,7 +38,7 @@ export default function InternationalPartnersByStructure() {
           },
           {
             term: {
-              participant_isFrench: false
+              participant_isFrench: true
             }
           },
           {
@@ -48,12 +48,12 @@ export default function InternationalPartnersByStructure() {
           },
           {
             term: {
-              participant_type: "institution",
+              participant_type: "laboratory",
             }
           },
           {
             term: {
-              "co_partners_fr_inst.keyword": selectedStructureId
+              "co_partners_fr_labs.keyword": selectedLaboratoryId
             }
           }
         ]
@@ -70,7 +70,7 @@ export default function InternationalPartnersByStructure() {
   }
 
   const { data: dataPartners, isLoading: isLoadingPartners } = useQuery({
-    queryKey: ['fundings-international-partners', selectedStructureId, selectedYearEnd, selectedYearStart],
+    queryKey: ['fundings-french-partners', selectedLaboratoryId, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -88,13 +88,13 @@ export default function InternationalPartnersByStructure() {
     .map((bucket) => ({
       lat: parseInt(bucket.key.split("_")[0]),
       lon: parseInt(bucket.key.split("_")[1]),
-    name: getLabelFromGps(bucket.key),
+      name: getLabelFromGps(bucket.key),
       z: bucket.doc_count,
     }));
 
   const config = {
-    id: "internationalPartnersByStructure",
-    integrationURL: "/integration?chart_id=internationalPartnersByStructure",
+    id: "frenchPartnersByLaboratory",
+    integrationURL: "/integration?chart_id=frenchPartnersByLaboratory",
   };
 
   const options = {
@@ -112,7 +112,7 @@ export default function InternationalPartnersByStructure() {
         name: 'Nombre de projets communs',
         data,
         tooltip: {
-          pointFormat: `<b>${getLabelFromName(selectedStructureId)}</b> et <b>{point.name}</b> ont collaboré sur <b>{point.z} projet(s)</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
+          pointFormat: `<b>${getLabelFromName(selectedLaboratoryId)}</b> et <b>{point.name}</b> ont collaboré sur <b>{point.z} projet(s)</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
         }
       }
     ],
@@ -120,13 +120,13 @@ export default function InternationalPartnersByStructure() {
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="international-partners-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="french-partners-by-laboratory">
       <Title as="h3" look="h6">
-        {`Partenaires internationaux de la structure ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`}
+        {`Partenaires français du laboratoire ${getLabelFromName(selectedLaboratoryId)} sur la période ${selectedYearStart}-${selectedYearEnd}`}
       </Title>
-      <StructuresSelector
-        selectedStructureId={selectedStructureId}
-        setSelectedStructureId={setSelectedStructureId}
+      <LaboratoriesSelector
+        selectedLaboratoryId={selectedLaboratoryId}
+        setSelectedLaboratoryId={setSelectedLaboratoryId}
       />
       <YearsSelector
         selectedYearEnd={selectedYearEnd}

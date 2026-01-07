@@ -61,6 +61,13 @@ const getGeneralOptions = (title: string, categories: any[], title_x_axis: strin
   };
 }
 
+const getLabelFromGps = (label: string) => {
+  const allNames = label.toString().split('###')[1].split('|||').map((item) => ({
+    label: item.split('_')[1],
+    lang: item.split('_')[0]?.toLowerCase(),
+  }));
+  return allNames.find((item) => item.lang === 'fr')?.label ?? allNames.find((item) => item.lang === 'en')?.label;
+}
 const getLabelFromName = (label: string | number) => label.toString().split('_')[1].split('|')[0];
 
 export {
@@ -69,6 +76,7 @@ export {
   getCategoriesAndSeriesBudget,
   getColorFromFunder,
   getGeneralOptions,
+  getLabelFromGps,
   getLabelFromName,
   sortedFunders,
 };

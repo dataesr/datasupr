@@ -28,6 +28,16 @@ export default function SidemenuLaboratories() {
                     Nombre de participations de laboratoires par région
                   </a>
                 </li>
+                <li>
+                  <a href="#french-partners-by-laboratory" className={`${location.hash === "#french-partners-by-laboratory" ? "selected" : ""}`}>
+                    Partenaires français
+                  </a>
+                </li>
+                <li>
+                  <a href="#international-partners-by-laboratory" className={`${location.hash === "#international-partners-by-laboratory" ? "selected" : ""}`}>
+                    Partenaires internationaux
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
