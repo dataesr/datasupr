@@ -87,8 +87,8 @@ export default function TopFundersByLaboratory() {
       unique_projects: any; key: string; doc_count: number;
     }) => ({
       color: getColorFromFunder(item.key),
+      data: [item.unique_projects.value],
       name: item.key,
-      y: item.unique_projects.value,
     })
   );
 
@@ -99,11 +99,31 @@ export default function TopFundersByLaboratory() {
   };
 
   const options: object = {
-    ...getGeneralOptions('', categories, '', 'Nombre de projets financés'),
-    legend: { enabled: false },
-    series: [{ data: series }],
+    ...getGeneralOptions("", categories, "Financeurs", "Nombre de projets financés"),
+    legend: {
+      align: "center",
+      enabled: true,
+      layout: "horizontal",
+      reversed: false,
+      verticalAlign: "bottom",
+    },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true,
+          format: "{series.name}",
+        },
+        stacking: undefined,
+      },
+    },
+    series,
     tooltip: {
-      format: `<b>{point.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(selectedLaboratoryId)}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
+      format: `<b>{series.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(selectedLaboratoryId)}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
+    },
+    xAxis: {
+      categories,
+      labels: { enabled: false },
+      title: { text: "Financeurs" },
     },
   }
 
@@ -121,30 +141,7 @@ export default function TopFundersByLaboratory() {
       />
       <ChartWrapper
         config={config}
-        legend={
-          <ul className="legend">
-            {categories.map((category) => (
-              <li
-                key={category}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "5px",
-                }}
-              >
-                <div
-                  style={{
-                    background: sortedFunders?.[category.toLowerCase()] ?? '#00ff00',
-                    height: "20px",
-                    marginRight: "10px",
-                    width: "20px"
-                  }}
-                ></div>
-                <span>{category}</span>
-              </li>
-            ))}
-          </ul>
-        }
+        legend={null}
         options={options}
       />
     </div>
