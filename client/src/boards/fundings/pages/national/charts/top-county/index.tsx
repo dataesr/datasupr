@@ -1,8 +1,8 @@
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
 import { useState } from "react";
 
+import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector.tsx";
@@ -70,20 +70,25 @@ export default function TopCounty() {
     return [county_id, bucket.doc_count]
   });
 
+  const config = {
+    id: "topCounty",
+    integrationURL: "/integration?chart_id=topCounty",
+  };
+
   const options = {
     ...getGeneralOptions('', [], '', ''),
     chart: { backgroundColor: 'transparent', margin: 0 },
     colorAxis: {
         dataClasses: [
-            { from: 0, to: 100*nbYears, color: '#f2f2f2' },
-            { from: 100*nbYears, to: 300*nbYears, color: '#dbe4ee' },
-            { from: 300*nbYears, to: 1000*nbYears, color: '#9ebcda' },
-            { from: 1000*nbYears, to: 3000*nbYears, color: '#f2b8a2' },
-            { from: 3000*nbYears, color: '#e07a5f' }
+            { from: 0, to: 100 * nbYears, color: '#f2f2f2' },
+            { from: 100 * nbYears, to: 300 * nbYears, color: '#dbe4ee' },
+            { from: 300 * nbYears, to: 1000 * nbYears, color: '#9ebcda' },
+            { from: 1000 * nbYears, to: 3000 * nbYears, color: '#f2b8a2' },
+            { from: 3000 * nbYears, color: '#e07a5f' }
         ]
     },
     legend: { align: 'right', layout: 'vertical' },
-    mapView: { padding: [50, 0, 30, 0] },
+    mapView: { padding: [20, 0, 0, 0] },
     plotOptions: { map: { states: { hover: { borderColor: '#1e2538' } } } },
     series: [
       {
@@ -92,10 +97,7 @@ export default function TopCounty() {
         name: topology.title || 'Map'
       }
     ],
-    title: {
-      style: { color: 'black' },
-      text: `Nombre de participations par région sur la période ${selectedYearStart}-${selectedYearEnd}`
-    },
+    title: { text: "" },
     tooltip: {
       format: `La région <b>{point.name}</b> a participé à {point.value} projets sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
     }
@@ -103,17 +105,20 @@ export default function TopCounty() {
 
   return (
     <div className={`chart-container chart-container--${color}`} id="top-county">
+      <Title as="h3" look="h6">
+        {`Nombre de participations par région sur la période ${selectedYearStart}-${selectedYearEnd}`}
+      </Title>
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      {/* TODO: use  normal chartWrapper */}
-      <HighchartsReact
-        highcharts={Highcharts}
+      <ChartWrapper
+        config={config}
+        constructorType="mapChart"
+        legend={null}
         options={options}
-        constructorType={"mapChart"}
       />
     </div>
   );

@@ -1,8 +1,8 @@
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
 import { useState } from "react";
 
+import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector.tsx";
@@ -102,11 +102,16 @@ export default function InternationalPartnersByStructure() {
     )
     .flat();
 
+  const config = {
+    id: "internationalPartnersByStructure",
+    integrationURL: "/integration?chart_id=internationalPartnersByStructure",
+  };
+
   const options = {
     ...getGeneralOptions('', [], '', ''),
     chart: { backgroundColor: 'transparent', margin: 0 },
     legend: { enabled: false },
-    mapView: { padding: [50, 0, 0, 0] },
+    mapView: { padding: [20, 0, 0, 0] },
     series: [
       {
         name: mapData.title || 'France',
@@ -121,14 +126,14 @@ export default function InternationalPartnersByStructure() {
         }
       }
     ],
-    title: {
-      style: { color: '#ffffff' },
-      text: `Partenaires internationaux, insitutionnels et actifs sur la période ${selectedYearStart}-${selectedYearEnd}`
-    }
+    title: { text: "" }
   };
 
   return (
     <div className={`chart-container chart-container--${color}`} id="international-partners-by-structure">
+      <Title as="h3" look="h6">
+        {`Nombre de participations par région sur la période ${selectedYearStart}-${selectedYearEnd}`}
+      </Title>
       <StructuresSelector
         selectedStructureId={selectedStructureId}
         setSelectedStructureId={setSelectedStructureId}
@@ -139,10 +144,11 @@ export default function InternationalPartnersByStructure() {
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      <HighchartsReact
-        highcharts={Highcharts}
+      <ChartWrapper
+        config={config}
+        constructorType="mapChart"
+        legend={null}
         options={options}
-        constructorType={"mapChart"}
       />
     </div>
   );

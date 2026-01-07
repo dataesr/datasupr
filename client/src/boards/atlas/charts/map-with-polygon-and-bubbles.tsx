@@ -19,10 +19,6 @@ export default function MapWithPolygonAndBubbles({
   mapbubbleData: MapBubbleDataProps;
   polygonsData: PolygonsDataProps;
 }) {
-  console.log("polygonsData");
-  console.log(polygonsData);
-  console.log("mapbubbleData");
-  console.log(mapbubbleData);
   const [searchParams] = useSearchParams();
   const geoId = searchParams.get("geo_id") || "";
   

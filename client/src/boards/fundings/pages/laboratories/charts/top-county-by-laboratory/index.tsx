@@ -1,8 +1,8 @@
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import Highcharts from "highcharts";
-import HighchartsReact from "highcharts-react-official";
 import { useState } from "react";
 
+import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getGeneralOptions, getLabelFromName } from "../../../../utils";
@@ -77,12 +77,17 @@ export default function TopCountyByLaboratory() {
     return [county_id, bucket.doc_count]
   });
 
+  const config = {
+    id: "topCountyByLaboratory",
+    integrationURL: "/integration?chart_id=topCountyByLaboratory",
+  };
+
   const options = {
     ...getGeneralOptions('', [], '', ''),
     chart: { backgroundColor: 'transparent', margin: 0 },
     colorAxis: { maxColor: '#4ba5a6', minColor: '#ffffff' },
     legend: { align: 'right', layout: 'vertical' },
-    mapView: { padding: [50, 0, 30, 0] },
+    mapView: { padding: [20, 0, 0, 0] },
     plotOptions: { map: { states: { hover: { borderColor: '#1e2538' } } } },
     series: [
       {
@@ -91,10 +96,7 @@ export default function TopCountyByLaboratory() {
         name: topology.title || 'Map'
       }
     ],
-    title: {
-      style: { color: '#ffffff' },
-      text: `Nombre de participations pour ${getLabelFromName(selectedLaboratoryId)} par région sur la période ${selectedYearStart}-${selectedYearEnd}`
-    },
+    title: { text: "" },
     tooltip: {
       format: `Le laboratoire <b>${getLabelFromName(selectedLaboratoryId)}</b> a participé à <b>{point.value}</b> projets en région <b>{point.name}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
     }
@@ -102,6 +104,9 @@ export default function TopCountyByLaboratory() {
 
   return (
     <div className={`chart-container chart-container--${color}`} id="top-county-by-laboratory">
+      <Title as="h3" look="h6">
+        {`Nombre de participations par région sur la période ${selectedYearStart}-${selectedYearEnd}`}
+      </Title>
       <LaboratoriesSelector
         selectedLaboratoryId={selectedLaboratoryId}
         setSelectedLaboratoryId={setSelectedLaboratoryId}
@@ -112,10 +117,11 @@ export default function TopCountyByLaboratory() {
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      <HighchartsReact
-        highcharts={Highcharts}
+      <ChartWrapper
+        config={config}
+        constructorType="mapChart"
+        legend={null}
         options={options}
-        constructorType={"mapChart"}
       />
     </div>
   );

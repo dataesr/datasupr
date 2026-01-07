@@ -82,8 +82,8 @@ export default function TopFundersByStructure() {
 
   const series = (data?.aggregations?.by_funder_type?.buckets ?? []).map((item: { unique_projects: any; key: string; doc_count: number }) => ({
     color: getColorFromFunder(item.key),
-    name: item.key,
     data: [item.unique_projects.value],
+    name: item.key,
   }));
   const categories = series.map((item: { name: any }) => item.name);
 
@@ -95,25 +95,20 @@ export default function TopFundersByStructure() {
 
   const options: object = {
     ...getGeneralOptions("", categories, "Financeurs", "Nombre de projets financés"),
-    xAxis: {
-      categories,
-      labels: { enabled: false },
-      title: { text: "Financeurs" },
-    },
     legend: {
-      enabled: true,
-      reversed: false,
-      layout: "horizontal",
       align: "center",
+      enabled: true,
+      layout: "horizontal",
+      reversed: false,
       verticalAlign: "bottom",
     },
     plotOptions: {
       series: {
-        stacking: undefined,
         dataLabels: {
           enabled: true,
           format: "{series.name}",
         },
+        stacking: undefined,
       },
     },
     series: series,
@@ -121,6 +116,11 @@ export default function TopFundersByStructure() {
       format: `<b>{series.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(
         selectedStructureId
       )}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
+    },
+    xAxis: {
+      categories,
+      labels: { enabled: false },
+      title: { text: "Financeurs" },
     },
   };
 

@@ -117,7 +117,12 @@ export default function TopCountyByStructure() {
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      <ChartWrapper config={config} options={options} legend={null} constructorType="mapChart" />
+      <ChartWrapper
+        config={config}
+        constructorType="mapChart"
+        legend={null}
+        options={options}
+      />
     </div>
   );
 }
