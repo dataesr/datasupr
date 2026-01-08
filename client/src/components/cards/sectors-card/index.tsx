@@ -76,7 +76,7 @@ export default function SectorsCard({ currentYear, values }: CardProps) {
   };
 
   return (
-    <figure style={{ height: "200px" }}>
+    <figure>
       <HighchartsReact highcharts={Highcharts} options={secteursOptions} />
     </figure>
   );

@@ -1,8 +1,13 @@
-import { Row, Col, Title, Badge } from "@dataesr/dsfr-plus";
+import { Row, Col, Title, Badge, Text } from "@dataesr/dsfr-plus";
 import Callout from "../../../../../../components/callout";
 import CopyButton from "../../../../../../components/copy-button";
 import CountrySelector from "../../../../../../components/country-selector/selector";
 import FieldsMainCard from "../../../../../../components/cards/fields-main-card";
+import GendersCard from "../../../../../../components/cards/genders-card";
+import GenericCard from "../../../../../../components/cards/generic-card";
+import SectorsCard from "../../../../../../components/cards/sectors-card";
+import StudentsCard from "../../../../../../components/cards/students-card";
+import StudentsCardWithTrend from "../../../../../../components/cards/students-card-with-trend";
 
 export default function Id4Components() {
   return (
@@ -94,16 +99,50 @@ export default function Id4Components() {
                 </code>
               </li>
               <li>
-                <Badge color="purple-glycine">FilieresList</Badge>&nbsp;: liste des filières avec recherche et filtrage.
+                <Badge color="purple-glycine">FilieresList</Badge>&nbsp;: liste des filières. Nécessite une annee universitaire dans l'URL
+                <br />
+                <code>{`<FilieresList />`}</code>
               </li>
               <li>
                 <Badge color="purple-glycine">Filters</Badge>&nbsp;: composant de filtrage des données.
               </li>
               <li>
                 <Badge color="purple-glycine">GendersCard</Badge>&nbsp;: carte d'affichage des statistiques par genre.
+                <br />
+                <GendersCard
+                  currentYear="2025-26"
+                  values={{
+                    labels: ["Masculin", "Féminin"],
+                    values: [30, 70],
+                  }}
+                />
+                <br />
+                <code>
+                  {`<GendersCard
+  currentYear="2025-26"
+  values={{
+    labels: ["label1", "label2"],
+    values: [300, 700],
+  }}
+/>`}
+                </code>
               </li>
               <li>
                 <Badge color="purple-glycine">GenericCard</Badge>&nbsp;: carte générique réutilisable.
+                <br />
+                <GenericCard
+                  description="Tableau de bord du personnel enseignant"
+                  title="Personnel enseignant"
+                  to="/personnel-enseignant?datasupr=true"
+                />
+                <br />
+                <code>
+                  {`<GenericCard
+  description="Tableau de bord du personnel enseignant"
+  title="Personnel enseignant"
+  to="/personnel-enseignant?datasupr=true"
+/>`}
+                </code>
               </li>
               <li>
                 <Badge color="purple-glycine">Map</Badge>&nbsp;: composant de carte géographique interactive.
@@ -122,12 +161,55 @@ export default function Id4Components() {
               </li>
               <li>
                 <Badge color="purple-glycine">SectorsCard</Badge>&nbsp;: carte d'affichage des statistiques par secteur.
+                <br />
+                <SectorsCard
+                  currentYear="2025-26"
+                  values={{
+                    labels: ["Public", "Privé"],
+                    values: [40, 60],
+                  }}
+                />
+                <br />
+                <code>
+                  {`<SectorsCard
+  currentYear="2025-26"
+  values={{
+    labels: ["Public", "Privé"],
+    values: [40, 60],
+  }}
+/>`}
+                </code>
               </li>
               <li>
                 <Badge color="purple-glycine">StudentsCard</Badge>&nbsp;: carte d'affichage des statistiques étudiantes.
+                <br />
+                <StudentsCard number="12000" descriptionNode={<Text size="sm">année universitaire 2025-26</Text>} />
+                <br />
+                <code>
+                  {`<StudentsCard
+  number="12000"
+  descriptionNode={<Text size="sm">année universitaire 2025-26</Text>}
+/>`}
+                </code>
               </li>
               <li>
                 <Badge color="purple-glycine">StudentsCardWithTrend</Badge>&nbsp;: carte d'affichage des statistiques étudiantes avec tendance.
+                <br />
+                <StudentsCardWithTrend
+                  descriptionNode={<Badge color="yellow-tournesol">2025-26</Badge>}
+                  number="1234"
+                  label="Effectifs étudiants"
+                  trendGraph={<>composant graph ici</>}
+                />
+                <br />
+                <code>
+                  {`<StudentsCardWithTrend
+  descriptionNode={<Badge color="yellow-tournesol">2025-26</Badge>}
+  number="1234"
+  label="Effectifs étudiants"
+  trendGraph={<>composant graph ici</>}
+/>`}
+                </code>
               </li>
               <li>
                 <Badge color="purple-glycine">SwitchTheme</Badge>&nbsp;: composant de changement de thème (clair/sombre).
