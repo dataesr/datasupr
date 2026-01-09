@@ -211,7 +211,14 @@ export default function BoardsSuggestComponent() {
     <aside className={`inline-suggest fr-mt-3w ${isExpanded ? "inline-suggest--expanded" : ""}`}>
       <Container fluid>
         <Row gutters>
-          <Col xs="12">
+          <Col xs="12" className="fr-pb-0">
+            <Title as="h5" look="h5" className="fr-mb-0">
+              datasupR
+            </Title>
+            <Text className="fr-mb-1w">
+              datasupR est un ensemble de tableaux de bord. Nous avons détecté que d'autres tableaux de bord pourraient vous intéresser en fonction
+              des paramètres que vous avez sélectionnés. Cliquez sur le bouton + pour voir les suggestions complètes.
+            </Text>
             <div className="inline-suggest__header" onClick={() => setIsExpanded(!isExpanded)}>
               <Title as="h6" look="h6" className="fr-mb-0">
                 💡 {suggestions.length} tableau{suggestions.length > 1 ? "x" : ""} de bord suggéré{suggestions.length > 1 ? "s" : ""}
@@ -223,7 +230,7 @@ export default function BoardsSuggestComponent() {
           </Col>
 
           {!isExpanded && (
-            <Col xs="12">
+            <Col xs="12" className="fr-pt-0">
               <div className="inline-suggest__quick-links">
                 {suggestions.map((suggestion, index) => {
                   const targetDashboard = dashboards?.find((dashboard) => dashboard.id === suggestion.boardId);
