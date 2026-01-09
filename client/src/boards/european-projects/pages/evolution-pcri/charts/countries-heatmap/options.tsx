@@ -143,7 +143,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
       reversed: true,
       labels: {
         formatter: function () {
-          const countryName = this.value as string;
+          const countryName = this?.value as string;
           const countryCode = filteredData.find((d) => d.country === countryName)?.countryCode;
           // Ajouter une icône flèche noire pour le pays sélectionné
           if (highlightCountryCode && countryCode === highlightCountryCode) {
@@ -190,7 +190,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
         const point = this.points as any;
         return `<b>${getI18nLabel("tooltip-country")}</b>: ${countries[point.y]}<br/>
                 <b>${getI18nLabel("tooltip-framework")}</b>: ${frameworkOrder[point.x]}<br/>
-                <b>${getI18nLabel("tooltip-share")}</b>: ${point.value?.toFixed(2)}%`;
+                <b>${getI18nLabel("tooltip-share")}</b>: ${point?.value?.toFixed(2)}%`;
       },
     },
     series: [
@@ -205,7 +205,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
           formatter: function () {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const point = this.points as any;
-            const value = point.value as number;
+            const value = point?.value as number;
 
             if (value > 0) {
               return `${value.toFixed(1)}%`;
