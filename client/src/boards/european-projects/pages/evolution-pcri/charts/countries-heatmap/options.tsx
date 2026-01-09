@@ -187,7 +187,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
     tooltip: {
       formatter: function () {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const point = this.points as any;
+        const point = this as any;
         return `<b>${getI18nLabel("tooltip-country")}</b>: ${countries[point.y]}<br/>
                 <b>${getI18nLabel("tooltip-framework")}</b>: ${frameworkOrder[point.x]}<br/>
                 <b>${getI18nLabel("tooltip-share")}</b>: ${point?.value?.toFixed(2)}%`;
@@ -204,7 +204,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
           color: "#000000",
           formatter: function () {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const point = this.points as any;
+            const point = this as any;
             const value = point?.value as number;
 
             if (value > 0) {
