@@ -11,6 +11,10 @@
     "fr": "Cookies",
     "en": "Cookies"
   },
+  "counties": {
+    "en": "By counties",
+    "fr": "Par région"
+  },
   "datasets": {
     "fr": "Jeux de données",
     "en": "Datasets"

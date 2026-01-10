@@ -2,10 +2,12 @@ import { Navigate, Route, Routes, useSearchParams } from "react-router-dom";
 
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
-import Home from "./pages/home/index.tsx";
+import Counties from "./pages/counties";
+import Home from "./pages/home";
 import SidemenuLaboratories from "./pages/laboratories/components/sidemenu";
 import Laboratories from "./pages/laboratories/index.tsx";
 import National from "./pages/national";
+import SidemenuCounties from "./pages/counties/components/sidemenu";
 import SidemenuNational from "./pages/national/components/sidemenu";
 import SidemenuStructures from "./pages/structures/components/sidemenu";
 import Structures from "./pages/structures/index.tsx";
@@ -29,6 +31,7 @@ const RouteWithTitle = ({ titleKey, element }) => {
   return element;
 };
 
+
 export default function FundingsRoutes() {
   return (
     <Routes>
@@ -43,6 +46,9 @@ export default function FundingsRoutes() {
         </Route>
         <Route element={<SidemenuLaboratories />}>
           <Route path="laboratories" element={<RouteWithTitle titleKey="laboratories" element={<Laboratories />} />} />
+        </Route>
+        <Route element={<SidemenuCounties />}>
+          <Route path="counties" element={<RouteWithTitle titleKey="counties" element={<Counties />} />} />
         </Route>
       </Route>
     </Routes>

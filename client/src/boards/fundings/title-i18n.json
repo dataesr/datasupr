@@ -1,4 +1,8 @@
 {
+  "counties": {
+    "en": "Fundings - By county",
+    "fr": "Financements - Par région"
+  },
   "home": {
     "en": "Fundings - Home",
     "fr": "Financements - Accueil"
