@@ -1,14 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils.ts";
+import LaboratoriesSelector from "../../components/laboratoriesSelector";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function ParticipationsOverTimeBudget() {
+export default function ParticipationsOverTimeBudgetByLaboratory() {
+  const [selectedLaboratoryId, setSelectedLaboratoryId] = useState<string>("200610854B###FR_Observatoire de Paris - PSL");
   const color = useChartColor();
   const startYear = 2011;
 
@@ -36,9 +39,9 @@ export default function ParticipationsOverTimeBudget() {
           },
           {
             term: {
-              participant_type: "institution"
-            }
-          }
+              "participant_id_name.keyword": selectedLaboratoryId,
+            },
+          },
         ]
       }
     },
@@ -76,7 +79,7 @@ export default function ParticipationsOverTimeBudget() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-participations-over-time-budget'],
+    queryKey: ['fundings-participations-over-time-budget-by-laboratory', selectedLaboratoryId],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -101,9 +104,9 @@ export default function ParticipationsOverTimeBudget() {
   }));
 
   const config = {
-    id: "participationsOverTimeBudget",
-    integrationURL: "/integration?chart_id=participationsOverTimeBudget",
-    title: `Montant total des projets par financeur sur la période ${years[0]}-${years[years.length - 1]}, par année de début du projet`,
+    id: "participationsOverTimeBudgetByLaboratory",
+    integrationURL: "/integration?chart_id=participationsOverTimeBudgetByLaboratory",
+    title: `Montant total des projets pour ${getLabelFromName(selectedLaboratoryId)} par financeur sur la période ${years[0]}-${years[years.length - 1]}, par année de début du projet`,
   };
 
   const options: object = {
@@ -135,7 +138,8 @@ export default function ParticipationsOverTimeBudget() {
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="participations-over-time-budget">
+    <div className={`chart-container chart-container--${color}`} id="participations-over-time-budget-by-laboratory">
+      <LaboratoriesSelector selectedLaboratoryId={selectedLaboratoryId} setSelectedLaboratoryId={setSelectedLaboratoryId} /> 
       <ChartWrapper
         config={config}
         legend={null}

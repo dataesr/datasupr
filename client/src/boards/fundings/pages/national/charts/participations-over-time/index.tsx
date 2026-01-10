@@ -11,6 +11,7 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 export default function ParticipationsOverTime() {
   const color = useChartColor();
   const startYear = 2011;
+
   const body = {
     size: 0,
     query: {

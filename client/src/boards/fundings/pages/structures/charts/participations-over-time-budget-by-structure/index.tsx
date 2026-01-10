@@ -1,14 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils.ts";
+import StructuresSelector from "../../components/structuresSelector";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function ParticipationsOverTimeBudget() {
+export default function ParticipationsOverTimeBudgetByStructure() {
+  const [selectedStructureId, setSelectedStructureId] = useState<string>(
+    "180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research"
+  );
   const color = useChartColor();
   const startYear = 2011;
 
@@ -36,9 +41,9 @@ export default function ParticipationsOverTimeBudget() {
           },
           {
             term: {
-              participant_type: "institution"
-            }
-          }
+              "participant_id_name.keyword": selectedStructureId,
+            },
+          },
         ]
       }
     },
@@ -76,7 +81,7 @@ export default function ParticipationsOverTimeBudget() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-participations-over-time-budget'],
+    queryKey: ['fundings-participations-over-time-budget-by-structure', selectedStructureId],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -101,9 +106,9 @@ export default function ParticipationsOverTimeBudget() {
   }));
 
   const config = {
-    id: "participationsOverTimeBudget",
-    integrationURL: "/integration?chart_id=participationsOverTimeBudget",
-    title: `Montant total des projets par financeur sur la période ${years[0]}-${years[years.length - 1]}, par année de début du projet`,
+    id: "participationsOverTimeBudgetByStructure",
+    integrationURL: "/integration?chart_id=participationsOverTimeBudgetByStructure",
+    title: `Montant total des projets pour ${getLabelFromName(selectedStructureId)} par financeur sur la période ${years[0]}-${years[years.length - 1]}, par année de début du projet`,
   };
 
   const options: object = {
@@ -135,7 +140,8 @@ export default function ParticipationsOverTimeBudget() {
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="participations-over-time-budget">
+    <div className={`chart-container chart-container--${color}`} id="participations-over-time-budget-by-structure">
+      <StructuresSelector selectedStructureId={selectedStructureId} setSelectedStructureId={setSelectedStructureId} /> 
       <ChartWrapper
         config={config}
         legend={null}

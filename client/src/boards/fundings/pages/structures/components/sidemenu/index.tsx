@@ -38,6 +38,16 @@ export default function SidemenuStructures() {
                     Partenaires internationaux
                   </a>
                 </li>
+                <li>
+                  <a href="#participations-over-time-by-structure" className={`${location.hash === "#participations-over-time-by-structure" ? "selected" : ""}`}>
+                    Nombre de projets par financeur par année de début du projet
+                  </a>
+                </li>
+                <li>
+                  <a href="#participations-over-time-budget-by-structure" className={`${location.hash === "#participations-over-time-budget-by-structure" ? "selected" : ""}`}>
+                    Montant total des projets par financeur par année de début du projet
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
