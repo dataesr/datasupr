@@ -18,25 +18,25 @@ export default function TabNavigation({
           aria-label="Analyses disponibles"
         >
           <TabButton
-            id="tab-scatter1"
+            id="tab-produits-vs-etudiants"
             label="Produits vs Effectifs d'étudiants"
-            isActive={activeTab === "scatter1"}
-            tabPanelId="tabpanel-scatter1"
-            onClick={() => onTabChange("scatter1")}
+            isActive={activeTab === "produits-vs-etudiants"}
+            tabPanelId="tabpanel-produits-vs-etudiants"
+            onClick={() => onTabChange("produits-vs-etudiants")}
           />
           <TabButton
-            id="tab-scatter2"
+            id="tab-scsp-vs-encadrement"
             label="SCSP vs Encadrement"
-            isActive={activeTab === "scatter2"}
-            tabPanelId="tabpanel-scatter2"
-            onClick={() => onTabChange("scatter2")}
+            isActive={activeTab === "scsp-vs-encadrement"}
+            tabPanelId="tabpanel-scsp-vs-encadrement"
+            onClick={() => onTabChange("scsp-vs-encadrement")}
           />
           <TabButton
-            id="tab-scatter3"
+            id="tab-scsp-vs-ressources-propres"
             label="SCSP vs Ressources propres"
-            isActive={activeTab === "scatter3"}
-            tabPanelId="tabpanel-scatter3"
-            onClick={() => onTabChange("scatter3")}
+            isActive={activeTab === "scsp-vs-ressources-propres"}
+            tabPanelId="tabpanel-scsp-vs-ressources-propres"
+            onClick={() => onTabChange("scsp-vs-ressources-propres")}
           />
           <TabButton
             id="tab-comparison"

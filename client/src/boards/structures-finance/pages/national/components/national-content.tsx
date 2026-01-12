@@ -17,7 +17,7 @@ export default function NationalContent() {
   const selectedType = searchParams.get("type") || "";
   const selectedTypologie = searchParams.get("typologie") || "";
   const selectedRegion = searchParams.get("region") || "";
-  const activeTab = searchParams.get("tab") || "scatter1";
+  const activeTab = searchParams.get("tab") || "produits-vs-etudiants";
 
   const { data: comparisonData, isLoading: isLoadingComparison } =
     useFinanceAdvancedComparison(
@@ -50,21 +50,21 @@ export default function NationalContent() {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "scatter1":
+      case "produits-vs-etudiants":
         return (
           <ProduitsEffectifsTab
             data={filteredItems}
             selectedYear={selectedYear}
           />
         );
-      case "scatter2":
+      case "scsp-vs-encadrement":
         return (
           <ScspEncadrementTab
             data={filteredItems}
             selectedYear={selectedYear}
           />
         );
-      case "scatter3":
+      case "scsp-vs-ressources-propres":
         return (
           <ScspRessourcesTab data={filteredItems} selectedYear={selectedYear} />
         );

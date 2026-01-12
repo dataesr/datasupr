@@ -22,9 +22,9 @@ export function ProduitsEffectifsTab({
 
   return (
     <section
-      id="tabpanel-scatter1"
+      id="tabpanel-produits-vs-etudiants"
       role="tabpanel"
-      aria-labelledby="tab-scatter1"
+      aria-labelledby="tab-produits-vs-etudiants"
       tabIndex={0}
       className="fr-mb-3w"
     >

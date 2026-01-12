@@ -22,9 +22,9 @@ export function ScspRessourcesTab({
 
   return (
     <section
-      id="tabpanel-scatter3"
+      id="tabpanel-scsp-vs-ressources-propres"
       role="tabpanel"
-      aria-labelledby="tab-scatter3"
+      aria-labelledby="tab-scsp-vs-ressources-propres"
       tabIndex={0}
       className="fr-mb-3w"
     >

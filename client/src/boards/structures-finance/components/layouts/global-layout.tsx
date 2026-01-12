@@ -1,5 +1,12 @@
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
-import { Button, Header, Logo, Service, FastAccess } from "@dataesr/dsfr-plus";
+import {
+  Button,
+  Header,
+  Logo,
+  Service,
+  FastAccess,
+  Container,
+} from "@dataesr/dsfr-plus";
 
 import Footer from "./footer";
 import SwitchTheme from "../../../../components/switch-theme";
@@ -12,13 +19,15 @@ export default function GlobalLayout() {
 
   if (!pathname) return null;
 
+  const isActive = (path: string) => pathname === path;
+
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
 
   return (
     <>
-      <Header className="fr-header--responsive">
+      <Header>
         <Logo text="Ministère|de l'Enseignement|supérieur,|de la Recherche|et de l'Espace" />
         <Service name="DataSupR" tagline={getI18nLabel("title")} />
         <FastAccess className="fr-btns-group--sm fr-btns-group--inline-sm">
@@ -64,14 +73,38 @@ export default function GlobalLayout() {
           </Button>
         </FastAccess>
       </Header>
-      {/* A CHANGER SI CA PUE */}
-      <style>{`
-        .fr-header .fr-container {
-          max-width: 100% !important;
-          padding-left: 1.5rem;
-          padding-right: 1.5rem;
-        }
-      `}</style>
+      <Container>
+        <nav className="fr-nav" role="navigation" aria-label="Menu principal">
+          <ul className="fr-nav__list">
+            <li className="fr-nav__item">
+              <a
+                className="fr-nav__link"
+                href="/structures-finance/etablissements"
+                target="_self"
+                aria-current={
+                  isActive("/structures-finance/etablissements")
+                    ? "page"
+                    : undefined
+                }
+              >
+                Etablissement
+              </a>
+            </li>
+            <li className="fr-nav__item">
+              <a
+                className="fr-nav__link"
+                href="/structures-finance/national"
+                target="_self"
+                aria-current={
+                  isActive("/structures-finance/national") ? "page" : undefined
+                }
+              >
+                Vue nationale
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </Container>
       <Outlet />
       <Footer />
       <SwitchTheme />

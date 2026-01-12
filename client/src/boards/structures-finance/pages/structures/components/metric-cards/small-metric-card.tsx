@@ -52,14 +52,16 @@ export function SmallMetricCard({
   const sparklinePath = sparklineData ? createSparklinePath(sparklineData) : "";
 
   const trend =
-    sparklineData && sparklineData.length >= 2
+    sparklineData && sparklineData.length >= 2 && sparklineData[0] !== 0
       ? ((sparklineData[sparklineData.length - 1] - sparklineData[0]) /
           sparklineData[0]) *
         100
       : null;
 
   const trendFormatted =
-    trend !== null ? `${trend > 0 ? "+" : ""}${trend.toFixed(1)}%` : null;
+    trend !== null && isFinite(trend)
+      ? `${trend > 0 ? "+" : ""}${trend.toFixed(1)}%`
+      : null;
 
   const gradientId = `gradient-small-${label.replace(
     /[^a-zA-Z0-9]/g,

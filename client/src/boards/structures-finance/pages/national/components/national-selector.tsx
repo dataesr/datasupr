@@ -1,6 +1,6 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import { DSFR_COLORS } from "../../../constants/colors";
 import { useFinanceYears, useFinanceAdvancedComparison } from "../../../api";
 import { useNationalFilters } from "../hooks/useNationalFilters";
@@ -9,6 +9,7 @@ export default function NationalSelector() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: yearsData } = useFinanceYears();
   const years = useMemo(() => yearsData?.years || [], [yearsData]);
+  const hasInitializedType = useRef(false);
 
   const yearFromUrl = searchParams.get("year") || "";
   const selectedYear = yearFromUrl || years[0] || "";
@@ -54,7 +55,8 @@ export default function NationalSelector() {
   }, [years, yearFromUrl, searchParams, setSearchParams]);
 
   useEffect(() => {
-    if (availableTypes.length && !selectedType) {
+    if (availableTypes.length && !selectedType && !hasInitializedType.current) {
+      hasInitializedType.current = true;
       const universiteType = availableTypes.find(
         (t) =>
           t.toLowerCase().includes("université") ||
@@ -65,7 +67,7 @@ export default function NationalSelector() {
       next.set("type", typeToSet);
       setSearchParams(next);
     }
-  }, [availableTypes, selectedType, searchParams, setSearchParams]);
+  }, [availableTypes, selectedType, setSearchParams]);
 
   const handleYearChange = (year: string) => {
     const next = new URLSearchParams(searchParams);
@@ -75,7 +77,11 @@ export default function NationalSelector() {
 
   const handleTypeChange = (type: string) => {
     const next = new URLSearchParams(searchParams);
-    next.set("type", type);
+    if (type) {
+      next.set("type", type);
+    } else {
+      next.delete("type");
+    }
     next.delete("typologie");
     next.delete("region");
     setSearchParams(next);

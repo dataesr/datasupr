@@ -22,9 +22,9 @@ export function ScspEncadrementTab({
 
   return (
     <section
-      id="tabpanel-scatter2"
+      id="tabpanel-scsp-vs-encadrement"
       role="tabpanel"
-      aria-labelledby="tab-scatter2"
+      aria-labelledby="tab-scsp-vs-encadrement"
       tabIndex={0}
       className="fr-mb-3w"
     >
