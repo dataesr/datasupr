@@ -121,6 +121,7 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
         $project: {
           _id: 0,
           etablissement_id_paysage_actuel: 1,
+          etablissement_lib: 1,
           etablissement_actuel_lib: 1,
           region: 1,
           type: 1,
