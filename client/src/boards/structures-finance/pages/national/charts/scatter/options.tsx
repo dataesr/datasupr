@@ -26,9 +26,7 @@ export const createScatterOptions = (
       }
 
       const etablissementName =
-        item.etablissement_lib ||
-        item.etablissement_actuel_lib ||
-        "Établissement inconnu";
+        item.etablissement_lib || "Établissement inconnu";
 
       regionGroups.get(region)!.push({
         x: item[config.xMetric],
@@ -41,14 +39,16 @@ export const createScatterOptions = (
     });
 
   const colors = CHART_COLORS.palette;
-  const series = Array.from(regionGroups.entries()).map(
-    ([region, items], index) => ({
+  const series = Array.from(regionGroups.entries())
+    .sort(([regionA], [regionB]) =>
+      regionA.localeCompare(regionB, "fr", { sensitivity: "base" })
+    )
+    .map(([region, items], index) => ({
       name: region,
       type: "bubble" as const,
       data: items,
       color: colors[index % colors.length],
-    })
-  );
+    }));
 
   return {
     chart: {
@@ -57,13 +57,7 @@ export const createScatterOptions = (
       backgroundColor: "transparent",
     },
     title: {
-      text: config.title,
-      align: "left",
-      style: {
-        fontSize: "18px",
-        fontWeight: "600",
-        color: "var(--text-title-grey)",
-      },
+      text: undefined,
     },
     accessibility: {
       enabled: true,
@@ -78,16 +72,9 @@ export const createScatterOptions = (
         style: {
           fontSize: "13px",
           fontWeight: "500",
-          color: "var(--text-default-grey)",
         },
       },
-      gridLineWidth: 1,
-      gridLineColor: "var(--border-default-grey)",
-      labels: {
-        style: {
-          color: "var(--text-default-grey)",
-        },
-      },
+      gridLineWidth: 0,
     },
     yAxis: {
       title: {
@@ -95,21 +82,12 @@ export const createScatterOptions = (
         style: {
           fontSize: "13px",
           fontWeight: "500",
-          color: "var(--text-default-grey)",
-        },
-      },
-      gridLineColor: "var(--border-default-grey)",
-      labels: {
-        style: {
-          color: "var(--text-default-grey)",
         },
       },
     },
     tooltip: {
       useHTML: true,
-      backgroundColor: "var(--background-default-grey)",
       borderWidth: 1,
-      borderColor: "var(--border-default-grey)",
       borderRadius: 8,
       shadow: false,
       formatter: function () {
@@ -151,16 +129,14 @@ export const createScatterOptions = (
       align: "right",
       verticalAlign: "middle",
       layout: "vertical",
-      itemStyle: {
-        fontSize: "11px",
-        color: "var(--text-default-grey)",
-      },
       title: {
         text: "Régions",
         style: {
-          fontWeight: "600",
-          fontSize: "12px",
+          color: "var(--text-default-grey)",
         },
+      },
+      itemStyle: {
+        color: "var(--text-default-grey)",
       },
       accessibility: {
         enabled: true,

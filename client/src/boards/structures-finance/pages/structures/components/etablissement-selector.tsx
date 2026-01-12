@@ -1,44 +1,103 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
+import { useSearchParams } from "react-router-dom";
+import { useMemo } from "react";
 import SearchableSelect from "../../../components/searchable-select";
 import { CHART_COLORS, DSFR_COLORS } from "../../../constants/colors";
+import { useStructuresFilters } from "../hooks/useStructuresFilters";
+import { useFinanceYears } from "../../../api";
 
-interface EtablissementSelectorProps {
-  availableTypes: string[];
-  selectedType: string;
-  onTypeChange: (type: string) => void;
+export default function EtablissementSelector() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: yearsData } = useFinanceYears();
+  const years = useMemo(() => yearsData?.years || [], [yearsData]);
 
-  availableRegions: string[];
-  selectedRegion: string;
-  onRegionChange: (region: string) => void;
+  const selectedYear = searchParams.get("year") || years[0] || "";
+  const selectedType = searchParams.get("type") || "tous";
+  const selectedRegion = searchParams.get("region") || "toutes";
+  const selectedTypologie = searchParams.get("typologie") || "toutes";
+  const selectedEtablissement = searchParams.get("structureId") || "";
 
-  availableTypologies: string[];
-  selectedTypologie: string;
-  onTypologieChange: (typologie: string) => void;
+  const {
+    availableTypes,
+    availableRegions,
+    availableTypologies,
+    filteredEtablissements,
+  } = useStructuresFilters({
+    selectedYear,
+    selectedType,
+    selectedRegion,
+    selectedTypologie,
+  });
 
-  etablissementOptions: Array<{
-    id: string;
-    label: string;
-    searchableText: string;
-    subtitle?: string;
-  }>;
-  selectedEtablissement: string;
-  onEtablissementChange: (id: string) => void;
-}
+  const etablissementOptions = useMemo(
+    () =>
+      filteredEtablissements
+        .map((etab: any) => {
+          const displayName =
+            etab.etablissement_actuel_lib || etab.etablissement_lib || etab.nom;
+          const searchText = [
+            displayName,
+            etab.etablissement_lib,
+            etab.etablissement_actuel_lib,
+            etab.nom,
+            etab.champ_recherche,
+            etab.etablissement_actuel_region || etab.region,
+          ]
+            .filter(Boolean)
+            .join(" ");
 
-export default function EtablissementSelector({
-  availableTypes,
-  selectedType,
-  onTypeChange,
-  availableRegions,
-  selectedRegion,
-  onRegionChange,
-  availableTypologies,
-  selectedTypologie,
-  onTypologieChange,
-  etablissementOptions,
-  selectedEtablissement,
-  onEtablissementChange,
-}: EtablissementSelectorProps) {
+          return {
+            id:
+              etab.etablissement_id_paysage ||
+              etab.etablissement_id_paysage_actuel ||
+              etab.id,
+            label: `${displayName}${
+              etab.etablissement_actuel_region || etab.region
+                ? ` — ${etab.etablissement_actuel_region || etab.region}`
+                : ""
+            }`,
+            searchableText: searchText,
+            subtitle: etab.champ_recherche,
+          };
+        })
+        .sort((a, b) => {
+          return a.label.localeCompare(b.label, "fr", { sensitivity: "base" });
+        }),
+    [filteredEtablissements]
+  );
+
+  const handleTypeChange = (type: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("type", type);
+    next.delete("typologie");
+    next.delete("region");
+    next.delete("structureId");
+    setSearchParams(next);
+  };
+
+  const handleRegionChange = (region: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("region", region);
+    next.delete("structureId");
+    setSearchParams(next);
+  };
+
+  const handleTypologieChange = (typologie: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("typologie", typologie);
+    next.delete("structureId");
+    setSearchParams(next);
+  };
+
+  const handleEtablissementChange = (structureId: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("structureId", structureId);
+    if (!searchParams.has("year") && years[0]) {
+      next.set("year", String(years[0]));
+    }
+    setSearchParams(next);
+  };
+
   return (
     <>
       <div
@@ -69,7 +128,7 @@ export default function EtablissementSelector({
               <select
                 className="fr-select"
                 value={selectedType}
-                onChange={(e) => onTypeChange(e.target.value)}
+                onChange={(e) => handleTypeChange(e.target.value)}
               >
                 <option value="tous">Tous les types</option>
                 {availableTypes.map((type) => (
@@ -88,7 +147,7 @@ export default function EtablissementSelector({
               <select
                 className="fr-select"
                 value={selectedTypologie}
-                onChange={(e) => onTypologieChange(e.target.value)}
+                onChange={(e) => handleTypologieChange(e.target.value)}
               >
                 <option value="toutes">Toutes les typologies</option>
                 {availableTypologies.map((typologie) => (
@@ -107,7 +166,7 @@ export default function EtablissementSelector({
               <select
                 className="fr-select"
                 value={selectedRegion}
-                onChange={(e) => onRegionChange(e.target.value)}
+                onChange={(e) => handleRegionChange(e.target.value)}
               >
                 <option value="toutes">Toutes les régions</option>
                 {availableRegions.map((region) => (
@@ -126,7 +185,7 @@ export default function EtablissementSelector({
               label="Établissement"
               options={etablissementOptions}
               value={selectedEtablissement}
-              onChange={onEtablissementChange}
+              onChange={handleEtablissementChange}
               placeholder="Rechercher un établissement..."
             />
           </Col>

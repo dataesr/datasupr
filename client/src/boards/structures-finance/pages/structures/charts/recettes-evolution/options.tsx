@@ -223,22 +223,16 @@ export const createRecettesEvolutionChartOptions = (
       title: {
         text: "Année d'exercice",
         style: {
-          color: "var(--text-default-grey)",
           fontWeight: "bold",
         },
       },
-      labels: {
-        style: {
-          color: "var(--text-default-grey)",
-        },
-      },
+      labels: {},
     },
     yAxis: {
       min: 0,
       title: {
         text: mode === "value" ? "Montant (€)" : "Pourcentage (%)",
         style: {
-          color: "var(--text-default-grey)",
           fontWeight: "bold",
         },
       },
@@ -249,15 +243,11 @@ export const createRecettesEvolutionChartOptions = (
           }
           return Highcharts.numberFormat(Number(this.value), 0, ",", " ");
         },
-        style: {
-          color: "var(--text-default-grey)",
-        },
       },
       stackLabels: {
         enabled: mode === "value",
         style: {
           fontWeight: "bold",
-          color: "var(--text-default-grey)",
         },
         formatter: function () {
           return Highcharts.numberFormat(this.total || 0, 0, ",", " ") + " €";
@@ -266,9 +256,7 @@ export const createRecettesEvolutionChartOptions = (
     },
     tooltip: {
       useHTML: true,
-      backgroundColor: "var(--background-default-grey)",
       borderWidth: 1,
-      borderColor: "var(--border-default-grey)",
       borderRadius: 8,
       shadow: false,
       formatter: function () {
@@ -341,7 +329,7 @@ export const createRecettesEvolutionChartOptions = (
       verticalAlign: "bottom",
       layout: "horizontal",
       itemStyle: {
-        fontSize: "12px",
+        color: "var(--text-default-grey)",
       },
     },
     credits: {

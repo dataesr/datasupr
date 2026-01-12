@@ -36,7 +36,6 @@ export const createComparisonBarOptions = (
       style: {
         fontSize: "18px",
         fontWeight: "600",
-        color: "var(--text-title-grey)",
       },
     },
     accessibility: {
@@ -67,14 +66,10 @@ export const createComparisonBarOptions = (
         style: {
           fontSize: "13px",
           fontWeight: "500",
-          color: "var(--text-default-grey)",
         },
       },
       labels: {
         overflow: "justify",
-        style: {
-          color: "var(--text-default-grey)",
-        },
         formatter: function () {
           if (config.format) {
             return config.format(this.value as number);
@@ -82,13 +77,10 @@ export const createComparisonBarOptions = (
           return String(this.value);
         },
       },
-      gridLineColor: "var(--border-default-grey)",
     },
     tooltip: {
       useHTML: true,
-      backgroundColor: "var(--background-default-grey)",
       borderWidth: 1,
-      borderColor: "var(--border-default-grey)",
       borderRadius: 8,
       shadow: false,
       formatter: function () {
@@ -123,7 +115,19 @@ export const createComparisonBarOptions = (
       },
     },
     legend: {
-      enabled: false,
+      enabled: true,
+      align: "right",
+      verticalAlign: "middle",
+      layout: "vertical",
+      title: {
+        text: "Régions",
+        style: {
+          color: "var(--text-default-grey)",
+        },
+      },
+      itemStyle: {
+        color: "var(--text-default-grey)",
+      },
     },
     credits: {
       enabled: false,

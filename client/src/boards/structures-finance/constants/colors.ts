@@ -89,7 +89,7 @@ export const CHART_COLORS = {
 
 export const METRIC_COLORS = {
   effectifs: DSFR_COLORS.blueCumulus,
-  effectifsLicence: DSFR_COLORS.blueCumulus850,
+  effectifsLicence: DSFR_COLORS.blueCumulus,
   effectifsMaster: DSFR_COLORS.pinkTuile,
   effectifsDoctorat: DSFR_COLORS.orangeTerreBattue,
 
@@ -116,18 +116,18 @@ export const METRIC_COLORS = {
 export const CARD_COLORS = {
   effectifs: {
     color: DSFR_COLORS.blueCumulus,
-    background: DSFR_COLORS.blueCumulus850,
+    background: DSFR_COLORS.blueCumulus,
   },
   finances: {
     color: DSFR_COLORS.greenArchipel,
-    background: DSFR_COLORS.greenArchipel850,
+    background: DSFR_COLORS.greenArchipel,
   },
   personnel: {
     color: DSFR_COLORS.pinkTuile,
-    background: DSFR_COLORS.pinkTuile850,
+    background: DSFR_COLORS.pinkTuile,
   },
   recherche: {
     color: DSFR_COLORS.purpleGlycine,
-    background: DSFR_COLORS.purpleGlycine850,
+    background: DSFR_COLORS.purpleGlycine,
   },
 } as const;

@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createScatterOptions, ScatterConfig } from "./options";
+import { RenderData } from "./render-data";
 
 interface ScatterChartProps {
   config: ScatterConfig;
@@ -14,7 +15,12 @@ export default function ScatterChart({ config, data }: ScatterChartProps) {
 
   const chartConfig = {
     id: `scatter-${config.xMetric}-${config.yMetric}`,
-    title: "",
+    title: {
+      className: "fr-mt-0w",
+      look: "h5" as const,
+      size: "h3" as const,
+      fr: config.title,
+    },
   };
 
   return (
@@ -22,7 +28,7 @@ export default function ScatterChart({ config, data }: ScatterChartProps) {
       config={chartConfig}
       options={chartOptions}
       legend={null}
-      hideTitle
+      renderData={() => <RenderData config={config} data={data} />}
     />
   );
 }

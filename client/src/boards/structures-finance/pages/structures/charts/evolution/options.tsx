@@ -78,7 +78,6 @@ export const createEvolutionChartOptions = (
                 return Highcharts.numberFormat(value, 0, ",", " ");
               },
             },
-            gridLineColor: "var(--border-default-grey)",
           },
           {
             title: {
@@ -117,14 +116,8 @@ export const createEvolutionChartOptions = (
               : selectedMetrics.length > 0
               ? metricsConfig[selectedMetrics[0]].label
               : "Valeur",
-            style: {
-              color: "var(--text-default-grey)",
-            },
           },
           labels: {
-            style: {
-              color: "var(--text-default-grey)",
-            },
             formatter: function (this: any) {
               const value = this.value as number;
               if (isBase100) {
@@ -146,7 +139,6 @@ export const createEvolutionChartOptions = (
               return Highcharts.numberFormat(value, 0, ",", " ");
             },
           },
-          gridLineColor: "var(--border-default-grey)",
         };
 
   return {
@@ -165,27 +157,20 @@ export const createEvolutionChartOptions = (
       categories: sortedData.map((item) => String(item.exercice)),
       title: {
         text: "Année",
-        style: {
-          color: "var(--text-default-grey)",
-        },
       },
       crosshair: true,
       labels: {
         style: {
           fontSize: "13px",
-          color: "var(--text-default-grey)",
         },
       },
       lineWidth: 1,
-      lineColor: "var(--border-default-grey)",
     },
     yAxis: yAxisConfig as any,
     tooltip: {
       shared: true,
       useHTML: true,
-      backgroundColor: "var(--background-default-grey)",
       borderWidth: 1,
-      borderColor: "var(--border-default-grey)",
       borderRadius: 8,
       shadow: false,
       formatter: function () {
@@ -227,7 +212,7 @@ export const createEvolutionChartOptions = (
                   " "
                 );
               }
-              valueStr += `<br/><span style="font-size:11px;color:var(--text-mention-grey)">${originalStr}</span>`;
+              valueStr += `<br/><span style="font-size:11px">${originalStr}</span>`;
             }
           } else {
             if (config?.format === "euro") {

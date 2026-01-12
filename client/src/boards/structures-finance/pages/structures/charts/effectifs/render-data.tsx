@@ -173,6 +173,12 @@ export function RenderDataDisciplines({ data }: RenderDataDisciplinesProps) {
       has: data.has_effectif_staps,
     },
     {
+      name: "Santé",
+      effectif: data.effectif_sans_cpge_sante || 0,
+      percentage: data.part_effectif_sans_cpge_sante || 0,
+      has: data.has_effectif_sante,
+    },
+    {
       name: "Vétérinaire",
       effectif: data.effectif_sans_cpge_veto || 0,
       percentage: data.part_effectif_sans_cpge_veto || 0,

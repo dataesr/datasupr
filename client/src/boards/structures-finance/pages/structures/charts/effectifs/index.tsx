@@ -48,6 +48,7 @@ export default function EffectifsChart({
       (data?.has_effectif_theo && data?.effectif_sans_cpge_theo > 0) ||
       (data?.has_effectif_si && data?.effectif_sans_cpge_si > 0) ||
       (data?.has_effectif_staps && data?.effectif_sans_cpge_staps > 0) ||
+      (data?.has_effectif_sante && data?.effectif_sans_cpge_sante > 0) ||
       (data?.has_effectif_veto && data?.effectif_sans_cpge_veto > 0) ||
       (data?.has_effectif_interd && data?.effectif_sans_cpge_interd > 0)
     );
@@ -94,6 +95,7 @@ export default function EffectifsChart({
             <>
               Répartition des effectifs par niveau
               {etablissementName && ` — ${etablissementName}`}
+              {selectedYear && ` — ${selectedYear}`}
             </>
           ),
         },
@@ -102,7 +104,10 @@ export default function EffectifsChart({
             <>
               Ce graphique présente la répartition des étudiants par niveau de
               formation (Licence, Master, Doctorat) pour l'exercice{" "}
-              {selectedYear}. Les données excluent les effectifs de CPGE.
+              {selectedYear}. Ces données ne prennent pas en compte les
+              étudiants inscrits en parallèle dans une classe préparatoire aux
+              grandes écoles et une prépa intégrées dans un autre
+              établissement..
             </>
           ),
         },
@@ -145,6 +150,7 @@ export default function EffectifsChart({
             <>
               Répartition par filières spécifiques
               {etablissementName && ` — ${etablissementName}`}
+              {selectedYear && ` — ${selectedYear}`}
             </>
           ),
         },
@@ -196,6 +202,7 @@ export default function EffectifsChart({
             <>
               Répartition par disciplines
               {etablissementName && ` — ${etablissementName}`}
+              {selectedYear && ` — ${selectedYear}`}
             </>
           ),
         },
@@ -210,23 +217,24 @@ export default function EffectifsChart({
           ),
         },
         readingKey: {
-          fr: (
-            <>
-              L'établissement propose{" "}
-              {
-                [
-                  data.has_effectif_dsa,
-                  data.has_effectif_llsh,
-                  data.has_effectif_theo,
-                  data.has_effectif_si,
-                  data.has_effectif_staps,
-                  data.has_effectif_veto,
-                  data.has_effectif_interd,
-                ].filter(Boolean).length
-              }{" "}
-              disciplines différentes.
-            </>
-          ),
+          fr: (() => {
+            const nbDisciplines = [
+              data.has_effectif_dsa,
+              data.has_effectif_llsh,
+              data.has_effectif_theo,
+              data.has_effectif_si,
+              data.has_effectif_staps,
+              data.has_effectif_veto,
+              data.has_effectif_interd,
+            ].filter(Boolean).length;
+            return (
+              <>
+                L'établissement propose {nbDisciplines} discipline
+                {nbDisciplines > 1 ? "s" : ""} différente
+                {nbDisciplines > 1 ? "s" : ""}.
+              </>
+            );
+          })(),
         },
         updateDate: new Date(),
         integrationURL: "/integration-url",

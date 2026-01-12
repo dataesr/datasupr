@@ -1,8 +1,4 @@
-// Styles responsive pour le module Structures Finance
-
-// Gestion du débordement sur mobile
 @media (max-width: 768px) {
-  // Empêcher le débordement horizontal
   .fr-container {
     overflow-x: hidden;
     max-width: 100%;
@@ -10,7 +6,6 @@
     padding-right: 1rem;
   }
 
-  // Adapter les onglets sur mobile - utiliser un scroll horizontal si nécessaire
   .fr-tabs__list {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
@@ -35,24 +30,20 @@
     white-space: nowrap;
   }
 
-  // Adapter les filtres sur mobile
   .fr-select-group {
     margin-bottom: 1rem;
   }
 
-  // Adapter les cartes sur mobile
   .fr-card {
     margin-bottom: 1rem;
   }
 
-  // Adapter les graphiques sur mobile
   .highcharts-container {
     width: 100% !important;
     height: auto !important;
     min-height: 300px;
   }
 
-  // Réduire le padding sur mobile
   .fr-p-3w {
     padding: 1rem !important;
   }
@@ -61,7 +52,6 @@
     padding: 0.75rem !important;
   }
 
-  // Adapter les titres sur mobile
   .fr-h4 {
     font-size: 1.25rem;
     line-height: 1.4;
@@ -77,7 +67,6 @@
     line-height: 1.4;
   }
 
-  // Réduire les marges sur mobile
   .fr-mb-3w {
     margin-bottom: 1rem !important;
   }
@@ -86,7 +75,6 @@
     margin-bottom: 0.75rem !important;
   }
 
-  // Améliorer l'affichage des Row avec gutters
   .fr-grid-row--gutters {
     margin-left: -0.5rem;
     margin-right: -0.5rem;
@@ -98,7 +86,6 @@
   }
 }
 
-// Amélioration du header sur mobile
 @media (max-width: 576px) {
   .fr-header__service-title {
     font-size: 1rem;
@@ -106,29 +93,25 @@
 
   .fr-header__service-tagline {
     font-size: 0.75rem;
-    display: none; // Masquer le tagline sur très petits écrans
+    display: none;
   }
 
-  // Masquer certains éléments sur très petits écrans
   .fr-logo {
     font-size: 0.65rem;
     line-height: 1.1;
   }
 
-  // Adapter le header pour qu'il ne déborde pas
   .fr-header {
     .fr-header__body {
       flex-wrap: wrap;
     }
   }
 
-  // Les boutons dans le FastAccess affichent seulement les icônes
   .fr-btns-group--inline-sm .fr-btn {
     padding: 0.5rem;
   }
 }
 
-// Amélioration de l'affichage tablette
 @media (min-width: 769px) and (max-width: 992px) {
   .fr-tabs__tab {
     font-size: 0.9rem;
@@ -141,7 +124,6 @@
   }
 }
 
-// Assurer que les graphiques sont responsive
 .chart-wrapper,
 figure[role="img"] {
   width: 100%;
@@ -153,7 +135,6 @@ figure[role="img"] {
   }
 }
 
-// Améliorer l'affichage des tableaux sur mobile
 @media (max-width: 768px) {
   table {
     display: block;
@@ -163,10 +144,9 @@ figure[role="img"] {
   }
 }
 
-// Sticky année selector - amélioration mobile
 .sticky-year-selector {
   @media (max-width: 768px) {
-    position: relative !important; // Désactiver sticky sur mobile
+    position: relative !important;
     top: auto !important;
     padding: 0.5rem !important;
     flex-direction: column;
@@ -184,7 +164,6 @@ figure[role="img"] {
   }
 }
 
-// Amélioration des badges sur mobile
 @media (max-width: 576px) {
   .fr-badge {
     font-size: 0.75rem;

@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createComparisonBarOptions } from "./options";
+import { RenderData } from "./render-data";
 
 interface ComparisonBarChartProps {
   data: any[];
@@ -88,7 +89,7 @@ const METRIC_OPTIONS: MetricOption[] = [
     format: (v) => `${(v / 1000000).toFixed(1)} M€`,
   },
   {
-    key: "ressources_propres_produits_encaissables",
+    key: "part_ressources_propres",
     label: "Part des ressources propres / produits encaissables",
     category: "Ratios",
     format: (v) => `${v.toFixed(1)}%`,
@@ -255,6 +256,15 @@ export default function ComparisonBarChart({ data }: ComparisonBarChartProps) {
           config={config}
           options={chartOptions}
           legend={null}
+          renderData={() => (
+            <RenderData
+              data={data}
+              metric={selectedMetric}
+              metricLabel={selectedMetricConfig.label}
+              topN={topN}
+              format={selectedMetricConfig.format}
+            />
+          )}
           hideTitle
         />
       )}

@@ -13,14 +13,13 @@ interface MetricCardProps {
   sparklineData?: number[];
 }
 
-function MetricCard({
+export function MetricCard({
   title,
   value,
   detail,
   color = CHART_COLORS.primary,
   sparklineData,
 }: MetricCardProps) {
-  // Créer un path SVG pour la sparkline
   const createSparklinePath = (data: number[]) => {
     if (!data || data.length < 2) return "";
 
@@ -39,15 +38,13 @@ function MetricCard({
       return { x, y };
     });
 
-    // Créer une courbe lisse avec des courbes de Bézier cubiques plus subtiles
     let path = `M ${points[0].x},${points[0].y}`;
 
     for (let i = 0; i < points.length - 1; i++) {
       const current = points[i];
       const next = points[i + 1];
 
-      // Points de contrôle plus proches pour des courbes plus douces
-      const tension = 0.3; // Facteur de tension (0 = ligne droite, 1 = très courbé)
+      const tension = 0.3;
       const cp1x = current.x + (next.x - current.x) * tension;
       const cp1y = current.y;
       const cp2x = next.x - (next.x - current.x) * tension;
@@ -61,7 +58,16 @@ function MetricCard({
 
   const sparklinePath = sparklineData ? createSparklinePath(sparklineData) : "";
 
-  // Créer un ID unique pour éviter les conflits
+  const trend =
+    sparklineData && sparklineData.length >= 2
+      ? ((sparklineData[sparklineData.length - 1] - sparklineData[0]) /
+          sparklineData[0]) *
+        100
+      : null;
+
+  const trendFormatted =
+    trend !== null ? `${trend > 0 ? "+" : ""}${trend.toFixed(1)}%` : null;
+
   const gradientId = `gradient-${title.replace(
     /[^a-zA-Z0-9]/g,
     "-"
@@ -145,6 +151,29 @@ function MetricCard({
             </p>
           )}
         </div>
+        {trendFormatted && (
+          <div
+            style={{
+              position: "absolute",
+              bottom: "0.5rem",
+              right: "0.5rem",
+              fontSize: "0.875rem",
+              fontWeight: 600,
+              color:
+                trend && trend > 0
+                  ? "var(--green-archipel-sun-391)"
+                  : trend && trend < 0
+                  ? "var(--pink-tuile-sun-425)"
+                  : "var(--text-mention-grey)",
+              display: "flex",
+              alignItems: "center",
+              gap: "3px",
+            }}
+          >
+            {trend && trend > 0 ? "↗" : trend && trend < 0 ? "↘" : "→"}
+            {trendFormatted}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -153,19 +182,22 @@ function MetricCard({
 interface MetricOverviewProps {
   data: any;
   evolutionData?: any[];
+  selectedYear?: string | number;
 }
 
 export default function MetricOverview({
   data,
   evolutionData,
+  selectedYear,
 }: MetricOverviewProps) {
   if (!data) return null;
 
-  // Extraire les données d'évolution pour chaque métrique
   const getEvolutionData = (metricKey: string) => {
     if (!evolutionData || evolutionData.length === 0) return undefined;
+    const yearNum = selectedYear ? Number(selectedYear) : null;
     return evolutionData
       .sort((a, b) => a.exercice - b.exercice)
+      .filter((item) => !yearNum || item.exercice <= yearNum)
       .map((item) => item[metricKey])
       .filter((val): val is number => val != null && !isNaN(val));
   };
@@ -256,7 +288,7 @@ export default function MetricOverview({
     {
       title: "Charges / Produits encaissables",
       value: pct(data.charges_de_personnel_produits_encaissables),
-      detail: "Part des charges dans les produits",
+      detail: "Part des charges de personnel dans les produits",
       color: CHART_COLORS.tertiary,
       sparklineData: getEvolutionData(
         "charges_de_personnel_produits_encaissables"

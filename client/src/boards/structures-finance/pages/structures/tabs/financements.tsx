@@ -1,12 +1,13 @@
 import { useFinanceEtablissementEvolution } from "../../../api";
-import MetricOverview from "../components/metric-overview";
+import MetricOverview from "../components/metric-cards/metric-card";
 import "./styles.scss";
 
 interface FinancementsTabProps {
   data: any;
+  selectedYear?: string | number;
 }
 
-export function FinancementsTab({ data }: FinancementsTabProps) {
+export function FinancementsTab({ data, selectedYear }: FinancementsTabProps) {
   const { data: evolutionData } = useFinanceEtablissementEvolution(
     data?.etablissement_id_paysage
   );
@@ -18,7 +19,11 @@ export function FinancementsTab({ data }: FinancementsTabProps) {
       aria-labelledby="tab-financements"
       className="fr-p-3w tab-container"
     >
-      <MetricOverview data={data} evolutionData={evolutionData} />
+      <MetricOverview
+        data={data}
+        evolutionData={evolutionData}
+        selectedYear={selectedYear}
+      />
     </div>
   );
 }

@@ -87,9 +87,7 @@ export const createEffectifsNiveauChartOptions = (
     },
     tooltip: {
       useHTML: true,
-      backgroundColor: "var(--background-default-grey)",
       borderWidth: 1,
-      borderColor: "var(--border-default-grey)",
       borderRadius: 8,
       shadow: false,
       formatter: function () {
@@ -129,6 +127,9 @@ export const createEffectifsNiveauChartOptions = (
       align: "right",
       verticalAlign: "middle",
       layout: "vertical",
+      itemStyle: {
+        color: "var(--text-default-grey)",
+      },
     },
     credits: {
       enabled: false,
@@ -212,17 +213,13 @@ export const createEffectifsSpecifiquesChartOptions = (
     },
     tooltip: {
       useHTML: true,
-      backgroundColor: "var(--background-default-grey)",
       borderWidth: 1,
-      borderColor: "var(--border-default-grey)",
       borderRadius: 8,
       shadow: false,
       formatter: function () {
         const point = this as any;
         return `<div style="padding:10px">
-                <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
-                  point.x
-                }</div>
+               
                 <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
                   point.y,
                   0,
@@ -308,6 +305,13 @@ export const createEffectifsDisciplinesChartOptions = (
       color: colors[6],
     },
     {
+      name: "Santé",
+      y: data.effectif_sans_cpge_sante || 0,
+      percentage: data.part_effectif_sans_cpge_sante || 0,
+      has: data.has_effectif_sante,
+      color: colors[7],
+    },
+    {
       name: "Vétérinaire",
       y: data.effectif_sans_cpge_veto || 0,
       percentage: data.part_effectif_sans_cpge_veto || 0,
@@ -337,9 +341,7 @@ export const createEffectifsDisciplinesChartOptions = (
     },
     tooltip: {
       useHTML: true,
-      backgroundColor: "var(--background-default-grey)",
       borderWidth: 1,
-      borderColor: "var(--border-default-grey)",
       borderRadius: 8,
       shadow: false,
       formatter: function () {
@@ -383,6 +385,9 @@ export const createEffectifsDisciplinesChartOptions = (
       align: "right",
       verticalAlign: "middle",
       layout: "vertical",
+      itemStyle: {
+        color: undefined,
+      },
     },
     credits: {
       enabled: false,

@@ -1,4 +1,4 @@
-import { Row, Col, Badge } from "@dataesr/dsfr-plus";
+import { Badge } from "@dataesr/dsfr-plus";
 import { DSFR_COLORS } from "../../../constants/colors";
 
 interface EtablissementInfoProps {
@@ -6,9 +6,6 @@ interface EtablissementInfoProps {
 }
 
 export default function EtablissementInfo({ data }: EtablissementInfoProps) {
-  const isActuel =
-    data?.etablissement_id_paysage === data?.etablissement_id_paysage_actuel;
-
   return (
     <div
       className="fr-mb-3w"
@@ -18,49 +15,48 @@ export default function EtablissementInfo({ data }: EtablissementInfoProps) {
       }}
     >
       <div className="fr-p-3w">
-        <Row gutters className="fr-mb-2v">
-          <Col xs="12" sm="6" md="4">
-            <p className="fr-text--sm fr-mb-1v">
-              <strong style={{ color: DSFR_COLORS.textDefault }}>Type :</strong>{" "}
-              {data.type}
-            </p>
-          </Col>
-          <Col xs="12" sm="6" md="4">
-            <p className="fr-text--sm fr-mb-1v">
-              <strong style={{ color: DSFR_COLORS.textDefault }}>
-                Région :
-              </strong>{" "}
-              {data.region}
-            </p>
-          </Col>
-          <Col xs="12" md="4">
-            <p className="fr-text--sm fr-mb-1v">
-              <strong style={{ color: DSFR_COLORS.textDefault }}>
-                Commune du siège :
-              </strong>{" "}
-              {data.commune}
-            </p>
-            <p className="fr-text--sm fr-mb-0 fr-mt-2v">
-              <strong style={{ color: DSFR_COLORS.textDefault }}>RCE :</strong>{" "}
-              {data.is_rce ? (
-                <>
-                  Oui
-                  {data.rce && (
-                    <span style={{ fontStyle: "italic" }}>
-                      {" "}
-                      (depuis {data.rce})
-                    </span>
-                  )}
-                </>
-              ) : (
-                "Non"
-              )}
-            </p>
-          </Col>
-        </Row>
+        <div
+          className="fr-mb-2v"
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "space-between",
+          }}
+        >
+          <span className="fr-text--sm">
+            <strong style={{ color: DSFR_COLORS.textDefault }}>Type :</strong>{" "}
+            {data.type}
+          </span>
+          <span className="fr-text--sm">
+            <strong style={{ color: DSFR_COLORS.textDefault }}>Région :</strong>{" "}
+            {data.region}
+          </span>
+          <span className="fr-text--sm">
+            <strong style={{ color: DSFR_COLORS.textDefault }}>
+              Commune :
+            </strong>{" "}
+            {data.commune}
+          </span>
+          <span className="fr-text--sm">
+            <strong style={{ color: DSFR_COLORS.textDefault }}>RCE :</strong>{" "}
+            {data.is_rce ? (
+              <>
+                Oui
+                {data.rce && (
+                  <span style={{ fontStyle: "italic" }}>
+                    {" "}
+                    (depuis {data.rce})
+                  </span>
+                )}
+              </>
+            ) : (
+              "Non"
+            )}
+          </span>
+        </div>
 
         {data.effectif_sans_cpge && (
-          <p className="fr-text--sm fr-mb-2v">
+          <p className="fr-text--sm">
             <strong style={{ color: DSFR_COLORS.textDefault }}>
               Nombre d'étudiants inscrits :
             </strong>{" "}
@@ -84,6 +80,7 @@ export default function EtablissementInfo({ data }: EtablissementInfoProps) {
               flexWrap: "wrap",
               gap: "0.5rem",
               marginTop: "0.5rem",
+              alignItems: "center",
             }}
           >
             {data.has_effectif_l && (
@@ -91,12 +88,12 @@ export default function EtablissementInfo({ data }: EtablissementInfoProps) {
                 color="blue-cumulus"
                 style={{
                   fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
+                  textTransform: "capitalize",
+                  backgroundColor: "var(--background-default-grey)",
                   border: "2px solid",
                 }}
               >
-                licence
+                Licence
               </Badge>
             )}
             {data.has_effectif_m && (
@@ -104,12 +101,12 @@ export default function EtablissementInfo({ data }: EtablissementInfoProps) {
                 color="green-archipel"
                 style={{
                   fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
+                  textTransform: "capitalize",
+                  backgroundColor: "var(--background-default-grey)",
                   border: "2px solid",
                 }}
               >
-                master
+                Master
               </Badge>
             )}
             {data.has_effectif_d && (
@@ -117,103 +114,33 @@ export default function EtablissementInfo({ data }: EtablissementInfoProps) {
                 color="pink-tuile"
                 style={{
                   fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
+                  textTransform: "capitalize",
+                  backgroundColor: "var(--background-default-grey)",
                   border: "2px solid",
                 }}
               >
-                doctorat
+                Doctorat
               </Badge>
             )}
+
+            {(data.has_effectif_l ||
+              data.has_effectif_m ||
+              data.has_effectif_d) &&
+              (data.has_effectif_iut ||
+                data.has_effectif_sante ||
+                data.has_effectif_ing) && <span>•</span>}
+
             {data.has_effectif_iut && (
               <Badge
                 color="blue-cumulus"
                 style={{
                   fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
+                  textTransform: "uppercase",
+                  backgroundColor: "var(--background-default-grey)",
                   border: "2px solid",
                 }}
               >
-                iut
-              </Badge>
-            )}
-            {data.has_effectif_ing && (
-              <Badge
-                color="yellow-tournesol"
-                style={{
-                  fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
-                  border: "2px solid",
-                }}
-              >
-                ingénieur
-              </Badge>
-            )}
-            {data.has_effectif_dsa && (
-              <Badge
-                color="green-emeraude"
-                style={{
-                  fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
-                  border: "2px solid",
-                }}
-              >
-                droit sciences éco aes
-              </Badge>
-            )}
-            {data.has_effectif_llsh && (
-              <Badge
-                color="pink-tuile"
-                style={{
-                  fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
-                  border: "2px solid",
-                }}
-              >
-                lettres langues shs
-              </Badge>
-            )}
-            {data.has_effectif_theo && (
-              <Badge
-                color="purple-glycine"
-                style={{
-                  fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
-                  border: "2px solid",
-                }}
-              >
-                théologie
-              </Badge>
-            )}
-            {data.has_effectif_si && (
-              <Badge
-                color="orange-terre-battue"
-                style={{
-                  fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
-                  border: "2px solid",
-                }}
-              >
-                sciences et ingénierie
-              </Badge>
-            )}
-            {data.has_effectif_staps && (
-              <Badge
-                color="green-menthe"
-                style={{
-                  fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
-                  border: "2px solid",
-                }}
-              >
-                staps
+                IUT
               </Badge>
             )}
             {data.has_effectif_sante && (
@@ -221,12 +148,102 @@ export default function EtablissementInfo({ data }: EtablissementInfoProps) {
                 color="brown-caramel"
                 style={{
                   fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
+                  textTransform: "capitalize",
+                  backgroundColor: "var(--background-default-grey)",
                   border: "2px solid",
                 }}
               >
-                santé
+                Santé
+              </Badge>
+            )}
+            {data.has_effectif_ing && (
+              <Badge
+                color="yellow-tournesol"
+                style={{
+                  fontSize: "11px",
+                  textTransform: "capitalize",
+                  backgroundColor: "var(--background-default-grey)",
+                  border: "2px solid",
+                }}
+              >
+                Ingénieur
+              </Badge>
+            )}
+
+            {(data.has_effectif_iut ||
+              data.has_effectif_sante ||
+              data.has_effectif_ing) &&
+              (data.has_effectif_dsa ||
+                data.has_effectif_llsh ||
+                data.has_effectif_theo ||
+                data.has_effectif_si ||
+                data.has_effectif_staps ||
+                data.has_effectif_veto ||
+                data.has_effectif_interd) && <span>•</span>}
+
+            {data.has_effectif_dsa && (
+              <Badge
+                color="green-emeraude"
+                style={{
+                  fontSize: "11px",
+                  textTransform: "capitalize",
+                  backgroundColor: "var(--background-default-grey)",
+                  border: "2px solid",
+                }}
+              >
+                Droit Sciences Éco AES
+              </Badge>
+            )}
+            {data.has_effectif_llsh && (
+              <Badge
+                color="pink-tuile"
+                style={{
+                  fontSize: "11px",
+                  textTransform: "capitalize",
+                  backgroundColor: "var(--background-default-grey)",
+                  border: "2px solid",
+                }}
+              >
+                Lettres Langues SHS
+              </Badge>
+            )}
+            {data.has_effectif_theo && (
+              <Badge
+                color="purple-glycine"
+                style={{
+                  fontSize: "11px",
+                  textTransform: "capitalize",
+                  backgroundColor: "var(--background-default-grey)",
+                  border: "2px solid",
+                }}
+              >
+                Théologie
+              </Badge>
+            )}
+            {data.has_effectif_si && (
+              <Badge
+                color="orange-terre-battue"
+                style={{
+                  fontSize: "11px",
+                  textTransform: "capitalize",
+                  backgroundColor: "var(--background-default-grey)",
+                  border: "2px solid",
+                }}
+              >
+                Sciences et Ingénierie
+              </Badge>
+            )}
+            {data.has_effectif_staps && (
+              <Badge
+                color="green-menthe"
+                style={{
+                  fontSize: "11px",
+                  textTransform: "uppercase",
+                  backgroundColor: "var(--background-default-grey)",
+                  border: "2px solid",
+                }}
+              >
+                STAPS
               </Badge>
             )}
             {data.has_effectif_veto && (
@@ -234,12 +251,12 @@ export default function EtablissementInfo({ data }: EtablissementInfoProps) {
                 color="green-archipel"
                 style={{
                   fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
+                  textTransform: "capitalize",
+                  backgroundColor: "var(--background-default-grey)",
                   border: "2px solid",
                 }}
               >
-                vétérinaire
+                Vétérinaire
               </Badge>
             )}
             {data.has_effectif_interd && (
@@ -247,33 +264,16 @@ export default function EtablissementInfo({ data }: EtablissementInfoProps) {
                 color="pink-macaron"
                 style={{
                   fontSize: "11px",
-                  textTransform: "none",
-                  backgroundColor: "white",
+                  textTransform: "capitalize",
+                  backgroundColor: "var(--background-default-grey)",
                   border: "2px solid",
                 }}
               >
-                interdisciplinaire
+                Interdisciplinaire
               </Badge>
             )}
           </div>
         </div>
-
-        {!isActuel && (
-          <div
-            className="fr-mt-2w fr-p-2w"
-            style={{
-              backgroundColor: "var(--background-contrast-warning)",
-              borderRadius: "4px",
-              border: "1px solid var(--border-plain-warning)",
-              fontStyle: "italic",
-            }}
-          >
-            <span style={{ color: "var(--text-default-warning)" }}>
-              → Anciennement : <strong>{data.etablissement_lib}</strong> (
-              {data.etablissement_actuel_type})
-            </span>
-          </div>
-        )}
       </div>
     </div>
   );

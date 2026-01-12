@@ -27,7 +27,8 @@ interface RessourcesPropresData {
 }
 
 export const createRessourcesPropresChartOptions = (
-  data: RessourcesPropresData
+  data: RessourcesPropresData,
+  viewMode: "value" | "percentage" = "value"
 ): Highcharts.Options => {
   const categories = [
     "Droits d'inscription",
@@ -35,7 +36,7 @@ export const createRessourcesPropresChartOptions = (
     "Taxe d'apprentissage",
     "Valorisation",
     "ANR hors investissements d'avenir",
-    "ANR investissements",
+    "ANR investissements d'avenir",
     "Contrats & prestations",
     "Subventions région",
     "Subventions UE",
@@ -75,7 +76,8 @@ export const createRessourcesPropresChartOptions = (
 
   const seriesData = categories.map((cat, idx) => ({
     name: cat,
-    value: values[idx],
+    value: viewMode === "value" ? values[idx] : percentages[idx],
+    actualValue: values[idx],
     color: colors[idx],
     percentage: percentages[idx],
   }));
@@ -94,27 +96,42 @@ export const createRessourcesPropresChartOptions = (
     },
     tooltip: {
       useHTML: true,
-      backgroundColor: "var(--background-default-grey)",
       borderWidth: 1,
-      borderColor: "var(--border-default-grey)",
       borderRadius: 8,
       shadow: false,
       formatter: function () {
         const point = this as any;
-        return `<div style="padding:10px">
-                <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
-                  point.name
-                }</div>
-                <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
-                  point.value,
-                  0,
-                  ",",
-                  " "
-                )} €</div>
-                <div style="color:#666;font-size:13px">${point.percentage.toFixed(
-                  2
-                )}% des ressources propres</div>
-                </div>`;
+        if (viewMode === "value") {
+          return `<div style="padding:10px">
+                  <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
+                    point.name
+                  }</div>
+                  <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
+                    point.actualValue,
+                    0,
+                    ",",
+                    " "
+                  )} €</div>
+                  <div style="color:#666;font-size:13px">${point.percentage.toFixed(
+                    2
+                  )}% des ressources propres</div>
+                  </div>`;
+        } else {
+          return `<div style="padding:10px">
+                  <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
+                    point.name
+                  }</div>
+                  <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${point.percentage.toFixed(
+                    2
+                  )}%</div>
+                  <div style="color:#666;font-size:13px">${Highcharts.numberFormat(
+                    point.actualValue,
+                    0,
+                    ",",
+                    " "
+                  )} €</div>
+                  </div>`;
+        }
       },
     },
     plotOptions: {
@@ -126,20 +143,31 @@ export const createRessourcesPropresChartOptions = (
           formatter: function () {
             const point = this as any;
             if (point.value === 0) return null;
-            return `<div style="text-align:center">
-                      <div style="font-weight:bold;font-size:12px;margin-bottom:2px">${
-                        point.name
-                      }</div>
-                      <div style="font-size:11px">${Highcharts.numberFormat(
-                        point.value,
-                        0,
-                        ",",
-                        " "
-                      )} €</div>
-                      <div style="font-size:10px">${point.percentage.toFixed(
-                        1
-                      )}%</div>
-                    </div>`;
+            if (viewMode === "value") {
+              return `<div style="text-align:center">
+                        <div style="font-weight:bold;font-size:12px;margin-bottom:2px">${
+                          point.name
+                        }</div>
+                        <div style="font-size:11px">${Highcharts.numberFormat(
+                          point.actualValue,
+                          0,
+                          ",",
+                          " "
+                        )} €</div>
+                        <div style="font-size:10px">${point.percentage.toFixed(
+                          1
+                        )}%</div>
+                      </div>`;
+            } else {
+              return `<div style="text-align:center">
+                        <div style="font-weight:bold;font-size:12px;margin-bottom:2px">${
+                          point.name
+                        }</div>
+                        <div style="font-size:11px">${point.percentage.toFixed(
+                          1
+                        )}%</div>
+                      </div>`;
+            }
           },
           style: {
             textOutline: "none",

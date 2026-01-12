@@ -1,6 +1,7 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import Highcharts from "highcharts";
 import "highcharts/modules/treemap";
+import { Button } from "@dataesr/dsfr-plus";
 import { createRessourcesPropresChartOptions } from "./options";
 import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -21,10 +22,12 @@ export default function RessourcesPropresChart({
   selectedYear,
   etablissementName,
 }: RessourcesPropresChartProps) {
+  const [viewMode, setViewMode] = useState<"value" | "percentage">("value");
+
   const options = useMemo(() => {
     if (!data) return {} as Highcharts.Options;
-    return createRessourcesPropresChartOptions(data);
-  }, [data]);
+    return createRessourcesPropresChartOptions(data, viewMode);
+  }, [data, viewMode]);
 
   const ressourcesPropresDecomposition = useMemo(
     () => [
@@ -59,7 +62,7 @@ export default function RessourcesPropresChart({
         color: CHART_COLORS.palette[4],
       },
       {
-        label: "ANR investissements",
+        label: "ANR investissements d'avenir",
         value: data?.anr_investissements_d_avenir,
         part: data?.part_anr_investissements_d_avenir,
         color: CHART_COLORS.palette[5],
@@ -98,12 +101,48 @@ export default function RessourcesPropresChart({
     [data]
   );
 
-  const totalRessources = data?.ressources_propres || 0;
+  const totalRessources = data?.recettes_propres || 0;
 
   if (!data) return null;
 
   return (
-    <ChartWrapper
+    <div>
+      <div
+        className="fr-mb-3w"
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexWrap: "wrap",
+          gap: "1rem",
+        }}
+      >
+        <h3
+          className="fr-h5 fr-mb-0"
+          style={{
+            borderLeft: `4px solid ${CHART_COLORS.primary}`,
+            paddingLeft: "1rem",
+          }}
+        ></h3>
+        <div className="fr-btns-group fr-btns-group--sm fr-btns-group--inline">
+          <Button
+            size="sm"
+            variant={viewMode === "value" ? "primary" : "secondary"}
+            onClick={() => setViewMode("value")}
+          >
+            Valeurs
+          </Button>
+          <Button
+            size="sm"
+            variant={viewMode === "percentage" ? "primary" : "secondary"}
+            onClick={() => setViewMode("percentage")}
+          >
+            Parts (%)
+          </Button>
+        </div>
+      </div>
+
+      <ChartWrapper
       config={{
         id: "ressources-propres-chart",
         idQuery: "ressources-propres",
@@ -115,6 +154,7 @@ export default function RessourcesPropresChart({
             <>
               Décomposition des ressources propres
               {etablissementName && ` — ${etablissementName}`}
+              {selectedYear && ` — ${selectedYear}`}
             </>
           ),
         },
@@ -164,5 +204,6 @@ export default function RessourcesPropresChart({
       legend={null}
       renderData={() => <RenderData data={data} />}
     />
+    </div>
   );
 }
