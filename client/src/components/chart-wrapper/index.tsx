@@ -332,7 +332,7 @@ export default function ChartWrapper({
 }: {
   config: ChartConfig;
   options: HighchartsOptions;
-  legend: React.ReactNode;
+  legend?: React.ReactNode;
   renderData?: (options: Highcharts.Options) => React.ReactNode;
   hideTitle?: boolean;
   constructorType?: "chart" | "stockChart" | "mapChart";
@@ -477,7 +477,7 @@ export default function ChartWrapper({
         </figure>
       )}
       <div className="fr-pt-1w">
-        {legend}
+        {legend && legend}
         <div className="chart-footer">
           <ChartFooter comment={config.comment} readingKey={config.readingKey} source={config.source} updateDate={config.updateDate} />
         </div>

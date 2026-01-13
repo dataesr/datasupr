@@ -10,16 +10,18 @@ export default function YearsSelector({
   const years = Array.from(Array(26).keys()).map((item) => item + 2000);
 
   return (
-    <Row gutters className="form-row">
+    <Row gutters className="fr-mx-1w">
       <Col md={6}>
         <select
           name="fundings-year-start"
           id="fundings-year-start"
-          className="fr-mb-2w fr-select"
+          className="fr-select"
           value={selectedYearStart}
           onChange={(e) => setSelectedYearStart(e.target.value)}
         >
-          <option disabled value="">Sélectionnez une année de début</option>
+          <option disabled value="">
+            Sélectionnez une année de début
+          </option>
           {years.map((year) => (
             <option key={year} value={year}>
               {year}
@@ -31,11 +33,13 @@ export default function YearsSelector({
         <select
           name="fundings-year-end"
           id="fundings-year-end"
-          className="fr-mb-2w fr-select"
+          className="fr-select"
           value={selectedYearEnd}
           onChange={(e) => setSelectedYearEnd(e.target.value)}
         >
-          <option disabled value="">Sélectionnez une année de fin</option>
+          <option disabled value="">
+            Sélectionnez une année de fin
+          </option>
           {years.map((year) => (
             <option key={year} value={year}>
               {year}
@@ -44,5 +48,5 @@ export default function YearsSelector({
         </select>
       </Col>
     </Row>
-  )
+  );
 }
