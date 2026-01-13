@@ -5,10 +5,8 @@ import {
   Logo,
   Service,
   FastAccess,
-  Container,
   Nav,
   Link,
-  NavItem,
 } from "@dataesr/dsfr-plus";
 
 import Footer from "./footer";
