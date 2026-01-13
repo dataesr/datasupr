@@ -1,18 +1,21 @@
 import EvolutionChart from "../charts/evolution";
 import "./styles.scss";
 
-interface AnalysesTabProps {
+interface AnalysesSectionProps {
   data: any;
   selectedEtablissement?: string;
 }
 
-export function AnalysesTab({ data, selectedEtablissement }: AnalysesTabProps) {
+export function AnalysesSection({
+  data,
+  selectedEtablissement,
+}: AnalysesSectionProps) {
   return (
     <div
-      id="tabpanel-analyses"
-      role="tabpanel"
-      aria-labelledby="tab-analyses"
-      className="fr-p-3w tab-container"
+      id="section-analyses"
+      role="region"
+      aria-labelledby="section-analyses"
+      className="fr-p-3w section-container"
     >
       <EvolutionChart
         etablissementId={selectedEtablissement || ""}

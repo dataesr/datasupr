@@ -1,24 +1,33 @@
 import { useSearchParams } from "react-router-dom";
+import { useEffect } from "react";
 import { useFinanceEtablissementDetail, useFinanceYears } from "../../../api";
 import StickyHeader from "./sticky-header";
 import EtablissementInfo from "./etablissement-info";
-import TabNavigation from "../tabs/tab-navigation";
+import SectionNavigation from "./section-navigation";
 import {
-  FinancementsTab,
-  MoyensHumainsTab,
-  RessourcesPropresTab,
-  EtudiantsTab,
-  AnalysesTab,
-} from "../tabs/tabs";
+  FinancementsSection,
+  MoyensHumainsSection,
+  RessourcesPropresSection,
+  EtudiantsSection,
+  AnalysesSection,
+} from "../sections/sections";
 
 export default function EtablissementDetails() {
   const [searchParams, setSearchParams] = useSearchParams();
   const structureId = searchParams.get("structureId") || "";
   const year = searchParams.get("year") || "";
-  const tab = searchParams.get("tab") || "financements";
+  const section = searchParams.get("section") || "financements";
 
   const { data: yearsData } = useFinanceYears();
   const years = yearsData?.years || [];
+
+  useEffect(() => {
+    if (structureId && !searchParams.get("section")) {
+      const next = new URLSearchParams(searchParams);
+      next.set("section", "financements");
+      setSearchParams(next, { replace: true });
+    }
+  }, [structureId, searchParams, setSearchParams]);
 
   const { data: detailData, isLoading } = useFinanceEtablissementDetail(
     structureId,
@@ -29,19 +38,6 @@ export default function EtablissementDetails() {
   const handleYearChange = (newYear: string) => {
     const next = new URLSearchParams(searchParams);
     next.set("year", newYear);
-    setSearchParams(next);
-  };
-
-  const handleTabChange = (
-    newTab:
-      | "financements"
-      | "moyens-humains"
-      | "etudiants"
-      | "analyses"
-      | "recettes-propres"
-  ) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("tab", newTab);
     setSearchParams(next);
   };
 
@@ -75,22 +71,22 @@ export default function EtablissementDetails() {
       detailData.etablissement_id_paysage_actuel &&
     detailData.date_de_fermeture == null;
 
-  const showYearSelector = tab !== "analyses";
+  const showYearSelector = section !== "analyses";
   const selectedYear = year || years[0] || "";
 
-  const renderTabContent = () => {
-    switch (tab) {
+  const renderSectionContent = () => {
+    switch (section) {
       case "financements":
         return (
-          <FinancementsTab data={detailData} selectedYear={selectedYear} />
+          <FinancementsSection data={detailData} selectedYear={selectedYear} />
         );
       case "moyens-humains":
         return (
-          <MoyensHumainsTab data={detailData} selectedYear={selectedYear} />
+          <MoyensHumainsSection data={detailData} selectedYear={selectedYear} />
         );
       case "recettes-propres":
         return (
-          <RessourcesPropresTab
+          <RessourcesPropresSection
             data={detailData}
             selectedEtablissement={structureId}
             selectedYear={selectedYear}
@@ -98,7 +94,7 @@ export default function EtablissementDetails() {
         );
       case "etudiants":
         return (
-          <EtudiantsTab
+          <EtudiantsSection
             data={detailData}
             selectedYear={selectedYear}
             selectedEtablissement={structureId}
@@ -106,7 +102,10 @@ export default function EtablissementDetails() {
         );
       case "analyses":
         return (
-          <AnalysesTab data={detailData} selectedEtablissement={structureId} />
+          <AnalysesSection
+            data={detailData}
+            selectedEtablissement={structureId}
+          />
         );
       default:
         return null;
@@ -127,9 +126,9 @@ export default function EtablissementDetails() {
 
       <EtablissementInfo data={detailData} />
 
-      <TabNavigation activeTab={tab as any} onTabChange={handleTabChange} />
+      <SectionNavigation />
 
-      {renderTabContent()}
+      {renderSectionContent()}
     </>
   );
 }

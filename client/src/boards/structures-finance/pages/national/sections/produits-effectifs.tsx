@@ -1,15 +1,15 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ScatterChart from "../charts/scatter";
 
-interface ProduitsEffectifsTabProps {
+interface ProduitsEffectifsSectionProps {
   data: any[];
   selectedYear?: string | number;
 }
 
-export function ProduitsEffectifsTab({
+export function ProduitsEffectifsSection({
   data,
   selectedYear,
-}: ProduitsEffectifsTabProps) {
+}: ProduitsEffectifsSectionProps) {
   const scatterConfig = {
     title: `Total des ressources hors opérations en capital vs Effectifs d'étudiants${
       selectedYear ? ` — ${selectedYear}` : ""
@@ -22,11 +22,9 @@ export function ProduitsEffectifsTab({
 
   return (
     <section
-      id="tabpanel-produits-vs-etudiants"
-      role="tabpanel"
-      aria-labelledby="tab-produits-vs-etudiants"
-      tabIndex={0}
-      className="fr-mb-3w"
+      id="section-produits-vs-etudiants"
+      role="region"
+      className="fr-mb-3w section-container"
     >
       <Row>
         <Col xs="12">

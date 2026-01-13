@@ -1,15 +1,15 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ScatterChart from "../charts/scatter";
 
-interface ScspRessourcesTabProps {
+interface ScspRessourcesSectionProps {
   data: any[];
   selectedYear?: string | number;
 }
 
-export function ScspRessourcesTab({
+export function ScspRessourcesSection({
   data,
   selectedYear,
-}: ScspRessourcesTabProps) {
+}: ScspRessourcesSectionProps) {
   const scatterConfig = {
     title: `SCSP vs Ressources propres${
       selectedYear ? ` — ${selectedYear}` : ""
@@ -22,11 +22,9 @@ export function ScspRessourcesTab({
 
   return (
     <section
-      id="tabpanel-scsp-vs-ressources-propres"
-      role="tabpanel"
-      aria-labelledby="tab-scsp-vs-ressources-propres"
-      tabIndex={0}
-      className="fr-mb-3w"
+      id="section-scsp-vs-ressources-propres"
+      role="region"
+      className="fr-mb-3w section-container"
     >
       <Row>
         <Col xs="12">

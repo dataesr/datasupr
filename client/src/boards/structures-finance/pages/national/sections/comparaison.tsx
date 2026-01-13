@@ -1,18 +1,16 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ComparisonBarChart from "../charts/comparison-bar";
 
-interface ComparaisonTabProps {
+interface ComparaisonSectionProps {
   data: any[];
 }
 
-export function ComparaisonTab({ data }: ComparaisonTabProps) {
+export function ComparaisonSection({ data }: ComparaisonSectionProps) {
   return (
     <section
-      id="tabpanel-comparison"
-      role="tabpanel"
-      aria-labelledby="tab-comparison"
-      tabIndex={0}
-      className="fr-mb-3w"
+      id="section-comparison"
+      role="region"
+      className="fr-mb-3w section-container"
     >
       <div className="fr-callout fr-mb-3w">
         <p className="fr-callout__text">

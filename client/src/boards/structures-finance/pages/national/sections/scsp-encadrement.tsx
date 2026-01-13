@@ -1,15 +1,15 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ScatterChart from "../charts/scatter";
 
-interface ScspEncadrementTabProps {
+interface ScspEncadrementSectionProps {
   data: any[];
   selectedYear?: string | number;
 }
 
-export function ScspEncadrementTab({
+export function ScspEncadrementSection({
   data,
   selectedYear,
-}: ScspEncadrementTabProps) {
+}: ScspEncadrementSectionProps) {
   const scatterConfig = {
     title: `SCSP par étudiant vs Taux d'encadrement${
       selectedYear ? ` — ${selectedYear}` : ""
@@ -22,11 +22,9 @@ export function ScspEncadrementTab({
 
   return (
     <section
-      id="tabpanel-scsp-vs-encadrement"
-      role="tabpanel"
-      aria-labelledby="tab-scsp-vs-encadrement"
-      tabIndex={0}
-      className="fr-mb-3w"
+      id="section-scsp-vs-encadrement"
+      role="region"
+      className="fr-mb-3w section-container"
     >
       <Row>
         <Col xs="12">

@@ -1,18 +1,18 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import { CHART_COLORS } from "../../../constants/colors";
 import { useFinanceEtablissementEvolution } from "../../../api";
-import { MetricCard } from "../components/metric-cards/metric-card";
+import { MetricChartCard } from "../components/metric-cards/metric-chart-card";
 import "./styles.scss";
 
-interface MoyensHumainsTabProps {
+interface MoyensHumainsSectionProps {
   data: any;
   selectedYear?: string | number;
 }
 
-export function MoyensHumainsTab({
+export function MoyensHumainsSection({
   data,
   selectedYear,
-}: MoyensHumainsTabProps) {
+}: MoyensHumainsSectionProps) {
   const { data: evolutionData } = useFinanceEtablissementEvolution(
     data?.etablissement_id_paysage
   );
@@ -23,15 +23,15 @@ export function MoyensHumainsTab({
     return evolutionData
       .sort((a, b) => a.exercice - b.exercice)
       .filter((item) => !yearNum || item.exercice <= yearNum)
-      .map((item) => item[metricKey])
-      .filter((val): val is number => val != null && !isNaN(val));
+      .map((item) => ({ exercice: item.exercice, value: item[metricKey] }))
+      .filter((item) => item.value != null && !isNaN(item.value));
   };
   return (
     <div
-      id="tabpanel-moyens-humains"
-      role="tabpanel"
-      aria-labelledby="tab-moyens-humains"
-      className="fr-p-3w tab-container"
+      id="section-moyens-humains"
+      role="region"
+      aria-labelledby="section-moyens-humains"
+      className="fr-p-3w section-container"
     >
       <div className="fr-mb-5w">
         <h3
@@ -42,7 +42,7 @@ export function MoyensHumainsTab({
         </h3>
         <Row gutters>
           <Col xs="12" md="6">
-            <MetricCard
+            <MetricChartCard
               title="Nombre d'emplois (ETPT)"
               value={
                 data.emploi_etpt != null
@@ -53,11 +53,11 @@ export function MoyensHumainsTab({
               }
               detail="Équivalent temps plein travaillé"
               color={CHART_COLORS.palette[0]}
-              sparklineData={getEvolutionData("emploi_etpt")}
+              evolutionData={getEvolutionData("emploi_etpt")}
             />
           </Col>
           <Col xs="12" md="6">
-            <MetricCard
+            <MetricChartCard
               title="Taux d'encadrement"
               value={
                 data.taux_encadrement != null
@@ -72,7 +72,8 @@ export function MoyensHumainsTab({
                   : "Enseignants permanents"
               }
               color={CHART_COLORS.palette[1]}
-              sparklineData={getEvolutionData("taux_encadrement")}
+              evolutionData={getEvolutionData("taux_encadrement")}
+              unit="%"
             />
           </Col>
         </Row>
@@ -87,7 +88,7 @@ export function MoyensHumainsTab({
         </h3>
         <Row gutters>
           <Col xs="12" sm="6" md="4">
-            <MetricCard
+            <MetricChartCard
               title="Charges de personnel"
               value={
                 data.charges_de_personnel != null
@@ -98,11 +99,12 @@ export function MoyensHumainsTab({
               }
               detail="Dépenses de masse salariale"
               color={CHART_COLORS.palette[2]}
-              sparklineData={getEvolutionData("charges_de_personnel")}
+              evolutionData={getEvolutionData("charges_de_personnel")}
+              unit="€"
             />
           </Col>
           <Col xs="12" sm="6" md="4">
-            <MetricCard
+            <MetricChartCard
               title="Poids sur produits"
               value={
                 data.charges_de_personnel_produits_encaissables != null
@@ -113,13 +115,14 @@ export function MoyensHumainsTab({
               }
               detail="Part des produits encaissables"
               color={CHART_COLORS.palette[3]}
-              sparklineData={getEvolutionData(
+              evolutionData={getEvolutionData(
                 "charges_de_personnel_produits_encaissables"
               )}
+              unit="%"
             />
           </Col>
           <Col xs="12" md="4">
-            <MetricCard
+            <MetricChartCard
               title="Rémunération permanents"
               value={
                 data.taux_de_remuneration_des_permanents != null
@@ -128,9 +131,10 @@ export function MoyensHumainsTab({
               }
               detail="Part des dépenses de personnel"
               color={CHART_COLORS.palette[4]}
-              sparklineData={getEvolutionData(
+              evolutionData={getEvolutionData(
                 "taux_de_remuneration_des_permanents"
               )}
+              unit="%"
             />
           </Col>
         </Row>

@@ -1,14 +1,14 @@
 import { useSearchParams } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useFinanceAdvancedComparison } from "../../../api";
 import { useFilteredNationalData } from "../hooks/useFilteredNationalData";
-import TabNavigation from "../tabs/tab-navigation";
+import SectionNavigation from "../sections/section-navigation";
 import {
-  ProduitsEffectifsTab,
-  ScspEncadrementTab,
-  ScspRessourcesTab,
-  ComparaisonTab,
-} from "../tabs/tabs";
+  ProduitsEffectifsSection,
+  ScspEncadrementSection,
+  ScspRessourcesSection,
+  ComparaisonSection,
+} from "../sections/sections";
 
 export default function NationalContent() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,7 +17,15 @@ export default function NationalContent() {
   const selectedType = searchParams.get("type") || "";
   const selectedTypologie = searchParams.get("typologie") || "";
   const selectedRegion = searchParams.get("region") || "";
-  const activeTab = searchParams.get("tab") || "produits-vs-etudiants";
+  const activeSection = searchParams.get("section") || "produits-vs-etudiants";
+
+  useEffect(() => {
+    if (!searchParams.get("section")) {
+      const next = new URLSearchParams(searchParams);
+      next.set("section", "produits-vs-etudiants");
+      setSearchParams(next, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   const { data: comparisonData, isLoading: isLoadingComparison } =
     useFinanceAdvancedComparison(
@@ -42,34 +50,31 @@ export default function NationalContent() {
     selectedRegion
   );
 
-  const handleTabChange = (tab: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("tab", tab);
-    setSearchParams(next);
-  };
-
-  const renderTabContent = () => {
-    switch (activeTab) {
+  const renderSectionContent = () => {
+    switch (activeSection) {
       case "produits-vs-etudiants":
         return (
-          <ProduitsEffectifsTab
+          <ProduitsEffectifsSection
             data={filteredItems}
             selectedYear={selectedYear}
           />
         );
       case "scsp-vs-encadrement":
         return (
-          <ScspEncadrementTab
+          <ScspEncadrementSection
             data={filteredItems}
             selectedYear={selectedYear}
           />
         );
       case "scsp-vs-ressources-propres":
         return (
-          <ScspRessourcesTab data={filteredItems} selectedYear={selectedYear} />
+          <ScspRessourcesSection
+            data={filteredItems}
+            selectedYear={selectedYear}
+          />
         );
       case "comparison":
-        return <ComparaisonTab data={filteredItems} />;
+        return <ComparaisonSection data={filteredItems} />;
       default:
         return null;
     }
@@ -77,7 +82,7 @@ export default function NationalContent() {
 
   return (
     <>
-      <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+      <SectionNavigation />
 
       {isLoadingComparison && (
         <div
@@ -100,7 +105,9 @@ export default function NationalContent() {
         </div>
       )}
 
-      {!isLoadingComparison && filteredItems.length > 0 && renderTabContent()}
+      {!isLoadingComparison &&
+        filteredItems.length > 0 &&
+        renderSectionContent()}
     </>
   );
 }

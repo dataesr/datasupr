@@ -4,7 +4,7 @@ import { FORMATION_COLORS } from "../../../constants/formation-colors";
 import { useFinanceEtablissementEvolution } from "../../../api";
 import "./styles.scss";
 
-interface EtudiantsTabProps {
+interface EtudiantsSectionProps {
   data: any;
   selectedYear?: string | number;
   selectedEtablissement?: string;
@@ -13,11 +13,11 @@ interface EtudiantsTabProps {
 const num = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
 
-export function EtudiantsTab({
+export function EtudiantsSection({
   data,
   selectedYear,
   selectedEtablissement,
-}: EtudiantsTabProps) {
+}: EtudiantsSectionProps) {
   const { data: evolutionData } = useFinanceEtablissementEvolution(
     selectedEtablissement || "",
     !!selectedEtablissement
@@ -35,20 +35,17 @@ export function EtudiantsTab({
 
   return (
     <div
-      id="tabpanel-etudiants"
-      role="tabpanel"
-      aria-labelledby="tab-etudiants"
-      className="fr-p-3w tab-container"
+      id="section-etudiants"
+      role="region"
+      aria-labelledby="section-etudiants"
+      className="fr-p-3w section-container"
     >
-      {/* Metrics Cards Section */}
       <div className="fr-mb-3w">
         <h3 className="fr-h6 fr-mb-2w">
           Répartition des effectifs {selectedYear && `(${selectedYear})`}
         </h3>
 
-        {/* Cursus and Filières on same line */}
         <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
-          {/* Cursus Section */}
           {(data?.has_effectif_l ||
             data?.has_effectif_m ||
             data?.has_effectif_d) && (
@@ -88,7 +85,6 @@ export function EtudiantsTab({
             </div>
           )}
 
-          {/* Filières spécifiques Section */}
           {((data?.has_effectif_iut && data?.effectif_sans_cpge_iut > 0) ||
             (data?.has_effectif_ing && data?.effectif_sans_cpge_ing > 0) ||
             (data?.has_effectif_sante &&
@@ -133,7 +129,6 @@ export function EtudiantsTab({
           )}
         </div>
 
-        {/* Disciplines Section */}
         {((data?.has_effectif_dsa && data?.effectif_sans_cpge_dsa > 0) ||
           (data?.has_effectif_llsh && data?.effectif_sans_cpge_llsh > 0) ||
           (data?.has_effectif_theo && data?.effectif_sans_cpge_theo > 0) ||
@@ -215,7 +210,6 @@ export function EtudiantsTab({
         )}
       </div>
 
-      {/* Chart Section */}
       <EffectifsChart
         data={data}
         selectedYear={selectedYear}
