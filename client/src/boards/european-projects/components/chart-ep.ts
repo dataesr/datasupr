@@ -21,7 +21,7 @@ export function CreateChartOptions(
 
   const defaultOptions: HighchartsInstance.Options = {
     chart: {
-      backgroundColor: "transparent",
+      backgroundColor: rootStyles.getPropertyValue("--background-default-grey"),
     },
     title: { text: "" },
     legend: { enabled: false },
