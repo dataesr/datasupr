@@ -136,11 +136,7 @@ export default function ParticipationsOverTimeByCounty() {
   return (
     <div className={`chart-container chart-container--${color}`} id="participations-over-time-by-county">
       <CountiesSelector selectedCounty={selectedCounty} setSelectedCounty={setSelectedCounty} />
-      <ChartWrapper
-        config={config}
-        legend={null}
-        options={options}
-      />
+      <ChartWrapper config={config} options={options} />
     </div>
   );
 }

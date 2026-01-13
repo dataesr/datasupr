@@ -70,20 +70,10 @@ export default function ProjectsTypesPillarsSubsidiesRequested({
     <Container fluid>
       <Row>
         <Col md={6}>
-          <ChartWrapper
-            config={configChart1}
-            options={options}
-            legend={null}
-            renderData={renderDataValuesAndRates}
-          />
+          <ChartWrapper config={configChart1} options={options} renderData={renderDataValuesAndRates} />
         </Col>
         <Col>
-          <ChartWrapper
-            config={configChart2}
-            options={optionsRates}
-            legend={null}
-            renderData={renderDataValuesAndRates}
-          />
+          <ChartWrapper config={configChart2} options={optionsRates} renderData={renderDataValuesAndRates} />
         </Col>
       </Row>
       <Row>
@@ -138,10 +128,7 @@ export default function ProjectsTypesPillarsSubsidiesRequested({
                   marginRight: "10px",
                 }}
               ></div>
-              <span>
-                Problématiques mondiales et compétitivité industrielle
-                européenne
-              </span>
+              <span>Problématiques mondiales et compétitivité industrielle européenne</span>
             </li>
             <li
               style={{
@@ -158,10 +145,7 @@ export default function ProjectsTypesPillarsSubsidiesRequested({
                   marginRight: "10px",
                 }}
               ></div>
-              <span>
-                Élargir la participation et renforcer l'espace européen de la
-                recherche
-              </span>
+              <span>Élargir la participation et renforcer l'espace européen de la recherche</span>
             </li>
           </ul>
         </Col>

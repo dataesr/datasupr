@@ -34,5 +34,5 @@ export default function ProgramsFundingProportion() {
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
   };
 
-  return <ChartWrapper config={config} legend={null} options={options(data)} renderData={() => renderDataTable(data, currentLang)} />;
+  return <ChartWrapper config={config} options={options(data)} renderData={() => renderDataTable(data, currentLang)} />;
 }

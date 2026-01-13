@@ -130,12 +130,8 @@ export default function ParticipationsOverTimeByLaboratory() {
 
   return (
     <div className={`chart-container chart-container--${color}`} id="participations-over-time-by-laboratory">
-      <LaboratoriesSelector selectedLaboratoryId={selectedLaboratoryId} setSelectedLaboratoryId={setSelectedLaboratoryId} /> 
-      <ChartWrapper
-        config={config}
-        legend={null}
-        options={options}
-      />
+      <LaboratoriesSelector selectedLaboratoryId={selectedLaboratoryId} setSelectedLaboratoryId={setSelectedLaboratoryId} />
+      <ChartWrapper config={config} options={options} />
     </div>
   );
 }

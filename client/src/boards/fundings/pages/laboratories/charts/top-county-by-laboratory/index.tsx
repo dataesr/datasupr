@@ -116,22 +116,14 @@ export default function TopCountyByLaboratory() {
       <Title as="h3" look="h6">
         {`Nombre de participations par région sur la période ${selectedYearStart}-${selectedYearEnd}`}
       </Title>
-      <LaboratoriesSelector
-        selectedLaboratoryId={selectedLaboratoryId}
-        setSelectedLaboratoryId={setSelectedLaboratoryId}
-      />
+      <LaboratoriesSelector selectedLaboratoryId={selectedLaboratoryId} setSelectedLaboratoryId={setSelectedLaboratoryId} />
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      <ChartWrapper
-        config={config}
-        constructorType="mapChart"
-        legend={null}
-        options={options}
-      />
+      <ChartWrapper config={config} constructorType="mapChart" options={options} />
     </div>
   );
 };

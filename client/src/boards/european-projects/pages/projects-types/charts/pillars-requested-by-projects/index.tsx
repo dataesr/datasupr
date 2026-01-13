@@ -105,40 +105,20 @@ import {
         {indicateurId === "pillarsSubsidiesRequestedByProjects" && (
           <Row>
             <Col md={6}>
-              <ChartWrapper
-                config={configChart1a}
-                legend={legend}
-                options={options}
-                renderData={renderDataValues}
-              />
+              <ChartWrapper config={configChart1a} legend={legend} options={options} renderData={renderDataValues} />
             </Col>
             <Col>
-              <ChartWrapper
-                config={configChart1b}
-                legend={null}
-                options={optionsRates}
-                renderData={renderDataRates}
-              />
+              <ChartWrapper config={configChart1b} options={optionsRates} renderData={renderDataRates} />
             </Col>
           </Row>
         )}
         {indicateurId === "pillarsProjectCoordinationRequestedByProjects" && (
           <Row>
             <Col md={6}>
-              <ChartWrapper
-                config={configChart2a}
-                legend={legend}
-                options={options}
-                renderData={renderDataValues}
-              />
+              <ChartWrapper config={configChart2a} legend={legend} options={options} renderData={renderDataValues} />
             </Col>
             <Col>
-              <ChartWrapper
-                config={configChart2b}
-                legend={null}
-                options={optionsRates}
-                renderData={renderDataRates}
-              />
+              <ChartWrapper config={configChart2b} options={optionsRates} renderData={renderDataRates} />
             </Col>
           </Row>
         )}

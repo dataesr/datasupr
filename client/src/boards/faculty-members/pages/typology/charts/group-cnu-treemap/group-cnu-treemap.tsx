@@ -433,12 +433,7 @@ export function GroupCNUTreemapChart() {
 
   return (
     <>
-      <ChartWrapper
-        config={config}
-        options={treemapOptions}
-        legend={null}
-        renderData={() => <RenderData data={treemapData} />}
-      />
+      <ChartWrapper config={config} options={treemapOptions} renderData={() => <RenderData data={treemapData} />} />
 
       <Row horizontalAlign="center" className="fr-mb-4w fr-mt-1w">
         <Col className="text-center">

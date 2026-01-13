@@ -52,7 +52,6 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
           <ChartWrapper
             config={configChart1}
             options={optionsSubventionsValues(data)}
-            legend={null}
             renderData={() => null} // TODO: add data table
           />
         </Col>
@@ -60,7 +59,6 @@ export default function TypeOfFinancingSubsidiesRequestedByProjects() {
           <ChartWrapper
             config={configChart2}
             options={optionsSubventionsRates(data)}
-            legend={null}
             renderData={() => null} // TODO: add data table
           />
         </Col>

@@ -100,11 +100,7 @@ export default function FundedLabs() {
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      <ChartWrapper
-        config={config}
-        legend={null}
-        options={options}
-      />
+      <ChartWrapper config={config} options={options} />
     </div>
   );
 }

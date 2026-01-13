@@ -124,22 +124,14 @@ export default function InternationalPartnersByLaboratory() {
       <Title as="h3" look="h6">
         {`Partenaires internationaux du laboratoire ${getLabelFromName(selectedLaboratoryId)} sur la période ${selectedYearStart}-${selectedYearEnd}`}
       </Title>
-      <LaboratoriesSelector
-        selectedLaboratoryId={selectedLaboratoryId}
-        setSelectedLaboratoryId={setSelectedLaboratoryId}
-      />
+      <LaboratoriesSelector selectedLaboratoryId={selectedLaboratoryId} setSelectedLaboratoryId={setSelectedLaboratoryId} />
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      <ChartWrapper
-        config={config}
-        constructorType="mapChart"
-        legend={null}
-        options={options}
-      />
+      <ChartWrapper config={config} constructorType="mapChart" options={options} />
     </div>
   );
 };

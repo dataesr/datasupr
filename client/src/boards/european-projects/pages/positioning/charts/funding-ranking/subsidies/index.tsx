@@ -116,7 +116,6 @@ export default function FundingRankingSubsidies() {
           </Title>
           <ChartWrapper
             config={configChart1a}
-            legend={null}
             options={optionsSub(prepareData(data, "total_successful"), currentLang)}
             renderData={() => renderDataTableSubsidies(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />
@@ -127,7 +126,6 @@ export default function FundingRankingSubsidies() {
           </Title>
           <ChartWrapper
             config={configChart1b}
-            legend={null}
             options={optionSubSuccessRate(prepareData(data, "total_successful"), currentLang)}
             renderData={() =>
               renderDataTableSuccessRate(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)

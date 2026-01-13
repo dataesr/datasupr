@@ -53,6 +53,6 @@ export default function IpccAll() {
     },
   };
 
-  return <ChartWrapper config={chartConfig} options={options} legend={null} />;
+  return <ChartWrapper config={chartConfig} options={options} />;
 }
  

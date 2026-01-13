@@ -373,9 +373,7 @@ export function StatusEvolutionChart() {
             <Button
               size="sm"
               onClick={() => setPermanentCategory("professeurs")}
-              variant={
-                permanentCategory === "professeurs" ? undefined : "secondary"
-              }
+              variant={permanentCategory === "professeurs" ? undefined : "secondary"}
               className="fr-mr-1v"
             >
               Professeurs
@@ -385,11 +383,7 @@ export function StatusEvolutionChart() {
             <Button
               size="sm"
               onClick={() => setPermanentCategory("maitres_conferences")}
-              variant={
-                permanentCategory === "maitres_conferences"
-                  ? undefined
-                  : "secondary"
-              }
+              variant={permanentCategory === "maitres_conferences" ? undefined : "secondary"}
               className="fr-mr-1v"
             >
               Maîtres de conf.
@@ -399,11 +393,7 @@ export function StatusEvolutionChart() {
             <Button
               size="sm"
               onClick={() => setPermanentCategory("enseignants_2nd_degre")}
-              variant={
-                permanentCategory === "enseignants_2nd_degre"
-                  ? undefined
-                  : "secondary"
-              }
+              variant={permanentCategory === "enseignants_2nd_degre" ? undefined : "secondary"}
               className="fr-mr-1v"
             >
               Ens. 2nd degré
@@ -413,21 +403,14 @@ export function StatusEvolutionChart() {
             <Button
               size="sm"
               onClick={() => setPermanentCategory("non_permanents")}
-              variant={
-                permanentCategory === "non_permanents" ? undefined : "secondary"
-              }
+              variant={permanentCategory === "non_permanents" ? undefined : "secondary"}
             >
               Non permanents
             </Button>
           )}
         </div>
       )}
-      <ChartWrapper
-        config={config}
-        options={chartOptions}
-        legend={null}
-        renderData={() => <RenderData data={processedData} />}
-      />
+      <ChartWrapper config={config} options={chartOptions} renderData={() => <RenderData data={processedData} />} />
     </div>
   );
 }

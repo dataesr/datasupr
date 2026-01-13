@@ -100,7 +100,9 @@ export default function FundedLabs() {
             value={selectedYearStart}
             onChange={(e) => setSelectedYearStart(e.target.value)}
           >
-            <option disabled value="">Sélectionnez une année de début</option>
+            <option disabled value="">
+              Sélectionnez une année de début
+            </option>
             {years.map((year) => (
               <option key={year} value={year}>
                 {year}
@@ -116,7 +118,9 @@ export default function FundedLabs() {
             value={selectedYearEnd}
             onChange={(e) => setSelectedYearEnd(e.target.value)}
           >
-            <option disabled value="">Sélectionnez une année de fin</option>
+            <option disabled value="">
+              Sélectionnez une année de fin
+            </option>
             {years.map((year) => (
               <option key={year} value={year}>
                 {year}
@@ -125,11 +129,7 @@ export default function FundedLabs() {
           </select>
         </Col>
       </Row>
-      <ChartWrapper
-        config={config}
-        legend={null}
-        options={options}
-      />
+      <ChartWrapper config={config} options={options} />
     </div>
   );
 }

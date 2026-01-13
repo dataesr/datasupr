@@ -118,21 +118,14 @@ export default function TopLabsByStructure() {
 
   return (
     <div className={`chart-container chart-container--${color}`} id="top-funders-by-structure">
-      <StructuresSelector
-        selectedStructureId={selectedStructureId}
-        setSelectedStructureId={setSelectedStructureId}
-      />
+      <StructuresSelector selectedStructureId={selectedStructureId} setSelectedStructureId={setSelectedStructureId} />
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      <ChartWrapper
-        config={config}
-        legend={null}
-        options={options}
-      />
+      <ChartWrapper config={config} options={options} />
     </div>
   );
 }

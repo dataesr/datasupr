@@ -70,7 +70,6 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
         <Col md={6}>
           <ChartWrapper
             config={configChart1}
-            legend={null}
             options={optionsValues(data)}
             renderData={() => null} // TODO: add data table
           />
@@ -78,7 +77,6 @@ export default function TypeOfFinancingSubsidiesRequestedLines() {
         <Col>
           <ChartWrapper
             config={configChart2}
-            legend={null}
             options={optionsRates(data)}
             renderData={() => null} // TODO: add data table
           />

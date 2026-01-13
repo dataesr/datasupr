@@ -199,16 +199,9 @@ export default function ComparisonBarChart({ data }: ComparisonBarChartProps) {
           <div className="fr-select-group">
             <label className="fr-label" htmlFor="select-metric">
               <strong>Métrique à comparer</strong>
-              <span className="fr-hint-text">
-                Choisissez la métrique à visualiser
-              </span>
+              <span className="fr-hint-text">Choisissez la métrique à visualiser</span>
             </label>
-            <select
-              id="select-metric"
-              className="fr-select"
-              value={selectedMetric}
-              onChange={(e) => setSelectedMetric(e.target.value)}
-            >
+            <select id="select-metric" className="fr-select" value={selectedMetric} onChange={(e) => setSelectedMetric(e.target.value)}>
               {Object.entries(groupedMetrics).map(([category, metrics]) => (
                 <optgroup key={category} label={category}>
                   {metrics.map((metric) => (
@@ -227,12 +220,7 @@ export default function ComparisonBarChart({ data }: ComparisonBarChartProps) {
               <strong>Nombre d'établissements</strong>
               <span className="fr-hint-text">Afficher par</span>
             </label>
-            <select
-              id="select-top-n"
-              className="fr-select"
-              value={topN}
-              onChange={(e) => setTopN(Number(e.target.value))}
-            >
+            <select id="select-top-n" className="fr-select" value={topN} onChange={(e) => setTopN(Number(e.target.value))}>
               <option value="10">10</option>
               <option value="20">20</option>
               <option value="30">30</option>
@@ -246,16 +234,12 @@ export default function ComparisonBarChart({ data }: ComparisonBarChartProps) {
       {!chartOptions || !data || data.length === 0 ? (
         <div className="fr-alert fr-alert--warning">
           <p className="fr-alert__title">Aucune donnée disponible</p>
-          <p>
-            Aucun établissement ne dispose de données pour cette métrique avec
-            les filtres sélectionnés.
-          </p>
+          <p>Aucun établissement ne dispose de données pour cette métrique avec les filtres sélectionnés.</p>
         </div>
       ) : (
         <ChartWrapper
           config={config}
           options={chartOptions}
-          legend={null}
           renderData={() => (
             <RenderData
               data={data}

@@ -125,85 +125,57 @@ export default function RessourcesPropresChart({
           }}
         ></h3>
         <div className="fr-btns-group fr-btns-group--sm fr-btns-group--inline">
-          <Button
-            size="sm"
-            variant={viewMode === "value" ? "primary" : "secondary"}
-            onClick={() => setViewMode("value")}
-          >
+          <Button size="sm" variant={viewMode === "value" ? "primary" : "secondary"} onClick={() => setViewMode("value")}>
             Valeurs
           </Button>
-          <Button
-            size="sm"
-            variant={viewMode === "percentage" ? "primary" : "secondary"}
-            onClick={() => setViewMode("percentage")}
-          >
+          <Button size="sm" variant={viewMode === "percentage" ? "primary" : "secondary"} onClick={() => setViewMode("percentage")}>
             Parts (%)
           </Button>
         </div>
       </div>
 
       <ChartWrapper
-      config={{
-        id: "ressources-propres-chart",
-        idQuery: "ressources-propres",
-        title: {
-          className: "fr-mt-0w",
-          look: "h5",
-          size: "h3",
-          fr: (
-            <>
-              Décomposition des ressources propres
-              {etablissementName && ` — ${etablissementName}`}
-              {selectedYear && ` — ${selectedYear}`}
-            </>
-          ),
-        },
-        comment: {
-          fr: (
-            <>
-              Ce graphique présente la répartition détaillée des ressources
-              propres de l'établissement pour l'exercice {selectedYear}. Les
-              ressources propres comprennent notamment les droits d'inscription,
-              la formation continue, les contrats de recherche, les subventions
-              régionales et européennes.
-            </>
-          ),
-        },
-        readingKey: {
-          fr: (
-            <>
-              En {selectedYear}, le total des ressources propres s'élève à{" "}
-              <strong>{euro(totalRessources)} €</strong>. La principale source
-              est{" "}
-              {ressourcesPropresDecomposition
-                .sort((a, b) => (b.value || 0) - (a.value || 0))[0]
-                ?.label.toLowerCase()}{" "}
-              avec{" "}
-              <strong>
-                {euro(
-                  ressourcesPropresDecomposition.sort(
-                    (a, b) => (b.value || 0) - (a.value || 0)
-                  )[0]?.value
-                )}{" "}
-                €
-              </strong>{" "}
-              (
-              {pct(
-                ressourcesPropresDecomposition.sort(
-                  (a, b) => (b.value || 0) - (a.value || 0)
-                )[0]?.part
-              )}
-              ).
-            </>
-          ),
-        },
-        updateDate: new Date(),
-        integrationURL: "/integration-url",
-      }}
-      options={options}
-      legend={null}
-      renderData={() => <RenderData data={data} />}
-    />
+        config={{
+          id: "ressources-propres-chart",
+          idQuery: "ressources-propres",
+          title: {
+            className: "fr-mt-0w",
+            look: "h5",
+            size: "h3",
+            fr: (
+              <>
+                Décomposition des ressources propres
+                {etablissementName && ` — ${etablissementName}`}
+                {selectedYear && ` — ${selectedYear}`}
+              </>
+            ),
+          },
+          comment: {
+            fr: (
+              <>
+                Ce graphique présente la répartition détaillée des ressources propres de l'établissement pour l'exercice {selectedYear}. Les
+                ressources propres comprennent notamment les droits d'inscription, la formation continue, les contrats de recherche, les subventions
+                régionales et européennes.
+              </>
+            ),
+          },
+          readingKey: {
+            fr: (
+              <>
+                En {selectedYear}, le total des ressources propres s'élève à <strong>{euro(totalRessources)} €</strong>. La principale source est{" "}
+                {ressourcesPropresDecomposition.sort((a, b) => (b.value || 0) - (a.value || 0))[0]?.label.toLowerCase()} avec{" "}
+                <strong>{euro(ressourcesPropresDecomposition.sort((a, b) => (b.value || 0) - (a.value || 0))[0]?.value)} €</strong> (
+                {pct(ressourcesPropresDecomposition.sort((a, b) => (b.value || 0) - (a.value || 0))[0]?.part)}
+                ).
+              </>
+            ),
+          },
+          updateDate: new Date(),
+          integrationURL: "/integration-url",
+        }}
+        options={options}
+        renderData={() => <RenderData data={data} />}
+      />
     </div>
   );
 }

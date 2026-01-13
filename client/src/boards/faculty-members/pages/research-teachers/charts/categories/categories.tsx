@@ -159,8 +159,7 @@ export const CategoryDistribution = () => {
           as: "h2",
           fr: (
             <>
-              Comment se répartissent les enseignants permanents par genre
-              ?&nbsp;
+              Comment se répartissent les enseignants permanents par genre ?&nbsp;
               <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
             </>
           ),
@@ -168,33 +167,20 @@ export const CategoryDistribution = () => {
         comment: {
           fr: (
             <>
-              Répartition des enseignants permanents par catégorie au sein de la
-              fonction publique d'État. Les enseignants permanents sont répartis
-              en 3 catégories : les{" "}
-              <GlossaryTerm term="professeurs des universités">
-                professeurs des universités
-              </GlossaryTerm>{" "}
-              (PR), les{" "}
-              <GlossaryTerm term="maîtres de conférences">
-                maîtres de conférences
-              </GlossaryTerm>{" "}
-              (MCF) et les{" "}
-              <GlossaryTerm term="2nd degrés">
-                enseignants du 2nd degré et Arts et métiers.
-              </GlossaryTerm>{" "}
+              Répartition des enseignants permanents par catégorie au sein de la fonction publique d'État. Les enseignants permanents sont répartis en
+              3 catégories : les <GlossaryTerm term="professeurs des universités">professeurs des universités</GlossaryTerm> (PR), les{" "}
+              <GlossaryTerm term="maîtres de conférences">maîtres de conférences</GlossaryTerm> (MCF) et les{" "}
+              <GlossaryTerm term="2nd degrés">enseignants du 2nd degré et Arts et métiers.</GlossaryTerm>{" "}
             </>
           ),
         },
         readingKey: {
           fr: exampleData ? (
             <>
-              Pour l'année universitaire {selectedYear}, la catégorie la plus
-              représentée est "<strong>{exampleData.name}</strong>" avec{" "}
-              <strong>{exampleData.total.toLocaleString("fr-FR")}</strong>{" "}
-              personnes, dont{" "}
-              <strong>{exampleData.women.toLocaleString("fr-FR")}</strong>{" "}
-              femmes et{" "}
-              <strong>{exampleData.men.toLocaleString("fr-FR")}</strong> hommes.
+              Pour l'année universitaire {selectedYear}, la catégorie la plus représentée est "<strong>{exampleData.name}</strong>" avec{" "}
+              <strong>{exampleData.total.toLocaleString("fr-FR")}</strong> personnes, dont{" "}
+              <strong>{exampleData.women.toLocaleString("fr-FR")}</strong> femmes et <strong>{exampleData.men.toLocaleString("fr-FR")}</strong>{" "}
+              hommes.
             </>
           ) : (
             <></>
@@ -211,13 +197,9 @@ export const CategoryDistribution = () => {
           },
         },
         updateDate: new Date(),
-        integrationURL: generateIntegrationURL(
-          context,
-          "category-distribution"
-        ),
+        integrationURL: generateIntegrationURL(context, "category-distribution"),
       }}
       options={chartOptions}
-      legend={null}
       renderData={() => <RenderData data={categoryData} />}
     />
   );

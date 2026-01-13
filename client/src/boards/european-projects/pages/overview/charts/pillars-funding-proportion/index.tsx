@@ -50,5 +50,5 @@ export default function PillarsFundingProportion() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} legend={null} options={options(data)} renderData={() => renderDataTable(data, "fr")} />;
+  return <ChartWrapper config={config} options={options(data)} renderData={() => renderDataTable(data, "fr")} />;
 }

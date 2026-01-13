@@ -1,4 +1,4 @@
-import { Col, Row, Select } from "@dataesr/dsfr-plus";
+import { Col, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default.tsx";

@@ -44,7 +44,7 @@ export default function EfficiencyScatter() {
   return (
     <div className={`chart-container chart-container--${color}`}>
       <span className="chart-badge">Top 15</span>
-      <ChartWrapper config={config} legend={null} options={options(data, currentLang)} renderData={() => renderDataTable(data, currentLang)} />
+      <ChartWrapper config={config} options={options(data, currentLang)} renderData={() => renderDataTable(data, currentLang)} />
     </div>
   );
 }

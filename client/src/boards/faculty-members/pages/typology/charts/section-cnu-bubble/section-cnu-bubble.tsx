@@ -753,12 +753,7 @@ export function SectionsBubbleChart() {
 
   return (
     <>
-      <ChartWrapper
-        config={config}
-        options={bubbleOptions}
-        legend={null}
-        renderData={() => <RenderData data={bubbleData} />}
-      />
+      <ChartWrapper config={config} options={bubbleOptions} renderData={() => <RenderData data={bubbleData} />} />
     </>
   );
 }

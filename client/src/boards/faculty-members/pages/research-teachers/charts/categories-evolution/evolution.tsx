@@ -114,26 +114,14 @@ export const CategoryEvolutionChart = () => {
           ),
         },
         comment: {
-          fr: (
-            <>
-              Ce graphique montre l'évolution du nombre d'enseignants permanents
-              par catégorie au fil des années universitaires.
-            </>
-          ),
+          fr: <>Ce graphique montre l'évolution du nombre d'enseignants permanents par catégorie au fil des années universitaires.</>,
         },
         readingKey: {
           fr: exampleCategory ? (
             <>
-              Pour la catégorie <strong>"{exampleCategory.name}"</strong>,
-              l'effectif est passé de{" "}
-              <strong>
-                {exampleCategory.startValue.toLocaleString("fr-FR")}
-              </strong>{" "}
-              pour l'année universitaire {exampleCategory.startYear} à{" "}
-              <strong>
-                {exampleCategory.endValue.toLocaleString("fr-FR")}
-              </strong>{" "}
-              pour {exampleCategory.endYear}.
+              Pour la catégorie <strong>"{exampleCategory.name}"</strong>, l'effectif est passé de{" "}
+              <strong>{exampleCategory.startValue.toLocaleString("fr-FR")}</strong> pour l'année universitaire {exampleCategory.startYear} à{" "}
+              <strong>{exampleCategory.endValue.toLocaleString("fr-FR")}</strong> pour {exampleCategory.endYear}.
             </>
           ) : (
             <></>
@@ -152,7 +140,6 @@ export const CategoryEvolutionChart = () => {
         updateDate: new Date(),
         integrationURL: generateIntegrationURL(context, "category-evolution"),
       }}
-      legend={null}
       options={chartOptions}
     />
   );

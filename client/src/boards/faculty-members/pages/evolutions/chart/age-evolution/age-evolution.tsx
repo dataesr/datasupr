@@ -431,7 +431,6 @@ export function AgeEvolutionChart() {
       <ChartWrapper
         config={config}
         options={chartOptions}
-        legend={null}
         renderData={() => <RenderData data={processedData} />}
       />
     </div>

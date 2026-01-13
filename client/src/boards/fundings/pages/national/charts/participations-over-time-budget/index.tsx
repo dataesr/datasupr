@@ -136,11 +136,7 @@ export default function ParticipationsOverTimeBudget() {
 
   return (
     <div className={`chart-container chart-container--${color}`} id="participations-over-time-budget">
-      <ChartWrapper
-        config={config}
-        legend={null}
-        options={options}
-      />
+      <ChartWrapper config={config} options={options} />
     </div>
   );
 }

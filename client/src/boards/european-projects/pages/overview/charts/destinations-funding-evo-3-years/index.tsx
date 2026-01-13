@@ -140,20 +140,10 @@ export default function DestinationsFundingEvo3Years() {
       </Row>
       <Row>
         <Col md={6}>
-          <ChartWrapper
-            config={configChart1}
-            legend={null}
-            options={optionsSubsidiesValues(data, displayType)}
-            renderData={RenderDataSubsidiesValuesAndRates}
-          />
+          <ChartWrapper config={configChart1} options={optionsSubsidiesValues(data, displayType)} renderData={RenderDataSubsidiesValuesAndRates} />
         </Col>
         <Col>
-          <ChartWrapper
-            config={configChart2}
-            legend={null}
-            options={optionsSubsidiesRates(data, displayType)}
-            renderData={RenderDataSubsidiesValuesAndRates}
-          />
+          <ChartWrapper config={configChart2} options={optionsSubsidiesRates(data, displayType)} renderData={RenderDataSubsidiesValuesAndRates} />
         </Col>
       </Row>
       <Row>
@@ -165,7 +155,6 @@ export default function DestinationsFundingEvo3Years() {
         <Col>
           <ChartWrapper
             config={configChart3}
-            legend={null}
             options={optionsSubsidiesCountryRates(data, displayType)}
             renderData={RenderDataSubsidiesValuesAndRates}
           />

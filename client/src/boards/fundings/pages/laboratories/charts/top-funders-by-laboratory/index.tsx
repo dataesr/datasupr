@@ -129,21 +129,14 @@ export default function TopFundersByLaboratory() {
 
   return (
     <div className={`chart-container chart-container--${color}`} id="top-funders-by-laboratory">
-      <LaboratoriesSelector
-        selectedLaboratoryId={selectedLaboratoryId}
-        setSelectedLaboratoryId={setSelectedLaboratoryId}
-      />
+      <LaboratoriesSelector selectedLaboratoryId={selectedLaboratoryId} setSelectedLaboratoryId={setSelectedLaboratoryId} />
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      <ChartWrapper
-        config={config}
-        legend={null}
-        options={options}
-      />
+      <ChartWrapper config={config} options={options} />
     </div>
   );
 }

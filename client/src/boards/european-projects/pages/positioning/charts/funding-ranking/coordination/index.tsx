@@ -117,7 +117,6 @@ export default function FundingRankingCoordination() {
           </Title>
           <ChartWrapper
             config={configChart2a}
-            legend={null}
             options={optionsCoordinationNumber(prepareData(data, "total_coordination_number_successful"), currentLang)}
             renderData={() =>
               renderDataTableCoordination(
@@ -134,7 +133,6 @@ export default function FundingRankingCoordination() {
           </Title>
           <ChartWrapper
             config={configChart2b}
-            legend={null}
             options={optionCoordinationNumberSuccessRate(prepareData(data, "total_coordination_number_successful"))}
             renderData={() =>
               renderDataTableCoordinationSuccessRate(

@@ -258,7 +258,6 @@ const DistributionBar: React.FC = () => {
       <ChartWrapper
         config={config}
         options={chartOptions}
-        legend={null}
         renderData={() => (
           <RenderData data={itemsData} contextHeaderLabel={header} />
         )}

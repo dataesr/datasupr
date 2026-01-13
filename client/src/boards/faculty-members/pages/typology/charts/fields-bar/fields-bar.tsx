@@ -431,7 +431,6 @@ const ItemBarChart: React.FC = () => {
             config={config}
             hideTitle={true}
             options={options}
-            legend={null}
             renderData={() => <RenderData data={sortedItems} />}
           />
           <Row horizontalAlign="center" className="fr-mb-4w">

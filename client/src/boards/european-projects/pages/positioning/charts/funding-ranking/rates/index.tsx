@@ -135,7 +135,6 @@ export default function FundingRankingRates() {
         <Col>
           <ChartWrapper
             config={configChartFundingRankingSubRates}
-            legend={null}
             options={optionsSubRates(prepareData(data, "total_successful"), currentLang)}
             renderData={() => renderDataTable(prepareData(data, "total_successful"), currentLang, searchParams.get("country_code") ?? null)}
           />

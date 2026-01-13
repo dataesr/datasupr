@@ -109,7 +109,9 @@ export default function TopProjectsByStructure() {
             value={selectedStructure}
             onChange={(e) => setSelectedStructure(e.target.value)}
           >
-            <option disabled value="">Sélectionnez une structure</option>
+            <option disabled value="">
+              Sélectionnez une structure
+            </option>
             {structures.map((structure) => (
               <option key={structure.id} value={structure.id}>
                 {structure.name}
@@ -127,7 +129,9 @@ export default function TopProjectsByStructure() {
             value={selectedYearStart}
             onChange={(e) => setSelectedYearStart(e.target.value)}
           >
-            <option disabled value="">Sélectionnez une année de début</option>
+            <option disabled value="">
+              Sélectionnez une année de début
+            </option>
             {years.map((year) => (
               <option key={year} value={year}>
                 {year}
@@ -143,7 +147,9 @@ export default function TopProjectsByStructure() {
             value={selectedYearEnd}
             onChange={(e) => setSelectedYearEnd(e.target.value)}
           >
-            <option disabled value="">Sélectionnez une année de fin</option>
+            <option disabled value="">
+              Sélectionnez une année de fin
+            </option>
             {years.map((year) => (
               <option key={year} value={year}>
                 {year}
@@ -152,11 +158,7 @@ export default function TopProjectsByStructure() {
           </select>
         </Col>
       </Row>
-      <ChartWrapper
-        config={config}
-        legend={null}
-        options={options}
-      />
+      <ChartWrapper config={config} options={options} />
     </div>
   );
 }

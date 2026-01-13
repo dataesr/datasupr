@@ -118,7 +118,6 @@ export default function FundingRankingParticipations() {
           </Title>
           <ChartWrapper
             config={configChart3a}
-            legend={null}
             options={optionsNumberInvolved(prepareData(data, "total_number_involved_successful"), currentLang)}
             renderData={() =>
               renderDataTableParticipations(
@@ -135,7 +134,6 @@ export default function FundingRankingParticipations() {
           </Title>
           <ChartWrapper
             config={configChart3b}
-            legend={null}
             options={optionNumberInvolvedSuccessRate(prepareData(data, "total_number_involved_successful"), currentLang)}
             renderData={() =>
               renderDataTableParticipationsSuccessRate(

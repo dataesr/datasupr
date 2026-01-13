@@ -114,38 +114,19 @@ export default function ProgramsFundingEvo3Years() {
     <Container fluid>
       <Row className="fr-my-1w">
         <Col>
-          <select
-            className="fr-select"
-            onChange={(e) => setDisplayType(e.target.value)}
-          >
-            <option value="total_fund_eur">
-              {getI18nLabel("total-fund-eur")}
-            </option>
-            <option value="total_coordination_number">
-              {getI18nLabel("total-coordination-number")}
-            </option>
-            <option value="total_number_involved">
-              {getI18nLabel("total-number-involved")}
-            </option>
+          <select className="fr-select" onChange={(e) => setDisplayType(e.target.value)}>
+            <option value="total_fund_eur">{getI18nLabel("total-fund-eur")}</option>
+            <option value="total_coordination_number">{getI18nLabel("total-coordination-number")}</option>
+            <option value="total_number_involved">{getI18nLabel("total-number-involved")}</option>
           </select>
         </Col>
       </Row>
       <Row>
         <Col md={6}>
-          <ChartWrapper
-            config={configChart1}
-            legend={null}
-            options={optionsSubsidiesValues(data, displayType)}
-            renderData={RenderDataSubsidiesValuesAndRates}
-          />
+          <ChartWrapper config={configChart1} options={optionsSubsidiesValues(data, displayType)} renderData={RenderDataSubsidiesValuesAndRates} />
         </Col>
         <Col>
-          <ChartWrapper
-            config={configChart2}
-            legend={null}
-            options={optionsSubsidiesRates(data, displayType)}
-            renderData={RenderDataSubsidiesValuesAndRates}
-          />
+          <ChartWrapper config={configChart2} options={optionsSubsidiesRates(data, displayType)} renderData={RenderDataSubsidiesValuesAndRates} />
         </Col>
       </Row>
       <Row>
@@ -157,7 +138,6 @@ export default function ProgramsFundingEvo3Years() {
         <Col>
           <ChartWrapper
             config={configChart3}
-            legend={null}
             options={optionsSubsidiesCountryRates(data, displayType)}
             renderData={RenderDataSubsidiesValuesAndRates}
           />

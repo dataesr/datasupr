@@ -43,7 +43,6 @@ export default function SuccessRateForAmountsByTypeOfFinancing() {
           <ChartWrapper
             config={config}
             options={options(data)}
-            legend={null}
             renderData={() => null} // TODO: add data table
           />
         </Col>

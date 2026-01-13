@@ -102,26 +102,20 @@ export default function EffectifsChart({
         comment: {
           fr: (
             <>
-              Ce graphique présente la répartition des étudiants par niveau de
-              formation (Licence, Master, Doctorat) pour l'exercice{" "}
-              {selectedYear}. Ces données ne prennent pas en compte les
-              étudiants inscrits en parallèle dans une classe préparatoire aux
-              grandes écoles et une prépa intégrées dans un autre
-              établissement..
+              Ce graphique présente la répartition des étudiants par niveau de formation (Licence, Master, Doctorat) pour l'exercice {selectedYear}.
+              Ces données ne prennent pas en compte les étudiants inscrits en parallèle dans une classe préparatoire aux grandes écoles et une prépa
+              intégrées dans un autre établissement..
             </>
           ),
         },
         readingKey: {
           fr: (
             <>
-              En {selectedYear}, l'établissement compte{" "}
-              <strong>{num(data.effectif_sans_cpge)} étudiants</strong> au
-              total.
+              En {selectedYear}, l'établissement compte <strong>{num(data.effectif_sans_cpge)} étudiants</strong> au total.
               {data.has_effectif_m && data.effectif_sans_cpge_m && (
                 <>
                   {" "}
-                  Le niveau Master représente la plus grande part avec{" "}
-                  <strong>{num(data.effectif_sans_cpge_m)} étudiants</strong> (
+                  Le niveau Master représente la plus grande part avec <strong>{num(data.effectif_sans_cpge_m)} étudiants</strong> (
                   {pct(data.part_effectif_sans_cpge_m)}).
                 </>
               )}
@@ -132,7 +126,6 @@ export default function EffectifsChart({
         integrationURL: "/integration-url",
       }}
       options={cursusOptions}
-      legend={null}
       renderData={() => <RenderDataNiveau data={data} />}
     />
   );
@@ -157,10 +150,8 @@ export default function EffectifsChart({
         comment: {
           fr: (
             <>
-              Ce graphique présente les effectifs des filières spécifiques (IUT,
-              Ingénieur, Santé) pour l'exercice {selectedYear}. Ces filières ne
-              sont pas calculées en pourcentage car elles peuvent se superposer
-              avec les autres catégories.
+              Ce graphique présente les effectifs des filières spécifiques (IUT, Ingénieur, Santé) pour l'exercice {selectedYear}. Ces filières ne
+              sont pas calculées en pourcentage car elles peuvent se superposer avec les autres catégories.
             </>
           ),
         },
@@ -169,12 +160,7 @@ export default function EffectifsChart({
             <>
               Les filières spécifiques totalisent{" "}
               <strong>
-                {num(
-                  (data.effectif_sans_cpge_iut || 0) +
-                    (data.effectif_sans_cpge_ing || 0) +
-                    (data.effectif_sans_cpge_sante || 0)
-                )}{" "}
-                étudiants
+                {num((data.effectif_sans_cpge_iut || 0) + (data.effectif_sans_cpge_ing || 0) + (data.effectif_sans_cpge_sante || 0))} étudiants
               </strong>
               .
             </>
@@ -184,7 +170,6 @@ export default function EffectifsChart({
         integrationURL: "/integration-url",
       }}
       options={specifiquesOptions}
-      legend={null}
       renderData={() => <RenderDataSpecifiques data={data} />}
     />
   );
@@ -209,10 +194,8 @@ export default function EffectifsChart({
         comment: {
           fr: (
             <>
-              Ce graphique détaille la répartition des étudiants par discipline
-              (Droit Sciences Éco AES, Lettres Langues SHS, Théologie, Sciences
-              et Ingénierie, STAPS, Vétérinaire, Interdisciplinaire) pour
-              l'exercice {selectedYear}.
+              Ce graphique détaille la répartition des étudiants par discipline (Droit Sciences Éco AES, Lettres Langues SHS, Théologie, Sciences et
+              Ingénierie, STAPS, Vétérinaire, Interdisciplinaire) pour l'exercice {selectedYear}.
             </>
           ),
         },
@@ -240,7 +223,6 @@ export default function EffectifsChart({
         integrationURL: "/integration-url",
       }}
       options={disciplinesOptions}
-      legend={null}
       renderData={() => <RenderDataDisciplines data={data} />}
     />
   );

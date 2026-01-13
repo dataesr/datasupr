@@ -342,24 +342,17 @@ export default function CnuGroupsChart() {
               <>
                 Répartition des{" "}
                 {hasNonPermanentStaff ? (
-                  <GlossaryTerm term="personnel enseignant">
-                    enseignants
-                  </GlossaryTerm>
+                  <GlossaryTerm term="personnel enseignant">enseignants</GlossaryTerm>
                 ) : (
-                  <GlossaryTerm term="enseignants permanents">
-                    enseignants permanents
-                  </GlossaryTerm>
+                  <GlossaryTerm term="enseignants permanents">enseignants permanents</GlossaryTerm>
                 )}{" "}
-                par <GlossaryTerm term="groupe cnu">groupe CNU</GlossaryTerm>.
-                Cette visualisation montre la distribution des effectifs selon
-                les groupes CNU.
+                par <GlossaryTerm term="groupe cnu">groupe CNU</GlossaryTerm>. Cette visualisation montre la distribution des effectifs selon les
+                groupes CNU.
                 {!hasNonPermanentStaff && (
                   <>
                     <br />
-                    <strong>Note :</strong> Les données présentées ne concernent
-                    que les enseignants permanents. Les données relatives aux
-                    enseignants non-permanents ne sont pas disponibles pour
-                    cette période.
+                    <strong>Note :</strong> Les données présentées ne concernent que les enseignants permanents. Les données relatives aux enseignants
+                    non-permanents ne sont pas disponibles pour cette période.
                   </>
                 )}
               </>
@@ -374,12 +367,8 @@ export default function CnuGroupsChart() {
                 {largestGroup && (
                   <>
                     {" "}
-                    pour le groupe CNU '{largestGroup.cnuGroupLabel}'{" "}
-                    <strong>{largestGroup.totalCount.toLocaleString()}</strong>{" "}
-                    personnes, dont{" "}
-                    <strong>{largestGroup.femaleCount.toLocaleString()}</strong>{" "}
-                    femmes et{" "}
-                    <strong>{largestGroup.maleCount.toLocaleString()}</strong>{" "}
+                    pour le groupe CNU '{largestGroup.cnuGroupLabel}' <strong>{largestGroup.totalCount.toLocaleString()}</strong> personnes, dont{" "}
+                    <strong>{largestGroup.femaleCount.toLocaleString()}</strong> femmes et <strong>{largestGroup.maleCount.toLocaleString()}</strong>{" "}
                     hommes.
                   </>
                 )}
@@ -397,11 +386,9 @@ export default function CnuGroupsChart() {
             },
           },
           updateDate: new Date(),
-          integrationURL:
-            "/integration-url/faculty-members/${context}/cnu-group${année_universitaire}?${contextId}",
+          integrationURL: "/integration-url/faculty-members/${context}/cnu-group${année_universitaire}?${contextId}",
         }}
         options={options}
-        legend={null}
         renderData={() => <RenderData groupedData={tableData} />}
       />
     </div>

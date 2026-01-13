@@ -369,23 +369,14 @@ export function EstablishmentTypeChart() {
       <div className="fr-mb-2w fr-flex fr-flex--center">
         {shouldShowStatusFilters && (
           <div className="fr-mr-4v">
-            <Button
-              size="sm"
-              onClick={() => setStatusFilter("all")}
-              variant={statusFilter === "all" ? undefined : "secondary"}
-              className="fr-mr-1v"
-            >
+            <Button size="sm" onClick={() => setStatusFilter("all")} variant={statusFilter === "all" ? undefined : "secondary"} className="fr-mr-1v">
               Tous
             </Button>
             {hasEnseignantChercheur && (
               <Button
                 size="sm"
                 onClick={() => setStatusFilter("enseignant_chercheur")}
-                variant={
-                  statusFilter === "enseignant_chercheur"
-                    ? undefined
-                    : "secondary"
-                }
+                variant={statusFilter === "enseignant_chercheur" ? undefined : "secondary"}
                 className="fr-mr-1v"
               >
                 Ens.-chercheurs
@@ -395,24 +386,14 @@ export function EstablishmentTypeChart() {
               <Button
                 size="sm"
                 onClick={() => setStatusFilter("titulaire_non_chercheur")}
-                variant={
-                  statusFilter === "titulaire_non_chercheur"
-                    ? undefined
-                    : "secondary"
-                }
+                variant={statusFilter === "titulaire_non_chercheur" ? undefined : "secondary"}
                 className="fr-mr-1v"
               >
                 Ens. du 2nd degré
               </Button>
             )}
             {hasNonTitulaire && (
-              <Button
-                size="sm"
-                onClick={() => setStatusFilter("non_titulaire")}
-                variant={
-                  statusFilter === "non_titulaire" ? undefined : "secondary"
-                }
-              >
+              <Button size="sm" onClick={() => setStatusFilter("non_titulaire")} variant={statusFilter === "non_titulaire" ? undefined : "secondary"}>
                 Non permanents
               </Button>
             )}
@@ -435,12 +416,7 @@ export function EstablishmentTypeChart() {
           Pourcentage
         </Button>
       </div>
-      <ChartWrapper
-        config={config}
-        options={chartOptions}
-        legend={null}
-        renderData={() => <RenderData data={tableData} />}
-      />
+      <ChartWrapper config={config} options={chartOptions} renderData={() => <RenderData data={tableData} />} />
     </div>
   );
 }

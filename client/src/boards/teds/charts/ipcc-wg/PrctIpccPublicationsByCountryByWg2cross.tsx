@@ -40,5 +40,5 @@ export default function PrctIpccReferencesByCountry() {
     },
   };
 
-  return <ChartWrapper config={chartConfig} options={options} legend={null} />;
+  return <ChartWrapper config={chartConfig} options={options} />;
 }

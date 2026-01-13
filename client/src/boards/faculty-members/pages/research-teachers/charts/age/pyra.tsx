@@ -184,8 +184,7 @@ export function AgeDistribution() {
             as: "h2",
             fr: (
               <>
-                Répartition des enseignants permanents par tranche d'âge et par
-                catégorie&nbsp;
+                Répartition des enseignants permanents par tranche d'âge et par catégorie&nbsp;
                 <SubtitleWithContext classText="fr-text--lg fr-text--regular" />
               </>
             ),
@@ -193,9 +192,8 @@ export function AgeDistribution() {
           comment: {
             fr: (
               <>
-                Répartition des enseignants-chercheurs par tranche d'âge et par
-                catégorie. Les tranches d'âge sont les suivantes : 35 ans et moi
-                à gauche, 36 à 55 ans au milieu et 56 et plus à droite.
+                Répartition des enseignants-chercheurs par tranche d'âge et par catégorie. Les tranches d'âge sont les suivantes : 35 ans et moi à
+                gauche, 36 à 55 ans au milieu et 56 et plus à droite.
               </>
             ),
           },
@@ -203,10 +201,8 @@ export function AgeDistribution() {
             fr:
               exampleData && typeof exampleData.count === "number" ? (
                 <>
-                  Pour l'année universitaire {selectedYear}, on dénombre{" "}
-                  <strong>{exampleData.count.toLocaleString("fr-FR")}</strong>{" "}
-                  <strong>{exampleData.categoryName}</strong> qui ont entre{" "}
-                  <strong>{exampleData.ageClassName}</strong>.
+                  Pour l'année universitaire {selectedYear}, on dénombre <strong>{exampleData.count.toLocaleString("fr-FR")}</strong>{" "}
+                  <strong>{exampleData.categoryName}</strong> qui ont entre <strong>{exampleData.ageClassName}</strong>.
                 </>
               ) : (
                 <></>
@@ -226,7 +222,6 @@ export function AgeDistribution() {
           integrationURL: generateIntegrationURL(context, "cnu-age-category"),
         }}
         options={chartOptions}
-        legend={null}
         renderData={() => <RenderData data={processedData} />}
       />
     </div>

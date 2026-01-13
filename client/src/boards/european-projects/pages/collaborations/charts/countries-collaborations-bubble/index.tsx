@@ -69,7 +69,6 @@ export default function CountriesCollaborationsBubble() {
         <Col>
           <ChartWrapper
             config={configChart}
-            legend={null}
             options={options(data, currentLang, nbToShow)}
             renderData={() => null} // TODO: add data table
           />

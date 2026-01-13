@@ -141,12 +141,8 @@ export default function ParticipationsOverTimeBudgetByStructure() {
 
   return (
     <div className={`chart-container chart-container--${color}`} id="participations-over-time-budget-by-structure">
-      <StructuresSelector selectedStructureId={selectedStructureId} setSelectedStructureId={setSelectedStructureId} /> 
-      <ChartWrapper
-        config={config}
-        legend={null}
-        options={options}
-      />
+      <StructuresSelector selectedStructureId={selectedStructureId} setSelectedStructureId={setSelectedStructureId} />
+      <ChartWrapper config={config} options={options} />
     </div>
   );
 }

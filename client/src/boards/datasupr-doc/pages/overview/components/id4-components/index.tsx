@@ -54,7 +54,6 @@ export default function Id4Components() {
                 <code>
                   {`<ChartWrapper
   config={config}
-  legend={null}
   options={options(data, currentLang)}
   renderData={() => renderDataTable(data, currentLang)}
 />`}

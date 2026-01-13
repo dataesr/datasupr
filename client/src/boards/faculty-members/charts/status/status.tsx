@@ -349,20 +349,10 @@ const StatusDistribution: React.FC = () => {
   return (
     <>
       <div className="fr-mb-2w fr-flex fr-flex--center">
-        <Button
-          size="sm"
-          onClick={() => setDisplayAsPercentage(false)}
-          variant={!displayAsPercentage ? undefined : "secondary"}
-          className="fr-mr-2v"
-        >
+        <Button size="sm" onClick={() => setDisplayAsPercentage(false)} variant={!displayAsPercentage ? undefined : "secondary"} className="fr-mr-2v">
           Effectifs
         </Button>
-        <Button
-          size="sm"
-          onClick={() => setDisplayAsPercentage(true)}
-          variant={displayAsPercentage ? undefined : "secondary"}
-          className="fr-mr-2v"
-        >
+        <Button size="sm" onClick={() => setDisplayAsPercentage(true)} variant={displayAsPercentage ? undefined : "secondary"} className="fr-mr-2v">
           Pourcentage
         </Button>
       </div>
@@ -374,27 +364,19 @@ const StatusDistribution: React.FC = () => {
                 mode="select"
                 allowedTypes={["univ"]}
                 placeholder="Ajouter un établissement dans le graphique"
-                onSelect={(item) =>
-                  onSelectStructure({ id: item.id, name: item.name })
-                }
+                onSelect={(item) => onSelectStructure({ id: item.id, name: item.name })}
                 disabledPredicate={(item) => displayedLabels.has(item.name)}
               />
             </div>
             {addedLabels.length > 0 && (
               <div className="fr-mt-2w">
-                <div className="fr-text--sm fr-mb-1w">
-                  Établissements ajoutés :
-                </div>
+                <div className="fr-text--sm fr-mb-1w">Établissements ajoutés :</div>
                 <div>
                   {addedLabels.map((label) => (
                     <DismissibleTag
                       color="blue-cumulus"
                       aria-label={`Retirer ${label}`}
-                      onClick={() =>
-                        setAddedLabels((prev) =>
-                          prev.filter((l) => l !== label)
-                        )
-                      }
+                      onClick={() => setAddedLabels((prev) => prev.filter((l) => l !== label))}
                     >
                       {label}
                     </DismissibleTag>
@@ -413,9 +395,7 @@ const StatusDistribution: React.FC = () => {
                 mode="select"
                 allowedTypes={["region"]}
                 placeholder="Ajouter une région dans le graphique"
-                onSelect={(item) =>
-                  onSelectStructure({ id: item.id, name: item.name })
-                }
+                onSelect={(item) => onSelectStructure({ id: item.id, name: item.name })}
                 disabledPredicate={(item) => displayedLabels.has(item.name)}
               />
             </div>
@@ -427,11 +407,7 @@ const StatusDistribution: React.FC = () => {
                     <DismissibleTag
                       color="blue-cumulus"
                       aria-label={`Retirer ${label}`}
-                      onClick={() =>
-                        setAddedLabels((prev) =>
-                          prev.filter((l) => l !== label)
-                        )
-                      }
+                      onClick={() => setAddedLabels((prev) => prev.filter((l) => l !== label))}
                     >
                       {label}
                     </DismissibleTag>
@@ -455,16 +431,12 @@ const StatusDistribution: React.FC = () => {
               <>
                 {hasNonPermanentStaff
                   ? `Quelle est la répartition des statuts du personnel enseignant ${
-                      contextLabelForTitle.startsWith("dans") ||
-                      contextLabelForTitle.startsWith("à") ||
-                      contextLabelForTitle.startsWith("en")
+                      contextLabelForTitle.startsWith("dans") || contextLabelForTitle.startsWith("à") || contextLabelForTitle.startsWith("en")
                         ? contextLabelForTitle
                         : `par ${contextLabelForTitle}`
                     } ?`
                   : `Quelle est la répartition des statuts des enseignants permanents ${
-                      contextLabelForTitle.startsWith("dans") ||
-                      contextLabelForTitle.startsWith("à") ||
-                      contextLabelForTitle.startsWith("en")
+                      contextLabelForTitle.startsWith("dans") || contextLabelForTitle.startsWith("à") || contextLabelForTitle.startsWith("en")
                         ? contextLabelForTitle
                         : `par ${contextLabelForTitle}`
                     } ?`}
@@ -478,37 +450,23 @@ const StatusDistribution: React.FC = () => {
               <>
                 Répartition par statut des{" "}
                 {hasNonPermanentStaff ? (
-                  <GlossaryTerm term="personnels enseignants">
-                    personnels enseignants
-                  </GlossaryTerm>
+                  <GlossaryTerm term="personnels enseignants">personnels enseignants</GlossaryTerm>
                 ) : (
-                  <GlossaryTerm term="enseignants permanents">
-                    enseignants permanents
-                  </GlossaryTerm>
+                  <GlossaryTerm term="enseignants permanents">enseignants permanents</GlossaryTerm>
                 )}
-                , distinguant notamment les{" "}
-                <GlossaryTerm term="enseignant-chercheur">
-                  enseignants-chercheurs
-                </GlossaryTerm>
+                , distinguant notamment les <GlossaryTerm term="enseignant-chercheur">enseignants-chercheurs</GlossaryTerm>
                 {hasNonPermanentStaff && (
                   <>
-                    , les enseignants du secondaire affectés dans le supérieur
-                    et les{" "}
-                    <GlossaryTerm term="permanent / non permanent">
-                      non-permanents
-                    </GlossaryTerm>
+                    , les enseignants du secondaire affectés dans le supérieur et les{" "}
+                    <GlossaryTerm term="permanent / non permanent">non-permanents</GlossaryTerm>
                   </>
                 )}
-                {!hasNonPermanentStaff &&
-                  " et les Enseignant du Secondaire Affecté dans le Supérieur"}
-                .
+                {!hasNonPermanentStaff && " et les Enseignant du Secondaire Affecté dans le Supérieur"}.
                 {!hasNonPermanentStaff && (
                   <>
                     <br />
-                    <strong>Note :</strong> Les données présentées ne concernent
-                    que les enseignants permanents. Les données relatives aux
-                    enseignants non-permanents ne sont pas disponibles pour
-                    cette période.
+                    <strong>Note :</strong> Les données présentées ne concernent que les enseignants permanents. Les données relatives aux enseignants
+                    non-permanents ne sont pas disponibles pour cette période.
                   </>
                 )}
               </>
@@ -522,73 +480,35 @@ const StatusDistribution: React.FC = () => {
               <>
                 {displayAsPercentage ? (
                   <>
-                    Pour l'année universitaire {selectedYear} pour{" "}
-                    {contextId
-                      ? contextLabelForPrefix
-                      : getContextLabel(true, exampleItem.itemId)}{" "}
-                    {!contextId && <strong>"{exampleItem.fieldLabel}"</strong>},
-                    la répartition des{" "}
-                    {hasNonPermanentStaff
-                      ? "personnels enseignants"
-                      : "enseignants permanents"}{" "}
-                    par statut est la suivante :{" "}
-                    <strong>
-                      {(
-                        (exampleItem.enseignantsChercheurs /
-                          exampleItem.totalCount) *
-                        100
-                      ).toFixed(1)}
-                      %
-                    </strong>{" "}
-                    sont des enseignants-chercheurs
+                    Pour l'année universitaire {selectedYear} pour {contextId ? contextLabelForPrefix : getContextLabel(true, exampleItem.itemId)}{" "}
+                    {!contextId && <strong>"{exampleItem.fieldLabel}"</strong>}, la répartition des{" "}
+                    {hasNonPermanentStaff ? "personnels enseignants" : "enseignants permanents"} par statut est la suivante :{" "}
+                    <strong>{((exampleItem.enseignantsChercheurs / exampleItem.totalCount) * 100).toFixed(1)}%</strong> sont des
+                    enseignants-chercheurs
                     {hasNonPermanentStaff && (
                       <>
                         {" et "}
-                        <strong>
-                          {(
-                            (exampleItem.nonTitulaires /
-                              exampleItem.totalCount) *
-                            100
-                          ).toFixed(1)}
-                          %
-                        </strong>{" "}
-                        sont des non-permanents
+                        <strong>{((exampleItem.nonTitulaires / exampleItem.totalCount) * 100).toFixed(1)}%</strong> sont des non-permanents
                       </>
                     )}
                     .
                   </>
                 ) : (
                   <>
-                    Pour l'année universitaire {selectedYear} pour{" "}
-                    {contextId
-                      ? contextLabelForPrefix
-                      : getContextLabel(true, exampleItem.itemId)}{" "}
+                    Pour l'année universitaire {selectedYear} pour {contextId ? contextLabelForPrefix : getContextLabel(true, exampleItem.itemId)}{" "}
                     {!contextId && (
                       <>
                         <strong>"{exampleItem.fieldLabel}"</strong>, on dénombre{" "}
                       </>
                     )}
                     {contextId && ", on dénombre "}
-                    <strong>
-                      {exampleItem.totalCount.toLocaleString("fr-FR")}
-                    </strong>{" "}
-                    {hasNonPermanentStaff
-                      ? "personnels enseignants"
-                      : "enseignants permanents"}
-                    , dont{" "}
-                    <strong>
-                      {exampleItem.enseignantsChercheurs.toLocaleString(
-                        "fr-FR"
-                      )}
-                    </strong>{" "}
-                    enseignants-chercheurs
+                    <strong>{exampleItem.totalCount.toLocaleString("fr-FR")}</strong>{" "}
+                    {hasNonPermanentStaff ? "personnels enseignants" : "enseignants permanents"}, dont{" "}
+                    <strong>{exampleItem.enseignantsChercheurs.toLocaleString("fr-FR")}</strong> enseignants-chercheurs
                     {hasNonPermanentStaff && (
                       <>
                         {" et "}
-                        <strong>
-                          {exampleItem.nonTitulaires.toLocaleString("fr-FR")}
-                        </strong>{" "}
-                        non-permanents
+                        <strong>{exampleItem.nonTitulaires.toLocaleString("fr-FR")}</strong> non-permanents
                       </>
                     )}
                     .
@@ -613,7 +533,6 @@ const StatusDistribution: React.FC = () => {
           integrationURL: generateIntegrationURL(context, "statuts"),
         }}
         options={chartOptions}
-        legend={null}
         renderData={() => <RenderData data={processedData} />}
       />
     </>

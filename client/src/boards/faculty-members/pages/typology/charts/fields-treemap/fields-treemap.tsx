@@ -330,12 +330,7 @@ export function ItemsTreemapChart() {
 
   return (
     <>
-      <ChartWrapper
-        config={config}
-        options={treemapOptions}
-        legend={null}
-        renderData={() => <RenderData data={treemapData} />}
-      />
+      <ChartWrapper config={config} options={treemapOptions} renderData={() => <RenderData data={treemapData} />} />
     </>
   );
 }

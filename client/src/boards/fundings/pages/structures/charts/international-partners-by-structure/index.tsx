@@ -124,22 +124,14 @@ export default function InternationalPartnersByStructure() {
       <Title as="h3" look="h6">
         {`Partenaires internationaux de la structure ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`}
       </Title>
-      <StructuresSelector
-        selectedStructureId={selectedStructureId}
-        setSelectedStructureId={setSelectedStructureId}
-      />
+      <StructuresSelector selectedStructureId={selectedStructureId} setSelectedStructureId={setSelectedStructureId} />
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}
         setSelectedYearEnd={setSelectedYearEnd}
         setSelectedYearStart={setSelectedYearStart}
       />
-      <ChartWrapper
-        config={config}
-        constructorType="mapChart"
-        legend={null}
-        options={options}
-      />
+      <ChartWrapper config={config} constructorType="mapChart" options={options} />
     </div>
   );
 };

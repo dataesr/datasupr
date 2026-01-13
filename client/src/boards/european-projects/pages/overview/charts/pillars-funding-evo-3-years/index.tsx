@@ -102,7 +102,6 @@ export default function PillarsFundingEvo3Years() {
         <Col md={12}>
           <ChartWrapper
             config={configChart1}
-            legend={null}
             options={optionsSubsidiesValues(data, displayType, currentLang)}
             renderData={() => renderDataTable(data, currentLang, displayType)}
           />
@@ -112,7 +111,6 @@ export default function PillarsFundingEvo3Years() {
         <Col>
           <ChartWrapper
             config={configChart3}
-            legend={null}
             options={optionsSubsidiesCountryRates(data, displayType, currentLang)}
             renderData={() => renderDataTableRates(data, currentLang, displayType)}
           />

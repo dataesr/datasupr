@@ -195,7 +195,6 @@ export default function FundingEvo3Years() {
         <Col md={6}>
           <ChartWrapper
             config={configChart1}
-            legend={null}
             options={optionsSubsidiesValues(filteredData, currentLang)}
             renderData={RenderDataSubsidiesValuesAndRates}
           />
@@ -203,7 +202,6 @@ export default function FundingEvo3Years() {
         <Col>
           <ChartWrapper
             config={configChart2}
-            legend={null}
             options={optionsSubsidiesSuccessRates(filteredData, currentLang)}
             renderData={RenderDataSubsidiesValuesAndRates}
           />
@@ -218,7 +216,6 @@ export default function FundingEvo3Years() {
         <Col>
           <ChartWrapper
             config={configChart3}
-            legend={null}
             options={optionsSubsidiesRates(filteredData, currentLang)}
             renderData={RenderDataSubsidiesValuesAndRates}
           />

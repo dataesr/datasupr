@@ -30,7 +30,6 @@ export default function MainBeneficiaries() {
   return (
     <ChartWrapper
       config={config}
-      legend={null}
       options={options(data)}
       renderData={() => null} // TODO: add data table
     />

@@ -103,7 +103,6 @@ export default function Id3Charts() {
               <code>
                 {`<ChartWrapper
   config={config}
-  legend={null}
   options={options(data, currentLang)}
   renderData={() => renderDataTable(data, currentLang)}
 />`}

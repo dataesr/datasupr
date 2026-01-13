@@ -46,5 +46,5 @@ export default function TopicsFundingProportion() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} legend={null} options={options(data)} renderData={() => renderDataTable(data, currentLang)} />;
+  return <ChartWrapper config={config} options={options(data)} renderData={() => renderDataTable(data, currentLang)} />;
 }

@@ -75,7 +75,6 @@ export default function EntityVariablePie({ entity_id }: { entity_id?: string })
         <Col>
           <ChartWrapper
             config={configChart}
-            legend={null}
             options={options(data, currentLang)}
             renderData={() => null} // TODO: add data table
           />
