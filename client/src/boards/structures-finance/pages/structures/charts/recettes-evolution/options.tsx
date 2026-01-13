@@ -1,5 +1,6 @@
 import Highcharts from "highcharts";
 import { CHART_COLORS } from "../../../../constants/colors";
+import { CreateChartOptions } from "../../../../chart-options";
 
 interface RecettesEvolutionData {
   exercice: number;
@@ -206,17 +207,9 @@ export const createRecettesEvolutionChartOptions = (
           },
         ];
 
-  return {
+  return CreateChartOptions("column", {
     chart: {
-      type: "column",
       height: 500,
-      backgroundColor: "transparent",
-    },
-    title: {
-      text: undefined,
-    },
-    exporting: {
-      enabled: false,
     },
     xAxis: {
       categories: years.map(String),
@@ -226,7 +219,6 @@ export const createRecettesEvolutionChartOptions = (
           fontWeight: "bold",
         },
       },
-      labels: {},
     },
     yAxis: {
       min: 0,
@@ -325,19 +317,16 @@ export const createRecettesEvolutionChartOptions = (
       },
     },
     legend: {
+      enabled: true,
       align: "center",
       verticalAlign: "bottom",
-      layout: "horizontal",
       itemStyle: {
         color: "var(--text-default-grey)",
       },
-    },
-    credits: {
-      enabled: false,
     },
     series: series.map((s) => ({
       ...s,
       type: "column",
     })),
-  };
+  });
 };

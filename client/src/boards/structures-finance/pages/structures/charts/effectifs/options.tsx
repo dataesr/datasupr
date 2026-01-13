@@ -1,5 +1,6 @@
 import Highcharts from "highcharts";
 import { CHART_COLORS } from "../../../../constants/colors";
+import { CreateChartOptions } from "../../../../chart-options";
 
 interface EffectifsData {
   effectif_sans_cpge?: number;
@@ -73,17 +74,9 @@ export const createEffectifsNiveauChartOptions = (
     },
   ].filter((item) => item.has);
 
-  return {
+  return CreateChartOptions("pie", {
     chart: {
-      type: "pie",
       height: 400,
-      backgroundColor: "transparent",
-    },
-    title: {
-      text: undefined,
-    },
-    exporting: {
-      enabled: false,
     },
     tooltip: {
       useHTML: true,
@@ -124,15 +117,13 @@ export const createEffectifsNiveauChartOptions = (
       },
     },
     legend: {
+      enabled: true,
       align: "right",
       verticalAlign: "middle",
       layout: "vertical",
       itemStyle: {
         color: "var(--text-default-grey)",
       },
-    },
-    credits: {
-      enabled: false,
     },
     series: [
       {
@@ -141,7 +132,7 @@ export const createEffectifsNiveauChartOptions = (
         data: niveaux,
       },
     ],
-  };
+  });
 };
 
 export const createEffectifsSpecifiquesChartOptions = (
@@ -176,26 +167,13 @@ export const createEffectifsSpecifiquesChartOptions = (
     color: item.color,
   }));
 
-  return {
+  return CreateChartOptions("column", {
     chart: {
-      type: "column",
       height: 400,
-      backgroundColor: "transparent",
-    },
-    title: {
-      text: undefined,
-    },
-    exporting: {
-      enabled: false,
     },
     xAxis: {
       categories: categories,
       crosshair: true,
-      labels: {
-        style: {
-          fontSize: "13px",
-        },
-      },
     },
     yAxis: {
       min: 0,
@@ -246,12 +224,6 @@ export const createEffectifsSpecifiquesChartOptions = (
         },
       },
     },
-    legend: {
-      enabled: false,
-    },
-    credits: {
-      enabled: false,
-    },
     series: [
       {
         name: "Effectifs",
@@ -260,7 +232,7 @@ export const createEffectifsSpecifiquesChartOptions = (
         colorByPoint: true,
       },
     ],
-  };
+  });
 };
 
 export const createEffectifsDisciplinesChartOptions = (
@@ -327,17 +299,9 @@ export const createEffectifsDisciplinesChartOptions = (
     },
   ].filter((item) => item.has && item.y > 0);
 
-  return {
+  return CreateChartOptions("pie", {
     chart: {
-      type: "pie",
       height: 400,
-      backgroundColor: "transparent",
-    },
-    title: {
-      text: undefined,
-    },
-    exporting: {
-      enabled: false,
     },
     tooltip: {
       useHTML: true,
@@ -382,15 +346,13 @@ export const createEffectifsDisciplinesChartOptions = (
       },
     },
     legend: {
+      enabled: true,
       align: "right",
       verticalAlign: "middle",
       layout: "vertical",
       itemStyle: {
         color: undefined,
       },
-    },
-    credits: {
-      enabled: false,
     },
     series: [
       {
@@ -399,5 +361,5 @@ export const createEffectifsDisciplinesChartOptions = (
         data: disciplines,
       },
     ],
-  };
+  });
 };

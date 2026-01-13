@@ -1,4 +1,5 @@
 import Highcharts from "highcharts";
+import { CreateChartOptions } from "../../../../chart-options";
 
 interface EvolutionData {
   exercice: number;
@@ -141,17 +142,9 @@ export const createEvolutionChartOptions = (
           },
         };
 
-  return {
+  return CreateChartOptions("line", {
     chart: {
-      type: "line",
       height: 500,
-      backgroundColor: "transparent",
-    },
-    title: {
-      text: undefined,
-    },
-    exporting: {
-      enabled: false,
     },
     xAxis: {
       categories: sortedData.map((item) => String(item.exercice)),
@@ -159,11 +152,6 @@ export const createEvolutionChartOptions = (
         text: "Année",
       },
       crosshair: true,
-      labels: {
-        style: {
-          fontSize: "13px",
-        },
-      },
       lineWidth: 1,
     },
     yAxis: yAxisConfig as any,
@@ -254,8 +242,5 @@ export const createEvolutionChartOptions = (
       },
     },
     series: series as any,
-    credits: {
-      enabled: false,
-    },
-  };
+  });
 };

@@ -6,6 +6,9 @@ import {
   Service,
   FastAccess,
   Container,
+  Nav,
+  Link,
+  NavItem,
 } from "@dataesr/dsfr-plus";
 
 import Footer from "./footer";
@@ -72,39 +75,21 @@ export default function GlobalLayout() {
             </span>
           </Button>
         </FastAccess>
+        <Nav>
+          <Link
+            current={isActive("/structures-finance/etablissements")}
+            href="/structures-finance/etablissements"
+          >
+            Etablissement
+          </Link>
+          <Link
+            current={isActive("/structures-finance/national")}
+            href="/structures-finance/national"
+          >
+            Vue nationale
+          </Link>
+        </Nav>
       </Header>
-      <Container>
-        <nav className="fr-nav" role="navigation" aria-label="Menu principal">
-          <ul className="fr-nav__list">
-            <li className="fr-nav__item">
-              <a
-                className="fr-nav__link"
-                href="/structures-finance/etablissements"
-                target="_self"
-                aria-current={
-                  isActive("/structures-finance/etablissements")
-                    ? "page"
-                    : undefined
-                }
-              >
-                Etablissement
-              </a>
-            </li>
-            <li className="fr-nav__item">
-              <a
-                className="fr-nav__link"
-                href="/structures-finance/national"
-                target="_self"
-                aria-current={
-                  isActive("/structures-finance/national") ? "page" : undefined
-                }
-              >
-                Vue nationale
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </Container>
       <Outlet />
       <Footer />
       <SwitchTheme />

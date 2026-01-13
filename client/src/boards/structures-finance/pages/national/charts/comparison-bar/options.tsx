@@ -1,5 +1,6 @@
 import Highcharts from "highcharts";
 import { CHART_COLORS } from "../../../../constants/colors";
+import { CreateChartOptions } from "../../../../chart-options";
 
 export interface ComparisonBarConfig {
   metric: string;
@@ -24,11 +25,9 @@ export const createComparisonBarOptions = (
     .sort((a, b) => b.value - a.value)
     .slice(0, config.topN);
 
-  return {
+  return CreateChartOptions("bar", {
     chart: {
-      type: "bar",
       height: Math.max(400, chartData.length * 25 + 100),
-      backgroundColor: "transparent",
     },
     title: {
       text: `${config.metricLabel} par établissement`,
@@ -49,12 +48,6 @@ export const createComparisonBarOptions = (
       categories: chartData.map((d) => d.name),
       title: {
         text: null,
-      },
-      labels: {
-        style: {
-          fontSize: "11px",
-          color: "var(--text-default-grey)",
-        },
       },
       gridLineWidth: 0,
     },
@@ -129,9 +122,6 @@ export const createComparisonBarOptions = (
         color: "var(--text-default-grey)",
       },
     },
-    credits: {
-      enabled: false,
-    },
     series: [
       {
         type: "bar",
@@ -139,5 +129,5 @@ export const createComparisonBarOptions = (
         data: chartData.map((d) => d.value),
       },
     ],
-  };
+  });
 };

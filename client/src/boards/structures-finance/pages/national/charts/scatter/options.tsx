@@ -1,5 +1,6 @@
 import Highcharts from "highcharts";
 import { CHART_COLORS } from "../../../../constants/colors";
+import { CreateChartOptions } from "../../../../chart-options";
 
 export interface ScatterConfig {
   title: string;
@@ -50,14 +51,9 @@ export const createScatterOptions = (
       color: colors[index % colors.length],
     }));
 
-  return {
+  return CreateChartOptions("bubble", {
     chart: {
-      type: "bubble",
       height: 600,
-      backgroundColor: "transparent",
-    },
-    title: {
-      text: undefined,
     },
     accessibility: {
       enabled: true,
@@ -121,9 +117,6 @@ export const createScatterOptions = (
         maxSize: 40,
       },
     },
-    exporting: {
-      enabled: false,
-    },
     legend: {
       enabled: true,
       align: "right",
@@ -145,9 +138,6 @@ export const createScatterOptions = (
         },
       },
     },
-    credits: {
-      enabled: false,
-    },
     series: series,
-  };
+  });
 };

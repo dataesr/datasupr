@@ -1,5 +1,6 @@
 import Highcharts from "highcharts";
 import { CHART_COLORS } from "../../../../constants/colors";
+import { CreateChartOptions } from "../../../../chart-options";
 
 interface RessourcesPropresData {
   droits_d_inscription?: number;
@@ -82,17 +83,9 @@ export const createRessourcesPropresChartOptions = (
     percentage: percentages[idx],
   }));
 
-  return {
+  return CreateChartOptions("treemap", {
     chart: {
-      type: "treemap",
       height: 500,
-      backgroundColor: "transparent",
-    },
-    title: {
-      text: undefined,
-    },
-    exporting: {
-      enabled: false,
     },
     tooltip: {
       useHTML: true,
@@ -176,12 +169,6 @@ export const createRessourcesPropresChartOptions = (
         },
       },
     },
-    legend: {
-      enabled: false,
-    },
-    credits: {
-      enabled: false,
-    },
     series: [
       {
         name: "Ressources propres",
@@ -189,5 +176,5 @@ export const createRessourcesPropresChartOptions = (
         data: seriesData,
       },
     ],
-  };
+  });
 };
