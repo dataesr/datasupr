@@ -16,6 +16,7 @@ import {
 import TertiaryNavigation, {
   TertiaryNavigationItem,
 } from "../../../../../../components/tertiary-navigation";
+import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 
 export default function Id4Components() {
   return (
@@ -323,6 +324,42 @@ export default function Id4Components() {
     <TertiaryNavigationItem href="#section-2" label="Section 2" />
     <TertiaryNavigationItem href="#section-3" label="Section 3" />
   </TertiaryNavigation>`}
+                </code>
+              </li>
+              <li id="id4-metric-chart-card">
+                <Badge color="purple-glycine">MetricChartCard</Badge>&nbsp;:
+                carte de métrique avec graphique d'évolution et tendance.
+                <br />
+                <div style={{ maxWidth: "400px" }}>
+                  <MetricChartCard
+                    title="Budget total"
+                    value="180 M€"
+                    detail="Exercice 2024"
+                    evolutionData={[
+                      { exercice: 2020, value: 150000000 },
+                      { exercice: 2021, value: 160000000 },
+                      { exercice: 2022, value: 165000000 },
+                      { exercice: 2023, value: 175000000 },
+                      { exercice: 2024, value: 180000000 },
+                    ]}
+                    unit="€"
+                  />
+                </div>
+                <br />
+                <code>
+                  {`<MetricChartCard
+  title="Budget total"
+  value="180 M€"
+  detail="Exercice 2024"
+  evolutionData={[
+    { exercice: 2020, value: 150000000 },
+    { exercice: 2021, value: 160000000 },
+    { exercice: 2022, value: 165000000 },
+    { exercice: 2023, value: 175000000 },
+    { exercice: 2024, value: 180000000 },
+  ]}
+  unit="€"
+/>`}
                 </code>
               </li>
             </ul>
