@@ -113,18 +113,18 @@ export default function GlobalLayout({ languageSelector = false }) {
                   <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
                   {getI18nLabel("home")}
                 </Link>
-                <Link current={is("/fundings/national")} href="/fundings/national">
+                {/* <Link current={is("/fundings/national")} href="/fundings/national">
                   {getI18nLabel("national")}
-                </Link>
+                </Link> */}
                 <Link current={is("/fundings/structures")} href="/fundings/structures">
                   {getI18nLabel("structures")}
                 </Link>
-                <Link current={is("/fundings/laboratories")} href="/fundings/laboratories">
+                {/* <Link current={is("/fundings/laboratories")} href="/fundings/laboratories">
                   {getI18nLabel("laboratories")}
-                </Link>
-                <Link current={is("/fundings/counties")} href="/fundings/counties">
+                </Link> */}
+                {/* <Link current={is("/fundings/counties")} href="/fundings/counties">
                   {getI18nLabel("counties")}
-                </Link>
+                </Link> */}
               </Nav>
             </div>
           </div>

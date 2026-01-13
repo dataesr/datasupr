@@ -1,4 +1,4 @@
-import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 
 import FrenchPartnersByLaboratory from "./charts/french-partners-by-laboratory";
 import InternationalPartnersByLaboratory from "./charts/international-partners-by-laboratory";
@@ -11,7 +11,6 @@ import TopProjectsLaboratory from "./charts/top-projects-by-laboratory";
 export default function Structures() {
   return (
     <Container>
-      <Title>Vue par laboratoire</Title>
       <Row gutters>
         <Col>
           <TopFundersByLaboratory />
