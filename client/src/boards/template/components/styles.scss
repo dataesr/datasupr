@@ -23,6 +23,18 @@
     align-items: center;
     width: 100%;
     gap: 1rem;
+
+    nav {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+
+      a {
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+    }
   }
 
   .tm-extra-items {
