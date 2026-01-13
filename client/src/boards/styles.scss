@@ -465,8 +465,8 @@ ul {
 }
 
 .chart-container {
-  // background-color: var(--background-contrast-blue-cumulus);
   padding: 16px;
+  position: relative; // Pour permettre le positionnement absolu du badge
 
   .chart-footer {
     font-size: 0.8rem;
@@ -477,16 +477,46 @@ ul {
     font-size: 0.8rem;
     color: #6a6a6a;
     background-color: white;
-  }
-
+  } 
+  
   .chart {
-    background-color: var(--background-default-grey-hover);
+    background-color: white;
   }
 }
 
+// Badge réutilisable pour les graphiques
+.chart-badge {
+  position: absolute;
+  top: -8px;
+  left: -8px;
+  background-color: var(--background-action-high-blue-france);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  white-space: nowrap;
+}
 
+.chart-container--default {
+  background-color: var(--background-contrast-blue-ecume) !important;
+}
 
 // Effet de défilement fluide pour toute la page
 html {
   scroll-behavior: smooth;
+}
+
+.callout-style {
+  background-image: linear-gradient(0deg, rgb(100, 100, 100), rgb(0, 0, 0));
+  background-color: var(--background-contrast-blue-ecume);
+  padding: 16px;
+
+  p{
+    font-size: 0.9rem;
+  }
 }

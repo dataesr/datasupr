@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 
-export type ChartColorType = "pillars" | "programs" | "thematics" | "destinations";
+export type ChartColorType = "default" | "pillars" | "programs" | "thematics" | "destinations";
 
 /**
  * Hook personnalisé pour déterminer la couleur du graphique en fonction de la vue et des paramètres
@@ -12,6 +12,10 @@ export function useChartColor(): ChartColorType {
   const destinationIds = searchParams.get("destinationIds");
 
   // Logique de détermination de la couleur basée sur la vue et les paramètres
+  if (view === "pillars") {
+    return "pillars";
+  }
+
   if (view === "program") {
     return "pillars";
   }
@@ -29,7 +33,7 @@ export function useChartColor(): ChartColorType {
   }
 
   // Couleur par défaut
-  return "pillars";
+  return "default";
 }
 
 /**
