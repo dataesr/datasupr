@@ -1,9 +1,16 @@
-import { useLocation } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import "./styles.scss";
+import i18n from "./i18n.json";
 
 export function SummaryWrapper({ children, className }: { children: React.ReactNode; className?: string }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+
+  const getI18nLabel = (key: string) => {
+    return i18n[key][currentLang];
+  };
 
   return (
     <div className={`fr-summary-wrapper ${className || ""}`}>
@@ -13,7 +20,7 @@ export function SummaryWrapper({ children, className }: { children: React.ReactN
         aria-expanded={isExpanded}
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        {isExpanded ? "Masquer le sommaire" : "Afficher le sommaire"}
+        {isExpanded ? getI18nLabel("hideSummary") : getI18nLabel("showSummary")}
       </button>
       <div className={`fr-summary-collapse ${isExpanded ? "fr-summary-collapse--expanded" : ""}`} id="summary-collapse">
         {children}
@@ -22,11 +29,20 @@ export function SummaryWrapper({ children, className }: { children: React.ReactN
   );
 }
 
-export function Summary({ title, children, className }: { title: string; children: React.ReactNode; className?: string }) {
+export function Summary({ title, children, className }: { title?: string; children: React.ReactNode; className?: string }) {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+
+  const getI18nLabel = (key: string) => {
+    return i18n[key][currentLang];
+  };
+
+  const summaryTitle = title || getI18nLabel("summary");
+
   return (
     <nav className={`fr-summary ${className || ""}`} role="navigation" aria-labelledby="fr-summary-title">
       <h2 className="fr-summary__title" id="fr-summary-title">
-        {title}
+        {summaryTitle}
       </h2>
       <ol>{children}</ol>
     </nav>

@@ -1,0 +1,14 @@
+{
+  "showSummary": {
+    "fr": "Afficher le sommaire",
+    "en": "Show summary"
+  },
+  "hideSummary": {
+    "fr": "Masquer le sommaire",
+    "en": "Hide summary"
+  },
+  "summary": {
+    "fr": "Sommaire",
+    "en": "Summary"
+  }
+}
