@@ -21,11 +21,11 @@ export default function Id4Components() {
           <Callout>
             Voici la liste des composants réutilisables disponibles dans la bibliothèque de composants Datasupr&nbsp;:
             <ul className="components-list">
-              <li>
+              <li id="id4-board-suggest">
                 <Badge color="purple-glycine">BoardSuggestComponent</Badge>&nbsp;: composant de suggestion de tableaux de bord.
                 <code>{`<BoardsSuggestComponent />`}</code>
               </li>
-              <li>
+              <li id="id4-callout">
                 <Badge color="purple-glycine">Callout</Badge>&nbsp;: encadré d'information avec style visuel distinct.
                 <Callout className="fr-mt-1w" colorFamily="blue-cumulus">
                   Exemple de Callout imbriqué pour démontrer la réutilisabilité du composant Callout à l'intérieur d'un autre Callout.
@@ -36,7 +36,7 @@ export default function Id4Components() {
 </Callout>`}
                 </code>
               </li>
-              <li>
+              <li id="id4-chart-footer">
                 <Badge color="purple-glycine">ChartFooter</Badge>&nbsp;: pied de page des graphiques avec informations de source et date.
                 <code>
                   {`<ChartFooter
@@ -47,7 +47,7 @@ export default function Id4Components() {
 />`}
                 </code>
               </li>
-              <li>
+              <li id="id4-chart-wrapper">
                 <Badge color="purple-glycine">ChartWrapper</Badge>&nbsp;: composant d'encapsulation des graphiques avec gestion des options, de la
                 légende et du rendu tableau.
                 <br />
@@ -60,7 +60,7 @@ export default function Id4Components() {
 />`}
                 </code>
               </li>
-              <li>
+              <li id="id4-chart-badge">
                 <Badge color="purple-glycine">Chart Badge</Badge>&nbsp;: badge visuel à placer sur les graphiques (par exemple "Top 15").
                 <br />
                 <div
@@ -77,27 +77,27 @@ export default function Id4Components() {
 </div>`}
                 </code>
               </li>
-              <li>
+              <li id="id4-cookies">
                 <Badge color="purple-glycine">Cookies</Badge>&nbsp;: composant de gestion des cookies et consentement.
               </li>
-              <li>
+              <li id="id4-copy-button">
                 <Badge color="purple-glycine">CopyButton</Badge>&nbsp;: bouton de copie dans le presse-papier.
                 <br />
                 <CopyButton text="Texte à copier" />
                 <br />
                 <code>{`<CopyButton textToCopy="Texte à copier" />`}</code>
               </li>
-              <li>
+              <li id="id4-country-selector">
                 <Badge color="purple-glycine">CountrySelector</Badge>&nbsp;: sélecteur de pays avec recherche.
                 <br />
                 <CountrySelector />
                 <br />
                 <code>{`<CountrySelector />`}</code>
               </li>
-              <li>
+              <li id="id4-custom-breadcrumb">
                 <Badge color="purple-glycine">CustomBreadcrumb</Badge>&nbsp;: fil d'Ariane personnalisé pour la navigation.
               </li>
-              <li>
+              <li id="id4-fields-main-card">
                 <Badge color="purple-glycine">FieldsMainCard</Badge>&nbsp;: carte d'affichage des filières principales.
                 <br />
                 <FieldsMainCard
@@ -116,15 +116,15 @@ export default function Id4Components() {
 />`}
                 </code>
               </li>
-              <li>
+              <li id="id4-filieres-list">
                 <Badge color="purple-glycine">FilieresList</Badge>&nbsp;: liste des filières. Nécessite une annee universitaire dans l'URL
                 <br />
                 <code>{`<FilieresList />`}</code>
               </li>
-              <li>
+              <li id="id4-filters">
                 <Badge color="purple-glycine">Filters</Badge>&nbsp;: composant de filtrage des données.
               </li>
-              <li>
+              <li id="id4-genders-card">
                 <Badge color="purple-glycine">GendersCard</Badge>&nbsp;: carte d'affichage des statistiques par genre.
                 <br />
                 <GendersCard
@@ -145,7 +145,7 @@ export default function Id4Components() {
 />`}
                 </code>
               </li>
-              <li>
+              <li id="id4-generic-card">
                 <Badge color="purple-glycine">GenericCard</Badge>&nbsp;: carte générique réutilisable.
                 <br />
                 <GenericCard
@@ -162,22 +162,22 @@ export default function Id4Components() {
 />`}
                 </code>
               </li>
-              <li>
+              <li id="id4-map">
                 <Badge color="purple-glycine">Map</Badge>&nbsp;: composant de carte géographique interactive.
               </li>
-              <li>
+              <li id="id4-not-found-page">
                 <Badge color="purple-glycine">NotFoundPage</Badge>&nbsp;: page 404 personnalisée.
               </li>
-              <li>
+              <li id="id4-queries-creator">
                 <Badge color="purple-glycine">QueriesCreator</Badge>&nbsp;: créateur de requêtes personnalisées.
               </li>
-              <li>
+              <li id="id4-router-link">
                 <Badge color="purple-glycine">RouterLink</Badge>&nbsp;: composant de lien de navigation.
               </li>
-              <li>
+              <li id="id4-scroll-to-top">
                 <Badge color="purple-glycine">ScrollToTop</Badge>&nbsp;: composant de remontée automatique en haut de page.
               </li>
-              <li>
+              <li id="id4-sectors-card">
                 <Badge color="purple-glycine">SectorsCard</Badge>&nbsp;: carte d'affichage des statistiques par secteur.
                 <br />
                 <SectorsCard
@@ -198,7 +198,7 @@ export default function Id4Components() {
 />`}
                 </code>
               </li>
-              <li>
+              <li id="id4-students-card">
                 <Badge color="purple-glycine">StudentsCard</Badge>&nbsp;: carte d'affichage des statistiques étudiantes.
                 <br />
                 <StudentsCard number="12000" descriptionNode={<Text size="sm">année universitaire 2025-26</Text>} />
@@ -210,7 +210,7 @@ export default function Id4Components() {
 />`}
                 </code>
               </li>
-              <li>
+              <li id="id4-students-card-with-trend">
                 <Badge color="purple-glycine">StudentsCardWithTrend</Badge>&nbsp;: carte d'affichage des statistiques étudiantes avec tendance.
                 <br />
                 <StudentsCardWithTrend
@@ -229,7 +229,7 @@ export default function Id4Components() {
 />`}
                 </code>
               </li>
-              <li>
+              <li id="id4-summary">
                 <Badge color="purple-glycine">Summary</Badge>&nbsp;: composant de sommaire avec navigation par ancres. Utiliser avec{" "}
                 <Badge color="purple-glycine">SummaryWrapper</Badge> pour un sommaire collapsible sur mobile.
                 <br />
@@ -251,10 +251,10 @@ export default function Id4Components() {
 </SummaryWrapper>`}
                 </code>
               </li>
-              <li>
+              <li id="id4-switch-theme">
                 <Badge color="purple-glycine">SwitchTheme</Badge>&nbsp;: composant de changement de thème (clair/sombre).
               </li>
-              <li>
+              <li id="id4-template">
                 <Badge color="purple-glycine">Template</Badge>&nbsp;: composant template de base.
               </li>
             </ul>
