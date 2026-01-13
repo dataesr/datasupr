@@ -32,7 +32,7 @@ export function EtudiantsSection({
       .map((item: any) => item[metricKey])
       .filter((val: any): val is number => val != null && !isNaN(val));
   };
-
+  console.log(evolutionData);
   return (
     <div
       id="section-etudiants"
@@ -42,7 +42,7 @@ export function EtudiantsSection({
     >
       <div className="fr-mb-3w">
         <h3 className="fr-h6 fr-mb-2w">
-          Répartition des effectifs {selectedYear && `(${selectedYear})`}
+          Répartition des effectifs {`(${data.anuniv})`}
         </h3>
 
         <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>

@@ -23,14 +23,14 @@ export default function StickyHeader({
   return (
     <div className="structures-sticky-header">
       <div className="structures-header-content">
-        <h4 className="fr-text--lg fr-mb-0 structures-header-title">
-          {currentName}
-        </h4>
         {historicalName && historicalName !== currentName && (
-          <p className="fr-text--sm fr-mb-0 structures-header-subtitle">
+          <p className="fr-text--lg fr-mb-0 structures-header-title">
             {historicalName}
           </p>
         )}
+        <p className="fr-text--lg fr-mb-0 structures-header-title">
+          {currentName}
+        </p>
       </div>
       {showMergedBadge && <Badge color="info">Fusionné</Badge>}
       {showYearSelector && (

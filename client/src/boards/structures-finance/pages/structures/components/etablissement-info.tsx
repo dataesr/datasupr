@@ -25,7 +25,7 @@ export default function EtablissementInfo({ data }: EtablissementInfoProps) {
         >
           <span className="fr-text--sm">
             <strong style={{ color: DSFR_COLORS.textDefault }}>Type :</strong>{" "}
-            {data.type}
+            {data.etablissement_actuel_categorie}
           </span>
           <span className="fr-text--sm">
             <strong style={{ color: DSFR_COLORS.textDefault }}>Région :</strong>{" "}

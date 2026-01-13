@@ -38,15 +38,7 @@ export function FinancementsSection({
       className="fr-p-3w section-container"
     >
       <div className="fr-mb-4w">
-        <h3
-          className="fr-h5 fr-mb-3w"
-          style={{
-            borderLeft: `4px solid ${CHART_COLORS.primary}`,
-            paddingLeft: "1rem",
-          }}
-        >
-          Les ressources de l'établissement
-        </h3>
+        <h3 className="fr-h5 fr-mb-3w">Les ressources de l'établissement</h3>
         <Row gutters>
           <Col xs="12" md="4">
             <MetricChartCard
@@ -101,13 +93,7 @@ export function FinancementsSection({
       </div>
 
       <div className="fr-mb-4w">
-        <h3
-          className="fr-h5 fr-mb-3w"
-          style={{
-            borderLeft: `4px solid ${CHART_COLORS.secondary}`,
-            paddingLeft: "1rem",
-          }}
-        >
+        <h3 className="fr-h5 fr-mb-3w">
           Subvention pour charges de service public
         </h3>
         <Row gutters>
@@ -141,15 +127,7 @@ export function FinancementsSection({
       </div>
 
       <div className="fr-mb-4w">
-        <h3
-          className="fr-h5 fr-mb-3w"
-          style={{
-            borderLeft: `4px solid ${CHART_COLORS.tertiary}`,
-            paddingLeft: "1rem",
-          }}
-        >
-          Masse salariale
-        </h3>
+        <h3 className="fr-h5 fr-mb-3w">Masse salariale</h3>
         <Row gutters>
           <Col xs="12" md="4">
             <MetricChartCard

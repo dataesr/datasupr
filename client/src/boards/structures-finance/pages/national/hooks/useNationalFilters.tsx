@@ -18,13 +18,14 @@ export function useNationalFilters(
     }
     if (selectedRegion) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.region === selectedRegion
+        (item: any) => item.etablissement_actuel_region === selectedRegion
       );
     }
 
     const types = new Set<string>();
     itemsToConsider.forEach((item: any) => {
-      if (item.type) types.add(item.type);
+      if (item.etablissement_actuel_type)
+        types.add(item.etablissement_actuel_type);
     });
 
     return Array.from(types).sort((a, b) => {
@@ -49,12 +50,12 @@ export function useNationalFilters(
 
     if (selectedType) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.type === selectedType
+        (item: any) => item.etablissement_actuel_type === selectedType
       );
     }
     if (selectedRegion) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.region === selectedRegion
+        (item: any) => item.etablissement_actuel_region === selectedRegion
       );
     }
 
@@ -86,7 +87,7 @@ export function useNationalFilters(
 
     if (selectedType) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.type === selectedType
+        (item: any) => item.etablissement_actuel_type === selectedType
       );
     }
     if (selectedTypologie) {
@@ -97,7 +98,8 @@ export function useNationalFilters(
 
     const regions = new Set<string>();
     itemsToConsider.forEach((item: any) => {
-      if (item.region) regions.add(item.region);
+      if (item.etablissement_actuel_region)
+        regions.add(item.etablissement_actuel_region);
     });
 
     return Array.from(regions).sort((a, b) =>

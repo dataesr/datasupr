@@ -11,9 +11,16 @@ export default function NationalSelector() {
   const years = useMemo(() => yearsData?.years || [], [yearsData]);
   const hasInitializedType = useRef(false);
 
+  const defaultYear = useMemo(() => {
+    if (!years.length) return "";
+    return years.includes(2024) ? "2024" : String(years[0]);
+  }, [years]);
+  // ATTENTION MODIFIER QUAND ON AURA LES DONNEES 2025
+
   const yearFromUrl = searchParams.get("year") || "";
-  const selectedYear = yearFromUrl || years[0] || "";
+  const selectedYear = yearFromUrl || defaultYear;
   const selectedType = searchParams.get("type") || "";
+  // const selectedYear = yearFromUrl || years[0] || "";
   const selectedTypologie = searchParams.get("typologie") || "";
   const selectedRegion = searchParams.get("region") || "";
 
@@ -48,11 +55,10 @@ export default function NationalSelector() {
       return;
     }
 
-    const fallback = yearsStr[0];
     const next = new URLSearchParams(searchParams);
-    next.set("year", fallback);
+    next.set("year", defaultYear);
     setSearchParams(next);
-  }, [years, yearFromUrl, searchParams, setSearchParams]);
+  }, [years, yearFromUrl, searchParams, setSearchParams, defaultYear]);
 
   useEffect(() => {
     if (availableTypes.length && !selectedType && !hasInitializedType.current) {

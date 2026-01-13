@@ -11,8 +11,15 @@ export default function EtablissementSelector() {
   const { data: yearsData } = useFinanceYears();
   const years = useMemo(() => yearsData?.years || [], [yearsData]);
 
-  const selectedYear = searchParams.get("year") || years[0] || "";
+  const defaultYear = useMemo(() => {
+    if (!years.length) return "";
+    return years.includes(2024) ? "2024" : String(years[0]);
+  }, [years]);
+
+  const selectedYear = searchParams.get("year") || defaultYear;
   const selectedType = searchParams.get("type") || "tous";
+  // ATTENTION REMETTRE QUAND ON AURA LES DONNEES 2025
+  // const selectedYear = yearFromUrl || years[0] || "";
   const selectedRegion = searchParams.get("region") || "toutes";
   const selectedTypologie = searchParams.get("typologie") || "toutes";
   const selectedEtablissement = searchParams.get("structureId") || "";
@@ -92,8 +99,8 @@ export default function EtablissementSelector() {
   const handleEtablissementChange = (structureId: string) => {
     const next = new URLSearchParams(searchParams);
     next.set("structureId", structureId);
-    if (!searchParams.has("year") && years[0]) {
-      next.set("year", String(years[0]));
+    if (!searchParams.has("year") && defaultYear) {
+      next.set("year", defaultYear);
     }
     setSearchParams(next);
   };

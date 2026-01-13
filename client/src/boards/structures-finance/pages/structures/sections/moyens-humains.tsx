@@ -34,12 +34,7 @@ export function MoyensHumainsSection({
       className="fr-p-3w section-container"
     >
       <div className="fr-mb-5w">
-        <h3
-          className="fr-h5 fr-mb-3w section-title"
-          style={{ borderLeftColor: CHART_COLORS.tertiary }}
-        >
-          Les enseignants permanents
-        </h3>
+        <h3 className="fr-h5 fr-mb-3w ">Les enseignants permanents</h3>
         <Row gutters>
           <Col xs="12" md="6">
             <MetricChartCard
@@ -81,7 +76,7 @@ export function MoyensHumainsSection({
 
       <div>
         <h3
-          className="fr-h5 fr-mb-3w section-title"
+          className="fr-h5 fr-mb-3w "
           style={{ borderLeftColor: CHART_COLORS.secondary }}
         >
           La masse salariale

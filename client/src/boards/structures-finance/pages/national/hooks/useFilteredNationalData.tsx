@@ -10,7 +10,9 @@ export function useFilteredNationalData(
     let items = allItems;
 
     if (selectedType) {
-      items = items.filter((item: any) => item.type === selectedType);
+      items = items.filter(
+        (item: any) => item.etablissement_actuel_type === selectedType
+      );
     }
     if (selectedTypologie) {
       items = items.filter(
@@ -18,7 +20,9 @@ export function useFilteredNationalData(
       );
     }
     if (selectedRegion) {
-      items = items.filter((item: any) => item.region === selectedRegion);
+      items = items.filter(
+        (item: any) => item.etablissement_actuel_region === selectedRegion
+      );
     }
 
     return items;

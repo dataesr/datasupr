@@ -68,9 +68,9 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
 
     const matchStage = {
       ...(annee ? { exercice: Number(annee) } : {}),
-      ...(type ? { type } : {}),
+      ...(type ? { etablissement_actuel_type: type } : {}),
       ...(typologie ? { etablissement_actuel_typologie: typologie } : {}),
-      ...(region ? { region } : {}),
+      ...(region ? { etablissement_actuel_region: region } : {}),
     };
 
     const pipeline = [
@@ -124,7 +124,9 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
           etablissement_lib: 1,
           etablissement_actuel_lib: 1,
           region: 1,
+          etablissement_actuel_region: 1,
           type: 1,
+          etablissement_actuel_type: 1,
           etablissement_actuel_typologie: 1,
           recettes_propres: 1,
           scsp: 1,
