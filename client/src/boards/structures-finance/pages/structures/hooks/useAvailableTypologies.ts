@@ -1,8 +1,5 @@
 import { useMemo } from "react";
 
-/**
- * Hook pour calculer les typologies disponibles en fonction des filtres
- */
 export function useAvailableTypologies(
   allEtablissements: any[],
   selectedType: string,
@@ -14,23 +11,21 @@ export function useAvailableTypologies(
     if (selectedType && selectedType !== "tous") {
       etabsToConsider = etabsToConsider.filter(
         (etab: any) =>
-          (etab.etablissement_actuel_type || etab.type)
-            ?.toLowerCase()
-            .trim() === selectedType.toLowerCase().trim()
+          etab.etablissement_actuel_type?.toLowerCase().trim() ===
+          selectedType.toLowerCase().trim()
       );
     }
     if (selectedRegion && selectedRegion !== "toutes") {
       etabsToConsider = etabsToConsider.filter(
         (etab: any) =>
-          (etab.etablissement_actuel_region || etab.region)
-            ?.toLowerCase()
-            .trim() === selectedRegion.toLowerCase().trim()
+          etab.etablissement_actuel_region?.toLowerCase().trim() ===
+          selectedRegion.toLowerCase().trim()
       );
     }
 
     const typologies = new Set<string>();
     etabsToConsider.forEach((etab: any) => {
-      const typologie = etab.etablissement_actuel_typologie || etab.typologie;
+      const typologie = etab.etablissement_actuel_typologie;
       if (typologie && typologie.trim()) {
         typologies.add(typologie.trim());
       }

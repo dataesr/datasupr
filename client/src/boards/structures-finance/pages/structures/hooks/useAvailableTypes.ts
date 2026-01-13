@@ -1,18 +1,10 @@
 import { useMemo } from "react";
 
-/**
- * Hook pour calculer les types d'établissements disponibles
- */
 export function useAvailableTypes(allEtablissements: any[]) {
   return useMemo(() => {
     const types = new Set<string>();
     allEtablissements.forEach((etab: any) => {
-      const typeValue =
-        etab.etablissement_actuel_type ||
-        etab.type ||
-        etab.typologie ||
-        etab.type_etablissement ||
-        etab.typeEtablissement;
+      const typeValue = etab.etablissement_actuel_type;
       if (typeValue && String(typeValue).trim()) {
         types.add(String(typeValue).trim());
       }

@@ -12,27 +12,24 @@ export function useFilteredEtablissements(
     if (selectedType && selectedType !== "tous") {
       filtered = filtered.filter(
         (etab: any) =>
-          (etab.etablissement_actuel_type || etab.type)
-            ?.toLowerCase()
-            .trim() === selectedType.toLowerCase().trim()
+          etab.etablissement_actuel_type?.toLowerCase().trim() ===
+          selectedType.toLowerCase().trim()
       );
     }
 
     if (selectedRegion && selectedRegion !== "toutes") {
       filtered = filtered.filter(
         (etab: any) =>
-          (etab.etablissement_actuel_region || etab.region)
-            ?.toLowerCase()
-            .trim() === selectedRegion.toLowerCase().trim()
+          etab.etablissement_actuel_region?.toLowerCase().trim() ===
+          selectedRegion.toLowerCase().trim()
       );
     }
 
     if (selectedTypologie && selectedTypologie !== "toutes") {
       filtered = filtered.filter(
         (etab: any) =>
-          (etab.etablissement_actuel_typologie || etab.typologie)
-            ?.toLowerCase()
-            .trim() === selectedTypologie.toLowerCase().trim()
+          etab.etablissement_actuel_typologie?.toLowerCase().trim() ===
+          selectedTypologie.toLowerCase().trim()
       );
     }
 

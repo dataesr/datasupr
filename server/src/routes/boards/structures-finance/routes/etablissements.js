@@ -26,7 +26,11 @@ router.get("/structures-finance/etablissements", async (req, res) => {
             },
             etablissement_actuel_lib: { $first: "$etablissement_actuel_lib" },
             region: { $first: "$region" },
+            etablissement_actuel_region: {
+              $first: "$etablissement_actuel_region",
+            },
             type: { $first: "$type" },
+            etablissement_actuel_type: { $first: "$etablissement_actuel_type" },
             typologie: { $first: "$etablissement_actuel_typologie" },
           },
         },
@@ -44,9 +48,9 @@ router.get("/structures-finance/etablissements", async (req, res) => {
       nom_actuel: x.etablissement_actuel_lib,
       etablissement_actuel_lib: x.etablissement_actuel_lib,
       region: x.region,
-      etablissement_actuel_region: x.region,
+      etablissement_actuel_region: x.etablissement_actuel_region,
       type: x.type,
-      etablissement_actuel_type: x.type,
+      etablissement_actuel_type: x.etablissement_actuel_type,
       typologie: x.typologie,
       etablissement_actuel_typologie: x.typologie,
     }));
