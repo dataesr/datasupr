@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Outlet, useLocation, useSearchParams } from "react-router-dom";
-import { Button, Header, Logo, Service, FastAccess, Container, Nav, Link } from "@dataesr/dsfr-plus";
+import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
+import { Button, Header, Logo, Service, FastAccess, Container } from "@dataesr/dsfr-plus";
 
 import Footer from "./footer";
 import SwitchTheme from "../../../../components/switch-theme";
@@ -121,31 +121,36 @@ export default function GlobalLayout({ languageSelector = false }) {
               Menu
             </button>
             <div className={`ep-nav-wrapper ${menuOpen ? "ep-nav-open" : ""}`} id="ep-main-nav">
-              <Nav aria-label="Main navigation">
-                <Link current={is("/european-projects/accueil")} href="/european-projects/accueil">
-                  <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
-                  {getI18nLabel("home")}
-                </Link>
-                {/* <Link
-                  current={
-                    is("/european-projects/search") ||
-                    is("/european-projects/synthese") ||
-                    is("/european-projects/positionnement") ||
-                    is("/european-projects/collaborations") ||
-                    is("/european-projects/beneficiaires")
-                  }
-                  href="/european-projects/search"
-                >
-                  {getI18nLabel("main")}
-                </Link> */}
-                <Link current={is("/european-projects/msca")} href={`/european-projects/msca?${filtersParams}`}>
-                  MSCA
-                </Link>
-                <Link current={is("/european-projects/erc")} href={`/european-projects/erc?${filtersParams}`}>
-                  ERC
-                </Link>
-                <Link href="/european-projects/evolution-pcri">Evolution des PCRI</Link>
-              </Nav>
+              <nav className="fr-nav" role="navigation" aria-label="Main navigation">
+                <ul className="fr-nav__list">
+                  <li className="fr-nav__item">
+                    <Link to="/european-projects/accueil" {...(is("/european-projects/accueil") && { "aria-current": "page" })}>
+                      <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
+                      {getI18nLabel("home")}
+                    </Link>
+                  </li>
+                  <li className="fr-nav__item">
+                    <Link to={`/european-projects/overview?${filtersParams}`} {...(is("/european-projects/overview") && { "aria-current": "page" })}>
+                      {getI18nLabel("he")}
+                    </Link>
+                  </li>
+                  <li className="fr-nav__item">
+                    <Link to={`/european-projects/msca?${filtersParams}`} {...(is("/european-projects/msca") && { "aria-current": "page" })}>
+                      MSCA
+                    </Link>
+                  </li>
+                  <li className="fr-nav__item">
+                    <Link to={`/european-projects/erc?${filtersParams}`} {...(is("/european-projects/erc") && { "aria-current": "page" })}>
+                      ERC
+                    </Link>
+                  </li>
+                  <li className="fr-nav__item">
+                    <Link to="/european-projects/evolution-pcri" {...(is("/european-projects/evolution-pcri") && { "aria-current": "page" })}>
+                      Evolution des PCRI
+                    </Link>
+                  </li>
+                </ul>
+              </nav>
               <div className="ep-extra-items">
                 <span>Lexique</span> {/* TODO : add */}
                 <CountrySelector />

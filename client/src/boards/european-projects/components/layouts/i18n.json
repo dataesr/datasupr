@@ -20,8 +20,12 @@
     "en": "Explore dashboards"
   },
   "home": {
-    "fr": "Accueil - Horizon Europe",
-    "en": "Home - Horizon Europe"
+    "fr": "Accueil",
+    "en": "Home"
+  },
+  "he": {
+    "fr": "Horizon Europe",
+    "en": "Horizon Europe"
   },
   "languagesSelector": {
     "fr": "Sélectionner une langue",

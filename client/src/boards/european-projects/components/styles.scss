@@ -21,7 +21,43 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    gap: 1rem;
+
+    nav {
+      display: flex;
+      align-items: center;
+
+      ul {
+        padding-left: 0;
+        margin: 0;
+      }
+
+      li:first-child a {
+        padding-left: 0;
+      }
+
+      a {
+        padding: 0.5rem 1rem;
+        text-decoration: none;
+        white-space: nowrap;
+        position: relative;
+
+        &[aria-current="page"] {
+          font-weight: 700;
+
+          &::before {
+            content: "";
+            bottom: -4px;
+            height: 2px;
+            left: 0;
+            margin-top: 0;
+            position: absolute;
+            top: auto;
+            width: 100%;
+            background-color: var(--border-action-high-blue-france);
+          }
+        }
+      }
+    }
   }
 
   .ep-extra-items {
