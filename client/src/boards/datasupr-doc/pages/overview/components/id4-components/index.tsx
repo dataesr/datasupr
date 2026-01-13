@@ -61,6 +61,23 @@ export default function Id4Components() {
                 </code>
               </li>
               <li>
+                <Badge color="purple-glycine">Chart Badge</Badge>&nbsp;: badge visuel à placer sur les graphiques (par exemple "Top 15").
+                <br />
+                <div
+                  className="chart-container chart-container--green-emeraude fr-mt-1w"
+                  style={{ position: "relative", padding: "1rem", minHeight: "80px" }}
+                >
+                  <span className="chart-badge">Top 15</span>
+                </div>
+                <br />
+                <code>
+                  {`<div className="chart-container chart-container--{color}">
+  <span className="chart-badge">Top 15</span>
+  <ChartWrapper ... />
+</div>`}
+                </code>
+              </li>
+              <li>
                 <Badge color="purple-glycine">Cookies</Badge>&nbsp;: composant de gestion des cookies et consentement.
               </li>
               <li>
