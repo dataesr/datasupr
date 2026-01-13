@@ -1,6 +1,6 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "../../../api";
-import { MetricChartCard } from "../components/metric-cards/metric-chart-card";
+import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 import { CHART_COLORS } from "../../../constants/colors";
 import "./styles.scss";
 

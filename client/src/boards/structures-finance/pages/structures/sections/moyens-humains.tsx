@@ -1,7 +1,7 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import { CHART_COLORS } from "../../../constants/colors";
 import { useFinanceEtablissementEvolution } from "../../../api";
-import { MetricChartCard } from "../components/metric-cards/metric-chart-card";
+import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 import "./styles.scss";
 
 interface MoyensHumainsSectionProps {
