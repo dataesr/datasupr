@@ -1,22 +1,22 @@
 {
   "counties": {
-    "en": "Fundings - By county",
-    "fr": "Financements - Par région"
+    "en": "By county - Funding through calls for proposals - DataSupR",
+    "fr": "Par région - Financement par appel à projets - DataSupR"
   },
   "home": {
-    "en": "Fundings - Home",
-    "fr": "Financements - Accueil"
+    "en": "Home - Funding through calls for proposals - DataSupR",
+    "fr": "Accueil - Financement par appel à projets - DataSupR"
   },
   "laboratories": {
-    "en": "Fundings - By laboratory",
-    "fr": "Financements - Par laboratoire"
+    "en": "By laboratory - Funding through calls for proposals - DataSupR",
+    "fr": "Par laboratoire - Financement par appel à projets - DataSupR"
   },
   "national": {
-    "en": "Fundings - National",
-    "fr": "Financements - National"
+    "en": "National - Funding through calls for proposals - DataSupR",
+    "fr": "National - Financement par appel à projets - DataSupR"
   },
   "structures": {
-    "en": "Fundings - By structure",
-    "fr": "Financements - Par structure"
+    "en": "By structure - Funding through calls for proposals - DataSupR",
+    "fr": "Par structure - Financement par appel à projets - DataSupR"
   }
 }

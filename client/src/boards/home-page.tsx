@@ -32,7 +32,7 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    //Call API to get the list of dashboards
+    // Call API to get the list of dashboards
     const getData = async () => {
       const response = await fetch(
         `${VITE_APP_SERVER_URL}/tableaux?tag=` + searchText
@@ -201,9 +201,9 @@ export default function HomePage() {
         <Row gutters>
           <Col>
             <GenericCard
-              description="Tableau de bord des financements"
-              title="Financements"
-              to="/fundings/national"
+              description="Indicateurs sur le financement des structures via les appels à projet"
+              title="Financement par appel à projets"
+              to="/fundings/structures"
             />
           </Col>
         </Row>
