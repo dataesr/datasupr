@@ -1,0 +1,51 @@
+// Variable pour le décalage du menu sticky et du contenu de la page 
+$sticky-header-offset: 50px;
+
+.fr-summary__link.selected {
+  font-weight: bold;
+}
+
+.sticky-summary {
+  position: sticky;
+  top: $sticky-header-offset;
+  z-index: 10;
+}
+
+// Décalage pour les ancres afin d'éviter qu'elles soient cachées sous le menu sticky
+[id] {
+  scroll-margin-top: $sticky-header-offset;
+}
+
+// Styles pour le collapse responsive du sommaire
+.fr-summary-wrapper {
+  .fr-summary__btn {
+    width: 100%;
+    margin-bottom: 1rem;
+    justify-content: space-between;
+  }
+
+  // Sur grand écran, toujours visible
+  @media (min-width: 992px) {
+    .fr-summary-collapse {
+      display: block;
+    }
+  }
+
+  // Sur petit écran, géré par le collapse
+  @media (max-width: 991px) {
+    .fr-summary-collapse {
+      display: none;
+
+      &.fr-summary-collapse--expanded {
+        display: block;
+      }
+    }
+  }
+
+  // Masquer le bouton sur grand écran
+  @media (min-width: 992px) {
+    .fr-summary__btn {
+      display: none;
+    }
+  }
+}

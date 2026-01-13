@@ -483,3 +483,10 @@ ul {
     background-color: var(--background-default-grey-hover);
   }
 }
+
+
+
+// Effet de défilement fluide pour toute la page
+html {
+  scroll-behavior: smooth;
+}

@@ -8,6 +8,7 @@ import GenericCard from "../../../../../../components/cards/generic-card";
 import SectorsCard from "../../../../../../components/cards/sectors-card";
 import StudentsCard from "../../../../../../components/cards/students-card";
 import StudentsCardWithTrend from "../../../../../../components/cards/students-card-with-trend";
+import { Summary, SummaryItem, SummaryWrapper } from "../../../../../../components/summary";
 
 export default function Id4Components() {
   return (
@@ -209,6 +210,28 @@ export default function Id4Components() {
   label="Effectifs étudiants"
   trendGraph={<>composant graph ici</>}
 />`}
+                </code>
+              </li>
+              <li>
+                <Badge color="purple-glycine">Summary</Badge>&nbsp;: composant de sommaire avec navigation par ancres. Utiliser avec{" "}
+                <Badge color="purple-glycine">SummaryWrapper</Badge> pour un sommaire collapsible sur mobile.
+                <br />
+                <SummaryWrapper>
+                  <Summary title="Exemple de sommaire">
+                    <SummaryItem href="#id1" label="Section 1" />
+                    <SummaryItem href="#id2" label="Section 2" />
+                    <SummaryItem href="#id3" label="Section 3" />
+                  </Summary>
+                </SummaryWrapper>
+                <br />
+                <code>
+                  {`<SummaryWrapper>
+  <Summary title="Sommaire" className="sticky-summary">
+    <SummaryItem href="#section-1" label="Section 1" />
+    <SummaryItem href="#section-2" label="Section 2" />
+    <SummaryItem href="#section-3" label="Section 3" />
+  </Summary>
+</SummaryWrapper>`}
                 </code>
               </li>
               <li>
