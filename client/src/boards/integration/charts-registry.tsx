@@ -47,7 +47,6 @@ export const chartsRegistry = {
   topCountyByLaboratory: lazy(() => import("../fundings/pages/laboratories/charts/top-county-by-laboratory")),
   topFundersByLaboratory: lazy(() => import("../fundings/pages/laboratories/charts/top-funders-by-laboratory")),
   topFundersByStructure: lazy(() => import("../fundings/pages/structures/charts/top-funders-by-structure")),
-  topLabsByStructure: lazy(() => import("../fundings/pages/structures/charts/top-labs-by-structure")),
   topProjectsByLaboratory: lazy(() => import("../fundings/pages/laboratories/charts/top-projects-by-laboratory")),
   topProjectsByStructure: lazy(() => import("../fundings/pages/structures/charts/top-projects-by-structure")),
 };

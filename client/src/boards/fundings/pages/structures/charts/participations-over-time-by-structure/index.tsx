@@ -1,19 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils.ts";
-import StructuresSelector from "../../components/structuresSelector";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function ParticipationsOverTimeByStructure() {
-  const [selectedStructureId, setSelectedStructureId] = useState<string>(
-    "180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research"
-  );
+  const [searchParams] = useSearchParams();
+  const next = new URLSearchParams(searchParams);
+  const selectedStructure = next.get("structure")?.toString() ?? "";
   const color = useChartColor();
   const startYear = 2011;
 
@@ -41,7 +40,7 @@ export default function ParticipationsOverTimeByStructure() {
           },
           {
             term: {
-              "participant_id_name.keyword": selectedStructureId,
+              "participant_id_name.keyword": selectedStructure,
             },
           },
         ]
@@ -74,7 +73,7 @@ export default function ParticipationsOverTimeByStructure() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-participations-over-time-by-structure', selectedStructureId],
+    queryKey: ['fundings-participations-over-time-by-structure', selectedStructure],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -90,7 +89,7 @@ export default function ParticipationsOverTimeByStructure() {
   const allYears = data.aggregations.by_project_type.buckets
     .flatMap(bucket => bucket.by_project_year.buckets.map(b => b.key));
   const maxYear = Math.max(...allYears);
-  const years = Array.from(Array(maxYear-startYear+1).keys()).map((item) => item + startYear);
+  const years = Array.from(Array(maxYear - startYear + 1).keys()).map((item) => item + startYear);
   const series = data.aggregations.by_project_type.buckets.map((bucket) => ({
     color: getColorFromFunder(bucket.key),
     data: years.map((year) => bucket.by_project_year.buckets.find((item) => item.key === year)?.unique_projects.value ?? 0),
@@ -101,7 +100,7 @@ export default function ParticipationsOverTimeByStructure() {
   const config = {
     id: "participationsOverTimeByStructure",
     integrationURL: "/integration?chart_id=participationsOverTimeByStructure",
-    title: `Nombre de projets pour ${getLabelFromName(selectedStructureId)} par financeur sur la période ${years[0]}-${years[years.length - 1]}, par année de début du projet`,
+    title: `Nombre de projets pour ${getLabelFromName(selectedStructure)} par financeur sur la période ${years[0]}-${years[years.length - 1]}, par année de début du projet`,
   };
 
   const options: object = {
@@ -132,7 +131,6 @@ export default function ParticipationsOverTimeByStructure() {
 
   return (
     <div className={`chart-container chart-container--${color}`} id="participations-over-time-by-structure">
-      <StructuresSelector selectedStructureId={selectedStructureId} setSelectedStructureId={setSelectedStructureId} />
       <ChartWrapper config={config} options={options} />
     </div>
   );

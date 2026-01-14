@@ -1,22 +1,23 @@
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector";
 import { getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils";
-import StructuresSelector from "../../components/structuresSelector";
-import { Title } from "@dataesr/dsfr-plus";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
+
 export default function TopFundersByStructure() {
-  const [selectedStructureId, setSelectedStructureId] = useState<string>(
-    "180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research"
-  );
+  const [searchParams] = useSearchParams();
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
+  const next = new URLSearchParams(searchParams);
+  const selectedStructure = next.get("structure")?.toString() ?? "";
   const color = useChartColor();
 
   const body = {
@@ -44,7 +45,7 @@ export default function TopFundersByStructure() {
           },
           {
             term: {
-              "participant_id_name.keyword": selectedStructureId,
+              "participant_id_name.keyword": selectedStructure,
             },
           },
         ],
@@ -68,7 +69,7 @@ export default function TopFundersByStructure() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-top-funders-by-structure", selectedStructureId, selectedYearEnd, selectedYearStart],
+    queryKey: ["fundings-top-funders-by-structure", selectedStructure, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -115,7 +116,7 @@ export default function TopFundersByStructure() {
     series,
     tooltip: {
       format: `<b>{series.name}</b> a financé <b>{point.y}</b> projet(s) auquel(s) prend part <b>${getLabelFromName(
-        selectedStructureId
+        selectedStructure
       )}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`,
     },
     xAxis: {
@@ -124,14 +125,12 @@ export default function TopFundersByStructure() {
       title: { text: "Financeurs" },
     },
   };
-  console.log(color);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="top-funders-by-structure">
-      <Title as="h3">{`Top 25 des financeurs pour ${getLabelFromName(
-        selectedStructureId
+      <Title as="h3" look="h6">{`Top 25 des financeurs pour ${getLabelFromName(
+        selectedStructure
       )} sur la période ${selectedYearStart}-${selectedYearEnd}`}</Title>
-      <StructuresSelector selectedStructureId={selectedStructureId} setSelectedStructureId={setSelectedStructureId} />
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}

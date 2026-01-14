@@ -1,18 +1,23 @@
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 
 import TopFundersByStructure from "./charts/top-funders-by-structure";
-// import TopLabsByStructure from "./charts/top-labs-by-structure";
 import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
 import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
 import ParticipationsOverTimeBudgetByStructure from "./charts/participations-over-time-budget-by-structure";
 import ParticipationsOverTimeByStructure from "./charts/participations-over-time-by-structure";
 import TopCountyByStructure from "./charts/top-county-by-structure";
 import TopProjectsByStructure from "./charts/top-projects-by-structure";
+import StructuresSelector from "./components/structuresSelector";
 
 
 export default function Structures() {
   return (
     <Container>
+      <Row gutters>
+        <Col>
+          <StructuresSelector />
+        </Col>
+      </Row>
       <Row gutters>
         <Col>
           <TopFundersByStructure />
@@ -23,11 +28,6 @@ export default function Structures() {
           <TopProjectsByStructure />
         </Col>
       </Row>
-      {/* <Row gutters>
-        <Col>
-          <TopLabsByStructure />
-        </Col>
-      </Row> */}
       <Row gutters>
         <Col>
           <TopCountyByStructure />

@@ -1,21 +1,23 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector.tsx";
 import { getGeneralOptions, getLabelFromGps, getLabelFromName } from "../../../../utils.ts";
-import StructuresSelector from "../../components/structuresSelector.tsx";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function InternationalPartnersByStructure() {
-  const [selectedStructureId, setSelectedStructureId] = useState<string>("180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research");
+  const [searchParams] = useSearchParams();
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
+  const next = new URLSearchParams(searchParams);
+  const selectedStructure = next.get("structure")?.toString() ?? "";
   const color = useChartColor();
 
   const { data: mapData, isLoading: isLoadingTopology } = useQuery({
@@ -53,7 +55,7 @@ export default function InternationalPartnersByStructure() {
           },
           {
             term: {
-              "co_partners_fr_inst.keyword": selectedStructureId
+              "co_partners_fr_inst.keyword": selectedStructure
             }
           }
         ]
@@ -70,7 +72,7 @@ export default function InternationalPartnersByStructure() {
   }
 
   const { data: dataPartners, isLoading: isLoadingPartners } = useQuery({
-    queryKey: ['fundings-international-partners', selectedStructureId, selectedYearEnd, selectedYearStart],
+    queryKey: ['fundings-international-partners', selectedStructure, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),
@@ -112,7 +114,7 @@ export default function InternationalPartnersByStructure() {
         name: 'Nombre de projets communs',
         data,
         tooltip: {
-          pointFormat: `<b>${getLabelFromName(selectedStructureId)}</b> et <b>{point.name}</b> ont collaboré sur <b>{point.z} projet(s)</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
+          pointFormat: `<b>${getLabelFromName(selectedStructure)}</b> et <b>{point.name}</b> ont collaboré sur <b>{point.z} projet(s)</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
         }
       }
     ],
@@ -122,9 +124,8 @@ export default function InternationalPartnersByStructure() {
   return (
     <div className={`chart-container chart-container--${color}`} id="international-partners-by-structure">
       <Title as="h3" look="h6">
-        {`Partenaires internationaux de la structure ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`}
+        {`Partenaires internationaux de la structure ${getLabelFromName(selectedStructure)} sur la période ${selectedYearStart}-${selectedYearEnd}`}
       </Title>
-      <StructuresSelector selectedStructureId={selectedStructureId} setSelectedStructureId={setSelectedStructureId} />
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}

@@ -69,7 +69,13 @@ const getLabelFromGps = (label: string) => {
   }));
   return allNames.find((item) => item.lang === 'fr')?.label ?? allNames.find((item) => item.lang === 'en')?.label;
 }
-const getLabelFromName = (label: string | number) => label.toString().split('_')[1].split('|')[0];
+const getLabelFromName = (label: string | number) => {
+  try {
+    return label.toString().split('_')[1].split('|')[0];
+  } catch (error) {
+    return label.toString();
+  }
+};
 
 export {
   formatCompactNumber,

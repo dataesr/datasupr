@@ -124,7 +124,6 @@ export default function FrenchPartnersByStructure() {
       <Title as="h3" look="h6">
         {`Partenaires français de la structure ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`}
       </Title>
-      <StructuresSelector selectedStructureId={selectedStructureId} setSelectedStructureId={setSelectedStructureId} />
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}

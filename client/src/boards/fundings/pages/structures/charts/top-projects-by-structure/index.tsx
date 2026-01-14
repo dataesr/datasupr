@@ -1,20 +1,23 @@
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import YearsSelector from "../../../../components/yearsSelector";
 import { formatCompactNumber, getColorFromFunder, getGeneralOptions, getLabelFromName, sortedFunders } from "../../../../utils";
-import StructuresSelector from "../../components/structuresSelector";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function TopProjectsByStructure() {
-  const [selectedStructureId, setSelectedStructureId] = useState<string>("180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research");
+  const [searchParams] = useSearchParams();
   const [selectedYearEnd, setSelectedYearEnd] = useState<string>("2024");
   const [selectedYearStart, setSelectedYearStart] = useState<string>("2022");
+  const next = new URLSearchParams(searchParams);
+  const selectedStructure = next.get("structure")?.toString() ?? "";
   const color = useChartColor();
 
   const body = {
@@ -32,7 +35,7 @@ export default function TopProjectsByStructure() {
           },
           {
             term: {
-              "participants.structure.id_name.keyword": selectedStructureId
+              "participants.structure.id_name.keyword": selectedStructure
             }
           }
         ]
@@ -46,7 +49,7 @@ export default function TopProjectsByStructure() {
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-top-projects-by-structure', selectedStructureId, selectedYearEnd, selectedYearStart],
+    queryKey: ['fundings-top-projects-by-structure', selectedStructure, selectedYearEnd, selectedYearStart],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-projects`, {
         body: JSON.stringify(body),
@@ -73,7 +76,6 @@ export default function TopProjectsByStructure() {
   const config = {
     id: "topProjectsByStructure",
     integrationURL: "/integration?chart_id=topProjectsByStructure",
-    title: `Top 25 des projets pour ${getLabelFromName(selectedStructureId)} sur la période ${selectedYearStart}-${selectedYearEnd}`,
   };
 
   const options: object = {
@@ -82,17 +84,16 @@ export default function TopProjectsByStructure() {
     series: [{ data: series }],
     tooltip: {
       formatter: function (this: any) {
-        return `<b>${getLabelFromName(selectedStructureId)}</b> a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par <b>${this.point.type}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
+        return `<b>${getLabelFromName(selectedStructure)}</b> a participé au projet <b>${this.point.name}</b> financé à hauteur de <b>${formatCompactNumber(this.point.y)} €</b> par <b>${this.point.type}</b> sur la période <b>${selectedYearStart}-${selectedYearEnd}</b>`
       },
     },
   };
 
   return (
     <div className={`chart-container chart-container--${color}`} id="top-projects-by-structure">
-      <StructuresSelector
-        selectedStructureId={selectedStructureId}
-        setSelectedStructureId={setSelectedStructureId}
-      />
+      <Title as="h3" look="h6">
+        {`Top 25 des projets pour ${getLabelFromName(selectedStructure)} sur la période ${selectedYearStart}-${selectedYearEnd}`}
+      </Title>
       <YearsSelector
         selectedYearEnd={selectedYearEnd}
         selectedYearStart={selectedYearStart}
