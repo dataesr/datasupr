@@ -10,12 +10,12 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function StructuresSelector() {
-  const years = Array.from(Array(10).keys()).map((item) => (item + 2015).toString());
-  const defaultYear = years[years.length - 2];
+  // const years = Array.from(Array(10).keys()).map((item) => (item + 2015).toString());
+  // const defaultYear = years[years.length - 2];
   const defaultStructure = '180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research';
   const [searchParams, setSearchParams] = useSearchParams({});
-  const selectedCounty = searchParams.get("county");
-  const selectedStructure = searchParams.get("structure");
+  const selectedCounty = searchParams.get("county") ?? "";
+  const selectedStructure = searchParams.get("structure") ?? "";
 
   if (!selectedStructure) {
     const next = new URLSearchParams(searchParams);
@@ -24,10 +24,10 @@ export default function StructuresSelector() {
   }
 
   const handleCountyChange = (county: string) => {
-    // const next = new URLSearchParams(searchParams);
-    // next.set('county', county);
-    // next.delete('structure');
-    // setSearchParams(next);
+    const next = new URLSearchParams(searchParams);
+    next.set('county', county);
+    next.delete('structure');
+    setSearchParams(next);
   };
 
   const handleStructureChange = (structure: string) => {
@@ -111,7 +111,7 @@ export default function StructuresSelector() {
 
         <Row gutters>
           <Col xs="12" sm="6" md="4">
-            <div className="fr-select-group" htmlFor="select-hint">
+            <div className="fr-select-group">
               <label className="fr-label">Région</label>
               <select
                 aria-describedby="select-hint-messages"
