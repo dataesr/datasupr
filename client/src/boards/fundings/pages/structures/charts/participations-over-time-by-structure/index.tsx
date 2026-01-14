@@ -25,22 +25,27 @@ export default function ParticipationsOverTimeByStructure() {
             range: {
               project_year: {
                 gte: startYear,
-              }
-            }
+              },
+            },
           },
           {
             term: {
-              participant_isFrench: true
-            }
+              participant_isFrench: true,
+            },
           },
           {
             term: {
-              participant_status: "active"
-            }
+              participant_status: "active",
+            },
           },
           {
             term: {
               "participant_id_name.keyword": selectedStructure,
+            },
+          },
+          {
+            terms: {
+              "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"],
             },
           },
         ]

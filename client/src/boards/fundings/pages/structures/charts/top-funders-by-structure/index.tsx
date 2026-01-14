@@ -48,6 +48,11 @@ export default function TopFundersByStructure() {
               "participant_id_name.keyword": selectedStructure,
             },
           },
+          {
+            terms: {
+              "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"],
+            },
+          },
         ],
       },
     },

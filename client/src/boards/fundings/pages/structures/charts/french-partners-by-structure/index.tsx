@@ -34,30 +34,35 @@ export default function FrenchPartnersByStructure() {
             range: {
               project_year: {
                 gte: selectedYearStart,
-                lte: selectedYearEnd
-              }
-            }
+                lte: selectedYearEnd,
+              },
+            },
           },
           {
             term: {
-              participant_isFrench: true
-            }
+              participant_isFrench: true,
+            },
           },
           {
             term: {
-              participant_status: "active"
-            }
+              participant_status: "active",
+            },
           },
           {
             term: {
               participant_type: "institution",
-            }
+            },
           },
           {
             term: {
-              "co_partners_fr_inst.keyword": selectedStructure
-            }
-          }
+              "co_partners_fr_inst.keyword": selectedStructure,
+            },
+          },
+          {
+            terms: {
+              "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"],
+            },
+          },
         ]
       }
     },
@@ -87,12 +92,12 @@ export default function FrenchPartnersByStructure() {
   if (isLoadingTopology || !mapData || isLoadingPartners || !dataPartners) return <DefaultSkeleton />;
 
   const data = dataPartners.aggregations?.by_gps?.buckets
-  .map((bucket) => ({
-    lat: parseInt(bucket.key.split("_")[0]),
-    lon: parseInt(bucket.key.split("_")[1]),
-    name: getLabelFromGps(bucket.key),
-    z: bucket.doc_count,
-  }));
+    .map((bucket) => ({
+      lat: parseInt(bucket.key.split("_")[0]),
+      lon: parseInt(bucket.key.split("_")[1]),
+      name: getLabelFromGps(bucket.key),
+      z: bucket.doc_count,
+    }));
 
   const config = {
     id: "frenchPartnersByStructure",

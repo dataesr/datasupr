@@ -29,22 +29,27 @@ export default function TopProjectsByStructure() {
             range: {
               year: {
                 gte: selectedYearStart,
-                lte: selectedYearEnd
-              }
-            }
+                lte: selectedYearEnd,
+              },
+            },
           },
           {
             term: {
-              "participants.structure.id_name.keyword": selectedStructure
-            }
-          }
+              "participants.structure.id_name.keyword": selectedStructure,
+            },
+          },
+          {
+            terms: {
+              "type.keyword": ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"],
+            },
+          },
         ]
       }
     },
     sort: [
       {
-        budgetTotal: { order: "desc" }
-      }
+        budgetTotal: { order: "desc" },
+      },
     ]
   }
 

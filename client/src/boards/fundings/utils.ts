@@ -2,20 +2,8 @@ const sortedFunders = {
   "anr": "#738cff",
   "pia anr": "#3f5ffc",
   "pia hors anr": "#182a3d",
-  "inca": "#baff8c",
-  "anses": "#002620",
-  "sirano": "#4f8100",
-  "iresp": "#2ac8b6",
-  "phrc": "#7f7e53",
-  "dim ile-de-france": "#e61e0b",
-  "fp7": "#ffffb8",
   "horizon 2020": "#ffd500",
   "horizon europe": "#e39700",
-  "i-lab": "#de5b91",
-  "i-nov": "#ad5096",
-  "i-phd": "#7f4596",
-  "partenariat hubet curien": "#704214",
-  "thèses co-financées ademe": "#d1b38c",
 };
 
 const formatCompactNumber = (number: number) => {

@@ -44,6 +44,11 @@ export default function TopCountyByStructure() {
               "co_partners_fr_inst.keyword": selectedStructure,
             },
           },
+          {
+            terms: {
+              "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"],
+            },
+          },
         ],
       },
     },

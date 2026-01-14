@@ -15,7 +15,7 @@ export default function StructuresSelector() {
   const defaultStructure = '180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research';
   const [searchParams, setSearchParams] = useSearchParams({});
   const selectedCounty = searchParams.get("county") ?? "";
-  const selectedStructure = searchParams.get("structure") ?? "";
+  const selectedStructure = searchParams.get("structure");
 
   if (!selectedStructure) {
     const next = new URLSearchParams(searchParams);
@@ -62,6 +62,11 @@ export default function StructuresSelector() {
           {
             term: {
               "participant_kind.keyword": "Secteur public",
+            },
+          },
+          {
+            terms: {
+              "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR", "H2020", "Horizon Europe"],
             },
           },
         ],
