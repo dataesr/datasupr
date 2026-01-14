@@ -30,13 +30,8 @@ export const chartsRegistry = {
   efficiencyScatter: lazy(() => import("../european-projects/pages/evolution-pcri/charts/efficiency-scatter")),
 
   // Fundings
-  frenchPartnersByStructure: lazy(() => import("../fundings/pages/structures/charts/french-partners-by-structure")),
-  internationalPartnersByStructure: lazy(() => import("../fundings/pages/structures/charts/international-partners-by-structure")),
   overviewByStructure: lazy(() => import("../fundings/pages/structures/charts/overview-by-structure")),
   projectsByStructure: lazy(() => import("../fundings/pages/structures/charts/projects-by-structure")),
-  topCountyByBtructure: lazy(() => import("../fundings/pages/structures/charts/top-county-by-structure")),
-  topFundersByStructure: lazy(() => import("../fundings/pages/structures/charts/top-funders-by-structure")),
-  topProjectsByStructure: lazy(() => import("../fundings/pages/structures/charts/top-projects-by-structure")),
 };
 
 export type ChartId = keyof typeof chartsRegistry;

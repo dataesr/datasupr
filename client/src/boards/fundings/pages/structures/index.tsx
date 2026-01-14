@@ -1,13 +1,5 @@
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
-// import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
-// import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
-// import ParticipationsOverTimeBudgetByStructure from "./charts/participations-over-time-budget-by-structure";
-// import ParticipationsOverTimeByStructure from "./charts/participations-over-time-by-structure";
-// import ProjectsByStructure from "./charts/projects-by-structure";
-// import TopCountyByStructure from "./charts/top-county-by-structure";
-// import TopFundersByStructure from "./charts/top-funders-by-structure";
-// import TopProjectsByStructure from "./charts/top-projects-by-structure";
 import OverviewByStructure from "./charts/overview-by-structure";
 import ProjectsByStructure from "./charts/projects-by-structure";
 import SelectedStructure from "./components/selected-structure";
@@ -49,41 +41,6 @@ export default function Structures() {
          <OverviewByStructure />
         </Col>
       </Row>
-      {/* <Row gutters>
-        <Col>
-          <TopFundersByStructure />
-        </Col>
-      </Row> */}
-      {/* <Row gutters>
-        <Col>
-          <TopProjectsByStructure />
-        </Col>
-      </Row> */}
-      {/* <Row gutters>
-        <Col>
-          <TopCountyByStructure />
-        </Col>
-      </Row> */}
-      {/* <Row gutters>
-        <Col>
-          <FrenchPartnersByStructure />
-        </Col>
-      </Row> */}
-      {/* <Row gutters>
-        <Col>
-          <InternationalPartnersByStructure />
-        </Col>
-      </Row> */}
-      {/* <Row gutters>
-        <Col>
-          <ParticipationsOverTimeByStructure />
-        </Col>
-      </Row> */}
-      {/* <Row gutters>
-        <Col>
-          <ParticipationsOverTimeBudgetByStructure />
-        </Col>
-      </Row> */}
     </Container>
   );
 }

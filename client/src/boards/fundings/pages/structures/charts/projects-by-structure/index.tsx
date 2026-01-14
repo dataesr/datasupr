@@ -7,7 +7,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { formatCompactNumber, getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils.ts";
 
-const { VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function ProjectsByStructure() {
@@ -77,7 +77,7 @@ export default function ProjectsByStructure() {
   const { data, isLoading } = useQuery({
     queryKey: ['fundings-projects-by-structure', structure, year],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-staging`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",

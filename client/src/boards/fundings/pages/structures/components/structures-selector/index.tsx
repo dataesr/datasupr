@@ -7,7 +7,7 @@ import SearchableSelect from "../../../../../structures-finance/components/searc
 import { getLabelFromName } from "../../../../utils";
 import { useState } from "react";
 
-const { VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function StructuresSelector() {
@@ -131,7 +131,7 @@ export default function StructuresSelector() {
   const { data: dataCounties, isLoading: isLoadingCounties } = useQuery({
     queryKey: ["fundings-counties"],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-staging`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(bodyCounties),
         headers: {
           "Content-Type": "application/json",
@@ -140,11 +140,12 @@ export default function StructuresSelector() {
         method: "POST",
       }).then((response) => response.json()),
   });
+  console.log(dataCounties);
 
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
     queryKey: ["fundings-structures", county],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-staging`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(bodyStructures),
         headers: {
           "Content-Type": "application/json",
