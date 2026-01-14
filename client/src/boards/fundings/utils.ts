@@ -39,7 +39,7 @@ const getColorFromFunder = (funder: string) => {
 
 const getGeneralOptions = (title: string, categories: any[], title_x_axis: string, title_y_axis: string) => {
   return {
-    chart: { height: "800px", type: "bar" },
+    chart: { height: "600px", type: "bar" },
     credits: { enabled: false },
     exporting: { enabled: false },
     legend: { reversed: true },
