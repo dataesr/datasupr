@@ -70,7 +70,7 @@ export default function BudgetByStructure() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-budget-by-structure', structure],
+    queryKey: ['fundings-budget-by-structure', structure, year],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),

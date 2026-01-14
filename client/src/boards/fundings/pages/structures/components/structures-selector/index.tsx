@@ -2,9 +2,9 @@ import { Col, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import DefaultSkeleton from "../../../../../components/charts-skeletons/default.tsx";
-import SearchableSelect from "../../../../structures-finance/components/searchable-select";
-import { getLabelFromName } from "../../../utils";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
+import SearchableSelect from "../../../../../structures-finance/components/searchable-select";
+import { getLabelFromName } from "../../../../utils";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 

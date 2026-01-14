@@ -10,7 +10,8 @@ import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 // import TopProjectsByStructure from "./charts/top-projects-by-structure";
 import BudgetByStructure from "./charts/budget-by-structure";
 import ProjectsByStructure from "./charts/projects-by-structure";
-import StructuresSelector from "./components/structuresSelector";
+import SelectedStructure from "./components/selected-structure";
+import StructuresSelector from "./components/structures-selector";
 
 
 export default function Structures() {
@@ -19,6 +20,11 @@ export default function Structures() {
       <Row gutters>
         <Col>
           <StructuresSelector />
+        </Col>
+      </Row>
+      <Row gutters>
+        <Col>
+          <SelectedStructure />
         </Col>
       </Row>
       <Row gutters>

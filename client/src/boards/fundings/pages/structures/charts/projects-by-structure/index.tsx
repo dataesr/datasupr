@@ -68,7 +68,7 @@ export default function ProjectsByStructure() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-projects-by-structure', structure],
+    queryKey: ['fundings-projects-by-structure', structure, year],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
         body: JSON.stringify(body),

@@ -1,8 +1,10 @@
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { Outlet } from "react-router-dom";
 
-import "./styles.scss";
 import { Summary, SummaryItem, SummaryWrapper } from "../../../../../../components/summary";
+
+import "./styles.scss";
+
 
 export default function SidemenuStructures() {
   return (
