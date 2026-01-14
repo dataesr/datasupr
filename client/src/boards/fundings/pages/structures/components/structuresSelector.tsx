@@ -10,16 +10,21 @@ const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function StructuresSelector() {
-  // const years = Array.from(Array(10).keys()).map((item) => (item + 2015).toString());
-  // const defaultYear = years[years.length - 2];
-  const defaultStructure = '180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research';
   const [searchParams, setSearchParams] = useSearchParams({});
-  const selectedCounty = searchParams.get("county") ?? "";
-  const selectedStructure = searchParams.get("structure") ?? "";
+  const county = searchParams.get("county") ?? "";
+  const structure = searchParams.get("structure") ?? "";
+  const year = searchParams.get("year") ?? "";
+  const defaultStructure = "180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research";
+  const defaultYear = "2024";
 
-  if (!selectedStructure) {
+  if (!structure || structure.length === 0 || !year || year.length === 0) {
     const next = new URLSearchParams(searchParams);
-    next.set('structure', defaultStructure);
+    if (!structure || structure.length === 0) {
+      next.set("structure", defaultStructure);
+    }
+    if (!year || year.length === 0) {
+      next.set("year", defaultYear);
+    }
     setSearchParams(next);
   }
 
@@ -30,12 +35,9 @@ export default function StructuresSelector() {
     setSearchParams(next);
   };
 
-  const handleStructureChange = (structure: string) => {
+  const handleStructureChange = (selectedStructure: string) => {
     const next = new URLSearchParams(searchParams);
-    next.set('structure', structure);
-    // if (!searchParams.has('year') && defaultYear) {
-    //   next.set('year', defaultYear);
-    // }
+    next.set('structure', selectedStructure);
     setSearchParams(next);
   };
 
@@ -124,10 +126,10 @@ export default function StructuresSelector() {
                 id="select-hint"
                 name="select-hint"
                 onChange={(e) => handleCountyChange(e.target.value)}
-                value={selectedCounty}
+                value={county}
               >
                 <option value="toutes">Toutes les régions</option>
-                {counties.map((county) => (
+                {counties.map((county: string) => (
                   <option key={county} value={county}>
                     {county}
                   </option>
@@ -142,7 +144,7 @@ export default function StructuresSelector() {
               onChange={handleStructureChange}
               options={structures}
               placeholder="Rechercher une structure..."
-              value={selectedStructure}
+              value={structure}
             />
           </Col>
         </Row>
