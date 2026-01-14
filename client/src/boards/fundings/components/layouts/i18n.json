@@ -11,10 +11,6 @@
     "fr": "Cookies",
     "en": "Cookies"
   },
-  "counties": {
-    "en": "By counties",
-    "fr": "Par région"
-  },
   "datasets": {
     "fr": "Jeux de données",
     "en": "Datasets"
@@ -22,14 +18,6 @@
   "explore": {
     "fr": "Explorer d'autres tableaux de bord",
     "en": "Explore dashboards"
-  },
-  "laboratories": {
-    "fr": "Par laboratoire",
-    "en": "By laboratory"
-  },
-  "national": {
-    "fr": "National",
-    "en": "National"
   },
   "structures": {
     "fr": "Par structure",
