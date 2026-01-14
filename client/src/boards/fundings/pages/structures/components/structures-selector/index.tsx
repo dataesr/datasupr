@@ -5,17 +5,18 @@ import { useSearchParams } from "react-router-dom";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import SearchableSelect from "../../../../../structures-finance/components/searchable-select";
 import { getLabelFromName } from "../../../../utils";
+import { useState } from "react";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function StructuresSelector() {
+  const [county, setCounty] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
-  const county = searchParams.get("county") ?? "";
   const structure = searchParams.get("structure") ?? "";
   const year = searchParams.get("year") ?? "";
   const defaultStructure = "180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research";
-  const defaultYear = "2024";
+  const defaultYear = "2023";
 
   if (!structure || structure.length === 0 || !year || year.length === 0) {
     const next = new URLSearchParams(searchParams);
@@ -28,29 +29,22 @@ export default function StructuresSelector() {
     setSearchParams(next);
   }
 
-  const handleCountyChange = (county: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set('county', county);
-    next.delete('structure');
-    setSearchParams(next);
-  };
-
   const handleStructureChange = (selectedStructure: string) => {
     const next = new URLSearchParams(searchParams);
-    next.set('structure', selectedStructure);
+    next.set("structure", selectedStructure);
     setSearchParams(next);
   };
 
-  const body = {
+  const bodyCounties = {
     size: 0,
     query: {
       bool: {
         filter: [
-          {
-            term: {
-              participant_isFrench: true,
-            },
-          },
+          // {
+          //   term: {
+          //     participant_isFrench: true,
+          //   },
+          // },
           {
             term: {
               participant_status: "active",
@@ -75,28 +69,70 @@ export default function StructuresSelector() {
       },
     },
     aggregations: {
+      by_county: {
+        terms: {
+          field: "address.region.keyword",
+          missing: "N/A",
+          order: { "_key": "asc" },
+          size: 20,
+        },
+      },
+    },
+  };
+
+  const bodyStructures = {
+    size: 0,
+    query: {
+      bool: {
+        filter: [
+          // {
+          //   term: {
+          //     participant_isFrench: true,
+          //   },
+          // },
+          {
+            term: {
+              participant_status: "active",
+            },
+          },
+          {
+            term: {
+              participant_type: "institution",
+            },
+          },
+          {
+            term: {
+              "participant_kind.keyword": "Secteur public",
+            },
+          },
+          {
+            terms: {
+              "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR", "H2020", "Horizon Europe"],
+            },
+          },
+          {
+            wildcard: {
+              "address.region.keyword": county,
+            },
+          },
+        ],
+      },
+    },
+    aggregations: {
       by_structure: {
         terms: {
           field: "participant_id_name.keyword",
           size: 1500,
         },
       },
-      by_county: {
-        terms: {
-          field: "address.region.keyword",
-          // missing
-          // order: { "_key": "asc" },
-          size: 15,
-        },
-      },
     },
   };
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["fundings-structures"],
+  const { data: dataCounties, isLoading: isLoadingCounties } = useQuery({
+    queryKey: ["fundings-counties"],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
-        body: JSON.stringify(body),
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-staging`, {
+        body: JSON.stringify(bodyCounties),
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -105,9 +141,22 @@ export default function StructuresSelector() {
       }).then((response) => response.json()),
   });
 
-  if (isLoading || !data) return <DefaultSkeleton />;
-  const counties = data.aggregations.by_county?.buckets.map((bucket) => bucket.key);
-  const structures = data.aggregations?.by_structure?.buckets.map((bucket) => ({ id: bucket.key, label: getLabelFromName(bucket.key) })) || [];
+  const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
+    queryKey: ["fundings-structures", county],
+    queryFn: () =>
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-staging`, {
+        body: JSON.stringify(bodyStructures),
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        method: "POST",
+      }).then((response) => response.json()),
+  });
+
+  if (isLoadingCounties || !dataCounties || isLoadingStructures || !dataStructures) return <DefaultSkeleton />;
+  const counties = dataCounties.aggregations.by_county?.buckets.map((bucket) => bucket.key);
+  const structures = dataStructures.aggregations?.by_structure?.buckets.map((bucket) => ({ id: bucket.key, label: getLabelFromName(bucket.key) })) || [];
 
   return (
     <>
@@ -125,10 +174,10 @@ export default function StructuresSelector() {
                 className="fr-select "
                 id="select-hint"
                 name="select-hint"
-                onChange={(e) => handleCountyChange(e.target.value)}
+                onChange={(e) => setCounty(e.target.value)}
                 value={county}
               >
-                <option value="toutes">Toutes les régions</option>
+                <option value="*">Toutes les régions</option>
                 {counties.map((county: string) => (
                   <option key={county} value={county}>
                     {county}

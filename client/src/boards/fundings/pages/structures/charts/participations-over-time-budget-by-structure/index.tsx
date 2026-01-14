@@ -87,7 +87,7 @@ export default function ParticipationsOverTimeBudgetByStructure() {
   const { data, isLoading } = useQuery({
     queryKey: ['fundings-participations-over-time-budget-by-structure', selectedStructure],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-staging`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",

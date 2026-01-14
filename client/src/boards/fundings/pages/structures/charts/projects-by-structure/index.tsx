@@ -28,11 +28,11 @@ export default function ProjectsByStructure() {
               project_year: year,
             },
           },
-          {
-            term: {
-              participant_isFrench: true,
-            },
-          },
+          // {
+          //   term: {
+          //     participant_isFrench: true,
+          //   },
+          // },
           {
             term: {
               participant_status: "active",
@@ -77,7 +77,7 @@ export default function ProjectsByStructure() {
   const { data, isLoading } = useQuery({
     queryKey: ['fundings-projects-by-structure', structure, year],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-staging`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",

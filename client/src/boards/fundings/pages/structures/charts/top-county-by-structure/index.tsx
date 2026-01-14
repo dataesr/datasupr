@@ -65,7 +65,7 @@ export default function TopCountyByStructure() {
   const { data: dataCounty, isLoading: isLoadingCounty } = useQuery({
     queryKey: ["fundings-top-county", selectedStructure, selectedYearEnd, selectedYearStart],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-staging`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",

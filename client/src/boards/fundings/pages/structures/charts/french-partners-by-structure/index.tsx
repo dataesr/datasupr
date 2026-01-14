@@ -79,7 +79,7 @@ export default function FrenchPartnersByStructure() {
   const { data: dataPartners, isLoading: isLoadingPartners } = useQuery({
     queryKey: ['fundings-french-partners', selectedStructure, selectedYearEnd, selectedYearStart],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations-staging`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",

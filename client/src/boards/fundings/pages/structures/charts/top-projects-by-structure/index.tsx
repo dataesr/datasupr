@@ -56,7 +56,7 @@ export default function TopProjectsByStructure() {
   const { data, isLoading } = useQuery({
     queryKey: ['fundings-top-projects-by-structure', selectedStructure, selectedYearEnd, selectedYearStart],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-projects`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-projects-staging`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
