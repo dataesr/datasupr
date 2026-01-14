@@ -6,7 +6,7 @@ import "highcharts/modules/variwide";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils.ts";
+import { getGeneralOptions, getLabelFromName } from "../../../../utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
