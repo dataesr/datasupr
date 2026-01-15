@@ -1,0 +1,38 @@
+{
+  "european-projects": {
+    "label": {
+      "fr": "Tableau de bord des projets européens",
+      "en": "European Projects Dashboard"
+    },
+    "link": "/european-projects"
+  },
+  "accueil": {
+    "label": {
+      "fr": "Accueil",
+      "en": "Home"
+    },
+    "link": "/european-projects/accueil"
+  },
+  "horizon-europe": {
+    "label": {
+      "fr": "Horizon Europe",
+      "en": "Horizon Europe"
+    },
+    "link": "/european-projects/horizon-europe"
+  },
+  "msca": {
+    "label": {
+      "fr": "MSCA",
+      "en": "MSCA"
+    },
+    "link": "/european-projects/msca"
+  },
+  "erc": {
+    "label": { "fr": "ERC", "en": "ERC" },
+    "link": "/european-projects/erc"
+  },
+  "evolution-pcri": {
+    "label": { "fr": "Evolution des PCRI", "en": "Evolution of R&I programs" },
+    "link": "/european-projects/evolution-pcri"
+  }
+}

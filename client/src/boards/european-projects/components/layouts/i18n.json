@@ -66,5 +66,13 @@
   "themes": {
     "fr": "Thèmes",
     "en": "Themes"
+  },
+  "evolutionPcri": {
+    "fr": "Évolution des PCRI",
+    "en": "Evolution of R&I programs"
+  },
+  "close": {
+    "fr": "Fermer",
+    "en": "Close"
   }
 }

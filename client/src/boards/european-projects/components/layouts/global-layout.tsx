@@ -1,22 +1,25 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
-import { Button, Header, Logo, Service, FastAccess, Container } from "@dataesr/dsfr-plus";
+// import { Button, Header, Logo, Service, FastAccess, Container, Nav, Link } from "@dataesr/dsfr-plus";
 
-import Footer from "./footer";
-import SwitchTheme from "../../../../components/switch-theme";
+// import Footer from "./footer";
+// import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
-import CountrySelector from "../../../../components/country-selector/selector";
+// import CountrySelector from "../../../../components/country-selector/selector";
 import "../styles.scss";
+import Footer from "./footer";
+import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
+import navigationConfig from "./navigation-config.json";
 
-export default function GlobalLayout({ languageSelector = false }) {
+export default function GlobalLayout() {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const filtersParams = searchParams.toString();
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    if (!searchParams.get("language") && languageSelector) {
+    if (!searchParams.get("language")) {
       searchParams.set("language", "fr"); // default value
       setSearchParams(searchParams);
     }
@@ -24,7 +27,7 @@ export default function GlobalLayout({ languageSelector = false }) {
       searchParams.set("country_code", "FRA"); // default value
       setSearchParams(searchParams);
     }
-  }, [searchParams, setSearchParams, languageSelector]);
+  }, [searchParams, setSearchParams]);
 
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
@@ -32,136 +35,114 @@ export default function GlobalLayout({ languageSelector = false }) {
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
-
   return (
     <>
-      <Header>
-        <Logo text="Ministère|de l'Enseignement|supérieur,|de la Recherche|et de l'Espace" />
-        <Service name="DataSupR" tagline={getI18nLabel("tagline")} />
-        <FastAccess>
-          <Button as="a" href="/" icon="github-fill" size="sm" variant="text">
-            {getI18nLabel("explore")}
-          </Button>
-          <Button
-            as="a"
-            href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-atlas_regional-effectifs-d-etudiants-inscrits/table/?disjunctive.rgp_formations_ou_etablissements&sort=-rentree"
-            icon="code-s-slash-line"
-            rel="noreferer noopener"
-            size="sm"
-            target="_blank"
-            variant="text"
-          >
-            {getI18nLabel("datasets")}
-          </Button>
-          <Button aria-controls="fr-theme-modal" className="fr-btn fr-icon-theme-fill" data-fr-opened="false">
-            {getI18nLabel("themes")}
-          </Button>
-          {languageSelector && (
-            <nav role="navigation" className="fr-translate fr-nav">
-              <div className="fr-nav__item">
-                <button
-                  aria-controls="translate-1177"
-                  aria-expanded="false"
-                  className="fr-translate__btn fr-btn fr-btn--tertiary"
-                  title={getI18nLabel("languagesSelector")}
-                >
-                  {currentLang === "fr" ? (
-                    <>
-                      FR<span className="fr-hidden-lg"> - Français</span>
-                    </>
-                  ) : (
-                    <>
-                      EN<span className="fr-hidden-lg"> - English</span>
-                    </>
-                  )}
-                </button>
-                <div className="fr-collapse fr-translate__menu fr-menu" id="translate-1177">
-                  <ul className="fr-menu__list">
-                    <li>
-                      <Button
-                        aria-current={searchParams.get("language") === "fr"}
-                        className="fr-translate__language fr-nav__link"
-                        onClick={() => {
-                          searchParams.set("language", "fr");
-                          setSearchParams(searchParams);
-                        }}
-                      >
-                        FR - Français
-                      </Button>
-                    </li>
-                    <li>
-                      <Button
-                        aria-current={searchParams.get("language") === "en"}
-                        className="fr-translate__language fr-nav__link"
-                        onClick={() => {
-                          searchParams.set("language", "en");
-                          setSearchParams(searchParams);
-                        }}
-                      >
-                        EN - English
-                      </Button>
-                    </li>
-                  </ul>
+      <header role="banner" className="fr-header">
+        <div className="fr-header__body">
+          <div className="fr-container">
+            <div className="fr-header__body-row">
+              <div className="fr-header__brand fr-enlarge-link">
+                <div className="fr-header__brand-top">
+                  <div className="fr-header__logo">
+                    <a href="/" title="Accueil - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
+                      <p className="fr-logo">
+                        Ministère
+                        <br />
+                        de l'Enseignement
+                        <br />
+                        supérieur,
+                        <br />
+                        de la Recherche
+                        <br />
+                        et de l'Espace
+                      </p>
+                    </a>
+                  </div>
+                  <div className="fr-header__navbar">
+                    <button
+                      data-fr-opened="false"
+                      aria-controls="modal-header"
+                      title="Menu"
+                      type="button"
+                      id="button-header"
+                      className="fr-btn--menu fr-btn"
+                    >
+                      Menu
+                    </button>
+                  </div>
                 </div>
-              </div>
-            </nav>
-          )}
-        </FastAccess>
-      </Header>
-      <div className="ep-main-menu">
-        <Container>
-          <div className="actions">
-            <button
-              className="ep-menu-toggle fr-btn fr-btn--tertiary"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-expanded={menuOpen}
-              aria-controls="ep-main-nav"
-            >
-              {menuOpen ? <i className="ri-close-line" /> : <i className="ri-menu-line" />}
-              Menu
-            </button>
-            <div className={`ep-nav-wrapper ${menuOpen ? "ep-nav-open" : ""}`} id="ep-main-nav">
-              <nav className="fr-nav" role="navigation" aria-label="Main navigation">
-                <ul className="fr-nav__list">
-                  <li className="fr-nav__item">
-                    <Link to="/european-projects/accueil" {...(is("/european-projects/accueil") && { "aria-current": "page" })}>
-                      <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
-                      {getI18nLabel("home")}
-                    </Link>
-                  </li>
-                  <li className="fr-nav__item">
-                    <Link to={`/european-projects/overview?${filtersParams}`} {...(is("/european-projects/overview") && { "aria-current": "page" })}>
-                      {getI18nLabel("he")}
-                    </Link>
-                  </li>
-                  <li className="fr-nav__item">
-                    <Link to={`/european-projects/msca?${filtersParams}`} {...(is("/european-projects/msca") && { "aria-current": "page" })}>
-                      MSCA
-                    </Link>
-                  </li>
-                  <li className="fr-nav__item">
-                    <Link to={`/european-projects/erc?${filtersParams}`} {...(is("/european-projects/erc") && { "aria-current": "page" })}>
-                      ERC
-                    </Link>
-                  </li>
-                  <li className="fr-nav__item">
-                    <Link to="/european-projects/evolution-pcri" {...(is("/european-projects/evolution-pcri") && { "aria-current": "page" })}>
-                      Evolution des PCRI
-                    </Link>
-                  </li>
-                </ul>
-              </nav>
-              <div className="ep-extra-items">
-                <span>Lexique</span> {/* TODO : add */}
-                <CountrySelector />
               </div>
             </div>
           </div>
-        </Container>
-      </div>
+        </div>
+        <div className="fr-header__menu fr-modal" id="modal-header" aria-labelledby="button-header">
+          <div className="fr-container">
+            <button aria-controls="modal-header" title="Fermer" type="button" id="button-2168" className="fr-btn--close fr-btn">
+              {getI18nLabel("close")}
+            </button>
+            <div className="fr-header__menu-links"></div>
+            <nav className="fr-nav" role="navigation" aria-label="Menu principal">
+              <ul className="fr-nav__list">
+                <li className="fr-nav__item">
+                  <Link to="/european-projects/accueil" target="_self" {...(pathname === "/" && { "aria-current": "page" })} className="fr-nav__link">
+                    <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
+                    {getI18nLabel("home")}
+                  </Link>
+                </li>
+                <li className="fr-nav__item">
+                  <Link
+                    to={`/european-projects/horizon-europe?${filtersParams}`}
+                    target="_self"
+                    {...(is("/european-projects/horizon-europe") && { "aria-current": "page" })}
+                    className="fr-nav__link"
+                  >
+                    {getI18nLabel("he")}
+                  </Link>
+                </li>
+                <li className="fr-nav__item">
+                  <Link
+                    to={`/european-projects/msca?${filtersParams}`}
+                    target="_self"
+                    {...(is("/european-projects/msca") && { "aria-current": "page" })}
+                    className="fr-nav__link"
+                  >
+                    MSCA
+                  </Link>
+                </li>
+                <li className="fr-nav__item">
+                  <Link
+                    to={`/european-projects/erc?${filtersParams}`}
+                    target="_self"
+                    {...(is("/european-projects/erc") && { "aria-current": "page" })}
+                    className="fr-nav__link"
+                  >
+                    ERC
+                  </Link>
+                </li>
+                <li className="fr-nav__item">
+                  <Link
+                    to="/european-projects/evolution-pcri"
+                    target="_self"
+                    {...(is("/european-projects/evolution-pcri") && { "aria-current": "page" })}
+                    className="fr-nav__link"
+                  >
+                    {getI18nLabel("evolutionPcri")}
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
+      <Container>
+        <Row>
+          <Col>
+            <CustomBreadcrumb config={navigationConfig} />
+          </Col>
+        </Row>
+      </Container>
       <Outlet />
       <Footer />
-      <SwitchTheme />
     </>
   );
 }

@@ -45,11 +45,11 @@ const EntityWrapper = () => {
 export default function EuropeanProjectsRoutes() {
   return (
     <Routes>
-      <Route element={<GlobalLayout languageSelector />}>
+      <Route element={<GlobalLayout />}>
         <Route index element={<Navigate to="accueil" replace />} />
         <Route path="accueil" element={<RouteWithTitle titleKey="accueil" element={<Home />} />} />
         <Route path="search" element={<RouteWithTitle titleKey="search" element={<Search />} />} />
-        <Route path="overview" element={<RouteWithTitle titleKey="overview" element={<OverviewV2 />} />} />
+        <Route path="horizon-europe" element={<RouteWithTitle titleKey="overview" element={<OverviewV2 />} />} />
         <Route element={<SidemenuLayout />}>
           <Route path="synthese" element={<RouteWithTitle titleKey="synthese" element={<Overview />} />} />
           <Route path="positionnement" element={<RouteWithTitle titleKey="positionnement" element={<Positioning />} />} />
