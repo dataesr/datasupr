@@ -1,6 +1,10 @@
+import { useSearchParams } from "react-router-dom";
 import { Row, Col } from "@dataesr/dsfr-plus";
 import { CHART_COLORS } from "../../../constants/colors";
-import { useFinanceEtablissementEvolution } from "../../../api";
+import {
+  useFinanceEtablissementEvolution,
+  useFinanceYears,
+} from "../../../api";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 import "./styles.scss";
 
@@ -13,9 +17,19 @@ export function MoyensHumainsSection({
   data,
   selectedYear,
 }: MoyensHumainsSectionProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: yearsData } = useFinanceYears();
+  const years = yearsData?.years || [];
+
   const { data: evolutionData } = useFinanceEtablissementEvolution(
     data?.etablissement_id_paysage
   );
+
+  const handleYearChange = (year: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("year", year);
+    setSearchParams(next);
+  };
 
   const getEvolutionData = (metricKey: string) => {
     if (!evolutionData || evolutionData.length === 0) return undefined;
@@ -33,8 +47,31 @@ export function MoyensHumainsSection({
       aria-labelledby="section-moyens-humains"
       className="fr-p-3w section-container"
     >
+      <div className="section-header fr-mb-5w">
+        <h3 className="fr-h5 section-header__title">
+          Les enseignants permanents
+        </h3>
+        <label
+          className="fr-label"
+          htmlFor="select-year-moyens-humains"
+        ></label>
+        <div className="fr-select-group section-header__year-selector">
+          <select
+            className="fr-select"
+            id="select-year-moyens-humains"
+            value={selectedYear}
+            onChange={(e) => handleYearChange(e.target.value)}
+          >
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       <div className="fr-mb-5w">
-        <h3 className="fr-h5 fr-mb-3w ">Les enseignants permanents</h3>
         <Row gutters>
           <Col xs="12" md="6">
             <MetricChartCard

@@ -1,13 +1,9 @@
-import { Outlet, useLocation, useSearchParams } from "react-router-dom";
 import {
-  Button,
-  Header,
-  Logo,
-  Service,
-  FastAccess,
-  Nav,
-  Link,
-} from "@dataesr/dsfr-plus";
+  Outlet,
+  useLocation,
+  useSearchParams,
+  NavLink,
+} from "react-router-dom";
 
 import Footer from "./footer";
 import SwitchTheme from "../../../../components/switch-theme";
@@ -20,74 +16,172 @@ export default function GlobalLayout() {
 
   if (!pathname) return null;
 
-  const isActive = (path: string) => pathname === path;
-
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
 
   return (
     <>
-      <Header>
-        <Logo text="Ministère|de l'Enseignement|supérieur,|de la Recherche|et de l'Espace" />
-        <Service name="DataSupR" tagline={getI18nLabel("title")} />
-        <FastAccess className="fr-btns-group--sm fr-btns-group--inline-sm">
-          <Button
-            as="a"
-            href="/"
-            icon="compass-3-line"
-            size="sm"
-            variant="text"
-            title="Explorer les tableaux de bord"
-            className="fr-mb-1w fr-mb-sm-0"
-          >
-            <span className="fr-hidden fr-unhidden-sm">
-              {getI18nLabel("explore")}
-            </span>
-          </Button>
-          <Button
-            as="a"
-            href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-atlas_regional-effectifs-d-etudiants-inscrits/table/?disjunctive.rgp_formations_ou_etablissements&sort=-rentree"
-            icon="database-2-line"
-            rel="noreferer noopener"
-            size="sm"
-            target="_blank"
-            variant="text"
-            title="Accéder aux jeux de données"
-            className="fr-mb-1w fr-mb-sm-0"
-          >
-            <span className="fr-hidden fr-unhidden-sm">
-              {getI18nLabel("datasets")}
-            </span>
-          </Button>
-          <Button
-            aria-controls="fr-theme-modal"
-            className="fr-btn fr-icon-theme-fill fr-mb-1w fr-mb-sm-0"
-            data-fr-opened="false"
-            size="sm"
-            variant="text"
-            title="Changer le thème d'affichage"
-          >
-            <span className="fr-hidden fr-unhidden-sm">
-              {getI18nLabel("themes")}
-            </span>
-          </Button>
-        </FastAccess>
-        <Nav>
-          <Link
-            current={isActive("/structures-finance/etablissements")}
-            href="/structures-finance/etablissements"
-          >
-            Etablissement
-          </Link>
-          <Link
-            current={isActive("/structures-finance/national")}
-            href="/structures-finance/national"
-          >
-            Vue nationale
-          </Link>
-        </Nav>
-      </Header>
+      <header role="banner" className="fr-header">
+        <div className="fr-header__body">
+          <div className="fr-container">
+            <div className="fr-header__body-row">
+              <div className="fr-header__brand fr-enlarge-link">
+                <div className="fr-header__brand-top">
+                  <div className="fr-header__logo">
+                    <p className="fr-logo">
+                      Ministère
+                      <br />
+                      de l'Enseignement
+                      <br />
+                      supérieur,
+                      <br />
+                      de la Recherche
+                      <br />
+                      et de l'Espace
+                    </p>
+                  </div>
+                  <div className="fr-header__operator">
+                    <img
+                      className="fr-responsive-img"
+                      style={{ width: "3.5rem" }}
+                      src="/logo.svg"
+                      alt=""
+                    />
+                  </div>
+                  <div className="fr-header__navbar">
+                    <button
+                      className="fr-btn--menu fr-btn"
+                      data-fr-opened="false"
+                      aria-controls="modal-832"
+                      aria-haspopup="menu"
+                      id="fr-btn-menu-mobile"
+                      title="Menu"
+                    >
+                      Menu
+                    </button>
+                  </div>
+                </div>
+                <div className="fr-header__service">
+                  <a href="/" title="Accueil - DataSupR">
+                    <p className="fr-header__service-title">DataSupR</p>
+                  </a>
+                  <p className="fr-header__service-tagline">
+                    {getI18nLabel("title")}
+                  </p>
+                </div>
+              </div>
+              <div className="fr-header__tools">
+                <div className="fr-header__tools-links">
+                  <ul className="fr-btns-group">
+                    <li>
+                      <a
+                        className="fr-btn fr-icon-compass-3-line"
+                        href="/"
+                        title="Explorer les tableaux de bord"
+                      >
+                        <span className="fr-hidden fr-unhidden-sm">
+                          {getI18nLabel("explore")}
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="fr-btn fr-icon-database-2-line"
+                        href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-atlas_regional-effectifs-d-etudiants-inscrits/table/?disjunctive.rgp_formations_ou_etablissements&sort=-rentree"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="Accéder aux jeux de données"
+                      >
+                        <span className="fr-hidden fr-unhidden-sm">
+                          {getI18nLabel("datasets")}
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <button
+                        className="fr-btn fr-icon-theme-fill"
+                        aria-controls="fr-theme-modal"
+                        data-fr-opened="false"
+                        title="Changer le thème d'affichage"
+                      >
+                        <span className="fr-hidden fr-unhidden-sm">
+                          {getI18nLabel("themes")}
+                        </span>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          className="fr-header__menu fr-modal"
+          id="modal-832"
+          aria-labelledby="fr-btn-menu-mobile"
+        >
+          <div className="fr-container">
+            <button
+              className="fr-btn--close fr-btn"
+              aria-controls="modal-832"
+              title="Fermer"
+            >
+              Fermer
+            </button>
+            <div className="fr-header__menu-links"></div>
+            <nav
+              className="fr-nav"
+              id="navigation-832"
+              role="navigation"
+              aria-label="Menu principal"
+            >
+              <ul className="fr-nav__list">
+                <li className="fr-nav__item">
+                  <NavLink
+                    className="fr-nav__link"
+                    aria-current={
+                      pathname === "/structures-finance/accueil"
+                        ? "page"
+                        : undefined
+                    }
+                    to="/structures-finance/accueil"
+                  >
+                    Accueil
+                  </NavLink>
+                </li>
+                <li className="fr-nav__item">
+                  <NavLink
+                    className="fr-nav__link"
+                    aria-current={
+                      pathname === "/structures-finance/etablissements"
+                        ? "page"
+                        : undefined
+                    }
+                    to="/structures-finance/etablissements"
+                  >
+                    Etablissements
+                  </NavLink>
+                </li>
+                <li className="fr-nav__item">
+                  <NavLink
+                    className="fr-nav__link"
+                    aria-current={
+                      pathname === "/structures-finance/national"
+                        ? "page"
+                        : undefined
+                    }
+                    to="/structures-finance/national"
+                  >
+                    Vue nationale
+                  </NavLink>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
+
       <Outlet />
       <Footer />
       <SwitchTheme />

@@ -474,7 +474,9 @@ export default function EvolutionChart({
             padding: "1rem 1.5rem",
             backgroundColor: "transparent",
             border: "none",
-            borderBottom: isSelectionExpanded ? "1px solid var(--border-default-grey)" : "none",
+            borderBottom: isSelectionExpanded
+              ? "1px solid var(--border-default-grey)"
+              : "none",
             cursor: "pointer",
             display: "flex",
             justifyContent: "space-between",
@@ -516,14 +518,17 @@ export default function EvolutionChart({
 
         <div
           id="evolution-selection-panel"
-          className={`fr-collapse ${isSelectionExpanded ? "fr-collapse--expanded" : ""}`}
+          className={`fr-collapse ${
+            isSelectionExpanded ? "fr-collapse--expanded" : ""
+          }`}
           style={{
             padding: isSelectionExpanded ? "1.5rem" : "0 1.5rem",
           }}
         >
           <div className="fr-mb-2w">
             <p className="fr-text--sm fr-mb-1v">
-              <strong>Période :</strong> {periodText} • <strong>{analysesWithData.size}</strong> analyse
+              <strong>Période :</strong> {periodText} •{" "}
+              <strong>{analysesWithData.size}</strong> analyse
               {analysesWithData.size > 1 ? "s" : ""}
             </p>
           </div>
@@ -542,7 +547,11 @@ export default function EvolutionChart({
                 >
                   {cat === "all"
                     ? `Toutes (${analysesWithData.size})`
-                    : `${cat} (${Array.from(analysesWithData).filter((m) => PREDEFINED_ANALYSES[m].category === cat).length})`}
+                    : `${cat} (${
+                        Array.from(analysesWithData).filter(
+                          (m) => PREDEFINED_ANALYSES[m].category === cat
+                        ).length
+                      })`}
                 </Button>
               ))}
             </ButtonGroup>
@@ -552,7 +561,9 @@ export default function EvolutionChart({
             {availableAnalyses.length === 0 && (
               <Col md="12">
                 <div className="fr-alert fr-alert--info fr-alert--sm">
-                  <p className="fr-text--sm">Aucune analyse disponible dans cette catégorie</p>
+                  <p className="fr-text--sm">
+                    Aucune analyse disponible dans cette catégorie
+                  </p>
                 </div>
               </Col>
             )}
@@ -568,9 +579,17 @@ export default function EvolutionChart({
                       width: "100%",
                       textAlign: "left",
                       marginBottom: "0.25rem",
-                      backgroundColor: isSelected ? CHART_COLORS.primary : "var(--background-default-grey)",
-                      color: isSelected ? "var(--text-inverted-grey)" : "var(--text-action-high-grey)",
-                      border: `1px solid ${isSelected ? CHART_COLORS.primary : "var(--border-default-grey)"}`,
+                      backgroundColor: isSelected
+                        ? CHART_COLORS.primary
+                        : "var(--background-default-grey)",
+                      color: isSelected
+                        ? "var(--text-inverted-grey)"
+                        : "var(--text-action-high-grey)",
+                      border: `1px solid ${
+                        isSelected
+                          ? CHART_COLORS.primary
+                          : "var(--border-default-grey)"
+                      }`,
                       cursor: "pointer",
                       padding: "0.35rem 0.5rem",
                       fontSize: "12px",
@@ -591,7 +610,9 @@ export default function EvolutionChart({
 
           {!selectedAnalysis && (
             <div className="fr-alert fr-alert--info fr-alert--sm fr-mt-2w">
-              <p className="fr-text--sm">Sélectionnez une analyse pour afficher le(s) graphique(s)</p>
+              <p className="fr-text--sm">
+                Sélectionnez une analyse pour afficher le(s) graphique(s)
+              </p>
             </div>
           )}
         </div>
@@ -608,21 +629,26 @@ export default function EvolutionChart({
               size: "h3",
               fr: (
                 <>
-                  {PREDEFINED_ANALYSES[selectedAnalysis].label} — {etablissementName}
+                  {PREDEFINED_ANALYSES[selectedAnalysis].label} —{" "}
+                  {etablissementName}
                 </>
               ),
             },
             comment: {
               fr: (
                 <>
-                  Analyse de l'évolution de {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur la période {periodText}.
+                  Analyse de l'évolution de{" "}
+                  {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur
+                  la période {periodText}.
                 </>
               ),
             },
             readingKey: {
               fr: (
                 <>
-                  Ce graphique présente l'évolution de {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur {years.length} années.
+                  Ce graphique présente l'évolution de{" "}
+                  {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur{" "}
+                  {years.length} années.
                 </>
               ),
             },
@@ -630,7 +656,13 @@ export default function EvolutionChart({
             integrationURL: "/integration-url",
           }}
           options={chartOptions}
-          renderData={() => <RenderDataSingle data={data} metricKey={selectedMetrics[0]} metricConfig={METRICS_CONFIG[selectedMetrics[0]]} />}
+          renderData={() => (
+            <RenderDataSingle
+              data={data}
+              metricKey={selectedMetrics[0]}
+              metricConfig={METRICS_CONFIG[selectedMetrics[0]]}
+            />
+          )}
         />
       )}
 
@@ -651,13 +683,22 @@ export default function EvolutionChart({
                   comment: {
                     fr: (
                       <>
-                        Comparaison de l'évolution de {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} et{" "}
-                        {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()} en base 100 (première année = 100).
+                        Comparaison de l'évolution de{" "}
+                        {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()}{" "}
+                        et{" "}
+                        {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()}{" "}
+                        en base 100 (première année = 100).
                       </>
                     ),
                   },
                   readingKey: {
-                    fr: <>Ce graphique permet de comparer les dynamiques d'évolution des deux indicateurs sur une échelle normalisée.</>,
+                    fr: (
+                      <>
+                        Ce graphique permet de comparer les dynamiques
+                        d'évolution des deux indicateurs sur une échelle
+                        normalisée.
+                      </>
+                    ),
                   },
                   updateDate: new Date(),
                   integrationURL: "/integration-url",
@@ -691,29 +732,49 @@ export default function EvolutionChart({
                       size: "h3",
                       fr: (
                         <>
-                          {METRICS_CONFIG[selectedMetrics[0]].label} — {etablissementName}
+                          {METRICS_CONFIG[selectedMetrics[0]].label} —{" "}
+                          {etablissementName}
                         </>
                       ),
                     },
                     comment: {
                       fr: (
                         <>
-                          Évolution de {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur la période {periodText}.
+                          Évolution de{" "}
+                          {METRICS_CONFIG[
+                            selectedMetrics[0]
+                          ].label.toLowerCase()}{" "}
+                          sur la période {periodText}.
                         </>
                       ),
                     },
                     readingKey: {
                       fr: (
                         <>
-                          Évolution historique de {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur {years.length} années.
+                          Évolution historique de{" "}
+                          {METRICS_CONFIG[
+                            selectedMetrics[0]
+                          ].label.toLowerCase()}{" "}
+                          sur {years.length} années.
                         </>
                       ),
                     },
                     updateDate: new Date(),
                     integrationURL: "/integration-url",
                   }}
-                  options={createEvolutionChartOptions(data, [selectedMetrics[0]] as MetricKey[], METRICS_CONFIG, false)}
-                  renderData={() => <RenderDataSingle data={data} metricKey={selectedMetrics[0]} metricConfig={METRICS_CONFIG[selectedMetrics[0]]} />}
+                  options={createEvolutionChartOptions(
+                    data,
+                    [selectedMetrics[0]] as MetricKey[],
+                    METRICS_CONFIG,
+                    false
+                  )}
+                  renderData={() => (
+                    <RenderDataSingle
+                      data={data}
+                      metricKey={selectedMetrics[0]}
+                      metricConfig={METRICS_CONFIG[selectedMetrics[0]]}
+                    />
+                  )}
                 />
               </Col>
 
@@ -728,29 +789,49 @@ export default function EvolutionChart({
                       size: "h3",
                       fr: (
                         <>
-                          {METRICS_CONFIG[selectedMetrics[1]].label} — {etablissementName}
+                          {METRICS_CONFIG[selectedMetrics[1]].label} —{" "}
+                          {etablissementName}
                         </>
                       ),
                     },
                     comment: {
                       fr: (
                         <>
-                          Évolution de {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()} sur la période {periodText}.
+                          Évolution de{" "}
+                          {METRICS_CONFIG[
+                            selectedMetrics[1]
+                          ].label.toLowerCase()}{" "}
+                          sur la période {periodText}.
                         </>
                       ),
                     },
                     readingKey: {
                       fr: (
                         <>
-                          Évolution historique de {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()} sur {years.length} années.
+                          Évolution historique de{" "}
+                          {METRICS_CONFIG[
+                            selectedMetrics[1]
+                          ].label.toLowerCase()}{" "}
+                          sur {years.length} années.
                         </>
                       ),
                     },
                     updateDate: new Date(),
                     integrationURL: "/integration-url",
                   }}
-                  options={createEvolutionChartOptions(data, [selectedMetrics[1]] as MetricKey[], METRICS_CONFIG, false)}
-                  renderData={() => <RenderDataSingle data={data} metricKey={selectedMetrics[1]} metricConfig={METRICS_CONFIG[selectedMetrics[1]]} />}
+                  options={createEvolutionChartOptions(
+                    data,
+                    [selectedMetrics[1]] as MetricKey[],
+                    METRICS_CONFIG,
+                    false
+                  )}
+                  renderData={() => (
+                    <RenderDataSingle
+                      data={data}
+                      metricKey={selectedMetrics[1]}
+                      metricConfig={METRICS_CONFIG[selectedMetrics[1]]}
+                    />
+                  )}
                 />
               </Col>
             </Row>

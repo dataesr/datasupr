@@ -1,6 +1,10 @@
 import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Row, Col } from "@dataesr/dsfr-plus";
-import { useFinanceEtablissementEvolution } from "../../../api";
+import {
+  useFinanceEtablissementEvolution,
+  useFinanceYears,
+} from "../../../api";
 import RessourcesPropresChart from "../charts/ressources-propres";
 import RecettesEvolutionChart from "../charts/recettes-evolution";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
@@ -22,10 +26,20 @@ export function RessourcesPropresSection({
   selectedEtablissement,
   selectedYear,
 }: RessourcesPropresSectionProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: yearsData } = useFinanceYears();
+  const years = yearsData?.years || [];
+
   const { data: evolutionData } = useFinanceEtablissementEvolution(
     selectedEtablissement || "",
     !!selectedEtablissement
   );
+
+  const handleYearChange = (year: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("year", year);
+    setSearchParams(next);
+  };
 
   const totalRessources = data?.recettes_propres || 0;
   const totalProduits = data?.produits_de_fonctionnement_encaissables || 0;
@@ -53,6 +67,28 @@ export function RessourcesPropresSection({
       aria-labelledby="section-recettes-propres"
       className="fr-p-3w section-container"
     >
+      <div className="section-header fr-mb-4w">
+        <h3 className="fr-h5 section-header__title">Ressources propres</h3>
+        <label
+          className="fr-label"
+          htmlFor="select-year-ressources-propres"
+        ></label>
+        <div className="fr-select-group section-header__year-selector">
+          <select
+            className="fr-select"
+            id="select-year-ressources-propres"
+            value={selectedYear}
+            onChange={(e) => handleYearChange(e.target.value)}
+          >
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
+
       <div className="fr-mb-4w">
         <Row gutters>
           <Col xs="12">

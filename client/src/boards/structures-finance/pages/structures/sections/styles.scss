@@ -4,6 +4,33 @@
   border: 1px solid var(--border-default-grey);
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+
+  &__title {
+    margin: 0;
+    flex: 1;
+  }
+
+  &__year-selector {
+    min-width: 120px;
+    margin-bottom: 0;
+
+    .fr-label {
+      font-size: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .fr-select {
+      font-size: 0.875rem;
+    }
+  }
+}
+
 .metric-card {
   height: 100%;
   border-left: none;

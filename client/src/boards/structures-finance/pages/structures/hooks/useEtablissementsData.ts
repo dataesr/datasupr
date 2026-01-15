@@ -1,9 +1,6 @@
 import { useMemo } from "react";
 import { useFinanceEtablissements } from "../../../api";
 
-/**
- * Hook pour récupérer et dédupliquer les établissements
- */
 export function useEtablissementsData(selectedYear: string | number) {
   const { data: etablissementsData, isLoading } = useFinanceEtablissements(
     String(selectedYear),
@@ -17,9 +14,6 @@ export function useEtablissementsData(selectedYear: string | number) {
       ? etablissementsData
       : etablissementsData.data || etablissementsData.etablissements || [];
 
-    const totalBefore = etabs.length;
-
-    // Dédupliquer par établissement actuel
     const etabsMap = new Map();
     etabs.forEach((etab: any) => {
       const currentId =
@@ -38,12 +32,6 @@ export function useEtablissementsData(selectedYear: string | number) {
     });
 
     etabs = Array.from(etabsMap.values());
-
-    console.log(
-      `Établissements dédupliqués: ${totalBefore} -> ${etabs.length} (par établissement actuel)`,
-      `Exemple:`,
-      etabs[0]
-    );
 
     return etabs;
   }, [etablissementsData]);

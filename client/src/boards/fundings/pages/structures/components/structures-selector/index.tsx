@@ -3,19 +3,20 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import SearchableSelect from "../../../../../structures-finance/components/searchable-select";
+import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
 import { getLabelFromName } from "../../../../utils";
 import { useState } from "react";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
-
+const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } =
+  import.meta.env;
 
 export default function StructuresSelector() {
   const [county, setCounty] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
   const structure = searchParams.get("structure") ?? "";
   const year = searchParams.get("year") ?? "";
-  const defaultStructure = "180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research";
+  const defaultStructure =
+    "180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research";
   const defaultYear = "2023";
 
   if (!structure || structure.length === 0 || !year || year.length === 0) {
@@ -62,7 +63,13 @@ export default function StructuresSelector() {
           },
           {
             terms: {
-              "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR", "H2020", "Horizon Europe"],
+              "project_type.keyword": [
+                "ANR",
+                "PIA ANR",
+                "PIA hors ANR",
+                "H2020",
+                "Horizon Europe",
+              ],
             },
           },
         ],
@@ -73,7 +80,7 @@ export default function StructuresSelector() {
         terms: {
           field: "address.region.keyword",
           missing: "N/A",
-          order: { "_key": "asc" },
+          order: { _key: "asc" },
           size: 20,
         },
       },
@@ -107,7 +114,13 @@ export default function StructuresSelector() {
           },
           {
             terms: {
-              "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR", "H2020", "Horizon Europe"],
+              "project_type.keyword": [
+                "ANR",
+                "PIA ANR",
+                "PIA hors ANR",
+                "H2020",
+                "Horizon Europe",
+              ],
             },
           },
           {
@@ -131,40 +144,56 @@ export default function StructuresSelector() {
   const { data: dataCounties, isLoading: isLoadingCounties } = useQuery({
     queryKey: ["fundings-counties"],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
-        body: JSON.stringify(bodyCounties),
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        method: "POST",
-      }).then((response) => response.json()),
+      fetch(
+        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        {
+          body: JSON.stringify(bodyCounties),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          method: "POST",
+        }
+      ).then((response) => response.json()),
   });
   console.log(dataCounties);
 
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
     queryKey: ["fundings-structures", county],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
-        body: JSON.stringify(bodyStructures),
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        method: "POST",
-      }).then((response) => response.json()),
+      fetch(
+        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        {
+          body: JSON.stringify(bodyStructures),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          method: "POST",
+        }
+      ).then((response) => response.json()),
   });
 
-  if (isLoadingCounties || !dataCounties || isLoadingStructures || !dataStructures) return <DefaultSkeleton />;
-  const counties = dataCounties.aggregations.by_county?.buckets.map((bucket) => bucket.key);
-  const structures = dataStructures.aggregations?.by_structure?.buckets.map((bucket) => ({ id: bucket.key, label: getLabelFromName(bucket.key) })) || [];
+  if (
+    isLoadingCounties ||
+    !dataCounties ||
+    isLoadingStructures ||
+    !dataStructures
+  )
+    return <DefaultSkeleton />;
+  const counties = dataCounties.aggregations.by_county?.buckets.map(
+    (bucket) => bucket.key
+  );
+  const structures =
+    dataStructures.aggregations?.by_structure?.buckets.map((bucket) => ({
+      id: bucket.key,
+      label: getLabelFromName(bucket.key),
+    })) || [];
 
   return (
     <>
       <div>
-        <h3>
-          Sélectionner une structure
-        </h3>
+        <h3>Sélectionner une structure</h3>
 
         <Row gutters>
           <Col xs="12" sm="6" md="4">

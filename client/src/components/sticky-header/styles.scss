@@ -1,0 +1,42 @@
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--background-alt-blue-france);
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+
+  &__content {
+    flex: 1;
+  }
+
+  &__title {
+    font-weight: 700;
+  }
+
+  &__subtitle {
+    font-style: italic;
+    color: var(--text-mention-grey);
+    margin-top: 0.25rem;
+  }
+
+  &__selector {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__selector-label {
+    font-size: 14px;
+    color: var(--text-default-grey);
+    font-weight: 500;
+  }
+
+  &__select {
+    width: auto;
+    min-width: 120px;
+  }
+}

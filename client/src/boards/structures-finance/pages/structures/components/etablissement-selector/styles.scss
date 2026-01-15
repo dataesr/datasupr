@@ -1,0 +1,183 @@
+.etablissement-selector {
+  &__header {
+    background: linear-gradient(
+      135deg,
+      var(--background-contrast-blue-france) 0%,
+      var(--background-default-grey) 100%
+    );
+    padding: 2.5rem 0;
+    margin-bottom: 2rem;
+
+    .fr-label {
+      color: var(--text-label-grey);
+    }
+
+    .fr-hint-text {
+      color: var(--text-mention-grey);
+    }
+
+    .fr-select {
+      background-color: var(--background-contrast-grey);
+      color: var(--text-default-grey);
+      border-color: var(--border-plain-grey);
+    }
+
+    .fr-col {
+      transition: flex-basis 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+      }
+    }
+  }
+
+  &__title {
+    color: var(--text-title-grey) !important;
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+
+    @media (max-width: 768px) {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+@keyframes slideInFade {
+  from {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutFade {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(1rem);
+  }
+}
+
+.info-card {
+  background: var(--background-default-grey);
+  border: 1px solid var(--border-default-grey);
+  padding: 1.5rem;
+  animation: slideInFade 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  @media (prefers-reduced-motion: reduce) {
+    animation: none;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  &__title {
+    color: var(--text-title-blue-france);
+    font-size: 1.125rem;
+    line-height: 1.5rem;
+    margin: 0;
+  }
+
+  &__details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    padding: 0;
+
+    > div {
+      display: flex;
+      align-items: baseline;
+    }
+
+    dt {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--text-mention-grey);
+      text-transform: uppercase;
+
+      &::after {
+        content: " :";
+      }
+    }
+
+    dd {
+      font-size: 0.875rem;
+      color: var(--text-default-grey);
+    }
+  }
+
+  &__rce-date {
+    font-size: 0.75rem;
+    font-style: italic;
+  }
+
+  &__formations {
+    border-top: 1px solid var(--border-default-grey);
+    padding-top: 1rem;
+  }
+
+  &__formations-title {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    color: var(--text-mention-grey);
+    margin: 0 0 0.75rem 0;
+  }
+
+  &__badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+
+    .fr-badge {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+    }
+  }
+
+  &__separator {
+    color: var(--text-mention-grey);
+    font-size: 0.875rem;
+    line-height: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .etablissement-selector__header {
+    padding: 1.5rem 0;
+  }
+
+  .info-card {
+    padding: 1rem;
+
+    &__title {
+      font-size: 1rem;
+    }
+
+    &__details {
+      gap: 0.5rem 1rem;
+    }
+  }
+}

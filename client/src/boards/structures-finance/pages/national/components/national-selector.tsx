@@ -1,9 +1,10 @@
-import { Row, Col } from "@dataesr/dsfr-plus";
+import { Row, Col, Container } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useMemo, useEffect, useRef } from "react";
-import { DSFR_COLORS } from "../../../constants/colors";
 import { useFinanceYears, useFinanceAdvancedComparison } from "../../../api";
 import { useNationalFilters } from "../hooks/useNationalFilters";
+import "./national-selector.scss";
+import Breadcrumb from "../../../components/breadcrumb";
 
 export default function NationalSelector() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -112,112 +113,120 @@ export default function NationalSelector() {
     }
     setSearchParams(next);
   };
+
   return (
-    <section
-      className="fr-p-3w fr-mb-3w"
-      style={{
-        backgroundColor: DSFR_COLORS.backgroundDefaultHover,
-        borderRadius: "8px",
-        border: `1px solid ${DSFR_COLORS.borderDefault}`,
-      }}
-      aria-labelledby="filters-title"
-    >
-      <h2 id="filters-title" className="fr-h6 fr-mb-3w">
-        Filtres de sélection
-      </h2>
-      <Row gutters>
-        <Col xs="12" sm="6" md="3">
-          <div className="fr-select-group">
-            <label className="fr-label" htmlFor="select-year">
-              <strong>Année</strong>
-              <span className="fr-hint-text">Année de référence</span>
-            </label>
-            <select
-              id="select-year"
-              className="fr-select"
-              value={selectedYear}
-              onChange={(e) => handleYearChange(e.target.value)}
-              aria-required="true"
-            >
-              {years.map((year) => (
-                <option key={year} value={year}>
-                  Exercice {year}
-                </option>
-              ))}
-            </select>
-          </div>
-        </Col>
+    <section className="national-selector" aria-labelledby="filters-title">
+      <Container fluid className="national-selector__header">
+        <Container>
+          <Breadcrumb
+            items={[
+              { label: "Accueil", path: "/structures-finance/accueil" },
+              {
+                label: "Vue nationale",
+                path: "/structures-finance/national",
+              },
+            ]}
+          />
+          <h2 id="filters-title" className="national-selector__title">
+            Filtres de sélection
+          </h2>
+          <Row gutters>
+            <Col xs="12" sm="6" md="3">
+              <div className="fr-select-group">
+                <label className="fr-label" htmlFor="select-year">
+                  <strong>Année</strong>
+                  <span className="fr-hint-text">Année de référence</span>
+                </label>
+                <select
+                  id="select-year"
+                  className="fr-select"
+                  value={selectedYear}
+                  onChange={(e) => handleYearChange(e.target.value)}
+                  aria-required="true"
+                >
+                  {years.map((year) => (
+                    <option key={year} value={year}>
+                      Exercice {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </Col>
 
-        <Col xs="12" sm="6" md="3">
-          <div className="fr-select-group">
-            <label className="fr-label" htmlFor="select-type">
-              <strong>Type d'établissement</strong>
-              <span className="fr-hint-text">Filtrer par type (optionnel)</span>
-            </label>
-            <select
-              id="select-type"
-              className="fr-select"
-              value={selectedType}
-              onChange={(e) => handleTypeChange(e.target.value)}
-            >
-              <option value="">Tous les types</option>
-              {availableTypes.map((type: string) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-          </div>
-        </Col>
+            <Col xs="12" sm="6" md="3">
+              <div className="fr-select-group">
+                <label className="fr-label" htmlFor="select-type">
+                  <strong>Type d'établissement</strong>
+                  <span className="fr-hint-text">
+                    Filtrer par type (optionnel)
+                  </span>
+                </label>
+                <select
+                  id="select-type"
+                  className="fr-select"
+                  value={selectedType}
+                  onChange={(e) => handleTypeChange(e.target.value)}
+                >
+                  <option value="">Tous les types</option>
+                  {availableTypes.map((type: string) => (
+                    <option key={type} value={type}>
+                      {type}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </Col>
 
-        <Col xs="12" sm="6" md="3">
-          <div className="fr-select-group">
-            <label className="fr-label" htmlFor="select-typologie">
-              <strong>Typologie</strong>
-              <span className="fr-hint-text">
-                Filtrer par typologie (optionnel)
-              </span>
-            </label>
-            <select
-              id="select-typologie"
-              className="fr-select"
-              value={selectedTypologie}
-              onChange={(e) => handleTypologieChange(e.target.value)}
-            >
-              <option value="">Toutes les typologies</option>
-              {availableTypologies.map((typo: string) => (
-                <option key={typo} value={typo}>
-                  {typo}
-                </option>
-              ))}
-            </select>
-          </div>
-        </Col>
+            <Col xs="12" sm="6" md="3">
+              <div className="fr-select-group">
+                <label className="fr-label" htmlFor="select-typologie">
+                  <strong>Typologie</strong>
+                  <span className="fr-hint-text">
+                    Filtrer par typologie (optionnel)
+                  </span>
+                </label>
+                <select
+                  id="select-typologie"
+                  className="fr-select"
+                  value={selectedTypologie}
+                  onChange={(e) => handleTypologieChange(e.target.value)}
+                >
+                  <option value="">Toutes les typologies</option>
+                  {availableTypologies.map((typo: string) => (
+                    <option key={typo} value={typo}>
+                      {typo}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </Col>
 
-        <Col xs="12" sm="6" md="3">
-          <div className="fr-select-group">
-            <label className="fr-label" htmlFor="select-region">
-              <strong>Région</strong>
-              <span className="fr-hint-text">
-                Filtrer par région (optionnel)
-              </span>
-            </label>
-            <select
-              id="select-region"
-              className="fr-select"
-              value={selectedRegion}
-              onChange={(e) => handleRegionChange(e.target.value)}
-            >
-              <option value="">Toutes les régions</option>
-              {availableRegions.map((region: string) => (
-                <option key={region} value={region}>
-                  {region}
-                </option>
-              ))}
-            </select>
-          </div>
-        </Col>
-      </Row>
+            <Col xs="12" sm="6" md="3">
+              <div className="fr-select-group">
+                <label className="fr-label" htmlFor="select-region">
+                  <strong>Région</strong>
+                  <span className="fr-hint-text">
+                    Filtrer par région (optionnel)
+                  </span>
+                </label>
+                <select
+                  id="select-region"
+                  className="fr-select"
+                  value={selectedRegion}
+                  onChange={(e) => handleRegionChange(e.target.value)}
+                >
+                  <option value="">Toutes les régions</option>
+                  {availableRegions.map((region: string) => (
+                    <option key={region} value={region}>
+                      {region}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </Col>
+          </Row>
+        </Container>
+      </Container>
     </section>
   );
 }

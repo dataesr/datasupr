@@ -1,7 +1,11 @@
+import { useSearchParams } from "react-router-dom";
 import EffectifsChart from "../charts/effectifs";
 import { SmallMetricCard } from "../components/metric-cards/small-metric-card";
 import { FORMATION_COLORS } from "../../../constants/formation-colors";
-import { useFinanceEtablissementEvolution } from "../../../api";
+import {
+  useFinanceEtablissementEvolution,
+  useFinanceYears,
+} from "../../../api";
 import "./styles.scss";
 
 interface EtudiantsSectionProps {
@@ -18,10 +22,20 @@ export function EtudiantsSection({
   selectedYear,
   selectedEtablissement,
 }: EtudiantsSectionProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const { data: yearsData } = useFinanceYears();
+  const years = yearsData?.years || [];
+
   const { data: evolutionData } = useFinanceEtablissementEvolution(
     selectedEtablissement || "",
     !!selectedEtablissement
   );
+
+  const handleYearChange = (year: string) => {
+    const next = new URLSearchParams(searchParams);
+    next.set("year", year);
+    setSearchParams(next);
+  };
 
   const getEvolutionData = (metricKey: string) => {
     if (!evolutionData || evolutionData.length === 0) return undefined;
@@ -40,11 +54,28 @@ export function EtudiantsSection({
       aria-labelledby="section-etudiants"
       className="fr-p-3w section-container"
     >
-      <div className="fr-mb-3w">
-        <h3 className="fr-h6 fr-mb-2w">
+      <div className="section-header fr-mb-3w">
+        <h3 className="fr-h6 section-header__title">
           Répartition des effectifs {`(${data.anuniv})`}
         </h3>
+        <label className="fr-label" htmlFor="select-year-etudiants"></label>
+        <div className="fr-select-group section-header__year-selector">
+          <select
+            className="fr-select"
+            id="select-year-etudiants"
+            value={selectedYear}
+            onChange={(e) => handleYearChange(e.target.value)}
+          >
+            {years.map((year) => (
+              <option key={year} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
+        </div>
+      </div>
 
+      <div className="fr-mb-3w">
         <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
           {(data?.has_effectif_l ||
             data?.has_effectif_m ||

@@ -1,8 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useFinanceEtablissementDetail, useFinanceYears } from "../../../api";
-import StickyHeader from "./sticky-header";
-import EtablissementInfo from "./etablissement-info";
 import SectionNavigation from "./section-navigation";
 import {
   FinancementsSection,
@@ -35,12 +33,6 @@ export default function EtablissementDetails() {
     !!structureId && !!(year || years[0])
   );
 
-  const handleYearChange = (newYear: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("year", newYear);
-    setSearchParams(next);
-  };
-
   if (!structureId) {
     return (
       <div className="fr-alert fr-alert--info fr-mt-3w">
@@ -66,12 +58,6 @@ export default function EtablissementDetails() {
     return null;
   }
 
-  const showMergedBadge =
-    detailData.etablissement_id_paysage !==
-      detailData.etablissement_id_paysage_actuel &&
-    detailData.date_de_fermeture == null;
-
-  const showYearSelector = section !== "analyses";
   const selectedYear = year || years[0] || "";
 
   const renderSectionContent = () => {
@@ -114,18 +100,6 @@ export default function EtablissementDetails() {
 
   return (
     <>
-      <StickyHeader
-        currentName={detailData.etablissement_actuel_lib}
-        historicalName={detailData.etablissement_lib}
-        showMergedBadge={showMergedBadge}
-        showYearSelector={showYearSelector}
-        years={years}
-        selectedYear={selectedYear}
-        onYearChange={handleYearChange}
-      />
-
-      <EtablissementInfo data={detailData} />
-
       <SectionNavigation />
 
       {renderSectionContent()}
