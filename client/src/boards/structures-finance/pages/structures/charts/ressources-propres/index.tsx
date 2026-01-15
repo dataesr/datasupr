@@ -159,7 +159,6 @@ export default function RessourcesPropresChart({
               </>
             ),
           },
-          updateDate: new Date(),
           integrationURL: "/integration-url",
         }}
         options={options}

@@ -136,7 +136,6 @@ export default function RecettesEvolutionChart({
               </>
             ),
           },
-          updateDate: new Date(),
           integrationURL: "/integration-url",
         }}
         options={chartOptions}

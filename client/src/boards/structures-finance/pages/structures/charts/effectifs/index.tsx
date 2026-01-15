@@ -159,7 +159,6 @@ export default function EffectifsChart({
             </>
           ),
         },
-        updateDate: new Date(),
         integrationURL: "/integration-url",
       }}
       options={cursusOptions}

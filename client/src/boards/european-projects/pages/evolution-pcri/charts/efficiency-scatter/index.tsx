@@ -37,7 +37,6 @@ export default function EfficiencyScatter() {
     },
     readingKey: readingKey(data, isLoading),
     sources: EPChartsSources,
-    updateDate: EPChartsUpdateDate,
     integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };
 

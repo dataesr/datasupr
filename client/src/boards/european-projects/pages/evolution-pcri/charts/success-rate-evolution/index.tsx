@@ -38,7 +38,6 @@ export default function SuccessRateEvolution() {
     },
     readingKey: readingKey(data, isLoading),
     sources: EPChartsSources,
-    updateDate: EPChartsUpdateDate,
     integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };
 

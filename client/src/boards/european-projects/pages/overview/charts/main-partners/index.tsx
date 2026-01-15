@@ -45,7 +45,6 @@ export default function MainPartners() {
     },
     readingKey: readingKey(data),
     sources: EPChartsSources,
-    updateDate: EPChartsUpdateDate,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries",
   };
 
