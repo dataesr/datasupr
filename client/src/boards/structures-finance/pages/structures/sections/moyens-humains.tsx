@@ -48,9 +48,7 @@ export function MoyensHumainsSection({
       className="fr-p-3w section-container"
     >
       <div className="section-header fr-mb-5w">
-        <h3 className="fr-h5 section-header__title">
-          Les enseignants permanents
-        </h3>
+        <h3 className="fr-h5 section-header__title">La masse salariale</h3>
         <label
           className="fr-label"
           htmlFor="select-year-moyens-humains"
@@ -72,52 +70,6 @@ export function MoyensHumainsSection({
       </div>
 
       <div className="fr-mb-5w">
-        <Row gutters>
-          <Col xs="12" md="6">
-            <MetricChartCard
-              title="Nombre d'emplois (ETPT)"
-              value={
-                data.emploi_etpt != null
-                  ? data.emploi_etpt.toLocaleString("fr-FR", {
-                      maximumFractionDigits: 1,
-                    })
-                  : "—"
-              }
-              detail="Équivalent temps plein travaillé"
-              color={CHART_COLORS.palette[0]}
-              evolutionData={getEvolutionData("emploi_etpt")}
-            />
-          </Col>
-          <Col xs="12" md="6">
-            <MetricChartCard
-              title="Taux d'encadrement"
-              value={
-                data.taux_encadrement != null
-                  ? `${data.taux_encadrement.toFixed(1)} %`
-                  : "—"
-              }
-              detail={
-                data.effectif_sans_cpge
-                  ? `Pour ${data.effectif_sans_cpge.toLocaleString(
-                      "fr-FR"
-                    )} étudiants`
-                  : "Enseignants permanents"
-              }
-              color={CHART_COLORS.palette[1]}
-              evolutionData={getEvolutionData("taux_encadrement")}
-              unit="%"
-            />
-          </Col>
-        </Row>
-      </div>
-
-      <div>
-        <h3
-          className="fr-h5 fr-mb-3w "
-          style={{ borderLeftColor: CHART_COLORS.secondary }}
-        >
-          La masse salariale
-        </h3>
         <Row gutters>
           <Col xs="12" sm="6" md="4">
             <MetricChartCard
@@ -166,6 +118,52 @@ export function MoyensHumainsSection({
               evolutionData={getEvolutionData(
                 "taux_de_remuneration_des_permanents"
               )}
+              unit="%"
+            />
+          </Col>
+        </Row>
+      </div>
+
+      <div>
+        <h3
+          className="fr-h5 fr-mb-3w "
+          style={{ borderLeftColor: CHART_COLORS.secondary }}
+        >
+          Les enseignants permanents
+        </h3>
+        <Row gutters>
+          <Col xs="12" md="6">
+            <MetricChartCard
+              title="Nombre d'emplois (ETPT)"
+              value={
+                data.emploi_etpt != null
+                  ? data.emploi_etpt.toLocaleString("fr-FR", {
+                      maximumFractionDigits: 1,
+                    })
+                  : "—"
+              }
+              detail="Équivalent temps plein travaillé"
+              color={CHART_COLORS.palette[0]}
+              evolutionData={getEvolutionData("emploi_etpt")}
+            />
+          </Col>
+          <Col xs="12" md="6">
+            <MetricChartCard
+              title="Taux d'encadrement"
+              value={
+                data.taux_encadrement != null
+                  ? `${data.taux_encadrement.toFixed(1)} %`
+                  : "—"
+              }
+              detail={
+                data.effectif_sans_cpge
+                  ? `Pour ${data.effectif_sans_cpge.toLocaleString(
+                      "fr-FR"
+                    )} étudiants`
+                  : "Enseignants permanents"
+              }
+              color={CHART_COLORS.palette[1]}
+              evolutionData={getEvolutionData("taux_encadrement")}
               unit="%"
             />
           </Col>

@@ -17,7 +17,7 @@ export default function SectionNavigation() {
     <div className="fr-mb-3w">
       <TertiaryNavigation>
         <TertiaryNavigationItem
-          label="Financements"
+          label="Les ressources de l'établissement"
           isActive={activeSection === "financements"}
           onClick={(e) => {
             e.preventDefault();

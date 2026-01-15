@@ -17,14 +17,21 @@ export default function InfoCard({ data, onClose }: InfoCardProps) {
     data.has_effectif_si ||
     data.has_effectif_staps ||
     data.has_effectif_veto ||
+    data.has_effectif_sante ||
     data.has_effectif_interd;
+
+  const showActuelName =
+    data.etablissement_actuel_lib &&
+    data.etablissement_lib &&
+    data.etablissement_lib !== data.etablissement_actuel_lib;
 
   return (
     <div className="info-card">
       <div className="info-card__content">
         <div className="info-card__header">
           <h3 className="info-card__title">
-            {data.etablissement_actuel_lib || data.etablissement_lib}
+            {data.etablissement_lib || data.etablissement_actuel_lib}
+            {showActuelName && ` > ${data.etablissement_actuel_lib}`}
           </h3>
           <button
             className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-close-line"
@@ -37,41 +44,44 @@ export default function InfoCard({ data, onClose }: InfoCardProps) {
         <dl className="info-card__details">
           {data.etablissement_actuel_categorie && (
             <div>
-              <dt>Type</dt>
               <dd>{data.etablissement_actuel_categorie}</dd>
             </div>
           )}
 
           <div>
-            <dt>Localisation</dt>
             <dd>
-              {data.region} — {data.commune}
+              {data.commune} — {data.region}
             </dd>
           </div>
 
+          {data.nb_sites && (
+            <div>
+              <dd>
+                Implanté sur {data.nb_sites}{" "}
+                {data.nb_sites > 1 ? "sites" : "site"}
+              </dd>
+            </div>
+          )}
+
           <div>
-            <dt>RCE</dt>
             <dd>
               {data.is_rce ? (
                 <>
-                  Oui
-                  {data.rce && (
-                    <span className="info-card__rce-date">
-                      {" "}
-                      (depuis {data.rce})
-                    </span>
-                  )}
+                  Dispose des responsabilités et compétences élargies (RCE)
+                  {data.rce && <> depuis {data.rce}</>}
                 </>
               ) : (
-                "Non"
+                "Ne dispose pas des responsabilités et compétences élargies"
               )}
             </dd>
           </div>
 
           {data.effectif_sans_cpge && (
             <div>
-              <dt>Étudiants</dt>
-              <dd>{data.effectif_sans_cpge.toLocaleString("fr-FR")}</dd>
+              <dd>
+                {data.effectif_sans_cpge.toLocaleString("fr-FR")} étudiants
+                inscrits en {data.anuniv}
+              </dd>
             </div>
           )}
         </dl>
@@ -81,17 +91,17 @@ export default function InfoCard({ data, onClose }: InfoCardProps) {
           <div className="info-card__badges">
             {data.has_effectif_l && (
               <Badge color="blue-cumulus" size="sm">
-                Licence
+                1er cycle
               </Badge>
             )}
             {data.has_effectif_m && (
               <Badge color="green-archipel" size="sm">
-                Master
+                2ème cycle
               </Badge>
             )}
             {data.has_effectif_d && (
               <Badge color="pink-tuile" size="sm">
-                Doctorat
+                3ème cycle
               </Badge>
             )}
 
@@ -130,6 +140,11 @@ export default function InfoCard({ data, onClose }: InfoCardProps) {
             {data.has_effectif_llsh && (
               <Badge color="pink-tuile" size="sm">
                 Lettres Langues SHS
+              </Badge>
+            )}
+            {data.has_effectif_sante && (
+              <Badge color="brown-caramel" size="sm">
+                Santé
               </Badge>
             )}
             {data.has_effectif_theo && (

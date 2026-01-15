@@ -238,7 +238,12 @@ export function MetricChartCard({
           {detail && (
             <p
               className="fr-text--sm"
-              style={{ color: DSFR_COLORS.textDefault, margin: 0 }}
+              style={{
+                color: DSFR_COLORS.textDefault,
+                margin: 0,
+                position: "relative",
+                zIndex: 10,
+              }}
             >
               {detail}
             </p>

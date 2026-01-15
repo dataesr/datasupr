@@ -89,24 +89,7 @@ export function FinancementsSection({
               unit="€"
             />
           </Col>
-          <Col xs="12" md="4">
-            <MetricChartCard
-              title="Subvention pour charge de service public"
-              value={`${euro(data.scsp)} €`}
-              detail={
-                data.produits_de_fonctionnement_encaissables && data.scsp
-                  ? `${(
-                      (data.scsp /
-                        data.produits_de_fonctionnement_encaissables) *
-                      100
-                    ).toFixed(1)} % des ressources`
-                  : "Part des ressources"
-              }
-              color={CHART_COLORS.primary}
-              evolutionData={getEvolutionData("scsp")}
-              unit="€"
-            />
-          </Col>
+
           <Col xs="12" md="4">
             <MetricChartCard
               title="Ressources propres"
@@ -126,6 +109,24 @@ export function FinancementsSection({
               unit="€"
             />
           </Col>
+          <Col xs="12" md="4">
+            <MetricChartCard
+              title="Autonomie financière"
+              value={
+                data.ressources_propres_produits_encaissables != null
+                  ? `${data.ressources_propres_produits_encaissables.toFixed(
+                      1
+                    )} %`
+                  : "—"
+              }
+              detail="Part des ressources propres"
+              color={CHART_COLORS.primary}
+              evolutionData={getEvolutionData(
+                "ressources_propres_produits_encaissables"
+              )}
+              unit="%"
+            />
+          </Col>
         </Row>
       </div>
 
@@ -134,30 +135,48 @@ export function FinancementsSection({
           Subvention pour charges de service public
         </h3>
         <Row gutters>
-          <Col xs="12" md="6">
+          <Col xs="12" md="4">
             <MetricChartCard
               title="SCSP"
               value={`${euro(data.scsp)} €`}
-              detail="Subvention pour charges de service public"
+              detail="Dotation de l'État"
               color={CHART_COLORS.secondary}
               evolutionData={getEvolutionData("scsp")}
               unit="€"
             />
           </Col>
-          <Col xs="12" md="6">
+          <Col xs="12" md="4">
             <MetricChartCard
-              title="SCSP par étudiant"
+              title="SCSP par étudiant financé"
               value={`${euro(data.scsp_par_etudiants)} €`}
               detail={
                 data.scsp_etudiants
                   ? `Pour ${data.scsp_etudiants.toLocaleString(
                       "fr-FR"
-                    )} étudiants`
-                  : "Ratio SCSP / étudiants"
+                    )} étudiants financés`
+                  : "Ratio SCSP / étudiants financés"
               }
               color={CHART_COLORS.secondary}
               evolutionData={getEvolutionData("scsp_par_etudiants")}
               unit="€"
+            />
+          </Col>
+          <Col xs="12" md="4">
+            <MetricChartCard
+              title="Part des étudiants financés"
+              value={
+                data.part_scsp_etudiants_effectif_sans_cpge != null
+                  ? `${data.part_scsp_etudiants_effectif_sans_cpge.toFixed(
+                      1
+                    )} %`
+                  : "—"
+              }
+              detail="Part des étudiants SCSP dans l'effectif total"
+              color={CHART_COLORS.secondary}
+              evolutionData={getEvolutionData(
+                "part_scsp_etudiants_effectif_sans_cpge"
+              )}
+              unit="%"
             />
           </Col>
         </Row>
