@@ -10,7 +10,7 @@ import { formatCompactNumber, getColorFromFunder, getGeneralOptions } from "../.
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function ProjectsByStructure({ name }: { name: string }) {
+export default function ProjectsByStructure({ name }: { name: string | undefined }) {
   const [field, setField] = useState("projects");
   const [searchParams] = useSearchParams();
   const next = new URLSearchParams(searchParams);
@@ -108,7 +108,6 @@ export default function ProjectsByStructure({ name }: { name: string }) {
   };
   const config = {
     id: "projectsByStructure",
-    integrationURL: `/integration?chart_id=projectsByStructure&${next.toString()}`,
     title: field === "projects" ? titleProjects : titleBudget,
   };
 

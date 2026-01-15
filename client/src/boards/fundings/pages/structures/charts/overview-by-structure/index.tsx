@@ -11,7 +11,7 @@ import { getGeneralOptions } from "../../../../utils.ts";
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function OverviewByStructure({ name }: { name: string }) {
+export default function OverviewByStructure({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
   const next = new URLSearchParams(searchParams);
   const structure = next.get("structure")?.toString() ?? "";
@@ -90,7 +90,6 @@ export default function OverviewByStructure({ name }: { name: string }) {
 
   const config = {
     id: "overviewByStructure",
-    integrationURL: `/integration?chart_id=overviewByStructure&${next.toString()}`,
     title: `Nombre de projets pour ${name} par financeur pour l'année ${year}`,
   };
 

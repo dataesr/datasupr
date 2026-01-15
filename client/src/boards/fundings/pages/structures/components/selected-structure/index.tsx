@@ -2,7 +2,7 @@ import { Col, Row } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
 
-export default function SelectedStructure({ name }: { name: string }) {
+export default function SelectedStructure({ name }: { name: string | undefined }) {
   const [searchParams, setSearchParams] = useSearchParams({});
   const year = searchParams.get("year") ?? "";
   const years = Array.from(Array(10).keys()).map((item) => item + 2015);
