@@ -56,7 +56,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       by_project_type: {
         terms: {
           field: "project_type.keyword",
-          size: 30,
+          size: 50,
         },
         aggregations: {
           sum_budget: {

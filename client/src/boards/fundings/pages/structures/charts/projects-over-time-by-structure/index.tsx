@@ -12,13 +12,13 @@ import { FundingsSources } from "../../../graph-config.js";
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function ProjectsByStructure({ name }: { name: string | undefined }) {
+export default function ProjectsOverTimeByStructure({ name }: { name: string | undefined }) {
   const [field, setField] = useState("projects");
   const [searchParams] = useSearchParams();
   const next = new URLSearchParams(searchParams);
   const structure = next.get("structure")?.toString() ?? "";
-  const year = next.get("year")?.toString() ?? "";
   const color = useChartColor();
+  const years = [2020, 2021, 2022, 2023, 2024];
 
   const body = {
     size: 0,
@@ -26,8 +26,10 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       bool: {
         filter: [
           {
-            term: {
-              project_year: year,
+            range: {
+              project_year: {
+                gte: years[0],
+              },
             },
           },
           {
@@ -60,14 +62,21 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
           size: 50,
         },
         aggregations: {
-          unique_projects: {
-            cardinality: {
-              field: "project_id.keyword",
+          by_project_year: {
+            terms: {
+              field: "project_year",
             },
-          },
-          sum_budget: {
-            sum: {
-              field: "project_budgetTotal",
+            aggs: {
+              unique_projects: {
+                cardinality: {
+                  field: "project_id.keyword",
+                },
+              },
+              sum_budget: {
+                sum: {
+                  field: "project_budgetTotal",
+                },
+              },
             },
           },
         },
@@ -76,7 +85,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-projects-by-structure', structure, year],
+    queryKey: ['funding-projects-over-time-by-structure', structure],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -90,38 +99,54 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  const series = data.aggregations.by_project_type.buckets.map((bucket, index) => ({
+  const series = data.aggregations.by_project_type.buckets.map((bucket) => ({
     color: getColorFromFunder(bucket.key),
-    name: bucket.key,
-    data: [{ x: index, y: field === "projects" ? bucket.unique_projects.value : bucket.sum_budget.value }],
+    data: years.map((year) => bucket.by_project_year.buckets.find((item) => item.key === year)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
+    marker: { enabled: false },
+    name: bucket.key
   }));
-  const categories: string[] = series.map((item: { name: string }) => item.name);
 
-  const titleProjects = `Nombre de projets de ${name} par financeur pour l'année ${year}`;
-  const titleBudget = `Montant total des projets de ${name} par financeur pour l'année ${year}`;
+  const titleProjects = `Nombre de projets de ${name} par financeur sur la période ${years[0]}-${years[years.length - 1]}, par année de début du projet`;
+  const titleBudget = `Montant total des projets de ${name} par financeur sur la période ${years[0]}-${years[years.length - 1]}, par année de début du projet`;
   const axisProjects = "Nombre de projets";
   const axisBudget = "Montant total";
   const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté en <b>${year}</b> grâce au financement de <b>${this.series.name}</b> avec la participation de <b>${name}</b>`;
+    return `<b>${this.y}</b> projets ont débuté en <b>${this.x}</b> grâce au financement de <b>${this.series.name}</b> avec la participation de <b>${name}</b>`;
   };
   const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés en <b>${year}</b> auxquels prend part <b>${name}</b>`;
+    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés en <b>${this.x}</b> auxquels prend part <b>${name}</b>`;
   };
   const config = {
-    id: "projectsByStructure",
+    id: "projectsOverTimeByStructure",
     sources: FundingsSources,
   };
 
   const options: object = {
-    ...getGeneralOptions('', [], '', field === "projects" ? axisProjects : axisBudget),
-    plotOptions: { bar: { grouping: false } },
-    series,
+    ...getGeneralOptions('', [], 'Année de début du projet', field === "projects" ? axisProjects : axisBudget),
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
-    xAxis: { categories },
+    chart: {
+      height: '600px',
+      type: 'area'
+    },
+    plotOptions: {
+      series: {
+        pointStart: years[0]
+      },
+      area: {
+        stacking: 'normal',
+        marker: {
+          enabled: false,
+          lineColor: '#666666',
+          lineWidth: 1,
+          symbol: 'circle'
+        }
+      }
+    },
+    series,
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="projects-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="projects-over-time-by-structure">
       <Title as="h2" look="h6">
         {field === "projects" ? titleProjects : titleBudget}
       </Title>

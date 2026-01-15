@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import OverviewByStructure from "./charts/overview-by-structure";
 import ProjectsByStructure from "./charts/projects-by-structure";
+import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
 import StructuresSelector from "./components/structures-selector";
 import YearSelector from "./components/year-selector";
 
@@ -42,9 +43,14 @@ export default function Structures() {
           </Row>
           <Row gutters>
             <Col>
+              <ProjectsOverTimeByStructure name={name} />
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col>
               <div className="chart-container chart-container--default" id="projects-list">
                 <Title as="h2" look="h6">
-                  Liste des projets de la structure choisie
+                  {`Liste des projets de ${name}`}
                 </Title>
                 <div>
                   <a href={scanrUrl} target="_blank">Voir ces projets sur scanR</a>

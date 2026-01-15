@@ -15,6 +15,7 @@ export default function SidemenuStructures() {
             <Summary title="Sommaire">
               <SummaryItem href="#projects-by-structure" label="Nombre de projets et leurs montants" />
               <SummaryItem href="#overview-by-structure" label="Vue relative des financements" />
+              <SummaryItem href="#pprojects-over-time-by-structure" label="Evolution du nombre de projets et leurs montants au cours du temps" />
               <SummaryItem href="#projects-list" label="Liste des projets" />
             </Summary>
           </SummaryWrapper>
