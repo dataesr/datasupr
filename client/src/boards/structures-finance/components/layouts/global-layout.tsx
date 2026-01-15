@@ -64,7 +64,7 @@ export default function GlobalLayout() {
                 </div>
                 <div className="fr-header__service">
                   <a href="/" title="Accueil - DataSupR">
-                    <p className="fr-header__service-title">DataSupR</p>
+                    <p className="fr-header__service-title">#dataESR</p>
                   </a>
                   <p className="fr-header__service-tagline">
                     {getI18nLabel("title")}
@@ -74,30 +74,6 @@ export default function GlobalLayout() {
               <div className="fr-header__tools">
                 <div className="fr-header__tools-links">
                   <ul className="fr-btns-group">
-                    <li>
-                      <a
-                        className="fr-btn fr-icon-compass-3-line"
-                        href="/"
-                        title="Explorer les tableaux de bord"
-                      >
-                        <span className="fr-hidden fr-unhidden-sm">
-                          {getI18nLabel("explore")}
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a
-                        className="fr-btn fr-icon-database-2-line"
-                        href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-atlas_regional-effectifs-d-etudiants-inscrits/table/?disjunctive.rgp_formations_ou_etablissements&sort=-rentree"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        title="Accéder aux jeux de données"
-                      >
-                        <span className="fr-hidden fr-unhidden-sm">
-                          {getI18nLabel("datasets")}
-                        </span>
-                      </a>
-                    </li>
                     <li>
                       <button
                         className="fr-btn fr-icon-theme-fill"

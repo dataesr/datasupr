@@ -30,7 +30,7 @@ export default function Filters({ selectedEtablissement }: FiltersProps) {
     }
   }, [years, defaultYear, searchParams, setSearchParams]);
 
-  const [selectedType, setSelectedType] = useState("Universités et assimilés");
+  const [selectedType, setSelectedType] = useState("tous");
   const [selectedTypologie, setSelectedTypologie] = useState("toutes");
 
   const {
@@ -140,15 +140,7 @@ export default function Filters({ selectedEtablissement }: FiltersProps) {
     <>
       {!selectedEtablissement ? (
         <>
-          <SearchableSelect
-            options={etablissementOptions}
-            value={selectedEtablissement}
-            onChange={handleEtablissementChange}
-            placeholder="Rechercher un établissement par nom ou ville..."
-            label="Établissement"
-          />
-
-          <div className="fr-mt-2w">
+          <div className="fr-mb-2w">
             <Row gutters>
               <Col xs="12" md="7">
                 <fieldset className="fr-fieldset">
@@ -228,6 +220,14 @@ export default function Filters({ selectedEtablissement }: FiltersProps) {
               </Col>
             </Row>
           </div>
+
+          <SearchableSelect
+            options={etablissementOptions}
+            value={selectedEtablissement}
+            onChange={handleEtablissementChange}
+            placeholder="Rechercher un établissement par nom ou ville..."
+            label="Établissement"
+          />
         </>
       ) : (
         <>

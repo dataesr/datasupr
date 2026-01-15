@@ -46,7 +46,7 @@ export default function EtablissementSelector() {
             items={[
               { label: "Accueil", path: "/structures-finance/accueil" },
               {
-                label: "Etablissements",
+                label: "Situation d’un établissement",
                 path: "/structures-finance/etablissements",
               },
               ...(selectedEtablissement && detailData?.etablissement_actuel_lib

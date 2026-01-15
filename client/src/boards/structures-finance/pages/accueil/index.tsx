@@ -34,7 +34,7 @@ function HeroSection() {
                   className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
                   onClick={() => navigate("/structures-finance/etablissements")}
                 >
-                  Par établissement
+                  Situation d’un établissement{" "}
                 </button>
               </div>
             </div>
@@ -94,7 +94,7 @@ function QuickAccessSection() {
 
   const handleEtablissementSelect = (etablissementId: string) => {
     navigate(
-      `/structures-finance/etablissements?year=${latestYear}&type=tous&region=toutes&structureId=${etablissementId}`
+      `/structures-finance/etablissements?year=2024&type=tous&region=toutes&structureId=${etablissementId}`
     );
     setSearchValue("");
   };
@@ -107,8 +107,8 @@ function QuickAccessSection() {
             <div className="accueil-quick-access">
               <h2 className="accueil-section__title">Accès rapide</h2>
               <p className="accueil-section__description">
-                Recherchez directement un établissement pour accéder à ses
-                données financières détaillées
+                Accédez directement aux données financières détaillées d’un
+                établissement
               </p>
               <div className="accueil-quick-access__search">
                 <SearchableSelect
@@ -129,18 +129,18 @@ function QuickAccessSection() {
 
 const features = [
   {
-    icon: "/artwork/pictograms/digital/data-visualization.svg",
-    title: "Vue nationale",
-    description:
-      "Analyse globale des données financières de tous les établissements. Visualisez les tendances nationales et les agrégations par type et région.",
-    link: "/structures-finance/national",
-  },
-  {
     icon: "/artwork/pictograms/buildings/school.svg",
-    title: "Structures",
+    title: "Fiche établissements d’enseignement supérieur",
     description:
       "Explorez les données financières détaillées d'un établissement spécifique. Analysez l'évolution temporelle des indicateurs clés.",
     link: "/structures-finance/etablissements",
+  },
+  {
+    icon: "/artwork/pictograms/digital/data-visualization.svg",
+    title: "Vue nationale",
+    description:
+      "Analyse globale des données financières de tous les établissements. Visualisez les tendances nationales.",
+    link: "/structures-finance/national",
   },
 ];
 
