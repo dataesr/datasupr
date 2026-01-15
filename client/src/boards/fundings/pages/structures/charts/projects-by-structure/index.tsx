@@ -108,7 +108,7 @@ export default function ProjectsByStructure() {
   };
   const config = {
     id: "projectsByStructure",
-    integrationURL: "/integration?chart_id=projectsByStructure",
+    integrationURL: `/integration?chart_id=projectsByStructure&${next.toString()}`,
     title: field === "projects" ? titleProjects : titleBudget,
   };
 

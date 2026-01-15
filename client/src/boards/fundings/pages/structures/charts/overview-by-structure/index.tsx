@@ -90,7 +90,7 @@ export default function OverviewByStructure() {
 
   const config = {
     id: "overviewByStructure",
-    integrationURL: "/integration?chart_id=overviewByStructure",
+    integrationURL: `/integration?chart_id=overviewByStructure&${next.toString()}`,
     title: `Nombre de projets pour ${getLabelFromName(structure)} par financeur pour l'année ${year}`,
   };
 
