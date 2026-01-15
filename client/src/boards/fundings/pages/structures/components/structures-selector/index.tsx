@@ -15,15 +15,10 @@ export default function StructuresSelector() {
   const [searchParams, setSearchParams] = useSearchParams({});
   const structure = searchParams.get("structure") ?? "";
   const year = searchParams.get("year") ?? "";
-  const defaultStructure =
-    "180089013###FR_Centre national de la recherche scientifique|||EN_French National Centre for Scientific Research";
   const defaultYear = "2023";
 
   if (!structure || structure.length === 0 || !year || year.length === 0) {
     const next = new URLSearchParams(searchParams);
-    if (!structure || structure.length === 0) {
-      next.set("structure", defaultStructure);
-    }
     if (!year || year.length === 0) {
       next.set("year", defaultYear);
     }
