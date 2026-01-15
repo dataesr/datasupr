@@ -7,9 +7,9 @@
     "fr": "Exemple de lecture :",
     "en": "Reading example:"
   },
-  "source": {
-    "fr": "Source :",
-    "en": "Source:"
+  "sources": {
+    "fr": "Sources :",
+    "en": "Sources:"
   },
   "updateDate": {
     "fr": "Date de mise à jour :",

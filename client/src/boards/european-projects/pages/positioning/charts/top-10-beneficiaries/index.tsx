@@ -7,7 +7,7 @@ import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
-import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
+import { EPChartsSources } from "../../../../config.js";
 
 export default function Top10Beneficiaries() {
   const [searchParams] = useSearchParams();
@@ -42,8 +42,7 @@ export default function Top10Beneficiaries() {
       ),
     },
     readingKey: readingKey(data),
-    source: EPChartsSource,
-    updateDate: EPChartsUpdateDate,
+    sources: EPChartsSources,
     title: {
       fr: "Classement des bénéficiaires",
       en: "Beneficiaries ranking",

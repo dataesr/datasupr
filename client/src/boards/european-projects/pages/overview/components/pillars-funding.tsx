@@ -3,7 +3,7 @@ import PillarsFundingValues from "../charts/pillars-funding";
 import PillarsFundingSuccessRates from "../charts/pillars-funding-success-rates";
 import PillarsFundingProportion from "../charts/pillars-funding-proportion";
 import ChartFooter from "../../../../../components/chart-footer";
-import { EPChartsSource, EPChartsUpdateDate } from "../../../config";
+import { EPChartsSources } from "../../../config";
 
 export default function PillarsFunding() {
   return (
@@ -45,8 +45,7 @@ export default function PillarsFunding() {
                 </>
               ),
             }}
-            source={EPChartsSource}
-            updateDate={EPChartsUpdateDate}
+            sources={EPChartsSources}
           />
         </Col>
       </Row>

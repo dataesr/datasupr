@@ -7,7 +7,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { readingKey, useGetParams, renderDataTable } from "./utils";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
-import { EPChartsSource, EPChartsUpdateDate } from "../../../../config";
+import { EPChartsSources } from "../../../../config";
 
 export default function MainPartners() {
   const params = useGetParams();
@@ -44,7 +44,7 @@ export default function MainPartners() {
       ),
     },
     readingKey: readingKey(data),
-    source: EPChartsSource,
+    sources: EPChartsSources,
     updateDate: EPChartsUpdateDate,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/main-beneficiaries",
   };

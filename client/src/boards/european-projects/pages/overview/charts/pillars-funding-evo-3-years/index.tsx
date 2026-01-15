@@ -13,7 +13,7 @@ import { useState } from "react";
 
 import i18nLocal from "./i18n.json";
 import i18nGlobal from "../../../../i18n-global.json";
-import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
+import { EPChartsSources } from "../../../../config.js";
 // TODO: adapter les commentaires en fonction du selecteur
 // TODO: fix renderDataTable()
 
@@ -57,8 +57,7 @@ export default function PillarsFundingEvo3Years() {
       ),
     },
     readingKey: valuesSuccessReadingKey(data, displayType),
-    source: EPChartsSource,
-    updateDate: EPChartsUpdateDate,
+    sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
   };
 
@@ -73,8 +72,7 @@ export default function PillarsFundingEvo3Years() {
       en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
     },
     readingKey: successRatesReadingKey(data, displayType),
-    source: EPChartsSource,
-    updateDate: EPChartsUpdateDate,
+    sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
   };
 

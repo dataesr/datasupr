@@ -1,33 +1,32 @@
-import { useSearchParams } from "react-router-dom";
-
 import { Link } from "@dataesr/dsfr-plus";
+import { useSearchParams } from "react-router-dom";
 
 import i18n from "./i18n.json";
 
 interface LocalizedContent {
-  fr: JSX.Element;
   en?: JSX.Element;
+  fr: JSX.Element;
 }
 
 interface LocalizedUrl {
-  fr: string;
   en?: string;
+  fr: string;
 }
 
 interface Source {
   label: LocalizedContent;
+  updateDate?: Date;
   url: LocalizedUrl;
 }
 
 interface ChartFooterProps {
   comment?: LocalizedContent;
   readingKey?: LocalizedContent;
-  source?: Source;
-  updateDate?: Date;
+  sources?: Source[];
 }
 
 /**
- * Composant ChartFooter - Affiche un pied de graphique avec commentaires, clé de lecture, source et date de mise à jour
+ * Composant ChartFooter - Affiche un pied de graphique avec commentaires, clé de lecture et sources
  *
  * @example
  * ```tsx
@@ -42,8 +41,7 @@ interface ChartFooterProps {
 export default function ChartFooter({
   comment,
   readingKey,
-  source,
-  updateDate,
+  sources,
 }: ChartFooterProps) {
   const [searchParams] = useSearchParams();
   const currentLang = (searchParams.get("language") || "fr") as "fr" | "en";
@@ -52,7 +50,7 @@ export default function ChartFooter({
     return i18n[key][currentLang];
   }
 
-  if (!comment && !readingKey && !source && !updateDate) {
+  if (!comment && !readingKey && !sources) {
     return null;
   }
 
@@ -72,7 +70,7 @@ export default function ChartFooter({
         </div>
       )}
 
-      {(source || updateDate) && (
+      {(sources && sources.length > 0) && (
         <div
           style={{
             display: "flex",
@@ -82,21 +80,22 @@ export default function ChartFooter({
             paddingTop: "10px",
           }}
         >
-          {source && (
-            <div>
-              <b>{getI18nLabel("source")} </b>
-              <Link href={source.url[currentLang] || source.url.fr} target="_blank" rel="noopener noreferrer">
-                {source.label[currentLang] || source.label.fr}
-              </Link>
-            </div>
-          )}
-
-          {updateDate && (
-            <div>
-              <b>{getI18nLabel("updateDate")} </b>
-              {updateDate.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")}
-            </div>
-          )}
+          {sources.map((source) => (
+            <>
+              <div>
+                <b>{getI18nLabel("sources")} </b>
+                <Link href={source.url[currentLang] || source.url.fr} target="_blank" rel="noopener noreferrer">
+                  {source.label[currentLang] || source.label.fr}
+                </Link>
+              </div>
+              {(source.updateDate) && (
+                <div>
+                  <b>{getI18nLabel("updateDate")} </b>
+                  {source.updateDate.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")}
+                </div>
+              )}
+            </>
+          ))}
         </div>
       )}
     </div>

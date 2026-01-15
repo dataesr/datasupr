@@ -3,7 +3,7 @@ import DestinationFundingValues from "../charts/destination-funding";
 import DestinationFundingSuccessRates from "../charts/destination-funding-success-rates";
 import DestinationFundingProportion from "../charts/destination-funding-proportion";
 import ChartFooter from "../../../../../components/chart-footer";
-import { EPChartsSource, EPChartsUpdateDate } from "../../../config";
+import { EPChartsSources } from "../../../config";
 
 export default function DestinationsFunding() {
   return (
@@ -42,8 +42,7 @@ export default function DestinationsFunding() {
                 <>For the "Scientific Excellence" topic, projects requested X M€ in funding and obtained Y M€, representing a success rate of Z%.</>
               ),
             }}
-            source={EPChartsSource}
-            updateDate={EPChartsUpdateDate}
+            sources={EPChartsSources}
           />
         </Col>
       </Row>

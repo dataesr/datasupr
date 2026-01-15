@@ -36,6 +36,7 @@ interface LocalizedUrl {
 
 interface Source {
   label: LocalizedContent;
+  update?: Date;
   url: LocalizedUrl;
 }
 
@@ -85,8 +86,7 @@ export type ChartConfig = {
   integrationURL?: string;
   comment?: LocalizedContent;
   readingKey?: LocalizedContent;
-  source?: Source;
-  updateDate?: Date;
+  sources?: Source[];
 };
 
 export type HighchartsOptions = Highcharts.Options | any | null;
@@ -479,7 +479,7 @@ export default function ChartWrapper({
       <div className="fr-pt-1w">
         {legend && legend}
         <div className="chart-footer">
-          <ChartFooter comment={config.comment} readingKey={config.readingKey} source={config.source} updateDate={config.updateDate} />
+          <ChartFooter comment={config.comment} readingKey={config.readingKey} sources={config.sources} />
         </div>
       </div>
       <MenuModal

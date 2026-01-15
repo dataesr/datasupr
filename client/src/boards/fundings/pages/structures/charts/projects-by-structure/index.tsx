@@ -108,15 +108,15 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   };
   const config = {
     id: "projectsByStructure",
-    source: {
+    sources: [{
       label: {
         fr: <>ANR (ANR DGDS)</>,
       },
+      update: new Date("2026-01-09"),
       url: {
         fr: "https://www.data.gouv.fr/datasets/anr-01-projets-anr-dos-et-dgds-detail-des-projets-et-des-partenaires",
       },
-    },
-    updateDate: new Date("2026-01-09"),
+    }],
   };
 
   const options: object = {

@@ -5,7 +5,7 @@ import ProgramsFundingValues from "../charts/programs-funding";
 import ProgramsFundingSuccessRates from "../charts/programs-funding-success-rates";
 import ProgramsFundingProportion from "../charts/programs-funding-proportion";
 import ChartFooter from "../../../../../components/chart-footer";
-import { EPChartsSource, EPChartsUpdateDate } from "../../../config";
+import { EPChartsSources } from "../../../config";
 import { readingKey, useGetParams } from "../charts/programs-funding/utils";
 import { getData } from "../charts/programs-funding/query";
 
@@ -42,8 +42,7 @@ export default function ProgramsFunding() {
               ),
             }}
             readingKey={readingKey(data, isLoading)}
-            source={EPChartsSource}
-            updateDate={EPChartsUpdateDate}
+            sources={EPChartsSources}
           />
         </Col>
       </Row>

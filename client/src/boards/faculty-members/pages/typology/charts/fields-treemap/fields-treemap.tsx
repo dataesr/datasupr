@@ -288,18 +288,18 @@ export function ItemsTreemapChart() {
         </>
       ),
     },
-    source: {
+    sources: [{
       label: {
         fr: <>MESR-SIES, SISE</>,
         en: <>MESR-SIES, SISE</>,
       },
+      update: new Date(),
       url: {
         fr: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
         en: "https://www.enseignementsup-recherche.gouv.fr/fr/le-systeme-d-information-sur-le-suivi-de-l-etudiant-sise-46229",
       },
-    },
+    }],
     legend: false,
-    updateDate: new Date(),
     integrationURL: `/personnel-enseignant/discipline/typologie`,
   };
 

@@ -6,7 +6,7 @@ import { useGetParams, renderDataTable } from "./utils";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
+import { EPChartsSources } from "../../../../config.js";
 
 // TODO: clé de lecture + commentaires
 const config = {
@@ -32,8 +32,7 @@ const config = {
       </>
     ),
   },
-  source: EPChartsSource,
-  updateDate: EPChartsUpdateDate,
+  sources: EPChartsSources,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
 };
 

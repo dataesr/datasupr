@@ -3,7 +3,7 @@ import TopicsFundingValues from "../charts/topics-funding";
 import TopicsFundingSuccessRates from "../charts/topics-funding-success-rates";
 import TopicsFundingProportion from "../charts/topics-funding-proportion";
 import ChartFooter from "../../../../../components/chart-footer";
-import { EPChartsSource, EPChartsUpdateDate } from "../../../config";
+import { EPChartsSources } from "../../../config";
 
 export default function TopicsFunding() {
   return (
@@ -42,8 +42,7 @@ export default function TopicsFunding() {
                 <>For the "Scientific Excellence" topic, projects requested X M€ in funding and obtained Y M€, representing a success rate of Z%.</>
               ),
             }}
-            source={EPChartsSource}
-            updateDate={EPChartsUpdateDate}
+            sources={EPChartsSources}
           />
         </Col>
       </Row>

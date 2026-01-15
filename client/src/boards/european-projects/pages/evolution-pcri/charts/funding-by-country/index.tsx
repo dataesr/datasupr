@@ -10,7 +10,7 @@ import { useChartColor } from "../../../../../../hooks/useChartColor";
 import { getFlagEmoji } from "../../../../../../utils";
 import allCountries from "../../../../../../components/country-selector/all-countries.json";
 import Legend from "./legend";
-import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
+import { EPChartsSources } from "../../../../config.js";
 
 // Fonction pour convertir ISO3 vers ISO2
 function getIso2(iso3) {
@@ -48,7 +48,7 @@ export default function FundingByCountry() {
       en: <>Evolution of cumulative funding obtained by countries from FP6 to Horizon Europe.</>,
     },
     readingKey: readingKey(data, isLoading),
-    source: EPChartsSource,
+    sources: EPChartsSources,
     updateDate: EPChartsUpdateDate,
     integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };

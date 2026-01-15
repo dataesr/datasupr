@@ -7,7 +7,7 @@ import { useGetParams, readingKey, renderDataTable } from "./utils.js";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
-import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
+import { EPChartsSources } from "../../../../config.js";
 
 import i18n from "./i18n.json";
 
@@ -36,7 +36,7 @@ export default function EfficiencyScatter() {
       en: <>{i18n.comment.en}</>,
     },
     readingKey: readingKey(data, isLoading),
-    source: EPChartsSource,
+    sources: EPChartsSources,
     updateDate: EPChartsUpdateDate,
     integrationURL: `/integration?chart_id=${chartId}&${params}`,
   };

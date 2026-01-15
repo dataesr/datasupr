@@ -6,7 +6,7 @@ import { readingKey, useGetParams, renderDataTable } from "./utils";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { EPChartsSource, EPChartsUpdateDate } from "../../../../config.js";
+import { EPChartsSources } from "../../../../config.js";
 
 export default function ProgramsFundingProportion() {
   const { params, currentLang } = useGetParams();
@@ -25,8 +25,7 @@ export default function ProgramsFundingProportion() {
       en: <>Funding requested and obtained by the country on all countries</>,
     },
     readingKey: readingKey(data, isLoading),
-    source: EPChartsSource,
-    updateDate: EPChartsUpdateDate,
+    sources: EPChartsSources,
     title: {
       fr: <>Part des financement demandés et obtenus par le pays sur l'ensemble des pays</>,
       en: <>Funding requested and obtained by the country on all countries</>,

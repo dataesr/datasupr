@@ -69,8 +69,7 @@ export default function Id3Charts() {
     en: <>{i18n.comment.en}</>,
   },
   readingKey: readingKey(data, isLoading),
-  source: EPChartsSource,
-  updateDate: EPChartsUpdateDate,
+  sources: EPChartsSources,
   integrationURL: \`/integration?chart_id=\${chartId}&\${params}\`,
 };`}
               </code>

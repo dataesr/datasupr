@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getData } from "./query";
 import options from "./options";
 import { useGetParams, renderDataTable } from "./utils";
-import { EPChartsSource, EPChartsUpdateDate } from "../../../../config";
+import { EPChartsSources } from "../../../../config";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
@@ -36,8 +36,7 @@ const config = {
       </>
     ),
   },
-  source: EPChartsSource,
-  updateDate: EPChartsUpdateDate,
+  sources: EPChartsSources,
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
 };
 
