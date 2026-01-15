@@ -7,6 +7,7 @@ import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { formatCompactNumber, getColorFromFunder, getGeneralOptions } from "../../../../utils.ts";
+import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -90,15 +91,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
 
   const config = {
     id: "overviewByStructure",
-    sources: [{
-      label: {
-        fr: <>ANR (ANR DGDS)</>,
-      },
-      update: new Date("2026-01-09"),
-      url: {
-        fr: "https://www.data.gouv.fr/datasets/anr-01-projets-anr-dos-et-dgds-detail-des-projets-et-des-partenaires",
-      },
-    }],
+    sources: FundingsSources,
     title: `Vue relative des financements de ${name} pour l'année ${year}`,
   };
 

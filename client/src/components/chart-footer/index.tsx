@@ -15,7 +15,7 @@ interface LocalizedUrl {
 
 interface Source {
   label: LocalizedContent;
-  updateDate?: Date;
+  update?: Date;
   url: LocalizedUrl;
 }
 
@@ -80,22 +80,20 @@ export default function ChartFooter({
             paddingTop: "10px",
           }}
         >
-          {sources.map((source) => (
-            <>
-              <div>
-                <b>{getI18nLabel("sources")} </b>
+          <div>
+            <b>{getI18nLabel("sources")} </b>
+            {sources.map((source, index) => (
+              <>
                 <Link href={source.url[currentLang] || source.url.fr} target="_blank" rel="noopener noreferrer">
                   {source.label[currentLang] || source.label.fr}
                 </Link>
-              </div>
-              {(source.updateDate) && (
-                <div>
-                  <b>{getI18nLabel("updateDate")} </b>
-                  {source.updateDate.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")}
-                </div>
-              )}
-            </>
-          ))}
+                {(source?.update) && (
+                  <i>(<b>{getI18nLabel("update")}</b> {source.update.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")})</i>
+                )}
+                {(index < sources.length - 1) && (<span>, </span>)}
+              </>
+            ))}
+          </div>
         </div>
       )}
     </div>

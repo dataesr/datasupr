@@ -11,8 +11,8 @@
     "fr": "Sources :",
     "en": "Sources:"
   },
-  "updateDate": {
-    "fr": "Date de mise à jour :",
-    "en": "Update date:"
+  "update": {
+    "fr": "màj",
+    "en": "update"
   }
 }
