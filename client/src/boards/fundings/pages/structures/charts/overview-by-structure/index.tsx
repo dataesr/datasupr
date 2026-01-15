@@ -95,6 +95,8 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     title: `Vue relative des financements de ${name} pour l'année ${year}`,
   };
 
+  let hiddenPoints: string[] = [];
+
   const options: object = {
     ...getGeneralOptions('', [], '', 'Montant total'),
     chart: { height: '600px', type: 'variwide' },
@@ -103,7 +105,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
         return `<b>${this.z}</b> projets pour un montant total de <b>${formatCompactNumber(this.y)} €</b> ont débuté en <b>${year}</b> grâce au financement de <b>${this.name}</b> avec la participation de <b>${name}</b>`;
       }
     },
-    legend: { enabled: false },
+    legend: { enabled: true },
     series: [{
       data: series,
       colorByPoint: true,
@@ -114,8 +116,45 @@ export default function OverviewByStructure({ name }: { name: string | undefined
           return `${formatCompactNumber(this.y)} €`;
         }
       },
+      legendType: 'point',
+      type: 'variwide',
     }],
-    xAxis: { type: 'category' },
+    xAxis: {
+      type: 'category',
+      labels: {
+        formatter: function () {
+          return this.axis.series[0].points[this.pos].visible ? this.value : '';
+        }
+      }
+    },
+    plotOptions: {
+      series: {
+        point: {
+          events: {
+            legendItemClick: function(e: any) {
+              var clic_id = e.target.name;
+              this.series.points.forEach((point) => {
+                if (point.name === clic_id) {
+                  if (!hiddenPoints.includes(point.name)) {
+                    hiddenPoints.push(point.name);
+                  } else {
+                    hiddenPoints = hiddenPoints.filter((item) => item !== point.name);
+                  }
+                  point.update({
+                    oldY: point.y ? point.y : point.oldY,
+                    y: point.y ? null : point.oldY,
+                    oldZ: point.z ? point.z : point.oldZ,
+                    z: point.z ? null : point.oldZ,
+                    visible: !hiddenPoints.includes(point.name),
+                  }, false);
+                }
+              });
+              this.series.chart.redraw(true);
+            }
+          }
+        }
+      }
+    },
   };
 
   return (
