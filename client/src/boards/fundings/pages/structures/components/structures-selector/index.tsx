@@ -73,7 +73,7 @@ export default function StructuresSelector({ setName }) {
         terms: {
           field: "address.region.keyword",
           order: { _key: "asc" },
-          size: 20,
+          size: 30,
         },
       },
     },
