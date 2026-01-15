@@ -116,6 +116,9 @@ export default function GlobalLayout({ languageSelector = false }) {
                 <Link current={is("/fundings/structures")} href="/fundings/structures">
                   {getI18nLabel("structures")}
                 </Link>
+                <Link current={is("/fundings/comparison")} href="/fundings/comparison">
+                  {getI18nLabel("comparison")}
+                </Link>
               </Nav>
             </div>
           </div>

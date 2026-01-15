@@ -1,19 +1,11 @@
 {
-  "counties": {
-    "en": "By county - Funding through calls for proposals - DataSupR",
-    "fr": "Par région - Financement par appel à projets - DataSupR"
+  "comparison": {
+    "en": "Comparison - Funding through calls for proposals - DataSupR",
+    "fr": "Comparaison - Financement par appel à projets - DataSupR"
   },
   "home": {
     "en": "Home - Funding through calls for proposals - DataSupR",
     "fr": "Accueil - Financement par appel à projets - DataSupR"
-  },
-  "laboratories": {
-    "en": "By laboratory - Funding through calls for proposals - DataSupR",
-    "fr": "Par laboratoire - Financement par appel à projets - DataSupR"
-  },
-  "national": {
-    "en": "National - Funding through calls for proposals - DataSupR",
-    "fr": "National - Financement par appel à projets - DataSupR"
   },
   "structures": {
     "en": "By structure - Funding through calls for proposals - DataSupR",

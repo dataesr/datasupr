@@ -128,11 +128,11 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       <fieldset className="fr-segmented">
         <div className="fr-segmented__elements">
           <div className="fr-segmented__element">
-            <input checked={field === "projects"} id="fundings-segmented-projects" name="fundings-segmented-projects" onChange={() => { }} type="radio" value="projects" />
+            <input checked={field === "projects"} id="projects-by-structure-projects" name="projects-by-structure-projects" onChange={() => { }} type="radio" value="projects" />
             <label className="fr-label" onClick={() => setField("projects")}>Nombre de projets</label>
           </div>
           <div className="fr-segmented__element">
-            <input checked={field === "budget"} id="fundings-segmented-budget" name="fundings-segmented-budget" onChange={() => { }} type="radio" value="budget" />
+            <input checked={field === "budget"} id="projects-by-structure-budget" name="projects-by-structure-budget" onChange={() => { }} type="radio" value="budget" />
             <label className="fr-label" onClick={() => setField("budget")}>Montant total</label>
           </div>
         </div>

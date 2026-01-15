@@ -5,8 +5,8 @@ import { useState } from "react";
 import OverviewByStructure from "./charts/overview-by-structure";
 import ProjectsByStructure from "./charts/projects-by-structure";
 import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
-import StructuresSelector from "./components/structures-selector";
-import YearSelector from "./components/year-selector";
+import StructureSelector from "./components/structure-selector";
+import YearSelector from "../../components/year-selector";
 
 
 export default function Structures() {
@@ -21,7 +21,7 @@ export default function Structures() {
     <Container className="board-fundings">
       <Row gutters>
         <Col>
-          <StructuresSelector setName={setName} />
+          <StructureSelector setName={setName} />
         </Col>
       </Row>
       {structure ? (
