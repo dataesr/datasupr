@@ -5,7 +5,7 @@ import TertiaryNavigation, {
 
 export default function SectionNavigation() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const activeSection = searchParams.get("section") || "financements";
+  const activeSection = searchParams.get("section") || "ressources";
 
   const handleSectionChange = (section: string) => {
     const next = new URLSearchParams(searchParams);
@@ -18,10 +18,10 @@ export default function SectionNavigation() {
       <TertiaryNavigation>
         <TertiaryNavigationItem
           label="Les ressources de l'établissement"
-          isActive={activeSection === "financements"}
+          isActive={activeSection === "ressources"}
           onClick={(e) => {
             e.preventDefault();
-            handleSectionChange("financements");
+            handleSectionChange("ressources");
           }}
         />
         <TertiaryNavigationItem
@@ -42,10 +42,10 @@ export default function SectionNavigation() {
         />
         <TertiaryNavigationItem
           label="Diplômes et formations"
-          isActive={activeSection === "etudiants"}
+          isActive={activeSection === "diplomes-formations"}
           onClick={(e) => {
             e.preventDefault();
-            handleSectionChange("etudiants");
+            handleSectionChange("diplomes-formations");
           }}
         />
         <TertiaryNavigationItem

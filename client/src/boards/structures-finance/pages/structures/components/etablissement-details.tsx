@@ -14,7 +14,7 @@ export default function EtablissementDetails() {
   const [searchParams, setSearchParams] = useSearchParams();
   const structureId = searchParams.get("structureId") || "";
   const year = searchParams.get("year") || "";
-  const section = searchParams.get("section") || "financements";
+  const section = searchParams.get("section") || "ressources";
 
   const { data: yearsData } = useFinanceYears();
   const years = yearsData?.years || [];
@@ -22,7 +22,7 @@ export default function EtablissementDetails() {
   useEffect(() => {
     if (structureId && !searchParams.get("section")) {
       const next = new URLSearchParams(searchParams);
-      next.set("section", "financements");
+      next.set("section", "ressources");
       setSearchParams(next, { replace: true });
     }
   }, [structureId, searchParams, setSearchParams]);
@@ -62,7 +62,7 @@ export default function EtablissementDetails() {
 
   const renderSectionContent = () => {
     switch (section) {
-      case "financements":
+      case "ressources":
         return (
           <FinancementsSection data={detailData} selectedYear={selectedYear} />
         );
@@ -77,7 +77,7 @@ export default function EtablissementDetails() {
         return (
           <MoyensHumainsSection data={detailData} selectedYear={selectedYear} />
         );
-      case "etudiants":
+      case "diplomes-formations":
         return (
           <EtudiantsSection
             data={detailData}
