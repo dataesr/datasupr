@@ -18,7 +18,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   const next = new URLSearchParams(searchParams);
   const structure = next.get("structure")?.toString() ?? "";
   const color = useChartColor();
-  const years = [2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024];
+  const years = Array.from(Array(10).keys()).map((item) => item + 2015);
 
   const body = {
     size: 0,

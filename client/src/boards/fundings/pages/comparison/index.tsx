@@ -8,7 +8,8 @@ import ProjectsByStructures from "./charts/projects-by-structures";
 
 export default function Comparison() {
   const [searchParams] = useSearchParams({});
-  const year = searchParams.get("year");
+  const structures = searchParams.getAll("structures");
+  console.log(structures);
 
   return (
     <Container className="board-fundings">
@@ -22,12 +23,20 @@ export default function Comparison() {
           <YearSelector />
         </Col>
       </Row>
-      {year && (
+      {(structures && structures.length > 0) ? (
         <Row gutters>
           <Col>
             <ProjectsByStructures />
           </Col>
         </Row>
+      ): (
+        <div className="fr-alert fr-alert--info fr-mt-3w">
+          <h3 className="fr-alert__title">Sélectionner plusieurs structures</h3>
+          <p>
+            Choisissez plusieurs structures dans la liste déroulante pour visualiser
+            leurs financements via les appels à projet. Vous pouvez filtrer par région.
+          </p>
+        </div>
       )}
     </Container>
   )

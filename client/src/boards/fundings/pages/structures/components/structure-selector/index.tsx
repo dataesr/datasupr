@@ -16,17 +16,6 @@ export default function StructureSelector({ setName }) {
   const [county, setCounty] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
   const structure = searchParams.get("structure") ?? "";
-  const year = searchParams.get("year") ?? "";
-  const defaultYear = "2023";
-
-  // If no year in the URL, set the default one
-  if (!year || year.length === 0) {
-    const next = new URLSearchParams(searchParams);
-    if (!year || year.length === 0) {
-      next.set("year", defaultYear);
-    }
-    setSearchParams(next);
-  }
 
   const bodyCounties = {
     size: 0,

@@ -6,6 +6,16 @@ export default function YearSelector() {
   const [searchParams, setSearchParams] = useSearchParams({});
   const year = searchParams.get("year") ?? "";
   const years = Array.from(Array(10).keys()).map((item) => item + 2015);
+  const defaultYear = "2023";
+
+  // If no year in the URL, set the default one
+  if (!year || year.length === 0) {
+    const next = new URLSearchParams(searchParams);
+    if (!year || year.length === 0) {
+      next.set("year", defaultYear);
+    }
+    setSearchParams(next);
+  }
 
   const handleYearChange = (year: string) => {
     const next = new URLSearchParams(searchParams);

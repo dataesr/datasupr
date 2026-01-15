@@ -24,13 +24,13 @@ export default function Structures() {
           <StructureSelector setName={setName} />
         </Col>
       </Row>
-      {structure ? (
+      <Row gutters>
+        <Col>
+          <YearSelector />
+        </Col>
+      </Row>
+      {(structure) ? (
         <>
-          <Row gutters>
-            <Col>
-              <YearSelector />
-            </Col>
-          </Row>
           <Row gutters>
             <Col>
               <ProjectsByStructure name={name} />
@@ -64,7 +64,7 @@ export default function Structures() {
           <h3 className="fr-alert__title">Sélectionner une structure</h3>
           <p>
             Choisissez une structure dans la liste déroulante pour visualiser
-            son financement via les appels à projet. Vous pouvez filtrer par région.
+            ses financements via les appels à projet. Vous pouvez filtrer par région.
           </p>
         </div>
       )}

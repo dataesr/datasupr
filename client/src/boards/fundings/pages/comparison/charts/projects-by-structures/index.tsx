@@ -16,10 +16,9 @@ export default function ProjectsByStructures() {
   const [field, setField] = useState("projects");
   const [searchParams] = useSearchParams();
   const next = new URLSearchParams(searchParams);
-  // const structure = next.get("structure")?.toString() ?? "";
+  const structures = next.getAll("structures");
   const year = next.get("year")?.toString() ?? "";
   const color = useChartColor();
-  const structures = ["8k41p", "E1Wdn", "n2X5f"]
 
   const body = {
     size: 0,
