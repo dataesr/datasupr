@@ -652,7 +652,6 @@ export default function EvolutionChart({
                 </>
               ),
             },
-            updateDate: new Date(),
             integrationURL: "/integration-url",
           }}
           options={chartOptions}
@@ -700,7 +699,6 @@ export default function EvolutionChart({
                       </>
                     ),
                   },
-                  updateDate: new Date(),
                   integrationURL: "/integration-url",
                 }}
                 options={chartOptionsBase100}
@@ -759,7 +757,6 @@ export default function EvolutionChart({
                         </>
                       ),
                     },
-                    updateDate: new Date(),
                     integrationURL: "/integration-url",
                   }}
                   options={createEvolutionChartOptions(
@@ -816,7 +813,6 @@ export default function EvolutionChart({
                         </>
                       ),
                     },
-                    updateDate: new Date(),
                     integrationURL: "/integration-url",
                   }}
                   options={createEvolutionChartOptions(
