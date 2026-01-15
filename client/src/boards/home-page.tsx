@@ -203,7 +203,7 @@ export default function HomePage() {
             <GenericCard
               description="Indicateurs sur le financement des structures via les appels à projet"
               title="Financement par appel à projets"
-              to="/fundings/structures"
+              to="/fundings/home"
             />
           </Col>
         </Row>
