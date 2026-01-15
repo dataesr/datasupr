@@ -6,7 +6,7 @@ import "highcharts/modules/variwide";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getGeneralOptions } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -90,33 +90,30 @@ export default function OverviewByStructure({ name }: { name: string | undefined
 
   const config = {
     id: "overviewByStructure",
-    title: `Nombre de projets pour ${name} par financeur pour l'année ${year}`,
+    title: `Vue relative des financements de ${name} pour l'année ${year}`,
   };
 
   const options: object = {
-    ...getGeneralOptions('', [], '', 'Montant total du projet'),
+    ...getGeneralOptions('', [], '', 'Montant total'),
+    chart: { height: '600px', type: 'variwide' },
     tooltip: {
-      format: `<b>{point.z}</b> projets pour un montant total de <b>{point.y} €</b> ont débuté en <b>${year}</b> grâce au financement de <b>{point.name}</b> dont au moins un participant est une institution française active`,
+      formatter: function (this: any) {
+        return `<b>${this.z}</b> projets pour un montant total de <b>${formatCompactNumber(this.y)} €</b> ont débuté en <b>${year}</b> grâce au financement de <b>${this.name}</b> avec la participation de <b>${name}</b>`;
+      }
     },
-    chart: {
-      type: 'variwide'
-    },
-    legend: {
-        enabled: false
-    },
+    legend: { enabled: false },
     series: [{
       // name: 'founders',
       data: series,
-      borderRadius: 3,
       colorByPoint: true,
       dataLabels: {
         enabled: true,
-        format: '{point.name}'
+        formatter: function (this: any) {
+          return `${formatCompactNumber(this.y)} €`;
+        }
       },
     }],
-    xAxis: {
-        type: 'category'
-    },
+    xAxis: { type: 'category' },
   };
 
   return (

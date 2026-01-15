@@ -2,7 +2,7 @@ import { Col, Row } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
 
-export default function SelectedStructure({ name }: { name: string | undefined }) {
+export default function YearSelector() {
   const [searchParams, setSearchParams] = useSearchParams({});
   const year = searchParams.get("year") ?? "";
   const years = Array.from(Array(10).keys()).map((item) => item + 2015);
@@ -16,10 +16,8 @@ export default function SelectedStructure({ name }: { name: string | undefined }
   return (
     <div>
       <Row gutters>
-        <Col xs="12" sm="6" md="8">
-          {name}
-        </Col>
-        <Col  xs="12" sm="6" md="4">
+        <Col xs="4">
+          <label className="fr-label">Année</label>
           <select
             className="fr-select"
             id="fundings-year"
@@ -27,9 +25,6 @@ export default function SelectedStructure({ name }: { name: string | undefined }
             onChange={(e) => handleYearChange(e.target.value)}
             value={year}
           >
-            <option disabled value="">
-              Sélectionnez une année de début
-            </option>
             {years.map((year) => (
               <option key={year} value={year}>
                 {year}

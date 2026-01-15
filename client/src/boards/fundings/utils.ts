@@ -21,8 +21,6 @@ const getGeneralOptions = (title: string, categories: any[], title_x_axis: strin
     chart: { height: "600px", type: "bar" },
     credits: { enabled: false },
     exporting: { enabled: false },
-    legend: { reversed: true },
-    plotOptions: { series: { stacking: "normal" } },
     title: { text: title },
     xAxis: { categories, title: { text: title_x_axis } },
     yAxis: { title: { text: title_y_axis } },

@@ -1,3 +1,4 @@
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -89,47 +90,48 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  const series = data.aggregations.by_project_type.buckets.map((bucket) => ({
+  const series = data.aggregations.by_project_type.buckets.map((bucket, index) => ({
     color: getColorFromFunder(bucket.key),
     name: bucket.key,
-    y: field === "projects" ? bucket.unique_projects.value : bucket.sum_budget.value,
+    data: [{ x: index, y: field === "projects" ? bucket.unique_projects.value : bucket.sum_budget.value }],
   }));
   const categories: string[] = series.map((item: { name: string }) => item.name);
 
-  const titleProjects = `Nombre de projets pour ${name} par financeur pour l'année ${year}`;
-  const titleBudget = `Montant total des projets pour ${name} par financeur pour l'année ${year}`;
+  const titleProjects = `Nombre de projets de ${name} par financeur pour l'année ${year}`;
+  const titleBudget = `Montant total des projets de ${name} par financeur pour l'année ${year}`;
   const axisProjects = "Nombre de projets";
-  const axisBudget = "Montant total des projets";
-  const tooltipProjects = function(this: any) {
-    return `<b>${this.value}</b> projets ont débuté en <b>${year}</b> grâce au financement de <b>${this.name}</b> dont au moins un participant est une institution française active`
-  };;
-  const tooltipBudget = function(this: any) {
-    return `<b>${formatCompactNumber(this.value)} €</b> ont été financés par <b>${this.name}</b> pour des projets débutés en <b>${year}</b> dont au moins un participant est une institution française active`
+  const axisBudget = "Montant total";
+  const tooltipProjects = function (this: any) {
+    return `<b>${this.y}</b> projets ont débuté en <b>${year}</b> grâce au financement de <b>${this.series.name}</b> avec la participation de <b>${name}</b>`;
+  };
+  const tooltipBudget = function (this: any) {
+    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés en <b>${year}</b> auxquels prend part <b>${name}</b>`;
   };
   const config = {
     id: "projectsByStructure",
-    title: field === "projects" ? titleProjects : titleBudget,
   };
 
   const options: object = {
     ...getGeneralOptions('', [], '', field === "projects" ? axisProjects : axisBudget),
-    series: [{ data: series }],
-    tooltip: {
-      formatter: field === "projects" ? tooltipProjects : tooltipBudget,
-    },
+    plotOptions: { bar: { grouping: false } },
+    series,
+    tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
     xAxis: { categories },
   };
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structure">
+      <Title as="h2" look="h6">
+        {field === "projects" ? titleProjects : titleBudget}
+      </Title>
       <fieldset className="fr-segmented">
         <div className="fr-segmented__elements">
           <div className="fr-segmented__element">
-            <input checked={ field === "projects" } id="segmented-1-1" name="segmented-1" onChange={() => {}} type="radio" value="projects" />
+            <input checked={field === "projects"} id="segmented-1-1" name="segmented-1" onChange={() => { }} type="radio" value="projects" />
             <label className="fr-label" onClick={() => setField("projects")}>Nombre de projets</label>
           </div>
           <div className="fr-segmented__element">
-            <input checked={ field === "budget" } id="segmented-1-2" name="segmented-1" onChange={() => {}} type="radio" value="budget" />
+            <input checked={field === "budget"} id="segmented-1-2" name="segmented-1" onChange={() => { }} type="radio" value="budget" />
             <label className="fr-label" onClick={() => setField("budget")}>Montant total</label>
           </div>
         </div>

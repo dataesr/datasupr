@@ -7,8 +7,11 @@ import SearchableSelect from "../../../../../../components/searchable-select/ind
 import { getIdFromStructure, getLabelFromStructure } from "../../../../utils";
 import { useState } from "react";
 
+import "./styles.scss";
+
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } =
   import.meta.env;
+
 
 export default function StructuresSelector({ setName }) {
   const [county, setCounty] = useState("*");
@@ -17,6 +20,7 @@ export default function StructuresSelector({ setName }) {
   const year = searchParams.get("year") ?? "";
   const defaultYear = "2023";
 
+  // If no year in the URL, set the default one
   if (!year || year.length === 0) {
     const next = new URLSearchParams(searchParams);
     if (!year || year.length === 0) {
@@ -24,13 +28,6 @@ export default function StructuresSelector({ setName }) {
     }
     setSearchParams(next);
   }
-
-  const handleStructureChange = (selectedStructure: string) => {
-    setName(getLabelFromStructure(selectedStructure));
-    const next = new URLSearchParams(searchParams);
-    next.set("structure", getIdFromStructure(selectedStructure));
-    setSearchParams(next);
-  };
 
   const bodyCounties = {
     size: 0,
@@ -176,53 +173,63 @@ export default function StructuresSelector({ setName }) {
     !dataStructures
   )
     return <DefaultSkeleton />;
+
   const counties = dataCounties.aggregations.by_county?.buckets.map(
     (bucket) => bucket.key
   );
   const structures =
     dataStructures.aggregations?.by_structure?.buckets.map((bucket) => ({
-      id: bucket.key,
+      id: getIdFromStructure(bucket.key),
       label: getLabelFromStructure(bucket.key),
     })) || [];
 
+  const handleStructureChange = (selectedStructure: string) => {
+    setName(structures.find((item) => item.id === selectedStructure).label);
+    const next = new URLSearchParams(searchParams);
+    next.set("structure", getIdFromStructure(selectedStructure));
+    setSearchParams(next);
+  };
+
+  if (structure && structure.length > 0) {
+    setName(structures.find((item) => item.id === structure).label);
+  }
+
   return (
     <>
-      <div>
-        <h3>Sélectionner une structure</h3>
+      <Row gutters>
+        <Col xs="12" sm="6" md="4">
+          <div className="fr-select-group">
+            <label className="fr-label">Région</label>
+            <select
+              aria-describedby="select-hint-messages"
+              className="fr-select"
+              id="select-hint"
+              name="select-hint"
+              onChange={(e) => setCounty(e.target.value)}
+              value={county}
+            >
+              <option value="*">Toutes les régions</option>
+              {counties.map((county: string) => (
+                <option key={county} value={county}>
+                  {county}
+                </option>
+              ))}
+            </select>
+          </div>
+        </Col>
 
-        <Row gutters>
-          <Col xs="12" sm="6" md="4">
-            <div className="fr-select-group">
-              <label className="fr-label">Région</label>
-              <select
-                aria-describedby="select-hint-messages"
-                className="fr-select "
-                id="select-hint"
-                name="select-hint"
-                onChange={(e) => setCounty(e.target.value)}
-                value={county}
-              >
-                <option value="*">Toutes les régions</option>
-                {counties.map((county: string) => (
-                  <option key={county} value={county}>
-                    {county}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </Col>
-
-          <Col xs="12" sm="6" md="8">
+        <Col xs="12" sm="6" md="8">
+          <label className="fr-label">Structure</label>
+          <div className="fr-mt-1w">
             <SearchableSelect
-              label="Structure"
               onChange={handleStructureChange}
               options={structures}
               placeholder="Rechercher une structure..."
               value={structure}
             />
-          </Col>
-        </Row>
-      </div>
+          </div>
+        </Col>
+      </Row>
     </>
   );
 }
