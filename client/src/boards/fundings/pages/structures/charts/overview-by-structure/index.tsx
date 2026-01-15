@@ -28,11 +28,11 @@ export default function OverviewByStructure({ name }: { name: string | undefined
               project_year: year,
             },
           },
-          // {
-          //   term: {
-          //     participant_isFrench: true,
-          //   },
-          // },
+          {
+            term: {
+              participant_isFrench: true,
+            },
+          },
           {
             term: {
               participant_status: "active",
@@ -56,7 +56,6 @@ export default function OverviewByStructure({ name }: { name: string | undefined
         terms: {
           field: "project_type.keyword",
           size: 30,
-          // order: { "_count": "asc" }
         },
         aggregations: {
           sum_budget: {

@@ -34,11 +34,11 @@ export default function StructuresSelector({ setName }) {
     query: {
       bool: {
         filter: [
-          // {
-          //   term: {
-          //     participant_isFrench: true,
-          //   },
-          // },
+          {
+            term: {
+              participant_isFrench: true,
+            },
+          },
           {
             term: {
               participant_status: "active",
@@ -72,7 +72,6 @@ export default function StructuresSelector({ setName }) {
       by_county: {
         terms: {
           field: "address.region.keyword",
-          missing: "N/A",
           order: { _key: "asc" },
           size: 20,
         },
@@ -80,16 +79,16 @@ export default function StructuresSelector({ setName }) {
     },
   };
 
-  const bodyStructures = {
+  const bodyStructures: any = {
     size: 0,
     query: {
       bool: {
         filter: [
-          // {
-          //   term: {
-          //     participant_isFrench: true,
-          //   },
-          // },
+          {
+            term: {
+              participant_isFrench: true,
+            },
+          },
           {
             term: {
               participant_status: "active",
@@ -116,11 +115,6 @@ export default function StructuresSelector({ setName }) {
               ],
             },
           },
-          {
-            wildcard: {
-              "address.region.keyword": county,
-            },
-          },
         ],
       },
     },
@@ -133,6 +127,9 @@ export default function StructuresSelector({ setName }) {
       },
     },
   };
+  if (county && county !== '*') {
+    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": county } });
+  }
 
   const { data: dataCounties, isLoading: isLoadingCounties } = useQuery({
     queryKey: ["fundings-counties"],
