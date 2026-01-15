@@ -27,18 +27,8 @@ const getGeneralOptions = (title: string, categories: any[], title_x_axis: strin
   };
 }
 
-const getIdFromStructure = (structure: string): string => {
-  return structure?.split('###')?.[0] ?? structure;
-}
-
-const getLabelFromStructure = (structure: string): string => {
-  return structure?.split('###')?.[1]?.split('|||')?.[0]?.split('_')?.[1] ?? structure;
-}
-
 export {
   formatCompactNumber,
   getColorFromFunder,
   getGeneralOptions,
-  getIdFromStructure,
-  getLabelFromStructure,
 };

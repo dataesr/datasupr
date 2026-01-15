@@ -4,7 +4,6 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
-import { getIdFromStructure, getLabelFromStructure } from "../../../../utils";
 import { useState } from "react";
 
 import "./styles.scss";
@@ -121,7 +120,7 @@ export default function StructuresSelector({ setName }) {
     aggregations: {
       by_structure: {
         terms: {
-          field: "participant_id_name.keyword",
+          field: "participant_id_name_default.keyword",
           size: 1500,
         },
       },
@@ -175,20 +174,27 @@ export default function StructuresSelector({ setName }) {
     (bucket) => bucket.key
   );
   const structures =
-    dataStructures.aggregations?.by_structure?.buckets.map((bucket) => ({
-      id: getIdFromStructure(bucket.key),
-      label: getLabelFromStructure(bucket.key),
-    })) || [];
+    dataStructures.aggregations?.by_structure?.buckets.map((bucket) => {
+      const [id, label] = bucket.key.split('###');
+      return ({ id, label });
+    }) || [];
 
   const handleStructureChange = (selectedStructure: string) => {
     setName(structures.find((item) => item.id === selectedStructure).label);
     const next = new URLSearchParams(searchParams);
-    next.set("structure", getIdFromStructure(selectedStructure));
+    next.set("structure", selectedStructure.split('###')[0]);
     setSearchParams(next);
   };
 
   if (structure && structure.length > 0) {
-    setName(structures.find((item) => item.id === structure).label);
+    const str = structures.find((item) => item.id === structure);
+    if (str) {
+      setName(str.label);
+    } else {
+      const next = new URLSearchParams(searchParams);
+      next.delete("structure");
+      setSearchParams(next);
+    }
   }
 
   return (
