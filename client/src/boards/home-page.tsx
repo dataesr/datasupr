@@ -176,7 +176,7 @@ export default function HomePage() {
             <GenericCard
               description="Tableau de bord financier des universités"
               title="Finance"
-              to="/structures-finance?datasupr=true"
+              to="/structures-finance/accueil?datasupr=true"
             />
           </Col>
         </Row>
