@@ -4,7 +4,6 @@ import { useMemo, useEffect, useRef } from "react";
 import { useFinanceYears, useFinanceAdvancedComparison } from "../../../api";
 import { useNationalFilters } from "../hooks/useNationalFilters";
 import "./national-selector.scss";
-import Breadcrumb from "../../../components/breadcrumb";
 
 export default function NationalSelector() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -118,15 +117,6 @@ export default function NationalSelector() {
     <section className="national-selector" aria-labelledby="filters-title">
       <Container fluid className="national-selector__header">
         <Container>
-          <Breadcrumb
-            items={[
-              { label: "Accueil", path: "/structures-finance/accueil" },
-              {
-                label: "Vue nationale",
-                path: "/structures-finance/national",
-              },
-            ]}
-          />
           <h2 id="filters-title" className="national-selector__title">
             Filtres de sélection
           </h2>

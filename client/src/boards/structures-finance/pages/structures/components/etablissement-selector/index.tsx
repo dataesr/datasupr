@@ -8,7 +8,6 @@ import {
 import Filters from "./Filters";
 import InfoCard from "./InfoCard";
 import "./styles.scss";
-import Breadcrumb from "../../../../components/breadcrumb";
 
 export default function EtablissementSelector() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -42,23 +41,6 @@ export default function EtablissementSelector() {
     >
       <Container fluid className="etablissement-selector__header">
         <Container>
-          <Breadcrumb
-            items={[
-              { label: "Accueil", path: "/structures-finance/accueil" },
-              {
-                label: "Situation d’un établissement",
-                path: "/structures-finance/etablissements",
-              },
-              ...(selectedEtablissement && detailData?.etablissement_actuel_lib
-                ? [
-                    {
-                      label: detailData.etablissement_actuel_lib,
-                      path: `/structures-finance/etablissements?structureId=${selectedEtablissement}&year=${selectedYear}`,
-                    },
-                  ]
-                : []),
-            ]}
-          />
           <Row gutters>
             <Col xs="12" lg={selectedEtablissement ? "6" : "12"}>
               <h2
