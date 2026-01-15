@@ -14,7 +14,7 @@ export default function CustomBreadcrumb({ config }) {
   const parent = pathSegments[pathSegments.length - 2] || "";
 
   return (
-    <Breadcrumb className="fr-m-0 fr-mt-1w">
+    <Breadcrumb className="fr-my-3w">
       {isDatasupr === "true" ? <Link href="/">datasupR</Link> : null}
       <Link href={`${config[parent].link}?${params}`}>{config[parent].label[currentLang]}</Link>
       <Link href={`${config[parent].link}?${params}`}>
