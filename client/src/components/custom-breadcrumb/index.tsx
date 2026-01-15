@@ -6,6 +6,7 @@ export default function CustomBreadcrumb({ config }) {
   const location = useLocation();
   const currentLang = searchParams.get("language") || "fr";
   const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
+  const isDatasupr = searchParams.get("datasupr") || "false";
 
   // Extraire la dernière partie de l'URL comme currentPage
   const pathSegments = location.pathname.split("/").filter(Boolean);
@@ -14,7 +15,7 @@ export default function CustomBreadcrumb({ config }) {
 
   return (
     <Breadcrumb className="fr-m-0 fr-mt-1w">
-      <Link href="/">Accueil</Link>
+      {isDatasupr === "true" ? <Link href="/">datasupR</Link> : null}
       <Link href={`${config[parent].link}?${params}`}>{config[parent].label[currentLang]}</Link>
       <Link href={`${config[parent].link}?${params}`}>
         <strong>{config[currentPage].label[currentLang]}</strong>
