@@ -6,7 +6,7 @@ import "highcharts/modules/variwide";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getGeneralOptions } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -87,9 +87,19 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   const series = data.aggregations.by_project_type.buckets.map((bucket) =>
     [bucket.key, bucket.sum_budget.value, bucket.doc_count]
   );
+  const colors = series.map((item) => getColorFromFunder(item[0]));
 
   const config = {
     id: "overviewByStructure",
+    source: {
+      label: {
+        fr: <>ANR (ANR DGDS)</>,
+      },
+      url: {
+        fr: "https://www.data.gouv.fr/datasets/anr-01-projets-anr-dos-et-dgds-detail-des-projets-et-des-partenaires",
+      },
+    },
+    updateDate: new Date("2026-01-09"),
     title: `Vue relative des financements de ${name} pour l'année ${year}`,
   };
 
@@ -103,9 +113,9 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     },
     legend: { enabled: false },
     series: [{
-      // name: 'founders',
       data: series,
       colorByPoint: true,
+      colors,
       dataLabels: {
         enabled: true,
         formatter: function (this: any) {

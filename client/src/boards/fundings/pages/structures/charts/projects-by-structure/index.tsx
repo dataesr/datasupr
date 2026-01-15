@@ -109,6 +109,15 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   };
   const config = {
     id: "projectsByStructure",
+    source: {
+      label: {
+        fr: <>ANR (ANR DGDS)</>,
+      },
+      url: {
+        fr: "https://www.data.gouv.fr/datasets/anr-01-projets-anr-dos-et-dgds-detail-des-projets-et-des-partenaires",
+      },
+    },
+    updateDate: new Date("2026-01-09"),
   };
 
   const options: object = {
@@ -127,11 +136,11 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       <fieldset className="fr-segmented">
         <div className="fr-segmented__elements">
           <div className="fr-segmented__element">
-            <input checked={field === "projects"} id="segmented-1-1" name="segmented-1" onChange={() => { }} type="radio" value="projects" />
+            <input checked={field === "projects"} id="fundings-segmented-projects" name="fundings-segmented-projects" onChange={() => { }} type="radio" value="projects" />
             <label className="fr-label" onClick={() => setField("projects")}>Nombre de projets</label>
           </div>
           <div className="fr-segmented__element">
-            <input checked={field === "budget"} id="segmented-1-2" name="segmented-1" onChange={() => { }} type="radio" value="budget" />
+            <input checked={field === "budget"} id="fundings-segmented-budget" name="fundings-segmented-budget" onChange={() => { }} type="radio" value="budget" />
             <label className="fr-label" onClick={() => setField("budget")}>Montant total</label>
           </div>
         </div>

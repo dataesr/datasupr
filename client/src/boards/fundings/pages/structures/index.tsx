@@ -42,7 +42,7 @@ export default function Structures() {
           </Row>
           <Row gutters>
             <Col>
-              <div id="projects-list">
+              <div className="chart-container chart-container--default" id="projects-list">
                 <Title as="h2" look="h6">
                   Liste des projets de la structure choisie
                 </Title>
@@ -55,11 +55,10 @@ export default function Structures() {
         </>
       ) : (
         <div className="fr-alert fr-alert--info fr-mt-3w">
-          <h3 className="fr-alert__title">Sélectionnez un établissement</h3>
+          <h3 className="fr-alert__title">Sélectionner une structure</h3>
           <p>
-            Utilisez les filtres ci-dessus pour affiner votre recherche, puis
-            sélectionnez un établissement dans la liste déroulante pour visualiser
-            ses données financières.
+            Choisissez une structure dans la liste déroulante pour visualiser
+            son financement via les appels à projet. Vous pouvez filtrer par région.
           </p>
         </div>
       )}
