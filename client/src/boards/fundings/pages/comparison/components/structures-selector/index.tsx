@@ -173,16 +173,16 @@ export default function StructuresSelector() {
     setSearchParams(next);
   };
 
-  if (structure && structure.length > 0) {
-    const str = structures.find((item) => item.id === structure);
-    // if (str) {
-    //   setName(str.label);
-    // } else {
-    //   const next = new URLSearchParams(searchParams);
-    //   next.delete("structure");
-    //   setSearchParams(next);
-    // }
-  }
+  // if (structure && structure.length > 0) {
+  //   // const str = structures.find((item) => item.id === structure);
+  //   // if (str) {
+  //   //   setName(str.label);
+  //   // } else {
+  //   //   const next = new URLSearchParams(searchParams);
+  //   //   next.delete("structure");
+  //   //   setSearchParams(next);
+  //   // }
+  // }
 
   return (
     <>
