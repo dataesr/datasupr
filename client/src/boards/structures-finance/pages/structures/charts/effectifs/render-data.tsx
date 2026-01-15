@@ -71,6 +71,157 @@ export function RenderDataNiveau({ data }: RenderDataNiveauProps) {
   );
 }
 
+interface RenderDataDiplomesProps {
+  data: any;
+}
+
+export function RenderDataDiplomes({ data }: RenderDataDiplomesProps) {
+  const totalEffectif =
+    (data.effectif_sans_cpge_dn || 0) + (data.effectif_sans_cpge_du || 0);
+  const diplomes = [
+    {
+      name: "Diplômes nationaux",
+      effectif: data.effectif_sans_cpge_dn || 0,
+      percentage:
+        totalEffectif > 0
+          ? ((data.effectif_sans_cpge_dn || 0) / totalEffectif) * 100
+          : 0,
+    },
+    {
+      name: "Diplômes d'établissement",
+      effectif: data.effectif_sans_cpge_du || 0,
+      percentage:
+        totalEffectif > 0
+          ? ((data.effectif_sans_cpge_du || 0) / totalEffectif) * 100
+          : 0,
+    },
+  ].filter((item) => item.effectif > 0);
+
+  if (diplomes.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table id="effectifs-diplomes-table" style={{ width: "100%" }}>
+              <thead>
+                <tr>
+                  <th style={{ width: "70%" }}>Type de diplôme</th>
+                  <th style={{ width: "20%" }}>Effectif</th>
+                  <th style={{ width: "10%" }}>Pourcentage</th>
+                </tr>
+              </thead>
+              <tbody>
+                {diplomes.map((diplome, index) => (
+                  <tr key={index}>
+                    <td>{diplome.name}</td>
+                    <td>{num(diplome.effectif)}</td>
+                    <td>{pct(diplome.percentage)}</td>
+                  </tr>
+                ))}
+                <tr style={{ fontWeight: "bold" }}>
+                  <td>Total</td>
+                  <td>{num(totalEffectif)}</td>
+                  <td>100 %</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+interface RenderDataDegreesProps {
+  data: any;
+}
+
+export function RenderDataDegrees({ data }: RenderDataDegreesProps) {
+  const degrees = [
+    {
+      name: "BAC ou inférieur",
+      effectif: data.effectif_sans_cpge_deg0 || 0,
+    },
+    {
+      name: "BAC + 1",
+      effectif: data.effectif_sans_cpge_deg1 || 0,
+    },
+    {
+      name: "BAC + 2",
+      effectif: data.effectif_sans_cpge_deg2 || 0,
+    },
+    {
+      name: "BAC + 3",
+      effectif: data.effectif_sans_cpge_deg3 || 0,
+    },
+    {
+      name: "BAC + 4",
+      effectif: data.effectif_sans_cpge_deg4 || 0,
+    },
+    {
+      name: "BAC + 5",
+      effectif: data.effectif_sans_cpge_deg5 || 0,
+    },
+    {
+      name: "BAC + 6 et plus",
+      effectif: data.effectif_sans_cpge_deg6 || 0,
+    },
+    {
+      name: "Non renseigné",
+      effectif: data.effectif_sans_cpge_deg9 || 0,
+    },
+  ].filter((item) => item.effectif > 0);
+
+  if (degrees.length === 0) {
+    return (
+      <div className="fr-text--center fr-py-3w">
+        Aucune donnée disponible pour le tableau.
+      </div>
+    );
+  }
+
+  const total = degrees.reduce((sum, item) => sum + item.effectif, 0);
+
+  return (
+    <div className="fr-table--sm fr-table fr-table--bordered">
+      <div className="fr-table__wrapper">
+        <div className="fr-table__container">
+          <div className="fr-table__content">
+            <table id="effectifs-degrees-table" style={{ width: "100%" }}>
+              <thead>
+                <tr>
+                  <th style={{ width: "100%" }}>Degré d'étude</th>
+                  <th>Effectif</th>
+                </tr>
+              </thead>
+              <tbody>
+                {degrees.map((degree, index) => (
+                  <tr key={index}>
+                    <td>{degree.name}</td>
+                    <td>{num(degree.effectif)}</td>
+                  </tr>
+                ))}
+                <tr style={{ fontWeight: "bold" }}>
+                  <td>Total</td>
+                  <td>{num(total)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 interface RenderDataSpecifiquesProps {
   data: any;
 }

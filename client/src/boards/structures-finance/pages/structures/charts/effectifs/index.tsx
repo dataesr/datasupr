@@ -5,11 +5,15 @@ import {
   createEffectifsNiveauChartOptions,
   createEffectifsSpecifiquesChartOptions,
   createEffectifsDisciplinesChartOptions,
+  createEffectifsDiplomesChartOptions,
+  createEffectifsDegreesChartOptions,
 } from "./options";
 import {
   RenderDataNiveau,
   RenderDataSpecifiques,
   RenderDataDisciplines,
+  RenderDataDiplomes,
+  RenderDataDegrees,
 } from "./render-data";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { CHART_COLORS } from "../../../../constants/colors";
@@ -54,6 +58,23 @@ export default function EffectifsChart({
     );
   }, [data]);
 
+  const hasDiplomesData = useMemo(() => {
+    return data?.effectif_sans_cpge_dn > 0 || data?.effectif_sans_cpge_du > 0;
+  }, [data]);
+
+  const hasDegreesData = useMemo(() => {
+    return (
+      (data?.effectif_sans_cpge_deg0 || 0) > 0 ||
+      (data?.effectif_sans_cpge_deg1 || 0) > 0 ||
+      (data?.effectif_sans_cpge_deg2 || 0) > 0 ||
+      (data?.effectif_sans_cpge_deg3 || 0) > 0 ||
+      (data?.effectif_sans_cpge_deg4 || 0) > 0 ||
+      (data?.effectif_sans_cpge_deg5 || 0) > 0 ||
+      (data?.effectif_sans_cpge_deg6 || 0) > 0 ||
+      (data?.effectif_sans_cpge_deg9 || 0) > 0
+    );
+  }, [data]);
+
   const defaultViewMode = useMemo(() => {
     if (hasCursusData) return "cursus";
     if (hasSpecifiquesData) return "specifiques";
@@ -62,7 +83,7 @@ export default function EffectifsChart({
   }, [hasCursusData, hasSpecifiquesData, hasDisciplinesData]);
 
   const [viewMode, setViewMode] = useState<
-    "cursus" | "specifiques" | "disciplines"
+    "cursus" | "specifiques" | "disciplines" | "diplomes" | "degrees"
   >(defaultViewMode);
 
   const cursusOptions = useMemo(() => {
@@ -78,6 +99,16 @@ export default function EffectifsChart({
   const disciplinesOptions = useMemo(() => {
     if (!data) return {} as Highcharts.Options;
     return createEffectifsDisciplinesChartOptions(data);
+  }, [data]);
+
+  const diplomesOptions = useMemo(() => {
+    if (!data) return {} as Highcharts.Options;
+    return createEffectifsDiplomesChartOptions(data);
+  }, [data]);
+
+  const degreesOptions = useMemo(() => {
+    if (!data) return {} as Highcharts.Options;
+    return createEffectifsDegreesChartOptions(data);
   }, [data]);
 
   if (!data) return null;
@@ -242,6 +273,104 @@ export default function EffectifsChart({
     />
   );
 
+  const renderDiplomesChart = () => (
+    <ChartWrapper
+      config={{
+        id: "effectifs-diplomes-chart",
+        idQuery: "effectifs-diplomes",
+        title: {
+          className: "fr-mt-0w",
+          look: "h5",
+          size: "h3",
+          fr: (
+            <>
+              Répartition par types de formation
+              {etablissementName && ` — ${etablissementName}`}
+              {`${data.anuniv ? ` — ${data.anuniv}` : ""}`}
+            </>
+          ),
+        },
+        comment: {
+          fr: (
+            <>
+              Ce graphique présente la répartition des étudiants entre les
+              diplômes nationaux et les diplômes d'établissement pour l'exercice{" "}
+              {selectedYear}.
+            </>
+          ),
+        },
+        readingKey: {
+          fr: (
+            <>
+              En {selectedYear}, l'établissement compte{" "}
+              <strong>
+                {num(
+                  (data.effectif_sans_cpge_dn || 0) +
+                    (data.effectif_sans_cpge_du || 0)
+                )}{" "}
+                étudiants
+              </strong>{" "}
+              au total.
+              {data.effectif_sans_cpge_dn > 0 && (
+                <>
+                  {" "}
+                  Les diplômes nationaux représentent{" "}
+                  <strong>{num(data.effectif_sans_cpge_dn)} étudiants</strong>.
+                </>
+              )}
+            </>
+          ),
+        },
+        updateDate: new Date(),
+        integrationURL: "/integration-url",
+      }}
+      options={diplomesOptions}
+      renderData={() => <RenderDataDiplomes data={data} />}
+    />
+  );
+
+  const renderDegreesChart = () => (
+    <ChartWrapper
+      config={{
+        id: "effectifs-degrees-chart",
+        idQuery: "effectifs-degrees",
+        title: {
+          className: "fr-mt-0w",
+          look: "h5",
+          size: "h3",
+          fr: (
+            <>
+              Répartition par degrés d'étude
+              {etablissementName && ` — ${etablissementName}`}
+              {`${data.anuniv ? ` — ${data.anuniv}` : ""}`}
+            </>
+          ),
+        },
+        comment: {
+          fr: (
+            <>
+              Ce graphique détaille la répartition des étudiants selon leur
+              degré d'étude (de BAC ou inférieur à BAC + 6 et plus) pour
+              l'exercice {selectedYear}.
+            </>
+          ),
+        },
+        readingKey: {
+          fr: (
+            <>
+              La répartition montre le nombre d'étudiants à chaque niveau
+              d'étude post-baccalauréat.
+            </>
+          ),
+        },
+        updateDate: new Date(),
+        integrationURL: "/integration-url",
+      }}
+      options={degreesOptions}
+      renderData={() => <RenderDataDegrees data={data} />}
+    />
+  );
+
   return (
     <div>
       <div
@@ -284,12 +413,32 @@ export default function EffectifsChart({
               Par disciplines
             </Button>
           )}
+          {hasDiplomesData && (
+            <Button
+              size="sm"
+              variant={viewMode === "diplomes" ? "primary" : "secondary"}
+              onClick={() => setViewMode("diplomes")}
+            >
+              Types de diplômes
+            </Button>
+          )}
+          {hasDegreesData && (
+            <Button
+              size="sm"
+              variant={viewMode === "degrees" ? "primary" : "secondary"}
+              onClick={() => setViewMode("degrees")}
+            >
+              Degrés d'étude
+            </Button>
+          )}
         </div>
       </div>
 
       {viewMode === "cursus" && renderNiveauChart()}
       {viewMode === "specifiques" && renderSpecifiquesChart()}
       {viewMode === "disciplines" && renderDisciplinesChart()}
+      {viewMode === "diplomes" && renderDiplomesChart()}
+      {viewMode === "degrees" && renderDegreesChart()}
     </div>
   );
 }

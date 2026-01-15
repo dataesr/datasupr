@@ -25,6 +25,14 @@ export default function SectionNavigation() {
           }}
         />
         <TertiaryNavigationItem
+          label="Santé financière"
+          isActive={activeSection === "sante-financiere"}
+          onClick={(e) => {
+            e.preventDefault();
+            handleSectionChange("sante-financiere");
+          }}
+        />
+        <TertiaryNavigationItem
           label="Moyens humains"
           isActive={activeSection === "moyens-humains"}
           onClick={(e) => {
@@ -33,15 +41,7 @@ export default function SectionNavigation() {
           }}
         />
         <TertiaryNavigationItem
-          label="Ressources propres"
-          isActive={activeSection === "recettes-propres"}
-          onClick={(e) => {
-            e.preventDefault();
-            handleSectionChange("recettes-propres");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="Étudiants inscrits"
+          label="Diplômes et formations"
           isActive={activeSection === "etudiants"}
           onClick={(e) => {
             e.preventDefault();

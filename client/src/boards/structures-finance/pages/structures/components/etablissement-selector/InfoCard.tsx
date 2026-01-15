@@ -80,7 +80,9 @@ export default function InfoCard({ data, onClose }: InfoCardProps) {
             <div>
               <dd>
                 {data.effectif_sans_cpge.toLocaleString("fr-FR")} étudiants
-                inscrits en {data.anuniv}
+                inscrits en {data.anuniv} dont{" "}
+                {data.part_effectif_sans_cpge_dn.toLocaleString("fr-FR")} % dans
+                les diplômes nationaux
               </dd>
             </div>
           )}

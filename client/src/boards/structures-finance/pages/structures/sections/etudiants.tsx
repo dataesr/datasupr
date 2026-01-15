@@ -1,7 +1,10 @@
 import { useSearchParams } from "react-router-dom";
+import { Row, Col } from "@dataesr/dsfr-plus";
 import EffectifsChart from "../charts/effectifs";
 import { SmallMetricCard } from "../components/metric-cards/small-metric-card";
+import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 import { FORMATION_COLORS } from "../../../constants/formation-colors";
+import { CHART_COLORS } from "../../../constants/colors";
 import {
   useFinanceEtablissementEvolution,
   useFinanceYears,
@@ -43,10 +46,10 @@ export function EtudiantsSection({
     return evolutionData
       .sort((a: any, b: any) => a.exercice - b.exercice)
       .filter((item: any) => !yearNum || item.exercice <= yearNum)
-      .map((item: any) => item[metricKey])
-      .filter((val: any): val is number => val != null && !isNaN(val));
+      .map((item: any) => ({ exercice: item.exercice, value: item[metricKey] }))
+      .filter((item: any) => item.value != null && !isNaN(item.value));
   };
-  console.log(evolutionData);
+
   return (
     <div
       id="section-etudiants"
@@ -239,6 +242,38 @@ export function EtudiantsSection({
             </div>
           </div>
         )}
+      </div>
+
+      <div className="fr-mb-4w">
+        <Row gutters>
+          <Col xs="12" md="4">
+            <MetricChartCard
+              title="Nombre d'étudiants inscrits"
+              value={num(data.effectif_sans_cpge)}
+              detail="Total des inscriptions"
+              color={CHART_COLORS.primary}
+              evolutionData={getEvolutionData("effectif_sans_cpge")}
+            />
+          </Col>
+          <Col xs="12" md="4">
+            <MetricChartCard
+              title="Diplômes nationaux"
+              value={num(data.effectif_sans_cpge_dn)}
+              detail="Étudiants inscrits en diplômes nationaux"
+              color={CHART_COLORS.secondary}
+              evolutionData={getEvolutionData("effectif_sans_cpge_dn")}
+            />
+          </Col>
+          <Col xs="12" md="4">
+            <MetricChartCard
+              title="Diplômes d'établissement"
+              value={num(data.effectif_sans_cpge_du)}
+              detail="Étudiants inscrits en diplômes d'établissement"
+              color={CHART_COLORS.tertiary}
+              evolutionData={getEvolutionData("effectif_sans_cpge_du")}
+            />
+          </Col>
+        </Row>
       </div>
 
       <EffectifsChart

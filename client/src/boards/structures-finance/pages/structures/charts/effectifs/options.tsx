@@ -7,6 +7,16 @@ interface EffectifsData {
   effectif_sans_cpge_l?: number;
   effectif_sans_cpge_m?: number;
   effectif_sans_cpge_d?: number;
+  effectif_sans_cpge_dn?: number;
+  effectif_sans_cpge_du?: number;
+  effectif_sans_cpge_deg0?: number;
+  effectif_sans_cpge_deg1?: number;
+  effectif_sans_cpge_deg2?: number;
+  effectif_sans_cpge_deg3?: number;
+  effectif_sans_cpge_deg4?: number;
+  effectif_sans_cpge_deg5?: number;
+  effectif_sans_cpge_deg6?: number;
+  effectif_sans_cpge_deg9?: number;
   part_effectif_sans_cpge_l?: number;
   part_effectif_sans_cpge_m?: number;
   part_effectif_sans_cpge_d?: number;
@@ -359,6 +369,205 @@ export const createEffectifsDisciplinesChartOptions = (
         name: "Effectifs",
         type: "pie",
         data: disciplines,
+      },
+    ],
+  });
+};
+
+export const createEffectifsDiplomesChartOptions = (
+  data: EffectifsData
+): Highcharts.Options => {
+  const totalEffectif =
+    (data.effectif_sans_cpge_dn || 0) + (data.effectif_sans_cpge_du || 0);
+  const diplomes = [
+    {
+      name: "Diplômes nationaux",
+      y: data.effectif_sans_cpge_dn || 0,
+      color: CHART_COLORS.primary,
+      percentage:
+        totalEffectif > 0
+          ? ((data.effectif_sans_cpge_dn || 0) / totalEffectif) * 100
+          : 0,
+    },
+    {
+      name: "Diplômes d'établissement",
+      y: data.effectif_sans_cpge_du || 0,
+      color: CHART_COLORS.secondary,
+      percentage:
+        totalEffectif > 0
+          ? ((data.effectif_sans_cpge_du || 0) / totalEffectif) * 100
+          : 0,
+    },
+  ].filter((item) => item.y > 0);
+
+  return CreateChartOptions("pie", {
+    chart: {
+      height: 400,
+    },
+    title: {
+      text: undefined,
+    },
+    tooltip: {
+      pointFormat:
+        "<b>{point.y:,.0f}</b> étudiants<br><b>{point.percentage:.1f}%</b>",
+    },
+    plotOptions: {
+      pie: {
+        size: "90%",
+        dataLabels: {
+          enabled: true,
+          format: "<b>{point.name}</b><br>{point.percentage:.1f}%",
+          style: {
+            fontSize: "13px",
+            textOutline: "none",
+          },
+        },
+        showInLegend: true,
+      },
+    },
+    legend: {
+      enabled: true,
+      align: "right",
+      verticalAlign: "middle",
+      layout: "vertical",
+      itemStyle: {
+        color: undefined,
+      },
+    },
+    series: [
+      {
+        name: "Effectifs",
+        type: "pie",
+        data: diplomes,
+      },
+    ],
+  });
+};
+
+export const createEffectifsDegreesChartOptions = (
+  data: EffectifsData
+): Highcharts.Options => {
+  const colors = CHART_COLORS.palette;
+
+  const degrees = [
+    {
+      name: "BAC ou inférieur",
+      y: data.effectif_sans_cpge_deg0 || 0,
+      color: colors[0],
+    },
+    {
+      name: "BAC + 1",
+      y: data.effectif_sans_cpge_deg1 || 0,
+      color: colors[1],
+    },
+    {
+      name: "BAC + 2",
+      y: data.effectif_sans_cpge_deg2 || 0,
+      color: colors[2],
+    },
+    {
+      name: "BAC + 3",
+      y: data.effectif_sans_cpge_deg3 || 0,
+      color: colors[3],
+    },
+    {
+      name: "BAC + 4",
+      y: data.effectif_sans_cpge_deg4 || 0,
+      color: colors[4],
+    },
+    {
+      name: "BAC + 5",
+      y: data.effectif_sans_cpge_deg5 || 0,
+      color: colors[5],
+    },
+    {
+      name: "BAC + 6 et plus",
+      y: data.effectif_sans_cpge_deg6 || 0,
+      color: colors[6],
+    },
+    {
+      name: "Non renseigné",
+      y: data.effectif_sans_cpge_deg9 || 0,
+      color: colors[8],
+    },
+  ].filter((item) => item.y > 0);
+
+  const categories = degrees.map((item) => item.name);
+  const values = degrees.map((item) => ({
+    y: item.y,
+    color: item.color,
+  }));
+
+  return CreateChartOptions("column", {
+    chart: {
+      height: 400,
+    },
+    xAxis: {
+      categories: categories,
+      crosshair: true,
+      labels: {
+        style: {
+          fontSize: "12px",
+        },
+      },
+    },
+    yAxis: {
+      min: 0,
+      title: {
+        text: "Nombre d'étudiants",
+        style: {
+          fontSize: "13px",
+        },
+      },
+      labels: {
+        formatter: function () {
+          return Highcharts.numberFormat(this.value as number, 0, ",", " ");
+        },
+      },
+    },
+    tooltip: {
+      useHTML: true,
+      borderWidth: 1,
+      borderRadius: 8,
+      shadow: false,
+      formatter: function () {
+        const point = this as any;
+        return `<div style="padding:10px">
+                <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
+                  point.key
+                }</div>
+                <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
+                  point.y,
+                  0,
+                  ",",
+                  " "
+                )} étudiants</div>
+                </div>`;
+      },
+    },
+    plotOptions: {
+      column: {
+        pointPadding: 0.2,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            return Highcharts.numberFormat(this.y as number, 0, ",", " ");
+          },
+          style: {
+            fontSize: "13px",
+            fontWeight: "bold",
+            textOutline: "none",
+          },
+        },
+      },
+    },
+    series: [
+      {
+        name: "Effectifs",
+        type: "column",
+        data: values,
+        colorByPoint: true,
       },
     ],
   });

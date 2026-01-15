@@ -4,8 +4,8 @@ import { useFinanceEtablissementDetail, useFinanceYears } from "../../../api";
 import SectionNavigation from "./section-navigation";
 import {
   FinancementsSection,
+  SanteFinancierSection,
   MoyensHumainsSection,
-  RessourcesPropresSection,
   EtudiantsSection,
   AnalysesSection,
 } from "../sections/sections";
@@ -66,17 +66,16 @@ export default function EtablissementDetails() {
         return (
           <FinancementsSection data={detailData} selectedYear={selectedYear} />
         );
+      case "sante-financiere":
+        return (
+          <SanteFinancierSection
+            data={detailData}
+            selectedYear={selectedYear}
+          />
+        );
       case "moyens-humains":
         return (
           <MoyensHumainsSection data={detailData} selectedYear={selectedYear} />
-        );
-      case "recettes-propres":
-        return (
-          <RessourcesPropresSection
-            data={detailData}
-            selectedEtablissement={structureId}
-            selectedYear={selectedYear}
-          />
         );
       case "etudiants":
         return (

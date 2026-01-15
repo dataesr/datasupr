@@ -6,6 +6,7 @@ import {
 } from "../../../api";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 import { CHART_COLORS } from "../../../constants/colors";
+import RessourcesPropresChart from "../charts/ressources-propres";
 import "./styles.scss";
 
 const euro = (n?: number) =>
@@ -94,16 +95,6 @@ export function FinancementsSection({
             <MetricChartCard
               title="Ressources propres"
               value={`${euro(data.recettes_propres)} €`}
-              detail={
-                data.produits_de_fonctionnement_encaissables &&
-                data.recettes_propres
-                  ? `${(
-                      (data.recettes_propres /
-                        data.produits_de_fonctionnement_encaissables) *
-                      100
-                    ).toFixed(1)} % des ressources`
-                  : "Part des ressources"
-              }
               color={CHART_COLORS.primary}
               evolutionData={getEvolutionData("recettes_propres")}
               unit="€"
@@ -131,6 +122,86 @@ export function FinancementsSection({
       </div>
 
       <div className="fr-mb-4w">
+        <h3 className="fr-h5 fr-mb-3w">Détail des ressources propres</h3>
+        <Row gutters>
+          <Col xs="12" sm="6" md="4">
+            <MetricChartCard
+              title="Ressources propres liées aux activités de formation"
+              value={
+                data.tot_ress_formation != null
+                  ? `${data.tot_ress_formation.toLocaleString("fr-FR", {
+                      maximumFractionDigits: 0,
+                    })} €`
+                  : "—"
+              }
+              detail={
+                data.part_ress_formation != null
+                  ? `${data.part_ress_formation.toFixed(
+                      1
+                    )} % des ressources propres`
+                  : "Part des ressources propres"
+              }
+              color={CHART_COLORS.tertiary}
+              evolutionData={getEvolutionData("tot_ress_formation")}
+              unit="€"
+            />
+          </Col>
+          <Col xs="12" sm="6" md="4">
+            <MetricChartCard
+              title="Ressources propres liées aux activités de recherche"
+              value={
+                data.tot_ress_recherche != null
+                  ? `${data.tot_ress_recherche.toLocaleString("fr-FR", {
+                      maximumFractionDigits: 0,
+                    })} €`
+                  : "—"
+              }
+              detail={
+                data.part_ress_recherche != null
+                  ? `${data.part_ress_recherche.toFixed(
+                      1
+                    )} % des ressources propres`
+                  : "Part des ressources propres"
+              }
+              color={CHART_COLORS.tertiary}
+              evolutionData={getEvolutionData("tot_ress_recherche")}
+              unit="€"
+            />
+          </Col>
+          <Col xs="12" md="4">
+            <MetricChartCard
+              title="Autres ressources propres"
+              value={
+                data.tot_ress_autres_recette != null
+                  ? `${data.tot_ress_autres_recette.toLocaleString("fr-FR", {
+                      maximumFractionDigits: 0,
+                    })} €`
+                  : "—"
+              }
+              detail={
+                data.part_ress_autres_recette != null
+                  ? `${data.part_ress_autres_recette.toFixed(
+                      1
+                    )} % des ressources propres`
+                  : "Part des ressources propres"
+              }
+              color={CHART_COLORS.tertiary}
+              evolutionData={getEvolutionData("tot_ress_autres_recette")}
+              unit="€"
+            />
+          </Col>
+        </Row>
+      </div>
+
+      <div className="fr-mb-4w">
+        <RessourcesPropresChart
+          data={data}
+          selectedYear={selectedYear}
+          etablissementName={data?.etablissement_lib}
+        />
+      </div>
+
+      <div className="fr-mb-4w">
         <h3 className="fr-h5 fr-mb-3w">
           Subvention pour charges de service public
         </h3>
@@ -139,7 +210,11 @@ export function FinancementsSection({
             <MetricChartCard
               title="SCSP"
               value={`${euro(data.scsp)} €`}
-              detail="Dotation de l'État"
+              detail={
+                data.is_rce === false
+                  ? "Dotation de l'État (inclut la masse salariale prise en charge par l'État)"
+                  : "Dotation de l'État"
+              }
               color={CHART_COLORS.secondary}
               evolutionData={getEvolutionData("scsp")}
               unit="€"
@@ -153,7 +228,13 @@ export function FinancementsSection({
                 data.scsp_etudiants
                   ? `Pour ${data.scsp_etudiants.toLocaleString(
                       "fr-FR"
-                    )} étudiants financés`
+                    )} étudiants financés${
+                      data.is_rce === false
+                        ? " (inclut la masse salariale prise en charge par l'État)"
+                        : ""
+                    }`
+                  : data.is_rce === false
+                  ? "Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par l'État)"
                   : "Ratio SCSP / étudiants financés"
               }
               color={CHART_COLORS.secondary}

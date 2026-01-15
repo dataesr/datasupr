@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Highcharts from "highcharts";
 import "highcharts/modules/treemap";
-import { Button } from "@dataesr/dsfr-plus";
 import { createRessourcesPropresChartOptions } from "./options";
 import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -22,12 +21,10 @@ export default function RessourcesPropresChart({
   selectedYear,
   etablissementName,
 }: RessourcesPropresChartProps) {
-  const [viewMode, setViewMode] = useState<"value" | "percentage">("value");
-
   const options = useMemo(() => {
     if (!data) return {} as Highcharts.Options;
-    return createRessourcesPropresChartOptions(data, viewMode);
-  }, [data, viewMode]);
+    return createRessourcesPropresChartOptions(data);
+  }, [data]);
 
   const ressourcesPropresDecomposition = useMemo(
     () => [
@@ -107,33 +104,6 @@ export default function RessourcesPropresChart({
 
   return (
     <div>
-      <div
-        className="fr-mb-3w"
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: "1rem",
-        }}
-      >
-        <h3
-          className="fr-h5 fr-mb-0"
-          style={{
-            borderLeft: `4px solid ${CHART_COLORS.primary}`,
-            paddingLeft: "1rem",
-          }}
-        ></h3>
-        <div className="fr-btns-group fr-btns-group--sm fr-btns-group--inline">
-          <Button size="sm" variant={viewMode === "value" ? "primary" : "secondary"} onClick={() => setViewMode("value")}>
-            Valeurs
-          </Button>
-          <Button size="sm" variant={viewMode === "percentage" ? "primary" : "secondary"} onClick={() => setViewMode("percentage")}>
-            Parts (%)
-          </Button>
-        </div>
-      </div>
-
       <ChartWrapper
         config={{
           id: "ressources-propres-chart",
@@ -153,19 +123,38 @@ export default function RessourcesPropresChart({
           comment: {
             fr: (
               <>
-                Ce graphique présente la répartition détaillée des ressources propres de l'établissement pour l'exercice {selectedYear}. Les
-                ressources propres comprennent notamment les droits d'inscription, la formation continue, les contrats de recherche, les subventions
-                régionales et européennes.
+                Ce graphique présente la répartition détaillée des ressources
+                propres de l'établissement pour l'exercice {selectedYear}. Les
+                ressources propres comprennent notamment les droits
+                d'inscription, la formation continue, les contrats de recherche,
+                les subventions régionales et européennes.
               </>
             ),
           },
           readingKey: {
             fr: (
               <>
-                En {selectedYear}, le total des ressources propres s'élève à <strong>{euro(totalRessources)} €</strong>. La principale source est{" "}
-                {ressourcesPropresDecomposition.sort((a, b) => (b.value || 0) - (a.value || 0))[0]?.label.toLowerCase()} avec{" "}
-                <strong>{euro(ressourcesPropresDecomposition.sort((a, b) => (b.value || 0) - (a.value || 0))[0]?.value)} €</strong> (
-                {pct(ressourcesPropresDecomposition.sort((a, b) => (b.value || 0) - (a.value || 0))[0]?.part)}
+                En {selectedYear}, le total des ressources propres s'élève à{" "}
+                <strong>{euro(totalRessources)} €</strong>. La principale source
+                est{" "}
+                {ressourcesPropresDecomposition
+                  .sort((a, b) => (b.value || 0) - (a.value || 0))[0]
+                  ?.label.toLowerCase()}{" "}
+                avec{" "}
+                <strong>
+                  {euro(
+                    ressourcesPropresDecomposition.sort(
+                      (a, b) => (b.value || 0) - (a.value || 0)
+                    )[0]?.value
+                  )}{" "}
+                  €
+                </strong>{" "}
+                (
+                {pct(
+                  ressourcesPropresDecomposition.sort(
+                    (a, b) => (b.value || 0) - (a.value || 0)
+                  )[0]?.part
+                )}
                 ).
               </>
             ),
