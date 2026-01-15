@@ -209,7 +209,6 @@ export default function EffectifsChart({
             </>
           ),
         },
-        updateDate: new Date(),
         integrationURL: "/integration-url",
       }}
       options={specifiquesOptions}
@@ -264,7 +263,6 @@ export default function EffectifsChart({
             );
           })(),
         },
-        updateDate: new Date(),
         integrationURL: "/integration-url",
       }}
       options={disciplinesOptions}
@@ -320,7 +318,6 @@ export default function EffectifsChart({
             </>
           ),
         },
-        updateDate: new Date(),
         integrationURL: "/integration-url",
       }}
       options={diplomesOptions}
@@ -362,7 +359,6 @@ export default function EffectifsChart({
             </>
           ),
         },
-        updateDate: new Date(),
         integrationURL: "/integration-url",
       }}
       options={degreesOptions}
