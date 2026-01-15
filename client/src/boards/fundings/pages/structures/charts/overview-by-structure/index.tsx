@@ -122,7 +122,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     xAxis: {
       type: 'category',
       labels: {
-        formatter: function () {
+        formatter: function (this: any) {
           return this.axis.series[0].points[this.pos].visible ? this.value : '';
         }
       }
@@ -131,7 +131,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       series: {
         point: {
           events: {
-            legendItemClick: function(e: any) {
+            legendItemClick: function(this: any, e: any) {
               var clic_id = e.target.name;
               this.series.points.forEach((point) => {
                 if (point.name === clic_id) {
