@@ -1,0 +1,30 @@
+{
+  "structures-finance": {
+    "label": {
+      "fr": "Tableau de bord des financements des structures",
+      "en": "Structures Finance Dashboard"
+    },
+    "link": "/structures-finance"
+  },
+  "accueil": {
+    "label": {
+      "fr": "Accueil",
+      "en": "Home"
+    },
+    "link": "/structures-finance/accueil"
+  },
+  "etablissements": {
+    "label": {
+      "fr": "Vue par établissement",
+      "en": "Structure view"
+    },
+    "link": "/structures-finance/etablissements"
+  },
+  "national": {
+    "label": {
+      "fr": "Vue nationale",
+      "en": "National view"
+    },
+    "link": "/structures-finance/national"
+  }
+}

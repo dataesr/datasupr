@@ -84,7 +84,12 @@ export default function GlobalLayout() {
             <nav className="fr-nav" role="navigation" aria-label="Menu principal">
               <ul className="fr-nav__list">
                 <li className="fr-nav__item">
-                  <Link to="/european-projects/accueil" target="_self" {...(pathname === "/" && { "aria-current": "page" })} className="fr-nav__link">
+                  <Link
+                    to="/european-projects/accueil"
+                    target="_self"
+                    {...(pathname === "/european-projects/accueil" && { "aria-current": "page" })}
+                    className="fr-nav__link"
+                  >
                     <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
                     {getI18nLabel("home")}
                   </Link>
@@ -146,3 +151,17 @@ export default function GlobalLayout() {
     </>
   );
 }
+
+/**
+ * TODO
+ * lexique
+import CountrySelector from "../../../../components/country-selector/selector";
+ * 
+                <CountrySelector />
+ * 
+import SwitchTheme from "../../../../components/switch-theme";
+
+      <SwitchTheme />
+ * 
+ * 
+ */

@@ -58,5 +58,9 @@
   "themes": {
     "fr": "Thèmes",
     "en": "Themes"
+  },
+  "close": {
+    "fr": "Fermer",
+    "en": "Close"
   }
 }

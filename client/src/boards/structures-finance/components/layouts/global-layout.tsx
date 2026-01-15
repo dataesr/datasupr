@@ -1,25 +1,40 @@
-import {
-  Outlet,
-  useLocation,
-  useSearchParams,
-  NavLink,
-} from "react-router-dom";
+import { useEffect } from "react";
+import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
+// import { Button, Header, Logo, Service, FastAccess, Container, Nav, Link } from "@dataesr/dsfr-plus";
 
-import Footer from "./footer";
-import SwitchTheme from "../../../../components/switch-theme";
+// import Footer from "./footer";
+// import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
+// import CountrySelector from "../../../../components/country-selector/selector";
+// import "../styles.scss";
+import Footer from "./footer";
+import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
+import navigationConfig from "./navigation-config.json";
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
+  const filtersParams = searchParams.toString();
+
+  useEffect(() => {
+    if (!searchParams.get("language")) {
+      searchParams.set("language", "fr"); // default value
+      setSearchParams(searchParams);
+    }
+    if (!searchParams.get("country_code")) {
+      searchParams.set("country_code", "FRA"); // default value
+      setSearchParams(searchParams);
+    }
+  }, [searchParams, setSearchParams]);
 
   if (!pathname) return null;
+  const is = (str: string): boolean => pathname?.startsWith(str);
 
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
-
   return (
     <>
       <header role="banner" className="fr-header">
@@ -29,138 +44,91 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <div className="fr-header__logo">
-                    <p className="fr-logo">
-                      Ministère
-                      <br />
-                      de l'Enseignement
-                      <br />
-                      supérieur,
-                      <br />
-                      de la Recherche
-                      <br />
-                      et de l'Espace
-                    </p>
-                  </div>
-                  <div className="fr-header__operator">
-                    <img
-                      className="fr-responsive-img"
-                      style={{ width: "3.5rem" }}
-                      src="/logo.svg"
-                      alt=""
-                    />
+                    <a href="/" title="Accueil - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
+                      <p className="fr-logo">
+                        Ministère
+                        <br />
+                        de l'Enseignement
+                        <br />
+                        supérieur,
+                        <br />
+                        de la Recherche
+                        <br />
+                        et de l'Espace
+                      </p>
+                    </a>
                   </div>
                   <div className="fr-header__navbar">
                     <button
-                      className="fr-btn--menu fr-btn"
                       data-fr-opened="false"
-                      aria-controls="modal-832"
-                      aria-haspopup="menu"
-                      id="fr-btn-menu-mobile"
+                      aria-controls="modal-header"
                       title="Menu"
+                      type="button"
+                      id="button-header"
+                      className="fr-btn--menu fr-btn"
                     >
                       Menu
                     </button>
                   </div>
                 </div>
-                <div className="fr-header__service">
-                  <a href="/" title="Accueil - DataSupR">
-                    <p className="fr-header__service-title">#dataESR</p>
-                  </a>
-                  <p className="fr-header__service-tagline">
-                    {getI18nLabel("title")}
-                  </p>
-                </div>
-              </div>
-              <div className="fr-header__tools">
-                <div className="fr-header__tools-links">
-                  <ul className="fr-btns-group">
-                    <li>
-                      <button
-                        className="fr-btn fr-icon-theme-fill"
-                        aria-controls="fr-theme-modal"
-                        data-fr-opened="false"
-                        title="Changer le thème d'affichage"
-                      >
-                        <span className="fr-hidden fr-unhidden-sm">
-                          {getI18nLabel("themes")}
-                        </span>
-                      </button>
-                    </li>
-                  </ul>
-                </div>
               </div>
             </div>
           </div>
         </div>
-        <div
-          className="fr-header__menu fr-modal"
-          id="modal-832"
-          aria-labelledby="fr-btn-menu-mobile"
-        >
+        <div className="fr-header__menu fr-modal" id="modal-header" aria-labelledby="button-header">
           <div className="fr-container">
-            <button
-              className="fr-btn--close fr-btn"
-              aria-controls="modal-832"
-              title="Fermer"
-            >
-              Fermer
+            <button aria-controls="modal-header" title="Fermer" type="button" id="button-2168" className="fr-btn--close fr-btn">
+              {getI18nLabel("close")}
             </button>
             <div className="fr-header__menu-links"></div>
-            <nav
-              className="fr-nav"
-              id="navigation-832"
-              role="navigation"
-              aria-label="Menu principal"
-            >
+            <nav className="fr-nav" role="navigation" aria-label="Menu principal">
               <ul className="fr-nav__list">
                 <li className="fr-nav__item">
-                  <NavLink
-                    className="fr-nav__link"
-                    aria-current={
-                      pathname === "/structures-finance/accueil"
-                        ? "page"
-                        : undefined
-                    }
+                  <Link
                     to="/structures-finance/accueil"
+                    target="_self"
+                    {...(pathname === "/structures-finance/accueil" && { "aria-current": "page" })}
+                    className="fr-nav__link"
                   >
-                    Accueil
-                  </NavLink>
+                    <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
+                    {getI18nLabel("home")}
+                  </Link>
                 </li>
                 <li className="fr-nav__item">
-                  <NavLink
+                  <Link
+                    to={`/structures-finance/etablissements?${filtersParams}`}
+                    target="_self"
+                    {...(is("/structures-finance/etablissements") && { "aria-current": "page" })}
                     className="fr-nav__link"
-                    aria-current={
-                      pathname === "/structures-finance/etablissements"
-                        ? "page"
-                        : undefined
-                    }
-                    to="/structures-finance/etablissements"
                   >
-                    Etablissements
-                  </NavLink>
+                    Vue par établissements
+                  </Link>
                 </li>
                 <li className="fr-nav__item">
-                  <NavLink
+                  <Link
+                    to={`/structures-finance/national?${filtersParams}`}
+                    target="_self"
+                    {...(is("/structures-finance/national") && { "aria-current": "page" })}
                     className="fr-nav__link"
-                    aria-current={
-                      pathname === "/structures-finance/national"
-                        ? "page"
-                        : undefined
-                    }
-                    to="/structures-finance/national"
                   >
                     Vue nationale
-                  </NavLink>
+                  </Link>
                 </li>
+                
               </ul>
             </nav>
           </div>
         </div>
       </header>
-
+      <Container>
+        <Row>
+          <Col>
+            <CustomBreadcrumb config={navigationConfig} />
+          </Col>
+        </Row>
+      </Container>
       <Outlet />
       <Footer />
-      <SwitchTheme />
     </>
   );
 }
