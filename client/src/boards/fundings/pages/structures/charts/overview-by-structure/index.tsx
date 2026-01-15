@@ -6,12 +6,12 @@ import "highcharts/modules/variwide";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getGeneralOptions, getLabelFromName } from "../../../../utils.ts";
+import { getGeneralOptions } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function OverviewByStructure() {
+export default function OverviewByStructure({ name }: { name: string }) {
   const [searchParams] = useSearchParams();
   const next = new URLSearchParams(searchParams);
   const structure = next.get("structure")?.toString() ?? "";
@@ -40,7 +40,7 @@ export default function OverviewByStructure() {
           },
           {
             term: {
-              "participant_id_name.keyword": structure,
+              "participant_id.keyword": structure,
             },
           },
           {
@@ -91,7 +91,7 @@ export default function OverviewByStructure() {
   const config = {
     id: "overviewByStructure",
     integrationURL: `/integration?chart_id=overviewByStructure&${next.toString()}`,
-    title: `Nombre de projets pour ${getLabelFromName(structure)} par financeur pour l'année ${year}`,
+    title: `Nombre de projets pour ${name} par financeur pour l'année ${year}`,
   };
 
   const options: object = {

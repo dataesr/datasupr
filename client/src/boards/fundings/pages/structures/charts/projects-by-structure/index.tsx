@@ -5,12 +5,12 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getGeneralOptions, getLabelFromName } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getGeneralOptions } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function ProjectsByStructure() {
+export default function ProjectsByStructure({ name }: { name: string }) {
   const [field, setField] = useState("projects");
   const [searchParams] = useSearchParams();
   const next = new URLSearchParams(searchParams);
@@ -40,7 +40,7 @@ export default function ProjectsByStructure() {
           },
           {
             term: {
-              "participant_id_name.keyword": structure,
+              "participant_id.keyword": structure,
             },
           },
           {
@@ -96,8 +96,8 @@ export default function ProjectsByStructure() {
   }));
   const categories: string[] = series.map((item: { name: string }) => item.name);
 
-  const titleProjects = `Nombre de projets pour ${getLabelFromName(structure)} par financeur pour l'année ${year}`;
-  const titleBudget = `Montant total des projets pour ${getLabelFromName(structure)} par financeur pour l'année ${year}`;
+  const titleProjects = `Nombre de projets pour ${name} par financeur pour l'année ${year}`;
+  const titleBudget = `Montant total des projets pour ${name} par financeur pour l'année ${year}`;
   const axisProjects = "Nombre de projets";
   const axisBudget = "Montant total des projets";
   const tooltipProjects = function(this: any) {

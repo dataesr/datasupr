@@ -5,29 +5,31 @@ import OverviewByStructure from "./charts/overview-by-structure";
 import ProjectsByStructure from "./charts/projects-by-structure";
 import SelectedStructure from "./components/selected-structure";
 import StructuresSelector from "./components/structures-selector";
+import { useState } from "react";
 
 
 export default function Structures() {
   const [searchParams] = useSearchParams({});
   const structure = searchParams.get("structure");
+  const [name, setName] = useState();
 
   return (
     <Container>
       <Row gutters>
         <Col>
-          <StructuresSelector />
+          <StructuresSelector setName={setName} />
         </Col>
       </Row>
       {structure ? (
         <>
           <Row gutters>
             <Col>
-              <SelectedStructure />
+              <SelectedStructure name={name} />
             </Col>
           </Row>
           <Row gutters>
             <Col>
-              <ProjectsByStructure />
+              <ProjectsByStructure name={name} />
             </Col>
           </Row>
           <Row gutters>
@@ -44,7 +46,7 @@ export default function Structures() {
           </Row>
           <Row gutters>
             <Col>
-              <OverviewByStructure />
+              <OverviewByStructure name={name} />
             </Col>
           </Row>
         </>

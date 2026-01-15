@@ -1,18 +1,15 @@
 import { Col, Row } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
-import { getLabelFromName } from "../../../../utils";
 
-
-export default function SelectedStructure() {
+export default function SelectedStructure({ name }: { name: string }) {
   const [searchParams, setSearchParams] = useSearchParams({});
-  const structure = searchParams.get("structure") ?? "";
   const year = searchParams.get("year") ?? "";
   const years = Array.from(Array(10).keys()).map((item) => item + 2015);
 
-  const handleYearChange = (county: string) => {
+  const handleYearChange = (year: string) => {
     const next = new URLSearchParams(searchParams);
-    next.set('year', county);
+    next.set('year', year);
     setSearchParams(next);
   };
 
@@ -20,7 +17,7 @@ export default function SelectedStructure() {
     <div>
       <Row gutters>
         <Col xs="12" sm="6" md="8">
-          {getLabelFromName(structure)}
+          {name}
         </Col>
         <Col  xs="12" sm="6" md="4">
           <select

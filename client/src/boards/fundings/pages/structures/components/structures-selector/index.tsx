@@ -4,20 +4,20 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
-import { getLabelFromName } from "../../../../utils";
+import { getIdFromStructure, getLabelFromStructure } from "../../../../utils";
 import { useState } from "react";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } =
   import.meta.env;
 
-export default function StructuresSelector() {
+export default function StructuresSelector({ setName }: { setName: (a: string) => void }) {
   const [county, setCounty] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
   const structure = searchParams.get("structure") ?? "";
   const year = searchParams.get("year") ?? "";
   const defaultYear = "2023";
 
-  if (!structure || structure.length === 0 || !year || year.length === 0) {
+  if (!year || year.length === 0) {
     const next = new URLSearchParams(searchParams);
     if (!year || year.length === 0) {
       next.set("year", defaultYear);
@@ -26,8 +26,9 @@ export default function StructuresSelector() {
   }
 
   const handleStructureChange = (selectedStructure: string) => {
+    setName(getLabelFromStructure(selectedStructure));
     const next = new URLSearchParams(searchParams);
-    next.set("structure", selectedStructure);
+    next.set("structure", getIdFromStructure(selectedStructure));
     setSearchParams(next);
   };
 
@@ -151,7 +152,6 @@ export default function StructuresSelector() {
         }
       ).then((response) => response.json()),
   });
-  console.log(dataCounties);
 
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
     queryKey: ["fundings-structures", county],
@@ -182,7 +182,7 @@ export default function StructuresSelector() {
   const structures =
     dataStructures.aggregations?.by_structure?.buckets.map((bucket) => ({
       id: bucket.key,
-      label: getLabelFromName(bucket.key),
+      label: getLabelFromStructure(bucket.key),
     })) || [];
 
   return (
