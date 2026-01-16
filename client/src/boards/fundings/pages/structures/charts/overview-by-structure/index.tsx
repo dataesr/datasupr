@@ -14,9 +14,8 @@ const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = impor
 
 export default function OverviewByStructure({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
-  const next = new URLSearchParams(searchParams);
-  const structure = next.get("structure")?.toString() ?? "";
-  const year = next.get("year")?.toString() ?? "";
+  const structure = searchParams.get("structure");
+  const year = searchParams.get("year");
   const color = useChartColor();
 
   const body = {

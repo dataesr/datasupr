@@ -29,7 +29,7 @@ export default function Structures() {
           <YearSelector />
         </Col>
       </Row>
-      {(structure) ? (
+      {structure ? (
         <>
           <Row gutters>
             <Col>

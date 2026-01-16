@@ -15,7 +15,7 @@ const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } =
 export default function StructureSelector({ setName }) {
   const [county, setCounty] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
-  const structure = searchParams.get("structure") ?? "";
+  const structure = searchParams.get("structure");
 
   const bodyCounties = {
     size: 0,
@@ -168,9 +168,8 @@ export default function StructureSelector({ setName }) {
 
   const handleStructureChange = (selectedStructure: string) => {
     setName(structures.find((item) => item.id === selectedStructure).label);
-    const next = new URLSearchParams(searchParams);
-    next.set("structure", selectedStructure.split('###')[0]);
-    setSearchParams(next);
+    searchParams.set("structure", selectedStructure.split('###')[0]);
+    setSearchParams(searchParams);
   };
 
   if (structure && structure.length > 0) {
@@ -178,9 +177,8 @@ export default function StructureSelector({ setName }) {
     if (str && str?.label) {
       setName(str.label);
     } else {
-      const next = new URLSearchParams(searchParams);
-      next.delete("structure");
-      setSearchParams(next);
+      searchParams.delete("structure");
+      setSearchParams(searchParams);
     }
   }
 

@@ -4,13 +4,12 @@ import { useSearchParams } from "react-router-dom";
 
 export default function YearSelector() {
   const [searchParams, setSearchParams] = useSearchParams({});
-  const year = searchParams.get("year") ?? "";
+  const year = searchParams.get("year");
   const years = Array.from(Array(10).keys()).map((item) => item + 2015);
 
   const handleYearChange = (year: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set('year', year);
-    setSearchParams(next);
+    searchParams.set("year", year);
+    setSearchParams(searchParams);
   };
 
   return (

@@ -6,8 +6,8 @@ export default function Home() {
     <Container>
       <Row gutters>
         <Col>
-          <Title>Methodology</Title>
-          <div>To Be Done</div>
+          <Title>Méthodologie</Title>
+          <div>Page en construction</div>
         </Col>
       </Row>
     </Container>

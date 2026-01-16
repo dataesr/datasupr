@@ -13,7 +13,7 @@ const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } =
 export default function StructuresSelector() {
   const [county, setCounty] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
-  const selectedStructures: string[] = searchParams.getAll("structure") ?? [];
+  const selectedStructures: string[] = searchParams.getAll("structure");
 
   const bodyCounties = {
     size: 0,
@@ -165,11 +165,10 @@ export default function StructuresSelector() {
     }) || [];
 
   const handleStructureChange = (selectedStructure: string) => {
-    const next = new URLSearchParams(searchParams);
     const selectedStructureId = selectedStructure.split('###')[0];
     if (!selectedStructures.includes(selectedStructureId)) {
-      next.append("structure", selectedStructureId);
-      setSearchParams(next);
+      searchParams.append("structure", selectedStructureId);
+      setSearchParams(searchParams);
     }
   };
 
@@ -209,7 +208,7 @@ export default function StructuresSelector() {
               onChange={handleStructureChange}
               options={structures}
               placeholder="Rechercher une structure..."
-              value={selectedStructures.length > 0 ? selectedStructures[selectedStructures.length - 1] : ""}
+              value={""}
             />
           </div>
           <TagGroup className="fr-mt-1w">

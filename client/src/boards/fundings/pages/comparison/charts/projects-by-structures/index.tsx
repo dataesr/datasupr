@@ -1,4 +1,4 @@
-import { Title } from "@dataesr/dsfr-plus";
+import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -15,9 +15,8 @@ const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = impor
 export default function ProjectsByStructures() {
   const [field, setField] = useState("projects");
   const [searchParams] = useSearchParams();
-  const next = new URLSearchParams(searchParams);
-  const structures = next.getAll("structure");
-  const year = next.get("year")?.toString() ?? "";
+  const structures = searchParams.getAll("structure");
+  const year = searchParams.get("year");
   const color = useChartColor();
 
   const body = {
@@ -135,18 +134,10 @@ export default function ProjectsByStructures() {
       <Title as="h2" look="h6">
         {field === "projects" ? titleProjects : titleBudget}
       </Title>
-      <fieldset className="fr-segmented">
-        <div className="fr-segmented__elements">
-          <div className="fr-segmented__element">
-            <input checked={field === "projects"} id="projects-by-structures-projects" name="projects-by-structures-projects" onChange={() => { }} type="radio" value="projects" />
-            <label className="fr-label" onClick={() => setField("projects")}>Nombre de projets</label>
-          </div>
-          <div className="fr-segmented__element">
-            <input checked={field === "budget"} id="projects-by-structures-budget" name="projects-by-structures-budget" onChange={() => { }} type="radio" value="budget" />
-            <label className="fr-label" onClick={() => setField("budget")}>Montant total</label>
-          </div>
-        </div>
-      </fieldset>
+      <SegmentedControl name="projects-by-structures-segmented">
+        <SegmentedElement checked={field === "projects"} label="Nombre de projets" onClick={() => setField("projects")} value="projects" />
+        <SegmentedElement checked={field === "budget"} label="Montant total" onClick={() => setField("budget")} value="budget" />
+      </SegmentedControl>
       <ChartWrapper config={config} options={options} />
     </div>
   );
