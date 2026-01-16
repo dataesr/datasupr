@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
+import SearchableSelect from "../../../../../../components/searchable-select";
 import { useState } from "react";
 
 import "./styles.scss";
@@ -159,9 +159,7 @@ export default function StructureSelector({ setName }) {
   )
     return <DefaultSkeleton />;
 
-  const counties = dataCounties.aggregations.by_county?.buckets.map(
-    (bucket) => bucket.key
-  );
+  const counties = dataCounties.aggregations.by_county?.buckets.map((bucket) => bucket.key);
   const structures =
     dataStructures.aggregations?.by_structure?.buckets.map((bucket) => {
       const [id, label] = bucket.key.split('###');
@@ -177,7 +175,7 @@ export default function StructureSelector({ setName }) {
 
   if (structure && structure.length > 0) {
     const str = structures.find((item) => item.id === structure);
-    if (str) {
+    if (str && str?.label) {
       setName(str.label);
     } else {
       const next = new URLSearchParams(searchParams);

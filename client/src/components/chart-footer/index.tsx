@@ -83,7 +83,7 @@ export default function ChartFooter({
           <div>
             <b>{getI18nLabel("sources")} </b>
             {sources.map((source, index) => (
-              <>
+              <span key={`graph-footer-source-${index}`}>
                 <Link href={source.url[currentLang] || source.url.fr} target="_blank" rel="noopener noreferrer">
                   {source.label[currentLang] || source.label.fr}
                 </Link>
@@ -91,7 +91,7 @@ export default function ChartFooter({
                   <i>(<b>{getI18nLabel("update")}</b> {source.update.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")})</i>
                 )}
                 {(index < sources.length - 1) && (<span>, </span>)}
-              </>
+              </span>
             ))}
           </div>
         </div>

@@ -25,6 +25,17 @@ export const FundingsSources = [
   },
   {
     label: {
+      en: React.createElement(React.Fragment, null, "PIA Web"),
+      fr: React.createElement(React.Fragment, null, "PIA Web"),
+    },
+    update: new Date("2026-01-09"),
+    url: {
+      en: "https://piaweb.adc.education.fr/",
+      fr: "https://piaweb.adc.education.fr/"
+    }
+  },
+  {
+    label: {
       en: React.createElement(React.Fragment, null, "Horizon Europe"),
       fr: React.createElement(React.Fragment, null, "Horizon Europe"),
     },

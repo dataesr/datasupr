@@ -1,21 +1,22 @@
 import { Col, Row } from "@dataesr/dsfr-plus";
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
 
 export default function YearSelector() {
   const [searchParams, setSearchParams] = useSearchParams({});
+  const next = new URLSearchParams(searchParams);
   const year = searchParams.get("year") ?? "";
   const years = Array.from(Array(10).keys()).map((item) => item + 2015);
   const defaultYear = "2023";
 
-  // If no year in the URL, set the default one
-  if (!year || year.length === 0) {
-    const next = new URLSearchParams(searchParams);
+  useEffect(() => {
+    // If no year in the URL, set the default one
     if (!year || year.length === 0) {
       next.set("year", defaultYear);
+      setSearchParams(next);
     }
-    setSearchParams(next);
-  }
+  }, []);
 
   const handleYearChange = (year: string) => {
     const next = new URLSearchParams(searchParams);

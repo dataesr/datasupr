@@ -157,9 +157,7 @@ export default function StructuresSelector() {
   )
     return <DefaultSkeleton />;
 
-  const counties = dataCounties.aggregations.by_county?.buckets.map(
-    (bucket) => bucket.key
-  );
+  const counties = dataCounties.aggregations.by_county?.buckets.map((bucket) => bucket.key);
   const structures =
     dataStructures.aggregations?.by_structure?.buckets.map((bucket) => {
       const [id, label] = bucket.key.split('###');

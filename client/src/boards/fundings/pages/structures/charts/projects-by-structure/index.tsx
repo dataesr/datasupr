@@ -92,8 +92,8 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
 
   const series = data.aggregations.by_project_type.buckets.map((bucket, index) => ({
     color: getColorFromFunder(bucket.key),
-    name: bucket.key,
     data: [{ x: index, y: field === "projects" ? bucket.unique_projects.value : bucket.sum_budget.value }],
+    name: bucket.key,
   }));
   const categories: string[] = series.map((item: { name: string }) => item.name);
 
