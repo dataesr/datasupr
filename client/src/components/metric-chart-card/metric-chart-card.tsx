@@ -175,18 +175,18 @@ export function MetricChartCard({
     };
   }, [evolutionData, color, title, unit]);
 
-  const trend =
-    evolutionData && evolutionData.length >= 2 && evolutionData[0].value !== 0
-      ? ((evolutionData[evolutionData.length - 1].value -
-          evolutionData[0].value) /
-          evolutionData[0].value) *
-        100
-      : null;
+  // const trend =
+  //   evolutionData && evolutionData.length >= 2 && evolutionData[0].value !== 0
+  //     ? ((evolutionData[evolutionData.length - 1].value -
+  //         evolutionData[0].value) /
+  //         evolutionData[0].value) *
+  //       100
+  //     : null;
 
-  const trendFormatted =
-    trend !== null && isFinite(trend)
-      ? `${trend > 0 ? "+" : ""}${trend.toFixed(1)}%`
-      : null;
+  // const trendFormatted =
+  //   trend !== null && isFinite(trend)
+  //     ? `${trend > 0 ? "+" : ""}${trend.toFixed(1)}%`
+  //     : null;
 
   return (
     <div
@@ -249,7 +249,7 @@ export function MetricChartCard({
             </p>
           )}
         </div>
-        {trendFormatted && (
+        {/* {trendFormatted && (
           <div
             style={{
               position: "absolute",
@@ -271,7 +271,7 @@ export function MetricChartCard({
             {trend && trend > 0 ? "↗" : trend && trend < 0 ? "↘" : "→"}
             {trendFormatted}
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

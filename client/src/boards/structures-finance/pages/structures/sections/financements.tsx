@@ -122,6 +122,83 @@ export function FinancementsSection({
       </div>
 
       <div className="fr-mb-4w">
+        <h3 className="fr-h5 fr-mb-3w">
+          Subvention pour charges de service public
+        </h3>
+        <Row gutters>
+          <Col xs="12" md="3">
+            <MetricChartCard
+              title="SCSP"
+              value={`${euro(data.scsp)} €`}
+              detail={
+                data.is_rce === false
+                  ? "Dotation de l'État (inclut la masse salariale prise en charge par l'État)"
+                  : "Dotation de l'État"
+              }
+              color={CHART_COLORS.secondary}
+              evolutionData={getEvolutionData("scsp")}
+              unit="€"
+            />
+          </Col>
+          <Col xs="12" md="3">
+            <MetricChartCard
+              title="Nombre d'étudiants financés par la SCSP"
+              value={
+                data.scsp_etudiants != null
+                  ? `${data.scsp_etudiants.toLocaleString("fr-FR")} étudiant${
+                      data.scsp_etudiants > 1 ? "s" : ""
+                    }`
+                  : "—"
+              }
+              color={CHART_COLORS.secondary}
+              evolutionData={getEvolutionData("scsp_etudiants")}
+              unit="étudiants"
+            />
+          </Col>
+          <Col xs="12" md="3">
+            <MetricChartCard
+              title="SCSP par étudiant financé"
+              value={`${euro(data.scsp_par_etudiants)} €`}
+              detail={
+                data.scsp_etudiants
+                  ? `Pour ${data.scsp_etudiants.toLocaleString(
+                      "fr-FR"
+                    )} étudiants financés${
+                      data.is_rce === false
+                        ? " (inclut la masse salariale prise en charge par l'État)"
+                        : ""
+                    }`
+                  : data.is_rce === false
+                  ? "Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par l'État)"
+                  : "Ratio SCSP / étudiants financés"
+              }
+              color={CHART_COLORS.secondary}
+              evolutionData={getEvolutionData("scsp_par_etudiants")}
+              unit="€"
+            />
+          </Col>
+          <Col xs="12" md="3">
+            <MetricChartCard
+              title="Part des étudiants financés"
+              value={
+                data.part_scsp_etudiants_effectif_sans_cpge != null
+                  ? `${data.part_scsp_etudiants_effectif_sans_cpge.toFixed(
+                      1
+                    )} %`
+                  : "—"
+              }
+              detail="Part des étudiants SCSP dans l'effectif total"
+              color={CHART_COLORS.secondary}
+              evolutionData={getEvolutionData(
+                "part_scsp_etudiants_effectif_sans_cpge"
+              )}
+              unit="%"
+            />
+          </Col>
+        </Row>
+      </div>
+
+      <div className="fr-mb-4w">
         <h3 className="fr-h5 fr-mb-3w">Détail des ressources propres</h3>
         <Row gutters>
           <Col xs="12" sm="6" md="4">
@@ -199,118 +276,6 @@ export function FinancementsSection({
           selectedYear={selectedYear}
           etablissementName={data?.etablissement_lib}
         />
-      </div>
-
-      <div className="fr-mb-4w">
-        <h3 className="fr-h5 fr-mb-3w">
-          Subvention pour charges de service public
-        </h3>
-        <Row gutters>
-          <Col xs="12" md="4">
-            <MetricChartCard
-              title="SCSP"
-              value={`${euro(data.scsp)} €`}
-              detail={
-                data.is_rce === false
-                  ? "Dotation de l'État (inclut la masse salariale prise en charge par l'État)"
-                  : "Dotation de l'État"
-              }
-              color={CHART_COLORS.secondary}
-              evolutionData={getEvolutionData("scsp")}
-              unit="€"
-            />
-          </Col>
-          <Col xs="12" md="4">
-            <MetricChartCard
-              title="SCSP par étudiant financé"
-              value={`${euro(data.scsp_par_etudiants)} €`}
-              detail={
-                data.scsp_etudiants
-                  ? `Pour ${data.scsp_etudiants.toLocaleString(
-                      "fr-FR"
-                    )} étudiants financés${
-                      data.is_rce === false
-                        ? " (inclut la masse salariale prise en charge par l'État)"
-                        : ""
-                    }`
-                  : data.is_rce === false
-                  ? "Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par l'État)"
-                  : "Ratio SCSP / étudiants financés"
-              }
-              color={CHART_COLORS.secondary}
-              evolutionData={getEvolutionData("scsp_par_etudiants")}
-              unit="€"
-            />
-          </Col>
-          <Col xs="12" md="4">
-            <MetricChartCard
-              title="Part des étudiants financés"
-              value={
-                data.part_scsp_etudiants_effectif_sans_cpge != null
-                  ? `${data.part_scsp_etudiants_effectif_sans_cpge.toFixed(
-                      1
-                    )} %`
-                  : "—"
-              }
-              detail="Part des étudiants SCSP dans l'effectif total"
-              color={CHART_COLORS.secondary}
-              evolutionData={getEvolutionData(
-                "part_scsp_etudiants_effectif_sans_cpge"
-              )}
-              unit="%"
-            />
-          </Col>
-        </Row>
-      </div>
-
-      <div className="fr-mb-4w">
-        <h3 className="fr-h5 fr-mb-3w">Masse salariale</h3>
-        <Row gutters>
-          <Col xs="12" md="4">
-            <MetricChartCard
-              title="Charges de personnel"
-              value={`${euro(data.charges_de_personnel)} €`}
-              detail="Masse salariale totale"
-              color={CHART_COLORS.tertiary}
-              evolutionData={getEvolutionData("charges_de_personnel")}
-              unit="€"
-            />
-          </Col>
-          <Col xs="12" md="4">
-            <MetricChartCard
-              title="Charges / Produits encaissables"
-              value={
-                data.charges_de_personnel_produits_encaissables != null
-                  ? `${data.charges_de_personnel_produits_encaissables.toFixed(
-                      1
-                    )} %`
-                  : "—"
-              }
-              detail="Part des charges de personnel dans les produits"
-              color={CHART_COLORS.tertiary}
-              evolutionData={getEvolutionData(
-                "charges_de_personnel_produits_encaissables"
-              )}
-              unit="%"
-            />
-          </Col>
-          <Col xs="12" md="4">
-            <MetricChartCard
-              title="Taux rémunération permanents"
-              value={
-                data.taux_de_remuneration_des_permanents != null
-                  ? `${data.taux_de_remuneration_des_permanents.toFixed(1)} %`
-                  : "—"
-              }
-              detail="Ratio rémunération des permanents"
-              color={CHART_COLORS.tertiary}
-              evolutionData={getEvolutionData(
-                "taux_de_remuneration_des_permanents"
-              )}
-              unit="%"
-            />
-          </Col>
-        </Row>
       </div>
     </div>
   );

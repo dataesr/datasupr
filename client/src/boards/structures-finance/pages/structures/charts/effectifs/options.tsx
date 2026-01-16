@@ -62,21 +62,21 @@ export const createEffectifsNiveauChartOptions = (
 ): Highcharts.Options => {
   const niveaux = [
     {
-      name: "Licence",
+      name: "1er cycle (cursus L)",
       y: data.effectif_sans_cpge_l || 0,
       color: CHART_COLORS.primary,
       percentage: data.part_effectif_sans_cpge_l || 0,
       has: data.has_effectif_l,
     },
     {
-      name: "Master",
+      name: "2ème cycle (cursus M)",
       y: data.effectif_sans_cpge_m || 0,
       color: CHART_COLORS.secondary,
       percentage: data.part_effectif_sans_cpge_m || 0,
       has: data.has_effectif_m,
     },
     {
-      name: "Doctorat",
+      name: "3ème cycle (cursus D)",
       y: data.effectif_sans_cpge_d || 0,
       color: CHART_COLORS.tertiary,
       percentage: data.part_effectif_sans_cpge_d || 0,
@@ -86,7 +86,13 @@ export const createEffectifsNiveauChartOptions = (
 
   return CreateChartOptions("pie", {
     chart: {
-      height: 400,
+      height: 350,
+    },
+    legend: {
+      enabled: true,
+      layout: "horizontal",
+      align: "center",
+      verticalAlign: "bottom",
     },
     tooltip: {
       useHTML: true,
@@ -113,31 +119,18 @@ export const createEffectifsNiveauChartOptions = (
     },
     plotOptions: {
       pie: {
+        size: "75%",
         allowPointSelect: true,
         cursor: "pointer",
         dataLabels: {
-          enabled: true,
-          format: "<b>{point.name}</b><br>{point.percentage:.1f}%",
-          style: {
-            fontSize: "13px",
-            textOutline: "none",
-          },
+          enabled: false,
         },
         showInLegend: true,
       },
     },
-    legend: {
-      enabled: true,
-      align: "right",
-      verticalAlign: "middle",
-      layout: "vertical",
-      itemStyle: {
-        color: "var(--text-default-grey)",
-      },
-    },
     series: [
       {
-        name: "Effectifs",
+        name: "",
         type: "pie",
         data: niveaux,
       },
@@ -152,19 +145,19 @@ export const createEffectifsSpecifiquesChartOptions = (
 
   const specifiques = [
     {
-      name: "IUT",
+      name: "Formations d'IUT",
       y: data.effectif_sans_cpge_iut || 0,
       has: data.has_effectif_iut,
       color: colors[0],
     },
     {
-      name: "Ingénieur",
+      name: "Formations d'ingénieurs",
       y: data.effectif_sans_cpge_ing || 0,
       has: data.has_effectif_ing,
       color: colors[10],
     },
     {
-      name: "Santé",
+      name: "Formation de santé",
       y: data.effectif_sans_cpge_sante || 0,
       has: data.has_effectif_sante,
       color: colors[7],
@@ -175,11 +168,18 @@ export const createEffectifsSpecifiquesChartOptions = (
   const values = specifiques.map((item) => ({
     y: item.y,
     color: item.color,
+    name: item.name,
   }));
 
   return CreateChartOptions("column", {
     chart: {
-      height: 400,
+      height: 300,
+    },
+    legend: {
+      enabled: true,
+      layout: "horizontal",
+      align: "center",
+      verticalAlign: "bottom",
     },
     xAxis: {
       categories: categories,
@@ -188,10 +188,7 @@ export const createEffectifsSpecifiquesChartOptions = (
     yAxis: {
       min: 0,
       title: {
-        text: "Nombre d'étudiants",
-        style: {
-          fontSize: "13px",
-        },
+        text: "",
       },
       labels: {
         formatter: function () {
@@ -207,7 +204,9 @@ export const createEffectifsSpecifiquesChartOptions = (
       formatter: function () {
         const point = this as any;
         return `<div style="padding:10px">
-               
+                <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
+                  point.name
+                }</div>
                 <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
                   point.y,
                   0,
@@ -221,6 +220,8 @@ export const createEffectifsSpecifiquesChartOptions = (
       column: {
         pointPadding: 0.2,
         borderWidth: 0,
+        groupPadding: 0.1,
+        pointWidth: 40,
         dataLabels: {
           enabled: true,
           formatter: function () {
@@ -240,7 +241,15 @@ export const createEffectifsSpecifiquesChartOptions = (
         type: "column",
         data: values,
         colorByPoint: true,
+        showInLegend: false,
       },
+      ...specifiques.map((item) => ({
+        name: item.name,
+        type: "column" as const,
+        color: item.color,
+        data: [],
+        showInLegend: true,
+      })),
     ],
   });
 };
@@ -252,14 +261,14 @@ export const createEffectifsDisciplinesChartOptions = (
 
   const disciplines = [
     {
-      name: "Droit, Sciences Éco, AES",
+      name: "Droit, sciences économiques, AES",
       y: data.effectif_sans_cpge_dsa || 0,
       percentage: data.part_effectif_sans_cpge_dsa || 0,
       has: data.has_effectif_dsa,
       color: colors[1],
     },
     {
-      name: "Lettres, Langues, SHS",
+      name: "Lettres, langues et sciences humaines",
       y: data.effectif_sans_cpge_llsh || 0,
       percentage: data.part_effectif_sans_cpge_llsh || 0,
       has: data.has_effectif_llsh,
@@ -273,7 +282,7 @@ export const createEffectifsDisciplinesChartOptions = (
       color: colors[4],
     },
     {
-      name: "Sciences et Ingénierie",
+      name: "Sciences et sciences de l'ingénieur",
       y: data.effectif_sans_cpge_si || 0,
       percentage: data.part_effectif_sans_cpge_si || 0,
       has: data.has_effectif_si,
@@ -287,7 +296,7 @@ export const createEffectifsDisciplinesChartOptions = (
       color: colors[6],
     },
     {
-      name: "Santé",
+      name: "Formation de santé",
       y: data.effectif_sans_cpge_sante || 0,
       percentage: data.part_effectif_sans_cpge_sante || 0,
       has: data.has_effectif_sante,
@@ -311,7 +320,13 @@ export const createEffectifsDisciplinesChartOptions = (
 
   return CreateChartOptions("pie", {
     chart: {
-      height: 400,
+      height: 350,
+    },
+    legend: {
+      enabled: true,
+      layout: "horizontal",
+      align: "center",
+      verticalAlign: "bottom",
     },
     tooltip: {
       useHTML: true,
@@ -338,35 +353,18 @@ export const createEffectifsDisciplinesChartOptions = (
     },
     plotOptions: {
       pie: {
+        size: "75%",
         allowPointSelect: true,
         cursor: "pointer",
         dataLabels: {
-          enabled: true,
-          useHTML: true,
-          formatter: function () {
-            const point = this as any;
-            return `<b>${point.name}</b><br>${point.percentage.toFixed(1)}%`;
-          },
-          style: {
-            fontSize: "13px",
-            textOutline: "none",
-          },
+          enabled: false,
         },
         showInLegend: true,
       },
     },
-    legend: {
-      enabled: true,
-      align: "right",
-      verticalAlign: "middle",
-      layout: "vertical",
-      itemStyle: {
-        color: undefined,
-      },
-    },
     series: [
       {
-        name: "Effectifs",
+        name: "",
         type: "pie",
         data: disciplines,
       },
@@ -402,7 +400,13 @@ export const createEffectifsDiplomesChartOptions = (
 
   return CreateChartOptions("pie", {
     chart: {
-      height: 400,
+      height: 350,
+    },
+    legend: {
+      enabled: true,
+      layout: "horizontal",
+      align: "center",
+      verticalAlign: "bottom",
     },
     title: {
       text: undefined,
@@ -413,30 +417,16 @@ export const createEffectifsDiplomesChartOptions = (
     },
     plotOptions: {
       pie: {
-        size: "90%",
+        size: "75%",
         dataLabels: {
-          enabled: true,
-          format: "<b>{point.name}</b><br>{point.percentage:.1f}%",
-          style: {
-            fontSize: "13px",
-            textOutline: "none",
-          },
+          enabled: false,
         },
         showInLegend: true,
       },
     },
-    legend: {
-      enabled: true,
-      align: "right",
-      verticalAlign: "middle",
-      layout: "vertical",
-      itemStyle: {
-        color: undefined,
-      },
-    },
     series: [
       {
-        name: "Effectifs",
+        name: "",
         type: "pie",
         data: diplomes,
       },
@@ -496,11 +486,18 @@ export const createEffectifsDegreesChartOptions = (
   const values = degrees.map((item) => ({
     y: item.y,
     color: item.color,
+    name: item.name,
   }));
 
   return CreateChartOptions("column", {
     chart: {
-      height: 400,
+      height: 300,
+    },
+    legend: {
+      enabled: true,
+      layout: "horizontal",
+      align: "center",
+      verticalAlign: "bottom",
     },
     xAxis: {
       categories: categories,
@@ -514,10 +511,7 @@ export const createEffectifsDegreesChartOptions = (
     yAxis: {
       min: 0,
       title: {
-        text: "Nombre d'étudiants",
-        style: {
-          fontSize: "13px",
-        },
+        text: "",
       },
       labels: {
         formatter: function () {
@@ -534,7 +528,7 @@ export const createEffectifsDegreesChartOptions = (
         const point = this as any;
         return `<div style="padding:10px">
                 <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
-                  point.key
+                  point.name
                 }</div>
                 <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
                   point.y,
@@ -549,6 +543,8 @@ export const createEffectifsDegreesChartOptions = (
       column: {
         pointPadding: 0.2,
         borderWidth: 0,
+        groupPadding: 0.1,
+        pointWidth: 40,
         dataLabels: {
           enabled: true,
           formatter: function () {
@@ -568,7 +564,15 @@ export const createEffectifsDegreesChartOptions = (
         type: "column",
         data: values,
         colorByPoint: true,
+        showInLegend: false,
       },
+      ...degrees.map((item) => ({
+        name: item.name,
+        type: "column" as const,
+        color: item.color,
+        data: [],
+        showInLegend: true,
+      })),
     ],
   });
 };

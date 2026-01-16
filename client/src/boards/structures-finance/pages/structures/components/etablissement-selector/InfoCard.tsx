@@ -81,8 +81,8 @@ export default function InfoCard({ data, onClose }: InfoCardProps) {
               <dd>
                 {data.effectif_sans_cpge.toLocaleString("fr-FR")} étudiants
                 inscrits en {data.anuniv} dont{" "}
-                {data.part_effectif_sans_cpge_dn.toLocaleString("fr-FR")} % dans
-                les diplômes nationaux
+                {data.part_effectif_sans_cpge_dn.toFixed(1)} % dans les diplômes
+                nationaux
               </dd>
             </div>
           )}
@@ -93,17 +93,17 @@ export default function InfoCard({ data, onClose }: InfoCardProps) {
           <div className="info-card__badges">
             {data.has_effectif_l && (
               <Badge color="blue-cumulus" size="sm">
-                1er cycle
+                1er cycle L
               </Badge>
             )}
             {data.has_effectif_m && (
               <Badge color="green-archipel" size="sm">
-                2ème cycle
+                2ème cycle M
               </Badge>
             )}
             {data.has_effectif_d && (
               <Badge color="pink-tuile" size="sm">
-                3ème cycle
+                3ème cycle D
               </Badge>
             )}
 
@@ -156,7 +156,7 @@ export default function InfoCard({ data, onClose }: InfoCardProps) {
             )}
             {data.has_effectif_si && (
               <Badge color="orange-terre-battue" size="sm">
-                Sciences et Ingénierie
+                Sciences et sciences de l'ingénieur
               </Badge>
             )}
             {data.has_effectif_staps && (

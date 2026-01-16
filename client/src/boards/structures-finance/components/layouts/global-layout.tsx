@@ -44,7 +44,10 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <div className="fr-header__logo">
-                    <a href="/" title="Accueil - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
+                    <a
+                      href="/"
+                      title="Accueil - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)"
+                    >
                       <p className="fr-logo">
                         Ministère
                         <br />
@@ -75,30 +78,53 @@ export default function GlobalLayout() {
             </div>
           </div>
         </div>
-        <div className="fr-header__menu fr-modal" id="modal-header" aria-labelledby="button-header">
+        <div
+          className="fr-header__menu fr-modal"
+          id="modal-header"
+          aria-labelledby="button-header"
+        >
           <div className="fr-container">
-            <button aria-controls="modal-header" title="Fermer" type="button" id="button-2168" className="fr-btn--close fr-btn">
+            <button
+              aria-controls="modal-header"
+              title="Fermer"
+              type="button"
+              id="button-2168"
+              className="fr-btn--close fr-btn"
+            >
               {getI18nLabel("close")}
             </button>
             <div className="fr-header__menu-links"></div>
-            <nav className="fr-nav" role="navigation" aria-label="Menu principal">
+            <nav
+              className="fr-nav"
+              role="navigation"
+              aria-label="Menu principal"
+            >
               <ul className="fr-nav__list">
                 <li className="fr-nav__item">
                   <Link
                     to="/structures-finance/accueil"
                     target="_self"
-                    {...(pathname === "/structures-finance/accueil" && { "aria-current": "page" })}
+                    {...(pathname === "/structures-finance/accueil" && {
+                      "aria-current": "page",
+                    })}
                     className="fr-nav__link"
                   >
-                    <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
+                    <span
+                      className="fr-icon-home-4-line fr-mr-1w"
+                      aria-hidden="true"
+                    />
                     {getI18nLabel("home")}
                   </Link>
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/structures-finance/etablissements?${filtersParams}`}
+                    to={`/structures-finance/etablissements?${filtersParams}${
+                      filtersParams ? "&" : ""
+                    }section=ressources`}
                     target="_self"
-                    {...(is("/structures-finance/etablissements") && { "aria-current": "page" })}
+                    {...(is("/structures-finance/etablissements") && {
+                      "aria-current": "page",
+                    })}
                     className="fr-nav__link"
                   >
                     Vue par établissements
@@ -108,13 +134,14 @@ export default function GlobalLayout() {
                   <Link
                     to={`/structures-finance/national?${filtersParams}`}
                     target="_self"
-                    {...(is("/structures-finance/national") && { "aria-current": "page" })}
+                    {...(is("/structures-finance/national") && {
+                      "aria-current": "page",
+                    })}
                     className="fr-nav__link"
                   >
                     Vue nationale
                   </Link>
                 </li>
-                
               </ul>
             </nav>
           </div>

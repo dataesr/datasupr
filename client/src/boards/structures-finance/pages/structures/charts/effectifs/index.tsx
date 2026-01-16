@@ -1,6 +1,6 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import Highcharts from "highcharts";
-import { Button } from "@dataesr/dsfr-plus";
+import { Row, Col } from "@dataesr/dsfr-plus";
 import {
   createEffectifsNiveauChartOptions,
   createEffectifsSpecifiquesChartOptions,
@@ -16,7 +16,6 @@ import {
   RenderDataDegrees,
 } from "./render-data";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { CHART_COLORS } from "../../../../constants/colors";
 
 const num = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
@@ -75,17 +74,6 @@ export default function EffectifsChart({
     );
   }, [data]);
 
-  const defaultViewMode = useMemo(() => {
-    if (hasCursusData) return "cursus";
-    if (hasSpecifiquesData) return "specifiques";
-    if (hasDisciplinesData) return "disciplines";
-    return "cursus";
-  }, [hasCursusData, hasSpecifiquesData, hasDisciplinesData]);
-
-  const [viewMode, setViewMode] = useState<
-    "cursus" | "specifiques" | "disciplines" | "diplomes" | "degrees"
-  >(defaultViewMode);
-
   const cursusOptions = useMemo(() => {
     if (!data) return {} as Highcharts.Options;
     return createEffectifsNiveauChartOptions(data);
@@ -120,15 +108,9 @@ export default function EffectifsChart({
         idQuery: "effectifs-niveau",
         title: {
           className: "fr-mt-0w",
-          look: "h5",
-          size: "h3",
-          fr: (
-            <>
-              Répartition des effectifs par niveau
-              {etablissementName && ` — ${etablissementName}`}
-              {`${data.anuniv ? ` — ${data.anuniv}` : ""}`}
-            </>
-          ),
+          look: "h6",
+          size: "h5",
+          fr: "Par cursus",
         },
         comment: {
           fr: (
@@ -173,15 +155,9 @@ export default function EffectifsChart({
         idQuery: "effectifs-specifiques",
         title: {
           className: "fr-mt-0w",
-          look: "h5",
-          size: "h3",
-          fr: (
-            <>
-              Répartition par filières spécifiques
-              {etablissementName && ` — ${etablissementName}`}
-              {`${data.anuniv ? ` — ${data.anuniv}` : ""}`}
-            </>
-          ),
+          look: "h6",
+          size: "h5",
+          fr: "Filières spécifiques",
         },
         comment: {
           fr: (
@@ -223,15 +199,9 @@ export default function EffectifsChart({
         idQuery: "effectifs-disciplines",
         title: {
           className: "fr-mt-0w",
-          look: "h5",
-          size: "h3",
-          fr: (
-            <>
-              Répartition par disciplines
-              {etablissementName && ` — ${etablissementName}`}
-              {`${data.anuniv ? ` — ${data.anuniv}` : ""}`}
-            </>
-          ),
+          look: "h6",
+          size: "h5",
+          fr: "Par disciplines",
         },
         comment: {
           fr: (
@@ -277,15 +247,9 @@ export default function EffectifsChart({
         idQuery: "effectifs-diplomes",
         title: {
           className: "fr-mt-0w",
-          look: "h5",
-          size: "h3",
-          fr: (
-            <>
-              Répartition par types de formation
-              {etablissementName && ` — ${etablissementName}`}
-              {`${data.anuniv ? ` — ${data.anuniv}` : ""}`}
-            </>
-          ),
+          look: "h6",
+          size: "h5",
+          fr: "Types de formation",
         },
         comment: {
           fr: (
@@ -332,15 +296,9 @@ export default function EffectifsChart({
         idQuery: "effectifs-degrees",
         title: {
           className: "fr-mt-0w",
-          look: "h5",
-          size: "h3",
-          fr: (
-            <>
-              Répartition par degrés d'étude
-              {etablissementName && ` — ${etablissementName}`}
-              {`${data.anuniv ? ` — ${data.anuniv}` : ""}`}
-            </>
-          ),
+          look: "h6",
+          size: "h5",
+          fr: "Degrés d'étude",
         },
         comment: {
           fr: (
@@ -368,72 +326,45 @@ export default function EffectifsChart({
 
   return (
     <div>
-      <div
-        className="fr-mb-2w"
-        style={{ display: "flex", gap: "1rem", alignItems: "center" }}
-      >
+      <div className="fr-mb-4w">
         <h3
-          className="fr-h5 fr-mb-0"
-          style={{
-            borderLeft: `4px solid ${CHART_COLORS.tertiary}`,
-            paddingLeft: "1rem",
-            flex: 1,
-          }}
-        ></h3>
-        <div className="fr-btns-group fr-btns-group--sm fr-btns-group--inline">
-          {hasCursusData && (
-            <Button
-              size="sm"
-              variant={viewMode === "cursus" ? "primary" : "secondary"}
-              onClick={() => setViewMode("cursus")}
-            >
-              Par cursus
-            </Button>
-          )}
-          {hasSpecifiquesData && (
-            <Button
-              size="sm"
-              variant={viewMode === "specifiques" ? "primary" : "secondary"}
-              onClick={() => setViewMode("specifiques")}
-            >
-              Filières spécifiques
-            </Button>
-          )}
-          {hasDisciplinesData && (
-            <Button
-              size="sm"
-              variant={viewMode === "disciplines" ? "primary" : "secondary"}
-              onClick={() => setViewMode("disciplines")}
-            >
-              Par disciplines
-            </Button>
-          )}
-          {hasDiplomesData && (
-            <Button
-              size="sm"
-              variant={viewMode === "diplomes" ? "primary" : "secondary"}
-              onClick={() => setViewMode("diplomes")}
-            >
-              Types de diplômes
-            </Button>
-          )}
-          {hasDegreesData && (
-            <Button
-              size="sm"
-              variant={viewMode === "degrees" ? "primary" : "secondary"}
-              onClick={() => setViewMode("degrees")}
-            >
-              Degrés d'étude
-            </Button>
-          )}
-        </div>
+          className="fr-h4"
+          style={{ borderLeft: "4px solid #000091", paddingLeft: "1rem" }}
+        >
+          Répartition des effectifs
+          {etablissementName && ` — ${etablissementName}`}
+          {data.anuniv && ` — ${data.anuniv}`}
+        </h3>
       </div>
-
-      {viewMode === "cursus" && renderNiveauChart()}
-      {viewMode === "specifiques" && renderSpecifiquesChart()}
-      {viewMode === "disciplines" && renderDisciplinesChart()}
-      {viewMode === "diplomes" && renderDiplomesChart()}
-      {viewMode === "degrees" && renderDegreesChart()}
+      <Row gutters>
+        {hasCursusData && (
+          <Col xs="12" lg="4">
+            {renderNiveauChart()}
+          </Col>
+        )}
+        {hasDisciplinesData && (
+          <Col xs="12" lg="4">
+            {renderDisciplinesChart()}
+          </Col>
+        )}
+        {hasDiplomesData && (
+          <Col xs="12" lg="4">
+            {renderDiplomesChart()}
+          </Col>
+        )}
+      </Row>
+      <Row gutters className="fr-mt-3w">
+        {hasSpecifiquesData && (
+          <Col xs="12" md="6">
+            {renderSpecifiquesChart()}
+          </Col>
+        )}
+        {hasDegreesData && (
+          <Col xs="12" md="6">
+            {renderDegreesChart()}
+          </Col>
+        )}
+      </Row>
     </div>
   );
 }
