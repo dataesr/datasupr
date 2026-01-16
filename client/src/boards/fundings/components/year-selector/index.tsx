@@ -13,25 +13,23 @@ export default function YearSelector() {
   };
 
   return (
-    <div>
-      <Row gutters>
-        <Col xs="4">
-          <label className="fr-label">Année</label>
-          <select
-            className="fr-select"
-            id="fundings-year"
-            name="fundings-year"
-            onChange={(e) => handleYearChange(e.target.value)}
-            value={year}
-          >
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </Col>
-      </Row>
-    </div>
+    <Row gutters>
+      <Col xs="4">
+        <label className="fr-label">Année</label>
+        <select
+          className="fr-select"
+          id="fundings-year"
+          name="fundings-year"
+          onChange={(e) => handleYearChange(e.target.value)}
+          value={year}
+        >
+          {years.map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </Col>
+    </Row>
   );
 }

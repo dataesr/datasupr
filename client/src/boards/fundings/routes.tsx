@@ -3,6 +3,7 @@ import { Navigate, Route, Routes, useSearchParams } from "react-router-dom";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 import Comparison from "./pages/comparison";
+import SidemenuComparison from "./pages/comparison/components/sidemenu";
 import Home from "./pages/home";
 import Structures from "./pages/structures";
 import SidemenuStructures from "./pages/structures/components/sidemenu";
@@ -36,7 +37,9 @@ export default function FundingsRoutes() {
         <Route element={<SidemenuStructures />}>
           <Route path="structures" element={<RouteWithTitle titleKey="structures" element={<Structures />} />} />
         </Route>
-        <Route path="comparison" element={<RouteWithTitle titleKey="comparison" element={<Comparison />} />} />
+        <Route element={<SidemenuComparison />}>
+          <Route path="comparison" element={<RouteWithTitle titleKey="comparison" element={<Comparison />} />} />
+        </Route>
       </Route>
     </Routes>
   );

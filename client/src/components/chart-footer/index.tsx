@@ -88,7 +88,10 @@ export default function ChartFooter({
                   {source.label[currentLang] || source.label.fr}
                 </Link>
                 {(source?.update) && (
-                  <i>(<b>{getI18nLabel("update")}</b> {source.update.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")})</i>
+                  <>
+                    {' '}
+                    <i>(<b>{getI18nLabel("update")}</b> {source.update.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")})</i>
+                  </>
                 )}
                 {(index < sources.length - 1) && (<span>, </span>)}
               </span>

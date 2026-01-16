@@ -81,9 +81,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  if (isLoading || !data) return <DefaultSkeleton />;
-
-  const series = data.aggregations.by_project_type.buckets.map((bucket) =>
+  const series = (data?.aggregations?.by_project_type?.buckets ?? []).map((bucket) =>
     [bucket.key, bucket.sum_budget.value, bucket.doc_count]
   );
   const colors = series.map((item) => getColorFromFunder(item[0]));
@@ -101,7 +99,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     chart: { height: '600px', type: 'variwide' },
     tooltip: {
       formatter: function (this: any) {
-        return `<b>${this.z}</b> projets pour un montant total de <b>${formatCompactNumber(this.y)} €</b> ont débuté en <b>${year}</b> grâce au financement de <b>${this.name}</b> avec la participation de <b>${name}</b>`;
+        return `<b>${this.z}</b> projets pour un montant total de <b>${formatCompactNumber(this.y)} €</b> ont débuté en <b>${year}</b> grâce au financement de <b>${this.name}</b> auxquels prend part <b>${name}</b>`;
       }
     },
     legend: { enabled: true },
@@ -158,7 +156,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
 
   return (
     <div className={`chart-container chart-container--${color}`} id="overview-by-structure">
-      <ChartWrapper config={config} options={options} />
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} options={options} />}
     </div>
   );
 }

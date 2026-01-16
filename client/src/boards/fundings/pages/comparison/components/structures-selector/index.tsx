@@ -149,20 +149,16 @@ export default function StructuresSelector() {
       ).then((response) => response.json()),
   });
 
-  if (
-    isLoadingCounties ||
-    !dataCounties ||
-    isLoadingStructures ||
-    !dataStructures
-  )
-    return <DefaultSkeleton />;
-
-  const counties = dataCounties.aggregations.by_county?.buckets.map((bucket) => bucket.key);
+  const counties = (dataCounties?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket.key);
   const structures =
-    dataStructures.aggregations?.by_structure?.buckets.map((bucket) => {
+    (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const [id, label] = bucket.key.split('###');
       return ({ id, label });
     }) || [];
+  const structures2 = (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
+    const [id, label] = bucket.key.split('###');
+    return ({ id, label });
+  }) || [];
 
   const handleStructureChange = (selectedStructure: string) => {
     const selectedStructureId = selectedStructure.split('###')[0];
@@ -178,9 +174,9 @@ export default function StructuresSelector() {
   };
 
   return (
-    <>
-      <Row gutters>
-        <Col xs="12" sm="6" md="4">
+    <Row gutters>
+      <Col xs="12" sm="6" md="4">
+        {isLoadingCounties ? <DefaultSkeleton height="70px" /> : (
           <div className="fr-select-group">
             <label className="fr-label">Région</label>
             <select
@@ -199,27 +195,31 @@ export default function StructuresSelector() {
               ))}
             </select>
           </div>
-        </Col>
+        )}
+      </Col>
 
-        <Col xs="12" sm="6" md="8">
-          <label className="fr-label">Structure</label>
-          <div className="fr-mt-1w">
-            <SearchableSelect
-              onChange={handleStructureChange}
-              options={structures}
-              placeholder="Rechercher une structure..."
-              value={""}
-            />
-          </div>
-          <TagGroup className="fr-mt-1w">
-            {selectedStructures.map((selectedStructure) => (
-              <DismissibleTag key={selectedStructure} onClick={() => handleTagClick(selectedStructure)}>
-                {structures.find((item) => item.id === selectedStructure)?.label}
-              </DismissibleTag>
-            ))}
-          </TagGroup>
-        </Col>
-      </Row>
-    </>
+      <Col xs="12" sm="6" md="8">
+        {isLoadingStructures ? <DefaultSkeleton height="70px" /> : (
+          <>
+            <label className="fr-label">Structure</label>
+            <div className="fr-mt-1w">
+              <SearchableSelect
+                onChange={handleStructureChange}
+                options={structures}
+                placeholder="Rechercher une structure..."
+                value={""}
+              />
+            </div>
+            <TagGroup className="fr-mt-1w">
+              {selectedStructures.map((selectedStructure) => (
+                <DismissibleTag key={selectedStructure} onClick={() => handleTagClick(selectedStructure)}>
+                  {structures2.find((item) => item.id === selectedStructure)?.label}
+                </DismissibleTag>
+              ))}
+            </TagGroup>
+          </>
+        )}
+      </Col>
+    </Row>
   );
 }

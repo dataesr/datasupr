@@ -120,10 +120,10 @@ export default function GlobalLayout({ languageSelector = false }) {
                   <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
                   {getI18nLabel("home")}
                 </Link>
-                <Link current={is("/fundings/structures")} href="/fundings/structures">
+                <Link current={is("/fundings/structures")} href={`/fundings/structures?${searchParams}`}>
                   {getI18nLabel("structures")}
                 </Link>
-                <Link current={is("/fundings/comparison")} href="/fundings/comparison">
+                <Link current={is("/fundings/comparison")} href={`/fundings/comparison?${searchParams}`}>
                   {getI18nLabel("comparison")}
                 </Link>
               </Nav>

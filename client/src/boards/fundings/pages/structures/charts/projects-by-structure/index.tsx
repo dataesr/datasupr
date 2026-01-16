@@ -87,9 +87,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  if (isLoading || !data) return <DefaultSkeleton />;
-
-  const series = data.aggregations.by_project_type.buckets.map((bucket, index) => ({
+  const series = (data?.aggregations?.by_project_type?.buckets ?? []).map((bucket, index) => ({
     color: getColorFromFunder(bucket.key),
     data: [{ x: index, y: field === "projects" ? bucket.unique_projects.value : bucket.sum_budget.value }],
     name: bucket.key,
@@ -101,7 +99,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   const axisProjects = "Nombre de projets";
   const axisBudget = "Montant total";
   const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté en <b>${year}</b> grâce au financement de <b>${this.series.name}</b> avec la participation de <b>${name}</b>`;
+    return `<b>${this.y}</b> projets ont débuté en <b>${year}</b> grâce au financement de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
   };
   const tooltipBudget = function (this: any) {
     return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés en <b>${year}</b> auxquels prend part <b>${name}</b>`;
@@ -128,7 +126,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         <SegmentedElement checked={field === "projects"} label="Nombre de projets" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montant total" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      <ChartWrapper config={config} options={options} />
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} options={options} />}
     </div>
   );
 }

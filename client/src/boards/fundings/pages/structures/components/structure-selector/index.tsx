@@ -6,8 +6,6 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import SearchableSelect from "../../../../../../components/searchable-select";
 import { useState } from "react";
 
-import "./styles.scss";
-
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } =
   import.meta.env;
 
@@ -151,17 +149,9 @@ export default function StructureSelector({ setName }) {
       ).then((response) => response.json()),
   });
 
-  if (
-    isLoadingCounties ||
-    !dataCounties ||
-    isLoadingStructures ||
-    !dataStructures
-  )
-    return <DefaultSkeleton />;
-
-  const counties = dataCounties.aggregations.by_county?.buckets.map((bucket) => bucket.key);
+  const counties = (dataCounties?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket.key);
   const structures =
-    dataStructures.aggregations?.by_structure?.buckets.map((bucket) => {
+    (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const [id, label] = bucket.key.split('###');
       return ({ id, label });
     }) || [];
@@ -176,16 +166,13 @@ export default function StructureSelector({ setName }) {
     const str = structures.find((item) => item.id === structure);
     if (str && str?.label) {
       setName(str.label);
-    } else {
-      searchParams.delete("structure");
-      setSearchParams(searchParams);
     }
   }
 
   return (
-    <>
-      <Row gutters>
-        <Col xs="12" sm="6" md="4">
+    <Row gutters>
+      <Col xs="12" sm="6" md="4">
+        {isLoadingCounties ? <DefaultSkeleton height="70px" /> : (
           <div className="fr-select-group">
             <label className="fr-label">Région</label>
             <select
@@ -204,20 +191,24 @@ export default function StructureSelector({ setName }) {
               ))}
             </select>
           </div>
-        </Col>
+        )}
+      </Col>
 
-        <Col xs="12" sm="6" md="8">
-          <label className="fr-label">Structure</label>
-          <div className="fr-mt-1w">
-            <SearchableSelect
-              onChange={handleStructureChange}
-              options={structures}
-              placeholder="Rechercher une structure..."
-              value={structure}
-            />
-          </div>
-        </Col>
-      </Row>
-    </>
+      <Col xs="12" sm="6" md="8">
+        {isLoadingStructures ? <DefaultSkeleton height="70px" /> : (
+          <>
+            <label className="fr-label">Structure</label>
+            <div className="fr-mt-1w">
+              <SearchableSelect
+                onChange={handleStructureChange}
+                options={structures}
+                placeholder="Rechercher une structure..."
+                value={structure}
+              />
+            </div>
+          </>
+        )}
+      </Col>
+    </Row>
   );
 }

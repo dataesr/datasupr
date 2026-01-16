@@ -94,11 +94,10 @@ export default function ProjectsByStructures() {
       }).then((response) => response.json()),
   });
 
-  if (isLoading || !data) return <DefaultSkeleton />;
-
-  let funders = data.aggregations.by_structure.buckets.map((bucket) => bucket.by_project_type.buckets.map((bucket2) => bucket2.key)).flat();
+  // TODO: Can be improve to avoid to parse data aggregations multiple times
+  let funders = (data?.aggregations?.by_structure?.buckets ?? []).map((bucket) => bucket.by_project_type.buckets.map((bucket2) => bucket2.key)).flat();
   funders = [...new Set(funders)].reverse();
-  const categories = data.aggregations.by_structure.buckets.map((item) => item.key.split('###')[1]);
+  const categories = (data?.aggregations?.by_structure?.buckets ?? []).map((item) => item.key.split('###')[1]);
   const series = funders.map((funder) => ({
     color: getColorFromFunder(funder),
     data: data.aggregations.by_structure.buckets.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
@@ -110,10 +109,10 @@ export default function ProjectsByStructures() {
   const axisProjects = "Nombre de projets";
   const axisBudget = "Montant total";
   const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté en <b>${year}</b> grâce au financement de <b>${this.series.name}</b> avec la participation de <b>${this.value}</b>`;
+    return `<b>${this.y}</b> projets ont débuté en <b>${year}</b> grâce au financement de <b>${this.series.name}</b> auxquels prend part <b>${categories[this.x]}</b>`;
   };
   const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés en <b>${year}</b> auxquels prend part <b>${this.x}</b>`;
+    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés en <b>${year}</b> auxquels prend part <b>${categories[this.x]}</b>`;
   };
   const config = {
     id: "projectsByStructures",
@@ -138,7 +137,7 @@ export default function ProjectsByStructures() {
         <SegmentedElement checked={field === "projects"} label="Nombre de projets" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montant total" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      <ChartWrapper config={config} options={options} />
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} options={options} />}
     </div>
   );
 }
