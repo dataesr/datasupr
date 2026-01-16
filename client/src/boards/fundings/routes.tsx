@@ -41,8 +41,8 @@ export default function FundingsRoutes() {
         <Route element={<SidemenuComparison />}>
           <Route path="comparison" element={<RouteWithTitle titleKey="comparison" element={<Comparison />} />} />
         </Route>
-        <Route path="*" element={<NotFoundPage />} />
       </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
