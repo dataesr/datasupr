@@ -122,7 +122,10 @@ export default function ProjectsByStructures() {
   const options: object = {
     ...getGeneralOptions('', [], '', field === "projects" ? axisProjects : axisBudget),
     legend: { reversed: true },
-    plotOptions: { series: { dataLabels: { enabled: true }, stacking: "normal" } },
+    plotOptions: { series: { dataLabels: {
+      enabled: true,
+      formatter: function(this: any) { return field === "projects" ? this.y : `${formatCompactNumber(this.y)} €`},
+    }, stacking: "normal" } },
     series,
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
     xAxis: { categories },
