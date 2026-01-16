@@ -1,4 +1,4 @@
-import { Col, Row } from "@dataesr/dsfr-plus";
+import { Col, DismissibleTag, Row, TagGroup } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
@@ -13,7 +13,7 @@ const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } =
 export default function StructuresSelector() {
   const [county, setCounty] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
-  const structure = searchParams.get("structure") ?? "";
+  const selectedStructures: string[] = searchParams.getAll("structure") ?? [];
 
   const bodyCounties = {
     size: 0,
@@ -165,22 +165,18 @@ export default function StructuresSelector() {
     }) || [];
 
   const handleStructureChange = (selectedStructure: string) => {
-    // setName(structures.find((item) => item.id === selectedStructure).label);
     const next = new URLSearchParams(searchParams);
-    next.set("structure", selectedStructure.split('###')[0]);
-    setSearchParams(next);
+    const selectedStructureId = selectedStructure.split('###')[0];
+    if (!selectedStructures.includes(selectedStructureId)) {
+      next.append("structure", selectedStructureId);
+      setSearchParams(next);
+    }
   };
 
-  // if (structure && structure.length > 0) {
-  //   // const str = structures.find((item) => item.id === structure);
-  //   // if (str) {
-  //   //   setName(str.label);
-  //   // } else {
-  //   //   const next = new URLSearchParams(searchParams);
-  //   //   next.delete("structure");
-  //   //   setSearchParams(next);
-  //   // }
-  // }
+  const handleTagClick = (selectedStructure: string) => {
+    searchParams.delete("structure", selectedStructure);
+    setSearchParams(searchParams);
+  };
 
   return (
     <>
@@ -213,9 +209,16 @@ export default function StructuresSelector() {
               onChange={handleStructureChange}
               options={structures}
               placeholder="Rechercher une structure..."
-              value={structure}
+              value={selectedStructures.length > 0 ? selectedStructures[selectedStructures.length - 1] : ""}
             />
           </div>
+          <TagGroup className="fr-mt-1w">
+            {selectedStructures.map((selectedStructure) => (
+              <DismissibleTag key={selectedStructure} onClick={() => handleTagClick(selectedStructure)}>
+                {structures.find((item) => item.id === selectedStructure)?.label}
+              </DismissibleTag>
+            ))}
+          </TagGroup>
         </Col>
       </Row>
     </>

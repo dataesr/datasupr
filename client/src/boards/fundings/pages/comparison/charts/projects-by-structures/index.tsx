@@ -16,7 +16,7 @@ export default function ProjectsByStructures() {
   const [field, setField] = useState("projects");
   const [searchParams] = useSearchParams();
   const next = new URLSearchParams(searchParams);
-  const structures = next.getAll("structures");
+  const structures = next.getAll("structure");
   const year = next.get("year")?.toString() ?? "";
   const color = useChartColor();
 
@@ -97,7 +97,6 @@ export default function ProjectsByStructures() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  console.log(data);
   let funders = data.aggregations.by_structure.buckets.map((bucket) => bucket.by_project_type.buckets.map((bucket2) => bucket2.key)).flat();
   funders = [...new Set(funders)].reverse();
   const categories = data.aggregations.by_structure.buckets.map((item) => item.key.split('###')[1]);

@@ -1,5 +1,5 @@
 import { Button, Container, FastAccess, Header, Link, Logo, Nav, Service } from "@dataesr/dsfr-plus";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import SwitchTheme from "../../../../components/switch-theme";
@@ -12,6 +12,13 @@ export default function GlobalLayout({ languageSelector = false }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
   const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!searchParams.get("year")) {
+      searchParams.set("year", "2023");
+      setSearchParams(searchParams);
+    }
+  }, [searchParams, setSearchParams]);
 
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
@@ -116,7 +123,7 @@ export default function GlobalLayout({ languageSelector = false }) {
                 <Link current={is("/fundings/structures")} href="/fundings/structures">
                   {getI18nLabel("structures")}
                 </Link>
-                <Link current={is("/fundings/comparison")} href="/fundings/comparison?year=2023&structures=8k41p&structures=E1Wdn&structures=n2X5f">
+                <Link current={is("/fundings/comparison")} href="/fundings/comparison">
                   {getI18nLabel("comparison")}
                 </Link>
               </Nav>

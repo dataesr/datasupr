@@ -3,21 +3,20 @@ import { useSearchParams } from "react-router-dom";
 
 import YearSelector from "../../components/year-selector";
 import ProjectsByStructures from "./charts/projects-by-structures";
-// import StructuresSelector from "./components/structures-selector";
+import StructuresSelector from "./components/structures-selector";
 
 
 export default function Comparison() {
   const [searchParams] = useSearchParams({});
-  const structures = searchParams.getAll("structures");
-  console.log(structures);
+  const structures = searchParams.getAll("structure");
 
   return (
     <Container className="board-fundings">
-      {/* <Row gutters>
+      <Row gutters>
         <Col>
           <StructuresSelector />
         </Col>
-      </Row> */}
+      </Row>
       <Row gutters>
         <Col>
           <YearSelector />
