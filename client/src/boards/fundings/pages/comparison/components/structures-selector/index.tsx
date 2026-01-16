@@ -113,6 +113,7 @@ export default function StructuresSelector() {
       },
     },
   };
+  const bodyStructuresAll = JSON.parse(JSON.stringify(bodyStructures));
   if (county && county !== '*') {
     bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": county } });
   }
@@ -149,13 +150,29 @@ export default function StructuresSelector() {
       ).then((response) => response.json()),
   });
 
+  const { data: dataStructuresAll, isLoading: isLoadingStructuresAll } = useQuery({
+    queryKey: ["fundings-structures"],
+    queryFn: () =>
+      fetch(
+        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        {
+          body: JSON.stringify(bodyStructuresAll),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          method: "POST",
+        }
+      ).then((response) => response.json()),
+  });
+
   const counties = (dataCounties?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket.key);
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const [id, label] = bucket.key.split('###');
       return ({ id, label });
     }) || [];
-  const structures2 = (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
+  const structuresAll = (dataStructuresAll?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
     const [id, label] = bucket.key.split('###');
     return ({ id, label });
   }) || [];
@@ -199,7 +216,7 @@ export default function StructuresSelector() {
       </Col>
 
       <Col xs="12" sm="6" md="8">
-        {isLoadingStructures ? <DefaultSkeleton height="70px" /> : (
+        {(isLoadingStructures || isLoadingStructuresAll) ? <DefaultSkeleton height="70px" /> : (
           <>
             <label className="fr-label">Structure</label>
             <div className="fr-mt-1w">
@@ -213,7 +230,7 @@ export default function StructuresSelector() {
             <TagGroup className="fr-mt-1w">
               {selectedStructures.map((selectedStructure) => (
                 <DismissibleTag key={selectedStructure} onClick={() => handleTagClick(selectedStructure)}>
-                  {structures2.find((item) => item.id === selectedStructure)?.label}
+                  {structuresAll.find((item) => item.id === selectedStructure)?.label}
                 </DismissibleTag>
               ))}
             </TagGroup>
