@@ -147,7 +147,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
       <Title as="h2" look="h6">
         {field === "projects" ? titleProjects : titleBudget}
       </Title>
-      <SegmentedControl name="projects-by-structures-segmented">
+      <SegmentedControl name="projects-over-time-by-structure-segmented">
         <SegmentedElement checked={field === "projects"} label="Nombre de projets" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montant total" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>

@@ -122,7 +122,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       <Title as="h2" look="h6">
         {field === "projects" ? titleProjects : titleBudget}
       </Title>
-      <SegmentedControl name="projects-by-structures-segmented">
+      <SegmentedControl name="projects-by-structure-segmented">
         <SegmentedElement checked={field === "projects"} label="Nombre de projets" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montant total" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
