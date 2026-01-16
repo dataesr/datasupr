@@ -3,6 +3,10 @@
     "en": "Accessibility : non/partially/totally compliant",
     "fr": "Accessibilité : non/partiellement/totalement conforme"
   },
+  "close": {
+    "fr": "Fermer",
+    "en": "Close"
+  },
   "comparison": {
     "en": "Comparison",
     "fr": "Comparaison"
