@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import AdminRoutes from "./boards/admin/routes.tsx";
 import AtlasRoutes from "./boards/atlas/routes.tsx";
@@ -31,6 +31,8 @@ export default function Router() {
       />
       <Route path="/teds/*" element={<TedsRoutes />} />
       <Route path="/graduates/*" element={<GraduatesRoutes />} />
+      <Route path="/template/*" element={<TemplateRoutes />} />
+      <Route path="/fundings" element={<Navigate to="/fundings/home" replace />} />
       <Route path="/fundings/*" element={<FundingsRoutes />} />
       <Route path="/cookies" element={<CookiePolicyPage />} />
       <Route path="/template/*" element={<TemplateRoutes />} />

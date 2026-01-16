@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes, useSearchParams } from "react-router-dom";
 
+import NotFoundPage from "../../components/not-found-page.tsx";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 import Comparison from "./pages/comparison";
@@ -31,7 +32,7 @@ const RouteWithTitle = ({ titleKey, element }) => {
 export default function FundingsRoutes() {
   return (
     <Routes>
-      <Route element={<GlobalLayout languageSelector />}>
+      <Route element={<GlobalLayout />}>
         <Route index element={<Navigate to="home" replace />} />
         <Route path="home" element={<RouteWithTitle titleKey="home" element={<Home />} />} />
         <Route element={<SidemenuStructures />}>
@@ -40,6 +41,7 @@ export default function FundingsRoutes() {
         <Route element={<SidemenuComparison />}>
           <Route path="comparison" element={<RouteWithTitle titleKey="comparison" element={<Comparison />} />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );
