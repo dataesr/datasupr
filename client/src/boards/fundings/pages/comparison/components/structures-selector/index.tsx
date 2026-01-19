@@ -170,7 +170,7 @@ export default function StructuresSelector() {
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const [id, label] = bucket.key.split('###');
-      return ({ id, label });
+      return ({ id, label, searchableText: label.normalize('NFD').replace(/[\u0300-\u036f]/g, '') });
     }) || [];
   const structuresAll = (dataStructuresAll?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
     const [id, label] = bucket.key.split('###');
