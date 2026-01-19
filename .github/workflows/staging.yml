@@ -10,7 +10,7 @@ env:
   DEPLOYMENT: datasupr
   DEPLOYMENT_NAMESPACE: datasupr
   DEPLOYMENT_URL: https://datasupr.staging.dataesr.ovh
-  MM_NOTIFICATION_CHANNEL: 'bots'
+  MM_NOTIFICATION_CHANNEL: bots
 
 jobs:
   publish-ghcr:
@@ -31,7 +31,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 24
-      - run: npm ci && npm run build:staging
+      - run: npm ci --silent && npm run build:staging
 
       - name: 🐋 Build Docker image
         run: |
