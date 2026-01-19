@@ -1,9 +1,5 @@
-import { useSearchParams } from "react-router-dom";
 import { Row, Col } from "@dataesr/dsfr-plus";
-import {
-  useFinanceEtablissementEvolution,
-  useFinanceYears,
-} from "../../../api";
+import { useFinanceEtablissementEvolution } from "../../../api";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 import { CHART_COLORS } from "../../../constants/colors";
 import "./styles.scss";
@@ -20,19 +16,9 @@ export function SanteFinancierSection({
   data,
   selectedYear,
 }: SanteFinancierSectionProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { data: yearsData } = useFinanceYears();
-  const years = yearsData?.years || [];
-
   const { data: evolutionData } = useFinanceEtablissementEvolution(
     data?.etablissement_id_paysage
   );
-
-  const handleYearChange = (year: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("year", year);
-    setSearchParams(next);
-  };
 
   const getEvolutionData = (metricKey: string) => {
     if (!evolutionData || evolutionData.length === 0) return undefined;
@@ -44,7 +30,6 @@ export function SanteFinancierSection({
       .filter((item) => item.value != null && !isNaN(item.value));
   };
 
-  // Vérifier si le résultat net comptable est différent du résultat hors SIE
   const showResultatHorsSie =
     data?.resultat_net_comptable != null &&
     data?.resultat_net_comptable_hors_sie != null &&
@@ -55,7 +40,7 @@ export function SanteFinancierSection({
       id="section-sante-financier"
       role="region"
       aria-labelledby="section-sante-financier"
-      className="fr-p-3w section-container"
+      className="section-container"
     >
       <div className="section-header fr-mb-4w">
         <h3 className="fr-h5 section-header__title">
@@ -65,20 +50,6 @@ export function SanteFinancierSection({
             htmlFor="select-year-sante-financier"
           ></label>
         </h3>
-        <div className="fr-select-group section-header__year-selector">
-          <select
-            className="fr-select"
-            id="select-year-sante-financier"
-            value={selectedYear}
-            onChange={(e) => handleYearChange(e.target.value)}
-          >
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </div>
       </div>
 
       <div className="fr-mb-4w">

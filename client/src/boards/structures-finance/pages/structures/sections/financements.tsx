@@ -1,9 +1,5 @@
-import { useSearchParams } from "react-router-dom";
 import { Row, Col } from "@dataesr/dsfr-plus";
-import {
-  useFinanceEtablissementEvolution,
-  useFinanceYears,
-} from "../../../api";
+import { useFinanceEtablissementEvolution } from "../../../api";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 import { CHART_COLORS } from "../../../constants/colors";
 import RessourcesPropresChart from "../charts/ressources-propres";
@@ -21,19 +17,9 @@ export function FinancementsSection({
   data,
   selectedYear,
 }: FinancementsSectionProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const { data: yearsData } = useFinanceYears();
-  const years = yearsData?.years || [];
-
   const { data: evolutionData } = useFinanceEtablissementEvolution(
     data?.etablissement_id_paysage
   );
-
-  const handleYearChange = (year: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("year", year);
-    setSearchParams(next);
-  };
 
   const getEvolutionData = (metricKey: string) => {
     if (!evolutionData || evolutionData.length === 0) return undefined;
@@ -50,7 +36,7 @@ export function FinancementsSection({
       id="section-financements"
       role="region"
       aria-labelledby="section-financements"
-      className="fr-p-3w section-container"
+      className="section-container"
     >
       <div className="section-header fr-mb-4w">
         <h3 className="fr-h5 section-header__title">
@@ -60,20 +46,6 @@ export function FinancementsSection({
             htmlFor="select-year-financements"
           ></label>
         </h3>
-        <div className="fr-select-group section-header__year-selector">
-          <select
-            className="fr-select"
-            id="select-year-financements"
-            value={selectedYear}
-            onChange={(e) => handleYearChange(e.target.value)}
-          >
-            {years.map((year) => (
-              <option key={year} value={year}>
-                {year}
-              </option>
-            ))}
-          </select>
-        </div>
       </div>
 
       <div className="fr-mb-4w">

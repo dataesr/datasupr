@@ -1,18 +1,21 @@
 import { useMemo } from "react";
-import { useFinanceEtablissements } from "../../../api";
+import { useFinanceAdvancedComparison } from "../../../api";
 
 export function useEtablissementsData(selectedYear: string | number) {
-  const { data: etablissementsData, isLoading } = useFinanceEtablissements(
-    String(selectedYear),
+  const { data: comparisonData, isLoading } = useFinanceAdvancedComparison(
+    {
+      annee: String(selectedYear),
+      type: "",
+      typologie: "",
+      region: "",
+    },
     !!selectedYear
   );
 
   const allEtablissements = useMemo(() => {
-    if (!etablissementsData) return [];
+    if (!comparisonData || !comparisonData.items) return [];
 
-    let etabs = Array.isArray(etablissementsData)
-      ? etablissementsData
-      : etablissementsData.data || etablissementsData.etablissements || [];
+    let etabs = comparisonData.items;
 
     const etabsMap = new Map();
     etabs.forEach((etab: any) => {
@@ -34,7 +37,7 @@ export function useEtablissementsData(selectedYear: string | number) {
     etabs = Array.from(etabsMap.values());
 
     return etabs;
-  }, [etablissementsData]);
+  }, [comparisonData]);
 
   return {
     allEtablissements,

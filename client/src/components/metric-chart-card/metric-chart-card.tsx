@@ -196,7 +196,6 @@ export function MetricChartCard({
       aria-label={`${title}: ${value}${detail ? `, ${detail}` : ""}`}
       style={{
         height: "100%",
-        borderTop: `4px solid ${color}`,
         borderLeft: "none",
         borderRight: "none",
         borderBottom: "none",

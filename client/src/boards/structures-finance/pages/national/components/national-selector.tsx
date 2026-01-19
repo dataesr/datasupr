@@ -11,10 +11,7 @@ export default function NationalSelector() {
   const years = useMemo(() => yearsData?.years || [], [yearsData]);
   const hasInitializedType = useRef(false);
 
-  const defaultYear = useMemo(() => {
-    if (!years.length) return "";
-    return years.includes(2024) ? "2024" : String(years[0]);
-  }, [years]);
+  const defaultYear = "2024";
   // ATTENTION MODIFIER QUAND ON AURA LES DONNEES 2025
 
   const yearFromUrl = searchParams.get("year") || "";
@@ -23,6 +20,38 @@ export default function NationalSelector() {
   // const selectedYear = yearFromUrl || years[0] || "";
   const selectedTypologie = searchParams.get("typologie") || "";
   const selectedRegion = searchParams.get("region") || "";
+
+  // Nettoyer les paramètres non pertinents pour la vue nationale
+  useEffect(() => {
+    const next = new URLSearchParams(searchParams);
+    let hasChanges = false;
+
+    // Retirer les paramètres spécifiques à la vue établissements
+    if (searchParams.has("structureId")) {
+      next.delete("structureId");
+      hasChanges = true;
+    }
+    if (searchParams.has("section")) {
+      next.delete("section");
+      hasChanges = true;
+    }
+    if (searchParams.get("type") === "tous") {
+      next.delete("type");
+      hasChanges = true;
+    }
+    if (searchParams.get("region") === "toutes") {
+      next.delete("region");
+      hasChanges = true;
+    }
+    if (searchParams.get("typologie") === "toutes") {
+      next.delete("typologie");
+      hasChanges = true;
+    }
+
+    if (hasChanges) {
+      setSearchParams(next, { replace: true });
+    }
+  }, []);
 
   const { data: comparisonData } = useFinanceAdvancedComparison(
     {

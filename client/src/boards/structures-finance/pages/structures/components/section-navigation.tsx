@@ -14,7 +14,7 @@ export default function SectionNavigation() {
   };
 
   return (
-    <div className="fr-mb-3w">
+    <div>
       <TertiaryNavigation>
         <TertiaryNavigationItem
           label="Les ressources de l'établissement"

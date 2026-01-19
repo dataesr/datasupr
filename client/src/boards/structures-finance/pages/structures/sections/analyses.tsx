@@ -15,7 +15,7 @@ export function AnalysesSection({
       id="section-analyses"
       role="region"
       aria-labelledby="section-analyses"
-      className="fr-p-3w section-container"
+      className="section-container"
     >
       <EvolutionChart
         etablissementId={selectedEtablissement || ""}

@@ -1,7 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useFinanceEtablissementDetail, useFinanceYears } from "../../../api";
-import SectionNavigation from "./section-navigation";
 import {
   FinancementsSection,
   SanteFinancierSection,
@@ -97,11 +96,5 @@ export default function EtablissementDetails() {
     }
   };
 
-  return (
-    <>
-      <SectionNavigation />
-
-      {renderSectionContent()}
-    </>
-  );
+  return <>{renderSectionContent()}</>;
 }
