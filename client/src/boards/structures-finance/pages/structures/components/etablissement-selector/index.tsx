@@ -60,11 +60,14 @@ export default function EtablissementSelector() {
             .filter(Boolean)
             .join(" ");
 
+          const id =
+            etab.etablissement_id_paysage ||
+            etab.etablissement_id_paysage_actuel ||
+            etab.id;
+
           return {
-            id:
-              etab.etablissement_id_paysage ||
-              etab.etablissement_id_paysage_actuel ||
-              etab.id,
+            id,
+            hasValidPaysageId: !!etab.etablissement_id_paysage,
             label: `${displayName}${
               etab.etablissement_actuel_region || etab.region
                 ? ` — ${etab.etablissement_actuel_region || etab.region}`
@@ -81,20 +84,29 @@ export default function EtablissementSelector() {
     [filteredEtablissements]
   );
 
-  const handleClearSelection = () => {
-    const next = new URLSearchParams(searchParams);
-    next.delete("structureId");
-    setSearchParams(next);
-  };
-
   const handleEtablissementSelect = (id: string) => {
+    const selected = etablissementOptions.find((opt) => opt.id === id);
+
+    const finalId = selected?.data?.etablissement_id_paysage || id;
+
+    if (!finalId || finalId === "undefined") {
+      console.error("Invalid establishment ID:", finalId);
+      return;
+    }
+
     const next = new URLSearchParams(searchParams);
-    next.set("structureId", id);
+    next.set("structureId", finalId);
     next.set("section", "ressources");
     next.set("year", selectedYear || "2024");
     next.delete("type");
     next.delete("region");
     next.delete("typologie");
+    setSearchParams(next);
+  };
+
+  const handleClearSelection = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete("structureId");
     setSearchParams(next);
   };
 

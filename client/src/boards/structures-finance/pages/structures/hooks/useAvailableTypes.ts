@@ -24,14 +24,6 @@ export function useAvailableTypes(allEtablissements: any[]) {
       return a.localeCompare(b, "fr", { sensitivity: "base" });
     });
 
-    console.log(
-      "Available types extracted:",
-      sortedTypes,
-      "from",
-      allEtablissements.length,
-      "etablissements"
-    );
-
     return sortedTypes;
   }, [allEtablissements]);
 }
