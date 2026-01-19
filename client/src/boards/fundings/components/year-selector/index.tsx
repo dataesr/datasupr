@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 export default function YearSelector() {
   const [searchParams, setSearchParams] = useSearchParams({});
   const year = searchParams.get("year") ?? "";
-  const years = Array.from(Array(10).keys()).map((item) => item + 2015);
+  const years = Array.from(Array(10).keys()).map((item) => item + 2015).sort((a, b) => b - a);
 
   const handleYearChange = (year: string) => {
     searchParams.set("year", year);
