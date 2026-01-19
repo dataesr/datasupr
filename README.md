@@ -18,3 +18,13 @@ And the project should be available via your favorite browser at http://localhos
 
 The react client app is served by the node server in production.
 Vite build creates a build in `/dist` folder. This folder has to be moved into the `/server` folder.
+
+
+## Deployment
+
+The version number follows [semver](https://semver.org/).
+
+To deploy in production, simply run this command from your staging branch :
+
+`npm run deploy:[patch|minor|major]`
+⚠️ Obviously, only members of the dataesr organization have rights to push on the repo.
