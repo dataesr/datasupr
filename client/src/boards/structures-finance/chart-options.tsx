@@ -18,13 +18,32 @@ export function CreateChartOptions(
   options: NonNullable<HighchartsInstance.Options>
 ) {
   const rootStyles = getComputedStyle(document.documentElement);
+  const labelColor = rootStyles.getPropertyValue("--text-default-grey").trim();
 
   const defaultOptions: HighchartsInstance.Options = {
     chart: {
       backgroundColor: "transparent",
+      style: {
+        fontFamily: "Marianne, sans-serif",
+      },
     },
-    title: { text: "" },
-    legend: { enabled: false },
+    title: {
+      text: "",
+      style: {
+        color: labelColor,
+      },
+    },
+    legend: {
+      enabled: false,
+      itemStyle: {
+        color: labelColor,
+        fontSize: "13px",
+        fontWeight: "400",
+      },
+      itemHoverStyle: {
+        color: labelColor,
+      },
+    },
     exporting: { enabled: false },
     credits: { enabled: false },
   };
@@ -38,7 +57,12 @@ export function CreateChartOptions(
           style: {
             fontSize: "13px",
             fontFamily: "Marianne, sans-serif",
-            color: rootStyles.getPropertyValue("--label-color"),
+            color: labelColor,
+          },
+        },
+        title: {
+          style: {
+            color: labelColor,
           },
         },
       };
@@ -50,7 +74,47 @@ export function CreateChartOptions(
         style: {
           fontSize: "13px",
           fontFamily: "Marianne, sans-serif",
-          color: rootStyles.getPropertyValue("--label-color"),
+          color: labelColor,
+        },
+      },
+      title: {
+        style: {
+          color: labelColor,
+        },
+      },
+    };
+  }
+
+  if (Array.isArray(options.yAxis) && options.yAxis.length > 0) {
+    defaultOptions.yAxis = options.yAxis.map((axis) => {
+      return {
+        ...axis,
+        labels: {
+          style: {
+            fontSize: "13px",
+            fontFamily: "Marianne, sans-serif",
+            color: labelColor,
+          },
+        },
+        title: {
+          style: {
+            color: labelColor,
+          },
+        },
+      };
+    });
+  } else if (!options.yAxis) {
+    defaultOptions.yAxis = {
+      labels: {
+        style: {
+          fontSize: "13px",
+          fontFamily: "Marianne, sans-serif",
+          color: labelColor,
+        },
+      },
+      title: {
+        style: {
+          color: labelColor,
         },
       },
     };
