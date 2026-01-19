@@ -1,55 +1,13 @@
-import { Badge, Container } from "@dataesr/dsfr-plus";
-import { useSearchParams } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
-import TertiaryNavigation, {
-  TertiaryNavigationItem,
-} from "../../../../../../components/tertiary-navigation";
+import { useState } from "react";
+import { Badge } from "@dataesr/dsfr-plus";
 
 interface PageHeaderProps {
   data: any;
   onClose: () => void;
-  years?: number[];
-  selectedYear?: string;
 }
 
-export default function PageHeader({
-  data,
-  onClose,
-  years = [],
-  selectedYear,
-}: PageHeaderProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeSection = searchParams.get("section") || "ressources";
-  const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
+export default function PageHeader({ data, onClose }: PageHeaderProps) {
   const [showFormations, setShowFormations] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  const handleSectionChange = (section: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("section", section);
-    setSearchParams(next);
-  };
-
-  const handleYearChange = (year: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("year", year);
-    setSearchParams(next);
-    setIsYearDropdownOpen(false);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setIsYearDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   if (!data) return null;
 
@@ -74,7 +32,7 @@ export default function PageHeader({
     data.etablissement_lib &&
     data.etablissement_lib !== data.etablissement_actuel_lib;
 
-  const headerContent = (
+  return (
     <div className="fr-py-3w">
       <div className="fr-grid-row fr-grid-row--gutters fr-grid-row--middle fr-mb-2w">
         <div className="fr-col">
@@ -308,103 +266,5 @@ export default function PageHeader({
         </div>
       </div>
     </div>
-  );
-
-  const navigationContent = (
-    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-      <TertiaryNavigation>
-        <TertiaryNavigationItem
-          label="Ressources"
-          isActive={activeSection === "ressources"}
-          onClick={(e) => {
-            e.preventDefault();
-            handleSectionChange("ressources");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="Santé financière"
-          isActive={activeSection === "sante-financiere"}
-          onClick={(e) => {
-            e.preventDefault();
-            handleSectionChange("sante-financiere");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="Moyens humains"
-          isActive={activeSection === "moyens-humains"}
-          onClick={(e) => {
-            e.preventDefault();
-            handleSectionChange("moyens-humains");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="Diplômes et formations"
-          isActive={activeSection === "diplomes-formations"}
-          onClick={(e) => {
-            e.preventDefault();
-            handleSectionChange("diplomes-formations");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="Analyses et évolutions"
-          isActive={activeSection === "analyses"}
-          onClick={(e) => {
-            e.preventDefault();
-            handleSectionChange("analyses");
-          }}
-        />
-      </TertiaryNavigation>
-
-      {years && years.length > 0 && (
-        <div
-          className="page-header__year-dropdown"
-          ref={dropdownRef}
-          style={{ marginLeft: "auto" }}
-        >
-          <button
-            className="page-header__year-button"
-            onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
-            aria-expanded={isYearDropdownOpen}
-            aria-haspopup="true"
-          >
-            <span className="fr-icon-calendar-line" aria-hidden="true" />
-            <span className="page-header__year-text">Année {selectedYear}</span>
-            <span
-              className={`fr-icon-arrow-${
-                isYearDropdownOpen ? "up" : "down"
-              }-s-line`}
-              aria-hidden="true"
-            />
-          </button>
-
-          {isYearDropdownOpen && (
-            <ul className="page-header__year-menu" role="menu">
-              {years.map((year) => (
-                <li key={year} role="none">
-                  <button
-                    role="menuitem"
-                    className={`page-header__year-option ${
-                      selectedYear === year.toString() ? "active" : ""
-                    }`}
-                    onClick={() => handleYearChange(year.toString())}
-                  >
-                    {year}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
-    </div>
-  );
-
-  return (
-    <>
-      <Container fluid className="etablissement-selector__wrapper">
-        <Container>{headerContent}</Container>
-      </Container>
-      <Container>{navigationContent}</Container>
-    </>
   );
 }

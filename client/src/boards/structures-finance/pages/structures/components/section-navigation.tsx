@@ -1,27 +1,49 @@
-import { useSearchParams } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
 import TertiaryNavigation, {
   TertiaryNavigationItem,
 } from "../../../../../components/tertiary-navigation";
 
-export default function SectionNavigation() {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const activeSection = searchParams.get("section") || "ressources";
+interface SectionNavigationProps {
+  activeSection: string;
+  years: number[];
+  selectedYear: string;
+  onSectionChange: (section: string) => void;
+  onYearChange: (year: string) => void;
+}
 
-  const handleSectionChange = (section: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("section", section);
-    setSearchParams(next);
-  };
+export default function SectionNavigation({
+  activeSection,
+  years,
+  selectedYear,
+  onSectionChange,
+  onYearChange,
+}: SectionNavigationProps) {
+  const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsYearDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
-    <div>
+    <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
       <TertiaryNavigation>
         <TertiaryNavigationItem
-          label="Les ressources de l'établissement"
+          label="Ressources"
           isActive={activeSection === "ressources"}
           onClick={(e) => {
             e.preventDefault();
-            handleSectionChange("ressources");
+            onSectionChange("ressources");
           }}
         />
         <TertiaryNavigationItem
@@ -29,7 +51,7 @@ export default function SectionNavigation() {
           isActive={activeSection === "sante-financiere"}
           onClick={(e) => {
             e.preventDefault();
-            handleSectionChange("sante-financiere");
+            onSectionChange("sante-financiere");
           }}
         />
         <TertiaryNavigationItem
@@ -37,7 +59,7 @@ export default function SectionNavigation() {
           isActive={activeSection === "moyens-humains"}
           onClick={(e) => {
             e.preventDefault();
-            handleSectionChange("moyens-humains");
+            onSectionChange("moyens-humains");
           }}
         />
         <TertiaryNavigationItem
@@ -45,7 +67,7 @@ export default function SectionNavigation() {
           isActive={activeSection === "diplomes-formations"}
           onClick={(e) => {
             e.preventDefault();
-            handleSectionChange("diplomes-formations");
+            onSectionChange("diplomes-formations");
           }}
         />
         <TertiaryNavigationItem
@@ -53,10 +75,55 @@ export default function SectionNavigation() {
           isActive={activeSection === "analyses"}
           onClick={(e) => {
             e.preventDefault();
-            handleSectionChange("analyses");
+            onSectionChange("analyses");
           }}
         />
       </TertiaryNavigation>
+
+      {years && years.length > 0 && (
+        <div
+          className="page-header__year-dropdown"
+          ref={dropdownRef}
+          style={{ marginLeft: "auto" }}
+        >
+          <button
+            className="page-header__year-button"
+            onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
+            aria-expanded={isYearDropdownOpen}
+            aria-haspopup="true"
+          >
+            <span className="fr-icon-calendar-line" aria-hidden="true" />
+            <span className="page-header__year-text">Année {selectedYear}</span>
+            <span
+              className={`fr-icon-arrow-${
+                isYearDropdownOpen ? "up" : "down"
+              }-s-line`}
+              aria-hidden="true"
+            />
+          </button>
+
+          {isYearDropdownOpen && (
+            <ul className="page-header__year-menu" role="menu">
+              {years.map((year) => (
+                <li key={year} role="none">
+                  <button
+                    role="menuitem"
+                    className={`page-header__year-option ${
+                      selectedYear === year.toString() ? "active" : ""
+                    }`}
+                    onClick={() => {
+                      onYearChange(year.toString());
+                      setIsYearDropdownOpen(false);
+                    }}
+                  >
+                    {year}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
     </div>
   );
 }

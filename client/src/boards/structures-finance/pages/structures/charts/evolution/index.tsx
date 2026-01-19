@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Row, Col, Button, ButtonGroup } from "@dataesr/dsfr-plus";
-import { useFinanceEtablissementEvolution } from "../../../../api";
+import { useFinanceEtablissementEvolution } from "./api";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createEvolutionChartOptions } from "./options";
 import { RenderDataSingle, RenderDataBase100 } from "./render-data";
@@ -339,9 +340,12 @@ const PREDEFINED_ANALYSES = {
 type AnalysisKey = keyof typeof PREDEFINED_ANALYSES;
 
 export default function EvolutionChart({
-  etablissementId,
+  etablissementId: propEtablissementId,
   etablissementName,
 }: EvolutionChartProps) {
+  const [searchParams] = useSearchParams();
+  const etablissementId =
+    propEtablissementId || searchParams.get("structureId") || "";
   const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisKey | null>(
     null
   );

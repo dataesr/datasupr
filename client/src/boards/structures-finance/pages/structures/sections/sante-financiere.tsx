@@ -1,5 +1,5 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
-import { useFinanceEtablissementEvolution } from "../../../api";
+import { useMetricEvolution } from "./api";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 import { CHART_COLORS } from "../../../constants/colors";
 import "./styles.scss";
@@ -9,27 +9,9 @@ const euro = (n?: number) =>
 
 interface SanteFinancierSectionProps {
   data: any;
-  selectedYear?: string | number;
 }
 
-export function SanteFinancierSection({
-  data,
-  selectedYear,
-}: SanteFinancierSectionProps) {
-  const { data: evolutionData } = useFinanceEtablissementEvolution(
-    data?.etablissement_id_paysage
-  );
-
-  const getEvolutionData = (metricKey: string) => {
-    if (!evolutionData || evolutionData.length === 0) return undefined;
-    const yearNum = selectedYear ? Number(selectedYear) : null;
-    return evolutionData
-      .sort((a, b) => a.exercice - b.exercice)
-      .filter((item) => !yearNum || item.exercice <= yearNum)
-      .map((item) => ({ exercice: item.exercice, value: item[metricKey] }))
-      .filter((item) => item.value != null && !isNaN(item.value));
-  };
-
+export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
   const showResultatHorsSie =
     data?.resultat_net_comptable != null &&
     data?.resultat_net_comptable_hors_sie != null &&
@@ -60,7 +42,7 @@ export function SanteFinancierSection({
               value={`${euro(data.resultat_net_comptable)} €`}
               detail="Le résultat net comptable mesure les ressources nettes restant à l'établissement à l'issue de l'exercice. Indique la performance financière globale de l'établissement."
               color={CHART_COLORS.primary}
-              evolutionData={getEvolutionData("resultat_net_comptable")}
+              evolutionData={useMetricEvolution("resultat_net_comptable")}
               unit="€"
             />
           </Col>
@@ -72,7 +54,7 @@ export function SanteFinancierSection({
                 value={`${euro(data.resultat_net_comptable_hors_sie)} €`}
                 detail="Le résultat net comptable hors services inter-établissements mesure les ressources nettes restant à l'établissement à l'issue de l'exercice sans prendre en compte les services communs à plusieurs établissements (service de documentation par exemple). Indique la performance financière globale de l'établissement."
                 color={CHART_COLORS.primary}
-                evolutionData={getEvolutionData(
+                evolutionData={useMetricEvolution(
                   "resultat_net_comptable_hors_sie"
                 )}
                 unit="€"
@@ -86,7 +68,7 @@ export function SanteFinancierSection({
               value={`${euro(data.capacite_d_autofinancement)} €`}
               detail="Épargne dégagée pendant l'exercice qui permettra d'assurer tout ou partie de l'investissement de l'année et d'augmenter le fonds de roulement."
               color={CHART_COLORS.primary}
-              evolutionData={getEvolutionData("capacite_d_autofinancement")}
+              evolutionData={useMetricEvolution("capacite_d_autofinancement")}
               unit="€"
             />
           </Col>
@@ -100,7 +82,7 @@ export function SanteFinancierSection({
                   : "—"
               }
               color={CHART_COLORS.primary}
-              evolutionData={getEvolutionData("caf_produits_encaissables")}
+              evolutionData={useMetricEvolution("caf_produits_encaissables")}
               unit="%"
             />
           </Col>
@@ -116,7 +98,9 @@ export function SanteFinancierSection({
               value={`${euro(data.fonds_de_roulement_net_global)} €`}
               detail="Ressource durable ou structurelle mise à disposition de l'établissement pour financer des emplois (investissements) liés au cycle d'exploitation. Il constitue une marge de sécurité financière destinée à financer une partie de l'actif circulant."
               color={CHART_COLORS.secondary}
-              evolutionData={getEvolutionData("fonds_de_roulement_net_global")}
+              evolutionData={useMetricEvolution(
+                "fonds_de_roulement_net_global"
+              )}
               unit="€"
             />
           </Col>
@@ -127,7 +111,7 @@ export function SanteFinancierSection({
               value={`${euro(data.besoin_en_fonds_de_roulement)} €`}
               detail="Le besoin en fonds de roulement mesure le décalage entre les encaissements et les décaissements du cycle d'activité."
               color={CHART_COLORS.secondary}
-              evolutionData={getEvolutionData("besoin_en_fonds_de_roulement")}
+              evolutionData={useMetricEvolution("besoin_en_fonds_de_roulement")}
               unit="€"
             />
           </Col>
@@ -138,7 +122,7 @@ export function SanteFinancierSection({
               value={`${euro(data.tresorerie)} €`}
               detail="Liquidités immédiatement disponibles (caisse, banque, VMP)."
               color={CHART_COLORS.secondary}
-              evolutionData={getEvolutionData("tresorerie")}
+              evolutionData={useMetricEvolution("tresorerie")}
               unit="€"
             />
           </Col>
@@ -161,7 +145,7 @@ export function SanteFinancierSection({
               }
               detail="Expression du fonds de roulement en nombre de jours de fonctionnement. Un fonds de roulement net global de 30 jours signifie que l'établissement peut couvrir 30 jours de dépenses courantes."
               color={CHART_COLORS.secondary}
-              evolutionData={getEvolutionData(
+              evolutionData={useMetricEvolution(
                 "fonds_de_roulement_en_jours_de_fonctionnement"
               )}
               unit="jours"
@@ -182,7 +166,7 @@ export function SanteFinancierSection({
               }
               detail="Expression de la trésorerie en nombre de jours de fonctionnement. Indique la durée pendant laquelle l'établissement peut fonctionner sans nouvel encaissement."
               color={CHART_COLORS.secondary}
-              evolutionData={getEvolutionData(
+              evolutionData={useMetricEvolution(
                 "tresorerie_en_jours_de_fonctionnement"
               )}
               unit="jours"
@@ -206,7 +190,7 @@ export function SanteFinancierSection({
               }
               detail="Ratio mesurant l'équilibre entre les dépenses réelles (décaissables) et les recettes réelles (encaissables)."
               color={CHART_COLORS.tertiary}
-              evolutionData={getEvolutionData(
+              evolutionData={useMetricEvolution(
                 "charges_decaissables_produits_encaissables"
               )}
               unit="%"
@@ -223,7 +207,7 @@ export function SanteFinancierSection({
               }
               detail="Indique la part des recettes consacrée à la rémunération du personnel titulaire."
               color={CHART_COLORS.tertiary}
-              evolutionData={getEvolutionData(
+              evolutionData={useMetricEvolution(
                 "taux_de_remuneration_des_permanents"
               )}
               unit="%"
@@ -242,7 +226,7 @@ export function SanteFinancierSection({
               }
               detail="Part des ressources propres (hors subventions pour charges de service public) dans les produits totaux. Mesure l'autonomie financière."
               color={CHART_COLORS.tertiary}
-              evolutionData={getEvolutionData(
+              evolutionData={useMetricEvolution(
                 "ressources_propres_produits_encaissables"
               )}
               unit="%"
@@ -261,7 +245,7 @@ export function SanteFinancierSection({
               }
               detail="Ratio entre la masse salariale et les produits. Évalue le poids des coûts salariaux."
               color={CHART_COLORS.tertiary}
-              evolutionData={getEvolutionData(
+              evolutionData={useMetricEvolution(
                 "charges_de_personnel_produits_encaissables"
               )}
               unit="%"
@@ -282,7 +266,7 @@ export function SanteFinancierSection({
               }
               detail="Ratio entre la CAF et les investissements en immobilisations. Indique si l'activité génère suffisamment de ressources pour financer les investissements."
               color={CHART_COLORS.primary}
-              evolutionData={getEvolutionData(
+              evolutionData={useMetricEvolution(
                 "caf_acquisitions_d_immobilisations"
               )}
               unit="%"
@@ -295,7 +279,7 @@ export function SanteFinancierSection({
               value={`${euro(data.solde_budgetaire)} €`}
               detail="Le solde budgétaire est un solde intermédiaire de trésorerie, reflétant le flux de trésorerie généré par l'activité de l'organisme au cours d'un exercice."
               color={CHART_COLORS.secondary}
-              evolutionData={getEvolutionData("solde_budgetaire")}
+              evolutionData={useMetricEvolution("solde_budgetaire")}
               unit="€"
             />
           </Col>

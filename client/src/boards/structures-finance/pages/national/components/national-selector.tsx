@@ -1,7 +1,8 @@
 import { Row, Col, Container } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useMemo, useEffect, useRef } from "react";
-import { useFinanceYears, useFinanceAdvancedComparison } from "../../../api";
+import { useFinanceYears } from "../../../api/common";
+import { useFinanceAdvancedComparison } from "../api";
 import { useNationalFilters } from "../hooks/useNationalFilters";
 import "./national-selector.scss";
 

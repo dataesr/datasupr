@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useMemo, useEffect } from "react";
-import { useFinanceAdvancedComparison } from "../../../api";
+import { useFinanceAdvancedComparison } from "../api";
 import { useFilteredNationalData } from "../hooks/useFilteredNationalData";
 import SectionNavigation from "../sections/section-navigation";
 import {

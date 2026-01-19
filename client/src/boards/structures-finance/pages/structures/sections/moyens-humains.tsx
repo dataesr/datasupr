@@ -1,31 +1,14 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import { CHART_COLORS } from "../../../constants/colors";
-import { useFinanceEtablissementEvolution } from "../../../api";
+import { useMetricEvolution } from "./api";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 import "./styles.scss";
 
 interface MoyensHumainsSectionProps {
   data: any;
-  selectedYear?: string | number;
 }
 
-export function MoyensHumainsSection({
-  data,
-  selectedYear,
-}: MoyensHumainsSectionProps) {
-  const { data: evolutionData } = useFinanceEtablissementEvolution(
-    data?.etablissement_id_paysage
-  );
-
-  const getEvolutionData = (metricKey: string) => {
-    if (!evolutionData || evolutionData.length === 0) return undefined;
-    const yearNum = selectedYear ? Number(selectedYear) : null;
-    return evolutionData
-      .sort((a, b) => a.exercice - b.exercice)
-      .filter((item) => !yearNum || item.exercice <= yearNum)
-      .map((item) => ({ exercice: item.exercice, value: item[metricKey] }))
-      .filter((item) => item.value != null && !isNaN(item.value));
-  };
+export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
   return (
     <div
       id="section-moyens-humains"
@@ -57,7 +40,7 @@ export function MoyensHumainsSection({
               }
               detail="Équivalent temps plein travaillé"
               color={CHART_COLORS.palette[0]}
-              evolutionData={getEvolutionData("emploi_etpt")}
+              evolutionData={useMetricEvolution("emploi_etpt")}
             />
           </Col>
           <Col xs="12" md="6">
@@ -76,7 +59,7 @@ export function MoyensHumainsSection({
                   : "Enseignants permanents"
               }
               color={CHART_COLORS.palette[1]}
-              evolutionData={getEvolutionData("taux_encadrement")}
+              evolutionData={useMetricEvolution("taux_encadrement")}
               unit="%"
             />
           </Col>
@@ -103,7 +86,7 @@ export function MoyensHumainsSection({
               }
               detail="Dépenses de masse salariale"
               color={CHART_COLORS.palette[2]}
-              evolutionData={getEvolutionData("charges_de_personnel")}
+              evolutionData={useMetricEvolution("charges_de_personnel")}
               unit="€"
             />
           </Col>
@@ -119,7 +102,7 @@ export function MoyensHumainsSection({
               }
               detail="Part des produits encaissables"
               color={CHART_COLORS.palette[3]}
-              evolutionData={getEvolutionData(
+              evolutionData={useMetricEvolution(
                 "charges_de_personnel_produits_encaissables"
               )}
               unit="%"
@@ -135,7 +118,7 @@ export function MoyensHumainsSection({
               }
               detail="Part des dépenses de personnel"
               color={CHART_COLORS.palette[4]}
-              evolutionData={getEvolutionData(
+              evolutionData={useMetricEvolution(
                 "taux_de_remuneration_des_permanents"
               )}
               unit="%"

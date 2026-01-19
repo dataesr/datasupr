@@ -1,4 +1,4 @@
-import { CHART_COLORS } from "../../../../constants/colors";
+import { CHART_COLORS } from "../../../constants/colors";
 
 interface SmallMetricCardProps {
   label: string;
@@ -72,9 +72,9 @@ export function SmallMetricCard({
     <div
       style={{
         position: "relative",
-        width: "150px",
-        height: "60px",
-        padding: "8px 10px",
+        width: "180px",
+        height: "95px",
+        padding: "10px 12px",
         borderRadius: "4px",
         backgroundColor: "var(--background-contrast-grey)",
         borderTop: `3px solid ${color}`,
@@ -130,10 +130,11 @@ export function SmallMetricCard({
         </div>
         <div
           style={{
-            fontSize: "1.125rem",
+            fontSize: "1.25rem",
             fontWeight: 700,
             color: "var(--text-title-grey)",
-            lineHeight: "1.2",
+            lineHeight: "1.3",
+            marginTop: "4px",
           }}
         >
           {value}
@@ -150,8 +151,8 @@ export function SmallMetricCard({
                 trend && trend > 0
                   ? "var(--green-archipel-sun-391)"
                   : trend && trend < 0
-                  ? "var(--pink-tuile-sun-425)"
-                  : "var(--text-mention-grey)",
+                    ? "var(--pink-tuile-sun-425)"
+                    : "var(--text-mention-grey)",
               display: "flex",
               alignItems: "center",
               gap: "2px",

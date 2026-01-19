@@ -1,4 +1,5 @@
 import { useSearchParams } from "react-router-dom";
+import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
 
 export default function Footer() {
@@ -13,7 +14,10 @@ export default function Footer() {
       <div className="fr-container">
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
-            <a href="/" title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
+            <a
+              href="/"
+              title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)"
+            >
               <p className="fr-logo">
                 Ministère
                 <br />
@@ -108,6 +112,15 @@ export default function Footer() {
                 {getI18nLabel("contact")}
               </a>
             </li>
+            <li className="fr-footer__bottom-item">
+              <button
+                className="fr-footer__bottom-link fr-link--icon-left fr-icon-theme-fill"
+                aria-controls="fr-theme-modal"
+                data-fr-opened="false"
+              >
+                Paramètres d'affichage
+              </button>
+            </li>
           </ul>
           <div className="fr-footer__bottom-copy">
             <p
@@ -118,6 +131,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      <SwitchTheme />
     </footer>
   );
 }

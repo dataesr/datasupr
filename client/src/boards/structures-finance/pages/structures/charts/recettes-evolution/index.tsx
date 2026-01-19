@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Button } from "@dataesr/dsfr-plus";
-import { useFinanceEtablissementEvolution } from "../../../../api";
+import { useFinanceEtablissementEvolution } from "./api";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createRecettesEvolutionChartOptions } from "./options";
 import { RenderData } from "./render-data";
@@ -12,9 +13,12 @@ interface RecettesEvolutionChartProps {
 }
 
 export default function RecettesEvolutionChart({
-  etablissementId,
+  etablissementId: propEtablissementId,
   etablissementName,
 }: RecettesEvolutionChartProps) {
+  const [searchParams] = useSearchParams();
+  const etablissementId =
+    propEtablissementId || searchParams.get("structureId") || "";
   const [viewMode, setViewMode] = useState<"value" | "percentage">("value");
 
   const { data: evolutionData, isLoading } = useFinanceEtablissementEvolution(
@@ -86,10 +90,18 @@ export default function RecettesEvolutionChart({
           }}
         ></h3>
         <div className="fr-btns-group fr-btns-group--sm fr-btns-group--inline">
-          <Button size="sm" variant={viewMode === "value" ? "primary" : "secondary"} onClick={() => setViewMode("value")}>
+          <Button
+            size="sm"
+            variant={viewMode === "value" ? "primary" : "secondary"}
+            onClick={() => setViewMode("value")}
+          >
             Valeurs
           </Button>
-          <Button size="sm" variant={viewMode === "percentage" ? "primary" : "secondary"} onClick={() => setViewMode("percentage")}>
+          <Button
+            size="sm"
+            variant={viewMode === "percentage" ? "primary" : "secondary"}
+            onClick={() => setViewMode("percentage")}
+          >
             Parts (%)
           </Button>
         </div>
@@ -113,9 +125,12 @@ export default function RecettesEvolutionChart({
           comment: {
             fr: (
               <>
-                Ce graphique présente l'évolution de la décomposition des ressources propres de l'établissement au fil des exercices. Les ressources
-                propres comprennent les droits d'inscription, la formation continue, la taxe d'apprentissage, la valorisation, les financements ANR,
-                les contrats de recherche, les subventions européennes et régionales, et autres.
+                Ce graphique présente l'évolution de la décomposition des
+                ressources propres de l'établissement au fil des exercices. Les
+                ressources propres comprennent les droits d'inscription, la
+                formation continue, la taxe d'apprentissage, la valorisation,
+                les financements ANR, les contrats de recherche, les subventions
+                européennes et régionales, et autres.
               </>
             ),
           },
@@ -124,13 +139,17 @@ export default function RecettesEvolutionChart({
               <>
                 {viewMode === "value" ? (
                   <>
-                    Le graphique montre l'évolution des montants en euros pour chaque composante des ressources propres. Les colonnes empilées
-                    permettent de visualiser la composition totale et l'évolution de chaque source de financement dans le temps.
+                    Le graphique montre l'évolution des montants en euros pour
+                    chaque composante des ressources propres. Les colonnes
+                    empilées permettent de visualiser la composition totale et
+                    l'évolution de chaque source de financement dans le temps.
                   </>
                 ) : (
                   <>
-                    Le graphique montre la répartition en pourcentage de chaque composante des ressources propres. Cette vue permet d'identifier les
-                    changements dans la structure des ressources propres de l'établissement au fil des années.
+                    Le graphique montre la répartition en pourcentage de chaque
+                    composante des ressources propres. Cette vue permet
+                    d'identifier les changements dans la structure des
+                    ressources propres de l'établissement au fil des années.
                   </>
                 )}
               </>

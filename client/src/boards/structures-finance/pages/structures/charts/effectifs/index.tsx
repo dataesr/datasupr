@@ -1,6 +1,8 @@
 import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
 import { Row, Col } from "@dataesr/dsfr-plus";
+import { useFinanceEtablissementEvolution } from "./api";
 import {
   createEffectifsNiveauChartOptions,
   createEffectifsSpecifiquesChartOptions,
@@ -28,10 +30,27 @@ interface EffectifsChartProps {
 }
 
 export default function EffectifsChart({
-  data,
-  selectedYear,
+  data: propData,
+  selectedYear: propSelectedYear,
   etablissementName,
 }: EffectifsChartProps) {
+  const [searchParams] = useSearchParams();
+  const etablissementId = searchParams.get("structureId") || "";
+  const selectedYear = propSelectedYear || searchParams.get("year") || "";
+
+  const { data: evolutionData } = useFinanceEtablissementEvolution(
+    etablissementId,
+    !!etablissementId
+  );
+
+  const data = useMemo(() => {
+    if (propData) return propData;
+    if (!evolutionData || !selectedYear) return null;
+    return evolutionData.find(
+      (item: any) => String(item.exercice) === String(selectedYear)
+    );
+  }, [propData, evolutionData, selectedYear]);
+
   const hasCursusData = useMemo(() => {
     return data?.has_effectif_l || data?.has_effectif_m || data?.has_effectif_d;
   }, [data]);

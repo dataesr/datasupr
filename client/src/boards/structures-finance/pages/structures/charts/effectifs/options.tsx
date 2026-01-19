@@ -224,13 +224,15 @@ export const createEffectifsSpecifiquesChartOptions = (
         pointWidth: 40,
         dataLabels: {
           enabled: true,
+          useHTML: true,
           formatter: function () {
-            return Highcharts.numberFormat(this.y as number, 0, ",", " ");
-          },
-          style: {
-            fontSize: "13px",
-            fontWeight: "bold",
-            textOutline: "none",
+            const value = Highcharts.numberFormat(
+              this.y as number,
+              0,
+              ",",
+              " "
+            );
+            return `<span style="color: var(--text-default-grey); font-size: 13px; font-weight: bold;">${value}</span>`;
           },
         },
       },
@@ -547,13 +549,15 @@ export const createEffectifsDegreesChartOptions = (
         pointWidth: 40,
         dataLabels: {
           enabled: true,
+          useHTML: true,
           formatter: function () {
-            return Highcharts.numberFormat(this.y as number, 0, ",", " ");
-          },
-          style: {
-            fontSize: "13px",
-            fontWeight: "bold",
-            textOutline: "none",
+            const value = Highcharts.numberFormat(
+              this.y as number,
+              0,
+              ",",
+              " "
+            );
+            return `<span style="color: var(--text-default-grey); font-size: 13px; font-weight: bold;">${value}</span>`;
           },
         },
       },

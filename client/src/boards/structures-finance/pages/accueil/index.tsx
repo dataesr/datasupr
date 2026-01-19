@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Container } from "@dataesr/dsfr-plus";
 import { useMemo, useState } from "react";
-import { useFinanceEtablissements, useFinanceYears } from "../../api";
+import { useFinanceYears } from "../../api/common";
+import { useFinanceEtablissements } from "./api";
 import SearchableSelect from "../../../../components/searchable-select";
 import "./styles.scss";
 
@@ -127,66 +128,11 @@ function QuickAccessSection() {
   );
 }
 
-const features = [
-  {
-    icon: "/artwork/pictograms/buildings/school.svg",
-    title: "Fiche établissements d’enseignement supérieur",
-    description:
-      "Explorez les données financières détaillées d'un établissement spécifique. Analysez l'évolution temporelle des indicateurs clés.",
-    link: "/structures-finance/etablissements",
-  },
-  {
-    icon: "/artwork/pictograms/digital/data-visualization.svg",
-    title: "Vue nationale",
-    description:
-      "Analyse globale des données financières de tous les établissements. Visualisez les tendances nationales.",
-    link: "/structures-finance/national",
-  },
-];
-
-function FeaturesSection() {
-  const navigate = useNavigate();
-
-  return (
-    <section className="accueil-section accueil-section--alt">
-      <Container>
-        <h2 className="accueil-section__title">Fonctionnalités</h2>
-        <p className="accueil-section__description">
-          Deux approches complémentaires pour explorer les finances
-        </p>
-        <Row gutters>
-          {features.map((feature) => (
-            <Col xs="12" md="6" key={feature.title}>
-              <button
-                className="accueil-card"
-                onClick={() => navigate(feature.link)}
-              >
-                <div className="accueil-card__icon">
-                  <img src={feature.icon} alt="" aria-hidden="true" />
-                </div>
-                <h3 className="accueil-card__title">{feature.title}</h3>
-                <p className="accueil-card__description">
-                  {feature.description}
-                </p>
-                <span className="accueil-card__footer">
-                  En savoir plus
-                  <i className="ri-arrow-right-line"></i>
-                </span>
-              </button>
-            </Col>
-          ))}
-        </Row>
-      </Container>
-    </section>
-  );
-}
-
 export default function AccueilView() {
   return (
     <div className="accueil-page">
       <HeroSection />
       <QuickAccessSection />
-      <FeaturesSection />
     </div>
   );
 }

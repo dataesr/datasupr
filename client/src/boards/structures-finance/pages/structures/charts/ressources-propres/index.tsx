@@ -1,6 +1,8 @@
 import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
 import "highcharts/modules/treemap";
+import { useFinanceEtablissementEvolution } from "./api";
 import { createRessourcesPropresChartOptions } from "./options";
 import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -17,10 +19,27 @@ interface RessourcesPropresChartProps {
 }
 
 export default function RessourcesPropresChart({
-  data,
-  selectedYear,
+  data: propData,
+  selectedYear: propSelectedYear,
   etablissementName,
 }: RessourcesPropresChartProps) {
+  const [searchParams] = useSearchParams();
+  const etablissementId = searchParams.get("structureId") || "";
+  const selectedYear = propSelectedYear || searchParams.get("year") || "";
+
+  const { data: evolutionData } = useFinanceEtablissementEvolution(
+    etablissementId,
+    !!etablissementId
+  );
+
+  const data = useMemo(() => {
+    if (propData) return propData;
+    if (!evolutionData || !selectedYear) return null;
+    return evolutionData.find(
+      (item: any) => String(item.exercice) === String(selectedYear)
+    );
+  }, [propData, evolutionData, selectedYear]);
+
   const options = useMemo(() => {
     if (!data) return {} as Highcharts.Options;
     return createRessourcesPropresChartOptions(data);

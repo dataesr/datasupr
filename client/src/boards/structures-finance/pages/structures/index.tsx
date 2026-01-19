@@ -1,14 +1,15 @@
-import { Container } from "@dataesr/dsfr-plus";
-import EtablissementDetails from "./components/etablissement-details";
-import EtablissementSelector from "./components/etablissement-selector";
+import { useSearchParams } from "react-router-dom";
+import EstablishmentSelection from "./components/establishment-selection";
+import EstablishmentView from "./components/establishment-view";
+import "./styles.scss";
 
 export default function StructuresView() {
-  return (
-    <>
-      <EtablissementSelector />
-      <Container>
-        <EtablissementDetails />
-      </Container>
-    </>
+  const [searchParams] = useSearchParams();
+  const selectedEtablissement = searchParams.get("structureId");
+
+  return selectedEtablissement ? (
+    <EstablishmentView />
+  ) : (
+    <EstablishmentSelection />
   );
 }

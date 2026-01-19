@@ -1,16 +1,15 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import EffectifsChart from "../charts/effectifs";
-import { SmallMetricCard } from "../components/metric-cards/small-metric-card";
+import { SmallMetricCard } from "../components/small-metric-card";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 import { FORMATION_COLORS } from "../../../constants/formation-colors";
 import { CHART_COLORS } from "../../../constants/colors";
-import { useFinanceEtablissementEvolution } from "../../../api";
+import { useMetricEvolution } from "./api";
 import "./styles.scss";
 
 interface EtudiantsSectionProps {
   data: any;
   selectedYear?: string | number;
-  selectedEtablissement?: string;
 }
 
 const num = (n?: number) =>
@@ -19,22 +18,26 @@ const num = (n?: number) =>
 export function EtudiantsSection({
   data,
   selectedYear,
-  selectedEtablissement,
 }: EtudiantsSectionProps) {
-  const { data: evolutionData } = useFinanceEtablissementEvolution(
-    selectedEtablissement || "",
-    !!selectedEtablissement
+  // Appeler tous les hooks au top level
+  const effectifEvolution = useMetricEvolution("effectif_sans_cpge");
+  const effectifDnEvolution = useMetricEvolution("effectif_sans_cpge_dn");
+  const effectifDuEvolution = useMetricEvolution("effectif_sans_cpge_du");
+  const effectifLEvolution = useMetricEvolution("effectif_sans_cpge_l");
+  const effectifMEvolution = useMetricEvolution("effectif_sans_cpge_m");
+  const effectifDEvolution = useMetricEvolution("effectif_sans_cpge_d");
+  const effectifIutEvolution = useMetricEvolution("effectif_sans_cpge_iut");
+  const effectifIngEvolution = useMetricEvolution("effectif_sans_cpge_ing");
+  const effectifSanteEvolution = useMetricEvolution("effectif_sans_cpge_sante");
+  const effectifDsaEvolution = useMetricEvolution("effectif_sans_cpge_dsa");
+  const effectifLlshEvolution = useMetricEvolution("effectif_sans_cpge_llsh");
+  const effectifTheoEvolution = useMetricEvolution("effectif_sans_cpge_theo");
+  const effectifSiEvolution = useMetricEvolution("effectif_sans_cpge_si");
+  const effectifStapsEvolution = useMetricEvolution("effectif_sans_cpge_staps");
+  const effectifVetoEvolution = useMetricEvolution("effectif_sans_cpge_veto");
+  const effectifInterdEvolution = useMetricEvolution(
+    "effectif_sans_cpge_interd"
   );
-
-  const getEvolutionData = (metricKey: string) => {
-    if (!evolutionData || evolutionData.length === 0) return undefined;
-    const yearNum = selectedYear ? Number(selectedYear) : null;
-    return evolutionData
-      .sort((a: any, b: any) => a.exercice - b.exercice)
-      .filter((item: any) => !yearNum || item.exercice <= yearNum)
-      .map((item: any) => ({ exercice: item.exercice, value: item[metricKey] }))
-      .filter((item: any) => item.value != null && !isNaN(item.value));
-  };
 
   return (
     <div
@@ -58,7 +61,7 @@ export function EtudiantsSection({
               value={num(data.effectif_sans_cpge)}
               detail="Total des inscriptions"
               color={CHART_COLORS.primary}
-              evolutionData={getEvolutionData("effectif_sans_cpge")}
+              evolutionData={effectifEvolution}
             />
           </Col>
           <Col xs="12" md="4">
@@ -67,7 +70,7 @@ export function EtudiantsSection({
               value={num(data.effectif_sans_cpge_dn)}
               detail="Étudiants inscrits en diplômes nationaux"
               color={CHART_COLORS.secondary}
-              evolutionData={getEvolutionData("effectif_sans_cpge_dn")}
+              evolutionData={effectifDnEvolution}
             />
           </Col>
           <Col xs="12" md="4">
@@ -76,7 +79,7 @@ export function EtudiantsSection({
               value={num(data.effectif_sans_cpge_du)}
               detail="Étudiants inscrits en diplômes d'établissement"
               color={CHART_COLORS.tertiary}
-              evolutionData={getEvolutionData("effectif_sans_cpge_du")}
+              evolutionData={effectifDuEvolution}
             />
           </Col>
         </Row>
@@ -105,9 +108,7 @@ export function EtudiantsSection({
                     label="1er cycle (cursus L)"
                     value={num(data.effectif_sans_cpge_l)}
                     color={FORMATION_COLORS.licence}
-                    sparklineData={getEvolutionData(
-                      "effectif_sans_cpge_l"
-                    )?.map((d) => d.value)}
+                    sparklineData={effectifLEvolution?.map((d) => d.value)}
                   />
                 )}
                 {data?.has_effectif_m && (
@@ -115,9 +116,7 @@ export function EtudiantsSection({
                     label="2ème cycle (cursus M)"
                     value={num(data.effectif_sans_cpge_m)}
                     color={FORMATION_COLORS.master}
-                    sparklineData={getEvolutionData(
-                      "effectif_sans_cpge_m"
-                    )?.map((d) => d.value)}
+                    sparklineData={effectifMEvolution?.map((d) => d.value)}
                   />
                 )}
                 {data?.has_effectif_d && (
@@ -125,9 +124,7 @@ export function EtudiantsSection({
                     label="3ème cycle (cursus D)"
                     value={num(data.effectif_sans_cpge_d)}
                     color={FORMATION_COLORS.doctorat}
-                    sparklineData={getEvolutionData(
-                      "effectif_sans_cpge_d"
-                    )?.map((d) => d.value)}
+                    sparklineData={effectifDEvolution?.map((d) => d.value)}
                   />
                 )}
               </div>
@@ -151,9 +148,7 @@ export function EtudiantsSection({
                     label="formations d'IUT"
                     value={num(data.effectif_sans_cpge_iut)}
                     color={FORMATION_COLORS.iut}
-                    sparklineData={getEvolutionData(
-                      "effectif_sans_cpge_iut"
-                    )?.map((d) => d.value)}
+                    sparklineData={effectifIutEvolution?.map((d) => d.value)}
                   />
                 )}
                 {data?.has_effectif_ing && data?.effectif_sans_cpge_ing > 0 && (
@@ -161,10 +156,12 @@ export function EtudiantsSection({
                     label="formations d'ingénieurs"
                     value={num(data.effectif_sans_cpge_ing)}
                     color={FORMATION_COLORS.ingenieur}
-                    sparklineData={getEvolutionData(
-                      "effectif_sans_cpge_ing"
-                    )?.map((d) => d.value)}
+                    sparklineData={effectifIngEvolution?.map((d) => d.value)}
                   />
+                )}
+                {console.log(
+                  data?.has_effectif_ing,
+                  data?.effectif_sans_cpge_ing
                 )}
                 {data?.has_effectif_sante &&
                   data?.effectif_sans_cpge_sante > 0 && (
@@ -172,9 +169,9 @@ export function EtudiantsSection({
                       label="formation de santé"
                       value={num(data.effectif_sans_cpge_sante)}
                       color={FORMATION_COLORS.sante}
-                      sparklineData={getEvolutionData(
-                        "effectif_sans_cpge_sante"
-                      )?.map((d) => d.value)}
+                      sparklineData={effectifSanteEvolution?.map(
+                        (d) => d.value
+                      )}
                     />
                   )}
               </div>
@@ -203,9 +200,7 @@ export function EtudiantsSection({
                   label="Droit, sciences économiques, AES"
                   value={num(data.effectif_sans_cpge_dsa)}
                   color={FORMATION_COLORS.dsa}
-                  sparklineData={getEvolutionData(
-                    "effectif_sans_cpge_dsa"
-                  )?.map((d) => d.value)}
+                  sparklineData={effectifDsaEvolution?.map((d) => d.value)}
                 />
               )}
               {data?.has_effectif_llsh && data?.effectif_sans_cpge_llsh > 0 && (
@@ -213,9 +208,7 @@ export function EtudiantsSection({
                   label="Lettres, langues et sciences humaines"
                   value={num(data.effectif_sans_cpge_llsh)}
                   color={FORMATION_COLORS.llsh}
-                  sparklineData={getEvolutionData(
-                    "effectif_sans_cpge_llsh"
-                  )?.map((d) => d.value)}
+                  sparklineData={effectifLlshEvolution?.map((d) => d.value)}
                 />
               )}
               {data?.has_effectif_theo && data?.effectif_sans_cpge_theo > 0 && (
@@ -223,9 +216,7 @@ export function EtudiantsSection({
                   label="Théologie"
                   value={num(data.effectif_sans_cpge_theo)}
                   color={FORMATION_COLORS.theo}
-                  sparklineData={getEvolutionData(
-                    "effectif_sans_cpge_theo"
-                  )?.map((d) => d.value)}
+                  sparklineData={effectifTheoEvolution?.map((d) => d.value)}
                 />
               )}
               {data?.has_effectif_sante &&
@@ -234,9 +225,7 @@ export function EtudiantsSection({
                     label="Formation de santé"
                     value={num(data.effectif_sans_cpge_sante)}
                     color={FORMATION_COLORS.sante}
-                    sparklineData={getEvolutionData(
-                      "effectif_sans_cpge_sante"
-                    )?.map((d) => d.value)}
+                    sparklineData={effectifSanteEvolution?.map((d) => d.value)}
                   />
                 )}
               {data?.has_effectif_si && data?.effectif_sans_cpge_si > 0 && (
@@ -244,9 +233,7 @@ export function EtudiantsSection({
                   label="Sciences et sciences de l'ingénieur"
                   value={num(data.effectif_sans_cpge_si)}
                   color={FORMATION_COLORS.si}
-                  sparklineData={getEvolutionData("effectif_sans_cpge_si")?.map(
-                    (d) => d.value
-                  )}
+                  sparklineData={effectifSiEvolution?.map((d) => d.value)}
                 />
               )}
               {data?.has_effectif_staps &&
@@ -255,9 +242,7 @@ export function EtudiantsSection({
                     label="STAPS"
                     value={num(data.effectif_sans_cpge_staps)}
                     color={FORMATION_COLORS.staps}
-                    sparklineData={getEvolutionData(
-                      "effectif_sans_cpge_staps"
-                    )?.map((d) => d.value)}
+                    sparklineData={effectifStapsEvolution?.map((d) => d.value)}
                   />
                 )}
               {data?.has_effectif_veto && data?.effectif_sans_cpge_veto > 0 && (
@@ -265,9 +250,7 @@ export function EtudiantsSection({
                   label="Vétérinaires"
                   value={num(data.effectif_sans_cpge_veto)}
                   color={FORMATION_COLORS.veto}
-                  sparklineData={getEvolutionData(
-                    "effectif_sans_cpge_veto"
-                  )?.map((d) => d.value)}
+                  sparklineData={effectifVetoEvolution?.map((d) => d.value)}
                 />
               )}
               {data?.has_effectif_interd &&
@@ -276,9 +259,7 @@ export function EtudiantsSection({
                     label="Interdisciplinaire"
                     value={num(data.effectif_sans_cpge_interd)}
                     color={FORMATION_COLORS.interd}
-                    sparklineData={getEvolutionData(
-                      "effectif_sans_cpge_interd"
-                    )?.map((d) => d.value)}
+                    sparklineData={effectifInterdEvolution?.map((d) => d.value)}
                   />
                 )}
             </div>
