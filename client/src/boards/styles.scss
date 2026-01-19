@@ -453,8 +453,9 @@ ul {
   // beneficiaries-types colors
   --beneficiarie-type-REC-color: var(--scale-1-color);
   --beneficiarie-type-PUB-color: var(--scale-4-color);
-  --beneficiarie-type-PRC-color: 
-  --beneficiarie-type-HES-color: var(--scale-3-color);
+  --beneficiarie-type-PRC-color: --beneficiarie-type-HES-color: var(
+      --scale-3-color
+    );
   --beneficiarie-type-OTH-color: var(--scale-5-color);
 
   // framework colors
@@ -475,12 +476,12 @@ ul {
 
   .legend {
     font-size: 0.8rem;
-    color: #6a6a6a;
-    background-color: white;
-  } 
-  
+    color: (--label-color);
+    background-color: transparent;
+  }
+
   .chart {
-    background-color: white;
+    background-color: transparent;
   }
 }
 
@@ -516,7 +517,7 @@ html {
   background-color: var(--background-contrast-blue-ecume);
   padding: 16px;
 
-  p{
+  p {
     font-size: 0.9rem;
   }
 }
