@@ -13,6 +13,7 @@
   "scripts": {
     "build": "rm -rf server/dist && npm -w client run build -- --emptyOutDir --outDir ../server/dist",
     "build:staging": "rm -rf server/dist && npm -w client run build:staging -- --emptyOutDir --outDir ../server/dist",
+    "build:production": "rm -rf server/dist && npm -w client run build:production -- --emptyOutDir --outDir ../server/dist",
     "client": "npm -w client run dev",
     "client:docker": "npm -w client run dev:docker",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
