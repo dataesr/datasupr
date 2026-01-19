@@ -35,7 +35,7 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <div className="fr-header__logo">
-                    <a href="/" title="Accueil - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
+                    <a href="/fundings" title="Financement par appel à projets - DataESR">
                       <p className="fr-logo">
                         Ministère
                         <br />
