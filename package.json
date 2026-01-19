@@ -23,8 +23,14 @@
     "deploy:patch": "npm version --workspaces patch && git add **/package.json package-lock.json && npm version patch --include-workspace-root --force",
     "deploy:minor": "npm version --workspaces minor && git add **/package.json package-lock.json && npm version minor --include-workspace-root --force",
     "deploy:major": "npm version --workspaces major && git add **/package.json package-lock.json && npm version major --include-workspace-root --force",
+    "predeploy": "git switch main && git pull origin main --rebase --tags && git merge origin staging",
+    "predeploy:patch": "npm run predeploy",
+    "predeploy:minor": "npm run predeploy",
+    "predeploy:major": "npm run predeploy",
     "postdeploy": "git push origin main --tags && git switch staging && git merge origin main && git push",
-    "predeploy": "git switch main && git pull origin main --rebase --tags && git merge origin staging"
+    "postdeploy:patch": "npm run postdeploy",
+    "postdeploy:minor": "npm run postdeploy",
+    "postdeploy:major": "npm run postdeploy"
   },
   "devDependencies": {
     "@types/js-cookie": "^3.0.6"
