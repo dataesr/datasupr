@@ -6,7 +6,7 @@ import "highcharts/modules/variwide";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, funders, getColorFromFunder, getGeneralOptions } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -45,7 +45,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
           },
           {
             terms: {
-              "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"],
+              "project_type.keyword": funders,
             },
           },
         ]

@@ -6,7 +6,7 @@ import { years } from "../../utils";
 
 export default function YearSelector() {
   const [searchParams, setSearchParams] = useSearchParams({});
-  const year = searchParams.get("year") ?? "";
+  const year:string = searchParams.get("year") ?? years[years.length  - 1].toString();
 
   const handleYearChange = (year: string) => {
     searchParams.set("year", year);
@@ -24,7 +24,7 @@ export default function YearSelector() {
           onChange={(e) => handleYearChange(e.target.value)}
           value={year}
         >
-          {years.map((year) => (
+          {[...years].sort((a, b) => b - a).map((year) => (
             <option key={year} value={year}>
               {year}
             </option>

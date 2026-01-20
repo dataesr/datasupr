@@ -19,7 +19,7 @@ export default function Structures() {
   const scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${year}%257D%252C%257B%2522value%2522%253A${year}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants.structure.id%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522${structure}%2522%252C%2522label%2522%253A%2522${name}%2522%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`;
 
   return (
-    <Container className="board-fundings">
+    <Container className="board-fundings fr-pt-3w">
       <Row gutters>
         <Col>
           <StructureSelector setName={setName} />
@@ -66,7 +66,7 @@ export default function Structures() {
           <h3 className="fr-alert__title">Sélectionner une structure</h3>
           <p>
             Choisissez une structure dans la liste déroulante pour visualiser
-            ses financements via les appels à projet. Vous pouvez filtrer par région.
+            ses financements via les appels à projets. Vous pouvez filtrer par région.
           </p>
         </div>
       )}

@@ -3,8 +3,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { getColorFromFunder, years } from "../../../../utils.ts";
-import ChartCard from "../chart-card/index.tsx";
+import { formatCompactNumber, funders, getColorFromFunder, years } from "../../../../utils.ts";
+import ChartCard from "../chart-card";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -12,6 +12,7 @@ const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = impor
 export default function Cards() {
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
+  const year = Number(searchParams.get("year"));
 
   const body = {
     size: 0,
@@ -42,7 +43,7 @@ export default function Cards() {
           },
           {
             terms: {
-              "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"],
+              "project_type.keyword": funders,
             },
           },
         ]
@@ -90,34 +91,40 @@ export default function Cards() {
       }).then((response) => response.json()),
   });
 
-  const funders = (data?.aggregations?.by_project_type?.buckets ?? []).map((item) => item.key);
+  const getDataByFunder = (funder) => {
+    const dataFunder = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder)?.by_project_year?.buckets ?? [];
+    return years.map((year) => ({
+      x: year,
+      y: dataFunder.find((item) => item.key === year)?.unique_projects?.value ?? 0,
+    }));
+  }
 
   return (
     <>
       <Row gutters>
-        {funders.map((funder, i) => (
-          <Col xs="12" md="4" key={`card-projects-${i}`}>
+        {(data?.aggregations?.by_project_type?.buckets ?? []).map((funder) => (
+          <Col xs="12" md="4" key={`card-projects-${funder.key}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
-                color={getColorFromFunder(funder)}
-                evolutionData={(data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder)?.by_project_year?.buckets?.map((item) => ({ exercice: item.key, value: item.unique_projects.value }))}
-                title={`Projets financés par ${funder} en 2023`}
-                value={(data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder)?.by_project_year?.buckets?.find((item) => item.key === 2023)?.unique_projects?.value ?? 0}
+                color={getColorFromFunder(funder.key)}
+                data={getDataByFunder(funder.key)}
+                title={`Projets financés par ${funder.key} en ${year}`}
+                value={(data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder.key)?.by_project_year?.buckets?.find((item) => item.key === year)?.unique_projects?.value ?? 0}
               />
             }
           </Col>
         ))}
       </Row>
       <Row gutters>
-        {funders.map((funder, i) => (
-          <Col xs="12" md="4" key={`card-budget-${i}`}>
+        {(data?.aggregations?.by_project_type?.buckets ?? []).map((funder) => (
+          <Col xs="12" md="4" key={`card-budget-${funder.key}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
-                color={getColorFromFunder(funder)}
-                evolutionData={(data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder)?.by_project_year?.buckets?.map((item) => ({ exercice: item.key, value: item.sum_budget.value }))}
-                title={`Projets financés par ${funder} en 2023`}
+                color={getColorFromFunder(funder.key)}
+                data={(data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder.key)?.by_project_year?.buckets?.map((item) => ({ x: item.key, y: item.sum_budget.value }))}
+                title={`Projets financés par ${funder.key} en ${year}`}
                 unit="€"
-                value={(data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder)?.by_project_year?.buckets?.find((item) => item.key === 2023)?.sum_budget?.value ?? 0}
+                value={formatCompactNumber((data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder.key)?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget?.value ?? 0)}
               />
             }
           </Col>

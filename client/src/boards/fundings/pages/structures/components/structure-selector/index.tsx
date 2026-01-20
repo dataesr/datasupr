@@ -2,12 +2,12 @@ import { Col, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
+import { useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import SearchableSelect from "../../../../../../components/searchable-select";
-import { useState } from "react";
+import { funders } from "../../../../utils.ts";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } =
-  import.meta.env;
+const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function StructureSelector({ setName }) {
@@ -42,13 +42,7 @@ export default function StructureSelector({ setName }) {
           },
           {
             terms: {
-              "project_type.keyword": [
-                "ANR",
-                "PIA ANR",
-                "PIA hors ANR",
-                "H2020",
-                "Horizon Europe",
-              ],
+              "project_type.keyword": funders,
             },
           },
         ],
@@ -92,13 +86,7 @@ export default function StructureSelector({ setName }) {
           },
           {
             terms: {
-              "project_type.keyword": [
-                "ANR",
-                "PIA ANR",
-                "PIA hors ANR",
-                "H2020",
-                "Horizon Europe",
-              ],
+              "project_type.keyword": funders,
             },
           },
         ],

@@ -1,3 +1,5 @@
+const funders = ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"];
+
 const sortedFunders = {
   "anr": "#738cff",
   "pia anr": "#3f5ffc",
@@ -6,7 +8,7 @@ const sortedFunders = {
   "horizon europe": "#e39700",
 };
 
-const years = Array.from(Array(11).keys()).map((item) => item + 2015).sort((a, b) => b - a);
+const years: number[] = Array.from(Array(11).keys()).map((item) => item + 2015);
 
 const formatCompactNumber = (number: number): string => {
   const formatter = Intl.NumberFormat("fr", { notation: "compact" });
@@ -31,6 +33,7 @@ const getGeneralOptions = (title: string, categories: any[], title_x_axis: strin
 
 export {
   formatCompactNumber,
+  funders,
   getColorFromFunder,
   getGeneralOptions,
   years,

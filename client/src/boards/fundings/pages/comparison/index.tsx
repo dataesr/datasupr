@@ -11,7 +11,7 @@ export default function Comparison() {
   const structures = searchParams.getAll("structure");
 
   return (
-    <Container className="board-fundings">
+    <Container className="board-fundings fr-pt-3w">
       <Row gutters>
         <Col>
           <StructuresSelector />
@@ -33,7 +33,7 @@ export default function Comparison() {
           <h3 className="fr-alert__title">Sélectionner plusieurs structures</h3>
           <p>
             Choisissez plusieurs structures dans la liste déroulante pour visualiser
-            leurs financements via les appels à projet. Vous pouvez filtrer par région.
+            leurs financements via les appels à projets. Vous pouvez filtrer par région.
           </p>
         </div>
       )}

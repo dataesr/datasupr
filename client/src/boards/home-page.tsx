@@ -52,7 +52,7 @@ const DASHBOARDS: DashboardCard[] = [
   {
     title: "Financement par appels à projets",
     description:
-      "Indicateurs sur le financement des structures via les appels à projet.",
+      "Indicateurs sur le financement des structures via les appels à projets.",
     icon: "money-euro-box-line",
     url: "/fundings/home",
   },

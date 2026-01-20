@@ -1,33 +1,32 @@
 import { useEffect, useRef } from "react";
 import Highcharts from "highcharts";
-// import { DSFR_COLORS } from "../../boards/structures-finance/constants/colors";
 
 interface MetricChartCardProps {
-  title: string;
-  value: string;
-  detail?: string;
   color?: string;
-  evolutionData?: Array<{ exercice: number; value: number }>;
+  data?: Array<{ x: number; y: number }>;
+  detail?: string;
+  title: string;
   unit?: string;
+  value: string;
 }
 
 export default function ChartCard({
-  title,
-  value,
-  detail,
   color = "var(--blue-france-sun-113)",
-  evolutionData,
+  data,
+  detail,
+  title,
   unit = "",
+  value,
 }: MetricChartCardProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<Highcharts.Chart | null>(null);
 
   useEffect(() => {
-    if (!chartRef.current || !evolutionData || evolutionData.length === 0)
+    if (!chartRef.current || !data || data.length === 0)
       return;
 
-    const years = evolutionData.sort((a, b) => a.exercice - b.exercice).map((item) => String(item.exercice));
-    const values = evolutionData.sort((a, b) => a.exercice - b.exercice).map((item) => item.value);
+    const years = data.sort((a, b) => a.x - b.x).map((item) => String(item.x));
+    const values = data.sort((a, b) => a.x - b.x).map((item) => item.y);
 
     const resolvedColor = color.startsWith("var(")
       ? getComputedStyle(document.documentElement)
@@ -153,9 +152,7 @@ export default function ChartCard({
           name: title,
           data: values,
           accessibility: {
-            description: `${title}: Évolution de ${years[0]} à ${
-              years[years.length - 1]
-            }`,
+            description: `${title}: Évolution de ${years[0]} à ${years[years.length - 1]}`,
           },
         },
       ],
@@ -173,13 +170,13 @@ export default function ChartCard({
         chartInstance.current = null;
       }
     };
-  }, [evolutionData, color, title, unit]);
+  }, [data, color, title, unit]);
 
   // const trend =
-  //   evolutionData && evolutionData.length >= 2 && evolutionData[0].value !== 0
-  //     ? ((evolutionData[evolutionData.length - 1].value -
-  //         evolutionData[0].value) /
-  //         evolutionData[0].value) *
+  //   data && data.length >= 2 && data[0].y !== 0
+  //     ? ((data[data.length - 1].y -
+  //         data[0].y) /
+  //         data[0].y) *
   //       100
   //     : null;
 
@@ -204,7 +201,7 @@ export default function ChartCard({
         overflow: "hidden",
       }}
     >
-      {evolutionData && evolutionData.length > 0 && (
+      {data && data.length > 0 && (
         <div
           ref={chartRef}
           style={{
