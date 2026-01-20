@@ -5,18 +5,19 @@ import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import SearchableSelect from "../../../../../../components/searchable-select";
-import { funders, getEsQuery } from "../../../../utils.ts";
+import { getEsQuery } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function StructureSelector({ setName }) {
   const [county, setCounty] = useState("*");
+  const [typology, setTypology] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
   const structure = searchParams.get("structure") ?? "";
 
   const bodyCounties = {
-    ...getEsQuery({ structures: [structure] }),
+    ...getEsQuery({}),
     aggregations: {
       by_county: {
         terms: {
@@ -27,55 +28,11 @@ export default function StructureSelector({ setName }) {
       },
     },
   };
-
-  const bodyStructures: any = {
-    size: 0,
-    query: {
-      bool: {
-        filter: [
-          {
-            term: {
-              participant_isFrench: true,
-            },
-          },
-          {
-            term: {
-              participant_status: "active",
-            },
-          },
-          {
-            term: {
-              participant_type: "institution",
-            },
-          },
-          {
-            term: {
-              "participant_kind.keyword": "Secteur public",
-            },
-          },
-          {
-            terms: {
-              "project_type.keyword": funders,
-            },
-          },
-        ],
-      },
-    },
-    aggregations: {
-      by_structure: {
-        terms: {
-          field: "participant_id_name_default.keyword",
-          size: 1500,
-        },
-      },
-    },
-  };
-  if (county && county !== '*') {
-    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": county } });
+  if (typology && typology !== '*') {
+    bodyCounties.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
   }
-
   const { data: dataCounties, isLoading: isLoadingCounties } = useQuery({
-    queryKey: ["fundings-counties"],
+    queryKey: ["fundings-counties", typology],
     queryFn: () =>
       fetch(
         `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
@@ -89,9 +46,58 @@ export default function StructureSelector({ setName }) {
         }
       ).then((response) => response.json()),
   });
+  const counties = (dataCounties?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket.key);
 
+  const bodyTypologies = {
+    ...getEsQuery({}),
+    aggregations: {
+      by_typology: {
+        terms: {
+          field: "participant_typologie_1.keyword",
+          order: { _key: "asc" },
+        },
+      },
+    },
+  };
+  if (county && county !== '*') {
+    bodyTypologies.query.bool.filter.push({ term: { "address.region.keyword": county } });
+  }
+  const { data: dataTypologies, isLoading: isLoadingTypologies } = useQuery({
+    queryKey: ["fundings-typologies", county],
+    queryFn: () =>
+      fetch(
+        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        {
+          body: JSON.stringify(bodyTypologies),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          method: "POST",
+        }
+      ).then((response) => response.json()),
+  });
+  const typologies = (dataTypologies?.aggregations?.by_typology?.buckets ?? []).map((bucket) => bucket.key);
+
+  const bodyStructures: any = {
+    ...getEsQuery({}),
+    aggregations: {
+      by_structure: {
+        terms: {
+          field: "participant_id_name_default.keyword",
+          size: 1500,
+        },
+      },
+    },
+  };
+  if (county && county !== '*') {
+    bodyStructures.query.bool.filter.push({ term: { "address.region.keyword": county } });
+  }
+  if (typology && typology !== '*') {
+    bodyStructures.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
+  }
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
-    queryKey: ["fundings-structures", county],
+    queryKey: ["fundings-structures", county, typology],
     queryFn: () =>
       fetch(
         `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
@@ -105,8 +111,6 @@ export default function StructureSelector({ setName }) {
         }
       ).then((response) => response.json()),
   });
-
-  const counties = (dataCounties?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket.key);
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const [id, label] = bucket.key.split('###');
@@ -128,15 +132,15 @@ export default function StructureSelector({ setName }) {
 
   return (
     <Row gutters>
-      <Col xs="12" sm="6" md="4">
+      <Col xs="12" sm="3">
         {isLoadingCounties ? <DefaultSkeleton height="70px" /> : (
           <div className="fr-select-group">
             <label className="fr-label">Région</label>
             <select
-              aria-describedby="select-hint-messages"
+              aria-describedby="select-county-messages"
               className="fr-select"
-              id="select-hint"
-              name="select-hint"
+              id="select-county"
+              name="select-county"
               onChange={(e) => setCounty(e.target.value)}
               value={county}
             >
@@ -151,7 +155,30 @@ export default function StructureSelector({ setName }) {
         )}
       </Col>
 
-      <Col xs="12" sm="6" md="8">
+      <Col xs="12" sm="3">
+        {isLoadingTypologies ? <DefaultSkeleton height="70px" /> : (
+          <div className="fr-select-group">
+            <label className="fr-label">Typology</label>
+            <select
+              aria-describedby="select-typology-messages"
+              className="fr-select"
+              id="select-typology"
+              name="select-typology"
+              onChange={(e) => setTypology(e.target.value)}
+              value={typology}
+            >
+              <option value="*">Toutes les typologies</option>
+              {typologies.map((typology: string) => (
+                <option key={typology} value={typology}>
+                  {typology}
+                </option>
+              ))}
+            </select>
+          </div>
+        )}
+      </Col>
+
+      <Col xs="12" sm="6">
         {isLoadingStructures ? <DefaultSkeleton height="70px" /> : (
           <>
             <label className="fr-label">Structure</label>
