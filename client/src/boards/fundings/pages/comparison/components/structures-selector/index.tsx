@@ -223,7 +223,7 @@ export default function StructuresSelector() {
               <SearchableSelect
                 onChange={handleStructureChange}
                 options={structures}
-                placeholder="Rechercher une structure..."
+                placeholder="Ajouter une structure..."
                 value={""}
               />
             </div>
