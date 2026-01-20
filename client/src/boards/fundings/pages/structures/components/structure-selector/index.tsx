@@ -13,7 +13,7 @@ const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = impor
 export default function StructureSelector({ setName }) {
   const [county, setCounty] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
-  const structure = searchParams.get("structure");
+  const structure = searchParams.get("structure") ?? "";
 
   const bodyCounties = {
     ...getEsQuery({ structures: [structure] }),
