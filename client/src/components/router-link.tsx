@@ -13,6 +13,10 @@ export default function RouterLink({ href, replace, target, children }: RouterLi
     return createElement("a", { href, target }, children);
   }
 
+  if (!href) {
+    return createElement("span", null, children);
+  }
+
   const linkElement: any = Link;
   const linkAttributes = Object.create(null);
   linkAttributes.to = href;
