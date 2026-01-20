@@ -100,9 +100,9 @@ export default function SelectionUI({
 
   return (
     <>
-      <h1 className="fr-h3 fr-mb-3w">Sélectionnez un établissement</h1>
+      <h1 className="fr-h3 ">Sélectionnez un établissement</h1>
 
-      <div className="fr-mb-3w">
+      <div className="fr-mb-2w">
         <Row gutters>
           <Col xs="12" md="7">
             <fieldset className="fr-fieldset">

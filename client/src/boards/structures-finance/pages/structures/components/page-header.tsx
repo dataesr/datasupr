@@ -33,8 +33,8 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
     data.etablissement_lib !== data.etablissement_actuel_lib;
 
   return (
-    <div className="fr-py-3w">
-      <div className="fr-grid-row fr-grid-row--gutters fr-grid-row--middle fr-mb-2w">
+    <div>
+      <div className="fr-grid-row fr-grid-row--gutters fr-grid-row--middle ">
         <div className="fr-col">
           <h1 className="fr-h3 fr-mb-0">
             {data.etablissement_lib || data.etablissement_actuel_lib}

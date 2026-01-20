@@ -21,7 +21,31 @@
     "label": {
       "fr": "Vue nationale"
     },
-    "link": "/structures-finance/national"
+    "link": "/structures-finance/national/produits-vs-etudiants"
+  },
+  "scsp-vs-encadrement": {
+    "label": {
+      "fr": "SCSP vs Encadrement"
+    },
+    "link": "/structures-finance/national/scsp-vs-encadrement"
+  },
+  "produits-vs-etudiants": {
+    "label": {
+      "fr": "Produits vs étudiants"
+    },
+    "link": "/structures-finance/national/produits-vs-etudiants"
+  },
+  "scsp-vs-ressources-propres": {
+    "label": {
+      "fr": "SCSP vs Ressources Propres"
+    },
+    "link": "/structures-finance/national/scsp-vs-ressources-propres"
+  },
+  "comparison": {
+    "label": {
+      "fr": "Comparaison entre établissements"
+    },
+    "link": "/structures-finance/national/comparison"
   },
   "faq": {
     "label": {
@@ -34,5 +58,35 @@
       "fr": "Définitions"
     },
     "link": "/structures-finance/definitions"
+  },
+  "ressources": {
+    "label": {
+      "fr": "Ressources"
+    },
+    "link": "/structures-finance/ressources"
+  },
+  "sante-financiere": {
+    "label": {
+      "fr": "Santé financière"
+    },
+    "link": "/structures-finance/sante-financiere"
+  },
+  "moyens-humains": {
+    "label": {
+      "fr": "Moyens humains"
+    },
+    "link": "/structures-finance/moyens-humains"
+  },
+  "diplomes-formations": {
+    "label": {
+      "fr": "Diplômes et formations"
+    },
+    "link": "/structures-finance/diplomes-formations"
+  },
+  "analyses": {
+    "label": {
+      "fr": "Analyses"
+    },
+    "link": "/structures-finance/analyses"
   }
 }
