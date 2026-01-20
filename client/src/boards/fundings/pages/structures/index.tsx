@@ -1,12 +1,13 @@
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { useState } from "react";
+import YearSelector from "../../components/year-selector";
 import OverviewByStructure from "./charts/overview-by-structure";
 import ProjectsByStructure from "./charts/projects-by-structure";
 import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
+import Cards from "./components/cards";
 import StructureSelector from "./components/structure-selector";
-import YearSelector from "../../components/year-selector";
 
 
 export default function Structures() {
@@ -31,6 +32,7 @@ export default function Structures() {
       </Row>
       {structure ? (
         <>
+          <Cards />
           <Row gutters>
             <Col>
               <ProjectsByStructure name={name} />
