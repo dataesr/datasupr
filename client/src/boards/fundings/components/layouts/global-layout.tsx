@@ -14,7 +14,7 @@ export default function GlobalLayout() {
 
   useEffect(() => {
     if (!searchParams.get("year")) {
-      searchParams.set("year", "2023");
+      searchParams.set("year", "2024");
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams]);
