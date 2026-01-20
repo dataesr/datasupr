@@ -207,7 +207,7 @@ export default function StructuresSelector() {
         {(isLoadingStructures || isLoadingStructuresAll) ? <DefaultSkeleton height="70px" /> : (
           <>
             <label className="fr-label">Structure</label>
-            <div className="fr-mt-1w">
+            <div className="fr-mt-1w fr-mb-1w">
               <SearchableSelect
                 onChange={handleStructureChange}
                 options={structures}
@@ -215,7 +215,7 @@ export default function StructuresSelector() {
                 value={""}
               />
             </div>
-            <TagGroup className="fr-mt-1w">
+            <TagGroup>
               {selectedStructures.map((selectedStructure) => (
                 <DismissibleTag key={selectedStructure} onClick={() => handleTagClick(selectedStructure)}>
                   {structuresAll.find((item) => item.id === selectedStructure)?.label}

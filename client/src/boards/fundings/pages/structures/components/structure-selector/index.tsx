@@ -186,7 +186,7 @@ export default function StructureSelector({ setName }) {
         {isLoadingStructures ? <DefaultSkeleton height="70px" /> : (
           <>
             <label className="fr-label">Structure</label>
-            <div className="fr-mt-1w">
+            <div className="fr-mt-1w fr-mb-1w">
               <SearchableSelect
                 onChange={handleStructureChange}
                 options={structures}

@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import Highcharts from "highcharts";
 
-interface MetricChartCardProps {
+interface ChartCardProps {
   color?: string;
   data?: Array<{ x: number; y: number }>;
   detail?: string;
@@ -10,14 +10,15 @@ interface MetricChartCardProps {
   value: string;
 }
 
-export default function ChartCard({
+
+export default function evolution({
   color = "var(--blue-france-sun-113)",
   data,
   detail,
   title,
   unit = "",
   value,
-}: MetricChartCardProps) {
+}: ChartCardProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<Highcharts.Chart | null>(null);
 
@@ -30,8 +31,8 @@ export default function ChartCard({
 
     const resolvedColor = color.startsWith("var(")
       ? getComputedStyle(document.documentElement)
-          .getPropertyValue(color.slice(4, -1))
-          .trim()
+        .getPropertyValue(color.slice(4, -1))
+        .trim()
       : color;
 
     chartInstance.current = Highcharts.chart({
@@ -158,9 +159,8 @@ export default function ChartCard({
       ],
       accessibility: {
         enabled: true,
-        description: `Graphique montrant l'évolution de ${title} sur la période ${
-          years[0]
-        }-${years[years.length - 1]}`,
+        description: `Graphique montrant l'évolution de ${title} sur la période ${years[0]
+          }-${years[years.length - 1]}`,
       },
     });
 
@@ -175,14 +175,14 @@ export default function ChartCard({
   // const trend =
   //   data && data.length >= 2 && data[0].y !== 0
   //     ? ((data[data.length - 1].y -
-  //         data[0].y) /
-  //         data[0].y) *
-  //       100
+  //       data[0].y) /
+  //       data[0].y) *
+  //     100
   //     : null;
 
   // const trendFormatted =
   //   trend !== null && isFinite(trend)
-  //     ? `${trend > 0 ? "+" : ""}${trend.toFixed(1)}%`
+  //     ? `${trend > 0 ? "+" : ""}${trend.toFixed(1)}% en 2024`
   //     : null;
 
   return (
@@ -244,30 +244,30 @@ export default function ChartCard({
               {detail}
             </p>
           )}
+          {/* {trendFormatted && (
+            <div
+              style={{
+                position: "relative",
+                top: "0.5rem",
+                right: "0.5rem",
+                fontSize: "0.875rem",
+                fontWeight: 600,
+                color:
+                  trend && trend > 0
+                    ? "var(--green-archipel-sun-391)"
+                    : trend && trend < 0
+                      ? "var(--pink-tuile-sun-425)"
+                      : "var(--text-mention-grey)",
+                display: "flex",
+                alignItems: "center",
+                gap: "3px",
+              }}
+            >
+              {trend && trend > 0 ? "↗" : trend && trend < 0 ? "↘" : "→"}
+              {trendFormatted}
+            </div>
+          )} */}
         </div>
-        {/* {trendFormatted && (
-          <div
-            style={{
-              position: "absolute",
-              top: "0.5rem",
-              right: "0.5rem",
-              fontSize: "0.875rem",
-              fontWeight: 600,
-              color:
-                trend && trend > 0
-                  ? "var(--green-archipel-sun-391)"
-                  : trend && trend < 0
-                  ? "var(--pink-tuile-sun-425)"
-                  : "var(--text-mention-grey)",
-              display: "flex",
-              alignItems: "center",
-              gap: "3px",
-            }}
-          >
-            {trend && trend > 0 ? "↗" : trend && trend < 0 ? "↘" : "→"}
-            {trendFormatted}
-          </div>
-        )} */}
       </div>
     </div>
   );

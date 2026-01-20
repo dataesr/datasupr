@@ -91,40 +91,49 @@ export default function Cards() {
       }).then((response) => response.json()),
   });
 
-  const getDataByFunder = (funder) => {
-    const dataFunder = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder)?.by_project_year?.buckets ?? [];
-    return years.map((year) => ({
-      x: year,
-      y: dataFunder.find((item) => item.key === year)?.unique_projects?.value ?? 0,
-    }));
-  }
+  const dataByFunder = {};
+  (data?.aggregations?.by_project_type?.buckets ?? []).forEach((funder) => {
+    dataByFunder[funder.key] = {
+      projects: years.map((year) => ({
+        x: year,
+        y: funder?.by_project_year?.buckets.find((item) => item.key === year)?.unique_projects?.value ?? 0,
+      })),
+      budget: years.map((year) => ({
+        x: year,
+        y: funder?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget?.value ?? 0,
+      })),
+    };
+  });
+
+  const size = Math.floor(12 / Object.keys(dataByFunder).length);
 
   return (
     <>
       <Row gutters>
-        {(data?.aggregations?.by_project_type?.buckets ?? []).map((funder) => (
-          <Col xs="12" md="4" key={`card-projects-${funder.key}`}>
+        {Object.keys(dataByFunder).map((funder) => (
+          <Col xs="12" md={size} key={`card-projects-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
-                color={getColorFromFunder(funder.key)}
-                data={getDataByFunder(funder.key)}
-                title={`Projets financés par ${funder.key} en ${year}`}
-                value={(data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder.key)?.by_project_year?.buckets?.find((item) => item.key === year)?.unique_projects?.value ?? 0}
+                color={getColorFromFunder(funder)}
+                data={dataByFunder[funder].projects}
+                detail={`en ${year}`}
+                title={`Projets financés par ${funder}`}
+                value={`${dataByFunder[funder].projects.find((item) => item.x === year).y} projet${dataByFunder[funder].projects.find((item) => item.x === year).y > 1 ? 's' : ''}`}
               />
             }
           </Col>
         ))}
       </Row>
       <Row gutters>
-        {(data?.aggregations?.by_project_type?.buckets ?? []).map((funder) => (
-          <Col xs="12" md="4" key={`card-budget-${funder.key}`}>
+        {Object.keys(dataByFunder).map((funder) => (
+          <Col xs="12" md={size} key={`card-budget-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
-                color={getColorFromFunder(funder.key)}
-                data={(data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder.key)?.by_project_year?.buckets?.map((item) => ({ x: item.key, y: item.sum_budget.value }))}
-                title={`Projets financés par ${funder.key} en ${year}`}
-                unit="€"
-                value={formatCompactNumber((data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder.key)?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget?.value ?? 0)}
+                color={getColorFromFunder(funder)}
+                data={dataByFunder[funder].budget}
+                detail={`en ${year}`}
+                title={`Montants financés par ${funder}`}
+                value={`${formatCompactNumber(dataByFunder[funder].budget.find((item) => item.x === year).y)} €`}
               />
             }
           </Col>

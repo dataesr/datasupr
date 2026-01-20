@@ -63,7 +63,9 @@ export default function Structures() {
         </>
       ) : (
         <div className="fr-alert fr-alert--info fr-mt-3w">
-          <h3 className="fr-alert__title">Sélectionner une structure</h3>
+          <h3 className="fr-alert__title">
+            Sélectionner une structure
+          </h3>
           <p>
             Choisissez une structure dans la liste déroulante pour visualiser
             ses financements via les appels à projets. Vous pouvez filtrer par région.
