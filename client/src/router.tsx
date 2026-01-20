@@ -21,19 +21,20 @@ export default function Router() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
-      <Route path="/admin*" element={<AdminRoutes />} />
-      <Route path="/atlas*" element={<AtlasRoutes />} />
+      <Route path="/admin/*" element={<AdminRoutes />} />
+      <Route path="/atlas/*" element={<AtlasRoutes />} />
       <Route path="/cookies" element={<CookiePolicyPage />} />
-      <Route path="/datasupr-doc*" element={<DatasuprDocRoutes />} />
-      <Route path="/european-projects*" element={<EuropeanProjectsRoutes />} />
-      <Route path="/fundings*" element={<FundingsRoutes />} />
-      <Route path="/graduates*" element={<GraduatesRoutes />} />
+      <Route path="/datasupr-doc/*" element={<DatasuprDocRoutes />} />
+      <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
+      <Route path="/fundings" element={<FundingsRoutes />} />
+      <Route path="/fundings/*" element={<FundingsRoutes />} />
+      <Route path="/graduates/*" element={<GraduatesRoutes />} />
       <Route path="/integration" element={<Integration />} />
-      <Route path="/open-alex*" element={<OpenAlexRoutes />} />
-      <Route path="/personnel-enseignant*" element={<FacultyMembersRoutes />} />
-      <Route path="/structures-finance*" element={<StructuresFinanceRoutes />} />
-      <Route path="/teds*" element={<TedsRoutes />} />
-      <Route path="/template*" element={<TemplateRoutes />} />
+      <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
+      <Route path="/personnel-enseignant/*" element={<FacultyMembersRoutes />} />
+      <Route path="/structures-finance/*" element={<StructuresFinanceRoutes />} />
+      <Route path="/teds/*" element={<TedsRoutes />} />
+      <Route path="/template/*" element={<TemplateRoutes />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
