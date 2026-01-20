@@ -4,8 +4,6 @@ import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 import Footer from "./footer";
 import i18n from "./i18n.json";
 
-import "../styles.scss";
-
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();

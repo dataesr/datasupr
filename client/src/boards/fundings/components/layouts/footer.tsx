@@ -8,6 +8,7 @@ export default function Footer() {
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
+
   return (
     <footer className="fr-footer fr-mt-5w" role="contentinfo" id="footer">
       <div className="fr-container">
