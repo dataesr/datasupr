@@ -124,7 +124,7 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/structures-finance/national?${filtersParams}`}
+                    to={`/structures-finance/national?}`}
                     target="_self"
                     {...(is("/structures-finance/national") && {
                       "aria-current": "page",
@@ -136,7 +136,7 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/structures-finance/faq?${filtersParams}`}
+                    to={`/structures-finance/faq?`}
                     target="_self"
                     {...(is("/structures-finance/faq") && {
                       "aria-current": "page",
@@ -148,7 +148,7 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/structures-finance/definitions?${filtersParams}`}
+                    to={`/structures-finance/definitions`}
                     target="_self"
                     {...(is("/structures-finance/definitions") && {
                       "aria-current": "page",
