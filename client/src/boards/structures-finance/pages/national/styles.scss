@@ -1,0 +1,9 @@
+.etablissement-selector {
+  &__wrapper {
+    background: linear-gradient(
+      135deg,
+      var(--background-contrast-blue-france) 0%,
+      var(--background-default-grey) 100%
+    );
+  }
+}

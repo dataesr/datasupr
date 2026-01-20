@@ -14,7 +14,15 @@ export default function SectionNavigation() {
   };
 
   return (
-    <div className="fr-mb-3w">
+    <div
+      style={{
+        display: "flex",
+        alignItems: "center",
+        gap: "1rem",
+        borderBottom: "2px solid var(--border-default-grey)",
+      }}
+    >
+      {" "}
       <TertiaryNavigation>
         <TertiaryNavigationItem
           label="Produits vs Effectifs d'étudiants"

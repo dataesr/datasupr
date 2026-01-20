@@ -1,7 +1,9 @@
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
-import { useFinanceFAQ } from "./api";
 import FAQ from "../../../../components/faq";
+import { useFinanceFAQ } from "./api";
+import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
+import navigationConfig from "../../navigation-config.json";
 
 export default function FAQView() {
   const [searchParams] = useSearchParams();
@@ -41,17 +43,23 @@ export default function FAQView() {
 
   return (
     <main role="main">
-      <Container className="fr-my-6w">
-        <Row>
-          <Col>
-            <h1 className="fr-h1">Foire aux questions</h1>
-            <p className="fr-text--lead fr-mb-4w">
-              Retrouvez les réponses aux questions les plus fréquentes sur les
-              données financières des établissements d'enseignement supérieur.
-            </p>
-          </Col>
-        </Row>
-        <Row>
+      <Container fluid className="etablissement-selector__wrapper">
+        <Container as="section" className="fr-py-4w">
+          <CustomBreadcrumb config={navigationConfig} />
+
+          <Row>
+            <Col>
+              <h1 className="fr-h1">Foire aux questions</h1>
+              <p className="fr-text--lead fr-mb-4w">
+                Retrouvez les réponses aux questions les plus fréquentes sur les
+                données financières des établissements d'enseignement supérieur.
+              </p>
+            </Col>
+          </Row>
+        </Container>
+      </Container>
+      <Container>
+        <Row className="fr-my-6w">
           <Col>
             <FAQ data={data || []} />
           </Col>

@@ -1,0 +1,38 @@
+{
+  "structures-finance": {
+    "label": {
+      "fr": "Accueil"
+    },
+    "link": "/structures-finance/accueil"
+  },
+  "accueil": {
+    "label": {
+      "fr": "Accueil"
+    },
+    "link": "/structures-finance/accueil"
+  },
+  "etablissements": {
+    "label": {
+      "fr": "Sélection des établissements"
+    },
+    "link": "/structures-finance/etablissements"
+  },
+  "national": {
+    "label": {
+      "fr": "Vue nationale"
+    },
+    "link": "/structures-finance/national"
+  },
+  "faq": {
+    "label": {
+      "fr": "Foire aux questions"
+    },
+    "link": "/structures-finance/faq"
+  },
+  "definitions": {
+    "label": {
+      "fr": "Définitions"
+    },
+    "link": "/structures-finance/definitions"
+  }
+}

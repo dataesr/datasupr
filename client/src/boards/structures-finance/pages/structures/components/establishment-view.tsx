@@ -13,7 +13,7 @@ import {
   AnalysesSection,
 } from "../sections/sections";
 import CustomBreadcrumb from "../../../../../components/custom-breadcrumb";
-import navigationConfig from "./navigation-config.json";
+import navigationConfig from "../../../navigation-config.json";
 
 export default function EstablishmentView() {
   const [searchParams, setSearchParams] = useSearchParams();

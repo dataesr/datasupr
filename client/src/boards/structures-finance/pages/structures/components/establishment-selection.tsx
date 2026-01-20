@@ -1,8 +1,10 @@
 import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import { Container } from "@dataesr/dsfr-plus";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useStructuresFilters } from "../hooks";
 import SelectionUI from "./selection-ui";
+import CustomBreadcrumb from "../../../../../components/custom-breadcrumb";
+import navigationConfig from "../../../navigation-config.json";
 
 export default function EstablishmentSelection() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -59,22 +61,33 @@ export default function EstablishmentSelection() {
   };
 
   return (
-    <Container fluid className="etablissement-selector__wrapper">
-      <Container className="fr-py-4w">
-        <SelectionUI
-          selectedType={selectedType}
-          selectedTypologie={selectedTypologie}
-          selectedRegion={selectedRegion}
-          availableTypes={availableTypes}
-          availableTypologies={availableTypologies}
-          availableRegions={availableRegions}
-          filteredEtablissements={filteredEtablissements}
-          onTypeChange={handleTypeChange}
-          onTypologieChange={handleTypologieChange}
-          onRegionChange={handleRegionChange}
-          onEtablissementSelect={handleEtablissementSelect}
-        />
+    <main>
+      <Container fluid className="etablissement-selector__wrapper">
+        <Container as="section" className="fr-py-4w">
+          <Row>
+            <Col>
+              <CustomBreadcrumb config={navigationConfig} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <SelectionUI
+                selectedType={selectedType}
+                selectedTypologie={selectedTypologie}
+                selectedRegion={selectedRegion}
+                availableTypes={availableTypes}
+                availableTypologies={availableTypologies}
+                availableRegions={availableRegions}
+                filteredEtablissements={filteredEtablissements}
+                onTypeChange={handleTypeChange}
+                onTypologieChange={handleTypologieChange}
+                onRegionChange={handleRegionChange}
+                onEtablissementSelect={handleEtablissementSelect}
+              />
+            </Col>
+          </Row>
+        </Container>
       </Container>
-    </Container>
+    </main>
   );
 }
