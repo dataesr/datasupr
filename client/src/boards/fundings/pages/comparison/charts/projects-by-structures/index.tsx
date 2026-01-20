@@ -77,7 +77,7 @@ export default function ProjectsByStructures() {
   const titleProjects = `Nombre de projets par financeur entre ${yearMin} et ${yearMax}`;
   const titleBudget = `Montant total des projets par financeur entre ${yearMin} et ${yearMax}`;
   const axisProjects = "Nombre de projets financés";
-  const axisBudget = "Montant total";
+  const axisBudget = "Montants financés";
   const tooltipProjects = function (this: any) {
     return `<b>${this.y}</b> projets ont débuté entre <b>${yearMin}</b> et <b>${yearMax}</b> grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${categories[this.x]}</b>`;
   };

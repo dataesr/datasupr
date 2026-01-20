@@ -76,7 +76,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   const titleProjects = `Nombre de projets de ${name} par financeur entre ${yearMin} et ${yearMax}, par année de début du projet`;
   const titleBudget = `Montant total des projets de ${name} par financeur entre ${yearMin} et ${yearMax}, par année de début du projet`;
   const axisProjects = "Nombre de projets financés";
-  const axisBudget = "Montant total";
+  const axisBudget = "Montants financés";
   const tooltipProjects = function (this: any) {
     return `<b>${this.y}</b> projets ont débuté en <b>${this.x}</b> grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
   };
@@ -119,7 +119,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
       </Title>
       <SegmentedControl name="projects-over-time-by-structure-segmented">
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
-        <SegmentedElement checked={field === "budget"} label="Montant total" onClick={() => setField("budget")} value="budget" />
+        <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} options={options} />}
     </div>

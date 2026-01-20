@@ -65,7 +65,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   let hiddenPoints: string[] = [];
 
   const options: object = {
-    ...getGeneralOptions('', [], '', 'Montant total'),
+    ...getGeneralOptions('', [], '', 'Montants financés'),
     chart: { height: '600px', type: 'variwide' },
     tooltip: {
       formatter: function (this: any) {

@@ -14,10 +14,10 @@ export default function GlobalLayout() {
   useEffect(() => {
     if (!searchParams.get("yearMax") || !searchParams.get("yearMin")) {
       if (!searchParams.get("yearMax")) {
-        searchParams.set("yearMax", years[years.length - 2].toString());
+        searchParams.set("yearMax", String(years[years.length - 2]));
       }
       if (!searchParams.get("yearMin")) {
-        searchParams.set("yearMin", years[years.length - 2].toString());
+        searchParams.set("yearMin", String(years[years.length - 2]));
       }
       setSearchParams(searchParams);
     }

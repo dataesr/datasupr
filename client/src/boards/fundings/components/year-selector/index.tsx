@@ -6,8 +6,8 @@ import { years } from "../../utils";
 
 export default function YearSelector() {
   const [searchParams, setSearchParams] = useSearchParams({});
-  const yearMax: string = searchParams.get("yearMax") ?? years[years.length - 2].toString();
-  const yearMin: string = searchParams.get("yearMin") ?? years[years.length - 2].toString();
+  const yearMax: string = searchParams.get("yearMax") ?? String(years[years.length - 2]);
+  const yearMin: string = searchParams.get("yearMin") ?? String(years[years.length - 2]);
 
   const handleYearMaxChange = (year: string) => {
     searchParams.set("yearMax", year);

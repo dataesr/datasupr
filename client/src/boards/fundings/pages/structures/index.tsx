@@ -67,7 +67,7 @@ export default function Structures() {
           <Alert
             className="fr-mt-3w"
             description="Choisissez une structure dans la liste déroulante pour visualiser
-            ses financements via les appels à projets. Vous pouvez filtrer par région."
+            ses financements via les appels à projets. Vous pouvez filtrer par région et par typologie."
             title="Sélectionner une structure"
             variant="info"
           />

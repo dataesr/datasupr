@@ -6,8 +6,10 @@ interface ChartCardProps {
   data?: Array<{ x: number; y: number }>;
   detail?: string;
   title: string;
+  tooltipFormatter?: Highcharts.TooltipFormatterCallbackFunction | undefined;
   unit?: string;
   value: string;
+  yAxisMax?: number;
 }
 
 
@@ -16,8 +18,10 @@ export default function evolution({
   data,
   detail,
   title,
+  tooltipFormatter = function (this: any) { return `<b>${this.x}</b><br/>${this.y}` },
   unit = "",
   value,
+  yAxisMax = undefined,
 }: ChartCardProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<Highcharts.Chart | null>(null);
@@ -26,8 +30,8 @@ export default function evolution({
     if (!chartRef.current || !data || data.length === 0)
       return;
 
-    const years = data.sort((a, b) => a.x - b.x).map((item) => String(item.x));
-    const values = data.sort((a, b) => a.x - b.x).map((item) => item.y);
+    const categories = data.sort((a, b) => a.x - b.x).map((item) => String(item.x));
+    const dataSeries = data.sort((a, b) => a.x - b.x).map((item) => item.y);
 
     const resolvedColor = color.startsWith("var(")
       ? getComputedStyle(document.documentElement)
@@ -51,7 +55,7 @@ export default function evolution({
         enabled: false,
       },
       xAxis: {
-        categories: years,
+        categories,
         visible: false,
         labels: {
           enabled: false,
@@ -68,6 +72,7 @@ export default function evolution({
           enabled: false,
         },
         gridLineWidth: 0,
+        max: yAxisMax,
       },
       legend: {
         enabled: false,
@@ -130,37 +135,15 @@ export default function evolution({
         style: {
           color: "var(--text-default-grey)",
         },
-        formatter: function () {
-          const val = this.y as number;
-          const year = years[this.index];
-          let formattedValue = "";
-          if (unit === "€") {
-            formattedValue =
-              val.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
-          } else if (unit === "%") {
-            formattedValue = val.toFixed(1) + " %";
-          } else {
-            formattedValue = val.toLocaleString("fr-FR", {
-              maximumFractionDigits: 1,
-            });
-          }
-          return `<b>${year}</b><br/>${formattedValue}`;
-        },
+        formatter: tooltipFormatter,
       },
       series: [
         {
-          type: "areaspline",
+          data: dataSeries,
           name: title,
-          data: values,
-          accessibility: {
-            description: `${title}: Évolution de ${years[0]} à ${years[years.length - 1]}`,
-          },
+          type: "areaspline",
         },
       ],
-      accessibility: {
-        enabled: true,
-        description: `Graphique montrant l'évolution de ${title} entre ${years[0]} et ${years[years.length - 1]}`,
-      },
     });
 
     return () => {
@@ -210,13 +193,15 @@ export default function evolution({
             right: 0,
             width: "100%",
             height: "110px",
+            zIndex: 1,
           }}
         />
       )}
 
       <div
         className="fr-card__body fr-p-2w"
-        style={{ position: "relative", zIndex: 1, pointerEvents: "none" }}
+        // style={{ position: "relative", zIndex: 1, pointerEvents: "none" }}
+        style={{ position: "relative", pointerEvents: "none" }}
       >
         <div className="fr-card__content">
           <p
@@ -237,7 +222,7 @@ export default function evolution({
                 // color: DSFR_COLORS.textDefault,
                 margin: 0,
                 position: "relative",
-                zIndex: 10,
+                // zIndex: 10,
               }}
             >
               {detail}

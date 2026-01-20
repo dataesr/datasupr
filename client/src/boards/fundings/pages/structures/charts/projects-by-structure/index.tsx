@@ -67,7 +67,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   const titleProjects = `Nombre de projets de ${name} par financeur entre ${yearMin} et ${yearMax}`;
   const titleBudget = `Montant total des projets de ${name} par financeur entre ${yearMin} et ${yearMax}`;
   const axisProjects = "Nombre de projets financés";
-  const axisBudget = "Montant total";
+  const axisBudget = "Montants financés";
   const tooltipProjects = function (this: any) {
     return `<b>${this.y}</b> projets ont débuté entre <b>${yearMin}</b> et <b>${yearMax}</b> grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
   };
@@ -93,8 +93,8 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         {field === "projects" ? titleProjects : titleBudget}
       </Title>
       <SegmentedControl name="projects-by-structure-segmented">
-        <SegmentedElement checked={field === "projects"} label=" financés" onClick={() => setField("projects")} value="projects" />
-        <SegmentedElement checked={field === "budget"} label="Montant total" onClick={() => setField("budget")} value="budget" />
+        <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
+        <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} options={options} />}
     </div>

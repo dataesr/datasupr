@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { formatCompactNumber, getColorFromFunder, getEsQuery, years } from "../../../../utils.ts";
+import { formatCompactNumber, funders, getColorFromFunder, getEsQuery, years } from "../../../../utils.ts";
 import ChartCard from "../chart-card";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -61,49 +61,58 @@ export default function Cards() {
       }).then((response) => response.json()),
   });
 
-  const dataByFunder = {};
-  (data?.aggregations?.by_project_type?.buckets ?? []).forEach((funder) => {
-    dataByFunder[funder.key] = {
-      projects: years.map((year) => ({
-        x: year,
-        y: funder?.by_project_year?.buckets.find((item) => item.key === year)?.unique_projects?.value ?? 0,
-      })),
-      budget: years.map((year) => ({
-        x: year,
-        y: funder?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget?.value ?? 0,
-      })),
-    };
+  const dataFunders = {};
+  funders.forEach((funder) => {
+    const dataByFunder = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
+    if (dataByFunder) {
+      dataFunders[funder] = {
+        projects: years.map((year) => ({
+          x: year,
+          y: dataByFunder?.by_project_year?.buckets.find((item) => item.key === year)?.unique_projects?.value ?? 0,
+        })),
+        budget: years.map((year) => ({
+          x: year,
+          y: dataByFunder?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget?.value ?? 0,
+        })),
+      };
+    }
   });
 
-  const size: ColSize = Math.floor(12 / Object.keys(dataByFunder).length) as ColSize;
+  const size: ColSize = Math.floor(12 / Object.keys(dataFunders).length) as ColSize;
+  const maxProjects: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.projects.map((project) => project.y)).flat());
+  const maxBudget: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.budget.map((project) => project.y)).flat());
 
   return (
     <>
       <Row gutters>
-        {Object.keys(dataByFunder).map((funder) => (
+        {Object.keys(dataFunders).map((funder) => (
           <Col xs="12" md={size} key={`card-projects-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
                 color={getColorFromFunder(funder)}
-                data={dataByFunder[funder].projects}
+                data={dataFunders[funder].projects}
                 detail={`entre ${yearMin} et ${yearMax}`}
                 title={`Projets financés par ${funder}`}
-                value={`${dataByFunder[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0)} projet${dataByFunder[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0) > 1 ? 's' : ''}`}
+                tooltipFormatter={function (this: any) { return `${this.y} project(s) par ${funder} en ${this.key}` }}
+                value={`${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0)} projet${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0) > 1 ? 's' : ''}`}
+                yAxisMax={maxProjects}
               />
             }
           </Col>
         ))}
       </Row>
       <Row gutters>
-        {Object.keys(dataByFunder).map((funder) => (
+        {Object.keys(dataFunders).map((funder) => (
           <Col xs="12" md={size} key={`card-budget-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
                 color={getColorFromFunder(funder)}
-                data={dataByFunder[funder].budget}
+                data={dataFunders[funder].budget}
                 detail={`entre ${yearMin} et ${yearMax}`}
                 title={`Montants financés par ${funder}`}
-                value={`${formatCompactNumber(dataByFunder[funder].budget.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0))} €`}
+                tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y)} € par ${funder} en ${this.key}` }}
+                value={`${formatCompactNumber(dataFunders[funder].budget.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0))} €`}
+                yAxisMax={maxBudget}
               />
             }
           </Col>

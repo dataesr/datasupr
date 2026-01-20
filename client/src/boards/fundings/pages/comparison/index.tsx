@@ -26,7 +26,7 @@ export default function Comparison() {
         </Col>
       </Row>
       {(Number(yearMin) <= Number(yearMax)) && (
-        (structures && structures.length > 0) ? (
+        (structures && structures.length >= 2) ? (
           <>
             <Row gutters>
               <Col>
@@ -42,7 +42,7 @@ export default function Comparison() {
         ) : (
           <Alert
             description="Choisissez plusieurs structures dans la liste déroulante pour visualiser
-              leurs financements via les appels à projets. Vous pouvez filtrer par région."
+              leurs financements via les appels à projets. Vous pouvez filtrer par région et par typologie."
             className="fr-mt-3w"
             title="Sélectionner plusieurs structures"
             variant="info"
