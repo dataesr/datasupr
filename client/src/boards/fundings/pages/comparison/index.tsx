@@ -1,4 +1,4 @@
-import { Col, Container, Row } from "@dataesr/dsfr-plus";
+import { Alert, Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
 import YearSelector from "../../components/year-selector";
@@ -10,6 +10,8 @@ import StructuresSelector from "./components/structures-selector";
 export default function Comparison() {
   const [searchParams] = useSearchParams({});
   const structures = searchParams.getAll("structure");
+  const yearMax = searchParams.get("yearMax");
+  const yearMin = searchParams.get("yearMin");
 
   return (
     <Container className="board-fundings fr-pt-3w">
@@ -23,29 +25,29 @@ export default function Comparison() {
           <YearSelector />
         </Col>
       </Row>
-      {(structures && structures.length > 0) ? (
-        <>
-          <Row gutters>
-            <Col>
-              <ProjectsByStructures />
-            </Col>
-          </Row>
-          <Row gutters>
-            <Col>
-              <Dispersion />
-            </Col>
-          </Row>
-        </>
-      ) : (
-        <div className="fr-alert fr-alert--info fr-mt-3w">
-          <h3 className="fr-alert__title">
-            Sélectionner plusieurs structures
-          </h3>
-          <p>
-            Choisissez plusieurs structures dans la liste déroulante pour visualiser
-            leurs financements via les appels à projets. Vous pouvez filtrer par région.
-          </p>
-        </div>
+      {(Number(yearMin) <= Number(yearMax)) && (
+        (structures && structures.length > 0) ? (
+          <>
+            <Row gutters>
+              <Col>
+                <ProjectsByStructures />
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col>
+                <Dispersion />
+              </Col>
+            </Row>
+          </>
+        ) : (
+          <Alert
+            description="Choisissez plusieurs structures dans la liste déroulante pour visualiser
+              leurs financements via les appels à projets. Vous pouvez filtrer par région."
+            className="fr-mt-3w"
+            title="Sélectionner plusieurs structures"
+            variant="info"
+          />
+        )
       )}
     </Container>
   )

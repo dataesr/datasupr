@@ -159,8 +159,7 @@ export default function evolution({
       ],
       accessibility: {
         enabled: true,
-        description: `Graphique montrant l'évolution de ${title} sur la période ${years[0]
-          }-${years[years.length - 1]}`,
+        description: `Graphique montrant l'évolution de ${title} entre ${years[0]} et ${years[years.length - 1]}`,
       },
     });
 

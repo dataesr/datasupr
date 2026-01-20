@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
+import { years } from "../../utils";
 import Footer from "./footer";
 import i18n from "./i18n.json";
 
@@ -11,8 +12,13 @@ export default function GlobalLayout() {
   const currentLang = searchParams.get("language") || "fr";
 
   useEffect(() => {
-    if (!searchParams.get("year")) {
-      searchParams.set("year", "2024");
+    if (!searchParams.get("yearMax") || !searchParams.get("yearMin")) {
+      if (!searchParams.get("yearMax")) {
+        searchParams.set("yearMax", years[years.length - 2].toString());
+      }
+      if (!searchParams.get("yearMin")) {
+        searchParams.set("yearMin", years[years.length - 2].toString());
+      }
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams]);

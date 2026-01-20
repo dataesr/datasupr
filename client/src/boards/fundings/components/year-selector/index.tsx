@@ -1,4 +1,4 @@
-import { Col, Row } from "@dataesr/dsfr-plus";
+import { Alert, Col, Row } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
 import { years } from "../../utils";
@@ -6,23 +6,29 @@ import { years } from "../../utils";
 
 export default function YearSelector() {
   const [searchParams, setSearchParams] = useSearchParams({});
-  const year:string = searchParams.get("year") ?? years[years.length  - 1].toString();
+  const yearMax: string = searchParams.get("yearMax") ?? years[years.length - 2].toString();
+  const yearMin: string = searchParams.get("yearMin") ?? years[years.length - 2].toString();
 
-  const handleYearChange = (year: string) => {
-    searchParams.set("year", year);
+  const handleYearMaxChange = (year: string) => {
+    searchParams.set("yearMax", year);
+    setSearchParams(searchParams);
+  };
+
+  const handleYearMinChange = (year: string) => {
+    searchParams.set("yearMin", year);
     setSearchParams(searchParams);
   };
 
   return (
     <Row gutters>
-      <Col xs="4">
-        <label className="fr-label">Année</label>
+      <Col xs="3">
+        <label className="fr-label">Année de début</label>
         <select
           className="fr-select"
-          id="fundings-year"
-          name="fundings-year"
-          onChange={(e) => handleYearChange(e.target.value)}
-          value={year}
+          id="fundings-year-min"
+          name="fundings-year-min"
+          onChange={(e) => handleYearMinChange(e.target.value)}
+          value={yearMin}
         >
           {[...years].sort((a, b) => b - a).map((year) => (
             <option key={year} value={year}>
@@ -31,6 +37,32 @@ export default function YearSelector() {
           ))}
         </select>
       </Col>
+      <Col xs="3">
+        <label className="fr-label">Année de fin</label>
+        <select
+          className="fr-select"
+          id="fundings-year-max"
+          name="fundings-year-max"
+          onChange={(e) => handleYearMaxChange(e.target.value)}
+          value={yearMax}
+        >
+          {[...years].sort((a, b) => b - a).map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </Col>
+      {(Number(yearMax) >= 2024 && Number(yearMin) <= 2025) && (
+        <Col xs="6">
+          <Alert variant="warning" title="Attention" description="Les données 2024 et 2025 sont incomplètes" size="sm" />
+        </Col>
+      )}
+      {(Number(yearMin) > Number(yearMax)) && (
+        <Col xs="6">
+          <Alert variant="error" title="Erreur" description="L'année de fin doit être supérieure ou égale à l'année de début" size="sm" />
+        </Col>
+      )}
     </Row>
   );
 }

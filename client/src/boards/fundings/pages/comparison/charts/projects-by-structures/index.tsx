@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, funders, getColorFromFunder, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -16,42 +16,12 @@ export default function ProjectsByStructures() {
   const [field, setField] = useState("projects");
   const [searchParams] = useSearchParams();
   const structures = searchParams.getAll("structure");
-  const year = searchParams.get("year");
+  const yearMax = searchParams.get("yearMax");
+  const yearMin = searchParams.get("yearMin");
   const color = useChartColor();
 
   const body = {
-    size: 0,
-    query: {
-      bool: {
-        filter: [
-          {
-            term: {
-              project_year: year,
-            },
-          },
-          {
-            term: {
-              participant_isFrench: true,
-            },
-          },
-          {
-            term: {
-              participant_status: "active",
-            },
-          },
-          {
-            terms: {
-              "participant_id.keyword": structures,
-            },
-          },
-          {
-            terms: {
-              "project_type.keyword": funders,
-            },
-          },
-        ]
-      },
-    },
+    ...getEsQuery({ structures, yearMax, yearMin }),
     aggregations: {
       by_structure: {
         terms: {
@@ -82,7 +52,7 @@ export default function ProjectsByStructures() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-projects-by-structures', structures, year],
+    queryKey: ['fundings-projects-by-structures', structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -104,15 +74,15 @@ export default function ProjectsByStructures() {
     name: funder,
   }));
 
-  const titleProjects = `Nombre de projets par financeur pour l'année ${year}`;
-  const titleBudget = `Montant total des projets par financeur pour l'année ${year}`;
-  const axisProjects = "Nombre de projets";
+  const titleProjects = `Nombre de projets par financeur entre ${yearMin} et ${yearMax}`;
+  const titleBudget = `Montant total des projets par financeur entre ${yearMin} et ${yearMax}`;
+  const axisProjects = "Nombre de projets financés";
   const axisBudget = "Montant total";
   const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté en <b>${year}</b> grâce au financement de <b>${this.series.name}</b> auxquels prend part <b>${categories[this.x]}</b>`;
+    return `<b>${this.y}</b> projets ont débuté entre <b>${yearMin}</b> et <b>${yearMax}</b> grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${categories[this.x]}</b>`;
   };
   const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés en <b>${year}</b> auxquels prend part <b>${categories[this.x]}</b>`;
+    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés entre <b>${yearMin}</b> et <b>${yearMax}</b> auxquels prend part <b>${categories[this.x]}</b>`;
   };
   const config = {
     id: "projectsByStructures",
@@ -137,7 +107,7 @@ export default function ProjectsByStructures() {
         {field === "projects" ? titleProjects : titleBudget}
       </Title>
       <SegmentedControl name="projects-by-structures-segmented">
-        <SegmentedElement checked={field === "projects"} label="Nombre de projets" onClick={() => setField("projects")} value="projects" />
+        <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montant total" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} options={options} />}

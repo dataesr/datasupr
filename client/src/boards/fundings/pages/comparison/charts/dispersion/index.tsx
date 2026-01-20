@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { funders, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getEsQuery, getGeneralOptions } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -13,42 +13,12 @@ const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = impor
 export default function Dispersion() {
   const [searchParams] = useSearchParams();
   const structures = searchParams.getAll("structure");
-  const year = searchParams.get("year");
+  const yearMax = searchParams.get("yearMax");
+  const yearMin = searchParams.get("yearMin");
   const color = useChartColor();
 
   const body = {
-    size: 0,
-    query: {
-      bool: {
-        filter: [
-          {
-            term: {
-              project_year: year,
-            },
-          },
-          {
-            term: {
-              participant_isFrench: true,
-            },
-          },
-          {
-            term: {
-              participant_status: "active",
-            },
-          },
-          {
-            terms: {
-              "participant_id.keyword": structures,
-            },
-          },
-          {
-            terms: {
-              "project_type.keyword": funders,
-            },
-          },
-        ]
-      },
-    },
+    ...getEsQuery({ structures, yearMax, yearMin }),
     aggregations: {
       by_structure: {
         terms: {
@@ -71,7 +41,7 @@ export default function Dispersion() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['dispersion', structures, year],
+    queryKey: ['dispersion', structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -87,23 +57,25 @@ export default function Dispersion() {
     name: bucket.key.split("###")[1],
     x: bucket?.unique_projects?.value ?? 0,
     y: bucket?.sum_budget?.value ?? 0,
+    yFormatted: `${formatCompactNumber(bucket?.sum_budget?.value ?? 0)} €`,
   }));
 
   const config = {
     id: "dispersion",
     sources: FundingsSources,
-    title: `Nombre de projets financés et leurs montants par structure pour l'année ${year}`,
+    title: `Nombre de projets financés et leurs montants par structure entre ${yearMin} et ${yearMax}`,
   };
 
   const options: object = {
-    ...getGeneralOptions("", [], "Nombre de projets financés", "Montants financés"),
+    ...getGeneralOptions("", [], "Nombre de projets financés", ""),
     chart: { height: "600px", plotBorderWidth: 1, type: "bubble", zooming: { type: "xy" } },
     legend: { enabled: false },
     plotOptions: { series: { dataLabels: { enabled: true, format: "{point.name}" } } },
     series: [{ colorByPoint: true, data: seriesData }],
     tooltip: {
-      format: `En <b>${year}</b>, <b>{point.name}</b> a reçu <b>{point.y}</b> ppour financer <b>{point.x} projets</b>`,
-    }
+      format: `Entre <b>${yearMin}</b> et <b>${yearMax}</b>, <b>{point.name}</b> a reçu <b>{point.yFormatted}</b> pour financer <b>{point.x} projets</b>`,
+    },
+    yAxis: { labels: { formatter: function(this: any) { return `${formatCompactNumber(this.value)} €`; } }, title: { text: "Montants financés" } },
   };
 
   return (

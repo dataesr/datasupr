@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
-import { funders } from "../../../../utils.ts";
+import { getEsQuery } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -16,38 +16,7 @@ export default function StructuresSelector() {
   const selectedStructures: string[] = searchParams.getAll("structure");
 
   const bodyCounties = {
-    size: 0,
-    query: {
-      bool: {
-        filter: [
-          {
-            term: {
-              participant_isFrench: true,
-            },
-          },
-          {
-            term: {
-              participant_status: "active",
-            },
-          },
-          {
-            term: {
-              participant_type: "institution",
-            },
-          },
-          {
-            term: {
-              "participant_kind.keyword": "Secteur public",
-            },
-          },
-          {
-            terms: {
-              "project_type.keyword": funders,
-            },
-          },
-        ],
-      },
-    },
+    ...getEsQuery({}),
     aggregations: {
       by_county: {
         terms: {
@@ -60,38 +29,7 @@ export default function StructuresSelector() {
   };
 
   const bodyStructures: any = {
-    size: 0,
-    query: {
-      bool: {
-        filter: [
-          {
-            term: {
-              participant_isFrench: true,
-            },
-          },
-          {
-            term: {
-              participant_status: "active",
-            },
-          },
-          {
-            term: {
-              participant_type: "institution",
-            },
-          },
-          {
-            term: {
-              "participant_kind.keyword": "Secteur public",
-            },
-          },
-          {
-            terms: {
-              "project_type.keyword": funders,
-            },
-          },
-        ],
-      },
-    },
+    ...getEsQuery({}),
     aggregations: {
       by_structure: {
         terms: {

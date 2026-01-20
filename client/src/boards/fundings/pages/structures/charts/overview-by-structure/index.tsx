@@ -6,7 +6,7 @@ import "highcharts/modules/variwide";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, funders, getColorFromFunder, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -15,42 +15,12 @@ const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = impor
 export default function OverviewByStructure({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
-  const year = searchParams.get("year");
+  const yearMax = searchParams.get("yearMax");
+  const yearMin = searchParams.get("yearMin");
   const color = useChartColor();
 
   const body = {
-    size: 0,
-    query: {
-      bool: {
-        filter: [
-          {
-            term: {
-              project_year: year,
-            },
-          },
-          {
-            term: {
-              participant_isFrench: true,
-            },
-          },
-          {
-            term: {
-              participant_status: "active",
-            },
-          },
-          {
-            term: {
-              "participant_id.keyword": structure,
-            },
-          },
-          {
-            terms: {
-              "project_type.keyword": funders,
-            },
-          },
-        ]
-      },
-    },
+    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -69,7 +39,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-overview-by-structure', structure, year],
+    queryKey: ['fundings-overview-by-structure', structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -89,7 +59,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   const config = {
     id: "overviewByStructure",
     sources: FundingsSources,
-    title: `Vue relative des financements de ${name} pour l'année ${year}`,
+    title: `Vue relative des financements de ${name} entre ${yearMin} et ${yearMax}`,
   };
 
   let hiddenPoints: string[] = [];
@@ -99,7 +69,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     chart: { height: '600px', type: 'variwide' },
     tooltip: {
       formatter: function (this: any) {
-        return `<b>${this.z}</b> projets pour un montant total de <b>${formatCompactNumber(this.y)} €</b> ont débuté en <b>${year}</b> grâce au financement de <b>${this.name}</b> auxquels prend part <b>${name}</b>`;
+        return `<b>${this.z}</b> projets pour un montant total de <b>${formatCompactNumber(this.y)} €</b> ont débuté entre <b>${yearMin}</b> et <b>${yearMax}</b> grâce aux financements de <b>${this.name}</b> auxquels prend part <b>${name}</b>`;
       }
     },
     legend: { enabled: true },

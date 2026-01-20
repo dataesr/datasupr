@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import SearchableSelect from "../../../../../../components/searchable-select";
-import { funders } from "../../../../utils.ts";
+import { funders, getEsQuery } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -13,41 +13,10 @@ const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = impor
 export default function StructureSelector({ setName }) {
   const [county, setCounty] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
-  const structure = searchParams.get("structure") ?? "";
+  const structure = searchParams.get("structure");
 
   const bodyCounties = {
-    size: 0,
-    query: {
-      bool: {
-        filter: [
-          {
-            term: {
-              participant_isFrench: true,
-            },
-          },
-          {
-            term: {
-              participant_status: "active",
-            },
-          },
-          {
-            term: {
-              participant_type: "institution",
-            },
-          },
-          {
-            term: {
-              "participant_kind.keyword": "Secteur public",
-            },
-          },
-          {
-            terms: {
-              "project_type.keyword": funders,
-            },
-          },
-        ],
-      },
-    },
+    ...getEsQuery({ structures: [structure] }),
     aggregations: {
       by_county: {
         terms: {

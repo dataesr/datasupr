@@ -3,52 +3,22 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { formatCompactNumber, funders, getColorFromFunder, years } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getEsQuery, years } from "../../../../utils.ts";
 import ChartCard from "../chart-card";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+
+type ColSize = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
 
 
 export default function Cards() {
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
-  const year = Number(searchParams.get("year"));
+  const yearMax = searchParams.get("yearMax");
+  const yearMin = searchParams.get("yearMin");
 
   const body = {
-    size: 0,
-    query: {
-      bool: {
-        filter: [
-          {
-            range: {
-              project_year: {
-                gte: years[0],
-              },
-            },
-          },
-          {
-            term: {
-              participant_isFrench: true,
-            },
-          },
-          {
-            term: {
-              participant_status: "active",
-            },
-          },
-          {
-            term: {
-              "participant_id.keyword": structure,
-            },
-          },
-          {
-            terms: {
-              "project_type.keyword": funders,
-            },
-          },
-        ]
-      },
-    },
+    ...getEsQuery({ structures: [structure] }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -105,7 +75,7 @@ export default function Cards() {
     };
   });
 
-  const size = Math.floor(12 / Object.keys(dataByFunder).length);
+  const size: ColSize = Math.floor(12 / Object.keys(dataByFunder).length) as ColSize;
 
   return (
     <>
@@ -116,9 +86,9 @@ export default function Cards() {
               <ChartCard
                 color={getColorFromFunder(funder)}
                 data={dataByFunder[funder].projects}
-                detail={`en ${year}`}
+                detail={`entre ${yearMin} et ${yearMax}`}
                 title={`Projets financés par ${funder}`}
-                value={`${dataByFunder[funder].projects.find((item) => item.x === year).y} projet${dataByFunder[funder].projects.find((item) => item.x === year).y > 1 ? 's' : ''}`}
+                value={`${dataByFunder[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0)} projet${dataByFunder[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0) > 1 ? 's' : ''}`}
               />
             }
           </Col>
@@ -131,9 +101,9 @@ export default function Cards() {
               <ChartCard
                 color={getColorFromFunder(funder)}
                 data={dataByFunder[funder].budget}
-                detail={`en ${year}`}
+                detail={`entre ${yearMin} et ${yearMax}`}
                 title={`Montants financés par ${funder}`}
-                value={`${formatCompactNumber(dataByFunder[funder].budget.find((item) => item.x === year).y)} €`}
+                value={`${formatCompactNumber(dataByFunder[funder].budget.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0))} €`}
               />
             }
           </Col>
