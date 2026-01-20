@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getGeneralOptions, years } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -17,7 +17,6 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const color = useChartColor();
-  const years = Array.from(Array(10).keys()).map((item) => item + 2015);
 
   const body = {
     size: 0,

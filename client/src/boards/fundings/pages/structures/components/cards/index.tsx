@@ -2,9 +2,9 @@ import { Col, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import ChartCard from "../chart-card/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { getColorFromFunder } from "../../../../utils.ts";
+import { getColorFromFunder, years } from "../../../../utils.ts";
+import ChartCard from "../chart-card/index.tsx";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -12,7 +12,6 @@ const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = impor
 export default function Cards() {
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
-  const years = Array.from(Array(10).keys()).map((item) => item + 2015);
 
   const body = {
     size: 0,

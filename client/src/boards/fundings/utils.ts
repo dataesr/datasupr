@@ -6,6 +6,8 @@ const sortedFunders = {
   "horizon europe": "#e39700",
 };
 
+const years = Array.from(Array(11).keys()).map((item) => item + 2015).sort((a, b) => b - a);
+
 const formatCompactNumber = (number: number): string => {
   const formatter = Intl.NumberFormat("fr", { notation: "compact" });
   return formatter.format(number);
@@ -31,4 +33,5 @@ export {
   formatCompactNumber,
   getColorFromFunder,
   getGeneralOptions,
+  years,
 };
