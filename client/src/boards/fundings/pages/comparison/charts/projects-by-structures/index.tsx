@@ -95,10 +95,10 @@ export default function ProjectsByStructures() {
   });
 
   // TODO: Can be improve to avoid to parse data aggregations multiple times
-  let funders = (data?.aggregations?.by_structure?.buckets ?? []).map((bucket) => bucket.by_project_type.buckets.map((bucket2) => bucket2.key)).flat();
-  funders = [...new Set(funders)].reverse();
+  let funders2 = (data?.aggregations?.by_structure?.buckets ?? []).map((bucket) => bucket.by_project_type.buckets.map((bucket2) => bucket2.key)).flat();
+  funders2 = [...new Set(funders2)].reverse();
   const categories = (data?.aggregations?.by_structure?.buckets ?? []).map((item) => item.key.split('###')[1]);
-  const series = funders.map((funder) => ({
+  const series = funders2.map((funder) => ({
     color: getColorFromFunder(funder),
     data: data.aggregations.by_structure.buckets.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
     name: funder,
