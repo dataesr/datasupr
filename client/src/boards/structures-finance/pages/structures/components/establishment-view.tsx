@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useMemo, useEffect } from "react";
-import { Container } from "@dataesr/dsfr-plus";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useFinanceYears } from "../../../api/common";
 import { useFinanceEtablissementDetail } from "../../../api/api";
 import PageHeader from "./page-header";
@@ -12,6 +12,8 @@ import {
   EtudiantsSection,
   AnalysesSection,
 } from "../sections/sections";
+import CustomBreadcrumb from "../../../../../components/custom-breadcrumb";
+import navigationConfig from "./navigation-config.json";
 
 export default function EstablishmentView() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -98,14 +100,23 @@ export default function EstablishmentView() {
   }
 
   return (
-    <>
+    <main>
       <Container fluid className="etablissement-selector__wrapper">
-        <Container>
-          <PageHeader data={detailData} onClose={handleClearSelection} />
+        <Container as="section">
+          <Row>
+            <Col>
+              <CustomBreadcrumb config={navigationConfig} />
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <PageHeader data={detailData} onClose={handleClearSelection} />
+            </Col>
+          </Row>
         </Container>
       </Container>
 
-      <Container>
+      <Container as="section">
         <SectionNavigation
           activeSection={section}
           years={years}
@@ -116,6 +127,6 @@ export default function EstablishmentView() {
       </Container>
 
       <Container className="fr-mt-4w">{renderSectionContent()}</Container>
-    </>
+    </main>
   );
 }

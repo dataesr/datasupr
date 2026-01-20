@@ -1,213 +1,164 @@
-import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-const { VITE_APP_SERVER_URL } = import.meta.env;
 
-import {
-  Badge,
-  Button,
-  Col,
-  Container,
-  Row,
-  Text,
-  Title,
-} from "@dataesr/dsfr-plus";
+import { Col, Container, Row } from "@dataesr/dsfr-plus";
 
-import GenericCard from "../components/cards/generic-card/index.tsx";
-
-import "./styles.scss";
+import "./home-styles.scss";
 import Footer from "../layout/footer.tsx";
 import HeaderDatasupR from "../layout/header.tsx";
 
-type TDBDefinitionTypes = {
-  id: string;
-  label: string;
-  searchDescription: string;
-  tags: string[];
+type DashboardCard = {
+  title: string;
+  description: string;
+  icon: string;
   url: string;
 };
 
+const DASHBOARDS: DashboardCard[] = [
+  {
+    title: "Atlas des effectifs étudiants",
+    description:
+      "Visualisez la diversité du système français d'enseignement supérieur à travers cartes, graphiques et tableaux. Outil indispensable pour comprendre la structuration territoriale.",
+    icon: "earth-line",
+    url: "/atlas?datasupr=true",
+  },
+  {
+    title: "Finances des établissements",
+    description:
+      "Consultez et analysez les données financières des universités et établissements d'enseignement supérieur français.",
+    icon: "money-euro-circle-line",
+    url: "/structures-finance/accueil?datasupr=true",
+  },
+  {
+    title: "Personnel enseignant",
+    description:
+      "Explorez les données sur le personnel enseignant des établissements d'enseignement supérieur.",
+    icon: "account-circle-line",
+    url: "/personnel-enseignant?datasupr=true",
+  },
+  {
+    title: "Diplômés",
+    description:
+      "Découvrez les statistiques sur les diplômés de l'enseignement supérieur.",
+    icon: "award-line",
+    url: "/graduates",
+  },
+  {
+    title: "Projets européens",
+    description:
+      "Consultez les données sur les projets européens dans l'enseignement supérieur.",
+    icon: "flag-line",
+    url: "/european-projects?datasupr=true",
+  },
+  {
+    title: "Financement par appels à projets",
+    description:
+      "Indicateurs sur le financement des structures via les appels à projet.",
+    icon: "money-euro-box-line",
+    url: "/fundings/home",
+  },
+  {
+    title: "Open Alex",
+    description: "Explorez les données de recherche et publications.",
+    icon: "book-2-line",
+    url: "/open-alex?datasupr=true",
+  },
+  {
+    title: "TEDS",
+    description: "Tableaux de bord TEDS.",
+    icon: "file-text-line",
+    url: "/teds?datasupr=true",
+  },
+];
+
+function HeroSection() {
+  return (
+    <section className="home-hero">
+      <Container>
+        <Row>
+          <Col xs="12" lg="8" offsetLg="2">
+            <div className="home-hero__content">
+              <p className="home-hero__label">
+                ENSEIGNEMENT SUPÉRIEUR, RECHERCHE, INNOVATION ET ESPACE
+              </p>
+              <h1 className="home-hero__title">
+                Explorez les données de l'enseignement supérieur
+              </h1>
+              <p className="home-hero__description">
+                DataESR est la plateforme de visualisation des données de
+                l'enseignement supérieur, de la recherche, de l'innovation et de
+                l'espace. Accédez à des tableaux de bord interactifs, cartes et
+                graphiques sur les effectifs étudiants, les formations, la
+                recherche, les finances et plus encore.
+              </p>
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </section>
+  );
+}
+
+function DashboardsSection({ navigate }: { navigate: (url: string) => void }) {
+  return (
+    <section className="home-section">
+      <Container>
+        <Row>
+          <Col xs="12">
+            <h2 className="home-section__title">
+              Tableaux de bord disponibles
+            </h2>
+            <p className="home-section__description">
+              Découvrez nos différents tableaux de bord thématiques
+            </p>
+          </Col>
+        </Row>
+        <Row gutters className="fr-mt-3w">
+          {DASHBOARDS.map((dashboard) => (
+            <Col key={dashboard.url} xs="12" md="6" lg="4">
+              <div
+                className="home-dashboard-card"
+                onClick={() => navigate(dashboard.url)}
+              >
+                <div className="home-dashboard-card__icon">
+                  <span
+                    className={`fr-icon-${dashboard.icon}`}
+                    aria-hidden="true"
+                  />
+                </div>
+                <h3 className="home-dashboard-card__title">
+                  {dashboard.title}
+                </h3>
+                <p className="home-dashboard-card__description">
+                  {dashboard.description}
+                </p>
+                <div className="home-dashboard-card__footer">
+                  <span className="home-dashboard-card__link">
+                    Accéder
+                    <span
+                      className="fr-icon-arrow-right-line fr-ml-1w"
+                      aria-hidden="true"
+                    />
+                  </span>
+                </div>
+              </div>
+            </Col>
+          ))}
+        </Row>
+      </Container>
+    </section>
+  );
+}
+
 export default function HomePage() {
-  const [searchText, setSearchText] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    // Call API to get the list of dashboards
-    const getData = async () => {
-      const response = await fetch(
-        `${VITE_APP_SERVER_URL}/tableaux?tag=` + searchText
-      );
-      const data = await response.json();
-      setSearchResults(data);
-    };
-
-    getData();
-  }, [searchText]);
 
   return (
     <>
       <HeaderDatasupR />
-      <Container>
-        <Row className="fr-mt-5w">
-          <Col>
-            <Title as="h2" className="fr-mb-2w">
-              DataSupR - Tableaux de bord de l'enseignement supérieur, de la
-              recherche et de l'innovation
-            </Title>
-            <Text>
-              Bienvenue sur dataSupR, la plateforme de visualisation des données
-              de l'enseignement supérieur, de la recherche et de l'innovation.
-              <br />
-              Vous y trouverez des tableaux de bord interactifs, des cartes, des
-              graphiques et des données brutes sur les effectifs étudiants, les
-              ressources humaines, les formations, les diplômes, la recherche,
-              les publications, les brevets, les finances, etc.
-            </Text>
-          </Col>
-        </Row>
-        <Row className="fr-mt-5w">
-          <Col>
-            <Title as="h3" look="h5" className="fr-mb-2w">
-              Rechercher un tableau de bord
-            </Title>
-          </Col>
-        </Row>
-        <Row>
-          <Col md={10} className="search">
-            <label className="fr-label" htmlFor="text-input-text">
-              Saisissez un mot clé pour rechercher un tableau de bord. Par
-              exemple : "étudiants", "atlas", "France", "recherche", "finances",
-              etc ...
-            </label>
-            <input
-              className="fr-input"
-              type="text"
-              id="text-input-text"
-              name="text-input-text"
-              onChange={(e) => setSearchText(e.target.value)}
-            />
-            {searchResults?.length > 0 ? (
-              <ul className="search-results">
-                {searchResults.map((result: TDBDefinitionTypes) => (
-                  <li className="search-result" key={result.id}>
-                    <span
-                      onClick={() => {
-                        navigate(result.url);
-                      }}
-                    >
-                      <strong>{result.label}</strong>&nbsp;-&nbsp;
-                      <i>{result.searchDescription}</i>
-                    </span>
-                    <br />
-                    {result.tags.map((tag) => (
-                      <Badge
-                        className="fr-mx-1w"
-                        title={tag}
-                        key={tag}
-                        color="brown-cafe-creme"
-                        onClick={() => {
-                          setSearchText(tag);
-                        }} //TODO: did not work
-                      >
-                        {tag}
-                      </Badge>
-                    ))}
-                  </li>
-                ))}
-              </ul>
-            ) : null}
-          </Col>
-          <Col md={2}>
-            <Button
-              className="fr-mt-4w"
-              color="pink-tuile"
-              icon="search-line"
-              onClick={() => {}}
-            >
-              Rechercher
-            </Button>
-          </Col>
-        </Row>
-        <Row className="fr-mt-5w">
-          <Col>
-            <Title as="h3" look="h5" className="fr-mb-2w">
-              Proposition des tableaux de bord à explorer
-            </Title>
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col>
-            <GenericCard
-              description="L’Atlas des effectifs étudiants est un outil indispensable pour une bonne appréhension de la structuration territoriale de l’enseignement supérieur et pour l’élaboration de stratégies territoriales. Il présente, sous forme de cartes, de graphiques et de tableaux, la diversité du système français d’enseignement supérieur."
-              title="Atlas des effectifs étudiants"
-              to="/atlas?datasupr=true"
-            />
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col>
-            <GenericCard
-              description="Projets européens"
-              title="Projets européens"
-              to="/european-projects?datasupr=true"
-            />
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col>
-            <GenericCard
-              description="Open Alex"
-              title="Open Alex"
-              to="/open-alex?datasupr=true"
-            />
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col>
-            <GenericCard
-              description="TEDS"
-              title="TEDS"
-              to="/teds?datasupr=true"
-            />
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col>
-            <GenericCard
-              description="Tableau de bord financier des universités"
-              title="Finance"
-              to="/structures-finance/accueil?datasupr=true"
-            />
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col>
-            <GenericCard
-              description="Diplomés"
-              title="Diplomés"
-              to="/graduates"
-            />
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col>
-            <GenericCard
-              description="Tableau de bord du personnel enseignant"
-              title="Personnel enseignant"
-              to="/personnel-enseignant?datasupr=true"
-            />
-          </Col>
-        </Row>
-        <Row gutters>
-          <Col>
-            <GenericCard
-              description="Indicateurs sur le financement des structures via les appels à projet"
-              title="Financement par appel à projets"
-              to="/fundings/home"
-            />
-          </Col>
-        </Row>
-      </Container>
+      <div className="home-page">
+        <HeroSection />
+        <DashboardsSection navigate={navigate} />
+      </div>
       <Footer />
     </>
   );

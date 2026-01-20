@@ -10,7 +10,7 @@ export default function Footer() {
     return i18n[key][currentLang];
   }
   return (
-    <footer className="fr-footer fr-mt-5w" role="contentinfo" id="footer">
+    <footer className="fr-footer" role="contentinfo" id="footer">
       <div className="fr-container">
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">

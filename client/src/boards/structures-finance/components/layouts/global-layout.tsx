@@ -134,6 +134,30 @@ export default function GlobalLayout() {
                     Vue nationale
                   </Link>
                 </li>
+                <li className="fr-nav__item">
+                  <Link
+                    to={`/structures-finance/faq?${filtersParams}`}
+                    target="_self"
+                    {...(is("/structures-finance/faq") && {
+                      "aria-current": "page",
+                    })}
+                    className="fr-nav__link"
+                  >
+                    FAQ
+                  </Link>
+                </li>
+                <li className="fr-nav__item">
+                  <Link
+                    to={`/structures-finance/definitions?${filtersParams}`}
+                    target="_self"
+                    {...(is("/structures-finance/definitions") && {
+                      "aria-current": "page",
+                    })}
+                    className="fr-nav__link"
+                  >
+                    Définitions
+                  </Link>
+                </li>
               </ul>
             </nav>
           </div>
