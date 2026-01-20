@@ -20,19 +20,26 @@ export default function Dispersion() {
   const body = {
     ...getEsQuery({ structures, yearMax, yearMin }),
     aggregations: {
-      by_structure: {
+      by_typology: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_typologie_1.keyword",
         },
         aggregations: {
-          unique_projects: {
-            cardinality: {
-              field: "project_id.keyword",
+          by_structure: {
+            terms: {
+              field: "participant_id_name_default.keyword",
             },
-          },
-          sum_budget: {
-            sum: {
-              field: "project_budgetTotal",
+            aggregations: {
+              unique_projects: {
+                cardinality: {
+                  field: "project_id.keyword",
+                },
+              },
+              sum_budget: {
+                sum: {
+                  field: "project_budgetTotal",
+                },
+              },
             },
           },
         },
@@ -53,11 +60,14 @@ export default function Dispersion() {
       }).then((response) => response.json()),
   });
 
-  const seriesData = (data?.aggregations?.by_structure?.buckets ?? []).map((bucket) => ({
-    name: bucket.key.split("###")[1],
-    x: bucket?.unique_projects?.value ?? 0,
-    y: bucket?.sum_budget?.value ?? 0,
-    yFormatted: `${formatCompactNumber(bucket?.sum_budget?.value ?? 0)} €`,
+  const series = (data?.aggregations?.by_typology?.buckets ?? []).map((typology) => ({
+    data: (typology?.by_structure?.buckets ?? []).map((structure) => ({
+      name: structure.key.split("###")[1],
+      x: structure?.unique_projects?.value ?? 0,
+      y: structure?.sum_budget?.value ?? 0,
+      yFormatted: `${formatCompactNumber(structure?.sum_budget?.value ?? 0)} €`,
+    })),
+    name: typology.key,
   }));
 
   const config = {
@@ -69,13 +79,12 @@ export default function Dispersion() {
   const options: object = {
     ...getGeneralOptions("", [], "Nombre de projets financés", ""),
     chart: { height: "600px", plotBorderWidth: 1, type: "bubble", zooming: { type: "xy" } },
-    legend: { enabled: false },
     plotOptions: { series: { dataLabels: { enabled: true, format: "{point.name}" } } },
-    series: [{ colorByPoint: true, data: seriesData }],
+    series,
     tooltip: {
-      format: `Entre <b>${yearMin}</b> et <b>${yearMax}</b>, <b>{point.name}</b> a reçu <b>{point.yFormatted}</b> pour financer <b>{point.x} projets</b>`,
+      format: `{point.typology} Entre <b>${yearMin}</b> et <b>${yearMax}</b>, <b>{point.name}</b> a reçu <b>{point.yFormatted}</b> pour financer <b>{point.x} projets</b>`,
     },
-    yAxis: { labels: { formatter: function(this: any) { return `${formatCompactNumber(this.value)} €`; } }, title: { text: "Montants financés" } },
+    yAxis: { labels: { formatter: function (this: any) { return `${formatCompactNumber(this.value)} €`; } }, title: { text: "Montants financés" } },
   };
 
   return (
