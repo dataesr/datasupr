@@ -1,5 +1,5 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
-import ScatterChart from "../charts/scatter";
+import ScatterChart from "../../charts/scatter";
 
 interface ProduitsEffectifsSectionProps {
   data: any[];

@@ -22,12 +22,10 @@ export default function NationalSelector() {
   const selectedTypologie = searchParams.get("typologie") || "";
   const selectedRegion = searchParams.get("region") || "";
 
-  // Nettoyer les paramètres non pertinents pour la vue nationale
   useEffect(() => {
     const next = new URLSearchParams(searchParams);
     let hasChanges = false;
 
-    // Retirer les paramètres spécifiques à la vue établissements
     if (searchParams.has("structureId")) {
       next.delete("structureId");
       hasChanges = true;

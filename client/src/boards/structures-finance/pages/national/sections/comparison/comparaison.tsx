@@ -1,5 +1,5 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
-import ComparisonBarChart from "../charts/comparison-bar";
+import ComparisonBarChart from "./chart/comparison-bar";
 
 interface ComparaisonSectionProps {
   data: any[];

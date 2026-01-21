@@ -2,9 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-/**
- * Hook pour récupérer les données de comparaison avancée pour la vue nationale
- */
 export const useFinanceAdvancedComparison = (
   params: {
     annee?: string;

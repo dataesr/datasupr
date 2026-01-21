@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { Row, Col } from "@dataesr/dsfr-plus";
-import ChartWrapper from "../../../../../../components/chart-wrapper";
-import Dropdown from "../../../../../../components/dropdown";
 import { createComparisonBarOptions } from "./options";
 import { RenderData } from "./render-data";
+import Dropdown from "../../../../../../../../components/dropdown";
+import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 interface ComparisonBarChartProps {
   data: any[];

@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
-import { CHART_COLORS } from "../../../../constants/colors";
-import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
+import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { CHART_COLORS } from "../../../../../../constants/colors";
 
 export interface ComparisonBarConfig {
   metric: string;
