@@ -54,7 +54,7 @@ export default function StructureSelector({ setName }) {
       by_typology: {
         terms: {
           field: "participant_typologie_1.keyword",
-          order: { _key: "asc" },
+          order: { _key: "desc" },
         },
       },
     },
@@ -158,7 +158,9 @@ export default function StructureSelector({ setName }) {
       <Col xs="12" sm="3">
         {isLoadingTypologies ? <DefaultSkeleton height="70px" /> : (
           <div className="fr-select-group">
-            <label className="fr-label">Typology</label>
+            <label className="fr-label">
+              Typologie
+            </label>
             <select
               aria-describedby="select-typology-messages"
               className="fr-select"

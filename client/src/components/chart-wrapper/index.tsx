@@ -506,6 +506,3 @@ export default function ChartWrapper({
 
 // Ajout de la propriété Title au composant principal
 ChartWrapper.Title = ChartTitle;
-
-// Ajout de la propriété Title au composant principal
-ChartWrapper.Title = ChartTitle;

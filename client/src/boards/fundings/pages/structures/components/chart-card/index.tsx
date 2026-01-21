@@ -64,6 +64,7 @@ export default function evolution({
         tickLength: 0,
       },
       yAxis: {
+        type: "logarithmic",
         visible: false,
         title: {
           text: undefined,
@@ -73,6 +74,7 @@ export default function evolution({
         },
         gridLineWidth: 0,
         max: yAxisMax,
+        min: 1,
       },
       legend: {
         enabled: false,

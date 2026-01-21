@@ -1,13 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import "highcharts/modules/variwide";
-
-import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { deepMerge, formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
+
+import "highcharts/modules/variwide";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 

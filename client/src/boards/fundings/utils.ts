@@ -10,6 +10,9 @@ const sortedFunders = {
   "horizon europe": "#e39700",
 };
 
+const typologies = [ "Autres", "Ecoles et instituts", "Etablissements de santé",
+  "Organismes de recherche", "Structures de recherche", "Universités"];
+
 const years: number[] = Array.from(Array(11).keys()).map((item) => item + 2015);
 
 /**
@@ -36,7 +39,7 @@ function deepMerge(target, source) {
     }
   });
   return target;
-}
+};
 
 const formatCompactNumber = (number: number): string => {
   const formatter = Intl.NumberFormat("fr", { notation: "compact" });
@@ -91,6 +94,11 @@ const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = y
           {
             terms: {
               "project_type.keyword": funders,
+            },
+          },
+          {
+            terms: {
+              "participant_typologie_1.keyword": typologies,
             },
           },
         ],

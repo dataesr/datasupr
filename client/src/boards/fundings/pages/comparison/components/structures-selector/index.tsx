@@ -1,10 +1,10 @@
 import { Col, DismissibleTag, Row, TagGroup } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
+import SearchableSelect from "../../../../../../components/searchable-select";
 import { getEsQuery } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -54,7 +54,7 @@ export default function StructuresSelector() {
       by_typology: {
         terms: {
           field: "participant_typologie_1.keyword",
-          order: { _key: "asc" },
+          order: { _key: "desc" },
         },
       },
     },
@@ -179,7 +179,9 @@ export default function StructuresSelector() {
       <Col xs="12" sm="3">
         {isLoadingTypologies ? <DefaultSkeleton height="70px" /> : (
           <div className="fr-select-group">
-            <label className="fr-label">Typology</label>
+            <label className="fr-label">
+              Typologie
+            </label>
             <select
               aria-describedby="select-typology-messages"
               className="fr-select"

@@ -5,6 +5,8 @@ import { useSearchParams } from "react-router-dom";
 import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
 import YearSelector from "../../components/year-selector";
 import navigationConfig from "../navigation-config.json";
+import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
+import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
 import OverviewByStructure from "./charts/overview-by-structure";
 import ProjectsByStructure from "./charts/projects-by-structure";
 import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
@@ -53,6 +55,16 @@ export default function Structures() {
                 <ProjectsOverTimeByStructure name={name} />
               </Col>
             </Row>
+            {/* <Row gutters>
+              <Col>
+                <FrenchPartnersByStructure name={name} />
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col>
+                <InternationalPartnersByStructure name={name} />
+              </Col>
+            </Row> */}
             <Row gutters>
               <Col>
                 <div className="chart-container chart-container--default" id="projects-list">

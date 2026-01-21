@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { deepMerge, formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
@@ -33,7 +33,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
             terms: {
               field: "project_year",
             },
-            aggs: {
+            aggregations: {
               unique_projects: {
                 cardinality: {
                   field: "project_id.keyword",
