@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, getEsQuery, getGeneralOptions } from "../../../../utils.ts";
 
 import "highcharts/modules/map";
 
@@ -62,13 +62,13 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
       }).then((response) => response.json()),
   });
 
-  console.log(data);
+  // console.log(data);
   const series = (data?.aggregations?.by_project_type?.buckets ?? []).map((funder) => ({
     name: funder,
     data: funder,
   }));
   const categories = [];
-  console.log(series);
+  // console.log(series);
 
   const config = {
     id: "internationalPartnersByStructure",
@@ -89,7 +89,7 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
     series,
     // tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: object = deepMerge(getGeneralOptions("", categories, "", ""), localOptions);
+  const options: object = deepMerge(getGeneralOptions(`Partenaires internationaux de ${name}`, categories, "", ""), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="international-partners-by-structure">
