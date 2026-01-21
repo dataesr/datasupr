@@ -90,6 +90,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
             style: {
               fontSize: "20px",
               textOutline: "none",
+              fontFamily: "Segoe UI Emoji, sans-serif",
             },
             align: "left", // Aligner à gauche du point
             verticalAlign: "middle", // Centrer verticalement
