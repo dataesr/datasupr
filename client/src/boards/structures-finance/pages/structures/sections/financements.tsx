@@ -1,12 +1,14 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import { useMetricEvolution } from "./api";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
-import { CHART_COLORS } from "../../../constants/colors";
+import { SECTION_COLORS } from "../../../constants/colors";
 import RessourcesPropresChart from "../charts/ressources-propres";
 import "./styles.scss";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
+
+const SECTION_COLOR = SECTION_COLORS.ressources;
 
 interface FinancementsSectionProps {
   data: any;
@@ -41,7 +43,7 @@ export function FinancementsSection({
               title="Total des ressources"
               value={`${euro(data.produits_de_fonctionnement_encaissables)} €`}
               detail="Hors opérations en capital"
-              color={CHART_COLORS.primary}
+              color={SECTION_COLOR}
               evolutionData={useMetricEvolution(
                 "produits_de_fonctionnement_encaissables"
               )}
@@ -53,7 +55,7 @@ export function FinancementsSection({
             <MetricChartCard
               title="Ressources propres"
               value={`${euro(data.recettes_propres)} €`}
-              color={CHART_COLORS.primary}
+              color={SECTION_COLOR}
               evolutionData={useMetricEvolution("recettes_propres")}
               unit="€"
             />
@@ -69,7 +71,7 @@ export function FinancementsSection({
                   : "—"
               }
               detail="Part des ressources propres"
-              color={CHART_COLORS.primary}
+              color={SECTION_COLOR}
               evolutionData={useMetricEvolution(
                 "ressources_propres_produits_encaissables"
               )}
@@ -93,7 +95,7 @@ export function FinancementsSection({
                   ? "Dotation de l'État (inclut la masse salariale prise en charge par l'État)"
                   : "Dotation de l'État"
               }
-              color={CHART_COLORS.secondary}
+              color={SECTION_COLOR}
               evolutionData={useMetricEvolution("scsp")}
               unit="€"
             />
@@ -108,7 +110,7 @@ export function FinancementsSection({
                     }`
                   : "—"
               }
-              color={CHART_COLORS.secondary}
+              color={SECTION_COLOR}
               evolutionData={useMetricEvolution("scsp_etudiants")}
               unit="étudiants"
             />
@@ -130,7 +132,7 @@ export function FinancementsSection({
                     ? "Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par l'État)"
                     : "Ratio SCSP / étudiants financés"
               }
-              color={CHART_COLORS.secondary}
+              color={SECTION_COLOR}
               evolutionData={useMetricEvolution("scsp_par_etudiants")}
               unit="€"
             />
@@ -146,7 +148,7 @@ export function FinancementsSection({
                   : "—"
               }
               detail="Part des étudiants SCSP dans l'effectif total"
-              color={CHART_COLORS.secondary}
+              color={SECTION_COLOR}
               evolutionData={useMetricEvolution(
                 "part_scsp_etudiants_effectif_sans_cpge"
               )}
@@ -176,7 +178,7 @@ export function FinancementsSection({
                     )} % des ressources propres`
                   : "Part des ressources propres"
               }
-              color={CHART_COLORS.tertiary}
+              color={SECTION_COLOR}
               evolutionData={useMetricEvolution("tot_ress_formation")}
               unit="€"
             />
@@ -198,7 +200,7 @@ export function FinancementsSection({
                     )} % des ressources propres`
                   : "Part des ressources propres"
               }
-              color={CHART_COLORS.tertiary}
+              color={SECTION_COLOR}
               evolutionData={useMetricEvolution("tot_ress_recherche")}
               unit="€"
             />
@@ -220,7 +222,7 @@ export function FinancementsSection({
                     )} % des ressources propres`
                   : "Part des ressources propres"
               }
-              color={CHART_COLORS.tertiary}
+              color={SECTION_COLOR}
               evolutionData={useMetricEvolution("tot_ress_autres_recette")}
               unit="€"
             />
