@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -64,15 +64,15 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   }));
   const categories: string[] = series.map((item: { name: string }) => item.name);
 
-  const titleProjects = `Nombre de projets de ${name} par financeur entre ${yearMin} et ${yearMax}`;
-  const titleBudget = `Montant total des projets de ${name} par financeur entre ${yearMin} et ${yearMax}`;
+  const titleProjects = `Nombre de projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const titleBudget = `Montant total des projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const axisProjects = "Nombre de projets financés";
-  const axisBudget = "Montants financés";
+  const axisBudget = "Montants financés (€)";
   const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté entre <b>${yearMin}</b> et <b>${yearMax}</b> grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
+    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
   };
   const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés entre <b>${yearMin}</b> et <b>${yearMax}</b> auxquels prend part <b>${name}</b>`;
+    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${name}</b>`;
   };
   const config = {
     id: "projectsByStructure",
@@ -80,7 +80,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   };
 
   const options: object = {
-    ...getGeneralOptions('', [], '', field === "projects" ? axisProjects : axisBudget),
+    ...getGeneralOptions("", [], "", field === "projects" ? axisProjects : axisBudget),
     plotOptions: { bar: { grouping: false } },
     series,
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },

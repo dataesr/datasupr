@@ -6,7 +6,7 @@ import "highcharts/modules/variwide";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -59,41 +59,14 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   const config = {
     id: "overviewByStructure",
     sources: FundingsSources,
-    title: `Vue relative des financements de ${name} entre ${yearMin} et ${yearMax}`,
+    title: `Vue relative des financements de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   let hiddenPoints: string[] = [];
 
   const options: object = {
-    ...getGeneralOptions('', [], '', 'Montants financés'),
-    chart: { height: '600px', type: 'variwide' },
-    tooltip: {
-      formatter: function (this: any) {
-        return `<b>${this.z}</b> projets pour un montant total de <b>${formatCompactNumber(this.y)} €</b> ont débuté entre <b>${yearMin}</b> et <b>${yearMax}</b> grâce aux financements de <b>${this.name}</b> auxquels prend part <b>${name}</b>`;
-      }
-    },
+    ...getGeneralOptions("", [], "", "Montants financés (€)", "variwide"),
     legend: { enabled: true },
-    series: [{
-      data: series,
-      colorByPoint: true,
-      colors,
-      dataLabels: {
-        enabled: true,
-        formatter: function (this: any) {
-          return `${formatCompactNumber(this.y)} €`;
-        }
-      },
-      legendType: 'point',
-      type: 'variwide',
-    }],
-    xAxis: {
-      type: 'category',
-      labels: {
-        formatter: function (this: any) {
-          return this.axis.series[0].points[this.pos].visible ? this.value : '';
-        }
-      }
-    },
     plotOptions: {
       series: {
         point: {
@@ -117,10 +90,36 @@ export default function OverviewByStructure({ name }: { name: string | undefined
                 }
               });
               this.series.chart.redraw(true);
-            }
-          }
+            },
+          },
+        },
+      },
+    },
+    series: [{
+      data: series,
+      colorByPoint: true,
+      colors,
+      dataLabels: {
+        enabled: true,
+        formatter: function (this: any) {
+          return `${formatCompactNumber(this.y)} €`;
         }
-      }
+      },
+      legendType: "point",
+      type: "variwide",
+    }],
+    tooltip: {
+      formatter: function (this: any) {
+        return `<b>${this.z}</b> projets pour un montant total de <b>${formatCompactNumber(this.y)} €</b> ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.name}</b> auxquels prend part <b>${name}</b>`;
+      },
+    },
+    xAxis: {
+      labels: {
+        formatter: function (this: any) {
+          return this.axis.series[0].points[this.pos].visible ? this.value : '';
+        },
+      },
+      type: "category",
     },
   };
 

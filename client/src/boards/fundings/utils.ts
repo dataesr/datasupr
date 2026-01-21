@@ -77,13 +77,33 @@ const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = y
   return query
 };
 
-const getGeneralOptions = (title: string, categories: any[], title_x_axis: string, title_y_axis: string) => {
-  return createChartOptions("bar", {
+const getGeneralOptions = (title: string, categories: any[], title_x_axis: string, title_y_axis: string, type: string = "bar") => {
+  return createChartOptions(type, {
     chart: { height: "600px" },
     title: { text: title },
     xAxis: { categories, title: { text: title_x_axis } },
     yAxis: { title: { text: title_y_axis } },
   });
+};
+
+const getYearRangeLabel = ({ isBold = false, yearMax, yearMin }: { isBold?: boolean, yearMax: string | null, yearMin: string | null }): string => {
+  let label = "";
+  if (yearMin === yearMax) {
+    label += "en ";
+    if (isBold) label += "<b>";
+    label += `${yearMin}`;
+    if (isBold) label += "</b>";
+  } else {
+    label += "entre ";
+    if (isBold) label += "<b>";
+    label += `${yearMin}`;
+    if (isBold) label += "</b>";
+    label += " et ";
+    if (isBold) label += "<b>";
+    label += `${yearMax}`;
+    if (isBold) label += "</b>";
+  }
+  return label;
 };
 
 export {
@@ -92,5 +112,6 @@ export {
   getColorFromFunder,
   getEsQuery,
   getGeneralOptions,
+  getYearRangeLabel,
   years,
 };

@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -73,10 +73,10 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     name: bucket.key
   }));
 
-  const titleProjects = `Nombre de projets de ${name} par financeur entre ${yearMin} et ${yearMax}, par année de début du projet`;
-  const titleBudget = `Montant total des projets de ${name} par financeur entre ${yearMin} et ${yearMax}, par année de début du projet`;
+  const titleProjects = `Nombre de projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}, par année de début du projet`;
+  const titleBudget = `Montant total des projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}, par année de début du projet`;
   const axisProjects = "Nombre de projets financés";
-  const axisBudget = "Montants financés";
+  const axisBudget = "Montants financés (€)";
   const tooltipProjects = function (this: any) {
     return `<b>${this.y}</b> projets ont débuté en <b>${this.x}</b> grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
   };
@@ -89,23 +89,19 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   };
 
   const options: object = {
-    ...getGeneralOptions('', [], 'Année de début du projet', field === "projects" ? axisProjects : axisBudget),
+    ...getGeneralOptions("", [], "Année de début du projet", field === "projects" ? axisProjects : axisBudget, "area"),
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
-    chart: {
-      height: '600px',
-      type: 'area'
-    },
     plotOptions: {
       series: {
         pointStart: Number(yearMin)
       },
       area: {
-        stacking: 'normal',
+        stacking: "normal",
         marker: {
           enabled: false,
-          lineColor: '#666666',
+          lineColor: "#666666",
           lineWidth: 1,
-          symbol: 'circle'
+          symbol: "circle"
         }
       }
     },

@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { formatCompactNumber, funders, getColorFromFunder, getEsQuery, years } from "../../../../utils.ts";
+import { formatCompactNumber, funders, getColorFromFunder, getEsQuery, getYearRangeLabel, years } from "../../../../utils.ts";
 import ChartCard from "../chart-card";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -91,7 +91,7 @@ export default function Cards() {
               <ChartCard
                 color={getColorFromFunder(funder)}
                 data={dataFunders[funder].projects}
-                detail={`entre ${yearMin} et ${yearMax}`}
+                detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Projets financés par ${funder}`}
                 tooltipFormatter={function (this: any) { return `${this.y} project(s) par ${funder} en ${this.key}` }}
                 value={`${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0)} projet${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0) > 1 ? 's' : ''}`}
@@ -108,7 +108,7 @@ export default function Cards() {
               <ChartCard
                 color={getColorFromFunder(funder)}
                 data={dataFunders[funder].budget}
-                detail={`entre ${yearMin} et ${yearMax}`}
+                detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Montants financés par ${funder}`}
                 tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y)} € par ${funder} en ${this.key}` }}
                 value={`${formatCompactNumber(dataFunders[funder].budget.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.y, 0))} €`}

@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getEsQuery, getGeneralOptions } from "../../../../utils.ts";
+import { formatCompactNumber, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -78,17 +78,17 @@ export default function Dispersion() {
   const config = {
     id: "dispersion",
     sources: FundingsSources,
-    title: `Nombre de projets financés et leurs montants par structure entre ${yearMin} et ${yearMax}`,
+    title: `Nombre de projets financés et leurs montants par structure ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   const options: object = {
-    ...getGeneralOptions("", [], "", ""),
+    ...getGeneralOptions("", [], "", "", "bubble"),
     chart: { height: "600px", plotBorderWidth: 1, type: "bubble", zooming: { type: "xy" } },
     legend: { enabled: true },
     plotOptions: { series: { dataLabels: { enabled: true, format: "{point.name}" } } },
     series,
     tooltip: {
-      format: `{point.typology} Entre <b>${yearMin}</b> et <b>${yearMax}</b>, <b>{point.name}</b> a reçu <b>{point.yFormatted}</b> pour financer <b>{point.x} projets</b>`,
+      format: `<b>{point.name}</b> a reçu <b>{point.yFormatted}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour financer <b>{point.x} projets</b>`,
     },
     xAxis: {
       gridLineWidth: 1,
