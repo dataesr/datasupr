@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import "./searchable-select.scss";
 
 interface SearchableSelectProps {
+  canSelectAll: boolean,
   options: Array<{
     id: string;
     label: string;
@@ -9,12 +10,13 @@ interface SearchableSelectProps {
     subtitle?: string;
   }>;
   value: string;
-  onChange: (value: string) => void;
+  onChange: (value?: string) => void;
   placeholder?: string;
   label?: string;
 }
 
 export default function SearchableSelect({
+  canSelectAll,
   options,
   value,
   onChange,
@@ -52,6 +54,12 @@ export default function SearchableSelect({
     setIsOpen(false);
   };
 
+  const handleSelectAll = () => {
+    onChange();
+    setSearchTerm("");
+    setIsOpen(false);
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setIsOpen(true);
@@ -84,6 +92,15 @@ export default function SearchableSelect({
 
       {isOpen && (
         <div className="searchable-select-dropdown">
+          {canSelectAll && (
+            <div
+              className="searchable-select-option"
+              key="select-all"
+              onClick={() => handleSelectAll()}
+            >
+              Tout sélectionner
+            </div>
+          )}
           {filteredOptions.length === 0 ? (
             <div className="searchable-select-no-results">
               Aucun résultat trouvé
@@ -93,9 +110,8 @@ export default function SearchableSelect({
               <div
                 key={option.id}
                 onClick={() => handleSelect(option.id)}
-                className={`searchable-select-option ${
-                  option.id === value ? "selected" : ""
-                }`}
+                className={`searchable-select-option ${option.id === value ? "selected" : ""
+                  }`}
               >
                 <div>{option.label}</div>
                 {option.subtitle && (

@@ -138,10 +138,17 @@ export default function StructuresSelector() {
       return ({ id, label, searchableText: label.normalize('NFD').replace(/[\u0300-\u036f]/g, '') });
     }) || [];
 
-  const handleStructureChange = (selectedStructure: string) => {
-    const selectedStructureId = selectedStructure.split('###')[0];
-    if (!selectedStructures.includes(selectedStructureId)) {
-      searchParams.append("structure", selectedStructureId);
+  const handleStructureChange = (selectedStructure?: string) => {
+    if (selectedStructure) {
+      const selectedStructureId = selectedStructure.split('###')[0];
+      if (!selectedStructures.includes(selectedStructureId)) {
+        searchParams.append("structure", selectedStructureId);
+        setSearchParams(searchParams);
+      }
+    } else {
+      structures.forEach((str) => {
+        searchParams.append("structure", str.id);
+      })
       setSearchParams(searchParams);
     }
   };
@@ -150,6 +157,11 @@ export default function StructuresSelector() {
     searchParams.delete("structure", selectedStructure);
     setSearchParams(searchParams);
   };
+
+  const handleDeleteAll = () => {
+    searchParams.delete("structure");
+    setSearchParams(searchParams);
+  }
 
   return (
     <Row gutters>
@@ -207,6 +219,7 @@ export default function StructuresSelector() {
             <label className="fr-label">Structure</label>
             <div className="fr-mt-1w fr-mb-1w">
               <SearchableSelect
+                canSelectAll={true}
                 onChange={handleStructureChange}
                 options={structures}
                 placeholder="Ajouter une structure..."
@@ -219,6 +232,11 @@ export default function StructuresSelector() {
                   {structuresAll.find((item) => item.id === selectedStructure)?.label}
                 </DismissibleTag>
               ))}
+              {(selectedStructures.length > 0) && (
+                <DismissibleTag color="orange-terre-battue" key="delete-all" onClick={() => handleDeleteAll()}>
+                  Supprimer toutes les structures
+                </DismissibleTag>
+              )}
             </TagGroup>
           </>
         )}
