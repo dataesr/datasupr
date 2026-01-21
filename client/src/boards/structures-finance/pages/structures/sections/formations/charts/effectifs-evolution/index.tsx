@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "./api";
 import { createStackedEvolutionChartOptions } from "./options";
@@ -146,37 +147,35 @@ const VIEWS_CONFIG: Record<
 };
 
 interface EffectifsEvolutionChartProps {
-  etablissementId: string;
-  etablissementName: string;
+  etablissementId?: string;
+  etablissementName?: string;
 }
 
 export default function EffectifsEvolutionChart({
-  etablissementId,
+  etablissementId: propEtablissementId,
   etablissementName,
 }: EffectifsEvolutionChartProps) {
+  const [searchParams] = useSearchParams();
+  const etablissementId =
+    propEtablissementId || searchParams.get("structureId") || "";
+
   const { data, isLoading } = useFinanceEtablissementEvolution(etablissementId);
   const [selectedView, setSelectedView] = useState<ViewType>("cycles");
 
   const viewConfig = VIEWS_CONFIG[selectedView];
 
-  // Filtrer les vues qui ont des données
   const availableViews = useMemo(() => {
     if (!data || data.length === 0) return [];
-
     return (Object.keys(VIEWS_CONFIG) as ViewType[]).filter((viewKey) => {
       const config = VIEWS_CONFIG[viewKey];
       return config.metrics.some((metric) =>
-        data.some((item: any) => {
-          const value = item[metric];
-          return value != null && value > 0;
-        })
+        data.some((item: any) => item[metric] != null && item[metric] > 0)
       );
     });
   }, [data]);
 
   const chartOptions = useMemo(() => {
     if (!data || data.length === 0) return null;
-
     return createStackedEvolutionChartOptions(
       data,
       viewConfig.metrics,
@@ -191,10 +190,28 @@ export default function EffectifsEvolutionChart({
       .sort((a, b) => a - b);
   }, [data]);
 
-  const periodText = useMemo(() => {
-    if (years.length === 0) return "Aucune donnée";
-    return `${years[0]} - ${years[years.length - 1]}`;
-  }, [years]);
+  const periodText =
+    years.length === 0
+      ? ""
+      : years.length === 1
+        ? String(years[0])
+        : `${years[0]} - ${years[years.length - 1]}`;
+
+  const etabName = etablissementName || data?.[0]?.etablissement_lib || "";
+
+  const config = {
+    id: "effectifs-evolution",
+    integrationURL: `/integration?chart_id=effectifs-evolution&structureId=${etablissementId}`,
+    title: `Évolution des effectifs ${viewConfig.label.toLowerCase()}${etabName ? ` — ${etabName}` : ""}`,
+    comment: {
+      fr: (
+        <>
+          Répartition des effectifs étudiants {viewConfig.label.toLowerCase()}{" "}
+          sur la période {periodText}.
+        </>
+      ),
+    },
+  };
 
   if (isLoading) {
     return (
@@ -230,30 +247,7 @@ export default function EffectifsEvolutionChart({
 
       {chartOptions && (
         <ChartWrapper
-          config={{
-            id: `effectifs-evolution-${selectedView}`,
-            idQuery: `effectifs-evolution-${selectedView}`,
-            title: {
-              className: "fr-mt-0w",
-              look: "h5",
-              size: "h3",
-              fr: (
-                <>
-                  Évolution des effectifs {viewConfig.label.toLowerCase()} —{" "}
-                  {etablissementName}
-                </>
-              ),
-            },
-            comment: {
-              fr: (
-                <>
-                  Répartition des effectifs étudiants{" "}
-                  {viewConfig.label.toLowerCase()} sur la période {periodText}.
-                </>
-              ),
-            },
-            integrationURL: "/integration-url",
-          }}
+          config={config}
           options={chartOptions}
           renderData={() => (
             <RenderDataStacked

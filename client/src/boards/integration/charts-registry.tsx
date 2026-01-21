@@ -97,6 +97,10 @@ export const chartsRegistry = {
     () =>
       import("../structures-finance/pages/structures/sections/formations/charts/effectifs/effectifs-degrees")
   ),
+  "effectifs-evolution": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/formations/charts/effectifs-evolution")
+  ),
 };
 
 export type ChartId = keyof typeof chartsRegistry;
