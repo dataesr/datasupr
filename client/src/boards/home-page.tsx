@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
 import { Badge, Col, Container, Link, Row } from "@dataesr/dsfr-plus";
@@ -9,74 +9,72 @@ import HeaderDatasupR from "../layout/header.tsx";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-type DashboardCard = {
-  title: string;
-  description: string;
-  icon: string;
-  url: string;
-};
+// type DashboardCard = {
+//   title: string;
+//   description: string;
+//   icon: string;
+//   url: string;
+// };
 
-
-
-const DASHBOARDS: DashboardCard[] = [
-  {
-    title: "Atlas des effectifs étudiants",
-    description:
-      "Visualisez la diversité du système français d'enseignement supérieur à travers cartes, graphiques et tableaux. Outil indispensable pour comprendre la structuration territoriale.",
-    icon: "earth-line",
-    url: "/atlas?datasupr=true",
-  },
-  {
-    title: "Finances des établissements",
-    description:
-      "Consultez et analysez les données financières des universités et établissements d'enseignement supérieur français.",
-    icon: "money-euro-circle-line",
-    url: "/structures-finance/accueil?datasupr=true",
-  },
-  {
-    title: "Personnel enseignant",
-    description:
-      "Explorez les données sur le personnel enseignant des établissements d'enseignement supérieur.",
-    icon: "account-circle-line",
-    url: "/personnel-enseignant?datasupr=true",
-  },
-  {
-    title: "Diplômés",
-    description:
-      "Découvrez les statistiques sur les diplômés de l'enseignement supérieur.",
-    icon: "award-line",
-    url: "/graduates",
-  },
-  {
-    title: "Projets européens",
-    description:
-      "Consultez les données sur les projets européens dans l'enseignement supérieur.",
-    icon: "flag-line",
-    url: "/european-projects?datasupr=true",
-  },
-  {
-    title: "Financement par appels à projets",
-    description:
-      "Indicateurs sur le financement des structures via les appels à projets.",
-    icon: "money-euro-box-line",
-    url: "/fundings/home",
-  },
-  {
-    title: "Open Alex",
-    description: "Explorez les données de recherche et publications.",
-    icon: "book-2-line",
-    url: "/open-alex?datasupr=true",
-  },
-  {
-    title: "TEDS",
-    description: "Tableaux de bord TEDS.",
-    icon: "file-text-line",
-    url: "/teds?datasupr=true",
-  },
-];
+// const DASHBOARDS: DashboardCard[] = [
+//   {
+//     title: "Atlas des effectifs étudiants",
+//     description:
+//       "Visualisez la diversité du système français d'enseignement supérieur à travers cartes, graphiques et tableaux. Outil indispensable pour comprendre la structuration territoriale.",
+//     icon: "earth-line",
+//     url: "/atlas?datasupr=true",
+//   },
+//   {
+//     title: "Finances des établissements",
+//     description:
+//       "Consultez et analysez les données financières des universités et établissements d'enseignement supérieur français.",
+//     icon: "money-euro-circle-line",
+//     url: "/structures-finance/accueil?datasupr=true",
+//   },
+//   {
+//     title: "Personnel enseignant",
+//     description:
+//       "Explorez les données sur le personnel enseignant des établissements d'enseignement supérieur.",
+//     icon: "account-circle-line",
+//     url: "/personnel-enseignant?datasupr=true",
+//   },
+//   {
+//     title: "Diplômés",
+//     description:
+//       "Découvrez les statistiques sur les diplômés de l'enseignement supérieur.",
+//     icon: "award-line",
+//     url: "/graduates",
+//   },
+//   {
+//     title: "Projets européens",
+//     description:
+//       "Consultez les données sur les projets européens dans l'enseignement supérieur.",
+//     icon: "flag-line",
+//     url: "/european-projects?datasupr=true",
+//   },
+//   {
+//     title: "Financement par appels à projets",
+//     description:
+//       "Indicateurs sur le financement des structures via les appels à projets.",
+//     icon: "money-euro-box-line",
+//     url: "/fundings/home",
+//   },
+//   {
+//     title: "Open Alex",
+//     description: "Explorez les données de recherche et publications.",
+//     icon: "book-2-line",
+//     url: "/open-alex?datasupr=true",
+//   },
+//   {
+//     title: "TEDS",
+//     description: "Tableaux de bord TEDS.",
+//     icon: "file-text-line",
+//     url: "/teds?datasupr=true",
+//   },
+// ];
 
 export default function HomePage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const { isLoading, data } = useQuery({
     queryKey: ["list-dashboards"],
