@@ -44,6 +44,51 @@ export function CreateChartOptions(
         color: labelColor,
       },
     },
+    tooltip: {
+      useHTML: true,
+      backgroundColor: "var(--background-default-grey)",
+      borderColor: "var(--border-default-grey)",
+      borderWidth: 1,
+      style: {
+        color: "var(--text-default-grey)",
+        zIndex: "999999",
+        pointerEvents: "none",
+      },
+    },
+    plotOptions: {
+      series: {
+        borderColor: "var(--border-default-grey)",
+        states: {
+          hover: {
+            brightness: 0.1,
+          },
+        },
+        dataLabels: {
+          style: {
+            textOutline: "none",
+          },
+          zIndex: 1,
+        },
+      },
+      column: {
+        borderColor: "var(--border-default-grey)",
+        dataLabels: {
+          zIndex: 1,
+        },
+      },
+      bar: {
+        borderColor: "var(--border-default-grey)",
+        dataLabels: {
+          zIndex: 1,
+        },
+      },
+      pie: {
+        borderColor: "var(--border-default-grey)",
+        dataLabels: {
+          zIndex: 1,
+        },
+      },
+    },
     exporting: { enabled: false },
     credits: { enabled: false },
   };

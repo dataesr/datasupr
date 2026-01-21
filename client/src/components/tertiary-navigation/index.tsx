@@ -8,7 +8,7 @@ export function TertiaryNavigation({
   className?: string;
 }) {
   return (
-    <nav className={`fr-nav--horizontal ${className}`} role="navigation">
+    <nav className={`fr-nav fr-nav--horizontal ${className}`} role="navigation">
       <ul className="fr-nav__list">{children}</ul>
     </nav>
   );
@@ -18,11 +18,13 @@ export function TertiaryNavigationItem({
   href,
   label,
   isActive = false,
+  className = "",
   onClick,
 }: {
   href?: string;
   label: string;
   isActive?: boolean;
+  className?: string;
   onClick?: (
     e: React.MouseEvent<HTMLAnchorElement | HTMLButtonElement>
   ) => void;
@@ -34,7 +36,7 @@ export function TertiaryNavigationItem({
   };
 
   return (
-    <li className="fr-nav__item">
+    <li className={`fr-nav__item ${className}`}>
       {href && !onClick ? (
         <a href={href} {...props}>
           {label}

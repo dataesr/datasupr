@@ -73,11 +73,9 @@ export function SmallMetricCard({
       style={{
         position: "relative",
         width: "180px",
-        height: "95px",
         padding: "10px 12px",
         borderRadius: "4px",
         backgroundColor: "var(--background-contrast-grey)",
-        borderTop: `3px solid ${color}`,
         overflow: "hidden",
       }}
     >

@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 // import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
 import i18n from "./i18n.json";
@@ -6,26 +5,14 @@ import Footer from "./footer";
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
+  const [searchParams] = useSearchParams();
   const filtersParams = searchParams.toString();
-
-  useEffect(() => {
-    if (!searchParams.get("language")) {
-      searchParams.set("language", "fr"); // default value
-      setSearchParams(searchParams);
-    }
-    if (!searchParams.get("country_code")) {
-      searchParams.set("country_code", "FRA"); // default value
-      setSearchParams(searchParams);
-    }
-  }, [searchParams, setSearchParams]);
 
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
+  function getI18nLabel(key: string): string {
+    return i18n[key]?.fr || "";
   }
   return (
     <>

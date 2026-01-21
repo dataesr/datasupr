@@ -1,7 +1,4 @@
 import { useState, useRef, useEffect } from "react";
-import TertiaryNavigation, {
-  TertiaryNavigationItem,
-} from "../../../../../components/tertiary-navigation";
 
 interface SectionNavigationProps {
   activeSection: string;
@@ -25,7 +22,10 @@ export default function SectionNavigation({
     const handleClickOutside = (event: MouseEvent) => {
       if (
         dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
+        !dropdownRef.current.contains(event.target as Node) &&
+        !(event.target as HTMLElement).closest(
+          '.fr-nav__btn[aria-controls="menu-year"]'
+        )
       ) {
         setIsYearDropdownOpen(false);
       }
@@ -36,101 +36,129 @@ export default function SectionNavigation({
   }, []);
 
   return (
-    <div
-      style={{
-        display: "flex",
-        alignItems: "center",
-        gap: "1rem",
-        borderBottom: "2px solid var(--border-default-grey)",
-      }}
-    >
-      <TertiaryNavigation>
-        <TertiaryNavigationItem
-          label="Ressources"
-          isActive={activeSection === "ressources"}
-          onClick={(e) => {
-            e.preventDefault();
-            onSectionChange("ressources");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="Santé financière"
-          isActive={activeSection === "sante-financiere"}
-          onClick={(e) => {
-            e.preventDefault();
-            onSectionChange("sante-financiere");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="Moyens humains"
-          isActive={activeSection === "moyens-humains"}
-          onClick={(e) => {
-            e.preventDefault();
-            onSectionChange("moyens-humains");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="Diplômes et formations"
-          isActive={activeSection === "diplomes-formations"}
-          onClick={(e) => {
-            e.preventDefault();
-            onSectionChange("diplomes-formations");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="Analyses et évolutions"
-          isActive={activeSection === "analyses"}
-          onClick={(e) => {
-            e.preventDefault();
-            onSectionChange("analyses");
-          }}
-        />
-      </TertiaryNavigation>
-
-      {years && years.length > 0 && (
-        <div
-          className="page-header__year-dropdown"
-          ref={dropdownRef}
-          style={{ marginLeft: "auto" }}
+    <nav className="fr-nav" role="navigation" aria-label="Navigation tertiaire">
+      <ul className="fr-nav__list">
+        <li className="fr-nav__item">
+          <a
+            className="fr-nav__link"
+            href="#ressources"
+            aria-current={activeSection === "ressources" ? "page" : undefined}
+            onClick={(e) => {
+              e.preventDefault();
+              onSectionChange("ressources");
+            }}
+          >
+            Ressources
+          </a>
+        </li>
+        <li className="fr-nav__item">
+          <a
+            className="fr-nav__link"
+            href="#sante-financiere"
+            aria-current={
+              activeSection === "sante-financiere" ? "page" : undefined
+            }
+            onClick={(e) => {
+              e.preventDefault();
+              onSectionChange("sante-financiere");
+            }}
+          >
+            Santé financière
+          </a>
+        </li>
+        <li className="fr-nav__item">
+          <a
+            className="fr-nav__link"
+            href="#moyens-humains"
+            aria-current={
+              activeSection === "moyens-humains" ? "page" : undefined
+            }
+            onClick={(e) => {
+              e.preventDefault();
+              onSectionChange("moyens-humains");
+            }}
+          >
+            Moyens humains
+          </a>
+        </li>
+        <li className="fr-nav__item">
+          <a
+            className="fr-nav__link"
+            href="#diplomes-formations"
+            aria-current={
+              activeSection === "diplomes-formations" ? "page" : undefined
+            }
+            onClick={(e) => {
+              e.preventDefault();
+              onSectionChange("diplomes-formations");
+            }}
+          >
+            Diplômes et formations
+          </a>
+        </li>
+        <li className="fr-nav__item">
+          <a
+            className="fr-nav__link"
+            href="#analyses"
+            aria-current={activeSection === "analyses" ? "page" : undefined}
+            onClick={(e) => {
+              e.preventDefault();
+              onSectionChange("analyses");
+            }}
+          >
+            Analyses et évolutions
+          </a>
+        </li>
+        <li
+          className="fr-nav__item"
+          style={{ marginLeft: "auto", position: "relative" }}
         >
           <button
-            className="page-header__year-button"
-            onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
+            className="fr-nav__btn"
+            type="button"
             aria-expanded={isYearDropdownOpen}
-            aria-haspopup="true"
+            aria-controls="menu-year"
+            onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
           >
             <span className="fr-icon-calendar-line" aria-hidden="true" />
-            <span className="page-header__year-text">Année {selectedYear}</span>
-            <span
-              className={`fr-icon-arrow-${
-                isYearDropdownOpen ? "up" : "down"
-              }-s-line`}
-              aria-hidden="true"
-            />
+            Année {selectedYear}
+            <span aria-hidden="true" />
           </button>
-
-          {isYearDropdownOpen && (
-            <ul className="page-header__year-menu" role="menu">
+          <div
+            ref={dropdownRef}
+            className="fr-collapse fr-menu"
+            id="menu-year"
+            style={{
+              display: isYearDropdownOpen ? "block" : "none",
+              position: "absolute",
+              top: "100%",
+              right: 0,
+              zIndex: 1000,
+            }}
+          >
+            <ul className="fr-menu__list">
               {years.map((year) => (
-                <li key={year} role="none">
-                  <button
-                    role="menuitem"
-                    className={`page-header__year-option ${
-                      selectedYear === year.toString() ? "active" : ""
-                    }`}
-                    onClick={() => {
+                <li key={year}>
+                  <a
+                    className="fr-nav__link"
+                    href={`#year-${year}`}
+                    aria-current={
+                      selectedYear === year.toString() ? "page" : undefined
+                    }
+                    onClick={(e) => {
+                      e.preventDefault();
                       onYearChange(year.toString());
                       setIsYearDropdownOpen(false);
                     }}
                   >
                     {year}
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>
-          )}
-        </div>
-      )}
-    </div>
+          </div>
+        </li>
+      </ul>
+    </nav>
   );
 }

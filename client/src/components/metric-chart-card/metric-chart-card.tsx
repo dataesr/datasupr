@@ -41,7 +41,7 @@ export function MetricChartCard({
         type: "areaspline",
         height: 110,
         backgroundColor: "transparent",
-        margin: [-0, -45, 0, -40],
+        margin: [-0, -50, 0, -50],
         spacing: [0, 0, 0, 0],
       },
       title: {
@@ -58,6 +58,8 @@ export function MetricChartCard({
         },
         lineWidth: 0,
         tickLength: 0,
+        minPadding: 0,
+        maxPadding: 0,
       },
       yAxis: {
         visible: false,
@@ -209,7 +211,7 @@ export function MetricChartCard({
           ref={chartRef}
           style={{
             position: "absolute",
-            bottom: "20px",
+            bottom: "-10px",
             left: 0,
             right: 0,
             width: "100%",

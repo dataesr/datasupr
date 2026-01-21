@@ -44,9 +44,12 @@ export default function FAQView() {
   return (
     <main role="main">
       <Container fluid className="etablissement-selector__wrapper">
-        <Container as="section" className="fr-py-4w">
-          <CustomBreadcrumb config={navigationConfig} />
-
+        <Container as="section">
+          <Row>
+            <Col>
+              <CustomBreadcrumb config={navigationConfig} />
+            </Col>
+          </Row>
           <Row>
             <Col>
               <h1 className="fr-h1">Foire aux questions</h1>

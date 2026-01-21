@@ -1,60 +1,57 @@
 .fr-nav--horizontal {
+  padding-top: 2rem !important;
+  margin-bottom: 2rem !important;
+  max-width: 100%;
+  contain: inline-size;
+
   .fr-nav__list {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
     overflow-x: auto;
-    list-style: none;
-    padding: 0 !important;
-    margin: 0 !important;
-    gap: 0 !important;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
-
-    &::-webkit-scrollbar {
-      display: none;
+    background-image: linear-gradient(
+      0deg,
+      var(--border-default-grey),
+      var(--border-default-grey)
+    );
+    background-position: 0 100%;
+    background-repeat: no-repeat;
+    background-size: 100% 2px;
+    .fr-nav__item::before {
+      content: none !important;
     }
-
     .fr-nav__item {
       align-items: flex-start;
       position: static;
-      margin: 0 !important;
-      padding: 0 !important;
-
+      .fr-nav__link:hover:not([aria-current="page"]) {
+        background-position: 0 100%;
+        background-size: 100% 2px;
+        background-image: linear-gradient(
+          0deg,
+          var(--border-contrast-grey),
+          var(--border-contrast-grey)
+        );
+      }
       .fr-nav__link {
+        background-repeat: no-repeat;
+        padding: 0.75rem;
         font-weight: 400;
         height: 100%;
-        margin: 0 !important;
+        margin: 0;
         width: auto;
         font-size: 0.875rem;
         line-height: 1.5rem;
         min-height: 2.5rem;
         text-wrap: nowrap;
-        display: block;
-        padding: 0.75rem 1.5rem;
-        text-decoration: none;
-        position: relative;
-
-        &:hover {
-          background-color: var(--background-action-low-blue-france-hover);
-          color: var(--text-action-high-blue-france-hover);
-        }
-
-        &[aria-current="page"] {
-          font-weight: 700;
-
-          &::before {
-            content: "";
-            bottom: 0;
-            height: 2px;
-            left: 0;
-            margin-top: 0;
-            position: absolute;
-            top: auto;
-            width: 100%;
-            background-color: var(--border-action-high-blue-france);
-          }
-        }
+      }
+      .fr-nav__link::before {
+        bottom: 0;
+        height: 2px;
+        left: 0;
+        margin-top: 0;
+        position: absolute;
+        top: auto;
+        width: 100%;
       }
     }
   }

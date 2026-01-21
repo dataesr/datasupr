@@ -86,40 +86,27 @@ export const createEffectifsNiveauChartOptions = (
 
   return CreateChartOptions("pie", {
     chart: {
-      height: 350,
+      height: 400,
     },
     legend: {
       enabled: true,
       layout: "horizontal",
       align: "center",
       verticalAlign: "bottom",
+      itemStyle: {
+        color: "var(--text-default-grey)",
+      },
     },
     tooltip: {
-      useHTML: true,
-      borderWidth: 1,
-      borderRadius: 8,
-      shadow: false,
       formatter: function () {
         const point = this as any;
-        return `<div style="padding:10px">
-                <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
-                  point.name
-                }</div>
-                <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
-                  point.y,
-                  0,
-                  ",",
-                  " "
-                )} étudiants</div>
-                <div style="color:#666;font-size:13px">${point.percentage.toFixed(
-                  2
-                )}% du total</div>
-                </div>`;
+        return `<strong>${point.name}</strong><br/>${Highcharts.numberFormat(point.y, 0, ",", " ")} étudiants<br/>${point.percentage.toFixed(1)}% du total`;
       },
     },
     plotOptions: {
       pie: {
-        size: "75%",
+        size: 200,
+        center: ["50%", 90],
         allowPointSelect: true,
         cursor: "pointer",
         dataLabels: {
@@ -176,14 +163,17 @@ export const createEffectifsSpecifiquesChartOptions = (
       height: 300,
     },
     legend: {
-      enabled: true,
-      layout: "horizontal",
-      align: "center",
-      verticalAlign: "bottom",
+      enabled: false,
     },
     xAxis: {
       categories: categories,
       crosshair: true,
+      labels: {
+        align: "center",
+        style: {
+          color: "var(--text-default-grey)",
+        },
+      },
     },
     yAxis: {
       min: 0,
@@ -191,29 +181,15 @@ export const createEffectifsSpecifiquesChartOptions = (
         text: "",
       },
       labels: {
-        formatter: function () {
-          return Highcharts.numberFormat(this.value as number, 0, ",", " ");
+        style: {
+          color: "var(--text-default-grey)",
         },
       },
     },
     tooltip: {
-      useHTML: true,
-      borderWidth: 1,
-      borderRadius: 8,
-      shadow: false,
       formatter: function () {
         const point = this as any;
-        return `<div style="padding:10px">
-                <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
-                  point.name
-                }</div>
-                <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
-                  point.y,
-                  0,
-                  ",",
-                  " "
-                )} étudiants</div>
-                </div>`;
+        return `<strong>${point.name}</strong><br/>${Highcharts.numberFormat(point.y, 0, ",", " ")} étudiants`;
       },
     },
     plotOptions: {
@@ -224,15 +200,14 @@ export const createEffectifsSpecifiquesChartOptions = (
         pointWidth: 40,
         dataLabels: {
           enabled: true,
-          useHTML: true,
           formatter: function () {
-            const value = Highcharts.numberFormat(
-              this.y as number,
-              0,
-              ",",
-              " "
-            );
-            return `<span style="color: var(--text-default-grey); font-size: 13px; font-weight: bold;">${value}</span>`;
+            return Highcharts.numberFormat(this.y as number, 0, ",", " ");
+          },
+          style: {
+            color: "var(--text-default-grey)",
+            fontSize: "13px",
+            fontWeight: "bold",
+            textOutline: "none",
           },
         },
       },
@@ -245,13 +220,6 @@ export const createEffectifsSpecifiquesChartOptions = (
         colorByPoint: true,
         showInLegend: false,
       },
-      ...specifiques.map((item) => ({
-        name: item.name,
-        type: "column" as const,
-        color: item.color,
-        data: [],
-        showInLegend: true,
-      })),
     ],
   });
 };
@@ -322,40 +290,27 @@ export const createEffectifsDisciplinesChartOptions = (
 
   return CreateChartOptions("pie", {
     chart: {
-      height: 350,
+      height: 400,
     },
     legend: {
       enabled: true,
       layout: "horizontal",
       align: "center",
       verticalAlign: "bottom",
+      itemStyle: {
+        color: "var(--text-default-grey)",
+      },
     },
     tooltip: {
-      useHTML: true,
-      borderWidth: 1,
-      borderRadius: 8,
-      shadow: false,
       formatter: function () {
         const point = this as any;
-        return `<div style="padding:10px">
-                <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
-                  point.name
-                }</div>
-                <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
-                  point.y,
-                  0,
-                  ",",
-                  " "
-                )} étudiants</div>
-                <div style="color:#666;font-size:13px">${point.percentage.toFixed(
-                  1
-                )}% du total</div>
-                </div>`;
+        return `<strong>${point.name}</strong><br/>${Highcharts.numberFormat(point.y, 0, ",", " ")} étudiants<br/>${point.percentage.toFixed(1)}% du total`;
       },
     },
     plotOptions: {
       pie: {
-        size: "75%",
+        size: 200,
+        center: ["50%", 90],
         allowPointSelect: true,
         cursor: "pointer",
         dataLabels: {
@@ -402,10 +357,13 @@ export const createEffectifsDiplomesChartOptions = (
 
   return CreateChartOptions("pie", {
     chart: {
-      height: 350,
+      height: 400,
     },
     legend: {
       enabled: true,
+      itemStyle: {
+        color: "var(--text-default-grey)",
+      },
       layout: "horizontal",
       align: "center",
       verticalAlign: "bottom",
@@ -414,12 +372,15 @@ export const createEffectifsDiplomesChartOptions = (
       text: undefined,
     },
     tooltip: {
-      pointFormat:
-        "<b>{point.y:,.0f}</b> étudiants<br><b>{point.percentage:.1f}%</b>",
+      formatter: function () {
+        const point = this as any;
+        return `${Highcharts.numberFormat(point.y, 0, ",", " ")} étudiants<br/>${point.percentage.toFixed(1)}%`;
+      },
     },
     plotOptions: {
       pie: {
-        size: "75%",
+        size: 200,
+        center: ["50%", 90],
         dataLabels: {
           enabled: false,
         },
@@ -493,20 +454,22 @@ export const createEffectifsDegreesChartOptions = (
 
   return CreateChartOptions("column", {
     chart: {
-      height: 300,
+      height: 380,
+      marginBottom: 100,
+      marginLeft: 70,
     },
     legend: {
-      enabled: true,
-      layout: "horizontal",
-      align: "center",
-      verticalAlign: "bottom",
+      enabled: false,
     },
     xAxis: {
       categories: categories,
       crosshair: true,
       labels: {
+        rotation: -45,
+        align: "right",
         style: {
-          fontSize: "12px",
+          fontSize: "11px",
+          color: "var(--text-default-grey)",
         },
       },
     },
@@ -516,29 +479,15 @@ export const createEffectifsDegreesChartOptions = (
         text: "",
       },
       labels: {
-        formatter: function () {
-          return Highcharts.numberFormat(this.value as number, 0, ",", " ");
+        style: {
+          color: "var(--text-default-grey)",
         },
       },
     },
     tooltip: {
-      useHTML: true,
-      borderWidth: 1,
-      borderRadius: 8,
-      shadow: false,
       formatter: function () {
         const point = this as any;
-        return `<div style="padding:10px">
-                <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
-                  point.name
-                }</div>
-                <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
-                  point.y,
-                  0,
-                  ",",
-                  " "
-                )} étudiants</div>
-                </div>`;
+        return `<strong>${point.name}</strong><br/>${Highcharts.numberFormat(point.y, 0, ",", " ")} étudiants`;
       },
     },
     plotOptions: {
@@ -549,15 +498,14 @@ export const createEffectifsDegreesChartOptions = (
         pointWidth: 40,
         dataLabels: {
           enabled: true,
-          useHTML: true,
           formatter: function () {
-            const value = Highcharts.numberFormat(
-              this.y as number,
-              0,
-              ",",
-              " "
-            );
-            return `<span style="color: var(--text-default-grey); font-size: 13px; font-weight: bold;">${value}</span>`;
+            return Highcharts.numberFormat(this.y as number, 0, ",", " ");
+          },
+          style: {
+            color: "var(--text-default-grey)",
+            fontSize: "13px",
+            fontWeight: "bold",
+            textOutline: "none",
           },
         },
       },
@@ -570,13 +518,6 @@ export const createEffectifsDegreesChartOptions = (
         colorByPoint: true,
         showInLegend: false,
       },
-      ...degrees.map((item) => ({
-        name: item.name,
-        type: "column" as const,
-        color: item.color,
-        data: [],
-        showInLegend: true,
-      })),
     ],
   });
 };

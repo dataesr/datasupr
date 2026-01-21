@@ -147,7 +147,7 @@ export default function NationalSelector() {
   return (
     <main>
       <Container fluid className="etablissement-selector__wrapper">
-        <Container as="section" className="fr-py-4w">
+        <Container as="section">
           <Row>
             <Col>
               <CustomBreadcrumb config={navigationConfig} />

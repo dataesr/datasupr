@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Badge } from "@dataesr/dsfr-plus";
 
 interface PageHeaderProps {
@@ -7,8 +6,6 @@ interface PageHeaderProps {
 }
 
 export default function PageHeader({ data, onClose }: PageHeaderProps) {
-  const [showFormations, setShowFormations] = useState(false);
-
   if (!data) return null;
 
   const hasCursus =
@@ -51,7 +48,7 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
             onClick={onClose}
             title="Changer d'établissement"
           >
-            Changer
+            Changer d'établissement
           </button>
         </div>
       </div>
@@ -60,16 +57,12 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
         <div className="fr-col-12 fr-col-md-6">
           <div className="fr-mb-2w">
             {data.etablissement_actuel_categorie && (
-              <p className="fr-text--sm fr-text-mention--grey">
+              <p className="fr-text--sm fr-text-mention--grey fr-mb-1v">
                 {data.etablissement_actuel_categorie}
               </p>
             )}
-            <p className="fr-text--sm fr-text-mention--grey">
-              <span
-                className="fr-icon-map-pin-2-line fr-icon--sm"
-                aria-hidden="true"
-              />{" "}
-              {data.commune} — {data.region}
+            <p className="fr-text--sm fr-text-mention--grey fr-mb-0">
+              <span aria-hidden="true" /> {data.commune} — {data.region}
               {data.nb_sites && (
                 <>
                   {" "}
@@ -80,187 +73,166 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
           </div>
 
           {data.is_rce && (
-            <p className="fr-text--sm fr-text-mention--grey">
-              <span aria-hidden="true" />
+            <p className="fr-text--sm fr-text-mention--grey fr-mb-2w">
               Responsabilités et compétences élargies (RCE)
               {data.rce && <> depuis {data.rce}</>}
             </p>
           )}
-        </div>
 
-        <div className="fr-col-12 fr-col-md-6" style={{ textAlign: "right" }}>
           {data.effectif_sans_cpge && (
-            <div className="fr-mb-2w">
-              <p className="fr-text--lg fr-text--bold fr-mb-0">
-                {data.effectif_sans_cpge.toLocaleString("fr-FR")} étudiants
-              </p>
-              <p className="fr-text--xs fr-mb-0">
-                Inscrits en {data.anuniv} (
-                {data.part_effectif_sans_cpge_dn.toFixed(1)}% en diplômes
-                nationaux)
+            <div>
+              <p className="fr-text--sm fr-mb-0">
+                <span className="fr-text--bold">
+                  {data.effectif_sans_cpge.toLocaleString("fr-FR")} étudiants
+                </span>{" "}
+                <span className="fr-text-mention--grey">
+                  ({data.anuniv} • {data.part_effectif_sans_cpge_dn.toFixed(1)}%
+                  Diplômes nationaux)
+                </span>
               </p>
             </div>
           )}
+        </div>
 
+        <div className="fr-col-12 fr-col-md-6">
           {hasFormations && (
-            <div style={{ textAlign: "right" }}>
-              <button
-                className="fr-btn fr-btn--tertiary fr-btn--sm fr-btn--icon-right"
-                onClick={() => setShowFormations(!showFormations)}
-                aria-expanded={showFormations}
+            <div>
+              <p
+                className="fr-text--sm fr-text--bold fr-mb-0"
+                style={{
+                  textTransform: "uppercase",
+                  color: "var(--text-mention-grey)",
+                }}
               >
-                <span
-                  className={`fr-icon-${
-                    showFormations ? "arrow-up" : "arrow-down"
-                  }-s-line`}
-                  aria-hidden="true"
-                />
-                {showFormations ? "Masquer" : "Afficher"} les formations
-                proposées
-              </button>
-
-              {showFormations && (
-                <div className="fr-mt-2v">
-                  {hasCursus && (
-                    <div className="fr-mb-2v">
-                      <p
-                        className="fr-text--xs fr-text--bold fr-mb-1v"
-                        style={{
-                          textTransform: "uppercase",
-                          color: "var(--text-mention-grey)",
-                        }}
-                      >
-                        Cursus
-                      </p>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexWrap: "wrap",
-                          gap: "0.375rem",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        {data.has_effectif_l && (
-                          <Badge color="blue-cumulus" size="sm">
-                            1er cycle L
-                          </Badge>
-                        )}
-                        {data.has_effectif_m && (
-                          <Badge color="green-archipel" size="sm">
-                            2ème cycle M
-                          </Badge>
-                        )}
-                        {data.has_effectif_d && (
-                          <Badge color="pink-tuile" size="sm">
-                            3ème cycle D
-                          </Badge>
-                        )}
-                      </div>
+                Formations
+              </p>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                {hasCursus && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: "0.5rem",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <span
+                      className="fr-text--xs fr-mb-1w"
+                      style={{
+                        color: "var(--text-mention-grey)",
+                        minWidth: "65px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      Cursus
+                    </span>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "0.25rem",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {data.has_effectif_l && <Badge size="sm">Licence</Badge>}
+                      {data.has_effectif_m && <Badge size="sm">Master</Badge>}
+                      {data.has_effectif_d && <Badge size="sm">Doctorat</Badge>}
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {hasFilieres && (
-                    <div className="fr-mb-2v">
-                      <p
-                        className="fr-text--xs fr-text--bold fr-mb-1v"
-                        style={{
-                          textTransform: "uppercase",
-                          color: "var(--text-mention-grey)",
-                        }}
-                      >
-                        Filières spécifiques
-                      </p>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexWrap: "wrap",
-                          gap: "0.375rem",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        {data.has_effectif_iut && (
-                          <Badge color="blue-cumulus" size="sm">
-                            IUT
-                          </Badge>
-                        )}
-                        {data.has_effectif_sante && (
-                          <Badge color="brown-caramel" size="sm">
-                            Santé
-                          </Badge>
-                        )}
-                        {data.has_effectif_ing && (
-                          <Badge color="yellow-tournesol" size="sm">
-                            Ingénieur
-                          </Badge>
-                        )}
-                      </div>
+                {hasFilieres && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: "0.5rem",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <span
+                      className="fr-text--xs fr-mb-1w"
+                      style={{
+                        color: "var(--text-mention-grey)",
+                        minWidth: "65px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      Filières
+                    </span>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "0.25rem",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {data.has_effectif_iut && <Badge size="sm">IUT</Badge>}
+                      {data.has_effectif_ing && (
+                        <Badge size="sm">Ingénieur</Badge>
+                      )}
                     </div>
-                  )}
+                  </div>
+                )}
 
-                  {hasDisciplines && (
-                    <div className="fr-mb-0">
-                      <p
-                        className="fr-text--xs fr-text--bold fr-mb-1v"
-                        style={{
-                          textTransform: "uppercase",
-                          color: "var(--text-mention-grey)",
-                        }}
-                      >
-                        Disciplines
-                      </p>
-                      <div
-                        style={{
-                          display: "flex",
-                          flexWrap: "wrap",
-                          gap: "0.375rem",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        {data.has_effectif_dsa && (
-                          <Badge color="green-emeraude" size="sm">
-                            Droit Sciences Éco AES
-                          </Badge>
-                        )}
-                        {data.has_effectif_llsh && (
-                          <Badge color="pink-tuile" size="sm">
-                            Lettres Langues SHS
-                          </Badge>
-                        )}
-                        {data.has_effectif_theo && (
-                          <Badge color="purple-glycine" size="sm">
-                            Théologie
-                          </Badge>
-                        )}
-                        {data.has_effectif_si && (
-                          <Badge color="orange-terre-battue" size="sm">
-                            Sciences et ingénieur
-                          </Badge>
-                        )}
-                        {data.has_effectif_staps && (
-                          <Badge color="green-menthe" size="sm">
-                            STAPS
-                          </Badge>
-                        )}
-                        {data.has_effectif_veto && (
-                          <Badge color="green-archipel" size="sm">
-                            Vétérinaire
-                          </Badge>
-                        )}
-                        {data.has_effectif_interd && (
-                          <Badge color="pink-macaron" size="sm">
-                            Interdisciplinaire
-                          </Badge>
-                        )}
-                        {data.has_effectif_sante && (
-                          <Badge color="brown-caramel" size="sm">
-                            Santé
-                          </Badge>
-                        )}
-                      </div>
+                {hasDisciplines && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "baseline",
+                      gap: "0.5rem",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <span
+                      className="fr-text--xs fr-mb-1w"
+                      style={{
+                        color: "var(--text-mention-grey)",
+                        minWidth: "65px",
+                        fontWeight: 500,
+                      }}
+                    >
+                      Disciplines
+                    </span>
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "0.25rem",
+                        flexWrap: "wrap",
+                      }}
+                    >
+                      {data.has_effectif_dsa && (
+                        <Badge size="sm">Droit Éco AES</Badge>
+                      )}
+                      {data.has_effectif_llsh && (
+                        <Badge size="sm">Lettres SHS</Badge>
+                      )}
+                      {data.has_effectif_theo && (
+                        <Badge size="sm">Théologie</Badge>
+                      )}
+                      {data.has_effectif_si && (
+                        <Badge size="sm">Sciences</Badge>
+                      )}
+                      {data.has_effectif_staps && (
+                        <Badge size="sm">STAPS</Badge>
+                      )}
+                      {data.has_effectif_veto && (
+                        <Badge size="sm">Vétérinaire</Badge>
+                      )}
+                      {data.has_effectif_sante && (
+                        <Badge size="sm">Santé</Badge>
+                      )}
+                      {data.has_effectif_interd && (
+                        <Badge size="sm">Interdisciplinaire</Badge>
+                      )}
                     </div>
-                  )}
-                </div>
-              )}
+                  </div>
+                )}
+              </div>
             </div>
           )}
         </div>
