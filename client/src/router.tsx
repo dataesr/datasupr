@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
 import AdminRoutes from "./boards/admin/routes.tsx";
 import AtlasRoutes from "./boards/atlas/routes.tsx";
