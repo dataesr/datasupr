@@ -18,15 +18,62 @@ export function createChartOptions(
   options: NonNullable<HighchartsInstance.Options>
 ) {
   const rootStyles = getComputedStyle(document.documentElement);
+  const labelColor = rootStyles.getPropertyValue("--text-default-grey").trim();
 
   const defaultOptions: HighchartsInstance.Options = {
     chart: {
       backgroundColor: rootStyles.getPropertyValue("--background-default-grey"),
+      style: {
+        fontFamily: "Marianne, sans-serif",
+      },
     },
-    title: { text: "" },
-    legend: { enabled: false },
+    title: {
+      text: "",
+    },
+    legend: {
+      enabled: false,
+    },
+    tooltip: {
+      useHTML: true,
+      backgroundColor: "var(--background-default-grey)",
+      borderColor: "var(--border-default-grey)",
+      borderWidth: 1,
+      style: {
+        color: "var(--text-default-grey)",
+        zIndex: "999999",
+        pointerEvents: "none",
+      },
+    },
+    plotOptions: {
+      series: {
+        borderColor: "var(--border-default-grey)",
+        states: {
+          hover: {
+            brightness: 0.1,
+          },
+        },
+        dataLabels: {
+          style: {
+            textOutline: "none",
+          },
+          zIndex: 1,
+        },
+      },
+    },
     exporting: { enabled: false },
     credits: { enabled: false },
+  };
+
+  const axisLabelStyle = {
+    fontSize: "13px",
+    fontFamily: "Marianne, sans-serif",
+    color: labelColor,
+  };
+
+  const axisTitleStyle = {
+    style: {
+      color: labelColor,
+    },
   };
 
   if (Array.isArray(options.xAxis) && options.xAxis.length > 0) {
@@ -35,26 +82,38 @@ export function createChartOptions(
         ...axis,
         labels: {
           autoRotation: [-45, -90],
-          style: {
-            fontSize: "13px",
-            fontFamily: "Marianne, sans-serif",
-            color: rootStyles.getPropertyValue("--label-color"),
-          },
+          style: axisLabelStyle,
         },
+        title: axisTitleStyle,
       };
-      
     });
   } else {
     defaultOptions.xAxis = {
       labels: {
         autoRotation: [-45, -90],
-        style: {
-          fontSize: "13px",
-          fontFamily: "Marianne, sans-serif",
-          color: rootStyles.getPropertyValue("--label-color"),
-        }
-      }
-    }
+        style: axisLabelStyle,
+      },
+      title: axisTitleStyle,
+    };
+  }
+
+  if (Array.isArray(options.yAxis) && options.yAxis.length > 0) {
+    defaultOptions.yAxis = options.yAxis.map((axis) => {
+      return {
+        ...axis,
+        labels: {
+          style: axisLabelStyle,
+        },
+        title: axisTitleStyle,
+      };
+    });
+  } else {
+    defaultOptions.yAxis = {
+      labels: {
+        style: axisLabelStyle,
+      },
+      title: axisTitleStyle,
+    };
   }
 
   if (type !== "empty") {
