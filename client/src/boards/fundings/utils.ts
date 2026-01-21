@@ -1,3 +1,5 @@
+import { createChartOptions } from "../../components/chart-wrapper/default-options";
+
 const funders = ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"];
 
 const sortedFunders = {
@@ -76,14 +78,12 @@ const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = y
 };
 
 const getGeneralOptions = (title: string, categories: any[], title_x_axis: string, title_y_axis: string) => {
-  return {
-    chart: { height: "600px", type: "bar" },
-    credits: { enabled: false },
-    exporting: { enabled: false },
+  return createChartOptions("bar", {
+    chart: { height: "600px" },
     title: { text: title },
     xAxis: { categories, title: { text: title_x_axis } },
     yAxis: { title: { text: title_y_axis } },
-  };
+  });
 };
 
 export {

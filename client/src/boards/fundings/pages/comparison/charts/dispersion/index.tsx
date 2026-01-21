@@ -70,6 +70,11 @@ export default function Dispersion() {
     name: typology.key,
   }));
 
+  const xs = series.map((funder) => funder.data.map((structure) => structure.x)).flat();
+  const meanX = xs.length > 0 ? xs.reduce((prev, current) => prev + current) / xs.length : undefined;
+  const ys = series.map((funder) => funder.data.map((structure) => structure.y)).flat();
+  const meanY = ys.length > 0 ? ys.reduce((prev, current) => prev + current) / ys.length : undefined;
+
   const config = {
     id: "dispersion",
     sources: FundingsSources,
@@ -77,14 +82,38 @@ export default function Dispersion() {
   };
 
   const options: object = {
-    ...getGeneralOptions("", [], "Nombre de projets financés", ""),
+    ...getGeneralOptions("", [], "", ""),
     chart: { height: "600px", plotBorderWidth: 1, type: "bubble", zooming: { type: "xy" } },
+    legend: { enabled: true },
     plotOptions: { series: { dataLabels: { enabled: true, format: "{point.name}" } } },
     series,
     tooltip: {
       format: `{point.typology} Entre <b>${yearMin}</b> et <b>${yearMax}</b>, <b>{point.name}</b> a reçu <b>{point.yFormatted}</b> pour financer <b>{point.x} projets</b>`,
     },
-    yAxis: { labels: { formatter: function (this: any) { return `${formatCompactNumber(this.value)} €`; } }, title: { text: "Montants financés" } },
+    xAxis: {
+      gridLineWidth: 1,
+      lineWidth: 1,
+      plotLines: [{
+        dashStyle: "dot",
+        label: { rotation: 0, style: { fontStyle: "italic" }, text: "Nombre moyen de projets financés", x: 10, y: 15 },
+        value: meanX,
+        width: 2,
+        zIndex: 3,
+      }],
+      tickInterval: 20,
+      title: { text: "Nombre de projets financés" },
+    },
+    yAxis: {
+      lineWidth: 1,
+      plotLines: [{
+        dashStyle: "dot",
+        label: { align: "right", style: { fontStyle: "italic" }, text: "Montants financés", x: -8, y: -8 },
+        value: meanY,
+        width: 2,
+        zIndex: 3
+      }],
+      title: { text: "Montants financés (€)" },
+    },
   };
 
   return (

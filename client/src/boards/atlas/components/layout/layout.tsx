@@ -24,7 +24,7 @@ export function Layout({ languageSelector = false }) {
   return (
     <>
       <Header>
-        <Logo text="Ministère|chargé|de l'enseignement|supérieur|et de la recherche" />
+        <Logo text="Ministère|de l'enseignement|supérieur|de la recherche|et de l'espace" />
         <Service name="Atlas des effectifs étudiants" />
         <FastAccess>
           <Button

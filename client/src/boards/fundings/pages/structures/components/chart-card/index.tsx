@@ -79,6 +79,7 @@ export default function evolution({
       },
       plotOptions: {
         areaspline: {
+          enableMouseTracking: true,
           fillColor: {
             linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
             stops: [
@@ -102,40 +103,31 @@ export default function evolution({
               ],
             ],
           },
+          lineColor: resolvedColor,
+          lineWidth: 3,
           marker: {
             enabled: false,
             states: {
               hover: {
                 enabled: true,
-                radius: 4,
                 fillColor: resolvedColor,
-                lineWidth: 2,
                 lineColor: "#fff",
+                lineWidth: 2,
+                radius: 4,
               },
             },
           },
-          lineWidth: 3,
-          lineColor: resolvedColor,
-          states: {
-            hover: {
-              lineWidth: 3,
-            },
-          },
+          states: { hover: { lineWidth: 3 } },
           threshold: null,
-          enableMouseTracking: true,
         },
       },
-      exporting: {
-        enabled: false,
-      },
+      exporting: { enabled: false },
       tooltip: {
-        shared: true,
         backgroundColor: "var(--background-contrast-grey)",
         borderColor: "var(--border-default-grey)",
-        style: {
-          color: "var(--text-default-grey)",
-        },
         formatter: tooltipFormatter,
+        shared: true,
+        style: { color: "var(--text-default-grey)" },
       },
       series: [
         {
@@ -152,20 +144,7 @@ export default function evolution({
         chartInstance.current = null;
       }
     };
-  }, [data, color, title, unit]);
-
-  // const trend =
-  //   data && data.length >= 2 && data[0].y !== 0
-  //     ? ((data[data.length - 1].y -
-  //       data[0].y) /
-  //       data[0].y) *
-  //     100
-  //     : null;
-
-  // const trendFormatted =
-  //   trend !== null && isFinite(trend)
-  //     ? `${trend > 0 ? "+" : ""}${trend.toFixed(1)}% en 2024`
-  //     : null;
+  }, [color, data, title, unit]);
 
   return (
     <div
@@ -174,25 +153,24 @@ export default function evolution({
       role="article"
       aria-label={`${title}: ${value}${detail ? `, ${detail}` : ""}`}
       style={{
-        height: "100%",
+        borderBottom: "none",
         borderLeft: "none",
         borderRight: "none",
-        borderBottom: "none",
-        // backgroundColor: DSFR_COLORS.backgroundAlt,
-        position: "relative",
+        height: "100%",
         overflow: "hidden",
+        position: "relative",
       }}
     >
       {data && data.length > 0 && (
         <div
           ref={chartRef}
           style={{
-            position: "absolute",
             bottom: "20px",
+            height: "110px",
             left: 0,
+            position: "absolute",
             right: 0,
             width: "100%",
-            height: "110px",
             zIndex: 1,
           }}
         />
@@ -200,16 +178,14 @@ export default function evolution({
 
       <div
         className="fr-card__body fr-p-2w"
-        // style={{ position: "relative", zIndex: 1, pointerEvents: "none" }}
         style={{ position: "relative", pointerEvents: "none" }}
       >
         <div className="fr-card__content">
           <p
             className="fr-text--sm fr-text--bold fr-mb-1v"
             style={{
-              // color: DSFR_COLORS.textDefault,
-              textTransform: "uppercase",
               letterSpacing: "0.5px",
+              textTransform: "uppercase",
             }}
           >
             {title}
@@ -219,38 +195,13 @@ export default function evolution({
             <p
               className="fr-text--sm"
               style={{
-                // color: DSFR_COLORS.textDefault,
                 margin: 0,
                 position: "relative",
-                // zIndex: 10,
               }}
             >
               {detail}
             </p>
           )}
-          {/* {trendFormatted && (
-            <div
-              style={{
-                position: "relative",
-                top: "0.5rem",
-                right: "0.5rem",
-                fontSize: "0.875rem",
-                fontWeight: 600,
-                color:
-                  trend && trend > 0
-                    ? "var(--green-archipel-sun-391)"
-                    : trend && trend < 0
-                      ? "var(--pink-tuile-sun-425)"
-                      : "var(--text-mention-grey)",
-                display: "flex",
-                alignItems: "center",
-                gap: "3px",
-              }}
-            >
-              {trend && trend > 0 ? "↗" : trend && trend < 0 ? "↘" : "→"}
-              {trendFormatted}
-            </div>
-          )} */}
         </div>
       </div>
     </div>

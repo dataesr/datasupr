@@ -1,5 +1,8 @@
 import { useSearchParams } from "react-router-dom";
+
+import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
+
 
 export default function Footer() {
   const [searchParams] = useSearchParams();
@@ -14,7 +17,7 @@ export default function Footer() {
       <div className="fr-container">
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
-            <a href="/" title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)">
+            <a href="/fundings" title="Financement par appels à projets - DataESR">
               <p className="fr-logo">
                 Ministère
                 <br />
@@ -35,7 +38,7 @@ export default function Footer() {
                   className="fr-footer__content-link"
                   target="_blank"
                   rel="noopener external"
-                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  title="Legifrance - Nouvelle fenêtre"
                   href="https://legifrance.gouv.fr"
                 >
                   legifrance.gouv.fr
@@ -46,7 +49,7 @@ export default function Footer() {
                   className="fr-footer__content-link"
                   target="_blank"
                   rel="noopener external"
-                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  title="Gouvernement français - Nouvelle fenêtre"
                   href="https://gouvernement.fr"
                 >
                   gouvernement.fr
@@ -57,7 +60,7 @@ export default function Footer() {
                   className="fr-footer__content-link"
                   target="_blank"
                   rel="noopener external"
-                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  title="Service public - Nouvelle fenêtre"
                   href="https://service-public.fr"
                 >
                   service-public.fr
@@ -68,7 +71,7 @@ export default function Footer() {
                   className="fr-footer__content-link"
                   target="_blank"
                   rel="noopener external"
-                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  title="DataGouv - Nouvelle fenêtre"
                   href="https://data.gouv.fr"
                 >
                   data.gouv.fr
@@ -109,6 +112,15 @@ export default function Footer() {
                 {getI18nLabel("contact")}
               </a>
             </li>
+            <li className="fr-footer__bottom-item">
+              <button
+                className="fr-footer__bottom-link fr-link--icon-left fr-icon-theme-fill"
+                aria-controls="fr-theme-modal"
+                data-fr-opened="false"
+              >
+                Paramètres d'affichage
+              </button>
+            </li>
           </ul>
           <div className="fr-footer__bottom-copy">
             <p
@@ -119,6 +131,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      <SwitchTheme />
     </footer>
   );
 }

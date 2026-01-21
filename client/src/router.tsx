@@ -26,7 +26,6 @@ export default function Router() {
       <Route path="/cookies" element={<CookiePolicyPage />} />
       <Route path="/datasupr-doc/*" element={<DatasuprDocRoutes />} />
       <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
-      <Route path="/fundings" element={<Navigate to="/fundings/home" replace />} />
       <Route path="/fundings/*" element={<FundingsRoutes />} />
       <Route path="/graduates/*" element={<GraduatesRoutes />} />
       <Route path="/integration" element={<Integration />} />

@@ -13,7 +13,7 @@ function deepMerge(obj1, obj2) {
   return obj1;
 }
 
-export function CreateChartOptions(
+export function createChartOptions(
   type: NonNullable<HighchartsInstance.Options["chart"]>["type"],
   options: NonNullable<HighchartsInstance.Options>
 ) {
