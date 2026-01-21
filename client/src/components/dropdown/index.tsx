@@ -76,6 +76,12 @@ interface DropdownProps {
    * Whether the dropdown should take full width of its container
    */
   fullWidth?: boolean;
+  /**
+   * Visual variant of the trigger button
+   * - 'button': Standard DSFR button style (default)
+   * - 'nav': Navigation link style (for use in fr-nav)
+   */
+  variant?: "button" | "nav";
 }
 
 /**
@@ -123,6 +129,7 @@ export function Dropdown({
   disabled = false,
   align: alignProp = "auto",
   fullWidth = false,
+  variant = "button",
 }: DropdownProps) {
   const id = useId();
   const triggerId = `${id}-trigger`;
@@ -325,18 +332,22 @@ export function Dropdown({
   );
 
   // Build trigger button classes
+  const isNavVariant = variant === "nav";
   const sizeClass =
-    size === "sm" ? "fr-btn--sm" : size === "lg" ? "fr-btn--lg" : null;
-  const variantClass = outline
-    ? "fr-btn--tertiary"
-    : "fr-btn--tertiary-no-outline";
+    !isNavVariant &&
+    (size === "sm" ? "fr-btn--sm" : size === "lg" ? "fr-btn--lg" : null);
+  const variantClass =
+    !isNavVariant &&
+    (outline ? "fr-btn--tertiary" : "fr-btn--tertiary-no-outline");
   const iconClass = icon ? `fr-icon-${icon}` : null;
-  const iconPositionClass = icon && label ? "fr-btn--icon-left" : null;
+  const iconPositionClass =
+    !isNavVariant && icon && label ? "fr-btn--icon-left" : null;
   const arrowClass = showArrow ? "fx-dropdown__trigger--has-arrow" : null;
 
   const triggerClasses = cn(
-    "fr-btn",
+    isNavVariant ? "fr-nav__link" : "fr-btn",
     "fx-dropdown__trigger",
+    isNavVariant && "fx-dropdown__trigger--nav",
     sizeClass,
     variantClass,
     iconClass,

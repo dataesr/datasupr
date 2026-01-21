@@ -131,3 +131,11 @@ export const CARD_COLORS = {
     background: DSFR_COLORS.purpleGlycine,
   },
 } as const;
+// gestion temporaire des couleurs !!!
+
+export const SECTION_COLORS = {
+  ressources: DSFR_COLORS.blueFrance,
+  santeFinanciere: DSFR_COLORS.greenEmeraude,
+  moyensHumains: DSFR_COLORS.pinkTuile,
+  diplomesFormations: DSFR_COLORS.orangeTerreBattue,
+} as const;

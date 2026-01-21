@@ -23,7 +23,7 @@ export default function SectionNavigation({
       aria-label="Navigation secondaire"
       style={{ borderBottom: "1px solid var(--border-default-grey)" }}
     >
-      <ul className="fr-nav__list">
+      <ul className="fr-nav__list" style={{ alignItems: "center" }}>
         <li className="fr-nav__item">
           <a
             className="fr-nav__link"
@@ -95,13 +95,20 @@ export default function SectionNavigation({
             Analyses et évolutions
           </a>
         </li>
-        <li className="fr-nav__item" style={{ marginLeft: "auto" }}>
+        <li
+          className="fr-nav__item"
+          style={{
+            marginLeft: "auto",
+            alignSelf: "stretch",
+            display: "flex",
+            alignItems: "stretch",
+          }}
+        >
           <Dropdown
-            label={`Année ${selectedYear}`}
+            label={`${selectedYear}`}
             icon="calendar-line"
-            outline={false}
             align="end"
-            size="sm"
+            variant="nav"
           >
             {years.map((year) => (
               <button

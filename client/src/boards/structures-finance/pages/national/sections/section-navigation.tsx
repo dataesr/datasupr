@@ -1,7 +1,4 @@
 import { useSearchParams } from "react-router-dom";
-import TertiaryNavigation, {
-  TertiaryNavigationItem,
-} from "../../../../../components/tertiary-navigation";
 
 export default function SectionNavigation() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -14,41 +11,75 @@ export default function SectionNavigation() {
   };
 
   return (
-    <div>
-      <TertiaryNavigation>
-        <TertiaryNavigationItem
-          label="Produits vs Effectifs d'étudiants"
-          isActive={activeSection === "produits-vs-etudiants"}
-          onClick={(e) => {
-            e.preventDefault();
-            handleSectionChange("produits-vs-etudiants");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="SCSP vs Encadrement"
-          isActive={activeSection === "scsp-vs-encadrement"}
-          onClick={(e) => {
-            e.preventDefault();
-            handleSectionChange("scsp-vs-encadrement");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="SCSP vs Ressources propres"
-          isActive={activeSection === "scsp-vs-ressources-propres"}
-          onClick={(e) => {
-            e.preventDefault();
-            handleSectionChange("scsp-vs-ressources-propres");
-          }}
-        />
-        <TertiaryNavigationItem
-          label="Comparaison de métriques"
-          isActive={activeSection === "comparison"}
-          onClick={(e) => {
-            e.preventDefault();
-            handleSectionChange("comparison");
-          }}
-        />
-      </TertiaryNavigation>
-    </div>
+    <nav
+      className="fr-nav"
+      id="section-navigation"
+      role="navigation"
+      aria-label="Navigation secondaire"
+      style={{ borderBottom: "1px solid var(--border-default-grey)" }}
+    >
+      <ul className="fr-nav__list" style={{ alignItems: "center" }}>
+        <li className="fr-nav__item">
+          <a
+            className="fr-nav__link"
+            href="#produits-vs-etudiants"
+            aria-current={
+              activeSection === "produits-vs-etudiants" ? "page" : undefined
+            }
+            onClick={(e) => {
+              e.preventDefault();
+              handleSectionChange("produits-vs-etudiants");
+            }}
+          >
+            Produits vs Effectifs
+          </a>
+        </li>
+        <li className="fr-nav__item">
+          <a
+            className="fr-nav__link"
+            href="#scsp-vs-encadrement"
+            aria-current={
+              activeSection === "scsp-vs-encadrement" ? "page" : undefined
+            }
+            onClick={(e) => {
+              e.preventDefault();
+              handleSectionChange("scsp-vs-encadrement");
+            }}
+          >
+            SCSP vs Encadrement
+          </a>
+        </li>
+        <li className="fr-nav__item">
+          <a
+            className="fr-nav__link"
+            href="#scsp-vs-ressources-propres"
+            aria-current={
+              activeSection === "scsp-vs-ressources-propres"
+                ? "page"
+                : undefined
+            }
+            onClick={(e) => {
+              e.preventDefault();
+              handleSectionChange("scsp-vs-ressources-propres");
+            }}
+          >
+            SCSP vs Ressources propres
+          </a>
+        </li>
+        <li className="fr-nav__item">
+          <a
+            className="fr-nav__link"
+            href="#comparison"
+            aria-current={activeSection === "comparison" ? "page" : undefined}
+            onClick={(e) => {
+              e.preventDefault();
+              handleSectionChange("comparison");
+            }}
+          >
+            Comparaison de métriques
+          </a>
+        </li>
+      </ul>
+    </nav>
   );
 }

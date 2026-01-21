@@ -284,6 +284,9 @@ export const createEffectifsDisciplinesChartOptions = (
       layout: "horizontal",
       align: "center",
       verticalAlign: "bottom",
+      itemStyle: {
+        color: "var(--text-default-grey)",
+      },
     },
     tooltip: {
       formatter: function () {
@@ -348,6 +351,9 @@ export const createEffectifsDiplomesChartOptions = (
       layout: "horizontal",
       align: "center",
       verticalAlign: "bottom",
+      itemStyle: {
+        color: "var(--text-default-grey)",
+      },
     },
     tooltip: {
       formatter: function () {

@@ -3,9 +3,11 @@ import EffectifsChart from "../charts/effectifs";
 // import { SmallMetricCard } from "../components/small-metric-card";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 // import { FORMATION_COLORS } from "../../../constants/formation-colors";
-import { CHART_COLORS } from "../../../constants/colors";
+import { SECTION_COLORS } from "../../../constants/colors";
 import { useMetricEvolution } from "./api";
 import "./styles.scss";
+
+const SECTION_COLOR = SECTION_COLORS.diplomesFormations;
 
 interface EtudiantsSectionProps {
   data: any;
@@ -59,7 +61,7 @@ export function EtudiantsSection({
               title="Total des étudiants"
               value={num(data.effectif_sans_cpge)}
               detail="Inscriptions hors CPGE"
-              color={CHART_COLORS.primary}
+              color={SECTION_COLOR}
               evolutionData={effectifEvolution}
             />
           </Col>
@@ -68,7 +70,7 @@ export function EtudiantsSection({
               title="Diplômes nationaux"
               value={num(data.effectif_sans_cpge_dn)}
               detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_dn / data.effectif_sans_cpge) * 100).toFixed(0) : 0}% du total`}
-              color={CHART_COLORS.secondary}
+              color={SECTION_COLOR}
               evolutionData={effectifDnEvolution}
             />
           </Col>
@@ -77,7 +79,7 @@ export function EtudiantsSection({
               title="Diplômes d'établissement"
               value={num(data.effectif_sans_cpge_du)}
               detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_du / data.effectif_sans_cpge) * 100).toFixed(0) : 0}% du total`}
-              color={CHART_COLORS.tertiary}
+              color={SECTION_COLOR}
               evolutionData={effectifDuEvolution}
             />
           </Col>
