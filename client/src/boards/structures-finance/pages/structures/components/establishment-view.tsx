@@ -2,7 +2,11 @@ import { useSearchParams } from "react-router-dom";
 import { useMemo, useEffect } from "react";
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useFinanceYears } from "../../../api/common";
-import { useFinanceEtablissementDetail } from "../../../api/api";
+import {
+  useFinanceEtablissementDetail,
+  useCheckMultipleEstablishments,
+  useCheckEstablishmentExists,
+} from "../../../api/api";
 import PageHeader from "./page-header";
 import SectionNavigation from "./section-navigation";
 import {
@@ -14,21 +18,53 @@ import {
 } from "../sections/sections";
 import CustomBreadcrumb from "../../../../../components/custom-breadcrumb";
 import navigationConfig from "../../../navigation-config.json";
+import MultipleEstablishmentsSelector from "./multiple-establishments-selector";
+import EstablishmentNotExistsAlert from "./establishment-not-exists-alert";
 
 export default function EstablishmentView() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedYear = searchParams.get("year") || "2024";
   const selectedEtablissement = searchParams.get("structureId") || "";
+  const useHistorical = searchParams.get("useHistorical") === "true";
   const section = searchParams.get("section") || "ressources";
 
   const { data: yearsData } = useFinanceYears();
   const years = useMemo(() => yearsData?.years || [], [yearsData]);
 
+  // Vérifier si l'établissement actuel a plusieurs établissements historiques
+  const { data: multiplesData, isLoading: isCheckingMultiples } =
+    useCheckMultipleEstablishments(
+      selectedEtablissement,
+      String(selectedYear || years[0] || ""),
+      !!selectedEtablissement && !!(selectedYear || years[0]) && !useHistorical
+    );
+
+  // Vérifier si l'établissement existe pour l'année sélectionnée
+  // (que ce soit un établissement historique ou actuel)
+  const { data: existsData, isLoading: isCheckingExists } =
+    useCheckEstablishmentExists(
+      selectedEtablissement,
+      String(selectedYear || years[0] || ""),
+      !!selectedEtablissement && !!(selectedYear || years[0])
+    );
+
+  // Déterminer si on doit afficher le sélecteur
+  const showMultipleSelector =
+    !useHistorical && multiplesData?.hasMultiples && !isCheckingMultiples;
+
+  // Déterminer si l'établissement n'existe pas pour cette année
+  const showNotExistsAlert =
+    existsData && !existsData.exists && existsData.etablissementActuel;
+
   const { data: detailData, isLoading } = useFinanceEtablissementDetail(
     selectedEtablissement,
     String(selectedYear || years[0] || ""),
-    !!selectedEtablissement && !!(selectedYear || years[0])
+    !!selectedEtablissement &&
+      !!(selectedYear || years[0]) &&
+      !showMultipleSelector &&
+      !showNotExistsAlert,
+    useHistorical
   );
 
   useEffect(() => {
@@ -42,6 +78,7 @@ export default function EstablishmentView() {
   const handleClearSelection = () => {
     const next = new URLSearchParams(searchParams);
     next.delete("structureId");
+    next.delete("useHistorical");
     setSearchParams(next);
   };
 
@@ -54,6 +91,8 @@ export default function EstablishmentView() {
   const handleYearChange = (year: string) => {
     const next = new URLSearchParams(searchParams);
     next.set("year", year);
+    // Réinitialiser useHistorical quand l'année change pour revérifier les multiples
+    next.delete("useHistorical");
     setSearchParams(next);
   };
 
@@ -85,13 +124,48 @@ export default function EstablishmentView() {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isCheckingMultiples || isCheckingExists) {
     return (
       <Container fluid className="etablissement-selector__wrapper">
         <Container className="fr-py-4w">
           <p>Chargement des données...</p>
         </Container>
       </Container>
+    );
+  }
+
+  if (showNotExistsAlert && existsData?.etablissementActuel) {
+    return (
+      <EstablishmentNotExistsAlert
+        etablissementLibHistorique={
+          existsData.etablissement_lib_historique || selectedEtablissement
+        }
+        etablissementActuel={existsData.etablissementActuel}
+        selectedYear={selectedYear}
+      />
+    );
+  }
+
+  if (showMultipleSelector && multiplesData) {
+    return (
+      <main>
+        <Container fluid className="etablissement-selector__wrapper">
+          <Container as="section">
+            <Row>
+              <Col>
+                <CustomBreadcrumb config={navigationConfig} />
+              </Col>
+            </Row>
+          </Container>
+        </Container>
+        <MultipleEstablishmentsSelector
+          etablissements={multiplesData.etablissements}
+          selectedYear={selectedYear}
+          etablissementActuelLib={
+            multiplesData.etablissements[0]?.etablissement_actuel_lib || ""
+          }
+        />
+      </main>
     );
   }
 

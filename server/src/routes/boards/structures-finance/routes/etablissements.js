@@ -71,12 +71,24 @@ router.get(
       if (hit) return res.json(hit);
 
       const { id } = req.params;
-      const { annee } = req.query;
+      const { annee, useHistorical } = req.query;
       const collection = db.collection("finance-university-main_staging");
+
+      let matchCondition;
+      if (useHistorical === "true") {
+        matchCondition = { etablissement_id_paysage: id };
+      } else {
+        matchCondition = {
+          $or: [
+            { etablissement_id_paysage: id },
+            { etablissement_id_paysage_actuel: id },
+          ],
+        };
+      }
 
       const matchStage = {
         $match: {
-          etablissement_id_paysage: id,
+          ...matchCondition,
           ...(annee ? { exercice: Number(annee) } : {}),
         },
       };
@@ -167,6 +179,166 @@ router.get(
 
       setCached(key, docs);
       res.json(docs);
+    } catch (e) {
+      res.status(500).json({ error: "Server error", details: e.message });
+    }
+  }
+);
+
+router.get(
+  "/structures-finance/etablissements/:id/check-multiples",
+  async (req, res) => {
+    try {
+      const key = cacheKey(req.path, req.query);
+      const hit = getCached(key);
+      if (hit) return res.json(hit);
+
+      const { id } = req.params;
+      const { annee } = req.query;
+      const collection = db.collection("finance-university-main_staging");
+
+      const findActuelId = await collection.findOne({
+        $or: [
+          { etablissement_id_paysage: id },
+          { etablissement_id_paysage_actuel: id },
+        ],
+      });
+
+      if (!findActuelId) {
+        const payload = { hasMultiples: false, count: 0, etablissements: [] };
+        setCached(key, payload);
+        return res.json(payload);
+      }
+
+      const actualId = findActuelId.etablissement_id_paysage_actuel;
+
+      const pipeline = [
+        {
+          $match: {
+            etablissement_id_paysage_actuel: actualId,
+            ...(annee ? { exercice: Number(annee) } : {}),
+          },
+        },
+        {
+          $group: {
+            _id: "$etablissement_id_paysage",
+            etablissement_lib: { $first: "$etablissement_lib" },
+            etablissement_id_paysage_actuel: {
+              $first: "$etablissement_id_paysage_actuel",
+            },
+            etablissement_actuel_lib: { $first: "$etablissement_actuel_lib" },
+            type: { $first: "$type" },
+            typologie: { $first: "$typologie" },
+            exercice: { $first: "$exercice" },
+            date_de_creation: { $first: "$date_de_creation" },
+            date_de_fermeture: { $first: "$date_de_fermeture" },
+            effectif_sans_cpge: { $first: "$effectif_sans_cpge" },
+          },
+        },
+        { $sort: { etablissement_lib: 1 } },
+      ];
+
+      const docs = await collection.aggregate(pipeline).toArray();
+
+      const payload = {
+        hasMultiples: docs.length > 1,
+        count: docs.length,
+        etablissements: docs.map((doc) => ({
+          etablissement_id_paysage: doc._id,
+          etablissement_lib: doc.etablissement_lib,
+          etablissement_id_paysage_actuel: doc.etablissement_id_paysage_actuel,
+          etablissement_actuel_lib: doc.etablissement_actuel_lib,
+          type: doc.type,
+          typologie: doc.typologie,
+          exercice: doc.exercice,
+          date_de_creation: doc.date_de_creation,
+          date_de_fermeture: doc.date_de_fermeture,
+          effectif_sans_cpge: doc.effectif_sans_cpge,
+        })),
+      };
+
+      setCached(key, payload);
+      res.json(payload);
+    } catch (e) {
+      res.status(500).json({ error: "Server error", details: e.message });
+    }
+  }
+);
+
+router.get(
+  "/structures-finance/etablissements/:id/check-exists",
+  async (req, res) => {
+    try {
+      const key = cacheKey(req.path, req.query);
+      const hit = getCached(key);
+      if (hit) return res.json(hit);
+
+      const { id } = req.params;
+      const { annee } = req.query;
+      const collection = db.collection("finance-university-main_staging");
+
+      const existsForYear = await collection.findOne({
+        $or: [
+          { etablissement_id_paysage: id },
+          { etablissement_id_paysage_actuel: id },
+        ],
+        ...(annee ? { exercice: Number(annee) } : {}),
+      });
+
+      if (existsForYear) {
+        const payload = {
+          exists: true,
+          etablissement_id_paysage: existsForYear.etablissement_id_paysage,
+          etablissement_lib: existsForYear.etablissement_lib,
+        };
+        setCached(key, payload);
+        return res.json(payload);
+      }
+
+      const historicalDoc = await collection.findOne({
+        $or: [
+          { etablissement_id_paysage: id },
+          { etablissement_id_paysage_actuel: id },
+        ],
+      });
+
+      if (!historicalDoc) {
+        const payload = {
+          exists: false,
+          etablissementActuel: null,
+        };
+        setCached(key, payload);
+        return res.json(payload);
+      }
+
+      const currentDoc = await collection.findOne({
+        etablissement_id_paysage: historicalDoc.etablissement_id_paysage_actuel,
+        ...(annee ? { exercice: Number(annee) } : {}),
+      });
+
+      const payload = {
+        exists: false,
+        etablissement_lib_historique: historicalDoc.etablissement_lib,
+        etablissementActuel: currentDoc
+          ? {
+              etablissement_id_paysage: currentDoc.etablissement_id_paysage,
+              etablissement_id_paysage_actuel:
+                currentDoc.etablissement_id_paysage_actuel,
+              etablissement_lib: currentDoc.etablissement_lib,
+              etablissement_actuel_lib: currentDoc.etablissement_actuel_lib,
+            }
+          : {
+              etablissement_id_paysage:
+                historicalDoc.etablissement_id_paysage_actuel,
+              etablissement_id_paysage_actuel:
+                historicalDoc.etablissement_id_paysage_actuel,
+              etablissement_lib: historicalDoc.etablissement_actuel_lib,
+              etablissement_actuel_lib: historicalDoc.etablissement_actuel_lib,
+            },
+      };
+
+      setCached(key, payload);
+      res.json(payload);
     } catch (e) {
       res.status(500).json({ error: "Server error", details: e.message });
     }

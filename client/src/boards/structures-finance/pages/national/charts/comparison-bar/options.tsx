@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
 import { CHART_COLORS } from "../../../../constants/colors";
-import { CreateChartOptions } from "../../../../chart-options";
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 
 export interface ComparisonBarConfig {
   metric: string;
@@ -25,44 +25,26 @@ export const createComparisonBarOptions = (
     .sort((a, b) => b.value - a.value)
     .slice(0, config.topN);
 
-  return CreateChartOptions("bar", {
+  return createChartOptions("bar", {
     chart: {
       height: Math.max(400, chartData.length * 25 + 100),
     },
     title: {
-      text: `${config.metricLabel} par établissement`,
-      align: "left",
-      style: {
-        fontSize: "18px",
-        fontWeight: "600",
-      },
+      text: "",
     },
     accessibility: {
-      enabled: true,
       description: `Graphique en barres comparant ${config.metricLabel} pour ${chartData.length} établissements`,
-      keyboardNavigation: {
-        enabled: true,
-      },
     },
     xAxis: {
       categories: chartData.map((d) => d.name),
-      title: {
-        text: null,
-      },
       gridLineWidth: 0,
     },
     yAxis: {
       min: 0,
       title: {
-        text: config.metricLabel,
-        align: "high",
-        style: {
-          fontSize: "13px",
-          fontWeight: "500",
-        },
+        text: "",
       },
       labels: {
-        overflow: "justify",
         formatter: function () {
           if (config.format) {
             return config.format(this.value as number);
@@ -72,26 +54,20 @@ export const createComparisonBarOptions = (
       },
     },
     tooltip: {
-      useHTML: true,
-      borderWidth: 1,
-      borderRadius: 8,
-      shadow: false,
       formatter: function () {
         const value = this.y as number;
         const formatted = config.format
           ? config.format(value)
           : value.toLocaleString("fr-FR");
         return `
-          <div style="padding:10px">
-            <div style="margin-top:8px">
-              <strong>${config.metricLabel}:</strong> <span style="font-size:15px;font-weight:600">${formatted}</span>
+          <div style="padding:8px">
+            <div style="font-weight:600;margin-bottom:4px">${this.category}</div>
+            <div>
+              <strong>${config.metricLabel}:</strong> ${formatted}
             </div>
           </div>
         `;
       },
-    },
-    exporting: {
-      enabled: false,
     },
     plotOptions: {
       bar: {
@@ -101,26 +77,9 @@ export const createComparisonBarOptions = (
         color: CHART_COLORS.primary,
         borderRadius: 4,
       },
-      series: {
-        animation: {
-          duration: 800,
-        },
-      },
     },
     legend: {
-      enabled: true,
-      align: "right",
-      verticalAlign: "middle",
-      layout: "vertical",
-      title: {
-        text: "Régions",
-        style: {
-          color: "var(--text-default-grey)",
-        },
-      },
-      itemStyle: {
-        color: "var(--text-default-grey)",
-      },
+      enabled: false,
     },
     series: [
       {

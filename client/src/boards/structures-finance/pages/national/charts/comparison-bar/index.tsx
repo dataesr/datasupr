@@ -1,11 +1,16 @@
 import { useMemo, useState } from "react";
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import Dropdown from "../../../../../../components/dropdown";
 import { createComparisonBarOptions } from "./options";
 import { RenderData } from "./render-data";
 
 interface ComparisonBarChartProps {
   data: any[];
+  selectedYear?: string;
+  selectedType?: string;
+  selectedTypologie?: string;
+  selectedRegion?: string;
 }
 
 interface MetricOption {
@@ -150,11 +155,26 @@ const METRIC_OPTIONS: MetricOption[] = [
   },
 ];
 
-export default function ComparisonBarChart({ data }: ComparisonBarChartProps) {
+export default function ComparisonBarChart({
+  data,
+  selectedYear,
+  selectedType,
+  selectedTypologie,
+  selectedRegion,
+}: ComparisonBarChartProps) {
   const [selectedMetric, setSelectedMetric] = useState<string>(
     "part_droits_d_inscription"
   );
   const [topN, setTopN] = useState<number>(20);
+
+  const filterSummary = useMemo(() => {
+    const parts: string[] = [];
+    if (selectedYear) parts.push(selectedYear);
+    if (selectedType) parts.push(selectedType);
+    if (selectedTypologie) parts.push(selectedTypologie);
+    if (selectedRegion) parts.push(selectedRegion);
+    return parts.length > 0 ? ` (${parts.join(" · ")})` : "";
+  }, [selectedYear, selectedType, selectedTypologie, selectedRegion]);
 
   const selectedMetricConfig = useMemo(
     () =>
@@ -187,54 +207,88 @@ export default function ComparisonBarChart({ data }: ComparisonBarChartProps) {
     return groups;
   }, []);
 
+  const TOP_N_OPTIONS = [10, 20, 30, 50, 100];
+
   const config = {
     id: "comparison-bar",
-    title: "",
+    title: `${selectedMetricConfig.label}${filterSummary}`,
   };
 
   return (
     <div>
       <Row gutters className="fr-mb-3w">
         <Col xs="12" md="8">
-          <div className="fr-select-group">
-            <label className="fr-label" htmlFor="select-metric">
-              <strong>Métrique à comparer</strong>
-              <span className="fr-hint-text">Choisissez la métrique à visualiser</span>
-            </label>
-            <select id="select-metric" className="fr-select" value={selectedMetric} onChange={(e) => setSelectedMetric(e.target.value)}>
-              {Object.entries(groupedMetrics).map(([category, metrics]) => (
-                <optgroup key={category} label={category}>
-                  {metrics.map((metric) => (
-                    <option key={metric.key} value={metric.key}>
-                      {metric.label}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </select>
-          </div>
+          <p className="fr-text--sm fr-text--bold fr-mb-1w">
+            Métrique à comparer
+          </p>
+          <Dropdown
+            label={selectedMetricConfig.label}
+            icon="line-chart-line"
+            size="sm"
+            fullWidth
+          >
+            {Object.entries(groupedMetrics).map(([category, metrics]) => (
+              <div key={category}>
+                <div
+                  className="fr-text--xs fr-text--bold"
+                  style={{
+                    padding: "0.5rem 0.75rem",
+                    color: "var(--text-mention-grey)",
+                    backgroundColor: "var(--background-alt-grey)",
+                  }}
+                >
+                  {category}
+                </div>
+                {metrics.map((metric) => (
+                  <button
+                    key={metric.key}
+                    className={`fx-dropdown__item ${selectedMetric === metric.key ? "fx-dropdown__item--active" : ""}`}
+                    onClick={() => setSelectedMetric(metric.key)}
+                  >
+                    {metric.label}
+                  </button>
+                ))}
+              </div>
+            ))}
+          </Dropdown>
         </Col>
         <Col xs="12" md="4">
-          <div className="fr-select-group">
-            <label className="fr-label" htmlFor="select-top-n">
-              <strong>Nombre d'établissements</strong>
-              <span className="fr-hint-text">Afficher par</span>
-            </label>
-            <select id="select-top-n" className="fr-select" value={topN} onChange={(e) => setTopN(Number(e.target.value))}>
-              <option value="10">10</option>
-              <option value="20">20</option>
-              <option value="30">30</option>
-              <option value="50">50</option>
-              <option value="100">100</option>
-            </select>
-          </div>
+          <p className="fr-text--sm fr-text--bold fr-mb-1w">
+            Nombre d'établissements
+          </p>
+          <Dropdown label={`${topN}`} icon="list-ordered" size="sm">
+            {TOP_N_OPTIONS.map((n) => (
+              <label
+                key={n}
+                className="fx-dropdown__item"
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                  cursor: "pointer",
+                }}
+              >
+                <input
+                  type="radio"
+                  name="topN"
+                  checked={topN === n}
+                  onChange={() => setTopN(n)}
+                  style={{ accentColor: "var(--text-active-blue-france)" }}
+                />
+                {n} établissements
+              </label>
+            ))}
+          </Dropdown>
         </Col>
       </Row>
 
       {!chartOptions || !data || data.length === 0 ? (
         <div className="fr-alert fr-alert--warning">
           <p className="fr-alert__title">Aucune donnée disponible</p>
-          <p>Aucun établissement ne dispose de données pour cette métrique avec les filtres sélectionnés.</p>
+          <p>
+            Aucun établissement ne dispose de données pour cette métrique avec
+            les filtres sélectionnés.
+          </p>
         </div>
       ) : (
         <ChartWrapper
@@ -249,7 +303,6 @@ export default function ComparisonBarChart({ data }: ComparisonBarChartProps) {
               format={selectedMetricConfig.format}
             />
           )}
-          hideTitle
         />
       )}
     </div>

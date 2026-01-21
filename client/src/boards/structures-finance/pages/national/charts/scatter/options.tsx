@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
 import { CHART_COLORS } from "../../../../constants/colors";
-import { CreateChartOptions } from "../../../../chart-options";
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 
 export interface ScatterConfig {
   title: string;
@@ -51,7 +51,7 @@ export const createScatterOptions = (
       color: colors[index % colors.length],
     }));
 
-  return CreateChartOptions("bubble", {
+  return createChartOptions("bubble", {
     chart: {
       height: 600,
     },
@@ -101,11 +101,11 @@ export const createScatterOptions = (
                 config.xLabel
               }:</strong> ${Highcharts.numberFormat(point.x, 0, ",", " ")}</div>
               <div><strong>${config.yLabel}:</strong> ${Highcharts.numberFormat(
-          point.y,
-          2,
-          ",",
-          " "
-        )}</div>
+                point.y,
+                2,
+                ",",
+                " "
+              )}</div>
             </div>
           </div>
         `;

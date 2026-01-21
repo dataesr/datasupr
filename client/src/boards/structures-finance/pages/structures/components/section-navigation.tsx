@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import Dropdown from "../../../../../components/dropdown";
 
 interface SectionNavigationProps {
   activeSection: string;
@@ -15,28 +15,14 @@ export default function SectionNavigation({
   onSectionChange,
   onYearChange,
 }: SectionNavigationProps) {
-  const [isYearDropdownOpen, setIsYearDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node) &&
-        !(event.target as HTMLElement).closest(
-          '.fr-nav__btn[aria-controls="menu-year"]'
-        )
-      ) {
-        setIsYearDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
   return (
-    <nav className="fr-nav" role="navigation" aria-label="Navigation tertiaire">
+    <nav
+      className="fr-nav"
+      id="section-navigation"
+      role="navigation"
+      aria-label="Navigation secondaire"
+      style={{ borderBottom: "1px solid var(--border-default-grey)" }}
+    >
       <ul className="fr-nav__list">
         <li className="fr-nav__item">
           <a
@@ -109,54 +95,24 @@ export default function SectionNavigation({
             Analyses et évolutions
           </a>
         </li>
-        <li
-          className="fr-nav__item"
-          style={{ marginLeft: "auto", position: "relative" }}
-        >
-          <button
-            className="fr-nav__btn"
-            type="button"
-            aria-expanded={isYearDropdownOpen}
-            aria-controls="menu-year"
-            onClick={() => setIsYearDropdownOpen(!isYearDropdownOpen)}
+        <li className="fr-nav__item" style={{ marginLeft: "auto" }}>
+          <Dropdown
+            label={`Année ${selectedYear}`}
+            icon="calendar-line"
+            outline={false}
+            align="end"
+            size="sm"
           >
-            <span className="fr-icon-calendar-line" aria-hidden="true" />
-            Année {selectedYear}
-            <span aria-hidden="true" />
-          </button>
-          <div
-            ref={dropdownRef}
-            className="fr-collapse fr-menu"
-            id="menu-year"
-            style={{
-              display: isYearDropdownOpen ? "block" : "none",
-              position: "absolute",
-              top: "100%",
-              right: 0,
-              zIndex: 1000,
-            }}
-          >
-            <ul className="fr-menu__list">
-              {years.map((year) => (
-                <li key={year}>
-                  <a
-                    className="fr-nav__link"
-                    href={`#year-${year}`}
-                    aria-current={
-                      selectedYear === year.toString() ? "page" : undefined
-                    }
-                    onClick={(e) => {
-                      e.preventDefault();
-                      onYearChange(year.toString());
-                      setIsYearDropdownOpen(false);
-                    }}
-                  >
-                    {year}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
+            {years.map((year) => (
+              <button
+                key={year}
+                className={`fx-dropdown__item ${selectedYear === year.toString() ? "fx-dropdown__item--active" : ""}`}
+                onClick={() => onYearChange(year.toString())}
+              >
+                {year}
+              </button>
+            ))}
+          </Dropdown>
         </li>
       </ul>
     </nav>

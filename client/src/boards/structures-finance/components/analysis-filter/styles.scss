@@ -1,0 +1,63 @@
+.analysis-filter {
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+
+  .fr-segmented {
+    flex-wrap: wrap;
+
+    .fr-segmented__elements {
+      flex-wrap: wrap;
+    }
+
+    .fr-segmented__legend {
+      display: none;
+    }
+
+    input + label {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.5rem;
+    }
+  }
+
+  &__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  &__item {
+    width: 100%;
+    text-align: left;
+    padding: 0.5rem 0.75rem;
+    background-color: var(--background-default-grey);
+    color: var(--text-default-grey);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 400;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: var(--background-default-grey-hover);
+    }
+
+    &--selected {
+      background-color: var(--background-action-high-blue-france);
+      color: var(--text-inverted-grey);
+      font-weight: 600;
+
+      &:hover {
+        background-color: var(--background-action-high-blue-france-hover);
+      }
+    }
+  }
+
+  &__comparison-badge {
+    margin-left: 0.5rem;
+    font-size: 11px;
+    opacity: 0.7;
+  }
+}

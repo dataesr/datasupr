@@ -1,7 +1,6 @@
 import Highcharts from "highcharts";
 import { CHART_COLORS } from "../../../../constants/colors";
-import { CreateChartOptions } from "../../../../chart-options";
-
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 interface EffectifsData {
   effectif_sans_cpge?: number;
   effectif_sans_cpge_l?: number;
@@ -84,7 +83,7 @@ export const createEffectifsNiveauChartOptions = (
     },
   ].filter((item) => item.has);
 
-  return CreateChartOptions("pie", {
+  return createChartOptions("pie", {
     chart: {
       height: 400,
     },
@@ -158,32 +157,21 @@ export const createEffectifsSpecifiquesChartOptions = (
     name: item.name,
   }));
 
-  return CreateChartOptions("column", {
+  return createChartOptions("column", {
     chart: {
       height: 300,
-    },
-    legend: {
-      enabled: false,
     },
     xAxis: {
       categories: categories,
       crosshair: true,
       labels: {
         align: "center",
-        style: {
-          color: "var(--text-default-grey)",
-        },
       },
     },
     yAxis: {
       min: 0,
       title: {
         text: "",
-      },
-      labels: {
-        style: {
-          color: "var(--text-default-grey)",
-        },
       },
     },
     tooltip: {
@@ -207,7 +195,6 @@ export const createEffectifsSpecifiquesChartOptions = (
             color: "var(--text-default-grey)",
             fontSize: "13px",
             fontWeight: "bold",
-            textOutline: "none",
           },
         },
       },
@@ -288,7 +275,7 @@ export const createEffectifsDisciplinesChartOptions = (
     },
   ].filter((item) => item.has && item.y > 0);
 
-  return CreateChartOptions("pie", {
+  return createChartOptions("pie", {
     chart: {
       height: 400,
     },
@@ -297,9 +284,6 @@ export const createEffectifsDisciplinesChartOptions = (
       layout: "horizontal",
       align: "center",
       verticalAlign: "bottom",
-      itemStyle: {
-        color: "var(--text-default-grey)",
-      },
     },
     tooltip: {
       formatter: function () {
@@ -355,21 +339,15 @@ export const createEffectifsDiplomesChartOptions = (
     },
   ].filter((item) => item.y > 0);
 
-  return CreateChartOptions("pie", {
+  return createChartOptions("pie", {
     chart: {
       height: 400,
     },
     legend: {
       enabled: true,
-      itemStyle: {
-        color: "var(--text-default-grey)",
-      },
       layout: "horizontal",
       align: "center",
       verticalAlign: "bottom",
-    },
-    title: {
-      text: undefined,
     },
     tooltip: {
       formatter: function () {
@@ -452,14 +430,11 @@ export const createEffectifsDegreesChartOptions = (
     name: item.name,
   }));
 
-  return CreateChartOptions("column", {
+  return createChartOptions("column", {
     chart: {
       height: 380,
       marginBottom: 100,
       marginLeft: 70,
-    },
-    legend: {
-      enabled: false,
     },
     xAxis: {
       categories: categories,
@@ -469,7 +444,6 @@ export const createEffectifsDegreesChartOptions = (
         align: "right",
         style: {
           fontSize: "11px",
-          color: "var(--text-default-grey)",
         },
       },
     },
@@ -477,11 +451,6 @@ export const createEffectifsDegreesChartOptions = (
       min: 0,
       title: {
         text: "",
-      },
-      labels: {
-        style: {
-          color: "var(--text-default-grey)",
-        },
       },
     },
     tooltip: {
@@ -505,7 +474,6 @@ export const createEffectifsDegreesChartOptions = (
             color: "var(--text-default-grey)",
             fontSize: "13px",
             fontWeight: "bold",
-            textOutline: "none",
           },
         },
       },

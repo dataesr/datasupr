@@ -1,5 +1,5 @@
 import Highcharts from "highcharts";
-import { CreateChartOptions } from "../../../../chart-options";
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 
 interface EvolutionData {
   exercice: number;
@@ -115,8 +115,8 @@ export const createEvolutionChartOptions = (
             text: isBase100
               ? "Index (base 100 = première année)"
               : selectedMetrics.length > 0
-              ? metricsConfig[selectedMetrics[0]].label
-              : "Valeur",
+                ? metricsConfig[selectedMetrics[0]].label
+                : "Valeur",
           },
           labels: {
             formatter: function (this: any) {
@@ -142,7 +142,7 @@ export const createEvolutionChartOptions = (
           },
         };
 
-  return CreateChartOptions("line", {
+  return createChartOptions("line", {
     chart: {
       height: 500,
     },

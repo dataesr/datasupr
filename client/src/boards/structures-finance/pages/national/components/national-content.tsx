@@ -74,7 +74,15 @@ export default function NationalContent() {
           />
         );
       case "comparison":
-        return <ComparaisonSection data={filteredItems} />;
+        return (
+          <ComparaisonSection
+            data={filteredItems}
+            selectedYear={selectedYear}
+            selectedType={selectedType}
+            selectedTypologie={selectedTypologie}
+            selectedRegion={selectedRegion}
+          />
+        );
       default:
         return null;
     }

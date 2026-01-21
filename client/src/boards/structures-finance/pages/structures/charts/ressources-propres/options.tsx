@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
 import { CHART_COLORS } from "../../../../constants/colors";
-import { CreateChartOptions } from "../../../../chart-options";
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 
 interface RessourcesPropresData {
   droits_d_inscription?: number;
@@ -83,14 +83,13 @@ export const createRessourcesPropresChartOptions = (
     percentage: percentages[idx],
   }));
 
-  return CreateChartOptions("treemap", {
+  return createChartOptions("treemap", {
     chart: {
       height: 500,
+      spacing: [0, 0, 0, 0],
+      margin: [0, 0, 0, 0],
     },
     tooltip: {
-      useHTML: true,
-      borderWidth: 1,
-      borderRadius: 8,
       shadow: false,
       formatter: function () {
         const point = this as any;
@@ -105,7 +104,7 @@ export const createRessourcesPropresChartOptions = (
                     ",",
                     " "
                   )} €</div>
-                  <div style="color:#666;font-size:13px">${point.percentage.toFixed(
+                  <div style="font-size:13px">${point.percentage.toFixed(
                     2
                   )}% des ressources propres</div>
                   </div>`;
@@ -117,7 +116,7 @@ export const createRessourcesPropresChartOptions = (
                   <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${point.percentage.toFixed(
                     2
                   )}%</div>
-                  <div style="color:#666;font-size:13px">${Highcharts.numberFormat(
+                  <div style="font-size:13px">${Highcharts.numberFormat(
                     point.actualValue,
                     0,
                     ",",
@@ -161,10 +160,6 @@ export const createRessourcesPropresChartOptions = (
                         )}%</div>
                       </div>`;
             }
-          },
-          style: {
-            textOutline: "none",
-            color: "#ffffff",
           },
         },
       },

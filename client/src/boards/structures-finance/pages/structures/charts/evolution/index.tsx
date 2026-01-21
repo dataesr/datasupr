@@ -1,6 +1,5 @@
-import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Row, Col, Button, ButtonGroup } from "@dataesr/dsfr-plus";
+import { useMemo } from "react";
+import { Row, Col } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "./api";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { createEvolutionChartOptions } from "./options";
@@ -10,9 +9,12 @@ import { METRIC_COLORS, CHART_COLORS } from "../../../../constants/colors";
 interface EvolutionChartProps {
   etablissementId: string;
   etablissementName: string;
+  selectedAnalysis: AnalysisKey;
 }
 
 type MetricKey = keyof typeof METRICS_CONFIG;
+
+export type AnalysisKey = keyof typeof PREDEFINED_ANALYSES;
 
 const METRICS_CONFIG = {
   effectif_sans_cpge: {
@@ -167,6 +169,55 @@ const METRICS_CONFIG = {
     category: "Parts",
     suffix: "%",
   },
+  part_formation_continue_diplomes_propres_et_vae: {
+    label: "Part formation continue",
+    format: "percent" as const,
+    color: METRIC_COLORS.formationContinue,
+    category: "Parts",
+    suffix: "%",
+  },
+  part_taxe_d_apprentissage: {
+    label: "Part taxe d'apprentissage",
+    format: "percent" as const,
+    color: CHART_COLORS.palette[5],
+    category: "Parts",
+    suffix: "%",
+  },
+  part_valorisation: {
+    label: "Part valorisation",
+    format: "percent" as const,
+    color: CHART_COLORS.palette[6],
+    category: "Parts",
+    suffix: "%",
+  },
+  part_anr_hors_investissements_d_avenir: {
+    label: "Part ANR (hors IA)",
+    format: "percent" as const,
+    color: METRIC_COLORS.anr,
+    category: "Parts",
+    suffix: "%",
+  },
+  part_anr_investissements_d_avenir: {
+    label: "Part ANR investissements d'avenir",
+    format: "percent" as const,
+    color: CHART_COLORS.palette[7],
+    category: "Parts",
+    suffix: "%",
+  },
+  part_contrats_et_prestations_de_recherche_hors_anr: {
+    label: "Part contrats recherche",
+    format: "percent" as const,
+    color: METRIC_COLORS.contratsRecherche,
+    category: "Parts",
+    suffix: "%",
+  },
+  part_subventions_de_la_region: {
+    label: "Part subventions régionales",
+    format: "percent" as const,
+    color: CHART_COLORS.palette[8],
+    category: "Parts",
+    suffix: "%",
+  },
   part_subventions_union_europeenne: {
     label: "Part subventions UE",
     format: "percent" as const,
@@ -174,16 +225,40 @@ const METRICS_CONFIG = {
     category: "Parts",
     suffix: "%",
   },
-  part_anr_hors_investissements_d_avenir: {
-    label: "Part ANR",
+  part_autres_ressources_propres: {
+    label: "Part autres ressources propres",
     format: "percent" as const,
-    color: METRIC_COLORS.anr,
+    color: CHART_COLORS.palette[9],
+    category: "Parts",
+    suffix: "%",
+  },
+  part_autres_subventions: {
+    label: "Part autres subventions",
+    format: "percent" as const,
+    color: CHART_COLORS.palette[10],
     category: "Parts",
     suffix: "%",
   },
 } as const;
 
-const PREDEFINED_ANALYSES = {
+// Mapping des métriques vers leur part% correspondante
+const METRIC_TO_PART: Partial<Record<MetricKey, MetricKey>> = {
+  droits_d_inscription: "part_droits_d_inscription",
+  formation_continue_diplomes_propres_et_vae:
+    "part_formation_continue_diplomes_propres_et_vae",
+  taxe_d_apprentissage: "part_taxe_d_apprentissage",
+  valorisation: "part_valorisation",
+  anr_hors_investissements_d_avenir: "part_anr_hors_investissements_d_avenir",
+  anr_investissements_d_avenir: "part_anr_investissements_d_avenir",
+  contrats_et_prestations_de_recherche_hors_anr:
+    "part_contrats_et_prestations_de_recherche_hors_anr",
+  subventions_de_la_region: "part_subventions_de_la_region",
+  subventions_union_europeenne: "part_subventions_union_europeenne",
+  autres_ressources_propres: "part_autres_ressources_propres",
+  autres_subventions: "part_autres_subventions",
+};
+
+export const PREDEFINED_ANALYSES = {
   "ressources-total": {
     label: "Total des ressources",
     metrics: ["produits_de_fonctionnement_encaissables"],
@@ -191,20 +266,19 @@ const PREDEFINED_ANALYSES = {
     showBase100: false,
   },
   "ressources-scsp": {
-    label: "Subvention pour charges de service public (SCSP)",
+    label: "SCSP",
     metrics: ["scsp"],
     category: "Ressources",
     showBase100: false,
   },
   "ressources-propres": {
-    label: "Ressources propres de l'établissement",
+    label: "Ressources propres",
     metrics: ["ressources_propres"],
     category: "Ressources",
-    hasCustomChart: true,
     showBase100: false,
   },
   "ressources-vs-effectifs": {
-    label: "Ressources vs effectifs d'étudiants",
+    label: "Ressources vs effectifs",
     metrics: ["produits_de_fonctionnement_encaissables", "effectif_sans_cpge"],
     category: "Ressources",
     showBase100: true,
@@ -258,7 +332,7 @@ const PREDEFINED_ANALYSES = {
     showBase100: false,
   },
   "ressources-subventions-ue": {
-    label: "Subventions de l'Union Européenne",
+    label: "Subventions UE",
     metrics: ["subventions_union_europeenne"],
     category: "Ressources",
     showBase100: false,
@@ -276,14 +350,8 @@ const PREDEFINED_ANALYSES = {
     showBase100: false,
   },
 
-  "scsp-simple": {
-    label: "SCSP",
-    metrics: ["scsp"],
-    category: "SCSP",
-    showBase100: false,
-  },
   "scsp-par-etudiant": {
-    label: "SCSP par étudiant inscrit",
+    label: "SCSP par étudiant",
     metrics: ["scsp_par_etudiants"],
     category: "SCSP",
     showBase100: false,
@@ -296,19 +364,19 @@ const PREDEFINED_ANALYSES = {
   },
 
   "masse-salariale": {
-    label: "Dépenses relatives à la masse salariale",
+    label: "Dépenses de masse salariale",
     metrics: ["charges_de_personnel"],
     category: "Masse salariale",
     showBase100: false,
   },
   "masse-salariale-poids": {
-    label: "Poids des dépenses de personnel sur produits encaissables",
+    label: "Poids sur produits encaissables",
     metrics: ["charges_de_personnel_produits_encaissables"],
     category: "Masse salariale",
     showBase100: false,
   },
   "masse-salariale-comparaison": {
-    label: "Charges de personnel et poids sur produits",
+    label: "Charges et poids sur produits",
     metrics: [
       "charges_de_personnel_produits_encaissables",
       "charges_de_personnel",
@@ -318,40 +386,27 @@ const PREDEFINED_ANALYSES = {
   },
 
   "enseignants-emplois": {
-    label: "Nombre d'emplois d'enseignants permanents (ETPT)",
+    label: "Emplois enseignants (ETPT)",
     metrics: ["emploi_etpt"],
-    category: "Personnel enseignant",
+    category: "Personnel",
     showBase100: false,
   },
   "enseignants-taux": {
-    label: "Taux d'encadrement d'enseignants permanents",
+    label: "Taux d'encadrement",
     metrics: ["taux_encadrement"],
-    category: "Personnel enseignant",
+    category: "Personnel",
     showBase100: false,
   },
   "enseignants-comparaison": {
-    label: "Taux d'encadrement et emplois ETPT",
+    label: "Taux et emplois ETPT",
     metrics: ["taux_encadrement", "emploi_etpt"],
-    category: "Personnel enseignant",
+    category: "Personnel",
     showBase100: true,
   },
 } as const;
 
-type AnalysisKey = keyof typeof PREDEFINED_ANALYSES;
-
-export default function EvolutionChart({
-  etablissementId: propEtablissementId,
-  etablissementName,
-}: EvolutionChartProps) {
-  const [searchParams] = useSearchParams();
-  const etablissementId =
-    propEtablissementId || searchParams.get("structureId") || "";
-  const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisKey | null>(
-    null
-  );
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
-  const [isSelectionExpanded, setIsSelectionExpanded] = useState<boolean>(true);
-
+// Hook to get analyses with data - used by parent component
+export function useAnalysesWithData(etablissementId: string) {
   const { data, isLoading } = useFinanceEtablissementEvolution(etablissementId);
 
   const analysesWithData = useMemo(() => {
@@ -376,32 +431,33 @@ export default function EvolutionChart({
     return available;
   }, [data]);
 
-  const categories = useMemo(() => {
-    const cats = new Set(
-      Array.from(analysesWithData).map(
-        (key) => PREDEFINED_ANALYSES[key].category
-      )
-    );
-    return ["all", ...Array.from(cats)];
-  }, [analysesWithData]);
+  const years = useMemo(() => {
+    if (!data) return [];
+    return [...new Set(data.map((d) => d.exercice))]
+      .filter((y): y is number => typeof y === "number")
+      .sort((a, b) => a - b);
+  }, [data]);
 
-  const availableAnalyses = useMemo(() => {
-    const analysesArray = Array.from(analysesWithData);
-    if (selectedCategory === "all") {
-      return analysesArray;
-    }
-    return analysesArray.filter(
-      (key) => PREDEFINED_ANALYSES[key].category === selectedCategory
-    );
-  }, [selectedCategory, analysesWithData]);
+  const periodText = useMemo(() => {
+    if (years.length === 0) return "Aucune donnée";
+    return `${years[0]} - ${years[years.length - 1]}`;
+  }, [years]);
+
+  return { analysesWithData, periodText, isLoading, data };
+}
+
+export default function EvolutionChart({
+  etablissementId,
+  etablissementName,
+  selectedAnalysis,
+}: EvolutionChartProps) {
+  const { data } = useFinanceEtablissementEvolution(etablissementId);
 
   const selectedMetrics = useMemo(() => {
-    if (!selectedAnalysis) return [];
     return [...PREDEFINED_ANALYSES[selectedAnalysis].metrics] as MetricKey[];
   }, [selectedAnalysis]);
 
   const showBase100 = useMemo(() => {
-    if (!selectedAnalysis) return false;
     return PREDEFINED_ANALYSES[selectedAnalysis].showBase100 || false;
   }, [selectedAnalysis]);
 
@@ -437,192 +493,44 @@ export default function EvolutionChart({
 
   const periodText = useMemo(() => {
     if (years.length === 0) return "Aucune donnée";
-    return `${years[0]} - ${years[years.length - 1]} (${years.length} ${
-      years.length > 1 ? "années" : "année"
-    })`;
+    return `${years[0]} - ${years[years.length - 1]}`;
   }, [years]);
 
-  if (isLoading) {
-    return (
-      <div className="fr-p-3w" style={{ textAlign: "center" }}>
-        <p>Chargement des données d'évolution...</p>
-      </div>
+  // Vérifier si la métrique a une part% correspondante
+  const partMetricKey = useMemo(() => {
+    if (selectedMetrics.length !== 1) return null;
+    const partKey = METRIC_TO_PART[selectedMetrics[0]];
+    if (!partKey) return null;
+    // Vérifier que les données de part existent
+    const hasPartData = data?.some(
+      (item: any) => item[partKey] != null && item[partKey] !== 0
     );
-  }
+    return hasPartData ? partKey : null;
+  }, [selectedMetrics, data]);
 
-  if (!data || data.length === 0 || analysesWithData.size === 0) {
+  const partChartOptions = useMemo(() => {
+    if (!data || data.length === 0 || !partMetricKey) return null;
+
+    return createEvolutionChartOptions(
+      data,
+      [partMetricKey] as MetricKey[],
+      METRICS_CONFIG,
+      false
+    );
+  }, [data, partMetricKey]);
+
+  if (!data || data.length === 0) {
     return (
       <div className="fr-alert fr-alert--info">
-        <p>Aucune donnée d'évolution disponible pour cet établissement</p>
+        <p>Aucune donnée disponible</p>
       </div>
     );
   }
 
-  return (
-    <div>
-      <div
-        className="fr-mb-3w"
-        style={{
-          backgroundColor: "var(--background-default-grey-hover)",
-          borderRadius: "8px",
-          border: "1px solid var(--border-default-grey)",
-        }}
-      >
-        <button
-          aria-expanded={isSelectionExpanded}
-          aria-controls="evolution-selection-panel"
-          onClick={() => setIsSelectionExpanded(!isSelectionExpanded)}
-          style={{
-            width: "100%",
-            textAlign: "left",
-            padding: "1rem 1.5rem",
-            backgroundColor: "transparent",
-            border: "none",
-            borderBottom: isSelectionExpanded
-              ? "1px solid var(--border-default-grey)"
-              : "none",
-            cursor: "pointer",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <h3
-              className="fr-h6 fr-mb-1v"
-              style={{
-                borderLeft: `4px solid ${CHART_COLORS.primary}`,
-                paddingLeft: "1rem",
-                margin: 0,
-              }}
-            >
-              Sélection de l'analyse
-            </h3>
-            {selectedAnalysis && (
-              <p
-                className="fr-text--sm fr-mt-1v"
-                style={{
-                  margin: 0,
-                  paddingLeft: "1rem",
-                  color: "var(--text-mention-grey)",
-                }}
-              >
-                {PREDEFINED_ANALYSES[selectedAnalysis].label}
-              </p>
-            )}
-          </div>
-          <span
-            className="fr-icon-arrow-down-s-line"
-            style={{
-              transition: "transform 0.3s",
-              transform: isSelectionExpanded ? "rotate(180deg)" : "rotate(0)",
-            }}
-          />
-        </button>
-
-        <div
-          id="evolution-selection-panel"
-          className={`fr-collapse ${
-            isSelectionExpanded ? "fr-collapse--expanded" : ""
-          }`}
-          style={{
-            padding: isSelectionExpanded ? "1.5rem" : "0 1.5rem",
-          }}
-        >
-          <div className="fr-mb-2w">
-            <p className="fr-text--sm fr-mb-1v">
-              <strong>Période :</strong> {periodText} •{" "}
-              <strong>{analysesWithData.size}</strong> analyse
-              {analysesWithData.size > 1 ? "s" : ""}
-            </p>
-          </div>
-
-          <div className="fr-mb-2w">
-            <ButtonGroup size="sm" isInlineFrom="md">
-              {categories.map((cat) => (
-                <Button
-                  key={cat}
-                  onClick={() => {
-                    setSelectedCategory(cat);
-                    setSelectedAnalysis(null);
-                  }}
-                  variant={selectedCategory === cat ? "primary" : "secondary"}
-                  size="sm"
-                >
-                  {cat === "all"
-                    ? `Toutes (${analysesWithData.size})`
-                    : `${cat} (${
-                        Array.from(analysesWithData).filter(
-                          (m) => PREDEFINED_ANALYSES[m].category === cat
-                        ).length
-                      })`}
-                </Button>
-              ))}
-            </ButtonGroup>
-          </div>
-
-          <Row gutters>
-            {availableAnalyses.length === 0 && (
-              <Col md="12">
-                <div className="fr-alert fr-alert--info fr-alert--sm">
-                  <p className="fr-text--sm">
-                    Aucune analyse disponible dans cette catégorie
-                  </p>
-                </div>
-              </Col>
-            )}
-            {availableAnalyses.map((analysisKey) => {
-              const analysis = PREDEFINED_ANALYSES[analysisKey];
-              const isSelected = selectedAnalysis === analysisKey;
-
-              return (
-                <Col key={analysisKey} md="4" sm="12">
-                  <button
-                    className="fr-btn fr-btn--sm"
-                    style={{
-                      width: "100%",
-                      textAlign: "left",
-                      marginBottom: "0.25rem",
-                      backgroundColor: isSelected
-                        ? CHART_COLORS.primary
-                        : "var(--background-default-grey)",
-                      color: isSelected
-                        ? "var(--text-inverted-grey)"
-                        : "var(--text-action-high-grey)",
-                      border: `1px solid ${
-                        isSelected
-                          ? CHART_COLORS.primary
-                          : "var(--border-default-grey)"
-                      }`,
-                      cursor: "pointer",
-                      padding: "0.35rem 0.5rem",
-                      fontSize: "12px",
-                      fontWeight: isSelected ? 600 : 400,
-                      lineHeight: "1.3",
-                    }}
-                    onClick={() => {
-                      setSelectedAnalysis(analysisKey);
-                      setIsSelectionExpanded(false);
-                    }}
-                  >
-                    {analysis.label}
-                  </button>
-                </Col>
-              );
-            })}
-          </Row>
-
-          {!selectedAnalysis && (
-            <div className="fr-alert fr-alert--info fr-alert--sm fr-mt-2w">
-              <p className="fr-text--sm">
-                Sélectionnez une analyse pour afficher le(s) graphique(s)
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {selectedAnalysis && selectedMetrics.length === 1 && chartOptions && (
+  // Single metric chart
+  if (selectedMetrics.length === 1 && chartOptions) {
+    return (
+      <>
         <ChartWrapper
           config={{
             id: "evolution-chart-single",
@@ -641,18 +549,9 @@ export default function EvolutionChart({
             comment: {
               fr: (
                 <>
-                  Analyse de l'évolution de{" "}
+                  Évolution de{" "}
                   {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur
                   la période {periodText}.
-                </>
-              ),
-            },
-            readingKey: {
-              fr: (
-                <>
-                  Ce graphique présente l'évolution de{" "}
-                  {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur{" "}
-                  {years.length} années.
                 </>
               ),
             },
@@ -667,177 +566,158 @@ export default function EvolutionChart({
             />
           )}
         />
-      )}
 
-      {selectedAnalysis && selectedMetrics.length === 2 && (
-        <>
-          {chartOptionsBase100 && (
-            <>
+        {partMetricKey && partChartOptions && (
+          <div className="fr-mt-3w">
+            <ChartWrapper
+              config={{
+                id: "evolution-chart-part",
+                idQuery: "evolution-part",
+                title: {
+                  className: "fr-mt-0w",
+                  look: "h6",
+                  size: "h4",
+                  fr: (
+                    <>
+                      {METRICS_CONFIG[partMetricKey].label} —{" "}
+                      {etablissementName}
+                    </>
+                  ),
+                },
+                comment: {
+                  fr: (
+                    <>
+                      Évolution de la {METRICS_CONFIG[partMetricKey].label} sur
+                      ressources propres sur la période {periodText}.
+                    </>
+                  ),
+                },
+                integrationURL: "/integration-url",
+              }}
+              options={partChartOptions}
+              renderData={() => (
+                <RenderDataSingle
+                  data={data}
+                  metricKey={partMetricKey}
+                  metricConfig={METRICS_CONFIG[partMetricKey]}
+                />
+              )}
+            />
+          </div>
+        )}
+      </>
+    );
+  }
+
+  // Two metrics comparison
+  if (selectedMetrics.length === 2) {
+    return (
+      <>
+        {chartOptionsBase100 && (
+          <ChartWrapper
+            config={{
+              id: "evolution-chart-comparison",
+              idQuery: "evolution-comparison",
+              title: {
+                className: "fr-mt-0w",
+                look: "h5",
+                size: "h3",
+                fr: (
+                  <>
+                    {PREDEFINED_ANALYSES[selectedAnalysis].label} (base 100) —{" "}
+                    {etablissementName}
+                  </>
+                ),
+              },
+              comment: {
+                fr: (
+                  <>
+                    Comparaison de{" "}
+                    {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} et{" "}
+                    {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()} en
+                    base 100.
+                  </>
+                ),
+              },
+              integrationURL: "/integration-url",
+            }}
+            options={chartOptionsBase100}
+            renderData={() => (
+              <RenderDataBase100
+                data={data}
+                metric1Key={selectedMetrics[0]}
+                metric1Config={METRICS_CONFIG[selectedMetrics[0]]}
+                metric2Key={selectedMetrics[1]}
+                metric2Config={METRICS_CONFIG[selectedMetrics[1]]}
+              />
+            )}
+          />
+        )}
+
+        <div className="fr-mt-3w">
+          <Row gutters>
+            <Col md="6" xs="12">
               <ChartWrapper
                 config={{
-                  id: "evolution-chart-comparison",
-                  idQuery: "evolution-comparison",
+                  id: "evolution-chart-metric1",
+                  idQuery: "evolution-metric1",
                   title: {
                     className: "fr-mt-0w",
-                    look: "h5",
-                    size: "h3",
-                    fr: <>Comparaison en base 100 — {etablissementName}</>,
-                  },
-                  comment: {
-                    fr: (
-                      <>
-                        Comparaison de l'évolution de{" "}
-                        {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()}{" "}
-                        et{" "}
-                        {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()}{" "}
-                        en base 100 (première année = 100).
-                      </>
-                    ),
-                  },
-                  readingKey: {
-                    fr: (
-                      <>
-                        Ce graphique permet de comparer les dynamiques
-                        d'évolution des deux indicateurs sur une échelle
-                        normalisée.
-                      </>
-                    ),
+                    look: "h6",
+                    size: "h4",
+                    fr: <>{METRICS_CONFIG[selectedMetrics[0]].label}</>,
                   },
                   integrationURL: "/integration-url",
                 }}
-                options={chartOptionsBase100}
+                options={createEvolutionChartOptions(
+                  data,
+                  [selectedMetrics[0]] as MetricKey[],
+                  METRICS_CONFIG,
+                  false
+                )}
                 renderData={() => (
-                  <RenderDataBase100
+                  <RenderDataSingle
                     data={data}
-                    metric1Key={selectedMetrics[0]}
-                    metric1Config={METRICS_CONFIG[selectedMetrics[0]]}
-                    metric2Key={selectedMetrics[1]}
-                    metric2Config={METRICS_CONFIG[selectedMetrics[1]]}
+                    metricKey={selectedMetrics[0]}
+                    metricConfig={METRICS_CONFIG[selectedMetrics[0]]}
                   />
                 )}
               />
+            </Col>
 
-              <div className="fr-mt-5w" />
-            </>
-          )}
+            <Col md="6" xs="12">
+              <ChartWrapper
+                config={{
+                  id: "evolution-chart-metric2",
+                  idQuery: "evolution-metric2",
+                  title: {
+                    className: "fr-mt-0w",
+                    look: "h6",
+                    size: "h4",
+                    fr: <>{METRICS_CONFIG[selectedMetrics[1]].label}</>,
+                  },
+                  integrationURL: "/integration-url",
+                }}
+                options={createEvolutionChartOptions(
+                  data,
+                  [selectedMetrics[1]] as MetricKey[],
+                  METRICS_CONFIG,
+                  false
+                )}
+                renderData={() => (
+                  <RenderDataSingle
+                    data={data}
+                    metricKey={selectedMetrics[1]}
+                    metricConfig={METRICS_CONFIG[selectedMetrics[1]]}
+                  />
+                )}
+              />
+            </Col>
+          </Row>
+        </div>
+      </>
+    );
+  }
 
-          {chartOptions && (
-            <Row gutters>
-              <Col md="6" sm="12">
-                <ChartWrapper
-                  config={{
-                    id: "evolution-chart-metric1",
-                    idQuery: "evolution-metric1",
-                    title: {
-                      className: "fr-mt-0w",
-                      look: "h5",
-                      size: "h3",
-                      fr: (
-                        <>
-                          {METRICS_CONFIG[selectedMetrics[0]].label} —{" "}
-                          {etablissementName}
-                        </>
-                      ),
-                    },
-                    comment: {
-                      fr: (
-                        <>
-                          Évolution de{" "}
-                          {METRICS_CONFIG[
-                            selectedMetrics[0]
-                          ].label.toLowerCase()}{" "}
-                          sur la période {periodText}.
-                        </>
-                      ),
-                    },
-                    readingKey: {
-                      fr: (
-                        <>
-                          Évolution historique de{" "}
-                          {METRICS_CONFIG[
-                            selectedMetrics[0]
-                          ].label.toLowerCase()}{" "}
-                          sur {years.length} années.
-                        </>
-                      ),
-                    },
-                    integrationURL: "/integration-url",
-                  }}
-                  options={createEvolutionChartOptions(
-                    data,
-                    [selectedMetrics[0]] as MetricKey[],
-                    METRICS_CONFIG,
-                    false
-                  )}
-                  renderData={() => (
-                    <RenderDataSingle
-                      data={data}
-                      metricKey={selectedMetrics[0]}
-                      metricConfig={METRICS_CONFIG[selectedMetrics[0]]}
-                    />
-                  )}
-                />
-              </Col>
-
-              <Col md="6" sm="12">
-                <ChartWrapper
-                  config={{
-                    id: "evolution-chart-metric2",
-                    idQuery: "evolution-metric2",
-                    title: {
-                      className: "fr-mt-0w",
-                      look: "h5",
-                      size: "h3",
-                      fr: (
-                        <>
-                          {METRICS_CONFIG[selectedMetrics[1]].label} —{" "}
-                          {etablissementName}
-                        </>
-                      ),
-                    },
-                    comment: {
-                      fr: (
-                        <>
-                          Évolution de{" "}
-                          {METRICS_CONFIG[
-                            selectedMetrics[1]
-                          ].label.toLowerCase()}{" "}
-                          sur la période {periodText}.
-                        </>
-                      ),
-                    },
-                    readingKey: {
-                      fr: (
-                        <>
-                          Évolution historique de{" "}
-                          {METRICS_CONFIG[
-                            selectedMetrics[1]
-                          ].label.toLowerCase()}{" "}
-                          sur {years.length} années.
-                        </>
-                      ),
-                    },
-                    integrationURL: "/integration-url",
-                  }}
-                  options={createEvolutionChartOptions(
-                    data,
-                    [selectedMetrics[1]] as MetricKey[],
-                    METRICS_CONFIG,
-                    false
-                  )}
-                  renderData={() => (
-                    <RenderDataSingle
-                      data={data}
-                      metricKey={selectedMetrics[1]}
-                      metricConfig={METRICS_CONFIG[selectedMetrics[1]]}
-                    />
-                  )}
-                />
-              </Col>
-            </Row>
-          )}
-        </>
-      )}
-    </div>
-  );
+  return null;
 }

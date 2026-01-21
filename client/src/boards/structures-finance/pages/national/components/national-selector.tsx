@@ -5,6 +5,7 @@ import { useFinanceYears } from "../../../api/common";
 import { useFinanceAdvancedComparison } from "../api";
 import { useNationalFilters } from "../hooks/useNationalFilters";
 import CustomBreadcrumb from "../../../../../components/custom-breadcrumb";
+import Dropdown from "../../../../../components/dropdown";
 import navigationConfig from "../../../navigation-config.json";
 
 export default function NationalSelector() {
@@ -14,12 +15,10 @@ export default function NationalSelector() {
   const hasInitializedType = useRef(false);
 
   const defaultYear = "2024";
-  // ATTENTION MODIFIER QUAND ON AURA LES DONNEES 2025
 
   const yearFromUrl = searchParams.get("year") || "";
   const selectedYear = yearFromUrl || defaultYear;
   const selectedType = searchParams.get("type") || "";
-  // const selectedYear = yearFromUrl || years[0] || "";
   const selectedTypologie = searchParams.get("typologie") || "";
   const selectedRegion = searchParams.get("region") || "";
 
@@ -144,6 +143,122 @@ export default function NationalSelector() {
     setSearchParams(next);
   };
 
+  const handleResetFilters = () => {
+    const next = new URLSearchParams(searchParams);
+    next.delete("type");
+    next.delete("typologie");
+    next.delete("region");
+    hasInitializedType.current = false;
+    setSearchParams(next);
+  };
+
+  const hasActiveFilters = selectedType || selectedTypologie || selectedRegion;
+
+  const typeLabel = selectedType || "Tous les types";
+  const typologieLabel = selectedTypologie || "Toutes";
+  const regionLabel = selectedRegion || "Toutes";
+
+  const filterCards = [
+    {
+      icon: "calendar-line",
+      title: "Exercice",
+      value: selectedYear,
+      color: "var(--background-contrast-purple-glycine)",
+      iconColor: "var(--text-label-purple-glycine)",
+      dropdown: (
+        <Dropdown label={selectedYear} size="sm" fullWidth>
+          {years.map((year) => (
+            <button
+              key={year}
+              className={`fx-dropdown__item ${selectedYear === String(year) ? "fx-dropdown__item--active" : ""}`}
+              onClick={() => handleYearChange(String(year))}
+            >
+              {year}
+            </button>
+          ))}
+        </Dropdown>
+      ),
+    },
+    {
+      icon: "building-line",
+      title: "Type",
+      value: typeLabel,
+      color: "var(--background-contrast-blue-ecume)",
+      iconColor: "var(--text-label-blue-ecume)",
+      dropdown: (
+        <Dropdown label={typeLabel} size="sm" fullWidth>
+          <button
+            className={`fx-dropdown__item ${!selectedType ? "fx-dropdown__item--active" : ""}`}
+            onClick={() => handleTypeChange("")}
+          >
+            Tous les types
+          </button>
+          {availableTypes.map((type: string) => (
+            <button
+              key={type}
+              className={`fx-dropdown__item ${selectedType === type ? "fx-dropdown__item--active" : ""}`}
+              onClick={() => handleTypeChange(type)}
+            >
+              {type}
+            </button>
+          ))}
+        </Dropdown>
+      ),
+    },
+    {
+      icon: "layout-grid-line",
+      title: "Typologie",
+      value: typologieLabel,
+      color: "var(--background-contrast-green-emeraude)",
+      iconColor: "var(--text-label-green-emeraude)",
+      dropdown: (
+        <Dropdown label={typologieLabel} size="sm" fullWidth>
+          <button
+            className={`fx-dropdown__item ${!selectedTypologie ? "fx-dropdown__item--active" : ""}`}
+            onClick={() => handleTypologieChange("")}
+          >
+            Toutes les typologies
+          </button>
+          {availableTypologies.map((typo: string) => (
+            <button
+              key={typo}
+              className={`fx-dropdown__item ${selectedTypologie === typo ? "fx-dropdown__item--active" : ""}`}
+              onClick={() => handleTypologieChange(typo)}
+            >
+              {typo}
+            </button>
+          ))}
+        </Dropdown>
+      ),
+    },
+    {
+      icon: "map-pin-2-line",
+      title: "Région",
+      value: regionLabel,
+      color: "var(--background-contrast-orange-terre-battue)",
+      iconColor: "var(--text-label-orange-terre-battue)",
+      dropdown: (
+        <Dropdown label={regionLabel} size="sm" fullWidth>
+          <button
+            className={`fx-dropdown__item ${!selectedRegion ? "fx-dropdown__item--active" : ""}`}
+            onClick={() => handleRegionChange("")}
+          >
+            Toutes les régions
+          </button>
+          {availableRegions.map((region: string) => (
+            <button
+              key={region}
+              className={`fx-dropdown__item ${selectedRegion === region ? "fx-dropdown__item--active" : ""}`}
+              onClick={() => handleRegionChange(region)}
+            >
+              {region}
+            </button>
+          ))}
+        </Dropdown>
+      ),
+    },
+  ];
+
   return (
     <main>
       <Container fluid className="etablissement-selector__wrapper">
@@ -153,98 +268,78 @@ export default function NationalSelector() {
               <CustomBreadcrumb config={navigationConfig} />
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <h1 className="fr-h3 fr-mb-3w">Vue nationale</h1>
-
-              <div className="fr-mb-3w">
-                <Row gutters>
-                  <Col xs="12" sm="6" md="3">
-                    <div className="fr-select-group">
-                      <label className="fr-label" htmlFor="select-year">
-                        Année
-                      </label>
-                      <select
-                        id="select-year"
-                        className="fr-select"
-                        value={selectedYear}
-                        onChange={(e) => handleYearChange(e.target.value)}
-                        aria-required="true"
-                      >
-                        {years.map((year) => (
-                          <option key={year} value={year}>
-                            Exercice {year}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </Col>
-
-                  <Col xs="12" sm="6" md="3">
-                    <div className="fr-select-group">
-                      <label className="fr-label" htmlFor="select-type">
-                        Type d'établissement
-                      </label>
-                      <select
-                        id="select-type"
-                        className="fr-select"
-                        value={selectedType}
-                        onChange={(e) => handleTypeChange(e.target.value)}
-                      >
-                        <option value="">Tous les types</option>
-                        {availableTypes.map((type: string) => (
-                          <option key={type} value={type}>
-                            {type}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </Col>
-
-                  <Col xs="12" sm="6" md="3">
-                    <div className="fr-select-group">
-                      <label className="fr-label" htmlFor="select-typologie">
-                        Typologie
-                      </label>
-                      <select
-                        id="select-typologie"
-                        className="fr-select"
-                        value={selectedTypologie}
-                        onChange={(e) => handleTypologieChange(e.target.value)}
-                      >
-                        <option value="">Toutes les typologies</option>
-                        {availableTypologies.map((typo: string) => (
-                          <option key={typo} value={typo}>
-                            {typo}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </Col>
-
-                  <Col xs="12" sm="6" md="3">
-                    <div className="fr-select-group">
-                      <label className="fr-label" htmlFor="select-region">
-                        Région
-                      </label>
-                      <select
-                        id="select-region"
-                        className="fr-select"
-                        value={selectedRegion}
-                        onChange={(e) => handleRegionChange(e.target.value)}
-                      >
-                        <option value="">Toutes les régions</option>
-                        {availableRegions.map((region: string) => (
-                          <option key={region} value={region}>
-                            {region}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </Col>
-                </Row>
-              </div>
+          <Row className="fr-mb-3w">
+            <Col
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                flexWrap: "wrap",
+                gap: "1rem",
+              }}
+            >
+              <h1 className="fr-h3 fr-mb-0">Vue nationale</h1>
+              {hasActiveFilters && (
+                <button
+                  className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
+                  onClick={handleResetFilters}
+                  type="button"
+                >
+                  <span
+                    className="ri-refresh-line fr-mr-1w"
+                    aria-hidden="true"
+                  />
+                  Réinitialiser les filtres
+                </button>
+              )}
             </Col>
+          </Row>
+          <Row gutters>
+            {filterCards.map((card) => (
+              <Col key={card.title} xs="6" md="3">
+                <div
+                  style={{
+                    padding: "1rem",
+                    backgroundColor: "var(--background-default-grey)",
+                    border: "1px solid var(--border-default-grey)",
+                    height: "100%",
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "0.75rem",
+                      marginBottom: "0.75rem",
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        backgroundColor: card.color,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      <span
+                        className={`fr-icon-${card.icon}`}
+                        style={{ color: card.iconColor }}
+                        aria-hidden="true"
+                      />
+                    </div>
+                    <span
+                      className="fr-text--sm fr-text--bold"
+                      style={{ color: "var(--text-mention-grey)" }}
+                    >
+                      {card.title}
+                    </span>
+                  </div>
+                  {card.dropdown}
+                </div>
+              </Col>
+            ))}
           </Row>
         </Container>
       </Container>

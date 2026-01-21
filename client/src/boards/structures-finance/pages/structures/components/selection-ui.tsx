@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { Row, Col } from "@dataesr/dsfr-plus";
 import SearchableSelect from "../../../../../components/searchable-select";
+import Dropdown from "../../../../../components/dropdown";
 
 interface SelectionUIProps {
   selectedType: string;
@@ -14,6 +15,7 @@ interface SelectionUIProps {
   onTypologieChange: (typologie: string) => void;
   onRegionChange: (region: string) => void;
   onEtablissementSelect: (id: string) => void;
+  onResetFilters?: () => void;
 }
 
 export default function SelectionUI({
@@ -28,7 +30,12 @@ export default function SelectionUI({
   onTypologieChange,
   onRegionChange,
   onEtablissementSelect,
+  onResetFilters,
 }: SelectionUIProps) {
+  const hasActiveFilters =
+    (selectedType && selectedType !== "tous") ||
+    (selectedTypologie && selectedTypologie !== "toutes") ||
+    (selectedRegion && selectedRegion !== "toutes");
   const etablissementOptions = useMemo(
     () =>
       filteredEtablissements
@@ -82,116 +89,147 @@ export default function SelectionUI({
     onEtablissementSelect(finalId);
   };
 
-  const typologieOptions = [
-    { value: "toutes", label: "Toutes les typologies" },
-    ...availableTypologies.map((typo: string) => ({
-      value: typo,
-      label: typo,
-    })),
-  ];
-
-  const regionOptions = [
-    { value: "toutes", label: "Toutes les régions" },
-    ...availableRegions.map((region: string) => ({
-      value: region,
-      label: region,
-    })),
-  ];
+  const typeLabel = selectedType === "tous" ? "Tous les types" : selectedType;
+  const typologieLabel =
+    selectedTypologie === "toutes" ? "Toutes" : selectedTypologie;
+  const regionLabel = selectedRegion === "toutes" ? "Toutes" : selectedRegion;
 
   return (
-    <>
-      <h1 className="fr-h3 ">Sélectionnez un établissement</h1>
+    <Row>
+      <Col xs="12" md="8">
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "0.5rem",
+            marginBottom: "1rem",
+          }}
+        >
+          <h1 className="fr-h4 fr-mb-0">Sélectionnez un établissement</h1>
+          {hasActiveFilters && onResetFilters && (
+            <button
+              className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
+              onClick={onResetFilters}
+              type="button"
+            >
+              <span className="ri-refresh-line fr-mr-1w" aria-hidden="true" />
+              Réinitialiser les filtres
+            </button>
+          )}
+        </div>
 
-      <div className="fr-mb-2w">
-        <Row gutters>
-          <Col xs="12" md="7">
-            <fieldset className="fr-fieldset">
-              <legend className="fr-fieldset__legend fr-text--regular">
-                <span className="fr-label">Type</span>
-              </legend>
-              <div className="fr-fieldset__content">
-                <div className="fr-tags-group">
-                  <button
-                    type="button"
-                    className={`fr-tag ${
-                      selectedType === "tous" ? "fr-tag--dismiss" : ""
-                    }`}
-                    aria-pressed={selectedType === "tous"}
-                    onClick={() => onTypeChange("tous")}
-                  >
-                    Tous
-                  </button>
-                  {availableTypes.map((type: string) => (
-                    <button
-                      key={type}
-                      type="button"
-                      className={`fr-tag ${
-                        selectedType === type ? "fr-tag--dismiss" : ""
-                      }`}
-                      aria-pressed={selectedType === type}
-                      onClick={() => onTypeChange(type)}
-                    >
-                      {type}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </fieldset>
-          </Col>
-
-          <Col xs="6" md="2">
-            <div className="fr-select-group">
-              <label className="fr-label" htmlFor="select-typologie">
-                Typologie
-              </label>
-              <select
-                className="fr-select"
-                id="select-typologie"
-                name="typologie"
-                value={selectedTypologie}
-                onChange={(e) => onTypologieChange(e.target.value)}
+        <div
+          className="fr-mb-3w"
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "0.5rem",
+            alignItems: "center",
+          }}
+        >
+          <Dropdown label={typeLabel} icon="building-line" size="sm">
+            <button
+              className={`fx-dropdown__item ${selectedType === "tous" ? "fx-dropdown__item--active" : ""}`}
+              onClick={() => onTypeChange("tous")}
+            >
+              Tous les types
+            </button>
+            {availableTypes.map((type: string) => (
+              <button
+                key={type}
+                className={`fx-dropdown__item ${selectedType === type ? "fx-dropdown__item--active" : ""}`}
+                onClick={() => onTypeChange(type)}
               >
-                {typologieOptions.map((typologie) => (
-                  <option key={typologie.value} value={typologie.value}>
-                    {typologie.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </Col>
+                {type}
+              </button>
+            ))}
+          </Dropdown>
 
-          <Col xs="6" md="3">
-            <div className="fr-select-group">
-              <label className="fr-label" htmlFor="select-region">
-                Région
-              </label>
-              <select
-                className="fr-select"
-                id="select-region"
-                name="region"
-                value={selectedRegion}
-                onChange={(e) => onRegionChange(e.target.value)}
+          <Dropdown label={typologieLabel} icon="layout-grid-line" size="sm">
+            <button
+              className={`fx-dropdown__item ${selectedTypologie === "toutes" ? "fx-dropdown__item--active" : ""}`}
+              onClick={() => onTypologieChange("toutes")}
+            >
+              Toutes les typologies
+            </button>
+            {availableTypologies.map((typo) => (
+              <button
+                key={typo}
+                className={`fx-dropdown__item ${selectedTypologie === typo ? "fx-dropdown__item--active" : ""}`}
+                onClick={() => onTypologieChange(typo)}
               >
-                {regionOptions.map((region) => (
-                  <option key={region.value} value={region.value}>
-                    {region.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </Col>
-        </Row>
-      </div>
+                {typo}
+              </button>
+            ))}
+          </Dropdown>
 
-      <div className="fr-mb-3w">
-        <SearchableSelect
-          options={etablissementOptions}
-          value=""
-          onChange={handleEtablissementSelect}
-          placeholder="Rechercher un établissement par nom ou ville..."
-          label="Établissement"
-        />
-      </div>
-    </>
+          <Dropdown label={regionLabel} icon="map-pin-2-line" size="sm">
+            <button
+              className={`fx-dropdown__item ${selectedRegion === "toutes" ? "fx-dropdown__item--active" : ""}`}
+              onClick={() => onRegionChange("toutes")}
+            >
+              Toutes les régions
+            </button>
+            {availableRegions.map((region) => (
+              <button
+                key={region}
+                className={`fx-dropdown__item ${selectedRegion === region ? "fx-dropdown__item--active" : ""}`}
+                onClick={() => onRegionChange(region)}
+              >
+                {region}
+              </button>
+            ))}
+          </Dropdown>
+        </div>
+
+        <div className="fr-mb-3w">
+          <p className="fr-text--xs fr-mb-1w fr-text-mention--grey">
+            {filteredEtablissements.length} établissement
+            {filteredEtablissements.length > 1 ? "s" : ""} disponible
+            {filteredEtablissements.length > 1 ? "s" : ""}
+          </p>
+          <SearchableSelect
+            options={etablissementOptions}
+            value=""
+            onChange={handleEtablissementSelect}
+            placeholder="Rechercher un établissement par nom ou ville..."
+            label=""
+          />
+        </div>
+      </Col>
+      <Col
+        xs="12"
+        md="4"
+        className="fr-hidden fr-unhidden-md"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <svg
+          className="fr-artwork"
+          aria-hidden="true"
+          viewBox="0 0 80 80"
+          width="180px"
+          height="180px"
+        >
+          <use
+            className="fr-artwork-decorative"
+            href="/artwork/pictograms/buildings/school.svg#artwork-decorative"
+          />
+          <use
+            className="fr-artwork-minor"
+            href="/artwork/pictograms/buildings/school.svg#artwork-minor"
+          />
+          <use
+            className="fr-artwork-major"
+            href="/artwork/pictograms/buildings/school.svg#artwork-major"
+          />
+        </svg>
+      </Col>
+    </Row>
   );
 }

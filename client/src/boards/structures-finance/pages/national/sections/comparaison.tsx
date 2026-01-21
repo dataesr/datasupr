@@ -3,29 +3,43 @@ import ComparisonBarChart from "../charts/comparison-bar";
 
 interface ComparaisonSectionProps {
   data: any[];
+  selectedYear?: string;
+  selectedType?: string;
+  selectedTypologie?: string;
+  selectedRegion?: string;
 }
 
-export function ComparaisonSection({ data }: ComparaisonSectionProps) {
+export function ComparaisonSection({
+  data,
+  selectedYear,
+  selectedType,
+  selectedTypologie,
+  selectedRegion,
+}: ComparaisonSectionProps) {
   return (
     <section
       id="section-comparison"
       role="region"
       className="fr-mb-3w section-container"
     >
-      <div className="fr-callout fr-mb-3w">
-        <p className="fr-callout__text">
-          Ce graphique permet de comparer différentes métriques entre les
-          établissements sélectionnés. Pour les composantes des ressources
-          propres (droits d'inscription, formation continue, ANR, contrats de
-          recherche, etc.), les valeurs affichées correspondent à leur{" "}
-          <strong>part sur le total des ressources propres</strong> de chaque
-          établissement.
-        </p>
-      </div>
+      <p
+        className="fr-text--sm fr-mb-3w"
+        style={{ color: "var(--text-mention-grey)" }}
+      >
+        <span className="ri-information-line fr-mr-1w" aria-hidden="true" />
+        Pour les composantes des ressources propres, les valeurs correspondent à
+        leur part sur le total des ressources propres de chaque établissement.
+      </p>
 
       <Row>
         <Col xs="12">
-          <ComparisonBarChart data={data} />
+          <ComparisonBarChart
+            data={data}
+            selectedYear={selectedYear}
+            selectedType={selectedType}
+            selectedTypologie={selectedTypologie}
+            selectedRegion={selectedRegion}
+          />
         </Col>
       </Row>
     </section>

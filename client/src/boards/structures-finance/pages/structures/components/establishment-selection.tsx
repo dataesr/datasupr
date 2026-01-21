@@ -61,6 +61,15 @@ export default function EstablishmentSelection() {
     setSearchParams(next);
   };
 
+  const handleResetFilters = () => {
+    setSelectedType("tous");
+    setSelectedTypologie("toutes");
+    const next = new URLSearchParams(searchParams);
+    next.set("region", "toutes");
+    next.delete("structureId");
+    setSearchParams(next);
+  };
+
   return (
     <main>
       <Container fluid className="etablissement-selector__wrapper">
@@ -84,6 +93,7 @@ export default function EstablishmentSelection() {
                 onTypologieChange={handleTypologieChange}
                 onRegionChange={handleRegionChange}
                 onEtablissementSelect={handleEtablissementSelect}
+                onResetFilters={handleResetFilters}
               />
             </Col>
           </Row>

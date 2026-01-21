@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
 import { CHART_COLORS } from "../../../../constants/colors";
-import { CreateChartOptions } from "../../../../chart-options";
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 
 interface RecettesEvolutionData {
   exercice: number;
@@ -207,7 +207,7 @@ export const createRecettesEvolutionChartOptions = (
           },
         ];
 
-  return CreateChartOptions("column", {
+  return createChartOptions("column", {
     chart: {
       height: 500,
     },
@@ -263,8 +263,8 @@ export const createRecettesEvolutionChartOptions = (
                   }</div>
                   <div style="margin-bottom:4px">
                     <span style="color:${point.color};font-weight:bold">● ${
-            point.series.name
-          }</span>
+                      point.series.name
+                    }</span>
                   </div>
                   <div style="font-size:16px;font-weight:bold;margin-bottom:8px">
                     ${Highcharts.numberFormat(point.y, 0, ",", " ")} €
@@ -287,8 +287,8 @@ export const createRecettesEvolutionChartOptions = (
                   }</div>
                   <div style="margin-bottom:4px">
                     <span style="color:${point.color};font-weight:bold">● ${
-            point.series.name
-          }</span>
+                      point.series.name
+                    }</span>
                   </div>
                   <div style="font-size:16px;font-weight:bold;margin-bottom:4px">
                     ${percentage.toFixed(2)}%
