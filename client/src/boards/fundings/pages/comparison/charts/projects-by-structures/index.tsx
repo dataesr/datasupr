@@ -1,5 +1,6 @@
 import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -84,18 +85,25 @@ export default function ProjectsByStructures() {
   const tooltipBudget = function (this: any) {
     return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categories[this.x]}</b>`;
   };
+  const datalabelProject = function (this: any) {
+    return `${this.y} projet${this.y > 1 ? 's' : ''}`;
+  };
+  const datalabelBudget = function (this: any) {
+    return `${formatCompactNumber(this.y)} €`;
+  };
+
   const config = {
     id: "projectsByStructures",
     sources: FundingsSources,
   };
 
   const localOptions = {
-    legend: { reversed: true },
+    legend: { enabled: true, reversed: true },
     plotOptions: {
       series: {
         dataLabels: {
           enabled: true,
-          formatter: function (this: any) { return field === "projects" ? this.y : `${formatCompactNumber(this.y)} €` },
+          formatter: field === "projects" ? datalabelProject : datalabelBudget,
         },
         stacking: "normal",
       }
@@ -103,7 +111,7 @@ export default function ProjectsByStructures() {
     series,
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: object = deepMerge(getGeneralOptions("", categories, "", field === "projects" ? axisProjects : axisBudget), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", field === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structures">
@@ -114,7 +122,7 @@ export default function ProjectsByStructures() {
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapper config={config} options={options} />}
     </div>
   );
 }

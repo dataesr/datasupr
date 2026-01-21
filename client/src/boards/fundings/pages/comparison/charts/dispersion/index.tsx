@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -114,11 +115,11 @@ export default function Dispersion() {
       title: { text: "Montants financés (€)" },
     }
   };
-  const options: object = deepMerge(getGeneralOptions("", [], "", "", "bubble"), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", [], "", "", "bubble"), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="dispersion">
-      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapper config={config} options={options} />}
     </div>
   );
 }

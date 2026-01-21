@@ -1,12 +1,13 @@
 import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, funders, formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -64,14 +65,13 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
       }).then((response) => response.json()),
   });
 
-
   const years: number[] = Array.from(Array(Number(yearMax) - Number(yearMin) + 1).keys()).map((item) => item + Number(yearMin));
-  const series = (data?.aggregations?.by_project_type?.buckets ?? []).map((bucket) => ({
-    color: getColorFromFunder(bucket.key),
-    data: years.map((year) => bucket.by_project_year.buckets.find((item) => item.key === year)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
+  const series = funders.map((funder) => ({
+    color: getColorFromFunder(funder),
+    data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.by_project_year?.buckets.find((item) => item.key === year)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
     marker: { enabled: false },
-    name: bucket.key
-  }));
+    name: funder
+  })).reverse();
 
   const titleProjects = `Nombre de projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}, par année de début du projet`;
   const titleBudget = `Montant total des projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}, par année de début du projet`;
@@ -89,6 +89,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   };
 
   const localOptions = {
+    legend: { enabled: true, reversed: true },
     plotOptions: {
       series: { pointStart: Number(yearMin) },
       area: {
@@ -104,7 +105,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     series,
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: object = deepMerge(getGeneralOptions("", [], "Année de début du projet", field === "projects" ? axisProjects : axisBudget, "area"), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", [], "Année de début du projet", field === "projects" ? axisProjects : axisBudget, "area"), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-over-time-by-structure">
@@ -115,7 +116,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapper config={config} options={options} />}
     </div>
   );
 }

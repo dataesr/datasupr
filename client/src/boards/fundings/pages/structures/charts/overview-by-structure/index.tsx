@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -121,11 +122,11 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       type: "category",
     },
   };
-  const options: object = deepMerge(getGeneralOptions("", [], "", "Montants financés (€)", "variwide"), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", [], "", "Montants financés (€)", "variwide"), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="overview-by-structure">
-      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapper config={config} options={options} />}
     </div>
   );
 }

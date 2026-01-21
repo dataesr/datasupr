@@ -1,5 +1,6 @@
 import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -63,28 +64,44 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
     name: bucket.key,
   }));
   const categories: string[] = series.map((item: { name: string }) => item.name);
-
-  const titleProjects = `Nombre de projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
-  const titleBudget = `Montant total des projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
-  const axisProjects = "Nombre de projets financés";
+  
   const axisBudget = "Montants financés (€)";
-  const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
+  const axisProjects = "Nombre de projets financés";
+  const datalabelBudget = function (this: any) {
+    return `${formatCompactNumber(this.y)} €`;
   };
+  const datalabelProject = function (this: any) {
+    return `${this.y} projet${this.y > 1 ? 's' : ''}`;
+  };
+  const titleBudget = `Montant total des projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const titleProjects = `Nombre de projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltipBudget = function (this: any) {
     return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${name}</b>`;
   };
+  const tooltipProjects = function (this: any) {
+    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
+  };
+
   const config = {
     id: "projectsByStructure",
     sources: FundingsSources,
   };
 
   const localOptions = {
-    plotOptions: { bar: { grouping: false } },
+    plotOptions: {
+      bar: {
+        dataLabels: {
+          align: "right",
+          enabled: true,
+          formatter: field === "projects" ? datalabelProject : datalabelBudget,
+        },
+        grouping: false,
+      },
+    },
     series,
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: object = deepMerge(getGeneralOptions("", categories, "", field === "projects" ? axisProjects : axisBudget), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", field === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structure">
@@ -95,7 +112,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapper config={config} options={options} />}
     </div>
   );
 }
