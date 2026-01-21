@@ -3,6 +3,7 @@ import { useMetricEvolution } from "./api";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 import { SECTION_COLORS } from "../../../constants/colors";
 import RessourcesPropresChart from "../charts/ressources-propres";
+import RessourcesPropresEvolutionChart from "../charts/ressources-propres-evolution";
 import "./styles.scss";
 
 const euro = (n?: number) =>
@@ -40,7 +41,7 @@ export function FinancementsSection({
         <Row gutters>
           <Col xs="12" md="4">
             <MetricChartCard
-              title="Total des ressources"
+              title="Total"
               value={`${euro(data.produits_de_fonctionnement_encaissables)} €`}
               detail="Hors opérations en capital"
               color={SECTION_COLOR}
@@ -70,7 +71,7 @@ export function FinancementsSection({
                     )} %`
                   : "—"
               }
-              detail="Part des ressources propres"
+              detail="Part des ressources propres sur le total"
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution(
                 "ressources_propres_produits_encaissables"
@@ -83,7 +84,7 @@ export function FinancementsSection({
 
       <div className="fr-mb-4w">
         <h3 className="fr-h5 fr-mb-3w">
-          Subvention pour charges de service public
+          Subvention pour charges de service public (SCSP)
         </h3>
         <Row gutters>
           <Col xs="12" md="3">
@@ -97,6 +98,27 @@ export function FinancementsSection({
               }
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution("scsp")}
+              unit="€"
+            />
+          </Col>
+
+          <Col xs="12" md="3">
+            <MetricChartCard
+              title={`SCSP par étudiant financé ${data.anuniv}`}
+              value={`${euro(data.scsp_par_etudiants)} €`}
+              detail={
+                data.scsp_etudiants
+                  ? `${
+                      data.is_rce === false
+                        ? " (inclut la masse salariale prise en charge par l'État)"
+                        : ""
+                    }`
+                  : data.is_rce === false
+                    ? "Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par l'État)"
+                    : "Ratio SCSP / étudiants financés"
+              }
+              color={SECTION_COLOR}
+              evolutionData={useMetricEvolution("scsp_par_etudiants")}
               unit="€"
             />
           </Col>
@@ -117,28 +139,6 @@ export function FinancementsSection({
           </Col>
           <Col xs="12" md="3">
             <MetricChartCard
-              title="SCSP par étudiant financé"
-              value={`${euro(data.scsp_par_etudiants)} €`}
-              detail={
-                data.scsp_etudiants
-                  ? `Pour ${data.scsp_etudiants.toLocaleString(
-                      "fr-FR"
-                    )} étudiants financés${
-                      data.is_rce === false
-                        ? " (inclut la masse salariale prise en charge par l'État)"
-                        : ""
-                    }`
-                  : data.is_rce === false
-                    ? "Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par l'État)"
-                    : "Ratio SCSP / étudiants financés"
-              }
-              color={SECTION_COLOR}
-              evolutionData={useMetricEvolution("scsp_par_etudiants")}
-              unit="€"
-            />
-          </Col>
-          <Col xs="12" md="3">
-            <MetricChartCard
               title="Part des étudiants financés"
               value={
                 data.part_scsp_etudiants_effectif_sans_cpge != null
@@ -147,7 +147,6 @@ export function FinancementsSection({
                     )} %`
                   : "—"
               }
-              detail="Part des étudiants SCSP dans l'effectif total"
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution(
                 "part_scsp_etudiants_effectif_sans_cpge"
@@ -234,6 +233,12 @@ export function FinancementsSection({
         <RessourcesPropresChart
           data={data}
           selectedYear={selectedYear}
+          etablissementName={data?.etablissement_lib}
+        />
+      </div>
+
+      <div className="fr-mb-4w">
+        <RessourcesPropresEvolutionChart
           etablissementName={data?.etablissement_lib}
         />
       </div>

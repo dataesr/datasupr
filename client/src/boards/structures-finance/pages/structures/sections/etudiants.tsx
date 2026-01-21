@@ -1,5 +1,6 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import EffectifsChart from "../charts/effectifs";
+import EffectifsEvolutionChart from "../charts/effectifs-evolution";
 // import { SmallMetricCard } from "../components/small-metric-card";
 import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
 // import { FORMATION_COLORS } from "../../../constants/formation-colors";
@@ -50,7 +51,7 @@ export function EtudiantsSection({
     >
       <div className="section-header fr-mb-4w">
         <h3 className="fr-h5 section-header__title">
-          Effectifs étudiants {`(${data.anuniv})`}
+          Les étudiants inscrits en {`${data.anuniv}`}
         </h3>
       </div>
 
@@ -59,7 +60,7 @@ export function EtudiantsSection({
           <Col xs="12" md="4">
             <MetricChartCard
               title="Total des étudiants"
-              value={num(data.effectif_sans_cpge)}
+              value={`${num(data.effectif_sans_cpge)} étudiants inscrits`}
               detail="Inscriptions hors CPGE"
               color={SECTION_COLOR}
               evolutionData={effectifEvolution}
@@ -67,18 +68,18 @@ export function EtudiantsSection({
           </Col>
           <Col xs="12" md="4">
             <MetricChartCard
-              title="Diplômes nationaux"
+              title="Dont dans les diplômes nationaux"
               value={num(data.effectif_sans_cpge_dn)}
-              detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_dn / data.effectif_sans_cpge) * 100).toFixed(0) : 0}% du total`}
+              detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_dn / data.effectif_sans_cpge) * 100).toFixed(0) : 0}% du total des étudiants inscrits`}
               color={SECTION_COLOR}
               evolutionData={effectifDnEvolution}
             />
           </Col>
           <Col xs="12" md="4">
             <MetricChartCard
-              title="Diplômes d'établissement"
+              title="Dont dans les diplômes d’établissement"
               value={num(data.effectif_sans_cpge_du)}
-              detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_du / data.effectif_sans_cpge) * 100).toFixed(0) : 0}% du total`}
+              detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_du / data.effectif_sans_cpge) * 100).toFixed(0) : 0}% du total des étudiants inscrits`}
               color={SECTION_COLOR}
               evolutionData={effectifDuEvolution}
             />
@@ -284,6 +285,13 @@ export function EtudiantsSection({
 
       <div className="fr-mb-4w">
         <EffectifsChart data={data} selectedYear={selectedYear} />
+      </div>
+
+      <div className="fr-mb-4w">
+        <EffectifsEvolutionChart
+          etablissementId={data?.etablissement_id_paysage_actuel}
+          etablissementName={data?.etablissement_lib}
+        />
       </div>
     </div>
   );

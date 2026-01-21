@@ -168,7 +168,10 @@ router.get(
       const pipeline = [
         {
           $match: {
-            etablissement_id_paysage: id,
+            $or: [
+              { etablissement_id_paysage: id },
+              { etablissement_id_paysage_actuel: id },
+            ],
             exercice: { $ne: null },
           },
         },

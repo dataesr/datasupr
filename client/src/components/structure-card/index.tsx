@@ -7,6 +7,7 @@ interface StructureCardProps {
   studentCount?: number;
   onClick?: () => void;
   className?: string;
+  type?: string;
 }
 
 export default function StructureCard({
@@ -14,6 +15,7 @@ export default function StructureCard({
   region,
   category,
   studentCount,
+  type,
   onClick,
   className = "",
 }: StructureCardProps) {
@@ -41,10 +43,11 @@ export default function StructureCard({
           {category}
         </p>
       )}
+      {type !== undefined && <p className="structure-card__meta">{type}</p>}
 
       {studentCount !== undefined && (
         <p className="structure-card__stat">
-          {studentCount.toLocaleString("fr-FR")} étudiants
+          {studentCount.toLocaleString("fr-FR")} étudiants inscrits
         </p>
       )}
     </div>

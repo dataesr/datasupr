@@ -121,6 +121,7 @@ export default function EstablishmentSelection() {
               const category =
                 etab.etablissement_actuel_categorie || etab.categorie;
               const studentCount = etab.effectif_sans_cpge || etab.effectif;
+              const type = etab.etablissement_actuel_type || "";
 
               return (
                 <Col key={id} xs="12" md="6" lg="4">
@@ -129,6 +130,7 @@ export default function EstablishmentSelection() {
                     region={region}
                     category={category}
                     studentCount={studentCount}
+                    type={type}
                     onClick={() => handleEtablissementSelect(id)}
                   />
                 </Col>

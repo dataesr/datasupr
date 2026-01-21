@@ -105,7 +105,7 @@ export const createRessourcesPropresChartOptions = (
                     " "
                   )} €</div>
                   <div style="font-size:13px">${point.percentage.toFixed(
-                    2
+                    1
                   )}% des ressources propres</div>
                   </div>`;
         } else {
@@ -114,7 +114,7 @@ export const createRessourcesPropresChartOptions = (
                     point.name
                   }</div>
                   <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${point.percentage.toFixed(
-                    2
+                    1
                   )}%</div>
                   <div style="font-size:13px">${Highcharts.numberFormat(
                     point.actualValue,

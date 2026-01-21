@@ -134,18 +134,20 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
               title="Fonds de roulement en jours de fonctionnement"
               value={
                 data.fonds_de_roulement_en_jours_de_fonctionnement != null
-                  ? `${euro(
+                  ? `${Math.ceil(
                       data.fonds_de_roulement_en_jours_de_fonctionnement
                     )} jour${
                       Math.abs(
-                        data.fonds_de_roulement_en_jours_de_fonctionnement
+                        Math.ceil(
+                          data.fonds_de_roulement_en_jours_de_fonctionnement
+                        )
                       ) > 1
                         ? "s"
                         : ""
                     }`
                   : "—"
               }
-              detail="Expression du fonds de roulement en nombre de jours de fonctionnement. Un fonds de roulement net global de 30 jours signifie que l'établissement peut couvrir 30 jours de dépenses courantes."
+              detail={`Expression du fonds de roulement en nombre de jours de fonctionnement. Un fonds de roulement net global de ${Math.ceil(data.fonds_de_roulement_en_jours_de_fonctionnement)} jours signifie que l'établissement peut couvrir ${Math.ceil(data.fonds_de_roulement_en_jours_de_fonctionnement)} jours de dépenses courantes.`}
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution(
                 "fonds_de_roulement_en_jours_de_fonctionnement"
@@ -159,8 +161,10 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
               title="Trésorerie en jours de fonctionnement"
               value={
                 data.tresorerie_en_jours_de_fonctionnement != null
-                  ? `${euro(data.tresorerie_en_jours_de_fonctionnement)} jour${
-                      Math.abs(data.tresorerie_en_jours_de_fonctionnement) > 1
+                  ? `${Math.ceil(data.tresorerie_en_jours_de_fonctionnement)} jour${
+                      Math.abs(
+                        Math.ceil(data.tresorerie_en_jours_de_fonctionnement)
+                      ) > 1
                         ? "s"
                         : ""
                     }`
