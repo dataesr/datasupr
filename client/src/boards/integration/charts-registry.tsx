@@ -8,26 +8,75 @@ export const chartsRegistry = {
   // European Projects - Collaborations
   // MapOfEuropeCollaborationsFlow: lazy(() => import("../european-projects/pages/collaborations/charts/map-of-europe-collaborations-flow")),
   // CountryNeighbourgs: lazy(() => import("../european-projects/pages/collaborations/charts/country-neighbourgs")),
-  CountriesCollaborationsBubble: lazy(() => import("../european-projects/pages/collaborations/charts/countries-collaborations-bubble")),
-  CollaborationsEntityVariablePie: lazy(() => import("../european-projects/pages/collaborations/charts/entity-variable-pie")),
+  CountriesCollaborationsBubble: lazy(
+    () =>
+      import("../european-projects/pages/collaborations/charts/countries-collaborations-bubble")
+  ),
+  CollaborationsEntityVariablePie: lazy(
+    () =>
+      import("../european-projects/pages/collaborations/charts/entity-variable-pie")
+  ),
 
   // European Projects - Positioning
-  top10beneficiaries: lazy(() => import("../european-projects/pages/positioning/charts/top-10-beneficiaries")),
-  fundingRankingRates: lazy(() => import("../european-projects/pages/positioning/charts/funding-ranking/rates")),
-  FundingRankingSubsidies: lazy(() => import("../european-projects/pages/positioning/charts/funding-ranking/subsidies")),
-  FundingRankingParticipations: lazy(() => import("../european-projects/pages/positioning/charts/funding-ranking/participations")),
-  fundingRankingCoordination: lazy(() => import("../european-projects/pages/positioning/charts/funding-ranking/coordination")),
+  top10beneficiaries: lazy(
+    () =>
+      import("../european-projects/pages/positioning/charts/top-10-beneficiaries")
+  ),
+  fundingRankingRates: lazy(
+    () =>
+      import("../european-projects/pages/positioning/charts/funding-ranking/rates")
+  ),
+  FundingRankingSubsidies: lazy(
+    () =>
+      import("../european-projects/pages/positioning/charts/funding-ranking/subsidies")
+  ),
+  FundingRankingParticipations: lazy(
+    () =>
+      import("../european-projects/pages/positioning/charts/funding-ranking/participations")
+  ),
+  fundingRankingCoordination: lazy(
+    () =>
+      import("../european-projects/pages/positioning/charts/funding-ranking/coordination")
+  ),
 
   // European Projects - Synthesis
   // TODO
 
   // European Projects - Evolution PCRI
-  fundingStackedArea: lazy(() => import("../european-projects/pages/evolution-pcri/charts/funding-stacked-area")),
-  successRateEvolution: lazy(() => import("../european-projects/pages/evolution-pcri/charts/success-rate-evolution")),
-  countriesHeatmap: lazy(() => import("../european-projects/pages/evolution-pcri/charts/countries-heatmap")),
-  countriesRanking: lazy(() => import("../european-projects/pages/evolution-pcri/charts/countries-ranking")),
-  fundingByCountry: lazy(() => import("../european-projects/pages/evolution-pcri/charts/funding-by-country")),
-  efficiencyScatter: lazy(() => import("../european-projects/pages/evolution-pcri/charts/efficiency-scatter")),
+  fundingStackedArea: lazy(
+    () =>
+      import("../european-projects/pages/evolution-pcri/charts/funding-stacked-area")
+  ),
+  successRateEvolution: lazy(
+    () =>
+      import("../european-projects/pages/evolution-pcri/charts/success-rate-evolution")
+  ),
+  countriesHeatmap: lazy(
+    () =>
+      import("../european-projects/pages/evolution-pcri/charts/countries-heatmap")
+  ),
+  countriesRanking: lazy(
+    () =>
+      import("../european-projects/pages/evolution-pcri/charts/countries-ranking")
+  ),
+  fundingByCountry: lazy(
+    () =>
+      import("../european-projects/pages/evolution-pcri/charts/funding-by-country")
+  ),
+  efficiencyScatter: lazy(
+    () =>
+      import("../european-projects/pages/evolution-pcri/charts/efficiency-scatter")
+  ),
+
+  // Structures Finance
+  ressourcesPropres: lazy(
+    () =>
+      import("../structures-finance/pages/structures/charts/ressources-propres")
+  ),
+  ressourcesPropresEvolution: lazy(
+    () =>
+      import("../structures-finance/pages/structures/charts/ressources-propres-evolution")
+  ),
 };
 
 export type ChartId = keyof typeof chartsRegistry;
