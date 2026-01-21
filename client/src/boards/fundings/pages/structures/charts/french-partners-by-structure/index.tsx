@@ -4,9 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
-
-import "highcharts/modules/map";
+import { deepMerge, funders, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -18,24 +16,37 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   const yearMin = searchParams.get("yearMin");
   const color = useChartColor();
 
-  const { data: mapData, isLoading: isLoadingTopology } = useQuery({
-    queryKey: ['topo-fr'],
-    queryFn: () => fetch('https://code.highcharts.com/mapdata/countries/fr/fr-all.topo.json').then((response) => response.json()),
-  });
-
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),
     aggregations: {
-      by_gps: {
+      by_international_partners: {
         terms: {
-          field: "address.gps_id_name.keyword",
-          size: 10000
-        }
-      }
-    }
-  }
+          field: "co_partners_fr_inst.keyword",
+        },
+        aggregations: {
+          by_project_type: {
+            terms: {
+              field: "project_type.keyword",
+            },
+            aggregations: {
+              unique_projects: {
+                cardinality: {
+                  field: "project_id.keyword",
+                },
+              },
+              sum_budget: {
+                sum: {
+                  field: "project_budgetTotal",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  };
 
-  const { data: dataPartners, isLoading: isLoadingPartners } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['fundings-french-partners', structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
@@ -48,44 +59,44 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
       }).then((response) => response.json()),
   });
 
-  if (isLoadingTopology || !mapData || isLoadingPartners || !dataPartners) return <DefaultSkeleton />;
+  const partners = data?.aggregations?.by_international_partners?.buckets ?? [];
+  const series = funders.map((funder) => ({
+    color: getColorFromFunder(funder),
+    data: partners.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.unique_projects?.value ?? 0),
+    name: funder,
+  }));
+  const categories = partners.map((partner) => partner.key.split("###")[1].split("_")[1]);
 
-  const data = dataPartners.aggregations?.by_gps?.buckets
-    .map((bucket) => ({
-      lat: parseInt(bucket.key.split("_")[0]),
-      lon: parseInt(bucket.key.split("_")[1]),
-      name: bucket.key.split("###")[1],
-      z: bucket.doc_count,
-    }));
 
   const config = {
     id: "frenchPartnersByStructure",
     integrationURL: "/integration?chart_id=frenchPartnersByStructure",
-    title: `Partenaires français de la structure ${name} ${getYearRangeLabel({ yearMax, yearMin })}`,
+    title: `Partenaires français de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   const localOptions = {
-    mapView: { padding: [20, 0, 0, 0] },
-    series: [
-      {
-        name: mapData.title || "France",
-        mapData,
-      }, {
-        type: "mapbubble",
-        mapData,
-        name: "Nombre de projets communs",
-        data,
-        tooltip: {
-          pointFormat: `<b>${name}</b> et <b>{point.name}</b> ont collaboré sur <b>{point.z} projet(s)</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`,
+    legend: { enabled: true },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true,
+          formatter: function (this: any) { `${this.y} projects` },
         },
+        stacking: "normal",
       }
-    ],
+    },
+    series,
+    tooltip: {
+      formatter: function (this: any) {
+        return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
+      }
+    },
   };
-  const options: object = deepMerge(getGeneralOptions("", [], "", ""), localOptions);
+  const options: object = deepMerge(getGeneralOptions(`Partenaires internationaux de ${name}`, categories, "", ""), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="french-partners-by-structure">
-      <ChartWrapper config={config} constructorType="mapChart" options={options} />
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} constructorType="mapChart" options={options} />}
     </div>
   );
 };

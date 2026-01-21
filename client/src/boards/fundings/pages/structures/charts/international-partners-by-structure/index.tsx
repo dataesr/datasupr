@@ -4,9 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, getEsQuery, getGeneralOptions } from "../../../../utils.ts";
-
-import "highcharts/modules/map";
+import { deepMerge, funders, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -21,15 +19,14 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),
     aggregations: {
-      by_project_type: {
+      by_international_partners: {
         terms: {
-          field: "project_type.keyword",
-          size: 50,
+          field: "co_partners_foreign_inst.keyword",
         },
         aggregations: {
-          by_international_partners: {
+          by_project_type: {
             terms: {
-              field: "co_partners_foreign_inst.keyword",
+              field: "project_type.keyword",
             },
             aggregations: {
               unique_projects: {
@@ -62,34 +59,39 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
       }).then((response) => response.json()),
   });
 
-  // console.log(data);
-  const series = (data?.aggregations?.by_project_type?.buckets ?? []).map((funder) => ({
+  const partners = data?.aggregations?.by_international_partners?.buckets ?? [];
+  const series = funders.map((funder) => ({
+    color: getColorFromFunder(funder),
+    data: partners.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.unique_projects?.value ?? 0),
     name: funder,
-    data: funder,
   }));
-  const categories = [];
-  // console.log(series);
+  const categories = partners.map((partner) => partner.key.split("###")[1].split("_")[1]);
 
   const config = {
     id: "internationalPartnersByStructure",
     integrationURL: "/integration?chart_id=internationalPartnersByStructure",
+    title: `Partenaires internationaux de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   const localOptions = {
-    legend: { reversed: true },
+    legend: { enabled: true },
     plotOptions: {
       series: {
         dataLabels: {
           enabled: true,
-          // formatter: function (this: any) { return field === "projects" ? this.y : `${formatCompactNumber(this.y)} €` },
+          formatter: function (this: any) { `${this.y} projects` },
         },
         stacking: "normal",
       }
     },
     series,
-    // tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
+    tooltip: {
+      formatter: function (this: any) {
+        return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
+      }
+    },
   };
-  const options: object = deepMerge(getGeneralOptions(`Partenaires internationaux de ${name}`, categories, "", ""), localOptions);
+  const options: object = deepMerge(getGeneralOptions("", categories, "", ""), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="international-partners-by-structure">
