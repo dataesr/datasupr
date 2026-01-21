@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, funders, formatCompactNumber, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -58,13 +58,22 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  const series = (data?.aggregations?.by_project_type?.buckets ?? []).map((bucket, index) => ({
-    color: getColorFromFunder(bucket.key),
-    data: [{ x: index, y: field === "projects" ? bucket.unique_projects.value : bucket.sum_budget.value }],
-    name: bucket.key,
-  }));
-  const categories: string[] = series.map((item: { name: string }) => item.name);
-  
+  const series: any[] = [];
+  const categories: string[] = [];
+  let count = 0
+  funders.forEach((funder) => {
+    const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
+    if ((funderData?.unique_projects?.value ?? 0) > 0) {
+      series.push({
+        color: getColorByFunder(funder),
+        data: [{ x: count, y: field === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0 }],
+        name: funder,
+      });
+      categories.push(funder);
+      count += 1;
+    };
+  });
+
   const axisBudget = "Montants financés (€)";
   const axisProjects = "Nombre de projets financés";
   const datalabelBudget = function (this: any) {

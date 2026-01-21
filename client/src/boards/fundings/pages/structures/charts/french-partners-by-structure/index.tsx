@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, formatCompactNumber, funders, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -66,7 +66,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
 
   const partners = data?.aggregations?.by_international_partners?.buckets ?? [];
   const series = funders.map((funder) => ({
-    color: getColorFromFunder(funder),
+    color: getColorByFunder(funder),
     data: partners.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
     name: funder,
   })).reverse();

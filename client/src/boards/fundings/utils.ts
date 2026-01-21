@@ -46,7 +46,7 @@ const formatCompactNumber = (number: number): string => {
   return formatter.format(number);
 };
 
-const getColorFromFunder = (funder: string): string => {
+const getColorByFunder = (funder: string): string => {
   const funderLowerCase = funder.toLowerCase();
   return Object.keys(sortedFunders).includes(funderLowerCase) ? sortedFunders[funderLowerCase] : "#ccc";
 };
@@ -144,7 +144,7 @@ export {
   deepMerge,
   formatCompactNumber,
   funders,
-  getColorFromFunder,
+  getColorByFunder,
   getEsQuery,
   getGeneralOptions,
   getYearRangeLabel,

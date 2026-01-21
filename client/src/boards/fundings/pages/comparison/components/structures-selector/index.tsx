@@ -168,7 +168,11 @@ export default function StructuresSelector() {
       <Col xs="12" sm="3">
         {isLoadingCounties ? <DefaultSkeleton height="70px" /> : (
           <div className="fr-select-group">
-            <label className="fr-label">Région</label>
+            <label className="fr-label">
+              Région
+              {' '}
+              <i>{`(${counties.length})`}</i>
+            </label>
             <select
               aria-describedby="select-county-messages"
               className="fr-select"
@@ -193,6 +197,8 @@ export default function StructuresSelector() {
           <div className="fr-select-group">
             <label className="fr-label">
               Typologie
+              {' '}
+              <i>{`(${typologies.length})`}</i>
             </label>
             <select
               aria-describedby="select-typology-messages"
@@ -216,14 +222,18 @@ export default function StructuresSelector() {
       <Col xs="12" sm="6">
         {(isLoadingStructures || isLoadingStructuresAll) ? <DefaultSkeleton height="70px" /> : (
           <>
-            <label className="fr-label">Structure</label>
+            <label className="fr-label">
+              Structure
+              {' '}
+              <i>{`(${structures.length})`}</i>
+            </label>
             <div className="fr-mt-1w fr-mb-1w">
               <SearchableSelect
                 canSelectAll={true}
                 onChange={handleStructureChange}
                 options={structures}
                 placeholder="Ajouter une structure..."
-                value={""}
+                value={selectedStructures}
               />
             </div>
             <TagGroup>
@@ -232,9 +242,10 @@ export default function StructuresSelector() {
                   {structuresAll.find((item) => item.id === selectedStructure)?.label}
                 </DismissibleTag>
               ))}
-              {(selectedStructures.length > 0) && (
+              {(selectedStructures.length > 1) && (
                 <DismissibleTag color="orange-terre-battue" key="delete-all" onClick={() => handleDeleteAll()}>
-                  Supprimer toutes les structures
+                  <span aria-hidden="true" className="fr-icon-delete-line fr-icon--sm fr-mr-1w"></span>
+                  Tout supprimer
                 </DismissibleTag>
               )}
             </TagGroup>

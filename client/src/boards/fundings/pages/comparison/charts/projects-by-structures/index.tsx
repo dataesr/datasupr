@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -65,15 +65,12 @@ export default function ProjectsByStructures() {
       }).then((response) => response.json()),
   });
 
-  // TODO: Can be improve to avoid to parse data aggregations multiple times
-  let funders2 = (data?.aggregations?.by_structure?.buckets ?? []).map((bucket) => bucket.by_project_type.buckets.map((bucket2) => bucket2.key)).flat();
-  funders2 = [...new Set(funders2)].reverse();
   const categories = (data?.aggregations?.by_structure?.buckets ?? []).map((item) => item.key.split('###')[1]);
-  const series = funders2.map((funder) => ({
-    color: getColorFromFunder(funder),
-    data: data.aggregations.by_structure.buckets.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
+  const series = funders.map((funder) => ({
+    color: getColorByFunder(funder),
+    data: (data?.aggregations?.by_structure?.buckets ?? []).map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
     name: funder,
-  }));
+  })).reverse();
 
   const titleProjects = `Nombre de projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const titleBudget = `Montant total des projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
@@ -122,7 +119,7 @@ export default function ProjectsByStructures() {
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapper config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapper config={config} options={options} />}
     </div>
   );
 }

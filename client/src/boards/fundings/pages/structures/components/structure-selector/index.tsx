@@ -137,7 +137,11 @@ export default function StructureSelector({ setName }) {
       <Col xs="12" sm="3">
         {isLoadingCounties ? <DefaultSkeleton height="70px" /> : (
           <div className="fr-select-group">
-            <label className="fr-label">Région</label>
+            <label className="fr-label">
+              Région
+              {' '}
+              <i>{`(${counties.length})`}</i>
+            </label>
             <select
               aria-describedby="select-county-messages"
               className="fr-select"
@@ -162,6 +166,8 @@ export default function StructureSelector({ setName }) {
           <div className="fr-select-group">
             <label className="fr-label">
               Typologie
+              {' '}
+              <i>{`(${typologies.length})`}</i>
             </label>
             <select
               aria-describedby="select-typology-messages"
@@ -185,7 +191,11 @@ export default function StructureSelector({ setName }) {
       <Col xs="12" sm="6">
         {isLoadingStructures ? <DefaultSkeleton height="70px" /> : (
           <>
-            <label className="fr-label">Structure</label>
+            <label className="fr-label">
+              Structure
+              {' '}
+              <i>{`(${structures.length})`}</i>
+            </label>
             <div className="fr-mt-1w fr-mb-1w">
               <SearchableSelect
                 onChange={handleStructureChange}

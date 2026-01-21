@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, funders, formatCompactNumber, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 import "highcharts/modules/variwide";
@@ -52,10 +52,14 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  const series = (data?.aggregations?.by_project_type?.buckets ?? []).map((bucket) =>
-    [bucket.key, bucket.sum_budget.value, bucket.doc_count]
-  );
-  const colors = series.map((item) => getColorFromFunder(item[0]));
+  console.log(funders
+    .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)));
+
+  const series = funders
+    .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder))
+    .filter((item) => !!item)
+    .map((bucket) => [bucket.key, bucket.sum_budget.value, bucket.doc_count]);
+  const colors = series.map((item) => getColorByFunder(item[0]));
 
   const config = {
     id: "overviewByStructure",
