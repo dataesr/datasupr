@@ -65,7 +65,7 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   console.log(data);
   const series = (data?.aggregations?.by_project_type?.buckets ?? []).map((funder) => ({
     name: funder,
-    data: funder.
+    data: funder,
   }));
   const categories = [];
   console.log(series);
