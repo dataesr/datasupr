@@ -48,10 +48,13 @@ export default function RessourcesPropresEvolutionChart({
         ? String(years[0])
         : `${years[0]} - ${years[years.length - 1]}`;
 
+  const etabName =
+    etablissementName || evolutionData?.[0]?.etablissement_lib || "";
+
   const config = {
     id: "ressourcesPropresEvolution",
     integrationURL: `/integration?chart_id=ressourcesPropresEvolution&structureId=${etablissementId}`,
-    title: `Évolution des ressources propres${etablissementName ? ` — ${etablissementName}` : ""}`,
+    title: `Évolution des ressources propres${etabName ? ` — ${etabName}` : ""}`,
     comment: {
       fr: (
         <>

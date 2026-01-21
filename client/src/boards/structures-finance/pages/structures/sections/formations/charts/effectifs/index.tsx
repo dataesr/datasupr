@@ -114,20 +114,39 @@ export default function EffectifsChart({
 
   if (!data) return null;
 
+  const niveauConfig = {
+    id: "effectifs-niveau-chart",
+    integrationURL: `/integration?chart_id=effectifs-niveau&structureId=${etablissementId}&year=${selectedYear}`,
+    title: "Par cursus",
+  };
+
+  const specifiquesConfig = {
+    id: "effectifs-specifiques-chart",
+    integrationURL: `/integration?chart_id=effectifs-specifiques&structureId=${etablissementId}&year=${selectedYear}`,
+    title: "Filières spécifiques",
+  };
+
+  const disciplinesConfig = {
+    id: "effectifs-disciplines-chart",
+    integrationURL: `/integration?chart_id=effectifs-disciplines&structureId=${etablissementId}&year=${selectedYear}`,
+    title: "Par disciplines",
+  };
+
+  const diplomesConfig = {
+    id: "effectifs-diplomes-chart",
+    integrationURL: `/integration?chart_id=effectifs-diplomes&structureId=${etablissementId}&year=${selectedYear}`,
+    title: "Types de formation",
+  };
+
+  const degreesConfig = {
+    id: "effectifs-degrees-chart",
+    integrationURL: `/integration?chart_id=effectifs-degrees&structureId=${etablissementId}&year=${selectedYear}`,
+    title: "Degrés d'étude",
+  };
+
   const renderNiveauChart = () => (
     <ChartWrapper
-      config={{
-        id: "effectifs-niveau-chart",
-        idQuery: "effectifs-niveau",
-        title: {
-          className: "fr-mt-0w text-center",
-          look: "h6",
-          size: "h5",
-          fr: "Par cursus",
-        },
-
-        integrationURL: "/integration-url",
-      }}
+      config={niveauConfig}
       options={cursusOptions}
       renderData={() => <RenderDataNiveau data={data} />}
     />
@@ -135,18 +154,7 @@ export default function EffectifsChart({
 
   const renderSpecifiquesChart = () => (
     <ChartWrapper
-      config={{
-        id: "effectifs-specifiques-chart",
-        idQuery: "effectifs-specifiques",
-        title: {
-          className: "fr-mt-0w text-center",
-          look: "h6",
-          size: "h5",
-          fr: "Filières spécifiques",
-        },
-
-        integrationURL: "/integration-url",
-      }}
+      config={specifiquesConfig}
       options={specifiquesOptions}
       renderData={() => <RenderDataSpecifiques data={data} />}
     />
@@ -154,18 +162,7 @@ export default function EffectifsChart({
 
   const renderDisciplinesChart = () => (
     <ChartWrapper
-      config={{
-        id: "effectifs-disciplines-chart",
-        idQuery: "effectifs-disciplines",
-        title: {
-          className: "fr-mt-0w text-center",
-          look: "h6",
-          size: "h5",
-          fr: "Par disciplines",
-        },
-
-        integrationURL: "/integration-url",
-      }}
+      config={disciplinesConfig}
       options={disciplinesOptions}
       renderData={() => <RenderDataDisciplines data={data} />}
     />
@@ -173,18 +170,7 @@ export default function EffectifsChart({
 
   const renderDiplomesChart = () => (
     <ChartWrapper
-      config={{
-        id: "effectifs-diplomes-chart",
-        idQuery: "effectifs-diplomes",
-        title: {
-          className: "text-center",
-          look: "h6",
-          size: "h5",
-          fr: "Types de formation",
-        },
-
-        integrationURL: "/integration-url",
-      }}
+      config={diplomesConfig}
       options={diplomesOptions}
       renderData={() => <RenderDataDiplomes data={data} />}
     />
@@ -192,18 +178,7 @@ export default function EffectifsChart({
 
   const renderDegreesChart = () => (
     <ChartWrapper
-      config={{
-        id: "effectifs-degrees-chart",
-        idQuery: "effectifs-degrees",
-        title: {
-          className: "text-center",
-          look: "h6",
-          size: "h5",
-          fr: "Degrés d'étude",
-        },
-
-        integrationURL: "/integration-url",
-      }}
+      config={degreesConfig}
       options={degreesOptions}
       renderData={() => <RenderDataDegrees data={data} />}
     />

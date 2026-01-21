@@ -111,10 +111,12 @@ export default function RessourcesPropresChart({
 
   const totalRessources = data?.recettes_propres || 0;
 
+  const etabName = etablissementName || data?.etablissement_lib || "";
+
   const config = {
     id: "ressourcesPropres",
     integrationURL: `/integration?chart_id=ressourcesPropres&structureId=${etablissementId}&year=${selectedYear}`,
-    title: `Décomposition des ressources propres${etablissementName ? ` — ${etablissementName}` : ""}${selectedYear ? ` — ${selectedYear}` : ""}`,
+    title: `Décomposition des ressources propres${etabName ? ` — ${etabName}` : ""}${selectedYear ? ` — ${selectedYear}` : ""}`,
     comment: {
       fr: (
         <>

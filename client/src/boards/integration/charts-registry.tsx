@@ -77,6 +77,26 @@ export const chartsRegistry = {
     () =>
       import("../structures-finance/pages/structures/sections/resources/charts/ressources-propres-evolution")
   ),
+  "effectifs-niveau": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/formations/charts/effectifs/effectifs-niveau")
+  ),
+  "effectifs-specifiques": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/formations/charts/effectifs/effectifs-specifiques")
+  ),
+  "effectifs-disciplines": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/formations/charts/effectifs/effectifs-disciplines")
+  ),
+  "effectifs-diplomes": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/formations/charts/effectifs/effectifs-diplomes")
+  ),
+  "effectifs-degrees": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/formations/charts/effectifs/effectifs-degrees")
+  ),
 };
 
 export type ChartId = keyof typeof chartsRegistry;
