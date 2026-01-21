@@ -61,11 +61,10 @@ export default function SelectionUI({
           return {
             id,
             hasValidPaysageId: !!etab.etablissement_id_paysage,
-            label: `${displayName}${
-              etab.etablissement_actuel_region || etab.region
+            label: `${displayName}${etab.etablissement_actuel_region || etab.region
                 ? ` — ${etab.etablissement_actuel_region || etab.region}`
                 : ""
-            }`,
+              }`,
             searchableText: searchText,
             subtitle: etab.champ_recherche,
             data: etab,
@@ -77,16 +76,18 @@ export default function SelectionUI({
     [filteredEtablissements]
   );
 
-  const handleEtablissementSelect = (id: string) => {
-    const selected = etablissementOptions.find((opt) => opt.id === id);
-    const finalId = selected?.data?.etablissement_id_paysage || id;
+  const handleEtablissementSelect = (id?: string) => {
+    if (id) {
+      const selected = etablissementOptions.find((opt) => opt.id === id);
+      const finalId = selected?.data?.etablissement_id_paysage || id;
 
-    if (!finalId || finalId === "undefined") {
-      console.error("Invalid establishment ID:", finalId);
-      return;
+      if (!finalId || finalId === "undefined") {
+        console.error("Invalid establishment ID:", finalId);
+        return;
+      }
+
+      onEtablissementSelect(finalId);
     }
-
-    onEtablissementSelect(finalId);
   };
 
   const typeLabel = selectedType === "tous" ? "Tous les types" : selectedType;

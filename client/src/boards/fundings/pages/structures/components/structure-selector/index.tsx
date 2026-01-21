@@ -117,10 +117,12 @@ export default function StructureSelector({ setName }) {
       return ({ id, label, searchableText: label.normalize('NFD').replace(/[\u0300-\u036f]/g, '') });
     }) || [];
 
-  const handleStructureChange = (selectedStructure: string) => {
-    setName(structures.find((item) => item.id === selectedStructure).label);
-    searchParams.set("structure", selectedStructure.split('###')[0]);
-    setSearchParams(searchParams);
+  const handleStructureChange = (selectedStructure?: string) => {
+    if (selectedStructure) {
+      setName(structures.find((item) => item.id === selectedStructure).label);
+      searchParams.set("structure", selectedStructure.split('###')[0]);
+      setSearchParams(searchParams);
+    }
   };
 
   if (structure && structure.length > 0) {

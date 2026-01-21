@@ -93,11 +93,13 @@ function QuickAccessSection() {
       });
   }, [etablissementsData]);
 
-  const handleEtablissementSelect = (etablissementId: string) => {
-    navigate(
-      `/structures-finance/etablissements?year=2024&type=tous&region=toutes&structureId=${etablissementId}`
-    );
-    setSearchValue("");
+  const handleEtablissementSelect = (etablissementId?: string) => {
+    if (etablissementId) {
+      navigate(
+        `/structures-finance/etablissements?year=2024&type=tous&region=toutes&structureId=${etablissementId}`
+      );
+      setSearchValue("");
+    }
   };
 
   return (

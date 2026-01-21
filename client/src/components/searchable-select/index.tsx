@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import "./searchable-select.scss";
 
 interface SearchableSelectProps {
-  canSelectAll: boolean,
+  canSelectAll?: boolean = false,
   options: Array<{
     id: string;
     label: string;
