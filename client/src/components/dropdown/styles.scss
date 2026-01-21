@@ -3,6 +3,30 @@
   display: inline-block;
 }
 
+.fx-dropdown__trigger--nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  padding: 0.75rem 1rem;
+
+  &::before {
+    margin-right: 0.25rem;
+  }
+
+  &[aria-expanded="true"] {
+    color: var(--text-active-blue-france);
+    background-color: transparent;
+  }
+
+  &:hover {
+    background-color: var(--background-default-grey-hover);
+  }
+}
+
 .fx-dropdown--full-width {
   display: block;
   width: 100%;
