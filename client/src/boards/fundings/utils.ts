@@ -11,7 +11,7 @@ const sortedFunders = {
 };
 
 const typologies = [ "Autres", "Ecoles et instituts", "Etablissements de santé",
-  "Organismes de recherche", "Structures de recherche", "Universités"];
+  "Organismes de recherche", "Universités"];
 
 const years: number[] = Array.from(Array(11).keys()).map((item) => item + 2015);
 
