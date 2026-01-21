@@ -50,6 +50,7 @@ export default function Home() {
     url: "",
     api_url: "",
     isMultilingual: false,
+    homePageVisible: true,
   });
 
   const { data, isLoading } = useQuery({
@@ -155,6 +156,7 @@ export default function Home() {
         url: "",
         api_url: "",
         isMultilingual: false,
+        homePageVisible: true,
       });
     },
     onError: (error: Error) => {
@@ -241,6 +243,31 @@ export default function Home() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["list-characterizations"] });
       alert(`Caractérisation rafraîchie avec succès: ${data.count} valeurs distinctes trouvées`);
+    },
+    onError: (error: Error) => {
+      alert(error.message);
+    },
+  });
+
+  const updateHomePageVisibleMutation = useMutation({
+    mutationFn: async (params: { dashboardId: string; homePageVisible: boolean }) => {
+      const response = await fetch(`${VITE_APP_SERVER_URL}/admin/update-dashboard-visibility`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(params),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || "Erreur lors de la mise à jour de la visibilité");
+      }
+
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["list-dashboards"] });
     },
     onError: (error: Error) => {
       alert(error.message);
@@ -455,6 +482,19 @@ export default function Home() {
                 </label>
               </div>
             </Col>
+            <Col>
+              <div className="fr-checkbox-group">
+                <input
+                  type="checkbox"
+                  id="homePageVisible"
+                  checked={newDashboard.homePageVisible}
+                  onChange={(e) => setNewDashboard({ ...newDashboard, homePageVisible: e.target.checked })}
+                />
+                <label className="fr-label" htmlFor="homePageVisible">
+                  Visible sur la page d'accueil
+                </label>
+              </div>
+            </Col>
           </Row>
           <Row gutters className="form-row">
             <Col>
@@ -515,6 +555,7 @@ export default function Home() {
                   <th>URL du tableau</th>
                   <th>URL de l'API</th>
                   <th>Multilingue</th>
+                  <th>Visible page d'accueil</th>
                 </tr>
               </thead>
               <tbody>
@@ -533,6 +574,25 @@ export default function Home() {
                     <td>{dashboard.api_url}</td>
                     <td>
                       <Badge color={dashboard.isMultilingual ? "success" : "error"}>{dashboard.isMultilingual ? "Oui" : "Non"}</Badge>
+                    </td>
+                    <td>
+                      <div className="fr-toggle">
+                        <input
+                          type="checkbox"
+                          id={`homePageVisible-${dashboard.id}`}
+                          checked={dashboard.homePageVisible !== false}
+                          onChange={(e) => {
+                            updateHomePageVisibleMutation.mutate({
+                              dashboardId: dashboard.id,
+                              homePageVisible: e.target.checked,
+                            });
+                          }}
+                          disabled={updateHomePageVisibleMutation.isPending}
+                        />
+                        <label className="fr-toggle__label" htmlFor={`homePageVisible-${dashboard.id}`}>
+                          {dashboard.homePageVisible !== false ? "Visible" : "Masqué"}
+                        </label>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -968,7 +1028,7 @@ export default function Home() {
                                 </tr>
                               </>
                             );
-                          })
+                          }),
                       )}
                   </tbody>
                 </table>

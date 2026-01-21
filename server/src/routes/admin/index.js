@@ -27,7 +27,7 @@ router.route("/admin/list-dashboards").get(async (req, res) => {
 // add a new dashboard
 router.route("/admin/add-dashboard").post(async (req, res) => {
   const filters = checkQuery(req.body, ["name_fr", "name_en", "id", "description_fr", "description_en", "url", "api_url"], res);
-  const { name_fr, name_en, id, description_fr, description_en, url, api_url, isMultilingual } = req.body;
+  const { name_fr, name_en, id, description_fr, description_en, url, api_url, isMultilingual, homePageVisible } = req.body;
 
   getEmbeddings([name_fr, name_en, description_fr, description_en]).catch(console.error);
 
@@ -48,6 +48,7 @@ router.route("/admin/add-dashboard").post(async (req, res) => {
       url,
       api_url,
       isMultilingual: isMultilingual || false,
+      homePageVisible: homePageVisible !== undefined ? homePageVisible : true,
       data: [],
       constants: [],
       createdAt: new Date().toISOString(),
@@ -58,6 +59,31 @@ router.route("/admin/add-dashboard").post(async (req, res) => {
   } catch (error) {
     console.error("Error adding dashboard:", error);
     res.status(500).json({ error: "Unable to add dashboard", details: error.message });
+  }
+});
+
+// Update dashboard visibility
+router.route("/admin/update-dashboard-visibility").post(async (req, res) => {
+  const { dashboardId, homePageVisible } = req.body;
+
+  if (!dashboardId || homePageVisible === undefined) {
+    return res.status(400).json({ error: "dashboardId and homePageVisible are required" });
+  }
+
+  try {
+    const result = await db.collection("boards").updateOne(
+      { id: dashboardId },
+      { $set: { homePageVisible } }
+    );
+
+    if (result.matchedCount === 0) {
+      return res.status(404).json({ error: "Dashboard not found" });
+    }
+
+    res.json({ message: "Dashboard visibility updated successfully", homePageVisible });
+  } catch (error) {
+    console.error("Error updating dashboard visibility:", error);
+    res.status(500).json({ error: "Unable to update dashboard visibility", details: error.message });
   }
 });
 
