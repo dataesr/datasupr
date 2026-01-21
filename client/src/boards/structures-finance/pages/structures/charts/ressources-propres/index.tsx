@@ -12,7 +12,7 @@ const euro = (n?: number) =>
 const pct = (n?: number) => (n != null ? `${n.toFixed(1)} %` : "—");
 
 interface RessourcesPropresChartProps {
-  data: any;
+  data?: any;
   selectedYear?: string | number;
   etablissementName?: string;
 }
