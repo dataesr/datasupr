@@ -6,7 +6,7 @@ import "highcharts/modules/variwide";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -64,14 +64,13 @@ export default function OverviewByStructure({ name }: { name: string | undefined
 
   let hiddenPoints: string[] = [];
 
-  const options: object = {
-    ...getGeneralOptions("", [], "", "Montants financés (€)", "variwide"),
+  const localOptions = {
     legend: { enabled: true },
     plotOptions: {
       series: {
         point: {
           events: {
-            legendItemClick: function(this: any, e: any) {
+            legendItemClick: function (this: any, e: any) {
               var clic_id = e.target.name;
               this.series.points.forEach((point) => {
                 if (point.name === clic_id) {
@@ -122,6 +121,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       type: "category",
     },
   };
+  const options: object = deepMerge(getGeneralOptions("", [], "", "Montants financés (€)", "variwide"), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="overview-by-structure">

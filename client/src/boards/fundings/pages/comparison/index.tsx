@@ -1,7 +1,9 @@
 import { Alert, Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
+import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
 import YearSelector from "../../components/year-selector";
+import navigationConfig from "../navigation-config.json";
 import Dispersion from "./charts/dispersion";
 import ProjectsByStructures from "./charts/projects-by-structures";
 import StructuresSelector from "./components/structures-selector";
@@ -15,6 +17,7 @@ export default function Comparison() {
 
   return (
     <Container className="board-fundings fr-pt-3w">
+      <CustomBreadcrumb config={navigationConfig} />
       <Row gutters>
         <Col>
           <StructuresSelector />

@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -89,17 +89,21 @@ export default function ProjectsByStructures() {
     sources: FundingsSources,
   };
 
-  const options: object = {
-    ...getGeneralOptions("", [], "", field === "projects" ? axisProjects : axisBudget),
+  const localOptions = {
     legend: { reversed: true },
-    plotOptions: { series: { dataLabels: {
-      enabled: true,
-      formatter: function(this: any) { return field === "projects" ? this.y : `${formatCompactNumber(this.y)} €`},
-    }, stacking: "normal" } },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true,
+          formatter: function (this: any) { return field === "projects" ? this.y : `${formatCompactNumber(this.y)} €` },
+        },
+        stacking: "normal",
+      }
+    },
     series,
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
-    xAxis: { categories },
   };
+  const options: object = deepMerge(getGeneralOptions("", categories, "", field === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structures">

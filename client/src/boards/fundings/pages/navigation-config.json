@@ -1,0 +1,26 @@
+{
+  "home": {
+    "label": {
+      "fr": "Accueil"
+    },
+    "link": "/fundings/home"
+  },
+  "structures": {
+    "label": {
+      "fr": "Vue par structure"
+    },
+    "link": "/fundings/structures"
+  },
+  "comparison": {
+    "label": {
+      "fr": "Comparaison entre structure"
+    },
+    "link": "/fundings/comparison"
+  },
+  "fundings": {
+    "label": {
+      "fr": "Financements"
+    },
+    "link": "/fundings/home"
+  }
+}

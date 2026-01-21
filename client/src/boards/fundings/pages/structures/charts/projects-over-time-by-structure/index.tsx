@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, getColorFromFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -88,13 +88,9 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     sources: FundingsSources,
   };
 
-  const options: object = {
-    ...getGeneralOptions("", [], "Année de début du projet", field === "projects" ? axisProjects : axisBudget, "area"),
-    tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
+  const localOptions = {
     plotOptions: {
-      series: {
-        pointStart: Number(yearMin)
-      },
+      series: { pointStart: Number(yearMin) },
       area: {
         stacking: "normal",
         marker: {
@@ -106,7 +102,9 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
       }
     },
     series,
+    tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
   };
+  const options: object = deepMerge(getGeneralOptions("", [], "Année de début du projet", field === "projects" ? axisProjects : axisBudget, "area"), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-over-time-by-structure">

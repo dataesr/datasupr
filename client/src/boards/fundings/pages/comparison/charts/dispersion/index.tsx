@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { formatCompactNumber, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -81,9 +81,8 @@ export default function Dispersion() {
     title: `Nombre de projets financés et leurs montants par structure ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
-  const options: object = {
-    ...getGeneralOptions("", [], "", "", "bubble"),
-    chart: { height: "600px", plotBorderWidth: 1, type: "bubble", zooming: { type: "xy" } },
+  const localOptions = {
+    chart: { plotBorderWidth: 1, type: "bubble", zooming: { type: "xy" } },
     legend: { enabled: true },
     plotOptions: { series: { dataLabels: { enabled: true, format: "{point.name}" } } },
     series,
@@ -113,8 +112,9 @@ export default function Dispersion() {
         zIndex: 3
       }],
       title: { text: "Montants financés (€)" },
-    },
+    }
   };
+  const options: object = deepMerge(getGeneralOptions("", [], "", "", "bubble"), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="dispersion">

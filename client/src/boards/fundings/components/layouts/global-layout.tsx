@@ -15,10 +15,10 @@ export default function GlobalLayout() {
   useEffect(() => {
     if (!searchParams.get("yearMax") || !searchParams.get("yearMin")) {
       if (!searchParams.get("yearMax")) {
-        searchParams.set("yearMax", String(years[years.length - 1]));
+        searchParams.set("yearMax", String(years[years.length - 2]));
       }
       if (!searchParams.get("yearMin")) {
-        searchParams.set("yearMin", String(years[years.length - 1]));
+        searchParams.set("yearMin", String(years[years.length - 2]));
       }
       setSearchParams(searchParams);
     }
@@ -54,7 +54,10 @@ export default function GlobalLayout() {
                       </p>
                     </a>
                   </div>
-                  <Service name="Financement par appels à projets" />
+                  <Service
+                    name="Financement par appels à projets"
+                    tagline="Indicateurs sur le financement des structures via les appels à projets."
+                  />
                   <div className="fr-header__navbar">
                     <button
                       data-fr-opened="false"
