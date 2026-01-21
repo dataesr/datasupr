@@ -1,8 +1,8 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
-import { SECTION_COLORS } from "../../../constants/colors";
-import { useMetricEvolution } from "./api";
-import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
-import "./styles.scss";
+import { SECTION_COLORS } from "../../../../constants/colors";
+import { useMetricEvolution } from "../api";
+import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
+import "../styles.scss";
 
 const SECTION_COLOR = SECTION_COLORS.moyensHumains;
 

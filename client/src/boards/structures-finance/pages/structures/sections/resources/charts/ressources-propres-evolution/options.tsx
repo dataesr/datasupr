@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
-import { CHART_COLORS } from "../../../../constants/colors";
-import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
+import { CHART_COLORS } from "../../../../../../constants/colors";
+import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 
 interface EvolutionDataItem {
   exercice: number;
@@ -78,17 +78,33 @@ const RESSOURCES_CATEGORIES = [
 export { RESSOURCES_CATEGORIES };
 
 export const createRessourcesPropresEvolutionChartOptions = (
-  data: EvolutionDataItem[]
+  data: EvolutionDataItem[],
+  mode: "value" | "percentage" = "value"
 ): Highcharts.Options => {
   const sortedData = [...data].sort((a, b) => a.exercice - b.exercice);
   const years = sortedData.map((d) => String(d.exercice));
+
+  // Calculer les totaux par année pour le mode pourcentage
+  const totalsPerYear = sortedData.map((d) =>
+    RESSOURCES_CATEGORIES.reduce(
+      (sum, cat) => sum + ((d as any)[cat.key] || 0),
+      0
+    )
+  );
 
   const series: Highcharts.SeriesColumnOptions[] = RESSOURCES_CATEGORIES.map(
     (cat) => ({
       type: "column" as const,
       name: cat.label,
       color: cat.color,
-      data: sortedData.map((d) => (d as any)[cat.key] || 0),
+      data: sortedData.map((d, index) => {
+        const value = (d as any)[cat.key] || 0;
+        if (mode === "percentage") {
+          const total = totalsPerYear[index];
+          return total > 0 ? (value / total) * 100 : 0;
+        }
+        return value;
+      }),
     })
   );
 
@@ -105,8 +121,9 @@ export const createRessourcesPropresEvolutionChartOptions = (
     },
     yAxis: {
       min: 0,
+      max: mode === "percentage" ? 100 : undefined,
       title: {
-        text: "Montant (€)",
+        text: mode === "percentage" ? "Part (%)" : "Montant (€)",
       },
       stackLabels: {
         enabled: false,
@@ -114,6 +131,9 @@ export const createRessourcesPropresEvolutionChartOptions = (
       labels: {
         formatter: function () {
           const value = this.value as number;
+          if (mode === "percentage") {
+            return value + " %";
+          }
           if (value >= 1000000) {
             return (
               Highcharts.numberFormat(value / 1000000, 1, ",", " ") + " M€"
@@ -148,25 +168,30 @@ export const createRessourcesPropresEvolutionChartOptions = (
           const value = point.y || 0;
           total += value;
           if (value > 0) {
-            html += `<span style="color:${point.color}">●</span> ${
-              point.series.name
-            }: <b>${Highcharts.numberFormat(value, 0, ",", " ")} €</b><br/>`;
+            if (mode === "percentage") {
+              html += `<span style="color:${point.color}">●</span> ${
+                point.series.name
+              }: <b>${Highcharts.numberFormat(value, 1, ",", " ")} %</b><br/>`;
+            } else {
+              html += `<span style="color:${point.color}">●</span> ${
+                point.series.name
+              }: <b>${Highcharts.numberFormat(value, 0, ",", " ")} €</b><br/>`;
+            }
           }
         });
 
-        html += `<br/><b>Total: ${Highcharts.numberFormat(
-          total,
-          0,
-          ",",
-          " "
-        )} €</b></div>`;
+        if (mode === "percentage") {
+          html += `<br/><b>Total: ${Highcharts.numberFormat(total, 1, ",", " ")} %</b></div>`;
+        } else {
+          html += `<br/><b>Total: ${Highcharts.numberFormat(total, 0, ",", " ")} €</b></div>`;
+        }
 
         return html;
       },
     },
     plotOptions: {
       column: {
-        stacking: "normal",
+        stacking: mode === "percentage" ? "percent" : "normal",
         dataLabels: {
           enabled: false,
         },

@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "./api";
-import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { CHART_COLORS } from "../../../../constants/colors";
 import { createStackedEvolutionChartOptions } from "./options";
 import { RenderDataStacked } from "./render-data";
+import { CHART_COLORS } from "../../../../../../constants/colors";
+import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 type ViewType = "cycles" | "degres" | "disciplines" | "diplomes";
 

@@ -1,5 +1,5 @@
 import Highcharts from "highcharts";
-import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
+import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 
 interface EvolutionData {
   exercice: number;

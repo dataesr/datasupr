@@ -1,10 +1,10 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
-import { useMetricEvolution } from "./api";
-import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
-import { SECTION_COLORS } from "../../../constants/colors";
-import RessourcesPropresChart from "../charts/ressources-propres";
-import RessourcesPropresEvolutionChart from "../charts/ressources-propres-evolution";
-import "./styles.scss";
+import { useMetricEvolution } from "../api";
+import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
+import { SECTION_COLORS } from "../../../../constants/colors";
+import RessourcesPropresChart from "./charts/ressources-propres";
+import RessourcesPropresEvolutionChart from "./charts/ressources-propres-evolution";
+import "../styles.scss";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";

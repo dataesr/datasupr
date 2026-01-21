@@ -3,7 +3,7 @@ import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import {
   PREDEFINED_ANALYSES,
   type AnalysisKey,
-} from "../../pages/structures/charts/evolution";
+} from "../../pages/structures/sections/analyses/charts/evolution";
 import "./styles.scss";
 
 interface AnalysisFilterProps {

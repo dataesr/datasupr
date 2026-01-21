@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { Row, Col } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "./api";
-import ChartWrapper from "../../../../../../components/chart-wrapper";
 import {
   createEvolutionChartOptions,
   createStackedEvolutionChartOptions,
@@ -11,7 +10,11 @@ import {
   RenderDataBase100,
   RenderDataStacked,
 } from "./render-data";
-import { METRIC_COLORS, CHART_COLORS } from "../../../../constants/colors";
+import {
+  CHART_COLORS,
+  METRIC_COLORS,
+} from "../../../../../../constants/colors";
+import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 interface EvolutionChartProps {
   etablissementId: string;

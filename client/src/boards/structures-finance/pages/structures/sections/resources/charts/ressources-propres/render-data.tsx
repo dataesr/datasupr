@@ -1,4 +1,4 @@
-import { CHART_COLORS } from "../../../../constants/colors";
+import { CHART_COLORS } from "../../../../../../constants/colors";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";

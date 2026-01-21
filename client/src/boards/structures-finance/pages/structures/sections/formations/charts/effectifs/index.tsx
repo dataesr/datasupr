@@ -17,7 +17,7 @@ import {
   RenderDataDiplomes,
   RenderDataDegrees,
 } from "./render-data";
-import ChartWrapper from "../../../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 interface EffectifsChartProps {
   data: any;

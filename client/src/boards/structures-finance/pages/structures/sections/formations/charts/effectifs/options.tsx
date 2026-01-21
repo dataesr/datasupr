@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
-import { CHART_COLORS } from "../../../../constants/colors";
-import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
+import { CHART_COLORS } from "../../../../../../constants/colors";
+import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 interface EffectifsData {
   effectif_sans_cpge?: number;
   effectif_sans_cpge_l?: number;

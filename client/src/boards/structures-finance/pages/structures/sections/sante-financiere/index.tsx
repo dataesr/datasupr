@@ -1,8 +1,8 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
-import { useMetricEvolution } from "./api";
-import { MetricChartCard } from "../../../../../components/metric-chart-card/metric-chart-card";
-import { SECTION_COLORS } from "../../../constants/colors";
-import "./styles.scss";
+import { useMetricEvolution } from "../api";
+import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
+import { SECTION_COLORS } from "../../../../constants/colors";
+import "../styles.scss";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";

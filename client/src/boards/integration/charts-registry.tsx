@@ -71,11 +71,11 @@ export const chartsRegistry = {
   // Structures Finance
   ressourcesPropres: lazy(
     () =>
-      import("../structures-finance/pages/structures/charts/ressources-propres")
+      import("../structures-finance/pages/structures/sections/resources/charts/ressources-propres")
   ),
   ressourcesPropresEvolution: lazy(
     () =>
-      import("../structures-finance/pages/structures/charts/ressources-propres-evolution")
+      import("../structures-finance/pages/structures/sections/resources/charts/ressources-propres-evolution")
   ),
 };
 

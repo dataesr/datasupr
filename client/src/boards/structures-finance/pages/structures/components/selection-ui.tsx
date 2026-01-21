@@ -61,10 +61,11 @@ export default function SelectionUI({
           return {
             id,
             hasValidPaysageId: !!etab.etablissement_id_paysage,
-            label: `${displayName}${etab.etablissement_actuel_region || etab.region
+            label: `${displayName}${
+              etab.etablissement_actuel_region || etab.region
                 ? ` — ${etab.etablissement_actuel_region || etab.region}`
                 : ""
-              }`,
+            }`,
             searchableText: searchText,
             subtitle: etab.champ_recherche,
             data: etab,

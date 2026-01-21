@@ -3,9 +3,9 @@ import { Row, Col } from "@dataesr/dsfr-plus";
 import EvolutionChart, {
   useAnalysesWithData,
   type AnalysisKey,
-} from "../charts/evolution";
-import AnalysisFilter from "../../../components/analysis-filter";
-import "./styles.scss";
+} from "./charts/evolution";
+import AnalysisFilter from "../../../../components/analysis-filter";
+import "../styles.scss";
 
 interface AnalysesSectionProps {
   data: any;

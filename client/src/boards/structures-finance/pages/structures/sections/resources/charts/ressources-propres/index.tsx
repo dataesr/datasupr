@@ -5,7 +5,7 @@ import "highcharts/modules/treemap";
 import { useFinanceEtablissementEvolution } from "./api";
 import { createRessourcesPropresChartOptions } from "./options";
 import { RenderData } from "./render-data";
-import ChartWrapper from "../../../../../../components/chart-wrapper";
+import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
