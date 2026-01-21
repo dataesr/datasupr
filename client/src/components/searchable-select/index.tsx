@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import "./searchable-select.scss";
 
 interface SearchableSelectProps {
-  canSelectAll?: boolean = false,
+  canSelectAll?: boolean,
   options: Array<{
     id: string;
     label: string;
@@ -16,7 +16,7 @@ interface SearchableSelectProps {
 }
 
 export default function SearchableSelect({
-  canSelectAll,
+  canSelectAll = false,
   options,
   value,
   onChange,
