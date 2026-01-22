@@ -16,6 +16,7 @@ interface MultipleEstablishmentsResponse {
     date_de_creation?: string;
     date_de_fermeture?: string;
     effectif_sans_cpge?: number;
+    anuniv: string;
   }>;
 }
 

@@ -27,15 +27,15 @@ function HeroSection() {
               <div className="accueil-hero__cta">
                 <button
                   className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
-                  onClick={() => navigate("/structures-finance/national")}
+                  onClick={() => navigate("/structures-finance/etablissements")}
                 >
-                  Vue nationale
+                  Explorer un établissement
                 </button>
                 <button
                   className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
-                  onClick={() => navigate("/structures-finance/etablissements")}
+                  onClick={() => navigate("/structures-finance/national")}
                 >
-                  Situation d’un établissement{" "}
+                  Explorer la vue nationale
                 </button>
               </div>
             </div>

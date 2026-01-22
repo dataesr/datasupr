@@ -3,7 +3,7 @@ import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
 import RessourcesPropresChart from "./charts/ressources-propres";
-import RessourcesPropresEvolutionChart from "./charts/ressources-propres-evolution";
+// import RessourcesPropresEvolutionChart from "./charts/ressources-propres-evolution";
 import "../styles.scss";
 
 const euro = (n?: number) =>
@@ -104,7 +104,7 @@ export function FinancementsSection({
 
           <Col xs="12" md="3">
             <MetricChartCard
-              title={`SCSP par étudiant financé ${data.anuniv}`}
+              title={`SCSP par étudiant financé`}
               value={`${euro(data.scsp_par_etudiants)} €`}
               detail={
                 data.scsp_etudiants
@@ -124,12 +124,12 @@ export function FinancementsSection({
           </Col>
           <Col xs="12" md="3">
             <MetricChartCard
-              title="Nombre d'étudiants financés par la SCSP"
+              title={`Nombre d'étudiants financés par la SCSP`}
               value={
                 data.scsp_etudiants != null
                   ? `${data.scsp_etudiants.toLocaleString("fr-FR")} étudiant${
                       data.scsp_etudiants > 1 ? "s" : ""
-                    }`
+                    } en ${data.anuniv}`
                   : "—"
               }
               color={SECTION_COLOR}
@@ -237,11 +237,11 @@ export function FinancementsSection({
         />
       </div>
 
-      <div className="fr-mb-4w">
+      {/* <div className="fr-mb-4w">
         <RessourcesPropresEvolutionChart
           etablissementName={data?.etablissement_lib}
         />
-      </div>
+      </div> */}
     </div>
   );
 }
