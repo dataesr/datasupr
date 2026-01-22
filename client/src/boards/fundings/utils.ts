@@ -64,7 +64,7 @@ const getColorByFunder = (funder: string): string => {
 
 const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
   { structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
-  return {
+  const query = {
     size: 0,
     query: {
       bool: {
@@ -77,11 +77,14 @@ const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = y
           { term: { "participant_kind.keyword": "Secteur public" } },
           { terms: { "project_type.keyword": funders } },
           { terms: { "participant_typologie_1.keyword": typologies } },
-          { terms: { "participant_id.keyword": structures } }
         ],
       },
     },
   };
+  if (structures?.length ?? 0 > 0) {
+    query.query.bool.filter.push({ terms: { "participant_id.keyword": structures } });
+  };
+  return query;
 };
 
 const getGeneralOptions = (
