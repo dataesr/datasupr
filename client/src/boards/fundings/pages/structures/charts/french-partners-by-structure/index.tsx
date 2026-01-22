@@ -117,6 +117,12 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   const datalabelProject = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
+  const stacklabelProject = function (this: any) {
+    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
+  };
+  const stacklabelBudget = function (this: any) {
+    return `${formatCompactNumber(this.total)} €`;
+  };
   const tooltipBudget = function (this: any) {
     return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
@@ -132,6 +138,15 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
 
   const localOptions = {
     legend: { enabled: true, reversed: true },
+    yAxis: {
+      stackLabels: {
+        enabled: true,
+        style: {
+          fontWeight: 'bold'
+        },
+        formatter: field === "projects" ? stacklabelProject : stacklabelBudget,
+      }
+    },
     plotOptions: {
       series: {
         dataLabels: {

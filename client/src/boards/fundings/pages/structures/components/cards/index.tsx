@@ -117,7 +117,7 @@ export default function Cards() {
                 color={getColorByFunder(funder)}
                 data={dataFunders[funder].projects}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
-                title={`Projets financés par ${funder}`}
+                title={`Projets ${funder}`}
                 tooltipFormatter={function (this: any) { return `${this.y - 1} project(s) par ${funder} en ${this.key}` }}
                 value={`${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0)} projet${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0) > 1 ? 's' : ''}`}
                 yAxisMax={maxProjects}
@@ -160,7 +160,7 @@ export default function Cards() {
                 color={getColorByFunder(funder)}
                 data={dataFunders[funder].budget}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
-                title={`Montants financés par ${funder}`}
+                title={`Montants des projets ${funder}`}
                 tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y - 1)} € par ${funder} en ${this.key}` }}
                 value={`${formatCompactNumber(dataFunders[funder].budget.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
                 yAxisMax={maxBudget}
