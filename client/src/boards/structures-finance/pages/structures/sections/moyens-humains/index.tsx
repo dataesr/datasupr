@@ -32,7 +32,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
         <Row gutters>
           <Col xs="12" md="6">
             <MetricChartCard
-              title="Nombre d'emplois (ETPT)"
+              title="Nombre d'emplois"
               value={
                 data.emploi_etpt != null
                   ? data.emploi_etpt.toLocaleString("fr-FR", {
@@ -40,7 +40,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                     })
                   : "—"
               }
-              detail="Équivalent temps plein travaillé"
+              detail="Équivalent temps plein travaillé (ETPT)"
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution("emploi_etpt")}
             />
