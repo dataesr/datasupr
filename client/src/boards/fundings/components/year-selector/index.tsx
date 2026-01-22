@@ -55,7 +55,7 @@ export default function YearSelector() {
       </Col>
       {(Number(yearMax) >= 2024 && Number(yearMin) <= 2025) && (
         <Col xs="6">
-          <Alert variant="warning" title="Attention" description="Les données 2024 et 2025 sont incomplètes" size="sm" />
+          <Alert variant="warning" title="Attention" description="Les sources disponibles ne fournissent que des données provisoires pour 2024 et 2025" size="sm" />
         </Col>
       )}
       {(Number(yearMin) > Number(yearMax)) && (
