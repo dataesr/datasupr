@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, funders, formatCompactNumber, getColorByFunder, getEsQuery, getGeneralOptions } from "../../../../utils.ts";
+import { deepMerge, funders, formatCompactNumber, getColorByFunder, getEsQuery, getGeneralOptions, years } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -17,12 +17,10 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   const [field, setField] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
-  const yearMax = searchParams.get("yearMax");
-  const yearMin = searchParams.get("yearMin");
   const color = useChartColor();
 
   const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ structures: [structure] }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -53,7 +51,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['funding-projects-over-time-by-structure', structure, yearMax, yearMin],
+    queryKey: ['funding-projects-over-time-by-structure', structure],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -65,7 +63,6 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
       }).then((response) => response.json()),
   });
 
-  const years: number[] = Array.from(Array(Number(yearMax) - Number(yearMin) + 1).keys()).map((item) => item + Number(yearMin));
   const series = funders.map((funder) => ({
     color: getColorByFunder(funder),
     data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.by_project_year?.buckets.find((item) => item.key === year)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
@@ -91,7 +88,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   const localOptions = {
     legend: { enabled: true, reversed: true },
     plotOptions: {
-      series: { pointStart: Number(yearMin) },
+      series: { pointStart: Number(years[0]) },
       area: {
         stacking: "normal",
         marker: {
