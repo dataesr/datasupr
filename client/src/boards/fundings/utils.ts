@@ -64,7 +64,7 @@ const getColorByFunder = (funder: string): string => {
 
 const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
   { structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
-  const query = {
+  const query: any = {
     size: 0,
     query: {
       bool: {
