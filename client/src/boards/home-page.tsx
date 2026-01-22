@@ -90,7 +90,7 @@ export default function HomePage() {
     description_fr: "Indicateurs sur le financement des structures via les appels à projets.",
     isMultilingual: false,
     name_fr: "Financement par appels à projets",
-    url: "/fundings",
+    url: "/financements-par-aap",
   });
 
   return (
