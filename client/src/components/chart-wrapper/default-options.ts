@@ -96,6 +96,7 @@ export function createChartOptions(
     defaultOptions.xAxis = options.xAxis.map((axis) => {
       return {
         ...axis,
+        gridLineColor: "var(--border-default-grey)",
         labels: {
           autoRotation: [-45, -90],
           style: axisLabelStyle,
@@ -105,6 +106,7 @@ export function createChartOptions(
     });
   } else {
     defaultOptions.xAxis = {
+      gridLineColor: "var(--border-default-grey)",
       labels: {
         autoRotation: [-45, -90],
         style: axisLabelStyle,
@@ -117,6 +119,7 @@ export function createChartOptions(
     defaultOptions.yAxis = options.yAxis.map((axis) => {
       return {
         ...axis,
+        gridLineColor: "var(--border-default-grey)",
         labels: {
           style: axisLabelStyle,
         },
@@ -125,6 +128,7 @@ export function createChartOptions(
     });
   } else {
     defaultOptions.yAxis = {
+      gridLineColor: "var(--border-default-grey)",
       labels: {
         style: axisLabelStyle,
       },
