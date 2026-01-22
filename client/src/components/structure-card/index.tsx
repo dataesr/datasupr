@@ -37,8 +37,8 @@ export default function StructureCard({
     >
       <h2 className="structure-card__title">{title}</h2>
 
-      {region && <p className="structure-card__meta">{region}</p>}
       {type !== undefined && <p className="structure-card__meta">{type}</p>}
+      {region && <p className="structure-card__meta">{region}</p>}
 
       {studentCount !== undefined && (
         <p className="structure-card__stat">
