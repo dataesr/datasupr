@@ -37,8 +37,8 @@ export const FundingsSources = [
   },
   {
     label: {
-      en: React.createElement(React.Fragment, null, "Horizon Europe"),
-      fr: React.createElement(React.Fragment, null, "Horizon Europe"),
+      en: React.createElement(React.Fragment, null, "European projects"),
+      fr: React.createElement(React.Fragment, null, "Projets européens"),
     },
     update: new Date("2026-01-09"),
     url: {

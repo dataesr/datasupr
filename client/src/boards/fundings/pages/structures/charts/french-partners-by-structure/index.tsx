@@ -95,6 +95,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   };
 
   const config = {
+    comment: { "fr": <>Lorem Ipsum</> },
     id: "frenchPartnersByStructure",
     sources: FundingsSources,
   };

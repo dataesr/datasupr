@@ -78,6 +78,7 @@ export default function Dispersion() {
   const meanY = ys.length > 0 ? ys.reduce((prev, current) => prev + current) / ys.length : undefined;
 
   const config = {
+    comment: { "fr": <>Lorem Ipsum</> },
     id: "dispersion",
     sources: FundingsSources,
     title: `Nombre de projets financés et les montants associés pour les participants sélectionnés ${getYearRangeLabel({ yearMax, yearMin })}`,

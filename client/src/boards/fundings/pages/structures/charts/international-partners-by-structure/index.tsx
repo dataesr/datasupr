@@ -87,6 +87,7 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   };
 
   const config = {
+    comment: { "fr": <>Lorem Ipsum</> },
     id: "internationalPartnersByStructure",
     sources: FundingsSources,
   };
