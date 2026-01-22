@@ -100,8 +100,6 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
               { $ifNull: ["$recettes_propres", 0] },
             ],
           },
-          // Les taux par niveau/filière sont identiques au taux global
-          // car les emplois ne sont pas ventilés par niveau ou filière
           taux_encadrement_l: "$taux_encadrement",
           taux_encadrement_m: "$taux_encadrement",
           taux_encadrement_d: "$taux_encadrement",
@@ -220,6 +218,7 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
           emplois_total: 1,
           part_ressources_propres: 1,
           recettes_totales: 1,
+          anuniv: 1,
         },
       },
       { $sort: { etablissement_actuel_lib: 1 } },

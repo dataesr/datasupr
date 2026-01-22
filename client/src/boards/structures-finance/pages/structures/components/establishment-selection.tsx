@@ -113,24 +113,21 @@ export default function EstablishmentSelection() {
                 etab.etablissement_id_paysage ||
                 etab.etablissement_id_paysage_actuel ||
                 etab.id;
-              const displayName =
-                etab.etablissement_actuel_lib ||
-                etab.etablissement_lib ||
-                etab.nom;
-              const region = etab.etablissement_actuel_region || etab.region;
-              const category =
-                etab.etablissement_actuel_categorie || etab.categorie;
-              const studentCount = etab.effectif_sans_cpge || etab.effectif;
+              const displayName = etab.etablissement_lib || "";
               const type = etab.etablissement_actuel_type || "";
+              const region = etab.etablissement_actuel_region;
+              const studentCount = etab.effectif_sans_cpge;
+              const year = etab.anuniv;
+              console.log(etab);
 
               return (
                 <Col key={id} xs="12" md="6" lg="4">
                   <StructureCard
                     title={displayName}
                     region={region}
-                    category={category}
                     studentCount={studentCount}
                     type={type}
+                    year={year}
                     onClick={() => handleEtablissementSelect(id)}
                   />
                 </Col>

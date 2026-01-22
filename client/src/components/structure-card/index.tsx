@@ -3,19 +3,19 @@ import "./styles.scss";
 interface StructureCardProps {
   title: string;
   region?: string;
-  category?: string;
   studentCount?: number;
   onClick?: () => void;
   className?: string;
   type?: string;
+  year?: string | number;
 }
 
 export default function StructureCard({
   title,
   region,
-  category,
   studentCount,
   type,
+  year,
   onClick,
   className = "",
 }: StructureCardProps) {
@@ -25,6 +25,7 @@ export default function StructureCard({
       onClick();
     }
   };
+  console.log(year);
 
   return (
     <div
@@ -36,18 +37,12 @@ export default function StructureCard({
     >
       <h2 className="structure-card__title">{title}</h2>
 
-      {(region || category) && (
-        <p className="structure-card__meta">
-          {region}
-          {region && category && <> • </>}
-          {category}
-        </p>
-      )}
+      {region && <p className="structure-card__meta">{region}</p>}
       {type !== undefined && <p className="structure-card__meta">{type}</p>}
 
       {studentCount !== undefined && (
         <p className="structure-card__stat">
-          {studentCount.toLocaleString("fr-FR")} étudiants inscrits
+          {studentCount.toLocaleString("fr-FR")} étudiants inscrits en {year}
         </p>
       )}
     </div>

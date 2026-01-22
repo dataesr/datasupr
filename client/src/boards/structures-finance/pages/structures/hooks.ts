@@ -206,6 +206,12 @@ export function useFilteredEtablissements(
       );
     }
 
+    filtered.sort((a: any, b: any) => {
+      const nameA = a.etablissement_lib || a.nom || "";
+      const nameB = b.etablissement_lib || b.nom || "";
+      return nameA.localeCompare(nameB, "fr", { sensitivity: "base" });
+    });
+
     return filtered;
   }, [allEtablissements, selectedType, selectedRegion, selectedTypologie]);
 }
