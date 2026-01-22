@@ -104,7 +104,7 @@ export default function Cards() {
                   className="fr-text--sm fr-text--bold fr-mb-1v"
                   style={{ letterSpacing: "0.5px", textTransform: "uppercase" }}
                 >
-                  {`Nombre de projets financés ${getYearRangeLabel({ yearMax, yearMin })} par financeur`}
+                  {`Nombre de projets financés auxquels l'établissement participe`}
                 </p>
               </div>
             </div>
@@ -147,7 +147,7 @@ export default function Cards() {
                   className="fr-text--sm fr-text--bold fr-mb-1v"
                   style={{ letterSpacing: "0.5px", textTransform: "uppercase" }}
                 >
-                  {`Montants financés ${getYearRangeLabel({ yearMax, yearMin })} par financeur`}
+                  {`Montants financés pour les projets auxquels l'établissement participe`}
                 </p>
               </div>
             </div>

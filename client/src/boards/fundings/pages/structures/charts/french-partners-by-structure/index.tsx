@@ -81,10 +81,10 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
   const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${name}</b>`;
+    return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
 
   const config = {
@@ -111,7 +111,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   return (
     <div className={`chart-container chart-container--${color}`} id="french-partners-by-structure">
       <Title as="h2" look="h6">
-        {`Partenaires français de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {`Principaux partenaires français de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
       <SegmentedControl name="french-partners-by-structure-segmented">
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />

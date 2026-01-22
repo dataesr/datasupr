@@ -82,13 +82,13 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   const datalabelProject = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  const titleBudget = `Montant total des projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
-  const titleProjects = `Nombre de projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const titleBudget = `Montant total des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const titleProjects = `Nombre de projets financés auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${name}</b>`;
+    return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
   };
   const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
 
   const config = {

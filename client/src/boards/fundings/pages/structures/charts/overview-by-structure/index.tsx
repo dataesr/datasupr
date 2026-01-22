@@ -64,7 +64,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   const config = {
     id: "overviewByStructure",
     sources: FundingsSources,
-    title: `Vue relative des financements de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`,
+    title: `Structure du financement : nombre de projets et montants associés pour les projets auxquels participe l'établissement (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   let hiddenPoints: string[] = [];
@@ -114,7 +114,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     }],
     tooltip: {
       formatter: function (this: any) {
-        return `<b>${this.z}</b> projets pour un montant total de <b>${formatCompactNumber(this.y)} €</b> ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.name}</b> auxquels prend part <b>${name}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> financés pour <b>${this.z}</b> projets <b>${this.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       },
     },
     xAxis: {
@@ -126,7 +126,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       type: "category",
     },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", [], "", "Montants financés (€)", "variwide"), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", ['TODO'], "Nombre de projets", "Montants financés (€)", "variwide"), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="overview-by-structure">

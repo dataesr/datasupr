@@ -73,15 +73,15 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     name: funder
   })).reverse();
 
-  const titleProjects = `Nombre de projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}, par année de début du projet`;
-  const titleBudget = `Montant total des projets de ${name} par financeur ${getYearRangeLabel({ yearMax, yearMin })}, par année de début du projet`;
+  const titleProjects = `Evolution temporelle du nombre de projets auxquels participe l'établissement (${name})`;
+  const titleBudget = `Evolution temporelle du montant financé pour les projets auxquels participe l'établissement (${name})`;
   const axisProjects = "Nombre de projets financés";
   const axisBudget = "Montants financés (€)";
   const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté en <b>${this.x}</b> grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${name}</b>`;
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> auxquels prend part <b>${name}</b>`;
   };
   const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés en <b>${this.x}</b> auxquels prend part <b>${name}</b>`;
+    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
   };
   const config = {
     id: "projectsOverTimeByStructure",
