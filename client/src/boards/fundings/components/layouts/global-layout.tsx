@@ -55,6 +55,7 @@ export default function GlobalLayout() {
                     </a>
                   </div>
                   <Service
+                    href="/financements-par-aap"
                     name="Financements par appel à projet"
                     tagline="Suivi des financements par appel à projet dans les institutions françaises"
                   />

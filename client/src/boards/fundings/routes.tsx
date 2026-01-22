@@ -32,9 +32,10 @@ export default function FundingsRoutes() {
     <Routes>
       <Route element={<GlobalLayout />}>
         <Route index element={<Navigate to="home" replace />} />
-        <Route path="home" element={<RouteWithTitle titleKey="home" element={<Home />} />} />
-        <Route path="structures" element={<RouteWithTitle titleKey="structures" element={<Structures />} />} />
-        <Route path="comparison" element={<RouteWithTitle titleKey="comparison" element={<Comparison />} />} />
+        <Route path="/" element={<Navigate to="home" replace />} />
+        <Route path="/home" element={<RouteWithTitle titleKey="home" element={<Home />} />} />
+        <Route path="/structures" element={<RouteWithTitle titleKey="structures" element={<Structures />} />} />
+        <Route path="/comparison" element={<RouteWithTitle titleKey="comparison" element={<Comparison />} />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
