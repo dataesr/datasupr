@@ -101,6 +101,30 @@ export const chartsRegistry = {
     () =>
       import("../structures-finance/pages/structures/sections/formations/charts/effectifs-evolution")
   ),
+  "evolution-stacked": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+  ),
+  "evolution-single": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+  ),
+  "evolution-comparison": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+  ),
+  "evolution-part": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+  ),
+  "evolution-metric1": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+  ),
+  "evolution-metric2": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+  ),
 };
 
 export type ChartId = keyof typeof chartsRegistry;
