@@ -32,7 +32,6 @@ export default function EstablishmentView() {
   const { data: yearsData } = useFinanceYears();
   const years = useMemo(() => yearsData?.years || [], [yearsData]);
 
-  // Vérifier si l'établissement actuel a plusieurs établissements historiques
   const { data: multiplesData, isLoading: isCheckingMultiples } =
     useCheckMultipleEstablishments(
       selectedEtablissement,
@@ -40,8 +39,6 @@ export default function EstablishmentView() {
       !!selectedEtablissement && !!(selectedYear || years[0]) && !useHistorical
     );
 
-  // Vérifier si l'établissement existe pour l'année sélectionnée
-  // (que ce soit un établissement historique ou actuel)
   const { data: existsData, isLoading: isCheckingExists } =
     useCheckEstablishmentExists(
       selectedEtablissement,
@@ -49,11 +46,9 @@ export default function EstablishmentView() {
       !!selectedEtablissement && !!(selectedYear || years[0])
     );
 
-  // Déterminer si on doit afficher le sélecteur
   const showMultipleSelector =
     !useHistorical && multiplesData?.hasMultiples && !isCheckingMultiples;
 
-  // Déterminer si l'établissement n'existe pas pour cette année
   const showNotExistsAlert =
     existsData && !existsData.exists && existsData.etablissementActuel;
 

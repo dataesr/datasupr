@@ -98,11 +98,11 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                     <div>
                       <p className="fr-text--lg fr-text--bold fr-mb-0">
                         {data.effectif_sans_cpge.toLocaleString("fr-FR")}{" "}
-                        étudiants
+                        étudiants inscrits
                       </p>
                       <p className="fr-text--xs fr-mb-0 fr-text-mention--grey">
-                        Inscrits en {data.anuniv} (
-                        {data.part_effectif_sans_cpge_dn?.toFixed(1)}% DN)
+                        dont {data.part_effectif_sans_cpge_dn?.toFixed(1)} %
+                        dans les diplômes nationaux
                       </p>
                     </div>
                   </div>
@@ -204,7 +204,9 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                       <span className="fr-icon-bank-fill" aria-hidden="true" />
                     </div>
                     <div>
-                      <p className="fr-text--lg fr-text--bold fr-mb-0">RCE</p>
+                      <p className="fr-text--lg fr-text--bold fr-mb-0">
+                        RCE depuis {data.rce}
+                      </p>
                       <p className="fr-text--xs fr-mb-0 fr-text-mention--grey">
                         Responsabilités et compétences élargies
                       </p>

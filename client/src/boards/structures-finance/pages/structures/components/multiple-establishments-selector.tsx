@@ -13,6 +13,7 @@ interface Etablissement {
   date_de_creation?: string;
   date_de_fermeture?: string;
   effectif_sans_cpge?: number;
+  anuniv: string;
 }
 
 interface MultipleEstablishmentsSelectorProps {
@@ -61,9 +62,10 @@ export default function MultipleEstablishmentsSelector({
           <Col key={etab.etablissement_id_paysage} xs="12" md="6">
             <StructureCard
               title={etab.etablissement_lib}
-              category={etab.type || etab.typologie}
+              type={etab.type || etab.typologie}
               studentCount={etab.effectif_sans_cpge}
               onClick={() => handleSelect(etab.etablissement_id_paysage)}
+              year={etab.anuniv}
             />
           </Col>
         ))}

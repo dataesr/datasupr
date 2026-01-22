@@ -104,7 +104,7 @@ export function FinancementsSection({
 
           <Col xs="12" md="3">
             <MetricChartCard
-              title={`SCSP par étudiant financé ${data.anuniv}`}
+              title={`SCSP par étudiant financé`}
               value={`${euro(data.scsp_par_etudiants)} €`}
               detail={
                 data.scsp_etudiants
@@ -124,12 +124,12 @@ export function FinancementsSection({
           </Col>
           <Col xs="12" md="3">
             <MetricChartCard
-              title="Nombre d'étudiants financés par la SCSP"
+              title={`Nombre d'étudiants financés par la SCSP`}
               value={
                 data.scsp_etudiants != null
                   ? `${data.scsp_etudiants.toLocaleString("fr-FR")} étudiant${
                       data.scsp_etudiants > 1 ? "s" : ""
-                    }`
+                    } en ${data.anuniv}`
                   : "—"
               }
               color={SECTION_COLOR}

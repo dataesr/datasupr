@@ -236,6 +236,7 @@ router.get(
             date_de_creation: { $first: "$date_de_creation" },
             date_de_fermeture: { $first: "$date_de_fermeture" },
             effectif_sans_cpge: { $first: "$effectif_sans_cpge" },
+            anuniv: { $first: "$anuniv" },
           },
         },
         { $sort: { etablissement_lib: 1 } },
@@ -257,6 +258,7 @@ router.get(
           date_de_creation: doc.date_de_creation,
           date_de_fermeture: doc.date_de_fermeture,
           effectif_sans_cpge: doc.effectif_sans_cpge,
+          anuniv: doc.anuniv,
         })),
       };
 
