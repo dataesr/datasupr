@@ -9,6 +9,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { deepMerge, formatCompactNumber, funders, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
+import { readingKey } from "../../../../../european-projects/pages/overview/charts/programs-funding/utils.tsx";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -95,6 +96,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   };
 
   const config = {
+    comment: { "fr": "Lorem Ipsum" },
     id: "frenchPartnersByStructure",
     sources: FundingsSources,
   };

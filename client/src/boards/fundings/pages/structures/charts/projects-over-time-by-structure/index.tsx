@@ -81,6 +81,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
   };
   const config = {
+    comment: { "fr": "Lorem Ipsum" },
     id: "projectsOverTimeByStructure",
     sources: FundingsSources,
   };

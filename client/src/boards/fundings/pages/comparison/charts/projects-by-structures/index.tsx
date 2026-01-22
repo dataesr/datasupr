@@ -96,6 +96,7 @@ export default function ProjectsByStructures() {
   };
 
   const config = {
+    comment: { "fr": "Lorem Ipsum" },
     id: "projectsByStructures",
     sources: FundingsSources,
   };
