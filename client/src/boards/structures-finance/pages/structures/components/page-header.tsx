@@ -182,39 +182,37 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
               </div>
             )}
 
-            {data.is_rce && (
-              <div className="fr-col-auto">
+            <div className="fr-col-auto">
+              <div
+                className="fr-card fr-card--shadow fr-px-3v fr-py-2w"
+                style={{ overflow: "hidden" }}
+              >
                 <div
-                  className="fr-card fr-card--shadow fr-px-3v fr-py-2w"
-                  style={{ overflow: "hidden" }}
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                  }}
                 >
                   <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                    }}
+                    style={iconStyle(
+                      "--background-contrast-blue-france",
+                      "--text-action-high-blue-france"
+                    )}
                   >
-                    <div
-                      style={iconStyle(
-                        "--background-contrast-blue-france",
-                        "--text-action-high-blue-france"
-                      )}
-                    >
-                      <span className="fr-icon-bank-fill" aria-hidden="true" />
-                    </div>
-                    <div>
-                      <p className="fr-text--lg fr-text--bold fr-mb-0">
-                        RCE depuis {data.rce}
-                      </p>
-                      <p className="fr-text--xs fr-mb-0 fr-text-mention--grey">
-                        Responsabilités et compétences élargies
-                      </p>
-                    </div>
+                    <span className="fr-icon-bank-fill" aria-hidden="true" />
+                  </div>
+                  <div>
+                    <p className="fr-text--lg fr-text--bold fr-mb-0">
+                      {data.is_rce ? `RCE depuis ${data.rce}` : "Non RCE"}
+                    </p>
+                    <p className="fr-text--xs fr-mb-0 fr-text-mention--grey">
+                      Responsabilités et compétences élargies
+                    </p>
                   </div>
                 </div>
               </div>
-            )}
+            </div>
           </div>
         </div>
 
