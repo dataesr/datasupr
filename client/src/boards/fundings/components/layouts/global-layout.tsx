@@ -55,8 +55,8 @@ export default function GlobalLayout() {
                     </a>
                   </div>
                   <Service
-                    name="Financement par appels à projets"
-                    tagline="Indicateurs sur le financement des structures via les appels à projets."
+                    name="Financements par appel à projet"
+                    tagline="Suivi des financements par appel à projet dans les institutions françaises"
                   />
                   <div className="fr-header__navbar">
                     <button

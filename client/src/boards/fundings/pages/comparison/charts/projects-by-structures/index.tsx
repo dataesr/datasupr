@@ -88,14 +88,28 @@ export default function ProjectsByStructures() {
   const datalabelBudget = function (this: any) {
     return `${formatCompactNumber(this.y)} €`;
   };
+  const stacklabelProject = function (this: any) {
+    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
+  };
+  const stacklabelBudget = function (this: any) {
+    return `${formatCompactNumber(this.total)} €`;
+  };
 
   const config = {
     id: "projectsByStructures",
     sources: FundingsSources,
   };
-
   const localOptions = {
     legend: { enabled: true, reversed: true },
+    yAxis: {
+      stackLabels: {
+        enabled: true,
+        style: {
+          fontWeight: 'bold'
+        },
+        formatter: field === "projects" ? stacklabelProject : stacklabelBudget,
+      }
+    },
     plotOptions: {
       series: {
         dataLabels: {
