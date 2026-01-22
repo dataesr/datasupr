@@ -86,10 +86,10 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   const axisBudget = "Montants financés (€)";
   const axisProjects = "Nombre de projets financés";
   const datalabelBudget = function (this: any) {
-    return `${formatCompactNumber(this.y)} €  (${formatPerc(this.y_perc)})`;
+    return `${formatCompactNumber(this.y)} €  (${formatPerc(this.y_perc, 0)})`;
   };
   const datalabelProject = function (this: any) {
-    return `${this.y} projet${this.y > 1 ? 's' : ''} (${formatPerc(this.y_perc)})`;
+    return `${this.y} projet${this.y > 1 ? 's' : ''} (${formatPerc(this.y_perc, 0)})`;
   };
   const titleBudget = `Montant total des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const titleProjects = `Nombre de projets financés auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
