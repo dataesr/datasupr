@@ -10,8 +10,7 @@ import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { deepMerge, formatCompactNumber, funders, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
-const { VITE_APP_SERVER_URL } = import.meta.env;
-
+const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function InternationalPartnersByStructure({ name }: { name: string | undefined }) {
   const [field, setField] = useState("projects");
@@ -54,7 +53,7 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   const { data, isLoading } = useQuery({
     queryKey: ['fundings-international-partners', structure, yearMax, yearMin],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",

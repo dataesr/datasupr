@@ -68,7 +68,6 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       total += (field === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
     };
   });
-  console.log('ttttt', total);
   funders.forEach((funder) => {
     const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
     if ((funderData?.unique_projects?.value ?? 0) > 0) {
@@ -82,7 +81,6 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       count += 1;
     };
   });
-  console.log('ttt', series);
   const axisBudget = "Montants financés (€)";
   const axisProjects = "Nombre de projets financés";
   const datalabelBudget = function (this: any) {

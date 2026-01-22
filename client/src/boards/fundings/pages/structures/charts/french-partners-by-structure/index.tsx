@@ -10,8 +10,7 @@ import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { deepMerge, formatCompactNumber, funders, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
-const { VITE_APP_SERVER_URL } = import.meta.env;
-
+const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function FrenchPartnersByStructure({ name }: { name: string | undefined }) {
   const [field, setField] = useState("projects");
@@ -21,14 +20,22 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   const yearMin = searchParams.get("yearMin");
   const color = useChartColor();
 
+  const orderAgg = {"_count": "desc"}; // si par montant {"sum_budget": "desc"}
+  console.log('ttt', orderAgg);
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),
     aggregations: {
       by_international_partners: {
         terms: {
           field: "co_partners_fr_inst.keyword",
+          order: orderAgg,
         },
         aggregations: {
+          sum_budget: {
+            sum: {
+              field: "project_budgetTotal",
+            },
+          },
           by_project_type: {
             terms: {
               field: "project_type.keyword",
@@ -54,7 +61,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   const { data, isLoading } = useQuery({
     queryKey: ['fundings-french-partners', structure, yearMax, yearMin],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=scanr-participations`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
