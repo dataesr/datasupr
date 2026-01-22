@@ -40,7 +40,7 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <div className="fr-header__logo">
-                    <a href="/fundings" title="Financement par appels à projets - DataESR">
+                    <a href="/financements-par-aap" title="Financement par appels à projets - DataESR">
                       <p className="fr-logo">
                         Ministère
                         <br />
@@ -85,9 +85,9 @@ export default function GlobalLayout() {
               <ul className="fr-nav__list">
                 <li className="fr-nav__item">
                   <Link
-                    to="/fundings/home"
+                    to="/financements-par-aap/home"
                     target="_self"
-                    {...(pathname === "/fundings/home" && { "aria-current": "page" })}
+                    {...(pathname === "/financements-par-aap/home" && { "aria-current": "page" })}
                     className="fr-nav__link"
                   >
                     <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
@@ -96,9 +96,9 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/fundings/structures?${searchParams}`}
+                    to={`/financements-par-aap/structures?${searchParams}`}
                     target="_self"
-                    {...(is("/fundings/structures") && { "aria-current": "page" })}
+                    {...(is("/financements-par-aap/structures") && { "aria-current": "page" })}
                     className="fr-nav__link"
                   >
                     {getI18nLabel("structures")}
@@ -106,9 +106,9 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/fundings/comparison?${searchParams}`}
+                    to={`/financements-par-aap/comparison?${searchParams}`}
                     target="_self"
-                    {...(is("/fundings/comparison") && { "aria-current": "page" })}
+                    {...(is("/financements-par-aap/comparison") && { "aria-current": "page" })}
                     className="fr-nav__link"
                   >
                     {getI18nLabel("comparison")}

@@ -115,15 +115,10 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       },
     },
     xAxis: {
-      labels: {
-        formatter: function (this: any) {
-          return this.axis.series[0].points[this.pos].visible ? this.value : '';
-        },
-      },
       type: "category",
     },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", ['TODO'], "Nombre de projets", "Montants financés (€)", "variwide"), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", undefined, "Nombre de projets", "Montants financés (€)", "variwide"), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="overview-by-structure">

@@ -3,24 +3,24 @@
     "label": {
       "fr": "Accueil"
     },
-    "link": "/fundings/home"
+    "link": "/financements-par-aap/home"
   },
   "structures": {
     "label": {
       "fr": "Vue par structure"
     },
-    "link": "/fundings/structures"
+    "link": "/financements-par-aap/structures"
   },
   "comparison": {
     "label": {
       "fr": "Comparaison entre structure"
     },
-    "link": "/fundings/comparison"
+    "link": "/financements-par-aap/comparison"
   },
-  "fundings": {
+  "financements-par-aap": {
     "label": {
       "fr": "Financements"
     },
-    "link": "/fundings/home"
+    "link": "/financements-par-aap/home"
   }
 }

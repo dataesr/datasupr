@@ -29,7 +29,7 @@ function deepMerge(target, source) {
 export function createChartOptions(
   type: NonNullable<HighchartsInstance.Options["chart"]>["type"],
   options: NonNullable<HighchartsInstance.Options>
-) {
+): HighchartsInstance.Options {
   const rootStyles = getComputedStyle(document.documentElement);
   const labelColor = rootStyles.getPropertyValue("--text-default-grey").trim();
 
@@ -80,66 +80,57 @@ export function createChartOptions(
     credits: { enabled: false },
   };
 
-  const axisLabelStyle = {
-    fontSize: "13px",
-    fontFamily: "Marianne, sans-serif",
-    color: labelColor,
+  const defaultXAxisOptions = {
+    gridLineColor: "var(--border-default-grey)",
+    labels: {
+      autoRotation: [-45, -90],
+      style: {
+        fontSize: "13px",
+        fontFamily: "Marianne, sans-serif",
+        color: labelColor,
+      },
+    },
+    title: {
+      style: {
+        color: labelColor,
+      },
+    },
   };
 
-  const axisTitleStyle = {
-    style: {
-      color: labelColor,
+  const defaultYAxisOptions = {
+    gridLineColor: "var(--border-default-grey)",
+    labels: {
+      style: {
+        fontSize: "13px",
+        fontFamily: "Marianne, sans-serif",
+        color: labelColor,
+      },
+    },
+    title: {
+      style: {
+        color: labelColor,
+      },
     },
   };
 
   if (Array.isArray(options.xAxis) && options.xAxis.length > 0) {
     defaultOptions.xAxis = options.xAxis.map((axis) => {
-      return {
-        ...axis,
-        gridLineColor: "var(--border-default-grey)",
-        labels: {
-          autoRotation: [-45, -90],
-          style: axisLabelStyle,
-        },
-        title: axisTitleStyle,
-      };
+      return deepMerge(axis, defaultXAxisOptions);
     });
   } else {
-    defaultOptions.xAxis = {
-      gridLineColor: "var(--border-default-grey)",
-      labels: {
-        autoRotation: [-45, -90],
-        style: axisLabelStyle,
-      },
-      title: axisTitleStyle,
-    };
+    defaultOptions.xAxis = defaultXAxisOptions;
   }
 
   if (Array.isArray(options.yAxis) && options.yAxis.length > 0) {
     defaultOptions.yAxis = options.yAxis.map((axis) => {
-      return {
-        ...axis,
-        gridLineColor: "var(--border-default-grey)",
-        labels: {
-          style: axisLabelStyle,
-        },
-        title: axisTitleStyle,
-      };
+      return deepMerge(axis, defaultYAxisOptions);
     });
   } else {
-    defaultOptions.yAxis = {
-      gridLineColor: "var(--border-default-grey)",
-      labels: {
-        style: axisLabelStyle,
-      },
-      title: axisTitleStyle,
-    };
+    defaultOptions.yAxis = defaultYAxisOptions;
   }
 
-  if (type !== "empty") {
-    if (defaultOptions.chart) {
-      defaultOptions.chart.type = type;
-    }
+  if ((type !== "empty") && defaultOptions.chart) {
+    defaultOptions.chart.type = type;
   }
 
   const chartOptions = deepMerge(defaultOptions, options);

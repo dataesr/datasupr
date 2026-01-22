@@ -1,3 +1,5 @@
+import HighchartsInstance from "highcharts";
+
 import { createChartOptions } from "../../components/chart-wrapper/default-options";
 
 const funders = ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"];
@@ -10,7 +12,7 @@ const sortedFunders = {
   "horizon europe": "#e39700",
 };
 
-const typologies = [ "Autres", "Ecoles et instituts", "Etablissements de santé",
+const typologies = ["Autres", "Ecoles et instituts", "Etablissements de santé",
   "Organismes de recherche", "Universités"];
 
 const years: number[] = Array.from(Array(11).keys()).map((item) => item + 2015);
@@ -120,7 +122,13 @@ const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = y
   return query
 };
 
-const getGeneralOptions = (title: string, categories: any[], title_x_axis: string, title_y_axis: string, type: string = "bar") => {
+const getGeneralOptions = (
+  title: HighchartsInstance.TitleOptions["text"],
+  categories: HighchartsInstance.XAxisOptions["categories"],
+  title_x_axis: HighchartsInstance.XAxisTitleOptions["text"],
+  title_y_axis: HighchartsInstance.YAxisTitleOptions["text"],
+  type: HighchartsInstance.ChartOptions["type"] = "bar",
+) => {
   return createChartOptions(type, {
     chart: { height: "600px" },
     title: { text: title },
