@@ -26,7 +26,6 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
       by_international_partners_project: {
         terms: {
           field: "co_partners_fr_inst.keyword",
-          order: { "_count": "desc" },
         },
         aggregations: {
           by_project_type: {

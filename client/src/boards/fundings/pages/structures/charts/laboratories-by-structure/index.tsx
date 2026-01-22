@@ -7,12 +7,13 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, formatCompactNumber, funders, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, funders, formatCompactNumber, formatPerc, getColorByFunder, getGeneralOptions, getYearRangeLabel, typologies } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function InternationalPartnersByStructure({ name }: { name: string | undefined }) {
+
+export default function LaboratoriesByStructure({ name }: { name: string | undefined }) {
   const [field, setField] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
@@ -21,11 +22,24 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   const color = useChartColor();
 
   const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+    size: 0,
+    query: {
+      bool: {
+        filter: [
+          { range: { project_year: { gte: yearMin, lte: yearMax } } },
+          { term: { participant_isFrench: true } },
+          { term: { participant_status: "active" } },
+          { term: { participant_type: "laboratory" } },
+          { term: { "participant_kind.keyword": "Secteur public" } },
+          { terms: { "project_type.keyword": funders } },
+          { term: { "participant_institutions.structure.keyword": structure } }
+        ],
+      },
+    },
     aggregations: {
-      by_international_partners_project: {
+      by_laboratory_project: {
         terms: {
-          field: "co_partners_foreign_inst.keyword",
+          field: "participant_id_name_default.keyword",
         },
         aggregations: {
           by_project_type: {
@@ -42,9 +56,9 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
           },
         },
       },
-      by_international_partners_budget: {
+      by_laboratory_budget: {
         terms: {
-          field: "co_partners_foreign_inst.keyword",
+          field: "participant_id_name_default.keyword",
           order: { "sum_budget": "desc" },
         },
         aggregations: {
@@ -66,12 +80,12 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
             },
           },
         },
-      },
+      }
     },
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-international-partners', structure, yearMax, yearMin],
+    queryKey: ['fundings-projects-by-structures', structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -83,28 +97,34 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
       }).then((response) => response.json()),
   });
 
-  const partnersProject = data?.aggregations?.by_international_partners_project?.buckets ?? [];
+  const laboratoriesProject = data?.aggregations?.by_laboratory_project?.buckets ?? [];
   const seriesProject = funders.map((funder) => ({
     color: getColorByFunder(funder),
-    data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.unique_projects?.value ?? 0),
+    data: laboratoriesProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.unique_projects?.value ?? 0),
     name: funder,
   })).reverse();
-  const categoriesProject = partnersProject.map((partner) => partner.key.split("###")[1].split("_")[1]);
-  const partnersBudget = data?.aggregations?.by_international_partners_budget?.buckets ?? [];
+  const categoriesProject = laboratoriesProject.map((item) => item.key.split('###')[1]);
+  const laboratoriesBudget = data?.aggregations?.by_laboratory_budget?.buckets ?? [];
   const seriesBudget = funders.map((funder) => ({
     color: getColorByFunder(funder),
-    data: partnersBudget.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.sum_budget?.value ?? 0),
+    data: laboratoriesBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.sum_budget?.value ?? 0),
     name: funder,
   })).reverse();
-  const categoriesBudget = partnersBudget.map((partner) => partner.key.split("###")[1].split("_")[1]);
+  const categoriesBudget = laboratoriesBudget.map((item) => item.key.split('###')[1]);
 
-  const axisBudget = "Montants financés (€)";
   const axisProjects = "Nombre de projets financés";
-  const datalabelBudget = function (this: any) {
-    return `${formatCompactNumber(this.y)} €`;
+  const axisBudget = "Montants financés (€)";
+  const tooltipProjects = function (this: any) {
+    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${categoriesProject[this.x]}</b>`;
+  };
+  const tooltipBudget = function (this: any) {
+    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesProject[this.x]}</b>`;
   };
   const datalabelProject = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
+  };
+  const datalabelBudget = function (this: any) {
+    return `${formatCompactNumber(this.y)} €`;
   };
   const stacklabelProject = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
@@ -112,19 +132,12 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   const stacklabelBudget = function (this: any) {
     return `${formatCompactNumber(this.total)} €`;
   };
-  const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
-  };
-  const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
-  };
 
   const config = {
     comment: { "fr": <>Lorem Ipsum</> },
-    id: "internationalPartnersByStructure",
+    id: "projectsByStructures",
     sources: FundingsSources,
   };
-
   const localOptions = {
     legend: { enabled: true, reversed: true },
     yAxis: {
@@ -151,15 +164,15 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", field === "projects" ? categoriesProject : categoriesBudget, "", field === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="international-partners-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="projects-by-structures">
       <Title as="h2" look="h6">
-        {`Partenaires internationaux de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {`Laboratoires de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
-      <SegmentedControl name="international-partners-by-structure-segmented">
+      <SegmentedControl name="projects-by-structures-segmented">
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
       {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapper config={config} options={options} />}
     </div>
   );
-};
+}
