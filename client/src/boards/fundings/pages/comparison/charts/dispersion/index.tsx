@@ -109,7 +109,7 @@ export default function Dispersion() {
       lineWidth: 1,
       plotLines: [{
         dashStyle: "dot",
-        label: { align: "right", style: { fontStyle: "italic" }, text: `Montants moyen des projets = ${formatCompactNumber(meanY)} €`, x: -8, y: -8 },
+        label: { align: "right", style: { fontStyle: "italic" }, text: `Montants moyen des projets = ${formatCompactNumber(meanY || 0)} €`, x: -8, y: -8 },
         value: meanY,
         width: 2,
         zIndex: 3

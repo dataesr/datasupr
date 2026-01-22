@@ -39,7 +39,7 @@ export default function Home() {
   Elles décrivent principalement les participants au niveau institutionnel. Un
   travail complémentaire est mené avec le CNRS, le CEA, l’INRAE, l’INRIA et l’ONERA afin
   d’enrichir ces données et de reconstituer, lorsque cela est possible, le niveau
-  laboratoire pour les financements européens.
+  laboratoire pour les financements européens. Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027
 </p>
 
 <p> <strong> Financement PIA </strong><br />
