@@ -29,7 +29,7 @@ function deepMerge(target, source) {
 export function createChartOptions(
   type: NonNullable<HighchartsInstance.Options["chart"]>["type"],
   options: NonNullable<HighchartsInstance.Options>
-) {
+): HighchartsInstance.Options {
   const rootStyles = getComputedStyle(document.documentElement);
   const labelColor = rootStyles.getPropertyValue("--text-default-grey").trim();
 
