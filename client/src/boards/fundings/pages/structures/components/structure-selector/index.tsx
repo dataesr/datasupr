@@ -16,7 +16,7 @@ export default function StructureSelector({ setName }) {
   const [searchParams, setSearchParams] = useSearchParams({});
   const structure = searchParams.get("structure") ?? "";
 
-  const bodyCounties = {
+  const bodyCounties: any = {
     ...getEsQuery({}),
     aggregations: {
       by_county: {
@@ -48,7 +48,7 @@ export default function StructureSelector({ setName }) {
   });
   const counties = (dataCounties?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket.key);
 
-  const bodyTypologies = {
+  const bodyTypologies: any = {
     ...getEsQuery({}),
     aggregations: {
       by_typology: {
