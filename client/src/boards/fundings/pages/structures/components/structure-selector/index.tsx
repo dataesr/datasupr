@@ -1,4 +1,4 @@
-import { Col, Row } from "@dataesr/dsfr-plus";
+import { Badge, Col, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
@@ -139,8 +139,9 @@ export default function StructureSelector({ setName }) {
           <div className="fr-select-group">
             <label className="fr-label">
               Région
-              {' '}
-              <i>{`(${counties.length})`}</i>
+              <Badge className="fr-ml-1w">
+                {counties.length}
+              </Badge>
             </label>
             <select
               aria-describedby="select-county-messages"
@@ -166,8 +167,9 @@ export default function StructureSelector({ setName }) {
           <div className="fr-select-group">
             <label className="fr-label">
               Typologie
-              {' '}
-              <i>{`(${typologies.length})`}</i>
+              <Badge className="fr-ml-1w">
+                {typologies.length}
+              </Badge>
             </label>
             <select
               aria-describedby="select-typology-messages"
@@ -193,8 +195,9 @@ export default function StructureSelector({ setName }) {
           <>
             <label className="fr-label">
               Structure
-              {' '}
-              <i>{`(${structures.length})`}</i>
+              <Badge className="fr-ml-1w">
+                {structures.length}
+              </Badge>
             </label>
             <div className="fr-mt-1w fr-mb-1w">
               <SearchableSelect
