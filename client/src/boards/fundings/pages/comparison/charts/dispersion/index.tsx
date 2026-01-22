@@ -29,6 +29,7 @@ export default function Dispersion() {
           by_structure: {
             terms: {
               field: "participant_id_name_default.keyword",
+              size: 500,
             },
             aggregations: {
               unique_projects: {
@@ -79,7 +80,7 @@ export default function Dispersion() {
   const config = {
     id: "dispersion",
     sources: FundingsSources,
-    title: `Nombre de projets financés et leurs montants par structure ${getYearRangeLabel({ yearMax, yearMin })}`,
+    title: `Nombre de projets financés et les montants associés pour les participants sélectionnés ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   const localOptions = {
@@ -88,14 +89,14 @@ export default function Dispersion() {
     plotOptions: { series: { dataLabels: { enabled: true, format: "{point.name}" } } },
     series,
     tooltip: {
-      format: `<b>{point.name}</b> a reçu <b>{point.yFormatted}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour financer <b>{point.x} projets</b>`,
+      format: `<b>{point.name}</b> a participé à <b>{point.x} projets</b> dont le montant total représente <b>{point.yFormatted}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}</b>`,
     },
     xAxis: {
       gridLineWidth: 1,
       lineWidth: 1,
       plotLines: [{
         dashStyle: "dot",
-        label: { rotation: 0, style: { fontStyle: "italic" }, text: "Nombre moyen de projets financés", x: 10, y: 15 },
+        label: { rotation: 0, style: { fontStyle: "italic" }, text: `Nombre moyen de projets = ${Math.round(meanX)}`, x: 10, y: 15 },
         value: meanX,
         width: 2,
         zIndex: 3,
@@ -107,7 +108,7 @@ export default function Dispersion() {
       lineWidth: 1,
       plotLines: [{
         dashStyle: "dot",
-        label: { align: "right", style: { fontStyle: "italic" }, text: "Montants financés", x: -8, y: -8 },
+        label: { align: "right", style: { fontStyle: "italic" }, text: `Montants moyen des projets = ${formatCompactNumber(meanY)} €`, x: -8, y: -8 },
         value: meanY,
         width: 2,
         zIndex: 3

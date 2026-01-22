@@ -27,6 +27,7 @@ export default function ProjectsByStructures() {
       by_structure: {
         terms: {
           field: "participant_id_name_default.keyword",
+          size: 50
         },
         aggregations: {
           by_project_type: {
