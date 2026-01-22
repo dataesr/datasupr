@@ -5,6 +5,8 @@ import { useSearchParams } from "react-router-dom";
 import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
 import YearSelector from "../../components/year-selector";
 import navigationConfig from "../navigation-config.json";
+import ClassificationsByStructure from "./charts/classifications-by-structure";
+import Classifications2ByStructure from "./charts/classifications2-by-structure";
 import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
 import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
 import LaboratoriesByStructure from "./charts/laboratories-by-structure";
@@ -69,6 +71,16 @@ export default function Structures() {
             <Row gutters>
               <Col>
                 <LaboratoriesByStructure name={name} />
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col>
+                <ClassificationsByStructure name={name} />
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col>
+                <Classifications2ByStructure name={name} />
               </Col>
             </Row>
             <Row gutters>

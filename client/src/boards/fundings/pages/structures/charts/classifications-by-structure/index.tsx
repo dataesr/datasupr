@@ -12,7 +12,7 @@ import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function FrenchPartnersByStructure({ name }: { name: string | undefined }) {
+export default function ClassificationsByStructure({ name }: { name: string | undefined }) {
   const [field, setField] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
@@ -23,9 +23,10 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),
     aggregations: {
-      by_french_partners_project: {
+      by_classifications_project: {
         terms: {
-          field: "co_partners_fr_inst.keyword",
+          field: "project_classification.primary_field.keyword",
+          size: 15,
         },
         aggregations: {
           by_project_type: {
@@ -42,10 +43,11 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
           },
         },
       },
-      by_french_partners_budget: {
+      by_classifications_budget: {
         terms: {
-          field: "co_partners_fr_inst.keyword",
+          field: "project_classification.primary_field.keyword",
           order: { "sum_budget": "desc" },
+          size: 15,
         },
         aggregations: {
           sum_budget: {
@@ -71,7 +73,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-french-partners', structure, yearMax, yearMin],
+    queryKey: ['fundings-classifications', structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -83,20 +85,20 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
       }).then((response) => response.json()),
   });
 
-  const partnersProject = data?.aggregations?.by_french_partners_project?.buckets ?? [];
+  const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
   const seriesProject = funders.map((funder) => ({
     color: getColorByFunder(funder),
-    data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.unique_projects?.value ?? 0),
+    data: classificationsProject.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.unique_projects?.value ?? 0),
     name: funder,
   })).reverse();
-  const categoriesProject = partnersProject.map((partner) => partner.key.split("###")[1].split("_")[1]);
-  const partnersBudget = data?.aggregations?.by_french_partners_budget?.buckets ?? [];
+  const categoriesProject = classificationsProject.map((classification) => classification.key);
+  const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
   const seriesBudget = funders.map((funder) => ({
     color: getColorByFunder(funder),
-    data: partnersBudget.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.sum_budget?.value ?? 0),
+    data: classificationsBudget.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.sum_budget?.value ?? 0),
     name: funder,
   })).reverse();
-  const categoriesBudget = partnersBudget.map((partner) => partner.key.split("###")[1].split("_")[1]);
+  const categoriesBudget = classificationsBudget.map((classification) => classification.key);
 
   const axisBudget = "Montants financés (€)";
   const axisProjects = "Nombre de projets financés";
@@ -121,7 +123,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
 
   const config = {
     comment: { "fr": <>Lorem Ipsum</> },
-    id: "frenchPartnersByStructure",
+    id: "classificationsByStructure",
     sources: FundingsSources,
   };
 
@@ -151,11 +153,11 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", field === "projects" ? categoriesProject : categoriesBudget, "", field === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="french-partners-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="classifications-by-structure">
       <Title as="h2" look="h6">
-        {`Principaux partenaires français de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {`Financement par classifications disciplinaires de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
-      <SegmentedControl name="french-partners-by-structure-segmented">
+      <SegmentedControl name="classifications-by-structure-segmented">
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>

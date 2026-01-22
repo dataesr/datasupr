@@ -1,7 +1,10 @@
+import { Logo } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
 import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
+
+const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env;
 
 
 export default function Footer() {
@@ -18,17 +21,7 @@ export default function Footer() {
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
             <a href="/financements-par-aap" title="Financement par appels à projets - DataESR">
-              <p className="fr-logo">
-                Ministère
-                <br />
-                de l'enseignement
-                <br />
-                supérieur
-                <br />
-                de la recherche
-                <br />
-                et de l'espace
-              </p>
+              <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
             </a>
           </div>
           <div className="fr-footer__content">
@@ -110,6 +103,16 @@ export default function Footer() {
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="#">
                 {getI18nLabel("contact")}
+              </a>
+            </li>
+            <li className="fr-footer__bottom-item">
+              <a
+                className="fr-footer__bottom-link"
+                href={`https://github.com/dataesr/datasupr/releases/tag/v${VITE_VERSION}`}
+                rel="noreferer noopenner"
+                target="_blank"
+              >
+                {`v${VITE_VERSION}`}
               </a>
             </li>
             <li className="fr-footer__bottom-item">

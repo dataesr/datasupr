@@ -1,10 +1,12 @@
-import { Service } from "@dataesr/dsfr-plus";
+import { Logo, Service } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import { years } from "../../utils";
 import Footer from "./footer";
 import i18n from "./i18n.json";
+
+const { VITE_MINISTER_NAME } = import.meta.env;
 
 
 export default function GlobalLayout() {
@@ -39,21 +41,7 @@ export default function GlobalLayout() {
             <div className="fr-header__body-row">
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
-                  <div className="fr-header__logo">
-                    <a href="/financements-par-aap" title="Financement par appels à projets - DataESR">
-                      <p className="fr-logo">
-                        Ministère
-                        <br />
-                        de l'Enseignement
-                        <br />
-                        supérieur,
-                        <br />
-                        de la Recherche
-                        <br />
-                        et de l'Espace
-                      </p>
-                    </a>
-                  </div>
+                  <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
                   <Service
                     href="/financements-par-aap"
                     name="Financements par appel à projet"
