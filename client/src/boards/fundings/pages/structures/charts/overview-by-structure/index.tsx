@@ -59,7 +59,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   const colors = series.map((item) => getColorByFunder(item[0]));
 
   const config = {
-    comment: { "fr": "Lorem Ipsum" },
+    comment: { "fr": <>Lorem Ipsum</> },
     id: "overviewByStructure",
     sources: FundingsSources,
     title: `Structure du financement : nombre de projets et montants associés pour les projets auxquels participe l'établissement (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,

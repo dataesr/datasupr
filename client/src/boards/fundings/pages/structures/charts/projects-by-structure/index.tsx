@@ -99,7 +99,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   };
 
   const config = {
-    comment: { "fr": "Lorem Ipsum" },
+    comment: { "fr": <>Lorem Ipsum</> },
     id: "projectsByStructure",
     sources: FundingsSources,
   };
