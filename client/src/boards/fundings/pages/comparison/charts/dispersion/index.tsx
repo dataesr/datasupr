@@ -97,7 +97,7 @@ export default function Dispersion() {
       lineWidth: 1,
       plotLines: [{
         dashStyle: "dot",
-        label: { rotation: 0, style: { fontStyle: "italic" }, text: `Nombre moyen de projets = ${Math.round(meanX)}`, x: 10, y: 15 },
+        label: { rotation: 0, style: { fontStyle: "italic" }, text: `Nombre moyen de projets = ${Math.round(meanX || 0)}`, x: 10, y: 15 },
         value: meanX,
         width: 2,
         zIndex: 3,
