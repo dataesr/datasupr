@@ -23,7 +23,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),
     aggregations: {
-      by_international_partners_projects: {
+      by_international_partners_project: {
         terms: {
           field: "co_partners_fr_inst.keyword",
           order: { "_count": "desc" },
@@ -37,11 +37,6 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
               unique_projects: {
                 cardinality: {
                   field: "project_id.keyword",
-                },
-              },
-              sum_budget: {
-                sum: {
-                  field: "project_budgetTotal",
                 },
               },
             },
@@ -64,11 +59,6 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
               field: "project_type.keyword",
             },
             aggregations: {
-              unique_projects: {
-                cardinality: {
-                  field: "project_id.keyword",
-                },
-              },
               sum_budget: {
                 sum: {
                   field: "project_budgetTotal",
@@ -94,7 +84,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
       }).then((response) => response.json()),
   });
 
-  const partnersProject = data?.aggregations?.by_international_partners_projects?.buckets ?? [];
+  const partnersProject = data?.aggregations?.by_international_partners_project?.buckets ?? [];
   const seriesProject = funders.map((funder) => ({
     color: getColorByFunder(funder),
     data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.unique_projects?.value ?? 0),

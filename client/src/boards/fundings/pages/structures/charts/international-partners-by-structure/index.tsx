@@ -23,9 +23,10 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),
     aggregations: {
-      by_international_partners: {
+      by_international_partners_project: {
         terms: {
           field: "co_partners_foreign_inst.keyword",
+          order: { "_count": "desc" },
         },
         aggregations: {
           by_project_type: {
@@ -38,6 +39,26 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
                   field: "project_id.keyword",
                 },
               },
+            },
+          },
+        },
+      },
+      by_international_partners_budget: {
+        terms: {
+          field: "co_partners_foreign_inst.keyword",
+          order: { "sum_budget": "desc" },
+        },
+        aggregations: {
+          sum_budget: {
+            sum: {
+              field: "project_budgetTotal",
+            },
+          },
+          by_project_type: {
+            terms: {
+              field: "project_type.keyword",
+            },
+            aggregations: {
               sum_budget: {
                 sum: {
                   field: "project_budgetTotal",
@@ -62,14 +83,24 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
         method: "POST",
       }).then((response) => response.json()),
   });
+  console.log(data);
 
-  const partners = data?.aggregations?.by_international_partners?.buckets ?? [];
-  const series = funders.map((funder) => ({
+  const partnersProject = data?.aggregations?.by_international_partners_project?.buckets ?? [];
+  const seriesProject = funders.map((funder) => ({
     color: getColorByFunder(funder),
-    data: partners.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
+    data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.unique_projects?.value ?? 0),
     name: funder,
   })).reverse();
-  const categories = partners.map((partner) => partner.key.split("###")[1].split("_")[1]);
+  const categoriesProject = partnersProject.map((partner) => partner.key.split("###")[1].split("_")[1]);
+  const partnersBudget = data?.aggregations?.by_international_partners_budget?.buckets ?? [];
+  const seriesBudget = funders.map((funder) => ({
+    color: getColorByFunder(funder),
+    data: partnersBudget.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.sum_budget?.value ?? 0),
+    name: funder,
+  })).reverse();
+  const categoriesBudget = partnersBudget.map((partner) => partner.key.split("###")[1].split("_")[1]);
+  console.log(partnersProject);
+  console.log(partnersBudget);
 
   const axisBudget = "Montants financés (€)";
   const axisProjects = "Nombre de projets financés";
@@ -118,10 +149,10 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
         stacking: "normal",
       }
     },
-    series,
+    series: field === "projects" ? seriesProject : seriesBudget,
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", field === "projects" ? axisProjects : axisBudget), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", field === "projects" ? categoriesProject : categoriesBudget, "", field === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="international-partners-by-structure">
