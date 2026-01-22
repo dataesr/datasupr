@@ -86,6 +86,12 @@ export default function HomePage() {
   }
 
   const filteredData = data.filter((dashboard) => dashboard.homePageVisible);
+  filteredData.push({
+    description_fr: "Indicateurs sur le financement des structures via les appels à projets.",
+    isMultilingual: false,
+    name_fr: "Financement par appels à projets",
+    url: "/fundings",
+  });
 
   return (
     <>
