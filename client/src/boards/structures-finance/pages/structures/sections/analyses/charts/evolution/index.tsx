@@ -1,4 +1,5 @@
 import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Row, Col } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "./api";
 import {
@@ -17,9 +18,9 @@ import {
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 interface EvolutionChartProps {
-  etablissementId: string;
-  etablissementName: string;
-  selectedAnalysis: AnalysisKey;
+  etablissementId?: string;
+  etablissementName?: string;
+  selectedAnalysis?: AnalysisKey;
 }
 
 type MetricKey = keyof typeof METRICS_CONFIG;
@@ -795,11 +796,21 @@ export function useAnalysesWithData(etablissementId: string) {
 }
 
 export default function EvolutionChart({
-  etablissementId,
+  etablissementId: propEtablissementId,
   etablissementName,
-  selectedAnalysis,
+  selectedAnalysis: propSelectedAnalysis,
 }: EvolutionChartProps) {
+  const [searchParams] = useSearchParams();
+  const etablissementId =
+    propEtablissementId || searchParams.get("structureId") || "";
+  const selectedAnalysis =
+    propSelectedAnalysis ||
+    (searchParams.get("analysis") as AnalysisKey) ||
+    "ressources-total";
+
   const { data } = useFinanceEtablissementEvolution(etablissementId);
+
+  const etabName = etablissementName || data?.[0]?.etablissement_lib || "";
 
   const analysisConfig = PREDEFINED_ANALYSES[selectedAnalysis];
 
@@ -888,34 +899,24 @@ export default function EvolutionChart({
   }
 
   if (isStacked && chartOptions) {
+    const stackedConfig = {
+      id: "evolution-stacked",
+      integrationURL: `/integration?chart_id=evolution-stacked&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
+      title: `${analysisConfig.label}${etabName ? ` — ${etabName}` : ""}`,
+      comment: {
+        fr: (
+          <>
+            Évolution des effectifs par{" "}
+            {analysisConfig.label.toLowerCase().replace("effectifs par ", "")}{" "}
+            sur la période {periodText}.
+          </>
+        ),
+      },
+    };
+
     return (
       <ChartWrapper
-        config={{
-          id: "evolution-chart-stacked",
-          idQuery: "evolution-stacked",
-          title: {
-            className: "fr-mt-0w",
-            look: "h5",
-            size: "h3",
-            fr: (
-              <>
-                {analysisConfig.label} — {etablissementName}
-              </>
-            ),
-          },
-          comment: {
-            fr: (
-              <>
-                Évolution des effectifs par{" "}
-                {analysisConfig.label
-                  .toLowerCase()
-                  .replace("effectifs par ", "")}{" "}
-                sur la période {periodText}.
-              </>
-            ),
-          },
-          integrationURL: "/integration-url",
-        }}
+        config={stackedConfig}
         options={chartOptions}
         renderData={() => (
           <RenderDataStacked
@@ -929,34 +930,41 @@ export default function EvolutionChart({
   }
 
   if (selectedMetrics.length === 1 && chartOptions) {
+    const singleConfig = {
+      id: "evolution-single",
+      integrationURL: `/integration?chart_id=evolution-single&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
+      title: `${PREDEFINED_ANALYSES[selectedAnalysis].label}${etabName ? ` — ${etabName}` : ""}`,
+      comment: {
+        fr: (
+          <>
+            Évolution de{" "}
+            {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur la
+            période {periodText}.
+          </>
+        ),
+      },
+    };
+
+    const partConfig = partMetricKey
+      ? {
+          id: "evolution-part",
+          integrationURL: `/integration?chart_id=evolution-part&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
+          title: `${METRICS_CONFIG[partMetricKey].label}${etabName ? ` — ${etabName}` : ""}`,
+          comment: {
+            fr: (
+              <>
+                Évolution de la {METRICS_CONFIG[partMetricKey].label} sur
+                ressources propres sur la période {periodText}.
+              </>
+            ),
+          },
+        }
+      : null;
+
     return (
       <>
         <ChartWrapper
-          config={{
-            id: "evolution-chart-single",
-            idQuery: "evolution-single",
-            title: {
-              className: "fr-mt-0w",
-              look: "h5",
-              size: "h3",
-              fr: (
-                <>
-                  {PREDEFINED_ANALYSES[selectedAnalysis].label} —{" "}
-                  {etablissementName}
-                </>
-              ),
-            },
-            comment: {
-              fr: (
-                <>
-                  Évolution de{" "}
-                  {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur
-                  la période {periodText}.
-                </>
-              ),
-            },
-            integrationURL: "/integration-url",
-          }}
+          config={singleConfig}
           options={chartOptions}
           renderData={() => (
             <RenderDataSingle
@@ -967,33 +975,10 @@ export default function EvolutionChart({
           )}
         />
 
-        {partMetricKey && partChartOptions && (
+        {partMetricKey && partChartOptions && partConfig && (
           <div className="fr-mt-3w">
             <ChartWrapper
-              config={{
-                id: "evolution-chart-part",
-                idQuery: "evolution-part",
-                title: {
-                  className: "fr-mt-0w",
-                  look: "h6",
-                  size: "h4",
-                  fr: (
-                    <>
-                      {METRICS_CONFIG[partMetricKey].label} —{" "}
-                      {etablissementName}
-                    </>
-                  ),
-                },
-                comment: {
-                  fr: (
-                    <>
-                      Évolution de la {METRICS_CONFIG[partMetricKey].label} sur
-                      ressources propres sur la période {periodText}.
-                    </>
-                  ),
-                },
-                integrationURL: "/integration-url",
-              }}
+              config={partConfig}
               options={partChartOptions}
               renderData={() => (
                 <RenderDataSingle
@@ -1010,36 +995,39 @@ export default function EvolutionChart({
   }
 
   if (selectedMetrics.length === 2) {
+    const comparisonConfig = {
+      id: "evolution-comparison",
+      integrationURL: `/integration?chart_id=evolution-comparison&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
+      title: `${PREDEFINED_ANALYSES[selectedAnalysis].label} (base 100)${etabName ? ` — ${etabName}` : ""}`,
+      comment: {
+        fr: (
+          <>
+            Comparaison de{" "}
+            {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} et{" "}
+            {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()} en base
+            100.
+          </>
+        ),
+      },
+    };
+
+    const metric1Config = {
+      id: "evolution-metric1",
+      integrationURL: `/integration?chart_id=evolution-metric1&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
+      title: METRICS_CONFIG[selectedMetrics[0]].label,
+    };
+
+    const metric2Config = {
+      id: "evolution-metric2",
+      integrationURL: `/integration?chart_id=evolution-metric2&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
+      title: METRICS_CONFIG[selectedMetrics[1]].label,
+    };
+
     return (
       <>
         {chartOptionsBase100 && (
           <ChartWrapper
-            config={{
-              id: "evolution-chart-comparison",
-              idQuery: "evolution-comparison",
-              title: {
-                className: "fr-mt-0w",
-                look: "h5",
-                size: "h3",
-                fr: (
-                  <>
-                    {PREDEFINED_ANALYSES[selectedAnalysis].label} (base 100) —{" "}
-                    {etablissementName}
-                  </>
-                ),
-              },
-              comment: {
-                fr: (
-                  <>
-                    Comparaison de{" "}
-                    {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} et{" "}
-                    {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()} en
-                    base 100.
-                  </>
-                ),
-              },
-              integrationURL: "/integration-url",
-            }}
+            config={comparisonConfig}
             options={chartOptionsBase100}
             renderData={() => (
               <RenderDataBase100
@@ -1057,17 +1045,7 @@ export default function EvolutionChart({
           <Row gutters>
             <Col md="6" xs="12">
               <ChartWrapper
-                config={{
-                  id: "evolution-chart-metric1",
-                  idQuery: "evolution-metric1",
-                  title: {
-                    className: "fr-mt-0w",
-                    look: "h6",
-                    size: "h4",
-                    fr: <>{METRICS_CONFIG[selectedMetrics[0]].label}</>,
-                  },
-                  integrationURL: "/integration-url",
-                }}
+                config={metric1Config}
                 options={createEvolutionChartOptions(
                   data,
                   [selectedMetrics[0]] as MetricKey[],
@@ -1086,17 +1064,7 @@ export default function EvolutionChart({
 
             <Col md="6" xs="12">
               <ChartWrapper
-                config={{
-                  id: "evolution-chart-metric2",
-                  idQuery: "evolution-metric2",
-                  title: {
-                    className: "fr-mt-0w",
-                    look: "h6",
-                    size: "h4",
-                    fr: <>{METRICS_CONFIG[selectedMetrics[1]].label}</>,
-                  },
-                  integrationURL: "/integration-url",
-                }}
+                config={metric2Config}
                 options={createEvolutionChartOptions(
                   data,
                   [selectedMetrics[1]] as MetricKey[],
