@@ -72,7 +72,7 @@ export default function Cards() {
         budget: years.map((year) => ({
           x: year,
           y: 1 + (dataByFunder?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget?.value ?? 0),
-          yDisplay: dataByFunder?.by_project_year?.buckets.find((item) => item.key === year)?.unique_projects?.value ?? 0,
+          yDisplay: dataByFunder?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget?.value ?? 0,
         })),
       };
     }

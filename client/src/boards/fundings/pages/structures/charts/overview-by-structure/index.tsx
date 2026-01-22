@@ -52,9 +52,6 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  console.log(funders
-    .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)));
-
   const series = funders
     .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder))
     .filter((item) => !!item)
