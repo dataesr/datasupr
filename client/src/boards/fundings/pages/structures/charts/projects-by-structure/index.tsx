@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, funders, formatCompactNumber, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, funders, formatCompactNumber, formatPerc, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -60,35 +60,44 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
 
   const series: any[] = [];
   const categories: string[] = [];
-  let count = 0
+  let count = 0;
+  let total = 0;
   funders.forEach((funder) => {
     const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
     if ((funderData?.unique_projects?.value ?? 0) > 0) {
+      total += (field === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
+    };
+  });
+  console.log('ttttt', total);
+  funders.forEach((funder) => {
+    const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
+    if ((funderData?.unique_projects?.value ?? 0) > 0) {
+      const current_y = ( field === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
       series.push({
         color: getColorByFunder(funder),
-        data: [{ x: count, y: field === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0 }],
+        data: [{ x: count, y: current_y, y_perc: current_y / total, total }],
         name: funder,
       });
       categories.push(funder);
       count += 1;
     };
   });
-
+  console.log('ttt', series);
   const axisBudget = "Montants financés (€)";
   const axisProjects = "Nombre de projets financés";
   const datalabelBudget = function (this: any) {
-    return `${formatCompactNumber(this.y)} €`;
+    return `${formatCompactNumber(this.y)} €  (${formatPerc(this.y_perc)})`;
   };
   const datalabelProject = function (this: any) {
-    return `${this.y} projet${this.y > 1 ? 's' : ''}`;
+    return `${this.y} projet${this.y > 1 ? 's' : ''} (${formatPerc(this.y_perc)})`;
   };
   const titleBudget = `Montant total des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const titleProjects = `Nombre de projets financés auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
+    return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPerc(this.y_perc, 0)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
   };
   const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}, soit ${formatPerc(this.y_perc, 0)} (${this.y} / ${this.total} )`;
   };
 
   const config = {

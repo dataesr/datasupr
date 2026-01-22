@@ -46,6 +46,15 @@ const formatCompactNumber = (number: number): string => {
   return formatter.format(number);
 };
 
+const formatPerc = (number: number, decimals: number): string => {
+  const formatter = new Intl.NumberFormat("fr", {
+    style: "percent",
+    minimumFractionDigits: decimals,
+    maximumFractionDigits: decimals,
+  });
+  return formatter.format(number);
+};
+
 const getColorByFunder = (funder: string): string => {
   const funderLowerCase = funder.toLowerCase();
   return Object.keys(sortedFunders).includes(funderLowerCase) ? sortedFunders[funderLowerCase] : "#ccc";
@@ -143,6 +152,7 @@ const getYearRangeLabel = ({ isBold = false, yearMax, yearMin }: { isBold?: bool
 export {
   deepMerge,
   formatCompactNumber,
+  formatPerc,
   funders,
   getColorByFunder,
   getEsQuery,
