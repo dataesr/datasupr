@@ -52,7 +52,7 @@ export default function FAQView() {
           </Row>
           <Row>
             <Col>
-              <h1 className="fr-h1">Foire aux questions</h1>
+              <h1 className="fr-h3">Foire aux questions</h1>
               <p className="fr-text--lead fr-mb-4w">
                 Retrouvez les réponses aux questions les plus fréquentes sur les
                 données financières des établissements d'enseignement supérieur.

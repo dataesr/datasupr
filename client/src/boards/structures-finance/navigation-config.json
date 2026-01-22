@@ -82,5 +82,11 @@
       "fr": "Analyses"
     },
     "link": "/structures-finance/analyses"
+  },
+  "implantations": {
+    "label": {
+      "fr": "Implantations"
+    },
+    "link": "/structures-finance/implantations"
   }
 }

@@ -52,7 +52,7 @@ export default function DefinitionsView() {
           </Row>
           <Row>
             <Col>
-              <h1 className="fr-h1">Définitions des indicateurs</h1>
+              <h3 className="fr-h1">Définitions des indicateurs</h3>
               <p className="fr-text--lead fr-mb-4w">
                 Retrouvez les définitions détaillées de tous les indicateurs
                 financiers utilisés dans les tableaux de bord.

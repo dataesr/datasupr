@@ -6,6 +6,7 @@ interface SectionNavigationProps {
   selectedYear: string;
   onSectionChange: (section: string) => void;
   onYearChange: (year: string) => void;
+  data?: any;
 }
 
 export default function SectionNavigation({
@@ -14,7 +15,9 @@ export default function SectionNavigation({
   selectedYear,
   onSectionChange,
   onYearChange,
+  data,
 }: SectionNavigationProps) {
+  const showImplantations = data?.nb_sites > 1;
   return (
     <nav
       className="fr-nav"
@@ -82,6 +85,23 @@ export default function SectionNavigation({
             Diplômes et formations
           </a>
         </li>
+        {showImplantations && (
+          <li className="fr-nav__item">
+            <a
+              className="fr-nav__link"
+              href="#implantations"
+              aria-current={
+                activeSection === "implantations" ? "page" : undefined
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                onSectionChange("implantations");
+              }}
+            >
+              Implantations
+            </a>
+          </li>
+        )}
         <li className="fr-nav__item">
           <a
             className="fr-nav__link"

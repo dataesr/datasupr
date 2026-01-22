@@ -93,8 +93,11 @@ export default function SelectionUI({
 
   const typeLabel = selectedType === "tous" ? "Tous les types" : selectedType;
   const typologieLabel =
-    selectedTypologie === "toutes" ? "Toutes" : selectedTypologie;
-  const regionLabel = selectedRegion === "toutes" ? "Toutes" : selectedRegion;
+    selectedTypologie === "toutes"
+      ? "Toutes les typologies"
+      : selectedTypologie;
+  const regionLabel =
+    selectedRegion === "toutes" ? "Toutes les régions" : selectedRegion;
 
   return (
     <Row>

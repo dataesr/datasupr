@@ -15,6 +15,7 @@ import {
   MoyensHumainsSection,
   EtudiantsSection,
   AnalysesSection,
+  ImplantationsSection,
 } from "../sections/sections";
 import CustomBreadcrumb from "../../../../../components/custom-breadcrumb";
 import navigationConfig from "../../../navigation-config.json";
@@ -86,7 +87,6 @@ export default function EstablishmentView() {
   const handleYearChange = (year: string) => {
     const next = new URLSearchParams(searchParams);
     next.set("year", year);
-    // Réinitialiser useHistorical quand l'année change pour revérifier les multiples
     next.delete("useHistorical");
     setSearchParams(next);
   };
@@ -107,6 +107,8 @@ export default function EstablishmentView() {
         return (
           <EtudiantsSection data={detailData} selectedYear={selectedYear} />
         );
+      case "implantations":
+        return <ImplantationsSection data={detailData} />;
       case "analyses":
         return (
           <AnalysesSection
@@ -192,6 +194,7 @@ export default function EstablishmentView() {
           selectedYear={selectedYear}
           onSectionChange={handleSectionChange}
           onYearChange={handleYearChange}
+          data={detailData}
         />
       </Container>
 
