@@ -72,6 +72,12 @@ export default function ClassificationsByStructures() {
           },
         },
       },
+      by_structure: {
+        terms: {
+          field: "participant_id_name_default.keyword",
+          size: structures.length,
+        },
+      }
     },
   };
 
@@ -88,18 +94,28 @@ export default function ClassificationsByStructures() {
       }).then((response) => response.json()),
   });
 
+  const categoriesStructures = (data?.aggregations?.by_structure?.buckets ?? []).map((structure) => ({
+    id: structure.key.split("###")[0],
+    name: structure.key.split("###")[1],
+  }));
   const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
+  const categoriesProject: string[] = [];
   const seriesProject = classificationsProject.map((classification) => ({
-    data: classification?.by_structure?.buckets?.map((bucket) => bucket?.unique_projects?.value ?? 0),
+    data: classification?.by_structure?.buckets?.map((bucket) => {
+      categoriesProject.push(categoriesStructures.find((structure) => structure.id === bucket.key.split("###")[0])?.name ?? "Structure inconnue");
+      return bucket?.unique_projects?.value ?? 0;
+    }),
     name: classification.key,
   })).reverse();
-  const categoriesProject = (classificationsProject?.[0]?.by_structure?.buckets ?? []).map((structure) => structure.key.split("###")[1]);
   const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
+  const categoriesBudget: string[] = [];
   const seriesBudget = classificationsBudget.map((classification) => ({
-    data: classification?.by_structure?.buckets?.map((bucket) => bucket?.sum_budget?.value ?? 0),
+    data: classification?.by_structure?.buckets?.map((bucket) => {
+      categoriesBudget.push(categoriesStructures.find((structure) => structure.id === bucket.key.split("###")[0])?.name ?? "Structure inconnue");
+      return bucket?.sum_budget?.value ?? 0;
+    }),
     name: classification.key,
   })).reverse();
-  const categoriesBudget = (classificationsBudget?.[0]?.by_structure?.buckets ?? []).map((structure) => structure.key.split("###")[1]);
 
   const titleProjects = `Nombre de projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const titleBudget = `Montant total des projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;

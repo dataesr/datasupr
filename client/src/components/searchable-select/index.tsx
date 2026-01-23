@@ -4,6 +4,7 @@ import "./searchable-select.scss";
 
 interface SearchableSelectProps {
   canSelectAll?: boolean,
+  canSelectAllPlaceholder?: string,
   options: Array<{
     id: string;
     label: string;
@@ -18,6 +19,7 @@ interface SearchableSelectProps {
 
 export default function SearchableSelect({
   canSelectAll = false,
+  canSelectAllPlaceholder = "Tout sélectionner",
   options,
   value,
   onChange,
@@ -95,36 +97,40 @@ export default function SearchableSelect({
 
       {isOpen && (
         <div className="searchable-select-dropdown">
-          {canSelectAll && (
-            <div
-              className="searchable-select-option"
-              key="select-all"
-              onClick={() => handleSelectAll()}
-            >
-              <span aria-hidden="true" className="fr-icon-add-circle-line fr-icon--sm fr-mr-1w"></span>
-              <i>Tout ajouter</i>
-            </div>
-          )}
           {filteredOptions.length === 0 ? (
             <div className="searchable-select-no-results">
               Aucun résultat trouvé
             </div>
           ) : (
-            filteredOptions.map((option) => (
-              <div
-                className={`searchable-select-option ${newValue.includes(option.id) ? "selected" : ""
-                  }`}
-                key={option.id}
-                onClick={() => handleSelect(option.id)}
-              >
-                <div>{option.label}</div>
-                {option.subtitle && (
-                  <div className="searchable-select-subtitle">
-                    {option.subtitle}
+            <>
+              {canSelectAll && (
+                <div
+                  className="searchable-select-option"
+                  key="select-all"
+                  onClick={() => handleSelectAll()}
+                >
+                  <span aria-hidden="true" className="fr-icon-add-circle-line fr-icon--sm fr-mr-1w"></span>
+                  <i>{canSelectAllPlaceholder}</i>
+                </div>
+              )}
+              {
+                filteredOptions.map((option) => (
+                  <div
+                    className={`searchable-select-option ${newValue.includes(option.id) ? "selected" : ""
+                      }`}
+                    key={option.id}
+                    onClick={() => handleSelect(option.id)}
+                  >
+                    <div>{option.label}</div>
+                    {option.subtitle && (
+                      <div className="searchable-select-subtitle">
+                        {option.subtitle}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            ))
+                ))
+              }
+            </>
           )}
         </div>
       )}

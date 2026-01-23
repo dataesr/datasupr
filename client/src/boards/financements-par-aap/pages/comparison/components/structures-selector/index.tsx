@@ -233,6 +233,7 @@ export default function StructuresSelector() {
             <div className="fr-mt-1w fr-mb-1w">
               <SearchableSelect
                 canSelectAll={true}
+                canSelectAllPlaceholder={`Ajouter ${structures.length > 1 ? 'les' : 'la'} ${structures.length} structure${structures.length > 1 ? 's' : ''}`}
                 onChange={handleStructureChange}
                 options={structures}
                 placeholder="Ajouter une structure..."
