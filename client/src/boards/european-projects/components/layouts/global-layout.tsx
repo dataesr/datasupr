@@ -1,9 +1,6 @@
 import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
-// import { Button, Header, Logo, Service, FastAccess, Container, Nav, Link } from "@dataesr/dsfr-plus";
 
-// import Footer from "./footer";
-// import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
 import CountrySelector from "../../../../components/country-selector/selector";
 import "../styles.scss";
@@ -154,17 +151,3 @@ export default function GlobalLayout() {
     </>
   );
 }
-
-/**
- * TODO
- * lexique
-import CountrySelector from "../../../../components/country-selector/selector";
- * 
-                <CountrySelector />
- * 
-import SwitchTheme from "../../../../components/switch-theme";
-
-      <SwitchTheme />
- * 
- * 
- */

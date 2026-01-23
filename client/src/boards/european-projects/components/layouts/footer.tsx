@@ -1,5 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import i18n from "./i18n.json";
+import SwitchTheme from "../../../../components/switch-theme";
 
 export default function Footer() {
   const [searchParams] = useSearchParams();
@@ -108,6 +109,11 @@ export default function Footer() {
                 {getI18nLabel("contact")}
               </a>
             </li>
+            <li className="fr-footer__bottom-item">
+              <button className="fr-footer__bottom-link fr-link--icon-left fr-icon-theme-fill" aria-controls="fr-theme-modal" data-fr-opened="false">
+                Paramètres d'affichage
+              </button>
+            </li>
           </ul>
           <div className="fr-footer__bottom-copy">
             <p
@@ -118,6 +124,7 @@ export default function Footer() {
           </div>
         </div>
       </div>
+      <SwitchTheme />
     </footer>
   );
 }
