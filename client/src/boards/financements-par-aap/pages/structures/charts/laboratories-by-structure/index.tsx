@@ -40,6 +40,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
       by_laboratory_project: {
         terms: {
           field: "participant_id_name_default.keyword",
+          size: 25,
         },
         aggregations: {
           by_project_type: {
@@ -59,6 +60,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
       by_laboratory_budget: {
         terms: {
           field: "participant_id_name_default.keyword",
+          size: 25,
           order: { "sum_budget": "desc" },
         },
         aggregations: {
@@ -115,7 +117,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   const axisProjects = "Nombre de projets financés";
   const axisBudget = "Montants financés (€)";
   const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${categoriesProject[this.x]}</b>`;
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${categoriesProject[this.x]}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   const tooltipBudget = function (this: any) {
     return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesProject[this.x]}</b>`;
@@ -136,7 +138,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   const config = {
     comment: { "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.
 Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, les données au niveau laboratoire ne sont pas disponibles. 
-Les barres indiquent le nombre / le montant total des projets auxquels chaque laboratoire participe. Pour le montant, ce n'est pas le montant réellement reçu par l’établissement ou le laboratoire.
+Les barres indiquent le nombre / le montant total des projets auxquels chaque laboratoire participe. Les montants indiqués correspondent au financement global des projets auxquels l’établissement participe et ne reflètent pas les sommes effectivement perçues.
 On observe que certains laboratoires concentrent une part importante des projets financés, ce qui peut refléter à la fois la taille des laboratoires, leur historique de participation aux AAP et leur spécialisation thématique.</> },
     id: "projectsByStructures",
     sources: FundingsSources,

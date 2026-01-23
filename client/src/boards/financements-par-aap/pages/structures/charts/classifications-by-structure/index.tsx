@@ -122,7 +122,8 @@ export default function ClassificationsByStructure({ name }: { name: string | un
   };
 
   const config = {
-    comment: { "fr": <>Lorem Ipsum</> },
+    comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement selon les grandes classifications disciplinaires.
+Les barres représentent le nombre / le montant total des projets rattachés à chaque domaine, permettant d’identifier les champs scientifiques les plus présents dans les projets auxquels l’établissement participe. Les montants affichés ne correspondent pas aux financements réellement perçus par l’établissement, mais au volume global des projets financés dans lesquels il est impliqué. Ils doivent être interprétés comme un indicateur d’activité disciplinaire, et non comme un budget reçu.  Les thématiques ont été estimées par IA, à partir du titre, résumé et mots clés des projets.</> },
     id: "classificationsByStructure",
     sources: FundingsSources,
   };
