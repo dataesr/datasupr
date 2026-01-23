@@ -1,14 +1,11 @@
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
-import { useSearchParams } from "react-router-dom";
 import Definitions from "../../../../components/definitions";
 import { useFinanceDefinitions } from "./api";
 import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
 import navigationConfig from "../../navigation-config.json";
 
 export default function DefinitionsView() {
-  const [searchParams] = useSearchParams();
-  const language = searchParams.get("language") || "fr";
-  const { data, isLoading, error } = useFinanceDefinitions(language);
+  const { data, isLoading, error } = useFinanceDefinitions();
 
   if (isLoading) {
     return (

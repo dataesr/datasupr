@@ -143,7 +143,7 @@ export const createEffectifsSpecifiquesChartOptions = (
       color: colors[10],
     },
     {
-      name: "Formation de santé",
+      name: "Santé",
       y: data.effectif_sans_cpge_sante || 0,
       has: data.has_effectif_sante,
       color: colors[7],
@@ -253,7 +253,7 @@ export const createEffectifsDisciplinesChartOptions = (
       color: colors[6],
     },
     {
-      name: "Formation de santé",
+      name: "Santé",
       y: data.effectif_sans_cpge_sante || 0,
       percentage: data.part_effectif_sans_cpge_sante || 0,
       has: data.has_effectif_sante,

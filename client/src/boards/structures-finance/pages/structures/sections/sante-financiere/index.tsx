@@ -2,6 +2,7 @@ import { Row, Col } from "@dataesr/dsfr-plus";
 import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
+import StatusIndicator from "../../../../../../components/status-indicator";
 import "../styles.scss";
 
 const euro = (n?: number) =>
@@ -41,7 +42,17 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
           <Col xs="12" md={showResultatHorsSie ? "6" : "4"}>
             <MetricChartCard
               title="Résultat net comptable"
-              value={`${euro(data.resultat_net_comptable)} €`}
+              value={
+                <>
+                  {euro(data.resultat_net_comptable)} €{" "}
+                  {data.resultat_net_comptable_etat && (
+                    <StatusIndicator
+                      status={data.resultat_net_comptable_etat}
+                      indicateur="resultat_net_comptable"
+                    />
+                  )}
+                </>
+              }
               detail="Le résultat net comptable mesure les ressources nettes restant à l'établissement à l'issue de l'exercice. Indique la performance financière globale de l'établissement."
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution("resultat_net_comptable")}

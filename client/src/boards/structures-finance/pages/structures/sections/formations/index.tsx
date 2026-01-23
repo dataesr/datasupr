@@ -43,7 +43,7 @@ export function EtudiantsSection({
             <MetricChartCard
               title="Total des étudiants"
               value={`${num(data.effectif_sans_cpge)} étudiants inscrits`}
-              detail="Inscriptions hors CPGE"
+              detail="Hors doubles inscriptions CPGE"
               color={SECTION_COLOR}
               evolutionData={effectifEvolution}
             />
@@ -52,7 +52,7 @@ export function EtudiantsSection({
             <MetricChartCard
               title="Dont dans les diplômes nationaux"
               value={num(data.effectif_sans_cpge_dn)}
-              detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_dn / data.effectif_sans_cpge) * 100).toFixed(0) : 0}% du total des étudiants inscrits`}
+              detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_dn / data.effectif_sans_cpge) * 100).toFixed(1) : 0}% du total des étudiants inscrits`}
               color={SECTION_COLOR}
               evolutionData={effectifDnEvolution}
             />
@@ -61,7 +61,7 @@ export function EtudiantsSection({
             <MetricChartCard
               title="Dont dans les diplômes d'établissement"
               value={num(data.effectif_sans_cpge_du)}
-              detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_du / data.effectif_sans_cpge) * 100).toFixed(0) : 0}% du total des étudiants inscrits`}
+              detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_du / data.effectif_sans_cpge) * 100).toFixed(1) : 0}% du total des étudiants inscrits`}
               color={SECTION_COLOR}
               evolutionData={effectifDuEvolution}
             />
