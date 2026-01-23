@@ -585,14 +585,7 @@ export default function EpNavigator() {
         </div>
         <ul>
           <li className={`pilier ${!navState.pillar.linkEnabled ? "section-disabled" : ""}`}>
-            <i className="label-pilier">
-              {getI18nLabel("pillar")}{" "}
-              {getPillarsCount() > 0 && (
-                <Badge size="sm" className="fr-ml-1w" color="blue-cumulus">
-                  {getPillarsCount()}
-                </Badge>
-              )}
-            </i>
+            <i className="label-pilier">{getI18nLabel("pillar")}</i>
             <div className={`${!navState.pillar.linkEnabled ? "disabled" : ""} ${!pillarId ? "no-selection" : ""}`}>
               <Button
                 disabled={!navState.pillar.buttonEnabled}
@@ -606,14 +599,7 @@ export default function EpNavigator() {
             </div>
           </li>
           <li className={`programmes ${!navState.programs.linkEnabled ? "section-disabled" : ""}`}>
-            <i className="label-programmes">
-              {getI18nLabel("program")}{" "}
-              {getProgramsCount() > 0 && (
-                <Badge size="sm" className="fr-ml-1w" color="purple-glycine">
-                  {getProgramsCount()}
-                </Badge>
-              )}
-            </i>
+            <i className="label-programmes">{getI18nLabel("program")}</i>
             <div className={`${!navState.programs.linkEnabled ? "disabled" : ""} ${!programId ? "no-selection" : ""}`}>
               <Button
                 disabled={!navState.programs.buttonEnabled}
@@ -627,14 +613,7 @@ export default function EpNavigator() {
             </div>
           </li>
           <li className={`thematiques ${!navState.thematiques.linkEnabled ? "section-disabled" : ""}`}>
-            <i className="label-thematiques">
-              {getI18nLabel("thematics")}{" "}
-              {getThematicsCount() > 0 && (
-                <Badge size="sm" className="fr-ml-1w" color="green-menthe">
-                  {getThematicsCount()}
-                </Badge>
-              )}
-            </i>
+            <i className="label-thematiques">{getI18nLabel("thematics")}</i>
             <div className={`${!navState.thematiques.linkEnabled ? "disabled" : ""} ${!thematicIds ? "no-selection" : ""}`}>
               <Button
                 disabled={!navState.thematiques.buttonEnabled}
@@ -648,14 +627,7 @@ export default function EpNavigator() {
             </div>
           </li>
           <li className={`destinations ${!navState.destinations.linkEnabled ? "section-disabled" : ""}`}>
-            <i className="label-destinations">
-              {getI18nLabel("destinations")}{" "}
-              {getDestinationsCount() > 0 && (
-                <Badge size="sm" className="fr-ml-1w" color="orange-terre-battue">
-                  {getDestinationsCount()}
-                </Badge>
-              )}
-            </i>
+            <i className="label-destinations">{getI18nLabel("destinations")}</i>
             <div className={`${!navState.destinations.linkEnabled ? "disabled" : ""} ${!destinationIds ? "no-selection" : ""}`}>
               <Button
                 disabled={!navState.destinations.buttonEnabled}
