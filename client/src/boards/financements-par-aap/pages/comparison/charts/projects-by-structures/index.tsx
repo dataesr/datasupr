@@ -101,8 +101,8 @@ export default function ProjectsByStructures() {
   })).reverse();
   const categoriesBudget = structuresBudget.map((item) => item.key.split('###')[1]);
 
-  const titleProjects = `Nombre de projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
-  const titleBudget = `Montant total des projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const titleProjects = `Répartition des projets financés par type de financeur – comparaison entre établissements ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const titleBudget = `Montant total des projets par financeur – comparaison entre établissements ${getYearRangeLabel({ yearMax, yearMin })}`;
   const axisProjects = "Nombre de projets financés";
   const axisBudget = "Montants financés (€)";
   const tooltipProjects = function (this: any) {
@@ -125,7 +125,9 @@ export default function ProjectsByStructures() {
   };
 
   const config = {
-    comment: { "fr": <>Lorem Ipsum</> },
+    comment: { "fr": <>Ce graphique compare la répartition des projets financés par AAP selon les financeurs pour plusieurs établissements.
+L’analyse doit porter en priorité sur les proportions relatives entre catégories de financeurs, plutôt que sur les volumes absolus, afin de comparer la structure des portefeuilles de projets entre établissements de tailles différentes. Les montants indiqués correspondent au financement global des projets auxquels les établissements participent et ne reflètent pas les sommes effectivement perçues.
+</> },
     id: "projectsByStructures",
     sources: FundingsSources,
   };

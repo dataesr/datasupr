@@ -78,10 +78,15 @@ export default function Dispersion() {
   const meanY = ys.length > 0 ? ys.reduce((prev, current) => prev + current) / ys.length : undefined;
 
   const config = {
-    comment: { "fr": <>Lorem Ipsum</> },
+    comment: { "fr": <>Ce graphique positionne chaque établissement selon deux dimensions :
+– en abscisse, le nombre de projets financés auxquels il participe ;
+– en ordonnée, le montant total des projets correspondants. Il permet d’identifier différents profils :
+des établissements impliqués dans un grand nombre de projets,
+d'autres positionnés sur moins de projets mais de montant élevé,
+et ceux combinant volume et intensité financière.</> },
     id: "dispersion",
     sources: FundingsSources,
-    title: `Nombre de projets financés et les montants associés pour les participants sélectionnés ${getYearRangeLabel({ yearMax, yearMin })}`,
+    title: `Positionnement des établissements selon le nombre de projets et le montant associé ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   const localOptions = {

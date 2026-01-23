@@ -117,8 +117,8 @@ export default function ClassificationsByStructures() {
     name: classification.key,
   })).reverse();
 
-  const titleProjects = `Nombre de projets par structure ${getYearRangeLabel({ yearMax, yearMin })}`;
-  const titleBudget = `Montant total des projets par structure ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const titleProjects = `Profils disciplinaires des établissements via les projets financés ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const titleBudget = `Profils disciplinaires des établissements via le montant des projets financés ${getYearRangeLabel({ yearMax, yearMin })}`;
   const axisProjects = "Nombre de projets financés";
   const axisBudget = "Montants financés (€)";
   const tooltipProjects = function (this: any) {
@@ -141,7 +141,11 @@ export default function ClassificationsByStructures() {
   };
 
   const config = {
-    comment: { "fr": <>Lorem Ipsum</> },
+    comment: { "fr": <>Ce graphe présente, pour chaque établissement, la répartition des projets financés par AAP selon les grandes classifications disciplinaires.
+Chaque barre correspond à un établissement et est ventilée par discipline, permettant d’observer la structure scientifique de sa participation aux projets financés.
+L’analyse doit se concentrer sur la composition relative des barres, afin de comparer les profils disciplinaires indépendamment de la taille des établissements.
+Les montants indiqués correspondent au financement global des projets auxquels les établissements participent et ne reflètent pas les sommes effectivement perçues.
+</> },
     id: "classificationsByStructures",
     sources: FundingsSources,
   };

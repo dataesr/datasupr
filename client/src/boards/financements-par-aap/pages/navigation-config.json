@@ -7,13 +7,13 @@
   },
   "structures": {
     "label": {
-      "fr": "Vue par structure"
+      "fr": "Vue par établissement"
     },
     "link": "/financements-par-aap/structures"
   },
   "comparison": {
     "label": {
-      "fr": "Comparaison entre structure"
+      "fr": "Comparaison entre établissements"
     },
     "link": "/financements-par-aap/comparison"
   },
