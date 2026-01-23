@@ -40,7 +40,7 @@ export default function StructureCard({
       {type !== undefined && <p className="structure-card__meta">{type}</p>}
       {region && <p className="structure-card__meta">{region}</p>}
 
-      {studentCount !== undefined && (
+      {studentCount && (
         <p className="structure-card__stat">
           {studentCount.toLocaleString("fr-FR")} étudiants inscrits en {year}
         </p>
