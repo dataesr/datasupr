@@ -120,7 +120,10 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   };
 
   const config = {
-    comment: { "fr": <>Lorem Ipsum</> },
+    comment: { "fr": <>Ce graphe montre quels établissements français collaborent le plus avec l'établissement sur les projets financés par AAP.
+Les barres représentent le nombre / le montant total des projets auxquels chaque partenaire participe conjointement avec l'établissement.
+Quelques partenaires se distinguent par un volume élevé de projets, lié à leur taille intrinsèque, mais révèle aussi des collaborations régulières et structurantes.
+Ces montants ne reflètent pas les financements réellement reçus par l'établissement ou ses partenaires, mais indiquent l’importance relative de leur participation dans l’écosystème de projets financés par AAP.</> },
     id: "frenchPartnersByStructure",
     sources: FundingsSources,
   };

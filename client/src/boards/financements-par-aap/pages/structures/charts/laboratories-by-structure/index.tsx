@@ -134,7 +134,10 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   };
 
   const config = {
-    comment: { "fr": <>Lorem Ipsum</> },
+    comment: { "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.
+Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, les données au niveau laboratoire ne sont pas disponibles. 
+Les barres indiquent le nombre / le montant total des projets auxquels chaque laboratoire participe. Pour le montant, ce n'est pas le montant réellement reçu par l’établissement ou le laboratoire.
+On observe que certains laboratoires concentrent une part importante des projets financés, ce qui peut refléter à la fois la taille des laboratoires, leur historique de participation aux AAP et leur spécialisation thématique.</> },
     id: "projectsByStructures",
     sources: FundingsSources,
   };
@@ -166,7 +169,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structures">
       <Title as="h2" look="h6">
-        {`Laboratoires de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {`Principaux laboratoires de ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
       <SegmentedControl name="projects-by-structures-segmented">
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />

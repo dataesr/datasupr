@@ -120,7 +120,10 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   };
 
   const config = {
-    comment: { "fr": <>Lorem Ipsum</> },
+    comment: { "fr": <>Ce graphe montre quels partenaires internationaux collaborent le plus avec l'établissement sur les projets financés par AAP.
+Les barres représentent le nombre / le montant total des projets auxquels chaque partenaire participe conjointement avec l'établissement.
+Certains partenaires internationaux se distinguent par un volume élevé de projets, signalant des collaborations stratégiques et récurrentes à l’international.
+Ces montants ne reflètent pas les financements réellement reçus par l'établissement ou ses partenaires, mais indiquent l’importance relative de leur participation dans l’écosystème de projets financés par AAP</> },
     id: "internationalPartnersByStructure",
     sources: FundingsSources,
   };
@@ -153,7 +156,7 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   return (
     <div className={`chart-container chart-container--${color}`} id="international-partners-by-structure">
       <Title as="h2" look="h6">
-        {`Partenaires internationaux de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {`Principaux partenaires internationaux de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
       <SegmentedControl name="international-partners-by-structure-segmented">
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />

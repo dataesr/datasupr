@@ -64,7 +64,7 @@ export default function evolution({
         tickLength: 0,
       },
       yAxis: {
-        type: "logarithmic",
+        // type: "logarithmic",
         visible: false,
         title: {
           text: undefined,

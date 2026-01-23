@@ -118,7 +118,10 @@ export default function Cards() {
                 data={dataFunders[funder].projects}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Projets ${funder}`}
-                tooltipFormatter={function (this: any) { return `${this.y - 1} project(s) par ${funder} en ${this.key}` }}
+                tooltipFormatter={function (this: any) {
+                  const nbProjects = this.y - 1;
+                  return `${nbProjects} ${nbProjects > 1 ? "projets" : "projet"} ${funder} en ${this.key}`;
+                }}
                 value={`${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0)} projet${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0) > 1 ? 's' : ''}`}
                 yAxisMax={maxProjects}
               />
