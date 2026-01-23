@@ -1,7 +1,8 @@
 import { useSearchParams } from "react-router-dom";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useStructuresFilters } from "../hooks";
+import { useFinanceYears } from "../../../api/common";
 import SelectionUI from "./selection-ui";
 import StructureCard from "../../../../../components/structure-card";
 import StructuresBreadcrumb from "./structures-breadcrumb";
@@ -9,7 +10,12 @@ import StructuresBreadcrumb from "./structures-breadcrumb";
 export default function EstablishmentSelection() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const selectedYear = searchParams.get("year") || "2024";
+  const { data: yearsData } = useFinanceYears();
+  const latestYear = useMemo(() => {
+    if (!yearsData?.years?.length) return "2024";
+    return String(Math.max(...yearsData.years));
+  }, [yearsData]);
+
   const selectedRegion = searchParams.get("region") || "toutes";
 
   const [selectedType, setSelectedType] = useState("tous");
@@ -22,7 +28,7 @@ export default function EstablishmentSelection() {
     availableTypologies,
     filteredEtablissements,
   } = useStructuresFilters({
-    selectedYear,
+    selectedYear: latestYear,
     selectedType,
     selectedRegion,
     selectedTypologie,
@@ -33,7 +39,7 @@ export default function EstablishmentSelection() {
     const next = new URLSearchParams(searchParams);
     next.set("structureId", id);
     next.set("section", "ressources");
-    next.set("year", selectedYear || "2024");
+    next.set("year", "2024");
     next.delete("type");
     next.delete("region");
     next.delete("typologie");
@@ -129,7 +135,6 @@ export default function EstablishmentSelection() {
               const region = etab.etablissement_actuel_region;
               const studentCount = etab.effectif_sans_cpge;
               const year = etab.anuniv;
-              console.log(etab);
 
               return (
                 <Col key={id} xs="12" md="6" lg="4">

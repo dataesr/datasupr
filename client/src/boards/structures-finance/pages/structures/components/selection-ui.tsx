@@ -1,6 +1,6 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Row, Col } from "@dataesr/dsfr-plus";
-import SearchableSelect from "../../../../../components/searchable-select";
+import Select from "../../../../../components/select";
 import Dropdown from "../../../../../components/dropdown";
 
 interface SelectionUIProps {
@@ -36,6 +36,8 @@ export default function SelectionUI({
   onEtablissementSelect,
   onResetFilters,
 }: SelectionUIProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+
   const hasActiveFilters =
     (selectedType && selectedType !== "tous") ||
     (selectedTypologie && selectedTypologie !== "toutes") ||
@@ -146,78 +148,78 @@ export default function SelectionUI({
           }}
         >
           <Dropdown label={typeLabel} icon="building-line" size="sm">
-            <button
-              className={`fx-dropdown__item ${selectedType === "tous" ? "fx-dropdown__item--active" : ""}`}
+            <Dropdown.Item
+              active={selectedType === "tous"}
               onClick={() => onTypeChange("tous")}
             >
               Tous les types
-            </button>
+            </Dropdown.Item>
             {availableTypes.map((type: string) => (
-              <button
+              <Dropdown.Item
                 key={type}
-                className={`fx-dropdown__item ${selectedType === type ? "fx-dropdown__item--active" : ""}`}
+                active={selectedType === type}
                 onClick={() => onTypeChange(type)}
               >
                 {type}
-              </button>
+              </Dropdown.Item>
             ))}
           </Dropdown>
 
           <Dropdown label={typologieLabel} icon="layout-grid-line" size="sm">
-            <button
-              className={`fx-dropdown__item ${selectedTypologie === "toutes" ? "fx-dropdown__item--active" : ""}`}
+            <Dropdown.Item
+              active={selectedTypologie === "toutes"}
               onClick={() => onTypologieChange("toutes")}
             >
               Toutes les typologies
-            </button>
+            </Dropdown.Item>
             {availableTypologies.map((typo) => (
-              <button
+              <Dropdown.Item
                 key={typo}
-                className={`fx-dropdown__item ${selectedTypologie === typo ? "fx-dropdown__item--active" : ""}`}
+                active={selectedTypologie === typo}
                 onClick={() => onTypologieChange(typo)}
               >
                 {typo}
-              </button>
+              </Dropdown.Item>
             ))}
           </Dropdown>
 
           <Dropdown label={regionLabel} icon="map-pin-2-line" size="sm">
-            <button
-              className={`fx-dropdown__item ${selectedRegion === "toutes" ? "fx-dropdown__item--active" : ""}`}
+            <Dropdown.Item
+              active={selectedRegion === "toutes"}
               onClick={() => onRegionChange("toutes")}
             >
               Toutes les régions
-            </button>
+            </Dropdown.Item>
             {availableRegions.map((region) => (
-              <button
+              <Dropdown.Item
                 key={region}
-                className={`fx-dropdown__item ${selectedRegion === region ? "fx-dropdown__item--active" : ""}`}
+                active={selectedRegion === region}
                 onClick={() => onRegionChange(region)}
               >
                 {region}
-              </button>
+              </Dropdown.Item>
             ))}
           </Dropdown>
 
           <Dropdown label={rceLabel} icon="bank-line" size="sm">
-            <button
-              className={`fx-dropdown__item ${selectedRce === "tous" ? "fx-dropdown__item--active" : ""}`}
+            <Dropdown.Item
+              active={selectedRce === "tous"}
               onClick={() => onRceChange("tous")}
             >
               RCE et non RCE
-            </button>
-            <button
-              className={`fx-dropdown__item ${selectedRce === "rce" ? "fx-dropdown__item--active" : ""}`}
+            </Dropdown.Item>
+            <Dropdown.Item
+              active={selectedRce === "rce"}
               onClick={() => onRceChange("rce")}
             >
               RCE uniquement
-            </button>
-            <button
-              className={`fx-dropdown__item ${selectedRce === "non-rce" ? "fx-dropdown__item--active" : ""}`}
+            </Dropdown.Item>
+            <Dropdown.Item
+              active={selectedRce === "non-rce"}
               onClick={() => onRceChange("non-rce")}
             >
               Non RCE uniquement
-            </button>
+            </Dropdown.Item>
           </Dropdown>
         </div>
 
@@ -227,13 +229,47 @@ export default function SelectionUI({
             {filteredEtablissements.length > 1 ? "s" : ""} disponible
             {filteredEtablissements.length > 1 ? "s" : ""}
           </p>
-          <SearchableSelect
-            options={etablissementOptions}
-            value=""
-            onChange={handleEtablissementSelect}
-            placeholder="Rechercher un établissement par nom ou ville..."
-            label=""
-          />
+          <Select
+            label="Rechercher un établissement..."
+            icon="search-line"
+            size="md"
+            fullWidth
+          >
+            <Select.Search
+              placeholder="Rechercher par nom ou ville..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Select.Content maxHeight="300px">
+              {etablissementOptions
+                .filter((opt) =>
+                  searchQuery
+                    ? opt.searchableText
+                        .toLowerCase()
+                        .includes(searchQuery.toLowerCase())
+                    : true
+                )
+                .slice(0, 50)
+                .map((opt) => (
+                  <Select.Option
+                    key={opt.id}
+                    value={opt.id}
+                    onClick={() => handleEtablissementSelect(opt.id)}
+                  >
+                    {opt.label}
+                  </Select.Option>
+                ))}
+              {etablissementOptions.filter((opt) =>
+                searchQuery
+                  ? opt.searchableText
+                      .toLowerCase()
+                      .includes(searchQuery.toLowerCase())
+                  : true
+              ).length === 0 && (
+                <Select.Empty>Aucun établissement trouvé</Select.Empty>
+              )}
+            </Select.Content>
+          </Select>
         </div>
       </Col>
       <Col

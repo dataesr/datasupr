@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Dropdown from "../../../../../components/dropdown";
+import Select from "../../../../../components/select";
 
 interface SectionNavigationProps {
   activeSection: string;
@@ -82,32 +82,40 @@ export default function SectionNavigation({
           className="fr-nav__item"
           style={{
             marginLeft: "auto",
-            alignSelf: "stretch",
             display: "flex",
-            alignItems: "stretch",
+            alignItems: "center",
           }}
         >
-          <Dropdown
+          <Select
             label={`${selectedYear}`}
             icon="calendar-line"
             align="end"
-            variant="nav"
+            outline={false}
+            className="nav-year-select"
           >
             {years.map((year) => (
-              <button
+              <Select.Radio
                 key={year}
-                className={`fx-dropdown__item ${selectedYear === year.toString() ? "fx-dropdown__item--active" : ""}`}
-                onClick={() => onYearChange(year.toString())}
+                value={year.toString()}
+                checked={selectedYear === year.toString()}
+                onChange={() => onYearChange(year.toString())}
               >
                 {year}
-              </button>
+              </Select.Radio>
             ))}
-          </Dropdown>
+          </Select>
         </li>
       </ul>
 
       <style>{`
         [data-mobile-burger] { display: none; }
+        .nav-year-select .fx-select__trigger {
+          color: var(--text-default-grey);
+          background: none !important;
+        }
+        .nav-year-select .fx-select__trigger:hover {
+          background: var(--background-default-grey-hover) !important;
+        }
         @media (max-width: 61.99em) {
           [data-mobile-burger] { 
             display: flex !important; 

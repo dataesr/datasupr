@@ -5,6 +5,7 @@ import { SECTION_COLORS } from "../../../../constants/colors";
 import RessourcesPropresChart from "./charts/ressources-propres";
 // import RessourcesPropresEvolutionChart from "./charts/ressources-propres-evolution";
 import "../styles.scss";
+import RessourcesPropresEvolutionChart from "./charts/ressources-propres-evolution";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
@@ -237,11 +238,11 @@ export function FinancementsSection({
         />
       </div>
 
-      {/* <div className="fr-mb-4w">
+      <div className="fr-mb-4w">
         <RessourcesPropresEvolutionChart
           etablissementName={data?.etablissement_lib}
         />
-      </div> */}
+      </div>
     </div>
   );
 }

@@ -221,7 +221,13 @@ export function useFilteredEtablissements(
     });
 
     return filtered;
-  }, [allEtablissements, selectedType, selectedRegion, selectedTypologie, selectedRce]);
+  }, [
+    allEtablissements,
+    selectedType,
+    selectedRegion,
+    selectedTypologie,
+    selectedRce,
+  ]);
 }
 
 interface UseStructuresFiltersParams {

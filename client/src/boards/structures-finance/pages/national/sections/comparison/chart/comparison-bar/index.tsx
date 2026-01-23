@@ -3,6 +3,7 @@ import { Row, Col } from "@dataesr/dsfr-plus";
 import { createComparisonBarOptions } from "./options";
 import { RenderData } from "./render-data";
 import Dropdown from "../../../../../../../../components/dropdown";
+import Select from "../../../../../../../../components/select";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 
 interface ComparisonBarChartProps {
@@ -228,27 +229,17 @@ export default function ComparisonBarChart({
             fullWidth
           >
             {Object.entries(groupedMetrics).map(([category, metrics]) => (
-              <div key={category}>
-                <div
-                  className="fr-text--xs fr-text--bold"
-                  style={{
-                    padding: "0.5rem 0.75rem",
-                    color: "var(--text-mention-grey)",
-                    backgroundColor: "var(--background-alt-grey)",
-                  }}
-                >
-                  {category}
-                </div>
+              <Dropdown.Group key={category} label={category}>
                 {metrics.map((metric) => (
-                  <button
+                  <Dropdown.Item
                     key={metric.key}
-                    className={`fx-dropdown__item ${selectedMetric === metric.key ? "fx-dropdown__item--active" : ""}`}
+                    active={selectedMetric === metric.key}
                     onClick={() => setSelectedMetric(metric.key)}
                   >
                     {metric.label}
-                  </button>
+                  </Dropdown.Item>
                 ))}
-              </div>
+              </Dropdown.Group>
             ))}
           </Dropdown>
         </Col>
@@ -256,29 +247,22 @@ export default function ComparisonBarChart({
           <p className="fr-text--sm fr-text--bold fr-mb-1w">
             Nombre d'établissements
           </p>
-          <Dropdown label={`${topN}`} icon="list-ordered" size="sm">
+          <Select
+            label={`${topN} établissements`}
+            icon="list-ordered"
+            size="sm"
+          >
             {TOP_N_OPTIONS.map((n) => (
-              <label
+              <Select.Radio
                 key={n}
-                className="fx-dropdown__item"
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                  cursor: "pointer",
-                }}
+                value={String(n)}
+                checked={topN === n}
+                onChange={() => setTopN(n)}
               >
-                <input
-                  type="radio"
-                  name="topN"
-                  checked={topN === n}
-                  onChange={() => setTopN(n)}
-                  style={{ accentColor: "var(--text-active-blue-france)" }}
-                />
                 {n} établissements
-              </label>
+              </Select.Radio>
             ))}
-          </Dropdown>
+          </Select>
         </Col>
       </Row>
 

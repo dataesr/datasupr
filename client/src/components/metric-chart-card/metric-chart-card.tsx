@@ -39,9 +39,9 @@ export function MetricChartCard({
       chart: {
         renderTo: chartRef.current,
         type: "areaspline",
-        height: 110,
+        height: 80,
         backgroundColor: "transparent",
-        margin: [-0, -50, 0, -50],
+        margin: [0, -40, 0, -45],
         spacing: [0, 0, 0, 0],
       },
       title: {
@@ -60,6 +60,9 @@ export function MetricChartCard({
         tickLength: 0,
         minPadding: 0,
         maxPadding: 0,
+        startOnTick: false,
+        endOnTick: false,
+        tickmarkPlacement: "on",
       },
       yAxis: {
         visible: false,
@@ -120,6 +123,8 @@ export function MetricChartCard({
           },
           threshold: null,
           enableMouseTracking: true,
+          stickyTracking: true,
+          trackByArea: true,
         },
       },
       exporting: {
@@ -127,10 +132,25 @@ export function MetricChartCard({
       },
       tooltip: {
         shared: true,
+        useHTML: true,
+        outside: true,
         backgroundColor: "var(--background-contrast-grey)",
         borderColor: "var(--border-default-grey)",
         style: {
           color: "var(--text-default-grey)",
+          zIndex: 9999,
+        },
+        positioner: function (labelWidth, labelHeight, point) {
+          const chart = this.chart;
+          let x = point.plotX + chart.plotLeft - labelWidth / 2;
+          let y = point.plotY + chart.plotTop - labelHeight - 10;
+
+          if (x < 5) x = 5;
+          if (x + labelWidth > chart.chartWidth - 5)
+            x = chart.chartWidth - labelWidth - 5;
+          if (y < 5) y = point.plotY + chart.plotTop + 10;
+
+          return { x, y };
         },
         formatter: function () {
           const val = this.y as number;
@@ -190,9 +210,12 @@ export function MetricChartCard({
   //     ? `${trend > 0 ? "+" : ""}${trend.toFixed(1)}%`
   //     : null;
 
+  const hasChart = evolutionData && evolutionData.length > 0;
+  const chartHeight = 100;
+
   return (
     <div
-      className="fr-card fr-enlarge-link"
+      className="fr-card"
       tabIndex={0}
       role="article"
       aria-label={`${title}: ${value}${detail ? `, ${detail}` : ""}`}
@@ -202,27 +225,16 @@ export function MetricChartCard({
         borderRight: "none",
         borderBottom: "none",
         backgroundColor: DSFR_COLORS.backgroundAlt,
-        position: "relative",
-        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
       }}
     >
-      {evolutionData && evolutionData.length > 0 && (
-        <div
-          ref={chartRef}
-          style={{
-            position: "absolute",
-            bottom: "-10px",
-            left: 0,
-            right: 0,
-            width: "100%",
-            height: "110px",
-          }}
-        />
-      )}
-
       <div
         className="fr-card__body fr-p-2w"
-        style={{ position: "relative", zIndex: 1 }}
+        style={{
+          flex: "1 1 auto",
+          order: 1,
+        }}
       >
         <div className="fr-card__content">
           <p
@@ -235,45 +247,35 @@ export function MetricChartCard({
           >
             {title}
           </p>
-          <p className="fr-h5 fr-mb-1v">{value}</p>
+          <p className="fr-h5 fr-mb-1v" style={{ pointerEvents: "auto" }}>
+            {value}
+          </p>
           {detail && (
             <p
               className="fr-text--sm"
               style={{
                 color: DSFR_COLORS.textDefault,
                 margin: 0,
-                position: "relative",
-                zIndex: 10,
               }}
             >
               {detail}
             </p>
           )}
         </div>
-        {/* {trendFormatted && (
-          <div
-            style={{
-              position: "absolute",
-              top: "0.5rem",
-              right: "0.5rem",
-              fontSize: "0.875rem",
-              fontWeight: 600,
-              color:
-                trend && trend > 0
-                  ? "var(--green-archipel-sun-391)"
-                  : trend && trend < 0
-                  ? "var(--pink-tuile-sun-425)"
-                  : "var(--text-mention-grey)",
-              display: "flex",
-              alignItems: "center",
-              gap: "3px",
-            }}
-          >
-            {trend && trend > 0 ? "↗" : trend && trend < 0 ? "↘" : "→"}
-            {trendFormatted}
-          </div>
-        )} */}
       </div>
+
+      {hasChart && (
+        <div
+          ref={chartRef}
+          style={{
+            width: "100%",
+            height: `${chartHeight}px`,
+            flex: "0 0 auto",
+            order: 2,
+            marginBottom: -1,
+          }}
+        />
+      )}
     </div>
   );
 }

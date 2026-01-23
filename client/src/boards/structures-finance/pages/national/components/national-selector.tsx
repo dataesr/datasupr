@@ -165,13 +165,13 @@ export default function NationalSelector() {
       dropdown: (
         <Dropdown label={selectedYear} size="sm" fullWidth>
           {years.map((year) => (
-            <button
+            <Dropdown.Item
               key={year}
-              className={`fx-dropdown__item ${selectedYear === String(year) ? "fx-dropdown__item--active" : ""}`}
+              active={selectedYear === String(year)}
               onClick={() => handleYearChange(String(year))}
             >
               {year}
-            </button>
+            </Dropdown.Item>
           ))}
         </Dropdown>
       ),
@@ -184,20 +184,20 @@ export default function NationalSelector() {
       iconColor: "var(--text-label-blue-ecume)",
       dropdown: (
         <Dropdown label={typeLabel} size="sm" fullWidth>
-          <button
-            className={`fx-dropdown__item ${!selectedType ? "fx-dropdown__item--active" : ""}`}
+          <Dropdown.Item
+            active={!selectedType}
             onClick={() => handleTypeChange("")}
           >
             Tous les types
-          </button>
+          </Dropdown.Item>
           {availableTypes.map((type: string) => (
-            <button
+            <Dropdown.Item
               key={type}
-              className={`fx-dropdown__item ${selectedType === type ? "fx-dropdown__item--active" : ""}`}
+              active={selectedType === type}
               onClick={() => handleTypeChange(type)}
             >
               {type}
-            </button>
+            </Dropdown.Item>
           ))}
         </Dropdown>
       ),
@@ -210,20 +210,20 @@ export default function NationalSelector() {
       iconColor: "var(--text-label-green-emeraude)",
       dropdown: (
         <Dropdown label={typologieLabel} size="sm" fullWidth>
-          <button
-            className={`fx-dropdown__item ${!selectedTypologie ? "fx-dropdown__item--active" : ""}`}
+          <Dropdown.Item
+            active={!selectedTypologie}
             onClick={() => handleTypologieChange("")}
           >
             Toutes les typologies
-          </button>
+          </Dropdown.Item>
           {availableTypologies.map((typo: string) => (
-            <button
+            <Dropdown.Item
               key={typo}
-              className={`fx-dropdown__item ${selectedTypologie === typo ? "fx-dropdown__item--active" : ""}`}
+              active={selectedTypologie === typo}
               onClick={() => handleTypologieChange(typo)}
             >
               {typo}
-            </button>
+            </Dropdown.Item>
           ))}
         </Dropdown>
       ),
@@ -236,20 +236,20 @@ export default function NationalSelector() {
       iconColor: "var(--text-label-orange-terre-battue)",
       dropdown: (
         <Dropdown label={regionLabel} size="sm" fullWidth>
-          <button
-            className={`fx-dropdown__item ${!selectedRegion ? "fx-dropdown__item--active" : ""}`}
+          <Dropdown.Item
+            active={!selectedRegion}
             onClick={() => handleRegionChange("")}
           >
             Toutes les régions
-          </button>
+          </Dropdown.Item>
           {availableRegions.map((region: string) => (
-            <button
+            <Dropdown.Item
               key={region}
-              className={`fx-dropdown__item ${selectedRegion === region ? "fx-dropdown__item--active" : ""}`}
+              active={selectedRegion === region}
               onClick={() => handleRegionChange(region)}
             >
               {region}
-            </button>
+            </Dropdown.Item>
           ))}
         </Dropdown>
       ),
