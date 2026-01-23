@@ -4,8 +4,7 @@ import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useStructuresFilters } from "../hooks";
 import SelectionUI from "./selection-ui";
 import StructureCard from "../../../../../components/structure-card";
-import CustomBreadcrumb from "../../../../../components/custom-breadcrumb";
-import navigationConfig from "../../../navigation-config.json";
+import StructuresBreadcrumb from "./structures-breadcrumb";
 
 export default function EstablishmentSelection() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -76,7 +75,7 @@ export default function EstablishmentSelection() {
         <Container as="section">
           <Row>
             <Col>
-              <CustomBreadcrumb config={navigationConfig} />
+              <StructuresBreadcrumb />
             </Col>
           </Row>
           <Row>
