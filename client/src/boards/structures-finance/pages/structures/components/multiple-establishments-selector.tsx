@@ -42,9 +42,6 @@ export default function MultipleEstablishmentsSelector({
         <Col>
           <div className="fr-notice fr-notice--info">
             <div className="fr-notice__body">
-              <p className="fr-notice__title">
-                Plusieurs établissements historiques détectés
-              </p>
               <p className="fr-notice__desc">
                 Pour l'année <strong>{selectedYear}</strong>, l'établissement
                 actuel <strong>{etablissementActuelLib}</strong> regroupe{" "}

@@ -42,9 +42,6 @@ export default function EstablishmentNotExistsAlert({
           <Row>
             <Col>
               <div className="fr-alert fr-alert--warning">
-                <h3 className="fr-alert__title">
-                  Établissement non disponible pour l'année {selectedYear}
-                </h3>
                 <p>
                   L'établissement <strong>{etablissementLibHistorique}</strong>{" "}
                   n'existe pas pour l'année <strong>{selectedYear}</strong>.
