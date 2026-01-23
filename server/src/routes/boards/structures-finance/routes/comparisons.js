@@ -219,6 +219,8 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
           part_ressources_propres: 1,
           recettes_totales: 1,
           anuniv: 1,
+          is_rce: 1,
+          rce: 1,
         },
       },
       { $sort: { etablissement_actuel_lib: 1 } },
