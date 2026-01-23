@@ -42,6 +42,7 @@ router.get("/structures-finance/definitions", async (req, res) => {
         indicateur: item.Indicateur,
         libelle: item.libelleFr,
         definition: item.DefinitionFr,
+        interpretation: item.InterpretationFr,
         source: item.SourceFr,
         unite: item.uniteFr || "-",
       });
