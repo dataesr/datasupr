@@ -117,8 +117,8 @@ export default function ClassificationsByStructures() {
     name: classification.key,
   })).reverse();
 
-  const titleProjects = `Nombre de projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
-  const titleBudget = `Montant total des projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const titleProjects = `Nombre de projets par structure ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const titleBudget = `Montant total des projets par structure ${getYearRangeLabel({ yearMax, yearMin })}`;
   const axisProjects = "Nombre de projets financés";
   const axisBudget = "Montants financés (€)";
   const tooltipProjects = function (this: any) {
