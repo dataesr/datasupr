@@ -177,7 +177,8 @@ export function useFilteredEtablissements(
   allEtablissements: any[],
   selectedType: string,
   selectedRegion: string,
-  selectedTypologie: string
+  selectedTypologie: string,
+  selectedRce: string = "tous"
 ) {
   return useMemo(() => {
     let filtered = allEtablissements;
@@ -206,6 +207,13 @@ export function useFilteredEtablissements(
       );
     }
 
+    if (selectedRce && selectedRce !== "tous") {
+      filtered = filtered.filter((etab: any) => {
+        const isRce = etab.is_rce === true || etab.is_rce === 1;
+        return selectedRce === "rce" ? isRce : !isRce;
+      });
+    }
+
     filtered.sort((a: any, b: any) => {
       const nameA = a.etablissement_lib || a.nom || "";
       const nameB = b.etablissement_lib || b.nom || "";
@@ -213,7 +221,7 @@ export function useFilteredEtablissements(
     });
 
     return filtered;
-  }, [allEtablissements, selectedType, selectedRegion, selectedTypologie]);
+  }, [allEtablissements, selectedType, selectedRegion, selectedTypologie, selectedRce]);
 }
 
 interface UseStructuresFiltersParams {
@@ -221,6 +229,7 @@ interface UseStructuresFiltersParams {
   selectedType?: string;
   selectedRegion?: string;
   selectedTypologie?: string;
+  selectedRce?: string;
 }
 
 interface UseStructuresFiltersReturn {
@@ -238,6 +247,7 @@ export function useStructuresFilters({
   selectedType = "tous",
   selectedRegion = "toutes",
   selectedTypologie = "toutes",
+  selectedRce = "tous",
 }: UseStructuresFiltersParams): UseStructuresFiltersReturn {
   const { allEtablissements, isLoading } = useEtablissementsData(selectedYear);
 
@@ -260,7 +270,8 @@ export function useStructuresFilters({
     allEtablissements,
     selectedType,
     selectedRegion,
-    selectedTypologie
+    selectedTypologie,
+    selectedRce
   );
 
   return {

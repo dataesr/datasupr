@@ -14,6 +14,7 @@ export default function EstablishmentSelection() {
 
   const [selectedType, setSelectedType] = useState("tous");
   const [selectedTypologie, setSelectedTypologie] = useState("toutes");
+  const [selectedRce, setSelectedRce] = useState("tous");
 
   const {
     availableTypes,
@@ -25,6 +26,7 @@ export default function EstablishmentSelection() {
     selectedType,
     selectedRegion,
     selectedTypologie,
+    selectedRce,
   });
 
   const handleEtablissementSelect = (id: string) => {
@@ -60,9 +62,17 @@ export default function EstablishmentSelection() {
     setSearchParams(next);
   };
 
+  const handleRceChange = (rce: string) => {
+    setSelectedRce(rce);
+    const next = new URLSearchParams(searchParams);
+    next.delete("structureId");
+    setSearchParams(next);
+  };
+
   const handleResetFilters = () => {
     setSelectedType("tous");
     setSelectedTypologie("toutes");
+    setSelectedRce("tous");
     const next = new URLSearchParams(searchParams);
     next.set("region", "toutes");
     next.delete("structureId");
@@ -84,6 +94,7 @@ export default function EstablishmentSelection() {
                 selectedType={selectedType}
                 selectedTypologie={selectedTypologie}
                 selectedRegion={selectedRegion}
+                selectedRce={selectedRce}
                 availableTypes={availableTypes}
                 availableTypologies={availableTypologies}
                 availableRegions={availableRegions}
@@ -91,6 +102,7 @@ export default function EstablishmentSelection() {
                 onTypeChange={handleTypeChange}
                 onTypologieChange={handleTypologieChange}
                 onRegionChange={handleRegionChange}
+                onRceChange={handleRceChange}
                 onEtablissementSelect={handleEtablissementSelect}
                 onResetFilters={handleResetFilters}
               />

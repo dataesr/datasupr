@@ -7,6 +7,7 @@ interface SelectionUIProps {
   selectedType: string;
   selectedTypologie: string;
   selectedRegion: string;
+  selectedRce: string;
   availableTypes: string[];
   availableTypologies: string[];
   availableRegions: string[];
@@ -14,6 +15,7 @@ interface SelectionUIProps {
   onTypeChange: (type: string) => void;
   onTypologieChange: (typologie: string) => void;
   onRegionChange: (region: string) => void;
+  onRceChange: (rce: string) => void;
   onEtablissementSelect: (id: string) => void;
   onResetFilters?: () => void;
 }
@@ -22,6 +24,7 @@ export default function SelectionUI({
   selectedType,
   selectedTypologie,
   selectedRegion,
+  selectedRce,
   availableTypes,
   availableTypologies,
   availableRegions,
@@ -29,13 +32,15 @@ export default function SelectionUI({
   onTypeChange,
   onTypologieChange,
   onRegionChange,
+  onRceChange,
   onEtablissementSelect,
   onResetFilters,
 }: SelectionUIProps) {
   const hasActiveFilters =
     (selectedType && selectedType !== "tous") ||
     (selectedTypologie && selectedTypologie !== "toutes") ||
-    (selectedRegion && selectedRegion !== "toutes");
+    (selectedRegion && selectedRegion !== "toutes") ||
+    (selectedRce && selectedRce !== "tous");
   const etablissementOptions = useMemo(
     () =>
       filteredEtablissements
@@ -98,6 +103,12 @@ export default function SelectionUI({
       : selectedTypologie;
   const regionLabel =
     selectedRegion === "toutes" ? "Toutes les régions" : selectedRegion;
+  const rceLabel =
+    selectedRce === "tous"
+      ? "RCE et non RCE"
+      : selectedRce === "rce"
+        ? "RCE uniquement"
+        : "Non RCE uniquement";
 
   return (
     <Row>
@@ -186,6 +197,27 @@ export default function SelectionUI({
                 {region}
               </button>
             ))}
+          </Dropdown>
+
+          <Dropdown label={rceLabel} icon="bank-line" size="sm">
+            <button
+              className={`fx-dropdown__item ${selectedRce === "tous" ? "fx-dropdown__item--active" : ""}`}
+              onClick={() => onRceChange("tous")}
+            >
+              RCE et non RCE
+            </button>
+            <button
+              className={`fx-dropdown__item ${selectedRce === "rce" ? "fx-dropdown__item--active" : ""}`}
+              onClick={() => onRceChange("rce")}
+            >
+              RCE uniquement
+            </button>
+            <button
+              className={`fx-dropdown__item ${selectedRce === "non-rce" ? "fx-dropdown__item--active" : ""}`}
+              onClick={() => onRceChange("non-rce")}
+            >
+              Non RCE uniquement
+            </button>
           </Dropdown>
         </div>
 
