@@ -4,9 +4,8 @@ import { useMemo, useEffect, useRef } from "react";
 import { useFinanceYears } from "../../../api/common";
 import { useFinanceAdvancedComparison } from "../api";
 import { useNationalFilters } from "../hooks/useNationalFilters";
-import CustomBreadcrumb from "../../../../../components/custom-breadcrumb";
+import NationalBreadcrumb from "./national-breadcrumb";
 import Dropdown from "../../../../../components/dropdown";
-import navigationConfig from "../../../navigation-config.json";
 
 export default function NationalSelector() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -263,7 +262,7 @@ export default function NationalSelector() {
         <Container as="section">
           <Row>
             <Col>
-              <CustomBreadcrumb config={navigationConfig} />
+              <NationalBreadcrumb />
             </Col>
           </Row>
           <Row className="fr-mb-3w">

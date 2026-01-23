@@ -17,8 +17,7 @@ import {
   AnalysesSection,
   ImplantationsSection,
 } from "../sections/sections";
-import CustomBreadcrumb from "../../../../../components/custom-breadcrumb";
-import navigationConfig from "../../../navigation-config.json";
+import StructuresBreadcrumb from "./structures-breadcrumb";
 import MultipleEstablishmentsSelector from "./multiple-establishments-selector";
 import EstablishmentNotExistsAlert from "./establishment-not-exists-alert";
 
@@ -150,7 +149,11 @@ export default function EstablishmentView() {
           <Container as="section">
             <Row>
               <Col>
-                <CustomBreadcrumb config={navigationConfig} />
+                <StructuresBreadcrumb
+                  etablissementLib={
+                    multiplesData.etablissements[0]?.etablissement_actuel_lib
+                  }
+                />
               </Col>
             </Row>
           </Container>
@@ -176,7 +179,12 @@ export default function EstablishmentView() {
         <Container as="section">
           <Row>
             <Col>
-              <CustomBreadcrumb config={navigationConfig} />
+              <StructuresBreadcrumb
+                etablissementLib={
+                  detailData?.etablissement_lib ||
+                  detailData?.etablissement_actuel_lib
+                }
+              />
             </Col>
           </Row>
           <Row>
