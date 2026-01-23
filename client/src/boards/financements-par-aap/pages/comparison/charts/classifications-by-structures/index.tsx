@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, formatCompactNumber, funders, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -45,11 +45,11 @@ export default function ClassificationsByStructures() {
           },
         },
       },
-      by_structure_budget: {
+      by_classifications_budget: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "project_classification.primary_field.keyword",
           order: { "sum_budget": "desc" },
-          size: structures.length,
+          size: 25,
         },
         aggregations: {
           sum_budget: {
@@ -57,10 +57,10 @@ export default function ClassificationsByStructures() {
               field: "project_budgetTotal",
             },
           },
-          by_project_type: {
+          by_structure: {
             terms: {
-              field: "project_classification.primary_field.keyword",
-              size: 25,
+              field: "participant_id_name_default.keyword",
+              size: structures.length,
             },
             aggregations: {
               sum_budget: {
@@ -90,17 +90,15 @@ export default function ClassificationsByStructures() {
 
   const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
   const seriesProject = classificationsProject.map((classification) => ({
-    data: classification.by_structure.buckets.map((structure) => structure?.unique_projects?.value ?? 0),
+    data: classification?.by_structure?.buckets?.map((bucket) => bucket?.unique_projects?.value ?? 0),
     name: classification.key,
   })).reverse();
-  const categoriesProject = classificationsProject.map((item) => item.key);
-  const classificationssBudget = data?.aggregations?.by_structure_budget?.buckets ?? [];
-  const seriesBudget = funders.map((funder) => ({
-    // color: getColorByFunder(funder),
-    data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
-    name: funder,
+  const categoriesProject = ["CNRS", "PLOP"];
+  const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
+  const seriesBudget = classificationsBudget.map((classification) => ({
+    data: classification?.by_structure?.buckets?.map((bucket) => bucket?.sum_budget?.value ?? 0),
+    name: classification.key,
   })).reverse();
-  const categoriesBudget = structuresBudget.map((item) => item.key);
 
   const titleProjects = `Nombre de projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const titleBudget = `Montant total des projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
@@ -153,7 +151,7 @@ export default function ClassificationsByStructures() {
     series: field === "projects" ? seriesProject : seriesBudget,
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", field === "projects" ? categoriesProject : categoriesBudget, "", field === "projects" ? axisProjects : axisBudget), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categoriesProject, "", field === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="classifications-by-structures">
