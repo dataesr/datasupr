@@ -33,7 +33,7 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
             lg="4"
           >
             <StructureCard
-              title={`${implantation.implantation}${implantation.siege ? " (Siège)" : ""}`}
+              title={`${implantation.implantation}`}
               region={implantation.siege ? "Site principal" : ""}
               studentCount={implantation.effectif_sans_cpge}
               year={data.anuniv}

@@ -18,15 +18,11 @@ export interface DefinitionCategory {
   }[];
 }
 
-export const useFinanceDefinitions = (language?: string, enabled = true) => {
+export const useFinanceDefinitions = (enabled = true) => {
   return useQuery({
-    queryKey: ["finance", "definitions", language ?? "fr"],
+    queryKey: ["finance", "definitions"],
     queryFn: async () => {
-      const sp = new URLSearchParams();
-      if (language) sp.append("language", language);
-      const url = `${VITE_APP_SERVER_URL}/structures-finance/definitions${
-        sp.toString() ? `?${sp.toString()}` : ""
-      }`;
+      const url = `${VITE_APP_SERVER_URL}/structures-finance/definitions`;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("Erreur lors de la récupération des définitions");

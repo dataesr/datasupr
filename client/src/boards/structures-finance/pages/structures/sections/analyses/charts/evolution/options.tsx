@@ -173,7 +173,9 @@ export const createEvolutionChartOptions = (
         const yearIndex = sortedData.findIndex(
           (d) => String(d.exercice) === String(year)
         );
-        let tooltip = `<div style="padding:10px"><div style="font-weight:bold;margin-bottom:8px">${year}</div>`;
+        const etablissement =
+          yearIndex >= 0 ? sortedData[yearIndex].etablissement_lib || "" : "";
+        let tooltip = `<div style="padding:10px"><div style="font-weight:bold;margin-bottom:8px">${etablissement}</div>`;
 
         this.points?.forEach((point: any) => {
           const metricKey = selectedMetrics.find(
@@ -257,7 +259,8 @@ export const createEvolutionChartOptions = (
 export const createStackedEvolutionChartOptions = (
   data: EvolutionData[],
   selectedMetrics: string[],
-  metricsConfig: Record<string, MetricConfig>
+  metricsConfig: Record<string, MetricConfig>,
+  showPercentage: boolean = false
 ): Highcharts.Options => {
   const sortedData = [...data]
     .sort((a, b) => a.exercice - b.exercice)
@@ -282,6 +285,13 @@ export const createStackedEvolutionChartOptions = (
         name: config.label,
         data: sortedData.map((item) => {
           const value = item[metricKey];
+          if (showPercentage) {
+            const total = selectedMetrics.reduce((sum, m) => {
+              const v = item[m];
+              return sum + (typeof v === "number" ? v : 0);
+            }, 0);
+            return total > 0 ? (value / total) * 100 : 0;
+          }
           return typeof value === "number" ? value : 0;
         }),
         color: config.color,
@@ -305,14 +315,18 @@ export const createStackedEvolutionChartOptions = (
     },
     yAxis: {
       title: {
-        text: "Effectifs",
+        text: showPercentage ? "Pourcentage" : "Effectifs",
       },
       labels: {
         formatter: function (this: any) {
           const value = this.value as number;
+          if (showPercentage) {
+            return Highcharts.numberFormat(value, 0, ",", " ") + "%";
+          }
           return Highcharts.numberFormat(value, 0, ",", " ");
         },
       },
+      max: showPercentage ? 100 : undefined,
       stackLabels: {
         enabled: true,
         style: {
@@ -320,6 +334,9 @@ export const createStackedEvolutionChartOptions = (
           color: "var(--text-default-grey)",
         },
         formatter: function (this: any) {
+          if (showPercentage) {
+            return "100%";
+          }
           return Highcharts.numberFormat(this.total, 0, ",", " ");
         },
       },
@@ -332,21 +349,36 @@ export const createStackedEvolutionChartOptions = (
       shadow: false,
       formatter: function () {
         const year = this.points?.[0]?.key || this.x;
-        let tooltip = `<div style="padding:10px"><div style="font-weight:bold;margin-bottom:8px">${year}</div>`;
+        const yearIndex = sortedData.findIndex(
+          (d) => String(d.exercice) === String(year)
+        );
+        const etablissement =
+          yearIndex >= 0 ? sortedData[yearIndex].etablissement_lib || "" : "";
+        let tooltip = `<div style="padding:10px"><div style="font-weight:bold;margin-bottom:8px">${etablissement}</div>`;
         let total = 0;
 
         this.points?.forEach((point: any) => {
           total += point.y || 0;
-          const valueStr = Highcharts.numberFormat(point.y, 0, ",", " ");
-          tooltip += `<div style="margin-top:4px">
+          if (showPercentage) {
+            const valueStr = Highcharts.numberFormat(point.y, 1, ",", " ");
+            tooltip += `<div style="margin-top:4px">
+            <span style="color:${point.series.color}">●</span> 
+            <strong>${point.series.name}:</strong> ${valueStr}%
+          </div>`;
+          } else {
+            const valueStr = Highcharts.numberFormat(point.y, 0, ",", " ");
+            tooltip += `<div style="margin-top:4px">
             <span style="color:${point.series.color}">●</span> 
             <strong>${point.series.name}:</strong> ${valueStr}
           </div>`;
+          }
         });
 
-        tooltip += `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd">
+        if (!showPercentage) {
+          tooltip += `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd">
           <strong>Total:</strong> ${Highcharts.numberFormat(total, 0, ",", " ")}
         </div>`;
+        }
         tooltip += `</div>`;
         return tooltip;
       },

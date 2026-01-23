@@ -32,7 +32,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
         <Row gutters>
           <Col xs="12" md="6">
             <MetricChartCard
-              title="Nombre d'emplois"
+              title="Nombre d'emplois d’enseignants"
               value={
                 data.emploi_etpt != null
                   ? data.emploi_etpt.toLocaleString("fr-FR", {
@@ -50,7 +50,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
               title="Taux d'encadrement"
               value={
                 data.taux_encadrement != null
-                  ? `${data.taux_encadrement.toFixed(1)} %`
+                  ? `${data.taux_encadrement.toFixed(1)} étudiants par emploi d’enseignant`
                   : "—"
               }
               detail={

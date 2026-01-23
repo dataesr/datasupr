@@ -4,6 +4,7 @@ import { useSearchParams } from "react-router-dom";
 import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
 import YearSelector from "../../components/year-selector";
 import navigationConfig from "../navigation-config.json";
+import ClassificationsByStructures from "./charts/classifications-by-structures";
 import Dispersion from "./charts/dispersion";
 import ProjectsByStructures from "./charts/projects-by-structures";
 import StructuresSelector from "./components/structures-selector";
@@ -39,6 +40,11 @@ export default function Comparison() {
             <Row gutters>
               <Col>
                 <Dispersion />
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col>
+                <ClassificationsByStructures />
               </Col>
             </Row>
           </>

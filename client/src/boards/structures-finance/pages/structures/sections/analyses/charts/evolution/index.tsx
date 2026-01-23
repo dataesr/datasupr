@@ -1,6 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Row, Col } from "@dataesr/dsfr-plus";
+import {
+  Row,
+  Col,
+  SegmentedControl,
+  SegmentedElement,
+} from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "./api";
 import {
   createEvolutionChartOptions,
@@ -27,6 +32,9 @@ type MetricKey = keyof typeof METRICS_CONFIG;
 
 export type AnalysisKey = keyof typeof PREDEFINED_ANALYSES;
 
+const capitalizeFirst = (str: string) =>
+  str.charAt(0).toUpperCase() + str.slice(1);
+
 const METRICS_CONFIG = {
   effectif_sans_cpge: {
     label: "Effectifs totaux",
@@ -35,19 +43,19 @@ const METRICS_CONFIG = {
     category: "Effectifs",
   },
   effectif_sans_cpge_l: {
-    label: "Effectifs Licence",
+    label: "1er cycle (Cursus L)",
     format: "number" as const,
     color: METRIC_COLORS.effectifsLicence,
     category: "Effectifs",
   },
   effectif_sans_cpge_m: {
-    label: "Effectifs Master",
+    label: "2ème cycle (Cursus M)",
     format: "number" as const,
     color: METRIC_COLORS.effectifsMaster,
     category: "Effectifs",
   },
   effectif_sans_cpge_d: {
-    label: "Effectifs Doctorat",
+    label: "3ème cycle (Cursus D)",
     format: "number" as const,
     color: METRIC_COLORS.effectifsDoctorat,
     category: "Effectifs",
@@ -106,9 +114,9 @@ const METRICS_CONFIG = {
   },
 
   anr_hors_investissements_d_avenir: {
-    label: "ANR (hors IA)",
+    label: "ANR hors investissements d'avenir",
     format: "euro" as const,
-    color: METRIC_COLORS.anr,
+    color: "#A558A0",
     category: "Recherche",
   },
   subventions_union_europeenne: {
@@ -255,6 +263,31 @@ const METRICS_CONFIG = {
     color: CHART_COLORS.palette[9],
     category: "Santé financière",
   },
+  resultat_net_comptable: {
+    label: "Résultat net comptable",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[10],
+    category: "Santé financière",
+  },
+  resultat_net_comptable_hors_sie: {
+    label: "Résultat net comptable hors SIE",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[11],
+    category: "Santé financière",
+  },
+  capacite_d_autofinancement: {
+    label: "Capacité d'autofinancement",
+    format: "euro" as const,
+    color: METRIC_COLORS.effectifs,
+    category: "Santé financière",
+  },
+  caf_produits_encaissables: {
+    label: "CAF / Produits encaissables",
+    format: "percent" as const,
+    color: METRIC_COLORS.effectifsLicence,
+    category: "Santé financière",
+    suffix: "%",
+  },
 
   effectif_sans_cpge_deg0: {
     label: "BAC ou inférieur",
@@ -355,92 +388,140 @@ const METRICS_CONFIG = {
   },
 
   effectif_sans_cpge_du: {
-    label: "Diplôme universitaire (DU)",
+    label: "Diplôme d'établissement",
     format: "number" as const,
     color: CHART_COLORS.palette[0],
     category: "Effectifs",
   },
   effectif_sans_cpge_dn: {
-    label: "Diplôme national (DN)",
+    label: "Diplôme national",
+    format: "number" as const,
+    color: CHART_COLORS.palette[1],
+    category: "Effectifs",
+  },
+
+  effectif_sans_cpge_iut: {
+    label: "Effectifs IUT",
+    format: "number" as const,
+    color: CHART_COLORS.palette[0],
+    category: "Effectifs",
+  },
+  effectif_sans_cpge_ing: {
+    label: "Effectifs ingénieur",
     format: "number" as const,
     color: CHART_COLORS.palette[1],
     category: "Effectifs",
   },
 
   part_droits_d_inscription: {
-    label: "Part droits d'inscription",
+    label: "Part des droits d’inscription",
     format: "percent" as const,
     color: METRIC_COLORS.droitsInscription,
     category: "Parts",
     suffix: "%",
   },
   part_formation_continue_diplomes_propres_et_vae: {
-    label: "Part formation continue",
+    label: "part de la formation continue",
     format: "percent" as const,
     color: METRIC_COLORS.formationContinue,
     category: "Parts",
     suffix: "%",
   },
   part_taxe_d_apprentissage: {
-    label: "Part taxe d'apprentissage",
+    label: "part de la taxe d'apprentissage",
     format: "percent" as const,
     color: CHART_COLORS.palette[5],
     category: "Parts",
     suffix: "%",
   },
   part_valorisation: {
-    label: "Part valorisation",
+    label: "part de la valorisation",
     format: "percent" as const,
     color: CHART_COLORS.palette[6],
     category: "Parts",
     suffix: "%",
   },
   part_anr_hors_investissements_d_avenir: {
-    label: "Part ANR (hors IA)",
+    label: "part de l'ANR hors investissements d'avenir",
     format: "percent" as const,
-    color: METRIC_COLORS.anr,
+    color: "#A558A0",
     category: "Parts",
     suffix: "%",
   },
   part_anr_investissements_d_avenir: {
-    label: "Part ANR investissements d'avenir",
+    label: "part de l'ANR investissements d'avenir",
     format: "percent" as const,
     color: CHART_COLORS.palette[7],
     category: "Parts",
     suffix: "%",
   },
   part_contrats_et_prestations_de_recherche_hors_anr: {
-    label: "Part contrats recherche",
+    label: "part des contrats de recherche",
     format: "percent" as const,
     color: METRIC_COLORS.contratsRecherche,
     category: "Parts",
     suffix: "%",
   },
   part_subventions_de_la_region: {
-    label: "Part subventions régionales",
+    label: "part des subventions régionales",
     format: "percent" as const,
     color: CHART_COLORS.palette[8],
     category: "Parts",
     suffix: "%",
   },
   part_subventions_union_europeenne: {
-    label: "Part subventions UE",
+    label: "part des subventions UE",
     format: "percent" as const,
     color: METRIC_COLORS.subventionsUE,
     category: "Parts",
     suffix: "%",
   },
   part_autres_ressources_propres: {
-    label: "Part autres ressources propres",
+    label: "part des autres ressources propres",
     format: "percent" as const,
     color: CHART_COLORS.palette[9],
     category: "Parts",
     suffix: "%",
   },
   part_autres_subventions: {
-    label: "Part autres subventions",
+    label: "part des autres subventions",
     format: "percent" as const,
     color: CHART_COLORS.palette[10],
+    category: "Parts",
+    suffix: "%",
+  },
+  part_effectif_sans_cpge_iut: {
+    label: "part des effectifs IUT",
+    format: "percent" as const,
+    color: CHART_COLORS.palette[0],
+    category: "Parts",
+    suffix: "%",
+  },
+  part_effectif_sans_cpge_ing: {
+    label: "part des effectifs ingénieur",
+    format: "percent" as const,
+    color: CHART_COLORS.palette[1],
+    category: "Parts",
+    suffix: "%",
+  },
+  part_ress_formation: {
+    label: "part des ressources formation",
+    format: "percent" as const,
+    color: CHART_COLORS.palette[11],
+    category: "Parts",
+    suffix: "%",
+  },
+  part_ress_recherche: {
+    label: "part des ressources recherche",
+    format: "percent" as const,
+    color: CHART_COLORS.palette[11],
+    category: "Parts",
+    suffix: "%",
+  },
+  part_ress_autres_recette: {
+    label: "part des autres ressources",
+    format: "percent" as const,
+    color: CHART_COLORS.palette[11],
     category: "Parts",
     suffix: "%",
   },
@@ -460,6 +541,11 @@ const METRIC_TO_PART: Partial<Record<MetricKey, MetricKey>> = {
   subventions_union_europeenne: "part_subventions_union_europeenne",
   autres_ressources_propres: "part_autres_ressources_propres",
   autres_subventions: "part_autres_subventions",
+  effectif_sans_cpge_iut: "part_effectif_sans_cpge_iut",
+  effectif_sans_cpge_ing: "part_effectif_sans_cpge_ing",
+  tot_ress_formation: "part_ress_formation",
+  tot_ress_recherche: "part_ress_recherche",
+  tot_ress_autres_recette: "part_ress_autres_recette",
 };
 
 export const PREDEFINED_ANALYSES = {
@@ -469,23 +555,29 @@ export const PREDEFINED_ANALYSES = {
     category: "Ressources",
     showBase100: false,
   },
+  "ressources-vs-effectifs": {
+    label: "Total des ressources vs effectifs d'étudiants (comparaison)",
+    metrics: ["produits_de_fonctionnement_encaissables", "effectif_sans_cpge"],
+    category: "Ressources",
+    showBase100: true,
+  },
   "ressources-scsp": {
     label: "SCSP",
     metrics: ["scsp"],
-    category: "Ressources",
+    category: "SCSP",
     showBase100: false,
   },
   "ressources-propres": {
-    label: "Ressources propres",
+    label: "Total des ressources propres",
     metrics: ["ressources_propres"],
     category: "Ressources",
     showBase100: false,
   },
-  "ressources-vs-effectifs": {
-    label: "Ressources vs effectifs",
-    metrics: ["produits_de_fonctionnement_encaissables", "effectif_sans_cpge"],
+  "ressources-formation": {
+    label: "Ressources propres formation",
+    metrics: ["tot_ress_formation"],
     category: "Ressources",
-    showBase100: true,
+    showBase100: false,
   },
   "ressources-droits-inscription": {
     label: "Droits d'inscription",
@@ -502,6 +594,12 @@ export const PREDEFINED_ANALYSES = {
   "ressources-taxe-apprentissage": {
     label: "Taxe d'apprentissage",
     metrics: ["taxe_d_apprentissage"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "ressources-recherche": {
+    label: "Ressources propres recherche",
+    metrics: ["tot_ress_recherche"],
     category: "Ressources",
     showBase100: false,
   },
@@ -535,6 +633,12 @@ export const PREDEFINED_ANALYSES = {
     category: "Ressources",
     showBase100: false,
   },
+  "ressources-autres-recettes": {
+    label: "Autres ressources propres (hors formation/recherche)",
+    metrics: ["tot_ress_autres_recette"],
+    category: "Ressources",
+    showBase100: false,
+  },
   "ressources-subventions-ue": {
     label: "Subventions UE",
     metrics: ["subventions_union_europeenne"],
@@ -550,24 +654,6 @@ export const PREDEFINED_ANALYSES = {
   "ressources-autres-subventions": {
     label: "Autres subventions",
     metrics: ["autres_subventions"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-formation": {
-    label: "Ressources propres formation",
-    metrics: ["tot_ress_formation"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-recherche": {
-    label: "Ressources propres recherche",
-    metrics: ["tot_ress_recherche"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-autres-recettes": {
-    label: "Autres ressources propres (hors formation/recherche)",
-    metrics: ["tot_ress_autres_recette"],
     category: "Ressources",
     showBase100: false,
   },
@@ -632,6 +718,30 @@ export const PREDEFINED_ANALYSES = {
     category: "Santé financière",
     showBase100: false,
   },
+  "sante-resultat-net": {
+    label: "Résultat net comptable",
+    metrics: ["resultat_net_comptable"],
+    category: "Santé financière",
+    showBase100: false,
+  },
+  "sante-resultat-net-hors-sie": {
+    label: "Résultat net comptable hors SIE",
+    metrics: ["resultat_net_comptable_hors_sie"],
+    category: "Santé financière",
+    showBase100: false,
+  },
+  "sante-capacite-autofinancement": {
+    label: "Capacité d'autofinancement",
+    metrics: ["capacite_d_autofinancement"],
+    category: "Santé financière",
+    showBase100: false,
+  },
+  "sante-caf-produits": {
+    label: "CAF / Produits encaissables",
+    metrics: ["caf_produits_encaissables"],
+    category: "Santé financière",
+    showBase100: false,
+  },
   "sante-equilibre-exploitation": {
     label: "FR, BFR et Trésorerie",
     metrics: ["fonds_de_roulement_net_global", "besoin_en_fonds_de_roulement"],
@@ -693,19 +803,26 @@ export const PREDEFINED_ANALYSES = {
     showBase100: true,
   },
 
+  "formations-diplomes": {
+    label: "Effectifs par type de diplôme",
+    metrics: ["effectif_sans_cpge_dn", "effectif_sans_cpge_du"],
+    category: "Formations",
+    showBase100: false,
+    chartType: "stacked",
+  },
   "formations-cycles": {
-    label: "Effectifs par cycle (L/M/D)",
+    label: "Effectifs par cursus (L/M/D)",
     metrics: [
-      "effectif_sans_cpge_l",
-      "effectif_sans_cpge_m",
       "effectif_sans_cpge_d",
+      "effectif_sans_cpge_m",
+      "effectif_sans_cpge_l",
     ],
     category: "Formations",
     showBase100: false,
     chartType: "stacked",
   },
   "formations-degres": {
-    label: "Effectifs par degré",
+    label: "Effectifs par degré d'étude",
     metrics: [
       "effectif_sans_cpge_deg0",
       "effectif_sans_cpge_deg1",
@@ -736,12 +853,17 @@ export const PREDEFINED_ANALYSES = {
     showBase100: false,
     chartType: "stacked",
   },
-  "formations-diplomes": {
-    label: "Effectifs par type de diplôme",
-    metrics: ["effectif_sans_cpge_du", "effectif_sans_cpge_dn"],
+  "formations-iut": {
+    label: "Effectifs en IUT",
+    metrics: ["effectif_sans_cpge_iut"],
     category: "Formations",
     showBase100: false,
-    chartType: "stacked",
+  },
+  "formations-ingenieur": {
+    label: "Effectifs en formation d'ingénieur",
+    metrics: ["effectif_sans_cpge_ing"],
+    category: "Formations",
+    showBase100: false,
   },
 } as const;
 
@@ -801,6 +923,9 @@ export default function EvolutionChart({
   selectedAnalysis: propSelectedAnalysis,
 }: EvolutionChartProps) {
   const [searchParams] = useSearchParams();
+  const [displayMode, setDisplayMode] = useState<"values" | "percentage">(
+    "values"
+  );
   const etablissementId =
     propEtablissementId || searchParams.get("structureId") || "";
   const selectedAnalysis =
@@ -833,7 +958,8 @@ export default function EvolutionChart({
       return createStackedEvolutionChartOptions(
         data,
         selectedMetrics,
-        METRICS_CONFIG
+        METRICS_CONFIG,
+        displayMode === "percentage"
       );
     }
 
@@ -843,7 +969,7 @@ export default function EvolutionChart({
       METRICS_CONFIG,
       false
     );
-  }, [data, selectedMetrics, selectedAnalysis, isStacked]);
+  }, [data, selectedMetrics, selectedAnalysis, isStacked, displayMode]);
 
   const chartOptionsBase100 = useMemo(() => {
     if (!data || data.length === 0 || !selectedAnalysis || !showBase100)
@@ -915,17 +1041,36 @@ export default function EvolutionChart({
     };
 
     return (
-      <ChartWrapper
-        config={stackedConfig}
-        options={chartOptions}
-        renderData={() => (
-          <RenderDataStacked
-            data={data}
-            metrics={selectedMetrics}
-            metricsConfig={METRICS_CONFIG}
-          />
-        )}
-      />
+      <>
+        <div className="fr-mb-2w">
+          <SegmentedControl name="evolution-stacked-mode">
+            <SegmentedElement
+              checked={displayMode === "values"}
+              label="Valeurs"
+              onClick={() => setDisplayMode("values")}
+              value="values"
+            />
+            <SegmentedElement
+              checked={displayMode === "percentage"}
+              label="Part %"
+              onClick={() => setDisplayMode("percentage")}
+              value="percentage"
+            />
+          </SegmentedControl>
+        </div>
+
+        <ChartWrapper
+          config={stackedConfig}
+          options={chartOptions}
+          renderData={() => (
+            <RenderDataStacked
+              data={data}
+              metrics={selectedMetrics}
+              metricsConfig={METRICS_CONFIG}
+            />
+          )}
+        />
+      </>
     );
   }
 
@@ -949,12 +1094,15 @@ export default function EvolutionChart({
       ? {
           id: "evolution-part",
           integrationURL: `/integration?chart_id=evolution-part&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
-          title: `${METRICS_CONFIG[partMetricKey].label}${etabName ? ` — ${etabName}` : ""}`,
+          title: `${capitalizeFirst(METRICS_CONFIG[partMetricKey].label)}${etabName ? ` — ${etabName}` : ""}`,
           comment: {
             fr: (
               <>
-                Évolution de la {METRICS_CONFIG[partMetricKey].label} sur
-                ressources propres sur la période {periodText}.
+                Évolution de la {METRICS_CONFIG[partMetricKey].label}{" "}
+                {partMetricKey.includes("effectif")
+                  ? "sur le total des effectifs"
+                  : "sur ressources propres"}{" "}
+                sur la période {periodText}.
               </>
             ),
           },

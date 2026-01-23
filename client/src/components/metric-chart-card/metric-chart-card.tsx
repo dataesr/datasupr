@@ -4,7 +4,7 @@ import { DSFR_COLORS } from "../../boards/structures-finance/constants/colors";
 
 interface MetricChartCardProps {
   title: string;
-  value: string;
+  value: string | React.ReactNode;
   detail?: string;
   color?: string;
   evolutionData?: Array<{ exercice: number; value: number }>;
@@ -222,7 +222,7 @@ export function MetricChartCard({
 
       <div
         className="fr-card__body fr-p-2w"
-        style={{ position: "relative", zIndex: 1, pointerEvents: "none" }}
+        style={{ position: "relative", zIndex: 1 }}
       >
         <div className="fr-card__content">
           <p
