@@ -427,7 +427,12 @@ export default function EpNavigator() {
   const getPillarName = () => {
     if (!pillarId || !pillarsData || !Array.isArray(pillarsData)) return null;
     const pillar = pillarsData.find((p: FilterItem) => p.id === pillarId);
-    return pillar ? getLocalizedLabel(pillar) : null;
+    if (pillar) {
+      const localizedLabel = getLocalizedLabel(pillar);
+      const pillarLabel = currentLang === "fr" ? "Pilier" : "Pillar";
+      return localizedLabel + (pillar.id ? ` (${pillarLabel}${pillar.id.split(".")[1]})` : "");
+    }
+    return null;
   };
 
   const getProgramName = () => {
