@@ -93,21 +93,23 @@ export default function ClassificationsByStructures() {
     data: classification?.by_structure?.buckets?.map((bucket) => bucket?.unique_projects?.value ?? 0),
     name: classification.key,
   })).reverse();
+  const categoriesProject = (classificationsProject?.[0]?.by_structure?.buckets ?? []).map((structure) => structure.key.split("###")[1]);
   const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
   const seriesBudget = classificationsBudget.map((classification) => ({
     data: classification?.by_structure?.buckets?.map((bucket) => bucket?.sum_budget?.value ?? 0),
     name: classification.key,
   })).reverse();
+  const categoriesBudget = (classificationsBudget?.[0]?.by_structure?.buckets ?? []).map((structure) => structure.key.split("###")[1]);
 
   const titleProjects = `Nombre de projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const titleBudget = `Montant total des projets par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const axisProjects = "Nombre de projets financés";
   const axisBudget = "Montants financés (€)";
   const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${structures[this.x]}</b>`;
+    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${categoriesProject[this.x]}</b>`;
   };
   const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${structures[this.x]}</b>`;
+    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
   };
   const datalabelProject = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
@@ -150,7 +152,7 @@ export default function ClassificationsByStructures() {
     series: field === "projects" ? seriesProject : seriesBudget,
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", structures, "", field === "projects" ? axisProjects : axisBudget), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", field === "projects" ? categoriesProject : categoriesBudget, "", field === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="classifications-by-structures">
