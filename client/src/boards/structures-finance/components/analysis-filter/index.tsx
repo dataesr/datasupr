@@ -74,7 +74,7 @@ export default function AnalysisFilter({
               className={`analysis-filter__item ${isSelected ? "analysis-filter__item--selected" : ""}`}
             >
               {analysis.label}
-              {analysis.metrics.length > 1 && (
+              {analysis.showBase100 && (
                 <span className="analysis-filter__comparison-badge">
                   (comparaison)
                 </span>
