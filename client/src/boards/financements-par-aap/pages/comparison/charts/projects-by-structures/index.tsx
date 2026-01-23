@@ -89,14 +89,14 @@ export default function ProjectsByStructures() {
   const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
   const seriesProject = funders.map((funder) => ({
     color: getColorByFunder(funder),
-    data: structuresProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
+    data: structuresProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.unique_projects?.value ?? 0),
     name: funder,
   })).reverse();
   const categoriesProject = structuresProject.map((item) => item.key.split('###')[1]);
   const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? [];
   const seriesBudget = funders.map((funder) => ({
     color: getColorByFunder(funder),
-    data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
+    data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.sum_budget?.value ?? 0),
     name: funder,
   })).reverse();
   const categoriesBudget = structuresBudget.map((item) => item.key.split('###')[1]);
