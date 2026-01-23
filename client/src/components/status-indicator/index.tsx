@@ -12,10 +12,7 @@ const STATUS_CONFIG = {
     color: "var(--text-default-error)",
     label: "Alerte",
   },
-  vigilance: {
-    color: "var(--green-tilleul-700)",
-    label: "Vigilance",
-  },
+
   normal: {
     color: "var(--text-default-success)",
     label: "Normal",
