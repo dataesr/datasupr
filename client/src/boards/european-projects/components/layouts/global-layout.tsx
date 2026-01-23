@@ -5,7 +5,7 @@ import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 // import Footer from "./footer";
 // import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
-// import CountrySelector from "../../../../components/country-selector/selector";
+import CountrySelector from "../../../../components/country-selector/selector";
 import "../styles.scss";
 import Footer from "./footer";
 import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
@@ -133,6 +133,9 @@ export default function GlobalLayout() {
                   >
                     {getI18nLabel("evolutionPcri")}
                   </Link>
+                </li>
+                <li style={{ marginLeft: "auto" }}>
+                  <CountrySelector />
                 </li>
               </ul>
             </nav>
