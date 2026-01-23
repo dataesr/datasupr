@@ -5,7 +5,7 @@ import AtlasRoutes from "./boards/atlas/routes.tsx";
 import DatasuprDocRoutes from "./boards/datasupr-doc/routes.tsx";
 import EuropeanProjectsRoutes from "./boards/european-projects/routes.tsx";
 import FacultyMembersRoutes from "./boards/faculty-members/routes.tsx";
-import FundingsRoutes from "./boards/fundings/routes.tsx";
+import FundingsRoutes from "./boards/financements-par-aap/routes.tsx";
 import GraduatesRoutes from "./boards/graduates/routes.tsx";
 import HomePage from "./boards/home-page.tsx";
 import Integration from "./boards/integration/index.tsx";
