@@ -33,7 +33,7 @@ export default function ClassificationsByStructures() {
           by_structure: {
             terms: {
               field: "participant_id_name_default.keyword",
-              size: structures.length,
+              size: 9999,
             },
             aggregations: {
               unique_projects: {

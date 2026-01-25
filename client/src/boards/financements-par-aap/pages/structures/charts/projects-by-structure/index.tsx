@@ -58,6 +58,28 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
+  const { data: dataAlias, isLoading: isLoadingAlias } = useQuery({
+    queryKey: ["fundings-alias"],
+    queryFn: () =>
+      fetch(
+        `${VITE_APP_SERVER_URL}/elasticsearch/get-index-name-by-alias?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+          method: "GET",
+        },
+      ).then((response) => response.json()),
+  });
+
+
+  let update: any = "";
+  if (dataAlias) {
+    update = dataAlias?.index?.replace("\n", "")?.split("-")?.[2];
+    update = `${update.substring(0, 4)}-${update.substring(4, 6)}-${update.substring(6, 8)}`;
+    update = new Date(update);
+  }
+
   const series: any[] = [];
   const categories: string[] = [];
   let count = 0;
@@ -101,7 +123,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   const config = {
     comment: { "fr": <>Ce graphique indique, par financeur, le nombre et le montant des projets auxquels participe l'établissement {name}. Les montants affichés ne correspondent pas aux financements effectivement perçus par l'établissement. Ils représentent le volume total de financement des projets auxquels l’établissement participe, indépendamment de la part réelle qui lui est attribuée. </> },
     id: "projectsByStructure",
-    sources: FundingsSources,
+    sources: FundingsSources.map((source) => ({ ...source, update })),
   };
 
   const localOptions = {
@@ -129,7 +151,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapper config={config} options={options} />}
+      {(isLoading || isLoadingAlias) ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapper config={config} options={options} />}
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import React from "react";
 
-
 export const FundingsSources = [
   {
     label: {
@@ -32,8 +31,8 @@ export const FundingsSources = [
     update: new Date("2026-01-09"),
     url: {
       en: "https://piaweb.adc.education.fr/",
-      fr: "https://piaweb.adc.education.fr/"
-    }
+      fr: "https://piaweb.adc.education.fr/",
+    },
   },
   {
     label: {
