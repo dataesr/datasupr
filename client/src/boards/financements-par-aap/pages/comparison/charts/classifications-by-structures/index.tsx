@@ -23,16 +23,17 @@ export default function ClassificationsByStructures() {
   const body = {
     ...getEsQuery({ structures, yearMax, yearMin }),
     aggregations: {
-      by_classifications_project: {
+      by_structure_project: {
         terms: {
-          field: "project_classification.primary_field.keyword",
-          size: 25,
+          field: "participant_id_name_default.keyword",
+          size: structures.length,
+
         },
         aggregations: {
-          by_structure: {
+          by_classifications: {
             terms: {
-              field: "participant_id_name_default.keyword",
-              size: 9999,
+              field: "project_classification.primary_field.keyword",
+              size: 25,
             },
             aggregations: {
               unique_projects: {
@@ -44,11 +45,11 @@ export default function ClassificationsByStructures() {
           },
         },
       },
-      by_classifications_budget: {
+      by_structure_budget: {
         terms: {
-          field: "project_classification.primary_field.keyword",
+          field: "participant_id_name_default.keyword",
           order: { "sum_budget": "desc" },
-          size: 25,
+          size: structures.length,
         },
         aggregations: {
           sum_budget: {
@@ -56,10 +57,10 @@ export default function ClassificationsByStructures() {
               field: "project_budgetTotal",
             },
           },
-          by_structure: {
+          by_classifications: {
             terms: {
-              field: "participant_id_name_default.keyword",
-              size: structures.length,
+              field: "project_classification.primary_field.keyword",
+              size: 25,
             },
             aggregations: {
               sum_budget: {
@@ -71,17 +72,11 @@ export default function ClassificationsByStructures() {
           },
         },
       },
-      by_structure: {
-        terms: {
-          field: "participant_id_name_default.keyword",
-          size: structures.length,
-        },
-      }
     },
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-classifications-by-structures', structures, yearMax, yearMin],
+    queryKey: ["fundings-classifications-by-structures", structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -93,27 +88,17 @@ export default function ClassificationsByStructures() {
       }).then((response) => response.json()),
   });
 
-  const categoriesStructures = (data?.aggregations?.by_structure?.buckets ?? []).map((structure) => ({
-    id: structure.key.split("###")[0],
-    name: structure.key.split("###")[1],
-  }));
-  const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
-  const categoriesProject: string[] = [];
-  const seriesProject = classificationsProject.map((classification) => ({
-    data: classification?.by_structure?.buckets?.map((bucket) => {
-      categoriesProject.push(categoriesStructures.find((structure) => structure.id === bucket.key.split("###")[0])?.name ?? "Structure inconnue");
-      return bucket?.unique_projects?.value ?? 0;
-    }),
-    name: classification.key,
+  const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
+  const categoriesProject = structuresProject.map((bucket) => bucket.key.split("###")[1]);
+  const seriesProject = (structuresProject?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
+    data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.unique_projects?.value ?? 0),
+    name: bucket.key,
   })).reverse();
-  const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
-  const categoriesBudget: string[] = [];
-  const seriesBudget = classificationsBudget.map((classification) => ({
-    data: classification?.by_structure?.buckets?.map((bucket) => {
-      categoriesBudget.push(categoriesStructures.find((structure) => structure.id === bucket.key.split("###")[0])?.name ?? "Structure inconnue");
-      return bucket?.sum_budget?.value ?? 0;
-    }),
-    name: classification.key,
+  const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? [];
+  const categoriesBudget = structuresBudget.map((bucket) => bucket.key.split("###")[1]);
+  const seriesBudget = (structuresBudget?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
+    data: structuresBudget.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.sum_budget?.value ?? 0),
+    name: bucket.key,
   })).reverse();
 
   const titleProjects = `Profils disciplinaires des établissements via les projets financés ${getYearRangeLabel({ yearMax, yearMin })}`;
@@ -140,11 +125,13 @@ export default function ClassificationsByStructures() {
   };
 
   const config = {
-    comment: { "fr": <>Ce graphe présente, pour chaque établissement, la répartition des projets financés par AAP selon les grandes classifications disciplinaires.
-Chaque barre correspond à un établissement et est ventilée par discipline, permettant d’observer la structure scientifique de sa participation aux projets financés.
-L’analyse doit se concentrer sur la composition relative des barres, afin de comparer les profils disciplinaires indépendamment de la taille des établissements.
-Les montants indiqués correspondent au financement global des projets auxquels les établissements participent et ne reflètent pas les sommes effectivement perçues.
-</> },
+    comment: {
+      "fr": <>Ce graphe présente, pour chaque établissement, la répartition des projets financés par AAP selon les grandes classifications disciplinaires.
+        Chaque barre correspond à un établissement et est ventilée par discipline, permettant d’observer la structure scientifique de sa participation aux projets financés.
+        L’analyse doit se concentrer sur la composition relative des barres, afin de comparer les profils disciplinaires indépendamment de la taille des établissements.
+        Les montants indiqués correspondent au financement global des projets auxquels les établissements participent et ne reflètent pas les sommes effectivement perçues.
+      </>
+    },
     id: "classificationsByStructures",
   };
   const localOptions = {

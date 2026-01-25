@@ -48,11 +48,11 @@ const formatCompactNumber = (number: number): string => {
   return formatter.format(number);
 };
 
-const formatPerc = (number: number, decimals: number): string => {
+const formatPercent = (number: number, decimals: number = 0): string => {
   const formatter = new Intl.NumberFormat("fr", {
-    style: "percent",
-    minimumFractionDigits: decimals,
     maximumFractionDigits: decimals,
+    minimumFractionDigits: decimals,
+    style: "percent",
   });
   return formatter.format(number);
 };
@@ -125,7 +125,7 @@ const getYearRangeLabel = ({ isBold = false, yearMax, yearMin }: { isBold?: bool
 export {
   deepMerge,
   formatCompactNumber,
-  formatPerc,
+  formatPercent,
   funders,
   getColorByFunder,
   getEsQuery,

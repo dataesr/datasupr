@@ -73,7 +73,7 @@ export default function ProjectsByStructures() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-projects-by-structures', structures, yearMax, yearMin],
+    queryKey: ["fundings-projects-by-structures", structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -135,7 +135,7 @@ L’analyse doit porter en priorité sur les proportions relatives entre catégo
       stackLabels: {
         enabled: true,
         style: {
-          fontWeight: 'bold'
+          fontWeight: "bold",
         },
         formatter: field === "projects" ? stacklabelProject : stacklabelBudget,
       }
