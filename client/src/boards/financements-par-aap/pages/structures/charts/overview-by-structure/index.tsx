@@ -2,11 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
 
-import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
 import { deepMerge, funders, formatCompactNumber, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
-import { FundingsSources } from "../../../graph-config.js";
 
 import "highcharts/modules/variwide";
 
@@ -61,7 +60,6 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   const config = {
     comment: { "fr": <>Ce graphique met en regard le volume de projets et les montants de financement associés : la largeur des barres représente le nombre de projets, tandis que leur hauteur correspond au montant total de financement. Les montants indiqués reflètent le financement global des projets auxquels l’établissement participe et ne correspondent pas aux sommes effectivement perçues par celui-ci.</> },
     id: "overviewByStructure",
-    sources: FundingsSources,
     title: `Structure du financement : nombre de projets et montants associés pour les projets auxquels participe l'établissement (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
@@ -123,7 +121,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
 
   return (
     <div className={`chart-container chart-container--${color}`} id="overview-by-structure">
-      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapper config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapperCustom config={config} options={options} />}
     </div>
   );
 }

@@ -1,6 +1,12 @@
+import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
-export const FundingsSources = [
+import ChartWrapper, { ChartConfig, HighchartsOptions } from "../../../../components/chart-wrapper";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.js";
+
+const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+
+const fundingsSources = [
   {
     label: {
       en: React.createElement(React.Fragment, null, "ANR (DGDS)"),
@@ -46,3 +52,56 @@ export const FundingsSources = [
     },
   },
 ];
+
+
+export default function ChartWrapperCustom({
+  config,
+  constructorType,
+  hideTitle = false,
+  legend,
+  options,
+  renderData,
+}: {
+  config: ChartConfig;
+  constructorType?: "chart" | "stockChart" | "mapChart";
+  hideTitle?: boolean;
+  legend?: React.ReactNode;
+  options: HighchartsOptions;
+  renderData?: (options: Highcharts.Options) => React.ReactNode;
+}) {
+
+  const { data: dataAlias, isLoading: isLoadingAlias } = useQuery({
+    queryKey: ["fundings-alias"],
+    queryFn: () =>
+      fetch(
+        `${VITE_APP_SERVER_URL}/elasticsearch/get-index-name-by-alias?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        {
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+          },
+          method: "GET",
+        },
+      ).then((response) => response.json()),
+  });
+
+  let update: any = "";
+  if (dataAlias) {
+    update = dataAlias?.index?.replace("\n", "")?.split("-")?.[2];
+    update = `${update.substring(0, 4)}-${update.substring(4, 6)}-${update.substring(6, 8)}`;
+    update = new Date(update);
+  }
+
+  const configLocal = {
+    ...config,
+    sources: fundingsSources.map((source) => ({ ...source, update })),
+  };
+
+  return isLoadingAlias ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapper
+    config={configLocal}
+    constructorType={constructorType}
+    hideTitle={hideTitle}
+    legend={legend}
+    options={options}
+    renderData={renderData}
+  />
+}

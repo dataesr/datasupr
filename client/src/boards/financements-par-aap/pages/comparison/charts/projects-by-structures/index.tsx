@@ -4,11 +4,10 @@ import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
 import { deepMerge, formatCompactNumber, funders, getColorByFunder, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
-import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -129,7 +128,6 @@ export default function ProjectsByStructures() {
 L’analyse doit porter en priorité sur les proportions relatives entre catégories de financeurs, plutôt que sur les volumes absolus, afin de comparer la structure des portefeuilles de projets entre établissements de tailles différentes. Les montants indiqués correspondent au financement global des projets auxquels les établissements participent et ne reflètent pas les sommes effectivement perçues.
 </> },
     id: "projectsByStructures",
-    sources: FundingsSources,
   };
   const localOptions = {
     legend: { enabled: true, reversed: true },
@@ -165,7 +163,7 @@ L’analyse doit porter en priorité sur les proportions relatives entre catégo
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapper config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperCustom config={config} options={options} />}
     </div>
   );
 }

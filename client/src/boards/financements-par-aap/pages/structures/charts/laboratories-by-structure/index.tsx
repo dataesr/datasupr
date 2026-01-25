@@ -4,11 +4,10 @@ import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
 import { deepMerge, funders, formatCompactNumber, getColorByFunder, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
-import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -120,7 +119,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
     return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${categoriesProject[this.x]}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesProject[this.x]}</b>`;
+    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
   };
   const datalabelProject = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
@@ -141,7 +140,6 @@ Les sources de données ne donnent pas toujours accès au niveau laboratoire. Po
 Les barres indiquent le nombre / le montant total des projets auxquels chaque laboratoire participe. Les montants indiqués correspondent au financement global des projets auxquels l’établissement participe et ne reflètent pas les sommes effectivement perçues.
 On observe que certains laboratoires concentrent une part importante des projets financés, ce qui peut refléter à la fois la taille des laboratoires, leur historique de participation aux AAP et leur spécialisation thématique.</> },
     id: "projectsByStructures",
-    sources: FundingsSources,
   };
   const localOptions = {
     legend: { enabled: true, reversed: true },
@@ -177,7 +175,7 @@ On observe que certains laboratoires concentrent une part importante des projets
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapper config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperCustom config={config} options={options} />}
     </div>
   );
 }

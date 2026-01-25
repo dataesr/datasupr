@@ -4,11 +4,10 @@ import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
 import { deepMerge, funders, formatCompactNumber, getColorByFunder, getEsQuery, getGeneralOptions, years } from "../../../../utils.ts";
-import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -83,7 +82,6 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   const config = {
     comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs montants associés, ventilée par financeur, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Pour les financements europées, Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027. Les montants indiqués reflètent le financement global des projets auxquels l’établissement participe et ne correspondent pas aux sommes effectivement perçues par celui-ci.</> },
     id: "projectsOverTimeByStructure",
-    sources: FundingsSources,
   };
 
   const localOptions = {
@@ -114,7 +112,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapper config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapperCustom config={config} options={options} />}
     </div>
   );
 }

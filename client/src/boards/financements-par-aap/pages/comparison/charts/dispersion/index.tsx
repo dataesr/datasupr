@@ -2,11 +2,10 @@ import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
 
-import ChartWrapper from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
 import { deepMerge, formatCompactNumber, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
-import { FundingsSources } from "../../../graph-config.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -85,7 +84,6 @@ des établissements impliqués dans un grand nombre de projets,
 d'autres positionnés sur moins de projets mais de montant élevé,
 et ceux combinant volume et intensité financière.</> },
     id: "dispersion",
-    sources: FundingsSources,
     title: `Positionnement des établissements selon le nombre de projets et le montant associé ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
@@ -126,7 +124,7 @@ et ceux combinant volume et intensité financière.</> },
 
   return (
     <div className={`chart-container chart-container--${color}`} id="dispersion">
-      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapper config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapperCustom config={config} options={options} />}
     </div>
   );
 }
