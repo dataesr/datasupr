@@ -28,7 +28,7 @@ export default function Dispersion() {
           by_structure: {
             terms: {
               field: "participant_id_name_default.keyword",
-              size: 500,
+              size: structures.length,
             },
             aggregations: {
               unique_projects: {
