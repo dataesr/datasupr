@@ -2,7 +2,7 @@ import { Badge, Col, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
 import { getEsQuery } from "../../../../utils.ts";
@@ -10,7 +10,7 @@ import { getEsQuery } from "../../../../utils.ts";
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function StructureSelector({ setName }) {
+export default function StructureSelector({ setName, setStructures }) {
   const [county, setCounty] = useState("*");
   const [typology, setTypology] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
@@ -131,6 +131,13 @@ export default function StructureSelector({ setName }) {
       setName(str.label);
     }
   }
+
+  useEffect(() => {
+    setStructures((dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
+      const [id, label] = bucket.key.split('###');
+      return ({ id, label, searchableText: label.normalize('NFD').replace(/[\u0300-\u036f]/g, '') });
+    }) || []);
+  }, [dataStructures])
 
   return (
     <Row gutters>
