@@ -97,12 +97,12 @@ export default function GlobalLayout() {
                     })}
                     className="fr-nav__link"
                   >
-                    Vue par établissements
+                    Vue par établissement
                   </Link>
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/structures-finance/national?}`}
+                    to={"/structures-finance/national"}
                     target="_self"
                     {...(is("/structures-finance/national") && {
                       "aria-current": "page",
@@ -114,7 +114,7 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/structures-finance/faq?`}
+                    to={"/structures-finance/faq"}
                     target="_self"
                     {...(is("/structures-finance/faq") && {
                       "aria-current": "page",
@@ -126,7 +126,7 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/structures-finance/definitions`}
+                    to={"/structures-finance/definitions"}
                     target="_self"
                     {...(is("/structures-finance/definitions") && {
                       "aria-current": "page",
