@@ -1,10 +1,13 @@
 import { useSearchParams } from "react-router-dom";
 import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
+import { Logo } from "@dataesr/dsfr-plus";
 
 export default function Footer() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
+
+  const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env;
 
   function getI18nLabel(key) {
     return i18n[key][currentLang];
@@ -18,17 +21,7 @@ export default function Footer() {
               href="/"
               title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)"
             >
-              <p className="fr-logo">
-                Ministère
-                <br />
-                de l'enseignement
-                <br />
-                supérieur
-                <br />
-                de la recherche
-                <br />
-                et de l'espace
-              </p>
+              <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
             </a>
           </div>
           <div className="fr-footer__content">
@@ -110,6 +103,16 @@ export default function Footer() {
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="#">
                 {getI18nLabel("contact")}
+              </a>
+            </li>
+            <li className="fr-footer__bottom-item">
+              <a
+                className="fr-footer__bottom-link"
+                href={`https://github.com/dataesr/datasupr/releases/tag/v${VITE_VERSION}`}
+                rel="noreferer noopenner"
+                target="_blank"
+              >
+                {`v${VITE_VERSION}`}
               </a>
             </li>
             <li className="fr-footer__bottom-item">

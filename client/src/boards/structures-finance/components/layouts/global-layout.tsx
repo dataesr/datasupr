@@ -1,12 +1,13 @@
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
-// import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
 import i18n from "./i18n.json";
 import Footer from "./footer";
+import { Logo } from "@dataesr/dsfr-plus";
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
   const filtersParams = searchParams.toString();
+  const { VITE_MINISTER_NAME } = import.meta.env;
 
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
@@ -22,24 +23,7 @@ export default function GlobalLayout() {
             <div className="fr-header__body-row">
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
-                  <div className="fr-header__logo">
-                    <a
-                      href="/"
-                      title="Accueil - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)"
-                    >
-                      <p className="fr-logo">
-                        Ministère
-                        <br />
-                        de l'Enseignement
-                        <br />
-                        supérieur,
-                        <br />
-                        de la Recherche
-                        <br />
-                        et de l'Espace
-                      </p>
-                    </a>
-                  </div>
+                  <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
                   <div className="fr-header__navbar">
                     <button
                       data-fr-opened="false"
