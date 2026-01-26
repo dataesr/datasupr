@@ -1,6 +1,6 @@
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
-import CustomBreadcrumb from "../../../../../components/custom-breadcrumb";
+import Breadcrumb from "../../../../../components/breadcrumb";
 import StructureCard from "../../../../../components/structure-card";
 import navigationConfig from "../../../navigation-config.json";
 
@@ -34,7 +34,7 @@ export default function EstablishmentNotExistsAlert({
         <Container as="section">
           <Row>
             <Col>
-              <CustomBreadcrumb config={navigationConfig} />
+              <Breadcrumb config={navigationConfig} />
             </Col>
           </Row>
         </Container>

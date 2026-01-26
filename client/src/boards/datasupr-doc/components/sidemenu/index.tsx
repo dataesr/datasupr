@@ -12,6 +12,7 @@ export default function CustomSideMenu() {
         <SummaryItem href="#id4" label="Liste des composants" />
         <SubSummary>
           <SummaryItem href="#id4-board-suggest" label="BoardSuggestComponent" />
+          <SummaryItem href="#id4-breadcrumb" label="Breadcrumb" />
           <SummaryItem href="#id4-callout" label="Callout" />
           <SummaryItem href="#id4-chart-footer" label="ChartFooter" />
           <SummaryItem href="#id4-chart-wrapper" label="ChartWrapper" />
@@ -19,7 +20,6 @@ export default function CustomSideMenu() {
           <SummaryItem href="#id4-cookies" label="Cookies" />
           <SummaryItem href="#id4-copy-button" label="CopyButton" />
           <SummaryItem href="#id4-country-selector" label="CountrySelector" />
-          <SummaryItem href="#id4-custom-breadcrumb" label="CustomBreadcrumb" />
           <SummaryItem href="#id4-fields-main-card" label="FieldsMainCard" />
           <SummaryItem href="#id4-filieres-list" label="FilieresList" />
           <SummaryItem href="#id4-filters" label="Filters" />

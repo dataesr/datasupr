@@ -35,6 +35,10 @@ export default function Id4Components() {
                 &nbsp;: composant de suggestion de tableaux de bord.
                 <code>{`<BoardsSuggestComponent />`}</code>
               </li>
+              <li id="id4-breadcrumb">
+                <Badge color="purple-glycine">Breadcrumb</Badge>&nbsp;:
+                fil d'Ariane personnalisé pour la navigation.
+              </li>
               <li id="id4-callout">
                 <Badge color="purple-glycine">Callout</Badge>&nbsp;: encadré
                 d'information avec style visuel distinct.
@@ -114,10 +118,6 @@ export default function Id4Components() {
                 <CountrySelector />
                 <br />
                 <code>{`<CountrySelector />`}</code>
-              </li>
-              <li id="id4-custom-breadcrumb">
-                <Badge color="purple-glycine">CustomBreadcrumb</Badge>&nbsp;:
-                fil d'Ariane personnalisé pour la navigation.
               </li>
               <li id="id4-fields-main-card">
                 <Badge color="purple-glycine">FieldsMainCard</Badge>&nbsp;:

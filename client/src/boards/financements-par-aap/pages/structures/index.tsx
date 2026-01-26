@@ -2,7 +2,7 @@ import { Alert, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import CustomBreadcrumb from "../../../../components/custom-breadcrumb";
+import Breadcrumb from "../../../../components/breadcrumb";
 import YearSelector from "../../components/year-selector";
 import navigationConfig from "../navigation-config.json";
 import ClassificationsByStructure from "./charts/classifications-by-structure";
@@ -28,7 +28,7 @@ export default function Structures() {
 
   return (
     <Container className="board-fundings fr-pt-3w">
-      <CustomBreadcrumb config={navigationConfig} />
+      <Breadcrumb config={navigationConfig} />
       <Row gutters>
         <Col>
           <StructureSelector setName={setName} />

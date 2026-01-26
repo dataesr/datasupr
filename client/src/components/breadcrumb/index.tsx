@@ -1,13 +1,13 @@
-import { useSearchParams, useLocation } from "react-router-dom";
 import { Link } from "@dataesr/dsfr-plus";
+import { useLocation, useSearchParams } from "react-router-dom";
 
-export default function CustomBreadcrumb({ config }) {
+
+export default function Breadcrumb({ config }) {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const currentLang = searchParams.get("language") || "fr";
-  const section = searchParams.get("section") || null;
-  const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
   const isDatasupr = searchParams.get("datasupr") || "false";
+  const currentLang = searchParams.get("language") || "fr";
+  const currentSection = searchParams.get("section");
 
   // Extraire la dernière partie de l'URL comme currentPage
   const pathSegments = location.pathname.split("/").filter(Boolean);
@@ -23,20 +23,20 @@ export default function CustomBreadcrumb({ config }) {
         <ol className="fr-breadcrumb__list">
           {isDatasupr === "true" && (
             <li>
-              <Link href={`${config[parent].link}?${params}`}>{currentLang === "fr" ? "Sélectionner un tableau de bord" : "Select a dashboard"}</Link>
+              <Link href={`${config[parent].link}?${searchParams.toString()}`}>{currentLang === "fr" ? "Sélectionner un tableau de bord" : "Select a dashboard"}</Link>
             </li>
           )}
           <li>
-            <Link href={`${config[parent].link}?${params}`}>{config[parent].label[currentLang]}</Link>
+            <Link href={`${config[parent].link}?${searchParams.toString()}`}>{config[parent].label[currentLang]}</Link>
           </li>
-          {section ? (
+          {currentSection ? (
             <>
               <li>
-                <Link href={`${config[currentPage].link}?${params}`}>{config[currentPage].label[currentLang]}</Link>
+                <Link href={`${config[currentPage].link}?${searchParams.toString()}`}>{config[currentPage].label[currentLang]}</Link>
               </li>
               <li>
                 <Link>
-                  <strong>{config[section].label[currentLang]}</strong>
+                  <strong>{config[currentPage][currentSection].label[currentLang]}</strong>
                 </Link>
               </li>
             </>
