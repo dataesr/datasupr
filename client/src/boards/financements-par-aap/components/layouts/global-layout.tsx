@@ -1,5 +1,5 @@
 import { Col, Container, Logo, Row, Service } from "@dataesr/dsfr-plus";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import Breadcrumb from "../../../../components/breadcrumb";
