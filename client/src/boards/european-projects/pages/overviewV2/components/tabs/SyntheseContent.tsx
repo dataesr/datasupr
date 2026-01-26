@@ -33,8 +33,6 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
             Principaux bénéficiaires
           </Title>
           <MainPartners />
-
-          <p>Tableaux de synthèse des financements</p>
         </div>
       );
 

@@ -4,6 +4,7 @@ import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
 
 import i18n from "./i18n.json";
+import { getCssColor } from "../../../../../../utils/colors";
 
 export default function Options(data, currentLang) {
   if (!data) return null;
@@ -32,7 +33,7 @@ const newOptions: HighchartsInstance.Options = {
     {
       type: "bar",
       name: "Total subventions (€)",
-      color: "#4d2b5aff",
+      color: getCssColor("main-partner"),
       groupPadding: 0,
       data: data.list.map((item) => [item.acronym || item.name, item.total_fund_eur]),
     },
