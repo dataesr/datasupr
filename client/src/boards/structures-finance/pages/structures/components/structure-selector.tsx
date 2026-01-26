@@ -9,7 +9,7 @@ import StructuresBreadcrumb from "./structures-breadcrumb";
 
 // SelectionUI -> rendre indépendant grace a l'url
 
-export default function EstablishmentSelection() {
+export default function StructureSelection() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const { data: yearsData } = useFinanceYears();

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
-interface MultipleEstablishmentsResponse {
+interface MultipleStructuresResponse {
   hasMultiples: boolean;
   count: number;
   etablissements: Array<{
@@ -20,12 +20,12 @@ interface MultipleEstablishmentsResponse {
   }>;
 }
 
-export const useCheckMultipleEstablishments = (
+export const useCheckMultipleStructures = (
   id?: string,
   annee?: string,
   enabled = true
 ) => {
-  return useQuery<MultipleEstablishmentsResponse>({
+  return useQuery<MultipleStructuresResponse>({
     queryKey: ["finance", "check-multiples", id ?? null, annee ?? null],
     queryFn: async () => {
       if (!id) throw new Error("missing id");
@@ -67,7 +67,7 @@ export const useFinanceEtablissements = (annee?: string, enabled = true) => {
   });
 };
 
-export const useFinanceEtablissementDetail = (
+export const useFinanceStructureDetail = (
   id?: string,
   annee?: string,
   enabled = true,
@@ -176,7 +176,7 @@ interface CheckExistsResponse {
   } | null;
 }
 
-export const useCheckEstablishmentExists = (
+export const useCheckStructureExists = (
   id?: string,
   annee?: string,
   enabled = true

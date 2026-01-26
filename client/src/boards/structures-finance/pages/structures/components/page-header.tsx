@@ -3,7 +3,6 @@ interface PageHeaderProps {
   onClose: () => void;
 }
 
-// Style pour l'icône dans les cartes (cercle coloré) - utilise les variables DSFR
 const iconStyle = (
   bgColor: string,
   textColor: string

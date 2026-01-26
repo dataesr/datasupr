@@ -2,7 +2,7 @@ import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import StructureCard from "../../../../../components/structure-card";
 
-interface Etablissement {
+interface Structure {
   etablissement_id_paysage: string;
   etablissement_lib: string;
   etablissement_id_paysage_actuel: string;
@@ -16,17 +16,17 @@ interface Etablissement {
   anuniv: string;
 }
 
-interface MultipleEstablishmentsSelectorProps {
-  etablissements: Etablissement[];
+interface MultipleStructureSelectorProps {
+  etablissements: Structure[];
   selectedYear: string;
   etablissementActuelLib: string;
 }
 
-export default function MultipleEstablishmentsSelector({
+export default function MultipleStructuresSelector({
   etablissements,
   selectedYear,
   etablissementActuelLib,
-}: MultipleEstablishmentsSelectorProps) {
+}: MultipleStructureSelectorProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSelect = (etablissementIdPaysage: string) => {

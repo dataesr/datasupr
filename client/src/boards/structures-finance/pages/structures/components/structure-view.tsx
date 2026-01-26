@@ -1,11 +1,11 @@
 import { useSearchParams } from "react-router-dom";
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useFinanceYears } from "../../../api/common";
 import {
-  useFinanceEtablissementDetail,
-  useCheckMultipleEstablishments,
-  useCheckEstablishmentExists,
+  useFinanceStructureDetail,
+  useCheckMultipleStructures,
+  useCheckStructureExists,
 } from "../../../api/api";
 import PageHeader from "./page-header";
 import SectionNavigation from "./section-navigation";
@@ -18,14 +18,14 @@ import {
   ImplantationsSection,
 } from "../sections/sections";
 import StructuresBreadcrumb from "./structures-breadcrumb";
-import MultipleEstablishmentsSelector from "./multiple-establishments-selector";
-import EstablishmentNotExistsAlert from "./establishment-not-exists-alert";
+import StructureNotExistsAlert from "./structure-not-exists-alert";
+import MultipleStructuresSelector from "./multiple-structures-selector";
 
-export default function EstablishmentView() {
+export default function StructureView() {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const selectedYear = searchParams.get("year") || "2024";
-  const selectedEtablissement = searchParams.get("structureId") || "";
+  const selectedStructure = searchParams.get("structureId") || "";
   const useHistorical = searchParams.get("useHistorical") === "true";
   const section = searchParams.get("section") || "ressources";
 
@@ -33,17 +33,17 @@ export default function EstablishmentView() {
   const years = useMemo(() => yearsData?.years || [], [yearsData]);
 
   const { data: multiplesData, isLoading: isCheckingMultiples } =
-    useCheckMultipleEstablishments(
-      selectedEtablissement,
+    useCheckMultipleStructures(
+      selectedStructure,
       String(selectedYear || years[0] || ""),
-      !!selectedEtablissement && !!(selectedYear || years[0]) && !useHistorical
+      !!selectedStructure && !!(selectedYear || years[0]) && !useHistorical
     );
 
   const { data: existsData, isLoading: isCheckingExists } =
-    useCheckEstablishmentExists(
-      selectedEtablissement,
+    useCheckStructureExists(
+      selectedStructure,
       String(selectedYear || years[0] || ""),
-      !!selectedEtablissement && !!(selectedYear || years[0])
+      !!selectedStructure && !!(selectedYear || years[0])
     );
 
   const showMultipleSelector =
@@ -52,42 +52,35 @@ export default function EstablishmentView() {
   const showNotExistsAlert =
     existsData && !existsData.exists && existsData.etablissementActuel;
 
-  const { data: detailData, isLoading } = useFinanceEtablissementDetail(
-    selectedEtablissement,
+  const { data: detailData, isLoading } = useFinanceStructureDetail(
+    selectedStructure,
     String(selectedYear || years[0] || ""),
-    !!selectedEtablissement &&
+    !!selectedStructure &&
       !!(selectedYear || years[0]) &&
       !showMultipleSelector &&
       !showNotExistsAlert,
     useHistorical
   );
 
-  useEffect(() => {
-    if (selectedEtablissement && !searchParams.get("section")) {
-      const next = new URLSearchParams(searchParams);
-      next.set("section", "ressources");
-      setSearchParams(next, { replace: true });
-    }
-  }, [selectedEtablissement, searchParams, setSearchParams]);
-
   const handleClearSelection = () => {
-    const next = new URLSearchParams(searchParams);
-    next.delete("structureId");
-    next.delete("useHistorical");
-    setSearchParams(next);
+    const params = Object.fromEntries(searchParams);
+    delete params.structureId;
+    delete params.useHistorical;
+    setSearchParams(params);
   };
 
   const handleSectionChange = (newSection: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("section", newSection);
-    setSearchParams(next);
+    setSearchParams({
+      ...Object.fromEntries(searchParams),
+      section: newSection,
+    });
   };
 
   const handleYearChange = (year: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("year", year);
-    next.delete("useHistorical");
-    setSearchParams(next);
+    const params = Object.fromEntries(searchParams);
+    params.year = year;
+    delete params.useHistorical;
+    setSearchParams(params);
   };
 
   const renderSectionContent = () => {
@@ -112,7 +105,7 @@ export default function EstablishmentView() {
         return (
           <AnalysesSection
             data={detailData}
-            selectedEtablissement={selectedEtablissement}
+            selectedStructure={selectedStructure}
           />
         );
       default:
@@ -132,9 +125,9 @@ export default function EstablishmentView() {
 
   if (showNotExistsAlert && existsData?.etablissementActuel) {
     return (
-      <EstablishmentNotExistsAlert
+      <StructureNotExistsAlert
         etablissementLibHistorique={
-          existsData.etablissement_lib_historique || selectedEtablissement
+          existsData.etablissement_lib_historique || selectedStructure
         }
         etablissementActuel={existsData.etablissementActuel}
         selectedYear={selectedYear}
@@ -158,7 +151,7 @@ export default function EstablishmentView() {
             </Row>
           </Container>
         </Container>
-        <MultipleEstablishmentsSelector
+        <MultipleStructuresSelector
           etablissements={multiplesData.etablissements}
           selectedYear={selectedYear}
           etablissementActuelLib={

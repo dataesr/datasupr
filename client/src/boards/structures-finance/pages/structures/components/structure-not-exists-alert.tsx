@@ -4,7 +4,7 @@ import Breadcrumb from "../../../../../components/breadcrumb";
 import StructureCard from "../../../../../components/structure-card";
 import navigationConfig from "../../../navigation-config.json";
 
-interface EstablishmentNotExistsAlertProps {
+interface StructureNotExistsAlertProps {
   etablissementLibHistorique: string;
   etablissementActuel: {
     etablissement_id_paysage: string;
@@ -14,14 +14,14 @@ interface EstablishmentNotExistsAlertProps {
   selectedYear: string;
 }
 
-export default function EstablishmentNotExistsAlert({
+export default function StructureNotExistsAlert({
   etablissementLibHistorique,
   etablissementActuel,
   selectedYear,
-}: EstablishmentNotExistsAlertProps) {
+}: StructureNotExistsAlertProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleSwitchToCurrentEstablishment = () => {
+  const handleSwitchToCurrentStructure = () => {
     const next = new URLSearchParams(searchParams);
     next.set("structureId", etablissementActuel.etablissement_id_paysage);
     next.delete("useHistorical");
@@ -56,7 +56,7 @@ export default function EstablishmentNotExistsAlert({
                   etablissementActuel.etablissement_actuel_lib ||
                   etablissementActuel.etablissement_lib
                 }
-                onClick={handleSwitchToCurrentEstablishment}
+                onClick={handleSwitchToCurrentStructure}
               />
             </Col>
           </Row>

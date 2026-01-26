@@ -7,14 +7,14 @@ import { AnalysisKey } from "./charts/evolution/config";
 
 interface AnalysesSectionProps {
   data: any;
-  selectedEtablissement?: string;
+  selectedStructure?: string;
 }
 
 export function AnalysesSection({
   data,
-  selectedEtablissement,
+  selectedStructure,
 }: AnalysesSectionProps) {
-  const etablissementId = selectedEtablissement || "";
+  const etablissementId = selectedStructure || "";
   const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisKey | null>(
     null
   );
