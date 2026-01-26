@@ -1,3 +1,4 @@
+import { Title } from "@dataesr/dsfr-plus";
 import "./styles.scss";
 
 interface StructureCardProps {
@@ -8,6 +9,7 @@ interface StructureCardProps {
   className?: string;
   type?: string;
   year?: string | number;
+  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 export default function StructureCard({
@@ -17,6 +19,7 @@ export default function StructureCard({
   type,
   year,
   onClick,
+  as = "h2",
   className = "",
 }: StructureCardProps) {
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -25,8 +28,6 @@ export default function StructureCard({
       onClick();
     }
   };
-  console.log(year); // todo remove
-  // Hx -> As
   return (
     <div
       className={`structure-card ${className}`}
@@ -35,7 +36,9 @@ export default function StructureCard({
       tabIndex={onClick ? 0 : undefined}
       onKeyPress={handleKeyPress}
     >
-      <h2 className="structure-card__title">{title}</h2>
+      <Title as={as} className="structure-card__title">
+        {title}
+      </Title>
 
       {type !== undefined && <p className="structure-card__meta">{type}</p>}
       {region && <p className="structure-card__meta">{region}</p>}
