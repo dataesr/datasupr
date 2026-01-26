@@ -1,11 +1,9 @@
 import { useState } from "react";
 import { Row, Col } from "@dataesr/dsfr-plus";
-import EvolutionChart, {
-  useAnalysesWithData,
-  type AnalysisKey,
-} from "./charts/evolution";
+import EvolutionChart, { useAnalysesWithData } from "./charts/evolution";
 import AnalysisFilter from "../../../../components/analysis-filter";
 import "../styles.scss";
+import { AnalysisKey } from "./charts/evolution/config";
 
 interface AnalysesSectionProps {
   data: any;

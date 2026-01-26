@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
-import {
-  PREDEFINED_ANALYSES,
-  type AnalysisKey,
-} from "../../pages/structures/sections/analyses/charts/evolution";
+import {} from "../../pages/structures/sections/analyses/charts/evolution";
 import "./styles.scss";
+import {
+  AnalysisKey,
+  PREDEFINED_ANALYSES,
+} from "../../pages/structures/sections/analyses/charts/evolution/config";
 
 interface AnalysisFilterProps {
   analysesWithData: Set<AnalysisKey>;

@@ -224,11 +224,6 @@ export default function SelectionUI({
         </div>
 
         <div className="fr-mb-3w">
-          <p className="fr-text--xs fr-mb-1w fr-text-mention--grey">
-            {filteredEtablissements.length} établissement
-            {filteredEtablissements.length > 1 ? "s" : ""} disponible
-            {filteredEtablissements.length > 1 ? "s" : ""}
-          </p>
           <Select
             label="Rechercher un établissement..."
             icon="search-line"

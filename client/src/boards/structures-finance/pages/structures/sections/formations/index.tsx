@@ -1,6 +1,5 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import EffectifsChart from "./charts/effectifs";
-import EffectifsEvolutionChart from "./charts/effectifs-evolution";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
 import { useMetricEvolution } from "../api";
@@ -71,13 +70,6 @@ export function EtudiantsSection({
 
       <div className="fr-mb-4w">
         <EffectifsChart data={data} selectedYear={selectedYear} />
-      </div>
-
-      <div className="fr-mb-4w">
-        <EffectifsEvolutionChart
-          etablissementId={data?.etablissement_id_paysage_actuel}
-          etablissementName={data?.etablissement_lib}
-        />
       </div>
     </div>
   );

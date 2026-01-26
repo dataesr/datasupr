@@ -7,14 +7,12 @@ import {
   createEffectifsNiveauChartOptions,
   createEffectifsSpecifiquesChartOptions,
   createEffectifsDisciplinesChartOptions,
-  createEffectifsDiplomesChartOptions,
   createEffectifsDegreesChartOptions,
 } from "./options";
 import {
   RenderDataNiveau,
   RenderDataSpecifiques,
   RenderDataDisciplines,
-  RenderDataDiplomes,
   RenderDataDegrees,
 } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
@@ -70,10 +68,6 @@ export default function EffectifsChart({
     );
   }, [data]);
 
-  const hasDiplomesData = useMemo(() => {
-    return data?.effectif_sans_cpge_dn > 0 || data?.effectif_sans_cpge_du > 0;
-  }, [data]);
-
   const hasDegreesData = useMemo(() => {
     return (
       (data?.effectif_sans_cpge_deg0 || 0) > 0 ||
@@ -102,11 +96,6 @@ export default function EffectifsChart({
     return createEffectifsDisciplinesChartOptions(data);
   }, [data]);
 
-  const diplomesOptions = useMemo(() => {
-    if (!data) return {} as Highcharts.Options;
-    return createEffectifsDiplomesChartOptions(data);
-  }, [data]);
-
   const degreesOptions = useMemo(() => {
     if (!data) return {} as Highcharts.Options;
     return createEffectifsDegreesChartOptions(data);
@@ -130,12 +119,6 @@ export default function EffectifsChart({
     id: "effectifs-disciplines-chart",
     integrationURL: `/integration?chart_id=effectifs-disciplines&structureId=${etablissementId}&year=${selectedYear}`,
     title: "Par disciplines",
-  };
-
-  const diplomesConfig = {
-    id: "effectifs-diplomes-chart",
-    integrationURL: `/integration?chart_id=effectifs-diplomes&structureId=${etablissementId}&year=${selectedYear}`,
-    title: "Types de formation",
   };
 
   const degreesConfig = {
@@ -168,14 +151,6 @@ export default function EffectifsChart({
     />
   );
 
-  const renderDiplomesChart = () => (
-    <ChartWrapper
-      config={diplomesConfig}
-      options={diplomesOptions}
-      renderData={() => <RenderDataDiplomes data={data} />}
-    />
-  );
-
   const renderDegreesChart = () => (
     <ChartWrapper
       config={degreesConfig}
@@ -192,26 +167,22 @@ export default function EffectifsChart({
             {renderNiveauChart()}
           </Col>
         )}
-        {hasDisciplinesData && (
-          <Col xs="12" lg="4">
-            {renderDisciplinesChart()}
-          </Col>
-        )}
-        {hasDiplomesData && (
-          <Col xs="12" lg="4">
-            {renderDiplomesChart()}
+
+        {hasDegreesData && (
+          <Col xs="12" md="8">
+            {renderDegreesChart()}
           </Col>
         )}
       </Row>
       <Row gutters className="fr-mt-3w">
         {hasSpecifiquesData && (
-          <Col xs="12" md="6">
+          <Col xs="12" md="8">
             {renderSpecifiquesChart()}
           </Col>
         )}
-        {hasDegreesData && (
-          <Col xs="12" md="6">
-            {renderDegreesChart()}
+        {hasDisciplinesData && (
+          <Col xs="12" lg="4">
+            {renderDisciplinesChart()}
           </Col>
         )}
       </Row>

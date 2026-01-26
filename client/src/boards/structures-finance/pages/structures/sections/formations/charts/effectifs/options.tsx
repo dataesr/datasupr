@@ -143,7 +143,7 @@ export const createEffectifsSpecifiquesChartOptions = (
       color: colors[10],
     },
     {
-      name: "Santé",
+      name: "Formation de santé",
       y: data.effectif_sans_cpge_sante || 0,
       has: data.has_effectif_sante,
       color: colors[7],
@@ -311,71 +311,6 @@ export const createEffectifsDisciplinesChartOptions = (
         name: "",
         type: "pie",
         data: disciplines,
-      },
-    ],
-  });
-};
-
-export const createEffectifsDiplomesChartOptions = (
-  data: EffectifsData
-): Highcharts.Options => {
-  const totalEffectif =
-    (data.effectif_sans_cpge_dn || 0) + (data.effectif_sans_cpge_du || 0);
-  const diplomes = [
-    {
-      name: "Diplômes nationaux",
-      y: data.effectif_sans_cpge_dn || 0,
-      color: CHART_COLORS.primary,
-      percentage:
-        totalEffectif > 0
-          ? ((data.effectif_sans_cpge_dn || 0) / totalEffectif) * 100
-          : 0,
-    },
-    {
-      name: "Diplômes d'établissement",
-      y: data.effectif_sans_cpge_du || 0,
-      color: CHART_COLORS.secondary,
-      percentage:
-        totalEffectif > 0
-          ? ((data.effectif_sans_cpge_du || 0) / totalEffectif) * 100
-          : 0,
-    },
-  ].filter((item) => item.y > 0);
-
-  return createChartOptions("pie", {
-    chart: {
-      height: 400,
-    },
-    legend: {
-      enabled: true,
-      layout: "horizontal",
-      align: "center",
-      verticalAlign: "bottom",
-      itemStyle: {
-        color: "var(--text-default-grey)",
-      },
-    },
-    tooltip: {
-      formatter: function () {
-        const point = this as any;
-        return `${Highcharts.numberFormat(point.y, 0, ",", " ")} étudiants<br/>${point.percentage.toFixed(1)}%`;
-      },
-    },
-    plotOptions: {
-      pie: {
-        size: 200,
-        center: ["50%", 90],
-        dataLabels: {
-          enabled: false,
-        },
-        showInLegend: true,
-      },
-    },
-    series: [
-      {
-        name: "",
-        type: "pie",
-        data: diplomes,
       },
     ],
   });

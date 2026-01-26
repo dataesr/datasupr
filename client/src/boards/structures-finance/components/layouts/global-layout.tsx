@@ -1,7 +1,7 @@
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 import i18n from "./i18n.json";
 import Footer from "./footer";
-import { Logo } from "@dataesr/dsfr-plus";
+import { Logo, Service } from "@dataesr/dsfr-plus";
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
@@ -24,6 +24,11 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
+                  <Service
+                    href="/structures-finance/accueil"
+                    name="#dataESR tableaux de bord"
+                    tagline="Financement des établissements d'enseignement supérieur français "
+                  />
                   <div className="fr-header__navbar">
                     <button
                       data-fr-opened="false"
