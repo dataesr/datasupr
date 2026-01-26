@@ -1,7 +1,8 @@
-import { ReactNode } from "react";
 import { Link } from "@dataesr/dsfr-plus";
+import { ReactNode } from "react";
 
-import "./style.scss";
+import "./styles.scss";
+
 
 export default function GenericCard({
   description,

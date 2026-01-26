@@ -1,10 +1,13 @@
-import { useSearchParams } from "react-router-dom";
 import { Link } from "@dataesr/dsfr-plus";
-import { useNavigation } from "../../api/use-navigation";
 import { useMemo } from "react";
-import { useFacultyMembersYears } from "../../api/general-queries";
-import "./navigation-cards.scss";
+import { useSearchParams } from "react-router-dom";
+
 import { NavigationCardsProps } from "../../../../types/faculty-members";
+import { useFacultyMembersYears } from "../../api/general-queries";
+import { useNavigation } from "../../api/use-navigation";
+
+import "./styles.scss";
+
 
 export default function NavigationCards({
   type,

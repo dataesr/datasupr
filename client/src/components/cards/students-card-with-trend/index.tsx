@@ -1,6 +1,6 @@
-import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
-import "./style.scss";
+import "./styles.scss";
 
 type CardProps = {
   descriptionNode?: JSX.Element;
@@ -10,6 +10,7 @@ type CardProps = {
   to?: string;
   trendGraph: JSX.Element;
 };
+
 
 export default function StudentsCardWithTrend({
   descriptionNode,

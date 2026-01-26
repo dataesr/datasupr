@@ -1,4 +1,5 @@
-import "./Timeline.scss";
+import "./styles.scss";
+
 
 interface TimelinePeriod {
   id: string;

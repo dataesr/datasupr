@@ -11,7 +11,8 @@ type CardProps = {
   values: valuesProps;
 };
 
-import "./style.scss";
+import "./styles.scss";
+
 
 export default function GendersCard({ currentYear, values }: CardProps) {
   const rootStyles = getComputedStyle(document.documentElement);

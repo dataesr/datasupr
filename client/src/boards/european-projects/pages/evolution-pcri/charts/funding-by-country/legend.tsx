@@ -1,5 +1,7 @@
-import { Row, Col } from "@dataesr/dsfr-plus";
-import "./legend.scss";
+import { Col, Row } from "@dataesr/dsfr-plus";
+
+import "./styles.scss";
+
 
 export default function Legend() {
   const rootStyles = getComputedStyle(document.documentElement);

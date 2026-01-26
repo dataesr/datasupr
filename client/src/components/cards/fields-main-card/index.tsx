@@ -1,8 +1,6 @@
-import {
-  Container, Row, Col, Link,
-} from '@dataesr/dsfr-plus';
+import { Col, Container, Link, Row } from '@dataesr/dsfr-plus';
 
-import './style.scss';
+import './styles.scss';
 
 type CardProps = {
   descriptionNode?: JSX.Element,
@@ -11,6 +9,7 @@ type CardProps = {
   tagsNode?: JSX.Element,
   to?: string,
 };
+
 
 export default function FieldsMainCard({
   descriptionNode,

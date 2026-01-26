@@ -1,0 +1,30 @@
+[data-mobile-burger] {
+  display: none;
+}
+.nav-year-select .fx-select__trigger {
+  color: var(--text-default-grey);
+  background: none !important;
+}
+.nav-year-select .fx-select__trigger:hover {
+  background: var(--background-default-grey-hover) !important;
+}
+@media (max-width: 61.99em) {
+  [data-mobile-burger] {
+    display: flex !important;
+    margin: 0.5rem 1rem;
+  }
+  [data-nav-list] {
+    display: none !important;
+    flex-direction: column;
+    background: var(--background-default-grey);
+  }
+  [data-nav-list][data-open="true"] {
+    display: flex !important;
+  }
+  [data-nav-list] .fr-nav__item {
+    width: 100%;
+  }
+  [data-nav-list] .fr-nav__link {
+    width: 100%;
+  }
+}

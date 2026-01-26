@@ -1,13 +1,13 @@
 import { Badge } from "@dataesr/dsfr-plus";
-import { useFacultyMembersResearchTeachers } from "../../../api/use-research-teachers";
-import { formatToPercent } from "../../../../../utils/format";
 import { useMemo } from "react";
+
+import { CnuGroup, CnuGroupsTableProps } from "../../../../../types/faculty-members";
+import { formatToPercent } from "../../../../../utils/format";
+import { useFacultyMembersResearchTeachers } from "../../../api/use-research-teachers";
 import { TrendIndicator } from "./tendances";
-import {
-  CnuGroup,
-  CnuGroupsTableProps,
-} from "../../../../../types/faculty-members";
-import "./cnu-tables.scss";
+
+import "./styles.scss";
+
 
 export default function CnuGroupsTable({
   context,

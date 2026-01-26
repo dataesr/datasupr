@@ -1,9 +1,12 @@
-import { Badge, Accordion, AccordionGroup } from "@dataesr/dsfr-plus";
-import { useFacultyMembersResearchTeachers } from "../../../api/use-research-teachers";
+import { Accordion, AccordionGroup, Badge } from "@dataesr/dsfr-plus";
 import { useMemo } from "react";
+
 import { formatToPercent } from "../../../../../utils/format";
+import { useFacultyMembersResearchTeachers } from "../../../api/use-research-teachers";
 import { TrendIndicator } from "./tendances";
-import "./cnu-tables.scss";
+
+import "./styles.scss";
+
 
 function groupBy<T, K extends string>(array: T[], getKey: (item: T) => K) {
   return array.reduce((acc, item) => {
