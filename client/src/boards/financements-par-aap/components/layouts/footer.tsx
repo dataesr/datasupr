@@ -20,7 +20,7 @@ export default function Footer() {
       <div className="fr-container">
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
-            <a href="/financements-par-aap" title="Financement par appels à projets - DataESR">
+            <a href="/financements-par-aap/accueil" title="Financement par appels à projets - DataESR">
               <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
             </a>
           </div>

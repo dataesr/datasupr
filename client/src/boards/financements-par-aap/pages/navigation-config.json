@@ -1,17 +1,17 @@
 {
-  "home": {
+  "accueil": {
     "label": {
       "fr": "Accueil"
     },
     "link": "/financements-par-aap/home"
   },
-  "structures": {
+  "etablissement": {
     "label": {
       "fr": "Vue par établissement"
     },
     "link": "/financements-par-aap/structures"
   },
-  "comparison": {
+  "comparaison": {
     "label": {
       "fr": "Comparaison entre établissements"
     },

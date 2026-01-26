@@ -30,7 +30,12 @@ export default function GlobalLayout() {
   const is = (str: string): boolean => pathname?.startsWith(str);
 
   function getI18nLabel(key) {
-    return i18n[key][currentLang];
+    try {
+      return i18n[key][currentLang];
+    } catch (error) {
+      console.error(`No translation key ${key}`);
+      return key;
+    }
   }
 
   return (
@@ -43,7 +48,7 @@ export default function GlobalLayout() {
                 <div className="fr-header__brand-top">
                   <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
                   <Service
-                    href="/financements-par-aap"
+                    href="/financements-par-aap/accueil"
                     name="Financements par appel à projet"
                     tagline="Suivi des financements par appel à projet dans les institutions françaises"
                   />
