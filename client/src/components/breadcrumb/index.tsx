@@ -5,7 +5,7 @@ import { useLocation, useSearchParams } from "react-router-dom";
 export default function Breadcrumb({ config }) {
   const [searchParams] = useSearchParams();
   const location = useLocation();
-  const isDatasupr = searchParams.get("datasupr") || "false";
+  const isDatasupr: boolean = searchParams.has("datasupr");
   const currentLang = searchParams.get("language") || "fr";
   const currentSection = searchParams.get("section");
 
@@ -13,6 +13,9 @@ export default function Breadcrumb({ config }) {
   const pathSegments = location.pathname.split("/").filter(Boolean);
   const currentPage = pathSegments[pathSegments.length - 1] || "";
   const parent = pathSegments[pathSegments.length - 2] || "";
+  console.log(parent);
+  console.log(currentPage);
+  console.log(config[parent].label[currentLang]);
 
   return (
     <nav role="navigation" className="fr-breadcrumb" aria-label="vous êtes ici :">
@@ -21,7 +24,7 @@ export default function Breadcrumb({ config }) {
       </button>
       <div className="fr-collapse" id="breadcrumb-1">
         <ol className="fr-breadcrumb__list">
-          {isDatasupr === "true" && (
+          {isDatasupr && (
             <li>
               <Link href={`${config[parent].link}?${searchParams.toString()}`}>{currentLang === "fr" ? "Sélectionner un tableau de bord" : "Select a dashboard"}</Link>
             </li>

@@ -3,11 +3,15 @@
     "en": "Accessibility : non/partially/totally compliant",
     "fr": "Accessibilité : non/partiellement/totalement conforme"
   },
+  "accueil": {
+    "en": "Home",
+    "fr": "Accueil"
+  },
   "close": {
     "fr": "Fermer",
     "en": "Close"
   },
-  "comparison": {
+  "comparaison": {
     "en": "Comparison between structures",
     "fr": "Comparaison entre établissements"
   },
@@ -23,17 +27,13 @@
     "en": "Datasets",
     "fr": "Jeux de données"
   },
-  "explore": {
-    "en": "Explore dashboards",
-    "fr": "Explorer d'autres tableaux de bord"
-  },
-  "structures": {
+  "etablissement": {
     "en": "View by structure",
     "fr": "Vue par établissement"
   },
-  "home": {
-    "en": "Home",
-    "fr": "Accueil"
+  "explore": {
+    "en": "Explore dashboards",
+    "fr": "Explorer d'autres tableaux de bord"
   },
   "languagesSelector": {
     "en": "Select a language",

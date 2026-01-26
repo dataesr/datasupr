@@ -3,24 +3,55 @@
     "label": {
       "fr": "Accueil"
     },
-    "link": "/financements-par-aap/home"
+    "link": "/financements-par-aap/accueil"
   },
   "etablissement": {
     "label": {
       "fr": "Vue par établissement"
     },
-    "link": "/financements-par-aap/structures"
+    "link": "/financements-par-aap/etablissement",
+    "financements": {
+      "label": {
+        "fr": "Volume et répartition des financements"
+      }
+    },
+    "evolution": {
+      "label": {
+        "fr": "Evolution temporelle"
+      }
+    },
+    "partenaires": {
+      "label": {
+        "fr": "Institutions partenaires"
+      }
+    },
+    "laboratoires": {
+      "label": {
+        "fr": "Laboratoires"
+      }
+    },
+    "disciplines": {
+      "label": {
+        "fr": "Disciplines"
+      }
+    }
   },
   "comparaison": {
     "label": {
       "fr": "Comparaison entre établissements"
     },
-    "link": "/financements-par-aap/comparison"
+    "link": "/financements-par-aap/comparaison"
   },
   "financements-par-aap": {
     "label": {
       "fr": "Financements par AAP"
     },
-    "link": "/financements-par-aap/home"
+    "link": "/financements-par-aap/accueil",
+    "accueil": {
+      "label": {
+        "fr": "Accueil"
+      },
+      "link": "/financements-par-aap/accueil"
+    }
   }
 }

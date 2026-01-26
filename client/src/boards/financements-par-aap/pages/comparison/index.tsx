@@ -1,9 +1,8 @@
 import { Alert, Col, Container, Row } from "@dataesr/dsfr-plus";
+import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import Breadcrumb from "../../../../components/breadcrumb";
 import YearSelector from "../../components/year-selector";
-import navigationConfig from "../navigation-config.json";
 import ClassificationsByStructures from "./charts/classifications-by-structures";
 import Dispersion from "./charts/dispersion";
 import ProjectsByStructures from "./charts/projects-by-structures";
@@ -11,14 +10,20 @@ import StructuresSelector from "./components/structures-selector";
 
 
 export default function Comparison() {
-  const [searchParams] = useSearchParams({});
+  const [searchParams, setSearchParams] = useSearchParams({});
   const structures = searchParams.getAll("structure");
   const yearMax = searchParams.get("yearMax");
   const yearMin = searchParams.get("yearMin");
 
+  useEffect(() => {
+    if (searchParams.has("section")) {
+      searchParams.delete("section");
+      setSearchParams(searchParams);
+    }
+  }, [searchParams, setSearchParams]);
+
   return (
     <Container className="board-fundings fr-pt-3w">
-      <Breadcrumb config={navigationConfig} />
       <Row gutters>
         <Col>
           <StructuresSelector />

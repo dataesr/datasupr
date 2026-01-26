@@ -1,7 +1,9 @@
-import { Logo, Service } from "@dataesr/dsfr-plus";
-import { useEffect } from "react";
+import { Col, Container, Logo, Row, Service } from "@dataesr/dsfr-plus";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
+import Breadcrumb from "../../../../components/breadcrumb";
+import navigationConfig from "../../pages/navigation-config.json";
 import { years } from "../../utils";
 import Footer from "./footer";
 import i18n from "./i18n.json";
@@ -25,6 +27,14 @@ export default function GlobalLayout() {
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams]);
+
+  const searchParamsWithoutSection = () => {
+    if (!searchParams.has("section")) return searchParams;
+    // Deep copy of searchParams
+    const searchParamsCopy = new URLSearchParams(searchParams);
+    searchParamsCopy.delete("section");
+    return searchParamsCopy;
+  }
 
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
@@ -79,33 +89,33 @@ export default function GlobalLayout() {
               <ul className="fr-nav__list">
                 <li className="fr-nav__item">
                   <Link
-                    to="/financements-par-aap/home"
+                    to="/financements-par-aap/accueil"
                     target="_self"
-                    {...(pathname === "/financements-par-aap/home" && { "aria-current": "page" })}
+                    {...(pathname === "/financements-par-aap/accueil" && { "aria-current": "page" })}
                     className="fr-nav__link"
                   >
                     <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
-                    {getI18nLabel("home")}
+                    {getI18nLabel("accueil")}
                   </Link>
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/financements-par-aap/structures?${searchParams}`}
+                    to={`/financements-par-aap/etablissement?${searchParams}`}
                     target="_self"
-                    {...(is("/financements-par-aap/structures") && { "aria-current": "page" })}
+                    {...(is("/financements-par-aap/etablissement") && { "aria-current": "page" })}
                     className="fr-nav__link"
                   >
-                    {getI18nLabel("structures")}
+                    {getI18nLabel("etablissement")}
                   </Link>
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/financements-par-aap/comparison?${searchParams}`}
+                    to={`/financements-par-aap/comparaison?${searchParamsWithoutSection()}`}
                     target="_self"
-                    {...(is("/financements-par-aap/comparison") && { "aria-current": "page" })}
+                    {...(is("/financements-par-aap/comparaison") && { "aria-current": "page" })}
                     className="fr-nav__link"
                   >
-                    {getI18nLabel("comparison")}
+                    {getI18nLabel("comparaison")}
                   </Link>
                 </li>
               </ul>
@@ -113,6 +123,13 @@ export default function GlobalLayout() {
           </div>
         </div>
       </header>
+      <Container>
+        <Row>
+          <Col>
+            <Breadcrumb config={navigationConfig} />
+          </Col>
+        </Row>
+      </Container>
       <Outlet />
       <Footer />
     </>
