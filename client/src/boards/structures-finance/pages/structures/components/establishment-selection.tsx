@@ -7,6 +7,11 @@ import SelectionUI from "./selection-ui";
 import StructureCard from "../../../../../components/structure-card";
 import StructuresBreadcrumb from "./structures-breadcrumb";
 
+// TODO : filtres dans l'url
+// next -> setSearchParams()
+// SelectionUI -> rendre indépendant grace a l'url
+// UL/LI
+
 export default function EstablishmentSelection() {
   const [searchParams, setSearchParams] = useSearchParams();
 

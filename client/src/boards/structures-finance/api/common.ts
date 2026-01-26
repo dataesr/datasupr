@@ -14,7 +14,7 @@ export const useFinanceYears = (enabled = true) => {
       return response.json();
     },
     enabled,
-    staleTime: 5 * 60 * 1000,
+    staleTime: 5 * 60 * 1000, // TODO : delete
   });
 };
 

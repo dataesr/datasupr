@@ -8,7 +8,9 @@ import "./styles.scss";
 
 function HeroSection() {
   const navigate = useNavigate();
-
+  //TODO : button -> link
+  // Hx -> Title
+  // p -> Text
   return (
     <section className="accueil-hero">
       <Container>
@@ -16,25 +18,16 @@ function HeroSection() {
           <Col xs="12" lg="6">
             <div className="accueil-hero__text">
               <p className="accueil-hero__label">FINANCES DES ÉTABLISSEMENTS</p>
-              <h1 className="accueil-hero__title">
-                Explorez les données financières de l'enseignement supérieur
-              </h1>
+              <h1 className="accueil-hero__title">Explorez les données financières de l'enseignement supérieur</h1>
               <p className="accueil-hero__description">
-                Consultez et analysez les données financières des universités et
-                établissements d'enseignement supérieur français. Visualisez les
+                Consultez et analysez les données financières des universités et établissements d'enseignement supérieur français. Visualisez les
                 tendances nationales et les indicateurs clés.
               </p>
               <div className="accueil-hero__cta">
-                <button
-                  className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
-                  onClick={() => navigate("/structures-finance/etablissements")}
-                >
+                <button className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line" onClick={() => navigate("/structures-finance/etablissements")}>
                   Explorer un établissement
                 </button>
-                <button
-                  className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
-                  onClick={() => navigate("/structures-finance/national")}
-                >
+                <button className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line" onClick={() => navigate("/structures-finance/national")}>
                   Explorer la vue nationale
                 </button>
               </div>
@@ -42,11 +35,7 @@ function HeroSection() {
           </Col>
           <Col xs="12" lg="6">
             <div className="accueil-hero__illustration">
-              <img
-                src="/artwork/pictograms/institutions/money.svg"
-                alt=""
-                aria-hidden="true"
-              />
+              <img src="/artwork/pictograms/institutions/money.svg" alt="" aria-hidden="true" />
             </div>
           </Col>
         </Row>
@@ -58,7 +47,7 @@ function HeroSection() {
 // =============================================================================
 // QUICK ACCESS SECTION
 // =============================================================================
-
+// TODO : 2024 -> .env
 function QuickAccessSection() {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");

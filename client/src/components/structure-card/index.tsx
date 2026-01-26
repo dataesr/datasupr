@@ -25,8 +25,8 @@ export default function StructureCard({
       onClick();
     }
   };
-  console.log(year);
-
+  console.log(year); // todo remove
+  // Hx -> As
   return (
     <div
       className={`structure-card ${className}`}
