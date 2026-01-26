@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useStructuresFilters } from "../hooks";
 import { useFinanceYears } from "../../../api/common";
@@ -7,10 +7,7 @@ import SelectionUI from "./selection-ui";
 import StructureCard from "../../../../../components/structure-card";
 import StructuresBreadcrumb from "./structures-breadcrumb";
 
-// TODO : filtres dans l'url
-// next -> setSearchParams()
 // SelectionUI -> rendre indépendant grace a l'url
-// UL/LI
 
 export default function EstablishmentSelection() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -22,10 +19,9 @@ export default function EstablishmentSelection() {
   }, [yearsData]);
 
   const selectedRegion = searchParams.get("region") || "toutes";
-
-  const [selectedType, setSelectedType] = useState("tous");
-  const [selectedTypologie, setSelectedTypologie] = useState("toutes");
-  const [selectedRce, setSelectedRce] = useState("tous");
+  const selectedType = searchParams.get("type") || "tous";
+  const selectedTypologie = searchParams.get("typologie") || "toutes";
+  const selectedRce = searchParams.get("rce") || "tous";
 
   const {
     availableTypes,
@@ -41,53 +37,51 @@ export default function EstablishmentSelection() {
   });
 
   const handleEtablissementSelect = (id: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("structureId", id);
-    next.set("section", "ressources");
-    next.set("year", "2024");
-    next.delete("type");
-    next.delete("region");
-    next.delete("typologie");
-    setSearchParams(next);
+    setSearchParams({
+      structureId: id,
+      section: "ressources",
+      year: "2024",
+    });
   };
 
   const handleRegionChange = (region: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("region", region);
-    next.delete("structureId");
-    setSearchParams(next);
+    setSearchParams({
+      region,
+      type: selectedType,
+      typologie: selectedTypologie,
+      rce: selectedRce,
+    });
   };
 
   const handleTypeChange = (type: string) => {
-    setSelectedType(type);
-    setSelectedTypologie("toutes");
-    const next = new URLSearchParams(searchParams);
-    next.delete("structureId");
-    setSearchParams(next);
+    setSearchParams({
+      region: selectedRegion,
+      type,
+      typologie: "toutes",
+      rce: selectedRce,
+    });
   };
 
   const handleTypologieChange = (typologie: string) => {
-    setSelectedTypologie(typologie);
-    const next = new URLSearchParams(searchParams);
-    next.delete("structureId");
-    setSearchParams(next);
+    setSearchParams({
+      region: selectedRegion,
+      type: selectedType,
+      typologie,
+      rce: selectedRce,
+    });
   };
 
   const handleRceChange = (rce: string) => {
-    setSelectedRce(rce);
-    const next = new URLSearchParams(searchParams);
-    next.delete("structureId");
-    setSearchParams(next);
+    setSearchParams({
+      region: selectedRegion,
+      type: selectedType,
+      typologie: selectedTypologie,
+      rce,
+    });
   };
 
   const handleResetFilters = () => {
-    setSelectedType("tous");
-    setSelectedTypologie("toutes");
-    setSelectedRce("tous");
-    const next = new URLSearchParams(searchParams);
-    next.set("region", "toutes");
-    next.delete("structureId");
-    setSearchParams(next);
+    setSearchParams({ region: "toutes" });
   };
 
   return (
@@ -129,7 +123,10 @@ export default function EstablishmentSelection() {
             {filteredEtablissements.length > 1 ? "s" : ""} trouvé
             {filteredEtablissements.length > 1 ? "s" : ""}
           </p>
-          <Row gutters>
+          <ul
+            className="fr-grid-row fr-grid-row--gutters"
+            style={{ listStyle: "none", padding: 0 }}
+          >
             {filteredEtablissements.map((etab: any) => {
               const id =
                 etab.etablissement_id_paysage ||
@@ -142,7 +139,7 @@ export default function EstablishmentSelection() {
               const year = etab.anuniv;
 
               return (
-                <Col key={id} xs="12" md="6" lg="4">
+                <li key={id} className="fr-col-12 fr-col-md-6 fr-col-lg-4">
                   <StructureCard
                     title={displayName}
                     region={region}
@@ -151,10 +148,10 @@ export default function EstablishmentSelection() {
                     year={year}
                     onClick={() => handleEtablissementSelect(id)}
                   />
-                </Col>
+                </li>
               );
             })}
-          </Row>
+          </ul>
         </Container>
       )}
     </main>
