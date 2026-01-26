@@ -12,8 +12,8 @@ const sortedFunders = {
   "horizon europe": "#e39700",
 };
 
-const typologies = ["Autres", "Ecoles et instituts", "Etablissements de santé",
-  "Organismes de recherche", "Universités"];
+const typologies = ["Autres", "Ecoles, instituts et assimilés", "Etablissements de santé",
+  "Organismes de recherche", "Universités et assimilé"];
 
 const years: number[] = Array.from(Array(11).keys()).map((item) => item + 2015);
 
