@@ -1,7 +1,9 @@
-import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
-import i18n from "./i18n.json";
-import Footer from "./footer";
 import { Logo, Service } from "@dataesr/dsfr-plus";
+import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
+
+import Footer from "../../../../components/footer";
+import i18n from "./i18n.json";
+
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();

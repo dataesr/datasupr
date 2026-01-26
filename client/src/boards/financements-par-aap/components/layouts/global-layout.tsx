@@ -3,9 +3,9 @@ import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import Breadcrumb from "../../../../components/breadcrumb";
+import Footer from "../../../../components/footer";
 import navigationConfig from "../../pages/navigation-config.json";
 import { years } from "../../utils";
-import Footer from "./footer";
 import i18n from "./i18n.json";
 
 const { VITE_MINISTER_NAME } = import.meta.env;
@@ -131,7 +131,7 @@ export default function GlobalLayout() {
         </Row>
       </Container>
       <Outlet />
-      <Footer />
+      <Footer href="/financements-par-aap/accueil" title="Financement par appels à projets - DataESR" />
     </>
   );
 }

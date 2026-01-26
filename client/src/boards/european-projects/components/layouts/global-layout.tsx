@@ -4,7 +4,7 @@ import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import Breadcrumb from "../../../../components/breadcrumb";
 import CountrySelector from "../../../../components/country-selector/selector";
-import Footer from "./footer";
+import Footer from "../../../../components/footer";
 import i18n from "./i18n.json";
 import navigationConfig from "./navigation-config.json";
 

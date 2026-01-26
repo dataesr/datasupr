@@ -7,7 +7,7 @@ import i18n from "./i18n.json";
 const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env;
 
 
-export default function Footer() {
+export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { href?: string, title?: string }) {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
@@ -20,7 +20,7 @@ export default function Footer() {
       <div className="fr-container">
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
-            <a href="/" title="Accueil - DataSupR">
+            <a href={href} title={title}>
               <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
             </a>
           </div>

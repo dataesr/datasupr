@@ -1,10 +1,11 @@
+import { Button, Container, FastAccess, Header, Link, Logo, Nav, Service } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
 import { Outlet, useLocation, useSearchParams } from "react-router-dom";
-import { Button, Header, Logo, Service, FastAccess, Container, Nav, Link } from "@dataesr/dsfr-plus";
 
-import Footer from "./footer";
+import Footer from "../../../../components/footer";
 import SwitchTheme from "../../../../components/switch-theme";
 import i18n from "./i18n.json";
+
 
 export default function GlobalLayout({ languageSelector = false }) {
   const { pathname } = useLocation();

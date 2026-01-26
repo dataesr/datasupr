@@ -1,9 +1,10 @@
-import { useEffect } from 'react';
-import { Outlet, useSearchParams } from 'react-router-dom';
-import { Button, Header, Logo, Service, FastAccess } from '@dataesr/dsfr-plus';
+import { Button, FastAccess, Header, Logo, Service } from "@dataesr/dsfr-plus";
+import { useEffect } from "react";
+import { Outlet, useSearchParams } from "react-router-dom";
 
-import Footer from './footer';
-import SwitchTheme from '../../../../components/switch-theme';
+import Footer from "../../../../components/footer";
+import SwitchTheme from "../../../../components/switch-theme";
+
 
 export function Layout({ languageSelector = false }) {
   const [searchParams, setSearchParams] = useSearchParams();
