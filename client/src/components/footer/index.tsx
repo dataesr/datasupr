@@ -1,6 +1,11 @@
+import { Logo } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
+
+import SwitchTheme from "../switch-theme";
 import i18n from "./i18n.json";
-import SwitchTheme from "../components/switch-theme";
+
+const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env;
+
 
 export default function Footer() {
   const [searchParams] = useSearchParams();
@@ -9,26 +14,14 @@ export default function Footer() {
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
+
   return (
     <footer className="fr-footer" role="contentinfo" id="footer">
       <div className="fr-container">
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
-            <a
-              href="/"
-              title="Retour à l’accueil du site - Nom de l’entité (ministère, secrétariat d‘état, gouvernement)"
-            >
-              <p className="fr-logo">
-                Ministère
-                <br />
-                de l'enseignement
-                <br />
-                supérieur
-                <br />
-                de la recherche
-                <br />
-                et de l'espace
-              </p>
+            <a href="/" title="Accueil - DataSupR">
+              <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
             </a>
           </div>
           <div className="fr-footer__content">
@@ -38,7 +31,7 @@ export default function Footer() {
                   className="fr-footer__content-link"
                   target="_blank"
                   rel="noopener external"
-                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  title="Legifrance - nouvelle fenêtre"
                   href="https://legifrance.gouv.fr"
                 >
                   legifrance.gouv.fr
@@ -49,7 +42,7 @@ export default function Footer() {
                   className="fr-footer__content-link"
                   target="_blank"
                   rel="noopener external"
-                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  title="Gouvernement français - nouvelle fenêtre"
                   href="https://gouvernement.fr"
                 >
                   gouvernement.fr
@@ -60,7 +53,7 @@ export default function Footer() {
                   className="fr-footer__content-link"
                   target="_blank"
                   rel="noopener external"
-                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  title="Service public - nouvelle fenêtre"
                   href="https://service-public.fr"
                 >
                   service-public.fr
@@ -71,7 +64,7 @@ export default function Footer() {
                   className="fr-footer__content-link"
                   target="_blank"
                   rel="noopener external"
-                  title="[À MODIFIER - Intitulé] - nouvelle fenêtre"
+                  title="DataGouv - nouvelle fenêtre"
                   href="https://data.gouv.fr"
                 >
                   data.gouv.fr
@@ -110,6 +103,16 @@ export default function Footer() {
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="#">
                 {getI18nLabel("contact")}
+              </a>
+            </li>
+            <li className="fr-footer__bottom-item">
+              <a
+                className="fr-footer__bottom-link"
+                href={`https://github.com/dataesr/datasupr/releases/tag/v${VITE_VERSION}`}
+                rel="noreferer noopenner"
+                target="_blank"
+              >
+                {`v${VITE_VERSION}`}
               </a>
             </li>
             <li className="fr-footer__bottom-item">

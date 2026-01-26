@@ -1,11 +1,12 @@
+import { Button, FastAccess, Header, Logo, Service } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
 import { Outlet, useSearchParams } from "react-router-dom";
-import { Button, Header, Logo, Service, FastAccess } from "@dataesr/dsfr-plus";
 
-import Footer from "./footer";
-import SwitchTheme from "../components/switch-theme";
 import CookieConsent from "../components/cookies/cookie-consent/index";
+import Footer from "../components/footer";
+import SwitchTheme from "../components/switch-theme";
 import i18n from "./i18n.json";
+
 
 export function Layout({ languageSelector = false }) {
   const [searchParams, setSearchParams] = useSearchParams();

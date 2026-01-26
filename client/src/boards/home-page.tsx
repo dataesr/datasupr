@@ -1,7 +1,7 @@
 import { Badge, Col, Container, Link, Row } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 
-import Footer from "../layout/footer.tsx";
+import Footer from "../components/footer";
 import HeaderDatasupR from "../layout/header.tsx";
 
 import "./home-styles.scss";

@@ -1,11 +1,13 @@
+import { Button, ButtonGroup, Col, Container, Modal, ModalContent, ModalTitle, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { CookieConsentModalContent } from "../cookie-consent/index";
+
 import { useCookieConsent } from "../../../hooks/useCookieConsent";
-import i18n from "../cookie-consent/i18n.json";
-import Footer from "../../../layout/footer";
 import HeaderDatasupR from "../../../layout/header";
-import { Button, ButtonGroup, Col, Container, Row, Text, Title, Modal, ModalContent, ModalTitle } from "@dataesr/dsfr-plus";
+import Footer from "../../footer";
+import i18n from "../cookie-consent/i18n.json";
+import { CookieConsentModalContent } from "../cookie-consent/index";
+
 
 export default function CookiePolicyPage() {
   const [searchParams] = useSearchParams();

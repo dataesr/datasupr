@@ -1,4 +1,4 @@
-import { Alert, Col, Container, Row } from "@dataesr/dsfr-plus";
+import { Alert, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -48,6 +48,13 @@ export default function Comparison() {
 
   return (
     <Container className="board-fundings fr-pt-3w">
+      <Row gutters>
+        <Col>
+          <Title as="h1" look="h4">
+            Comparaison entre plusieurs établissements
+          </Title>
+        </Col>
+      </Row>
       <Row gutters>
         <Col>
           <StructuresSelector />

@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import {
   Button,
   Col,
@@ -11,8 +9,12 @@ import {
   Service,
   Title,
 } from "@dataesr/dsfr-plus";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+
+import Footer from "./footer";
 import SwitchTheme from "./switch-theme";
-import Footer from "../layout/footer";
+
 
 export default function NotFoundPage() {
   const [searchParams, setSearchParams] = useSearchParams();
