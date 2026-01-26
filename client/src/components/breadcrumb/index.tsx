@@ -13,9 +13,6 @@ export default function Breadcrumb({ config }) {
   const pathSegments = location.pathname.split("/").filter(Boolean);
   const currentPage = pathSegments[pathSegments.length - 1] || "";
   const parent = pathSegments[pathSegments.length - 2] || "";
-  console.log(parent);
-  console.log(currentPage);
-  console.log(config[parent].label[currentLang]);
 
   return (
     <nav role="navigation" className="fr-breadcrumb" aria-label="vous êtes ici :">

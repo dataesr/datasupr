@@ -70,7 +70,7 @@ export default function FavoritesList({ territoiresList }: { territoiresList: Te
         <li 
         className="fr-py-1w" 
         >
-          <Link href={`/atlas/general?geo_id=PAYS_100&annee_universitaire=${DEFAULT_CURRENT_YEAR}${datasupr ? '&datasupr=true' : ''}`}>
+          <Link href={`/atlas/general?geo_id=PAYS_100&annee_universitaire=${DEFAULT_CURRENT_YEAR}${datasupr ? '&datasupr' : ''}`}>
             France
           </Link>
           {GetLevelBadgeFromId({ id: "PAYS_100" })}
@@ -83,7 +83,7 @@ export default function FavoritesList({ territoiresList }: { territoiresList: Te
             style={{ borderBottom: "solid 1px #ddd" }}
           >
             <Link
-              href={`/atlas/general?geo_id=${territoire.id}&annee_universitaire=${DEFAULT_CURRENT_YEAR}${datasupr ? '&datasupr=true' : ''}`}
+              href={`/atlas/general?geo_id=${territoire.id}&annee_universitaire=${DEFAULT_CURRENT_YEAR}${datasupr ? '&datasupr' : ''}`}
             >
               {territoire.label}
             </Link>

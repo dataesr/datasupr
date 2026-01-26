@@ -88,7 +88,7 @@ export default function AtlasHeader() {
               color="pink-tuile"
               icon="home-4-line"
               onClick={() =>
-                navigate(`/atlas${isdatasupr ? "?datasupr=true" : ""}`)
+                navigate(`/atlas${isdatasupr ? "?datasupr" : ""}`)
               }
               size="sm"
             >
@@ -105,7 +105,7 @@ export default function AtlasHeader() {
                   `/atlas/general?geo_id=${
                     parent.geo_id
                   }&annee_universitaire=${currentYear}${
-                    isdatasupr ? "&datasupr=true" : ""
+                    isdatasupr ? "&datasupr" : ""
                   }`
                 )
               }
@@ -122,9 +122,9 @@ export default function AtlasHeader() {
 
       <Breadcrumb>
         {isdatasupr && (
-          <Link href={`/${isdatasupr ? "?datasupr=true" : ""}`}>Accueil</Link>
+          <Link href={`/${isdatasupr ? "?datasupr" : ""}`}>Accueil</Link>
         )}
-        <Link href={`/atlas${isdatasupr ? "?datasupr=true" : ""}`}>
+        <Link href={`/atlas${isdatasupr ? "?datasupr" : ""}`}>
           {isdatasupr ? "Atlas des effectifs étudiant-e-s" : "Accueil"}
         </Link>
         {geoId && <Link>{geoLabel}</Link>}

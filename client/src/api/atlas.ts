@@ -1,7 +1,7 @@
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 function cleanedParams(params: string) {
-  return params.replace(/&?datasupr=true/, '');
+  return params.replace(/&?datasupr/, '');
 }
 
 export async function getNumberOfStudentsMap(params: string) {

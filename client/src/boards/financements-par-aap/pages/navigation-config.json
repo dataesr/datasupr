@@ -40,7 +40,17 @@
     "label": {
       "fr": "Comparaison entre établissements"
     },
-    "link": "/financements-par-aap/comparaison"
+    "link": "/financements-par-aap/comparaison",
+    "financements": {
+      "label": {
+        "fr": "Volume et répartition des financements"
+      }
+    },
+    "disciplines": {
+      "label": {
+        "fr": "Disciplines"
+      }
+    }
   },
   "financements-par-aap": {
     "label": {

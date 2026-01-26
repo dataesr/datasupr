@@ -230,7 +230,7 @@ export function Search() {
                             `/atlas/general?geo_id=${
                               result.geo_id
                             }&annee_universitaire=${currentYear}${
-                              datasupr ? "&datasupr=true" : ""
+                              datasupr ? "&datasupr" : ""
                             }`
                           );
                         }}

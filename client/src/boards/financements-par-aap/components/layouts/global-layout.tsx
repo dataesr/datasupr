@@ -100,7 +100,7 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/financements-par-aap/etablissement?${searchParams}`}
+                    to={`/financements-par-aap/etablissement?${searchParamsWithoutSection()}`}
                     target="_self"
                     {...(is("/financements-par-aap/etablissement") && { "aria-current": "page" })}
                     className="fr-nav__link"

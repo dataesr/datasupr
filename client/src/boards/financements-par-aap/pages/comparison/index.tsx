@@ -1,23 +1,47 @@
 import { Alert, Col, Container, Row } from "@dataesr/dsfr-plus";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import YearSelector from "../../components/year-selector";
+import { years } from "../../utils";
 import ClassificationsByStructures from "./charts/classifications-by-structures";
 import Dispersion from "./charts/dispersion";
 import ProjectsByStructures from "./charts/projects-by-structures";
 import StructuresSelector from "./components/structures-selector";
 
+import "./styles.scss";
+
 
 export default function Comparison() {
   const [searchParams, setSearchParams] = useSearchParams({});
+  const section = searchParams.get("section");
   const structures = searchParams.getAll("structure");
-  const yearMax = searchParams.get("yearMax");
-  const yearMin = searchParams.get("yearMin");
+  const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
+  const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
+  const [isOpen, setIsOpen] = useState(false);
+  const sections = [
+    { id: "financements", label: "Volume et répartition des financements" },
+    { id: "disciplines", label: "Disciplines" },
+  ];
+
+  const handleNavClick = (section: string) => {
+    searchParams.set("section", section);
+    setSearchParams(searchParams);
+    setIsOpen(false);
+  };
+
+  const handleYearMaxChange = (year: string) => {
+    searchParams.set("yearMax", year);
+    setSearchParams(searchParams);
+  };
+
+  const handleYearMinChange = (year: string) => {
+    searchParams.set("yearMin", year);
+    setSearchParams(searchParams);
+  };
 
   useEffect(() => {
-    if (searchParams.has("section")) {
-      searchParams.delete("section");
+    if (!searchParams.get("section")) {
+      searchParams.set("section", "financements");
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams]);
@@ -29,29 +53,87 @@ export default function Comparison() {
           <StructuresSelector />
         </Col>
       </Row>
-      <Row gutters>
-        <Col>
-          <YearSelector />
-        </Col>
-      </Row>
       {(Number(yearMin) <= Number(yearMax)) && (
         (structures && structures.length >= 2) ? (
           <>
             <Row gutters>
               <Col>
-                <ProjectsByStructures />
+                <nav
+                  aria-label="Navigation secondaire"
+                  className="fr-nav fr-mb-1w"
+                  role="navigation"
+                >
+                  <button
+                    className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
+                    onClick={() => setIsOpen(!isOpen)}
+                    aria-expanded={isOpen}
+                    aria-controls="section-nav-list"
+                  >
+                    Menu
+                  </button>
+                  <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
+                    {sections.map((item) => (
+                      <li key={item.id} className="fr-nav__item">
+                        <a
+                          aria-current={section === item.id ? "page" : undefined}
+                          className="fr-nav__link"
+                          onClick={() => handleNavClick(item.id)}
+                        >
+                          {item.label}
+                        </a>
+                      </li>
+                    ))}
+                    <li className="fr-ml-auto">
+                      <select
+                        className="fr-select"
+                        onChange={(e) => handleYearMinChange(e.target.value)}
+                        value={yearMin}
+                      >
+                        {[...years].sort((a, b) => b - a).map((year) => (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        ))}
+                      </select>
+                    </li>
+                    <li className="fr-ml-1w">
+                      <select
+                        className="fr-select"
+                        onChange={(e) => handleYearMaxChange(e.target.value)}
+                        value={yearMax}
+                      >
+                        {[...years].sort((a, b) => b - a).map((year) => (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        ))}
+                      </select>
+                    </li>
+                  </ul>
+                </nav>
               </Col>
             </Row>
-            <Row gutters>
-              <Col>
-                <Dispersion />
-              </Col>
-            </Row>
-            <Row gutters>
-              <Col>
-                <ClassificationsByStructures />
-              </Col>
-            </Row>
+            {(section === "financements") && (
+              <>
+                <Row gutters>
+                  <Col>
+                    <ProjectsByStructures />
+                  </Col>
+                </Row>
+                <Row gutters>
+                  <Col>
+                    <Dispersion />
+                  </Col>
+                </Row>
+              </>
+            )}
+            {(section === "disciplines") && (
+              <Row gutters>
+                <Col>
+                  <ClassificationsByStructures />
+                </Col>
+              </Row>
+            )}
           </>
         ) : (
           <Alert
