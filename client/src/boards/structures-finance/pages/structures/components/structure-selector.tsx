@@ -7,8 +7,6 @@ import SelectionUI from "./selection-ui";
 import StructureCard from "../../../../../components/structure-card";
 import StructuresBreadcrumb from "./structures-breadcrumb";
 
-// SelectionUI -> rendre indépendant grace a l'url
-
 export default function StructureSelection() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -44,46 +42,6 @@ export default function StructureSelection() {
     });
   };
 
-  const handleRegionChange = (region: string) => {
-    setSearchParams({
-      region,
-      type: selectedType,
-      typologie: selectedTypologie,
-      rce: selectedRce,
-    });
-  };
-
-  const handleTypeChange = (type: string) => {
-    setSearchParams({
-      region: selectedRegion,
-      type,
-      typologie: "toutes",
-      rce: selectedRce,
-    });
-  };
-
-  const handleTypologieChange = (typologie: string) => {
-    setSearchParams({
-      region: selectedRegion,
-      type: selectedType,
-      typologie,
-      rce: selectedRce,
-    });
-  };
-
-  const handleRceChange = (rce: string) => {
-    setSearchParams({
-      region: selectedRegion,
-      type: selectedType,
-      typologie: selectedTypologie,
-      rce,
-    });
-  };
-
-  const handleResetFilters = () => {
-    setSearchParams({ region: "toutes" });
-  };
-
   return (
     <main>
       <Container fluid className="etablissement-selector__wrapper">
@@ -96,20 +54,11 @@ export default function StructureSelection() {
           <Row>
             <Col>
               <SelectionUI
-                selectedType={selectedType}
-                selectedTypologie={selectedTypologie}
-                selectedRegion={selectedRegion}
-                selectedRce={selectedRce}
                 availableTypes={availableTypes}
                 availableTypologies={availableTypologies}
                 availableRegions={availableRegions}
                 filteredEtablissements={filteredEtablissements}
-                onTypeChange={handleTypeChange}
-                onTypologieChange={handleTypologieChange}
-                onRegionChange={handleRegionChange}
-                onRceChange={handleRceChange}
                 onEtablissementSelect={handleEtablissementSelect}
-                onResetFilters={handleResetFilters}
               />
             </Col>
           </Row>

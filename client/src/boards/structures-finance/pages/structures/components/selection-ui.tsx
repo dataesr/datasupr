@@ -1,42 +1,70 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Row, Col } from "@dataesr/dsfr-plus";
 import Select from "../../../../../components/select";
 import Dropdown from "../../../../../components/dropdown";
 
 interface SelectionUIProps {
-  selectedType: string;
-  selectedTypologie: string;
-  selectedRegion: string;
-  selectedRce: string;
   availableTypes: string[];
   availableTypologies: string[];
   availableRegions: string[];
   filteredEtablissements: any[];
-  onTypeChange: (type: string) => void;
-  onTypologieChange: (typologie: string) => void;
-  onRegionChange: (region: string) => void;
-  onRceChange: (rce: string) => void;
   onEtablissementSelect: (id: string) => void;
-  onResetFilters?: () => void;
 }
 
 export default function SelectionUI({
-  selectedType,
-  selectedTypologie,
-  selectedRegion,
-  selectedRce,
   availableTypes,
   availableTypologies,
   availableRegions,
   filteredEtablissements,
-  onTypeChange,
-  onTypologieChange,
-  onRegionChange,
-  onRceChange,
   onEtablissementSelect,
-  onResetFilters,
 }: SelectionUIProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedRegion = searchParams.get("region") || "toutes";
+  const selectedType = searchParams.get("type") || "tous";
+  const selectedTypologie = searchParams.get("typologie") || "toutes";
+  const selectedRce = searchParams.get("rce") || "tous";
   const [searchQuery, setSearchQuery] = useState("");
+
+  const handleRegionChange = (region: string) => {
+    setSearchParams({
+      region,
+      type: selectedType,
+      typologie: selectedTypologie,
+      rce: selectedRce,
+    });
+  };
+
+  const handleTypeChange = (type: string) => {
+    setSearchParams({
+      region: selectedRegion,
+      type,
+      typologie: "toutes",
+      rce: selectedRce,
+    });
+  };
+
+  const handleTypologieChange = (typologie: string) => {
+    setSearchParams({
+      region: selectedRegion,
+      type: selectedType,
+      typologie,
+      rce: selectedRce,
+    });
+  };
+
+  const handleRceChange = (rce: string) => {
+    setSearchParams({
+      region: selectedRegion,
+      type: selectedType,
+      typologie: selectedTypologie,
+      rce,
+    });
+  };
+
+  const handleResetFilters = () => {
+    setSearchParams({ region: "toutes" });
+  };
 
   const hasActiveFilters =
     (selectedType && selectedType !== "tous") ||
@@ -126,10 +154,10 @@ export default function SelectionUI({
           }}
         >
           <h1 className="fr-h4 fr-mb-0">Sélectionnez un établissement</h1>
-          {hasActiveFilters && onResetFilters && (
+          {hasActiveFilters && (
             <button
               className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
-              onClick={onResetFilters}
+              onClick={handleResetFilters}
               type="button"
             >
               <span className="ri-refresh-line fr-mr-1w" aria-hidden="true" />
@@ -150,7 +178,7 @@ export default function SelectionUI({
           <Dropdown label={typeLabel} icon="building-line" size="sm">
             <Dropdown.Item
               active={selectedType === "tous"}
-              onClick={() => onTypeChange("tous")}
+              onClick={() => handleTypeChange("tous")}
             >
               Tous les types
             </Dropdown.Item>
@@ -158,7 +186,7 @@ export default function SelectionUI({
               <Dropdown.Item
                 key={type}
                 active={selectedType === type}
-                onClick={() => onTypeChange(type)}
+                onClick={() => handleTypeChange(type)}
               >
                 {type}
               </Dropdown.Item>
@@ -168,7 +196,7 @@ export default function SelectionUI({
           <Dropdown label={typologieLabel} icon="layout-grid-line" size="sm">
             <Dropdown.Item
               active={selectedTypologie === "toutes"}
-              onClick={() => onTypologieChange("toutes")}
+              onClick={() => handleTypologieChange("toutes")}
             >
               Toutes les typologies
             </Dropdown.Item>
@@ -176,7 +204,7 @@ export default function SelectionUI({
               <Dropdown.Item
                 key={typo}
                 active={selectedTypologie === typo}
-                onClick={() => onTypologieChange(typo)}
+                onClick={() => handleTypologieChange(typo)}
               >
                 {typo}
               </Dropdown.Item>
@@ -186,7 +214,7 @@ export default function SelectionUI({
           <Dropdown label={regionLabel} icon="map-pin-2-line" size="sm">
             <Dropdown.Item
               active={selectedRegion === "toutes"}
-              onClick={() => onRegionChange("toutes")}
+              onClick={() => handleRegionChange("toutes")}
             >
               Toutes les régions
             </Dropdown.Item>
@@ -194,7 +222,7 @@ export default function SelectionUI({
               <Dropdown.Item
                 key={region}
                 active={selectedRegion === region}
-                onClick={() => onRegionChange(region)}
+                onClick={() => handleRegionChange(region)}
               >
                 {region}
               </Dropdown.Item>
@@ -204,19 +232,19 @@ export default function SelectionUI({
           <Dropdown label={rceLabel} icon="bank-line" size="sm">
             <Dropdown.Item
               active={selectedRce === "tous"}
-              onClick={() => onRceChange("tous")}
+              onClick={() => handleRceChange("tous")}
             >
               RCE et non RCE
             </Dropdown.Item>
             <Dropdown.Item
               active={selectedRce === "rce"}
-              onClick={() => onRceChange("rce")}
+              onClick={() => handleRceChange("rce")}
             >
               RCE uniquement
             </Dropdown.Item>
             <Dropdown.Item
               active={selectedRce === "non-rce"}
-              onClick={() => onRceChange("non-rce")}
+              onClick={() => handleRceChange("non-rce")}
             >
               Non RCE uniquement
             </Dropdown.Item>
