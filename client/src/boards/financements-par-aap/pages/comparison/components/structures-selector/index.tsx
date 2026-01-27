@@ -133,11 +133,11 @@ export default function StructuresSelector() {
       ).then((response) => response.json()),
   });
   const structures =
-    (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => ({
-      id: bucket.key.split("###")[0],
-      label: bucket.key.split("###")[1],
-      searchableText: bucket.key.split("###")[1].normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
-    })) || [];
+    (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
+      const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
+      structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      return structureInfo;
+    }) || [];
 
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {
