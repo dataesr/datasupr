@@ -26,7 +26,7 @@ export default function Router() {
       <Route path="/cookies" element={<CookiePolicyPage />} />
       <Route path="/datasupr-doc/*" element={<DatasuprDocRoutes />} />
       <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
-      <Route path="/financements-par-aap/*" element={<FundingsRoutes />} />
+      <Route path="/financements-par-aap" element={<FundingsRoutes />} />
       <Route path="/graduates/*" element={<GraduatesRoutes />} />
       <Route path="/integration" element={<Integration />} />
       <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
