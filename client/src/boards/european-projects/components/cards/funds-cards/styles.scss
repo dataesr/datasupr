@@ -1,9 +1,13 @@
 .ep-funds-card {
   padding: 1rem;
   padding-top: 40px;
-  background-color: var(--background-contrast-blue-cumulus);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
+  background-color: var(--background-alt-grey);
+  border: 1px solid var(--border-default-grey);
 
+  &:hover {
+    background-color: var(--background-default-grey-hover);
+  }
+  
   .card-header {
     display: flex;
     justify-content: space-between;

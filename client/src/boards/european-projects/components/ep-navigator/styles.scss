@@ -64,8 +64,6 @@ $section-colors: (
 		position: sticky;
 		top: 60px; // Juste en dessous du menu principal (ep-main-menu)
 		z-index: 998; // En dessous du sidemenu (999) et du menu principal (1000)
-		background: var(--background-default-grey);
-		// box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 		
 		.navigator-full {
 			opacity: 0;
@@ -103,8 +101,7 @@ $section-colors: (
 	// Version minifiée avec badges
 	.navigator-minified {
 		padding: 0px 16px 16px 16px;
-		background: var(--background-default-grey);
-		border-bottom: 1px solid var(--border-default-grey);
+		
 
 		.minified-badges {
 			display: grid;

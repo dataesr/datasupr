@@ -1,15 +1,13 @@
-import { Col, Container, Row } from "@dataesr/dsfr-plus";
+import { Container } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
-import Breadcrumb from "../../../../components/breadcrumb";
+// import Breadcrumb from "../../../../components/breadcrumb";
 import CountrySelector from "../../../../components/country-selector/selector";
 import Footer from "../../../../components/footer";
 import i18n from "./i18n.json";
-import navigationConfig from "./navigation-config.json";
 
 import "../styles.scss";
-
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
@@ -135,13 +133,13 @@ export default function GlobalLayout() {
           </ul>
         </Container>
       </nav>
-      <Container>
+      {/* <Container>
         <Row>
           <Col>
             <Breadcrumb config={navigationConfig} />
           </Col>
         </Row>
-      </Container>
+      </Container> */}
       <Outlet />
       <Footer />
     </>
