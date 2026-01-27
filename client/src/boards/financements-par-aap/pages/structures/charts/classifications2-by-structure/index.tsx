@@ -97,8 +97,6 @@ export default function Classifications2ByStructure({ name }: { name: string | u
     data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.sum_budget?.value ?? 0),
     name: classification.key,
   })).reverse();
-  console.log(seriesProject);
-  console.log(seriesBudget);
 
   const axisBudget = "Montants financés (€)";
   const axisProjects = "Nombre de projets financés";

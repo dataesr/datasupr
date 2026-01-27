@@ -4,6 +4,8 @@ import { useSearchParams } from "react-router-dom";
 import SwitchTheme from "../switch-theme";
 import i18n from "./i18n.json";
 
+import "./styles.scss";
+
 const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env;
 
 
@@ -27,7 +29,7 @@ export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { h
           <div>
             <svg aria-hidden="true" viewBox="0 0 1167.77 752.85" width="100%">
               <use
-                className="fr-text-black-white--grey"
+                className="sies-logo"
                 href="/logos/sies_logo_signature.svg#sies-logo-text"
               />
               <use href="/logos/sies_logo_signature.svg#sies-logo-artwork" />
