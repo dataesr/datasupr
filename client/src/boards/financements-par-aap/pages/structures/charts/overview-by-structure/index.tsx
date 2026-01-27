@@ -4,9 +4,8 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getCssColor } from "../../../../../../utils/colors.ts";
 import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
-import { deepMerge, formatCompactNumber, funders, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 import "highcharts/modules/variwide";
 
@@ -56,7 +55,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder))
     .filter((item) => !!item)
     .map((bucket) => [bucket.key, bucket.sum_budget.value, bucket.doc_count]);
-  const colors = series.map((item) => getCssColor(`funder-${item[0].toLowerCase().replaceAll(" ", "-")}`),);
+  const colors = series.map((item) => getCssColor({ name: item[0], prefix: "funder" }));
 
   const config = {
     comment: { "fr": <>Ce graphique met en regard le volume de projets et les montants de financement associés : la largeur des barres représente le nombre de projets, tandis que leur hauteur correspond au montant total de financement. Les montants indiqués reflètent le financement global des projets auxquels l’établissement participe et ne correspondent pas aux sommes effectivement perçues par celui-ci.</> },

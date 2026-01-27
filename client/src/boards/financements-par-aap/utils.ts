@@ -1,6 +1,7 @@
 import HighchartsInstance from "highcharts";
 
 import { createChartOptions } from "../../components/chart-wrapper/default-options";
+import { getCssColor as getCssColorGlobal } from "../../utils/colors";
 
 const funders = ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"];
 
@@ -46,6 +47,13 @@ const formatPercent = (number: number, decimals: number = 0): string => {
     style: "percent",
   });
   return formatter.format(number);
+};
+
+const getCssColor = ({ name, prefix = "" }: { name: string, prefix?: string }) => {
+  let variableName: string = "";
+  if (prefix?.length > 0) variableName += `${prefix}-`;
+  variableName += name.toLowerCase().replace(/[^a-z ]/g, "").replace(/  +/g, " ").replaceAll(" ", "-");
+  return getCssColorGlobal(variableName);
 };
 
 const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
@@ -113,6 +121,7 @@ export {
   formatCompactNumber,
   formatPercent,
   funders,
+  getCssColor,
   getEsQuery,
   getGeneralOptions,
   getYearRangeLabel,

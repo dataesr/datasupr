@@ -1,4 +1,4 @@
-import { Row, Col } from "@dataesr/dsfr-plus";
+import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
@@ -21,20 +21,11 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
     data.resultat_net_comptable !== data.resultat_net_comptable_hors_sie;
 
   return (
-    <div
-      id="section-sante-financier"
-      role="region"
-      aria-labelledby="section-sante-financier"
-      className="section-container"
-    >
+    <div id="section-sante-financier" className="section-container">
       <div className="section-header fr-mb-4w">
-        <h3 className="fr-h5 section-header__title">
+        <Title as="h2" look="h5" className="section-header__title">
           Equilibre financier
-          <label
-            className="fr-label"
-            htmlFor="select-year-sante-financier"
-          ></label>
-        </h3>
+        </Title>
       </div>
 
       <div className="fr-mb-4w">
