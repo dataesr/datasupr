@@ -84,7 +84,7 @@ export default function StructuresSelector() {
     aggregations: {
       by_structure: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           size: 1500,
         },
       },
@@ -107,8 +107,9 @@ export default function StructuresSelector() {
       ).then((response) => response.json()),
   });
   const structuresAll = (dataStructuresAll?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
-    const [id, label] = bucket.key.split('###');
-    return ({ id, label });
+    const structureInfo = Object.fromEntries(new URLSearchParams(bucket.key));
+    structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    return structureInfo;
   }) || [];
 
   if (county && county !== '*') {
@@ -132,9 +133,10 @@ export default function StructuresSelector() {
         }
       ).then((response) => response.json()),
   });
+
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
-      const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
+      const structureInfo = Object.fromEntries(new URLSearchParams(bucket.key));
       structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
       return structureInfo;
     }) || [];

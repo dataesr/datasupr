@@ -1,4 +1,4 @@
-import { Button, Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Link, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -72,7 +72,7 @@ export default function DisplayStructure() {
 
   return (
     <>
-      <Container fluid className="funding-gradient fr-mb-3w">
+      <Container fluid className="funding-gradient">
         <Container as="section">
           <Row gutters>
             <Col>
@@ -85,44 +85,35 @@ export default function DisplayStructure() {
           </Row>
           <Row gutters>
             <Col xs="12" md="8">
-              <Title as="h1" look="h4">
+              <Title as="h1" className="fr-mb-1w" look="h4">
                 {label}
               </Title>
-              <Text>
-                {structureInfo?.region}
-              </Text>
-              <Text>
+              <Text size="xs">
                 {structureInfo?.typologie_2}
               </Text>
+              <Text>
+                <span aria-hidden="true" className="fr-icon-map-pin-2-fill fr-mr-1w"></span>
+                {structureInfo?.region}
+              </Text>
+              
             </Col>
             <Col>
-              <Button
-                // className="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-left fr-icon-arrow-go-back-line"
-                href="/financements-par-aap/etablissement"
-                icon="arrow-go-back-line"
-                as="a"
-                title="Changer d'établissement"
-                size="sm"
-                variant="text"
-                onClick={() => {}}
-              />
+              <div>
+                <Link href="/financements-par-aap/etablissement">
+                  <span aria-hidden="true" className="fr-icon-arrow-go-back-line fr-mr-1w" />
+                  Changer d'établissement
+                </Link>
+              </div>
+              <div>
+                <Link href={scanrUrl}>
+                  Voir la liste de ces projets sur scanR
+                </Link>
+              </div>
             </Col>
           </Row>
         </Container>
       </Container>
-      <Container>
-        <Row gutters>
-          <Col>
-            <div className="chart-container fr-background-contrast--grey" id="projects-list">
-              <Title as="h2" look="h6">
-                {`Liste des projets de ${label}`}
-              </Title>
-              <div>
-                <a href={scanrUrl} target="_blank">Voir ces projets sur scanR</a>
-              </div>
-            </div>
-          </Col>
-        </Row>
+      <Container className="fr-mb-3w">
         <Row gutters>
           <Col>
             <nav
@@ -150,7 +141,7 @@ export default function DisplayStructure() {
                     </button>
                   </li>
                 ))}
-                <li className="fr-ml-auto">
+                <li className="fr-nav__item fundings-ml-auto">
                   <select
                     className="fr-select"
                     onChange={(e) => handleYearMinChange(e.target.value)}
@@ -163,7 +154,7 @@ export default function DisplayStructure() {
                     ))}
                   </select>
                 </li>
-                <li className="fr-ml-1w">
+                <li className="fr-nav__item fr-ml-1w">
                   <select
                     className="fr-select"
                     onChange={(e) => handleYearMaxChange(e.target.value)}

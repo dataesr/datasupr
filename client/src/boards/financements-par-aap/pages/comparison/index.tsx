@@ -49,7 +49,7 @@ export default function Comparison() {
 
   return (
     <>
-      <Container fluid className="funding-gradient fr-mb-3w">
+      <Container fluid className="funding-gradient">
         <Container as="section">
           <Row gutters>
             <Col>
@@ -73,7 +73,7 @@ export default function Comparison() {
           </Row>
         </Container>
       </Container>
-      <Container>
+      <Container className="fr-mb-3w">
         {(Number(yearMin) <= Number(yearMax)) && (
           (structures && structures.length >= 2) ? (
             <>
@@ -104,7 +104,7 @@ export default function Comparison() {
                           </button>
                         </li>
                       ))}
-                      <li className="fr-ml-auto">
+                      <li className="fr-nav__item fundings-ml-auto">
                         <select
                           className="fr-select"
                           onChange={(e) => handleYearMinChange(e.target.value)}
@@ -117,7 +117,7 @@ export default function Comparison() {
                           ))}
                         </select>
                       </li>
-                      <li className="fr-ml-1w">
+                      <li className="fr-nav__item fr-ml-1w">
                         <select
                           className="fr-select"
                           onChange={(e) => handleYearMaxChange(e.target.value)}

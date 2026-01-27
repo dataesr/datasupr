@@ -111,8 +111,7 @@ export default function StructureSelector({ setStructures }) {
         }
       ).then((response) => response.json()),
   });
-  console.log(dataStructures);
-  console.log((dataStructures?.aggregations?.by_structure?.buckets ?? []));
+
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
