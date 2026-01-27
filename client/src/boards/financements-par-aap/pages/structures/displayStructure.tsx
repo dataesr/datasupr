@@ -33,13 +33,13 @@ export default function DisplayStructure() {
     { id: "disciplines", label: "Disciplines" },
   ];
 
-  
+
   const handleNavClick = (section: string) => {
     searchParams.set("section", section);
     setSearchParams(searchParams);
     setIsOpen(false);
   };
-  
+
   const handleYearMaxChange = (year: string) => {
     searchParams.set("yearMax", year);
     setSearchParams(searchParams);
@@ -65,8 +65,10 @@ export default function DisplayStructure() {
         },
         method: "POST",
       }).then((response) => response.json()),
-    });
-  const name = data?.hits?.hits?.[0]?._source?.participant_id_name_default?.split("###")?.[1] ?? "";
+  });
+  const participant = data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? "";
+  const participantSearchParams = new URLSearchParams(participant);
+  const name = participantSearchParams.get("label") ?? "";
   const scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522${structure}%2522%252C%2522label%2522%253A%2522${name}%2522%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`;
 
   return (
@@ -107,10 +109,10 @@ export default function DisplayStructure() {
             role="navigation"
           >
             <button
+              aria-controls="section-nav-list"
+              aria-expanded={isOpen}
               className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
               onClick={() => setIsOpen(!isOpen)}
-              aria-expanded={isOpen}
-              aria-controls="section-nav-list"
             >
               Menu
             </button>
