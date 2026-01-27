@@ -32,9 +32,7 @@ export default function Structures() {
 
   return (
     (Number(yearMin) <= Number(yearMax)) && structure ? (
-      <Container className="fr-mb-3w">
-        <DisplayStructure />
-      </Container>
+      <DisplayStructure />
     ) : (
       <>
         <Container fluid className="funding-gradient">

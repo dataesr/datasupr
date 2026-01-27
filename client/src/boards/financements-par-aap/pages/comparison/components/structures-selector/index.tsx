@@ -134,6 +134,7 @@ export default function StructuresSelector() {
   });
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
+      // TODO: Refacto
       const current_key = bucket.key || '';
       const params_structure = new URLSearchParams(current_key);
       const label = params_structure.get("label") ?? "";

@@ -1,4 +1,4 @@
-import { Col, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -73,148 +73,154 @@ export default function DisplayStructure() {
 
   return (
     <>
-      <Row gutters>
-        <Col>
-          <Breadcrumb items={[
-            { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
-            { href: "/financements-par-aap/etablissement", label: "Vue par établissement" },
-            { label: name }
-          ]} />
-        </Col>
-      </Row>
-      <Row gutters>
-        <Col>
-          <Title as="h1" look="h4">
-            {name}
-          </Title>
-        </Col>
-      </Row>
-      <Row gutters>
-        <Col>
-          <div className="chart-container fr-background-contrast--grey" id="projects-list">
-            <Title as="h2" look="h6">
-              {`Liste des projets de ${name}`}
-            </Title>
-            <div>
-              <a href={scanrUrl} target="_blank">Voir ces projets sur scanR</a>
+      <Container fluid className="funding-gradient">
+        <Container>
+          <Row gutters>
+            <Col>
+              <Breadcrumb items={[
+                { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
+                { href: "/financements-par-aap/etablissement", label: "Vue par établissement" },
+                { label: name }
+              ]} />
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col>
+              <Title as="h1" look="h4">
+                {name}
+              </Title>
+            </Col>
+          </Row>
+        </Container>
+      </Container>
+      <Container className="fr-mb-3w">
+        <Row gutters>
+          <Col>
+            <div className="chart-container fr-background-contrast--grey" id="projects-list">
+              <Title as="h2" look="h6">
+                {`Liste des projets de ${name}`}
+              </Title>
+              <div>
+                <a href={scanrUrl} target="_blank">Voir ces projets sur scanR</a>
+              </div>
             </div>
-          </div>
-        </Col>
-      </Row>
-      <Row gutters>
-        <Col>
-          <nav
-            aria-label="Navigation secondaire"
-            className="fr-nav fr-mb-1w"
-            role="navigation"
-          >
-            <button
-              aria-controls="section-nav-list"
-              aria-expanded={isOpen}
-              className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
-              onClick={() => setIsOpen(!isOpen)}
+          </Col>
+        </Row>
+        <Row gutters>
+          <Col>
+            <nav
+              aria-label="Navigation secondaire"
+              className="fr-nav fr-mb-1w"
+              role="navigation"
             >
-              Menu
-            </button>
-            <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
-              {sections.map((item) => (
-                <li key={item.id} className="fr-nav__item">
-                  <button
-                    aria-current={section === item.id ? "page" : undefined}
-                    className="fr-nav__link"
-                    onClick={() => handleNavClick(item.id)}
+              <button
+                aria-controls="section-nav-list"
+                aria-expanded={isOpen}
+                className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
+                onClick={() => setIsOpen(!isOpen)}
+              >
+                Menu
+              </button>
+              <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
+                {sections.map((item) => (
+                  <li key={item.id} className="fr-nav__item">
+                    <button
+                      aria-current={section === item.id ? "page" : undefined}
+                      className="fr-nav__link"
+                      onClick={() => handleNavClick(item.id)}
+                    >
+                      {item.label}
+                    </button>
+                  </li>
+                ))}
+                <li className="fr-ml-auto">
+                  <select
+                    className="fr-select"
+                    onChange={(e) => handleYearMinChange(e.target.value)}
+                    value={yearMin}
                   >
-                    {item.label}
-                  </button>
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
                 </li>
-              ))}
-              <li className="fr-ml-auto">
-                <select
-                  className="fr-select"
-                  onChange={(e) => handleYearMinChange(e.target.value)}
-                  value={yearMin}
-                >
-                  {[...years].sort((a, b) => b - a).map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </li>
-              <li className="fr-ml-1w">
-                <select
-                  className="fr-select"
-                  onChange={(e) => handleYearMaxChange(e.target.value)}
-                  value={yearMax}
-                >
-                  {[...years].sort((a, b) => b - a).map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </li>
-            </ul>
-          </nav>
-        </Col>
-      </Row>
-      {(section === "financements") && (
-        <>
-          <Cards />
-          <Row gutters>
-            <Col>
-              <ProjectsByStructure name={name} />
-            </Col>
-          </Row>
-          <Row gutters>
-            <Col>
-              <OverviewByStructure name={name} />
-            </Col>
-          </Row>
-        </>
-      )}
-      {(section === "evolution") && (
-        <Row gutters>
-          <Col>
-            <ProjectsOverTimeByStructure name={name} />
+                <li className="fr-ml-1w">
+                  <select
+                    className="fr-select"
+                    onChange={(e) => handleYearMaxChange(e.target.value)}
+                    value={yearMax}
+                  >
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </li>
+              </ul>
+            </nav>
           </Col>
         </Row>
-      )}
-      {(section === "partenaires") && (
-        <>
+        {(section === "financements") && (
+          <>
+            <Cards />
+            <Row gutters>
+              <Col>
+                <ProjectsByStructure name={name} />
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col>
+                <OverviewByStructure name={name} />
+              </Col>
+            </Row>
+          </>
+        )}
+        {(section === "evolution") && (
           <Row gutters>
             <Col>
-              <FrenchPartnersByStructure name={name} />
+              <ProjectsOverTimeByStructure name={name} />
             </Col>
           </Row>
+        )}
+        {(section === "partenaires") && (
+          <>
+            <Row gutters>
+              <Col>
+                <FrenchPartnersByStructure name={name} />
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col>
+                <InternationalPartnersByStructure name={name} />
+              </Col>
+            </Row>
+          </>
+        )}
+        {(section === "laboratoires") && (
           <Row gutters>
             <Col>
-              <InternationalPartnersByStructure name={name} />
+              <LaboratoriesByStructure name={name} />
             </Col>
           </Row>
-        </>
-      )}
-      {(section === "laboratoires") && (
-        <Row gutters>
-          <Col>
-            <LaboratoriesByStructure name={name} />
-          </Col>
-        </Row>
-      )}
-      {(section === "disciplines") && (
-        <>
-          <Row gutters>
-            <Col>
-              <ClassificationsByStructure name={name} />
-            </Col>
-          </Row>
-          <Row gutters>
-            <Col>
-              <Classifications2ByStructure name={name} />
-            </Col>
-          </Row>
-        </>
-      )}
+        )}
+        {(section === "disciplines") && (
+          <>
+            <Row gutters>
+              <Col>
+                <ClassificationsByStructure name={name} />
+              </Col>
+            </Row>
+            <Row gutters>
+              <Col>
+                <Classifications2ByStructure name={name} />
+              </Col>
+            </Row>
+          </>
+        )}
+      </Container>
     </>
   );
 }

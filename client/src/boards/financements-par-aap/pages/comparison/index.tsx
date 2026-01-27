@@ -48,119 +48,125 @@ export default function Comparison() {
   }, [searchParams, setSearchParams]);
 
   return (
-    <Container className="fr-mb-3w">
-      <Row gutters>
-        <Col>
-          <Breadcrumb items={[
-            { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
-            { label: "Comparaison entre établissements" },
-          ]} />
-        </Col>
-      </Row>
-      <Row gutters>
-        <Col>
-          <Title as="h1" look="h4">
-            Comparaison entre établissements
-          </Title>
-        </Col>
-      </Row>
-      <Row gutters>
-        <Col>
-          <StructuresSelector />
-        </Col>
-      </Row>
-      {(Number(yearMin) <= Number(yearMax)) && (
-        (structures && structures.length >= 2) ? (
-          <>
-            <Row gutters>
-              <Col>
-                <nav
-                  aria-label="Navigation secondaire"
-                  className="fr-nav fr-mb-1w"
-                  role="navigation"
-                >
-                  <button
-                    className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
-                    onClick={() => setIsOpen(!isOpen)}
-                    aria-expanded={isOpen}
-                    aria-controls="section-nav-list"
-                  >
-                    Menu
-                  </button>
-                  <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
-                    {sections.map((item) => (
-                      <li key={item.id} className="fr-nav__item">
-                        <button
-                          aria-current={section === item.id ? "page" : undefined}
-                          className="fr-nav__link"
-                          onClick={() => handleNavClick(item.id)}
-                        >
-                          {item.label}
-                        </button>
-                      </li>
-                    ))}
-                    <li className="fr-ml-auto">
-                      <select
-                        className="fr-select"
-                        onChange={(e) => handleYearMinChange(e.target.value)}
-                        value={yearMin}
-                      >
-                        {[...years].sort((a, b) => b - a).map((year) => (
-                          <option key={year} value={year}>
-                            {year}
-                          </option>
-                        ))}
-                      </select>
-                    </li>
-                    <li className="fr-ml-1w">
-                      <select
-                        className="fr-select"
-                        onChange={(e) => handleYearMaxChange(e.target.value)}
-                        value={yearMax}
-                      >
-                        {[...years].sort((a, b) => b - a).map((year) => (
-                          <option key={year} value={year}>
-                            {year}
-                          </option>
-                        ))}
-                      </select>
-                    </li>
-                  </ul>
-                </nav>
-              </Col>
-            </Row>
-            {(section === "financements") && (
-              <>
-                <Row gutters>
-                  <Col>
-                    <ProjectsByStructures />
-                  </Col>
-                </Row>
-                <Row gutters>
-                  <Col>
-                    <Dispersion />
-                  </Col>
-                </Row>
-              </>
-            )}
-            {(section === "disciplines") && (
+    <>
+      <Container fluid className="funding-gradient">
+        <Container>
+          <Row gutters>
+            <Col>
+              <Breadcrumb items={[
+                { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
+                { label: "Comparaison entre établissements" },
+              ]} />
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col>
+              <Title as="h1" look="h4">
+                Comparaison entre établissements
+              </Title>
+            </Col>
+          </Row>
+          <Row gutters>
+            <Col>
+              <StructuresSelector />
+            </Col>
+          </Row>
+        </Container>
+      </Container>
+      <Container className="fr-mb-3w">
+        {(Number(yearMin) <= Number(yearMax)) && (
+          (structures && structures.length >= 2) ? (
+            <>
               <Row gutters>
                 <Col>
-                  <ClassificationsByStructures />
+                  <nav
+                    aria-label="Navigation secondaire"
+                    className="fr-nav fr-mb-1w"
+                    role="navigation"
+                  >
+                    <button
+                      className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
+                      onClick={() => setIsOpen(!isOpen)}
+                      aria-expanded={isOpen}
+                      aria-controls="section-nav-list"
+                    >
+                      Menu
+                    </button>
+                    <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
+                      {sections.map((item) => (
+                        <li key={item.id} className="fr-nav__item">
+                          <button
+                            aria-current={section === item.id ? "page" : undefined}
+                            className="fr-nav__link"
+                            onClick={() => handleNavClick(item.id)}
+                          >
+                            {item.label}
+                          </button>
+                        </li>
+                      ))}
+                      <li className="fr-ml-auto">
+                        <select
+                          className="fr-select"
+                          onChange={(e) => handleYearMinChange(e.target.value)}
+                          value={yearMin}
+                        >
+                          {[...years].sort((a, b) => b - a).map((year) => (
+                            <option key={year} value={year}>
+                              {year}
+                            </option>
+                          ))}
+                        </select>
+                      </li>
+                      <li className="fr-ml-1w">
+                        <select
+                          className="fr-select"
+                          onChange={(e) => handleYearMaxChange(e.target.value)}
+                          value={yearMax}
+                        >
+                          {[...years].sort((a, b) => b - a).map((year) => (
+                            <option key={year} value={year}>
+                              {year}
+                            </option>
+                          ))}
+                        </select>
+                      </li>
+                    </ul>
+                  </nav>
                 </Col>
               </Row>
-            )}
-          </>
-        ) : (
-          <Alert
-            description="Sélectionnez plusieurs établissements dans la liste déroulante pour visualiser
+              {(section === "financements") && (
+                <>
+                  <Row gutters>
+                    <Col>
+                      <ProjectsByStructures />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <Dispersion />
+                    </Col>
+                  </Row>
+                </>
+              )}
+              {(section === "disciplines") && (
+                <Row gutters>
+                  <Col>
+                    <ClassificationsByStructures />
+                  </Col>
+                </Row>
+              )}
+            </>
+          ) : (
+            <Alert
+              description="Sélectionnez plusieurs établissements dans la liste déroulante pour visualiser
               leurs financements via les appels à projets. Vous pouvez filtrer par région et par typologie."
-            className="fr-mt-3w"
-            title="Sélectionnez plusieurs établissements"
-            variant="info"
-          />
-        )
-      )}
-    </Container>
+              className="fr-mt-3w"
+              title="Sélectionnez plusieurs établissements"
+              variant="info"
+            />
+          )
+        )}
+      </Container>
+    </>
   )
 }
