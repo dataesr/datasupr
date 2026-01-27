@@ -1,4 +1,4 @@
-import { Row, Col } from "@dataesr/dsfr-plus";
+import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import EffectifsChart from "./charts/effectifs";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
@@ -31,9 +31,9 @@ export function EtudiantsSection({
       className="section-container"
     >
       <div className="section-header fr-mb-4w">
-        <h3 className="fr-h5 section-header__title">
+        <Title as="h2" look="h5" className="section-header__title">
           Les étudiants inscrits en {`${data.anuniv}`}
-        </h3>
+        </Title>
       </div>
 
       <div className="fr-mb-4w">
