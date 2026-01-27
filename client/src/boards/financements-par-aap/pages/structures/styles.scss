@@ -2,14 +2,6 @@
   display: none;
 }
 
-.nav-year-select .fx-select__trigger {
-  background: none !important;
-  color: var(--text-default-grey);
-}
-.nav-year-select .fx-select__trigger:hover {
-  background: var(--background-default-grey-hover) !important;
-}
-
 .fr-nav {
   border-bottom: 1px solid var(--border-default-grey);
 
@@ -17,6 +9,7 @@
     align-items: "center";
   }
 }
+
 @media (max-width: 575px) {
   .data-mobile-burger {
     display: flex;

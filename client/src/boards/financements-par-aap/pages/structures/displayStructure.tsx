@@ -15,6 +15,8 @@ import ProjectsByStructure from "./charts/projects-by-structure";
 import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
 import Cards from "./components/cards";
 
+import "./styles.scss";
+
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
@@ -72,7 +74,7 @@ export default function DisplayStructure() {
 
   return (
     <>
-      <Container fluid className="funding-gradient">
+      <Container fluid className="funding-gradient fr-mb-3w">
         <Container as="section">
           <Row gutters>
             <Col>
@@ -98,7 +100,7 @@ export default function DisplayStructure() {
               
             </Col>
             <Col>
-              <div>
+              <div className="fr-mb-2w">
                 <Link href="/financements-par-aap/etablissement">
                   <span aria-hidden="true" className="fr-icon-arrow-go-back-line fr-mr-1w" />
                   Changer d'établissement

@@ -35,7 +35,7 @@ export default function Structures() {
       <DisplayStructure />
     ) : (
       <>
-        <Container fluid className="funding-gradient">
+        <Container fluid className="funding-gradient fr-mb-3w">
           <Container as="section">
             <Row gutters>
               <Col>

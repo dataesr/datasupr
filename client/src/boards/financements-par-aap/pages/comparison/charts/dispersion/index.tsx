@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
 import { deepMerge, formatCompactNumber, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -124,7 +124,7 @@ et ceux combinant volume et intensité financière.</> },
 
   return (
     <div className={`chart-container chart-container--${color}`} id="dispersion">
-      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapperCustom config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 }

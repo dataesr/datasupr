@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
-import ChartWrapper, { ChartConfig, HighchartsOptions } from "../../../../components/chart-wrapper";
+import Highcharts from "highcharts";
+import ChartWrapper, { ChartConfig, HighchartsOptions } from "../../../../components/chart-wrapper/index.js";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default.js";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -12,7 +13,6 @@ const fundingsSources = [
       en: React.createElement(React.Fragment, null, "ANR (DGDS)"),
       fr: React.createElement(React.Fragment, null, "ANR (DGDS)"),
     },
-    update: new Date("2026-01-09"),
     url: {
       en: "https://www.data.gouv.fr/datasets/anr-01-projets-anr-dos-et-dgds-detail-des-projets-et-des-partenaires",
       fr: "https://www.data.gouv.fr/datasets/anr-01-projets-anr-dos-et-dgds-detail-des-projets-et-des-partenaires",
@@ -23,7 +23,6 @@ const fundingsSources = [
       en: React.createElement(React.Fragment, null, "PIA ANR (DGPIE)"),
       fr: React.createElement(React.Fragment, null, "PIA ANR (DGPIE)"),
     },
-    update: new Date("2026-01-09"),
     url: {
       en: "https://www.data.gouv.fr/datasets/anr-02-projets-anr-dgpie-detail-des-projets-et-des-partenaires",
       fr: "https://www.data.gouv.fr/datasets/anr-02-projets-anr-dgpie-detail-des-projets-et-des-partenaires",
@@ -34,7 +33,6 @@ const fundingsSources = [
       en: React.createElement(React.Fragment, null, "PIA Web"),
       fr: React.createElement(React.Fragment, null, "PIA Web"),
     },
-    update: new Date("2026-01-09"),
     url: {
       en: "https://piaweb.adc.education.fr/",
       fr: "https://piaweb.adc.education.fr/",
@@ -45,7 +43,6 @@ const fundingsSources = [
       en: React.createElement(React.Fragment, null, "European projects"),
       fr: React.createElement(React.Fragment, null, "Projets européens"),
     },
-    update: new Date("2026-01-09"),
     url: {
       en: "https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-horizon-projects-entities/information/?disjunctive.paysage_category&disjunctive.region_1_name&disjunctive.regional_unit_name&disjunctive.free_keywords",
       fr: "https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-horizon-projects-entities/information/?disjunctive.paysage_category&disjunctive.region_1_name&disjunctive.regional_unit_name&disjunctive.free_keywords",
@@ -54,7 +51,7 @@ const fundingsSources = [
 ];
 
 
-export default function ChartWrapperCustom({
+export default function ChartWrapperFundings({
   config,
   constructorType,
   hideTitle = false,

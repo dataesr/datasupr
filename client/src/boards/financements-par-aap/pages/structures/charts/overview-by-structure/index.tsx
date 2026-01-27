@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
 import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 import "highcharts/modules/variwide";
@@ -119,9 +119,54 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   };
   const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", undefined, "Nombre de projets", "Montants financés (€)", "variwide"), localOptions);
 
+  const renderData = (options: any) => {
+    const columns: any = [];
+    const budget: any = [];
+    const projects: any = [];
+    (options?.series ?? [])?.[0]?.data.forEach((d: string[]) => {
+      columns.push(d[0]);
+      budget.push(d[1]);
+      projects.push(d[2]);
+    });
+
+    return (
+      <div style={{ width: "100%" }}>
+        <div className="fr-table-responsive">
+          <table
+            className="fr-table fr-table--bordered fr-table--sm"
+            style={{ width: "100%" }}
+          >
+            <thead>
+              <tr>
+                <th></th>
+                {columns.map((column) => (
+                  <th key={column} scope="col">{column}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Montants</th>
+                {budget.map((r) => (
+                  <td key={r}>{formatCompactNumber(r)} €</td>
+                ))}
+              </tr>
+              <tr>
+                <th scope="row">Projets</th>
+                {projects.map((r) => (
+                  <td key={r}>{r}</td>
+                ))}
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={`chart-container chart-container--${color}`} id="overview-by-structure">
-      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapperCustom config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} renderData={() => renderData(options)} />}
     </div>
   );
 }

@@ -6,7 +6,7 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
 import { deepMerge, formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -70,7 +70,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   funders.forEach((funder) => {
     const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
     if ((funderData?.unique_projects?.value ?? 0) > 0) {
-      const current_y = ( field === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
+      const current_y = (field === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
       series.push({
         color: getCssColor({ name: funder, prefix: "funder" }),
         data: [{ x: count, y: current_y, y_perc: current_y / total, total }],
@@ -118,6 +118,47 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   };
   const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", field === "projects" ? axisProjects : axisBudget), localOptions);
 
+  const renderData = (options: HighchartsInstance.Options) => {
+    const columns = (options?.series ?? []).map((serie) => serie.name);
+    const rows: any = [];
+    (options?.series ?? []).forEach((serie: any, i) => {
+      (serie?.data ?? []).forEach((d, j) => {
+        if (i === 0) rows.push([]);
+        rows[j].push(d?.y ?? 0);
+      });
+    });
+
+    return (
+      <div style={{ width: "100%" }}>
+        <div className="fr-table-responsive">
+          <table
+            className="fr-table fr-table--bordered fr-table--sm"
+            style={{ width: "100%" }}
+          >
+            <thead>
+              <tr>
+                <th></th>
+                {columns.map((column) => (
+                  <th key={column} scope="col">{column}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((row, index) => (
+                <tr key={index}>
+                  <th scope="row">Y</th>
+                  {row.map((r) => (
+                    <td key={r}>{r}</td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structure">
       <Title as="h2" look="h6">
@@ -127,7 +168,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperCustom config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} renderData={() => renderData(options)} />}
     </div>
   );
 }
