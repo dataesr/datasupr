@@ -7,10 +7,10 @@ import { useSearchParams } from "react-router-dom";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
-import { deepMerge, formatCompactNumber, funders, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
-import { getCssColor } from "../../../../../../utils/colors.ts";
+import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+
 
 export default function Classifications2ByStructure({ name }: { name: string | undefined }) {
   const [field, setField] = useState("projects");
@@ -87,13 +87,13 @@ export default function Classifications2ByStructure({ name }: { name: string | u
 
   const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
   const seriesProject = classificationsProject.map((classification) => ({
-    color: getCssColor(`classification-${classification.key.toLowerCase().replace(/[^a-z ]/g, "").replace(/  +/g, " ").replaceAll(" ", "-")}`),
+    color: getCssColor({ name: classification.key, prefix: "classification" }),
     data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.unique_projects?.value ?? 0),
     name: classification.key,
   })).reverse();
   const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
   const seriesBudget = classificationsBudget.map((classification) => ({
-    color: getCssColor(`classification-${classification.key.normalize("NFD").toLowerCase().replace(/[^a-z ]/g, "").replace(/  +/g, " ").replaceAll(" ", "-")}`),
+    color: getCssColor({ name: classification.key, prefix: "classification" }),
     data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.sum_budget?.value ?? 0),
     name: classification.key,
   })).reverse();

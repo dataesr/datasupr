@@ -3,8 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { getCssColor } from "../../../../../../utils/colors.ts";
-import { formatCompactNumber, funders, getEsQuery, getYearRangeLabel, years } from "../../../../utils.ts";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, years } from "../../../../utils.ts";
 import ChartCard from "../chart-card/index.tsx";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -115,7 +114,7 @@ export default function Cards() {
           <Col xs="12" md="2" key={`card-projects-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
-                color={getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`)}
+                color={getCssColor({ name: funder, prefix: "funder" })}
                 data={dataFunders[funder].projects}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Projets ${funder}`}
@@ -161,7 +160,7 @@ export default function Cards() {
           <Col xs="12" md="2" key={`card-budget-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
-                color={getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`)}
+                color={getCssColor({ name: funder, prefix: "funder" })}
                 data={dataFunders[funder].budget}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Montants des projets ${funder}`}

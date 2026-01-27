@@ -6,9 +6,8 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getCssColor } from "../../../../../../utils/colors.ts";
 import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
-import { deepMerge, formatCompactNumber, funders, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -86,14 +85,14 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
 
   const partnersProject = data?.aggregations?.by_french_partners_project?.buckets ?? [];
   const seriesProject = funders.map((funder) => ({
-    color: getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`),
+    color: getCssColor({ name: funder, prefix: "funder" }),
     data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.unique_projects?.value ?? 0),
     name: funder,
   })).reverse();
   const categoriesProject = partnersProject.map((partner) => partner.key.split("###")[1].split("_")[1]);
   const partnersBudget = data?.aggregations?.by_french_partners_budget?.buckets ?? [];
   const seriesBudget = funders.map((funder) => ({
-    color: getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`),
+    color: getCssColor({ name: funder, prefix: "funder" }),
     data: partnersBudget.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.sum_budget?.value ?? 0),
     name: funder,
   })).reverse();

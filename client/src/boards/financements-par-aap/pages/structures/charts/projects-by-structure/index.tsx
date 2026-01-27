@@ -6,9 +6,8 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getCssColor } from "../../../../../../utils/colors.ts";
 import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
-import { deepMerge, formatCompactNumber, formatPercent, funders, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -73,7 +72,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
     if ((funderData?.unique_projects?.value ?? 0) > 0) {
       const current_y = ( field === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
       series.push({
-        color: getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`),
+        color: getCssColor({ name: funder, prefix: "funder" }),
         data: [{ x: count, y: current_y, y_perc: current_y / total, total }],
         name: funder,
       });
