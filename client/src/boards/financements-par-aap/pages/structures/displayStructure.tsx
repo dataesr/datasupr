@@ -1,4 +1,4 @@
-import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Button, Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -66,39 +66,56 @@ export default function DisplayStructure() {
         method: "POST",
       }).then((response) => response.json()),
   });
-  const participant = data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? "";
-  const participantSearchParams = new URLSearchParams(participant);
-  const name = participantSearchParams.get("label") ?? "";
-  const scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522${structure}%2522%252C%2522label%2522%253A%2522${name}%2522%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`;
+  const structureInfo = Object.fromEntries(new URLSearchParams(data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? ""));
+  const label = structureInfo?.label ?? "";
+  const scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522${structure}%2522%252C%2522label%2522%253A%2522${label}%2522%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`;
 
   return (
     <>
-      <Container fluid className="funding-gradient">
-        <Container>
+      <Container fluid className="funding-gradient fr-mb-3w">
+        <Container as="section">
           <Row gutters>
             <Col>
               <Breadcrumb items={[
                 { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
                 { href: "/financements-par-aap/etablissement", label: "Vue par établissement" },
-                { label: name }
+                { label }
               ]} />
             </Col>
           </Row>
           <Row gutters>
-            <Col>
+            <Col xs="12" md="8">
               <Title as="h1" look="h4">
-                {name}
+                {label}
               </Title>
+              <Text>
+                {structureInfo?.region}
+              </Text>
+              <Text>
+                {structureInfo?.typologie_2}
+              </Text>
+            </Col>
+            <Col>
+              <Button
+                // className="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-left fr-icon-arrow-go-back-line"
+                href="/financements-par-aap/etablissement"
+                icon="arrow-go-back-line"
+                as="a"
+                title="Changer d'établissement"
+                size="sm"
+                variant="text"
+                onClick={() => {}}
+              />
             </Col>
           </Row>
         </Container>
       </Container>
-      <Container className="fr-mb-3w">
+      <Container>
         <Row gutters>
           <Col>
             <div className="chart-container fr-background-contrast--grey" id="projects-list">
               <Title as="h2" look="h6">
-                {`Liste des projets de ${name}`}
+                {`Liste des projets de ${label}`}
               </Title>
               <div>
                 <a href={scanrUrl} target="_blank">Voir ces projets sur scanR</a>
@@ -168,12 +185,12 @@ export default function DisplayStructure() {
             <Cards />
             <Row gutters>
               <Col>
-                <ProjectsByStructure name={name} />
+                <ProjectsByStructure name={label} />
               </Col>
             </Row>
             <Row gutters>
               <Col>
-                <OverviewByStructure name={name} />
+                <OverviewByStructure name={label} />
               </Col>
             </Row>
           </>
@@ -181,7 +198,7 @@ export default function DisplayStructure() {
         {(section === "evolution") && (
           <Row gutters>
             <Col>
-              <ProjectsOverTimeByStructure name={name} />
+              <ProjectsOverTimeByStructure name={label} />
             </Col>
           </Row>
         )}
@@ -189,12 +206,12 @@ export default function DisplayStructure() {
           <>
             <Row gutters>
               <Col>
-                <FrenchPartnersByStructure name={name} />
+                <FrenchPartnersByStructure name={label} />
               </Col>
             </Row>
             <Row gutters>
               <Col>
-                <InternationalPartnersByStructure name={name} />
+                <InternationalPartnersByStructure name={label} />
               </Col>
             </Row>
           </>
@@ -202,7 +219,7 @@ export default function DisplayStructure() {
         {(section === "laboratoires") && (
           <Row gutters>
             <Col>
-              <LaboratoriesByStructure name={name} />
+              <LaboratoriesByStructure name={label} />
             </Col>
           </Row>
         )}
@@ -210,12 +227,12 @@ export default function DisplayStructure() {
           <>
             <Row gutters>
               <Col>
-                <ClassificationsByStructure name={name} />
+                <ClassificationsByStructure name={label} />
               </Col>
             </Row>
             <Row gutters>
               <Col>
-                <Classifications2ByStructure name={name} />
+                <Classifications2ByStructure name={label} />
               </Col>
             </Row>
           </>

@@ -49,8 +49,8 @@ export default function Comparison() {
 
   return (
     <>
-      <Container fluid className="funding-gradient">
-        <Container>
+      <Container fluid className="funding-gradient fr-mb-3w">
+        <Container as="section">
           <Row gutters>
             <Col>
               <Breadcrumb items={[
@@ -73,7 +73,7 @@ export default function Comparison() {
           </Row>
         </Container>
       </Container>
-      <Container className="fr-mb-3w">
+      <Container>
         {(Number(yearMin) <= Number(yearMax)) && (
           (structures && structures.length >= 2) ? (
             <>

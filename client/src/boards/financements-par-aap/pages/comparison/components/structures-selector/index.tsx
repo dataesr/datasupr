@@ -133,19 +133,11 @@ export default function StructuresSelector() {
       ).then((response) => response.json()),
   });
   const structures =
-    (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
-      // TODO: Refacto
-      const current_key = bucket.key || '';
-      const params_structure = new URLSearchParams(current_key);
-      const label = params_structure.get("label") ?? "";
-      const id = params_structure.get("id") ?? "";
-      const city = params_structure.get("city") ?? "";
-      const country = params_structure.get("country") ?? "";
-      const region = params_structure.get("region") ?? "";
-      const typologie_1 = params_structure.get("typologie_1") ?? "";
-      const typologie_2 = params_structure.get("typologie_2") ?? "";
-      return ({ id, label, city, country, region, typologie_1, typologie_2, searchableText: label.normalize('NFD').replace(/[\u0300-\u036f]/g, '') });
-    }) || [];
+    (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => ({
+      id: bucket.key.split("###")[0],
+      label: bucket.key.split("###")[1],
+      searchableText: bucket.key.split("###")[1].normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+    })) || [];
 
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {

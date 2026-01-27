@@ -1,4 +1,4 @@
-import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -35,8 +35,8 @@ export default function Structures() {
       <DisplayStructure />
     ) : (
       <>
-        <Container fluid className="funding-gradient">
-          <Container>
+        <Container fluid className="funding-gradient fr-mb-3w">
+          <Container as="section">
             <Row gutters>
               <Col>
                 <Breadcrumb items={[
@@ -59,10 +59,17 @@ export default function Structures() {
             </Row>
           </Container>
         </Container>
-        <Container className="fr-my-3w">
+        <Container>
+          <Row gutters>
+            <Text className="fr-text--sm fr-mb-2w fr-pl-2w">
+              {structures.length} établissement
+              {structures.length > 1 ? "s" : ""} trouvé
+              {structures.length > 1 ? "s" : ""}
+            </Text>
+          </Row>
           <Row gutters>
             {structures.map((structure: any) => (
-              <Col key={structure.id} md="4">
+              <Col key={structure.id} xs="12" md="6" lg="4">
                 <CardSimple
                   description={structure.region}
                   onClick={() => handleStructure(structure.id)}

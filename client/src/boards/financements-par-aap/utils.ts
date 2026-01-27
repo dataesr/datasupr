@@ -52,7 +52,7 @@ const formatPercent = (number: number, decimals: number = 0): string => {
 const getCssColor = ({ name, prefix = "" }: { name: string, prefix?: string }) => {
   let variableName: string = "";
   if (prefix?.length > 0) variableName += `${prefix}-`;
-  variableName += name.toLowerCase().replace(/[^a-z ]/g, "").replace(/  +/g, " ").replaceAll(" ", "-");
+  variableName += name.toLowerCase().replace(/[^0-9a-z ]/g, "").replace(/  +/g, " ").replaceAll(" ", "-");
   return getCssColorGlobal(variableName);
 };
 
