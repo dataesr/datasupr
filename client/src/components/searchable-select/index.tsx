@@ -35,7 +35,7 @@ export default function SearchableSelect({
 
   const filteredOptions = options.filter((option) => {
     const searchText = option.searchableText || option.label;
-    return searchText.toLowerCase().includes(searchTerm.toLowerCase());
+    return searchText.toLowerCase().includes(searchTerm.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, ""));
   });
 
   const selectedOption = options.filter((opt) => newValue.includes(opt.id));

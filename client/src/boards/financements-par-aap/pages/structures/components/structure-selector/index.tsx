@@ -115,13 +115,13 @@ export default function StructureSelector({ setStructures }) {
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
-      structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      structureInfo.searchableText = structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       return structureInfo;
     }) || [];
 
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {
-      searchParams.set("structure", selectedStructure.split('###')[0]);
+      searchParams.set("structure", selectedStructure.split("###")[0]);
       setSearchParams(searchParams);
     }
   };
@@ -129,7 +129,7 @@ export default function StructureSelector({ setStructures }) {
   useEffect(() => {
     setStructures((dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
-      structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      structureInfo.searchableText = structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
       return structureInfo;
     }) || []);
   }, [dataStructures])
