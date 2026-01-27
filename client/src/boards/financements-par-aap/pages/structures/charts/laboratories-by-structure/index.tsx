@@ -20,6 +20,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   const yearMin = searchParams.get("yearMin");
   const color = useChartColor();
 
+  // No filter on typology bc some laboratories may have no typology, bc not in Paysage
   const body = {
     size: 0,
     query: {

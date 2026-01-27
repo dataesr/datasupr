@@ -12,8 +12,9 @@ const sortedFunders = {
   "horizon europe": "#e39700",
 };
 
-const typologies = ["Autres", "Ecoles, instituts et assimilés", "Etablissements de santé",
-  "Organismes de recherche", "Universités et assimilé"];
+// const typologies = ["Autres", "Ecoles, instituts et assimilés", "Etablissements de santé",
+//   "Organismes de recherche", "Universités et assimilés"];
+const typologiesExcluded = ["Entreprises", "Infrastructures de recherche", "Structures de recherche"];
 
 const years: number[] = Array.from(Array(11).keys()).map((item) => item + 2015);
 
@@ -76,7 +77,7 @@ const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = y
           { term: { participant_is_main_parent: 1 } },
           { term: { "participant_kind.keyword": "Secteur public" } },
           { terms: { "project_type.keyword": funders } },
-          { terms: { "participant_typologie_1.keyword": typologies } },
+          { bool: { must_not: { terms: { "participant_typologie_1.keyword": typologiesExcluded } } } },
         ],
       },
     },
@@ -131,6 +132,5 @@ export {
   getEsQuery,
   getGeneralOptions,
   getYearRangeLabel,
-  typologies,
   years,
 };
