@@ -6,8 +6,9 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import { getCssColor } from "../../../../../../utils/colors.ts";
 import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
-import { deepMerge, funders, formatCompactNumber, getColorByFunder, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -101,14 +102,14 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
 
   const laboratoriesProject = data?.aggregations?.by_laboratory_project?.buckets ?? [];
   const seriesProject = funders.map((funder) => ({
-    color: getColorByFunder(funder),
+    color: getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`),
     data: laboratoriesProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.unique_projects?.value ?? 0),
     name: funder,
   })).reverse();
   const categoriesProject = laboratoriesProject.map((item) => item.key.split('###')[1]);
   const laboratoriesBudget = data?.aggregations?.by_laboratory_budget?.buckets ?? [];
   const seriesBudget = funders.map((funder) => ({
-    color: getColorByFunder(funder),
+    color: getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`),
     data: laboratoriesBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.sum_budget?.value ?? 0),
     name: funder,
   })).reverse();

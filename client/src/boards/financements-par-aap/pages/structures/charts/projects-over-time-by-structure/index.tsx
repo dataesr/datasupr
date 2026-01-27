@@ -6,8 +6,9 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import { getCssColor } from "../../../../../../utils/colors.ts";
 import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
-import { deepMerge, funders, formatCompactNumber, getColorByFunder, getEsQuery, getGeneralOptions, years } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getEsQuery, getGeneralOptions, years } from "../../../../utils.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -63,7 +64,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   });
 
   const series = funders.map((funder) => ({
-    color: getColorByFunder(funder),
+    color: getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`),
     data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.by_project_year?.buckets.find((item) => item.key === year)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
     marker: { enabled: false },
     name: funder

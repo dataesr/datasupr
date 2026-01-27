@@ -91,7 +91,7 @@ export default function DisplayStructure() {
       </Row>
       <Row gutters>
         <Col>
-          <div className="chart-container chart-container--default" id="projects-list">
+          <div className="chart-container fr-background-contrast--grey" id="projects-list">
             <Title as="h2" look="h6">
               {`Liste des projets de ${name}`}
             </Title>
@@ -119,13 +119,13 @@ export default function DisplayStructure() {
             <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
               {sections.map((item) => (
                 <li key={item.id} className="fr-nav__item">
-                  <a
+                  <button
                     aria-current={section === item.id ? "page" : undefined}
                     className="fr-nav__link"
                     onClick={() => handleNavClick(item.id)}
                   >
                     {item.label}
-                  </a>
+                  </button>
                 </li>
               ))}
               <li className="fr-ml-auto">

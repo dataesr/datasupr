@@ -4,16 +4,6 @@ import { createChartOptions } from "../../components/chart-wrapper/default-optio
 
 const funders = ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"];
 
-const sortedFunders = {
-  "anr": "#738cff",
-  "pia anr": "#3f5ffc",
-  "pia hors anr": "#182a3d",
-  "horizon 2020": "#ffd500",
-  "horizon europe": "#e39700",
-};
-
-// const typologies = ["Autres", "Ecoles, instituts et assimilés", "Etablissements de santé",
-//   "Organismes de recherche", "Universités et assimilés"];
 const typologiesExcluded = ["Entreprises", "Infrastructures de recherche", "Structures de recherche"];
 
 const years: number[] = Array.from(Array(11).keys()).map((item) => item + 2015);
@@ -56,11 +46,6 @@ const formatPercent = (number: number, decimals: number = 0): string => {
     style: "percent",
   });
   return formatter.format(number);
-};
-
-const getColorByFunder = (funder: string): string => {
-  const funderLowerCase = funder.toLowerCase();
-  return Object.keys(sortedFunders).includes(funderLowerCase) ? sortedFunders[funderLowerCase] : "#ccc";
 };
 
 const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
@@ -128,7 +113,6 @@ export {
   formatCompactNumber,
   formatPercent,
   funders,
-  getColorByFunder,
   getEsQuery,
   getGeneralOptions,
   getYearRangeLabel,

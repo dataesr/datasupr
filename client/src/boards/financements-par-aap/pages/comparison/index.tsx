@@ -60,7 +60,7 @@ export default function Comparison() {
       <Row gutters>
         <Col>
           <Title as="h1" look="h4">
-            Comparaison entre plusieurs établissements
+            Comparaison entre établissements
           </Title>
         </Col>
       </Row>
@@ -90,13 +90,13 @@ export default function Comparison() {
                   <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
                     {sections.map((item) => (
                       <li key={item.id} className="fr-nav__item">
-                        <a
+                        <button
                           aria-current={section === item.id ? "page" : undefined}
                           className="fr-nav__link"
                           onClick={() => handleNavClick(item.id)}
                         >
                           {item.label}
-                        </a>
+                        </button>
                       </li>
                     ))}
                     <li className="fr-ml-auto">
@@ -153,10 +153,10 @@ export default function Comparison() {
           </>
         ) : (
           <Alert
-            description="Choisissez plusieurs structures dans la liste déroulante pour visualiser
+            description="Sélectionnez plusieurs établissements dans la liste déroulante pour visualiser
               leurs financements via les appels à projets. Vous pouvez filtrer par région et par typologie."
             className="fr-mt-3w"
-            title="Sélectionner plusieurs structures"
+            title="Sélectionnez plusieurs établissements"
             variant="info"
           />
         )
