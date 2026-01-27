@@ -1,10 +1,8 @@
-import { Col, Container, Logo, Row, Service } from "@dataesr/dsfr-plus";
+import { Logo, Service } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
-import Breadcrumb from "../../../../components/breadcrumb";
 import Footer from "../../../../components/footer";
-import navigationConfig from "../../pages/navigation-config.json";
 import { years } from "../../utils";
 import i18n from "./i18n.json";
 
@@ -28,7 +26,7 @@ export default function GlobalLayout() {
     }
   }, [searchParams, setSearchParams]);
 
-  const searchParamsWithoutSection = () => {
+  const searchParamsFiltered = () => {
     if (!searchParams.has("section")) return searchParams;
     // Deep copy of searchParams
     const searchParamsCopy = new URLSearchParams(searchParams);
@@ -100,7 +98,7 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/financements-par-aap/etablissement?${searchParamsWithoutSection()}`}
+                    to={`/financements-par-aap/etablissement?${searchParamsFiltered()}`}
                     target="_self"
                     {...(is("/financements-par-aap/etablissement") && { "aria-current": "page" })}
                     className="fr-nav__link"
@@ -110,7 +108,7 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/financements-par-aap/comparaison?${searchParamsWithoutSection()}`}
+                    to={`/financements-par-aap/comparaison?${searchParamsFiltered()}`}
                     target="_self"
                     {...(is("/financements-par-aap/comparaison") && { "aria-current": "page" })}
                     className="fr-nav__link"
@@ -123,13 +121,6 @@ export default function GlobalLayout() {
           </div>
         </div>
       </header>
-      <Container>
-        <Row>
-          <Col>
-            <Breadcrumb config={navigationConfig} />
-          </Col>
-        </Row>
-      </Container>
       <Outlet />
       <Footer href="/financements-par-aap/accueil" title="Financement par appels à projets - DataESR" />
     </>

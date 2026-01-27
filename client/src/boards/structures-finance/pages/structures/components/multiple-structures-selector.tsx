@@ -1,6 +1,6 @@
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
-import StructureCard from "../../../../../components/structure-card";
+import CardSimple from "../../../../../components/card-simple";
 
 interface Structure {
   etablissement_id_paysage: string;
@@ -57,11 +57,11 @@ export default function MultipleStructuresSelector({
       <Row gutters>
         {etablissements.map((etab) => (
           <Col key={etab.etablissement_id_paysage} xs="12" md="6">
-            <StructureCard
-              title={etab.etablissement_lib}
-              type={etab.type || etab.typologie}
-              studentCount={etab.effectif_sans_cpge}
+            <CardSimple
               onClick={() => handleSelect(etab.etablissement_id_paysage)}
+              stat={etab.effectif_sans_cpge}
+              subtitle={etab.type || etab.typologie}
+              title={etab.etablissement_lib}
               year={etab.anuniv}
             />
           </Col>

@@ -1,5 +1,5 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
-import StructureCard from "../../../../../../components/structure-card";
+import CardSimple from "../../../../../../components/card-simple";
 import "../styles.scss";
 
 interface ImplantationsSectionProps {
@@ -32,10 +32,10 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
             md="6"
             lg="4"
           >
-            <StructureCard
+            <CardSimple
+              description={implantation.siege ? "Site principal" : ""}
+              stat={implantation.effectif_sans_cpge}
               title={`${implantation.implantation}`}
-              region={implantation.siege ? "Site principal" : ""}
-              studentCount={implantation.effectif_sans_cpge}
               year={data.anuniv}
             />
           </Col>

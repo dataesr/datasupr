@@ -1,4 +1,4 @@
-import { Col, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -49,7 +49,14 @@ export default function DisplayStructure() {
   };
 
   return (
-    <>
+    <Container className="board-fundings">
+      <Row gutters>
+        <Col>
+          <Title as="h1" look="h4">
+            {name}
+          </Title>
+        </Col>
+      </Row>
       <Row gutters>
         <Col>
           <div className="chart-container chart-container--default" id="projects-list">
@@ -176,6 +183,6 @@ export default function DisplayStructure() {
           </Row>
         </>
       )}
-    </>
+    </Container>
   );
 }

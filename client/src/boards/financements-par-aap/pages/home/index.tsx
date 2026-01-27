@@ -2,6 +2,8 @@ import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import Breadcrumb from "../../../../components/breadcrumb";
+
 
 export default function Home() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -15,6 +17,14 @@ export default function Home() {
 
   return (
     <Container className="fr-pt-3w">
+      <Row gutters>
+        <Col>
+          <Breadcrumb items={[
+            { href: "/financements-par-aap/accueil", label: "Financemnets par AAP" },
+            { href: "/financements-par-aap/accueil", label: "Accueil" },
+          ]} />
+        </Col>
+      </Row>
       <Row gutters>
         <Col>
           <Title>Suivi des financements par appel à projet</Title>

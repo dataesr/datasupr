@@ -1,11 +1,11 @@
 .structure-card {
   background: var(--background-default-grey);
   border: 1px solid var(--border-default-grey);
-  padding: 1.25rem;
-  height: 100%;
-  transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
 
   &[role="button"] {
     cursor: pointer;
@@ -17,30 +17,30 @@
     }
 
     &:focus-visible {
-      outline: 2px solid var(--border-plain-blue-france);
       outline-offset: 2px;
+      outline: 2px solid var(--border-plain-blue-france);
     }
   }
 
   &__title {
+    color: var(--text-title-blue-france);
     font-size: 1.125rem;
     font-weight: 700;
-    color: var(--text-title-blue-france);
-    margin: 0 0 0.5rem 0;
     line-height: 1.3;
+    margin: 0 0 0.5rem 0;
   }
 
   &__meta {
-    font-size: 0.875rem;
     color: var(--text-mention-grey);
+    font-size: 0.875rem;
     margin: 0 0 0.75rem 0;
   }
 
   &__stat {
+    color: var(--text-default-grey);
     font-size: 0.9375rem;
     font-weight: 600;
-    color: var(--text-default-grey);
-    margin: 0;
     margin-top: auto;
+    margin: 0;
   }
 }

@@ -2,6 +2,7 @@ import { Alert, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import Breadcrumb from "../../../../components/breadcrumb";
 import { years } from "../../utils";
 import ClassificationsByStructures from "./charts/classifications-by-structures";
 import Dispersion from "./charts/dispersion";
@@ -48,6 +49,14 @@ export default function Comparison() {
 
   return (
     <Container className="board-fundings fr-pt-3w">
+      <Row gutters>
+        <Col>
+          <Breadcrumb items={[
+            { href: "/financements-par-aap/accueil", label: "Financemnets par AAP" },
+            { href: "/financements-par-aap/accueil", label: "Accueil" },
+          ]} />
+        </Col>
+      </Row>
       <Row gutters>
         <Col>
           <Title as="h1" look="h4">

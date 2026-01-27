@@ -201,7 +201,7 @@ export default function StructureSelector({ setName, setStructures }) {
         {isLoadingStructures ? <DefaultSkeleton height="70px" /> : (
           <>
             <label className="fr-label">
-              Structure
+              Etablissement
               <Badge className="fr-ml-1w">
                 {structures.length}
               </Badge>
@@ -210,7 +210,7 @@ export default function StructureSelector({ setName, setStructures }) {
               <SearchableSelect
                 onChange={handleStructureChange}
                 options={structures}
-                placeholder="Rechercher une structure..."
+                placeholder="Rechercher un établissement..."
                 value={structure}
               />
             </div>

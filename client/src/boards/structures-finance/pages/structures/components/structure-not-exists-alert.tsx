@@ -1,7 +1,7 @@
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import Breadcrumb from "../../../../../components/breadcrumb";
-import StructureCard from "../../../../../components/structure-card";
+import CardSimple from "../../../../../components/card-simple";
 import navigationConfig from "../../../navigation-config.json";
 
 interface StructureNotExistsAlertProps {
@@ -51,12 +51,12 @@ export default function StructureNotExistsAlert({
           </Row>
           <Row className="fr-mt-3w">
             <Col xs="12" md="6">
-              <StructureCard
+              <CardSimple
+                onClick={handleSwitchToCurrentStructure}
                 title={
                   etablissementActuel.etablissement_actuel_lib ||
                   etablissementActuel.etablissement_lib
                 }
-                onClick={handleSwitchToCurrentStructure}
               />
             </Col>
           </Row>

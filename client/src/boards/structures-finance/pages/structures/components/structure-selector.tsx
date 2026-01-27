@@ -4,7 +4,7 @@ import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useStructuresFilters } from "../hooks";
 import { useFinanceYears } from "../../../api/common";
 import SelectionUI from "./selection-ui";
-import StructureCard from "../../../../../components/structure-card";
+import CardSimple from "../../../../../components/card-simple";
 import StructuresBreadcrumb from "./structures-breadcrumb";
 
 export default function StructureSelection() {
@@ -89,13 +89,13 @@ export default function StructureSelection() {
 
               return (
                 <li key={id} className="fr-col-12 fr-col-md-6 fr-col-lg-4">
-                  <StructureCard
-                    title={displayName}
-                    region={region}
-                    studentCount={studentCount}
-                    type={type}
-                    year={year}
+                  <CardSimple
+                    description={region}
                     onClick={() => handleEtablissementSelect(id)}
+                    stat={studentCount}
+                    subtitle={type}
+                    title={displayName}
+                    year={year}
                   />
                 </li>
               );
