@@ -103,46 +103,47 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   };
   const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", [], "Année de début du projet", field === "projects" ? axisProjects : axisBudget, "area"), localOptions);
 
-  const renderData = (options: HighchartsInstance.Options) => {
-    const columns = (options?.series ?? []).map((serie) => serie.name);
-    const rows: any = [];
-    (options?.series ?? []).forEach((serie: any, i) => {
-      (serie?.data ?? []).forEach((d, j) => {
-        if (i === 0) rows.push([]);
-        rows[j].push(d ?? 0);
-      });
-    });
+  // TODO: implement it later
+  // const renderData = (options: HighchartsInstance.Options) => {
+  //   const columns = (options?.series ?? []).map((serie) => serie.name);
+  //   const rows: any = [];
+  //   (options?.series ?? []).forEach((serie: any, i) => {
+  //     (serie?.data ?? []).forEach((d, j) => {
+  //       if (i === 0) rows.push([]);
+  //       rows[j].push(d ?? 0);
+  //     });
+  //   });
 
-    return (
-      <div style={{ width: "100%" }}>
-        <div className="fr-table-responsive">
-          <table
-            className="fr-table fr-table--bordered fr-table--sm"
-            style={{ width: "100%" }}
-          >
-            <thead>
-              <tr>
-                <th>Année</th>
-                {columns.map((column) => (
-                  <th key={column} scope="col">{column}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row, index) => (
-                <tr key={index}>
-                  <th scope="row">{index + years[0]}</th>
-                  {row.map((r) => (
-                    <td key={r}>{r}</td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
-    );
-  };
+  //   return (
+  //     <div style={{ width: "100%" }}>
+  //       <div className="fr-table-responsive">
+  //         <table
+  //           className="fr-table fr-table--bordered fr-table--sm"
+  //           style={{ width: "100%" }}
+  //         >
+  //           <thead>
+  //             <tr>
+  //               <th>Année</th>
+  //               {columns.map((column) => (
+  //                 <th key={column} scope="col">{column}</th>
+  //               ))}
+  //             </tr>
+  //           </thead>
+  //           <tbody>
+  //             {rows.map((row, index) => (
+  //               <tr key={index}>
+  //                 <th scope="row">{index + years[0]}</th>
+  //                 {row.map((r) => (
+  //                   <td key={r}>{r}</td>
+  //                 ))}
+  //               </tr>
+  //             ))}
+  //           </tbody>
+  //         </table>
+  //       </div>
+  //     </div>
+  //   );
+  // };
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-over-time-by-structure">
@@ -153,7 +154,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
         <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
       </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} renderData={() => renderData(options)} />}
+      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 }
