@@ -44,7 +44,7 @@ export default function Structures() {
           <DisplayStructure />
         ) : (
           <Row gutters>
-            {structures.map((structure) => (
+            {structures.map((structure: any) => (
               <Col md="4">
                 <StructureCard
                   title={structure.label}

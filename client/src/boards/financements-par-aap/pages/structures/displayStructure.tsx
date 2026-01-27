@@ -21,7 +21,7 @@ export default function DisplayStructure() {
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
   const [isOpen, setIsOpen] = useState(false);
-  const [name, setName] = useState("");
+  const [name] = useState("");
   const sections = [
     { id: "financements", label: "Volume et répartition des financements" },
     { id: "evolution", label: "Evolution temporelle" },
