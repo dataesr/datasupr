@@ -2,8 +2,8 @@ import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import Breadcrumb from "../../../../components/breadcrumb";
 import CardSimple from "../../../../components/card-simple";
+import Breadcrumb from "../../components/breadcrumb";
 import { years } from "../../utils";
 import StructureSelector from "./components/structure-selector";
 import DisplayStructure from "./displayStructure";

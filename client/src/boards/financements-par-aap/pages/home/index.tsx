@@ -2,7 +2,7 @@ import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import Breadcrumb from "../../../../components/breadcrumb";
+import Breadcrumb from "../../components/breadcrumb";
 
 
 export default function Home() {

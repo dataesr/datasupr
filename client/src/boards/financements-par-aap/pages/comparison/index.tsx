@@ -2,7 +2,7 @@ import { Alert, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import Breadcrumb from "../../../../components/breadcrumb";
+import Breadcrumb from "../../components/breadcrumb";
 import { years } from "../../utils";
 import ClassificationsByStructures from "./charts/classifications-by-structures";
 import Dispersion from "./charts/dispersion";
