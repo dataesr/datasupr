@@ -29,7 +29,6 @@ export default function Structures() {
     searchParams.set("structure", structure);
     setSearchParams(searchParams);
   };
-
   return (
     (Number(yearMin) <= Number(yearMax)) && structure ? (
       <DisplayStructure />
@@ -55,13 +54,13 @@ export default function Structures() {
             <StructureSelector setStructures={setStructures} />
           </Col>
         </Row>
-        <Row gutters>
+        <Row gutters className="fr-m-3w">
           {structures.map((structure: any) => (
             <Col md="4">
               <CardSimple
-                description={structure.id}
+                description={structure.region}
                 onClick={() => handleStructure(structure.id)}
-                subtitle={structure.label}
+                subtitle={structure.typologie_1}
                 title={structure.label}
                 year={structure.label}
               />
