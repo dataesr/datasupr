@@ -38,7 +38,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
 
     case "pillar-detail":
       return (
-        <Container fluid>
+        <Container fluid className="fr-pb-3w">
           <Row>
             <Col md={8}>
               <SynthesisFocus />

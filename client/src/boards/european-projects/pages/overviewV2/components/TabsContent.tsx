@@ -25,80 +25,52 @@ export default function TabsContent({ overviewParams }: TabsContentProps) {
   };
 
   return (
-    <div className="fr-tabs">
-      <ul className="fr-tabs__list" role="tablist" aria-label="Sélection des onglets">
-        <li role="presentation">
-          <button
-            type="button"
-            id="tab-1"
-            className="fr-tabs__tab"
-            tabIndex={activeTab === "synthesis" ? 0 : -1}
-            role="tab"
-            aria-selected={activeTab === "synthesis"}
-            aria-controls="tab-1-panel"
-            onClick={() => handleTabChange("synthesis")}
-          >
-            {getIntlLabel("synthesis")}
-          </button>
-        </li>
-        <li role="presentation">
-          <button
-            type="button"
-            id="tab-2"
-            className="fr-tabs__tab"
-            tabIndex={activeTab === "positioning" ? 0 : -1}
-            role="tab"
-            aria-selected={activeTab === "positioning"}
-            aria-controls="tab-2-panel"
-            onClick={() => handleTabChange("positioning")}
-          >
-            {getIntlLabel("positioning")}
-          </button>
-        </li>
-        <li role="presentation">
-          <button
-            type="button"
-            id="tab-3"
-            className="fr-tabs__tab"
-            tabIndex={activeTab === "collaborations" ? 0 : -1}
-            role="tab"
-            aria-selected={activeTab === "collaborations"}
-            aria-controls="tab-3-panel"
-            onClick={() => handleTabChange("collaborations")}
-          >
-            {getIntlLabel("collaborations")}
-          </button>
-        </li>
-      </ul>
+    <div>
+      <nav className="fr-nav" role="navigation" aria-label="Menu principal">
+        <ul className="fr-nav__list">
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("synthesis");
+              }}
+              aria-current={activeTab === "synthesis" ? "page" : undefined}
+            >
+              {getIntlLabel("synthesis")}
+            </button>
+          </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("positioning");
+              }}
+              aria-current={activeTab === "positioning" ? "page" : undefined}
+            >
+              {getIntlLabel("positioning")}
+            </button>
+          </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("collaborations");
+              }}
+              aria-current={activeTab === "collaborations" ? "page" : undefined}
+            >
+              {getIntlLabel("collaborations")}
+            </button>
+          </li>
+        </ul>
+      </nav>
 
-      <div
-        id="tab-1-panel"
-        className={`fr-tabs__panel ${activeTab === "synthesis" ? "fr-tabs__panel--selected" : ""}`}
-        role="tabpanel"
-        aria-labelledby="tab-1"
-        tabIndex={0}
-      >
-        <SmartTabContent {...overviewParams} tabType="synthesis" />
-      </div>
-
-      <div
-        id="tab-2-panel"
-        className={`fr-tabs__panel ${activeTab === "positioning" ? "fr-tabs__panel--selected" : ""}`}
-        role="tabpanel"
-        aria-labelledby="tab-2"
-        tabIndex={0}
-      >
-        <SmartTabContent {...overviewParams} tabType="positioning" />
-      </div>
-
-      <div
-        id="tab-3-panel"
-        className={`fr-tabs__panel ${activeTab === "collaborations" ? "fr-tabs__panel--selected" : ""}`}
-        role="tabpanel"
-        aria-labelledby="tab-3"
-        tabIndex={0}
-      >
-        <SmartTabContent {...overviewParams} tabType="collaborations" />
+      <div className="fr-mt-3w">
+        {activeTab === "synthesis" && <SmartTabContent {...overviewParams} tabType="synthesis" />}
+        {activeTab === "positioning" && <SmartTabContent {...overviewParams} tabType="positioning" />}
+        {activeTab === "collaborations" && <SmartTabContent {...overviewParams} tabType="collaborations" />}
       </div>
     </div>
   );
