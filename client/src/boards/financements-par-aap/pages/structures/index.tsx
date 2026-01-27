@@ -16,7 +16,6 @@ export default function Structures() {
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
-  const [, setName] = useState("");
   const [structures, setStructures] = useState([]);
 
   useEffect(() => {
@@ -53,7 +52,7 @@ export default function Structures() {
         </Row>
         <Row gutters>
           <Col>
-            <StructureSelector setName={setName} setStructures={setStructures} />
+            <StructureSelector setStructures={setStructures} />
           </Col>
         </Row>
         <Row gutters>

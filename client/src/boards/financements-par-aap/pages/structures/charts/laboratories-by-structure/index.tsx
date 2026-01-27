@@ -87,7 +87,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-projects-by-structures', structure, yearMax, yearMin],
+    queryKey: ["fundings-projects-by-structures", structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

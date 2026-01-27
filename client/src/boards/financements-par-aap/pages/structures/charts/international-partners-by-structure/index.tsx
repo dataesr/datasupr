@@ -70,7 +70,7 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-international-partners', structure, yearMax, yearMin],
+    queryKey: ["fundings-international-partners", structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

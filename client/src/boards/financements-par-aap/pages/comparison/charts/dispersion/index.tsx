@@ -49,7 +49,7 @@ export default function Dispersion() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['dispersion', structures, yearMax, yearMin],
+    queryKey: ["fundings-dispersion", structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

@@ -10,7 +10,7 @@ import { getEsQuery } from "../../../../utils.ts";
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function StructureSelector({ setName, setStructures }) {
+export default function StructureSelector({ setStructures }) {
   const [county, setCounty] = useState("*");
   const [typology, setTypology] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
@@ -119,18 +119,10 @@ export default function StructureSelector({ setName, setStructures }) {
 
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {
-      setName(structures.find((item) => item.id === selectedStructure).label);
       searchParams.set("structure", selectedStructure.split('###')[0]);
       setSearchParams(searchParams);
     }
   };
-
-  if (structure && structure.length > 0) {
-    const str = structures.find((item) => item.id === structure);
-    if (str && str?.label) {
-      setName(str.label);
-    }
-  }
 
   useEffect(() => {
     setStructures((dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {

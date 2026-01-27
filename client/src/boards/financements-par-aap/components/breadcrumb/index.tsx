@@ -2,7 +2,6 @@ import { Link } from "@dataesr/dsfr-plus";
 
 
 export default function Breadcrumb({ items }) {
-  console.log(items);
   return (
     <nav role="navigation" className="fr-breadcrumb" aria-label="vous êtes ici :">
       <button className="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">

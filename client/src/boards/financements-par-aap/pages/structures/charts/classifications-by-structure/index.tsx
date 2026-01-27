@@ -72,7 +72,7 @@ export default function ClassificationsByStructure({ name }: { name: string | un
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ['fundings-classifications', structure, yearMax, yearMin],
+    queryKey: ["fundings-classifications", structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

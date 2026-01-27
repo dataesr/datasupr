@@ -16,7 +16,7 @@ export default function Home() {
   }, [searchParams, setSearchParams]);
 
   return (
-    <Container className="fr-pt-3w">
+    <Container className="board-fundings">
       <Row gutters>
         <Col>
           <Breadcrumb items={[
@@ -27,7 +27,13 @@ export default function Home() {
       </Row>
       <Row gutters>
         <Col>
-          <Title>Suivi des financements par appel à projet</Title>
+          <Title as="h1" look="h4">
+            Suivi des financements par appel à projet
+          </Title>
+        </Col>
+      </Row>
+      <Row gutters>
+        <Col>
           <p>
             Ce tableau de bord a pour objectif de suivre et d’analyser la participation des
             établissements français aux projets de recherche financés par appels à projets
