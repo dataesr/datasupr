@@ -6,6 +6,8 @@ import Footer from "../../../../components/footer";
 import { years } from "../../utils";
 import i18n from "./i18n.json";
 
+import "./styles.scss";
+
 const { VITE_MINISTER_NAME } = import.meta.env;
 
 
@@ -122,7 +124,10 @@ export default function GlobalLayout() {
         </div>
       </header>
       <Outlet />
-      <Footer href="/financements-par-aap/accueil" title="Financement par appels à projets - DataESR" />
+      <Footer
+        href="/financements-par-aap/accueil"
+        title="Financement par appels à projets - DataESR"
+      />
     </>
   );
 }

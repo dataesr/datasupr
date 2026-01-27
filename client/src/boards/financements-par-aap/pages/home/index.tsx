@@ -16,7 +16,7 @@ export default function Home() {
   }, [searchParams, setSearchParams]);
 
   return (
-    <Container className="board-fundings">
+    <Container className="fr-mb-3w">
       <Row gutters>
         <Col>
           <Breadcrumb items={[

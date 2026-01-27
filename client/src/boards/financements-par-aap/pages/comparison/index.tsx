@@ -48,7 +48,7 @@ export default function Comparison() {
   }, [searchParams, setSearchParams]);
 
   return (
-    <Container className="board-fundings fr-pt-3w">
+    <Container className="fr-mb-3w">
       <Row gutters>
         <Col>
           <Breadcrumb items={[
