@@ -64,7 +64,7 @@ export default function Structures() {
         <Container className="fr-my-3w">
           <Row gutters>
             {structures.map((structure: any) => (
-              <Col md="4">
+              <Col key={structure.id} md="4">
                 <CardSimple
                   description={structure.region}
                   onClick={() => handleStructure(structure.id)}
