@@ -115,7 +115,7 @@ export default function Cards() {
           <Col xs="12" md="2" key={`card-projects-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
-                color={getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`),}
+                color={getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`)}
                 data={dataFunders[funder].projects}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Projets ${funder}`}
@@ -161,7 +161,7 @@ export default function Cards() {
           <Col xs="12" md="2" key={`card-budget-${funder}`}>
             {isLoading ? <DefaultSkeleton height="250px" /> :
               <ChartCard
-                color={getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`),}
+                color={getCssColor(`funder-${funder.toLowerCase().replaceAll(" ", "-")}`)}
                 data={dataFunders[funder].budget}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Montants des projets ${funder}`}
