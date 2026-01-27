@@ -74,73 +74,67 @@ export default function GlobalLayout() {
             </div>
           </div>
         </div>
-        <div className="fr-header__menu fr-modal" id="modal-header" aria-labelledby="button-header">
-          <div className="fr-container">
-            <button aria-controls="modal-header" title="Fermer" type="button" id="button-2168" className="fr-btn--close fr-btn">
-              {getI18nLabel("close")}
-            </button>
-            <div className="fr-header__menu-links"></div>
-            <nav className="fr-nav" role="navigation" aria-label="Menu principal">
-              <ul className="fr-nav__list">
-                <li className="fr-nav__item">
-                  <Link
-                    to="/european-projects/accueil"
-                    target="_self"
-                    {...(pathname === "/european-projects/accueil" && { "aria-current": "page" })}
-                    className="fr-nav__link"
-                  >
-                    <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
-                    {getI18nLabel("home")}
-                  </Link>
-                </li>
-                <li className="fr-nav__item">
-                  <Link
-                    to={`/european-projects/horizon-europe?${filtersParams}`}
-                    target="_self"
-                    {...(is("/european-projects/horizon-europe") && { "aria-current": "page" })}
-                    className="fr-nav__link"
-                  >
-                    {getI18nLabel("he")}
-                  </Link>
-                </li>
-                <li className="fr-nav__item">
-                  <Link
-                    to={`/european-projects/msca?${filtersParams}`}
-                    target="_self"
-                    {...(is("/european-projects/msca") && { "aria-current": "page" })}
-                    className="fr-nav__link"
-                  >
-                    MSCA
-                  </Link>
-                </li>
-                <li className="fr-nav__item">
-                  <Link
-                    to={`/european-projects/erc?${filtersParams}`}
-                    target="_self"
-                    {...(is("/european-projects/erc") && { "aria-current": "page" })}
-                    className="fr-nav__link"
-                  >
-                    ERC
-                  </Link>
-                </li>
-                <li className="fr-nav__item">
-                  <Link
-                    to="/european-projects/evolution-pcri"
-                    target="_self"
-                    {...(is("/european-projects/evolution-pcri") && { "aria-current": "page" })}
-                    className="fr-nav__link"
-                  >
-                    {getI18nLabel("evolutionPcri")}
-                  </Link>
-                </li>
-                <li style={{ marginLeft: "auto" }}>
-                  <CountrySelector />
-                </li>
-              </ul>
-            </nav>
-          </div>
-        </div>
       </header>
+      <nav className="ep-sticky-nav fr-nav" role="navigation" aria-label="Menu principal">
+        <Container>
+          <ul className="fr-nav__list">
+            <li className="fr-nav__item">
+              <Link
+                to="/european-projects/accueil"
+                target="_self"
+                {...(pathname === "/european-projects/accueil" && { "aria-current": "page" })}
+                className="fr-nav__link"
+              >
+                <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
+                {getI18nLabel("home")}
+              </Link>
+            </li>
+            <li className="fr-nav__item">
+              <Link
+                to={`/european-projects/horizon-europe?${filtersParams}`}
+                target="_self"
+                {...(is("/european-projects/horizon-europe") && { "aria-current": "page" })}
+                className="fr-nav__link"
+              >
+                {getI18nLabel("he")}
+              </Link>
+            </li>
+            <li className="fr-nav__item">
+              <Link
+                to={`/european-projects/msca?${filtersParams}`}
+                target="_self"
+                {...(is("/european-projects/msca") && { "aria-current": "page" })}
+                className="fr-nav__link"
+              >
+                MSCA
+              </Link>
+            </li>
+            <li className="fr-nav__item">
+              <Link
+                to={`/european-projects/erc?${filtersParams}`}
+                target="_self"
+                {...(is("/european-projects/erc") && { "aria-current": "page" })}
+                className="fr-nav__link"
+              >
+                ERC
+              </Link>
+            </li>
+            <li className="fr-nav__item">
+              <Link
+                to="/european-projects/evolution-pcri"
+                target="_self"
+                {...(is("/european-projects/evolution-pcri") && { "aria-current": "page" })}
+                className="fr-nav__link"
+              >
+                {getI18nLabel("evolutionPcri")}
+              </Link>
+            </li>
+            <li className="fr-nav__item" style={{ marginLeft: "auto" }}>
+              <CountrySelector />
+            </li>
+          </ul>
+        </Container>
+      </nav>
       <Container>
         <Row>
           <Col>
