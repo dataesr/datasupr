@@ -98,7 +98,6 @@ export const useFinanceStructureDetail = (
       return response.json();
     },
     enabled: enabled && Boolean(id),
-    staleTime: 5 * 60 * 1000,
   });
 };
 
@@ -120,7 +119,6 @@ export const useFinanceEtablissementEvolution = (
       return response.json();
     },
     enabled: enabled && Boolean(id),
-    staleTime: 5 * 60 * 1000,
   });
 };
 
@@ -159,7 +157,6 @@ export const useFinanceAdvancedComparison = (
       return response.json();
     },
     enabled,
-    staleTime: 5 * 60 * 1000,
   });
 };
 
@@ -197,6 +194,5 @@ export const useCheckStructureExists = (
       return response.json();
     },
     enabled: enabled && Boolean(id) && Boolean(annee),
-    staleTime: 5 * 60 * 1000,
   });
 };
