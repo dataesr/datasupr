@@ -1,4 +1,4 @@
-import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Row, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
