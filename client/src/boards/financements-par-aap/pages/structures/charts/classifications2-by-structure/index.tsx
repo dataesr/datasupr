@@ -8,6 +8,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import ChartWrapperCustom from "../../../../components/chart-wrapper-custom";
 import { deepMerge, formatCompactNumber, funders, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { getCssColor } from "../../../../../../utils/colors.ts";
 
 const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -86,14 +87,18 @@ export default function Classifications2ByStructure({ name }: { name: string | u
 
   const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
   const seriesProject = classificationsProject.map((classification) => ({
+    color: getCssColor(`classification-${classification.key.toLowerCase().replace(/[^a-z ]/g, "").replace(/  +/g, " ").replaceAll(" ", "-")}`),
     data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.unique_projects?.value ?? 0),
     name: classification.key,
   })).reverse();
   const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
   const seriesBudget = classificationsBudget.map((classification) => ({
+    color: getCssColor(`classification-${classification.key.normalize("NFD").toLowerCase().replace(/[^a-z ]/g, "").replace(/  +/g, " ").replaceAll(" ", "-")}`),
     data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.sum_budget?.value ?? 0),
     name: classification.key,
   })).reverse();
+  console.log(seriesProject);
+  console.log(seriesBudget);
 
   const axisBudget = "Montants financés (€)";
   const axisProjects = "Nombre de projets financés";
