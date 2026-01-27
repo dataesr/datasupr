@@ -16,7 +16,7 @@ export default function Structures() {
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
-  const [name, setName] = useState("");
+  const [, setName] = useState("");
   const [structures, setStructures] = useState([]);
 
   useEffect(() => {
@@ -39,8 +39,8 @@ export default function Structures() {
         <Row gutters>
           <Col>
             <Breadcrumb items={[
-              { href: "/financements-par-aap/accueil", label: "Financemnets par AAP" },
-              { href: "/financements-par-aap/etablissement", label: "Vue par établissement" },
+              { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
+              { label: "Vue par établissement" },
             ]} />
           </Col>
         </Row>
