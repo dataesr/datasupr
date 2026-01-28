@@ -121,6 +121,14 @@ export const chartsRegistry = {
     () =>
       import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
   ),
+  "positioning-comparison-bar": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/positionning/charts/positioning-comparison-bar/integration-wrapper")
+  ),
+  "positioning-scatter": lazy(
+    () =>
+      import("../structures-finance/pages/structures/sections/positionning/charts/positioning-scatter/integration-wrapper")
+  ),
 };
 
 export type ChartId = keyof typeof chartsRegistry;

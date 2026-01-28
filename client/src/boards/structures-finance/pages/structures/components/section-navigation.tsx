@@ -29,6 +29,7 @@ export default function SectionNavigation({
     ...(showImplantations
       ? [{ id: "implantations", label: "Implantations" }]
       : []),
+    { id: "positionnement", label: "Positionnement" },
     { id: "analyses", label: "Analyses et évolutions" },
   ];
 
@@ -45,7 +46,6 @@ export default function SectionNavigation({
       aria-label="Navigation secondaire"
       style={{ borderBottom: "1px solid var(--border-default-grey)" }}
     >
-      {/* Burger button - visible only on mobile */}
       <button
         className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill"
         onClick={() => setIsOpen(!isOpen)}

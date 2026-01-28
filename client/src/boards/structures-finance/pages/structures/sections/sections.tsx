@@ -4,3 +4,4 @@ export { EtudiantsSection } from "./formations";
 export { AnalysesSection } from "./analyses";
 export { SanteFinancierSection } from "./sante-financiere";
 export { ImplantationsSection } from "./implantations";
+export { PositionnementSection } from "./positionning";

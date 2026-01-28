@@ -16,6 +16,7 @@ import {
   EtudiantsSection,
   AnalysesSection,
   ImplantationsSection,
+  PositionnementSection,
 } from "../sections/sections";
 import Breadcrumb from "../../../../financements-par-aap/components/breadcrumb";
 import StructureNotExistsAlert from "./structure-not-exists-alert";
@@ -101,6 +102,13 @@ export default function StructureView() {
         );
       case "implantations":
         return <ImplantationsSection data={detailData} />;
+      case "positionnement":
+        return (
+          <PositionnementSection
+            data={detailData}
+            selectedYear={selectedYear}
+          />
+        );
       case "analyses":
         return (
           <AnalysesSection

@@ -23,5 +23,11 @@ export default function ScatterChart({ config, data }: ScatterChartProps) {
     },
   };
 
-  return <ChartWrapper config={chartConfig} options={chartOptions} renderData={() => <RenderData config={config} data={data} />} />;
+  return (
+    <ChartWrapper
+      config={chartConfig}
+      options={chartOptions}
+      renderData={() => <RenderData config={config} data={data} />}
+    />
+  );
 }
