@@ -1,5 +1,5 @@
 import express from "express";
-import { db } from "../../../../services/mongo.js";
+import { fetchAllRecords } from "./ods-client.js";
 import { cacheKey, getCached, setCached } from "./cache.js";
 
 const router = express.Router();
@@ -10,19 +10,13 @@ router.get("/structures-finance/definitions", async (req, res) => {
     const hit = getCached(key);
     if (hit) return res.json(hit);
 
-    const collection = db.collection("finance-university-main-indicators");
-
-    const items = await collection
-      .aggregate([
-        {
-          $sort: { rubrique: 1, SousRubrique: 1, Indicateur: 1 },
-        },
-      ])
-      .toArray();
+    const items = await fetchAllRecords({
+      dataset: "definitions",
+    });
 
     const grouped = items.reduce((acc, item) => {
       const rubrique = item.rubrique;
-      const sousRubrique = item.SousRubrique;
+      const sousRubrique = item.sousrubrique || "Général";
 
       if (!acc[rubrique]) {
         acc[rubrique] = {
@@ -39,12 +33,12 @@ router.get("/structures-finance/definitions", async (req, res) => {
       }
 
       acc[rubrique].sousRubriques[sousRubrique].definitions.push({
-        indicateur: item.Indicateur,
-        libelle: item.libelleFr,
-        definition: item.DefinitionFr,
-        interpretation: item.InterpretationFr,
-        source: item.SourceFr,
-        unite: item.uniteFr || "-",
+        indicateur: item.indicateur,
+        libelle: item.libellefr || "",
+        definition: item.definitionfr || "",
+        interpretation: item.interpretationfr || "",
+        source: item.sourcefr || "",
+        unite: item.unitefr || "-",
       });
 
       return acc;
@@ -56,13 +50,9 @@ router.get("/structures-finance/definitions", async (req, res) => {
     }));
 
     setCached(key, payload);
-    return res.json(payload);
-  } catch (error) {
-    console.error("Error fetching definitions:", error);
-    return res.status(500).json({
-      error: "Failed to fetch definitions",
-      message: error.message,
-    });
+    res.json(payload);
+  } catch (e) {
+    res.status(500).json({ error: "Server error", details: e.message });
   }
 });
 

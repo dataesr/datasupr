@@ -1,5 +1,11 @@
-const FINANCE_DATASET_ENDPOINT =
-  "https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets/fr_esr_datasupr_finance/records";
+const BASE_ENDPOINT =
+  "https://data.enseignementsup-recherche.gouv.fr/api/explore/v2.1/catalog/datasets";
+
+const DATASETS = {
+  finance: "fr_esr_datasupr_finance",
+  faq: "fr_esr_datasupr_finance-faq",
+  definitions: "fr_esr_datasupr_finance-documentation-indicateur",
+};
 
 const PAGE_SIZE = 100;
 
@@ -23,6 +29,7 @@ function buildWhereClause(filters) {
 }
 
 async function fetchRecords({
+  dataset = "finance",
   select,
   where = {},
   groupBy,
@@ -30,6 +37,9 @@ async function fetchRecords({
   limit = PAGE_SIZE,
   offset = 0,
 }) {
+  const datasetId = DATASETS[dataset] || dataset;
+  const endpoint = `${BASE_ENDPOINT}/${datasetId}/records`;
+
   const queryParams = new URLSearchParams();
   if (select?.length) queryParams.set("select", select.join(","));
   const whereClause = buildWhereClause(where);
@@ -39,8 +49,7 @@ async function fetchRecords({
   queryParams.set("limit", limit);
   queryParams.set("offset", offset);
 
-  console.log(process.env.ODS_API_KEY);
-  const response = await fetch(`${FINANCE_DATASET_ENDPOINT}?${queryParams}`, {
+  const response = await fetch(`${endpoint}?${queryParams}`, {
     headers: { Authorization: `Apikey ${process.env.ODS_API_KEY}` },
   });
 
@@ -68,8 +77,9 @@ async function fetchAllRecords(options) {
   }
   return allRecords;
 }
-async function getDistinctValues(fieldName, filters = {}) {
+async function getDistinctValues(fieldName, filters = {}, dataset = "finance") {
   const records = await fetchAllRecords({
+    dataset,
     select: [fieldName],
     where: filters,
     groupBy: [fieldName],

@@ -1,5 +1,5 @@
 import express from "express";
-import { db } from "../../../../services/mongo.js";
+import { fetchAllRecords } from "./ods-client.js";
 import { cacheKey, getCached, setCached } from "./cache.js";
 
 const router = express.Router();
@@ -10,25 +10,25 @@ router.get("/structures-finance/faq", async (req, res) => {
     const hit = getCached(key);
     if (hit) return res.json(hit);
 
-    const collection = db.collection("finance-university-main-faq");
-
-    const items = await collection
-      .aggregate([{ $sort: { OrdreThématique: 1, OrdreQuestion: 1 } }])
-      .toArray();
+    const items = await fetchAllRecords({
+      dataset: "faq",
+    });
 
     const groupedByTheme = items.reduce((acc, item) => {
-      const theme = item.ThématiqueFr;
+      const theme = item.thematiquefr || "Général";
+      const ordre = item.ordrethematique || 0;
+      
       if (!acc[theme]) {
         acc[theme] = {
           theme,
-          ordre: item.OrdreThématique,
+          ordre,
           questions: [],
         };
       }
       acc[theme].questions.push({
-        question: item.QuestionFr,
-        reponse: item.RéponseFr,
-        ordre: item.OrdreQuestion,
+        question: item.questionfr || "",
+        reponse: item.reponsefr || "",
+        ordre: item.ordrequestion || 0,
       });
       return acc;
     }, {});
@@ -38,13 +38,9 @@ router.get("/structures-finance/faq", async (req, res) => {
     );
 
     setCached(key, payload);
-    return res.json(payload);
-  } catch (error) {
-    console.error("Error fetching FAQ:", error);
-    return res.status(500).json({
-      error: "Failed to fetch FAQ",
-      message: error.message,
-    });
+    res.json(payload);
+  } catch (e) {
+    res.status(500).json({ error: "Server error", details: e.message });
   }
 });
 
