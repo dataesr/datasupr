@@ -2,6 +2,7 @@ interface Definition {
   indicateur: string;
   libelle: string;
   definition: string;
+  interpretation?: string;
   source: string;
   unite: string;
 }
@@ -11,6 +12,7 @@ interface DefinitionCategory {
   sousRubriques: {
     nom: string;
     definitions: Definition[];
+    interpretation?: string;
   }[];
 }
 
@@ -71,7 +73,17 @@ export default function Definitions({
                                 {def.indicateur}
                               </code>
                             </td>
-                            <td>{def.definition}</td>
+                            <td>
+                              {def.definition}
+                              {def.interpretation && (
+                                <>
+                                  <br />
+                                  <br />
+                                  <strong>Interprétation :</strong>{" "}
+                                  {def.interpretation}
+                                </>
+                              )}
+                            </td>
                             <td className="fr-text--center">{def.unite}</td>
                             <td className="fr-text--xs">{def.source}</td>
                           </tr>
