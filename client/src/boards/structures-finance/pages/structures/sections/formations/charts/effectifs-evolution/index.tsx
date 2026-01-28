@@ -232,7 +232,10 @@ export default function EffectifsEvolutionChart({
   return (
     <div>
       <div className="fr-mb-2w">
-        <SegmentedControl name="effectifs-evolution-view">
+        <SegmentedControl
+          className="fr-segmented--sm"
+          name="effectifs-evolution-view"
+        >
           {availableViews.map((viewKey) => (
             <SegmentedElement
               key={viewKey}

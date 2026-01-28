@@ -38,27 +38,58 @@ export const createEvolutionChartOptions = (
     });
   }
 
+  const refIpc =
+    sortedData.length > 0 ? sortedData[0]["ref_ipc"] || null : null;
+
   const series = selectedMetrics.map((metricKey, index) => {
     const config = metricsConfig[metricKey];
+    const isIPCMetric = metricKey.endsWith("_ipc");
+
+    const useSameAxis =
+      selectedMetrics.length === 2 &&
+      metricsConfig[selectedMetrics[0]].format ===
+        metricsConfig[selectedMetrics[1]].format;
+
+    let seriesName = config.label;
+    if (isIPCMetric && refIpc) {
+      seriesName = `${config.label} (IPC ${refIpc})`;
+    }
+
     return {
-      name: config.label,
+      name: seriesName,
       data: sortedData.map((item) => {
-        const value = item[metricKey];
-        if (typeof value !== "number") return null;
+        const value = Number(item[metricKey]);
+        if (isNaN(value)) return null;
 
         if (isBase100 && baseValues[metricKey]) {
           return (value / baseValues[metricKey]) * 100;
         }
         return value;
       }),
-      color: config.color,
-      yAxis: isBase100 ? 0 : selectedMetrics.length > 1 && index === 1 ? 1 : 0,
+      color: isIPCMetric ? "var(--text-title-blue-france)" : config.color,
+      lineWidth: isIPCMetric ? 2 : 2,
+      marker: {
+        enabled: true,
+        radius: isIPCMetric ? 5 : 4,
+        symbol: isIPCMetric ? "square" : "circle",
+      },
+      yAxis: isBase100
+        ? 0
+        : useSameAxis
+          ? 0
+          : selectedMetrics.length > 1 && index === 1
+            ? 1
+            : 0,
       type: "line" as const,
+      visible: true,
     };
   });
 
   const yAxisConfig =
-    selectedMetrics.length > 1 && !isBase100
+    selectedMetrics.length > 1 &&
+    !isBase100 &&
+    metricsConfig[selectedMetrics[0]].format !==
+      metricsConfig[selectedMetrics[1]].format
       ? [
           {
             title: {
@@ -122,7 +153,11 @@ export const createEvolutionChartOptions = (
             text: isBase100
               ? "Index (base 100 = première année)"
               : selectedMetrics.length > 0
-                ? metricsConfig[selectedMetrics[0]].label
+                ? selectedMetrics.length === 2 &&
+                  metricsConfig[selectedMetrics[0]].format ===
+                    metricsConfig[selectedMetrics[1]].format
+                  ? `${metricsConfig[selectedMetrics[0]].label} / ${metricsConfig[selectedMetrics[1]].label}`
+                  : metricsConfig[selectedMetrics[0]].label
                 : "Valeur",
           },
           labels: {
@@ -222,6 +257,13 @@ export const createEvolutionChartOptions = (
             } else {
               valueStr = Highcharts.numberFormat(point.y, 0, ",", " ");
             }
+
+            if (metricKey && metricKey.endsWith("_ipc") && yearIndex >= 0) {
+              const refIpc = sortedData[yearIndex]["ref_ipc"];
+              if (refIpc) {
+                valueStr += `<br/><span style="font-size:11px">base ${refIpc}</span>`;
+              }
+            }
           }
 
           tooltip += `<div style="margin-top:4px">
@@ -255,7 +297,6 @@ export const createEvolutionChartOptions = (
   });
 };
 
-// Graphique empilé pour les formations
 export const createStackedEvolutionChartOptions = (
   data: EvolutionData[],
   selectedMetrics: string[],
@@ -271,8 +312,9 @@ export const createStackedEvolutionChartOptions = (
       })
     );
 
-  const series = selectedMetrics
-    .map((metricKey) => {
+  const series = [...selectedMetrics]
+    .reverse()
+    .map((metricKey, index) => {
       const config = metricsConfig[metricKey];
       const hasData = sortedData.some((item) => {
         const value = item[metricKey];
@@ -296,6 +338,8 @@ export const createStackedEvolutionChartOptions = (
         }),
         color: config.color,
         type: "column" as const,
+        // trick pour inverser l'ordre des séries dans la légende (demande de yann)
+        legendIndex: selectedMetrics.length - 1 - index,
       };
     })
     .filter(Boolean);
@@ -328,15 +372,12 @@ export const createStackedEvolutionChartOptions = (
       },
       max: showPercentage ? 100 : undefined,
       stackLabels: {
-        enabled: true,
+        enabled: !showPercentage,
         style: {
           fontWeight: "bold",
           color: "var(--text-default-grey)",
         },
         formatter: function (this: any) {
-          if (showPercentage) {
-            return "100%";
-          }
           return Highcharts.numberFormat(this.total, 0, ",", " ");
         },
       },

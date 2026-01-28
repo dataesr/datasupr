@@ -51,7 +51,10 @@ export default function AnalysisFilter({
         Période : {periodText} • {analysesWithData.size} analyses
       </p>
 
-      <SegmentedControl name="analysis-category" className="fr-mb-2w">
+      <SegmentedControl
+        name="analysis-category"
+        className="fr-mb-2w fr-segmented--sm"
+      >
         {categories.map((cat) => (
           <SegmentedElement
             key={cat}

@@ -56,10 +56,22 @@ export const METRICS_CONFIG = {
     color: METRIC_COLORS.scsp,
     category: "Finances",
   },
+  scsp_ipc: {
+    label: "SCSP corrigée de l'inflation",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[3],
+    category: "Finances",
+  },
   scsp_par_etudiants: {
     label: "SCSP par étudiant",
     format: "euro" as const,
     color: CHART_COLORS.palette[1],
+    category: "Finances",
+  },
+  scsp_par_etudiants_ipc: {
+    label: "SCSP par étudiant (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[4],
     category: "Finances",
   },
   scsp_etudiants: {
@@ -74,10 +86,22 @@ export const METRICS_CONFIG = {
     color: METRIC_COLORS.ressourcesPropres,
     category: "Finances",
   },
+  ressources_propres_ipc: {
+    label: "Ressources propres (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[5],
+    category: "Finances",
+  },
   charges_de_personnel: {
     label: "Charges de personnel",
     format: "euro" as const,
     color: METRIC_COLORS.chargesPersonnel,
+    category: "Finances",
+  },
+  charges_de_personnel_ipc: {
+    label: "Charges de personnel (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[6],
     category: "Finances",
   },
   produits_de_fonctionnement_encaissables: {
@@ -85,6 +109,91 @@ export const METRICS_CONFIG = {
     format: "euro" as const,
     color: METRIC_COLORS.produitsFonctionnement,
     category: "Finances",
+  },
+  produits_de_fonctionnement_encaissables_ipc: {
+    label: "Produits de fonctionnement (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[7],
+    category: "Finances",
+  },
+  ressources_propres_encaissables: {
+    label: "Ressources propres encaissables",
+    format: "euro" as const,
+    color: METRIC_COLORS.ressourcesPropres,
+    category: "Finances",
+  },
+  ressources_propres_encaissables_ipc: {
+    label: "Ressources propres encaissables (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[8],
+    category: "Finances",
+  },
+  recettes_propres: {
+    label: "Recettes propres",
+    format: "euro" as const,
+    color: METRIC_COLORS.ressourcesPropres,
+    category: "Finances",
+  },
+  recettes_propres_ipc: {
+    label: "Recettes propres (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[9],
+    category: "Finances",
+  },
+  charges_de_fonctionnement_decaissables: {
+    label: "Charges de fonctionnement décaissables",
+    format: "euro" as const,
+    color: METRIC_COLORS.chargesPersonnel,
+    category: "Santé financière",
+  },
+  charges_de_fonctionnement_decaissables_ipc: {
+    label: "Charges de fonctionnement décaissables (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[10],
+    category: "Santé financière",
+  },
+  charges_externes: {
+    label: "Charges externes",
+    format: "euro" as const,
+    color: METRIC_COLORS.chargesPersonnel,
+    category: "Finances",
+  },
+  charges_externes_ipc: {
+    label: "Charges externes (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[11],
+    category: "Finances",
+  },
+  charges_externes_produits_encaissables: {
+    label: "Charges externes / Produits encaissables",
+    format: "percent" as const,
+    color: METRIC_COLORS.chargesPersonnel,
+    category: "Ratios",
+    suffix: "%",
+  },
+  excedent_brut_d_exploitation_ebe: {
+    label: "Excédent brut d'exploitation (EBE)",
+    format: "euro" as const,
+    color: METRIC_COLORS.produitsFonctionnement,
+    category: "Finances",
+  },
+  excedent_brut_d_exploitation_ebe_ipc: {
+    label: "Excédent brut d'exploitation (EBE) (inflation ajustée)",
+    format: "euro" as const,
+    color: METRIC_COLORS.effectifs,
+    category: "Finances",
+  },
+  acquisitions_d_immobilisations: {
+    label: "Acquisitions d'immobilisations",
+    format: "euro" as const,
+    color: METRIC_COLORS.effectifsLicence,
+    category: "Santé financière",
+  },
+  acquisitions_d_immobilisations_ipc: {
+    label: "Acquisitions d'immobilisations (inflation ajustée)",
+    format: "euro" as const,
+    color: METRIC_COLORS.effectifsMaster,
+    category: "Santé financière",
   },
 
   anr_hors_investissements_d_avenir: {
@@ -160,16 +269,34 @@ export const METRICS_CONFIG = {
     color: CHART_COLORS.palette[11],
     category: "Finances",
   },
+  tot_ress_formation_ipc: {
+    label: "Ressources formation (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[8],
+    category: "Finances",
+  },
   tot_ress_recherche: {
     label: "Ressources recherche",
     format: "euro" as const,
     color: CHART_COLORS.palette[11],
     category: "Finances",
   },
+  tot_ress_recherche_ipc: {
+    label: "Ressources recherche (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[9],
+    category: "Finances",
+  },
   tot_ress_autres_recette: {
     label: "Autres ressources",
     format: "euro" as const,
     color: CHART_COLORS.palette[11],
+    category: "Finances",
+  },
+  tot_ress_autres_recette_ipc: {
+    label: "Autres ressources (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[10],
     category: "Finances",
   },
 
@@ -179,16 +306,34 @@ export const METRICS_CONFIG = {
     color: CHART_COLORS.palette[0],
     category: "Santé financière",
   },
+  fonds_de_roulement_net_global_ipc: {
+    label: "Fonds de roulement net global (inflation ajustée)",
+    format: "euro" as const,
+    color: CHART_COLORS.palette[11],
+    category: "Santé financière",
+  },
   besoin_en_fonds_de_roulement: {
     label: "Besoin en fonds de roulement",
     format: "euro" as const,
     color: CHART_COLORS.palette[1],
     category: "Santé financière",
   },
+  besoin_en_fonds_de_roulement_ipc: {
+    label: "Besoin en fonds de roulement (inflation ajustée)",
+    format: "euro" as const,
+    color: METRIC_COLORS.effectifsLicence,
+    category: "Santé financière",
+  },
   tresorerie: {
     label: "Trésorerie",
     format: "euro" as const,
     color: CHART_COLORS.palette[2],
+    category: "Santé financière",
+  },
+  tresorerie_ipc: {
+    label: "Trésorerie (inflation ajustée)",
+    format: "euro" as const,
+    color: METRIC_COLORS.effectifsMaster,
     category: "Santé financière",
   },
   fonds_de_roulement_en_jours_de_fonctionnement: {
@@ -237,10 +382,22 @@ export const METRICS_CONFIG = {
     color: CHART_COLORS.palette[9],
     category: "Santé financière",
   },
+  solde_budgetaire_ipc: {
+    label: "Solde budgétaire (inflation ajustée)",
+    format: "euro" as const,
+    color: METRIC_COLORS.effectifsDoctorat,
+    category: "Santé financière",
+  },
   resultat_net_comptable: {
     label: "Résultat net comptable",
     format: "euro" as const,
     color: CHART_COLORS.palette[10],
+    category: "Santé financière",
+  },
+  resultat_net_comptable_ipc: {
+    label: "Résultat net comptable (inflation ajustée)",
+    format: "euro" as const,
+    color: METRIC_COLORS.tauxEncadrement,
     category: "Santé financière",
   },
   resultat_net_comptable_hors_sie: {
@@ -249,10 +406,22 @@ export const METRICS_CONFIG = {
     color: CHART_COLORS.palette[11],
     category: "Santé financière",
   },
+  resultat_net_comptable_hors_sie_ipc: {
+    label: "Résultat net comptable hors SIE (inflation ajustée)",
+    format: "euro" as const,
+    color: METRIC_COLORS.emploiEtpt,
+    category: "Santé financière",
+  },
   capacite_d_autofinancement: {
     label: "Capacité d'autofinancement",
     format: "euro" as const,
     color: METRIC_COLORS.effectifs,
+    category: "Santé financière",
+  },
+  capacite_d_autofinancement_ipc: {
+    label: "Capacité d'autofinancement (inflation ajustée)",
+    format: "euro" as const,
+    color: METRIC_COLORS.scsp,
     category: "Santé financière",
   },
   caf_produits_encaissables: {
@@ -539,19 +708,25 @@ export const PREDEFINED_ANALYSES = {
   },
   "ressources-scsp": {
     label: "SCSP",
-    metrics: ["scsp"],
+    metrics: ["scsp", "scsp_ipc"],
     category: "SCSP",
     showBase100: false,
   },
   "ressources-propres": {
     label: "Total des ressources propres",
-    metrics: ["ressources_propres"],
+    metrics: ["ressources_propres", "ressources_propres_ipc"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "autonomie-financiere": {
+    label: "Autonomie financière",
+    metrics: ["ressources_propres_produits_encaissables"],
     category: "Ressources",
     showBase100: false,
   },
   "ressources-formation": {
     label: "Ressources propres formation",
-    metrics: ["tot_ress_formation"],
+    metrics: ["tot_ress_formation", "tot_ress_formation_ipc"],
     category: "Ressources",
     showBase100: false,
   },
@@ -575,7 +750,7 @@ export const PREDEFINED_ANALYSES = {
   },
   "ressources-recherche": {
     label: "Ressources propres recherche",
-    metrics: ["tot_ress_recherche"],
+    metrics: ["tot_ress_recherche", "tot_ress_recherche_ipc"],
     category: "Ressources",
     showBase100: false,
   },
@@ -603,15 +778,15 @@ export const PREDEFINED_ANALYSES = {
     category: "Ressources",
     showBase100: false,
   },
-  "ressources-subventions-region": {
-    label: "Subventions régionales",
-    metrics: ["subventions_de_la_region"],
+  "ressources-autres-recettes": {
+    label: "Autres ressources propres (hors formation/recherche)",
+    metrics: ["tot_ress_autres_recette", "tot_ress_autres_recette_ipc"],
     category: "Ressources",
     showBase100: false,
   },
-  "ressources-autres-recettes": {
-    label: "Autres ressources propres (hors formation/recherche)",
-    metrics: ["tot_ress_autres_recette"],
+  "ressources-subventions-region": {
+    label: "Subventions régionales",
+    metrics: ["subventions_de_la_region"],
     category: "Ressources",
     showBase100: false,
   },
@@ -633,22 +808,69 @@ export const PREDEFINED_ANALYSES = {
     category: "Ressources",
     showBase100: false,
   },
-
+  "ressources-propres-encaissables": {
+    label: "Ressources propres encaissables",
+    metrics: [
+      "ressources_propres_encaissables",
+      "ressources_propres_encaissables_ipc",
+    ],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "recettes-propres": {
+    label: "Recettes propres",
+    metrics: ["recettes_propres", "recettes_propres_ipc"],
+    category: "Ressources",
+    showBase100: false,
+  },
+  "sante-resultat-net": {
+    label: "Résultat net comptable",
+    metrics: ["resultat_net_comptable", "resultat_net_comptable_ipc"],
+    category: "Santé financière",
+    showBase100: false,
+  },
+  "sante-resultat-net-hors-sie": {
+    label: "Résultat net comptable hors SIE",
+    metrics: [
+      "resultat_net_comptable_hors_sie",
+      "resultat_net_comptable_hors_sie_ipc",
+    ],
+    category: "Santé financière",
+    showBase100: false,
+  },
+  "sante-capacite-autofinancement": {
+    label: "Capacité d'autofinancement",
+    metrics: ["capacite_d_autofinancement", "capacite_d_autofinancement_ipc"],
+    category: "Santé financière",
+    showBase100: false,
+  },
+  "sante-caf-produits": {
+    label: "CAF / Produits encaissables",
+    metrics: ["caf_produits_encaissables"],
+    category: "Santé financière",
+    showBase100: false,
+  },
   "sante-fonds-roulement": {
     label: "Fonds de roulement net global",
-    metrics: ["fonds_de_roulement_net_global"],
+    metrics: [
+      "fonds_de_roulement_net_global",
+      "fonds_de_roulement_net_global_ipc",
+    ],
     category: "Santé financière",
     showBase100: false,
   },
   "sante-bfr": {
     label: "Besoin en fonds de roulement",
-    metrics: ["besoin_en_fonds_de_roulement"],
+    metrics: [
+      "besoin_en_fonds_de_roulement",
+      "besoin_en_fonds_de_roulement_ipc",
+    ],
     category: "Santé financière",
     showBase100: false,
   },
   "sante-tresorerie": {
     label: "Trésorerie",
-    metrics: ["tresorerie"],
+    metrics: ["tresorerie", "tresorerie_ipc"],
     category: "Santé financière",
     showBase100: false,
   },
@@ -690,31 +912,40 @@ export const PREDEFINED_ANALYSES = {
   },
   "sante-solde-budgetaire": {
     label: "Solde budgétaire",
-    metrics: ["solde_budgetaire"],
+    metrics: ["solde_budgetaire", "solde_budgetaire_ipc"],
     category: "Santé financière",
     showBase100: false,
   },
-  "sante-resultat-net": {
-    label: "Résultat net comptable",
-    metrics: ["resultat_net_comptable"],
+  "charges-externes": {
+    label: "Charges externes",
+    metrics: ["charges_externes", "charges_externes_ipc"],
     category: "Santé financière",
     showBase100: false,
   },
-  "sante-resultat-net-hors-sie": {
-    label: "Résultat net comptable hors SIE",
-    metrics: ["resultat_net_comptable_hors_sie"],
+  "excedent-brut-exploitation": {
+    label: "Excédent brut d'exploitation (EBE)",
+    metrics: [
+      "excedent_brut_d_exploitation_ebe",
+      "excedent_brut_d_exploitation_ebe_ipc",
+    ],
     category: "Santé financière",
     showBase100: false,
   },
-  "sante-capacite-autofinancement": {
-    label: "Capacité d'autofinancement",
-    metrics: ["capacite_d_autofinancement"],
+  "charges-fonctionnement": {
+    label: "Charges de fonctionnement décaissables",
+    metrics: [
+      "charges_de_fonctionnement_decaissables",
+      "charges_de_fonctionnement_decaissables_ipc",
+    ],
     category: "Santé financière",
     showBase100: false,
   },
-  "sante-caf-produits": {
-    label: "CAF / Produits encaissables",
-    metrics: ["caf_produits_encaissables"],
+  "acquisitions-immobilisations": {
+    label: "Acquisitions d'immobilisations",
+    metrics: [
+      "acquisitions_d_immobilisations",
+      "acquisitions_d_immobilisations_ipc",
+    ],
     category: "Santé financière",
     showBase100: false,
   },
@@ -727,7 +958,7 @@ export const PREDEFINED_ANALYSES = {
 
   "scsp-par-etudiant": {
     label: "SCSP par étudiant",
-    metrics: ["scsp_par_etudiants"],
+    metrics: ["scsp_par_etudiants", "scsp_par_etudiants_ipc"],
     category: "SCSP",
     showBase100: false,
   },
@@ -752,7 +983,7 @@ export const PREDEFINED_ANALYSES = {
 
   "masse-salariale": {
     label: "Dépenses de masse salariale",
-    metrics: ["charges_de_personnel"],
+    metrics: ["charges_de_personnel", "charges_de_personnel_ipc"],
     category: "Masse salariale",
     showBase100: false,
   },
@@ -801,9 +1032,9 @@ export const PREDEFINED_ANALYSES = {
   "formations-cycles": {
     label: "Effectifs par cursus (L/M/D)",
     metrics: [
-      "effectif_sans_cpge_d",
-      "effectif_sans_cpge_m",
       "effectif_sans_cpge_l",
+      "effectif_sans_cpge_m",
+      "effectif_sans_cpge_d",
     ],
     category: "Formations",
     showBase100: false,

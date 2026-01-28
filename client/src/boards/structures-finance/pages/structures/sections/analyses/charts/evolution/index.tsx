@@ -13,6 +13,7 @@ import {
 } from "./options";
 import {
   RenderDataSingle,
+  RenderDataComparison,
   RenderDataBase100,
   RenderDataStacked,
 } from "./render-data";
@@ -94,6 +95,7 @@ export default function EvolutionChart({
   const [displayMode, setDisplayMode] = useState<"values" | "percentage">(
     "values"
   );
+  const [showIPC, setShowIPC] = useState(false);
   const etablissementId =
     propEtablissementId || searchParams.get("structureId") || "";
   const selectedAnalysis =
@@ -107,9 +109,26 @@ export default function EvolutionChart({
 
   const analysisConfig = PREDEFINED_ANALYSES[selectedAnalysis];
 
-  const selectedMetrics = useMemo(() => {
+  const baseMetrics = useMemo(() => {
     return [...analysisConfig.metrics] as MetricKey[];
   }, [analysisConfig]);
+
+  const hasIPCMetrics = useMemo(() => {
+    return baseMetrics.some((m) => m.endsWith("_ipc"));
+  }, [baseMetrics]);
+
+  const selectedMetrics = useMemo(() => {
+    if (!hasIPCMetrics || showIPC) {
+      return baseMetrics;
+    }
+    return baseMetrics.filter((m) => !m.endsWith("_ipc"));
+  }, [baseMetrics, hasIPCMetrics, showIPC]);
+
+  const nominalMetric = useMemo(() => {
+    if (!hasIPCMetrics) return null;
+    const nominal = baseMetrics.find((m) => !m.endsWith("_ipc"));
+    return nominal ? METRICS_CONFIG[nominal].label : null;
+  }, [baseMetrics, hasIPCMetrics]);
 
   const showBase100 = useMemo(() => {
     return analysisConfig.showBase100 || false;
@@ -211,7 +230,10 @@ export default function EvolutionChart({
     return (
       <>
         <div className="fr-mb-2w">
-          <SegmentedControl name="evolution-stacked-mode">
+          <SegmentedControl
+            className="fr-segmented--sm"
+            name="evolution-stacked-mode"
+          >
             <SegmentedElement
               checked={displayMode === "values"}
               label="Valeurs"
@@ -279,6 +301,27 @@ export default function EvolutionChart({
 
     return (
       <>
+        {hasIPCMetrics && (
+          <div className="fr-mb-2w">
+            <SegmentedControl
+              className="fr-segmented--sm"
+              name="evolution-ipc-mode"
+            >
+              <SegmentedElement
+                checked={!showIPC}
+                label={nominalMetric || "Valeur nominale"}
+                onClick={() => setShowIPC(false)}
+                value="nominal"
+              />
+              <SegmentedElement
+                checked={showIPC}
+                label={`${nominalMetric || "Valeur"} à prix constant`}
+                onClick={() => setShowIPC(true)}
+                value="constant"
+              />
+            </SegmentedControl>
+          </div>
+        )}
         <ChartWrapper
           config={singleConfig}
           options={chartOptions}
@@ -312,6 +355,63 @@ export default function EvolutionChart({
             <RessourcesPropresEvolutionChart etablissementName={etabName} />
           </div>
         )}
+      </>
+    );
+  }
+
+  if (selectedMetrics.length === 2 && !showBase100 && chartOptions) {
+    const dualConfig = {
+      id: "evolution-dual",
+      integrationURL: `/integration?chart_id=evolution-dual&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
+      title: `${PREDEFINED_ANALYSES[selectedAnalysis].label}${etabName ? ` — ${etabName}` : ""}`,
+      comment: {
+        fr: (
+          <>
+            Évolution de{" "}
+            {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} et{" "}
+            {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()} sur la
+            période {periodText}.
+          </>
+        ),
+      },
+    };
+
+    return (
+      <>
+        {hasIPCMetrics && (
+          <div className="fr-mb-2w">
+            <SegmentedControl
+              className="fr-segmented--sm"
+              name="evolution-ipc-mode"
+            >
+              <SegmentedElement
+                checked={!showIPC}
+                label={nominalMetric || "Valeur nominale"}
+                onClick={() => setShowIPC(false)}
+                value="nominal"
+              />
+              <SegmentedElement
+                checked={showIPC}
+                label={`${nominalMetric || "Valeur"} à prix constant`}
+                onClick={() => setShowIPC(true)}
+                value="constant"
+              />
+            </SegmentedControl>
+          </div>
+        )}
+        <ChartWrapper
+          config={dualConfig}
+          options={chartOptions}
+          renderData={() => (
+            <RenderDataComparison
+              data={data}
+              metric1Key={selectedMetrics[0]}
+              metric1Config={METRICS_CONFIG[selectedMetrics[0]]}
+              metric2Key={selectedMetrics[1]}
+              metric2Config={METRICS_CONFIG[selectedMetrics[1]]}
+            />
+          )}
+        />
       </>
     );
   }

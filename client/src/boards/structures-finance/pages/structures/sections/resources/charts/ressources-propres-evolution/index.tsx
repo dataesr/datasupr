@@ -95,7 +95,10 @@ export default function RessourcesPropresEvolutionChart({
   return (
     <div>
       <div className="fr-mb-2w">
-        <SegmentedControl name="ressources-propres-evolution-view">
+        <SegmentedControl
+          className="fr-segmented--sm"
+          name="ressources-propres-evolution-view"
+        >
           <SegmentedElement
             checked={viewMode === "value"}
             label="Valeurs"

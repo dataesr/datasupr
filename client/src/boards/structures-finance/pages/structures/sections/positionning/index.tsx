@@ -152,7 +152,10 @@ export function PositionnementSection({
           {filteredItems.length > 0 && (
             <div className="fr-mb-4w">
               <div className="fr-mb-3w">
-                <SegmentedControl name="positioning-chart-selector">
+                <SegmentedControl
+                  className="r-segmented--sm"
+                  name="positioning-chart-selector"
+                >
                   <SegmentedElement
                     checked={activeChart === "comparison"}
                     label="Comparaison par métrique"
