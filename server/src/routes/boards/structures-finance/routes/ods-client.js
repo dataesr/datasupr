@@ -39,6 +39,7 @@ async function fetchRecords({
   queryParams.set("limit", limit);
   queryParams.set("offset", offset);
 
+  console.log(process.env.ODS_API_KEY);
   const response = await fetch(`${FINANCE_DATASET_ENDPOINT}?${queryParams}`, {
     headers: { Authorization: `Apikey ${process.env.ODS_API_KEY}` },
   });
