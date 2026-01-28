@@ -3,6 +3,7 @@ import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
 import RessourcesPropresChart from "./charts/ressources-propres";
+import MetricDefinitionsTable from "../analyses/components/metric-definitions-table";
 import "../styles.scss";
 
 const euro = (n?: number) =>
@@ -209,6 +210,21 @@ export function FinancementsSection({
           etablissementName={data?.etablissement_lib}
         />
       </div>
+
+      <MetricDefinitionsTable
+        metricKeys={[
+          "produits_de_fonctionnement_encaissables",
+          "recettes_propres",
+          "ressources_propres_produits_encaissables",
+          "scsp",
+          "scsp_par_etudiants",
+          "scsp_etudiants",
+          "part_scsp_etudiants_effectif_sans_cpge",
+          "tot_ress_formation",
+          "tot_ress_recherche",
+          "tot_ress_autres_recette",
+        ]}
+      />
     </div>
   );
 }

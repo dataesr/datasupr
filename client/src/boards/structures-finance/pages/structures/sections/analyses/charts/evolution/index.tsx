@@ -19,6 +19,7 @@ import {
 } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import RessourcesPropresEvolutionChart from "../../../resources/charts/ressources-propres-evolution";
+import MetricDefinitionsTable from "../../components/metric-definitions-table";
 import {
   METRICS_CONFIG,
   PREDEFINED_ANALYSES,
@@ -260,6 +261,7 @@ export default function EvolutionChart({
             />
           )}
         />
+        <MetricDefinitionsTable metricKeys={selectedMetrics} />
       </>
     );
   }
@@ -355,6 +357,7 @@ export default function EvolutionChart({
             <RessourcesPropresEvolutionChart etablissementName={etabName} />
           </div>
         )}
+        <MetricDefinitionsTable metricKeys={selectedMetrics} />
       </>
     );
   }
@@ -412,6 +415,7 @@ export default function EvolutionChart({
             />
           )}
         />
+        <MetricDefinitionsTable metricKeys={selectedMetrics} />
       </>
     );
   }
@@ -527,6 +531,7 @@ export default function EvolutionChart({
             </Row>
           )}
         </div>
+        <MetricDefinitionsTable metricKeys={selectedMetrics} />
       </>
     );
   }

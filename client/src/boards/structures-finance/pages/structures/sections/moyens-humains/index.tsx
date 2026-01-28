@@ -2,6 +2,7 @@ import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import { SECTION_COLORS } from "../../../../constants/colors";
 import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
+import MetricDefinitionsTable from "../analyses/components/metric-definitions-table";
 import "../styles.scss";
 
 const SECTION_COLOR = SECTION_COLORS.moyensHumains;
@@ -119,6 +120,16 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
           </Col>
         </Row>
       </div>
+
+      <MetricDefinitionsTable
+        metricKeys={[
+          "emploi_etpt",
+          "taux_encadrement",
+          "charges_de_personnel",
+          "charges_de_personnel_produits_encaissables",
+          "taux_de_remuneration_des_permanents",
+        ]}
+      />
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
 import StatusIndicator from "../../../../../../components/status-indicator";
+import MetricDefinitionsTable from "../analyses/components/metric-definitions-table";
 import "../styles.scss";
 
 const euro = (n?: number) =>
@@ -293,6 +294,26 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
           </Col>
         </Row>
       </div>
+
+      <MetricDefinitionsTable
+        metricKeys={[
+          "resultat_net_comptable",
+          "resultat_net_comptable_hors_sie",
+          "capacite_d_autofinancement",
+          "caf_produits_encaissables",
+          "fonds_de_roulement_net_global",
+          "besoin_en_fonds_de_roulement",
+          "tresorerie",
+          "fonds_de_roulement_en_jours_de_fonctionnement",
+          "tresorerie_en_jours_de_fonctionnement",
+          "charges_decaissables_produits_encaissables",
+          "taux_de_remuneration_des_permanents",
+          "ressources_propres_produits_encaissables",
+          "charges_de_personnel_produits_encaissables",
+          "caf_acquisitions_d_immobilisations",
+          "solde_budgetaire",
+        ]}
+      />
     </div>
   );
 }

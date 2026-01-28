@@ -6,6 +6,7 @@ export interface Definition {
   indicateur: string;
   libelle: string;
   definition: string;
+  interpretation: string;
   source: string;
   unite: string;
 }
@@ -30,6 +31,5 @@ export const useFinanceDefinitions = (enabled = true) => {
       return response.json() as Promise<DefinitionCategory[]>;
     },
     enabled,
-    staleTime: 30 * 60 * 1000, // 30 minutes cache
   });
 };
