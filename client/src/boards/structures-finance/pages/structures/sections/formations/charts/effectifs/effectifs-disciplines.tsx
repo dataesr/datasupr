@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
-import { useFinanceEtablissementEvolution } from "./api";
+import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import { createEffectifsDisciplinesChartOptions } from "./options";
 import { RenderDataDisciplines } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";

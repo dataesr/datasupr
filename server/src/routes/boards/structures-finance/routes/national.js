@@ -1,5 +1,5 @@
 import express from "express";
-import { db } from "../../../../services/mongo.js";
+import { fetchRecords } from "./ods-client.js";
 import { cacheKey, getCached, setCached } from "./cache.js";
 
 const router = express.Router();
@@ -11,61 +11,36 @@ router.get("/structures-finance/national/overview", async (req, res) => {
     if (hit) return res.json(hit);
 
     const { annee } = req.query;
-    const collection = db.collection("finance-university-main_staging");
-    const matchStage = annee ? { $match: { exercice: Number(annee) } } : null;
+    const whereCondition = annee ? { exercice: Number(annee) } : {};
 
-    const pipeline = [
-      ...(matchStage ? [matchStage] : []),
-      {
-        $group: {
-          _id: null,
-          droits_d_inscription: {
-            $sum: { $ifNull: ["$droits_d_inscription", 0] },
-          },
-          formation_continue_diplomes_propres_et_vae: {
-            $sum: {
-              $ifNull: ["$formation_continue_diplomes_propres_et_vae", 0],
-            },
-          },
-          taxe_d_apprentissage: {
-            $sum: { $ifNull: ["$taxe_d_apprentissage", 0] },
-          },
-          anr_hors_investissements_d_avenir: {
-            $sum: { $ifNull: ["$anr_hors_investissements_d_avenir", 0] },
-          },
-          anr_investissements_d_avenir: {
-            $sum: { $ifNull: ["$anr_investissements_d_avenir", 0] },
-          },
-          contrats_et_prestations_de_recherche_hors_anr: {
-            $sum: {
-              $ifNull: ["$contrats_et_prestations_de_recherche_hors_anr", 0],
-            },
-          },
-          subventions_de_la_region: {
-            $sum: { $ifNull: ["$subventions_de_la_region", 0] },
-          },
-          subventions_union_europeenne: {
-            $sum: { $ifNull: ["$subventions_union_europeenne", 0] },
-          },
-          autres_ressources_propres: {
-            $sum: { $ifNull: ["$autres_ressources_propres", 0] },
-          },
-          autres_subventions: { $sum: { $ifNull: ["$autres_subventions", 0] } },
-          recettes_propres: { $sum: { $ifNull: ["$recettes_propres", 0] } },
-          scsp: { $sum: { $ifNull: ["$scsp", 0] } },
-          effectif_sans_cpge: { $sum: { $ifNull: ["$effectif_sans_cpge", 0] } },
-        },
-      },
-    ];
+    const results = await fetchRecords({
+      select: [
+        "SUM(droits_d_inscription) as droits_d_inscription",
+        "SUM(formation_continue_diplomes_propres_et_vae) as formation_continue_diplomes_propres_et_vae",
+        "SUM(taxe_d_apprentissage) as taxe_d_apprentissage",
+        "SUM(anr_hors_investissements_d_avenir) as anr_hors_investissements_d_avenir",
+        "SUM(anr_investissements_d_avenir) as anr_investissements_d_avenir",
+        "SUM(contrats_et_prestations_de_recherche_hors_anr) as contrats_et_prestations_de_recherche_hors_anr",
+        "SUM(subventions_de_la_region) as subventions_de_la_region",
+        "SUM(subventions_union_europeenne) as subventions_union_europeenne",
+        "SUM(autres_ressources_propres) as autres_ressources_propres",
+        "SUM(autres_subventions) as autres_subventions",
+        "SUM(recettes_propres) as recettes_propres",
+        "SUM(scsp) as scsp",
+        "SUM(effectif_sans_cpge) as effectif_sans_cpge",
+      ],
+      where: whereCondition,
+      limit: 1,
+    });
 
-    const [doc] = await collection.aggregate(pipeline).toArray();
+    const doc = results[0] || null;
     const scspParEtudiants =
       doc && doc.effectif_sans_cpge ? doc.scsp / doc.effectif_sans_cpge : 0;
 
     const payload = {
       annee: annee || "all",
       data: doc
-        ? { ...doc, scsp_par_etudiants: scspParEtudiants }
+        ? { ...doc, _id: null, scsp_par_etudiants: scspParEtudiants }
         : {
             droits_d_inscription: 0,
             formation_continue_diplomes_propres_et_vae: 0,

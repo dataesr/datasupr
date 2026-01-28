@@ -3,9 +3,6 @@ const FINANCE_DATASET_ENDPOINT =
 
 const PAGE_SIZE = 100;
 
-//  * Transforme un objet JS en clause WHERE pour l'API ODS
-//  * exmemple : buildWhereClause({ exercice: "2024", type: "Université" })
-
 function buildWhereClause(filters) {
   const conditions = [];
   for (const [fieldName, fieldValue] of Object.entries(filters)) {
@@ -22,12 +19,8 @@ function buildWhereClause(filters) {
       conditions.push(`\`${fieldName}\`="${fieldValue}"`);
     }
   }
-  //   Renvoit la clause WHERE complète ou une chaîne vide
   return conditions.join(" AND ");
 }
-
-//  * Récupère les objects depuis l'API ODS (max 100 par défaut)
-//  * exemple fetchRecords({ select: ["etablissement_id"], where: { exercice: "2024" }, limit: 10 })
 
 async function fetchRecords({
   select,
@@ -56,12 +49,8 @@ async function fetchRecords({
   }
 
   const jsonResponse = await response.json();
-  //   Renvoit les 100 premiers résultats
   return jsonResponse.results || [];
 }
-
-//  * Récupère TOUS les résultats en paginant automatiquement (100 par 100)
-//  * exemple fetchAllRecords({ where: { exercice: "2024" } })
 
 async function fetchAllRecords(options) {
   const allRecords = [];
@@ -76,13 +65,8 @@ async function fetchAllRecords(options) {
     if (pageRecords.length < PAGE_SIZE) break;
     currentOffset += PAGE_SIZE;
   }
-  //   Renvoit l'ensemble des résultats (plusieurs pages)
   return allRecords;
 }
-
-//  * Retourne les valeurs uniques d'un champ (équivalent SQL DISTINCT)
-//  * exemple getDistinctValues("Etablissement_id", { exercice: "2024" })
-//  *          → ["12341", "43123", "43123", ...]
 async function getDistinctValues(fieldName, filters = {}) {
   const records = await fetchAllRecords({
     select: [fieldName],
@@ -90,18 +74,9 @@ async function getDistinctValues(fieldName, filters = {}) {
     groupBy: [fieldName],
     orderBy: `${fieldName} ASC`,
   });
-  //   Renvoit la liste des valeurs distinctes non nulles
   return records.map((record) => record[fieldName]).filter(Boolean);
 }
 
 export { fetchRecords, fetchAllRecords, getDistinctValues };
 
-// En gros
-// JE VEUX Les données des établissements	:
-// fetchRecords quand j'ai un id
-// JE VEUX les données de tous les établissements	:
-// fetchAllRecords quand je n'ai pas d'id
-// JE VEUX les années disponibles	:
-// getDistinctValues
-
-// TOUTE LA DOC https://help.opendatasoft.com/apis/ods-explore-v2/#section/Introduction/Base-URL
+// DOC https://help.opendatasoft.com/apis/ods-explore-v2/#section/Introduction/Base-URL

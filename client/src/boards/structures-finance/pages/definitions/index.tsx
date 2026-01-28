@@ -1,7 +1,7 @@
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import Definitions from "../../../../components/definitions";
 import { useFinanceDefinitions } from "./api";
-import SimpleBreadcrumb from "../../components/simple-breadcrumb";
+import Breadcrumb from "../../../financements-par-aap/components/breadcrumb";
 
 export default function DefinitionsView() {
   const { data, isLoading, error } = useFinanceDefinitions();
@@ -43,7 +43,12 @@ export default function DefinitionsView() {
         <Container as="section">
           <Row>
             <Col>
-              <SimpleBreadcrumb currentPageLabel="Définitions" />
+              <Breadcrumb
+                items={[
+                  { label: "Accueil", href: "/structures-finance/accueil" },
+                  { label: "Définitions" },
+                ]}
+              />
             </Col>
           </Row>
           <Row>

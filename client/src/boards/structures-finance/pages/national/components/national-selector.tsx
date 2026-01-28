@@ -2,9 +2,9 @@ import { Row, Col, Container } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useMemo, useEffect, useRef } from "react";
 import { useFinanceYears } from "../../../api/common";
-import { useFinanceAdvancedComparison } from "../api";
+import { useFinanceAdvancedComparison } from "../../../api/api";
 import { useNationalFilters } from "../hooks/useNationalFilters";
-import NationalBreadcrumb from "./national-breadcrumb";
+import Breadcrumb from "../../../../financements-par-aap/components/breadcrumb";
 import Dropdown from "../../../../../components/dropdown";
 
 export default function NationalSelector() {
@@ -262,7 +262,12 @@ export default function NationalSelector() {
         <Container as="section">
           <Row>
             <Col>
-              <NationalBreadcrumb />
+              <Breadcrumb
+                items={[
+                  { label: "Accueil", href: "/structures-finance/accueil" },
+                  { label: "Vue nationale" },
+                ]}
+              />
             </Col>
           </Row>
           <Row className="fr-mb-3w">

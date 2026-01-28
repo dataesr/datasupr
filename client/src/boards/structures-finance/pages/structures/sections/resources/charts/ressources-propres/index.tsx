@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
 import "highcharts/modules/treemap";
-import { useFinanceEtablissementEvolution } from "./api";
+import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import { createRessourcesPropresChartOptions } from "./options";
 import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";

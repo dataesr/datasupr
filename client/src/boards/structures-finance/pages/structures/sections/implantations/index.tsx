@@ -1,4 +1,4 @@
-import { Row, Col } from "@dataesr/dsfr-plus";
+import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import CardSimple from "../../../../../../components/card-simple";
 import "../styles.scss";
 
@@ -7,21 +7,20 @@ interface ImplantationsSectionProps {
 }
 
 export function ImplantationsSection({ data }: ImplantationsSectionProps) {
-  if (!data?.implantations || data.implantations.length === 0) {
+  if (
+    !data?.implantations ||
+    !Array.isArray(data.implantations) ||
+    data.implantations.length === 0
+  ) {
     return null;
   }
 
   return (
-    <div
-      id="section-implantations"
-      role="region"
-      aria-labelledby="section-implantations"
-      className="section-container"
-    >
+    <div id="section-implantations" className="section-container">
       <div className="section-header fr-mb-4w">
-        <h3 className="fr-h5 section-header__title">
+        <Title as="h3" look="h5" className="section-header__title">
           Implantations géographiques
-        </h3>
+        </Title>
       </div>
 
       <Row gutters>

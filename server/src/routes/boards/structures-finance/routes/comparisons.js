@@ -1,5 +1,5 @@
 import express from "express";
-import { db } from "../../../../services/mongo.js";
+import { fetchRecords, fetchAllRecords } from "./ods-client.js";
 import { cacheKey, getCached, setCached } from "./cache.js";
 
 const router = express.Router();
@@ -17,32 +17,29 @@ router.get("/structures-finance/comparisons/compare", async (req, res) => {
         .json({ error: "groupBy and groupValue are required" });
     }
 
-    const collection = db.collection("finance-university-main_staging");
-    const matchStage = {
+    const whereCondition = {
       [groupBy]: groupValue,
-      ...(annee ? { exercice: Number(annee) } : {}),
     };
+    if (annee) {
+      whereCondition.exercice = Number(annee);
+    }
 
-    const pipeline = [
-      { $match: matchStage },
-      {
-        $project: {
-          _id: 0,
-          etablissement_id_paysage: 1,
-          etablissement_id_paysage_actuel: 1,
-          etablissement_actuel_lib: 1,
-          recettes_propres: 1,
-          scsp: 1,
-          region: 1,
-          type: 1,
-          etablissement_actuel_typologie: 1,
-          effectif_sans_cpge: 1,
-        },
-      },
-      { $sort: { scsp: -1 } },
-    ];
+    const items = await fetchAllRecords({
+      select: [
+        "etablissement_id_paysage",
+        "etablissement_id_paysage_actuel",
+        "etablissement_actuel_lib",
+        "recettes_propres",
+        "scsp",
+        "region",
+        "type",
+        "etablissement_actuel_typologie",
+        "effectif_sans_cpge",
+      ],
+      where: whereCondition,
+      orderBy: "scsp DESC",
+    });
 
-    const items = await collection.aggregate(pipeline).toArray();
     const payload = {
       annee: annee || "all",
       groupBy,
@@ -64,174 +61,140 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
     if (hit) return res.json(hit);
 
     const { annee, type, typologie, region } = req.query;
-    const collection = db.collection("finance-university-main_staging");
 
-    const matchStage = {
-      ...(annee ? { exercice: Number(annee) } : {}),
-      ...(type ? { etablissement_actuel_type: type } : {}),
-      ...(typologie ? { etablissement_actuel_typologie: typologie } : {}),
-      ...(region ? { etablissement_actuel_region: region } : {}),
-    };
+    const whereCondition = {};
+    if (annee) whereCondition.exercice = Number(annee);
+    if (type) whereCondition.etablissement_actuel_type = type;
+    if (typologie) whereCondition.etablissement_actuel_typologie = typologie;
+    if (region) whereCondition.etablissement_actuel_region = region;
 
-    const pipeline = [
-      { $match: matchStage },
-      {
-        $addFields: {
-          part_ressources_propres: {
-            $cond: {
-              if: { $gt: ["$produits_de_fonctionnement_encaissables", 0] },
-              then: {
-                $multiply: [
-                  {
-                    $divide: [
-                      "$ressources_propres",
-                      "$produits_de_fonctionnement_encaissables",
-                    ],
-                  },
-                  100,
-                ],
-              },
-              else: 0,
-            },
-          },
-          recettes_totales: {
-            $add: [
-              { $ifNull: ["$scsp", 0] },
-              { $ifNull: ["$recettes_propres", 0] },
-            ],
-          },
-          taux_encadrement_l: "$taux_encadrement",
-          taux_encadrement_m: "$taux_encadrement",
-          taux_encadrement_d: "$taux_encadrement",
-          taux_encadrement_iut: "$taux_encadrement",
-          taux_encadrement_ing: "$taux_encadrement",
-          taux_encadrement_dsa: "$taux_encadrement",
-          taux_encadrement_llsh: "$taux_encadrement",
-          taux_encadrement_theo: "$taux_encadrement",
-          taux_encadrement_si: "$taux_encadrement",
-          taux_encadrement_staps: "$taux_encadrement",
-          taux_encadrement_sante: "$taux_encadrement",
-          taux_encadrement_veto: "$taux_encadrement",
-          taux_encadrement_interd: "$taux_encadrement",
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          etablissement_id_paysage: 1,
-          etablissement_id_paysage_actuel: 1,
-          etablissement_lib: 1,
-          etablissement_actuel_lib: 1,
-          region: 1,
-          etablissement_actuel_region: 1,
-          type: 1,
-          etablissement_actuel_type: 1,
-          etablissement_actuel_typologie: 1,
-          recettes_propres: 1,
-          scsp: 1,
-          exercice: 1,
-          effectif_sans_cpge: 1,
-          effectif_sans_cpge_l: 1,
-          effectif_sans_cpge_m: 1,
-          effectif_sans_cpge_d: 1,
-          effectif_sans_cpge_iut: 1,
-          effectif_sans_cpge_ing: 1,
-          effectif_sans_cpge_dsa: 1,
-          effectif_sans_cpge_llsh: 1,
-          effectif_sans_cpge_theo: 1,
-          effectif_sans_cpge_si: 1,
-          effectif_sans_cpge_staps: 1,
-          effectif_sans_cpge_sante: 1,
-          effectif_sans_cpge_veto: 1,
-          effectif_sans_cpge_interd: 1,
-          part_effectif_sans_cpge_l: 1,
-          part_effectif_sans_cpge_m: 1,
-          part_effectif_sans_cpge_d: 1,
-          part_effectif_sans_cpge_iut: 1,
-          part_effectif_sans_cpge_ing: 1,
-          part_effectif_sans_cpge_dsa: 1,
-          part_effectif_sans_cpge_llsh: 1,
-          part_effectif_sans_cpge_theo: 1,
-          part_effectif_sans_cpge_si: 1,
-          part_effectif_sans_cpge_staps: 1,
-          part_effectif_sans_cpge_sante: 1,
-          part_effectif_sans_cpge_veto: 1,
-          part_effectif_sans_cpge_interd: 1,
-          has_effectif_l: 1,
-          has_effectif_m: 1,
-          has_effectif_d: 1,
-          has_effectif_iut: 1,
-          has_effectif_ing: 1,
-          has_effectif_dsa: 1,
-          has_effectif_llsh: 1,
-          has_effectif_theo: 1,
-          has_effectif_si: 1,
-          has_effectif_staps: 1,
-          has_effectif_sante: 1,
-          has_effectif_veto: 1,
-          has_effectif_interd: 1,
-          emploi_etpt: 1,
-          taux_encadrement: 1,
-          taux_encadrement_l: 1,
-          taux_encadrement_m: 1,
-          taux_encadrement_d: 1,
-          taux_encadrement_iut: 1,
-          taux_encadrement_ing: 1,
-          taux_encadrement_dsa: 1,
-          taux_encadrement_llsh: 1,
-          taux_encadrement_theo: 1,
-          taux_encadrement_si: 1,
-          taux_encadrement_staps: 1,
-          taux_encadrement_sante: 1,
-          taux_encadrement_veto: 1,
-          taux_encadrement_interd: 1,
-          scsp_par_etudiants: 1,
-          charges_de_personnel: 1,
-          produits_de_fonctionnement_encaissables: 1,
-          ressources_propres: 1,
-          part_ressources_propres: 1,
-          droits_d_inscription: 1,
-          formation_continue_diplomes_propres_et_vae: 1,
-          taxe_d_apprentissage: 1,
-          valorisation: 1,
-          anr_hors_investissements_d_avenir: 1,
-          anr_investissements_d_avenir: 1,
-          contrats_et_prestations_de_recherche_hors_anr: 1,
-          subventions_de_la_region: 1,
-          subventions_union_europeenne: 1,
-          autres_ressources_propres: 1,
-          autres_subventions: 1,
-          part_droits_d_inscription: 1,
-          part_formation_continue_diplomes_propres_et_vae: 1,
-          part_taxe_d_apprentissage: 1,
-          part_valorisation: 1,
-          part_anr_hors_investissements_d_avenir: 1,
-          part_anr_investissements_d_avenir: 1,
-          part_contrats_et_prestations_de_recherche_hors_anr: 1,
-          part_subventions_de_la_region: 1,
-          part_subventions_union_europeenne: 1,
-          part_autres_ressources_propres: 1,
-          part_autres_subventions: 1,
-          taux_de_remuneration_des_permanents: 1,
-          charges_de_personnel_produits_encaissables: 1,
-          emploi_etpt_etudiants: 1,
-          emplois_total: 1,
-          part_ressources_propres: 1,
-          recettes_totales: 1,
-          anuniv: 1,
-          is_rce: 1,
-          rce: 1,
-        },
-      },
-      { $sort: { etablissement_actuel_lib: 1 } },
-    ];
+    const items = await fetchAllRecords({
+      select: [
+        "etablissement_id_paysage",
+        "etablissement_id_paysage_actuel",
+        "etablissement_lib",
+        "etablissement_actuel_lib",
+        "region",
+        "etablissement_actuel_region",
+        "type",
+        "etablissement_actuel_type",
+        "etablissement_actuel_typologie",
+        "recettes_propres",
+        "scsp",
+        "exercice",
+        "effectif_sans_cpge",
+        "effectif_sans_cpge_l",
+        "effectif_sans_cpge_m",
+        "effectif_sans_cpge_d",
+        "effectif_sans_cpge_iut",
+        "effectif_sans_cpge_ing",
+        "effectif_sans_cpge_dsa",
+        "effectif_sans_cpge_llsh",
+        "effectif_sans_cpge_theo",
+        "effectif_sans_cpge_si",
+        "effectif_sans_cpge_staps",
+        "effectif_sans_cpge_sante",
+        "effectif_sans_cpge_veto",
+        "effectif_sans_cpge_interd",
+        "part_effectif_sans_cpge_l",
+        "part_effectif_sans_cpge_m",
+        "part_effectif_sans_cpge_d",
+        "part_effectif_sans_cpge_iut",
+        "part_effectif_sans_cpge_ing",
+        "part_effectif_sans_cpge_dsa",
+        "part_effectif_sans_cpge_llsh",
+        "part_effectif_sans_cpge_theo",
+        "part_effectif_sans_cpge_si",
+        "part_effectif_sans_cpge_staps",
+        "part_effectif_sans_cpge_sante",
+        "part_effectif_sans_cpge_veto",
+        "part_effectif_sans_cpge_interd",
+        "has_effectif_l",
+        "has_effectif_m",
+        "has_effectif_d",
+        "has_effectif_iut",
+        "has_effectif_ing",
+        "has_effectif_dsa",
+        "has_effectif_llsh",
+        "has_effectif_theo",
+        "has_effectif_si",
+        "has_effectif_staps",
+        "has_effectif_sante",
+        "has_effectif_veto",
+        "has_effectif_interd",
+        "emploi_etpt",
+        "taux_encadrement",
+        "scsp_par_etudiants",
+        "charges_de_personnel",
+        "produits_de_fonctionnement_encaissables",
+        "ressources_propres",
+        "droits_d_inscription",
+        "formation_continue_diplomes_propres_et_vae",
+        "taxe_d_apprentissage",
+        "valorisation",
+        "anr_hors_investissements_d_avenir",
+        "anr_investissements_d_avenir",
+        "contrats_et_prestations_de_recherche_hors_anr",
+        "subventions_de_la_region",
+        "subventions_union_europeenne",
+        "autres_ressources_propres",
+        "autres_subventions",
+        "part_droits_d_inscription",
+        "part_formation_continue_diplomes_propres_et_vae",
+        "part_taxe_d_apprentissage",
+        "part_valorisation",
+        "part_anr_hors_investissements_d_avenir",
+        "part_anr_investissements_d_avenir",
+        "part_contrats_et_prestations_de_recherche_hors_anr",
+        "part_subventions_de_la_region",
+        "part_subventions_union_europeenne",
+        "part_autres_ressources_propres",
+        "part_autres_subventions",
+        "taux_de_remuneration_des_permanents",
+        "charges_de_personnel_produits_encaissables",
+        "emploi_etpt_etudiants",
+        "anuniv",
+        "is_rce",
+        "rce",
+      ],
+      where: whereCondition,
+      orderBy: "etablissement_actuel_lib ASC",
+    });
 
-    const items = await collection.aggregate(pipeline).toArray();
+    const processedItems = items.map((item) => {
+      const part_ressources_propres =
+        item.produits_de_fonctionnement_encaissables > 0
+          ? (item.ressources_propres /
+              item.produits_de_fonctionnement_encaissables) *
+            100
+          : 0;
+      const recettes_totales = (item.scsp || 0) + (item.recettes_propres || 0);
+
+      return {
+        ...item,
+        part_ressources_propres,
+        recettes_totales,
+        taux_encadrement_l: item.taux_encadrement,
+        taux_encadrement_m: item.taux_encadrement,
+        taux_encadrement_d: item.taux_encadrement,
+        taux_encadrement_iut: item.taux_encadrement,
+        taux_encadrement_ing: item.taux_encadrement,
+        taux_encadrement_dsa: item.taux_encadrement,
+        taux_encadrement_llsh: item.taux_encadrement,
+        taux_encadrement_theo: item.taux_encadrement,
+        taux_encadrement_si: item.taux_encadrement,
+        taux_encadrement_staps: item.taux_encadrement,
+        taux_encadrement_sante: item.taux_encadrement,
+        taux_encadrement_veto: item.taux_encadrement,
+        taux_encadrement_interd: item.taux_encadrement,
+      };
+    });
+
     const payload = {
       annee: annee || "all",
       filters: { type, typologie, region },
-      count: items.length,
-      items,
+      count: processedItems.length,
+      items: processedItems,
     };
 
     setCached(key, payload);
@@ -248,29 +211,24 @@ router.get("/structures-finance/comparaisons", async (req, res) => {
     if (hit) return res.json(hit);
 
     const { annee, limit = 100 } = req.query;
-    const collection = db.collection("finance-university-main_staging");
-    const matchStage = annee ? { $match: { exercice: Number(annee) } } : null;
+    const whereCondition = annee ? { exercice: Number(annee) } : {};
 
-    const pipeline = [
-      ...(matchStage ? [matchStage] : []),
-      {
-        $project: {
-          _id: 0,
-          etablissement_id_paysage_actuel: 1,
-          etablissement_uai: 1,
-          etablissement_actuel_lib: 1,
-          recettes_propres: 1,
-          scsp: 1,
-          exercice: 1,
-          region: 1,
-          etablissement_actuel_typologie: 1,
-        },
-      },
-      { $sort: { scsp: -1 } },
-      { $limit: Number(limit) },
-    ];
+    const items = await fetchRecords({
+      select: [
+        "etablissement_id_paysage_actuel",
+        "etablissement_uai",
+        "etablissement_actuel_lib",
+        "recettes_propres",
+        "scsp",
+        "exercice",
+        "region",
+        "etablissement_actuel_typologie",
+      ],
+      where: whereCondition,
+      orderBy: "scsp DESC",
+      limit: Number(limit),
+    });
 
-    const items = await collection.aggregate(pipeline).toArray();
     const payload = {
       annee: annee || "all",
       items,
@@ -290,59 +248,48 @@ router.get("/structures-finance/comparisons/data", async (req, res) => {
     if (hit) return res.json(hit);
 
     const { annee } = req.query;
-    const collection = db.collection("finance-university-main_staging");
-    const matchStage = annee ? { exercice: Number(annee) } : {};
+    const whereCondition = annee ? { exercice: Number(annee) } : {};
 
-    const pipeline = [
-      { $match: matchStage },
-      {
-        $addFields: {
-          part_ressources_propres: {
-            $cond: {
-              if: { $gt: ["$produits_de_fonctionnement_encaissables", 0] },
-              then: {
-                $multiply: [
-                  {
-                    $divide: [
-                      "$ressources_propres",
-                      "$produits_de_fonctionnement_encaissables",
-                    ],
-                  },
-                  100,
-                ],
-              },
-              else: 0,
-            },
-          },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          etablissement_id_paysage: 1,
-          etablissement_id_paysage_actuel: 1,
-          etablissement_actuel_lib: 1,
-          etablissement_uai: 1,
-          type: 1,
-          region: 1,
-          etablissement_actuel_typologie: 1,
-          exercice: 1,
-          part_ressources_propres: 1,
-          charges_de_personnel_produits_encaissables: 1,
-          scsp_par_etudiants: 1,
-          taux_encadrement: 1,
-          effectif_sans_cpge: 1,
-          recettes_propres: 1,
-          scsp: 1,
-        },
-      },
-      { $sort: { etablissement_actuel_lib: 1 } },
-    ];
+    const items = await fetchAllRecords({
+      select: [
+        "etablissement_id_paysage",
+        "etablissement_id_paysage_actuel",
+        "etablissement_actuel_lib",
+        "etablissement_uai",
+        "type",
+        "region",
+        "etablissement_actuel_typologie",
+        "exercice",
+        "charges_de_personnel_produits_encaissables",
+        "scsp_par_etudiants",
+        "taux_encadrement",
+        "effectif_sans_cpge",
+        "recettes_propres",
+        "scsp",
+        "ressources_propres",
+        "produits_de_fonctionnement_encaissables",
+      ],
+      where: whereCondition,
+      orderBy: "etablissement_actuel_lib ASC",
+    });
 
-    const items = await collection.aggregate(pipeline).toArray();
+    const processedItems = items.map((item) => {
+      const part_ressources_propres =
+        item.produits_de_fonctionnement_encaissables > 0
+          ? (item.ressources_propres /
+              item.produits_de_fonctionnement_encaissables) *
+            100
+          : 0;
+
+      return {
+        ...item,
+        part_ressources_propres,
+      };
+    });
+
     const payload = {
       annee: annee || "all",
-      items,
+      items: processedItems,
     };
 
     setCached(key, payload);

@@ -5,7 +5,7 @@ import { useStructuresFilters } from "../hooks";
 import { useFinanceYears } from "../../../api/common";
 import SelectionUI from "./selection-ui";
 import CardSimple from "../../../../../components/card-simple";
-import StructuresBreadcrumb from "./structures-breadcrumb";
+import Breadcrumb from "../../../../financements-par-aap/components/breadcrumb";
 
 export default function StructureSelection() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -48,7 +48,12 @@ export default function StructureSelection() {
         <Container as="section">
           <Row>
             <Col>
-              <StructuresBreadcrumb />
+              <Breadcrumb
+                items={[
+                  { label: "Accueil", href: "/structures-finance/accueil" },
+                  { label: "Sélectionner un établissement" },
+                ]}
+              />
             </Col>
           </Row>
           <Row>

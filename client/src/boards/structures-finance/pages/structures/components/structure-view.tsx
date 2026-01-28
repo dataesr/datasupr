@@ -17,7 +17,7 @@ import {
   AnalysesSection,
   ImplantationsSection,
 } from "../sections/sections";
-import StructuresBreadcrumb from "./structures-breadcrumb";
+import Breadcrumb from "../../../../financements-par-aap/components/breadcrumb";
 import StructureNotExistsAlert from "./structure-not-exists-alert";
 import MultipleStructuresSelector from "./multiple-structures-selector";
 
@@ -142,10 +142,15 @@ export default function StructureView() {
           <Container as="section">
             <Row>
               <Col>
-                <StructuresBreadcrumb
-                  etablissementLib={
-                    multiplesData.etablissements[0]?.etablissement_actuel_lib
-                  }
+                <Breadcrumb
+                  items={[
+                    { label: "Accueil", href: "/structures-finance/accueil" },
+                    {
+                      label:
+                        multiplesData.etablissements[0]
+                          ?.etablissement_actuel_lib || "Établissement",
+                    },
+                  ]}
                 />
               </Col>
             </Row>
@@ -172,11 +177,16 @@ export default function StructureView() {
         <Container as="section">
           <Row>
             <Col>
-              <StructuresBreadcrumb
-                etablissementLib={
-                  detailData?.etablissement_lib ||
-                  detailData?.etablissement_actuel_lib
-                }
+              <Breadcrumb
+                items={[
+                  { label: "Accueil", href: "/structures-finance/accueil" },
+                  {
+                    label:
+                      detailData?.etablissement_lib ||
+                      detailData?.etablissement_actuel_lib ||
+                      "Établissement",
+                  },
+                ]}
               />
             </Col>
           </Row>

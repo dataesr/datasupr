@@ -1,5 +1,5 @@
 import express from "express";
-import { db } from "../../../../services/mongo.js";
+import { fetchRecords, fetchAllRecords } from "./ods-client.js";
 import { cacheKey, getCached, setCached } from "./cache.js";
 
 const router = express.Router();
@@ -11,36 +11,38 @@ router.get("/structures-finance/etablissements", async (req, res) => {
     if (hit) return res.json(hit);
 
     const { annee } = req.query;
-    const collection = db.collection("finance-university-main_staging");
-    const matchStage = annee ? { exercice: Number(annee) } : {};
+    const whereCondition = annee ? { exercice: Number(annee) } : {};
 
-    const items = await collection
-      .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: "$etablissement_id_paysage",
-            etablissement_lib: { $first: "$etablissement_lib" },
-            etablissement_id_paysage_actuel: {
-              $first: "$etablissement_id_paysage_actuel",
-            },
-            etablissement_actuel_lib: { $first: "$etablissement_actuel_lib" },
-            region: { $first: "$region" },
-            etablissement_actuel_region: {
-              $first: "$etablissement_actuel_region",
-            },
-            type: { $first: "$type" },
-            etablissement_actuel_type: { $first: "$etablissement_actuel_type" },
-            typologie: { $first: "$etablissement_actuel_typologie" },
-          },
-        },
-        { $sort: { etablissement_lib: 1 } },
-      ])
-      .toArray();
+    const items = await fetchAllRecords({
+      select: [
+        "etablissement_id_paysage",
+        "etablissement_lib",
+        "etablissement_id_paysage_actuel",
+        "etablissement_actuel_lib",
+        "region",
+        "etablissement_actuel_region",
+        "type",
+        "etablissement_actuel_type",
+        "etablissement_actuel_typologie",
+      ],
+      where: whereCondition,
+      groupBy: [
+        "etablissement_id_paysage",
+        "etablissement_lib",
+        "etablissement_id_paysage_actuel",
+        "etablissement_actuel_lib",
+        "region",
+        "etablissement_actuel_region",
+        "type",
+        "etablissement_actuel_type",
+        "etablissement_actuel_typologie",
+      ],
+      orderBy: "etablissement_lib ASC",
+    });
 
     const payload = items.map((x) => ({
-      id: x._id,
-      etablissement_id_paysage: x._id,
+      id: x.etablissement_id_paysage,
+      etablissement_id_paysage: x.etablissement_id_paysage,
       nom: x.etablissement_lib,
       etablissement_lib: x.etablissement_lib,
       id_actuel: x.etablissement_id_paysage_actuel,
@@ -51,8 +53,8 @@ router.get("/structures-finance/etablissements", async (req, res) => {
       etablissement_actuel_region: x.etablissement_actuel_region,
       type: x.type,
       etablissement_actuel_type: x.etablissement_actuel_type,
-      typologie: x.typologie,
-      etablissement_actuel_typologie: x.typologie,
+      typologie: x.etablissement_actuel_typologie,
+      etablissement_actuel_typologie: x.etablissement_actuel_typologie,
     }));
 
     setCached(key, payload);
@@ -72,13 +74,12 @@ router.get(
 
       const { id } = req.params;
       const { annee, useHistorical } = req.query;
-      const collection = db.collection("finance-university-main_staging");
 
-      let matchCondition;
+      let whereCondition;
       if (useHistorical === "true") {
-        matchCondition = { etablissement_id_paysage: id };
+        whereCondition = { etablissement_id_paysage: id };
       } else {
-        matchCondition = {
+        whereCondition = {
           $or: [
             { etablissement_id_paysage: id },
             { etablissement_id_paysage_actuel: id },
@@ -86,18 +87,29 @@ router.get(
         };
       }
 
-      const matchStage = {
-        $match: {
-          ...matchCondition,
-          ...(annee ? { exercice: Number(annee) } : {}),
-        },
-      };
+      if (annee) {
+        whereCondition.exercice = Number(annee);
+      }
 
-      const pipeline = [matchStage, { $sort: { exercice: -1 } }, { $limit: 1 }];
-      const [doc] = await collection.aggregate(pipeline).toArray();
+      const records = await fetchRecords({
+        where: whereCondition,
+        orderBy: "exercice DESC",
+        limit: 1,
+      });
+
+      const doc = records.length > 0 ? records[0] : null;
+
+      if (doc && doc.implantations && typeof doc.implantations === "string") {
+        try {
+          doc.implantations = JSON.parse(doc.implantations);
+        } catch (e) {
+          console.error("Error parsing implantations:", e);
+          doc.implantations = [];
+        }
+      }
 
       setCached(key, doc);
-      res.json(doc || null);
+      res.json(doc);
     } catch (e) {
       res.status(500).json({ error: "Server error", details: e.message });
     }
@@ -114,40 +126,36 @@ router.get(
 
       const { id } = req.params;
       const { annee } = req.query;
-      const collection = db.collection("finance-university-main_staging");
 
-      const pipeline = [
-        {
-          $match: {
-            $or: [
-              { etablissement_id_paysage_actuel: id },
-              { etablissement_uai: id },
-            ],
-            ...(annee ? { exercice: Number(annee) } : {}),
-          },
-        },
-        {
-          $project: {
-            _id: 1,
-            etablissement_id_paysage: 1,
-            etablissement_id_paysage_actuel: 1,
-            etablissement_actuel_lib: 1,
-            recettes_propres: 1,
-            scsp: 1,
-            region: 1,
-            scsp_par_etudiants: 1,
-            effectif_sans_cpge: 1,
-            etablissement_actuel_typologie: 1,
-          },
-        },
-        { $sort: { exercice: -1 } },
-        { $limit: 1 },
-      ];
+      const whereCondition = {
+        $or: [{ etablissement_id_paysage_actuel: id }],
+      };
 
-      const [doc] = await collection.aggregate(pipeline).toArray();
+      if (annee) {
+        whereCondition.exercice = Number(annee);
+      }
+
+      const records = await fetchRecords({
+        select: [
+          "etablissement_id_paysage",
+          "etablissement_id_paysage_actuel",
+          "etablissement_actuel_lib",
+          "recettes_propres",
+          "scsp",
+          "region",
+          "scsp_par_etudiants",
+          "effectif_sans_cpge",
+          "etablissement_actuel_typologie",
+        ],
+        where: whereCondition,
+        orderBy: "exercice DESC",
+        limit: 1,
+      });
+
+      const doc = records.length > 0 ? records[0] : null;
 
       setCached(key, doc);
-      res.json(doc || null);
+      res.json(doc);
     } catch (e) {
       res.status(500).json({ error: "Server error", details: e.message });
     }
@@ -163,22 +171,19 @@ router.get(
       if (hit) return res.json(hit);
 
       const { id } = req.params;
-      const collection = db.collection("finance-university-main_staging");
 
-      const pipeline = [
-        {
-          $match: {
-            $or: [
-              { etablissement_id_paysage: id },
-              { etablissement_id_paysage_actuel: id },
-            ],
-            exercice: { $ne: null },
-          },
-        },
-        { $sort: { exercice: 1 } },
-      ];
+      const whereCondition = {
+        $or: [
+          { etablissement_id_paysage: id },
+          { etablissement_id_paysage_actuel: id },
+        ],
+        exercice: { $ne: null },
+      };
 
-      const docs = await collection.aggregate(pipeline).toArray();
+      const docs = await fetchAllRecords({
+        where: whereCondition,
+        orderBy: "exercice ASC",
+      });
 
       setCached(key, docs);
       res.json(docs);
@@ -198,62 +203,74 @@ router.get(
 
       const { id } = req.params;
       const { annee } = req.query;
-      const collection = db.collection("finance-university-main_staging");
 
-      const findActuelId = await collection.findOne({
-        $or: [
-          { etablissement_id_paysage: id },
-          { etablissement_id_paysage_actuel: id },
-        ],
+      const [findActuelRecord] = await fetchRecords({
+        where: {
+          $or: [
+            { etablissement_id_paysage: id },
+            { etablissement_id_paysage_actuel: id },
+          ],
+        },
+        limit: 1,
       });
 
-      if (!findActuelId) {
+      if (!findActuelRecord) {
         const payload = { hasMultiples: false, count: 0, etablissements: [] };
         setCached(key, payload);
         return res.json(payload);
       }
 
-      const actualId = findActuelId.etablissement_id_paysage_actuel;
+      const actualId = findActuelRecord.etablissement_id_paysage_actuel;
 
-      const pipeline = [
-        {
-          $match: {
-            etablissement_id_paysage_actuel: actualId,
-            ...(annee ? { exercice: Number(annee) } : {}),
-          },
-        },
-        {
-          $group: {
-            _id: "$etablissement_id_paysage",
-            etablissement_lib: { $first: "$etablissement_lib" },
-            etablissement_id_paysage_actuel: {
-              $first: "$etablissement_id_paysage_actuel",
-            },
-            etablissement_actuel_lib: { $first: "$etablissement_actuel_lib" },
-            type: { $first: "$type" },
-            typologie: { $first: "$typologie" },
-            exercice: { $first: "$exercice" },
-            date_de_creation: { $first: "$date_de_creation" },
-            date_de_fermeture: { $first: "$date_de_fermeture" },
-            effectif_sans_cpge: { $first: "$effectif_sans_cpge" },
-            anuniv: { $first: "$anuniv" },
-          },
-        },
-        { $sort: { etablissement_lib: 1 } },
-      ];
+      const whereCondition = {
+        etablissement_id_paysage_actuel: actualId,
+      };
 
-      const docs = await collection.aggregate(pipeline).toArray();
+      if (annee) {
+        whereCondition.exercice = Number(annee);
+      }
+
+      const docs = await fetchAllRecords({
+        select: [
+          "etablissement_id_paysage",
+          "etablissement_lib",
+          "etablissement_id_paysage_actuel",
+          "etablissement_actuel_lib",
+          "type",
+          "etablissement_actuel_typologie",
+          "exercice",
+          "date_de_creation",
+          "date_de_fermeture",
+          "effectif_sans_cpge",
+          "anuniv",
+        ],
+        where: whereCondition,
+        groupBy: [
+          "etablissement_id_paysage",
+          "etablissement_lib",
+          "etablissement_id_paysage_actuel",
+          "etablissement_actuel_lib",
+          "type",
+          "etablissement_actuel_typologie",
+          "exercice",
+          "date_de_creation",
+          "date_de_fermeture",
+          "effectif_sans_cpge",
+          "anuniv",
+        ],
+        orderBy: "etablissement_lib ASC",
+      });
 
       const payload = {
         hasMultiples: docs.length > 1,
         count: docs.length,
         etablissements: docs.map((doc) => ({
-          etablissement_id_paysage: doc._id,
+          etablissement_id_paysage: doc.etablissement_id_paysage,
           etablissement_lib: doc.etablissement_lib,
           etablissement_id_paysage_actuel: doc.etablissement_id_paysage_actuel,
           etablissement_actuel_lib: doc.etablissement_actuel_lib,
           type: doc.type,
-          typologie: doc.typologie,
+          typologie: doc.etablissement_actuel_typologie,
           exercice: doc.exercice,
           date_de_creation: doc.date_de_creation,
           date_de_fermeture: doc.date_de_fermeture,
@@ -280,14 +297,21 @@ router.get(
 
       const { id } = req.params;
       const { annee } = req.query;
-      const collection = db.collection("finance-university-main_staging");
 
-      const existsForYear = await collection.findOne({
+      const whereForYear = {
         $or: [
           { etablissement_id_paysage: id },
           { etablissement_id_paysage_actuel: id },
         ],
-        ...(annee ? { exercice: Number(annee) } : {}),
+      };
+
+      if (annee) {
+        whereForYear.exercice = Number(annee);
+      }
+
+      const [existsForYear] = await fetchRecords({
+        where: whereForYear,
+        limit: 1,
       });
 
       if (existsForYear) {
@@ -300,11 +324,14 @@ router.get(
         return res.json(payload);
       }
 
-      const historicalDoc = await collection.findOne({
-        $or: [
-          { etablissement_id_paysage: id },
-          { etablissement_id_paysage_actuel: id },
-        ],
+      const [historicalDoc] = await fetchRecords({
+        where: {
+          $or: [
+            { etablissement_id_paysage: id },
+            { etablissement_id_paysage_actuel: id },
+          ],
+        },
+        limit: 1,
       });
 
       if (!historicalDoc) {
@@ -316,9 +343,17 @@ router.get(
         return res.json(payload);
       }
 
-      const currentDoc = await collection.findOne({
+      const whereForCurrent = {
         etablissement_id_paysage: historicalDoc.etablissement_id_paysage_actuel,
-        ...(annee ? { exercice: Number(annee) } : {}),
+      };
+
+      if (annee) {
+        whereForCurrent.exercice = Number(annee);
+      }
+
+      const [currentDoc] = await fetchRecords({
+        where: whereForCurrent,
+        limit: 1,
       });
 
       const payload = {

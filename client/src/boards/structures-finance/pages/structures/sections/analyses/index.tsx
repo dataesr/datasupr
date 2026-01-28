@@ -25,12 +25,7 @@ export function AnalysesSection({
 
   if (isLoading) {
     return (
-      <div
-        id="section-analyses"
-        role="region"
-        aria-labelledby="section-analyses"
-        className="section-container"
-      >
+      <div id="section-analyses" className="section-container">
         <div className="fr-p-3w" style={{ textAlign: "center" }}>
           <p>Chargement des données d'évolution...</p>
         </div>

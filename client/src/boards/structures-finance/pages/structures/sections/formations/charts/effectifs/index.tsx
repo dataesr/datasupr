@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import Highcharts from "highcharts";
 import { Row, Col } from "@dataesr/dsfr-plus";
-import { useFinanceEtablissementEvolution } from "./api";
+import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import {
   createEffectifsNiveauChartOptions,
   createEffectifsSpecifiquesChartOptions,

@@ -3,9 +3,7 @@ import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
 import RessourcesPropresChart from "./charts/ressources-propres";
-// import RessourcesPropresEvolutionChart from "./charts/ressources-propres-evolution";
 import "../styles.scss";
-import RessourcesPropresEvolutionChart from "./charts/ressources-propres-evolution";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
@@ -208,12 +206,6 @@ export function FinancementsSection({
         <RessourcesPropresChart
           data={data}
           selectedYear={selectedYear}
-          etablissementName={data?.etablissement_lib}
-        />
-      </div>
-
-      <div className="fr-mb-4w">
-        <RessourcesPropresEvolutionChart
           etablissementName={data?.etablissement_lib}
         />
       </div>
