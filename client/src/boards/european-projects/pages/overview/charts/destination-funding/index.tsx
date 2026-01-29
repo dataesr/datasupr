@@ -18,7 +18,7 @@ const config = {
 };
 
 export default function DestinationFundingValues() {
-  const { params, currentLang } = useGetParams();
+  const { params } = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: [config.idQuery, params],
     queryFn: () => getData(params),

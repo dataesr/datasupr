@@ -17,7 +17,7 @@ const config = {
 };
 
 export default function DestinationFundingProportion() {
-  const { params, currentLang } = useGetParams();
+  const { params } = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: [config.id, params],
     queryFn: () => getData(params),
