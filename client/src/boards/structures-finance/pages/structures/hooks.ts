@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import { useFinanceAdvancedComparison } from "../../api/api";
+import { isRce } from "../national/hooks/useFilteredNationalData";
 
 export function useEtablissementsData(selectedYear: string | number) {
   const { data: comparisonData, isLoading } = useFinanceAdvancedComparison(
@@ -173,6 +174,9 @@ export function useAvailableTypologies(
   }, [allEtablissements, selectedType, selectedRegion]);
 }
 
+const match = (a?: string, b?: string) =>
+  a?.toLowerCase().trim() === b?.toLowerCase().trim();
+
 export function useFilteredEtablissements(
   allEtablissements: any[],
   selectedType: string,
@@ -181,44 +185,29 @@ export function useFilteredEtablissements(
   selectedRce: string = "tous"
 ) {
   return useMemo(() => {
-    let filtered = allEtablissements;
-
-    if (selectedType && selectedType !== "tous") {
-      filtered = filtered.filter(
-        (etab: any) =>
-          etab.etablissement_actuel_type?.toLowerCase().trim() ===
-          selectedType.toLowerCase().trim()
-      );
-    }
-
-    if (selectedRegion && selectedRegion !== "toutes") {
-      filtered = filtered.filter(
-        (etab: any) =>
-          etab.etablissement_actuel_region?.toLowerCase().trim() ===
-          selectedRegion.toLowerCase().trim()
-      );
-    }
-
-    if (selectedTypologie && selectedTypologie !== "toutes") {
-      filtered = filtered.filter(
-        (etab: any) =>
-          etab.etablissement_actuel_typologie?.toLowerCase().trim() ===
-          selectedTypologie.toLowerCase().trim()
-      );
-    }
-
-    if (selectedRce && selectedRce !== "tous") {
-      filtered = filtered.filter((etab: any) => {
-        const isRce = etab.is_rce === true || etab.is_rce === 1;
-        return selectedRce === "rce" ? isRce : !isRce;
+    const filtered = allEtablissements
+      .filter((etab: any) => {
+        if (selectedType && selectedType !== "tous") {
+          if (!match(etab.etablissement_actuel_type, selectedType))
+            return false;
+        }
+        if (selectedRegion && selectedRegion !== "toutes") {
+          if (!match(etab.etablissement_actuel_region, selectedRegion))
+            return false;
+        }
+        if (selectedTypologie && selectedTypologie !== "toutes") {
+          if (!match(etab.etablissement_actuel_typologie, selectedTypologie))
+            return false;
+        }
+        if (selectedRce === "rce" && !isRce(etab)) return false;
+        if (selectedRce === "non-rce" && isRce(etab)) return false;
+        return true;
+      })
+      .sort((a: any, b: any) => {
+        const nameA = a.etablissement_lib || a.nom || "";
+        const nameB = b.etablissement_lib || b.nom || "";
+        return nameA.localeCompare(nameB, "fr", { sensitivity: "base" });
       });
-    }
-
-    filtered.sort((a: any, b: any) => {
-      const nameA = a.etablissement_lib || a.nom || "";
-      const nameB = b.etablissement_lib || b.nom || "";
-      return nameA.localeCompare(nameB, "fr", { sensitivity: "base" });
-    });
 
     return filtered;
   }, [

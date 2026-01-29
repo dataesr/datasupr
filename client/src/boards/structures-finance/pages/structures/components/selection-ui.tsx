@@ -1,8 +1,9 @@
 import { useMemo, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Row, Col, Title } from "@dataesr/dsfr-plus";
+import { Row, Col, Title, Button } from "@dataesr/dsfr-plus";
 import Select from "../../../../../components/select";
 import Dropdown from "../../../../../components/dropdown";
+import { useFilters } from "../../../hooks/useFilters";
+import "../../national/styles.scss";
 
 interface SelectionUIProps {
   availableTypes: string[];
@@ -19,58 +20,21 @@ export default function SelectionUI({
   filteredEtablissements,
   onEtablissementSelect,
 }: SelectionUIProps) {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const selectedRegion = searchParams.get("region") || "toutes";
-  const selectedType = searchParams.get("type") || "tous";
-  const selectedTypologie = searchParams.get("typologie") || "toutes";
-  const selectedRce = searchParams.get("rce") || "tous";
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleRegionChange = (region: string) => {
-    setSearchParams({
-      region,
-      type: selectedType,
-      typologie: selectedTypologie,
-      rce: selectedRce,
-    });
-  };
-
-  const handleTypeChange = (type: string) => {
-    setSearchParams({
-      region: selectedRegion,
-      type,
-      typologie: "toutes",
-      rce: selectedRce,
-    });
-  };
-
-  const handleTypologieChange = (typologie: string) => {
-    setSearchParams({
-      region: selectedRegion,
-      type: selectedType,
-      typologie,
-      rce: selectedRce,
-    });
-  };
-
-  const handleRceChange = (rce: string) => {
-    setSearchParams({
-      region: selectedRegion,
-      type: selectedType,
-      typologie: selectedTypologie,
-      rce,
-    });
-  };
-
-  const handleResetFilters = () => {
-    setSearchParams({ region: "toutes" });
-  };
-
-  const hasActiveFilters =
-    (selectedType && selectedType !== "tous") ||
-    (selectedTypologie && selectedTypologie !== "toutes") ||
-    (selectedRegion && selectedRegion !== "toutes") ||
-    (selectedRce && selectedRce !== "tous");
+  const {
+    selectedType,
+    selectedTypologie,
+    selectedRegion,
+    selectedRce,
+    handleTypeChange,
+    handleTypologieChange,
+    handleRegionChange,
+    handleRceChange,
+    handleResetFilters,
+    hasActiveFilters,
+    labels,
+  } = useFilters();
   const etablissementOptions = useMemo(
     () =>
       filteredEtablissements
@@ -126,59 +90,31 @@ export default function SelectionUI({
     }
   };
 
-  const typeLabel = selectedType === "tous" ? "Tous les types" : selectedType;
-  const typologieLabel =
-    selectedTypologie === "toutes"
-      ? "Toutes les typologies"
-      : selectedTypologie;
-  const regionLabel =
-    selectedRegion === "toutes" ? "Toutes les régions" : selectedRegion;
-  const rceLabel =
-    selectedRce === "tous"
-      ? "RCE et non RCE"
-      : selectedRce === "rce"
-        ? "RCE uniquement"
-        : "Non RCE uniquement";
-
   return (
     <Row>
       <Col xs="12" md="8">
-        <div
-          className="fr-grid-row fr-grid-row--middle fr-mb-2w"
-          style={{
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-          }}
-        >
+        <div className="filter-header fr-mb-2w">
           <Title as="h1" look="h4" className="fr-mb-0">
             Sélectionnez un établissement
           </Title>
           {hasActiveFilters && (
-            <button
-              className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
+            <Button
+              variant="tertiary"
+              size="sm"
+              icon="refresh-line"
+              iconPosition="left"
               onClick={handleResetFilters}
-              type="button"
             >
-              <span className="ri-refresh-line fr-mr-1w" aria-hidden="true" />
               Réinitialiser les filtres
-            </button>
+            </Button>
           )}
         </div>
 
-        <div
-          className="fr-mb-3w"
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-            alignItems: "center",
-          }}
-        >
-          <Dropdown label={typeLabel} icon="building-line" size="sm">
+        <div className="filter-bar fr-mb-3w">
+          <Dropdown label={labels.type} icon="building-line" size="sm">
             <Dropdown.Item
-              active={selectedType === "tous"}
-              onClick={() => handleTypeChange("tous")}
+              active={!selectedType}
+              onClick={() => handleTypeChange("")}
             >
               Tous les types
             </Dropdown.Item>
@@ -193,10 +129,15 @@ export default function SelectionUI({
             ))}
           </Dropdown>
 
-          <Dropdown label={typologieLabel} icon="layout-grid-line" size="sm">
+          <Dropdown
+            label={labels.typologie}
+            icon="layout-grid-line"
+            size="sm"
+            className="filter-bar__typologie"
+          >
             <Dropdown.Item
-              active={selectedTypologie === "toutes"}
-              onClick={() => handleTypologieChange("toutes")}
+              active={!selectedTypologie}
+              onClick={() => handleTypologieChange("")}
             >
               Toutes les typologies
             </Dropdown.Item>
@@ -211,10 +152,10 @@ export default function SelectionUI({
             ))}
           </Dropdown>
 
-          <Dropdown label={regionLabel} icon="map-pin-2-line" size="sm">
+          <Dropdown label={labels.region} icon="map-pin-2-line" size="sm">
             <Dropdown.Item
-              active={selectedRegion === "toutes"}
-              onClick={() => handleRegionChange("toutes")}
+              active={!selectedRegion}
+              onClick={() => handleRegionChange("")}
             >
               Toutes les régions
             </Dropdown.Item>
@@ -229,10 +170,15 @@ export default function SelectionUI({
             ))}
           </Dropdown>
 
-          <Dropdown label={rceLabel} icon="bank-line" size="sm">
+          <Dropdown
+            label={labels.rce}
+            icon="bank-line"
+            size="sm"
+            className="filter-bar__rce"
+          >
             <Dropdown.Item
-              active={selectedRce === "tous"}
-              onClick={() => handleRceChange("tous")}
+              active={!selectedRce}
+              onClick={() => handleRceChange("")}
             >
               RCE et non RCE
             </Dropdown.Item>
@@ -272,7 +218,6 @@ export default function SelectionUI({
                         .includes(searchQuery.toLowerCase())
                     : true
                 )
-                .slice(0, 50)
                 .map((opt) => (
                   <Select.Option
                     key={opt.id}
@@ -295,11 +240,7 @@ export default function SelectionUI({
           </Select>
         </div>
       </Col>
-      <Col
-        xs="12"
-        md="4"
-        className="fr-hidden fr-unhidden-md fr-grid-row fr-grid-row--center fr-grid-row--middle"
-      >
+      <Col xs="12" md="4">
         <svg
           className="fr-artwork"
           aria-hidden="true"

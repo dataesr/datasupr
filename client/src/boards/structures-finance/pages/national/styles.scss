@@ -8,54 +8,40 @@
   }
 }
 
-.national-selector {
-  &__header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
+.filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+
+  .fr-btn {
+    min-width: 200px;
+    justify-content: flex-start;
+    white-space: nowrap;
   }
 
-  &__filter-card {
-    padding: 1rem;
-    background-color: var(--background-default-grey);
-    border: 1px solid var(--border-default-grey);
-    height: 100%;
+  &__year .fr-btn {
+    min-width: 100px;
   }
 
-  &__filter-header {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
+  &__rce .fr-btn {
+    min-width: 140px;
   }
 
-  &__filter-icon {
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  &__typologie {
+    flex-basis: 100%;
+    order: 10;
 
-    &--calendar-line {
-      background-color: var(--background-contrast-purple-glycine);
-      color: var(--text-label-purple-glycine);
-    }
-
-    &--building-line {
-      background-color: var(--background-contrast-blue-ecume);
-      color: var(--text-label-blue-ecume);
-    }
-
-    &--layout-grid-line {
-      background-color: var(--background-contrast-green-emeraude);
-      color: var(--text-label-green-emeraude);
-    }
-
-    &--map-pin-2-line {
-      background-color: var(--background-contrast-orange-terre-battue);
-      color: var(--text-label-orange-terre-battue);
+    .fr-btn {
+      min-width: 100%;
     }
   }
 }

@@ -3,13 +3,14 @@ import { useMemo } from "react";
 import { Col, Container, Row, Text } from "@dataesr/dsfr-plus";
 import { useStructuresFilters } from "../hooks";
 import { useFinanceYears } from "../../../api/common";
+import { useFilters } from "../../../hooks/useFilters";
 import SelectionUI from "./selection-ui";
 import CardSimple from "../../../../../components/card-simple";
 import Breadcrumb from "../../../../financements-par-aap/components/breadcrumb";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 
 export default function StructureSelection() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
 
   const { data: yearsData, isLoading: isLoadingYears } = useFinanceYears();
   const latestYear = useMemo(() => {
@@ -17,10 +18,8 @@ export default function StructureSelection() {
     return String(Math.max(...yearsData.years));
   }, [yearsData]);
 
-  const selectedRegion = searchParams.get("region") || "toutes";
-  const selectedType = searchParams.get("type") || "tous";
-  const selectedTypologie = searchParams.get("typologie") || "toutes";
-  const selectedRce = searchParams.get("rce") || "tous";
+  const { selectedType, selectedTypologie, selectedRegion, selectedRce } =
+    useFilters();
 
   const {
     availableTypes,
@@ -30,10 +29,10 @@ export default function StructureSelection() {
     isLoading: isLoadingStructures,
   } = useStructuresFilters({
     selectedYear: latestYear,
-    selectedType,
-    selectedRegion,
-    selectedTypologie,
-    selectedRce,
+    selectedType: selectedType || "tous",
+    selectedRegion: selectedRegion || "toutes",
+    selectedTypologie: selectedTypologie || "toutes",
+    selectedRce: selectedRce || "tous",
   });
 
   const isLoading = isLoadingYears || isLoadingStructures;
