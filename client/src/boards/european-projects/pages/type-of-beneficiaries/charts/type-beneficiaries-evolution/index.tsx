@@ -22,7 +22,7 @@ const config = {
       <>
         Évolution des types de bénéficiaires
         <Text className="fr-text--light">
-          <i>Évolution des financements par pays (en millions d'euros)</i>
+          <i>Évolution des subventions par pays (en millions d'euros)</i>
         </Text>
       </>
     ),
@@ -36,7 +36,7 @@ const config = {
     ),
   },
   description: {
-    fr: "Évolution des financements obtenus par type d'entités selon les pays du top 10.",
+    fr: "Évolution des subventions obtenues par type d'entités selon les pays du top 10.",
     en: "Temporal evolution of funding obtained by entity types across top 10 countries.",
   },
   integrationURL: "/european-projects/components/pages/analysis/positioning/charts/type-beneficiaries-evolution",

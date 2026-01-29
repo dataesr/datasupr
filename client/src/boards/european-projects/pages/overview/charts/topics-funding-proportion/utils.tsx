@@ -38,7 +38,7 @@ export function renderDataTable(data, currentLang) {
 
   const labels = {
     caption:
-      currentLang === "fr" ? "Part des financements demandés et obtenus par le pays" : "Percentage of funding requested and obtained by the country",
+      currentLang === "fr" ? "Part des subventions demandées et obtenues par le pays" : "Percentage of funding requested and obtained by the country",
     topic: currentLang === "fr" ? "Thématique" : "Topic",
     evaluated: currentLang === "fr" ? "Évalués" : "Evaluated",
     successful: currentLang === "fr" ? "Lauréats" : "Successful",

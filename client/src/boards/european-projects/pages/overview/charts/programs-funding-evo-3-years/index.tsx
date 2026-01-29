@@ -20,7 +20,7 @@ import { normalizeIdForCssColorNames } from "../../../../utils";
 const configChart1 = {
   id: "programsEvolutionFundingLines",
   title: {
-    fr: "Programmes - Evolution des financements demandés et obtenus (M€)",
+    fr: "Programmes - Evolution des subventions demandées et obtenues (M€)",
     en: "Programs - Financing applied for and obtained (€m)",
   },
   description: {
@@ -28,13 +28,12 @@ const configChart1 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 const configChart2 = {
   id: "programsEvolutionFundingLinesRates",
   title: {
-    fr: "Programmes - Evolution du taux de succès des financements demandés et obtenus",
+    fr: "Programmes - Evolution du taux de succès des subventions demandées et obtenues",
     en: "Programs - Trend in the success rate of financing applications and grants",
   },
   description: {
@@ -42,13 +41,12 @@ const configChart2 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 const configChart3 = {
   id: "programsEvolutionFundingLinesSuccessRate",
   title: {
-    fr: "Programmes - Part des financements du pays demandés et obtenus par rapport au total des participants",
+    fr: "Programmes - Part des subventions du pays demandées et obtenues par rapport au total des participants",
     en: "Programs - Percentage of country funding applied for and obtained as a proportion of total participants",
   },
   description: {
@@ -56,8 +54,7 @@ const configChart3 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 
 export default function ProgramsFundingEvo3Years() {

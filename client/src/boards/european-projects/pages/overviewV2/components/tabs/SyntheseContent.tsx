@@ -26,7 +26,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
         <div>
           <SynthesisFocus />
           <Title as="h2" className="fr-mt-5w">
-            Comparaison de la répartition des financements par pilier
+            Comparaison de la répartition des subventions par pilier
           </Title>
           <PillarsFunding />
           <Title as="h2" className="fr-mt-5w">
@@ -55,8 +55,8 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
             Détails du pilier sur les 3 dernières années
           </Title>
           <Callout className="callout-style">
-            Visualisez l'évolution des financements demandés et obtenus pour le pilier sélectionné sur les trois dernières années du programme Horizon
-            Europe.
+            Visualisez l'évolution des subventions demandées et obtenues pour le pilier sélectionné sur les trois dernières années du programme
+            Horizon Europe.
             <br /> Cela vous permet d'analyser les tendances de financement et d'évaluer la performance du pilier au fil du temps.
             <br /> Vous pouvez également ajuster l'affichage pour visualister le total des subventions, le nombre total de coordinations ou le nombre
             total de participations.
@@ -66,10 +66,10 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
             Composition du pilier
           </Title>
           <Callout className="callout-style">
-            Visualisez la répartition des financements du pilier sélectionné par programme.
+            Visualisez la répartition des subventions du pilier sélectionné par programme.
             <br /> Cela vous permet d'identifier les programmes les plus financés et de comprendre leur contribution au sein du pilier.
           </Callout>
-          <Title as="h3">Répartition des financements par programme</Title>
+          <Title as="h3">Répartition des subventions par programme</Title>
           <ProgramsFunding />
           <BoardsSuggestComponent />
         </Container>
@@ -77,7 +77,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
 
     case "program-detail":
       return (
-        <div>
+        <Container fluid className="fr-pb-3w">
           <SynthesisFocus />
           <ProgramsOverview />
           <Title as="h2" className="fr-mt-5w">
@@ -88,18 +88,18 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
             Composition du programme
           </Title>
           <Callout className="callout-style">
-            Visualisez la répartition des financements du programme sélectionné par thématique.
+            Visualisez la répartition des subventions du programme sélectionné par thématique.
             <br /> Cela vous permet d'identifier les thématiques les plus financées et de comprendre leur contribution au sein du programme.
           </Callout>
-          <Title as="h3">Répartition des financements par thématique</Title>
+          <Title as="h3">Répartition des subventions par thématique</Title>
           <TopicsFunding />
           <BoardsSuggestComponent />
-        </div>
+        </Container>
       );
 
     case "thematic-detail":
       return (
-        <div>
+        <Container fluid className="fr-pb-3w">
           <SynthesisFocus />
           <ThematicsOverview />
           <Title as="h2" className="fr-mt-5w">
@@ -110,19 +110,19 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
             Composition du ou des thématiques
           </Title>
           <Callout className="callout-style">
-            Visualisez la répartition des financements de la ou des thématiques sélectionnée(s) par destination.
+            Visualisez la répartition des subventions de la ou des thématiques sélectionnée(s) par destination.
             <br /> Cela vous permet d'identifier les destinations les plus financées et de comprendre leur contribution au sein de la ou des
             thématiques.
           </Callout>
-          <Title as="h3">Répartition des financements par destination</Title>
+          <Title as="h3">Répartition des subventions par destination</Title>
           <DestinationsFunding />
           <BoardsSuggestComponent />
-        </div>
+        </Container>
       );
 
     case "destination-detail":
       return (
-        <div>
+        <Container fluid className="fr-pb-3w">
           <SynthesisFocus />
           <DestinationsOverview />
           <Title as="h2" className="fr-mt-5w">
@@ -130,7 +130,7 @@ export default function SyntheseContent({ contentType }: SyntheseContentProps) {
           </Title>
           <MainPartners />
           <BoardsSuggestComponent />
-        </div>
+        </Container>
       );
 
     default:

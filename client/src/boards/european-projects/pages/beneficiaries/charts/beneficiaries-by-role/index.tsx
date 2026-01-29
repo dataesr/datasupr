@@ -12,7 +12,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 const config = {
   id: "beneficiariesByRole",
   title: {
-    fr: "Top 10 des bénéficiaires par rôle en fonction des financements alloués",
+    fr: "Top 10 des bénéficiaires par rôle en fonction des subventions alloués",
     en: "Top 10 beneficiaries by role based on allocated funding",
   },
   subtitle: "",

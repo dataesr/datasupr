@@ -32,7 +32,7 @@ export function renderDataTable(data, currentLang) {
 
   const labels = {
     caption:
-      currentLang === "fr" ? "Part des financements demandés et obtenus par le pays" : "Percentage of funding requested and obtained by the country",
+      currentLang === "fr" ? "Part des subventions demandées et obtenues par le pays" : "Percentage of funding requested and obtained by the country",
     program: currentLang === "fr" ? "Programme" : "Program",
     evaluated: currentLang === "fr" ? "Évalués" : "Evaluated",
     successful: currentLang === "fr" ? "Lauréats" : "Successful",
@@ -105,7 +105,7 @@ export function readingKey(data, isLoading) {
 
   const fr = (
     <>
-      Le programme <strong>{programNameFr}</strong> présente la plus forte proportion de financements lauréats avec{" "}
+      Le programme <strong>{programNameFr}</strong> présente la plus forte proportion de subventions lauréats avec{" "}
       <strong>{successfulProportion.toFixed(2)}%</strong>, contre <strong>{evaluatedProportion.toFixed(2)}%</strong> pour les projets évalués, soit
       une différence de{" "}
       <strong>

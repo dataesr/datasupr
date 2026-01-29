@@ -11,7 +11,7 @@ const config = {
   idQuery: "pillarsFunding",
   title: {
     en: "Funding (M€)",
-    fr: "Financements (M€)",
+    fr: "Subventions (M€)",
   },
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding",
 };

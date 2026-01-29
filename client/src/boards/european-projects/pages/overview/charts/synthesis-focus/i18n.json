@@ -5,7 +5,7 @@
       "en": "share captured by participants from the country"
     },
     "tooltip": {
-      "fr": "Part des financements obtenus par les participants du pays par rapport au total des financements obtenus par tous les participants (toutes nationalités confondues).",
+      "fr": "Part des subventions obtenues par les participants du pays par rapport au total des subventions obtenues par tous les participants (toutes nationalités confondues).",
       "en": "Share of funding obtained by participants from the country compared to the total funding obtained by all participants (all nationalities combined)."
     }
   },
@@ -35,7 +35,7 @@
       "en": "success rate on amounts"
     },
     "tooltip": {
-      "fr": "Part des financements obtenus par les participants du pays parmi l'ensemble des financements demandés par ces mêmes participants.",
+      "fr": "Part des subventions obtenues par les participants du pays parmi l'ensemble des subventions demandées par ces mêmes participants.",
       "en": "Share of funding obtained by participants from the country among all funding requested by these same participants."
     }
   },

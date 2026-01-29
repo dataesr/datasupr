@@ -105,9 +105,10 @@ export function renderDataTable(data: { list: Array<{ id: string; name: string; 
     acronym: currentLang === "fr" ? "Acronyme" : "Acronym",
     funding: currentLang === "fr" ? "Financement total" : "Total funding",
     unit: "M€",
-    caption: currentLang === "fr" 
-      ? "Liste des principaux bénéficiaires récupérant 50% des financements (en millions d'euros)" 
-      : "List of main beneficiaries receiving 50% of funding (in millions of euros)",
+    caption:
+      currentLang === "fr"
+        ? "Liste des principaux bénéficiaires récupérant 50% des subventions (en millions d'euros)"
+        : "List of main beneficiaries receiving 50% of funding (in millions of euros)",
   };
 
   return (

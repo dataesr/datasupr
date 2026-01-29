@@ -24,13 +24,13 @@ export default function MainPartners() {
 
   const config = {
     id: "mainPartners",
-    title: "Liste des principaux bénéficiaires récupérants 50% des financements",
+    title: "Liste des principaux bénéficiaires récupérants 50% des subventions",
     comment: {
       fr: (
         <>
-          Ce graphique présente les principaux bénéficiaires des financements européens, en mettant en évidence ceux qui reçoivent 50% des fonds
-          alloués. Il permet d'identifier les acteurs clés dans la répartition des financements et d'analyser leur rôle dans le contexte des projets
-          européens. Chaque barre représente un bénéficiaire, avec la longueur de la barre indiquant le montant total des financements reçus. Les
+          Ce graphique présente les principaux bénéficiaires des subventions européennes, en mettant en évidence ceux qui reçoivent 50% des fonds
+          alloués. Il permet d'identifier les acteurs clés dans la répartition des subventions et d'analyser leur rôle dans le contexte des projets
+          européens. Chaque barre représente un bénéficiaire, avec la longueur de la barre indiquant le montant total des subventions reçus. Les
           bénéficiaires sont classés par ordre décroissant de financement, permettant ainsi d'identifier rapidement les acteurs les plus importants.
         </>
       ),

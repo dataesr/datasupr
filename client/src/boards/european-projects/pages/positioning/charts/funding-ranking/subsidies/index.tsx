@@ -74,8 +74,8 @@ export default function FundingRankingSubsidies() {
             {getI18nLabel("title")}
           </Title>
           <Callout className="callout-style">
-            La comparaison des montants demandés et obtenus permet d'évaluer l'efficacité des pays dans l'obtention de financements pour leurs
-            projets. Plus la différence entre les deux montants est faible, meilleure est la performance du pays en matière de financement.
+            La comparaison des montants demandés et obtenus permet d'évaluer l'efficacité des pays dans l'obtention de subventions pour leurs projets.
+            Plus la différence entre les deux montants est faible, meilleure est la performance du pays en matière de financement.
             <br />
             Le deuxième graphique illustre le taux de succès du pays par rapport à la moyenne des taux de succès des autres pays, offrant ainsi une
             perspective comparative sur l'efficacité des demandes de financement.

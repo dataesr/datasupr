@@ -44,7 +44,7 @@ export default function FundingRankingRates() {
           <strong style={{ color: "var(--successful-project-color)" }}>verte</strong> la part des montants obtenus (projets lauréats). Le chiffre
           affiché sur chaque colonne indique le <strong>rang du pays</strong> dans le classement européen pour cette catégorie. Un écart important
           entre les deux colonnes d'un même pays signale une différence de performance entre sa capacité à déposer des demandes et à obtenir des
-          financements. Vous avez la possibilité de trier le classement soit par montant total évalué, soit par montant total obtenu.
+          subventions. Vous avez la possibilité de trier le classement soit par montant total évalué, soit par montant total obtenu.
         </>
       ),
       en: (
@@ -98,7 +98,7 @@ export default function FundingRankingRates() {
           </Title>
           <Callout className="callout-style">
             La part des montants demandés et obtenus est calculée en divisant le montant total obtenu par le montant total demandé pour chaque pays.
-            Cet indicateur permet de mesurer l'efficacité des pays dans l'obtention de financements par rapport à leurs demandes. Plus la part est
+            Cet indicateur permet de mesurer l'efficacité des pays dans l'obtention de subventions par rapport à leurs demandes. Plus la part est
             élevée, meilleure est la performance du pays en matière de financement.
           </Callout>
         </Col>

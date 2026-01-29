@@ -30,7 +30,7 @@ export default function ProgramsFunding() {
             comment={{
               fr: (
                 <>
-                  Ce graphique affiche la répartition des financements demandés et obtenus (en M€) par pilier, ainsi que le taux de succès associé
+                  Ce graphique affiche la répartition des subventions demandées et obtenues (en M€) par pilier, ainsi que le taux de succès associé
                   (montants obtenus / montants demandés).
                 </>
               ),

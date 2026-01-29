@@ -22,8 +22,8 @@ const config = {
   readingKey: {
     fr: (
       <>
-        Pour le pilier "Excellence Scientifique", les projets ont demandé 5 835 M€ de financements, et en ont obtenu 1 154.3 M€, soit un taux de
-        succès de 19.80 %.
+        Pour le pilier "Excellence Scientifique", les projets ont demandé 5 835 M€ de subventions, et en ont obtenu 1 154.3 M€, soit un taux de succès
+        de 19.80 %.
       </>
     ),
     en: (

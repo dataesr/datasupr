@@ -10,10 +10,8 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 
 const config = {
   id: "fundedObjectives",
-  title: "Financements obtenus",
-  description: "Ad duis occaecat voluptate deserunt tempor enim nulla officia.",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/funded-objectives",
+  title: "Subventions obtenues",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/funded-objectives",
 };
 
 export default function FundedObjectives() {

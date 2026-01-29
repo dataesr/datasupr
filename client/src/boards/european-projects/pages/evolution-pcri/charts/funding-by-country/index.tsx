@@ -40,11 +40,11 @@ export default function FundingByCountry() {
   const config = {
     id: chartId,
     title: {
-      fr: "Évolution des financements de FP6 à Horizon Europe",
+      fr: "Évolution des subventions de FP6 à Horizon Europe",
       en: "Funding evolution from FP6 to Horizon Europe",
     },
     comment: {
-      fr: <>Evolution des financements cumulés obtenus par les pays depuis FP6 jusqu'à Horizon Europe.</>,
+      fr: <>Evolution des subventions cumuleés obtenues par les pays depuis FP6 jusqu'à Horizon Europe.</>,
       en: <>Evolution of cumulative funding obtained by countries from FP6 to Horizon Europe.</>,
     },
     readingKey: readingKey(data, isLoading),

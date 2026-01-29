@@ -20,8 +20,8 @@ export default function TopicsFunding() {
             comment={{
               fr: (
                 <>
-                  Ce graphique affiche la répartition des financements demandés et obtenus (en M€) par thématique, ainsi que le taux de succès associé
-                  (montants obtenus / montants demandés).
+                  Ce graphique affiche la répartition des subventions demandées et obtenues (en M€) par thématique, ainsi que le taux de succès
+                  associé (montants obtenus / montants demandés).
                 </>
               ),
               en: (
@@ -34,7 +34,7 @@ export default function TopicsFunding() {
             readingKey={{
               fr: (
                 <>
-                  Pour la thématique "Excellence Scientifique", les projets ont demandé X M€ de financements, et en ont obtenu Y M€, soit un taux de
+                  Pour la thématique "Excellence Scientifique", les projets ont demandé X M€ de subventions, et en ont obtenu Y M€, soit un taux de
                   succès de Z %.
                 </>
               ),

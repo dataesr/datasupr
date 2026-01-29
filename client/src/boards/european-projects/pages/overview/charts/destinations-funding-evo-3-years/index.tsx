@@ -22,7 +22,7 @@ import { normalizeIdForCssColorNames } from "../../../../utils";
 const configChart1 = {
   id: "destinationsEvolutionFundingLines",
   title: {
-    fr: "Destinations - Evolution des financements demandés et obtenus (M€)",
+    fr: "Destinations - Evolution des suventions demandées et obtenues (M€)",
     en: "Destinations - Financing applied for and obtained (€m)",
   },
   description: {
@@ -30,13 +30,12 @@ const configChart1 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 const configChart2 = {
   id: "destinationsEvolutionFundingLinesRates",
   title: {
-    fr: "Destinations - Evolution du taux de succès des financements demandés et obtenus",
+    fr: "Destinations - Evolution du taux de succès des subventions demandées et obtenues",
     en: "Destinations - Trend in the success rate of financing applications and grants",
   },
   description: {
@@ -44,13 +43,12 @@ const configChart2 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 const configChart3 = {
   id: "destinationsEvolutionFundingLinesSuccessRate",
   title: {
-    fr: "Destinations - Part des financements du pays demandés et obtenus par rapport au total des participants",
+    fr: "Destinations - Part des subventions du pays demandées et obtenues par rapport au total des participants",
     en: "Destinations - Percentage of country funding applied for and obtained as a proportion of total participants",
   },
   description: {
@@ -58,8 +56,7 @@ const configChart3 = {
     en: "",
   },
   subtitle: "",
-  integrationURL:
-    "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
 };
 
 export default function DestinationsFundingEvo3Years() {

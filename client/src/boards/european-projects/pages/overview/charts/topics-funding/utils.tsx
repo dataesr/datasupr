@@ -37,7 +37,7 @@ export function renderDataTable(data, currentLang) {
   const successfulData = rawData.filter((item) => item.stage === "successful");
 
   const labels = {
-    caption: currentLang === "fr" ? "Financements par thématique" : "Funding by topic",
+    caption: currentLang === "fr" ? "Suventions par thématique" : "Funding by topic",
     topic: currentLang === "fr" ? "Thématique" : "Topic",
     evaluated: currentLang === "fr" ? "Évalués" : "Evaluated",
     successful: currentLang === "fr" ? "Lauréats" : "Successful",

@@ -24,7 +24,7 @@ const config = {
       <>
         Top 10 des pays
         <Text className="fr-text--light">
-          <i>Financements obtenus par type d'entités (en millions d'euros)</i>
+          <i>Subventions obtenues par type d'entités (en millions d'euros)</i>
         </Text>
       </>
     ),

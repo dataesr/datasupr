@@ -3,7 +3,7 @@
 // Pour le tab Synthèse
 export const SynthesePillarComparison = () => (
   <div>
-    <h3>Graphique en barres - Financements par pilier</h3>
+    <h3>Graphique en barres - subventions par pilier</h3>
     <div>Tableau de bord KPI</div>
     <div>Évolution temporelle</div>
   </div>

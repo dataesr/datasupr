@@ -17,7 +17,8 @@ const config = {
   comment: {
     fr: (
       <>
-        Ce graphique affiche la part des financements demandés et obtenus (en M€) par le pays sélectionné sur l'ensemble des pays, pour chaque pilier.
+        Ce graphique affiche la part des subventions demandées et obtenues (en M€) par le pays sélectionné sur l'ensemble des pays, pour chaque
+        pilier.
       </>
     ),
     en: <>This chart displays the share of funding requested and obtained (in M€) by the selected country across all countries, for each pillar.</>,
@@ -25,8 +26,8 @@ const config = {
   readingKey: {
     fr: (
       <>
-        Pour le pilier "Excellence Scientifique", les projets du pays sélectionné ont demandé 583.5 M€ de financements, et en ont obtenu 115.4 M€,
-        soit respectivement 10% et 10% des montants demandés et obtenus par l'ensemble des pays.
+        Pour le pilier "Excellence Scientifique", les projets du pays sélectionné ont demandé 583.5 M€ de subventions, et en ont obtenu 115.4 M€, soit
+        respectivement 10% et 10% des montants demandés et obtenus par l'ensemble des pays.
       </>
     ),
     en: (

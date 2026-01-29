@@ -15,10 +15,10 @@ export default function EvolutionPcri() {
   const calloutContent = {
     fr: (
       <>
-        Cette page présente l'évolution des financements européens de <strong>FP6</strong> (2002-2006) à <strong>Horizon Europe</strong> (2021-2027).
+        Cette page présente l'évolution des subventions européennes de <strong>FP6</strong> (2002-2006) à <strong>Horizon Europe</strong> (2021-2027).
         Les données sur Horizon Europe étant encore partielles, les analyses comparatives se concentrent principalement sur les frameworks complets :{" "}
         <strong>FP7</strong> (2007-2013) et <strong>Horizon 2020</strong> (2014-2020). Les graphiques permettent d'identifier les tendances par pays,
-        les évolutions des taux de succès et les dynamiques de compétition entre pays pour l'obtention de financements.
+        les évolutions des taux de succès et les dynamiques de compétition entre pays pour l'obtention de subventions.
       </>
     ),
     en: (

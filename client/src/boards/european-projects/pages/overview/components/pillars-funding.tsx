@@ -20,7 +20,7 @@ export default function PillarsFunding() {
             comment={{
               fr: (
                 <>
-                  Ce graphique affiche la répartition des financements demandés et obtenus (en M€) par pilier, ainsi que le taux de succès associé
+                  Ce graphique affiche la répartition des subventions demandées et obtenues (en M€) par pilier, ainsi que le taux de succès associé
                   (montants obtenus / montants demandés).
                 </>
               ),
@@ -34,8 +34,8 @@ export default function PillarsFunding() {
             readingKey={{
               fr: (
                 <>
-                  Pour le pilier "Excellence Scientifique", les projets ont demandé 5 835 M€ de financements, et en ont obtenu 1 154.3 M€, soit un
-                  taux de succès de 19.8 %.
+                  Pour le pilier "Excellence Scientifique", les projets ont demandé 5 835 M€ de subventions, et en ont obtenu 1 154.3 M€, soit un taux
+                  de succès de 19.8 %.
                 </>
               ),
               en: (

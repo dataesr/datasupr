@@ -258,7 +258,7 @@ export default function Search() {
         </Title>
         <Callout className="callout-style fr-mb-1w" colorFamily="blue-cumulus">
           L'architecture thématiques est composé des <strong>piliers</strong>, <strong>programmes</strong>, <strong>thématiques</strong> et{" "}
-          <strong>destinations</strong>. Elle a pour but de faciliter la compréhension des financements accordés par la{" "}
+          <strong>destinations</strong>. Elle a pour but de faciliter la compréhension des subventions accordées par la{" "}
           <strong>commission européenne</strong>.
           <br /> Par défaut, l'ensemble du programme cadre de la recherche et de l'innovation (PCRI) est sélectionné. Vous pouvez affiner votre
           sélection en fonction de vos besoins.
@@ -331,7 +331,7 @@ export default function Search() {
                         checked={selectedThematics.includes(thematic.id)}
                         onChange={() => {
                           setSelectedThematics((prev) =>
-                            prev.includes(thematic.id) ? prev.filter((t) => t !== thematic.id) : [...prev, thematic.id]
+                            prev.includes(thematic.id) ? prev.filter((t) => t !== thematic.id) : [...prev, thematic.id],
                           );
                         }}
                       />
@@ -355,7 +355,7 @@ export default function Search() {
                         checked={selectedDestinations.includes(destination.id)}
                         onChange={() => {
                           setSelectedDestinations((prev) =>
-                            prev.includes(destination.id) ? prev.filter((d) => d !== destination.id) : [...prev, destination.id]
+                            prev.includes(destination.id) ? prev.filter((d) => d !== destination.id) : [...prev, destination.id],
                           );
                         }}
                       />

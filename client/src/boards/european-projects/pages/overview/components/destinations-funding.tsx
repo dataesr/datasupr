@@ -20,7 +20,7 @@ export default function DestinationsFunding() {
             comment={{
               fr: (
                 <>
-                  Ce graphique affiche la répartition des financements demandés et obtenus (en M€) par destination, ainsi que le taux de succès
+                  Ce graphique affiche la répartition des subventions demandées et obtenues (en M€) par destination, ainsi que le taux de succès
                   associé (montants obtenus / montants demandés).
                 </>
               ),
@@ -34,7 +34,7 @@ export default function DestinationsFunding() {
             readingKey={{
               fr: (
                 <>
-                  Pour la thématique "Excellence Scientifique", les projets ont demandé X M€ de financements, et en ont obtenu Y M€, soit un taux de
+                  Pour la thématique "Excellence Scientifique", les projets ont demandé X M€ de subventions, et en ont obtenu Y M€, soit un taux de
                   succès de Z %.
                 </>
               ),

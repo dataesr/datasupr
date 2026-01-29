@@ -103,8 +103,8 @@ export function successRatesReadingKey(data, displayType) {
 
       fr = (
         <>
-          En <strong>{year}</strong>, la part de financements des projets évalués pour le pilier <strong>{pillar_name_fr}</strong> est de{" "}
-          <strong>{formatToRates(pct1)}</strong> tandis que la part des financements des projets lauréats pour la même année est de{" "}
+          En <strong>{year}</strong>, la part de subventions des projets évalués pour le pilier <strong>{pillar_name_fr}</strong> est de{" "}
+          <strong>{formatToRates(pct1)}</strong> tandis que la part des subventions des projets lauréats pour la même année est de{" "}
           <strong>{formatToRates(pct2)}</strong>.
         </>
       );
@@ -219,7 +219,7 @@ export function renderDataTable(data, currentLang, displayType) {
 
   const labels = {
     caption:
-      currentLang === "fr" ? "Évolution des financements par pilier sur les 3 dernières années" : "Funding evolution by pillar over the last 3 years",
+      currentLang === "fr" ? "Évolution des subentions par pilier sur les 3 dernières années" : "Funding evolution by pillar over the last 3 years",
     pillar: currentLang === "fr" ? "Pilier" : "Pillar",
     evaluated: currentLang === "fr" ? "Évalués" : "Evaluated",
     successful: currentLang === "fr" ? "Lauréats" : "Successful",
@@ -321,7 +321,7 @@ export function renderDataTableRates(data, currentLang, displayType) {
   const labels = {
     caption:
       currentLang === "fr"
-        ? "Part des financements du pays par rapport au total des participants"
+        ? "Part des subventions du pays par rapport au total des participants"
         : "Percentage of country funding as a proportion of total participants",
     pillar: currentLang === "fr" ? "Pilier" : "Pillar",
     evaluated: currentLang === "fr" ? "Projets évalués" : "Evaluated projects",
