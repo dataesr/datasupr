@@ -22,7 +22,7 @@ export default function FundingsRoutes() {
     <Routes>
       <Route element={<GlobalLayout />}>
         <Route index element={<Navigate to="accueil" replace />} />
-        <Route path="/" element={<Navigate to="accueil" replace />} />
+        <Route path="" element={<Navigate to="accueil" replace />} />
         <Route path="accueil" element={<RouteWithTitle titleKey="accueil" element={<Home />} />} />
         <Route path="comparaison" element={<RouteWithTitle titleKey="comparaison" element={<Comparison />} />} />
         <Route path="etablissement" element={<RouteWithTitle titleKey="etablissement" element={<Structures />} />} />

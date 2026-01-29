@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import AdminRoutes from "./boards/admin/routes.tsx";
 import AtlasRoutes from "./boards/atlas/routes.tsx";
@@ -26,6 +26,10 @@ export default function Router() {
       <Route path="/cookies" element={<CookiePolicyPage />} />
       <Route path="/datasupr-doc/*" element={<DatasuprDocRoutes />} />
       <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
+      <Route
+        path="/financements-par-aap"
+        element={<Navigate to="/financements-par-aap/accueil" replace />}
+      />
       <Route path="/financements-par-aap/*" element={<FundingsRoutes />} />
       <Route path="/graduates/*" element={<GraduatesRoutes />} />
       <Route path="/integration" element={<Integration />} />
