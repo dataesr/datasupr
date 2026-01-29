@@ -21,6 +21,7 @@ import {
 import Breadcrumb from "../../../../financements-par-aap/components/breadcrumb";
 import StructureNotExistsAlert from "./structure-not-exists-alert";
 import MultipleStructuresSelector from "./multiple-structures-selector";
+import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 
 export default function StructureView() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -125,7 +126,7 @@ export default function StructureView() {
     return (
       <Container fluid className="etablissement-selector__wrapper">
         <Container className="fr-py-4w">
-          <p>Chargement des données...</p>
+          <DefaultSkeleton col={3} height="300px" />
         </Container>
       </Container>
     );

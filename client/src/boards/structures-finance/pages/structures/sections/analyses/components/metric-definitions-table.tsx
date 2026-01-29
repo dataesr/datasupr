@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useFinanceDefinitions } from "../../../../definitions/api";
 import "./metric-definitions-table.scss";
 import { Title } from "@dataesr/dsfr-plus";
+import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
 
 interface MetricDefinitionsTableProps {
   metricKeys: string[];
@@ -40,8 +41,8 @@ export default function MetricDefinitionsTable({
 
   if (isLoading) {
     return (
-      <div className="fr-mt-4w fr-p-2w fr-text--sm fr-text-mention--grey">
-        Chargement des définitions...
+      <div className="fr-mt-4w">
+        <DefaultSkeleton height="120px" />
       </div>
     );
   }

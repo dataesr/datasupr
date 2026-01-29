@@ -4,6 +4,7 @@ import EvolutionChart, { useAnalysesWithData } from "./charts/evolution";
 import AnalysisFilter from "../../../../components/analysis-filter";
 import "../styles.scss";
 import { AnalysisKey } from "./charts/evolution/config";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 interface AnalysesSectionProps {
   data: any;
@@ -26,9 +27,14 @@ export function AnalysesSection({
   if (isLoading) {
     return (
       <div id="section-analyses" className="section-container">
-        <div className="fr-p-3w" style={{ textAlign: "center" }}>
-          <p>Chargement des données d'évolution...</p>
-        </div>
+        <Row gutters>
+          <Col md="4" xs="12">
+            <DefaultSkeleton height="400px" />
+          </Col>
+          <Col md="8" xs="12">
+            <DefaultSkeleton height="400px" />
+          </Col>
+        </Row>
       </div>
     );
   }

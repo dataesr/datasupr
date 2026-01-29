@@ -6,11 +6,12 @@ import { useFinanceYears } from "../../../api/common";
 import SelectionUI from "./selection-ui";
 import CardSimple from "../../../../../components/card-simple";
 import Breadcrumb from "../../../../financements-par-aap/components/breadcrumb";
+import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 
 export default function StructureSelection() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const { data: yearsData } = useFinanceYears();
+  const { data: yearsData, isLoading: isLoadingYears } = useFinanceYears();
   const latestYear = useMemo(() => {
     if (!yearsData?.years?.length) return "2024";
     return String(Math.max(...yearsData.years));
@@ -26,6 +27,7 @@ export default function StructureSelection() {
     availableRegions,
     availableTypologies,
     filteredEtablissements,
+    isLoading: isLoadingStructures,
   } = useStructuresFilters({
     selectedYear: latestYear,
     selectedType,
@@ -33,6 +35,8 @@ export default function StructureSelection() {
     selectedTypologie,
     selectedRce,
   });
+
+  const isLoading = isLoadingYears || isLoadingStructures;
 
   const handleEtablissementSelect = (id: string) => {
     setSearchParams({
@@ -56,21 +60,29 @@ export default function StructureSelection() {
               />
             </Col>
           </Row>
-          <Row>
-            <Col>
-              <SelectionUI
-                availableTypes={availableTypes}
-                availableTypologies={availableTypologies}
-                availableRegions={availableRegions}
-                filteredEtablissements={filteredEtablissements}
-                onEtablissementSelect={handleEtablissementSelect}
-              />
-            </Col>
-          </Row>
+          {isLoading ? (
+            <Row>
+              <Col>
+                <DefaultSkeleton height="200px" />
+              </Col>
+            </Row>
+          ) : (
+            <Row>
+              <Col>
+                <SelectionUI
+                  availableTypes={availableTypes}
+                  availableTypologies={availableTypologies}
+                  availableRegions={availableRegions}
+                  filteredEtablissements={filteredEtablissements}
+                  onEtablissementSelect={handleEtablissementSelect}
+                />
+              </Col>
+            </Row>
+          )}
         </Container>
       </Container>
 
-      {filteredEtablissements.length > 0 && (
+      {!isLoading && filteredEtablissements.length > 0 && (
         <Container className="fr-py-4w">
           <p className="fr-text--sm fr-mb-2w">
             {filteredEtablissements.length} établissement

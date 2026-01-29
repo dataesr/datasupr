@@ -3,6 +3,7 @@ import { useMemo, useEffect } from "react";
 import { useFinanceAdvancedComparison } from "../../../api/api";
 import { useFilteredNationalData } from "../hooks/useFilteredNationalData";
 import SectionNavigation from "./section-navigation";
+import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import {
   ProduitsEffectifsSection,
   ScspEncadrementSection,
@@ -99,16 +100,7 @@ export default function NationalContent() {
     <>
       <SectionNavigation />
 
-      {isLoadingComparison && (
-        <div
-          className="fr-alert fr-alert--info"
-          role="status"
-          aria-live="polite"
-        >
-          <p className="fr-alert__title">Chargement en cours</p>
-          <p>Chargement des données d'analyse...</p>
-        </div>
-      )}
+      {isLoadingComparison && <DefaultSkeleton height="400px" />}
 
       {!isLoadingComparison && filteredItems.length === 0 && (
         <div className="fr-alert fr-alert--warning" role="alert">

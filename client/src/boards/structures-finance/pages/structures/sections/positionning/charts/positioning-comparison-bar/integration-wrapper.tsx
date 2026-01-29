@@ -7,6 +7,7 @@ import {
 import { usePositioningFilteredData } from "../../hooks/usePositioningFilteredData";
 import { FilterMode } from "../../components/positioning-filters";
 import PositioningComparisonBarChart from "./index";
+import DefaultSkeleton from "../../../../../../../../components/charts-skeletons/default";
 
 export default function PositioningComparisonBarIntegrationWrapper() {
   const [searchParams] = useSearchParams();
@@ -46,11 +47,7 @@ export default function PositioningComparisonBarIntegrationWrapper() {
   );
 
   if (isLoadingComparison || isLoadingStructure) {
-    return (
-      <div className="fr-p-4w">
-        <p>Chargement des données...</p>
-      </div>
-    );
+    return <DefaultSkeleton height="400px" />;
   }
 
   if (!structureData) {

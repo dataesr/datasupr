@@ -6,6 +6,7 @@ import { createStackedEvolutionChartOptions } from "./options";
 import { RenderDataStacked } from "./render-data";
 import { CHART_COLORS } from "../../../../../../constants/colors";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
+import DefaultSkeleton from "../../../../../../../../components/charts-skeletons/default";
 
 type ViewType = "cycles" | "degres" | "disciplines" | "diplomes";
 
@@ -214,11 +215,7 @@ export default function EffectifsEvolutionChart({
   };
 
   if (isLoading) {
-    return (
-      <div className="fr-py-4w fr-text--center">
-        <span className="fr-text--sm">Chargement des données...</span>
-      </div>
-    );
+    return <DefaultSkeleton height="400px" />;
   }
 
   if (!data || data.length === 0 || availableViews.length === 0) {

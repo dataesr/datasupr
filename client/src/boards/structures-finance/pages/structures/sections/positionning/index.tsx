@@ -17,6 +17,7 @@ import PositioningComparisonBarChart from "./charts/positioning-comparison-bar";
 import { usePositioningFilteredData } from "./hooks/usePositioningFilteredData";
 import MetricDefinitionsTable from "../analyses/components/metric-definitions-table";
 import "../styles.scss";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 interface PositionnementSectionProps {
   data: any;
@@ -113,16 +114,7 @@ export function PositionnementSection({
         </Text>
       </div>
 
-      {isLoading && (
-        <div
-          className="fr-alert fr-alert--info fr-mb-4w"
-          role="status"
-          aria-live="polite"
-        >
-          <p className="fr-alert__title">Chargement en cours</p>
-          <p>Chargement des données de comparaison...</p>
-        </div>
-      )}
+      {isLoading && <DefaultSkeleton height="400px" />}
 
       {!isLoading && allItems.length === 0 && (
         <div className="fr-alert fr-alert--warning fr-mb-4w" role="alert">

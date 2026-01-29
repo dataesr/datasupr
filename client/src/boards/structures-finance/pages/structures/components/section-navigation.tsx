@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Select from "../../../../../components/select";
+import "../styles.scss";
 
 interface SectionNavigationProps {
   activeSection: string;
@@ -40,28 +41,25 @@ export default function SectionNavigation({
 
   return (
     <nav
-      className="fr-nav"
+      className="fr-nav section-navigation"
       id="section-navigation"
       role="navigation"
       aria-label="Navigation secondaire"
-      style={{ borderBottom: "1px solid var(--border-default-grey)" }}
     >
       <button
-        className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill"
+        className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill section-navigation__burger"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-controls="section-nav-list"
-        data-mobile-burger
       >
         Menu
       </button>
 
       <ul
         id="section-nav-list"
-        className="fr-nav__list"
-        style={{ alignItems: "center" }}
-        data-nav-list
-        data-open={isOpen}
+        className={`fr-nav__list section-navigation__list ${
+          isOpen ? "section-navigation__list--open" : ""
+        }`}
       >
         {navItems.map((item) => (
           <li key={item.id} className="fr-nav__item">
@@ -78,59 +76,29 @@ export default function SectionNavigation({
             </a>
           </li>
         ))}
-        <li
-          className="fr-nav__item"
-          style={{
-            marginLeft: "auto",
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
+        <li className="fr-nav__item section-navigation__year-item">
           <Select
-            label={`${selectedYear}`}
+            label={selectedYear}
             icon="calendar-line"
             align="end"
             outline={false}
-            className="nav-year-select"
+            size="sm"
+            className="section-navigation__year-select"
+            aria-label="Sélectionner une année"
           >
             {years.map((year) => (
-              <Select.Radio
+              <Select.Option
                 key={year}
                 value={year.toString()}
-                checked={selectedYear === year.toString()}
-                onChange={() => onYearChange(year.toString())}
+                selected={selectedYear === year.toString()}
+                onClick={() => onYearChange(year.toString())}
               >
                 {year}
-              </Select.Radio>
+              </Select.Option>
             ))}
           </Select>
         </li>
       </ul>
-
-      <style>{`
-        [data-mobile-burger] { display: none; }
-        .nav-year-select .fx-select__trigger {
-          color: var(--text-default-grey);
-          background: none !important;
-        }
-        .nav-year-select .fx-select__trigger:hover {
-          background: var(--background-default-grey-hover) !important;
-        }
-        @media (max-width: 61.99em) {
-          [data-mobile-burger] { 
-            display: flex !important; 
-            margin: 0.5rem 1rem;
-          }
-          [data-nav-list] { 
-            display: none !important;
-            flex-direction: column;
-            background: var(--background-default-grey);
-          }
-          [data-nav-list][data-open="true"] { display: flex !important; }
-          [data-nav-list] .fr-nav__item { width: 100%; }
-          [data-nav-list] .fr-nav__link { width: 100%; }
-        }
-      `}</style>
     </nav>
   );
 }
