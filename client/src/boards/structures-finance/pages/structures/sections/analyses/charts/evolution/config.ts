@@ -5,7 +5,7 @@ import {
 
 export const METRICS_CONFIG = {
   effectif_sans_cpge: {
-    label: "Effectifs totaux",
+    label: "Effectifs d’étudiants inscrits",
     format: "number" as const,
     color: METRIC_COLORS.effectifs,
     category: "Effectifs",
