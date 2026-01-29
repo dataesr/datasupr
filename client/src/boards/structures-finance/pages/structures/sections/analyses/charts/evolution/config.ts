@@ -968,12 +968,7 @@ export const PREDEFINED_ANALYSES = {
     category: "SCSP",
     showBase100: false,
   },
-  "scsp-comparaison": {
-    label: "SCSP et SCSP par étudiant",
-    metrics: ["scsp", "scsp_par_etudiants"],
-    category: "SCSP",
-    showBase100: true,
-  },
+
   "scsp-comparaison-complete": {
     label: "SCSP, étudiants financés et SCSP par étudiant (base 100)",
     metrics: ["scsp", "scsp_etudiants", "scsp_par_etudiants"],
