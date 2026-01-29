@@ -76,7 +76,7 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                     <div>
                       <Text size="lg" bold className="fr-mb-0">
                         {data.effectif_sans_cpge.toLocaleString("fr-FR")}{" "}
-                        étudiants inscrits
+                        étudiants inscrits en {data.anuniv}
                       </Text>
                       <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
                         dont {data.part_effectif_sans_cpge_dn?.toFixed(1)} %
@@ -196,7 +196,7 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                 <div className="page-header__formations-row">
                   <dt className="page-header__formations-label">
                     <Text size="xs" className="fr-text-mention--grey fr-mb-0">
-                      Filières
+                      Filières spécifiques
                     </Text>
                   </dt>
                   <dd className="page-header__formations-value">
@@ -259,7 +259,8 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                           <Tag size="sm">Vétérinaire</Tag>
                         </li>
                       )}
-                      {data.has_effectif_sante_disc && (
+                      {(data.has_effectif_sante_disc ||
+                        data.has_effectif_sante) && (
                         <li>
                           <Tag size="sm">Santé</Tag>
                         </li>
