@@ -93,10 +93,7 @@ export default function StructureSelection() {
             {filteredEtablissements.length > 1 ? "s" : ""} trouvé
             {filteredEtablissements.length > 1 ? "s" : ""}
           </Text>
-          <ul
-            className="fr-grid-row fr-grid-row--gutters page-header__stats-list"
-            role="list"
-          >
+          <Row gutters className="fr-raw-list">
             {filteredEtablissements.map((etab: any) => {
               const id =
                 etab.etablissement_id_paysage ||
@@ -109,7 +106,7 @@ export default function StructureSelection() {
               const year = etab.anuniv;
 
               return (
-                <li key={id} className="fr-col-12 fr-col-md-6 fr-col-lg-4">
+                <Col key={id} xs="12" md="6" lg="4">
                   <CardSimple
                     description={region}
                     onClick={() => handleEtablissementSelect(id)}
@@ -118,10 +115,10 @@ export default function StructureSelection() {
                     title={displayName}
                     year={year}
                   />
-                </li>
+                </Col>
               );
             })}
-          </ul>
+          </Row>
         </Container>
       )}
     </main>

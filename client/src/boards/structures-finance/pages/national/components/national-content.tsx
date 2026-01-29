@@ -1,5 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useMemo, useEffect } from "react";
+import { Container, Text, Title } from "@dataesr/dsfr-plus";
 import { useFinanceAdvancedComparison } from "../../../api/api";
 import { useFilteredNationalData } from "../hooks/useFilteredNationalData";
 import SectionNavigation from "./section-navigation";
@@ -97,24 +98,26 @@ export default function NationalContent() {
   };
 
   return (
-    <>
+    <Container className="fr-py-3w">
       <SectionNavigation />
 
       {isLoadingComparison && <DefaultSkeleton height="400px" />}
 
       {!isLoadingComparison && filteredItems.length === 0 && (
         <div className="fr-alert fr-alert--warning" role="alert">
-          <p className="fr-alert__title">Aucun résultat</p>
-          <p>
+          <Title as="h2" look="h6" className="fr-alert__title">
+            Aucun résultat
+          </Title>
+          <Text>
             Aucun établissement ne correspond aux filtres sélectionnés. Essayez
             de modifier vos critères de recherche.
-          </p>
+          </Text>
         </div>
       )}
 
       {!isLoadingComparison &&
         filteredItems.length > 0 &&
         renderSectionContent()}
-    </>
+    </Container>
   );
 }

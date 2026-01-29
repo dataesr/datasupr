@@ -1,4 +1,4 @@
-import { Row, Col, Container } from "@dataesr/dsfr-plus";
+import { Row, Col, Container, Title, Text, Button } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useMemo, useEffect, useRef } from "react";
 import { useFinanceYears } from "../../../api/common";
@@ -6,6 +6,7 @@ import { useFinanceAdvancedComparison } from "../../../api/api";
 import { useNationalFilters } from "../hooks/useNationalFilters";
 import Breadcrumb from "../../../../financements-par-aap/components/breadcrumb";
 import Dropdown from "../../../../../components/dropdown";
+import "../styles.scss";
 
 export default function NationalSelector() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -152,8 +153,6 @@ export default function NationalSelector() {
       icon: "calendar-line",
       title: "Exercice",
       value: selectedYear,
-      color: "var(--background-contrast-purple-glycine)",
-      iconColor: "var(--text-label-purple-glycine)",
       dropdown: (
         <Dropdown label={selectedYear} size="sm" fullWidth>
           {years.map((year) => (
@@ -172,8 +171,6 @@ export default function NationalSelector() {
       icon: "building-line",
       title: "Type",
       value: typeLabel,
-      color: "var(--background-contrast-blue-ecume)",
-      iconColor: "var(--text-label-blue-ecume)",
       dropdown: (
         <Dropdown label={typeLabel} size="sm" fullWidth>
           <Dropdown.Item
@@ -198,8 +195,6 @@ export default function NationalSelector() {
       icon: "layout-grid-line",
       title: "Typologie",
       value: typologieLabel,
-      color: "var(--background-contrast-green-emeraude)",
-      iconColor: "var(--text-label-green-emeraude)",
       dropdown: (
         <Dropdown label={typologieLabel} size="sm" fullWidth>
           <Dropdown.Item
@@ -224,8 +219,6 @@ export default function NationalSelector() {
       icon: "map-pin-2-line",
       title: "Région",
       value: regionLabel,
-      color: "var(--background-contrast-orange-terre-battue)",
-      iconColor: "var(--text-label-orange-terre-battue)",
       dropdown: (
         <Dropdown label={regionLabel} size="sm" fullWidth>
           <Dropdown.Item
@@ -249,94 +242,64 @@ export default function NationalSelector() {
   ];
 
   return (
-    <main>
-      <Container fluid className="etablissement-selector__wrapper">
-        <Container as="section">
-          <Row>
-            <Col>
-              <Breadcrumb
-                items={[
-                  { label: "Accueil", href: "/structures-finance/accueil" },
-                  { label: "Vue nationale" },
-                ]}
-              />
-            </Col>
-          </Row>
-          <Row className="fr-mb-3w">
-            <Col
-              style={{
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                flexWrap: "wrap",
-                gap: "1rem",
-              }}
-            >
-              <h1 className="fr-h3 fr-mb-0">Vue nationale</h1>
-              {hasActiveFilters && (
-                <button
-                  className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
-                  onClick={handleResetFilters}
-                  type="button"
-                >
-                  <span
-                    className="ri-refresh-line fr-mr-1w"
-                    aria-hidden="true"
-                  />
-                  Réinitialiser les filtres
-                </button>
-              )}
-            </Col>
-          </Row>
-          <Row gutters>
-            {filterCards.map((card) => (
-              <Col key={card.title} xs="6" md="3">
-                <div
-                  style={{
-                    padding: "1rem",
-                    backgroundColor: "var(--background-default-grey)",
-                    border: "1px solid var(--border-default-grey)",
-                    height: "100%",
-                  }}
-                >
+    <Container fluid className="etablissement-selector__wrapper">
+      <Container as="section">
+        <Row>
+          <Col xs="12" md="12">
+            <Breadcrumb
+              items={[
+                { label: "Accueil", href: "/structures-finance/accueil" },
+                { label: "Vue nationale" },
+              ]}
+            />
+          </Col>
+        </Row>
+        <Row className="fr-mb-3w">
+          <Col className="national-selector__header">
+            <Title as="h1" look="h3" className="fr-mb-0">
+              Vue nationale
+            </Title>
+            {hasActiveFilters && (
+              <Button
+                variant="tertiary"
+                size="sm"
+                icon="refresh-line"
+                iconPosition="left"
+                onClick={handleResetFilters}
+              >
+                Réinitialiser les filtres
+              </Button>
+            )}
+          </Col>
+        </Row>
+        <Row gutters>
+          {filterCards.map((card) => (
+            <Col key={card.title} xs="6" md="3">
+              <div className="national-selector__filter-card">
+                <div className="national-selector__filter-header">
                   <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                      marginBottom: "0.75rem",
-                    }}
+                    className={`national-selector__filter-icon national-selector__filter-icon--${card.icon}`}
+                    aria-hidden="true"
                   >
-                    <div
-                      style={{
-                        width: "40px",
-                        height: "40px",
-                        backgroundColor: card.color,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <span
-                        className={`fr-icon-${card.icon}`}
-                        style={{ color: card.iconColor }}
-                        aria-hidden="true"
-                      />
-                    </div>
                     <span
-                      className="fr-text--sm fr-text--bold"
-                      style={{ color: "var(--text-mention-grey)" }}
-                    >
-                      {card.title}
-                    </span>
+                      className={`fr-icon-${card.icon}`}
+                      aria-hidden="true"
+                    />
                   </div>
-                  {card.dropdown}
+                  <Text
+                    size="sm"
+                    bold
+                    className="fr-mb-0 fr-text-mention--grey"
+                  >
+                    {card.title}
+                  </Text>
                 </div>
-              </Col>
-            ))}
-          </Row>
-        </Container>
+                {card.dropdown}
+              </div>
+            </Col>
+          ))}
+        </Row>
       </Container>
-    </main>
+    </Container>
   );
 }

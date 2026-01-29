@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { Button } from "@dataesr/dsfr-plus";
+import "../styles.scss";
 
 export default function SectionNavigation() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -7,9 +9,8 @@ export default function SectionNavigation() {
   const activeSection = searchParams.get("section") || "produits-vs-etudiants";
 
   const handleSectionChange = (section: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("section", section);
-    setSearchParams(next);
+    searchParams.set("section", section);
+    setSearchParams(searchParams);
     setIsOpen(false);
   };
 
@@ -22,27 +23,26 @@ export default function SectionNavigation() {
 
   return (
     <nav
-      className="fr-nav"
+      className="fr-nav section-navigation"
       id="section-navigation-national"
       role="navigation"
       aria-label="Navigation secondaire"
-      style={{ borderBottom: "1px solid var(--border-default-grey)" }}
     >
-      <button
-        className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill"
+      <Button
+        className="section-navigation__burger"
+        variant="secondary"
+        size="sm"
+        icon="menu-fill"
         onClick={() => setIsOpen(!isOpen)}
         aria-expanded={isOpen}
         aria-controls="section-nav-list-national"
-        data-mobile-burger-national
       >
         Menu
-      </button>
+      </Button>
 
       <ul
         id="section-nav-list-national"
-        className="fr-nav__list"
-        data-nav-list-national
-        data-open={isOpen}
+        className={`fr-nav__list section-navigation__list ${isOpen ? "section-navigation__list--open" : ""}`}
       >
         {navItems.map((item) => (
           <li key={item.id} className="fr-nav__item">
@@ -60,24 +60,6 @@ export default function SectionNavigation() {
           </li>
         ))}
       </ul>
-
-      <style>{`
-        [data-mobile-burger-national] { display: none; }
-        @media (max-width: 61.99em) {
-          [data-mobile-burger-national] { 
-            display: flex !important; 
-            margin: 0.5rem 1rem;
-          }
-          [data-nav-list-national] { 
-            display: none !important;
-            flex-direction: column;
-            background: var(--background-default-grey);
-          }
-          [data-nav-list-national][data-open="true"] { display: flex !important; }
-          [data-nav-list-national] .fr-nav__item { width: 100%; }
-          [data-nav-list-national] .fr-nav__link { width: 100%; }
-        }
-      `}</style>
     </nav>
   );
 }

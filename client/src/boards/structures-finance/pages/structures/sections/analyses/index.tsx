@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import EvolutionChart, { useAnalysesWithData } from "./charts/evolution";
-import AnalysisFilter from "../../../../components/analysis-filter";
+import AnalysisFilter from "./analysis-filter";
 import "../styles.scss";
 import { AnalysisKey } from "./charts/evolution/config";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";

@@ -1,11 +1,12 @@
 import { useMemo } from "react";
-import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
-import {} from "../../pages/structures/sections/analyses/charts/evolution";
-import "./styles.scss";
 import {
-  AnalysisKey,
-  PREDEFINED_ANALYSES,
-} from "../../pages/structures/sections/analyses/charts/evolution/config";
+  SegmentedControl,
+  SegmentedElement,
+  Text,
+  Title,
+} from "@dataesr/dsfr-plus";
+import "./styles.scss";
+import { AnalysisKey, PREDEFINED_ANALYSES } from "../charts/evolution/config";
 
 interface AnalysisFilterProps {
   analysesWithData: Set<AnalysisKey>;
@@ -44,12 +45,14 @@ export default function AnalysisFilter({
   }, [selectedCategory, analysesWithData]);
 
   return (
-    <div className="analysis-filter fr-p-2w fr-background-alt--grey">
-      <h3 className="fr-h6 fr-mb-2w">Sélection de l'analyse</h3>
+    <div className="analysis-filter fr-p-2w ">
+      <Title as="h3" look="h6" className="fr-mb-2w">
+        Sélection de l'analyse
+      </Title>
 
-      <p className="fr-text--xs fr-mb-2w fr-text-mention--grey">
+      <Text size="xs" className="fr-mb-2w fr-text-mention--grey">
         Période : {periodText} • {analysesWithData.size} analyses
-      </p>
+      </Text>
 
       <SegmentedControl
         name="analysis-category"
@@ -74,6 +77,7 @@ export default function AnalysisFilter({
           return (
             <button
               key={analysisKey}
+              type="button"
               onClick={() => onSelectAnalysis(analysisKey)}
               className={`analysis-filter__item ${isSelected ? "analysis-filter__item--selected" : ""}`}
             >

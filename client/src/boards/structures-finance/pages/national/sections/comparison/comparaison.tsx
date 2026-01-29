@@ -1,4 +1,4 @@
-import { Row, Col } from "@dataesr/dsfr-plus";
+import { Row, Col, Text } from "@dataesr/dsfr-plus";
 import ComparisonBarChart from "./chart/comparison-bar";
 import MetricDefinitionsTable from "../../../structures/sections/analyses/components/metric-definitions-table";
 
@@ -27,14 +27,11 @@ export function ComparaisonSection({
       role="region"
       className="fr-mb-3w section-container"
     >
-      <p
-        className="fr-text--sm fr-mb-3w"
-        style={{ color: "var(--text-mention-grey)" }}
-      >
+      <Text size="sm" className="fr-mb-3w fr-text-mention--grey">
         <span className="ri-information-line fr-mr-1w" aria-hidden="true" />
         Pour les composantes des ressources propres, les valeurs correspondent à
         leur part sur le total des ressources propres de chaque établissement.
-      </p>
+      </Text>
 
       <Row>
         <Col xs="12">

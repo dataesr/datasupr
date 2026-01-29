@@ -141,29 +141,40 @@ export default function SelectionUI({
         : "Non RCE uniquement";
 
   return (
-    <Row gutters>
+    <Row>
       <Col xs="12" md="8">
-        <Row className="fr-grid-row--middle fr-mb-2w">
-          <Col>
-            <Title as="h1" look="h4" className="fr-mb-0">
-              Sélectionnez un établissement
-            </Title>
-          </Col>
+        <div
+          className="fr-grid-row fr-grid-row--middle fr-mb-2w"
+          style={{
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "0.5rem",
+          }}
+        >
+          <Title as="h1" look="h4" className="fr-mb-0">
+            Sélectionnez un établissement
+          </Title>
           {hasActiveFilters && (
-            <Col className="fr-col-auto">
-              <button
-                className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
-                onClick={handleResetFilters}
-                type="button"
-              >
-                <span className="ri-refresh-line fr-mr-1w" aria-hidden="true" />
-                Réinitialiser les filtres
-              </button>
-            </Col>
+            <button
+              className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
+              onClick={handleResetFilters}
+              type="button"
+            >
+              <span className="ri-refresh-line fr-mr-1w" aria-hidden="true" />
+              Réinitialiser les filtres
+            </button>
           )}
-        </Row>
+        </div>
 
-        <div className="fr-btns-group fr-btns-group--inline fr-mb-3w">
+        <div
+          className="fr-mb-3w"
+          style={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "0.5rem",
+            alignItems: "center",
+          }}
+        >
           <Dropdown label={typeLabel} icon="building-line" size="sm">
             <Dropdown.Item
               active={selectedType === "tous"}
