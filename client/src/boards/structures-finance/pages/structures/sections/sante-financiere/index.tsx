@@ -22,9 +22,18 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
     data.resultat_net_comptable !== data.resultat_net_comptable_hors_sie;
 
   return (
-    <div id="section-sante-financier" className="section-container">
+    <section
+      id="section-sante-financier"
+      aria-labelledby="section-sante-financier-title"
+      className="section-container"
+    >
       <div className="section-header fr-mb-4w">
-        <Title as="h2" look="h5" className="section-header__title">
+        <Title
+          as="h2"
+          look="h5"
+          id="section-sante-financier-title"
+          className="section-header__title"
+        >
           Equilibre financier
         </Title>
       </div>
@@ -314,6 +323,6 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
           "solde_budgetaire",
         ]}
       />
-    </div>
+    </section>
   );
 }

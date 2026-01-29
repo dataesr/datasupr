@@ -21,9 +21,18 @@ export function FinancementsSection({
   selectedYear,
 }: FinancementsSectionProps) {
   return (
-    <div id="section-financements" className="section-container">
+    <section
+      id="section-financements"
+      aria-labelledby="section-financements-title"
+      className="section-container"
+    >
       <div className="section-header fr-mb-4w">
-        <Title as="h3" look="h5" className="section-header__title">
+        <Title
+          as="h2"
+          look="h5"
+          id="section-financements-title"
+          className="section-header__title"
+        >
           Les ressources de l'établissement
         </Title>
       </div>
@@ -225,6 +234,6 @@ export function FinancementsSection({
           "tot_ress_autres_recette",
         ]}
       />
-    </div>
+    </section>
   );
 }

@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Row, Col } from "@dataesr/dsfr-plus";
+import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import Select from "../../../../../components/select";
 import Dropdown from "../../../../../components/dropdown";
 
@@ -141,40 +141,29 @@ export default function SelectionUI({
         : "Non RCE uniquement";
 
   return (
-    <Row>
+    <Row gutters>
       <Col xs="12" md="8">
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-            marginBottom: "1rem",
-          }}
-        >
-          <h1 className="fr-h4 fr-mb-0">Sélectionnez un établissement</h1>
+        <Row className="fr-grid-row--middle fr-mb-2w">
+          <Col>
+            <Title as="h1" look="h4" className="fr-mb-0">
+              Sélectionnez un établissement
+            </Title>
+          </Col>
           {hasActiveFilters && (
-            <button
-              className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
-              onClick={handleResetFilters}
-              type="button"
-            >
-              <span className="ri-refresh-line fr-mr-1w" aria-hidden="true" />
-              Réinitialiser les filtres
-            </button>
+            <Col className="fr-col-auto">
+              <button
+                className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm"
+                onClick={handleResetFilters}
+                type="button"
+              >
+                <span className="ri-refresh-line fr-mr-1w" aria-hidden="true" />
+                Réinitialiser les filtres
+              </button>
+            </Col>
           )}
-        </div>
+        </Row>
 
-        <div
-          className="fr-mb-3w"
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "0.5rem",
-            alignItems: "center",
-          }}
-        >
+        <div className="fr-btns-group fr-btns-group--inline fr-mb-3w">
           <Dropdown label={typeLabel} icon="building-line" size="sm">
             <Dropdown.Item
               active={selectedType === "tous"}
@@ -298,12 +287,7 @@ export default function SelectionUI({
       <Col
         xs="12"
         md="4"
-        className="fr-hidden fr-unhidden-md"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        className="fr-hidden fr-unhidden-md fr-grid-row fr-grid-row--center fr-grid-row--middle"
       >
         <svg
           className="fr-artwork"

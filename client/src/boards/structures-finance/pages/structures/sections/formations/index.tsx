@@ -25,9 +25,18 @@ export function EtudiantsSection({
   const effectifDuEvolution = useMetricEvolution("effectif_sans_cpge_du");
 
   return (
-    <div id="section-etudiants" className="section-container">
+    <section
+      id="section-etudiants"
+      aria-labelledby="section-etudiants-title"
+      className="section-container"
+    >
       <div className="section-header fr-mb-4w">
-        <Title as="h2" look="h5" className="section-header__title">
+        <Title
+          as="h2"
+          look="h5"
+          id="section-etudiants-title"
+          className="section-header__title"
+        >
           Les étudiants inscrits en {`${data.anuniv}`}
         </Title>
       </div>
@@ -75,6 +84,6 @@ export function EtudiantsSection({
           "effectif_sans_cpge_du",
         ]}
       />
-    </div>
+    </section>
   );
 }

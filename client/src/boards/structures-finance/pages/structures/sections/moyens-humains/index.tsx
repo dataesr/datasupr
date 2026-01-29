@@ -13,9 +13,18 @@ interface MoyensHumainsSectionProps {
 
 export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
   return (
-    <div id="section-moyens-humains" className="section-container">
+    <section
+      id="section-moyens-humains"
+      aria-labelledby="section-moyens-humains-title"
+      className="section-container"
+    >
       <div className="section-header fr-mb-5w">
-        <Title as="h3" look="h5" className="section-header__title">
+        <Title
+          as="h2"
+          look="h5"
+          id="section-moyens-humains-title"
+          className="section-header__title"
+        >
           Les enseignants permanents
         </Title>
       </div>
@@ -66,12 +75,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
       </div>
 
       <div>
-        <h3
-          className="fr-h5 fr-mb-3w "
-          style={{ borderLeftColor: SECTION_COLOR }}
-        >
-          La masse salariale
-        </h3>
+        <h3 className="fr-h5 fr-mb-3w">La masse salariale</h3>
         <Row gutters>
           <Col xs="12" sm="6" md="4">
             <MetricChartCard
@@ -148,6 +152,6 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
           "taux_de_remuneration_des_permanents",
         ]}
       />
-    </div>
+    </section>
   );
 }

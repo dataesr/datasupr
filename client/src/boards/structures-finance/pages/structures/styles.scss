@@ -450,3 +450,89 @@
     }
   }
 }
+
+.page-header {
+  &__stats-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    > li {
+      flex: 0 0 auto;
+    }
+  }
+
+  &__stat-card {
+    overflow: hidden;
+  }
+
+  &__stat-card-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__stat-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    min-width: 2.5rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &--pink-tuile {
+      background-color: var(--background-contrast-pink-tuile);
+      color: var(--text-action-high-pink-tuile);
+    }
+
+    &--green-emeraude {
+      background-color: var(--background-contrast-green-emeraude);
+      color: var(--text-action-high-green-emeraude);
+    }
+
+    &--yellow-tournesol {
+      background-color: var(--background-contrast-yellow-tournesol);
+      color: var(--text-action-high-yellow-tournesol);
+    }
+
+    &--blue-france {
+      background-color: var(--background-contrast-blue-france);
+      color: var(--text-action-high-blue-france);
+    }
+  }
+
+  &__formations-table {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__formations-row {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__formations-label {
+    text-align: right;
+  }
+
+  &__formations-value {
+    margin: 0;
+  }
+
+  &__tag-list {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+}

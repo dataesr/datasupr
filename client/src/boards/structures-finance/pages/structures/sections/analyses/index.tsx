@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Row, Col } from "@dataesr/dsfr-plus";
+import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import EvolutionChart, { useAnalysesWithData } from "./charts/evolution";
 import AnalysisFilter from "../../../../components/analysis-filter";
 import "../styles.scss";
@@ -26,7 +26,21 @@ export function AnalysesSection({
 
   if (isLoading) {
     return (
-      <div id="section-analyses" className="section-container">
+      <section
+        id="section-analyses"
+        aria-labelledby="section-analyses-title"
+        className="section-container"
+      >
+        <div className="section-header fr-mb-4w">
+          <Title
+            as="h2"
+            look="h5"
+            id="section-analyses-title"
+            className="section-header__title"
+          >
+            Analyses et évolutions
+          </Title>
+        </div>
         <Row gutters>
           <Col md="4" xs="12">
             <DefaultSkeleton height="400px" />
@@ -35,32 +49,50 @@ export function AnalysesSection({
             <DefaultSkeleton height="400px" />
           </Col>
         </Row>
-      </div>
+      </section>
     );
   }
 
   if (analysesWithData.size === 0) {
     return (
-      <div
+      <section
         id="section-analyses"
-        role="region"
-        aria-labelledby="section-analyses"
+        aria-labelledby="section-analyses-title"
         className="section-container"
       >
+        <div className="section-header fr-mb-4w">
+          <Title
+            as="h2"
+            look="h5"
+            id="section-analyses-title"
+            className="section-header__title"
+          >
+            Analyses et évolutions
+          </Title>
+        </div>
         <div className="fr-alert fr-alert--info">
           <p>Aucune donnée d'évolution disponible pour cet établissement</p>
         </div>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div
+    <section
       id="section-analyses"
-      role="region"
-      aria-labelledby="section-analyses"
+      aria-labelledby="section-analyses-title"
       className="section-container"
     >
+      <div className="section-header fr-mb-4w">
+        <Title
+          as="h2"
+          look="h5"
+          id="section-analyses-title"
+          className="section-header__title"
+        >
+          Analyses et évolutions
+        </Title>
+      </div>
       <Row gutters>
         <Col md="4" xs="12">
           <AnalysisFilter
@@ -97,6 +129,6 @@ export function AnalysesSection({
           )}
         </Col>
       </Row>
-    </div>
+    </section>
   );
 }

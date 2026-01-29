@@ -124,23 +124,27 @@ export default function StructureView() {
 
   if (isLoading || isCheckingMultiples || isCheckingExists) {
     return (
-      <Container fluid className="etablissement-selector__wrapper">
-        <Container className="fr-py-4w">
-          <DefaultSkeleton col={3} height="300px" />
+      <main>
+        <Container fluid className="etablissement-selector__wrapper">
+          <Container className="fr-py-4w">
+            <DefaultSkeleton col={3} height="300px" />
+          </Container>
         </Container>
-      </Container>
+      </main>
     );
   }
 
   if (showNotExistsAlert && existsData?.etablissementActuel) {
     return (
-      <StructureNotExistsAlert
-        etablissementLibHistorique={
-          existsData.etablissement_lib_historique || selectedStructure
-        }
-        etablissementActuel={existsData.etablissementActuel}
-        selectedYear={selectedYear}
-      />
+      <main>
+        <StructureNotExistsAlert
+          etablissementLibHistorique={
+            existsData.etablissement_lib_historique || selectedStructure
+          }
+          etablissementActuel={existsData.etablissementActuel}
+          selectedYear={selectedYear}
+        />
+      </main>
     );
   }
 
@@ -183,7 +187,7 @@ export default function StructureView() {
   return (
     <main>
       <Container fluid className="etablissement-selector__wrapper">
-        <Container as="section">
+        <Container>
           <Row>
             <Col>
               <Breadcrumb
@@ -207,7 +211,7 @@ export default function StructureView() {
         </Container>
       </Container>
 
-      <Container as="section">
+      <Container>
         <SectionNavigation
           activeSection={section}
           years={years}
@@ -218,7 +222,9 @@ export default function StructureView() {
         />
       </Container>
 
-      <Container className="fr-mt-4w">{renderSectionContent()}</Container>
+      <Container as="section" className="fr-mt-4w">
+        {renderSectionContent()}
+      </Container>
     </main>
   );
 }

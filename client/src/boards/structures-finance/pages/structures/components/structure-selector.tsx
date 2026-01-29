@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { useMemo } from "react";
-import { Col, Container, Row } from "@dataesr/dsfr-plus";
+import { Col, Container, Row, Text } from "@dataesr/dsfr-plus";
 import { useStructuresFilters } from "../hooks";
 import { useFinanceYears } from "../../../api/common";
 import SelectionUI from "./selection-ui";
@@ -83,15 +83,19 @@ export default function StructureSelection() {
       </Container>
 
       {!isLoading && filteredEtablissements.length > 0 && (
-        <Container className="fr-py-4w">
-          <p className="fr-text--sm fr-mb-2w">
+        <Container
+          as="section"
+          className="fr-py-4w"
+          aria-label="Résultats de recherche"
+        >
+          <Text size="sm" className="fr-mb-2w" aria-live="polite">
             {filteredEtablissements.length} établissement
             {filteredEtablissements.length > 1 ? "s" : ""} trouvé
             {filteredEtablissements.length > 1 ? "s" : ""}
-          </p>
+          </Text>
           <ul
-            className="fr-grid-row fr-grid-row--gutters"
-            style={{ listStyle: "none", padding: 0 }}
+            className="fr-grid-row fr-grid-row--gutters page-header__stats-list"
+            role="list"
           >
             {filteredEtablissements.map((etab: any) => {
               const id =

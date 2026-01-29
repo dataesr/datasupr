@@ -1,22 +1,10 @@
+import { Row, Col, Title, Text, Button, Tag } from "@dataesr/dsfr-plus";
+import "../styles.scss";
+
 interface PageHeaderProps {
   data: any;
   onClose: () => void;
 }
-
-const iconStyle = (
-  bgColor: string,
-  textColor: string
-): React.CSSProperties => ({
-  width: "2.5rem",
-  height: "2.5rem",
-  minWidth: "2.5rem",
-  borderRadius: "50%",
-  backgroundColor: `var(${bgColor})`,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  color: `var(${textColor})`,
-});
 
 export default function PageHeader({ data, onClose }: PageHeaderProps) {
   if (!data) return null;
@@ -43,312 +31,252 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
     data.etablissement_lib !== data.etablissement_actuel_lib;
 
   return (
-    <div className="page-header fr-mb-4w">
-      <div className="fr-grid-row fr-grid-row--middle fr-grid-row--gutters fr-mb-2w">
-        <div className="fr-col">
-          <h1 className="fr-h4 fr-mb-0">
+    <header className="page-header fr-mb-4w">
+      <Row gutters className="fr-grid-row--middle fr-mb-2w">
+        <Col xs="12" md="8">
+          <Title as="h1" look="h4" className="fr-mb-0">
             {data.etablissement_lib || data.etablissement_actuel_lib}
-          </h1>
+          </Title>
           {showActuelName && (
-            <p className="fr-text--sm fr-mb-0 fr-text-mention--grey">
+            <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
               Actuellement : {data.etablissement_actuel_lib}
-            </p>
+            </Text>
           )}
           {data.etablissement_actuel_categorie && (
-            <p className="fr-text--xs fr-mb-0 fr-text-mention--grey">
+            <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
               {data.etablissement_actuel_categorie}
-            </p>
+            </Text>
           )}
-        </div>
-        <div className="fr-col-auto">
-          <button
-            className="fr-btn fr-btn--tertiary-no-outline fr-btn--icon-left fr-icon-arrow-go-back-line"
+        </Col>
+        <Col xs="12" md="4" className="text-right">
+          <Button
+            variant="tertiary"
+            icon="arrow-go-back-line"
+            iconPosition="left"
             onClick={onClose}
           >
             Changer d'établissement
-          </button>
-        </div>
-      </div>
+          </Button>
+        </Col>
+      </Row>
 
-      <div className="fr-grid-row fr-grid-row--gutters">
-        <div className="fr-col">
-          <div className="fr-grid-row fr-grid-row--gutters">
+      <Row gutters>
+        <Col xs="12" md={hasFormations ? "8" : "12"}>
+          <ul className="page-header__stats-list">
             {data.effectif_sans_cpge && (
-              <div className="fr-col-auto">
-                <div
-                  className="fr-card fr-card--shadow fr-px-3v fr-py-2w"
-                  style={{ overflow: "hidden" }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                    }}
-                  >
-                    <div
-                      style={iconStyle(
-                        "--background-contrast-pink-tuile",
-                        "--text-action-high-pink-tuile"
-                      )}
+              <li>
+                <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
+                  <div className="page-header__stat-card-content">
+                    <span
+                      className="page-header__stat-icon page-header__stat-icon--pink-tuile"
+                      aria-hidden="true"
                     >
                       <span className="fr-icon-team-fill" aria-hidden="true" />
-                    </div>
+                    </span>
                     <div>
-                      <p className="fr-text--lg fr-text--bold fr-mb-0">
+                      <Text size="lg" bold className="fr-mb-0">
                         {data.effectif_sans_cpge.toLocaleString("fr-FR")}{" "}
                         étudiants inscrits
-                      </p>
-                      <p className="fr-text--xs fr-mb-0 fr-text-mention--grey">
+                      </Text>
+                      <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
                         dont {data.part_effectif_sans_cpge_dn?.toFixed(1)} %
                         dans les diplômes nationaux
-                      </p>
+                      </Text>
                     </div>
                   </div>
                 </div>
-              </div>
+              </li>
             )}
 
-            <div className="fr-col-auto">
-              <div
-                className="fr-card fr-card--shadow fr-px-3v fr-py-2w"
-                style={{ overflow: "hidden" }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                  }}
-                >
-                  <div
-                    style={iconStyle(
-                      "--background-contrast-green-emeraude",
-                      "--text-action-high-green-emeraude"
-                    )}
+            <li>
+              <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
+                <div className="page-header__stat-card-content">
+                  <span
+                    className="page-header__stat-icon page-header__stat-icon--green-emeraude"
+                    aria-hidden="true"
                   >
                     <span
                       className="fr-icon-map-pin-2-fill"
                       aria-hidden="true"
                     />
-                  </div>
+                  </span>
                   <div>
-                    <p className="fr-text--lg fr-text--bold fr-mb-0">
+                    <Text size="lg" bold className="fr-mb-0">
                       {data.commune}
-                    </p>
-                    <p className="fr-text--xs fr-mb-0 fr-text-mention--grey">
+                    </Text>
+                    <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
                       {data.region}
-                    </p>
+                    </Text>
                   </div>
                 </div>
               </div>
-            </div>
+            </li>
 
             {data.nb_sites && (
-              <div className="fr-col-auto">
-                <div
-                  className="fr-card fr-card--shadow fr-px-3v fr-py-2w"
-                  style={{ overflow: "hidden" }}
-                >
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "0.75rem",
-                    }}
-                  >
-                    <div
-                      style={iconStyle(
-                        "--background-contrast-yellow-tournesol",
-                        "--text-action-high-yellow-tournesol"
-                      )}
+              <li>
+                <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
+                  <div className="page-header__stat-card-content">
+                    <span
+                      className="page-header__stat-icon page-header__stat-icon--yellow-tournesol"
+                      aria-hidden="true"
                     >
                       <span
                         className="fr-icon-building-fill"
                         aria-hidden="true"
                       />
-                    </div>
+                    </span>
                     <div>
-                      <p className="fr-text--lg fr-text--bold fr-mb-0">
+                      <Text size="lg" bold className="fr-mb-0">
                         {data.nb_sites}
-                      </p>
-                      <p className="fr-text--xs fr-mb-0 fr-text-mention--grey">
+                      </Text>
+                      <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
                         {data.nb_sites > 1 ? "Sites" : "Site"}
-                      </p>
+                      </Text>
                     </div>
                   </div>
                 </div>
-              </div>
+              </li>
             )}
 
-            <div className="fr-col-auto">
-              <div
-                className="fr-card fr-card--shadow fr-px-3v fr-py-2w"
-                style={{ overflow: "hidden" }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "0.75rem",
-                  }}
-                >
-                  <div
-                    style={iconStyle(
-                      "--background-contrast-blue-france",
-                      "--text-action-high-blue-france"
-                    )}
+            <li>
+              <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
+                <div className="page-header__stat-card-content">
+                  <span
+                    className="page-header__stat-icon page-header__stat-icon--blue-france"
+                    aria-hidden="true"
                   >
                     <span className="fr-icon-bank-fill" aria-hidden="true" />
-                  </div>
+                  </span>
                   <div>
-                    <p className="fr-text--lg fr-text--bold fr-mb-0">
+                    <Text size="lg" bold className="fr-mb-0">
                       {data.is_rce ? `RCE depuis ${data.rce}` : "Non RCE"}
-                    </p>
-                    <p className="fr-text--xs fr-mb-0 fr-text-mention--grey">
+                    </Text>
+                    <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
                       Responsabilités et compétences élargies
-                    </p>
+                    </Text>
                   </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
+            </li>
+          </ul>
+        </Col>
 
         {hasFormations && (
-          <div className="fr-col-auto">
-            <table style={{ borderCollapse: "collapse" }}>
-              <tbody>
-                {hasCursus && (
-                  <tr>
-                    <td
-                      style={{
-                        paddingRight: "1rem",
-                        paddingBottom: "0.5rem",
-                        verticalAlign: "middle",
-                      }}
-                    >
-                      <span className="fr-text--xs fr-text-mention--grey">
-                        Cursus
-                      </span>
-                    </td>
-                    <td
-                      style={{
-                        paddingBottom: "0.5rem",
-                        verticalAlign: "middle",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "0.5rem",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {data.has_effectif_l && (
-                          <span className="fr-tag fr-tag--sm">Licence</span>
-                        )}
-                        {data.has_effectif_m && (
-                          <span className="fr-tag fr-tag--sm">Master</span>
-                        )}
-                        {data.has_effectif_d && (
-                          <span className="fr-tag fr-tag--sm">Doctorat</span>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                )}
-                {hasFilieres && (
-                  <tr>
-                    <td
-                      style={{
-                        paddingRight: "1rem",
-                        paddingBottom: "0.5rem",
-                        verticalAlign: "middle",
-                      }}
-                    >
-                      <span className="fr-text--xs fr-text-mention--grey">
-                        Filières
-                      </span>
-                    </td>
-                    <td
-                      style={{
-                        paddingBottom: "0.5rem",
-                        verticalAlign: "middle",
-                      }}
-                    >
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "0.5rem",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {data.has_effectif_iut && (
-                          <span className="fr-tag fr-tag--sm">IUT</span>
-                        )}
-                        {data.has_effectif_ing && (
-                          <span className="fr-tag fr-tag--sm">Ingénieur</span>
-                        )}
-                        {data.has_effectif_sante && (
-                          <span className="fr-tag fr-tag--sm">Santé</span>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                )}
-                {hasDisciplines && (
-                  <tr>
-                    <td
-                      style={{ paddingRight: "1rem", verticalAlign: "middle" }}
-                    >
-                      <span className="fr-text--xs fr-text-mention--grey">
-                        Disciplines
-                      </span>
-                    </td>
-                    <td style={{ verticalAlign: "middle" }}>
-                      <div
-                        style={{
-                          display: "flex",
-                          gap: "0.5rem",
-                          flexWrap: "wrap",
-                        }}
-                      >
-                        {data.has_effectif_dsa && (
-                          <span className="fr-tag fr-tag--sm">Droit Éco</span>
-                        )}
-                        {data.has_effectif_llsh && (
-                          <span className="fr-tag fr-tag--sm">Lettres SHS</span>
-                        )}
-                        {data.has_effectif_si && (
-                          <span className="fr-tag fr-tag--sm">Sciences</span>
-                        )}
-                        {data.has_effectif_staps && (
-                          <span className="fr-tag fr-tag--sm">STAPS</span>
-                        )}
-                        {data.has_effectif_theo && (
-                          <span className="fr-tag fr-tag--sm">Théologie</span>
-                        )}
-                        {data.has_effectif_veto && (
-                          <span className="fr-tag fr-tag--sm">Vétérinaire</span>
-                        )}
-                        {data.has_effectif_sante_disc && (
-                          <span className="fr-tag fr-tag--sm">Santé</span>
-                        )}
-                        {data.has_effectif_interd && (
-                          <span className="fr-tag fr-tag--sm">
-                            Pluridisciplinaire
-                          </span>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+          <Col xs="12" md="4">
+            <dl className="page-header__formations-table">
+              {hasCursus && (
+                <div className="page-header__formations-row">
+                  <dt className="page-header__formations-label">
+                    <Text size="xs" className="fr-text-mention--grey fr-mb-0">
+                      Cursus
+                    </Text>
+                  </dt>
+                  <dd className="page-header__formations-value">
+                    <ul className="page-header__tag-list">
+                      {data.has_effectif_l && (
+                        <li>
+                          <Tag size="sm">Licence</Tag>
+                        </li>
+                      )}
+                      {data.has_effectif_m && (
+                        <li>
+                          <Tag size="sm">Master</Tag>
+                        </li>
+                      )}
+                      {data.has_effectif_d && (
+                        <li>
+                          <Tag size="sm">Doctorat</Tag>
+                        </li>
+                      )}
+                    </ul>
+                  </dd>
+                </div>
+              )}
+              {hasFilieres && (
+                <div className="page-header__formations-row">
+                  <dt className="page-header__formations-label">
+                    <Text size="xs" className="fr-text-mention--grey fr-mb-0">
+                      Filières
+                    </Text>
+                  </dt>
+                  <dd className="page-header__formations-value">
+                    <ul className="page-header__tag-list">
+                      {data.has_effectif_iut && (
+                        <li>
+                          <Tag size="sm">IUT</Tag>
+                        </li>
+                      )}
+                      {data.has_effectif_ing && (
+                        <li>
+                          <Tag size="sm">Ingénieur</Tag>
+                        </li>
+                      )}
+                      {data.has_effectif_sante && (
+                        <li>
+                          <Tag size="sm">Santé</Tag>
+                        </li>
+                      )}
+                    </ul>
+                  </dd>
+                </div>
+              )}
+              {hasDisciplines && (
+                <div className="page-header__formations-row">
+                  <dt className="page-header__formations-label">
+                    <Text size="xs" className="fr-text-mention--grey fr-mb-0">
+                      Disciplines
+                    </Text>
+                  </dt>
+                  <dd className="page-header__formations-value">
+                    <ul className="page-header__tag-list">
+                      {data.has_effectif_dsa && (
+                        <li>
+                          <Tag size="sm">Droit Éco</Tag>
+                        </li>
+                      )}
+                      {data.has_effectif_llsh && (
+                        <li>
+                          <Tag size="sm">Lettres SHS</Tag>
+                        </li>
+                      )}
+                      {data.has_effectif_si && (
+                        <li>
+                          <Tag size="sm">Sciences</Tag>
+                        </li>
+                      )}
+                      {data.has_effectif_staps && (
+                        <li>
+                          <Tag size="sm">STAPS</Tag>
+                        </li>
+                      )}
+                      {data.has_effectif_theo && (
+                        <li>
+                          <Tag size="sm">Théologie</Tag>
+                        </li>
+                      )}
+                      {data.has_effectif_veto && (
+                        <li>
+                          <Tag size="sm">Vétérinaire</Tag>
+                        </li>
+                      )}
+                      {data.has_effectif_sante_disc && (
+                        <li>
+                          <Tag size="sm">Santé</Tag>
+                        </li>
+                      )}
+                      {data.has_effectif_interd && (
+                        <li>
+                          <Tag size="sm">Pluridisciplinaire</Tag>
+                        </li>
+                      )}
+                    </ul>
+                  </dd>
+                </div>
+              )}
+            </dl>
+          </Col>
         )}
-      </div>
-    </div>
+      </Row>
+    </header>
   );
 }

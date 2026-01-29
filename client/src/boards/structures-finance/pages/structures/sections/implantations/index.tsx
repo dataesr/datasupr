@@ -1,4 +1,4 @@
-import { Row, Col, Title } from "@dataesr/dsfr-plus";
+import { Title } from "@dataesr/dsfr-plus";
 import CardSimple from "../../../../../../components/card-simple";
 import "../styles.scss";
 
@@ -16,30 +16,37 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
   }
 
   return (
-    <div id="section-implantations" className="section-container">
+    <section
+      id="section-implantations"
+      aria-labelledby="section-implantations-title"
+      className="section-container"
+    >
       <div className="section-header fr-mb-4w">
-        <Title as="h3" look="h5" className="section-header__title">
+        <Title
+          as="h2"
+          look="h5"
+          id="section-implantations-title"
+          className="section-header__title"
+        >
           Implantations géographiques
         </Title>
       </div>
 
-      <Row gutters>
+      <ul className="fr-grid-row fr-grid-row--gutters" role="list">
         {data.implantations.map((implantation: any, index: number) => (
-          <Col
+          <li
             key={implantation.implantation_id || index}
-            xs="12"
-            md="6"
-            lg="4"
+            className="fr-col-12 fr-col-md-6 fr-col-lg-4"
           >
             <CardSimple
               description={implantation.siege ? "Site principal" : ""}
               stat={implantation.effectif_sans_cpge}
-              title={`${implantation.implantation}`}
+              title={implantation.implantation}
               year={data.anuniv}
             />
-          </Col>
+          </li>
         ))}
-      </Row>
-    </div>
+      </ul>
+    </section>
   );
 }
