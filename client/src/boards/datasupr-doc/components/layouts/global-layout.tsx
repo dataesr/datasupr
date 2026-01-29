@@ -4,6 +4,7 @@ import { Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import Footer from "../../../../components/footer";
 import SwitchTheme from "../../../../components/switch-theme";
+import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
 
 import "../styles.scss";
@@ -13,24 +14,19 @@ export default function GlobalLayout({ languageSelector = false }) {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  // const filtersParams = searchParams.toString();
   const [menuOpen, setMenuOpen] = useState(false);
 
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
   return (
     <>
       <Header>
         <Logo text="Ministère|de l'Enseignement|supérieur,|de la Recherche|et de l'Espace" />
-        <Service name="DataSupR" tagline={getI18nLabel("tagline")} />
+        <Service name="DataSupR" tagline={getI18nLabel(i18n, "tagline")} />
         <FastAccess>
           <Button as="a" href="/" icon="github-fill" size="sm" variant="text">
-            {getI18nLabel("explore")}
+            {getI18nLabel(i18n, "explore")}
           </Button>
           <Button
             as="a"
@@ -41,10 +37,10 @@ export default function GlobalLayout({ languageSelector = false }) {
             target="_blank"
             variant="text"
           >
-            {getI18nLabel("datasets")}
+            {getI18nLabel(i18n, "datasets")}
           </Button>
           <Button aria-controls="fr-theme-modal" className="fr-btn fr-icon-theme-fill" data-fr-opened="false">
-            {getI18nLabel("themes")}
+            {getI18nLabel(i18n, "themes")}
           </Button>
           {languageSelector && (
             <nav role="navigation" className="fr-translate fr-nav">
@@ -53,7 +49,7 @@ export default function GlobalLayout({ languageSelector = false }) {
                   aria-controls="translate-1177"
                   aria-expanded="false"
                   className="fr-translate__btn fr-btn fr-btn--tertiary"
-                  title={getI18nLabel("languagesSelector")}
+                  title={getI18nLabel(i18n, "languagesSelector")}
                 >
                   {currentLang === "fr" ? (
                     <>
@@ -114,10 +110,10 @@ export default function GlobalLayout({ languageSelector = false }) {
               <Nav aria-label="Main navigation">
                 <Link current={is("/datasupr-doc/home")} href="/datasupr-doc/home">
                   <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
-                  {getI18nLabel("home")}
+                  {getI18nLabel(i18n, "home")}
                 </Link>
                 <Link current={is("/datasupr-doc/overview")} href="/datasupr-doc/overview">
-                  {getI18nLabel("overview")}
+                  {getI18nLabel(i18n, "overview")}
                 </Link>
               </Nav>
             </div>

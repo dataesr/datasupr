@@ -2,6 +2,7 @@ import { Logo, Service } from "@dataesr/dsfr-plus";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import Footer from "../../../../components/footer";
+import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
 
 
@@ -14,9 +15,6 @@ export default function GlobalLayout() {
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
 
-  function getI18nLabel(key: string): string {
-    return i18n[key]?.fr || "";
-  }
   return (
     <>
       <header role="banner" className="fr-header">
@@ -61,7 +59,7 @@ export default function GlobalLayout() {
               id="button-2168"
               className="fr-btn--close fr-btn"
             >
-              {getI18nLabel("close")}
+              {getI18nLabel(i18n, "close")}
             </button>
             <div className="fr-header__menu-links"></div>
             <nav
@@ -83,7 +81,7 @@ export default function GlobalLayout() {
                       className="fr-icon-home-4-line fr-mr-1w"
                       aria-hidden="true"
                     />
-                    {getI18nLabel("home")}
+                    {getI18nLabel(i18n, "home")}
                   </Link>
                 </li>
                 <li className="fr-nav__item">
