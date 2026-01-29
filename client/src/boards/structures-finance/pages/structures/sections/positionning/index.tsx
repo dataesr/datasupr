@@ -15,6 +15,7 @@ import PositioningFilters, {
 import PositioningScatterChart from "./charts/positioning-scatter";
 import PositioningComparisonBarChart from "./charts/positioning-comparison-bar";
 import { usePositioningFilteredData } from "./hooks/usePositioningFilteredData";
+import MetricDefinitionsTable from "../analyses/components/metric-definitions-table";
 import "../styles.scss";
 
 interface PositionnementSectionProps {
@@ -221,6 +222,17 @@ export function PositionnementSection({
               </Row>
             </div>
           )}
+
+          <MetricDefinitionsTable
+            metricKeys={[
+              "produits_de_fonctionnement_encaissables",
+              "effectif_sans_cpge",
+              "scsp_par_etudiants",
+              "taux_encadrement",
+              "scsp",
+              "ressources_propres",
+            ]}
+          />
         </>
       )}
     </div>

@@ -1,5 +1,6 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ScatterChart from "../../charts/scatter";
+import MetricDefinitionsTable from "../../../structures/sections/analyses/components/metric-definitions-table";
 
 interface ScspRessourcesSectionProps {
   data: any[];
@@ -34,6 +35,11 @@ export function ScspRessourcesSection({
             {data.length > 1 ? "s" : ""}
           </div>
           <ScatterChart config={scatterConfig} data={data} />
+        </Col>
+      </Row>
+      <Row>
+        <Col xs="12">
+          <MetricDefinitionsTable metricKeys={["scsp", "ressources_propres"]} />
         </Col>
       </Row>
     </section>

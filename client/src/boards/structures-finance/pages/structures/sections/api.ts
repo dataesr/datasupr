@@ -16,9 +16,12 @@ export const useMetricEvolution = (metricKey: string) => {
     if (!evolutionData || evolutionData.length === 0) return undefined;
     const yearNum = selectedYear ? Number(selectedYear) : null;
     return evolutionData
-      .sort((a: any, b: any) => a.exercice - b.exercice)
-      .filter((item: any) => !yearNum || item.exercice <= yearNum)
-      .map((item: any) => ({ exercice: item.exercice, value: item[metricKey] }))
+      .sort((a: any, b: any) => Number(a.exercice) - Number(b.exercice))
+      .filter((item: any) => !yearNum || Number(item.exercice) <= yearNum)
+      .map((item: any) => ({
+        exercice: Number(item.exercice),
+        value: Number(item[metricKey]),
+      }))
       .filter((item: any) => item.value != null && !isNaN(item.value));
   }, [evolutionData, metricKey, selectedYear]);
 };

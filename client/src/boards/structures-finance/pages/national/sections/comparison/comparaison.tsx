@@ -1,5 +1,6 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ComparisonBarChart from "./chart/comparison-bar";
+import MetricDefinitionsTable from "../../../structures/sections/analyses/components/metric-definitions-table";
 
 interface ComparaisonSectionProps {
   data: any[];
@@ -7,6 +8,8 @@ interface ComparaisonSectionProps {
   selectedType?: string;
   selectedTypologie?: string;
   selectedRegion?: string;
+  selectedMetric?: string;
+  onMetricChange?: (metric: string) => void;
 }
 
 export function ComparaisonSection({
@@ -15,6 +18,8 @@ export function ComparaisonSection({
   selectedType,
   selectedTypologie,
   selectedRegion,
+  selectedMetric,
+  onMetricChange,
 }: ComparaisonSectionProps) {
   return (
     <section
@@ -39,9 +44,19 @@ export function ComparaisonSection({
             selectedType={selectedType}
             selectedTypologie={selectedTypologie}
             selectedRegion={selectedRegion}
+            selectedMetric={selectedMetric}
+            onMetricChange={onMetricChange}
           />
         </Col>
       </Row>
+
+      {selectedMetric && (
+        <Row>
+          <Col xs="12">
+            <MetricDefinitionsTable metricKeys={[selectedMetric]} />
+          </Col>
+        </Row>
+      )}
     </section>
   );
 }

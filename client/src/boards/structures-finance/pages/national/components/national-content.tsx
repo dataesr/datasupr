@@ -18,12 +18,17 @@ export default function NationalContent() {
   const selectedTypologie = searchParams.get("typologie") || "";
   const selectedRegion = searchParams.get("region") || "";
   const activeSection = searchParams.get("section") || "produits-vs-etudiants";
+  const selectedMetric = searchParams.get("metric") || "";
+
+  const handleMetricChange = (metric: string) => {
+    searchParams.set("metric", metric);
+    setSearchParams(searchParams);
+  };
 
   useEffect(() => {
     if (!searchParams.get("section")) {
-      const next = new URLSearchParams(searchParams);
-      next.set("section", "produits-vs-etudiants");
-      setSearchParams(next, { replace: true });
+      searchParams.set("section", "produits-vs-etudiants");
+      setSearchParams(searchParams, { replace: true });
     }
   }, [searchParams, setSearchParams]);
 
@@ -81,6 +86,8 @@ export default function NationalContent() {
             selectedType={selectedType}
             selectedTypologie={selectedTypologie}
             selectedRegion={selectedRegion}
+            selectedMetric={selectedMetric}
+            onMetricChange={handleMetricChange}
           />
         );
       default:

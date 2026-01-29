@@ -22,32 +22,31 @@ export default function NationalSelector() {
   const selectedRegion = searchParams.get("region") || "";
 
   useEffect(() => {
-    const next = new URLSearchParams(searchParams);
     let hasChanges = false;
 
     if (searchParams.has("structureId")) {
-      next.delete("structureId");
+      searchParams.delete("structureId");
       hasChanges = true;
     }
     if (searchParams.has("section")) {
-      next.delete("section");
+      searchParams.delete("section");
       hasChanges = true;
     }
     if (searchParams.get("type") === "tous") {
-      next.delete("type");
+      searchParams.delete("type");
       hasChanges = true;
     }
     if (searchParams.get("region") === "toutes") {
-      next.delete("region");
+      searchParams.delete("region");
       hasChanges = true;
     }
     if (searchParams.get("typologie") === "toutes") {
-      next.delete("typologie");
+      searchParams.delete("typologie");
       hasChanges = true;
     }
 
     if (hasChanges) {
-      setSearchParams(next, { replace: true });
+      setSearchParams(searchParams, { replace: true });
     }
   }, []);
 
@@ -82,9 +81,8 @@ export default function NationalSelector() {
       return;
     }
 
-    const next = new URLSearchParams(searchParams);
-    next.set("year", defaultYear);
-    setSearchParams(next);
+    searchParams.set("year", defaultYear);
+    setSearchParams(searchParams);
   }, [years, yearFromUrl, searchParams, setSearchParams, defaultYear]);
 
   useEffect(() => {
@@ -96,57 +94,51 @@ export default function NationalSelector() {
           t.toLowerCase().includes("universite")
       );
       const typeToSet = universiteType || availableTypes[0];
-      const next = new URLSearchParams(searchParams);
-      next.set("type", typeToSet);
-      setSearchParams(next);
+      searchParams.set("type", typeToSet);
+      setSearchParams(searchParams);
     }
   }, [availableTypes, selectedType, setSearchParams]);
 
   const handleYearChange = (year: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("year", year);
-    setSearchParams(next);
+    searchParams.set("year", year);
+    setSearchParams(searchParams);
   };
 
   const handleTypeChange = (type: string) => {
-    const next = new URLSearchParams(searchParams);
     if (type) {
-      next.set("type", type);
+      searchParams.set("type", type);
     } else {
-      next.delete("type");
+      searchParams.delete("type");
     }
-    next.delete("typologie");
-    next.delete("region");
-    setSearchParams(next);
+    searchParams.delete("typologie");
+    searchParams.delete("region");
+    setSearchParams(searchParams);
   };
 
   const handleTypologieChange = (typologie: string) => {
-    const next = new URLSearchParams(searchParams);
     if (typologie) {
-      next.set("typologie", typologie);
+      searchParams.set("typologie", typologie);
     } else {
-      next.delete("typologie");
+      searchParams.delete("typologie");
     }
-    setSearchParams(next);
+    setSearchParams(searchParams);
   };
 
   const handleRegionChange = (region: string) => {
-    const next = new URLSearchParams(searchParams);
     if (region) {
-      next.set("region", region);
+      searchParams.set("region", region);
     } else {
-      next.delete("region");
+      searchParams.delete("region");
     }
-    setSearchParams(next);
+    setSearchParams(searchParams);
   };
 
   const handleResetFilters = () => {
-    const next = new URLSearchParams(searchParams);
-    next.delete("type");
-    next.delete("typologie");
-    next.delete("region");
+    searchParams.delete("type");
+    searchParams.delete("typologie");
+    searchParams.delete("region");
     hasInitializedType.current = false;
-    setSearchParams(next);
+    setSearchParams(searchParams);
   };
 
   const hasActiveFilters = selectedType || selectedTypologie || selectedRegion;

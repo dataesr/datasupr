@@ -28,6 +28,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
               value={
                 data.emploi_etpt != null
                   ? data.emploi_etpt.toLocaleString("fr-FR", {
+                      minimumFractionDigits: 0,
                       maximumFractionDigits: 1,
                     })
                   : "—"
@@ -35,6 +36,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
               detail="Équivalent temps plein travaillé (ETPT)"
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution("emploi_etpt")}
+              unit="ETPT"
             />
           </Col>
           <Col xs="12" md="6">
@@ -42,7 +44,10 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
               title="Taux d'encadrement"
               value={
                 data.taux_encadrement != null
-                  ? `${data.taux_encadrement.toFixed(1)} étudiants par emploi d’enseignant`
+                  ? `${data.taux_encadrement.toLocaleString("fr-FR", {
+                      minimumFractionDigits: 1,
+                      maximumFractionDigits: 1,
+                    })} étudiants par emploi d'enseignant`
                   : "—"
               }
               detail={
@@ -73,9 +78,12 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
               title="Charges de personnel"
               value={
                 data.charges_de_personnel != null
-                  ? `${data.charges_de_personnel.toLocaleString("fr-FR", {
-                      maximumFractionDigits: 0,
-                    })} €`
+                  ? `${Number(data.charges_de_personnel).toLocaleString(
+                      "fr-FR",
+                      {
+                        maximumFractionDigits: 0,
+                      }
+                    )} €`
                   : "—"
               }
               detail="Dépenses de masse salariale"
@@ -89,8 +97,12 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
               title="Poids sur produits"
               value={
                 data.charges_de_personnel_produits_encaissables != null
-                  ? `${data.charges_de_personnel_produits_encaissables.toFixed(
-                      1
+                  ? `${data.charges_de_personnel_produits_encaissables.toLocaleString(
+                      "fr-FR",
+                      {
+                        minimumFractionDigits: 1,
+                        maximumFractionDigits: 1,
+                      }
                     )} %`
                   : "—"
               }
@@ -107,7 +119,13 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
               title="Rémunération permanents"
               value={
                 data.taux_de_remuneration_des_permanents != null
-                  ? `${data.taux_de_remuneration_des_permanents.toFixed(1)} %`
+                  ? `${data.taux_de_remuneration_des_permanents.toLocaleString(
+                      "fr-FR",
+                      {
+                        minimumFractionDigits: 1,
+                        maximumFractionDigits: 1,
+                      }
+                    )} %`
                   : "—"
               }
               detail="Part des dépenses de personnel"

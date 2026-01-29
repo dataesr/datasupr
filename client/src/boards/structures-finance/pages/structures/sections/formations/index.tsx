@@ -3,6 +3,7 @@ import EffectifsChart from "./charts/effectifs";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
 import { useMetricEvolution } from "../api";
+import MetricDefinitionsTable from "../analyses/components/metric-definitions-table";
 import "../styles.scss";
 
 const SECTION_COLOR = SECTION_COLORS.diplomesFormations;
@@ -66,6 +67,14 @@ export function EtudiantsSection({
       <div className="fr-mb-4w">
         <EffectifsChart data={data} selectedYear={selectedYear} />
       </div>
+
+      <MetricDefinitionsTable
+        metricKeys={[
+          "effectif_sans_cpge",
+          "effectif_sans_cpge_dn",
+          "effectif_sans_cpge_du",
+        ]}
+      />
     </div>
   );
 }

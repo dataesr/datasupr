@@ -82,9 +82,24 @@ export function MetricChartCard({
           fillColor: {
             linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
             stops: [
-              [0, Highcharts.color(resolvedColor).setOpacity(0.8).get("rgba") as string],
-              [0.4, Highcharts.color(resolvedColor).setOpacity(0.15).get("rgba") as string],
-              [1, Highcharts.color(resolvedColor).setOpacity(0.02).get("rgba") as string],
+              [
+                0,
+                Highcharts.color(resolvedColor)
+                  .setOpacity(0.8)
+                  .get("rgba") as string,
+              ],
+              [
+                0.4,
+                Highcharts.color(resolvedColor)
+                  .setOpacity(0.15)
+                  .get("rgba") as string,
+              ],
+              [
+                1,
+                Highcharts.color(resolvedColor)
+                  .setOpacity(0.02)
+                  .get("rgba") as string,
+              ],
             ],
           },
           marker: {
@@ -131,7 +146,8 @@ export function MetricChartCard({
           let y = point.plotY + chart.plotTop - labelHeight - 10;
 
           if (x < 5) x = 5;
-          if (x + labelWidth > chart.chartWidth - 5) x = chart.chartWidth - labelWidth - 5;
+          if (x + labelWidth > chart.chartWidth - 5)
+            x = chart.chartWidth - labelWidth - 5;
           if (y < 5) y = point.plotY + chart.plotTop + 10;
 
           return { x, y };
@@ -141,11 +157,21 @@ export function MetricChartCard({
           const year = years[this.index];
           let formattedValue = "";
           if (unit === "€") {
-            formattedValue = val.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
+            formattedValue =
+              val.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) + " €";
           } else if (unit === "%") {
             formattedValue = val.toFixed(1) + " %";
+          } else if (unit) {
+            formattedValue =
+              val.toLocaleString("fr-FR", {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 1,
+              }) +
+              " " +
+              unit;
           } else {
             formattedValue = val.toLocaleString("fr-FR", {
+              minimumFractionDigits: 0,
               maximumFractionDigits: 1,
             });
           }

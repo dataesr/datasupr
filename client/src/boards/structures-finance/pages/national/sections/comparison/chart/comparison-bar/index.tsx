@@ -12,6 +12,8 @@ interface ComparisonBarChartProps {
   selectedType?: string;
   selectedTypologie?: string;
   selectedRegion?: string;
+  selectedMetric?: string;
+  onMetricChange?: (metric: string) => void;
 }
 
 interface MetricOption {
@@ -162,11 +164,26 @@ export default function ComparisonBarChart({
   selectedType,
   selectedTypologie,
   selectedRegion,
+  selectedMetric: selectedMetricProp,
+  onMetricChange,
 }: ComparisonBarChartProps) {
-  const [selectedMetric, setSelectedMetric] = useState<string>(
+  const [internalMetric, setInternalMetric] = useState<string>(
     "part_droits_d_inscription"
   );
   const [topN, setTopN] = useState<number>(20);
+
+  const selectedMetric =
+    selectedMetricProp && selectedMetricProp.trim() !== ""
+      ? selectedMetricProp
+      : internalMetric;
+
+  const setSelectedMetric = (metric: string) => {
+    if (onMetricChange) {
+      onMetricChange(metric);
+    } else {
+      setInternalMetric(metric);
+    }
+  };
 
   const filterSummary = useMemo(() => {
     const parts: string[] = [];
@@ -243,7 +260,7 @@ export default function ComparisonBarChart({
             ))}
           </Dropdown>
         </Col>
-        <Col xs="12" md="4">
+        <Col xs="12" md="4" className="text-right">
           <p className="fr-text--sm fr-text--bold fr-mb-1w">
             Nombre d'établissements
           </p>

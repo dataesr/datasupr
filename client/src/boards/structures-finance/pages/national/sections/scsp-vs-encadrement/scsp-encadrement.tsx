@@ -1,5 +1,6 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ScatterChart from "../../charts/scatter";
+import MetricDefinitionsTable from "../../../structures/sections/analyses/components/metric-definitions-table";
 
 interface ScspEncadrementSectionProps {
   data: any[];
@@ -34,6 +35,13 @@ export function ScspEncadrementSection({
             {data.length > 1 ? "s" : ""}
           </div>
           <ScatterChart config={scatterConfig} data={data} />
+        </Col>
+      </Row>
+      <Row>
+        <Col xs="12">
+          <MetricDefinitionsTable
+            metricKeys={["scsp_par_etudiants", "taux_encadrement"]}
+          />
         </Col>
       </Row>
     </section>
