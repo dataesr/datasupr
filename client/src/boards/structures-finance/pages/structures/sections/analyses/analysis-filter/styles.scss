@@ -3,61 +3,82 @@
   top: 1rem;
   max-height: calc(100vh - 2rem);
   overflow-y: auto;
+  background-color: var(--background-alt-grey);
+  padding: 1.5rem;
 
-  .fr-segmented {
-    flex-wrap: wrap;
+  &__count {
+    font-weight: 400;
+    font-size: 0.75rem;
+    color: var(--text-mention-grey);
+    margin-left: 0.5rem;
+  }
 
-    .fr-segmented__elements {
-      flex-wrap: wrap;
-    }
-
-    .fr-segmented__legend {
-      display: none;
-    }
-
-    input + label {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.5rem;
-    }
+  &__analyses {
+    border: none;
+    padding: 0;
+    margin: 0;
   }
 
   &__list {
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
+    gap: 0.5rem;
   }
 
   &__item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
     width: 100%;
     text-align: left;
-    padding: 0.5rem 0.75rem;
+    padding: 0.75rem 1rem;
     background-color: var(--background-default-grey);
     color: var(--text-default-grey);
-    border: none;
+    border: 1px solid var(--border-default-grey);
     border-radius: 4px;
     cursor: pointer;
-    font-size: 13px;
-    font-weight: 400;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
 
     &:hover {
-      background-color: var(--background-default-grey-hover);
+      background-color: var(--background-contrast-grey);
+      border-color: var(--border-active-blue-france);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--border-active-blue-france);
+      outline-offset: 2px;
     }
 
     &--selected {
-      background-color: var(--background-action-high-blue-france);
-      color: var(--text-inverted-grey);
-      font-weight: 600;
+      background-color: var(--background-contrast-info);
+      border-color: var(--border-active-blue-france);
+      border-left-width: 3px;
+
+      .analysis-filter__item-label {
+        font-weight: 600;
+        color: var(--text-action-high-blue-france);
+      }
 
       &:hover {
-        background-color: var(--background-action-high-blue-france-hover);
+        background-color: var(--background-contrast-info);
       }
     }
   }
 
-  &__comparison-badge {
-    margin-left: 0.5rem;
-    font-size: 11px;
-    opacity: 0.7;
+  &__item-label {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+
+  &__item-hint {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--text-mention-grey);
+    background-color: var(--background-contrast-grey);
+    padding: 0.125rem 0.375rem;
+    border-radius: 2px;
   }
 }

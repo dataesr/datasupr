@@ -19,10 +19,10 @@ export function AnalysesSection({
   const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisKey | null>(
     null
   );
-  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [selectedCategory, setSelectedCategory] =
+    useState<string>("Ressources");
 
-  const { analysesWithData, periodText, isLoading } =
-    useAnalysesWithData(etablissementId);
+  const { analysesWithData, isLoading } = useAnalysesWithData(etablissementId);
 
   if (isLoading) {
     return (
@@ -99,7 +99,6 @@ export function AnalysesSection({
             analysesWithData={analysesWithData}
             selectedAnalysis={selectedAnalysis}
             selectedCategory={selectedCategory}
-            periodText={periodText}
             onSelectAnalysis={setSelectedAnalysis}
             onSelectCategory={setSelectedCategory}
           />
