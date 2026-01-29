@@ -55,7 +55,6 @@ import {
     indicateurId,
   }) {
     const [searchParams] = useSearchParams();
-    const currentLang = searchParams.get("language") || "fr";
     const params = getDefaultParams(searchParams);
 
     const { data, isLoading } = useQuery({

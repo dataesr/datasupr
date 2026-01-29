@@ -1,6 +1,6 @@
-import { getI18nLabel as getI18nLabelFromUtils } from "../../../../../../../utils";
+import { getI18nLabel as getI18nLabelFromUtils } from "../../../../../../utils";
 import i18n from "./i18n.json";
-import globalI18n from "../../../../../i18n-global.json";
+import globalI18n from "../../../../i18n-global.json";
 
 function TableWrapper({ children }) {
   return (

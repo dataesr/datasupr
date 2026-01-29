@@ -1,6 +1,5 @@
-import { useSearchParams } from "react-router-dom";
 import { getI18nLabel } from "../../../../../utils";
-import i18n from "../../../../i18n-global.json";
+import i18n from "../../../i18n-global.json";
 import "./styles.scss";
 
 interface TimelinePeriod {
@@ -12,8 +11,6 @@ interface TimelinePeriod {
 }
 
 export default function Timeline() {
-  const [searchParams] = useSearchParams();
-
   const timelinePeriods: TimelinePeriod[] = [
     {
       id: "fp6",

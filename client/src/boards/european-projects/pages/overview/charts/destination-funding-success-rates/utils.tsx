@@ -37,7 +37,7 @@ export function useGetParams() {
   return { params: params.join("&"), currentLang };
 }
 
-export function renderDataTable(data, currentLang) {
+export function renderDataTable(data) {
   if (!data) return null;
 
   const successRates = data.successRateByDestination || [];

@@ -116,7 +116,6 @@ export default function Top10CountriesByTypeOfBeneficiaries() {
             [getI18nLabel("OTH"), rootStyles.getPropertyValue("--beneficiarie-type-OTH-color")],
           ],
           "Top10Beneficiaries",
-          currentLang
         )}
         options={options(data, currentLang)}
         renderData={() => RenderData(data, currentLang)}
