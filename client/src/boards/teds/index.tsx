@@ -1,34 +1,31 @@
-import { Container, Row, Col, Title, Button } from "@dataesr/dsfr-plus";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { useNavigate } from "react-router-dom";
 
-import i18n from "./i18n.json";
-import "./styles.scss"; // Assuming you have some styles for the welcome page
 import Callout from "../../components/callout";
+import { getI18nLabel } from "../../utils";
+import i18n from "./i18n.json";
+
+import "./styles.scss"; // Assuming you have some styles for the welcome page
+
 
 export default function Welcome() {
-  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const currentLang = searchParams.get("language") || "FR";
-
-  function getI18nLabel(key, lang = "fr") {
-    return i18n[key] ? i18n[key][lang] || i18n[key]["fr"] : "";
-  }
 
   return (
     <>
       <Container as="main">
         <Title as="h1" className="fr-my-5w">
-          {getI18nLabel("title", currentLang)}
+          {getI18nLabel(i18n, "title")}
         </Title>
-        <Callout>{getI18nLabel("teds-description", currentLang)}</Callout>
+        <Callout>{getI18nLabel(i18n, "teds-description")}</Callout>
         <section>
           <Row gutters>
             <Col md={6}>
               <div className="chart-bg">
                 <Title as="h2" className="fr-my-2w">
-                  {getI18nLabel("title-countries", currentLang)}
+                  {getI18nLabel(i18n, "title-countries")}
                 </Title>
-                {getI18nLabel("description-countries", currentLang)}
+                {getI18nLabel(i18n, "description-countries")}
                 <div className="fr-mt-2w">
                   <Button
                     onClick={() => {
@@ -36,7 +33,7 @@ export default function Welcome() {
                     }}
                     size="sm"
                   >
-                    {getI18nLabel("button-countries", currentLang)}
+                    {getI18nLabel(i18n, "button-countries")}
                   </Button>
                 </div>
               </div>
@@ -44,9 +41,9 @@ export default function Welcome() {
             <Col md={6}>
               <div className="chart-bg2">
                 <Title as="h2" className="fr-my-2w">
-                  {getI18nLabel("title-entities", currentLang)}
+                  {getI18nLabel(i18n, "title-entities")}
                 </Title>
-                {getI18nLabel("description-entities", currentLang)}
+                {getI18nLabel(i18n, "description-entities")}
                 <div className="fr-mt-2w text-right">
                   <Button
                     onClick={() => {
@@ -54,7 +51,7 @@ export default function Welcome() {
                     }}
                     size="sm"
                   >
-                    {getI18nLabel("button-entities", currentLang)}
+                    {getI18nLabel(i18n, "button-entities")}
                   </Button>
                 </div>
               </div>
