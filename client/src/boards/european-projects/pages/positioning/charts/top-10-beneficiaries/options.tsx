@@ -29,7 +29,7 @@ export default function Options(data, country_code, currentLang) {
       {
         name: "Total subventions en euros",
         type: "column",
-        colorByPoint: true,
+        color: "#233E41",
         data: data.map((item) => ({
           name: item[`name_${currentLang}`],
           y: item.total_fund_eur,
