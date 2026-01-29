@@ -1,6 +1,6 @@
 import { Logo } from "@dataesr/dsfr-plus";
-import { useSearchParams } from "react-router-dom";
 
+import { getI18nLabel } from "../../utils";
 import SwitchTheme from "../switch-theme";
 import i18n from "./i18n.json";
 
@@ -10,13 +10,6 @@ const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env;
 
 
 export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { href?: string, title?: string }) {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
-
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
   return (
     <footer className="fr-footer" role="contentinfo" id="footer">
       <div className="fr-container">
@@ -88,32 +81,32 @@ export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { h
           <ul className="fr-footer__bottom-list">
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="#">
-                {getI18nLabel("sitemap")}
+                {getI18nLabel(i18n, "sitemap")}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="#">
-                {getI18nLabel("accessibility")}
+                {getI18nLabel(i18n, "accessibility")}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="#">
-                {getI18nLabel("legalNotice")}
+                {getI18nLabel(i18n, "legalNotice")}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="#">
-                {getI18nLabel("personalData")}
+                {getI18nLabel(i18n, "personalData")}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="/cookies">
-                {getI18nLabel("cookies")}
+                {getI18nLabel(i18n, "cookies")}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
               <a className="fr-footer__bottom-link" href="#">
-                {getI18nLabel("contact")}
+                {getI18nLabel(i18n, "contact")}
               </a>
             </li>
             <li className="fr-footer__bottom-item">
@@ -139,7 +132,7 @@ export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { h
           <div className="fr-footer__bottom-copy">
             <p
               dangerouslySetInnerHTML={{
-                __html: getI18nLabel("rightsReserved"),
+                __html: getI18nLabel(i18n, "rightsReserved"),
               }}
             />
           </div>

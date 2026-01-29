@@ -1,6 +1,7 @@
 import { Link } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
+import { getI18nLabel } from "../../utils";
 import i18n from "./i18n.json";
 
 interface LocalizedContent {
@@ -46,10 +47,6 @@ export default function ChartFooter({
   const [searchParams] = useSearchParams();
   const currentLang = (searchParams.get("language") || "fr") as "fr" | "en";
 
-  function getI18nLabel(key: string) {
-    return i18n[key][currentLang];
-  }
-
   if (!comment && !readingKey && !sources) {
     return null;
   }
@@ -58,14 +55,14 @@ export default function ChartFooter({
     <div className="chart-footer">
       {comment && (
         <>
-          <b>{getI18nLabel("comment")} </b>
+          <b>{getI18nLabel(i18n, "comment")} </b>
           {comment[currentLang] || comment.fr}
         </>
       )}
 
       {readingKey && (
         <div>
-          <b>{getI18nLabel("readingKey")} </b>
+          <b>{getI18nLabel(i18n, "readingKey")} </b>
           {readingKey[currentLang] || readingKey.fr}
         </div>
       )}
@@ -81,7 +78,7 @@ export default function ChartFooter({
           }}
         >
           <div>
-            <b>{getI18nLabel("sources")} </b>
+            <b>{getI18nLabel(i18n, "sources")} </b>
             {sources.map((source, index) => (
               <span key={`graph-footer-source-${index}`}>
                 <Link href={source.url[currentLang] || source.url.fr} target="_blank" rel="noopener noreferrer">
@@ -90,7 +87,7 @@ export default function ChartFooter({
                 {(source?.update) && (
                   <>
                     {' '}
-                    <i>(<b>{getI18nLabel("update")}</b> {source.update.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")})</i>
+                    <i>(<b>{getI18nLabel(i18n, "update")}</b> {source.update.toLocaleDateString(currentLang === "fr" ? "fr-FR" : "en-US")})</i>
                   </>
                 )}
                 {(index < sources.length - 1) && (<span>, </span>)}

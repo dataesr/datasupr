@@ -5,6 +5,7 @@ import { Outlet, useSearchParams } from "react-router-dom";
 import CookieConsent from "../components/cookies/cookie-consent/index";
 import Footer from "../components/footer";
 import SwitchTheme from "../components/switch-theme";
+import { getI18nLabel } from "../utils";
 import i18n from "./i18n.json";
 
 
@@ -19,18 +20,14 @@ export function Layout({ languageSelector = false }) {
     }
   }, [searchParams, setSearchParams, languageSelector]);
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
   return (
     <>
       <Header>
         <Logo text="Ministère|chargé|de l'enseignement|supérieur|et de la recherche" />
-        <Service name="dataSupR" tagline={getI18nLabel("tagline")} />
+        <Service name="dataSupR" tagline={getI18nLabel(i18n, "tagline")} />
         <FastAccess>
           <Button as="a" href="/" icon="github-fill" size="sm" variant="text">
-            {getI18nLabel("explore")}
+            {getI18nLabel(i18n, "explore")}
           </Button>
           <Button
             as="a"
@@ -41,10 +38,10 @@ export function Layout({ languageSelector = false }) {
             target="_blank"
             variant="text"
           >
-            {getI18nLabel("datasets")}
+            {getI18nLabel(i18n, "datasets")}
           </Button>
           <Button aria-controls="fr-theme-modal" className="fr-btn fr-icon-theme-fill" data-fr-opened="false">
-            {getI18nLabel("themes")}
+            {getI18nLabel(i18n, "themes")}
           </Button>
           {languageSelector && (
             <nav role="navigation" className="fr-translate fr-nav">
@@ -53,7 +50,7 @@ export function Layout({ languageSelector = false }) {
                   aria-controls="translate-1177"
                   aria-expanded="false"
                   className="fr-translate__btn fr-btn fr-btn--tertiary"
-                  title={getI18nLabel("languagesSelector")}
+                  title={getI18nLabel(i18n, "languagesSelector")}
                 >
                   {currentLang === "fr" ? (
                     <>

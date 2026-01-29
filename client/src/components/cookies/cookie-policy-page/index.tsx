@@ -1,28 +1,17 @@
 import { Button, ButtonGroup, Col, Container, Modal, ModalContent, ModalTitle, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
 
 import { useCookieConsent } from "../../../hooks/useCookieConsent";
 import HeaderDatasupR from "../../../layout/header";
+import { getI18nLabel } from "../../../utils";
 import Footer from "../../footer";
 import i18n from "../cookie-consent/i18n.json";
 import { CookieConsentModalContent } from "../cookie-consent/index";
 
 
 export default function CookiePolicyPage() {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { resetConsent, consent, acceptAll, refuseAll, savePreferences } = useCookieConsent();
-
-  function getI18nLabel(key: string) {
-    const keys = key.split(".");
-    let value: Record<string, unknown> = i18n;
-    for (const k of keys) {
-      value = value[k] as Record<string, unknown>;
-    }
-    return (value as Record<string, string>)[currentLang.toLowerCase()];
-  }
 
   const handleOpenPreferences = () => {
     setIsModalOpen(true);
@@ -48,7 +37,7 @@ export default function CookiePolicyPage() {
   };
 
   const handleResetConsent = () => {
-    if (confirm(getI18nLabel("page.resetConsent.confirm"))) {
+    if (confirm(getI18nLabel(i18n, "page.resetConsent.confirm"))) {
       resetConsent();
     }
   };
@@ -72,34 +61,34 @@ export default function CookiePolicyPage() {
                   </li>
                   <li>
                     <a className="fr-breadcrumb__link" aria-current="page">
-                      {getI18nLabel("page.title")}
+                      {getI18nLabel(i18n, "page.title")}
                     </a>
                   </li>
                 </ol>
               </div>
             </nav>
 
-            <Title as="h1">{getI18nLabel("page.title")}</Title>
-            <Text size="lead">{getI18nLabel("page.introduction")}</Text>
+            <Title as="h1">{getI18nLabel(i18n, "page.title")}</Title>
+            <Text size="lead">{getI18nLabel(i18n, "page.introduction")}</Text>
 
             <Title as="h2" look="h3">
-              {getI18nLabel("page.whatAreCookies.title")}
+              {getI18nLabel(i18n, "page.whatAreCookies.title")}
             </Title>
-            <Text>{getI18nLabel("page.whatAreCookies.content")}</Text>
+            <Text>{getI18nLabel(i18n, "page.whatAreCookies.content")}</Text>
 
             <Title as="h2" look="h3">
-              {getI18nLabel("page.cookieTypes.title")}
+              {getI18nLabel(i18n, "page.cookieTypes.title")}
             </Title>
 
             <div className="fr-accordion">
               <h3 className="fr-accordion__title">
                 <button className="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-necessary">
-                  {getI18nLabel("categories.necessary.title")}
+                  {getI18nLabel(i18n, "categories.necessary.title")}
                 </button>
               </h3>
               <div className="fr-collapse" id="accordion-necessary">
                 <div className="fr-accordion__body">
-                  <p>{getI18nLabel("categories.necessary.description")}</p>
+                  <p>{getI18nLabel(i18n, "categories.necessary.description")}</p>
                   <p>
                     <strong>Exemples :</strong>
                   </p>
@@ -118,12 +107,12 @@ export default function CookiePolicyPage() {
             <div className="fr-accordion">
               <h3 className="fr-accordion__title">
                 <button className="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-functional">
-                  {getI18nLabel("categories.functional.title")}
+                  {getI18nLabel(i18n, "categories.functional.title")}
                 </button>
               </h3>
               <div className="fr-collapse" id="accordion-functional">
                 <div className="fr-accordion__body">
-                  <p>{getI18nLabel("categories.functional.description")}</p>
+                  <p>{getI18nLabel(i18n, "categories.functional.description")}</p>
                   <p>
                     <strong>Exemples :</strong>
                   </p>
@@ -151,12 +140,12 @@ export default function CookiePolicyPage() {
             <div className="fr-accordion">
               <h3 className="fr-accordion__title">
                 <button className="fr-accordion__btn" aria-expanded="false" aria-controls="accordion-analytics">
-                  {getI18nLabel("categories.analytics.title")}
+                  {getI18nLabel(i18n, "categories.analytics.title")}
                 </button>
               </h3>
               <div className="fr-collapse" id="accordion-analytics">
                 <div className="fr-accordion__body">
-                  <p>{getI18nLabel("categories.analytics.description")}</p>
+                  <p>{getI18nLabel(i18n, "categories.analytics.description")}</p>
                   <p>
                     <strong>Note :</strong> Les cookies analytiques ne sont pas encore implémentés sur ce site, mais cette catégorie est prévue pour
                     de futurs outils d'analyse d'audience anonymisés.
@@ -169,13 +158,13 @@ export default function CookiePolicyPage() {
             </div>
 
             <Title as="h3" look="h4" className="fr-mt-4w">
-              {getI18nLabel("page.managePreferences.title")}
+              {getI18nLabel(i18n, "page.managePreferences.title")}
             </Title>
-            <Text>{getI18nLabel("page.managePreferences.content")}</Text>
+            <Text>{getI18nLabel(i18n, "page.managePreferences.content")}</Text>
             <ButtonGroup>
-              <Button onClick={handleOpenPreferences}>{getI18nLabel("page.managePreferences.button")}</Button>
+              <Button onClick={handleOpenPreferences}>{getI18nLabel(i18n, "page.managePreferences.button")}</Button>
               <Button variant="secondary" onClick={handleResetConsent}>
-                {getI18nLabel("page.resetConsent.button")}
+                {getI18nLabel(i18n, "page.resetConsent.button")}
               </Button>
             </ButtonGroup>
 
@@ -202,9 +191,9 @@ export default function CookiePolicyPage() {
             </ul>
 
             <Title as="h2" look="h3" className="fr-mt-4w">
-              {getI18nLabel("page.contact.title")}
+              {getI18nLabel(i18n, "page.contact.title")}
             </Title>
-            <Text>{getI18nLabel("page.contact.content")}</Text>
+            <Text>{getI18nLabel(i18n, "page.contact.content")}</Text>
             <div className="fr-highlight">
               <p>
                 <strong>Contact :</strong>
@@ -225,7 +214,7 @@ export default function CookiePolicyPage() {
         </Row>
 
         <Modal isOpen={isModalOpen} hide={handleCloseModal} size="lg">
-          <ModalTitle>{getI18nLabel("modal.title")}</ModalTitle>
+          <ModalTitle>{getI18nLabel(i18n, "modal.title")}</ModalTitle>
           <ModalContent>
             <CookieConsentModalContent
               onAcceptAll={handleAcceptAllFromModal}

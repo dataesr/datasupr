@@ -133,12 +133,17 @@ async function getNeighbouringCountriesFromIso3(iso3: string) {
   }
 }
 
-function getI18nLabel(i18n: object, key: string) {
+function getI18nLabel(i18n: Record<string, unknown>, key: string) {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
   try {
-    return i18n[key][currentLang];
+    const keys = key.split(".");
+    let value: Record<string, unknown> = i18n;
+    for (const k of keys) {
+      value = value[k] as Record<string, unknown>;
+    }
+    return (value as Record<string, string>)[currentLang.toLowerCase()];
   } catch (error) {
     console.error(`No translation key ${key}`);
     return key;
