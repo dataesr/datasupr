@@ -15,14 +15,14 @@ export default function optionSuccessRate(data: DataItem[], currentLang: string)
   const total = data.reduce((acc, el) => acc + el.ratio, 0);
   const average = total / data.length;
 
+  const translations = {
+    fr: { successRate: "Taux de succès", average: "Moyenne des pays", successRateLabel: "Taux de succès sur les montants" },
+    en: { successRate: "Success rate", average: "Average of countries", successRateLabel: "Success rate on amounts" },
+  };
+  const t = translations[currentLang as keyof typeof translations] || translations.en;
+
   const newOptions: HighchartsInstance.Options = {
-    chart: {
-      type: "bar",
-      height: 400,
-    },
-    title: { text: "" },
     legend: { enabled: true, layout: "horizontal" },
-    credits: { enabled: false },
     xAxis: {
       visible: false,
     },
@@ -38,11 +38,13 @@ export default function optionSuccessRate(data: DataItem[], currentLang: string)
       ],
       min: 0,
       title: {
-        text: "Taux de succès %",
+        text: `${t.successRate} %`,
       },
     },
     tooltip: {
-      pointFormat: "Taux de succès : <b>{point.y:.1f} % </b>",
+      formatter: function (this: any) {
+        return `<b>${this.point.name}</b><br/>${t.successRate} : <b>${this.point.y.toFixed(1)}%</b><br/><br/>${t.average} : <b>${average.toFixed(1)}%</b>`;
+      },
     },
     plotOptions: {
       series: { dataLabels: { enabled: true } },
@@ -50,7 +52,7 @@ export default function optionSuccessRate(data: DataItem[], currentLang: string)
     series: [
       {
         type: "bar",
-        name: "Taux de succès sur les montants",
+        name: t.successRateLabel,
         color: rootStyles.getPropertyValue("--successRate-color"),
         groupPadding: 0,
         data: data.map((item) => ({

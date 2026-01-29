@@ -122,7 +122,7 @@ export default function FundingRankingCoordination() {
               renderDataTableCoordination(
                 prepareData(data, "total_coordination_number_successful"),
                 currentLang,
-                searchParams.get("country_code") ?? null
+                searchParams.get("country_code") ?? null,
               )
             }
           />
@@ -133,12 +133,12 @@ export default function FundingRankingCoordination() {
           </Title>
           <ChartWrapper
             config={configChart2b}
-            options={optionCoordinationNumberSuccessRate(prepareData(data, "total_coordination_number_successful"))}
+            options={optionCoordinationNumberSuccessRate(prepareData(data, "total_coordination_number_successful"), currentLang)}
             renderData={() =>
               renderDataTableCoordinationSuccessRate(
                 prepareData(data, "total_coordination_number_successful"),
                 currentLang,
-                searchParams.get("country_code") ?? null
+                searchParams.get("country_code") ?? null,
               )
             }
           />
