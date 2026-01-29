@@ -5,6 +5,8 @@ import Cookies from "js-cookie";
 
 import { GetData } from "./query";
 import { getDefaultParams } from "./utils";
+import { getI18nLabel } from "../../../../../../utils";
+import i18n from "../../../../i18n-global.json";
 import { GetLegend } from "../../../../components/legend";
 import { RenderData } from "./render-data";
 import options from "./options";
@@ -50,11 +52,11 @@ export default function TypeOfBeneficiariesEvolution() {
   const params = getDefaultParams(searchParams);
 
   const entityTypes = [
-    { value: "REC", label: currentLang === "fr" ? "Recherche" : "Research" },
-    { value: "PUB", label: currentLang === "fr" ? "Organisme public" : "Public institution" },
-    { value: "PRC", label: currentLang === "fr" ? "Organisme privé" : "Private institution" },
-    { value: "HES", label: currentLang === "fr" ? "Établissement d'enseignement supérieur" : "Higher education institution" },
-    { value: "OTH", label: currentLang === "fr" ? "Autre" : "Other" },
+    { value: "REC", label: getI18nLabel(i18n, "REC") },
+    { value: "PUB", label: getI18nLabel(i18n, "PUB") },
+    { value: "PRC", label: getI18nLabel(i18n, "PRC") },
+    { value: "HES", label: getI18nLabel(i18n, "HES") },
+    { value: "OTH", label: getI18nLabel(i18n, "OTH") },
   ];
 
   const handleEntityTypeChange = (event) => {
@@ -122,7 +124,7 @@ export default function TypeOfBeneficiariesEvolution() {
         <div className="fr-my-3w">
           <div className="fr-select-group">
             <label className="fr-label" htmlFor="entity-type-select-evolution">
-              {currentLang === "fr" ? "Type d'entité pour l'évolution temporelle" : "Entity type for temporal evolution"}
+              {getI18nLabel(i18n, "type-of-entity-evolution")}
             </label>
             <select
               className="fr-select"
@@ -144,7 +146,7 @@ export default function TypeOfBeneficiariesEvolution() {
       <ChartWrapper
         config={config}
         hideTitle={true}
-        legend={GetLegend(legendData, "TypeBeneficiariesEvolution", currentLang, 3)}
+        legend={GetLegend(legendData, "TypeBeneficiariesEvolution", 3)}
         options={options(data, currentLang)}
         renderData={() => RenderData(data, currentLang)}
       />

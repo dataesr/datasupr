@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
+import { getI18nLabel } from "../../../../../../utils";
 import { formatToMillions } from "../../../../../../utils/format";
+import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -37,10 +39,10 @@ export function renderDataTable(data, currentLang) {
   const successfulData = rawData.filter((item) => item.stage === "successful");
 
   const labels = {
-    caption: currentLang === "fr" ? "Suventions par thématique" : "Funding by topic",
-    topic: currentLang === "fr" ? "Thématique" : "Topic",
-    evaluated: currentLang === "fr" ? "Évalués" : "Evaluated",
-    successful: currentLang === "fr" ? "Lauréats" : "Successful",
+    caption: getI18nLabel(i18n, "funding-by-topic"),
+    topic: getI18nLabel(i18n, "topic"),
+    evaluated: getI18nLabel(i18n, "evaluated"),
+    successful: getI18nLabel(i18n, "successful"),
   };
 
   return (

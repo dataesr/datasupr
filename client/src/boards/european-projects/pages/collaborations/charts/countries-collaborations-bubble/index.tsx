@@ -45,9 +45,7 @@ export default function CountriesCollaborationsBubble() {
       <Row>
         <Col md={8}>
           <Title as="h2" look="h4">
-            {`Top ${nbToShow} ${
-              currentLang === "fr" ? "des pays ayant collaborés avec le pays sélectionné" : "of countries that collaborated with the selected country"
-            }`}
+            {`Top ${nbToShow} ${getI18nLabel("countries-collaborated")}`}
           </Title>
         </Col>
         <Col className="text-right">

@@ -104,7 +104,7 @@ Le seul critère de sélection est celui de l'excellence scientifique."
 
       <Row className="fr-mb-5w ep-bg2" gutters>
         <Col md={12}>
-          <Timeline currentLang={currentLang} />
+          <Timeline />
         </Col>
         <Col md={12} className="text-center">
           <Link href="/european-projects/evolution-pcri" className="fr-link fr-link--icon-right">

@@ -1,4 +1,6 @@
 import { formatToMillions, formatToRates } from "../../../../../../utils/format";
+import { getI18nLabel } from "../../../../../../utils";
+import i18n from "../../../../i18n-global.json";
 
 export function getDefaultParams(searchParams) {
   const params = [...searchParams].map(([key, value]) => `${key}=${value}`).join("&");
@@ -218,12 +220,11 @@ export function renderDataTable(data, currentLang, displayType) {
   const sortedYears = Array.from(years).sort();
 
   const labels = {
-    caption:
-      currentLang === "fr" ? "Évolution des subentions par pilier sur les 3 dernières années" : "Funding evolution by pillar over the last 3 years",
-    pillar: currentLang === "fr" ? "Pilier" : "Pillar",
-    evaluated: currentLang === "fr" ? "Évalués" : "Evaluated",
-    successful: currentLang === "fr" ? "Lauréats" : "Successful",
-    successRate: currentLang === "fr" ? "Taux de succès" : "Success rate",
+    caption: getI18nLabel(i18n, "caption-pillar-evolution"),
+    pillar: getI18nLabel(i18n, "pillar"),
+    evaluated: getI18nLabel(i18n, "evaluated-simple"),
+    successful: getI18nLabel(i18n, "successful"),
+    successRate: getI18nLabel(i18n, "success-rate"),
   };
 
   // Fonction pour formater les valeurs selon le type d'affichage
@@ -319,13 +320,10 @@ export function renderDataTableRates(data, currentLang, displayType) {
   const sortedYears = Array.from(years).sort();
 
   const labels = {
-    caption:
-      currentLang === "fr"
-        ? "Part des subventions du pays par rapport au total des participants"
-        : "Percentage of country funding as a proportion of total participants",
-    pillar: currentLang === "fr" ? "Pilier" : "Pillar",
-    evaluated: currentLang === "fr" ? "Projets évalués" : "Evaluated projects",
-    successful: currentLang === "fr" ? "Projets lauréats" : "Successful projects",
+    caption: getI18nLabel(i18n, "caption-pillar-proportion-participants"),
+    pillar: getI18nLabel(i18n, "pillar"),
+    evaluated: getI18nLabel(i18n, "projects-evaluated"),
+    successful: getI18nLabel(i18n, "projects-successful"),
   };
 
   return (

@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
+import { getI18nLabel } from "../../../../../../utils";
 import { formatToMillions } from "../../../../../../utils/format";
+import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -87,11 +89,11 @@ export function renderDataTable(data, currentLang, selectedCountryCode) {
   if (!data || data.length === 0) return null;
 
   const labels = {
-    caption: currentLang === "fr" ? "Classement des 10 premiers bénéficiaires" : "Top 10 beneficiaries ranking",
-    rank: currentLang === "fr" ? "Rang" : "Rank",
-    country: currentLang === "fr" ? "Pays" : "Country",
-    funding: currentLang === "fr" ? "Total subventions" : "Total subsidies",
-    influence: currentLang === "fr" ? "Poids du cumul (%)" : "Cumulative weight (%)",
+    caption: getI18nLabel(i18n, "caption-top-10-beneficiaries"),
+    rank: getI18nLabel(i18n, "rank"),
+    country: getI18nLabel(i18n, "country"),
+    funding: getI18nLabel(i18n, "total-subsidies"),
+    influence: getI18nLabel(i18n, "cumulative-weight-percent"),
   };
 
   return (

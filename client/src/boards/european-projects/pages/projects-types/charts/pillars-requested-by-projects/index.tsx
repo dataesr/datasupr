@@ -97,7 +97,6 @@ import {
         ["Projets évalués", "#009099"],
       ],
       "PillarsSubsidiesRequestedByProjects",
-      currentLang
     );
 
     return (

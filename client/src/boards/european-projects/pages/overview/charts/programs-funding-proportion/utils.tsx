@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
+import { getI18nLabel } from "../../../../../../utils";
 import { formatToPercent } from "../../../../../../utils/format";
+import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -31,11 +33,10 @@ export function renderDataTable(data, currentLang) {
   const successfulData = rawData.filter((item) => item.stage === "successful");
 
   const labels = {
-    caption:
-      currentLang === "fr" ? "Part des subventions demandées et obtenues par le pays" : "Percentage of funding requested and obtained by the country",
-    program: currentLang === "fr" ? "Programme" : "Program",
-    evaluated: currentLang === "fr" ? "Évalués" : "Evaluated",
-    successful: currentLang === "fr" ? "Lauréats" : "Successful",
+    caption: getI18nLabel(i18n, "funding-proportion-by-country"),
+    program: getI18nLabel(i18n, "program"),
+    evaluated: getI18nLabel(i18n, "evaluated"),
+    successful: getI18nLabel(i18n, "successful"),
   };
 
   return (

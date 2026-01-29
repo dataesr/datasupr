@@ -1,4 +1,6 @@
+import { getI18nLabel as getI18nLabelFromUtils } from "../../../../../../../utils";
 import i18n from "./i18n.json";
+import globalI18n from "../../../../../i18n-global.json";
 
 function TableWrapper({ children }) {
   return (
@@ -16,7 +18,7 @@ function TableWrapper({ children }) {
 
 export function RenderData(data, currentLang = "fr") {
   function getI18nLabel(key) {
-    return i18n[key][currentLang];
+    return i18n[key]?.[currentLang] || getI18nLabelFromUtils(globalI18n, key);
   }
 
   // Vérifier que nous avons des données
@@ -64,13 +66,13 @@ export function RenderData(data, currentLang = "fr") {
     <TableWrapper>
       <thead>
         <tr>
-          <th>{currentLang === "fr" ? "Pays" : "Country"}</th>
+          <th>{getI18nLabel("country")}</th>
           <th>{getI18nLabel("REC")} (M€)</th>
           <th>{getI18nLabel("PUB")} (M€)</th>
           <th>{getI18nLabel("PRC")} (M€)</th>
           <th>{getI18nLabel("HES")} (M€)</th>
           <th>{getI18nLabel("OTH")} (M€)</th>
-          <th>{currentLang === "fr" ? "Total (M€)" : "Total (M€)"}</th>
+          <th>{getI18nLabel("total")}</th>
         </tr>
       </thead>
       <tbody>

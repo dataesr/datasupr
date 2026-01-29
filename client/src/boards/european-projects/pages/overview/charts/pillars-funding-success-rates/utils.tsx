@@ -1,4 +1,6 @@
 import { useSearchParams } from "react-router-dom";
+import { getI18nLabel } from "../../../../../../utils";
+import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -28,11 +30,7 @@ export function useGetParams() {
  */
 export function renderDataTable(data: { successRateByPillar: Array<{ pillar: string; successRate: number }> }, currentLang: string = "fr") {
   if (!data || !data.successRateByPillar || data.successRateByPillar.length === 0) {
-    return (
-      <div className="fr-text--center fr-py-3w">
-        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
-      </div>
-    );
+    return <div className="fr-text--center fr-py-3w">{getI18nLabel(i18n, "no-data-table")}</div>;
   }
 
   // Trier par taux de succès (décroissant)
@@ -46,11 +44,9 @@ export function renderDataTable(data: { successRateByPillar: Array<{ pillar: str
   };
 
   const labels = {
-    pillar: currentLang === "fr" ? "Pilier" : "Pillar",
-    successRate: currentLang === "fr" ? "Taux de succès" : "Success rate",
-    caption: currentLang === "fr" 
-      ? "Taux de succès par pilier (en pourcentage)" 
-      : "Success rate by pillar (in percentage)",
+    pillar: getI18nLabel(i18n, "pillar"),
+    successRate: getI18nLabel(i18n, "success-rate"),
+    caption: getI18nLabel(i18n, "caption-pillar-success-rate"),
   };
 
   return (

@@ -128,17 +128,19 @@ export function readingKey(data) {
 }
 
 export function renderDataTableSubsidies(data, currentLang, selectedCountryCode) {
+  const { getI18nLabel } = require("../../../../../../../utils");
+  const i18n = require("../../../../../i18n-global.json");
+  
   if (!data || data.length === 0) return null;
 
   const labels = {
-    caption:
-      currentLang === "fr" ? "Classement des pays selon les montants demandés et obtenus" : "Ranking of countries by requested and obtained amounts",
-    position: currentLang === "fr" ? "Position" : "Position",
-    country: currentLang === "fr" ? "Pays" : "Country",
-    totalEvaluated: currentLang === "fr" ? "Montant demandé (M€)" : "Requested amount (M€)",
-    rankEvaluated: currentLang === "fr" ? "Rang (demandés)" : "Rank (requested)",
-    totalSuccessful: currentLang === "fr" ? "Montant obtenu (M€)" : "Obtained amount (M€)",
-    rankSuccessful: currentLang === "fr" ? "Rang (obtenus)" : "Rank (obtained)",
+    caption: getI18nLabel(i18n, "caption-funding-ranking-subsidies"),
+    position: getI18nLabel(i18n, "position"),
+    country: getI18nLabel(i18n, "country"),
+    totalEvaluated: getI18nLabel(i18n, "requested-amount-millions"),
+    rankEvaluated: getI18nLabel(i18n, "rank-requested"),
+    totalSuccessful: getI18nLabel(i18n, "obtained-amount-millions"),
+    rankSuccessful: getI18nLabel(i18n, "rank-obtained"),
   };
 
   return (
@@ -196,6 +198,9 @@ export function renderDataTableSubsidies(data, currentLang, selectedCountryCode)
 }
 
 export function renderDataTableSuccessRate(data, currentLang, selectedCountryCode) {
+  const { getI18nLabel } = require("../../../../../../../utils");
+  const i18n = require("../../../../../i18n-global.json");
+  
   if (!data || data.length === 0) return null;
 
   // Calculer le taux moyen
@@ -203,11 +208,11 @@ export function renderDataTableSuccessRate(data, currentLang, selectedCountryCod
   const average = total / data.length;
 
   const labels = {
-    caption: currentLang === "fr" ? "Taux de succès des pays" : "Success rate by country",
-    position: currentLang === "fr" ? "Position" : "Position",
-    country: currentLang === "fr" ? "Pays" : "Country",
-    successRate: currentLang === "fr" ? "Taux de succès (%)" : "Success rate (%)",
-    vsAverage: currentLang === "fr" ? "vs Moyenne" : "vs Average",
+    caption: getI18nLabel(i18n, "caption-success-rate-by-country"),
+    position: getI18nLabel(i18n, "position"),
+    country: getI18nLabel(i18n, "country"),
+    successRate: getI18nLabel(i18n, "success-rate-percent"),
+    vsAverage: getI18nLabel(i18n, "vs-average"),
     average: currentLang === "fr" ? `Moyenne : ${average.toFixed(1)} %` : `Average: ${average.toFixed(1)} %`,
   };
 

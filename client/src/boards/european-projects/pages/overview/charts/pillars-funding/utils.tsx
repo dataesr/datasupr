@@ -1,4 +1,6 @@
 import { useSearchParams } from "react-router-dom";
+import { getI18nLabel } from "../../../../../../utils";
+import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -28,11 +30,7 @@ export function useGetParams() {
  */
 export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; stage: string; total_fund_eur: number }> }, currentLang: string = "fr") {
   if (!data || !data.data || data.data.length === 0) {
-    return (
-      <div className="fr-text--center fr-py-3w">
-        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
-      </div>
-    );
+    return <div className="fr-text--center fr-py-3w">{getI18nLabel(i18n, "no-data-table")}</div>;
   }
 
   interface PillarData {
@@ -87,14 +85,12 @@ export function renderDataTable(data: { data: Array<{ pilier_name_fr: string; st
   };
 
   const labels = {
-    pillar: currentLang === "fr" ? "Pilier" : "Pillar",
-    evaluated: currentLang === "fr" ? "Projets évalués" : "Evaluated projects",
-    successful: currentLang === "fr" ? "Projets lauréats" : "Successful projects",
-    successRate: currentLang === "fr" ? "Taux de succès" : "Success rate",
+    pillar: getI18nLabel(i18n, "pillar"),
+    evaluated: getI18nLabel(i18n, "projects-evaluated"),
+    successful: getI18nLabel(i18n, "projects-successful"),
+    successRate: getI18nLabel(i18n, "success-rate"),
     unit: "M€",
-    caption: currentLang === "fr" 
-      ? "Financement par pilier : projets évalués et projets lauréats (en millions d'euros)" 
-      : "Funding by pillar: evaluated and successful projects (in millions of euros)",
+    caption: getI18nLabel(i18n, "caption-pillar-funding"),
   };
 
   return (

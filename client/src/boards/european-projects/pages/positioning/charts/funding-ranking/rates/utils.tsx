@@ -1,4 +1,6 @@
 import { useSearchParams } from "react-router-dom";
+import { getI18nLabel } from "../../../../../../../utils";
+import i18n from "../../../../../i18n-global.json";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -72,16 +74,13 @@ export function renderDataTable(data, currentLang, selectedCountryCode) {
   if (!data || data.length === 0) return null;
 
   const labels = {
-    caption:
-      currentLang === "fr"
-        ? "Classement des pays selon la part des montants demandés et obtenus"
-        : "Ranking of countries by share of amounts requested and obtained",
-    position: currentLang === "fr" ? "Position" : "Position",
-    country: currentLang === "fr" ? "Pays" : "Country",
-    ratioEvaluated: currentLang === "fr" ? "Part demandée (%)" : "Share requested (%)",
-    rankEvaluated: currentLang === "fr" ? "Rang (demandés)" : "Rank (requested)",
-    ratioSuccessful: currentLang === "fr" ? "Part obtenue (%)" : "Share obtained (%)",
-    rankSuccessful: currentLang === "fr" ? "Rang (obtenus)" : "Rank (obtained)",
+    caption: getI18nLabel(i18n, "caption-funding-ranking-rates"),
+    position: getI18nLabel(i18n, "position"),
+    country: getI18nLabel(i18n, "country"),
+    ratioEvaluated: getI18nLabel(i18n, "share-requested-percent"),
+    rankEvaluated: getI18nLabel(i18n, "rank-requested"),
+    ratioSuccessful: getI18nLabel(i18n, "share-obtained-percent"),
+    rankSuccessful: getI18nLabel(i18n, "rank-obtained"),
   };
 
   return (

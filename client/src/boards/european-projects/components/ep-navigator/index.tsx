@@ -425,11 +425,14 @@ export default function EpNavigator() {
 
   // Fonctions pour obtenir les noms des éléments sélectionnés
   const getPillarName = () => {
+    const { getI18nLabel } = require("../../../../utils");
+    const i18n = require("../../i18n-global.json");
+    
     if (!pillarId || !pillarsData || !Array.isArray(pillarsData)) return null;
     const pillar = pillarsData.find((p: FilterItem) => p.id === pillarId);
     if (pillar) {
       const localizedLabel = getLocalizedLabel(pillar);
-      const pillarLabel = currentLang === "fr" ? "Pilier" : "Pillar";
+      const pillarLabel = getI18nLabel(i18n, "pillar");
       return localizedLabel + (pillar.id ? ` (${pillarLabel}${pillar.id.split(".")[1]})` : "");
     }
     return null;

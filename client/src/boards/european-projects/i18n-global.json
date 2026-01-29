@@ -1,45 +1,45 @@
 {
-  "successful-projects":{
+  "successful-projects": {
     "fr": "Projets lauréats",
     "en": "Successful projects"
   },
-  "evaluated-projects":{
+  "evaluated-projects": {
     "fr": "Projets évalués",
     "en": "Evaluated projects"
   },
-  "legend":{
+  "legend": {
     "fr": "Légende",
     "en": "Legend"
   },
-  "show-less":{
+  "show-less": {
     "fr": "Afficher moins",
     "en": "Show less"
   },
-  "show-more":{
+  "show-more": {
     "fr": "Afficher plus",
     "en": "Show more"
   },
-  "selected-country":{
+  "selected-country": {
     "fr": "Pays sélectionnés",
     "en": "Selected countries"
   },
-  "associated-countries":{
+  "associated-countries": {
     "fr": "UE & Etats associés",
     "en": "EU & Associated countries"
   },
-  "country-success-rate":{
+  "country-success-rate": {
     "fr": "Taux de réussite du pays",
     "en": "Country success rate"
   },
-  "average-success-rate":{
+  "average-success-rate": {
     "fr": "Taux de réussite moyen",
     "en": "Average success rate"
   },
-  "success-rate" :{
+  "success-rate": {
     "fr": "Taux de succès",
     "en": "Success rate"
   },
-  "success-rate-info" :{
+  "success-rate-info": {
     "fr": "Projets lauréats / Projets évalués",
     "en": "Successful projects / Evaluated projects"
   },
@@ -66,5 +66,321 @@
   "collaborations": {
     "fr": "Collaborations",
     "en": "Collaborations"
+  },
+  "timeline-title": {
+    "fr": "Évolution des programmes européens de recherche",
+    "en": "Evolution of European research programmes"
+  },
+  "timeline-subtitle": {
+    "fr": "De 2002 à aujourd'hui : quatre générations de programmes",
+    "en": "From 2002 to today: four generations of programmes"
+  },
+  "fp6-description": {
+    "fr": "6 Programme-cadre de recherche et développement technologique",
+    "en": "6th Framework Programme for Research and Technological Development"
+  },
+  "fp7-description": {
+    "fr": "7e Programme-cadre de recherche et développement technologique",
+    "en": "7th Framework Programme for Research and Technological Development"
+  },
+  "h2020-description": {
+    "fr": "Programme de recherche et d'innovation de l'Union européenne",
+    "en": "Research and Innovation programme of the European Union"
+  },
+  "he-description": {
+    "fr": "En cours : Programme de recherche et d'innovation de l'UE pour 2021-2027",
+    "en": "In progress : EU's research and innovation programme for 2021-2027"
+  },
+  "no-data-available": {
+    "fr": "Aucune donnée disponible",
+    "en": "No data available"
+  },
+  "evaluation": {
+    "fr": "Évaluation",
+    "en": "Evaluation"
+  },
+  "evaluated": {
+    "fr": "Évalués",
+    "en": "Evaluated"
+  },
+  "successful": {
+    "fr": "Lauréats",
+    "en": "Successful"
+  },
+  "program": {
+    "fr": "Programme",
+    "en": "Program"
+  },
+  "funding-by-program": {
+    "fr": "Subventions par programme",
+    "en": "Funding by program"
+  },
+  "pillar": {
+    "fr": "Pilier",
+    "en": "Pillar"
+  },
+  "funding-by-pillar": {
+    "fr": "Subventions par pilier",
+    "en": "Funding by pillar"
+  },
+  "topic": {
+    "fr": "Thématique",
+    "en": "Topic"
+  },
+  "funding-by-topic": {
+    "fr": "Subventions par thématique",
+    "en": "Funding by topic"
+  },
+  "destination": {
+    "fr": "Destination",
+    "en": "Destination"
+  },
+  "funding-by-destination": {
+    "fr": "Subventions par destination",
+    "en": "Funding by destination"
+  },
+  "share-evaluated-projects": {
+    "fr": "Part projets évalués",
+    "en": "Evaluated projects share"
+  },
+  "share-successful-projects": {
+    "fr": "Part projets lauréats",
+    "en": "Successful projects share"
+  },
+  "funding-proportion-by-country": {
+    "fr": "Part des subventions demandées et obtenues par le pays",
+    "en": "Percentage of funding requested and obtained by the country"
+  },
+  "no-data-table": {
+    "fr": "Aucune donnée disponible pour le tableau.",
+    "en": "No data available for the table."
+  },
+  "caption-pillar-proportion": {
+    "fr": "Proportion des subventions par pilier",
+    "en": "Proportion of funding by pillar"
+  },
+  "caption-program-proportion": {
+    "fr": "Proportion des subventions par programme",
+    "en": "Proportion of funding by program"
+  },
+  "caption-topic-proportion": {
+    "fr": "Proportion des subventions par thématique",
+    "en": "Proportion of funding by topic"
+  },
+  "caption-destination-proportion": {
+    "fr": "Proportion des subventions par destination",
+    "en": "Proportion of funding by destination"
+  },
+  "caption-pillar-success-rate": {
+    "fr": "Taux de succès par pilier (en pourcentage)",
+    "en": "Success rate by pillar (in percentage)"
+  },
+  "caption-program-success-rate": {
+    "fr": "Taux de succès par programme",
+    "en": "Success rate by program"
+  },
+  "caption-topic-success-rate": {
+    "fr": "Taux de succès par thématique",
+    "en": "Success rate by topic"
+  },
+  "caption-destination-success-rate": {
+    "fr": "Taux de succès par destination",
+    "en": "Success rate by destination"
+  },
+  "beneficiary": {
+    "fr": "Bénéficiaire",
+    "en": "Beneficiary"
+  },
+  "acronym": {
+    "fr": "Acronyme",
+    "en": "Acronym"
+  },
+  "total-funding": {
+    "fr": "Financement total",
+    "en": "Total funding"
+  },
+  "caption-pillar-evolution": {
+    "fr": "Évolution des subventions par pilier sur les 3 dernières années",
+    "en": "Funding evolution by pillar over the last 3 years"
+  },
+  "caption-pillar-proportion-participants": {
+    "fr": "Part des subventions du pays par rapport au total des participants",
+    "en": "Percentage of country funding as a proportion of total participants"
+  },
+  "caption-pillar-funding": {
+    "fr": "Financement par pilier : projets évalués et projets lauréats (en millions d'euros)",
+    "en": "Funding by pillar: evaluated and successful projects (in millions of euros)"
+  },
+  "caption-funding-ranking-rates": {
+    "fr": "Classement des pays selon la part des montants demandés et obtenus",
+    "en": "Ranking of countries by share of amounts requested and obtained"
+  },
+  "position": {
+    "fr": "Position",
+    "en": "Position"
+  },
+  "share-requested-percent": {
+    "fr": "Part demandée (%)",
+    "en": "Share requested (%)"
+  },
+  "rank-requested": {
+    "fr": "Rang (demandés)",
+    "en": "Rank (requested)"
+  },
+  "share-obtained-percent": {
+    "fr": "Part obtenue (%)",
+    "en": "Share obtained (%)"
+  },
+  "rank-obtained": {
+    "fr": "Rang (obtenus)",
+    "en": "Rank (obtained)"
+  },
+  "caption-top-10-beneficiaries": {
+    "fr": "Classement des 10 premiers bénéficiaires",
+    "en": "Top 10 beneficiaries ranking"
+  },
+  "rank": {
+    "fr": "Rang",
+    "en": "Rank"
+  },
+  "total-subsidies": {
+    "fr": "Total subventions",
+    "en": "Total subsidies"
+  },
+  "cumulative-weight-percent": {
+    "fr": "Poids du cumul (%)",
+    "en": "Cumulative weight (%)"
+  },
+  "requested-amount-millions": {
+    "fr": "Montant demandé (M€)",
+    "en": "Requested amount (M€)"
+  },
+  "obtained-amount-millions": {
+    "fr": "Montant obtenu (M€)",
+    "en": "Obtained amount (M€)"
+  },
+  "total": {
+    "fr": "Total (M€)",
+    "en": "Total (M€)"
+  },
+  "REC": {
+    "fr": "Recherche",
+    "en": "Research"
+  },
+  "PUB": {
+    "fr": "Organisme public",
+    "en": "Public institution"
+  },
+  "PRC": {
+    "fr": "Organisme privé",
+    "en": "Private institution"
+  },
+  "HES": {
+    "fr": "Établissement d'enseignement supérieur",
+    "en": "Higher education institution"
+  },
+  "OTH": {
+    "fr": "Autre",
+    "en": "Other"
+  },
+  "type-of-entity-evolution": {
+    "fr": "Type d'entité pour l'évolution temporelle",
+    "en": "Entity type for temporal evolution"
+  },
+  "countries-collaborated": {
+    "fr": "des pays ayant collaborés avec le pays sélectionné",
+    "en": "of countries that collaborated with the selected country"
+  },
+  "year": {
+    "fr": "Année",
+    "en": "Year"
+  },
+  "framework": {
+    "fr": "Programme-cadre",
+    "en": "Framework"
+  },
+  "projects": {
+    "fr": "Projets",
+    "en": "Projects"
+  },
+  "summary-by-framework": {
+    "fr": "Récapitulatif par programme-cadre",
+    "en": "Summary by framework"
+  },
+  "average-per-year": {
+    "fr": "Moyenne/an",
+    "en": "Avg/year"
+  },
+  "retenus": {
+    "fr": "Retenus",
+    "en": "Successful"
+  },
+  "evaluated-simple": {
+    "fr": "Évalués",
+    "en": "Evaluated"
+  },
+  "projects-evaluated": {
+    "fr": "Projets évalués",
+    "en": "Evaluated projects"
+  },
+  "projects-successful": {
+    "fr": "Projets retenus",
+    "en": "Successful projects"
+  },
+  "funding-share": {
+    "fr": "Part de financement",
+    "en": "Funding share"
+  },
+  "caption-funding-ranking-subsidies": {
+    "fr": "Classement des pays selon les montants demandés et obtenus",
+    "en": "Ranking of countries by requested and obtained amounts"
+  },
+  "caption-success-rate-by-country": {
+    "fr": "Taux de succès des pays",
+    "en": "Success rate by country"
+  },
+  "success-rate-percent": {
+    "fr": "Taux de succès (%)",
+    "en": "Success rate (%)"
+  },
+  "vs-average": {
+    "fr": "vs Moyenne",
+    "en": "vs Average"
+  },
+  "submitted-coordinations": {
+    "fr": "Coordinations déposées",
+    "en": "Submitted coordinations"
+  },
+  "coordinations-coordinator": {
+    "fr": "Coordinations en tant que coordinateur",
+    "en": "Coordinations as coordinator"
+  },
+  "coordinations-participant": {
+    "fr": "Coordinations en tant que participant",
+    "en": "Coordinations as participant"
+  },
+  "participations-total": {
+    "fr": "Participations totales",
+    "en": "Total participations"
+  },
+  "candidates": {
+    "fr": "Candidats",
+    "en": "Candidates"
+  },
+  "participants": {
+    "fr": "Participants",
+    "en": "Participants"
+  },
+  "rank-candidates": {
+    "fr": "Rang (candidats)",
+    "en": "Rank (candidates)"
+  },
+  "rank-participants": {
+    "fr": "Rang (participants)",
+    "en": "Rank (participants)"
+  },
+  "caption-participants-success-rate": {
+    "fr": "Taux de succès des participants par pays",
+    "en": "Participants success rate by country"
   }
 }

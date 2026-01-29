@@ -95,12 +95,11 @@ export function readingKey(data, isLoading) {
  * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
  */
 export function renderDataTable(data: { country_code: string; country_name_fr: string; stage: string; project_number: number; funding: number }[], currentLang: string = "fr") {
+  const { getI18nLabel } = require("../../../../../../utils");
+  const i18n = require("../../../../i18n-global.json");
+  
   if (!data || data.length === 0) {
-    return (
-      <div className="fr-text--center fr-py-3w">
-        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
-      </div>
-    );
+    return <div className="fr-text--center fr-py-3w">{getI18nLabel(i18n, "no-data-table")}</div>;
   }
 
   interface CountryData {
@@ -179,16 +178,14 @@ export function renderDataTable(data: { country_code: string; country_name_fr: s
   };
 
   const labels = {
-    country: currentLang === "fr" ? "Pays" : "Country",
-    evaluated: currentLang === "fr" ? "Projets évalués" : "Evaluated projects",
-    successful: currentLang === "fr" ? "Projets retenus" : "Successful projects",
-    successRate: currentLang === "fr" ? "Taux de succès" : "Success rate",
-    funding: currentLang === "fr" ? "Financement" : "Funding",
-    fundingShare: currentLang === "fr" ? "Part de financement" : "Funding share",
+    country: getI18nLabel(i18n, "country"),
+    evaluated: getI18nLabel(i18n, "projects-evaluated"),
+    successful: getI18nLabel(i18n, "projects-successful"),
+    successRate: getI18nLabel(i18n, "success-rate"),
+    funding: getI18nLabel(i18n, "funding"),
+    fundingShare: getI18nLabel(i18n, "funding-share"),
     unit: "M€",
-    caption: currentLang === "fr" 
-      ? "Efficacité des pays par taux de succès et part de financement (Top 15)" 
-      : "Country efficiency by success rate and funding share (Top 15)",
+    caption: getI18nLabel(i18n, "caption-funding-ranking-rates"),
   };
 
   return (

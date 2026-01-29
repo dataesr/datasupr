@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
+import { getI18nLabel } from "../../../../../../utils";
 import { formatToRates } from "../../../../../../utils/format";
+import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -41,9 +43,9 @@ export function renderDataTable(data, currentLang) {
   const successRates = data.successRateByDestination || [];
 
   const labels = {
-    caption: currentLang === "fr" ? "Taux de succès par destination" : "Success rate by destination",
-    destination: currentLang === "fr" ? "Destination" : "Destination",
-    successRate: currentLang === "fr" ? "Taux de succès" : "Success rate",
+    caption: getI18nLabel(i18n, "caption-destination-success-rate"),
+    destination: getI18nLabel(i18n, "destination"),
+    successRate: getI18nLabel(i18n, "success-rate"),
   };
 
   return (

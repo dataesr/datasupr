@@ -1,3 +1,6 @@
+import { getI18nLabel } from "../../../../../../utils";
+import i18n from "../../../../i18n-global.json";
+
 function TableWrapper({ children }) {
   return (
     <div className="fr-table--sm fr-table fr-table--bordered">
@@ -33,11 +36,11 @@ export function RenderData(data, currentLang = "fr") {
   // Traduction des types d'entités
   const getEntityTypeLabel = (entityType) => {
     const labels = {
-      REC: currentLang === "fr" ? "Recherche" : "Research",
-      PUB: currentLang === "fr" ? "Organisme public" : "Public institution",
-      PRC: currentLang === "fr" ? "Organisme privé" : "Private institution",
-      HES: currentLang === "fr" ? "Établissement d'enseignement supérieur" : "Higher education institution",
-      OTH: currentLang === "fr" ? "Autre" : "Other",
+      REC: getI18nLabel(i18n, "REC"),
+      PUB: getI18nLabel(i18n, "PUB"),
+      PRC: getI18nLabel(i18n, "PRC"),
+      HES: getI18nLabel(i18n, "HES"),
+      OTH: getI18nLabel(i18n, "OTH"),
     };
     return labels[entityType] || entityType;
   };
@@ -59,8 +62,7 @@ export function RenderData(data, currentLang = "fr") {
       <div className="fr-mb-2w">
         <p>
           <strong>
-            {currentLang === "fr" ? "Type d'entité : " : "Entity type: "}
-            {getEntityTypeLabel(entity_type)}
+            {getI18nLabel(i18n, "type-of-entity-evolution")} :{getEntityTypeLabel(entity_type)}
           </strong>
         </p>
       </div>
@@ -68,12 +70,12 @@ export function RenderData(data, currentLang = "fr") {
       <TableWrapper>
         <thead>
           <tr>
-            <th>{currentLang === "fr" ? "Pays" : "Country"}</th>
+            <th>{getI18nLabel(i18n, "country")}</th>
             {years.map((year) => (
               <th key={year}>{year} (M€)</th>
             ))}
             <th>
-              <strong>{currentLang === "fr" ? "Total (M€)" : "Total (M€)"}</strong>
+              <strong>{getI18nLabel(i18n, "total")}</strong>
             </th>
           </tr>
         </thead>

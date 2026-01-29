@@ -1,5 +1,7 @@
 import { useSearchParams } from "react-router-dom";
+import { getI18nLabel } from "../../../../../../utils";
 import { formatToMillions } from "../../../../../../utils/format";
+import i18n from "../../../../i18n-global.json";
 
 export function useGetParams() {
   const [searchParams] = useSearchParams();
@@ -85,25 +87,22 @@ export function readingKey(data) {
  */
 export function renderDataTable(data: { list: Array<{ id: string; name: string; acronym: string; country_name: string; total_fund_eur: number }> }, currentLang: string = "fr") {
   if (!data || !data.list || data.list.length === 0) {
-    return (
-      <div className="fr-text--center fr-py-3w">
-        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
-      </div>
-    );
+    return <div className="fr-text--center fr-py-3w">{getI18nLabel(i18n, "no-data-table")}</div>;
   }
 
   const formatToMillions = (value: number) => {
     const millions = value / 1000000;
-    return new Intl.NumberFormat(currentLang === "fr" ? "fr-FR" : "en-US", { 
+    const locale = currentLang === "fr" ? "fr-FR" : "en-US";
+    return new Intl.NumberFormat(locale, {
       maximumFractionDigits: 2,
-      minimumFractionDigits: 2 
+      minimumFractionDigits: 2,
     }).format(millions);
   };
 
   const labels = {
-    partner: currentLang === "fr" ? "Bénéficiaire" : "Beneficiary",
-    acronym: currentLang === "fr" ? "Acronyme" : "Acronym",
-    funding: currentLang === "fr" ? "Financement total" : "Total funding",
+    partner: getI18nLabel(i18n, "beneficiary"),
+    acronym: getI18nLabel(i18n, "acronym"),
+    funding: getI18nLabel(i18n, "total-funding"),
     unit: "M€",
     caption:
       currentLang === "fr"

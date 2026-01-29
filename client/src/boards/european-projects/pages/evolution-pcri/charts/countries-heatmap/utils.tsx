@@ -140,12 +140,11 @@ export function readingKey(data, isLoading) {
  * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
  */
 export function renderDataTable(data: { country_code: string; country_name_fr: string; framework: string; funding: number }[], currentLang: string = "fr") {
+  const { getI18nLabel } = require("../../../../../../utils");
+  const i18n = require("../../../../i18n-global.json");
+  
   if (!data || data.length === 0) {
-    return (
-      <div className="fr-text--center fr-py-3w">
-        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
-      </div>
-    );
+    return <div className="fr-text--center fr-py-3w">{getI18nLabel(i18n, "no-data-table")}</div>;
   }
 
   interface CountryFrameworkData {
@@ -232,10 +231,8 @@ export function renderDataTable(data: { country_code: string; country_name_fr: s
   };
 
   const labels = {
-    country: currentLang === "fr" ? "Pays" : "Country",
-    caption: currentLang === "fr" 
-      ? "Part de financement par pays et par programme-cadre européen (Top 15, en pourcentage)" 
-      : "Funding share by country and European framework programme (Top 15, in percentage)",
+    country: getI18nLabel(i18n, "country"),
+    caption: getI18nLabel(i18n, "caption-funding-ranking-rates"),
   };
 
   return (

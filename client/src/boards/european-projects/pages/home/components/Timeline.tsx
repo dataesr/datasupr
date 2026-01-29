@@ -1,5 +1,7 @@
+import { useSearchParams } from "react-router-dom";
+import { getI18nLabel } from "../../../../../utils";
+import i18n from "../../../../i18n-global.json";
 import "./styles.scss";
-
 
 interface TimelinePeriod {
   id: string;
@@ -9,63 +11,45 @@ interface TimelinePeriod {
   description: string;
 }
 
-interface TimelineProps {
-  currentLang: string;
-}
+export default function Timeline() {
+  const [searchParams] = useSearchParams();
 
-export default function Timeline({ currentLang }: TimelineProps) {
   const timelinePeriods: TimelinePeriod[] = [
     {
       id: "fp6",
       period: "2002-2006",
       years: "5 ans",
       program: "FP6",
-      description:
-        currentLang === "fr"
-          ? "6 Programme-cadre de recherche et développement technologique"
-          : "6th Framework Programme for Research and Technological Development",
+      description: getI18nLabel(i18n, "fp6-description"),
     },
     {
       id: "fp7",
       period: "2007-2013",
       years: "7 ans",
       program: "FP7",
-      description:
-        currentLang === "fr"
-          ? "7e Programme-cadre de recherche et développement technologique"
-          : "7th Framework Programme for Research and Technological Development",
+      description: getI18nLabel(i18n, "fp7-description"),
     },
     {
       id: "h2020",
       period: "2014-2020",
       years: "7 ans",
       program: "Horizon 2020",
-      description:
-        currentLang === "fr"
-          ? "Programme de recherche et d'innovation de l'Union européenne"
-          : "Research and Innovation programme of the European Union",
+      description: getI18nLabel(i18n, "h2020-description"),
     },
     {
       id: "he",
       period: "2021-2027",
       years: "7 ans",
       program: "Horizon Europe",
-      description:
-        currentLang === "fr"
-          ? "En cours : Programme de recherche et d'innovation de l'UE pour 2021-2027"
-          : "In progress : EU's research and innovation programme for 2021-2027",
+      description: getI18nLabel(i18n, "he-description"),
     },
   ];
 
   return (
     <div className="timeline-container">
       <div className="timeline-header">
-        <h3 className="timeline-title">
-          {currentLang === "fr" ? "Évolution des programmes européens de recherche" : "Evolution of European research programmes"}
-        </h3>
-        <p className="timeline-subtitle">
-          {currentLang === "fr" ? "De 2002 à aujourd'hui : quatre générations de programmes" : "From 2002 to today: four generations of programmes"}
-        </p>
+        <h3 className="timeline-title">{getI18nLabel(i18n, "timeline-title")}</h3>
+        <p className="timeline-subtitle">{getI18nLabel(i18n, "timeline-subtitle")}</p>
       </div>
 
       <div className="timeline">

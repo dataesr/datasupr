@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate, useSearchParams, useParams } from "react-router-dom";
+import { Routes, Route, Navigate, useParams } from "react-router-dom";
 
 import Beneficiaries from "./pages/beneficiaries/index.tsx";
 import Collaborations from "./pages/collaborations/index.tsx";
@@ -16,24 +16,14 @@ import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
 import "./styles.scss";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 
+import { getI18nLabel } from "../../utils";
 import i18n from "./title-i18n.json";
 import CollaborationsEntity from "./pages/collaborations/index-entity.tsx";
 import TypeOfBeneficiaries from "./pages/type-of-beneficiaries/index.tsx";
 import EvolutionPcri from "./pages/evolution-pcri/index.tsx";
 
-const useRouteTitle = (path: string) => {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
-
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
-  useTitle(getI18nLabel(path));
-};
-
 const RouteWithTitle = ({ titleKey, element }) => {
-  useRouteTitle(titleKey);
+  useTitle(getI18nLabel(i18n, titleKey));
   return element;
 };
 
@@ -49,7 +39,7 @@ export default function EuropeanProjectsRoutes() {
         <Route index element={<Navigate to="accueil" replace />} />
         <Route path="accueil" element={<RouteWithTitle titleKey="accueil" element={<Home />} />} />
         <Route path="search" element={<RouteWithTitle titleKey="search" element={<Search />} />} />
-        <Route path="horizon-europe" element={<RouteWithTitle titleKey="overview" element={<OverviewV2 />} />} />
+        <Route path="horizon-europe" element={<RouteWithTitle titleKey="horizon-europe" element={<OverviewV2 />} />} />
         <Route element={<SidemenuLayout />}>
           <Route path="synthese" element={<RouteWithTitle titleKey="synthese" element={<Overview />} />} />
           <Route path="positionnement" element={<RouteWithTitle titleKey="positionnement" element={<Positioning />} />} />

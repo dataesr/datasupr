@@ -113,12 +113,11 @@ export function readingKey(data, isLoading) {
  * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
  */
 export function renderDataTable(data: { call_year: string; framework: string; stage: string; project_number: number; country_code: string }[], currentLang: string = "fr") {
+  const { getI18nLabel } = require("../../../../../../utils");
+  const i18n = require("../../../../i18n-global.json");
+  
   if (!data || data.length === 0) {
-    return (
-      <div className="fr-text--center fr-py-3w">
-        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
-      </div>
-    );
+    return <div className="fr-text--center fr-py-3w">{getI18nLabel(i18n, "no-data-table")}</div>;
   }
 
   interface YearFrameworkData {
@@ -188,13 +187,11 @@ export function renderDataTable(data: { call_year: string; framework: string; st
   };
 
   const labels = {
-    year: currentLang === "fr" ? "Année" : "Year",
-    evaluated: currentLang === "fr" ? "Évalués" : "Evaluated",
-    successful: currentLang === "fr" ? "Retenus" : "Successful",
-    successRate: currentLang === "fr" ? "Taux de succès" : "Success rate",
-    caption: currentLang === "fr" 
-      ? "Évolution du taux de succès par programme-cadre européen" 
-      : "Evolution of success rate by European framework programme",
+    year: getI18nLabel(i18n, "year"),
+    evaluated: getI18nLabel(i18n, "evaluated-simple"),
+    successful: getI18nLabel(i18n, "retenus"),
+    successRate: getI18nLabel(i18n, "success-rate"),
+    caption: getI18nLabel(i18n, "caption-pillar-evolution"),
   };
 
   return (

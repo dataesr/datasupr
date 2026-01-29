@@ -108,12 +108,11 @@ export function readingKey(data, isLoading) {
  * @returns Un composant JSX de tableau accessible ou un message si aucune donnée n'est disponible
  */
 export function renderDataTable(data: { call_year: string; framework: string; funding: number }[], currentLang: string = "fr") {
+  const { getI18nLabel } = require("../../../../../../utils");
+  const i18n = require("../../../../i18n-global.json");
+  
   if (!data || data.length === 0) {
-    return (
-      <div className="fr-text--center fr-py-3w">
-        {currentLang === "fr" ? "Aucune donnée disponible pour le tableau." : "No data available for the table."}
-      </div>
-    );
+    return <div className="fr-text--center fr-py-3w">{getI18nLabel(i18n, "no-data-table")}</div>;
   }
 
   interface YearFrameworkData {
@@ -159,12 +158,10 @@ export function renderDataTable(data: { call_year: string; framework: string; fu
   };
 
   const labels = {
-    year: currentLang === "fr" ? "Année" : "Year",
-    total: currentLang === "fr" ? "Total" : "Total",
+    year: getI18nLabel(i18n, "year"),
+    total: getI18nLabel(i18n, "total"),
     unit: "M€",
-    caption: currentLang === "fr" 
-      ? "Évolution du financement par programme-cadre européen (en millions d'euros)" 
-      : "Evolution of funding by European framework programme (in millions of euros)",
+    caption: getI18nLabel(i18n, "caption-pillar-evolution"),
   };
 
   return (
