@@ -1,4 +1,5 @@
 import Cookies from "js-cookie";
+import { useSearchParams } from "react-router-dom";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -132,14 +133,28 @@ async function getNeighbouringCountriesFromIso3(iso3: string) {
   }
 }
 
+function getI18nLabel(i18n: object, key: string) {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+
+  try {
+    return i18n[key][currentLang];
+  } catch (error) {
+    console.error(`No translation key ${key}`);
+    return key;
+  }
+}
+
 export {
   clearAllfavoriteIdsInCookie,
   getfavoriteIdsInCookie,
   getFlagEmoji,
   getGeoLabel,
+  getI18nLabel,
+  getNeighbouringCountriesFromIso3,
   getParentFromLevel,
   getSortedfavoriteIdsInCookie,
   getThemeFromHtmlNode,
-  setfavoriteIdsInCookie,
-  getNeighbouringCountriesFromIso3,
+  setfavoriteIdsInCookie
 };
+

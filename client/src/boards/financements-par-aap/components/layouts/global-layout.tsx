@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import Footer from "../../../../components/footer";
+import { getI18nLabel } from "../../../../utils";
 import { years } from "../../utils";
 import i18n from "./i18n.json";
 
@@ -14,7 +15,6 @@ const { VITE_MINISTER_NAME } = import.meta.env;
 export default function GlobalLayout() {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
 
   useEffect(() => {
     if (!searchParams.get("yearMax") || !searchParams.get("yearMin")) {
@@ -38,15 +38,6 @@ export default function GlobalLayout() {
 
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
-
-  function getI18nLabel(key) {
-    try {
-      return i18n[key][currentLang];
-    } catch (error) {
-      console.error(`No translation key ${key}`);
-      return key;
-    }
-  }
 
   return (
     <>
@@ -82,7 +73,7 @@ export default function GlobalLayout() {
         <div className="fr-header__menu fr-modal" id="modal-header" aria-labelledby="button-header">
           <div className="fr-container">
             <button aria-controls="modal-header" title="Fermer" type="button" id="button-2168" className="fr-btn--close fr-btn">
-              {getI18nLabel("close")}
+              {getI18nLabel(i18n, "close")}
             </button>
             <div className="fr-header__menu-links"></div>
             <nav className="fr-nav" role="navigation" aria-label="Menu principal">
@@ -95,7 +86,7 @@ export default function GlobalLayout() {
                     className="fr-nav__link"
                   >
                     <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
-                    {getI18nLabel("accueil")}
+                    {getI18nLabel(i18n, "accueil")}
                   </Link>
                 </li>
                 <li className="fr-nav__item">
@@ -105,7 +96,7 @@ export default function GlobalLayout() {
                     {...(is("/financements-par-aap/etablissement") && { "aria-current": "page" })}
                     className="fr-nav__link"
                   >
-                    {getI18nLabel("etablissement")}
+                    {getI18nLabel(i18n, "etablissement")}
                   </Link>
                 </li>
                 <li className="fr-nav__item">
@@ -115,7 +106,7 @@ export default function GlobalLayout() {
                     {...(is("/financements-par-aap/comparaison") && { "aria-current": "page" })}
                     className="fr-nav__link"
                   >
-                    {getI18nLabel("comparaison")}
+                    {getI18nLabel(i18n, "comparaison")}
                   </Link>
                 </li>
               </ul>

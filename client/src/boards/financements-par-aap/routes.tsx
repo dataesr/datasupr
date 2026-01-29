@@ -1,7 +1,8 @@
-import { Navigate, Route, Routes, useSearchParams } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import NotFoundPage from "../../components/not-found-page.tsx";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
+import { getI18nLabel } from "../../utils";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 import Comparison from "./pages/comparison/index.tsx";
 import Home from "./pages/home/index.tsx";
@@ -10,19 +11,8 @@ import i18n from "./title-i18n.json";
 
 import "./styles.scss";
 
-const useRouteTitle = (path: string) => {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
-
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
-  useTitle(getI18nLabel(path));
-};
-
 const RouteWithTitle = ({ titleKey, element }) => {
-  useRouteTitle(titleKey);
+  useTitle(getI18nLabel(i18n, titleKey))
   return element;
 };
 
