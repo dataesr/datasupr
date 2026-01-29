@@ -2,7 +2,6 @@ import { Text, Title } from "@dataesr/dsfr-plus";
 
 import "./styles.scss";
 
-
 interface StructureCardProps {
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
   className?: string;
@@ -13,7 +12,6 @@ interface StructureCardProps {
   title: string;
   year?: string | number;
 }
-
 
 export default function CardSimple({
   as = "h2",
@@ -44,21 +42,16 @@ export default function CardSimple({
         {title}
       </Title>
 
-      {subtitle && (
-        <Text className="structure-card__meta">
-          {subtitle}
-        </Text>
-      )}
+      {subtitle && <Text className="structure-card__meta">{subtitle}</Text>}
 
       {description && (
-        <Text className="structure-card__meta">
-          {description}
-        </Text>
+        <Text className="structure-card__meta">{description}</Text>
       )}
 
       {stat && (
         <Text className="structure-card__stat">
-          {stat.toLocaleString("fr-FR")} étudiants inscrits en {year}
+          {stat.toLocaleString("fr-FR")} étudiant{stat > 1 ? "s" : ""} inscrit
+          {stat > 1 ? "s" : ""} en {year}
         </Text>
       )}
     </div>

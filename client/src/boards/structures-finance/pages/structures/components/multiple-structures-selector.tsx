@@ -7,6 +7,7 @@ interface Structure {
   etablissement_lib: string;
   etablissement_id_paysage_actuel: string;
   etablissement_actuel_lib: string;
+  etablissement_actuel_categorie?: string;
   type: string;
   typologie: string;
   exercice: number;
@@ -60,7 +61,7 @@ export default function MultipleStructuresSelector({
             <CardSimple
               onClick={() => handleSelect(etab.etablissement_id_paysage)}
               stat={etab.effectif_sans_cpge}
-              subtitle={etab.type || etab.typologie}
+              subtitle={etab.etablissement_actuel_categorie}
               title={etab.etablissement_lib}
               year={etab.anuniv}
             />
