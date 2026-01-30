@@ -152,32 +152,6 @@ export default function SelectionUI({
 
         <div className="filter-bar fr-mb-2w">
           <Dropdown
-            label={labels.devimmo}
-            icon="home-4-line"
-            size="sm"
-            className="filter-bar__devimmo"
-          >
-            <Dropdown.Item
-              active={!selectedDevimmo}
-              onClick={() => handleDevimmoChange("")}
-            >
-              Avec ou sans dévolution immobilière
-            </Dropdown.Item>
-            <Dropdown.Item
-              active={selectedDevimmo === "devimmo"}
-              onClick={() => handleDevimmoChange("devimmo")}
-            >
-              Avec dévolution immobilière
-            </Dropdown.Item>
-            <Dropdown.Item
-              active={selectedDevimmo === "non-devimmo"}
-              onClick={() => handleDevimmoChange("non-devimmo")}
-            >
-              Sans dévolution immobilière
-            </Dropdown.Item>
-          </Dropdown>
-
-          <Dropdown
             label={labels.rce}
             icon="bank-line"
             size="sm"
@@ -200,6 +174,31 @@ export default function SelectionUI({
               onClick={() => handleRceChange("non-rce")}
             >
               Non RCE uniquement
+            </Dropdown.Item>
+          </Dropdown>
+          <Dropdown
+            label={labels.devimmo}
+            icon="home-4-line"
+            size="sm"
+            className="filter-bar__devimmo"
+          >
+            <Dropdown.Item
+              active={!selectedDevimmo}
+              onClick={() => handleDevimmoChange("")}
+            >
+              Avec ou sans dévolution immobilière
+            </Dropdown.Item>
+            <Dropdown.Item
+              active={selectedDevimmo === "devimmo"}
+              onClick={() => handleDevimmoChange("devimmo")}
+            >
+              Avec dévolution immobilière
+            </Dropdown.Item>
+            <Dropdown.Item
+              active={selectedDevimmo === "non-devimmo"}
+              onClick={() => handleDevimmoChange("non-devimmo")}
+            >
+              Sans dévolution immobilière
             </Dropdown.Item>
           </Dropdown>
         </div>

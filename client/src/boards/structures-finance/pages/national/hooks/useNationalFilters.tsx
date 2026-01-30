@@ -13,19 +13,18 @@ export function useNationalFilters(
 
     if (selectedTypologie) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.etablissement_actuel_typologie === selectedTypologie
+        (item: any) => item.typologie === selectedTypologie
       );
     }
     if (selectedRegion) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.etablissement_actuel_region === selectedRegion
+        (item: any) => item.region === selectedRegion
       );
     }
 
     const types = new Set<string>();
     itemsToConsider.forEach((item: any) => {
-      if (item.etablissement_actuel_type)
-        types.add(item.etablissement_actuel_type);
+      if (item.type) types.add(item.type);
     });
 
     return Array.from(types).sort((a, b) => {
@@ -50,19 +49,18 @@ export function useNationalFilters(
 
     if (selectedType) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.etablissement_actuel_type === selectedType
+        (item: any) => item.type === selectedType
       );
     }
     if (selectedRegion) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.etablissement_actuel_region === selectedRegion
+        (item: any) => item.region === selectedRegion
       );
     }
 
     const typologies = new Set<string>();
     itemsToConsider.forEach((item: any) => {
-      if (item.etablissement_actuel_typologie)
-        typologies.add(item.etablissement_actuel_typologie);
+      if (item.typologie) typologies.add(item.typologie);
     });
 
     return Array.from(typologies).sort((a, b) => {
@@ -87,19 +85,18 @@ export function useNationalFilters(
 
     if (selectedType) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.etablissement_actuel_type === selectedType
+        (item: any) => item.type === selectedType
       );
     }
     if (selectedTypologie) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.etablissement_actuel_typologie === selectedTypologie
+        (item: any) => item.typologie === selectedTypologie
       );
     }
 
     const regions = new Set<string>();
     itemsToConsider.forEach((item: any) => {
-      if (item.etablissement_actuel_region)
-        regions.add(item.etablissement_actuel_region);
+      if (item.region) regions.add(item.region);
     });
 
     return Array.from(regions).sort((a, b) =>

@@ -86,6 +86,7 @@ export default function NationalSelector() {
   );
 
   const etablissementCount = filteredItems.length;
+  // Attention pour la vue national on utilise pas actuel. Ni pour categorie ni pour typologie et region normal pas actuel
 
   useEffect(() => {
     if (!years.length) return;
@@ -191,32 +192,6 @@ export default function NationalSelector() {
 
             <div className="filter-bar fr-mb-2w">
               <Dropdown
-                label={labels.devimmo}
-                icon="home-4-line"
-                size="sm"
-                className="filter-bar__devimmo"
-              >
-                <Dropdown.Item
-                  active={!selectedDevimmo}
-                  onClick={() => handleDevimmoChange("")}
-                >
-                  Avec ou sans dévolution immobilière
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={selectedDevimmo === "devimmo"}
-                  onClick={() => handleDevimmoChange("devimmo")}
-                >
-                  Avec dévolution immobilière
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={selectedDevimmo === "non-devimmo"}
-                  onClick={() => handleDevimmoChange("non-devimmo")}
-                >
-                  Sans dévolution immobilière
-                </Dropdown.Item>
-              </Dropdown>
-
-              <Dropdown
                 label={labels.rce}
                 icon="bank-line"
                 size="sm"
@@ -239,6 +214,31 @@ export default function NationalSelector() {
                   onClick={() => handleRceChange("non-rce")}
                 >
                   Non RCE uniquement
+                </Dropdown.Item>
+              </Dropdown>
+              <Dropdown
+                label={labels.devimmo}
+                icon="home-4-line"
+                size="sm"
+                className="filter-bar__devimmo"
+              >
+                <Dropdown.Item
+                  active={!selectedDevimmo}
+                  onClick={() => handleDevimmoChange("")}
+                >
+                  Avec ou sans dévolution immobilière
+                </Dropdown.Item>
+                <Dropdown.Item
+                  active={selectedDevimmo === "devimmo"}
+                  onClick={() => handleDevimmoChange("devimmo")}
+                >
+                  Avec dévolution immobilière
+                </Dropdown.Item>
+                <Dropdown.Item
+                  active={selectedDevimmo === "non-devimmo"}
+                  onClick={() => handleDevimmoChange("non-devimmo")}
+                >
+                  Sans dévolution immobilière
                 </Dropdown.Item>
               </Dropdown>
             </div>

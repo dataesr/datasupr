@@ -171,15 +171,15 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                   <div>
                     <Text size="lg" bold className="fr-mb-0">
                       {data.is_devimmo
-                        ? data.devimmo_end
-                          ? `De ${data.devimmo_start} à ${data.devimmo_end}`
-                          : `Depuis ${data.devimmo_start}`
-                        : "État Patrimoine "}
+                        ? "Dévolution du patrimoine immobilier"
+                        : "Pas de dévolution immobilière"}
                     </Text>
                     <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
                       {data.is_devimmo
-                        ? "Dévolution du patrimoine immobilier"
-                        : "Pas de dévolution du patrimoine"}
+                        ? data.devimmo_end
+                          ? `De ${data.devimmo_start} à ${data.devimmo_end}`
+                          : `Depuis ${data.devimmo_start}`
+                        : " "}
                     </Text>
                   </div>
                 </div>

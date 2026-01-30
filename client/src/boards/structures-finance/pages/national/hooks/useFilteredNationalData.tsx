@@ -13,15 +13,10 @@ export function useFilteredNationalData(
 ) {
   return useMemo(() => {
     return allItems.filter((item: any) => {
-      if (selectedType && item.etablissement_actuel_type !== selectedType)
+      if (selectedType && item.type !== selectedType) return false;
+      if (selectedTypologie && item.typologie !== selectedTypologie)
         return false;
-      if (
-        selectedTypologie &&
-        item.etablissement_actuel_typologie !== selectedTypologie
-      )
-        return false;
-      if (selectedRegion && item.etablissement_actuel_region !== selectedRegion)
-        return false;
+      if (selectedRegion && item.region !== selectedRegion) return false;
       if (selectedRce === "rce" && !isRce(item)) return false;
       if (selectedRce === "non-rce" && isRce(item)) return false;
       if (selectedDevimmo === "devimmo" && !isDevimmo(item)) return false;

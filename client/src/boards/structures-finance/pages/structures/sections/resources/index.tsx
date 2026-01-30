@@ -80,18 +80,19 @@ export function FinancementsSection({
       </div>
 
       <div className="fr-mb-4w">
-        <h3 className="fr-h5 fr-mb-3w">
-          Subvention pour charges de service public (SCSP)
-        </h3>
+        <Title as="h3" look="h5" className="fr-mb-3w">
+          Financements attribués à l’établissement par le ministère en charge de
+          l'Enseignement supérieur
+        </Title>
         <Row gutters>
           <Col xs="12" md="3">
             <MetricChartCard
-              title="SCSP"
+              title="Dotation de l’État"
               value={`${euro(data.scsp)} €`}
               detail={
                 data.is_rce === false
-                  ? "Dotation de l'État (inclut la masse salariale prise en charge par l'État)"
-                  : "Dotation de l'État"
+                  ? "Subvention pour charges de service public (SCSP) et dépenses de personnel prises en charge par l’État"
+                  : "Subvention pour charges de service public (SCSP) "
               }
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution("scsp")}
@@ -117,7 +118,7 @@ export function FinancementsSection({
           </Col>
           <Col xs="12" md="3">
             <MetricChartCard
-              title={`Nombre d'étudiants financés par la SCSP`}
+              title={`Nombre d'étudiants financés par l'État`}
               value={
                 data.scsp_etudiants != null
                   ? `${data.scsp_etudiants.toLocaleString("fr-FR")} étudiant${data.scsp_etudiants > 1 ? "s" : ""} en ${data.anuniv}`

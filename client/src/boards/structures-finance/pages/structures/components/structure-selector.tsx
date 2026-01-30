@@ -105,7 +105,7 @@ export default function StructureSelection() {
                 etab.etablissement_id_paysage_actuel ||
                 etab.id;
               const displayName = etab.etablissement_lib || "";
-              const type = etab.etablissement_actuel_type || "";
+              const type = etab.etablissement_actuel_categorie || "";
               const region = etab.etablissement_actuel_region;
               const studentCount = etab.effectif_sans_cpge;
               const year = etab.anuniv;

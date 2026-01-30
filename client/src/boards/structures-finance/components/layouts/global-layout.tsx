@@ -5,11 +5,16 @@ import Footer from "../../../../components/footer";
 import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
 
+const FILTER_PARAMS = ["type", "typologie", "region", "rce", "devimmo"];
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
   const [searchParams] = useSearchParams();
-  const filtersParams = searchParams.toString();
+
+  const paramsWithoutFilters = new URLSearchParams(searchParams);
+  FILTER_PARAMS.forEach((key) => paramsWithoutFilters.delete(key));
+  const cleanParams = paramsWithoutFilters.toString();
+
   const { VITE_MINISTER_NAME } = import.meta.env;
 
   if (!pathname) return null;
@@ -86,8 +91,8 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/structures-finance/etablissements?${filtersParams}${
-                      filtersParams ? "&" : ""
+                    to={`/structures-finance/etablissements?${cleanParams}${
+                      cleanParams ? "&" : ""
                     }section=ressources`}
                     target="_self"
                     {...(is("/structures-finance/etablissements") && {
@@ -100,7 +105,7 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={"/structures-finance/national"}
+                    to={`/structures-finance/national${cleanParams ? `?${cleanParams}` : ""}`}
                     target="_self"
                     {...(is("/structures-finance/national") && {
                       "aria-current": "page",
