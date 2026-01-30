@@ -75,7 +75,9 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
       </div>
 
       <div>
-        <h3 className="fr-h5 fr-mb-3w">La masse salariale</h3>
+        <Title as="h3" look="h5" className="fr-mb-3w">
+          La masse salariale
+        </Title>
         <Row gutters>
           <Col xs="12" sm="6" md="4">
             <MetricChartCard

@@ -138,4 +138,5 @@ export const SECTION_COLORS = {
   santeFinanciere: DSFR_COLORS.greenEmeraude,
   moyensHumains: DSFR_COLORS.pinkTuile,
   diplomesFormations: DSFR_COLORS.orangeTerreBattue,
+  erc: DSFR_COLORS.orangeTerreBattue,
 } as const;

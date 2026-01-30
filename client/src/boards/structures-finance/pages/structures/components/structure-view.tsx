@@ -13,6 +13,7 @@ import {
   FinancementsSection,
   SanteFinancierSection,
   MoyensHumainsSection,
+  ErcSection,
   EtudiantsSection,
   AnalysesSection,
   ImplantationsSection,
@@ -97,6 +98,8 @@ export default function StructureView() {
         return <SanteFinancierSection data={detailData} />;
       case "moyens-humains":
         return <MoyensHumainsSection data={detailData} />;
+      case "erc":
+        return <ErcSection data={detailData} />;
       case "diplomes-formations":
         return (
           <EtudiantsSection data={detailData} selectedYear={selectedYear} />
