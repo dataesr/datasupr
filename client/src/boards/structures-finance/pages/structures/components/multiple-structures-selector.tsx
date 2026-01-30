@@ -7,7 +7,7 @@ interface Structure {
   etablissement_lib: string;
   etablissement_id_paysage_actuel: string;
   etablissement_actuel_lib: string;
-  etablissement_actuel_categorie?: string;
+  etablissement_categorie?: string;
   type: string;
   typologie: string;
   exercice: number;
@@ -31,10 +31,11 @@ export default function MultipleStructuresSelector({
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSelect = (etablissementIdPaysage: string) => {
-    const next = new URLSearchParams(searchParams);
-    next.set("structureId", etablissementIdPaysage);
-    next.set("useHistorical", "true");
-    setSearchParams(next);
+    setSearchParams({
+      ...Object.fromEntries(searchParams),
+      structureId: etablissementIdPaysage,
+      useHistorical: "true",
+    });
   };
 
   return (
@@ -61,7 +62,7 @@ export default function MultipleStructuresSelector({
             <CardSimple
               onClick={() => handleSelect(etab.etablissement_id_paysage)}
               stat={etab.effectif_sans_cpge}
-              subtitle={etab.etablissement_actuel_categorie}
+              subtitle={etab.etablissement_categorie}
               title={etab.etablissement_lib}
               year={etab.anuniv}
             />

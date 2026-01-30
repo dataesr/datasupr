@@ -200,19 +200,19 @@ export default function NationalSelector() {
                   active={!selectedDevimmo}
                   onClick={() => handleDevimmoChange("")}
                 >
-                  Tous les patrimoines
+                  Avec ou sans dévolution immobilière
                 </Dropdown.Item>
                 <Dropdown.Item
                   active={selectedDevimmo === "devimmo"}
                   onClick={() => handleDevimmoChange("devimmo")}
                 >
-                  Dévolution uniquement
+                  Avec dévolution immobilière
                 </Dropdown.Item>
                 <Dropdown.Item
                   active={selectedDevimmo === "non-devimmo"}
                   onClick={() => handleDevimmoChange("non-devimmo")}
                 >
-                  Sans dévolution
+                  Sans dévolution immobilière
                 </Dropdown.Item>
               </Dropdown>
 

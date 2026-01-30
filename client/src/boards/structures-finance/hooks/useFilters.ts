@@ -7,9 +7,9 @@ const RCE_LABELS: Record<string, string> = {
 };
 
 const DEVIMMO_LABELS: Record<string, string> = {
-  "": "Tous les patrimoines",
-  devimmo: "Dévolution uniquement",
-  "non-devimmo": "Sans dévolution",
+  "": "Avec ou sans dévolution immobilière",
+  devimmo: "Avec dévolution immobilière",
+  "non-devimmo": "Sans dévolution immobilière",
 };
 
 export function useFilters() {
