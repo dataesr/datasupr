@@ -1,6 +1,6 @@
-import { Button, Container, FastAccess, Header, Link, Logo, Nav, Service } from "@dataesr/dsfr-plus";
+import { Button, Container, FastAccess, Header, Logo, Nav, Service } from "@dataesr/dsfr-plus";
 import { useState } from "react";
-import { Outlet, useLocation, useSearchParams } from "react-router-dom";
+import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import Footer from "../../../../components/footer";
 import SwitchTheme from "../../../../components/switch-theme";
@@ -108,11 +108,21 @@ export default function GlobalLayout({ languageSelector = false }) {
             </button>
             <div className={`dd-nav-wrapper ${menuOpen ? "dd-nav-open" : ""}`} id="dd-main-nav">
               <Nav aria-label="Main navigation">
-                <Link current={is("/datasupr-doc/home")} href="/datasupr-doc/home">
+                <Link
+                  {...(pathname === "/datasupr-doc/home" && { "aria-current": "page" })}
+                  className="fr-nav__link"
+                  target="_self"
+                  to="/datasupr-doc/home"
+                >
                   <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
                   {getI18nLabel(i18n, "home")}
                 </Link>
-                <Link current={is("/datasupr-doc/overview")} href="/datasupr-doc/overview">
+                <Link
+                  {...(is("/datasupr-doc/overview") && { "aria-current": "page" })}
+                  className="fr-nav__link"
+                  target="_self"
+                  to="/datasupr-doc/overview"
+                >
                   {getI18nLabel(i18n, "overview")}
                 </Link>
               </Nav>

@@ -154,7 +154,10 @@ export default function GlobalLayout() {
       </Container> */}
 
       <Outlet />
-      <Footer />
+      <Footer
+        href="/structures-finance/accueil"
+        title="#dataESR tableaux de bord"
+      />
     </>
   );
 }

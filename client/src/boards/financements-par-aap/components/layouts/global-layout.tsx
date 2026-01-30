@@ -80,10 +80,10 @@ export default function GlobalLayout() {
               <ul className="fr-nav__list">
                 <li className="fr-nav__item">
                   <Link
-                    to="/financements-par-aap/accueil"
-                    target="_self"
                     {...(pathname === "/financements-par-aap/accueil" && { "aria-current": "page" })}
                     className="fr-nav__link"
+                    target="_self"
+                    to="/financements-par-aap/accueil"
                   >
                     <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
                     {getI18nLabel(i18n, "accueil")}
@@ -91,20 +91,20 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/financements-par-aap/etablissement?${searchParamsFiltered()}`}
-                    target="_self"
                     {...(is("/financements-par-aap/etablissement") && { "aria-current": "page" })}
                     className="fr-nav__link"
+                    target="_self"
+                    to={`/financements-par-aap/etablissement?${searchParamsFiltered()}`}
                   >
                     {getI18nLabel(i18n, "etablissement")}
                   </Link>
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/financements-par-aap/comparaison?${searchParamsFiltered()}`}
-                    target="_self"
                     {...(is("/financements-par-aap/comparaison") && { "aria-current": "page" })}
                     className="fr-nav__link"
+                    target="_self"
+                    to={`/financements-par-aap/comparaison?${searchParamsFiltered()}`}
                   >
                     {getI18nLabel(i18n, "comparaison")}
                   </Link>

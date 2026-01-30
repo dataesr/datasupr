@@ -25,6 +25,10 @@ export default function Router() {
       <Route path="/atlas/*" element={<AtlasRoutes />} />
       <Route path="/cookies" element={<CookiePolicyPage />} />
       <Route path="/datasupr-doc/*" element={<DatasuprDocRoutes />} />
+      <Route
+        path="/european-projects"
+        element={<Navigate to="/european-projects/accueil" replace />}
+      />
       <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
       <Route
         path="/financements-par-aap"
@@ -36,6 +40,10 @@ export default function Router() {
       <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
       <Route path="/personnel-enseignant/*" element={<FacultyMembersRoutes />} />
       <Route path="/structures-finance/*" element={<StructuresFinanceRoutes />} />
+      <Route
+        path="/teds"
+        element={<Navigate to="/teds/home" replace />}
+      />
       <Route path="/teds/*" element={<TedsRoutes />} />
       <Route path="/template/*" element={<TemplateRoutes />} />
       <Route path="*" element={<NotFoundPage />} />
