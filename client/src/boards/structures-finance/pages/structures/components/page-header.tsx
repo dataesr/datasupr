@@ -158,6 +158,33 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                 </div>
               </div>
             </li>
+
+            <li>
+              <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
+                <div className="page-header__stat-card-content">
+                  <span
+                    className="page-header__stat-icon page-header__stat-icon--purple-glycine"
+                    aria-hidden="true"
+                  >
+                    <span className="fr-icon-home-4-fill" aria-hidden="true" />
+                  </span>
+                  <div>
+                    <Text size="lg" bold className="fr-mb-0">
+                      {data.is_devimmo
+                        ? data.devimmo_end
+                          ? `De ${data.devimmo_start} à ${data.devimmo_end}`
+                          : `Depuis ${data.devimmo_start}`
+                        : "État Patrimoine "}
+                    </Text>
+                    <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
+                      {data.is_devimmo
+                        ? "Dévolution du patrimoine immobilier"
+                        : "Pas de dévolution du patrimoine"}
+                    </Text>
+                  </div>
+                </div>
+              </div>
+            </li>
           </ul>
         </Col>
 
