@@ -99,6 +99,7 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
         "effectif_sans_cpge_sante",
         "effectif_sans_cpge_veto",
         "effectif_sans_cpge_interd",
+        "effectif_sans_cpge_deg9",
         "part_effectif_sans_cpge_l",
         "part_effectif_sans_cpge_m",
         "part_effectif_sans_cpge_d",
@@ -112,6 +113,7 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
         "part_effectif_sans_cpge_sante",
         "part_effectif_sans_cpge_veto",
         "part_effectif_sans_cpge_interd",
+        "part_effectif_sans_cpge_deg9",
         "has_effectif_l",
         "has_effectif_m",
         "has_effectif_d",
@@ -125,6 +127,7 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
         "has_effectif_sante",
         "has_effectif_veto",
         "has_effectif_interd",
+        "has_effectif_deg9",
         "emploi_etpt",
         "taux_encadrement",
         "scsp_par_etudiants",
@@ -192,6 +195,7 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
         taux_encadrement_sante: item.taux_encadrement,
         taux_encadrement_veto: item.taux_encadrement,
         taux_encadrement_interd: item.taux_encadrement,
+        taux_encadrement_deg9: item.taux_encadrement,
       };
     });
 

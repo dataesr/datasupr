@@ -1,5 +1,11 @@
 import { useMemo, useState } from "react";
-import { Row, Col } from "@dataesr/dsfr-plus";
+import {
+  Row,
+  Col,
+  SegmentedControl,
+  SegmentedElement,
+  Text,
+} from "@dataesr/dsfr-plus";
 import { createComparisonBarOptions } from "./options";
 import { RenderData } from "./render-data";
 import Dropdown from "../../../../../../../../components/dropdown";
@@ -20,105 +26,117 @@ interface MetricOption {
   key: string;
   label: string;
   category: string;
+  partKey?: string;
+  partLabel?: string;
   format?: (value: number) => string;
+  partFormat?: (value: number) => string;
 }
 
 const METRIC_OPTIONS: MetricOption[] = [
   {
-    key: "part_droits_d_inscription",
+    key: "droits_d_inscription",
     label: "Droits d'inscription",
     category: "Ressources propres",
-    format: (v) => `${v.toFixed(1)}%`,
+    partKey: "part_droits_d_inscription",
+    partLabel: "Part des droits d'inscription",
+    format: (v) => `${(v / 1000000).toFixed(1)} M€`,
+    partFormat: (v) => `${v.toFixed(1)}%`,
   },
   {
-    key: "part_formation_continue_diplomes_propres_et_vae",
+    key: "formation_continue_diplomes_propres_et_vae",
     label: "Formation continue",
     category: "Ressources propres",
-    format: (v) => `${v.toFixed(1)}%`,
+    partKey: "part_formation_continue_diplomes_propres_et_vae",
+    partLabel: "Part de la formation continue",
+    format: (v) => `${(v / 1000000).toFixed(1)} M€`,
+    partFormat: (v) => `${v.toFixed(1)}%`,
   },
   {
-    key: "part_taxe_d_apprentissage",
+    key: "taxe_d_apprentissage",
     label: "Taxe d'apprentissage",
     category: "Ressources propres",
-    format: (v) => `${v.toFixed(1)}%`,
+    partKey: "part_taxe_d_apprentissage",
+    partLabel: "Part de la taxe d'apprentissage",
+    format: (v) => `${(v / 1000000).toFixed(1)} M€`,
+    partFormat: (v) => `${v.toFixed(1)}%`,
   },
   {
-    key: "part_valorisation",
+    key: "valorisation",
     label: "Valorisation",
     category: "Ressources propres",
-    format: (v) => `${v.toFixed(1)}%`,
+    partKey: "part_valorisation",
+    partLabel: "Part de la valorisation",
+    format: (v) => `${(v / 1000000).toFixed(1)} M€`,
+    partFormat: (v) => `${v.toFixed(1)}%`,
   },
   {
-    key: "part_anr_hors_investissements_d_avenir",
+    key: "anr_hors_investissements_d_avenir",
     label: "ANR hors investissements d'avenir",
     category: "Ressources propres",
-    format: (v) => `${v.toFixed(1)}%`,
+    partKey: "part_anr_hors_investissements_d_avenir",
+    partLabel: "Part de l'ANR hors investissements d'avenir",
+    format: (v) => `${(v / 1000000).toFixed(1)} M€`,
+    partFormat: (v) => `${v.toFixed(1)}%`,
   },
   {
-    key: "part_anr_investissements_d_avenir",
+    key: "anr_investissements_d_avenir",
     label: "ANR investissements d'avenir",
     category: "Ressources propres",
-    format: (v) => `${v.toFixed(1)}%`,
+    partKey: "part_anr_investissements_d_avenir",
+    partLabel: "Part de l'ANR investissements d'avenir",
+    format: (v) => `${(v / 1000000).toFixed(1)} M€`,
+    partFormat: (v) => `${v.toFixed(1)}%`,
   },
   {
-    key: "part_contrats_et_prestations_de_recherche_hors_anr",
+    key: "contrats_et_prestations_de_recherche_hors_anr",
     label: "Contrats de recherche hors ANR",
     category: "Ressources propres",
-    format: (v) => `${v.toFixed(1)}%`,
+    partKey: "part_contrats_et_prestations_de_recherche_hors_anr",
+    partLabel: "Part des contrats de recherche hors ANR",
+    format: (v) => `${(v / 1000000).toFixed(1)} M€`,
+    partFormat: (v) => `${v.toFixed(1)}%`,
   },
   {
-    key: "part_subventions_de_la_region",
+    key: "subventions_de_la_region",
     label: "Subventions de la région",
     category: "Ressources propres",
-    format: (v) => `${v.toFixed(1)}%`,
+    partKey: "part_subventions_de_la_region",
+    partLabel: "Part des subventions de la région",
+    format: (v) => `${(v / 1000000).toFixed(1)} M€`,
+    partFormat: (v) => `${v.toFixed(1)}%`,
   },
   {
-    key: "part_subventions_union_europeenne",
+    key: "subventions_union_europeenne",
     label: "Subventions Union Européenne",
     category: "Ressources propres",
-    format: (v) => `${v.toFixed(1)}%`,
+    partKey: "part_subventions_union_europeenne",
+    partLabel: "Part des subventions UE",
+    format: (v) => `${(v / 1000000).toFixed(1)} M€`,
+    partFormat: (v) => `${v.toFixed(1)}%`,
   },
   {
-    key: "part_autres_ressources_propres",
+    key: "autres_ressources_propres",
     label: "Autres ressources propres",
     category: "Ressources propres",
-    format: (v) => `${v.toFixed(1)}%`,
+    partKey: "part_autres_ressources_propres",
+    partLabel: "Part des autres ressources propres",
+    format: (v) => `${(v / 1000000).toFixed(1)} M€`,
+    partFormat: (v) => `${v.toFixed(1)}%`,
   },
   {
-    key: "part_autres_subventions",
+    key: "autres_subventions",
     label: "Autres subventions",
     category: "Ressources propres",
-    format: (v) => `${v.toFixed(1)}%`,
+    partKey: "part_autres_subventions",
+    partLabel: "Part des autres subventions",
+    format: (v) => `${(v / 1000000).toFixed(1)} M€`,
+    partFormat: (v) => `${v.toFixed(1)}%`,
   },
   {
     key: "ressources_propres",
     label: "Total ressources propres",
     category: "Valeurs absolues",
     format: (v) => `${(v / 1000000).toFixed(1)} M€`,
-  },
-  {
-    key: "part_ressources_propres",
-    label: "Part des ressources propres / produits encaissables",
-    category: "Ratios",
-    format: (v) => `${v.toFixed(1)}%`,
-  },
-  {
-    key: "charges_de_personnel_produits_encaissables",
-    label: "Part des charges de personnel / produits encaissables",
-    category: "Ratios",
-    format: (v) => `${v.toFixed(1)}%`,
-  },
-  {
-    key: "scsp_par_etudiants",
-    label: "SCSP par étudiant",
-    category: "Ratios",
-    format: (v) => `${v.toLocaleString("fr-FR")} €`,
-  },
-  {
-    key: "taux_encadrement",
-    label: "Taux d'encadrement",
-    category: "Ratios",
-    format: (v) => `${v.toFixed(1)}%`,
   },
   {
     key: "scsp",
@@ -156,6 +174,31 @@ const METRIC_OPTIONS: MetricOption[] = [
     category: "Valeurs absolues",
     format: (v) => v.toLocaleString("fr-FR"),
   },
+  // Ratios
+  {
+    key: "part_ressources_propres",
+    label: "Part des ressources propres / produits encaissables",
+    category: "Ratios",
+    format: (v) => `${v.toFixed(1)}%`,
+  },
+  {
+    key: "charges_de_personnel_produits_encaissables",
+    label: "Part des charges de personnel / produits encaissables",
+    category: "Ratios",
+    format: (v) => `${v.toFixed(1)}%`,
+  },
+  {
+    key: "scsp_par_etudiants",
+    label: "SCSP par étudiant",
+    category: "Ratios",
+    format: (v) => `${v.toLocaleString("fr-FR")} €`,
+  },
+  {
+    key: "taux_encadrement",
+    label: "Taux d'encadrement",
+    category: "Ratios",
+    format: (v) => `${v.toFixed(1)}%`,
+  },
 ];
 
 export default function ComparisonBarChart({
@@ -168,9 +211,10 @@ export default function ComparisonBarChart({
   onMetricChange,
 }: ComparisonBarChartProps) {
   const [internalMetric, setInternalMetric] = useState<string>(
-    "part_droits_d_inscription"
+    "droits_d_inscription"
   );
   const [topN, setTopN] = useState<number | null>(20);
+  const [displayMode, setDisplayMode] = useState<"value" | "part">("value");
 
   const selectedMetric =
     selectedMetricProp && selectedMetricProp.trim() !== ""
@@ -178,6 +222,7 @@ export default function ComparisonBarChart({
       : internalMetric;
 
   const setSelectedMetric = (metric: string) => {
+    setDisplayMode("value");
     if (onMetricChange) {
       onMetricChange(metric);
     } else {
@@ -200,27 +245,51 @@ export default function ComparisonBarChart({
     [selectedMetric]
   );
 
+  const hasPart = !!selectedMetricConfig.partKey;
+
+  const activeMetricKey = useMemo(() => {
+    if (displayMode === "part" && selectedMetricConfig.partKey) {
+      return selectedMetricConfig.partKey;
+    }
+    return selectedMetricConfig.key;
+  }, [displayMode, selectedMetricConfig]);
+
+  const activeMetricLabel = useMemo(() => {
+    if (displayMode === "part" && selectedMetricConfig.partLabel) {
+      return selectedMetricConfig.partLabel;
+    }
+    return selectedMetricConfig.label;
+  }, [displayMode, selectedMetricConfig]);
+
+  const activeFormat = useMemo(() => {
+    if (displayMode === "part" && selectedMetricConfig.partFormat) {
+      return selectedMetricConfig.partFormat;
+    }
+    return selectedMetricConfig.format;
+  }, [displayMode, selectedMetricConfig]);
+
   const chartOptions = useMemo(() => {
     if (!data || !data.length) return null;
 
     return createComparisonBarOptions(
       {
-        metric: selectedMetric,
-        metricLabel: selectedMetricConfig.label,
+        metric: activeMetricKey,
+        metricLabel: activeMetricLabel,
         topN: topN ?? data.length,
-        format: selectedMetricConfig.format,
+        format: activeFormat,
       },
       data
     );
-  }, [data, selectedMetric, topN, selectedMetricConfig]);
+  }, [data, activeMetricKey, activeMetricLabel, topN, activeFormat]);
 
   const groupedMetrics = useMemo(() => {
     const groups: Record<string, MetricOption[]> = {};
     METRIC_OPTIONS.forEach((metric) => {
-      if (!groups[metric.category]) {
-        groups[metric.category] = [];
+      const cat = metric.category;
+      if (!groups[cat]) {
+        groups[cat] = [];
       }
-      groups[metric.category].push(metric);
+      groups[cat].push(metric);
     });
     return groups;
   }, []);
@@ -229,7 +298,7 @@ export default function ComparisonBarChart({
 
   const config = {
     id: "comparison-bar",
-    title: `${selectedMetricConfig.label}${filterSummary}`,
+    title: `${activeMetricLabel}${filterSummary}`,
   };
 
   const getTopNLabel = (n: number | null) =>
@@ -239,9 +308,9 @@ export default function ComparisonBarChart({
     <div>
       <Row gutters className="fr-mb-3w">
         <Col xs="12" md="8">
-          <p className="fr-text--sm fr-text--bold fr-mb-1w">
+          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
             Métrique à comparer
-          </p>
+          </Text>
           <Dropdown
             label={selectedMetricConfig.label}
             icon="line-chart-line"
@@ -264,9 +333,9 @@ export default function ComparisonBarChart({
           </Dropdown>
         </Col>
         <Col xs="12" md="4" className="text-right">
-          <p className="fr-text--sm fr-text--bold fr-mb-1w">
+          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
             Nombre d'établissements
-          </p>
+          </Text>
           <Select label={getTopNLabel(topN)} icon="list-ordered" size="sm">
             {TOP_N_OPTIONS.map((n) => (
               <Select.Radio
@@ -281,6 +350,25 @@ export default function ComparisonBarChart({
           </Select>
         </Col>
       </Row>
+
+      {hasPart && (
+        <div className="fr-mb-2w">
+          <SegmentedControl className="fr-segmented--sm" name="display-mode">
+            <SegmentedElement
+              checked={displayMode === "value"}
+              label="Valeur"
+              onClick={() => setDisplayMode("value")}
+              value="value"
+            />
+            <SegmentedElement
+              checked={displayMode === "part"}
+              label="Part %"
+              onClick={() => setDisplayMode("part")}
+              value="part"
+            />
+          </SegmentedControl>
+        </div>
+      )}
 
       {!chartOptions || !data || data.length === 0 ? (
         <div className="fr-alert fr-alert--warning">
@@ -297,10 +385,10 @@ export default function ComparisonBarChart({
           renderData={() => (
             <RenderData
               data={data}
-              metric={selectedMetric}
-              metricLabel={selectedMetricConfig.label}
+              metric={activeMetricKey}
+              metricLabel={activeMetricLabel}
               topN={topN ?? data.length}
-              format={selectedMetricConfig.format}
+              format={activeFormat}
             />
           )}
         />
