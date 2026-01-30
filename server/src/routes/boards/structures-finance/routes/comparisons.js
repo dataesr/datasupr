@@ -156,6 +156,8 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
         "anuniv",
         "is_rce",
         "rce",
+        "devimmo",
+        "is_devimmo",
       ],
       where: whereCondition,
       orderBy: "etablissement_actuel_lib ASC",

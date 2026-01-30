@@ -20,6 +20,7 @@ export default function NationalContent() {
   const selectedTypologie = searchParams.get("typologie") || "";
   const selectedRegion = searchParams.get("region") || "";
   const selectedRce = searchParams.get("rce") || "";
+  const selectedDevimmo = searchParams.get("devimmo") || "";
   const activeSection = searchParams.get("section") || "produits-vs-etudiants";
   const selectedMetric = searchParams.get("metric") || "";
 
@@ -56,7 +57,8 @@ export default function NationalContent() {
     selectedType,
     selectedTypologie,
     selectedRegion,
-    selectedRce
+    selectedRce,
+    selectedDevimmo
   );
 
   const renderSectionContent = () => {

@@ -27,10 +27,12 @@ export default function SelectionUI({
     selectedTypologie,
     selectedRegion,
     selectedRce,
+    selectedDevimmo,
     handleTypeChange,
     handleTypologieChange,
     handleRegionChange,
     handleRceChange,
+    handleDevimmoChange,
     handleResetFilters,
     hasActiveFilters,
     labels,
@@ -110,7 +112,7 @@ export default function SelectionUI({
           )}
         </div>
 
-        <div className="filter-bar fr-mb-3w">
+        <div className="filter-bar fr-mb-2w">
           <Dropdown label={labels.type} icon="building-line" size="sm">
             <Dropdown.Item
               active={!selectedType}
@@ -125,29 +127,6 @@ export default function SelectionUI({
                 onClick={() => handleTypeChange(type)}
               >
                 {type}
-              </Dropdown.Item>
-            ))}
-          </Dropdown>
-
-          <Dropdown
-            label={labels.typologie}
-            icon="layout-grid-line"
-            size="sm"
-            className="filter-bar__typologie"
-          >
-            <Dropdown.Item
-              active={!selectedTypologie}
-              onClick={() => handleTypologieChange("")}
-            >
-              Toutes les typologies
-            </Dropdown.Item>
-            {availableTypologies.map((typo) => (
-              <Dropdown.Item
-                key={typo}
-                active={selectedTypologie === typo}
-                onClick={() => handleTypologieChange(typo)}
-              >
-                {typo}
               </Dropdown.Item>
             ))}
           </Dropdown>
@@ -168,6 +147,34 @@ export default function SelectionUI({
                 {region}
               </Dropdown.Item>
             ))}
+          </Dropdown>
+        </div>
+
+        <div className="filter-bar fr-mb-2w">
+          <Dropdown
+            label={labels.devimmo}
+            icon="home-4-line"
+            size="sm"
+            className="filter-bar__devimmo"
+          >
+            <Dropdown.Item
+              active={!selectedDevimmo}
+              onClick={() => handleDevimmoChange("")}
+            >
+              Tous les patrimoines
+            </Dropdown.Item>
+            <Dropdown.Item
+              active={selectedDevimmo === "devimmo"}
+              onClick={() => handleDevimmoChange("devimmo")}
+            >
+              Dévolution uniquement
+            </Dropdown.Item>
+            <Dropdown.Item
+              active={selectedDevimmo === "non-devimmo"}
+              onClick={() => handleDevimmoChange("non-devimmo")}
+            >
+              Sans dévolution
+            </Dropdown.Item>
           </Dropdown>
 
           <Dropdown
@@ -194,6 +201,31 @@ export default function SelectionUI({
             >
               Non RCE uniquement
             </Dropdown.Item>
+          </Dropdown>
+        </div>
+
+        <div className="filter-bar fr-mb-3w">
+          <Dropdown
+            label={labels.typologie}
+            icon="layout-grid-line"
+            size="sm"
+            className="filter-bar__typologie"
+          >
+            <Dropdown.Item
+              active={!selectedTypologie}
+              onClick={() => handleTypologieChange("")}
+            >
+              Toutes les typologies
+            </Dropdown.Item>
+            {availableTypologies.map((typo) => (
+              <Dropdown.Item
+                key={typo}
+                active={selectedTypologie === typo}
+                onClick={() => handleTypologieChange(typo)}
+              >
+                {typo}
+              </Dropdown.Item>
+            ))}
           </Dropdown>
         </div>
 

@@ -17,8 +17,8 @@ const pct = (n?: number) => (n != null ? `${n.toFixed(1)} %` : "—");
 
 const jours = (n?: number) => {
   if (n == null) return "—";
-  const val = Math.ceil(n);
-  return `${val} jour${Math.abs(val) > 1 ? "s" : ""}`;
+  const val = n.toFixed(1);
+  return `${val} jour${Math.abs(n) > 1 ? "s" : ""}`;
 };
 
 const SECTION_COLOR = SECTION_COLORS.santeFinanciere;
@@ -105,6 +105,42 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
           Equilibre financier
         </Title>
       </div>
+
+      {data?.is_rce && (
+        <div className="fr-callout fr-mb-4w">
+          <h3 className="fr-callout__title">Point d'attention</h3>
+          <p className="fr-callout__text">
+            Pour les établissements qui bénéficient des responsabilités et
+            compétences élargies (RCE), un ou deux niveaux d'alerte ont été
+            définis pour chaque indicateur :
+          </p>
+          <ul className="fr-callout__text fr-ml-2w">
+            <li>
+              <strong style={{ color: "var(--text-default-warning)" }}>
+                Orange
+              </strong>{" "}
+              : seuil à partir duquel une vigilance particulière doit être
+              accordée sur la santé financière de l'établissement, situation à
+              surveiller.
+            </li>
+            <li>
+              <strong style={{ color: "var(--text-default-error)" }}>
+                Rouge
+              </strong>{" "}
+              : seuil qui révèle un risque quant à la santé financière de
+              l'établissement. Alerte.
+            </li>
+          </ul>
+          <p className="fr-callout__text fr-mb-0">
+            Ces seuils d'alerte doivent être interprétés au regard de l'activité
+            de l'établissement, du groupe disciplinaire auquel il appartient et
+            des évènements significatifs intervenus au cours de l'exercice.
+            L'appréciation du niveau de risque résulte également de
+            l'interprétation d'un ensemble d'indicateurs mis en relation les uns
+            avec les autres. Ces alertes doivent toujours être contextualisées.
+          </p>
+        </div>
+      )}
 
       <div className="fr-mb-4w">
         <Row gutters>
@@ -236,6 +272,33 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
           />
         </Row>
       </div>
+      <Row>
+        <Col>
+          {data?.analyse_financiere && (
+            <div className="fr-callout fr-callout--blue-ecume fr-mb-4w">
+              <h3 className="fr-callout__title">Synthèse</h3>
+              <p className="fr-callout__text">{data.analyse_financiere}</p>
+              <p
+                className="fr-callout__text fr-text--sm fr-mb-0"
+                style={{
+                  fontStyle: "italic",
+                  color: "var(--text-mention-grey)",
+                }}
+              >
+                Cette analyse a été générée à l'aide d'un algorithme d'analyse
+                financière automatisée, développé pour traiter et interpréter
+                des données structurées. L'algorithme utilise les indicateurs
+                financiers clés, les états (alerte/vigilance), ainsi que les
+                évolutions interannuelles pour produire une synthèse
+                contextualisée. Les interprétations sont basées sur des règles
+                prédéfinies, et sont adaptées aux spécificités de chaque
+                établissement et exercice. Cette approche permet une analyse
+                objective, reproductible et exhaustive des données financières.
+              </p>
+            </div>
+          )}
+        </Col>
+      </Row>
 
       <MetricDefinitionsTable
         metricKeys={[

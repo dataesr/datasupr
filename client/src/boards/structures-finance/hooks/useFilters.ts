@@ -6,6 +6,12 @@ const RCE_LABELS: Record<string, string> = {
   "non-rce": "Non RCE uniquement",
 };
 
+const DEVIMMO_LABELS: Record<string, string> = {
+  "": "Tous les patrimoines",
+  devimmo: "Dévolution uniquement",
+  "non-devimmo": "Sans dévolution",
+};
+
 export function useFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -13,6 +19,7 @@ export function useFilters() {
   const selectedTypologie = searchParams.get("typologie") || "";
   const selectedRegion = searchParams.get("region") || "";
   const selectedRce = searchParams.get("rce") || "";
+  const selectedDevimmo = searchParams.get("devimmo") || "";
 
   const setParam = (key: string, value: string) => {
     if (value) {
@@ -30,24 +37,30 @@ export function useFilters() {
   };
 
   const handleResetFilters = () => {
-    ["type", "typologie", "region", "rce"].forEach((k) =>
+    ["type", "typologie", "region", "rce", "devimmo"].forEach((k) =>
       searchParams.delete(k)
     );
     setSearchParams(searchParams);
   };
 
   const hasActiveFilters =
-    !!selectedType || !!selectedTypologie || !!selectedRegion || !!selectedRce;
+    !!selectedType ||
+    !!selectedTypologie ||
+    !!selectedRegion ||
+    !!selectedRce ||
+    !!selectedDevimmo;
 
   return {
     selectedType,
     selectedTypologie,
     selectedRegion,
     selectedRce,
+    selectedDevimmo,
     handleTypeChange,
     handleTypologieChange: (v: string) => setParam("typologie", v),
     handleRegionChange: (v: string) => setParam("region", v),
     handleRceChange: (v: string) => setParam("rce", v),
+    handleDevimmoChange: (v: string) => setParam("devimmo", v),
     handleResetFilters,
     hasActiveFilters,
     labels: {
@@ -55,6 +68,7 @@ export function useFilters() {
       typologie: selectedTypologie || "Toutes les typologies",
       region: selectedRegion || "Toutes les régions",
       rce: RCE_LABELS[selectedRce] || RCE_LABELS[""],
+      devimmo: DEVIMMO_LABELS[selectedDevimmo] || DEVIMMO_LABELS[""],
     },
   };
 }

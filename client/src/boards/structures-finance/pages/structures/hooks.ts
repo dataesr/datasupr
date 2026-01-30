@@ -177,12 +177,15 @@ export function useAvailableTypologies(
 const match = (a?: string, b?: string) =>
   a?.toLowerCase().trim() === b?.toLowerCase().trim();
 
+const isDevimmo = (etab: any) => etab.devimmo === true;
+
 export function useFilteredEtablissements(
   allEtablissements: any[],
   selectedType: string,
   selectedRegion: string,
   selectedTypologie: string,
-  selectedRce: string = "tous"
+  selectedRce: string = "tous",
+  selectedDevimmo: string = "tous"
 ) {
   return useMemo(() => {
     const filtered = allEtablissements
@@ -201,6 +204,8 @@ export function useFilteredEtablissements(
         }
         if (selectedRce === "rce" && !isRce(etab)) return false;
         if (selectedRce === "non-rce" && isRce(etab)) return false;
+        if (selectedDevimmo === "devimmo" && !isDevimmo(etab)) return false;
+        if (selectedDevimmo === "non-devimmo" && isDevimmo(etab)) return false;
         return true;
       })
       .sort((a: any, b: any) => {
@@ -216,6 +221,7 @@ export function useFilteredEtablissements(
     selectedRegion,
     selectedTypologie,
     selectedRce,
+    selectedDevimmo,
   ]);
 }
 
@@ -225,6 +231,7 @@ interface UseStructuresFiltersParams {
   selectedRegion?: string;
   selectedTypologie?: string;
   selectedRce?: string;
+  selectedDevimmo?: string;
 }
 
 interface UseStructuresFiltersReturn {
@@ -243,6 +250,7 @@ export function useStructuresFilters({
   selectedRegion = "toutes",
   selectedTypologie = "toutes",
   selectedRce = "tous",
+  selectedDevimmo = "tous",
 }: UseStructuresFiltersParams): UseStructuresFiltersReturn {
   const { allEtablissements, isLoading } = useEtablissementsData(selectedYear);
 
@@ -266,7 +274,8 @@ export function useStructuresFilters({
     selectedType,
     selectedRegion,
     selectedTypologie,
-    selectedRce
+    selectedRce,
+    selectedDevimmo
   );
 
   return {

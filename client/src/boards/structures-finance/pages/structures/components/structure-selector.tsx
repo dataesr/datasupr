@@ -18,8 +18,13 @@ export default function StructureSelection() {
     return String(Math.max(...yearsData.years));
   }, [yearsData]);
 
-  const { selectedType, selectedTypologie, selectedRegion, selectedRce } =
-    useFilters();
+  const {
+    selectedType,
+    selectedTypologie,
+    selectedRegion,
+    selectedRce,
+    selectedDevimmo,
+  } = useFilters();
 
   const {
     availableTypes,
@@ -33,6 +38,7 @@ export default function StructureSelection() {
     selectedRegion: selectedRegion || "toutes",
     selectedTypologie: selectedTypologie || "toutes",
     selectedRce: selectedRce || "tous",
+    selectedDevimmo: selectedDevimmo || "tous",
   });
 
   const isLoading = isLoadingYears || isLoadingStructures;

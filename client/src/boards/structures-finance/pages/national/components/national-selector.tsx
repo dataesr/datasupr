@@ -57,10 +57,12 @@ export default function NationalSelector() {
     selectedTypologie,
     selectedRegion,
     selectedRce,
+    selectedDevimmo,
     handleTypeChange,
     handleTypologieChange,
     handleRegionChange,
     handleRceChange,
+    handleDevimmoChange,
     handleResetFilters,
     hasActiveFilters,
     labels,
@@ -79,7 +81,8 @@ export default function NationalSelector() {
     selectedType,
     selectedTypologie,
     selectedRegion,
-    selectedRce
+    selectedRce,
+    selectedDevimmo
   );
 
   const etablissementCount = filteredItems.length;
@@ -131,7 +134,7 @@ export default function NationalSelector() {
               )}
             </div>
 
-            <div className="filter-bar fr-mb-3w">
+            <div className="filter-bar fr-mb-2w">
               <Dropdown
                 label={selectedYear}
                 icon="calendar-line"
@@ -167,29 +170,6 @@ export default function NationalSelector() {
                 ))}
               </Dropdown>
 
-              <Dropdown
-                label={labels.typologie}
-                icon="layout-grid-line"
-                size="sm"
-                className="filter-bar__typologie"
-              >
-                <Dropdown.Item
-                  active={!selectedTypologie}
-                  onClick={() => handleTypologieChange("")}
-                >
-                  Toutes les typologies
-                </Dropdown.Item>
-                {availableTypologies.map((typo: string) => (
-                  <Dropdown.Item
-                    key={typo}
-                    active={selectedTypologie === typo}
-                    onClick={() => handleTypologieChange(typo)}
-                  >
-                    {typo}
-                  </Dropdown.Item>
-                ))}
-              </Dropdown>
-
               <Dropdown label={labels.region} icon="map-pin-2-line" size="sm">
                 <Dropdown.Item
                   active={!selectedRegion}
@@ -206,6 +186,34 @@ export default function NationalSelector() {
                     {region}
                   </Dropdown.Item>
                 ))}
+              </Dropdown>
+            </div>
+
+            <div className="filter-bar fr-mb-2w">
+              <Dropdown
+                label={labels.devimmo}
+                icon="home-4-line"
+                size="sm"
+                className="filter-bar__devimmo"
+              >
+                <Dropdown.Item
+                  active={!selectedDevimmo}
+                  onClick={() => handleDevimmoChange("")}
+                >
+                  Tous les patrimoines
+                </Dropdown.Item>
+                <Dropdown.Item
+                  active={selectedDevimmo === "devimmo"}
+                  onClick={() => handleDevimmoChange("devimmo")}
+                >
+                  Dévolution uniquement
+                </Dropdown.Item>
+                <Dropdown.Item
+                  active={selectedDevimmo === "non-devimmo"}
+                  onClick={() => handleDevimmoChange("non-devimmo")}
+                >
+                  Sans dévolution
+                </Dropdown.Item>
               </Dropdown>
 
               <Dropdown
@@ -232,6 +240,31 @@ export default function NationalSelector() {
                 >
                   Non RCE uniquement
                 </Dropdown.Item>
+              </Dropdown>
+            </div>
+
+            <div className="filter-bar fr-mb-3w">
+              <Dropdown
+                label={labels.typologie}
+                icon="layout-grid-line"
+                size="sm"
+                className="filter-bar__typologie"
+              >
+                <Dropdown.Item
+                  active={!selectedTypologie}
+                  onClick={() => handleTypologieChange("")}
+                >
+                  Toutes les typologies
+                </Dropdown.Item>
+                {availableTypologies.map((typo: string) => (
+                  <Dropdown.Item
+                    key={typo}
+                    active={selectedTypologie === typo}
+                    onClick={() => handleTypologieChange(typo)}
+                  >
+                    {typo}
+                  </Dropdown.Item>
+                ))}
               </Dropdown>
             </div>
             <Text size="sm" className="fr-mb-0 fr-text--bold">
