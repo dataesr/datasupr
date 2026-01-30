@@ -36,18 +36,13 @@ export function createChartOptions(
   const defaultOptions: HighchartsInstance.Options = {
     chart: {
       backgroundColor: rootStyles.getPropertyValue("--background-default-grey"),
-      style: {
-        fontFamily: "Marianne, sans-serif",
-      },
+      style: { fontFamily: "Marianne, sans-serif" },
     },
-    title: {
-      text: "",
-    },
+    title: { text: "" },
     legend: {
       enabled: false,
-      itemStyle: {
-        color: labelColor,
-      },
+      itemStyle: { color: labelColor, fontWeight: "500" },
+      itemHoverStyle: { color: labelColor, fontWeight: "700" },
     },
     tooltip: {
       useHTML: true,

@@ -1,9 +1,25 @@
-import { Badge, Breadcrumb, Button, Col, Container, Link, Modal, ModalContent, ModalTitle, Row, Text, TextInput, Title } from "@dataesr/dsfr-plus";
+import {
+  Badge,
+  Breadcrumb,
+  Button,
+  Col,
+  Container,
+  Link,
+  Modal,
+  ModalContent,
+  ModalTitle,
+  Row,
+  Text,
+  TextInput,
+  Title,
+} from "@dataesr/dsfr-plus";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { Fragment } from "react";
 
+import { useMemo, useState } from "react";
 import { queryClient } from "../../main";
-import { useState, useMemo } from "react";
 import Callout from "../atlas/components/callout";
+
 import "./styles.scss";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -19,6 +35,7 @@ const formatCreationDate = (timestamp: number | null) => {
     minute: "2-digit",
   });
 };
+
 
 export default function Home() {
   const [successMessages, setSuccessMessages] = useState<Map<string, string>>(new Map());
@@ -673,9 +690,9 @@ export default function Home() {
                 value={selectedDashboard}
                 onChange={(e) => setSelectedDashboard(e.target.value)}
               >
-                <option value="">Sélectionnez un tableau de bord</option>
+                <option value="">Sélectionner un tableau de bord</option>
                 {data.map((dashboard) => (
-                  <option key={dashboard.id} value={dashboard.id}>
+                  <option key={`dashboard-select-${dashboard.id}`} value={dashboard.id}>
                     {dashboard.name_fr}
                   </option>
                 ))}
@@ -690,9 +707,9 @@ export default function Home() {
                 value={selectedCollection}
                 onChange={(e) => setSelectedCollection(e.target.value)}
               >
-                <option value="">Sélectionnez une collection</option>
+                <option value="">Sélectionner une collection</option>
                 {availableCollections.map((collectionName) => (
-                  <option key={collectionName} value={collectionName}>
+                  <option key={`collection-select-${collectionName}`} value={collectionName}>
                     {collectionName}
                   </option>
                 ))}
@@ -707,9 +724,9 @@ export default function Home() {
                 value={selectedField}
                 onChange={(e) => setSelectedField(e.target.value)}
               >
-                <option value="">Sélectionnez un champ</option>
+                <option value="">Sélectionner un champ</option>
                 {collectionFields?.fields?.map((field) => (
-                  <option key={field.name} value={field.name}>
+                  <option key={`field-select-${field.name}`} value={field.name}>
                     {field.name} ({field.types.join(", ")})
                   </option>
                 ))}
@@ -758,9 +775,9 @@ export default function Home() {
                 value={selectedDashboard}
                 onChange={(e) => setSelectedDashboard(e.target.value)}
               >
-                <option value="">Sélectionnez un tableau de bord</option>
+                <option value="">Sélectionner un tableau de bord</option>
                 {data.map((dashboard) => (
-                  <option key={dashboard.id} value={dashboard.id}>
+                  <option key={`dashboard-select-manual-${dashboard.id}`} value={dashboard.id}>
                     {dashboard.name_fr}
                   </option>
                 ))}
@@ -955,8 +972,8 @@ export default function Home() {
                               allCollections?.find((b) => b.boardName === boardName && b.collectionName === collectionName && b.version === version);
 
                             return (
-                              <>
-                                <tr key={`${boardName}-${collectionName}`}>
+                              <Fragment key={`${boardName}-${collectionName}`}>
+                                <tr>
                                   <td rowSpan={2}>
                                     <Title as="h3" look="h6">
                                       {boardName}
@@ -999,7 +1016,7 @@ export default function Home() {
                                     )}
                                   </td>
                                 </tr>
-                                <tr key={`${boardName}-${collectionName}`}>
+                                <tr>
                                   <td>
                                     <Button size="sm" color="blue-cumulus">
                                       Nouvelle version
@@ -1026,7 +1043,7 @@ export default function Home() {
                                     </Button>
                                   </td>
                                 </tr>
-                              </>
+                              </Fragment>
                             );
                           }),
                       )}

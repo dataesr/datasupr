@@ -80,7 +80,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
   };
   const config = {
-    comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs montants associés, ventilée par financeur, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Pour les financements europées, Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027. Les montants indiqués reflètent le financement global des projets auxquels l’établissement participe et ne correspondent pas aux sommes effectivement perçues par celui-ci.</> },
+    comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs montants associés, ventilée par financeur, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Pour les financements européens, Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027. Les montants indiqués reflètent le financement global des projets auxquels l’établissement participe et ne correspondent pas aux sommes effectivement perçues par celui-ci.</> },
     id: "projectsOverTimeByStructure",
   };
 

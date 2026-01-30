@@ -72,6 +72,7 @@ export default function Dispersion() {
   }));
 
   const xs = series.map((funder) => funder.data.map((structure) => structure.x)).flat();
+  const tickInterval = (Math.max.apply(null, xs) - Math.min.apply(null, xs)) / 10;
   const meanX = xs.length > 0 ? xs.reduce((prev, current) => prev + current) / xs.length : undefined;
   const ys = series.map((funder) => funder.data.map((structure) => structure.y)).flat();
   const meanY = ys.length > 0 ? ys.reduce((prev, current) => prev + current) / ys.length : undefined;
@@ -105,7 +106,7 @@ et ceux combinant volume et intensité financière.</> },
         width: 2,
         zIndex: 3,
       }],
-      tickInterval: 20,
+      tickInterval,
       title: { text: "Nombre de projets financés" },
     },
     yAxis: {

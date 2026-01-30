@@ -158,10 +158,10 @@ export default function Comparison() {
             </>
           ) : (
             <Alert
-              description="Sélectionnez plusieurs établissements dans la liste déroulante pour visualiser
+              description="Sélectionner plusieurs établissements dans la liste déroulante pour visualiser
               leurs financements via les appels à projets. Vous pouvez filtrer par région et par typologie."
               className="fr-mt-3w"
-              title="Sélectionnez plusieurs établissements"
+              title="Sélectionner plusieurs établissements"
               variant="info"
             />
           )

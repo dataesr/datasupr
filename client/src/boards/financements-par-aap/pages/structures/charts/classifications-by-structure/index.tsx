@@ -155,7 +155,7 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
   return (
     <div className={`chart-container chart-container--${color}`} id="classifications-by-structure">
       <Title as="h2" look="h6">
-        {`Financement par classifications disciplinaires de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {`Financements par classifications disciplinaires de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
       <SegmentedControl name="classifications-by-structure-segmented">
         <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />

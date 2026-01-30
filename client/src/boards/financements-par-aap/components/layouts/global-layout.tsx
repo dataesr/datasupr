@@ -50,8 +50,8 @@ export default function GlobalLayout() {
                   <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
                   <Service
                     href="/financements-par-aap/accueil"
-                    name="Financements par appel à projet"
-                    tagline="Suivi des financements par appel à projet dans les institutions françaises"
+                    name="Financements par appels à projets"
+                    tagline="Suivi des financements par appels à projets dans les institutions françaises"
                   />
                   <div className="fr-header__navbar">
                     <button
@@ -117,7 +117,7 @@ export default function GlobalLayout() {
       <Outlet />
       <Footer
         href="/financements-par-aap/accueil"
-        title="Financement par appels à projets - DataESR"
+        title="Financements par appels à projets - DataESR"
       />
     </>
   );
