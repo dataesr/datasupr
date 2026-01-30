@@ -80,7 +80,8 @@ export const createEvolutionChartOptions = (
   selectedMetrics: string[],
   metricsConfig: Record<string, MetricConfig>,
   isBase100: boolean = false,
-  threshold: ThresholdConfig | null = null
+  threshold: ThresholdConfig | null = null,
+  xAxisField: "exercice" | "anuniv" = "exercice"
 ): Highcharts.Options => {
   const sortedData = [...data]
     .sort((a, b) => a.exercice - b.exercice)
@@ -277,9 +278,9 @@ export const createEvolutionChartOptions = (
       height: 500,
     },
     xAxis: {
-      categories: sortedData.map((item) => String(item.exercice)),
+      categories: sortedData.map((item) => String(item[xAxisField])),
       title: {
-        text: "Année",
+        text: xAxisField === "anuniv" ? "Année universitaire" : "Année",
       },
       crosshair: true,
       lineWidth: 1,
@@ -294,7 +295,7 @@ export const createEvolutionChartOptions = (
       formatter: function () {
         const year = this.points?.[0]?.key || this.x;
         const yearIndex = sortedData.findIndex(
-          (d) => String(d.exercice) === String(year)
+          (d) => String(d[xAxisField]) === String(year)
         );
         const etablissement =
           yearIndex >= 0 ? sortedData[yearIndex].etablissement_lib || "" : "";
@@ -412,7 +413,8 @@ export const createStackedEvolutionChartOptions = (
   data: EvolutionData[],
   selectedMetrics: string[],
   metricsConfig: Record<string, MetricConfig>,
-  showPercentage: boolean = false
+  showPercentage: boolean = false,
+  xAxisField: "exercice" | "anuniv" = "exercice"
 ): Highcharts.Options => {
   const sortedData = [...data]
     .sort((a, b) => a.exercice - b.exercice)
@@ -461,9 +463,9 @@ export const createStackedEvolutionChartOptions = (
       type: "column",
     },
     xAxis: {
-      categories: sortedData.map((item) => String(item.exercice)),
+      categories: sortedData.map((item) => String(item[xAxisField])),
       title: {
-        text: "Année",
+        text: xAxisField === "anuniv" ? "Année universitaire" : "Année",
       },
       crosshair: true,
       lineWidth: 1,
@@ -502,7 +504,7 @@ export const createStackedEvolutionChartOptions = (
       formatter: function () {
         const year = this.points?.[0]?.key || this.x;
         const yearIndex = sortedData.findIndex(
-          (d) => String(d.exercice) === String(year)
+          (d) => String(d[xAxisField]) === String(year)
         );
         const etablissement =
           yearIndex >= 0 ? sortedData[yearIndex].etablissement_lib || "" : "";

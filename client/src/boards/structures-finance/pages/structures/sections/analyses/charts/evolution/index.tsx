@@ -182,6 +182,12 @@ export default function EvolutionChart({
     return (analysisConfig as any).chartType === "stacked";
   }, [analysisConfig]);
 
+  const isFormationsCategory = useMemo(() => {
+    return analysisConfig.category === "Formations";
+  }, [analysisConfig]);
+
+  const xAxisField = isFormationsCategory ? "anuniv" : "exercice";
+
   const chartOptions = useMemo(() => {
     if (!data || data.length === 0 || !selectedAnalysis) return null;
 
@@ -190,7 +196,8 @@ export default function EvolutionChart({
         data,
         selectedMetrics,
         METRICS_CONFIG,
-        displayMode === "percentage"
+        displayMode === "percentage",
+        xAxisField
       );
     }
 
@@ -199,7 +206,8 @@ export default function EvolutionChart({
       selectedMetrics,
       METRICS_CONFIG,
       false,
-      metricThreshold
+      metricThreshold,
+      xAxisField
     );
   }, [
     data,
@@ -208,6 +216,7 @@ export default function EvolutionChart({
     isStacked,
     displayMode,
     metricThreshold,
+    xAxisField,
   ]);
 
   const chartOptionsBase100 = useMemo(() => {
@@ -219,9 +228,10 @@ export default function EvolutionChart({
       selectedMetrics,
       METRICS_CONFIG,
       true,
-      null
+      null,
+      xAxisField
     );
-  }, [data, selectedMetrics, selectedAnalysis, showBase100]);
+  }, [data, selectedMetrics, selectedAnalysis, showBase100, xAxisField]);
 
   const years = useMemo(() => {
     if (!data) return [];
