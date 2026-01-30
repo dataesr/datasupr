@@ -13,11 +13,74 @@ interface MetricConfig {
   suffix?: string;
 }
 
+export interface ThresholdConfig {
+  ale_sens?: "sup" | "inf" | "infegal" | null;
+  ale_val?: number | null;
+  ale_lib?: string | null;
+  vig_min?: number | null;
+  vig_max?: number | null;
+  vig_lib?: string | null;
+}
+
+const ALERT_COLOR = "rgba(206, 13, 13, 0.12)";
+const VIGILANCE_COLOR = "rgba(255, 182, 0, 0.12)";
+const ALERT_LINE = "#ce0d0d";
+const VIGILANCE_LINE = "#d64d00";
+
+export const createThresholdPlotBands = (
+  threshold: ThresholdConfig | null,
+  dataMin: number,
+  dataMax: number
+): {
+  plotBands: Highcharts.YAxisPlotBandsOptions[];
+  plotLines: Highcharts.YAxisPlotLinesOptions[];
+} => {
+  if (!threshold) return { plotBands: [], plotLines: [] };
+
+  const plotBands: Highcharts.YAxisPlotBandsOptions[] = [];
+  const plotLines: Highcharts.YAxisPlotLinesOptions[] = [];
+  const margin = Math.abs(dataMax - dataMin) * 0.3;
+
+  if (threshold.vig_min != null && threshold.vig_max != null) {
+    plotBands.push({
+      from: threshold.vig_min,
+      to: threshold.vig_max,
+      color: VIGILANCE_COLOR,
+      zIndex: 0,
+    });
+    plotLines.push({
+      value: threshold.vig_min,
+      color: VIGILANCE_LINE,
+      width: 1.5,
+      zIndex: 1,
+    });
+  }
+
+  if (threshold.ale_val != null && threshold.ale_sens) {
+    const isAbove = threshold.ale_sens === "sup";
+    plotBands.push({
+      from: isAbove ? threshold.ale_val : dataMin - margin,
+      to: isAbove ? dataMax + margin : threshold.ale_val,
+      color: ALERT_COLOR,
+      zIndex: 0,
+    });
+    plotLines.push({
+      value: threshold.ale_val,
+      color: ALERT_LINE,
+      width: 2,
+      zIndex: 1,
+    });
+  }
+
+  return { plotBands, plotLines };
+};
+
 export const createEvolutionChartOptions = (
   data: EvolutionData[],
   selectedMetrics: string[],
   metricsConfig: Record<string, MetricConfig>,
-  isBase100: boolean = false
+  isBase100: boolean = false,
+  threshold: ThresholdConfig | null = null
 ): Highcharts.Options => {
   const sortedData = [...data]
     .sort((a, b) => a.exercice - b.exercice)
@@ -27,6 +90,23 @@ export const createEvolutionChartOptions = (
         return value != null && value !== 0;
       })
     );
+
+  let dataMin = Infinity;
+  let dataMax = -Infinity;
+  sortedData.forEach((item) => {
+    selectedMetrics.forEach((metric) => {
+      const value = Number(item[metric]);
+      if (!isNaN(value)) {
+        dataMin = Math.min(dataMin, value);
+        dataMax = Math.max(dataMax, value);
+      }
+    });
+  });
+
+  const thresholdConfig =
+    selectedMetrics.length === 1 && !isBase100 && threshold
+      ? createThresholdPlotBands(threshold, dataMin, dataMax)
+      : { plotBands: [], plotLines: [] };
 
   const baseValues: Record<string, number> = {};
   if (isBase100 && sortedData.length > 0) {
@@ -182,6 +262,14 @@ export const createEvolutionChartOptions = (
               return Highcharts.numberFormat(value, 0, ",", " ");
             },
           },
+          plotBands:
+            thresholdConfig.plotBands.length > 0
+              ? thresholdConfig.plotBands
+              : undefined,
+          plotLines:
+            thresholdConfig.plotLines.length > 0
+              ? thresholdConfig.plotLines
+              : undefined,
         };
 
   return createChartOptions("line", {
@@ -271,6 +359,29 @@ export const createEvolutionChartOptions = (
             <strong>${point.series.name}:</strong> ${valueStr}
           </div>`;
         });
+
+        if (threshold && selectedMetrics.length === 1 && !isBase100) {
+          const value = this.points?.[0]?.y;
+          if (value != null) {
+            let zoneInfo = "";
+            const isAlert =
+              threshold.ale_sens === "sup"
+                ? value >= (threshold.ale_val ?? Infinity)
+                : value <= (threshold.ale_val ?? -Infinity);
+            const isVigilance =
+              threshold.vig_min != null &&
+              threshold.vig_max != null &&
+              value >= threshold.vig_min &&
+              value <= threshold.vig_max;
+
+            if (isAlert) {
+              zoneInfo = `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;color:${ALERT_LINE}"><strong>⚠ Zone d'alerte</strong></div>`;
+            } else if (isVigilance) {
+              zoneInfo = `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;color:${VIGILANCE_LINE}"><strong>⚠ Zone de vigilance</strong></div>`;
+            }
+            tooltip += zoneInfo;
+          }
+        }
 
         tooltip += `</div>`;
         return tooltip;

@@ -39,6 +39,12 @@ router.get("/structures-finance/definitions", async (req, res) => {
         interpretation: item.interpretationfr || "",
         source: item.sourcefr || "",
         unite: item.unitefr || "-",
+        ale_sens: item.ale_sens || null,
+        ale_val: item.ale_val ?? null,
+        ale_lib: item.ale_libfr || null,
+        vig_min: item.vig_min ?? null,
+        vig_max: item.vig_max ?? null,
+        vig_lib: item.vig_libfr || null,
       });
 
       return acc;

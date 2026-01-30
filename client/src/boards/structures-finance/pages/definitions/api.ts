@@ -9,6 +9,12 @@ export interface Definition {
   interpretation: string;
   source: string;
   unite: string;
+  ale_sens?: "sup" | "inf" | "infegal" | null;
+  ale_val?: number | null;
+  ale_lib?: string | null;
+  vig_min?: number | null;
+  vig_max?: number | null;
+  vig_lib?: string | null;
 }
 
 export interface DefinitionCategory {

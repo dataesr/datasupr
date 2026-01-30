@@ -7,9 +7,11 @@ import {
   SegmentedElement,
 } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
+import { useFinanceDefinitions } from "../../../../../definitions/api";
 import {
   createEvolutionChartOptions,
   createStackedEvolutionChartOptions,
+  type ThresholdConfig,
 } from "./options";
 import {
   RenderDataSingle,
@@ -27,6 +29,23 @@ import {
   type MetricKey,
   type AnalysisKey,
 } from "./config";
+
+const FINANCIAL_HEALTH_INDICATORS = [
+  "resultat_net_comptable",
+  "resultat_net_comptable_hors_sie",
+  "capacite_d_autofinancement",
+  "caf_produits_encaissables",
+  "fonds_de_roulement_net_global",
+  "tresorerie",
+  "fonds_de_roulement_en_jours_de_fonctionnement",
+  "tresorerie_en_jours_de_fonctionnement",
+  "charges_decaissables_produits_encaissables",
+  "taux_de_remuneration_des_permanents",
+  "ressources_propres_produits_encaissables",
+  "charges_de_personnel_produits_encaissables",
+  "caf_acquisitions_d_immobilisations",
+  "solde_budgetaire",
+];
 
 interface EvolutionChartProps {
   etablissementId?: string;
@@ -79,10 +98,8 @@ export function useAnalysesWithData(etablissementId: string) {
       .sort((a, b) => a - b);
   }, [data]);
 
-  const periodText = useMemo(() => {
-    if (years.length === 0) return "Aucune donnée";
-    return `${years[0]} - ${years[years.length - 1]}`;
-  }, [years]);
+  const periodText =
+    years.length > 0 ? `${years[0]} - ${years[years.length - 1]}` : "";
 
   return { analysesWithData, periodText, isLoading, data };
 }
@@ -105,6 +122,7 @@ export default function EvolutionChart({
     "ressources-total";
 
   const { data } = useFinanceEtablissementEvolution(etablissementId);
+  const { data: definitionsData } = useFinanceDefinitions();
 
   const etabName = etablissementName || data?.[0]?.etablissement_lib || "";
 
@@ -113,6 +131,31 @@ export default function EvolutionChart({
   const baseMetrics = useMemo(() => {
     return [...analysisConfig.metrics] as MetricKey[];
   }, [analysisConfig]);
+
+  const metricThreshold = useMemo((): ThresholdConfig | null => {
+    if (!definitionsData) return null;
+    const primaryMetric = baseMetrics.find((m) => !m.endsWith("_ipc"));
+    if (!primaryMetric || !FINANCIAL_HEALTH_INDICATORS.includes(primaryMetric))
+      return null;
+
+    for (const cat of definitionsData) {
+      for (const sr of cat.sousRubriques) {
+        const def = sr.definitions.find((d) => d.indicateur === primaryMetric);
+        if (
+          def &&
+          (def.ale_val != null || (def.vig_min != null && def.vig_max != null))
+        ) {
+          return {
+            ale_sens: def.ale_sens,
+            ale_val: def.ale_val,
+            vig_min: def.vig_min,
+            vig_max: def.vig_max,
+          };
+        }
+      }
+    }
+    return null;
+  }, [definitionsData, baseMetrics]);
 
   const hasIPCMetrics = useMemo(() => {
     return baseMetrics.some((m) => m.endsWith("_ipc"));
@@ -155,9 +198,17 @@ export default function EvolutionChart({
       data,
       selectedMetrics,
       METRICS_CONFIG,
-      false
+      false,
+      metricThreshold
     );
-  }, [data, selectedMetrics, selectedAnalysis, isStacked, displayMode]);
+  }, [
+    data,
+    selectedMetrics,
+    selectedAnalysis,
+    isStacked,
+    displayMode,
+    metricThreshold,
+  ]);
 
   const chartOptionsBase100 = useMemo(() => {
     if (!data || data.length === 0 || !selectedAnalysis || !showBase100)
@@ -167,7 +218,8 @@ export default function EvolutionChart({
       data,
       selectedMetrics,
       METRICS_CONFIG,
-      true
+      true,
+      null
     );
   }, [data, selectedMetrics, selectedAnalysis, showBase100]);
 
@@ -178,10 +230,8 @@ export default function EvolutionChart({
       .sort((a, b) => a - b);
   }, [data]);
 
-  const periodText = useMemo(() => {
-    if (years.length === 0) return "Aucune donnée";
-    return `${years[0]} - ${years[years.length - 1]}`;
-  }, [years]);
+  const periodText =
+    years.length > 0 ? `${years[0]} - ${years[years.length - 1]}` : "";
 
   const partMetricKey = useMemo(() => {
     if (selectedMetrics.length !== 1) return null;
@@ -217,15 +267,18 @@ export default function EvolutionChart({
       id: "evolution-stacked",
       integrationURL: `/integration?chart_id=evolution-stacked&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
       title: `${analysisConfig.label}${etabName ? ` — ${etabName}` : ""}`,
-      comment: {
-        fr: (
-          <>
-            Évolution des effectifs par{" "}
-            {analysisConfig.label.toLowerCase().replace("effectifs par ", "")}{" "}
-            sur la période {periodText}.
-          </>
-        ),
-      },
+      comment: periodText
+        ? {
+            fr: (
+              <>
+                Évolution des effectifs par{" "}
+                {analysisConfig.label
+                  .toLowerCase()
+                  .replace("effectifs par ", "")}{" "}
+              </>
+            ),
+          }
+        : undefined,
     };
 
     return (
@@ -271,15 +324,17 @@ export default function EvolutionChart({
       id: "evolution-single",
       integrationURL: `/integration?chart_id=evolution-single&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
       title: `${PREDEFINED_ANALYSES[selectedAnalysis].label}${etabName ? ` — ${etabName}` : ""}`,
-      comment: {
-        fr: (
-          <>
-            Évolution de{" "}
-            {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur la
-            période {periodText}.
-          </>
-        ),
-      },
+      comment: periodText
+        ? {
+            fr: (
+              <>
+                Évolution de{" "}
+                {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur la
+                période {periodText}.
+              </>
+            ),
+          }
+        : undefined,
     };
 
     const partConfig = partMetricKey
@@ -287,17 +342,19 @@ export default function EvolutionChart({
           id: "evolution-part",
           integrationURL: `/integration?chart_id=evolution-part&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
           title: `${capitalizeFirst(METRICS_CONFIG[partMetricKey].label)}${etabName ? ` — ${etabName}` : ""}`,
-          comment: {
-            fr: (
-              <>
-                Évolution de la {METRICS_CONFIG[partMetricKey].label}{" "}
-                {partMetricKey.includes("effectif")
-                  ? "sur le total des effectifs"
-                  : "sur ressources propres"}{" "}
-                sur la période {periodText}.
-              </>
-            ),
-          },
+          comment: periodText
+            ? {
+                fr: (
+                  <>
+                    Évolution de la {METRICS_CONFIG[partMetricKey].label}{" "}
+                    {partMetricKey.includes("effectif")
+                      ? "sur le total des effectifs"
+                      : "sur ressources propres"}{" "}
+                    sur la période {periodText}.
+                  </>
+                ),
+              }
+            : undefined,
         }
       : null;
 
@@ -367,16 +424,18 @@ export default function EvolutionChart({
       id: "evolution-dual",
       integrationURL: `/integration?chart_id=evolution-dual&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
       title: `${PREDEFINED_ANALYSES[selectedAnalysis].label}${etabName ? ` — ${etabName}` : ""}`,
-      comment: {
-        fr: (
-          <>
-            Évolution de{" "}
-            {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} et{" "}
-            {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()} sur la
-            période {periodText}.
-          </>
-        ),
-      },
+      comment: periodText
+        ? {
+            fr: (
+              <>
+                Évolution de{" "}
+                {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} et{" "}
+                {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()} sur la
+                période {periodText}.
+              </>
+            ),
+          }
+        : undefined,
     };
 
     return (
@@ -425,9 +484,9 @@ export default function EvolutionChart({
       id: "evolution-comparison",
       integrationURL: `/integration?chart_id=evolution-comparison&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
       title: `${PREDEFINED_ANALYSES[selectedAnalysis].label}${etabName ? ` — ${etabName}` : ""}`,
-      comment: {
-        fr: <>Comparaison en base 100 sur la période {periodText}.</>,
-      },
+      comment: periodText
+        ? { fr: <>Comparaison en base 100 sur la période {periodText}.</> }
+        : undefined,
     };
 
     return (
