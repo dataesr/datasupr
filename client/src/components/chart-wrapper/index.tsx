@@ -312,6 +312,13 @@ function ChartTitle({
   );
 }
 
+// See bug here : https://github.com/highcharts/highcharts/issues/23268
+interface CurrentChart extends Highcharts.Chart {
+   downloadCSV: () => string;
+   exportChart: (exportingOptions: Highcharts.ExportingOptions, chartOptions: Highcharts.Options) => string;
+   print: () => string;
+}
+
 export default function ChartWrapper({
   config,
   constructorType,
@@ -348,15 +355,17 @@ export default function ChartWrapper({
 
   const downloadCSV = () => {
     if (chart && chart.current && chart.current.chart) {
-      chart.current.chart.downloadCSV();
+      const currentChart = chart.current.chart as CurrentChart;
+      currentChart.downloadCSV();
     }
   };
 
   const downloadPNG = () => {
     if (chart && chart.current && chart.current.chart) {
+      const currentChart = chart.current.chart as CurrentChart;
       try {
         // Utiliser l'export offline
-        chart.current.chart.exportChart(
+        currentChart.exportChart(
           {
             type: "image/png",
             filename:
@@ -385,6 +394,7 @@ export default function ChartWrapper({
 
   const printChart = () => {
     if (chart && chart.current && chart.current.chart) {
+      const currentChart = chart.current.chart as CurrentChart;
       try {
         // Obtenir le titre du graphique
         let chartTitle = "Graphique";
@@ -402,9 +412,9 @@ export default function ChartWrapper({
           }
         }
         // Sauvegarder le titre actuel
-        const currentTitle = chart.current.chart.options.title;
+        const currentTitle = currentChart.options.title;
         // Mettre à jour temporairement le titre pour l'impression
-        chart.current.chart.update(
+        currentChart.update(
           {
             title: {
               text: chartTitle,
@@ -416,11 +426,11 @@ export default function ChartWrapper({
           },
           false
         );
-        chart.current.chart.print();
+        currentChart.print();
         // Restaurer le titre original après un délai
         setTimeout(() => {
-          if (chart.current && chart.current.chart) {
-            chart.current.chart.update(
+          if (currentChart) {
+            currentChart.update(
               {
                 title: currentTitle,
               },
