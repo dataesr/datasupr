@@ -47,6 +47,32 @@ const FINANCIAL_HEALTH_INDICATORS = [
   "solde_budgetaire",
 ];
 
+function ThresholdLegend({ threshold }: { threshold: ThresholdConfig | null }) {
+  if (!threshold) return null;
+
+  const hasVigilance = threshold.vig_lib != null;
+  const hasAlert = threshold.ale_lib != null;
+
+  if (!hasVigilance && !hasAlert) return null;
+
+  return (
+    <div className="threshold-legend fr-text--sm">
+      {hasVigilance && (
+        <div className="threshold-legend__item">
+          <span className="threshold-legend__marker threshold-legend__marker--warning" />
+          <span>Zone de vigilance : {threshold.vig_lib}</span>
+        </div>
+      )}
+      {hasAlert && (
+        <div className="threshold-legend__item">
+          <span className="threshold-legend__marker threshold-legend__marker--error" />
+          <span>Zone d'alerte : {threshold.ale_lib}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 interface EvolutionChartProps {
   etablissementId?: string;
   etablissementName?: string;
@@ -148,8 +174,10 @@ export default function EvolutionChart({
           return {
             ale_sens: def.ale_sens,
             ale_val: def.ale_val,
+            ale_lib: def.ale_lib,
             vig_min: def.vig_min,
             vig_max: def.vig_max,
+            vig_lib: def.vig_lib,
           };
         }
       }
@@ -394,6 +422,7 @@ export default function EvolutionChart({
         <ChartWrapper
           config={singleConfig}
           options={chartOptions}
+          legend={<ThresholdLegend threshold={metricThreshold} />}
           renderData={() => (
             <RenderDataSingle
               data={data}

@@ -55,3 +55,29 @@
   color: var(--text-default-grey);
   margin: 0;
 }
+
+.threshold-legend {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+
+  &__item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__marker {
+    display: inline-block;
+    width: 16px;
+    height: 3px;
+
+    &--warning {
+      background-color: var(--background-action-high-warning);
+    }
+
+    &--error {
+      background-color: var(--background-action-high-error);
+    }
+  }
+}
