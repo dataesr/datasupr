@@ -170,7 +170,7 @@ export default function ComparisonBarChart({
   const [internalMetric, setInternalMetric] = useState<string>(
     "part_droits_d_inscription"
   );
-  const [topN, setTopN] = useState<number>(20);
+  const [topN, setTopN] = useState<number | null>(20);
 
   const selectedMetric =
     selectedMetricProp && selectedMetricProp.trim() !== ""
@@ -207,7 +207,7 @@ export default function ComparisonBarChart({
       {
         metric: selectedMetric,
         metricLabel: selectedMetricConfig.label,
-        topN,
+        topN: topN ?? data.length,
         format: selectedMetricConfig.format,
       },
       data
@@ -225,12 +225,15 @@ export default function ComparisonBarChart({
     return groups;
   }, []);
 
-  const TOP_N_OPTIONS = [10, 20, 30, 50, 100];
+  const TOP_N_OPTIONS: (number | null)[] = [10, 20, 30, 50, 100, null];
 
   const config = {
     id: "comparison-bar",
     title: `${selectedMetricConfig.label}${filterSummary}`,
   };
+
+  const getTopNLabel = (n: number | null) =>
+    n === null ? "Tous les établissements" : `${n} établissements`;
 
   return (
     <div>
@@ -264,19 +267,15 @@ export default function ComparisonBarChart({
           <p className="fr-text--sm fr-text--bold fr-mb-1w">
             Nombre d'établissements
           </p>
-          <Select
-            label={`${topN} établissements`}
-            icon="list-ordered"
-            size="sm"
-          >
+          <Select label={getTopNLabel(topN)} icon="list-ordered" size="sm">
             {TOP_N_OPTIONS.map((n) => (
               <Select.Radio
-                key={n}
-                value={String(n)}
+                key={n ?? "all"}
+                value={n === null ? "all" : String(n)}
                 checked={topN === n}
                 onChange={() => setTopN(n)}
               >
-                {n} établissements
+                {getTopNLabel(n)}
               </Select.Radio>
             ))}
           </Select>
@@ -300,7 +299,7 @@ export default function ComparisonBarChart({
               data={data}
               metric={selectedMetric}
               metricLabel={selectedMetricConfig.label}
-              topN={topN}
+              topN={topN ?? data.length}
               format={selectedMetricConfig.format}
             />
           )}
