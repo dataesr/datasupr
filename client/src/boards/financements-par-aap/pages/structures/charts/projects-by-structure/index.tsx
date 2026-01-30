@@ -103,6 +103,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   };
 
   const localOptions = {
+    exporting: { chartOptions: { title: { text: field === "projects" ? titleProjects : titleBudget } } },
     plotOptions: {
       bar: {
         dataLabels: {
@@ -117,48 +118,6 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
     tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
   };
   const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", field === "projects" ? axisProjects : axisBudget), localOptions);
-
-  // TODO: implement it later
-  // const renderData = (options: HighchartsInstance.Options) => {
-  //   const columns = (options?.series ?? []).map((serie) => serie.name);
-  //   const rows: any = [];
-  //   (options?.series ?? []).forEach((serie: any, i) => {
-  //     (serie?.data ?? []).forEach((d, j) => {
-  //       if (i === 0) rows.push([]);
-  //       rows[j].push(d?.y ?? 0);
-  //     });
-  //   });
-
-  //   return (
-  //     <div style={{ width: "100%" }}>
-  //       <div className="fr-table-responsive">
-  //         <table
-  //           className="fr-table fr-table--bordered fr-table--sm"
-  //           style={{ width: "100%" }}
-  //         >
-  //           <thead>
-  //             <tr>
-  //               <th></th>
-  //               {columns.map((column) => (
-  //                 <th key={column} scope="col">{column}</th>
-  //               ))}
-  //             </tr>
-  //           </thead>
-  //           <tbody>
-  //             {rows.map((row, index) => (
-  //               <tr key={index}>
-  //                 <th scope="row">Y</th>
-  //                 {row.map((r) => (
-  //                   <td key={r}>{r}</td>
-  //                 ))}
-  //               </tr>
-  //             ))}
-  //           </tbody>
-  //         </table>
-  //       </div>
-  //     </div>
-  //   );
-  // };
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structure">

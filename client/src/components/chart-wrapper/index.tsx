@@ -1,11 +1,21 @@
-import { useId, useRef, useState } from "react";
-import React from "react";
-import Highcharts from "highcharts";
-import "highcharts/modules/exporting";
-import "highcharts/modules/offline-exporting";
-import "highcharts/modules/map";
-import HighchartsReact from "highcharts-react-official";
 import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Title } from "@dataesr/dsfr-plus";
+import Highcharts from "highcharts";
+import HighchartsReact from "highcharts-react-official";
+import "highcharts/modules/exporting";
+import "highcharts/modules/map";
+import "highcharts/modules/offline-exporting";
+import React, { useId, useRef, useState } from "react";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+
+import { useSearchParams } from "react-router-dom";
+import { getI18nLabel } from "../../utils";
+import ChartFooter from "../chart-footer";
+import CopyButton from "../copy-button";
+import i18n from "./i18n.json";
+
+import "./styles.scss";
+
 
 // Configuration globale pour l'export offline
 Highcharts.setOptions({
@@ -13,15 +23,6 @@ Highcharts.setOptions({
     fallbackToExportServer: false,
   },
 });
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
-
-import CopyButton from "../copy-button";
-import translations from "./i18n.json";
-
-import "./styles.scss";
-import { useSearchParams } from "react-router-dom";
-import ChartFooter from "../chart-footer";
 
 // Import des types pour ChartFooter
 interface LocalizedContent {
@@ -38,11 +39,6 @@ interface Source {
   label: LocalizedContent;
   update?: Date;
   url: LocalizedUrl;
-}
-
-// Fonction utilitaire pour obtenir les traductions
-function getTranslation(key: keyof typeof translations, lang: string = "fr"): string {
-  return translations[key]?.[lang as "fr" | "en"] || translations[key]?.["fr"] || key;
 }
 
 // Fonction utilitaire pour extraire le texte d'un ReactNode
@@ -94,9 +90,6 @@ export type HighchartsOptions = Highcharts.Options | any | null;
 const { VITE_APP_URL } = import.meta.env;
 
 function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
-
   const integrationCode = `<iframe \ntitle="${graphConfig.title}" \nwidth="800" \nheight="600" \nsrc="${VITE_APP_URL}${graphConfig.integrationURL}"></iframe>`;
   return (
     <Modal
@@ -106,7 +99,7 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
       size="lg"
     >
       <ModalTitle>
-        {getTranslation("integrationModalTitle", currentLang)}
+        {getI18nLabel(i18n, "integrationModalTitle")}
       </ModalTitle>
       <ModalContent>
         <div className="text-right">
@@ -121,7 +114,7 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
             onClick={() => setIsOpen(false)}
             variant="secondary"
           >
-            {getTranslation("close", currentLang)}
+            {getI18nLabel(i18n, "close")}
           </Button>
         </div>
       </ModalContent>
@@ -132,18 +125,15 @@ function IntegrationModal({ graphConfig, isOpen, modalId, setIsOpen }) {
 function MenuModal({
   config,
   displayType,
+  downloadCSV,
+  downloadPNG,
   isOpen,
+  modalId,
+  printChart,
   setDisplayType,
   setIsOpen,
   setIsOpenIntegration,
-  modalId,
-  downloadCSV,
-  downloadPNG,
-  printChart,
 }) {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
-
   return (
     <Modal
       isOpen={isOpen}
@@ -157,7 +147,7 @@ function MenuModal({
             className="fr-icon-bar-chart-box-line fr-mr-1w"
             aria-hidden="true"
           />
-          {getTranslation("modalTitle", currentLang)}
+          {getI18nLabel(i18n, "modalTitle")}
         </Title>
 
         <fieldset
@@ -168,12 +158,12 @@ function MenuModal({
             className="fr-fieldset__legend--regular fr-fieldset__legend"
             id="radio-hint-legend"
           >
-            {getTranslation("displayType", currentLang)}
+            {getI18nLabel(i18n, "displayType")}
           </legend>
           <div className="fr-fieldset__element">
             <Radio
               defaultChecked={displayType === "chart"}
-              label={getTranslation("chart", currentLang)}
+              label={getI18nLabel(i18n, "chart")}
               name={`${modalId}_radio-hint`}
               onClick={() => setDisplayType("chart")}
             />
@@ -181,7 +171,7 @@ function MenuModal({
           <div className="fr-fieldset__element">
             <Radio
               defaultChecked={displayType === "data"}
-              label={getTranslation("data", currentLang)}
+              label={getI18nLabel(i18n, "data")}
               name={`${modalId}_radio-hint`}
               onClick={() => setDisplayType("data")}
             />
@@ -196,7 +186,7 @@ function MenuModal({
               variant="text"
               onClick={downloadCSV}
             >
-              {getTranslation("downloadCSV", currentLang)}
+              {getI18nLabel(i18n, "downloadCSV")}
             </Button>
           </li>
           <li>
@@ -206,7 +196,7 @@ function MenuModal({
               variant="text"
               onClick={downloadPNG}
             >
-              {getTranslation("downloadPNG", currentLang)}
+              {getI18nLabel(i18n, "downloadPNG")}
             </Button>
           </li>
           <li>
@@ -216,7 +206,7 @@ function MenuModal({
               variant="text"
               onClick={printChart}
             >
-              {getTranslation("print", currentLang)}
+              {getI18nLabel(i18n, "print")}
             </Button>
           </li>
         </ul>
@@ -225,7 +215,7 @@ function MenuModal({
           <Row>
             <Col>
               <Title as="h2" look="h6">
-                {getTranslation("share", currentLang)}
+                {getI18nLabel(i18n, "share")}
               </Title>
               <div className="share">
                 <Button
@@ -250,7 +240,7 @@ function MenuModal({
             </Col>
             <Col>
               <Title as="h2" look="h6" className="text-right">
-                {getTranslation("integration", currentLang)}
+                {getI18nLabel(i18n, "integration")}
               </Title>
               <div className="share text-right">
                 <Button
@@ -261,11 +251,11 @@ function MenuModal({
                       setIsOpen(false);
                     }
                   }}
-                  title={getTranslation("integration", currentLang)}
+                  title={getI18nLabel(i18n, "integration")}
                   variant="secondary"
                   disabled={!config.integrationURL}
                 >
-                  {getTranslation("integration", currentLang)}
+                  {getI18nLabel(i18n, "integration")}
                 </Button>
               </div>
             </Col>
@@ -274,7 +264,7 @@ function MenuModal({
         <div className="fr-mt-2w text-right">
           <hr />
           <Button onClick={() => setIsOpen(false)}>
-            {getTranslation("close", currentLang)}
+            {getI18nLabel(i18n, "close")}
           </Button>
         </div>
       </ModalContent>
@@ -324,18 +314,18 @@ function ChartTitle({
 
 export default function ChartWrapper({
   config,
-  options,
-  legend,
-  renderData,
-  hideTitle = false,
   constructorType,
+  hideTitle = false,
+  legend,
+  options,
+  renderData,
 }: {
   config: ChartConfig;
-  options: HighchartsOptions;
-  legend?: React.ReactNode;
-  renderData?: (options: Highcharts.Options) => React.ReactNode;
-  hideTitle?: boolean;
   constructorType?: "chart" | "stockChart" | "mapChart";
+  hideTitle?: boolean;
+  legend?: React.ReactNode;
+  options: HighchartsOptions;
+  renderData?: (options: Highcharts.Options) => React.ReactNode;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
@@ -357,42 +347,40 @@ export default function ChartWrapper({
   }
 
   const downloadCSV = () => {
-    // if (chart && chart.current && chart.current.chart) {
-    //   chart.current.chart.downloadCSV();
-    // }
-    console.log("downloadCSV called");
+    if (chart && chart.current && chart.current.chart) {
+      chart.current.chart.downloadCSV();
+    }
   };
 
   const downloadPNG = () => {
-    console;
-    // if (chart && chart.current && chart.current.chart) {
-    //   try {
-    //     // Utiliser l'export offline
-    //     chart.current.chart.exportChart(
-    //       {
-    //         type: "image/png",
-    //         filename:
-    //           config.title && typeof config.title === "string"
-    //             ? config.title
-    //             : "graphique",
-    //         sourceWidth: 800,
-    //         sourceHeight: 600,
-    //         scale: 2, // Pour une meilleure qualité
-    //       },
-    //       {
-    //         exporting: {
-    //           fallbackToExportServer: false,
-    //         },
-    //       }
-    //     );
-    //   } catch (error) {
-    //     console.error("Erreur lors de l'export PNG:", error);
-    //     // Fallback alternatif : essayer avec la méthode print
-    //     alert(
-    //       "L'export PNG a échoué. Vous pouvez utiliser Ctrl+P pour imprimer la page."
-    //     );
-    //   }
-    // }
+    if (chart && chart.current && chart.current.chart) {
+      try {
+        // Utiliser l'export offline
+        chart.current.chart.exportChart(
+          {
+            type: "image/png",
+            filename:
+              config.title && typeof config.title === "string"
+                ? config.title
+                : "graphique",
+            sourceWidth: 800,
+            sourceHeight: 600,
+            scale: 2, // Pour une meilleure qualité
+          },
+          {
+            exporting: {
+              fallbackToExportServer: false,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Erreur lors de l'export PNG:", error);
+        // Fallback alternatif : essayer avec la méthode print
+        alert(
+          "L'export PNG a échoué. Vous pouvez utiliser Ctrl+P pour imprimer la page."
+        );
+      }
+    }
   };
 
   const printChart = () => {
@@ -413,10 +401,8 @@ export default function ChartWrapper({
             chartTitle = extractedText || "Graphique";
           }
         }
-
         // Sauvegarder le titre actuel
         const currentTitle = chart.current.chart.options.title;
-
         // Mettre à jour temporairement le titre pour l'impression
         chart.current.chart.update(
           {
@@ -430,11 +416,7 @@ export default function ChartWrapper({
           },
           false
         );
-
-        // Imprimer
-        // chart.current.chart.print();
-        console.log("printChart called");
-
+        chart.current.chart.print();
         // Restaurer le titre original après un délai
         setTimeout(() => {
           if (chart.current && chart.current.chart) {
