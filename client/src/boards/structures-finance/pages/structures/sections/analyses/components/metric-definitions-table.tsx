@@ -13,7 +13,6 @@ export default function MetricDefinitionsTable({
 }: MetricDefinitionsTableProps) {
   const [isOpen, setIsOpen] = useState(false);
   const { data: definitions, isLoading } = useFinanceDefinitions();
-  console.log(definitions, metricKeys);
   const relevantDefinitions = useMemo(() => {
     if (!definitions || !metricKeys) return [];
 

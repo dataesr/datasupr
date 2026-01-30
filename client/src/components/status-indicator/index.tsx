@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { useFinanceDefinitions } from "../../boards/structures-finance/pages/definitions/api";
 import "./styles.scss";
 
@@ -12,11 +13,21 @@ const STATUS_CONFIG = {
     color: "var(--text-default-error)",
     label: "Alerte",
   },
-
+  vigilance: {
+    color: "var(--text-default-warning)",
+    label: "Vigilance",
+  },
   normal: {
     color: "var(--text-default-success)",
     label: "Normal",
   },
+};
+
+const MAX_CHARS = 200;
+
+const truncateText = (text: string, maxLength: number) => {
+  if (text.length <= maxLength) return text;
+  return text.slice(0, maxLength).trim() + "…";
 };
 
 export default function StatusIndicator({
@@ -26,24 +37,26 @@ export default function StatusIndicator({
 }: StatusIndicatorProps) {
   const config = STATUS_CONFIG[status] || STATUS_CONFIG.normal;
   const { data: definitions } = useFinanceDefinitions();
-  const tooltipId = `tooltip-status-${status}`;
+  const tooltipId = `tooltip-status-${indicateur}-${status}`;
 
-  const getInterpretation = () => {
-    if (!definitions || !indicateur) return config.label;
+  const interpretation = useMemo(() => {
+    if (!definitions || !indicateur) return null;
     for (const category of definitions) {
       for (const subCategory of category.sousRubriques) {
         const def = subCategory.definitions.find(
-          (d: any) => d.indicateur === indicateur
+          (d) => d.indicateur === indicateur
         );
-        if (def && (def as any).interpretation) {
-          return (def as any).interpretation;
+        if (def?.interpretation) {
+          return def.interpretation;
         }
       }
     }
-    return config.label;
-  };
+    return null;
+  }, [definitions, indicateur]);
 
-  const displayText = getInterpretation();
+  const displayText = interpretation
+    ? `${config.label} : ${truncateText(interpretation, MAX_CHARS)}`
+    : config.label;
 
   return (
     <>
