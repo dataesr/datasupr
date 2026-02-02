@@ -11,7 +11,6 @@ import { useFinanceDefinitions } from "../../../../../definitions/api";
 import {
   createEvolutionChartOptions,
   createStackedEvolutionChartOptions,
-  type ThresholdConfig,
 } from "./options";
 import {
   RenderDataSingle,
@@ -29,49 +28,11 @@ import {
   type AnalysisKey,
 } from "./config";
 import MetricDefinitionsTable from "../../../../../../components/layouts/metric-definitions-table";
-
-const FINANCIAL_HEALTH_INDICATORS = [
-  "resultat_net_comptable",
-  "resultat_net_comptable_hors_sie",
-  "capacite_d_autofinancement",
-  "caf_produits_encaissables",
-  "fonds_de_roulement_net_global",
-  "tresorerie",
-  "fonds_de_roulement_en_jours_de_fonctionnement",
-  "tresorerie_en_jours_de_fonctionnement",
-  "charges_decaissables_produits_encaissables",
-  "taux_de_remuneration_des_permanents",
-  "ressources_propres_produits_encaissables",
-  "charges_de_personnel_produits_encaissables",
-  "caf_acquisitions_d_immobilisations",
-  "solde_budgetaire",
-];
-
-function ThresholdLegend({ threshold }: { threshold: ThresholdConfig | null }) {
-  if (!threshold) return null;
-
-  const hasVigilance = threshold.vig_lib != null;
-  const hasAlert = threshold.ale_lib != null;
-
-  if (!hasVigilance && !hasAlert) return null;
-
-  return (
-    <div className="threshold-legend fr-text--sm">
-      {hasVigilance && (
-        <div className="threshold-legend__item">
-          <span className="threshold-legend__marker threshold-legend__marker--warning" />
-          <span>Zone de vigilance : {threshold.vig_lib}</span>
-        </div>
-      )}
-      {hasAlert && (
-        <div className="threshold-legend__item">
-          <span className="threshold-legend__marker threshold-legend__marker--error" />
-          <span>Zone d'alerte : {threshold.ale_lib}</span>
-        </div>
-      )}
-    </div>
-  );
-}
+import {
+  FINANCIAL_HEALTH_INDICATORS,
+  ThresholdLegend,
+  type ThresholdConfig,
+} from "../../../../../../config/index";
 
 interface EvolutionChartProps {
   etablissementId?: string;

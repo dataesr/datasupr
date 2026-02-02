@@ -1,20 +1,16 @@
-import {
-  Row,
-  Col,
-  Title,
-  Text,
-  SegmentedControl,
-  SegmentedElement,
-} from "@dataesr/dsfr-plus";
-import { useMemo } from "react";
+import { Row, Col, Title, Text } from "@dataesr/dsfr-plus";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFinanceAdvancedComparison } from "../../../../api/api";
 import PositioningFilters, {
   FilterMode,
 } from "./components/positioning-filters";
+import PositioningMetricFilter from "./components/positioning-metric-filter";
 import PositioningScatterChart from "./charts/positioning-scatter";
 import PositioningComparisonBarChart from "./charts/positioning-comparison-bar";
 import { usePositioningFilteredData } from "./hooks/usePositioningFilteredData";
+import { type AnalysisKey } from "../analyses/charts/evolution/config";
+import { Select } from "../../../../../../components/select";
 import "../styles.scss";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
@@ -36,6 +32,13 @@ export function PositionnementSection({
     (searchParams.get("positioningFilter") as FilterMode) || "all";
   const activeChart =
     (searchParams.get("positioningChart") as ChartView) || "comparison";
+
+  const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisKey | null>(
+    "ressources-total"
+  );
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    "Indicateurs financiers"
+  );
 
   const updateSearchParams = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams);
@@ -72,6 +75,14 @@ export function PositionnementSection({
     data?.etablissement_actuel_lib ||
     data?.etablissement_lib ||
     "l'établissement";
+
+  const getChartLabel = () => {
+    if (activeChart === "comparison") return "Comparaison par analyse";
+    if (activeChart === "scatter-1") return "Produits vs Effectifs";
+    if (activeChart === "scatter-2") return "SCSP vs Encadrement";
+    if (activeChart === "scatter-3") return "SCSP vs Ressources";
+    return "Comparaison par analyse";
+  };
 
   const scatterConfigs = [
     {
@@ -144,6 +155,44 @@ export function PositionnementSection({
             onFilterModeChange={setFilterMode}
           />
 
+          <Row gutters className="fr-mb-3w">
+            <Col xs="12" md="4" offsetMd="8" className="text-right">
+              <Text className="fr-text--sm fr-text--bold fr-mb-1w">
+                Type de graphique
+              </Text>
+              <Select label={getChartLabel()} icon="line-chart-line" size="sm">
+                <Select.Checkbox
+                  value="comparison"
+                  checked={activeChart === "comparison"}
+                  onChange={() => setActiveChart("comparison")}
+                >
+                  Comparaison par analyse
+                </Select.Checkbox>
+                <Select.Checkbox
+                  value="scatter-1"
+                  checked={activeChart === "scatter-1"}
+                  onChange={() => setActiveChart("scatter-1")}
+                >
+                  Produits vs Effectifs
+                </Select.Checkbox>
+                <Select.Checkbox
+                  value="scatter-2"
+                  checked={activeChart === "scatter-2"}
+                  onChange={() => setActiveChart("scatter-2")}
+                >
+                  SCSP vs Encadrement
+                </Select.Checkbox>
+                <Select.Checkbox
+                  value="scatter-3"
+                  checked={activeChart === "scatter-3"}
+                  onChange={() => setActiveChart("scatter-3")}
+                >
+                  SCSP vs Ressources
+                </Select.Checkbox>
+              </Select>
+            </Col>
+          </Row>
+
           {filteredItems.length === 0 && (
             <div className="fr-alert fr-alert--warning fr-mb-4w" role="alert">
               <p className="fr-alert__title">Aucun résultat</p>
@@ -153,77 +202,53 @@ export function PositionnementSection({
 
           {filteredItems.length > 0 && (
             <div className="fr-mb-4w">
-              <fieldset className="fr-fieldset fr-mb-3w">
-                <legend className="fr-sr-only">
-                  Choisir le type de graphique
-                </legend>
-                <SegmentedControl
-                  className="fr-segmented--sm"
-                  name="positioning-chart-selector"
-                >
-                  <SegmentedElement
-                    checked={activeChart === "comparison"}
-                    label="Comparaison par métrique"
-                    onClick={() => setActiveChart("comparison")}
-                    value="comparison"
-                  />
-                  <SegmentedElement
-                    checked={activeChart === "scatter-1"}
-                    label="Produits vs Effectifs"
-                    onClick={() => setActiveChart("scatter-1")}
-                    value="scatter-1"
-                  />
-                  <SegmentedElement
-                    checked={activeChart === "scatter-2"}
-                    label="SCSP vs Encadrement"
-                    onClick={() => setActiveChart("scatter-2")}
-                    value="scatter-2"
-                  />
-                  <SegmentedElement
-                    checked={activeChart === "scatter-3"}
-                    label="SCSP vs Ressources"
-                    onClick={() => setActiveChart("scatter-3")}
-                    value="scatter-3"
-                  />
-                </SegmentedControl>
-              </fieldset>
-
-              <Row className="fr-mb-4w">
-                <Col xs="12">
-                  {activeChart === "comparison" && (
+              {activeChart === "comparison" && (
+                <Row gutters>
+                  <Col xs="12" md="4">
+                    <PositioningMetricFilter
+                      data={filteredItems}
+                      selectedAnalysis={selectedAnalysis}
+                      selectedCategory={selectedCategory}
+                      onSelectAnalysis={setSelectedAnalysis}
+                      onSelectCategory={setSelectedCategory}
+                    />
+                  </Col>
+                  <Col xs="12" md="8">
                     <PositioningComparisonBarChart
                       data={filteredItems}
                       currentStructureId={data?.etablissement_id_paysage_actuel}
                       currentStructureName={structureName}
                       selectedYear={String(selectedYear)}
+                      selectedAnalysis={selectedAnalysis}
+                      topN={filteredItems.length}
                     />
-                  )}
-                  {activeChart === "scatter-1" && (
-                    <PositioningScatterChart
-                      config={scatterConfigs[0]}
-                      data={filteredItems}
-                      currentStructureId={data?.etablissement_id_paysage_actuel}
-                      currentStructureName={structureName}
-                    />
-                  )}
-                  {activeChart === "scatter-2" && (
-                    <PositioningScatterChart
-                      config={scatterConfigs[1]}
-                      data={filteredItems}
-                      currentStructureId={data?.etablissement_id_paysage_actuel}
-                      currentStructureName={structureName}
-                    />
-                  )}
-                  {activeChart === "scatter-3" && (
-                    <PositioningScatterChart
-                      config={scatterConfigs[2]}
-                      data={filteredItems}
-                      currentStructureId={data?.etablissement_id_paysage_actuel}
-                      currentStructureName={structureName}
-                    />
-                  )}
-                </Col>
-              </Row>
+                  </Col>
+                </Row>
+              )}
+              {activeChart === "scatter-1" && (
+                <PositioningScatterChart
+                  config={scatterConfigs[0]}
+                  data={filteredItems}
+                  currentStructureId={data?.etablissement_id_paysage_actuel}
+                  currentStructureName={structureName}
+                />
+              )}
+              {activeChart === "scatter-2" && (
+                <PositioningScatterChart
+                  config={scatterConfigs[1]}
+                  data={filteredItems}
+                  currentStructureId={data?.etablissement_id_paysage_actuel}
+                  currentStructureName={structureName}
+                />
+              )}
+              {activeChart === "scatter-3" && (
+                <PositioningScatterChart
+                  config={scatterConfigs[2]}
+                  data={filteredItems}
+                  currentStructureId={data?.etablissement_id_paysage_actuel}
+                  currentStructureName={structureName}
+                />
+              )}
             </div>
           )}
 

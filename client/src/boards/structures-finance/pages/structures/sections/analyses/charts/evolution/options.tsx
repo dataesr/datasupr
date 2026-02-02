@@ -1,5 +1,7 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { THRESHOLD_COLORS } from "../../../../../../constants/colors";
+import type { ThresholdConfig } from "../../../../../../config";
 
 interface EvolutionData {
   exercice: number;
@@ -13,19 +15,10 @@ interface MetricConfig {
   suffix?: string;
 }
 
-export interface ThresholdConfig {
-  ale_sens?: "sup" | "inf" | "infegal" | null;
-  ale_val?: number | null;
-  ale_lib?: string | null;
-  vig_min?: number | null;
-  vig_max?: number | null;
-  vig_lib?: string | null;
-}
-
-const ALERT_COLOR = "rgba(206, 13, 13, 0.12)";
-const VIGILANCE_COLOR = "rgba(255, 182, 0, 0.12)";
-const ALERT_LINE = "#ce0d0d";
-const VIGILANCE_LINE = "#d64d00";
+const ALERT_COLOR = THRESHOLD_COLORS.alertBackground;
+const VIGILANCE_COLOR = THRESHOLD_COLORS.vigilanceBackground;
+const ALERT_LINE = THRESHOLD_COLORS.alertLine;
+const VIGILANCE_LINE = THRESHOLD_COLORS.vigilanceLine;
 
 export const createThresholdPlotBands = (
   threshold: ThresholdConfig | null,

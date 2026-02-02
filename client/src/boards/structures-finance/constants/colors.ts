@@ -140,3 +140,10 @@ export const SECTION_COLORS = {
   diplomesFormations: DSFR_COLORS.orangeTerreBattue,
   erc: DSFR_COLORS.orangeTerreBattue,
 } as const;
+
+export const THRESHOLD_COLORS = {
+  alertBackground: "rgba(206, 13, 13, 0.12)",
+  vigilanceBackground: "rgba(255, 182, 0, 0.12)",
+  alertLine: "#ce0d0d",
+  vigilanceLine: "#d6aa24",
+} as const;

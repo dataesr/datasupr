@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import {
   useFinanceAdvancedComparison,
@@ -6,6 +6,7 @@ import {
 } from "../../../../../../api/api";
 import { usePositioningFilteredData } from "../../hooks/usePositioningFilteredData";
 import { FilterMode } from "../../components/positioning-filters";
+import { type AnalysisKey } from "../../../analyses/charts/evolution/config";
 import PositioningComparisonBarChart from "./index";
 import DefaultSkeleton from "../../../../../../../../components/charts-skeletons/default";
 
@@ -15,6 +16,8 @@ export default function PositioningComparisonBarIntegrationWrapper() {
   const structureId = searchParams.get("structureId") || "";
   const selectedYear = searchParams.get("year") || "";
   const filterMode = (searchParams.get("filter") as FilterMode) || "all";
+
+  const [selectedAnalysis] = useState<AnalysisKey | null>("ressources-total");
 
   const { data: comparisonData, isLoading: isLoadingComparison } =
     useFinanceAdvancedComparison(
@@ -70,6 +73,8 @@ export default function PositioningComparisonBarIntegrationWrapper() {
       currentStructureId={structureData?.etablissement_id_paysage_actuel}
       currentStructureName={structureName}
       selectedYear={String(selectedYear)}
+      selectedAnalysis={selectedAnalysis}
+      topN={filteredItems.length}
     />
   );
 }
