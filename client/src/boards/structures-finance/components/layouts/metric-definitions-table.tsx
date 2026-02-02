@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
-import { useFinanceDefinitions } from "../../../../definitions/api";
 import "./metric-definitions-table.scss";
 import { Title } from "@dataesr/dsfr-plus";
-import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
+import { useFinanceDefinitions } from "../../pages/definitions/api";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 
 interface MetricDefinitionsTableProps {
   metricKeys: string[];
