@@ -1,7 +1,6 @@
-.analysis-filter {
+.item-filter {
   position: sticky;
   top: 1rem;
-  max-height: calc(100vh - 2rem);
   overflow-y: auto;
   background-color: var(--background-alt-grey);
   padding: 1.5rem;
@@ -13,7 +12,7 @@
     margin-left: 0.5rem;
   }
 
-  &__analyses {
+  &__list-container {
     border: none;
     padding: 0;
     margin: 0;
@@ -55,7 +54,7 @@
       border-color: var(--border-active-blue-france);
       border-left-width: 3px;
 
-      .analysis-filter__item-label {
+      .item-filter__item-label {
         font-weight: 600;
         color: var(--text-action-high-blue-france);
       }

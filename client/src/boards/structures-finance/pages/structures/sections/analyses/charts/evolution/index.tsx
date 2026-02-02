@@ -211,7 +211,7 @@ export default function EvolutionChart({
   }, [analysisConfig]);
 
   const isFormationsCategory = useMemo(() => {
-    return analysisConfig.category === "Formations";
+    return analysisConfig.category === "Étudiants et formation";
   }, [analysisConfig]);
 
   const xAxisField = isFormationsCategory ? "anuniv" : "exercice";

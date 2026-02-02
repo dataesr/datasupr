@@ -19,8 +19,9 @@ export function AnalysesSection({
   const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisKey | null>(
     null
   );
-  const [selectedCategory, setSelectedCategory] =
-    useState<string>("Ressources");
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    "Indicateurs financiers"
+  );
 
   const { analysesWithData, isLoading } = useAnalysesWithData(etablissementId);
 

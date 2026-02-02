@@ -694,118 +694,47 @@ export const METRIC_TO_PART: Partial<Record<MetricKey, MetricKey>> = {
 };
 
 export const PREDEFINED_ANALYSES = {
+  // Indicateurs financiers
   "ressources-total": {
     label: "Total des ressources",
     metrics: ["produits_de_fonctionnement_encaissables"],
-    category: "Ressources",
+    category: "Indicateurs financiers",
     showBase100: false,
   },
   "ressources-vs-effectifs": {
     label: "Total des ressources vs effectifs d'étudiants (comparaison)",
     metrics: ["produits_de_fonctionnement_encaissables", "effectif_sans_cpge"],
-    category: "Ressources",
+    category: "Indicateurs financiers",
     showBase100: true,
   },
   "ressources-scsp": {
     label: "SCSP",
     metrics: ["scsp", "scsp_ipc"],
-    category: "SCSP",
+    category: "Indicateurs financiers",
     showBase100: false,
+  },
+  "scsp-par-etudiant": {
+    label: "SCSP par étudiant",
+    metrics: ["scsp_par_etudiants", "scsp_par_etudiants_ipc"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "scsp-etudiant": {
+    label: "SCSP étudiant",
+    metrics: ["scsp_etudiants"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "scsp-comparaison-complete": {
+    label: "SCSP, étudiants financés et SCSP par étudiant (base 100)",
+    metrics: ["scsp", "scsp_etudiants", "scsp_par_etudiants"],
+    category: "Indicateurs financiers",
+    showBase100: true,
   },
   "ressources-propres": {
     label: "Total des ressources propres",
     metrics: ["ressources_propres", "ressources_propres_ipc"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "autonomie-financiere": {
-    label: "Autonomie financière",
-    metrics: ["ressources_propres_produits_encaissables"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-formation": {
-    label: "Ressources propres formation",
-    metrics: ["tot_ress_formation", "tot_ress_formation_ipc"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-droits-inscription": {
-    label: "Droits d'inscription",
-    metrics: ["droits_d_inscription"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-formation-continue": {
-    label: "Formation continue et VAE",
-    metrics: ["formation_continue_diplomes_propres_et_vae"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-taxe-apprentissage": {
-    label: "Taxe d'apprentissage",
-    metrics: ["taxe_d_apprentissage"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-recherche": {
-    label: "Ressources propres recherche",
-    metrics: ["tot_ress_recherche", "tot_ress_recherche_ipc"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-valorisation": {
-    label: "Valorisation",
-    metrics: ["valorisation"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-anr-hors-ia": {
-    label: "ANR hors investissements d'avenir",
-    metrics: ["anr_hors_investissements_d_avenir"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-anr-ia": {
-    label: "ANR investissements d'avenir",
-    metrics: ["anr_investissements_d_avenir"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-contrats-recherche": {
-    label: "Contrats et prestations de recherche",
-    metrics: ["contrats_et_prestations_de_recherche_hors_anr"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-autres-recettes": {
-    label: "Autres ressources propres (hors formation/recherche)",
-    metrics: ["tot_ress_autres_recette", "tot_ress_autres_recette_ipc"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-subventions-region": {
-    label: "Subventions régionales",
-    metrics: ["subventions_de_la_region"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-subventions-ue": {
-    label: "Subventions UE",
-    metrics: ["subventions_union_europeenne"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-autres-propres": {
-    label: "Autres ressources propres",
-    metrics: ["autres_ressources_propres"],
-    category: "Ressources",
-    showBase100: false,
-  },
-  "ressources-autres-subventions": {
-    label: "Autres subventions",
-    metrics: ["autres_subventions"],
-    category: "Ressources",
+    category: "Indicateurs financiers",
     showBase100: false,
   },
   "ressources-propres-encaissables": {
@@ -814,15 +743,128 @@ export const PREDEFINED_ANALYSES = {
       "ressources_propres_encaissables",
       "ressources_propres_encaissables_ipc",
     ],
-    category: "Ressources",
+    category: "Indicateurs financiers",
     showBase100: false,
   },
   "recettes-propres": {
     label: "Recettes propres",
     metrics: ["recettes_propres", "recettes_propres_ipc"],
-    category: "Ressources",
+    category: "Indicateurs financiers",
     showBase100: false,
   },
+  "autonomie-financiere": {
+    label: "Autonomie financière",
+    metrics: ["ressources_propres_produits_encaissables"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-formation": {
+    label: "Ressources propres formation",
+    metrics: ["tot_ress_formation", "tot_ress_formation_ipc"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-droits-inscription": {
+    label: "Droits d'inscription",
+    metrics: ["droits_d_inscription"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-formation-continue": {
+    label: "Formation continue et VAE",
+    metrics: ["formation_continue_diplomes_propres_et_vae"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-taxe-apprentissage": {
+    label: "Taxe d'apprentissage",
+    metrics: ["taxe_d_apprentissage"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-recherche": {
+    label: "Ressources propres recherche",
+    metrics: ["tot_ress_recherche", "tot_ress_recherche_ipc"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-valorisation": {
+    label: "Valorisation",
+    metrics: ["valorisation"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-anr-hors-ia": {
+    label: "ANR hors investissements d'avenir",
+    metrics: ["anr_hors_investissements_d_avenir"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-anr-ia": {
+    label: "ANR investissements d'avenir",
+    metrics: ["anr_investissements_d_avenir"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-contrats-recherche": {
+    label: "Contrats et prestations de recherche",
+    metrics: ["contrats_et_prestations_de_recherche_hors_anr"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-autres-recettes": {
+    label: "Autres ressources propres (hors formation/recherche)",
+    metrics: ["tot_ress_autres_recette", "tot_ress_autres_recette_ipc"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-subventions-region": {
+    label: "Subventions régionales",
+    metrics: ["subventions_de_la_region"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-subventions-ue": {
+    label: "Subventions UE",
+    metrics: ["subventions_union_europeenne"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-autres-propres": {
+    label: "Autres ressources propres",
+    metrics: ["autres_ressources_propres"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "ressources-autres-subventions": {
+    label: "Autres subventions",
+    metrics: ["autres_subventions"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "masse-salariale": {
+    label: "Dépenses de masse salariale",
+    metrics: ["charges_de_personnel", "charges_de_personnel_ipc"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "masse-salariale-poids": {
+    label: "Poids sur produits encaissables",
+    metrics: ["charges_de_personnel_produits_encaissables"],
+    category: "Indicateurs financiers",
+    showBase100: false,
+  },
+  "masse-salariale-comparaison": {
+    label: "Charges et poids sur produits",
+    metrics: [
+      "charges_de_personnel_produits_encaissables",
+      "charges_de_personnel",
+    ],
+    category: "Indicateurs financiers",
+    showBase100: true,
+  },
+
+  // Santé financière
   "sante-resultat-net": {
     label: "Résultat net comptable",
     metrics: ["resultat_net_comptable", "resultat_net_comptable_ipc"],
@@ -956,71 +998,11 @@ export const PREDEFINED_ANALYSES = {
     showBase100: true,
   },
 
-  "scsp-par-etudiant": {
-    label: "SCSP par étudiant",
-    metrics: ["scsp_par_etudiants", "scsp_par_etudiants_ipc"],
-    category: "SCSP",
-    showBase100: false,
-  },
-  "scsp-etudiant": {
-    label: "SCSP étudiant",
-    metrics: ["scsp_etudiants"],
-    category: "SCSP",
-    showBase100: false,
-  },
-
-  "scsp-comparaison-complete": {
-    label: "SCSP, étudiants financés et SCSP par étudiant (base 100)",
-    metrics: ["scsp", "scsp_etudiants", "scsp_par_etudiants"],
-    category: "SCSP",
-    showBase100: true,
-  },
-
-  "masse-salariale": {
-    label: "Dépenses de masse salariale",
-    metrics: ["charges_de_personnel", "charges_de_personnel_ipc"],
-    category: "Masse salariale",
-    showBase100: false,
-  },
-  "masse-salariale-poids": {
-    label: "Poids sur produits encaissables",
-    metrics: ["charges_de_personnel_produits_encaissables"],
-    category: "Masse salariale",
-    showBase100: false,
-  },
-  "masse-salariale-comparaison": {
-    label: "Charges et poids sur produits",
-    metrics: [
-      "charges_de_personnel_produits_encaissables",
-      "charges_de_personnel",
-    ],
-    category: "Masse salariale",
-    showBase100: true,
-  },
-
-  "enseignants-emplois": {
-    label: "Emplois enseignants (ETPT)",
-    metrics: ["emploi_etpt"],
-    category: "Personnel",
-    showBase100: false,
-  },
-  "enseignants-taux": {
-    label: "Taux d'encadrement",
-    metrics: ["taux_encadrement"],
-    category: "Personnel",
-    showBase100: false,
-  },
-  "enseignants-comparaison": {
-    label: "Taux et emplois ETPT",
-    metrics: ["taux_encadrement", "emploi_etpt"],
-    category: "Personnel",
-    showBase100: true,
-  },
-
+  // Étudiants et formation
   "formations-diplomes": {
     label: "Effectifs par type de diplôme",
     metrics: ["effectif_sans_cpge_dn", "effectif_sans_cpge_du"],
-    category: "Formations",
+    category: "Étudiants et formation",
     showBase100: false,
     chartType: "stacked",
   },
@@ -1031,7 +1013,7 @@ export const PREDEFINED_ANALYSES = {
       "effectif_sans_cpge_m",
       "effectif_sans_cpge_d",
     ],
-    category: "Formations",
+    category: "Étudiants et formation",
     showBase100: false,
     chartType: "stacked",
   },
@@ -1047,7 +1029,7 @@ export const PREDEFINED_ANALYSES = {
       "effectif_sans_cpge_deg6",
       "effectif_sans_cpge_deg9",
     ],
-    category: "Formations",
+    category: "Étudiants et formation",
     showBase100: false,
     chartType: "stacked",
   },
@@ -1063,21 +1045,41 @@ export const PREDEFINED_ANALYSES = {
       "effectif_sans_cpge_veto",
       "effectif_sans_cpge_interd",
     ],
-    category: "Formations",
+    category: "Étudiants et formation",
     showBase100: false,
     chartType: "stacked",
   },
   "formations-iut": {
     label: "Effectifs en IUT",
     metrics: ["effectif_sans_cpge_iut"],
-    category: "Formations",
+    category: "Étudiants et formation",
     showBase100: false,
   },
   "formations-ingenieur": {
     label: "Effectifs en formation d'ingénieur",
     metrics: ["effectif_sans_cpge_ing"],
-    category: "Formations",
+    category: "Étudiants et formation",
     showBase100: false,
+  },
+
+  // Emplois
+  "enseignants-emplois": {
+    label: "Emplois enseignants (ETPT)",
+    metrics: ["emploi_etpt"],
+    category: "Emplois",
+    showBase100: false,
+  },
+  "enseignants-taux": {
+    label: "Taux d'encadrement",
+    metrics: ["taux_encadrement"],
+    category: "Emplois",
+    showBase100: false,
+  },
+  "enseignants-comparaison": {
+    label: "Taux et emplois ETPT",
+    metrics: ["taux_encadrement", "emploi_etpt"],
+    category: "Emplois",
+    showBase100: true,
   },
 } as const;
 
