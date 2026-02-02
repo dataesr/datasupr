@@ -81,11 +81,11 @@ export default function NationalContent() {
       case "comparison":
         return (
           <AnalyseSection
-            data={filteredItems}
-            selectedYear={selectedYear}
             selectedType={selectedType}
             selectedTypologie={selectedTypologie}
             selectedRegion={selectedRegion}
+            selectedRce={selectedRce}
+            selectedDevimmo={selectedDevimmo}
           />
         );
       default:

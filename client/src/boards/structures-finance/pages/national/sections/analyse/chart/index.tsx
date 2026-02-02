@@ -4,6 +4,7 @@ import { Text, Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../components/chart-wrapper/index.tsx";
 import { createComparisonBarOptions } from "./options.tsx";
 import Select from "../../../../../../../components/select/index.tsx";
+import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
@@ -15,19 +16,19 @@ import { RenderData } from "./render-data.tsx";
 interface NationalChartProps {
   data: any[];
   selectedAnalysis: AnalysisKey;
-  selectedYear?: string;
-  selectedType?: string;
-  selectedTypologie?: string;
-  selectedRegion?: string;
+  selectedYear: string;
+  availableYears: number[];
+  onYearChange: (year: string) => void;
+  isLoading: boolean;
 }
 
 export default function NationalChart({
   data,
   selectedAnalysis,
   selectedYear,
-  selectedType,
-  selectedTypologie,
-  selectedRegion,
+  availableYears,
+  onYearChange,
+  isLoading,
 }: NationalChartProps) {
   const [topN, setTopN] = useState<number | null>(20);
 
@@ -42,15 +43,6 @@ export default function NationalChart({
 
     return nonIpcMetric as MetricKey;
   }, [selectedAnalysis, analysisConfig]);
-
-  const filterSummary = useMemo(() => {
-    const parts: string[] = [];
-    if (selectedYear) parts.push(selectedYear);
-    if (selectedType) parts.push(selectedType);
-    if (selectedTypologie) parts.push(selectedTypologie);
-    if (selectedRegion) parts.push(selectedRegion);
-    return parts.length > 0 ? ` (${parts.join(" · ")})` : "";
-  }, [selectedYear, selectedType, selectedTypologie, selectedRegion]);
 
   const metricConfig = activeMetricKey
     ? METRICS_CONFIG[activeMetricKey as MetricKey]
@@ -94,13 +86,28 @@ export default function NationalChart({
 
   const config = {
     id: "national-comparison",
-    title: `${analysisConfig.label}${filterSummary}`,
+    title: `${analysisConfig.label} (${selectedYear})`,
   };
 
   return (
     <div>
       <Row gutters className="fr-mb-3w">
-        <Col xs="12" md="4" offsetMd="8">
+        <Col xs="12" md="4">
+          <Text className="fr-text--sm fr-text--bold fr-mb-1w">Année</Text>
+          <Select label={selectedYear} size="sm" fullWidth className="fr-mb-0">
+            {availableYears.map((year) => (
+              <Select.Checkbox
+                key={year}
+                value={String(year)}
+                checked={selectedYear === String(year)}
+                onChange={() => onYearChange(String(year))}
+              >
+                {year}
+              </Select.Checkbox>
+            ))}
+          </Select>
+        </Col>
+        <Col xs="12" md="4" offsetMd="4">
           <Text className="fr-text--sm fr-text--bold fr-mb-1w">
             Nombre d'établissements
           </Text>
@@ -124,7 +131,11 @@ export default function NationalChart({
         </Col>
       </Row>
 
-      {!chartOptions || !data || data.length === 0 ? (
+      {isLoading ? (
+        <div className="fr-text--center fr-py-5w">
+          <DefaultSkeleton />
+        </div>
+      ) : !chartOptions || !data || data.length === 0 ? (
         <div className="fr-alert fr-alert--warning">
           <p className="fr-alert__title">Aucune donnée disponible</p>
           <p>

@@ -1,30 +1,66 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
+import { useSearchParams } from "react-router-dom";
 import NationalChart from "./chart";
 import AnalysisFilter from "./analysis-filter";
 import { type AnalysisKey } from "../../../structures/sections/analyses/charts/evolution/config";
+import { useFinanceYears } from "../../../../api/common";
+import { useFinanceAdvancedComparison } from "../../../../api/api";
+import { useFilteredNationalData } from "../../hooks/useFilteredNationalData";
 import "../../../structures/sections/styles.scss";
 
 interface AnalyseSectionProps {
-  data: any[];
-  selectedYear?: string;
   selectedType?: string;
   selectedTypologie?: string;
   selectedRegion?: string;
+  selectedRce?: string;
+  selectedDevimmo?: string;
 }
 
 export function AnalyseSection({
-  data,
-  selectedYear,
   selectedType,
   selectedTypologie,
   selectedRegion,
+  selectedRce,
+  selectedDevimmo,
 }: AnalyseSectionProps) {
+  const [searchParams] = useSearchParams();
+  const urlYear = searchParams.get("year") || "2024";
+
+  const [localYear, setLocalYear] = useState<string>(urlYear);
+
   const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisKey | null>(
     null
   );
   const [selectedCategory, setSelectedCategory] = useState<string>(
     "Indicateurs financiers"
+  );
+
+  const { data: yearsData } = useFinanceYears();
+  const years = useMemo(() => yearsData?.years || [], [yearsData]);
+
+  const { data: comparisonData, isLoading } = useFinanceAdvancedComparison(
+    {
+      annee: localYear,
+      type: "",
+      typologie: "",
+      region: "",
+    },
+    !!localYear
+  );
+
+  const allItems = useMemo(() => {
+    if (!comparisonData || !comparisonData.items) return [];
+    return comparisonData.items;
+  }, [comparisonData]);
+
+  const data = useFilteredNationalData(
+    allItems,
+    selectedType || "",
+    selectedTypologie || "",
+    selectedRegion || "",
+    selectedRce || "",
+    selectedDevimmo || ""
   );
 
   return (
@@ -73,10 +109,10 @@ export function AnalyseSection({
             <NationalChart
               data={data}
               selectedAnalysis={selectedAnalysis}
-              selectedYear={selectedYear}
-              selectedType={selectedType}
-              selectedTypologie={selectedTypologie}
-              selectedRegion={selectedRegion}
+              selectedYear={localYear}
+              availableYears={years}
+              onYearChange={setLocalYear}
+              isLoading={isLoading}
             />
           )}
         </Col>
