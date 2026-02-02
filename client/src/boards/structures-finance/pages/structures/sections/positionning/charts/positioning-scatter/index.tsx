@@ -20,8 +20,23 @@ export default function PositioningScatterChart({
   const [searchParams] = useSearchParams();
   const structureId = searchParams.get("structureId") || "";
   const selectedYear = searchParams.get("year") || "";
-  const positioningFilter = searchParams.get("positioningFilter") || "all";
   const positioningChart = searchParams.get("positioningChart") || "comparison";
+
+  const filterParams = new URLSearchParams();
+  const positioningType = searchParams.get("positioningType");
+  const positioningTypologie = searchParams.get("positioningTypologie");
+  const positioningRegion = searchParams.get("positioningRegion");
+  const positioningRce = searchParams.get("positioningRce");
+  const positioningDevimmo = searchParams.get("positioningDevimmo");
+
+  if (positioningType) filterParams.set("positioningType", positioningType);
+  if (positioningTypologie)
+    filterParams.set("positioningTypologie", positioningTypologie);
+  if (positioningRegion)
+    filterParams.set("positioningRegion", positioningRegion);
+  if (positioningRce) filterParams.set("positioningRce", positioningRce);
+  if (positioningDevimmo)
+    filterParams.set("positioningDevimmo", positioningDevimmo);
 
   const chartOptions = useMemo(() => {
     if (!data || !Array.isArray(data)) {
@@ -56,7 +71,7 @@ export default function PositioningScatterChart({
 
   const chartConfig = {
     id: `positioning-scatter-${config.xMetric}-${config.yMetric}`,
-    integrationURL: `/integration?chart_id=positioning-scatter&structureId=${structureId}&year=${selectedYear}&xMetric=${config.xMetric}&yMetric=${config.yMetric}&filter=${positioningFilter}&chart=${positioningChart}`,
+    integrationURL: `/integration?chart_id=positioning-scatter&structureId=${structureId}&year=${selectedYear}&xMetric=${config.xMetric}&yMetric=${config.yMetric}&chart=${positioningChart}&${filterParams.toString()}`,
     title: `${config.title}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
   };
 

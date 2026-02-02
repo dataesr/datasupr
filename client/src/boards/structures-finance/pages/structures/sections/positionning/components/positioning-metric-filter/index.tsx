@@ -23,12 +23,14 @@ export default function PositioningMetricFilter({
   onSelectCategory,
 }: PositioningMetricFilterProps) {
   const items: FilterItem[] = useMemo(() => {
-    return Object.entries(PREDEFINED_ANALYSES).map(([key, analysis]) => ({
-      key,
-      label: analysis.label,
-      category: analysis.category,
-      hint: analysis.showBase100 ? "base 100" : undefined,
-    }));
+    return Object.entries(PREDEFINED_ANALYSES)
+      .filter(([, analysis]) => !analysis.showBase100)
+      .map(([key, analysis]) => ({
+        key,
+        label: analysis.label,
+        category: analysis.category,
+        hint: analysis.showBase100 ? "base 100" : undefined,
+      }));
   }, []);
 
   const availableKeys = useMemo(() => {
@@ -36,6 +38,7 @@ export default function PositioningMetricFilter({
 
     const available = Object.keys(PREDEFINED_ANALYSES).filter((key) => {
       const analysis = PREDEFINED_ANALYSES[key as AnalysisKey];
+      if (analysis.showBase100) return false;
       return analysis.metrics.some((metricKey) => {
         return data.some((item) => {
           const value = item[metricKey];

@@ -2,13 +2,14 @@ import { Row, Col, Title, Text } from "@dataesr/dsfr-plus";
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFinanceAdvancedComparison } from "../../../../api/api";
-import PositioningFilters, {
-  FilterMode,
-} from "./components/positioning-filters";
+import PositioningFilters from "./components/positioning-filters";
 import PositioningMetricFilter from "./components/positioning-metric-filter";
 import PositioningScatterChart from "./charts/positioning-scatter";
 import PositioningComparisonBarChart from "./charts/positioning-comparison-bar";
-import { usePositioningFilteredData } from "./hooks/usePositioningFilteredData";
+import {
+  usePositioningFilteredData,
+  type PositioningFilters as PositioningFiltersType,
+} from "./hooks/usePositioningFilteredData";
 import { type AnalysisKey } from "../analyses/charts/evolution/config";
 import { Select } from "../../../../../../components/select";
 import "../styles.scss";
@@ -28,10 +29,16 @@ export function PositionnementSection({
 }: PositionnementSectionProps) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const filterMode =
-    (searchParams.get("positioningFilter") as FilterMode) || "all";
   const activeChart =
     (searchParams.get("positioningChart") as ChartView) || "comparison";
+
+  const [filters, setFilters] = useState<PositioningFiltersType>({
+    type: searchParams.get("positioningType") || "",
+    typologie: searchParams.get("positioningTypologie") || "",
+    region: searchParams.get("positioningRegion") || "",
+    rce: searchParams.get("positioningRce") || "",
+    devimmo: searchParams.get("positioningDevimmo") || "",
+  });
 
   const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisKey | null>(
     "ressources-total"
@@ -42,12 +49,26 @@ export function PositionnementSection({
 
   const updateSearchParams = (key: string, value: string) => {
     const params = new URLSearchParams(searchParams);
-    params.set(key, value);
+    if (value) {
+      params.set(key, value);
+    } else {
+      params.delete(key);
+    }
     setSearchParams(params);
   };
 
-  const setFilterMode = (mode: FilterMode) => {
-    updateSearchParams("positioningFilter", mode);
+  const handleFiltersChange = (newFilters: PositioningFiltersType) => {
+    setFilters(newFilters);
+    const params = new URLSearchParams(searchParams);
+    Object.entries(newFilters).forEach(([key, value]) => {
+      const paramKey = `positioning${key.charAt(0).toUpperCase()}${key.slice(1)}`;
+      if (value) {
+        params.set(paramKey, value);
+      } else {
+        params.delete(paramKey);
+      }
+    });
+    setSearchParams(params);
   };
 
   const setActiveChart = (chart: ChartView) => {
@@ -69,7 +90,7 @@ export function PositionnementSection({
     return comparisonData.items;
   }, [comparisonData]);
 
-  const filteredItems = usePositioningFilteredData(allItems, data, filterMode);
+  const filteredItems = usePositioningFilteredData(allItems, data, filters);
 
   const structureName =
     data?.etablissement_actuel_lib ||
@@ -151,8 +172,8 @@ export function PositionnementSection({
           <PositioningFilters
             data={allItems}
             currentStructure={data}
-            filterMode={filterMode}
-            onFilterModeChange={setFilterMode}
+            filters={filters}
+            onFiltersChange={handleFiltersChange}
           />
 
           <Row gutters className="fr-mb-3w">

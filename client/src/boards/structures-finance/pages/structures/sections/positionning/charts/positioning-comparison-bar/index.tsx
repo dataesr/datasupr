@@ -35,7 +35,22 @@ export default function PositioningComparisonBarChart({
 }: PositioningComparisonBarChartProps) {
   const [searchParams] = useSearchParams();
   const structureId = searchParams.get("structureId") || "";
-  const positioningFilter = searchParams.get("positioningFilter") || "all";
+
+  const filterParams = new URLSearchParams();
+  const positioningType = searchParams.get("positioningType");
+  const positioningTypologie = searchParams.get("positioningTypologie");
+  const positioningRegion = searchParams.get("positioningRegion");
+  const positioningRce = searchParams.get("positioningRce");
+  const positioningDevimmo = searchParams.get("positioningDevimmo");
+
+  if (positioningType) filterParams.set("positioningType", positioningType);
+  if (positioningTypologie)
+    filterParams.set("positioningTypologie", positioningTypologie);
+  if (positioningRegion)
+    filterParams.set("positioningRegion", positioningRegion);
+  if (positioningRce) filterParams.set("positioningRce", positioningRce);
+  if (positioningDevimmo)
+    filterParams.set("positioningDevimmo", positioningDevimmo);
 
   const { data: definitionsData } = useFinanceDefinitions();
 
@@ -129,7 +144,7 @@ export default function PositioningComparisonBarChart({
 
   const config = {
     id: "positioning-comparison-bar",
-    integrationURL: `/integration?chart_id=positioning-comparison-bar&structureId=${structureId}&year=${selectedYear}&metric=${selectedMetric}&topN=${topN}&filter=${positioningFilter}`,
+    integrationURL: `/integration?chart_id=positioning-comparison-bar&structureId=${structureId}&year=${selectedYear}&metric=${selectedMetric}&${filterParams.toString()}`,
     title: `${selectedMetricConfig.label}${selectedYear ? ` — ${selectedYear}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
   };
 
