@@ -107,7 +107,7 @@ export default function DisplayStructure() {
                 </Link>
               </div>
               <div>
-                <Link href={scanrUrl}>
+                <Link href={scanrUrl} target="_blank">
                   Voir la liste de ces projets sur scanR
                 </Link>
               </div>
