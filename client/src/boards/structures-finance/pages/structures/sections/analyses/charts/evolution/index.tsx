@@ -21,7 +21,6 @@ import {
 } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import RessourcesPropresEvolutionChart from "../../../resources/charts/ressources-propres-evolution";
-import MetricDefinitionsTable from "../../components/metric-definitions-table";
 import {
   METRICS_CONFIG,
   PREDEFINED_ANALYSES,
@@ -29,6 +28,7 @@ import {
   type MetricKey,
   type AnalysisKey,
 } from "./config";
+import MetricDefinitionsTable from "../../../../../../components/layouts/metric-definitions-table";
 
 const FINANCIAL_HEALTH_INDICATORS = [
   "resultat_net_comptable",

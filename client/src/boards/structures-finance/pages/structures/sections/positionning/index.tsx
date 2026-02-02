@@ -15,9 +15,9 @@ import PositioningFilters, {
 import PositioningScatterChart from "./charts/positioning-scatter";
 import PositioningComparisonBarChart from "./charts/positioning-comparison-bar";
 import { usePositioningFilteredData } from "./hooks/usePositioningFilteredData";
-import MetricDefinitionsTable from "../analyses/components/metric-definitions-table";
 import "../styles.scss";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
 
 interface PositionnementSectionProps {
   data: any;

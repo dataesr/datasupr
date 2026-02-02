@@ -1,6 +1,6 @@
 import { Row, Col, Text } from "@dataesr/dsfr-plus";
 import ComparisonBarChart from "./chart/comparison-bar";
-import MetricDefinitionsTable from "../../../structures/sections/analyses/components/metric-definitions-table";
+import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
 
 interface ComparaisonSectionProps {
   data: any[];

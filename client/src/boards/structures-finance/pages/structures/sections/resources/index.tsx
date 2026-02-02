@@ -3,8 +3,8 @@ import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
 import RessourcesPropresChart from "./charts/ressources-propres";
-import MetricDefinitionsTable from "../analyses/components/metric-definitions-table";
 import "../styles.scss";
+import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
