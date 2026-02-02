@@ -200,7 +200,7 @@ export const createPositioningComparisonBarOptions = (
           y: d.value,
           color: d.isCurrentStructure
             ? "var(--background-flat-info)"
-            : "var(--background-contrast-blue-france)",
+            : "var(--text-default-grey)",
         })),
       },
     ],

@@ -12,7 +12,7 @@ interface MetricDefinitionsTableProps {
 export default function MetricDefinitionsTable({
   metricKeys,
 }: MetricDefinitionsTableProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(metricKeys.length < 3);
   const { data: definitions, isLoading } = useFinanceDefinitions();
   const relevantDefinitions = useMemo(() => {
     if (!definitions || !metricKeys) return [];
