@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
-import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
-import { CHART_COLORS } from "../../../../../../constants/colors";
+import { createChartOptions } from "../../../../../../../components/chart-wrapper/default-options";
+import { CHART_COLORS } from "../../../../../constants/colors";
 
 export interface ComparisonBarConfig {
   metric: string;
@@ -19,7 +19,8 @@ export const createComparisonBarOptions = (
       return value != null && !isNaN(value) && value > 0;
     })
     .map((item: any) => ({
-      name: item.etablissement_actuel_lib || "Sans nom",
+      name:
+        item.etablissement_actuel_lib || item.etablissement_lib || "Sans nom",
       value: item[config.metric],
     }))
     .sort((a, b) => b.value - a.value)

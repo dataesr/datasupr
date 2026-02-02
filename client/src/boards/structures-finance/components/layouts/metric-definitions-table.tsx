@@ -3,6 +3,7 @@ import "./metric-definitions-table.scss";
 import { Title } from "@dataesr/dsfr-plus";
 import { useFinanceDefinitions } from "../../pages/definitions/api";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import { parseMarkdown } from "../../../../utils/format";
 
 interface MetricDefinitionsTableProps {
   metricKeys: string[];
@@ -97,7 +98,12 @@ export default function MetricDefinitionsTable({
                   />
                   <div className="section-content">
                     <strong className="section-label">Définition</strong>
-                    <p className="section-text">{def.definition}</p>
+                    <p
+                      className="fr-mb-2w fr-text--sm"
+                      dangerouslySetInnerHTML={{
+                        __html: parseMarkdown(def.definition),
+                      }}
+                    />
                   </div>
                 </div>
               )}

@@ -9,7 +9,7 @@ import {
   ProduitsEffectifsSection,
   ScspEncadrementSection,
   ScspRessourcesSection,
-  ComparaisonSection,
+  AnalyseSection,
 } from "../sections/sections";
 
 export default function NationalContent() {
@@ -22,12 +22,6 @@ export default function NationalContent() {
   const selectedRce = searchParams.get("rce") || "";
   const selectedDevimmo = searchParams.get("devimmo") || "";
   const activeSection = searchParams.get("section") || "produits-vs-etudiants";
-  const selectedMetric = searchParams.get("metric") || "";
-
-  const handleMetricChange = (metric: string) => {
-    searchParams.set("metric", metric);
-    setSearchParams(searchParams);
-  };
 
   useEffect(() => {
     if (!searchParams.get("section")) {
@@ -86,14 +80,12 @@ export default function NationalContent() {
         );
       case "comparison":
         return (
-          <ComparaisonSection
+          <AnalyseSection
             data={filteredItems}
             selectedYear={selectedYear}
             selectedType={selectedType}
             selectedTypologie={selectedTypologie}
             selectedRegion={selectedRegion}
-            selectedMetric={selectedMetric}
-            onMetricChange={handleMetricChange}
           />
         );
       default:
@@ -108,7 +100,7 @@ export default function NationalContent() {
       {isLoadingComparison && <DefaultSkeleton height="400px" />}
 
       {!isLoadingComparison && filteredItems.length === 0 && (
-        <div className="fr-alert fr-alert--warning" role="alert">
+        <div className="fr-alert fr-alert--warning fr-mt-3w" role="alert">
           <Title as="h2" look="h6" className="fr-alert__title">
             Aucun résultat
           </Title>
