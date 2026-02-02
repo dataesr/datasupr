@@ -5,6 +5,7 @@ import ChartWrapper from "../../../../../../../components/chart-wrapper/index.ts
 import { createComparisonBarOptions } from "./options.tsx";
 import Select from "../../../../../../../components/select/index.tsx";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
+import MetricDefinitionsTable from "../../../../../components/layouts/metric-definitions-table";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
@@ -144,33 +145,38 @@ export default function NationalChart({
           </p>
         </div>
       ) : (
-        <ChartWrapper
-          config={config}
-          options={chartOptions}
-          renderData={() => (
-            <RenderData
-              data={data}
-              metric={activeMetricKey!}
-              metricLabel={metricConfig?.label || activeMetricKey || ""}
-              topN={topN ?? data.length}
-              format={(value: number) => {
-                if (!metricConfig) return String(value);
-                switch (metricConfig.format) {
-                  case "euro":
-                    return `${(value / 1000000).toFixed(1)} M€`;
-                  case "number":
-                    return value.toLocaleString("fr-FR");
-                  case "percent":
-                    return `${value.toFixed(1)}%`;
-                  case "decimal":
-                    return value.toFixed(2);
-                  default:
-                    return String(value);
-                }
-              }}
-            />
-          )}
-        />
+        <>
+          <ChartWrapper
+            config={config}
+            options={chartOptions}
+            renderData={() => (
+              <RenderData
+                data={data}
+                metric={activeMetricKey!}
+                metricLabel={metricConfig?.label || activeMetricKey || ""}
+                topN={topN ?? data.length}
+                format={(value: number) => {
+                  if (!metricConfig) return String(value);
+                  switch (metricConfig.format) {
+                    case "euro":
+                      return `${(value / 1000000).toFixed(1)} M€`;
+                    case "number":
+                      return value.toLocaleString("fr-FR");
+                    case "percent":
+                      return `${value.toFixed(1)}%`;
+                    case "decimal":
+                      return value.toFixed(2);
+                    default:
+                      return String(value);
+                  }
+                }}
+              />
+            )}
+          />
+          <MetricDefinitionsTable
+            metricKeys={activeMetricKey ? [activeMetricKey] : []}
+          />
+        </>
       )}
     </div>
   );
