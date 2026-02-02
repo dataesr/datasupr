@@ -119,7 +119,8 @@ export default function PositioningComparisonBarChart({
   const selectedMetricConfig = useMemo(() => {
     const config = METRICS_CONFIG[selectedMetric as MetricKey];
     if (!config) return METRICS_CONFIG["effectif_sans_cpge"];
-    return config;
+    const cleanLabel = config.label.replace(/ à prix courant$/i, "");
+    return { ...config, label: cleanLabel };
   }, [selectedMetric]);
 
   const metricThreshold = useMemo((): ThresholdConfig | null => {
