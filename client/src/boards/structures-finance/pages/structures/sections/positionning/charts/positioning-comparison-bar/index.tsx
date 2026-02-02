@@ -4,6 +4,8 @@ import { createPositioningComparisonBarOptions } from "./options";
 import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import { useFinanceDefinitions } from "../../../../../definitions/api";
+import { useFinanceAdvancedComparison } from "../../../../../../api/api";
+import { usePositioningFilteredData } from "../../hooks/usePositioningFilteredData";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
@@ -15,26 +17,29 @@ import {
   ThresholdLegend,
   type ThresholdConfig,
 } from "../../../../../../config/index";
+import DefaultSkeleton from "../../../../../../../../components/charts-skeletons/default";
 
 interface PositioningComparisonBarChartProps {
-  data: any[];
+  data?: any[];
   currentStructureId?: string;
   currentStructureName?: string;
   selectedYear?: string;
-  selectedAnalysis: AnalysisKey | null;
-  topN: number;
+  selectedAnalysis?: AnalysisKey | null;
+  topN?: number;
 }
 
 export default function PositioningComparisonBarChart({
-  data,
-  currentStructureId,
-  currentStructureName,
-  selectedYear,
-  selectedAnalysis,
-  topN,
+  data: propData,
+  currentStructureId: propCurrentStructureId,
+  currentStructureName: propCurrentStructureName,
+  selectedYear: propSelectedYear,
+  selectedAnalysis: propSelectedAnalysis,
+  topN: propTopN,
 }: PositioningComparisonBarChartProps) {
   const [searchParams] = useSearchParams();
   const structureId = searchParams.get("structureId") || "";
+  const year = propSelectedYear || searchParams.get("year") || "";
+  const metricParam = searchParams.get("metric") || "";
 
   const filterParams = new URLSearchParams();
   const positioningType = searchParams.get("positioningType");
@@ -51,6 +56,57 @@ export default function PositioningComparisonBarChart({
   if (positioningRce) filterParams.set("positioningRce", positioningRce);
   if (positioningDevimmo)
     filterParams.set("positioningDevimmo", positioningDevimmo);
+
+  const { data: apiData, isLoading } = useFinanceAdvancedComparison(
+    {
+      annee: year,
+      type: "",
+      typologie: "",
+      region: "",
+    },
+    !propData && !!year
+  );
+
+  const allItems = useMemo(() => {
+    if (propData) return propData;
+    if (!apiData || !apiData.items) return [];
+    return apiData.items;
+  }, [propData, apiData]);
+
+  const filters = useMemo(
+    () => ({
+      type: positioningType || "",
+      typologie: positioningTypologie || "",
+      region: positioningRegion || "",
+      rce: positioningRce || "",
+      devimmo: positioningDevimmo || "",
+    }),
+    [
+      positioningType,
+      positioningTypologie,
+      positioningRegion,
+      positioningRce,
+      positioningDevimmo,
+    ]
+  );
+
+  const data = usePositioningFilteredData(allItems, null, filters);
+
+  const currentStructureId = propCurrentStructureId || structureId;
+  const currentStructureName = propCurrentStructureName || "";
+  const topN = propTopN ?? data.length;
+
+  const selectedAnalysis = useMemo(() => {
+    if (propSelectedAnalysis !== undefined) return propSelectedAnalysis;
+    if (!metricParam) return "ressources-total" as AnalysisKey;
+
+    for (const [key, analysis] of Object.entries(PREDEFINED_ANALYSES)) {
+      if (analysis.metrics.some((m) => m === metricParam)) {
+        return key as AnalysisKey;
+      }
+    }
+    return "ressources-total" as AnalysisKey;
+  }, [propSelectedAnalysis, metricParam]);
 
   const { data: definitionsData } = useFinanceDefinitions();
 
@@ -144,9 +200,17 @@ export default function PositioningComparisonBarChart({
 
   const config = {
     id: "positioning-comparison-bar",
-    integrationURL: `/integration?chart_id=positioning-comparison-bar&structureId=${structureId}&year=${selectedYear}&metric=${selectedMetric}&${filterParams.toString()}`,
-    title: `${selectedMetricConfig.label}${selectedYear ? ` — ${selectedYear}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
+    integrationURL: `/integration?chart_id=positioning-comparison-bar&structureId=${structureId}&year=${year}&metric=${selectedMetric}&${filterParams.toString()}`,
+    title: `${selectedMetricConfig.label}${year ? ` — ${year}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
   };
+
+  if (isLoading) {
+    return (
+      <div className="fr-callout">
+        <DefaultSkeleton />
+      </div>
+    );
+  }
 
   return (
     <div>
