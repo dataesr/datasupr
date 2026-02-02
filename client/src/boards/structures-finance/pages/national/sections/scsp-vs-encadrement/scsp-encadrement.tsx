@@ -1,6 +1,6 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ScatterChart from "../../charts/scatter";
-import MetricDefinitionsTable from "../../../structures/sections/analyses/components/metric-definitions-table";
+import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
 
 interface ScspEncadrementSectionProps {
   data: any[];
