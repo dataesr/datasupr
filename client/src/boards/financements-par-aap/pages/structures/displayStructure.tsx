@@ -1,4 +1,4 @@
-import { Col, Container, Link, Row, Text, Title } from "@dataesr/dsfr-plus";
+import { Alert, Col, Container, Link, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -97,7 +97,7 @@ export default function DisplayStructure() {
                 <span aria-hidden="true" className="fr-icon-map-pin-2-fill fr-mr-1w"></span>
                 {structureInfo?.region}
               </Text>
-              
+
             </Col>
             <Col>
               <div className="fr-mb-2w">
@@ -131,6 +131,42 @@ export default function DisplayStructure() {
               >
                 Menu
               </button>
+              <Row horizontalAlign="right" style={{ float: "right" }}>
+                <Col md="1" style={{ display: "contents" }}>
+                  <select
+                    className="fr-select"
+                    onChange={(e) => handleYearMinChange(e.target.value)}
+                    style={{ width: "fit-content" }}
+                    value={yearMin}
+                  >
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                </Col>
+                <Col></Col>
+                <Col md="1" style={{ display: "contents" }}>
+                  <>
+                  <Text className="fr-mx-1w" style={{ margin: "auto" }}>
+                    à
+                  </Text>
+                  <select
+                    className="fr-select"
+                    onChange={(e) => handleYearMaxChange(e.target.value)}
+                    style={{ width: "fit-content" }}
+                    value={yearMax}
+                  >
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  </>
+                </Col>
+              </Row>
               <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
                 {sections.map((item) => (
                   <li key={item.id} className="fr-nav__item">
@@ -143,36 +179,17 @@ export default function DisplayStructure() {
                     </button>
                   </li>
                 ))}
-                <li className="fr-nav__item fundings-ml-auto">
-                  <select
-                    className="fr-select"
-                    onChange={(e) => handleYearMinChange(e.target.value)}
-                    value={yearMin}
-                  >
-                    {[...years].sort((a, b) => b - a).map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </li>
-                <li className="fr-nav__item fr-ml-1w">
-                  <select
-                    className="fr-select"
-                    onChange={(e) => handleYearMaxChange(e.target.value)}
-                    value={yearMax}
-                  >
-                    {[...years].sort((a, b) => b - a).map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </li>
               </ul>
             </nav>
           </Col>
         </Row>
+        {((Number(yearMax) >= 2023) || (Number(yearMin) >= 2023)) &&
+          <div style={{ float: "right" }}>
+            <div>
+              <Alert description="Les sources disponibles ne fournissent que des données provisoires pour 2024 et 2025" size="sm" variant="warning" />
+            </div>
+          </div>
+        }
         {(section === "financements") && (
           <>
             <Cards />
@@ -189,7 +206,7 @@ export default function DisplayStructure() {
           </>
         )}
         {(section === "evolution") && (
-          <Row gutters>
+          <Row gutters style={{ clear: "both" }}>
             <Col>
               <ProjectsOverTimeByStructure name={label} />
             </Col>
@@ -197,7 +214,7 @@ export default function DisplayStructure() {
         )}
         {(section === "partenaires") && (
           <>
-            <Row gutters>
+            <Row gutters style={{ clear: "both" }}>
               <Col>
                 <FrenchPartnersByStructure name={label} />
               </Col>
@@ -210,7 +227,7 @@ export default function DisplayStructure() {
           </>
         )}
         {(section === "laboratoires") && (
-          <Row gutters>
+          <Row gutters style={{ clear: "both" }}>
             <Col>
               <LaboratoriesByStructure name={label} />
             </Col>
@@ -218,7 +235,7 @@ export default function DisplayStructure() {
         )}
         {(section === "disciplines") && (
           <>
-            <Row gutters>
+            <Row gutters style={{ clear: "both" }}>
               <Col>
                 <ClassificationsByStructure name={label} />
               </Col>

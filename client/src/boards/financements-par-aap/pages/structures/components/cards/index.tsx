@@ -83,7 +83,7 @@ export default function Cards() {
 
   return (
     <>
-      <Row gutters>
+      <Row gutters style={{ clear: "both" }}>
         <Col xs="12" md="2" key={`card-projects-intro`}>
           <div
             aria-label={`Nombre de projets financés ${getYearRangeLabel({ yearMax, yearMin })} par financeur`}
