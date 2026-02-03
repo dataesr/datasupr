@@ -9,7 +9,7 @@ env:
   # Must match k8s deployment name
   DEPLOYMENT: dataesr
   DEPLOYMENT_NAMESPACE: dataesr
-  DEPLOYMENT_URL: https://data.dataesr.ovh
+  DEPLOYMENT_URL: https://tableaux.dataesr.ovh
   MM_NOTIFICATION_CHANNEL: bots
 
 jobs:
