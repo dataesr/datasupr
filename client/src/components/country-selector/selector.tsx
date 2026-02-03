@@ -44,6 +44,15 @@ export default function CountrySelector() {
     return countryLabel.includes(searchQuery.toLowerCase());
   });
 
+  const getCountryLabel = () => {
+    const country = allCountries.find((c) => c.cca3 === selectedCountry);
+    if (!country) return "";
+    if (currentLang === "fr" && country.translations?.fra) {
+      return country?.translations?.fra?.common;
+    }
+    return country.name.common;
+  };
+
   const baseUrl =
     pathname +
     "?" +
@@ -63,7 +72,7 @@ export default function CountrySelector() {
         size="sm"
         variant="tertiary"
       >
-        {getI18nLabel(i18n, "selectedCountry")} {getFlagEmoji(getIso2(selectedCountry))}
+        {getI18nLabel(i18n, "selectedCountry")} {getCountryLabel()} {getFlagEmoji(getIso2(selectedCountry))}
       </Button>
 
       <Modal isOpen={isModalOpen} hide={() => setIsModalOpen(false)}>
