@@ -396,7 +396,7 @@ export default function EvolutionChart({
                   />
                   <SegmentedElement
                     checked={showPart}
-                    label="Part"
+                    label="%"
                     onClick={() => setShowPart(true)}
                     value="part"
                   />

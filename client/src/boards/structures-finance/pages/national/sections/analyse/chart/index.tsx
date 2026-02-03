@@ -256,7 +256,7 @@ export default function NationalChart({
                   />
                   <SegmentedElement
                     checked={showPart}
-                    label="Part"
+                    label="%"
                     onClick={() => setShowPart(true)}
                     value="part"
                   />

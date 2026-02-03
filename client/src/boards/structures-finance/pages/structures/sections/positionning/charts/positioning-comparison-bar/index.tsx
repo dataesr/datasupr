@@ -271,7 +271,7 @@ export default function PositioningComparisonBarChart({
               />
               <SegmentedElement
                 checked={showPart}
-                label="Part"
+                label="%"
                 onClick={() => setShowPart(true)}
                 value="part"
               />
