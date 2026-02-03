@@ -1,20 +1,20 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import AdminRoutes from "./boards/admin/routes.tsx";
-import AtlasRoutes from "./boards/atlas/routes.tsx";
-import DatasuprDocRoutes from "./boards/datasupr-doc/routes.tsx";
-import EuropeanProjectsRoutes from "./boards/european-projects/routes.tsx";
-import FacultyMembersRoutes from "./boards/faculty-members/routes.tsx";
-import FundingsRoutes from "./boards/financements-par-aap/routes.tsx";
-import GraduatesRoutes from "./boards/graduates/routes.tsx";
-import HomePage from "./boards/home-page.tsx";
-import Integration from "./boards/integration/index.tsx";
-import OpenAlexRoutes from "./boards/open-alex/routes.tsx";
-import StructuresFinanceRoutes from "./boards/structures-finance/routes.tsx";
-import TedsRoutes from "./boards/teds/routes.tsx";
-import TemplateRoutes from "./boards/template/routes.tsx";
-import CookiePolicyPage from "./components/cookies/cookie-policy-page/index.tsx";
-import NotFoundPage from "./components/not-found-page.tsx";
+import AdminRoutes from "../boards/admin/routes.tsx";
+import AtlasRoutes from "../boards/atlas/routes.tsx";
+import DatasuprDocRoutes from "../boards/datasupr-doc/routes.tsx";
+import EuropeanProjectsRoutes from "../boards/european-projects/routes.tsx";
+import FacultyMembersRoutes from "../boards/faculty-members/routes.tsx";
+import FundingsRoutes from "../boards/financements-par-aap/routes.tsx";
+import GraduatesRoutes from "../boards/graduates/routes.tsx";
+import HomePage from "../boards/home-page.tsx";
+import Integration from "../boards/integration/index.tsx";
+import OpenAlexRoutes from "../boards/open-alex/routes.tsx";
+import StructuresFinanceRoutes from "../boards/structures-finance/routes.tsx";
+import TedsRoutes from "../boards/teds/routes.tsx";
+import TemplateRoutes from "../boards/template/routes.tsx";
+import CookiePolicyPage from "../components/cookies/cookie-policy-page/index.tsx";
+import NotFoundPage from "../components/not-found-page.tsx";
 
 
 export default function Router() {
