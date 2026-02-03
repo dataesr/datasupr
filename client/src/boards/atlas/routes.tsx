@@ -1,23 +1,25 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 
-import AtlasHeader from "./index.tsx";
-import { General } from "./pages/general.tsx";
-import { FieldsRouter } from "./pages/fields/index.tsx";
-import { Sectors } from "./pages/sectors.tsx";
-import { Genders } from "./pages/genders.tsx";
-import { OtherGeographicalLevels } from "./components/other-geographical-levels.tsx";
+import NotFoundPage from "../../components/not-found-page.tsx";
 import { Layout } from "./components/layout/layout.tsx";
-import SiteMap from "./pages/static-pages/site-map.tsx";
-import Accessibility from "./pages/static-pages/accessibility.tsx";
-import LegalMentions from "./pages/static-pages/legal-mentions.tsx";
-import CookieManagement from "./pages/static-pages/cookie-management.tsx";
-import Contact from "./pages/static-pages/contact.tsx";
+import { OtherGeographicalLevels } from "./components/other-geographical-levels.tsx";
 import { AtlasProvider } from "./context.tsx";
+import AtlasHeader from "./index.tsx";
+import { FieldsRouter } from "./pages/fields/index.tsx";
+import { Genders } from "./pages/genders.tsx";
+import { General } from "./pages/general.tsx";
+import { Sectors } from "./pages/sectors.tsx";
+import Accessibility from "./pages/static-pages/accessibility.tsx";
+import Contact from "./pages/static-pages/contact.tsx";
+import CookieManagement from "./pages/static-pages/cookie-management.tsx";
+import LegalMentions from "./pages/static-pages/legal-mentions.tsx";
+import SiteMap from "./pages/static-pages/site-map.tsx";
 
 import "highcharts/modules/accessibility";
-import "highcharts/modules/exporting";
 import "highcharts/modules/export-data";
+import "highcharts/modules/exporting";
 import Methodology from "./pages/static-pages/methodology.tsx";
+
 
 export default function AtlasRoutes() {
   return (
@@ -44,6 +46,7 @@ export default function AtlasRoutes() {
           <Route path="gestion-des-cookies" element={<CookieManagement />} />
           <Route path="contact" element={<Contact />} />
         </Route>
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </AtlasProvider>
   );

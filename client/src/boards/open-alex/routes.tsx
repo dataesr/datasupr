@@ -1,7 +1,9 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes } from "react-router-dom";
 
-import Home from './index.tsx';
+import NotFoundPage from "../../components/not-found-page.tsx";
 import { Layout } from "../../layout/layout.tsx";
+import Home from "./index.tsx";
+
 
 export default function OpenAlexRoutes() {
   return (
@@ -9,6 +11,7 @@ export default function OpenAlexRoutes() {
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
       </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
