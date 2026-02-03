@@ -46,7 +46,10 @@ export default function StructureSelector({ setStructures }) {
         }
       ).then((response) => response.json()),
   });
-  const counties = (dataCounties?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket.key);
+  const counties = (dataCounties?.aggregations?.by_county?.buckets ?? []).map((bucket) => ({
+    label: bucket.key,
+    value: bucket.key.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+  })).sort((a, b) => a.value - b.value);
 
   const bodyTypologies: any = {
     ...getEsQuery({}),
@@ -154,9 +157,9 @@ export default function StructureSelector({ setStructures }) {
               value={county}
             >
               <option value="*">Toutes les régions</option>
-              {counties.map((county: string) => (
-                <option key={county} value={county}>
-                  {county}
+              {counties.map((county) => (
+                <option key={county.value} value={county.value}>
+                  {county.label}
                 </option>
               ))}
             </select>
