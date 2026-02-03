@@ -113,6 +113,23 @@ export default function EvolutionChart({
 
   const analysisConfig = PREDEFINED_ANALYSES[selectedAnalysis];
 
+  const getMetricLabel = useMemo(() => {
+    return (metricKey: MetricKey): string => {
+      if (!definitionsData)
+        return METRICS_CONFIG[metricKey]?.label || metricKey;
+
+      for (const cat of definitionsData) {
+        for (const sr of cat.sousRubriques) {
+          const def = sr.definitions.find((d) => d.indicateur === metricKey);
+          if (def?.libelle) {
+            return def.libelle;
+          }
+        }
+      }
+      return METRICS_CONFIG[metricKey]?.label || metricKey;
+    };
+  }, [definitionsData]);
+
   const baseMetrics = useMemo(() => {
     return [...analysisConfig.metrics] as MetricKey[];
   }, [analysisConfig]);
@@ -175,7 +192,7 @@ export default function EvolutionChart({
   const nominalMetric = useMemo(() => {
     if (!hasIPCMetrics) return null;
     const nominal = baseMetrics.find((m) => !m.endsWith("_ipc"));
-    return nominal ? METRICS_CONFIG[nominal].label : null;
+    return nominal ? METRICS_CONFIG[nominal]?.label : null;
   }, [baseMetrics, hasIPCMetrics]);
 
   const showBase100 = useMemo(() => {
@@ -270,7 +287,7 @@ export default function EvolutionChart({
     const stackedConfig = {
       id: "evolution-stacked",
       integrationURL: `/integration?chart_id=evolution-stacked&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
-      title: `${analysisConfig.label}${etabName ? ` — ${etabName}` : ""}`,
+      title: `${getMetricLabel(baseMetrics[0])}${etabName ? ` — ${etabName}` : ""}`,
       comment: periodText
         ? {
             fr: (
@@ -327,14 +344,13 @@ export default function EvolutionChart({
     const singleConfig = {
       id: "evolution-single",
       integrationURL: `/integration?chart_id=evolution-single&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
-      title: `${PREDEFINED_ANALYSES[selectedAnalysis].label}${etabName ? ` — ${etabName}` : ""}`,
+      title: `${getMetricLabel(baseMetrics[0])}${etabName ? ` — ${etabName}` : ""}`,
       comment: periodText
         ? {
             fr: (
               <>
-                Évolution de{" "}
-                {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} sur la
-                période {periodText}.
+                Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()}{" "}
+                sur la période {periodText}.
               </>
             ),
           }
@@ -343,47 +359,51 @@ export default function EvolutionChart({
 
     return (
       <>
-        {hasIPCMetrics && (
-          <div className="fr-mb-2w">
-            <SegmentedControl
-              className="fr-segmented--sm"
-              name="evolution-ipc-mode"
-            >
-              <SegmentedElement
-                checked={!showIPC}
-                label={nominalMetric || "Valeur nominale"}
-                onClick={() => setShowIPC(false)}
-                value="nominal"
-              />
-              <SegmentedElement
-                checked={showIPC}
-                label={`${nominalMetric || "Valeur"} à prix constant`}
-                onClick={() => setShowIPC(true)}
-                value="constant"
-              />
-            </SegmentedControl>
-          </div>
-        )}
-        {partMetricKey && (
-          <div className="fr-mb-2w">
-            <SegmentedControl
-              className="fr-segmented--sm"
-              name="evolution-part-mode"
-            >
-              <SegmentedElement
-                checked={!showPart}
-                label="Valeur"
-                onClick={() => setShowPart(false)}
-                value="value"
-              />
-              <SegmentedElement
-                checked={showPart}
-                label="Part"
-                onClick={() => setShowPart(true)}
-                value="part"
-              />
-            </SegmentedControl>
-          </div>
+        {(hasIPCMetrics || partMetricKey) && (
+          <Row gutters className="fr-mb-2w">
+            {hasIPCMetrics && (
+              <Col xs="12" md="6">
+                <SegmentedControl
+                  className="fr-segmented--sm"
+                  name="evolution-ipc-mode"
+                >
+                  <SegmentedElement
+                    checked={!showIPC}
+                    label={`${nominalMetric || "Valeur"} à prix courant`}
+                    onClick={() => setShowIPC(false)}
+                    value="nominal"
+                  />
+                  <SegmentedElement
+                    checked={showIPC}
+                    label={`${nominalMetric || "Valeur"} à prix constant`}
+                    onClick={() => setShowIPC(true)}
+                    value="constant"
+                  />
+                </SegmentedControl>
+              </Col>
+            )}
+            {partMetricKey && (
+              <Col xs="12" md="6">
+                <SegmentedControl
+                  className="fr-segmented--sm"
+                  name="evolution-part-mode"
+                >
+                  <SegmentedElement
+                    checked={!showPart}
+                    label="Valeur"
+                    onClick={() => setShowPart(false)}
+                    value="value"
+                  />
+                  <SegmentedElement
+                    checked={showPart}
+                    label="Part"
+                    onClick={() => setShowPart(true)}
+                    value="part"
+                  />
+                </SegmentedControl>
+              </Col>
+            )}
+          </Row>
         )}
         <ChartWrapper
           config={singleConfig}
@@ -412,14 +432,13 @@ export default function EvolutionChart({
     const dualConfig = {
       id: "evolution-dual",
       integrationURL: `/integration?chart_id=evolution-dual&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
-      title: `${PREDEFINED_ANALYSES[selectedAnalysis].label}${etabName ? ` — ${etabName}` : ""}`,
+      title: `${getMetricLabel(baseMetrics[0])}${etabName ? ` — ${etabName}` : ""}`,
       comment: periodText
         ? {
             fr: (
               <>
-                Évolution de{" "}
-                {METRICS_CONFIG[selectedMetrics[0]].label.toLowerCase()} et{" "}
-                {METRICS_CONFIG[selectedMetrics[1]].label.toLowerCase()} sur la
+                Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()}{" "}
+                et {getMetricLabel(selectedMetrics[1]).toLowerCase()} sur la
                 période {periodText}.
               </>
             ),
@@ -430,25 +449,27 @@ export default function EvolutionChart({
     return (
       <>
         {hasIPCMetrics && (
-          <div className="fr-mb-2w">
-            <SegmentedControl
-              className="fr-segmented--sm"
-              name="evolution-ipc-mode"
-            >
-              <SegmentedElement
-                checked={!showIPC}
-                label={nominalMetric || "Valeur nominale"}
-                onClick={() => setShowIPC(false)}
-                value="nominal"
-              />
-              <SegmentedElement
-                checked={showIPC}
-                label={`${nominalMetric || "Valeur"} à prix constant`}
-                onClick={() => setShowIPC(true)}
-                value="constant"
-              />
-            </SegmentedControl>
-          </div>
+          <Row gutters className="fr-mb-2w">
+            <Col xs="12" md="6">
+              <SegmentedControl
+                className="fr-segmented--sm"
+                name="evolution-ipc-mode"
+              >
+                <SegmentedElement
+                  checked={!showIPC}
+                  label={`${nominalMetric || "Valeur"} à prix courant`}
+                  onClick={() => setShowIPC(false)}
+                  value="nominal"
+                />
+                <SegmentedElement
+                  checked={showIPC}
+                  label={`${nominalMetric || "Valeur"} à prix constant`}
+                  onClick={() => setShowIPC(true)}
+                  value="constant"
+                />
+              </SegmentedControl>
+            </Col>
+          </Row>
         )}
         <ChartWrapper
           config={dualConfig}
@@ -472,7 +493,7 @@ export default function EvolutionChart({
     const comparisonConfig = {
       id: "evolution-comparison",
       integrationURL: `/integration?chart_id=evolution-comparison&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
-      title: `${PREDEFINED_ANALYSES[selectedAnalysis].label}${etabName ? ` — ${etabName}` : ""}`,
+      title: `${getMetricLabel(baseMetrics[0])}${etabName ? ` — ${etabName}` : ""}`,
       comment: periodText
         ? { fr: <>Comparaison en base 100 sur la période {periodText}.</> }
         : undefined,
@@ -506,7 +527,7 @@ export default function EvolutionChart({
                       config={{
                         id: `evolution-metric${index + 1}`,
                         integrationURL: `/integration?chart_id=evolution-metric${index + 1}&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
-                        title: METRICS_CONFIG[metricKey].label,
+                        title: getMetricLabel(metricKey),
                       }}
                       options={createEvolutionChartOptions(
                         data,
@@ -531,7 +552,7 @@ export default function EvolutionChart({
                     config={{
                       id: `evolution-metric3`,
                       integrationURL: `/integration?chart_id=evolution-metric3&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
-                      title: METRICS_CONFIG[selectedMetrics[2]].label,
+                      title: getMetricLabel(selectedMetrics[2]),
                     }}
                     options={createEvolutionChartOptions(
                       data,
@@ -558,7 +579,7 @@ export default function EvolutionChart({
                     config={{
                       id: `evolution-metric${index + 1}`,
                       integrationURL: `/integration?chart_id=evolution-metric${index + 1}&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
-                      title: METRICS_CONFIG[metricKey].label,
+                      title: getMetricLabel(metricKey),
                     }}
                     options={createEvolutionChartOptions(
                       data,

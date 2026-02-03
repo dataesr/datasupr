@@ -1,6 +1,12 @@
 import { useMemo, useState } from "react";
 import Highcharts from "highcharts";
-import { Text, Row, Col } from "@dataesr/dsfr-plus";
+import {
+  Text,
+  Row,
+  Col,
+  SegmentedControl,
+  SegmentedElement,
+} from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../components/chart-wrapper/index.tsx";
 import { createComparisonBarOptions } from "./options.tsx";
 import Select from "../../../../../../../components/select/index.tsx";
@@ -10,6 +16,7 @@ import { useFinanceDefinitions } from "../../../../definitions/api";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
+  METRIC_TO_PART,
   type AnalysisKey,
   type MetricKey,
 } from "../../../../structures/sections/analyses/charts/evolution/config.ts";
@@ -39,8 +46,26 @@ export default function NationalChart({
 }: NationalChartProps) {
   const [topN, setTopN] = useState<number | null>(20);
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
+  const [showPart, setShowPart] = useState(false);
 
   const { data: definitionsData } = useFinanceDefinitions();
+
+  const getMetricLabel = useMemo(() => {
+    return (metricKey: MetricKey): string => {
+      if (!definitionsData)
+        return METRICS_CONFIG[metricKey]?.label || metricKey;
+
+      for (const cat of definitionsData) {
+        for (const sr of cat.sousRubriques) {
+          const def = sr.definitions.find((d) => d.indicateur === metricKey);
+          if (def?.libelle) {
+            return def.libelle;
+          }
+        }
+      }
+      return METRICS_CONFIG[metricKey]?.label || metricKey;
+    };
+  }, [definitionsData]);
 
   const analysisConfig = PREDEFINED_ANALYSES[selectedAnalysis];
   const isStacked = (analysisConfig as any)?.chartType === "stacked";
@@ -48,24 +73,75 @@ export default function NationalChart({
   const activeMetricKey = useMemo(() => {
     if (!analysisConfig) return null;
 
+    let baseMetric: MetricKey;
+
     if (isStacked) {
       const metrics = analysisConfig.metrics.filter(
         (metric) =>
           !metric.includes("_ipc") && metric !== "effectif_sans_cpge_veto"
       );
-      return (metrics[selectedMetricIndex] || metrics[0]) as MetricKey;
+      baseMetric = (metrics[selectedMetricIndex] || metrics[0]) as MetricKey;
+    } else {
+      const nonIpcMetric = analysisConfig.metrics.find(
+        (metric) => !metric.includes("_ipc")
+      );
+      baseMetric = nonIpcMetric as MetricKey;
     }
 
-    const nonIpcMetric = analysisConfig.metrics.find(
-      (metric) => !metric.includes("_ipc")
-    );
+    // Si le mode est "part" et que la version part existe, utiliser celle-ci
+    if (showPart && baseMetric) {
+      const partMetric = METRIC_TO_PART[baseMetric];
+      if (partMetric && METRICS_CONFIG[partMetric]) {
+        const hasPartData = data?.some((item: any) => {
+          const value = item[partMetric];
+          return value != null && value !== 0;
+        });
+        if (hasPartData) {
+          return partMetric;
+        }
+      }
+    }
 
-    return nonIpcMetric as MetricKey;
-  }, [selectedAnalysis, analysisConfig, isStacked, selectedMetricIndex]);
+    return baseMetric;
+  }, [
+    selectedAnalysis,
+    analysisConfig,
+    isStacked,
+    selectedMetricIndex,
+    showPart,
+    data,
+  ]);
 
   const metricConfig = activeMetricKey
     ? METRICS_CONFIG[activeMetricKey as MetricKey]
     : null;
+
+  const hasPartVersion = useMemo(() => {
+    if (!analysisConfig || !data || data.length === 0) return false;
+
+    let baseMetric: MetricKey;
+    if (isStacked) {
+      const metrics = analysisConfig.metrics.filter(
+        (metric) =>
+          !metric.includes("_ipc") && metric !== "effectif_sans_cpge_veto"
+      );
+      baseMetric = (metrics[selectedMetricIndex] || metrics[0]) as MetricKey;
+    } else {
+      const nonIpcMetric = analysisConfig.metrics.find(
+        (metric) => !metric.includes("_ipc")
+      );
+      baseMetric = nonIpcMetric as MetricKey;
+    }
+
+    const partMetric = METRIC_TO_PART[baseMetric];
+
+    if (!partMetric || !METRICS_CONFIG[partMetric]) return false;
+
+    return data.some((item: any) => {
+      const value = item[partMetric];
+      return value != null && value !== 0;
+    });
+  }, [isStacked, analysisConfig, selectedMetricIndex, data]);
 
   const metricThreshold = useMemo((): ThresholdConfig | null => {
     if (!definitionsData || !activeMetricKey) return null;
@@ -117,14 +193,23 @@ export default function NationalChart({
     return createComparisonBarOptions(
       {
         metric: activeMetricKey,
-        metricLabel: metricConfig?.label || activeMetricKey,
+        metricLabel: activeMetricKey
+          ? getMetricLabel(activeMetricKey)
+          : activeMetricKey,
         topN: topN ?? data.length,
         format: formatValue,
         threshold: metricThreshold,
       },
       data
     );
-  }, [data, activeMetricKey, topN, metricConfig, metricThreshold]);
+  }, [
+    data,
+    activeMetricKey,
+    topN,
+    metricConfig,
+    metricThreshold,
+    getMetricLabel,
+  ]);
 
   const TOP_N_OPTIONS: (number | null)[] = [10, 20, 30, 50, 100, null];
 
@@ -133,7 +218,7 @@ export default function NationalChart({
 
   const config = {
     id: "national-comparison",
-    title: `${analysisConfig.label} (${selectedYear})`,
+    title: `${activeMetricKey ? getMetricLabel(activeMetricKey) : analysisConfig.label} (${selectedYear})`,
   };
 
   return (
@@ -153,7 +238,34 @@ export default function NationalChart({
               </Select.Checkbox>
             ))}
           </Select>
+          {hasPartVersion && (
+            <Row gutters className="fr-mt-2w">
+              <Col xs="12" md="6">
+                <Text className="fr-text--sm fr-text--bold fr-mb-1w">
+                  Affichage
+                </Text>
+                <SegmentedControl
+                  className="fr-segmented--sm"
+                  name="national-part-mode"
+                >
+                  <SegmentedElement
+                    checked={!showPart}
+                    label="Valeur"
+                    onClick={() => setShowPart(false)}
+                    value="value"
+                  />
+                  <SegmentedElement
+                    checked={showPart}
+                    label="Part"
+                    onClick={() => setShowPart(true)}
+                    value="part"
+                  />
+                </SegmentedControl>
+              </Col>
+            </Row>
+          )}
         </Col>
+
         <Col xs="12" md="4" offsetMd="4">
           <Text className="fr-text--sm fr-text--bold fr-mb-1w">
             Nombre d'établissements
@@ -239,7 +351,9 @@ export default function NationalChart({
               <RenderData
                 data={data}
                 metric={activeMetricKey!}
-                metricLabel={metricConfig?.label || activeMetricKey || ""}
+                metricLabel={
+                  activeMetricKey ? getMetricLabel(activeMetricKey) : ""
+                }
                 topN={topN ?? data.length}
                 format={(value: number) => {
                   if (!metricConfig) return String(value);

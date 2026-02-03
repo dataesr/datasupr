@@ -95,6 +95,20 @@ export default function PositioningComparisonBarChart({
     return { ...config, label: cleanLabel };
   }, [selectedMetric]);
 
+  const metricLabel = useMemo(() => {
+    if (!definitionsData || !selectedMetric) return selectedMetricConfig.label;
+
+    for (const cat of definitionsData) {
+      for (const sr of cat.sousRubriques) {
+        const def = sr.definitions.find((d) => d.indicateur === selectedMetric);
+        if (def?.libelle) {
+          return def.libelle;
+        }
+      }
+    }
+    return selectedMetricConfig.label;
+  }, [definitionsData, selectedMetric, selectedMetricConfig.label]);
+
   const hasPartVersion = useMemo(() => {
     if (!analysisConfig || !data || data.length === 0) return false;
 
@@ -165,7 +179,7 @@ export default function PositioningComparisonBarChart({
     return createPositioningComparisonBarOptions(
       {
         metric: selectedMetric,
-        metricLabel: selectedMetricConfig.label,
+        metricLabel: metricLabel,
         format: formatValue,
         threshold: metricThreshold,
       },
@@ -176,7 +190,7 @@ export default function PositioningComparisonBarChart({
   }, [
     data,
     selectedMetric,
-    selectedMetricConfig.label,
+    metricLabel,
     formatValue,
     currentStructureId,
     currentStructureName,
@@ -195,7 +209,7 @@ export default function PositioningComparisonBarChart({
 
   const config = {
     id: "positioning-comparison-bar",
-    title: `${selectedMetricConfig.label}${year ? ` — ${year}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
+    title: `${metricLabel}${year ? ` — ${year}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
   };
 
   return (
@@ -284,7 +298,7 @@ export default function PositioningComparisonBarChart({
             <RenderData
               data={data}
               metric={selectedMetric}
-              metricLabel={selectedMetricConfig.label}
+              metricLabel={metricLabel}
               format={formatValue}
               currentStructureId={currentStructureId}
               currentStructureName={currentStructureName}
