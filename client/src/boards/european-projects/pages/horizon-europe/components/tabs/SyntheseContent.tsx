@@ -1,4 +1,5 @@
-import { ContentType } from "../../utils/displayRules";
+import { useSearchParams } from "react-router-dom";
+// import { ContentType } from "../../utils/displayRules";
 import PillarsFunding from "../../../overview/components/pillars-funding";
 import ProgramsFunding from "../../../overview/components/programs-funding";
 import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
@@ -15,11 +16,26 @@ import PillarsFundingEvo3Years from "../../../overview/charts/pillars-funding-ev
 import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
 // import DestinationsFunding from "../../../overview/components/destinations-funding";
 
-interface SyntheseContentProps {
-  contentType: ContentType;
-}
+// export default function SyntheseContent({ contentType }: SyntheseContentProps) {
+export default function SyntheseContent() {
+  const [searchParams] = useSearchParams();
 
-export default function SyntheseContent({ contentType }: SyntheseContentProps) {
+  const pillarId = searchParams.get("pillarId");
+  const programId = searchParams.get("programId");
+  const thematicIds = searchParams.get("thematicIds");
+  const destinationIds = searchParams.get("destinationIds");
+
+  let contentType = "pillar-comparison";
+  if (pillarId && programId && thematicIds && destinationIds) {
+    contentType = "destination-detail";
+  } else if (pillarId && programId && thematicIds) {
+    contentType = "thematic-detail";
+  } else if (pillarId && programId) {
+    contentType = "program-detail";
+  } else if (pillarId) {
+    contentType = "pillar-detail";
+  }
+
   switch (contentType) {
     case "pillar-comparison":
       return (

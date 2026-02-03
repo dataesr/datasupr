@@ -13,16 +13,8 @@ export default function Breadcrumb({ config }) {
   const parent = pathSegments[pathSegments.length - 2] || "";
 
   return (
-    <nav
-      role="navigation"
-      className="fr-breadcrumb"
-      aria-label="vous êtes ici :"
-    >
-      <button
-        className="fr-breadcrumb__button"
-        aria-expanded="false"
-        aria-controls="breadcrumb-1"
-      >
+    <nav role="navigation" className="fr-breadcrumb fr-mb-2w" aria-label="vous êtes ici :">
+      <button className="fr-breadcrumb__button" aria-expanded="false" aria-controls="breadcrumb-1">
         Voir le fil d’Ariane
       </button>
       <div className="fr-collapse" id="breadcrumb-1">
@@ -30,31 +22,21 @@ export default function Breadcrumb({ config }) {
           {isDatasupr && (
             <li>
               <Link href={`${config[parent].link}?${searchParams.toString()}`}>
-                {currentLang === "fr"
-                  ? "Sélectionner un tableau de bord"
-                  : "Select a dashboard"}
+                {currentLang === "fr" ? "Sélectionner un tableau de bord" : "Select a dashboard"}
               </Link>
             </li>
           )}
           <li>
-            <Link href={`${config[parent].link}?${searchParams.toString()}`}>
-              {config[parent].label[currentLang]}
-            </Link>
+            <Link href={`${config[parent].link}?${searchParams.toString()}`}>{config[parent].label[currentLang]}</Link>
           </li>
           {currentSection ? (
             <>
               <li>
-                <Link
-                  href={`${config[currentPage].link}?${searchParams.toString()}`}
-                >
-                  {config[currentPage].label[currentLang]}
-                </Link>
+                <Link href={`${config[currentPage].link}?${searchParams.toString()}`}>{config[currentPage].label[currentLang]}</Link>
               </li>
               <li>
                 <Link>
-                  <strong>
-                    {config[currentPage][currentSection]?.label[currentLang]}
-                  </strong>
+                  <strong>{config[currentPage][currentSection]?.label[currentLang]}</strong>
                 </Link>
               </li>
             </>

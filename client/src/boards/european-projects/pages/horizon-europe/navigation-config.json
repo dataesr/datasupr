@@ -18,7 +18,19 @@
       "fr": "Horizon Europe",
       "en": "Horizon Europe"
     },
-    "link": "/european-projects/horizon-europe"
+    "link": "/european-projects/horizon-europe",
+    "synthesis": {
+      "label": { "fr": "Synthèse", "en": "Synthesis" },
+      "link": "/european-projects/horizon-europe?section=synthesis"
+    },
+    "positioning": {
+      "label": { "fr": "Positionnement", "en": "Positioning" },
+      "link": "/european-projects/horizon-europe?section=positioning"
+    },
+    "collaborations": {
+      "label": { "fr": "Collaborations", "en": "Collaborations" },
+      "link": "/european-projects/horizon-europe?section=collaborations"
+    }
   },
   "msca": {
     "label": {

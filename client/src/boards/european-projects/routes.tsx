@@ -1,26 +1,27 @@
 import { Navigate, Route, Routes, useParams } from "react-router-dom";
 
-import NotFoundPage from "../../components/not-found-page.tsx";
-import { useTitle } from "../../hooks/usePageTitle.tsx";
-import { getI18nLabel } from "../../utils";
-import GlobalLayout from "./components/layouts/global-layout.tsx";
-import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
 import Beneficiaries from "./pages/beneficiaries/index.tsx";
-import CollaborationsEntity from "./pages/collaborations/index-entity.tsx";
 import Collaborations from "./pages/collaborations/index.tsx";
+import CollaborationsEntity from "./pages/collaborations/index-entity.tsx";
 import EvolutionPcri from "./pages/evolution-pcri/index.tsx";
+import GlobalLayout from "./components/layouts/global-layout.tsx";
 import Home from "./pages/home/index.tsx";
+import HorizonEurope from "./pages/horizon-europe/index.tsx";
 import Informations from "./pages/informations.tsx";
+import NotFoundPage from "../../components/not-found-page.tsx";
 import Overview from "./pages/overview/index.tsx";
-import OverviewV2 from "./pages/overviewV2/index.tsx";
 import Positioning from "./pages/positioning/index.tsx";
 import ProjectsTypes from "./pages/projects-types/index.tsx";
 import Search from "./pages/search/index.tsx";
+import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
 import TypeOfBeneficiaries from "./pages/type-of-beneficiaries/index.tsx";
+
+import { useTitle } from "../../hooks/usePageTitle.tsx";
+import { getI18nLabel } from "../../utils";
+
 import i18n from "./title-i18n.json";
 
 import "./styles.scss";
-
 
 const RouteWithTitle = ({ titleKey, element }) => {
   useTitle(getI18nLabel(i18n, titleKey));
@@ -40,7 +41,7 @@ export default function EuropeanProjectsRoutes() {
         <Route path="" element={<Navigate to="accueil" replace />} />
         <Route path="accueil" element={<RouteWithTitle titleKey="accueil" element={<Home />} />} />
         <Route path="search" element={<RouteWithTitle titleKey="search" element={<Search />} />} />
-        <Route path="horizon-europe" element={<RouteWithTitle titleKey="horizon-europe" element={<OverviewV2 />} />} />
+        <Route path="horizon-europe" element={<RouteWithTitle titleKey="horizon-europe" element={<HorizonEurope />} />} />
         <Route element={<SidemenuLayout />}>
           <Route path="synthese" element={<RouteWithTitle titleKey="synthese" element={<Overview />} />} />
           <Route path="positionnement" element={<RouteWithTitle titleKey="positionnement" element={<Positioning />} />} />

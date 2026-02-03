@@ -1,16 +1,14 @@
-import SmartTabContent from "./SmartTabContent";
-import { ViewConditions } from "../utils/displayRules";
 import { useSearchParams } from "react-router-dom";
 
 import i18n from "../../../i18n-global.json";
+import SyntheseContent from "./tabs/SyntheseContent";
+import PositionnementContent from "./tabs/PositionnementContent";
+import CollaborationsContent from "./tabs/CollaborationsContent";
 
-interface TabsContentProps {
-  overviewParams: ViewConditions;
-}
-
-export default function TabsContent({ overviewParams }: TabsContentProps) {
-  const { activeTab, view } = overviewParams;
+export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get("section") || "synthesis";
+
   const currentLang = searchParams.get("language") || "en";
 
   function getIntlLabel(key: string): string {
@@ -20,7 +18,7 @@ export default function TabsContent({ overviewParams }: TabsContentProps) {
   // Fonction pour changer d'onglet
   const handleTabChange = (newTab: "synthesis" | "positioning" | "collaborations") => {
     const newParams = new URLSearchParams(searchParams);
-    newParams.set("view", `${newTab}|${view}`);
+    newParams.set("section", newTab);
     setSearchParams(newParams);
   };
 
@@ -68,9 +66,9 @@ export default function TabsContent({ overviewParams }: TabsContentProps) {
       </nav>
 
       <div className="fr-mt-3w">
-        {activeTab === "synthesis" && <SmartTabContent {...overviewParams} tabType="synthesis" />}
-        {activeTab === "positioning" && <SmartTabContent {...overviewParams} tabType="positioning" />}
-        {activeTab === "collaborations" && <SmartTabContent {...overviewParams} tabType="collaborations" />}
+        {activeTab === "synthesis" && <SyntheseContent />}
+        {activeTab === "positioning" && <PositionnementContent />}
+        {activeTab === "collaborations" && <CollaborationsContent />}
       </div>
     </div>
   );

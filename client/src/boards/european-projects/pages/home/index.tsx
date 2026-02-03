@@ -1,28 +1,21 @@
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { getFiltersValues } from "../../api";
-
-import { Col, Container, Row, Title, Modal, ModalContent, ModalTitle, ModalFooter, Link } from "@dataesr/dsfr-plus";
-import { useState } from "react"; // Ajoutez cet import
-import Timeline from "./components/Timeline";
-import i18n from "./i18n.json";
-import "./styles.scss";
+import { Col, Container, Row, Title, Link } from "@dataesr/dsfr-plus";
 import PillarCard from "../../components/cards/pillars";
 import ErcCard from "../../components/cards/erc";
 import MscaCard from "../../components/cards/msca";
+import Timeline from "./components/Timeline";
+import { getFiltersValues } from "../../api";
 
-interface Program {
-  title: string;
-  pilier: number;
-  description: string;
-}
+import i18n from "./i18n.json";
+
+import "./styles.scss";
+
+
 export default function Home() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
-  // const [activePillar, setActivePillar] = useState(null); // Ajoutez cet état
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedProgram] = useState<Program | null>(null);
 
   const { data: dataPillars } = useQuery({
     queryKey: ["ep/get-filters-values", "pillars"],
@@ -32,15 +25,6 @@ export default function Home() {
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
-
-  // const handlePillarClick = (pillarNumber) => {
-  //   setActivePillar(activePillar === pillarNumber ? null : pillarNumber);
-  // };
-
-  // const handleProgramClick = (program) => {
-  //   setSelectedProgram(program);
-  //   setIsModalOpen(true);
-  // };
 
   return (
     <Container as="section" className="fr-mt-2w">
@@ -71,7 +55,7 @@ export default function Home() {
                 description={getI18nLabel(`${pillar.id}-description`)}
                 title={pillar[`label_${currentLang}`]}
                 subtitle={pillar.id}
-                to={`/european-projects/horizon-europe?view=synthesis|program&pillarId=${pillar.id}`}
+                to={`/european-projects/horizon-europe?section=synthesis&pillarId=${pillar.id}`}
               />
             </Col>
           ))}
@@ -113,26 +97,6 @@ Le seul critère de sélection est celui de l'excellence scientifique."
           </Link>
         </Col>
       </Row>
-
-      <Modal isOpen={isModalOpen} hide={() => setIsModalOpen(false)} size="lg">
-        <ModalTitle>{selectedProgram?.title || ""}</ModalTitle>
-        <ModalContent>
-          {selectedProgram && (
-            <div>
-              <p>
-                <strong>Pilier {selectedProgram.pilier}</strong>
-              </p>
-              <p>{selectedProgram.description}</p>
-            </div>
-          )}
-        </ModalContent>
-        <ModalFooter>
-          <Link href="/european-projects/search" className="fr-link fr-link--icon-right">
-            <span className="fr-fi-arrow-right-line fr-link__icon fr-link__icon--right" />
-            Lien vers la page de sélection des filtres
-          </Link>
-        </ModalFooter>
-      </Modal>
     </Container>
   );
 }

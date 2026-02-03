@@ -1,16 +1,13 @@
 import { Container } from "@dataesr/dsfr-plus";
-import EpNavigator from "../../components/ep-navigator";
+import EpNavigator from "../../components/ep-navigator/index";
 import TabsContent from "./components/TabsContent";
-import { useOverviewParams } from "./hooks/useOverviewParams";
 
 import navigationConfig from "./navigation-config.json";
 
 import "./styles.scss";
 import Breadcrumb from "../../../../components/breadcrumb";
 
-export default function OverviewV2() {
-  const overviewParams = useOverviewParams();
-
+export default function HorizonEurope() {
   return (
     <>
       <Container as="main" fluid>
@@ -21,7 +18,7 @@ export default function OverviewV2() {
           </Container>
         </div>
         <Container>
-          <TabsContent overviewParams={overviewParams} />
+          <TabsContent />
         </Container>
       </Container>
     </>

@@ -89,7 +89,7 @@ export default function GlobalLayout() {
             </li>
             <li className="fr-nav__item">
               <Link
-                to={`/european-projects/horizon-europe?${filtersParams}`}
+                to={`/european-projects/horizon-europe?section=synthesis&${filtersParams}`}
                 target="_self"
                 {...(is("/european-projects/horizon-europe") && { "aria-current": "page" })}
                 className="fr-nav__link"
