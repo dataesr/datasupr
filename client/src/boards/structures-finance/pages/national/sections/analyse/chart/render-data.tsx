@@ -16,7 +16,7 @@ export function RenderData({
   const chartData = data
     .filter((item: any) => {
       const value = item[metric];
-      return value != null && !isNaN(value) && value > 0;
+      return value != null && !isNaN(value);
     })
     .map((item: any) => ({
       name:

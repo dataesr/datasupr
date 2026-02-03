@@ -80,7 +80,7 @@ export const createComparisonBarOptions = (
         item.etablissement_actuel_lib || item.etablissement_lib || "Sans nom",
       value: item[config.metric],
     }))
-    .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
+    .sort((a, b) => b.value - a.value)
     .slice(0, config.topN);
 
   let dataMin = Infinity;

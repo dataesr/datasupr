@@ -4,6 +4,7 @@ import "./styles.scss";
 
 interface StructureCardProps {
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+  bottomText?: string;
   className?: string;
   description?: string;
   onClick?: () => void;
@@ -15,6 +16,7 @@ interface StructureCardProps {
 
 export default function CardSimple({
   as = "h2",
+  bottomText,
   className = "",
   description,
   onClick,
@@ -52,6 +54,12 @@ export default function CardSimple({
         <Text className="structure-card__stat">
           {stat.toLocaleString("fr-FR")} étudiant{stat > 1 ? "s" : ""} inscrit
           {stat > 1 ? "s" : ""} en {year}
+        </Text>
+      )}
+
+      {bottomText && (
+        <Text className="structure-card__bottom fr-text--sm fr-mt-1w">
+          {bottomText}
         </Text>
       )}
     </div>

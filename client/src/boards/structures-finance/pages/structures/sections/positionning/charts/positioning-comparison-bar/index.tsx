@@ -1,11 +1,10 @@
-import { useMemo } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useMemo, useState } from "react";
+import { Row, Col, Text } from "@dataesr/dsfr-plus";
 import { createPositioningComparisonBarOptions } from "./options";
 import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
+import Select from "../../../../../../../../components/select";
 import { useFinanceDefinitions } from "../../../../../definitions/api";
-import { useFinanceAdvancedComparison } from "../../../../../../api/api";
-import { usePositioningFilteredData } from "../../hooks/usePositioningFilteredData";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
@@ -17,15 +16,14 @@ import {
   ThresholdLegend,
   type ThresholdConfig,
 } from "../../../../../../config/index";
-import DefaultSkeleton from "../../../../../../../../components/charts-skeletons/default";
 
 interface PositioningComparisonBarChartProps {
-  data?: any[];
+  data: any[];
+  currentStructure: any;
   currentStructureId?: string;
   currentStructureName?: string;
   selectedYear?: string;
   selectedAnalysis?: AnalysisKey | null;
-  topN?: number;
 }
 
 export default function PositioningComparisonBarChart({
@@ -34,87 +32,35 @@ export default function PositioningComparisonBarChart({
   currentStructureName: propCurrentStructureName,
   selectedYear: propSelectedYear,
   selectedAnalysis: propSelectedAnalysis,
-  topN: propTopN,
 }: PositioningComparisonBarChartProps) {
-  const [searchParams] = useSearchParams();
-  const structureId = searchParams.get("structureId") || "";
-  const year = propSelectedYear || searchParams.get("year") || "";
-  const metricParam = searchParams.get("metric") || "";
+  const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
 
-  const filterParams = new URLSearchParams();
-  const positioningType = searchParams.get("positioningType");
-  const positioningTypologie = searchParams.get("positioningTypologie");
-  const positioningRegion = searchParams.get("positioningRegion");
-  const positioningRce = searchParams.get("positioningRce");
-  const positioningDevimmo = searchParams.get("positioningDevimmo");
-
-  if (positioningType) filterParams.set("positioningType", positioningType);
-  if (positioningTypologie)
-    filterParams.set("positioningTypologie", positioningTypologie);
-  if (positioningRegion)
-    filterParams.set("positioningRegion", positioningRegion);
-  if (positioningRce) filterParams.set("positioningRce", positioningRce);
-  if (positioningDevimmo)
-    filterParams.set("positioningDevimmo", positioningDevimmo);
-
-  const { data: apiData, isLoading } = useFinanceAdvancedComparison(
-    {
-      annee: year,
-      type: "",
-      typologie: "",
-      region: "",
-    },
-    !propData && !!year
-  );
-
-  const allItems = useMemo(() => {
-    if (propData) return propData;
-    if (!apiData || !apiData.items) return [];
-    return apiData.items;
-  }, [propData, apiData]);
-
-  const filters = useMemo(
-    () => ({
-      type: positioningType || "",
-      typologie: positioningTypologie || "",
-      region: positioningRegion || "",
-      rce: positioningRce || "",
-      devimmo: positioningDevimmo || "",
-    }),
-    [
-      positioningType,
-      positioningTypologie,
-      positioningRegion,
-      positioningRce,
-      positioningDevimmo,
-    ]
-  );
-
-  const data = usePositioningFilteredData(allItems, null, filters);
-
-  const currentStructureId = propCurrentStructureId || structureId;
+  const data = propData;
+  const currentStructureId = propCurrentStructureId;
   const currentStructureName = propCurrentStructureName || "";
-  const topN = propTopN ?? data.length;
-
-  const selectedAnalysis = useMemo(() => {
-    if (propSelectedAnalysis !== undefined) return propSelectedAnalysis;
-    if (!metricParam) return "ressources-total" as AnalysisKey;
-
-    for (const [key, analysis] of Object.entries(PREDEFINED_ANALYSES)) {
-      if (analysis.metrics.some((m) => m === metricParam)) {
-        return key as AnalysisKey;
-      }
-    }
-    return "ressources-total" as AnalysisKey;
-  }, [propSelectedAnalysis, metricParam]);
+  const year = propSelectedYear || "";
+  const selectedAnalysis = propSelectedAnalysis || "ressources-total";
 
   const { data: definitionsData } = useFinanceDefinitions();
 
+  const analysisConfig = selectedAnalysis
+    ? PREDEFINED_ANALYSES[selectedAnalysis]
+    : null;
+  const isStacked = (analysisConfig as any)?.chartType === "stacked";
+
   const selectedMetric = useMemo(() => {
-    if (!selectedAnalysis) return "effectif_sans_cpge";
-    const analysis = PREDEFINED_ANALYSES[selectedAnalysis];
-    return analysis?.metrics[0] || "effectif_sans_cpge";
-  }, [selectedAnalysis]);
+    if (!analysisConfig) return "effectif_sans_cpge";
+
+    if (isStacked) {
+      const metrics = analysisConfig.metrics.filter(
+        (metric) =>
+          !metric.includes("_ipc") && metric !== "effectif_sans_cpge_veto"
+      );
+      return (metrics[selectedMetricIndex] || metrics[0]) as MetricKey;
+    }
+
+    return analysisConfig?.metrics[0] || "effectif_sans_cpge";
+  }, [analysisConfig, isStacked, selectedMetricIndex]);
 
   const selectedMetricConfig = useMemo(() => {
     const config = METRICS_CONFIG[selectedMetric as MetricKey];
@@ -148,31 +94,29 @@ export default function PositioningComparisonBarChart({
     return null;
   }, [definitionsData, selectedMetric]);
 
+  const formatValue = useMemo(() => {
+    switch (selectedMetricConfig.format) {
+      case "euro":
+        return (v: number) => `${(v / 1000000).toFixed(1)} M€`;
+      case "percent":
+        return (v: number) => `${v.toFixed(1)}%`;
+      case "number":
+        return (v: number) => v.toLocaleString("fr-FR");
+      case "decimal":
+        return (v: number) => v.toFixed(1);
+      default:
+        return undefined;
+    }
+  }, [selectedMetricConfig.format]);
+
   const chartOptions = useMemo(() => {
     if (!data || !data.length) return null;
-
-    const getFormat = () => {
-      if (selectedMetricConfig.format === "euro") {
-        return (v: number) => `${(v / 1000000).toFixed(1)} M€`;
-      }
-      if (selectedMetricConfig.format === "percent") {
-        return (v: number) => `${v.toFixed(1)}%`;
-      }
-      if (selectedMetricConfig.format === "number") {
-        return (v: number) => v.toLocaleString("fr-FR");
-      }
-      if (selectedMetricConfig.format === "decimal") {
-        return (v: number) => v.toFixed(1);
-      }
-      return undefined;
-    };
 
     return createPositioningComparisonBarOptions(
       {
         metric: selectedMetric,
         metricLabel: selectedMetricConfig.label,
-        topN,
-        format: getFormat(),
+        format: formatValue,
         threshold: metricThreshold,
       },
       data,
@@ -182,8 +126,8 @@ export default function PositioningComparisonBarChart({
   }, [
     data,
     selectedMetric,
-    topN,
-    selectedMetricConfig,
+    selectedMetricConfig.label,
+    formatValue,
     currentStructureId,
     currentStructureName,
     metricThreshold,
@@ -191,30 +135,60 @@ export default function PositioningComparisonBarChart({
 
   const chartKey = useMemo(() => {
     if (!data || !Array.isArray(data))
-      return `${selectedAnalysis}-${topN}-${currentStructureId}`;
+      return `${selectedAnalysis}-${currentStructureId}`;
     const dataIds = data
       .map((d) => d?.etablissement_id_paysage_actuel)
       .sort()
       .join(",");
-    return `${selectedAnalysis}-${topN}-${currentStructureId}-${dataIds}`;
-  }, [selectedAnalysis, topN, currentStructureId, data]);
+    return `${selectedAnalysis}-${currentStructureId}-${dataIds}`;
+  }, [selectedAnalysis, currentStructureId, data]);
 
   const config = {
     id: "positioning-comparison-bar",
-    integrationURL: `/integration?chart_id=positioning-comparison-bar&structureId=${structureId}&year=${year}&metric=${selectedMetric}&${filterParams.toString()}`,
     title: `${selectedMetricConfig.label}${year ? ` — ${year}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
   };
 
-  if (isLoading) {
-    return (
-      <div className="fr-callout">
-        <DefaultSkeleton />
-      </div>
-    );
-  }
-
   return (
     <div>
+      {isStacked && analysisConfig && (
+        <Row gutters className="fr-mb-3w">
+          <Col xs="12" md="6">
+            <Text className="fr-text--sm fr-text--bold fr-mb-1w">Métrique</Text>
+            <Select
+              label={
+                METRICS_CONFIG[
+                  analysisConfig.metrics.filter(
+                    (metric) =>
+                      !metric.includes("_ipc") &&
+                      metric !== "effectif_sans_cpge_veto"
+                  )[selectedMetricIndex] as MetricKey
+                ]?.label || "Sélectionner"
+              }
+              size="sm"
+              fullWidth
+              className="fr-mb-0"
+            >
+              {analysisConfig.metrics
+                .filter(
+                  (metric) =>
+                    !metric.includes("_ipc") &&
+                    metric !== "effectif_sans_cpge_veto"
+                )
+                .map((metric, index) => (
+                  <Select.Checkbox
+                    key={metric}
+                    value={String(index)}
+                    checked={selectedMetricIndex === index}
+                    onChange={() => setSelectedMetricIndex(index)}
+                  >
+                    {METRICS_CONFIG[metric as MetricKey]?.label || metric}
+                  </Select.Checkbox>
+                ))}
+            </Select>
+          </Col>
+        </Row>
+      )}
+
       {!chartOptions || !data || data.length === 0 ? (
         <div className="fr-alert fr-alert--warning">
           <p className="fr-alert__title">Aucune donnée disponible</p>
@@ -234,18 +208,7 @@ export default function PositioningComparisonBarChart({
               data={data}
               metric={selectedMetric}
               metricLabel={selectedMetricConfig.label}
-              topN={topN}
-              format={
-                selectedMetricConfig.format === "euro"
-                  ? (v: number) => `${(v / 1000000).toFixed(1)} M€`
-                  : selectedMetricConfig.format === "percent"
-                    ? (v: number) => `${v.toFixed(1)}%`
-                    : selectedMetricConfig.format === "number"
-                      ? (v: number) => v.toLocaleString("fr-FR")
-                      : selectedMetricConfig.format === "decimal"
-                        ? (v: number) => v.toFixed(1)
-                        : undefined
-              }
+              format={formatValue}
               currentStructureId={currentStructureId}
               currentStructureName={currentStructureName}
             />

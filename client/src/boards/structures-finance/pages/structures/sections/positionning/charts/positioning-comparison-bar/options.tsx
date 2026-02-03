@@ -6,7 +6,6 @@ import type { ThresholdConfig } from "../../../../../../config";
 export interface PositioningComparisonBarConfig {
   metric: string;
   metricLabel: string;
-  topN: number;
   format?: (value: number) => string;
   threshold?: ThresholdConfig | null;
 }
@@ -78,32 +77,24 @@ export const createPositioningComparisonBarOptions = (
     return true;
   });
 
-  const allChartData = uniqueData.map((item: any) => {
-    const itemId = item.etablissement_id_paysage_actuel;
-    const isCurrentStructure =
-      currentStructureId && itemId === currentStructureId;
+  const chartData = uniqueData
+    .map((item: any) => {
+      const itemId = item.etablissement_id_paysage_actuel;
+      const isCurrentStructure =
+        currentStructureId && itemId === currentStructureId;
 
-    return {
-      name:
-        item.etablissement_actuel_lib || item.etablissement_lib || "Sans nom",
-      value: item[config.metric] || 0,
-      isCurrentStructure,
-    };
-  });
-
-  const currentStructure = allChartData.find((d) => d.isCurrentStructure);
-
-  const otherStructures = allChartData
+      return {
+        name:
+          item.etablissement_actuel_lib || item.etablissement_lib || "Sans nom",
+        value: item[config.metric] || 0,
+        isCurrentStructure,
+      };
+    })
     .filter((d) => {
-      if (d.isCurrentStructure) return false;
       const value = d.value;
       return value != null && !isNaN(value);
     })
-    .sort((a, b) => Math.abs(b.value) - Math.abs(a.value));
-
-  const chartData = currentStructure
-    ? [currentStructure, ...otherStructures]
-    : otherStructures;
+    .sort((a, b) => b.value - a.value);
 
   let dataMin = Infinity;
   let dataMax = -Infinity;

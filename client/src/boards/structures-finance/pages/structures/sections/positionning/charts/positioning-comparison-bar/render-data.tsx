@@ -4,7 +4,6 @@ interface RenderDataProps {
   data: any[];
   metric: string;
   metricLabel: string;
-  topN: number;
   format?: (value: number) => string;
   currentStructureId?: string;
   currentStructureName?: string;
@@ -14,7 +13,6 @@ export function RenderData({
   data,
   metric,
   metricLabel,
-  topN,
   format,
   currentStructureId,
 }: RenderDataProps) {
@@ -26,31 +24,24 @@ export function RenderData({
     return true;
   });
 
-  const allChartData = uniqueData.map((item: any) => {
-    const itemId = item.etablissement_id_paysage_actuel;
-    const isCurrentStructure =
-      currentStructureId && itemId === currentStructureId;
+  const chartData = uniqueData
+    .map((item: any) => {
+      const itemId = item.etablissement_id_paysage_actuel;
+      const isCurrentStructure =
+        currentStructureId && itemId === currentStructureId;
 
-    return {
-      name:
-        item.etablissement_actuel_lib || item.etablissement_lib || "Sans nom",
-      value: item[metric] || 0,
-      isCurrentStructure,
-    };
-  });
-
-  const currentStructure = allChartData.find((d) => d.isCurrentStructure);
-  const otherStructures = allChartData
-    .filter((d) => {
-      if (d.isCurrentStructure) return false;
-      const value = d.value;
-      return value != null && !isNaN(value) && value > 0;
+      return {
+        name:
+          item.etablissement_actuel_lib || item.etablissement_lib || "Sans nom",
+        value: item[metric] || 0,
+        isCurrentStructure,
+      };
     })
-    .sort((a, b) => b.value - a.value)
-    .slice(0, topN - 1);
-  const chartData = currentStructure
-    ? [currentStructure, ...otherStructures]
-    : otherStructures.slice(0, topN);
+    .filter((d) => {
+      const value = d.value;
+      return value != null && !isNaN(value);
+    })
+    .sort((a, b) => b.value - a.value);
 
   if (chartData.length === 0) {
     return (

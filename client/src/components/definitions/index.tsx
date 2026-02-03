@@ -5,6 +5,11 @@ interface Definition {
   interpretation?: string;
   source: string;
   unite: string;
+  pageDefinition?: boolean;
+  opendata1?: string | null;
+  opendata2?: string | null;
+  opendata3?: string | null;
+  opendata4?: string | null;
 }
 
 interface DefinitionCategory {
@@ -33,6 +38,41 @@ export default function Definitions({
     );
   }
 
+  const renderOpendataLinks = (def: Definition) => {
+    const links = [
+      def.opendata1,
+      def.opendata2,
+      def.opendata3,
+      def.opendata4,
+    ].filter(Boolean);
+
+    if (links.length === 0) return null;
+
+    return (
+      <div className="fr-mt-1w">
+        <strong className="fr-text--sm">Sources de données ouvertes :</strong>
+        <div className="fr-mt-1v">
+          {links.map((link, index) => (
+            <a
+              key={index}
+              href={link!}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="fr-link fr-link--sm fr-mr-2w"
+              title="Accéder aux données ouvertes"
+            >
+              <span
+                className="fr-icon-external-link-line fr-icon--sm fr-mr-1v"
+                aria-hidden="true"
+              />
+              Données {index + 1}
+            </a>
+          ))}
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className={className}>
       {data.map((category, categoryIndex) => (
@@ -60,7 +100,9 @@ export default function Definitions({
                       {sousRubrique.definitions
                         .filter(
                           (def) =>
-                            def.definition && def.definition.trim() !== ""
+                            def.pageDefinition !== false &&
+                            def.definition &&
+                            def.definition.trim() !== ""
                         )
                         .map((def, defIndex) => (
                           <tr
@@ -83,6 +125,7 @@ export default function Definitions({
                                   {def.interpretation}
                                 </>
                               )}
+                              {renderOpendataLinks(def)}
                             </td>
                             <td className="fr-text--center">{def.unite}</td>
                             <td className="fr-text--xs">{def.source}</td>

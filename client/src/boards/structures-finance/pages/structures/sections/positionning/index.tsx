@@ -237,11 +237,11 @@ export function PositionnementSection({
                   <Col xs="12" md="8">
                     <PositioningComparisonBarChart
                       data={filteredItems}
+                      currentStructure={data}
                       currentStructureId={data?.etablissement_id_paysage_actuel}
                       currentStructureName={structureName}
                       selectedYear={String(selectedYear)}
                       selectedAnalysis={selectedAnalysis}
-                      topN={filteredItems.length}
                     />
                   </Col>
                 </Row>
