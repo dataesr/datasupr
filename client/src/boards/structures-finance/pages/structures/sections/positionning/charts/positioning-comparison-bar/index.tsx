@@ -1,5 +1,11 @@
 import { useMemo, useState } from "react";
-import { Row, Col, Text } from "@dataesr/dsfr-plus";
+import {
+  Row,
+  Col,
+  Text,
+  SegmentedControl,
+  SegmentedElement,
+} from "@dataesr/dsfr-plus";
 import { createPositioningComparisonBarOptions } from "./options";
 import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
@@ -8,6 +14,7 @@ import { useFinanceDefinitions } from "../../../../../definitions/api";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
+  METRIC_TO_PART,
   type AnalysisKey,
   type MetricKey,
 } from "../../../analyses/charts/evolution/config";
@@ -34,6 +41,7 @@ export default function PositioningComparisonBarChart({
   selectedAnalysis: propSelectedAnalysis,
 }: PositioningComparisonBarChartProps) {
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
+  const [showPart, setShowPart] = useState(false);
 
   const data = propData || [];
   const currentStructureId = propCurrentStructureId;
@@ -51,16 +59,34 @@ export default function PositioningComparisonBarChart({
   const selectedMetric = useMemo(() => {
     if (!analysisConfig) return "effectif_sans_cpge";
 
+    let baseMetric: MetricKey;
+
     if (isStacked) {
       const metrics = analysisConfig.metrics.filter(
         (metric) =>
           !metric.includes("_ipc") && metric !== "effectif_sans_cpge_veto"
       );
-      return (metrics[selectedMetricIndex] || metrics[0]) as MetricKey;
+      baseMetric = (metrics[selectedMetricIndex] || metrics[0]) as MetricKey;
+    } else {
+      baseMetric = analysisConfig.metrics[0] as MetricKey;
     }
 
-    return analysisConfig?.metrics[0] || "effectif_sans_cpge";
-  }, [analysisConfig, isStacked, selectedMetricIndex]);
+    // Si le mode est "part" et que la version part existe, utiliser celle-ci
+    if (showPart) {
+      const partMetric = METRIC_TO_PART[baseMetric];
+      if (partMetric && METRICS_CONFIG[partMetric]) {
+        const hasPartData = data.some((item: any) => {
+          const value = item[partMetric];
+          return value != null && value !== 0;
+        });
+        if (hasPartData) {
+          return partMetric;
+        }
+      }
+    }
+
+    return baseMetric;
+  }, [analysisConfig, isStacked, selectedMetricIndex, showPart, data]);
 
   const selectedMetricConfig = useMemo(() => {
     const config = METRICS_CONFIG[selectedMetric as MetricKey];
@@ -68,6 +94,30 @@ export default function PositioningComparisonBarChart({
     const cleanLabel = config.label.replace(/ à prix courant$/i, "");
     return { ...config, label: cleanLabel };
   }, [selectedMetric]);
+
+  const hasPartVersion = useMemo(() => {
+    if (!analysisConfig || !data || data.length === 0) return false;
+
+    let baseMetric: MetricKey;
+    if (isStacked) {
+      const metrics = analysisConfig.metrics.filter(
+        (metric) =>
+          !metric.includes("_ipc") && metric !== "effectif_sans_cpge_veto"
+      );
+      baseMetric = (metrics[selectedMetricIndex] || metrics[0]) as MetricKey;
+    } else {
+      baseMetric = analysisConfig.metrics[0] as MetricKey;
+    }
+
+    const partMetric = METRIC_TO_PART[baseMetric];
+
+    if (!partMetric || !METRICS_CONFIG[partMetric]) return false;
+
+    return data.some((item: any) => {
+      const value = item[partMetric];
+      return value != null && value !== 0;
+    });
+  }, [isStacked, analysisConfig, selectedMetricIndex, data]);
 
   const metricThreshold = useMemo((): ThresholdConfig | null => {
     if (!definitionsData || !selectedMetric) return null;
@@ -185,6 +235,33 @@ export default function PositioningComparisonBarChart({
                   </Select.Checkbox>
                 ))}
             </Select>
+          </Col>
+        </Row>
+      )}
+
+      {hasPartVersion && (
+        <Row gutters className="fr-mb-3w">
+          <Col xs="12" md="6">
+            <Text className="fr-text--sm fr-text--bold fr-mb-1w">
+              Affichage
+            </Text>
+            <SegmentedControl
+              className="fr-segmented--sm"
+              name="positioning-part-mode"
+            >
+              <SegmentedElement
+                checked={!showPart}
+                label="Valeur"
+                onClick={() => setShowPart(false)}
+                value="value"
+              />
+              <SegmentedElement
+                checked={showPart}
+                label="Part"
+                onClick={() => setShowPart(true)}
+                value="part"
+              />
+            </SegmentedControl>
           </Col>
         </Row>
       )}
