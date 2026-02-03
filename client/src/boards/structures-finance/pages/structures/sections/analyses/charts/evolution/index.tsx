@@ -27,7 +27,7 @@ import {
   type MetricKey,
   type AnalysisKey,
 } from "./config";
-import MetricDefinitionsTable from "../../../../../../components/layouts/metric-definitions-table";
+import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
 import {
   FINANCIAL_HEALTH_INDICATORS,
   ThresholdLegend,

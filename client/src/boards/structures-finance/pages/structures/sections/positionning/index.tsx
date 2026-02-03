@@ -17,7 +17,7 @@ import {
 import { Select } from "../../../../../../components/select";
 import "../styles.scss";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
+import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 
 interface PositionnementSectionProps {
   data: any;

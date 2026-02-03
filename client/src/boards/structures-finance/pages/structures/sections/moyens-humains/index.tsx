@@ -3,7 +3,7 @@ import { SECTION_COLORS } from "../../../../constants/colors";
 import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
 import "../styles.scss";
-import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
+import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 
 const SECTION_COLOR = SECTION_COLORS.moyensHumains;
 

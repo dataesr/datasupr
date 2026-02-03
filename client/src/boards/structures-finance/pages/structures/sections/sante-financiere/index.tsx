@@ -5,7 +5,7 @@ import { SECTION_COLORS } from "../../../../constants/colors";
 import StatusIndicator from "../../../../../../components/status-indicator";
 import { parseMarkdown } from "../../../../../../utils/format";
 import "../styles.scss";
-import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
+import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 
 type FinanceStatus = "alerte" | "vigilance" | "normal";
 
