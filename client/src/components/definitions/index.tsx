@@ -1,15 +1,20 @@
+import { Link } from "@dataesr/dsfr-plus";
+
 interface Definition {
   indicateur: string;
   libelle: string;
   definition: string;
   interpretation?: string;
-  source: string;
+  source1fr?: string | null;
+  opendata1?: string | null;
+  source2fr?: string | null;
+  opendata2?: string | null;
+  source3fr?: string | null;
+  opendata3?: string | null;
+  source4fr?: string | null;
+  opendata4?: string | null;
   unite: string;
   pageDefinition?: boolean;
-  opendata1?: string | null;
-  opendata2?: string | null;
-  opendata3?: string | null;
-  opendata4?: string | null;
 }
 
 interface DefinitionCategory {
@@ -38,49 +43,61 @@ export default function Definitions({
     );
   }
 
-  const renderOpendataLinks = (def: Definition) => {
-    const links = [
-      def.opendata1,
-      def.opendata2,
-      def.opendata3,
-      def.opendata4,
-    ].filter(Boolean);
+  const renderSourceLinks = (def: Definition) => {
+    const sources: Array<{ label: string; link: string | null }> = [
+      { label: def.source1fr || "", link: def.opendata1 || null },
+      { label: def.source2fr || "", link: def.opendata2 || null },
+      { label: def.source3fr || "", link: def.opendata3 || null },
+      { label: def.source4fr || "", link: def.opendata4 || null },
+    ].filter((source) => source.label);
 
-    if (links.length === 0) return null;
+    if (sources.length === 0) return null;
 
     return (
-      <div className="fr-mt-1w">
-        <strong className="fr-text--sm">Sources de données ouvertes :</strong>
-        <div className="fr-mt-1v">
-          {links.map((link, index) => (
-            <a
-              key={index}
-              href={link!}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="fr-link fr-link--sm fr-mr-2w"
-              title="Accéder aux données ouvertes"
-            >
-              <span
-                className="fr-icon-external-link-line fr-icon--sm fr-mr-1v"
-                aria-hidden="true"
-              />
-              Données {index + 1}
-            </a>
-          ))}
-        </div>
+      <div>
+        {sources.map((source, index) => (
+          <div key={index} className={index > 0 ? "fr-mt-1v" : ""}>
+            <strong className="fr-text--sm">{source.label}</strong>
+            {source.link && (
+              <>
+                <br />
+                <Link
+                  href={source.link}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="fr-link fr-link--sm"
+                  title="Accéder aux données ouvertes"
+                >
+                  <span aria-hidden="true" />
+                  Données ouvertes
+                </Link>
+              </>
+            )}
+          </div>
+        ))}
       </div>
     );
   };
 
   return (
     <div className={className}>
-      {data.map((category, categoryIndex) => (
-        <div key={`category-${categoryIndex}`} className="fr-mb-8w">
-          <h2 className="fr-h2 fr-mb-3w">{category.rubrique}</h2>
-          {category.sousRubriques
-            .filter((sousRubrique) => sousRubrique.definitions.length > 0)
-            .map((sousRubrique, sousIndex) => (
+      {data.map((category, categoryIndex) => {
+        const validSousRubriques = category.sousRubriques.filter(
+          (sousRubrique) =>
+            sousRubrique.definitions.some(
+              (def) =>
+                def.pageDefinition === true &&
+                def.definition &&
+                def.definition.trim() !== ""
+            )
+        );
+
+        if (validSousRubriques.length === 0) return null;
+
+        return (
+          <div key={`category-${categoryIndex}`} className="fr-mb-8w">
+            <h2 className="fr-h2 fr-mb-3w">{category.rubrique}</h2>
+            {validSousRubriques.map((sousRubrique, sousIndex) => (
               <div
                 key={`sous-${categoryIndex}-${sousIndex}`}
                 className="fr-mb-6w"
@@ -93,14 +110,16 @@ export default function Definitions({
                         <th scope="col">Indicateur</th>
                         <th scope="col">Définition</th>
                         <th scope="col">Unité</th>
-                        <th scope="col">Source</th>
+                        <th scope="col" style={{ width: "25%" }}>
+                          Source
+                        </th>
                       </tr>
                     </thead>
                     <tbody>
                       {sousRubrique.definitions
                         .filter(
                           (def) =>
-                            def.pageDefinition !== false &&
+                            def.pageDefinition === true &&
                             def.definition &&
                             def.definition.trim() !== ""
                         )
@@ -111,9 +130,6 @@ export default function Definitions({
                             <td>
                               <strong>{def.libelle}</strong>
                               <br />
-                              <code className="fr-text--xs">
-                                {def.indicateur}
-                              </code>
                             </td>
                             <td>
                               {def.definition}
@@ -125,10 +141,11 @@ export default function Definitions({
                                   {def.interpretation}
                                 </>
                               )}
-                              {renderOpendataLinks(def)}
                             </td>
                             <td className="fr-text--center">{def.unite}</td>
-                            <td className="fr-text--xs">{def.source}</td>
+                            <td className="fr-text--xs">
+                              {renderSourceLinks(def)}
+                            </td>
                           </tr>
                         ))}
                     </tbody>
@@ -136,8 +153,9 @@ export default function Definitions({
                 </div>
               </div>
             ))}
-        </div>
-      ))}
+          </div>
+        );
+      })}
     </div>
   );
 }
