@@ -6,9 +6,9 @@ import { useFinanceAdvancedComparison } from "../../../api/api";
 import { useNationalFilters } from "../hooks/useNationalFilters";
 import { useFilteredNationalData } from "../hooks/useFilteredNationalData";
 import { useFilters } from "../../../hooks/useFilters";
-import Breadcrumb from "../../../../financements-par-aap/components/breadcrumb";
-import Dropdown from "../../../../../components/dropdown";
 import "../styles.scss";
+import Dropdown from "../../../components/dropdown";
+import Breadcrumb from "../../../components/breadcrumb";
 
 const DEFAULT_YEAR = "2024";
 
@@ -86,7 +86,6 @@ export default function NationalSelector() {
   );
 
   const etablissementCount = filteredItems.length;
-  // Attention pour la vue national on utilise pas actuel. Ni pour categorie ni pour typologie et region normal pas actuel
 
   useEffect(() => {
     if (!years.length) return;

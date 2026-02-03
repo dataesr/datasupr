@@ -1,6 +1,6 @@
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import EffectifsChart from "./charts/effectifs";
-import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
+import { MetricChartCard } from "../../components/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
 import { useMetricEvolution } from "../api";
 import "../styles.scss";

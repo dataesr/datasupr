@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Select from "../../../../../components/select";
+import Select from "../../../components/select";
 import "../styles.scss";
 
 interface SectionNavigationProps {

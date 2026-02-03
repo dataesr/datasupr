@@ -9,7 +9,7 @@ import {
 import { createPositioningComparisonBarOptions } from "./options";
 import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
-import Select from "../../../../../../../../components/select";
+import Select from "../../../../../../components/select";
 import { useFinanceDefinitions } from "../../../../../definitions/api";
 import {
   PREDEFINED_ANALYSES,

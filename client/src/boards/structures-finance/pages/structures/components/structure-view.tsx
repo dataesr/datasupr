@@ -19,10 +19,10 @@ import {
   ImplantationsSection,
   PositionnementSection,
 } from "../sections/sections";
-import Breadcrumb from "../../../../financements-par-aap/components/breadcrumb";
 import StructureNotExistsAlert from "./structure-not-exists-alert";
 import MultipleStructuresSelector from "./multiple-structures-selector";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
+import Breadcrumb from "../../../components/breadcrumb";
 
 export default function StructureView() {
   const [searchParams, setSearchParams] = useSearchParams();

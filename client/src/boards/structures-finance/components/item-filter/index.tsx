@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Title } from "@dataesr/dsfr-plus";
-import Select from "../../../../components/select";
+import Select from "../select";
 import "./styles.scss";
 
 export interface FilterItem {

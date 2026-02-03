@@ -1,8 +1,8 @@
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
-import FAQ from "../../../../components/faq";
+import FAQ from "./component/faq-display";
 import { useFinanceFAQ } from "./api";
-import Breadcrumb from "../../../financements-par-aap/components/breadcrumb";
+import Breadcrumb from "../../components/breadcrumb";
 
 export default function FAQView() {
   const [searchParams] = useSearchParams();

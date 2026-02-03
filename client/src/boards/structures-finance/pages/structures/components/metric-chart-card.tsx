@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import Highcharts from "highcharts";
-import { DSFR_COLORS } from "../../boards/structures-finance/constants/colors";
+import { DSFR_COLORS } from "../../../constants/colors";
 
 interface MetricChartCardProps {
   title: string;

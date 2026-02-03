@@ -1,7 +1,7 @@
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
-import Definitions from "../../../../components/definitions";
+import Definitions from "./component/definitions-display";
 import { useFinanceDefinitions } from "./api";
-import Breadcrumb from "../../../financements-par-aap/components/breadcrumb";
+import Breadcrumb from "../../components/breadcrumb";
 
 export default function DefinitionsView() {
   const { data, isLoading, error } = useFinanceDefinitions();

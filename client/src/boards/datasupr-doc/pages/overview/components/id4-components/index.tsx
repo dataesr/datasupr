@@ -13,10 +13,7 @@ import {
   SummaryItem,
   SummaryWrapper,
 } from "../../../../../../components/summary";
-import TertiaryNavigation, {
-  TertiaryNavigationItem,
-} from "../../../../../../components/tertiary-navigation";
-import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
+import { MetricChartCard } from "../../../../../structures-finance/pages/structures/components/metric-chart-card";
 
 export default function Id4Components() {
   return (
@@ -36,8 +33,8 @@ export default function Id4Components() {
                 <code>{`<BoardsSuggestComponent />`}</code>
               </li>
               <li id="id4-breadcrumb">
-                <Badge color="purple-glycine">Breadcrumb</Badge>&nbsp;:
-                fil d'Ariane personnalisé pour la navigation.
+                <Badge color="purple-glycine">Breadcrumb</Badge>&nbsp;: fil
+                d'Ariane personnalisé pour la navigation.
               </li>
               <li id="id4-callout">
                 <Badge color="purple-glycine">Callout</Badge>&nbsp;: encadré
@@ -305,26 +302,6 @@ export default function Id4Components() {
               <li id="id4-template">
                 <Badge color="purple-glycine">Template</Badge>&nbsp;: composant
                 template de base.
-              </li>
-              <li id="id4-tertiary-navigation">
-                <Badge color="purple-glycine">TertiaryNavigation</Badge>&nbsp;:
-                composant de navigation par ancres. Utiliser avec{" "}
-                <Badge color="purple-glycine">TertiaryNavigationItem</Badge>{" "}
-                pour chaque élément de navigation.
-                <br />
-                <TertiaryNavigation>
-                  <TertiaryNavigationItem href="#id1" label="Section 1" />
-                  <TertiaryNavigationItem href="#id2" label="Section 2" />
-                  <TertiaryNavigationItem href="#id3" label="Section 3" />
-                </TertiaryNavigation>
-                <br />
-                <code>
-                  {`<TertiaryNavigation>
-    <TertiaryNavigationItem href="#section-1" label="Section 1" />
-    <TertiaryNavigationItem href="#section-2" label="Section 2" />
-    <TertiaryNavigationItem href="#section-3" label="Section 3" />
-  </TertiaryNavigation>`}
-                </code>
               </li>
               <li id="id4-metric-chart-card">
                 <Badge color="purple-glycine">MetricChartCard</Badge>&nbsp;:

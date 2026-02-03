@@ -1,8 +1,8 @@
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import { useMetricEvolution } from "../api";
-import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
+import { MetricChartCard } from "../../components/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
-import StatusIndicator from "../../../../../../components/status-indicator";
+import StatusIndicator from "../../../../components/status-indicator";
 import { parseMarkdown } from "../../../../../../utils/format";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";

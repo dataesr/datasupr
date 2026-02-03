@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { Row, Col, Title, Button } from "@dataesr/dsfr-plus";
-import Select from "../../../../../components/select";
-import Dropdown from "../../../../../components/dropdown";
+import Select from "../../../components/select";
 import { useFilters } from "../../../hooks/useFilters";
 import "../../national/styles.scss";
+import Dropdown from "../../../components/dropdown";
 
 interface SelectionUIProps {
   availableTypes: string[];

@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useFinanceDefinitions } from "../../boards/structures-finance/pages/definitions/api";
+import { useFinanceDefinitions } from "../../pages/definitions/api";
 import "./styles.scss";
 
 interface StatusIndicatorProps {

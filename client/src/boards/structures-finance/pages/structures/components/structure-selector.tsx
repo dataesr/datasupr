@@ -6,8 +6,8 @@ import { useFinanceYears } from "../../../api/common";
 import { useFilters } from "../../../hooks/useFilters";
 import SelectionUI from "./selection-ui";
 import CardSimple from "../../../../../components/card-simple";
-import Breadcrumb from "../../../../financements-par-aap/components/breadcrumb";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
+import Breadcrumb from "../../../components/breadcrumb";
 
 export default function StructureSelection() {
   const [, setSearchParams] = useSearchParams();

@@ -1,6 +1,6 @@
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import { SECTION_COLORS } from "../../../../constants/colors";
-import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
+import { MetricChartCard } from "../../components/metric-chart-card";
 import { useMetricEvolution } from "../api";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";

@@ -1,7 +1,7 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
-import Dropdown from "../../../../../../../components/dropdown";
 import type { PositioningFilters } from "../hooks/usePositioningFilteredData";
 import "./positioning-filters.scss";
+import Dropdown from "../../../../../components/dropdown";
 
 interface PositioningFiltersProps {
   data: any[];

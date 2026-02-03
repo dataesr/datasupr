@@ -9,7 +9,7 @@ import {
 } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../components/chart-wrapper/index.tsx";
 import { createComparisonBarOptions } from "./options.tsx";
-import Select from "../../../../../../../components/select/index.tsx";
+import Select from "../../../../../components/select/index.tsx";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
 import MetricDefinitionsTable from "../../../../../components/metric-definitions/metric-definitions-table.tsx";
 import { useFinanceDefinitions } from "../../../../definitions/api";
