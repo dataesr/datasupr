@@ -10,7 +10,10 @@ import {
   usePositioningFilteredData,
   type PositioningFilters as PositioningFiltersType,
 } from "./hooks/usePositioningFilteredData";
-import { type AnalysisKey } from "../analyses/charts/evolution/config";
+import {
+  type AnalysisKey,
+  PREDEFINED_ANALYSES,
+} from "../analyses/charts/evolution/config";
 import { Select } from "../../../../../../components/select";
 import "../styles.scss";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
@@ -134,6 +137,25 @@ export function PositionnementSection({
       yLabel: "Ressources propres (€)",
     },
   ];
+
+  const metricKeys = useMemo(() => {
+    if (activeChart === "comparison" && selectedAnalysis) {
+      const analysisConfig = PREDEFINED_ANALYSES[selectedAnalysis];
+      if (analysisConfig) {
+        return analysisConfig.metrics.filter(
+          (metric) =>
+            !metric.includes("_ipc") && metric !== "effectif_sans_cpge_veto"
+        );
+      }
+    } else if (activeChart === "scatter-1") {
+      return ["produits_de_fonctionnement_encaissables", "effectif_sans_cpge"];
+    } else if (activeChart === "scatter-2") {
+      return ["scsp_par_etudiants", "taux_encadrement"];
+    } else if (activeChart === "scatter-3") {
+      return ["scsp", "ressources_propres"];
+    }
+    return [];
+  }, [activeChart, selectedAnalysis]);
 
   return (
     <section
@@ -273,16 +295,7 @@ export function PositionnementSection({
             </div>
           )}
 
-          <MetricDefinitionsTable
-            metricKeys={[
-              "produits_de_fonctionnement_encaissables",
-              "effectif_sans_cpge",
-              "scsp_par_etudiants",
-              "taux_encadrement",
-              "scsp",
-              "ressources_propres",
-            ]}
-          />
+          <MetricDefinitionsTable metricKeys={metricKeys} />
         </>
       )}
     </section>
