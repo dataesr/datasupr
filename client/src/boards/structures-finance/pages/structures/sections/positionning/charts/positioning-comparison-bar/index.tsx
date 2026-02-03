@@ -18,8 +18,8 @@ import {
 } from "../../../../../../config/index";
 
 interface PositioningComparisonBarChartProps {
-  data: any[];
-  currentStructure: any;
+  data?: any[];
+  currentStructure?: any;
   currentStructureId?: string;
   currentStructureName?: string;
   selectedYear?: string;
@@ -35,7 +35,7 @@ export default function PositioningComparisonBarChart({
 }: PositioningComparisonBarChartProps) {
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
 
-  const data = propData;
+  const data = propData || [];
   const currentStructureId = propCurrentStructureId;
   const currentStructureName = propCurrentStructureName || "";
   const year = propSelectedYear || "";

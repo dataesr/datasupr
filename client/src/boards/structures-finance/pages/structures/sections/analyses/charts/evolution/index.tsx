@@ -40,9 +40,6 @@ interface EvolutionChartProps {
   selectedAnalysis?: AnalysisKey;
 }
 
-const capitalizeFirst = (str: string) =>
-  str.charAt(0).toUpperCase() + str.slice(1);
-
 export function useAnalysesWithData(etablissementId: string) {
   const { data, isLoading } = useFinanceEtablissementEvolution(etablissementId);
 
@@ -101,6 +98,7 @@ export default function EvolutionChart({
     "values"
   );
   const [showIPC, setShowIPC] = useState(false);
+  const [showPart, setShowPart] = useState(false);
   const etablissementId =
     propEtablissementId || searchParams.get("structureId") || "";
   const selectedAnalysis =
@@ -151,11 +149,28 @@ export default function EvolutionChart({
   }, [baseMetrics]);
 
   const selectedMetrics = useMemo(() => {
+    let metrics = baseMetrics;
+
     if (!hasIPCMetrics || showIPC) {
-      return baseMetrics;
+      metrics = baseMetrics;
+    } else {
+      metrics = baseMetrics.filter((m) => !m.endsWith("_ipc"));
     }
-    return baseMetrics.filter((m) => !m.endsWith("_ipc"));
-  }, [baseMetrics, hasIPCMetrics, showIPC]);
+
+    if (showPart && metrics.length === 1) {
+      const partKey = METRIC_TO_PART[metrics[0]];
+      if (partKey && METRICS_CONFIG[partKey]) {
+        const hasPartData = data?.some(
+          (item: any) => item[partKey] != null && item[partKey] !== 0
+        );
+        if (hasPartData) {
+          return [partKey];
+        }
+      }
+    }
+
+    return metrics;
+  }, [baseMetrics, hasIPCMetrics, showIPC, showPart, data]);
 
   const nominalMetric = useMemo(() => {
     if (!hasIPCMetrics) return null;
@@ -233,25 +248,15 @@ export default function EvolutionChart({
     years.length > 0 ? `${years[0]} - ${years[years.length - 1]}` : "";
 
   const partMetricKey = useMemo(() => {
-    if (selectedMetrics.length !== 1) return null;
-    const partKey = METRIC_TO_PART[selectedMetrics[0]];
+    if (baseMetrics.length !== 1) return null;
+    const baseMetric = baseMetrics[0];
+    const partKey = METRIC_TO_PART[baseMetric];
     if (!partKey) return null;
     const hasPartData = data?.some(
       (item: any) => item[partKey] != null && item[partKey] !== 0
     );
     return hasPartData ? partKey : null;
-  }, [selectedMetrics, data]);
-
-  const partChartOptions = useMemo(() => {
-    if (!data || data.length === 0 || !partMetricKey) return null;
-
-    return createEvolutionChartOptions(
-      data,
-      [partMetricKey] as MetricKey[],
-      METRICS_CONFIG,
-      false
-    );
-  }, [data, partMetricKey]);
+  }, [baseMetrics, data]);
 
   if (!data || data.length === 0) {
     return (
@@ -336,27 +341,6 @@ export default function EvolutionChart({
         : undefined,
     };
 
-    const partConfig = partMetricKey
-      ? {
-          id: "evolution-part",
-          integrationURL: `/integration?chart_id=evolution-part&structureId=${etablissementId}&analysis=${selectedAnalysis}`,
-          title: `${capitalizeFirst(METRICS_CONFIG[partMetricKey].label)}${etabName ? ` — ${etabName}` : ""}`,
-          comment: periodText
-            ? {
-                fr: (
-                  <>
-                    Évolution de la {METRICS_CONFIG[partMetricKey].label}{" "}
-                    {partMetricKey.includes("effectif")
-                      ? "sur le total des effectifs"
-                      : "sur ressources propres"}{" "}
-                    sur la période {periodText}.
-                  </>
-                ),
-              }
-            : undefined,
-        }
-      : null;
-
     return (
       <>
         {hasIPCMetrics && (
@@ -380,6 +364,27 @@ export default function EvolutionChart({
             </SegmentedControl>
           </div>
         )}
+        {partMetricKey && (
+          <div className="fr-mb-2w">
+            <SegmentedControl
+              className="fr-segmented--sm"
+              name="evolution-part-mode"
+            >
+              <SegmentedElement
+                checked={!showPart}
+                label="Valeur"
+                onClick={() => setShowPart(false)}
+                value="value"
+              />
+              <SegmentedElement
+                checked={showPart}
+                label="Part"
+                onClick={() => setShowPart(true)}
+                value="part"
+              />
+            </SegmentedControl>
+          </div>
+        )}
         <ChartWrapper
           config={singleConfig}
           options={chartOptions}
@@ -392,22 +397,6 @@ export default function EvolutionChart({
             />
           )}
         />
-
-        {partMetricKey && partChartOptions && partConfig && (
-          <div className="fr-mt-3w">
-            <ChartWrapper
-              config={partConfig}
-              options={partChartOptions}
-              renderData={() => (
-                <RenderDataSingle
-                  data={data}
-                  metricKey={partMetricKey}
-                  metricConfig={METRICS_CONFIG[partMetricKey]}
-                />
-              )}
-            />
-          </div>
-        )}
 
         {selectedAnalysis === "ressources-propres" && (
           <div className="fr-mt-3w">
