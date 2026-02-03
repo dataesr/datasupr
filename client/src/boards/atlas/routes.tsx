@@ -13,12 +13,8 @@ import Accessibility from "./pages/static-pages/accessibility.tsx";
 import Contact from "./pages/static-pages/contact.tsx";
 import CookieManagement from "./pages/static-pages/cookie-management.tsx";
 import LegalMentions from "./pages/static-pages/legal-mentions.tsx";
-import SiteMap from "./pages/static-pages/site-map.tsx";
-
-import "highcharts/modules/accessibility";
-import "highcharts/modules/export-data";
-import "highcharts/modules/exporting";
 import Methodology from "./pages/static-pages/methodology.tsx";
+import SiteMap from "./pages/static-pages/site-map.tsx";
 
 
 export default function AtlasRoutes() {
