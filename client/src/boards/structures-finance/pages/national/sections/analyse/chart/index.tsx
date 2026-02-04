@@ -12,7 +12,8 @@ import { createComparisonBarOptions } from "./options.tsx";
 import Select from "../../../../../components/select/index.tsx";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
 import MetricDefinitionsTable from "../../../../../components/metric-definitions/metric-definitions-table.tsx";
-import { useFinanceDefinitions } from "../../../../definitions/api";
+import { useMetricLabel } from "../../../../../hooks/useMetricLabel";
+import { useMetricThreshold } from "../../../../../hooks/useMetricThreshold";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
@@ -21,11 +22,7 @@ import {
   type MetricKey,
 } from "../../../../../config/config.ts";
 import { RenderData } from "./render-data.tsx";
-import {
-  FINANCIAL_HEALTH_INDICATORS,
-  ThresholdLegend,
-  type ThresholdConfig,
-} from "../../../../../config/index.tsx";
+import { ThresholdLegend } from "../../../../../config/index.tsx";
 
 interface NationalChartProps {
   data: any[];
@@ -48,24 +45,7 @@ export default function NationalChart({
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
   const [showPart, setShowPart] = useState(false);
 
-  const { data: definitionsData } = useFinanceDefinitions();
-
-  const getMetricLabel = useMemo(() => {
-    return (metricKey: MetricKey): string => {
-      if (!definitionsData)
-        return METRICS_CONFIG[metricKey]?.label || metricKey;
-
-      for (const cat of definitionsData) {
-        for (const sr of cat.sousRubriques) {
-          const def = sr.definitions.find((d) => d.indicateur === metricKey);
-          if (def?.libelle) {
-            return def.libelle;
-          }
-        }
-      }
-      return METRICS_CONFIG[metricKey]?.label || metricKey;
-    };
-  }, [definitionsData]);
+  const getMetricLabel = useMetricLabel();
 
   const analysisConfig = PREDEFINED_ANALYSES[selectedAnalysis];
   const isStacked = (analysisConfig as any)?.chartType === "stacked";
@@ -112,6 +92,8 @@ export default function NationalChart({
     data,
   ]);
 
+  const metricThreshold = useMetricThreshold(activeMetricKey);
+
   const metricConfig = activeMetricKey
     ? METRICS_CONFIG[activeMetricKey as MetricKey]
     : null;
@@ -142,33 +124,6 @@ export default function NationalChart({
       return value != null && value !== 0;
     });
   }, [isStacked, analysisConfig, selectedMetricIndex, data]);
-
-  const metricThreshold = useMemo((): ThresholdConfig | null => {
-    if (!definitionsData || !activeMetricKey) return null;
-    if (!FINANCIAL_HEALTH_INDICATORS.includes(activeMetricKey)) return null;
-
-    for (const cat of definitionsData) {
-      for (const sr of cat.sousRubriques) {
-        const def = sr.definitions.find(
-          (d) => d.indicateur === activeMetricKey
-        );
-        if (
-          def &&
-          (def.ale_val != null || (def.vig_min != null && def.vig_max != null))
-        ) {
-          return {
-            ale_sens: def.ale_sens,
-            ale_val: def.ale_val,
-            ale_lib: def.ale_lib,
-            vig_min: def.vig_min,
-            vig_max: def.vig_max,
-            vig_lib: def.vig_lib,
-          };
-        }
-      }
-    }
-    return null;
-  }, [definitionsData, activeMetricKey]);
 
   const chartOptions: Highcharts.Options | null = useMemo(() => {
     if (!data || !data.length || !activeMetricKey) return null;

@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ItemFilter, {
   type FilterItem,
 } from "../../../../../components/item-filter";
@@ -10,24 +10,22 @@ import {
 interface AnalysisFilterProps {
   analysesWithData: Set<AnalysisKey>;
   selectedAnalysis: AnalysisKey | null;
-  selectedCategory: string;
   onSelectAnalysis: (analysis: AnalysisKey) => void;
-  onSelectCategory: (category: string) => void;
 }
 
 export default function AnalysisFilter({
   analysesWithData,
   selectedAnalysis,
-  selectedCategory,
   onSelectAnalysis,
-  onSelectCategory,
 }: AnalysisFilterProps) {
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    "Indicateurs financiers"
+  );
   const items: FilterItem[] = useMemo(() => {
     return Object.entries(PREDEFINED_ANALYSES).map(([key, analysis]) => ({
       key,
       label: analysis.label,
       category: analysis.category,
-      hint: analysis.showBase100 ? "base 100" : undefined,
     }));
   }, []);
 
@@ -39,7 +37,7 @@ export default function AnalysisFilter({
       selectedKey={selectedAnalysis}
       selectedCategory={selectedCategory}
       onSelectItem={(key) => onSelectAnalysis(key as AnalysisKey)}
-      onSelectCategory={onSelectCategory}
+      onSelectCategory={setSelectedCategory}
     />
   );
 }

@@ -11,6 +11,7 @@ import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import Select from "../../../../../../components/select";
 import { useFinanceDefinitions } from "../../../../../definitions/api";
+import { useMetricThreshold } from "../../../../../../hooks/useMetricThreshold";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
@@ -18,11 +19,7 @@ import {
   type AnalysisKey,
   type MetricKey,
 } from "../../../../../../config/config";
-import {
-  FINANCIAL_HEALTH_INDICATORS,
-  ThresholdLegend,
-  type ThresholdConfig,
-} from "../../../../../../config/index";
+import { ThresholdLegend } from "../../../../../../config/index";
 
 interface PositioningComparisonBarChartProps {
   data?: any[];
@@ -133,30 +130,7 @@ export default function PositioningComparisonBarChart({
     });
   }, [isStacked, analysisConfig, selectedMetricIndex, data]);
 
-  const metricThreshold = useMemo((): ThresholdConfig | null => {
-    if (!definitionsData || !selectedMetric) return null;
-    if (!FINANCIAL_HEALTH_INDICATORS.includes(selectedMetric)) return null;
-
-    for (const cat of definitionsData) {
-      for (const sr of cat.sousRubriques) {
-        const def = sr.definitions.find((d) => d.indicateur === selectedMetric);
-        if (
-          def &&
-          (def.ale_val != null || (def.vig_min != null && def.vig_max != null))
-        ) {
-          return {
-            ale_sens: def.ale_sens,
-            ale_val: def.ale_val,
-            ale_lib: def.ale_lib,
-            vig_min: def.vig_min,
-            vig_max: def.vig_max,
-            vig_lib: def.vig_lib,
-          };
-        }
-      }
-    }
-    return null;
-  }, [definitionsData, selectedMetric]);
+  const metricThreshold = useMetricThreshold(selectedMetric);
 
   const formatValue = useMemo(() => {
     switch (selectedMetricConfig.format) {
