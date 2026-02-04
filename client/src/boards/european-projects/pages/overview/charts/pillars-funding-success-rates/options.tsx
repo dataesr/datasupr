@@ -6,7 +6,7 @@ import { formatToRates } from "../../../../../../utils/format";
 export default function Options(data) {
   if (!data) return null;
 
-  const rootStyles = getComputedStyle(document.documentElement);
+  // const rootStyles = getComputedStyle(document.documentElement);
   const height = data.data.length * 50;
 
   const newOptions: HighchartsInstance.Options = {
