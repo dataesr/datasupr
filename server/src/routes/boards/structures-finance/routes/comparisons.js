@@ -75,6 +75,7 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
         "etablissement_lib",
         "etablissement_actuel_lib",
         "etablissement_categorie",
+        "champ_recherche",
         "etablissement_actuel_categorie",
         "region",
         "etablissement_actuel_region",
