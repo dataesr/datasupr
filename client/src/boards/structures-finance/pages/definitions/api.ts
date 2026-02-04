@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export interface Definition {
+  calculfr: string;
   indicateur: string;
   libelle: string;
   definition: string;

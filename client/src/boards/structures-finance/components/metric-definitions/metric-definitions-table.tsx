@@ -18,6 +18,7 @@ export default function MetricDefinitionsTable({
     if (!definitions || !metricKeys) return [];
 
     const result: Array<{
+      calculfr: string;
       indicateur: string;
       libelle: string;
       definition: string;
@@ -38,6 +39,7 @@ export default function MetricDefinitionsTable({
         for (const def of sousRubrique.definitions) {
           if (metricKeys.includes(def.indicateur)) {
             result.push({
+              calculfr: def.calculfr,
               indicateur: def.indicateur,
               libelle: def.libelle,
               definition: def.definition,
@@ -161,6 +163,23 @@ export default function MetricDefinitionsTable({
                       className="fr-mb-2w fr-text--sm"
                       dangerouslySetInnerHTML={{
                         __html: parseMarkdown(def.definition),
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+              {def.calculfr && def.calculfr !== "-" && (
+                <div className="definition-section">
+                  <span
+                    className="section-icon fr-icon-line-chart-fill"
+                    aria-hidden="true"
+                  />
+                  <div className="section-content">
+                    <strong className="section-label">Calcul</strong>
+                    <p
+                      className="fr-mb-2w fr-text--sm"
+                      dangerouslySetInnerHTML={{
+                        __html: parseMarkdown(def.calculfr),
                       }}
                     />
                   </div>

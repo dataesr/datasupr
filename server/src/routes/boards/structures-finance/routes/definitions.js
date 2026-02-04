@@ -45,6 +45,7 @@ router.get("/structures-finance/definitions", async (req, res) => {
         opendata3: item.opendata3 || null,
         source4fr: item.source4fr || null,
         opendata4: item.opendata4 || null,
+        calculfr: item.calculfr || null,
         unite: item.unitefr || "-",
         pageDefinition: item.pagedefinition === "True",
         ale_sens: item.ale_sens || null,
