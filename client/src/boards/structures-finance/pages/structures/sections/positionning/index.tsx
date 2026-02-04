@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { Row, Col } from "@dataesr/dsfr-plus";
-import { PositionningSectionWrapper } from "../../components/positionning/section-wrapper";
+import { PositionningSectionWrapper } from "./components/section-wrapper";
 import PositioningCharts, { type ChartView } from "./charts";
 import PositioningFiltersPanel from "./filters-container/filters";
 import ChartTypeSelector from "./chart-type-selector";

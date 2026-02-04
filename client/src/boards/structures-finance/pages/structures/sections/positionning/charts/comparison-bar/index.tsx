@@ -28,19 +28,19 @@ const filterDisplayMetrics = (metrics: readonly string[]) =>
   ) as MetricKey[];
 
 interface ComparisonBarChartProps {
-  data: any[];
+  data?: any[];
   currentStructureId?: string;
-  currentStructureName: string;
-  selectedYear: string;
-  selectedAnalysis: AnalysisKey | null;
+  currentStructureName?: string;
+  selectedYear?: string;
+  selectedAnalysis?: AnalysisKey | null;
 }
 
 export default function ComparisonBarChart({
   data = [],
   currentStructureId,
-  currentStructureName,
-  selectedYear,
-  selectedAnalysis,
+  currentStructureName = "",
+  selectedYear = "",
+  selectedAnalysis = null,
 }: ComparisonBarChartProps) {
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
   const [showPart, setShowPart] = useState(false);
