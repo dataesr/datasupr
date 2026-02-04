@@ -89,14 +89,21 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
     data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.unique_projects?.value ?? 0),
     name: funder,
   })).reverse();
-  const categoriesProject = partnersProject.map((partner) => partner.key.split("###")[1].split("_")[1]);
+  const categoriesProject = partnersProject?.map((partner) => {
+    const structure = Object.fromEntries(new URLSearchParams(partner.key));
+    return `${structure.label} (${structure.country})`;
+  });
+  console.log(categoriesProject);
   const partnersBudget = data?.aggregations?.by_international_partners_budget?.buckets ?? [];
   const seriesBudget = funders.map((funder) => ({
     color: getCssColor({ name: funder, prefix: "funder" }),
     data: partnersBudget.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.sum_budget?.value ?? 0),
     name: funder,
   })).reverse();
-  const categoriesBudget = partnersBudget.map((partner) => partner.key.split("###")[1].split("_")[1]);
+  const categoriesBudget = partnersBudget.map((partner) => {
+    const structure = Object.fromEntries(new URLSearchParams(partner.key));
+    return `${structure.label} (${structure.country})`;
+  });
 
   const axisBudget = "Montants financés (€)";
   const axisProjects = "Nombre de projets financés";
