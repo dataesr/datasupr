@@ -1,6 +1,6 @@
-import { Row, Col } from "@dataesr/dsfr-plus";
+import { Row, Col, Text } from "@dataesr/dsfr-plus";
 import type { PositioningFilters } from "../../../hooks";
-import "./positioning-filters.scss";
+import "./filters.scss";
 import Dropdown from "../../../../../components/dropdown";
 
 interface PositioningFiltersProps {
@@ -66,9 +66,9 @@ export default function PositioningFilters({
               <div className="positioning-filters__icon-wrapper positioning-filters__icon-wrapper--blue">
                 <span className="fr-icon-filter-line" aria-hidden="true" />
               </div>
-              <span className="fr-text--sm fr-text--bold text-mention-grey">
+              <Text className="fr-text--sm fr-text--bold text-mention-grey">
                 Filtrer la comparaison
-              </span>
+              </Text>
             </div>
 
             <div className="fr-mb-2w">
@@ -124,8 +124,31 @@ export default function PositioningFilters({
               <Row gutters>
                 <Col xs="12" md="6">
                   <Dropdown
+                    label={getTypologieLabel()}
+                    icon="layout-grid-line"
+                    size="sm"
+                    fullWidth
+                  >
+                    <Dropdown.Item
+                      active={!filters.typologie}
+                      onClick={() => handleFilterChange("typologie", "")}
+                    >
+                      Toutes les typologies
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      active={filters.typologie === "same-typologie"}
+                      onClick={() =>
+                        handleFilterChange("typologie", "same-typologie")
+                      }
+                    >
+                      Même typologie ({structureTypologie})
+                    </Dropdown.Item>
+                  </Dropdown>
+                </Col>
+                <Col xs="12" md="6">
+                  <Dropdown
                     label={getRceLabel()}
-                    icon="bank-line"
+                    icon="link"
                     size="sm"
                     fullWidth
                   >
@@ -149,6 +172,11 @@ export default function PositioningFilters({
                     </Dropdown.Item>
                   </Dropdown>
                 </Col>
+              </Row>
+            </div>
+
+            <div>
+              <Row gutters>
                 <Col xs="12" md="6">
                   <Dropdown
                     label={getDevimmoLabel()}
@@ -179,30 +207,6 @@ export default function PositioningFilters({
                   </Dropdown>
                 </Col>
               </Row>
-            </div>
-
-            <div>
-              <Dropdown
-                label={getTypologieLabel()}
-                icon="layout-grid-line"
-                size="sm"
-                fullWidth
-              >
-                <Dropdown.Item
-                  active={!filters.typologie}
-                  onClick={() => handleFilterChange("typologie", "")}
-                >
-                  Toutes les typologies
-                </Dropdown.Item>
-                <Dropdown.Item
-                  active={filters.typologie === "same-typologie"}
-                  onClick={() =>
-                    handleFilterChange("typologie", "same-typologie")
-                  }
-                >
-                  Même typologie ({structureTypologie})
-                </Dropdown.Item>
-              </Dropdown>
             </div>
           </div>
         </Col>

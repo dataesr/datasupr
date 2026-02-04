@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useFinanceAdvancedComparison } from "../../api/api";
 import { isRce } from "../national/hooks/useFilteredNationalData";
 
-export function useEtablissementsData(selectedYear: string | number) {
+function useEtablissementsData(selectedYear: string | number) {
   const { data: comparisonData, isLoading } = useFinanceAdvancedComparison(
     {
       annee: String(selectedYear),
@@ -46,7 +46,7 @@ export function useEtablissementsData(selectedYear: string | number) {
   };
 }
 
-export function useAvailableTypes(allEtablissements: any[]) {
+function useAvailableTypes(allEtablissements: any[]) {
   return useMemo(() => {
     const types = new Set<string>();
     allEtablissements.forEach((etab: any) => {
@@ -74,7 +74,7 @@ export function useAvailableTypes(allEtablissements: any[]) {
   }, [allEtablissements]);
 }
 
-export function useDefaultType(availableTypes: string[]) {
+function useDefaultType(availableTypes: string[]) {
   return useMemo(() => {
     if (availableTypes.length === 0) return null;
 
@@ -88,7 +88,7 @@ export function useDefaultType(availableTypes: string[]) {
   }, [availableTypes]);
 }
 
-export function useAvailableRegions(
+function useAvailableRegions(
   allEtablissements: any[],
   selectedType: string,
   selectedTypologie: string
@@ -127,7 +127,7 @@ export function useAvailableRegions(
   }, [allEtablissements, selectedType, selectedTypologie]);
 }
 
-export function useAvailableTypologies(
+function useAvailableTypologies(
   allEtablissements: any[],
   selectedType: string,
   selectedRegion: string
@@ -179,7 +179,7 @@ const match = (a?: string, b?: string) =>
 
 const isDevimmo = (etab: any) => etab.devimmo === true;
 
-export function useFilteredEtablissements(
+function useFilteredEtablissements(
   allEtablissements: any[],
   selectedType: string,
   selectedRegion: string,
@@ -285,6 +285,73 @@ export function useStructuresFilters({
     availableTypologies,
     filteredEtablissements,
     defaultType,
+    isLoading,
+  };
+}
+
+export interface PositioningFilters {
+  type?: string;
+  typologie?: string;
+  region?: string;
+  rce?: string;
+  devimmo?: string;
+}
+
+export function usePositioningData(
+  selectedYear: string | number | undefined,
+  currentStructure: any,
+  filters: PositioningFilters
+) {
+  const { allEtablissements, isLoading } = useEtablissementsData(
+    selectedYear as string | number
+  );
+
+  const filteredItems = useMemo(() => {
+    const structureId = currentStructure?.etablissement_id_paysage_actuel;
+
+    return allEtablissements.filter((item) => {
+      const itemId = item.etablissement_id_paysage_actuel;
+
+      if (structureId && itemId === structureId) return true;
+
+      if (filters.type === "same-type") {
+        const itemType = item.etablissement_actuel_type || item.type;
+        const currentType =
+          currentStructure?.etablissement_actuel_type || currentStructure?.type;
+        if (itemType !== currentType) return false;
+      }
+
+      if (filters.typologie === "same-typologie") {
+        const itemTypo = item.etablissement_actuel_typologie || item.typologie;
+        const currentTypo =
+          currentStructure?.etablissement_actuel_typologie ||
+          currentStructure?.typologie;
+        if (itemTypo !== currentTypo) return false;
+      }
+
+      if (filters.region === "same-region") {
+        const itemRegion = item.etablissement_actuel_region || item.region;
+        const currentRegion =
+          currentStructure?.etablissement_actuel_region ||
+          currentStructure?.region;
+        if (itemRegion !== currentRegion) return false;
+      }
+
+      if (filters.rce === "rce" && item.is_rce !== true) return false;
+      if (filters.rce === "non-rce" && item.is_rce === true) return false;
+
+      if (filters.devimmo === "devimmo" && item.is_devimmo !== true)
+        return false;
+      if (filters.devimmo === "non-devimmo" && item.is_devimmo === true)
+        return false;
+
+      return true;
+    });
+  }, [allEtablissements, currentStructure, filters]);
+
+  return {
+    allItems: allEtablissements,
+    filteredItems,
     isLoading,
   };
 }

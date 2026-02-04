@@ -123,11 +123,11 @@ export const chartsRegistry = {
   ),
   "positioning-comparison-bar": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/positionning/charts/positioning-comparison-bar/index")
+      import("../structures-finance/pages/structures/sections/positionning/charts/comparison-bar/index")
   ),
   "positioning-scatter": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/positionning/charts/positioning-scatter/index")
+      import("../structures-finance/pages/structures/sections/positionning/charts/scatter/index")
   ),
 };
 

@@ -3,7 +3,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 1rem;
   }
 
   &__card {
@@ -17,12 +16,17 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    margin-bottom: 0.75rem;
+    margin-bottom: 1rem;
+
+    p {
+      margin: 0;
+    }
   }
 
   &__icon-wrapper {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
+    min-width: 32px;
     display: flex;
     align-items: center;
     justify-content: center;

@@ -1,10 +1,15 @@
-import "./render-data.scss";
+interface MetricConfig {
+  label: string;
+  format: "number" | "percent" | "decimal" | "euro";
+  color: string;
+  suffix?: string;
+}
 
 interface RenderDataProps {
   data: any[];
   metric: string;
   metricLabel: string;
-  format?: (value: number) => string;
+  metricConfig: MetricConfig;
   currentStructureId?: string;
   currentStructureName?: string;
 }
@@ -13,7 +18,7 @@ export function RenderData({
   data,
   metric,
   metricLabel,
-  format,
+  metricConfig,
   currentStructureId,
 }: RenderDataProps) {
   const seenIds = new Set<string>();
@@ -52,10 +57,16 @@ export function RenderData({
   }
 
   const formatValue = (value: number) => {
-    if (format) {
-      return format(value);
+    if (metricConfig.format === "euro") {
+      return `${value.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} €`;
     }
-    return value.toLocaleString("fr-FR");
+    if (metricConfig.format === "percent") {
+      return `${value.toFixed(2)} %`;
+    }
+    if (metricConfig.format === "decimal") {
+      return value.toFixed(2);
+    }
+    return value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
   };
 
   return (

@@ -73,10 +73,18 @@ export default function StructureView() {
   };
 
   const handleSectionChange = (newSection: string) => {
-    setSearchParams({
-      ...Object.fromEntries(searchParams),
-      section: newSection,
-    });
+    const params = Object.fromEntries(searchParams);
+    // Nettoie les params spécifiques au positionnement
+    // à revoir rapidement !
+    delete params.analysis;
+    delete params.chart;
+    delete params.filterType;
+    delete params.filterTypologie;
+    delete params.filterRegion;
+    delete params.filterRce;
+    delete params.filterDevimmo;
+    delete params.positioningChart;
+    setSearchParams({ ...params, section: newSection });
   };
 
   const handleYearChange = (year: string) => {
@@ -130,7 +138,7 @@ export default function StructureView() {
       <main>
         <Container fluid className="etablissement-selector__wrapper">
           <Container className="fr-py-4w">
-            <DefaultSkeleton col={3} height="300px" />
+            <DefaultSkeleton />
           </Container>
         </Container>
       </main>

@@ -3,10 +3,17 @@ import { createChartOptions } from "../../../../../../../../components/chart-wra
 import { THRESHOLD_COLORS } from "../../../../../../constants/colors";
 import type { ThresholdConfig } from "../../../../../../config";
 
+interface MetricConfig {
+  label: string;
+  format: "number" | "percent" | "decimal" | "euro";
+  color: string;
+  suffix?: string;
+}
+
 export interface PositioningComparisonBarConfig {
   metric: string;
   metricLabel: string;
-  format?: (value: number) => string;
+  metricConfig: MetricConfig;
   threshold?: ThresholdConfig | null;
 }
 
@@ -133,10 +140,17 @@ export const createPositioningComparisonBarOptions = (
       },
       labels: {
         formatter: function () {
-          if (config.format) {
-            return config.format(this.value as number);
+          const value = this.value as number;
+          if (config.metricConfig.format === "euro") {
+            return `${Highcharts.numberFormat(value, 0, ",", " ")} €`;
           }
-          return String(this.value);
+          if (config.metricConfig.format === "percent") {
+            return `${value.toFixed(1)}%`;
+          }
+          if (config.metricConfig.format === "decimal") {
+            return value.toFixed(2);
+          }
+          return Highcharts.numberFormat(value, 0, ",", " ");
         },
       },
       plotBands:
@@ -156,9 +170,16 @@ export const createPositioningComparisonBarOptions = (
       formatter: function () {
         const point = this as any;
         const value = point.y as number;
-        const formatted = config.format
-          ? config.format(value)
-          : value.toLocaleString("fr-FR");
+        let formatted: string;
+        if (config.metricConfig.format === "euro") {
+          formatted = `${Highcharts.numberFormat(value, 0, ",", " ")} €`;
+        } else if (config.metricConfig.format === "percent") {
+          formatted = `${value.toFixed(2)}%`;
+        } else if (config.metricConfig.format === "decimal") {
+          formatted = value.toFixed(2);
+        } else {
+          formatted = Highcharts.numberFormat(value, 0, ",", " ");
+        }
 
         return `
           <div class="fr-p-2w">

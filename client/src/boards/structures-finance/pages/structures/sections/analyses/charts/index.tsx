@@ -58,7 +58,7 @@ export default function EvolutionChart({
     let metrics = baseMetrics;
     const hasIPCMetrics = baseMetrics.some((m) => m.endsWith("_ipc"));
 
-    // En base 100, on exclut TOUJOURS les métriques IPC
+    // En base 100, on exclut TOUJOURS les métriques IPC, sinon ça veut rien dire
     if (isBase100) {
       metrics = baseMetrics.filter((m) => !m.endsWith("_ipc"));
     } else if (!hasIPCMetrics || showIPC) {

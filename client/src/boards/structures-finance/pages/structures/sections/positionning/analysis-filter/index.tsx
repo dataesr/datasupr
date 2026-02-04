@@ -1,27 +1,27 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import ItemFilter, {
   type FilterItem,
-} from "../../../../../../components/item-filter";
+} from "../../../../../components/item-filter";
 import {
   PREDEFINED_ANALYSES,
   type AnalysisKey,
-} from "../../../../../../config/config";
+} from "../../../../../config/config";
 
-interface PositioningMetricFilterProps {
+interface AnalysisFilterProps {
   data: any[];
   selectedAnalysis: AnalysisKey | null;
-  selectedCategory: string;
   onSelectAnalysis: (analysis: AnalysisKey) => void;
-  onSelectCategory: (category: string) => void;
 }
 
-export default function PositioningMetricFilter({
+export default function AnalysisFilter({
   data,
   selectedAnalysis,
-  selectedCategory,
   onSelectAnalysis,
-  onSelectCategory,
-}: PositioningMetricFilterProps) {
+}: AnalysisFilterProps) {
+  const [selectedCategory, setSelectedCategory] = useState<string>(
+    "Indicateurs financiers"
+  );
+
   const items: FilterItem[] = useMemo(() => {
     return Object.entries(PREDEFINED_ANALYSES)
       .filter(([, analysis]) => !analysis.showBase100)
@@ -29,7 +29,6 @@ export default function PositioningMetricFilter({
         key,
         label: analysis.label,
         category: analysis.category,
-        hint: analysis.showBase100 ? "base 100" : undefined,
       }));
   }, []);
 
@@ -38,7 +37,6 @@ export default function PositioningMetricFilter({
 
     const available = Object.keys(PREDEFINED_ANALYSES).filter((key) => {
       const analysis = PREDEFINED_ANALYSES[key as AnalysisKey];
-      if (analysis.showBase100) return false;
       return analysis.metrics.some((metricKey) => {
         return data.some((item) => {
           const value = item[metricKey];
@@ -58,7 +56,7 @@ export default function PositioningMetricFilter({
       selectedKey={selectedAnalysis}
       selectedCategory={selectedCategory}
       onSelectItem={(key) => onSelectAnalysis(key as AnalysisKey)}
-      onSelectCategory={onSelectCategory}
+      onSelectCategory={setSelectedCategory}
     />
   );
 }
