@@ -1,6 +1,6 @@
 .ep-funds-card {
   padding: 1rem;
-  padding-top: 40px;
+  padding-top: 20px;
   background-color: var(--background-alt-grey);
   border: 1px solid var(--border-default-grey);
 
@@ -16,9 +16,9 @@
   }
 
   .label{
-    font-size: 1rem;
-    font-style: italic;
-    font-weight: 600;
+    font-size: 1.1rem;
+    // font-style: italic;
+    // font-weight: 600;
     margin: 0;
     color: var(--card-text-color, var(--text-default-grey));
   }
@@ -214,6 +214,32 @@
       height: 0.875rem;
       width: 35px;
     }
+  }
+
+  .calculation-details {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-default-grey);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .calculation-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.875rem;
+  }
+
+  .calculation-label {
+    color: var(--card-text-color, var(--text-default-grey));
+    font-weight: 500;
+  }
+
+  .calculation-value {
+    color: var(--card-primary-color, var(--text-label-blue-ecume));
+    font-weight: 600;
   }
   
   @keyframes loading-shimmer {

@@ -39,7 +39,7 @@ export default function SyntheseContent() {
   switch (contentType) {
     case "pillar-comparison":
       return (
-        <div>
+        <div className="fr-pb-3w">
           <SynthesisFocus />
           <Title as="h2" className="fr-mt-5w">
             Comparaison de la répartition des subventions par pilier

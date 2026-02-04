@@ -47,6 +47,10 @@ export default function SynthesisFocus() {
             label={getI18nLabel("fundsShare.label")}
             loading={false}
             tooltipText={getI18nLabel("fundsShare.tooltip")}
+            numerator={dataCurrentCountry_successful.total_fund_eur}
+            denominator={dataSuccessful.total_fund_eur}
+            numeratorLabel={getI18nLabel("labels.fundsShare.numerator")}
+            denominatorLabel={getI18nLabel("labels.fundsShare.denominator")}
           />
         </Col>
         <Col md={6}>
@@ -55,6 +59,10 @@ export default function SynthesisFocus() {
             label={getI18nLabel("participantsShare.label")}
             loading={false}
             tooltipText={getI18nLabel("participantsShare.tooltip")}
+            numerator={dataCurrentCountry_successful.total_involved}
+            denominator={dataSuccessful.total_involved}
+            numeratorLabel={getI18nLabel("labels.participantsShare.numerator")}
+            denominatorLabel={getI18nLabel("labels.participantsShare.denominator")}
           />
         </Col>
         <Col md={6}>
@@ -63,6 +71,10 @@ export default function SynthesisFocus() {
             label={getI18nLabel("coordinationsShare.label")}
             loading={false}
             tooltipText={getI18nLabel("coordinationsShare.tooltip")}
+            numerator={dataCurrentCountry_successful.total_coordination_number}
+            denominator={dataSuccessful.total_coordination_number}
+            numeratorLabel={getI18nLabel("labels.coordinationsShare.numerator")}
+            denominatorLabel={getI18nLabel("labels.coordinationsShare.denominator")}
           />
         </Col>
         <Col md={6}>
@@ -71,6 +83,10 @@ export default function SynthesisFocus() {
             label={getI18nLabel("fundsSuccessRate.label")}
             loading={false}
             tooltipText={getI18nLabel("fundsSuccessRate.tooltip")}
+            numerator={dataCurrentCountry_successful.total_fund_eur}
+            denominator={dataCurrentCountry_evaluated.total_fund_eur}
+            numeratorLabel={getI18nLabel("labels.fundsSuccessRate.numerator")}
+            denominatorLabel={getI18nLabel("labels.fundsSuccessRate.denominator")}
           />
         </Col>
         <Col md={6}>
@@ -79,6 +95,10 @@ export default function SynthesisFocus() {
             label={getI18nLabel("participantsSuccessRate.label")}
             loading={false}
             tooltipText={getI18nLabel("participantsSuccessRate.tooltip")}
+            numerator={dataCurrentCountry_successful.total_involved}
+            denominator={dataCurrentCountry_evaluated.total_involved}
+            numeratorLabel={getI18nLabel("labels.participantsSuccessRate.numerator")}
+            denominatorLabel={getI18nLabel("labels.participantsSuccessRate.denominator")}
           />
         </Col>
         <Col md={6}>
@@ -87,6 +107,10 @@ export default function SynthesisFocus() {
             label={getI18nLabel("projectsSuccessRate.label")}
             loading={false}
             tooltipText={getI18nLabel("projectsSuccessRate.tooltip")}
+            numerator={dataCurrentCountry_successful.total_coordination_number}
+            denominator={dataCurrentCountry_evaluated.total_coordination_number}
+            numeratorLabel={getI18nLabel("labels.projectsSuccessRate.numerator")}
+            denominatorLabel={getI18nLabel("labels.projectsSuccessRate.denominator")}
           />
         </Col>
       </Row>

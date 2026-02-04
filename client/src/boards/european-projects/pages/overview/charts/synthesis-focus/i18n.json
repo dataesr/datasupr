@@ -15,8 +15,8 @@
       "en": "share of winning participants from the country"
     },
     "tooltip": {
-      "fr": "Part des participants du pays parmi l'ensemble des participants (toutes nationalités confondues) ayant obtenu un financement.",
-      "en": "Share of participants from the country among all participants (all nationalities combined) who obtained funding."
+      "fr": "Part du nombre de participants du pays parmi l'ensemble des participants (toutes nationalités confondues) ayant obtenu un financement.",
+      "en": "Share of the number of participants from the country among all participants (all nationalities combined) who have obtained funding."
     }
   },
   "coordinationsShare": {
@@ -25,18 +25,18 @@
       "en": "share of project coordinations from the country"
     },
     "tooltip": {
-      "fr": "Part des projets coordonnés par un participant du pays parmi l'ensemble des projets financés (toutes nationalités confondues).",
-      "en": "Share of projects coordinated by a participant from the country among all funded projects (all nationalities combined)."
+      "fr": "Part du nombre des projets coordonnés par un participant du pays parmi l'ensemble des projets financés (toutes nationalités confondues).",
+      "en": "Share of the number of projects coordinated by a participant from the country among all funded projects (all nationalities combined)."
     }
   },
   "fundsSuccessRate": {
     "label": {
-      "fr": "taux de succès sur les montants",
+      "fr": "taux de succès sur les financements",
       "en": "success rate on amounts"
     },
     "tooltip": {
-      "fr": "Part des subventions obtenues par les participants du pays parmi l'ensemble des subventions demandées par ces mêmes participants.",
-      "en": "Share of funding obtained by participants from the country among all funding requested by these same participants."
+      "fr": "Financements obtenus / financements demandés par les équipes du pays sélectionné.",
+      "en": "funding obtained / funding requested by teams from the selected country."
     }
   },
   "participantsSuccessRate": {
@@ -45,18 +45,80 @@
       "en": "individual success rate of participants from the country"
     },
     "tooltip": {
-      "fr": "Part des participants du pays ayant obtenu un financement parmi l'ensemble des participants du pays ayant déposé un projet.",
-      "en": "Share of participants from the country who obtained funding among all participants from the country who submitted a project."
+      "fr": "Nombre de participants du pays dans les projets lauréats / le nombre de participants du pays dans les projets évalués",
+      "en": "number of country participants in winning projects / number of country participants in evaluated projects"
     }
   },
   "projectsSuccessRate": {
     "label": {
-      "fr": "taux de succès sur le nombre de projets",
-      "en": "success rate on number of projects"
+      "fr": "taux de succès sur le nombre de projets coordonnés",
+      "en": "success rate on the number of coordinated projects"
     },
     "tooltip": {
-      "fr": "Part des projets coordonnés par un participant du pays parmi l'ensemble des projets déposés par ces mêmes participants.",
-      "en": "Share of projects coordinated by a participant from the country among all projects submitted by these same participants."
+      "fr": "Nombre de projets du pays dans les projets lauréats / le nombre de projets du pays dans les projets évalués",
+      "en": "number of country projects in winning projects / number of country projects in evaluated projects"
+    }
+  },
+  "labels": {
+    "fundsShare": {
+      "numerator": {
+        "fr": "Financements du pays",
+        "en": "Country funding"
+      },
+      "denominator": {
+        "fr": "Total financements",
+        "en": "Total funding"
+      }
+    },
+    "participantsShare": {
+      "numerator": {
+        "fr": "Participants du pays",
+        "en": "Country participants"
+      },
+      "denominator": {
+        "fr": "Total participants",
+        "en": "Total participants"
+      }
+    },
+    "coordinationsShare": {
+      "numerator": {
+        "fr": "Coordinations du pays",
+        "en": "Country coordinations"
+      },
+      "denominator": {
+        "fr": "Total coordinations",
+        "en": "Total coordinations"
+      }
+    },
+    "fundsSuccessRate": {
+      "numerator": {
+        "fr": "Financements obtenus",
+        "en": "Funding obtained"
+      },
+      "denominator": {
+        "fr": "Financements demandés",
+        "en": "Funding requested"
+      }
+    },
+    "participantsSuccessRate": {
+      "numerator": {
+        "fr": "Participants lauréats",
+        "en": "Winning participants"
+      },
+      "denominator": {
+        "fr": "Participants évalués",
+        "en": "Evaluated participants"
+      }
+    },
+    "projectsSuccessRate": {
+      "numerator": {
+        "fr": "Projets lauréats",
+        "en": "Winning projects"
+      },
+      "denominator": {
+        "fr": "Projets évalués",
+        "en": "Evaluated projects"
+      }
     }
   }
 }
