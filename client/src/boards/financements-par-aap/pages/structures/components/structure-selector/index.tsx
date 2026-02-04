@@ -46,7 +46,9 @@ export default function StructureSelector({ setStructures }) {
         }
       ).then((response) => response.json()),
   });
-  const counties = (dataCounties?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket.key);
+  const counties = (dataCounties?.aggregations?.by_county?.buckets ?? [])
+    .map((bucket) => bucket.key)
+    .sort((a, b) => a.normalize('NFD').replace(/[\u0300-\u036f]/g, '') - b.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
 
   const bodyTypologies: any = {
     ...getEsQuery({}),
