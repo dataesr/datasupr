@@ -35,7 +35,6 @@ export default function DisplayStructure() {
     { id: "disciplines", label: "Disciplines" },
   ];
 
-
   const handleNavClick = (section: string) => {
     searchParams.set("section", section);
     setSearchParams(searchParams);
@@ -182,70 +181,76 @@ export default function DisplayStructure() {
             </nav>
           </Col>
         </Row>
-        {((Number(yearMax) >= 2023) || (Number(yearMin) >= 2023)) &&
+        {((Number(yearMax) >= 2024) || (Number(yearMin) >= 2024)) &&
           <div style={{ float: "right" }}>
             <div>
               <Alert description="Les sources disponibles ne fournissent que des données provisoires pour 2024 et 2025" size="sm" variant="warning" />
             </div>
           </div>
         }
-        {(section === "financements") && (
-          <>
-            <Cards />
-            <Row gutters>
-              <Col>
-                <ProjectsByStructure name={label} />
-              </Col>
-            </Row>
-            <Row gutters>
-              <Col>
-                <OverviewByStructure name={label} />
-              </Col>
-            </Row>
-          </>
-        )}
-        {(section === "evolution") && (
-          <Row gutters style={{ clear: "both" }}>
-            <Col>
-              <ProjectsOverTimeByStructure name={label} />
-            </Col>
-          </Row>
-        )}
-        {(section === "partenaires") && (
-          <>
-            <Row gutters style={{ clear: "both" }}>
-              <Col>
-                <FrenchPartnersByStructure name={label} />
-              </Col>
-            </Row>
-            <Row gutters>
-              <Col>
-                <InternationalPartnersByStructure name={label} />
-              </Col>
-            </Row>
-          </>
-        )}
-        {(section === "laboratoires") && (
-          <Row gutters style={{ clear: "both" }}>
-            <Col>
-              <LaboratoriesByStructure name={label} />
-            </Col>
-          </Row>
-        )}
-        {(section === "disciplines") && (
-          <>
-            <Row gutters style={{ clear: "both" }}>
-              <Col>
-                <ClassificationsByStructure name={label} />
-              </Col>
-            </Row>
-            <Row gutters>
-              <Col>
-                <Classifications2ByStructure name={label} />
-              </Col>
-            </Row>
-          </>
-        )}
+        {(yearMax < yearMin) ?
+          (<Alert description="Merci de choisir une année de fin supérieure ou égale à l'année de début" title="Erreur dans le choix des années" variant="error" />) :
+          (
+            <>
+              {(section === "financements") && (
+                <>
+                  <Cards />
+                  <Row gutters>
+                    <Col>
+                      <ProjectsByStructure name={label} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <OverviewByStructure name={label} />
+                    </Col>
+                  </Row>
+                </>
+              )}
+              {(section === "evolution") && (
+                <Row gutters style={{ clear: "both" }}>
+                  <Col>
+                    <ProjectsOverTimeByStructure name={label} />
+                  </Col>
+                </Row>
+              )}
+              {(section === "partenaires") && (
+                <>
+                  <Row gutters style={{ clear: "both" }}>
+                    <Col>
+                      <FrenchPartnersByStructure name={label} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <InternationalPartnersByStructure name={label} />
+                    </Col>
+                  </Row>
+                </>
+              )}
+              {(section === "laboratoires") && (
+                <Row gutters style={{ clear: "both" }}>
+                  <Col>
+                    <LaboratoriesByStructure name={label} />
+                  </Col>
+                </Row>
+              )}
+              {(section === "disciplines") && (
+                <>
+                  <Row gutters style={{ clear: "both" }}>
+                    <Col>
+                      <ClassificationsByStructure name={label} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <Classifications2ByStructure name={label} />
+                    </Col>
+                  </Row>
+                </>
+              )}
+            </>
+          )}
       </Container>
     </>
   );

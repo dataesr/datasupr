@@ -14,8 +14,6 @@ import "./styles.scss";
 export default function Structures() {
   const [searchParams, setSearchParams] = useSearchParams();
   const structure = searchParams.get("structure");
-  const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
-  const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
   const [structures, setStructures] = useState([]);
 
   useEffect(() => {
@@ -31,7 +29,7 @@ export default function Structures() {
   };
 
   return (
-    (Number(yearMin) <= Number(yearMax)) && structure ? (
+    structure ? (
       <DisplayStructure />
     ) : (
       <>

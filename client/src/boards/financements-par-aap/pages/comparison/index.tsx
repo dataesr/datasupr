@@ -74,31 +74,48 @@ export default function Comparison() {
         </Container>
       </Container>
       <Container className="fr-mb-3w">
-        {(Number(yearMin) <= Number(yearMax)) && (
-          (structures && structures.length >= 2) ? (
-            <>
-              <Row gutters>
-                <Col>
-                  <nav
-                    aria-label="Navigation secondaire"
-                    className="fr-nav fr-mb-1w"
-                    role="navigation"
+        {(structures && structures.length >= 2) ? (
+          <>
+            <Row gutters>
+              <Col>
+                <nav
+                  aria-label="Navigation secondaire"
+                  className="fr-nav fr-mb-1w"
+                  role="navigation"
+                >
+                  <button
+                    aria-controls="section-nav-list"
+                    aria-expanded={isOpen}
+                    className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
+                    onClick={() => setIsOpen(!isOpen)}
                   >
-                    <button
-                      aria-controls="section-nav-list"
-                      aria-expanded={isOpen}
-                      className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
-                      onClick={() => setIsOpen(!isOpen)}
-                    >
-                      Menu
-                    </button>
-                    <Row horizontalAlign="right" style={{ float: "right" }}>
-                      <Col md="1" style={{ display: "contents" }}>
+                    Menu
+                  </button>
+                  <Row horizontalAlign="right" style={{ float: "right" }}>
+                    <Col md="1" style={{ display: "contents" }}>
+                      <select
+                        className="fr-select"
+                        onChange={(e) => handleYearMinChange(e.target.value)}
+                        style={{ width: "fit-content" }}
+                        value={yearMin}
+                      >
+                        {[...years].sort((a, b) => b - a).map((year) => (
+                          <option key={year} value={year}>
+                            {year}
+                          </option>
+                        ))}
+                      </select>
+                    </Col>
+                    <Col md="1" style={{ display: "contents" }}>
+                      <>
+                        <Text className="fr-mx-1w" style={{ margin: "auto" }}>
+                          à
+                        </Text>
                         <select
                           className="fr-select"
-                          onChange={(e) => handleYearMinChange(e.target.value)}
+                          onChange={(e) => handleYearMaxChange(e.target.value)}
                           style={{ width: "fit-content" }}
-                          value={yearMin}
+                          value={yearMax}
                         >
                           {[...years].sort((a, b) => b - a).map((year) => (
                             <option key={year} value={year}>
@@ -106,74 +123,61 @@ export default function Comparison() {
                             </option>
                           ))}
                         </select>
-                      </Col>
-                      <Col md="1" style={{ display: "contents" }}>
-                        <>
-                          <Text className="fr-mx-1w" style={{ margin: "auto" }}>
-                            à
-                          </Text>
-                          <select
-                            className="fr-select"
-                            onChange={(e) => handleYearMaxChange(e.target.value)}
-                            style={{ width: "fit-content" }}
-                            value={yearMax}
-                          >
-                            {[...years].sort((a, b) => b - a).map((year) => (
-                              <option key={year} value={year}>
-                                {year}
-                              </option>
-                            ))}
-                          </select>
-                        </>
+                      </>
+                    </Col>
+                  </Row>
+                  <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
+                    {sections.map((item) => (
+                      <li key={item.id} className="fr-nav__item">
+                        <button
+                          aria-current={section === item.id ? "page" : undefined}
+                          className="fr-nav__link"
+                          onClick={() => handleNavClick(item.id)}
+                        >
+                          {item.label}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </nav>
+              </Col>
+            </Row>
+            {(yearMax < yearMin) ?
+              (<Alert description="Merci de choisir une année de fin supérieure ou égale à l'année de début" title="Erreur dans le choix des années" variant="error" />) :
+              (
+                <>
+                  {(section === "financements") && (
+                    <>
+                      <Row gutters>
+                        <Col>
+                          <ProjectsByStructures />
+                        </Col>
+                      </Row>
+                      <Row gutters>
+                        <Col>
+                          <Dispersion />
+                        </Col>
+                      </Row>
+                    </>
+                  )}
+                  {(section === "disciplines") && (
+                    <Row gutters>
+                      <Col>
+                        <ClassificationsByStructures />
                       </Col>
                     </Row>
-                    <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
-                      {sections.map((item) => (
-                        <li key={item.id} className="fr-nav__item">
-                          <button
-                            aria-current={section === item.id ? "page" : undefined}
-                            className="fr-nav__link"
-                            onClick={() => handleNavClick(item.id)}
-                          >
-                            {item.label}
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  </nav>
-                </Col>
-              </Row>
-              {(section === "financements") && (
-                <>
-                  <Row gutters>
-                    <Col>
-                      <ProjectsByStructures />
-                    </Col>
-                  </Row>
-                  <Row gutters>
-                    <Col>
-                      <Dispersion />
-                    </Col>
-                  </Row>
+                  )}
                 </>
               )}
-              {(section === "disciplines") && (
-                <Row gutters>
-                  <Col>
-                    <ClassificationsByStructures />
-                  </Col>
-                </Row>
-              )}
-            </>
-          ) : (
-            <Alert
-              description="Sélectionner plusieurs établissements dans la liste déroulante pour visualiser
+          </>
+        ) : (
+          <Alert
+            description="Sélectionner plusieurs établissements dans la liste déroulante pour visualiser
               leurs financements via les appels à projets. Vous pouvez filtrer par région et par typologie."
-              className="fr-mt-3w"
-              title="Sélectionner plusieurs établissements"
-              variant="info"
-            />
-          )
+            className="fr-mt-3w"
+            title="Sélectionner plusieurs établissements"
+            variant="info"
+          />
         )}
       </Container>
     </>
