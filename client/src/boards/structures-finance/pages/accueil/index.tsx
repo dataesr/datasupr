@@ -6,6 +6,13 @@ import { useFinanceEtablissements } from "./api";
 import Select from "../../components/select";
 import "./styles.scss";
 
+const normalizeString = (str: string): string => {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+};
+
 function HeroSection() {
   const navigate = useNavigate();
   //TODO : button -> link
@@ -79,9 +86,11 @@ function QuickAccessSection() {
     return etablissementsData
       .map((etab: any) => {
         const displayName = etab.nom || "";
-        const searchText = [displayName, etab.type, etab.region]
-          .filter(Boolean)
-          .join(" ");
+        const searchText = normalizeString(
+          [displayName, etab.champ_recherche, etab.type, etab.region]
+            .filter(Boolean)
+            .join(" ")
+        );
 
         return {
           id: etab.id,
@@ -131,9 +140,9 @@ function QuickAccessSection() {
                     {etablissementOptions
                       .filter((opt) =>
                         searchValue
-                          ? opt.searchableText
-                              .toLowerCase()
-                              .includes(searchValue.toLowerCase())
+                          ? opt.searchableText.includes(
+                              normalizeString(searchValue)
+                            )
                           : true
                       )
                       .map((opt) => (
@@ -147,9 +156,9 @@ function QuickAccessSection() {
                       ))}
                     {etablissementOptions.filter((opt) =>
                       searchValue
-                        ? opt.searchableText
-                            .toLowerCase()
-                            .includes(searchValue.toLowerCase())
+                        ? opt.searchableText.includes(
+                            normalizeString(searchValue)
+                          )
                         : true
                     ).length === 0 && (
                       <Select.Empty>Aucun établissement trouvé</Select.Empty>

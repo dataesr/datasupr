@@ -43,7 +43,7 @@ export default function StructureSelection() {
 
   const isLoading = isLoadingYears || isLoadingStructures;
 
-  const handleEtablissementSelect = (id: string) => {
+  const handleStructureSelect = (id: string) => {
     setSearchParams({
       structureId: id,
       section: "ressources",
@@ -68,7 +68,7 @@ export default function StructureSelection() {
           {isLoading ? (
             <Row>
               <Col>
-                <DefaultSkeleton height="200px" />
+                <DefaultSkeleton />
               </Col>
             </Row>
           ) : (
@@ -78,8 +78,8 @@ export default function StructureSelection() {
                   availableTypes={availableTypes}
                   availableTypologies={availableTypologies}
                   availableRegions={availableRegions}
-                  filteredEtablissements={filteredEtablissements}
-                  onEtablissementSelect={handleEtablissementSelect}
+                  filteredStructures={filteredEtablissements}
+                  onStructureSelect={handleStructureSelect}
                 />
               </Col>
             </Row>
@@ -114,7 +114,7 @@ export default function StructureSelection() {
                 <Col key={id} xs="12" md="6" lg="4">
                   <CardSimple
                     description={region}
-                    onClick={() => handleEtablissementSelect(id)}
+                    onClick={() => handleStructureSelect(id)}
                     stat={studentCount}
                     subtitle={type}
                     title={displayName}

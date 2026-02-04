@@ -5,20 +5,27 @@ import { useFilters } from "../../../hooks/useFilters";
 import "../../national/styles.scss";
 import Dropdown from "../../../components/dropdown";
 
+const normalizeString = (str: string): string => {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+};
+
 interface SelectionUIProps {
   availableTypes: string[];
   availableTypologies: string[];
   availableRegions: string[];
-  filteredEtablissements: any[];
-  onEtablissementSelect: (id: string) => void;
+  filteredStructures: any[];
+  onStructureSelect: (id: string) => void;
 }
 
 export default function SelectionUI({
   availableTypes,
   availableTypologies,
   availableRegions,
-  filteredEtablissements,
-  onEtablissementSelect,
+  filteredStructures,
+  onStructureSelect,
 }: SelectionUIProps) {
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -37,22 +44,24 @@ export default function SelectionUI({
     hasActiveFilters,
     labels,
   } = useFilters();
-  const etablissementOptions = useMemo(
+  const structureOptions = useMemo(
     () =>
-      filteredEtablissements
+      filteredStructures
         .map((etab: any) => {
           const displayName =
             etab.etablissement_actuel_lib || etab.etablissement_lib || etab.nom;
-          const searchText = [
-            displayName,
-            etab.etablissement_lib,
-            etab.etablissement_actuel_lib,
-            etab.nom,
-            etab.champ_recherche,
-            etab.etablissement_actuel_region || etab.region,
-          ]
-            .filter(Boolean)
-            .join(" ");
+          const searchText = normalizeString(
+            [
+              displayName,
+              etab.etablissement_lib,
+              etab.etablissement_actuel_lib,
+              etab.nom,
+              etab.champ_recherche,
+              etab.etablissement_actuel_region || etab.region,
+            ]
+              .filter(Boolean)
+              .join(" ")
+          );
 
           const id =
             etab.etablissement_id_paysage ||
@@ -75,20 +84,20 @@ export default function SelectionUI({
         .sort((a, b) => {
           return a.label.localeCompare(b.label, "fr", { sensitivity: "base" });
         }),
-    [filteredEtablissements]
+    [filteredStructures]
   );
 
-  const handleEtablissementSelect = (id?: string) => {
+  const handleStructureSelect = (id?: string) => {
     if (id) {
-      const selected = etablissementOptions.find((opt) => opt.id === id);
+      const selected = structureOptions.find((opt) => opt.id === id);
       const finalId = selected?.data?.etablissement_id_paysage || id;
 
       if (!finalId || finalId === "undefined") {
-        console.error("Invalid establishment ID:", finalId);
+        console.error("Invalid structure ID:", finalId);
         return;
       }
 
-      onEtablissementSelect(finalId);
+      onStructureSelect(finalId);
     }
   };
 
@@ -97,7 +106,7 @@ export default function SelectionUI({
       <Col xs="12" md="8">
         <div className="filter-header fr-mb-2w">
           <Title as="h1" look="h4" className="fr-mb-0">
-            Sélectionnez un établissement
+            Sélectionnez une structure
           </Title>
           {hasActiveFilters && (
             <Button
@@ -230,7 +239,7 @@ export default function SelectionUI({
 
         <div className="fr-mb-3w">
           <Select
-            label="Rechercher un établissement..."
+            label="Rechercher une structure..."
             icon="search-line"
             size="md"
             fullWidth
@@ -241,31 +250,27 @@ export default function SelectionUI({
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             <Select.Content maxHeight="300px">
-              {etablissementOptions
+              {structureOptions
                 .filter((opt) =>
                   searchQuery
-                    ? opt.searchableText
-                        .toLowerCase()
-                        .includes(searchQuery.toLowerCase())
+                    ? opt.searchableText.includes(normalizeString(searchQuery))
                     : true
                 )
                 .map((opt) => (
                   <Select.Option
                     key={opt.id}
                     value={opt.id}
-                    onClick={() => handleEtablissementSelect(opt.id)}
+                    onClick={() => handleStructureSelect(opt.id)}
                   >
                     {opt.label}
                   </Select.Option>
                 ))}
-              {etablissementOptions.filter((opt) =>
+              {structureOptions.filter((opt) =>
                 searchQuery
-                  ? opt.searchableText
-                      .toLowerCase()
-                      .includes(searchQuery.toLowerCase())
+                  ? opt.searchableText.includes(normalizeString(searchQuery))
                   : true
               ).length === 0 && (
-                <Select.Empty>Aucun établissement trouvé</Select.Empty>
+                <Select.Empty>Aucune structure trouvée</Select.Empty>
               )}
             </Select.Content>
           </Select>
