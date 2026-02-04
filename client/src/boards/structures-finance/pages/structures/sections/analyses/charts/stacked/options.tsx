@@ -54,6 +54,9 @@ export const createStackedChartOptions = (
     })
     .filter(Boolean);
 
+  const firstMetric = selectedMetrics[0];
+  const metricFormat = metricsConfig[firstMetric]?.format || "number";
+
   return createChartOptions("column", {
     chart: {
       height: 500,
@@ -69,13 +72,20 @@ export const createStackedChartOptions = (
     },
     yAxis: {
       title: {
-        text: showPercentage ? "Pourcentage" : "Effectifs",
+        text: showPercentage
+          ? "Pourcentage"
+          : metricFormat === "euro"
+            ? "Montant (€)"
+            : "Effectifs",
       },
       labels: {
         formatter: function (this: any) {
           const value = this.value as number;
           if (showPercentage) {
             return Highcharts.numberFormat(value, 0, ",", " ") + "%";
+          }
+          if (metricFormat === "euro") {
+            return Highcharts.numberFormat(value, 0, ",", " ") + " €";
           }
           return Highcharts.numberFormat(value, 0, ",", " ");
         },
@@ -88,6 +98,9 @@ export const createStackedChartOptions = (
           color: "var(--text-default-grey)",
         },
         formatter: function (this: any) {
+          if (metricFormat === "euro") {
+            return Highcharts.numberFormat(this.total, 0, ",", " ") + " €";
+          }
           return Highcharts.numberFormat(this.total, 0, ",", " ");
         },
       },
@@ -118,16 +131,18 @@ export const createStackedChartOptions = (
           </div>`;
           } else {
             const valueStr = Highcharts.numberFormat(point.y, 0, ",", " ");
+            const unit = metricFormat === "euro" ? " €" : "";
             tooltip += `<div style="margin-top:4px">
             <span style="color:${point.series.color}">●</span> 
-            <strong>${point.series.name}:</strong> ${valueStr}
+            <strong>${point.series.name}:</strong> ${valueStr}${unit}
           </div>`;
           }
         });
 
         if (!showPercentage) {
+          const unit = metricFormat === "euro" ? " €" : "";
           tooltip += `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd">
-          <strong>Total:</strong> ${Highcharts.numberFormat(total, 0, ",", " ")}
+          <strong>Total:</strong> ${Highcharts.numberFormat(total, 0, ",", " ")}${unit}
         </div>`;
         }
         tooltip += `</div>`;

@@ -261,9 +261,9 @@ export const METRICS_CONFIG = {
     category: "Finances",
   },
   tot_ress_formation: {
-    label: "Ressources formation à prix courant",
+    label: "Formation",
     format: "euro" as const,
-    color: CHART_COLORS.palette[11],
+    color: METRIC_COLORS.droitsInscription,
     category: "Finances",
   },
   tot_ress_formation_ipc: {
@@ -273,9 +273,9 @@ export const METRICS_CONFIG = {
     category: "Finances",
   },
   tot_ress_recherche: {
-    label: "Ressources recherche à prix courant",
+    label: "Recherche",
     format: "euro" as const,
-    color: CHART_COLORS.palette[11],
+    color: METRIC_COLORS.contratsRecherche,
     category: "Finances",
   },
   tot_ress_recherche_ipc: {
@@ -285,9 +285,9 @@ export const METRICS_CONFIG = {
     category: "Finances",
   },
   tot_ress_autres_recette: {
-    label: "Autres ressources à prix courant",
+    label: "Autres recettes",
     format: "euro" as const,
-    color: CHART_COLORS.palette[11],
+    color: METRIC_COLORS.subventionsUE,
     category: "Finances",
   },
   tot_ress_autres_recette_ipc: {
@@ -717,6 +717,17 @@ export const PREDEFINED_ANALYSES = {
     metrics: ["ressources_propres", "ressources_propres_ipc"],
     category: "Indicateurs financiers",
     showBase100: false,
+  },
+  "ressources-propres-decomposition": {
+    label: "Décomposition des ressources propres",
+    metrics: [
+      "tot_ress_formation",
+      "tot_ress_recherche",
+      "tot_ress_autres_recette",
+    ],
+    category: "Indicateurs financiers",
+    showBase100: false,
+    chartType: "stacked",
   },
   "ressources-propres-encaissables": {
     label: "Ressources propres encaissables",
