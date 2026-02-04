@@ -99,6 +99,7 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
         color={SECTION_COLOR}
         evolutionData={useMetricEvolution(id)}
         unit={unit}
+        metricKey={id}
       />
     </Col>
   );

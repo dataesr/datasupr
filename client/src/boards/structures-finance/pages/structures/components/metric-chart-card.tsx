@@ -1,14 +1,21 @@
 import { useEffect, useRef } from "react";
 import Highcharts from "highcharts";
 import { DSFR_COLORS } from "../../../constants/colors";
+import { BUDGET_SENSITIVE_METRICS } from "../../../components/budget-warning/budgetIndicators";
 
 interface MetricChartCardProps {
   title: string;
   value: string | React.ReactNode;
   detail?: string;
   color?: string;
-  evolutionData?: Array<{ exercice: number; value: number }>;
+  evolutionData?: Array<{
+    exercice: number;
+    value: number;
+    sanfin_source?: string;
+    anuniv?: number;
+  }>;
   unit?: string;
+  metricKey?: string;
 }
 
 export function MetricChartCard({
@@ -18,9 +25,17 @@ export function MetricChartCard({
   color = "var(--blue-france-sun-113)",
   evolutionData,
   unit = "",
+  metricKey,
 }: MetricChartCardProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<Highcharts.Chart | null>(null);
+
+  const hasBudgetData =
+    metricKey &&
+    BUDGET_SENSITIVE_METRICS.has(metricKey) &&
+    evolutionData?.some((item) => item.sanfin_source === "Budget");
+
+  const displayTitle = hasBudgetData ? `${title} (budget)` : title;
 
   useEffect(() => {
     if (!chartRef.current || !evolutionData || evolutionData.length === 0)
@@ -181,16 +196,16 @@ export function MetricChartCard({
       series: [
         {
           type: "areaspline",
-          name: title,
+          name: displayTitle,
           data: values,
           accessibility: {
-            description: `${title}: Évolution de ${years[0]} à ${years[years.length - 1]}`,
+            description: `${displayTitle}: Évolution de ${years[0]} à ${years[years.length - 1]}`,
           },
         },
       ],
       accessibility: {
         enabled: true,
-        description: `Graphique montrant l'évolution de ${title} sur la période ${years[0]}-${years[years.length - 1]}`,
+        description: `Graphique montrant l'évolution de ${displayTitle} sur la période ${years[0]}-${years[years.length - 1]}`,
       },
     });
 
@@ -200,7 +215,7 @@ export function MetricChartCard({
         chartInstance.current = null;
       }
     };
-  }, [evolutionData, color, title, unit]);
+  }, [evolutionData, color, displayTitle, unit]);
 
   // const trend =
   //   evolutionData && evolutionData.length >= 2 && evolutionData[0].value !== 0
@@ -223,7 +238,7 @@ export function MetricChartCard({
       className="fr-card"
       tabIndex={0}
       role="article"
-      aria-label={`${title}: ${value}${detail ? `, ${detail}` : ""}`}
+      aria-label={`${displayTitle}: ${value}${detail ? `, ${detail}` : ""}`}
       style={{
         height: "100%",
         borderLeft: "none",
@@ -250,7 +265,7 @@ export function MetricChartCard({
               letterSpacing: "0.5px",
             }}
           >
-            {title}
+            {displayTitle}
           </p>
           <p className="fr-h5 fr-mb-1v" style={{ pointerEvents: "auto" }}>
             {value}

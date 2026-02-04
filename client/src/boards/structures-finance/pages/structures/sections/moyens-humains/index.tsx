@@ -105,6 +105,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution("charges_de_personnel")}
               unit="€"
+              metricKey="charges_de_personnel"
             />
           </Col>
           <Col xs="12" sm="6" md="4">
@@ -127,6 +128,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                 "charges_de_personnel_produits_encaissables"
               )}
               unit="%"
+              metricKey="charges_de_personnel_produits_encaissables"
             />
           </Col>
           <Col xs="12" md="4">

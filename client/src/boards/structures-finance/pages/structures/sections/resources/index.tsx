@@ -61,6 +61,7 @@ export function FinancementsSection({
                 "produits_de_fonctionnement_encaissables"
               )}
               unit="€"
+              metricKey="produits_de_fonctionnement_encaissables"
             />
           </Col>
           <Col xs="12" md="4">
@@ -70,6 +71,7 @@ export function FinancementsSection({
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution("recettes_propres")}
               unit="€"
+              metricKey="recettes_propres"
             />
           </Col>
           <Col xs="12" md="4">
@@ -86,6 +88,7 @@ export function FinancementsSection({
                 "ressources_propres_produits_encaissables"
               )}
               unit="%"
+              metricKey="ressources_propres_produits_encaissables"
             />
           </Col>
         </Row>
@@ -180,6 +183,7 @@ export function FinancementsSection({
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution("tot_ress_formation")}
               unit="€"
+              metricKey="tot_ress_formation"
             />
           </Col>
           <Col xs="12" sm="6" md="4">
@@ -200,6 +204,7 @@ export function FinancementsSection({
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution("tot_ress_recherche")}
               unit="€"
+              metricKey="tot_ress_recherche"
             />
           </Col>
           <Col xs="12" md="4">
@@ -220,6 +225,7 @@ export function FinancementsSection({
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution("tot_ress_autres_recette")}
               unit="€"
+              metricKey="tot_ress_autres_recette"
             />
           </Col>
         </Row>
