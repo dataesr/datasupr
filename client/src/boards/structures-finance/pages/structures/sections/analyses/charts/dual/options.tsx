@@ -1,5 +1,6 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
 
 interface MetricConfig {
   label: string;
@@ -30,6 +31,34 @@ export const createDualChartOptions = (
 
   const refIpc =
     sortedData.length > 0 ? sortedData[0]["ref_ipc"] || null : null;
+
+  let data1Min = Infinity,
+    data1Max = -Infinity;
+  let data2Min = Infinity,
+    data2Max = -Infinity;
+  sortedData.forEach((item) => {
+    const val1 = Number(item[metric1Key]);
+    const val2 = Number(item[metric2Key]);
+    if (!isNaN(val1)) {
+      data1Min = Math.min(data1Min, val1);
+      data1Max = Math.max(data1Max, val1);
+    }
+    if (!isNaN(val2)) {
+      data2Min = Math.min(data2Min, val2);
+      data2Max = Math.max(data2Max, val2);
+    }
+  });
+
+  const tickInterval1 = calculateOptimalTickInterval(
+    data1Min,
+    data1Max,
+    config1.format
+  );
+  const tickInterval2 = calculateOptimalTickInterval(
+    data2Min,
+    data2Max,
+    config2.format
+  );
 
   const series = [metric1Key, metric2Key].map((metricKey, index) => {
     const config = metricsConfig[metricKey];
@@ -63,6 +92,7 @@ export const createDualChartOptions = (
         title: {
           text: `${config1.label} / ${config2.label}`,
         },
+        tickInterval: tickInterval1,
         labels: {
           formatter: function (this: any) {
             const value = this.value as number;
@@ -85,6 +115,7 @@ export const createDualChartOptions = (
             text: config1.label,
             style: { color: config1.color },
           },
+          tickInterval: tickInterval1,
           labels: {
             style: { color: config1.color },
             formatter: function (this: any) {
@@ -108,6 +139,7 @@ export const createDualChartOptions = (
             style: { color: config2.color },
           },
           opposite: true,
+          tickInterval: tickInterval2,
           labels: {
             style: { color: config2.color },
             formatter: function (this: any) {

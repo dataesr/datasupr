@@ -1,5 +1,6 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
 
 interface MetricConfig {
   label: string;
@@ -57,6 +58,26 @@ export const createStackedChartOptions = (
   const firstMetric = selectedMetrics[0];
   const metricFormat = metricsConfig[firstMetric]?.format || "number";
 
+  let dataMin = Infinity,
+    dataMax = -Infinity;
+  sortedData.forEach((item) => {
+    const total = selectedMetrics.reduce((sum, m) => {
+      const v = item[m];
+      return sum + (typeof v === "number" ? v : 0);
+    }, 0);
+    if (showPercentage) {
+      dataMin = 0;
+      dataMax = 100;
+    } else {
+      dataMin = Math.min(dataMin, 0);
+      dataMax = Math.max(dataMax, total);
+    }
+  });
+
+  const tickInterval = showPercentage
+    ? calculateOptimalTickInterval(0, 100, "percent")
+    : calculateOptimalTickInterval(dataMin, dataMax, metricFormat);
+
   return createChartOptions("column", {
     chart: {
       height: 500,
@@ -78,6 +99,7 @@ export const createStackedChartOptions = (
             ? "Montant (€)"
             : "Effectifs",
       },
+      tickInterval: tickInterval,
       labels: {
         formatter: function (this: any) {
           const value = this.value as number;

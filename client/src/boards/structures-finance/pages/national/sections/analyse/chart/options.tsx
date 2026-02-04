@@ -5,6 +5,7 @@ import {
   THRESHOLD_COLORS,
 } from "../../../../../constants/colors";
 import type { ThresholdConfig } from "../../../../../config";
+import { calculateOptimalTickInterval } from "../../../../../utils/chartUtils";
 
 interface MetricConfig {
   label: string;
@@ -104,6 +105,12 @@ export const createComparisonBarOptions = (
     ? createThresholdPlotBands(config.threshold, dataMin, dataMax)
     : { plotBands: [], plotLines: [] };
 
+  const tickInterval = calculateOptimalTickInterval(
+    dataMin,
+    dataMax,
+    config.metricConfig.format
+  );
+
   return createChartOptions("bar", {
     chart: {
       height: Math.max(400, chartData.length * 25 + 100),
@@ -122,6 +129,7 @@ export const createComparisonBarOptions = (
       title: {
         text: "",
       },
+      tickInterval: tickInterval,
       labels: {
         formatter: function () {
           const value = this.value as number;

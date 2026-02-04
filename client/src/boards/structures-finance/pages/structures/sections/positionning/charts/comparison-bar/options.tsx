@@ -2,6 +2,7 @@ import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { THRESHOLD_COLORS } from "../../../../../../constants/colors";
 import type { ThresholdConfig } from "../../../../../../config";
+import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
 
 interface MetricConfig {
   label: string;
@@ -117,6 +118,12 @@ export const createPositioningComparisonBarOptions = (
     ? createThresholdPlotBands(config.threshold, dataMin, dataMax)
     : { plotBands: [], plotLines: [] };
 
+  const tickInterval = calculateOptimalTickInterval(
+    dataMin,
+    dataMax,
+    config.metricConfig.format
+  );
+
   const chartHeight = Math.max(500, chartData.length * 25);
   // A voir si on override avec ce que Anne à fait?
 
@@ -138,6 +145,7 @@ export const createPositioningComparisonBarOptions = (
       title: {
         text: "",
       },
+      tickInterval: tickInterval,
       labels: {
         formatter: function () {
           const value = this.value as number;

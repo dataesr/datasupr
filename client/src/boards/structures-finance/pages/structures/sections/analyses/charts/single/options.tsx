@@ -2,6 +2,7 @@ import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { THRESHOLD_COLORS } from "../../../../../../constants/colors";
 import type { ThresholdConfig } from "../../../../../../config";
+import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
 
 interface MetricConfig {
   label: string;
@@ -95,6 +96,12 @@ export const createSingleChartOptions = (
   const refIpc =
     sortedData.length > 0 ? sortedData[0]["ref_ipc"] || null : null;
 
+  const tickInterval = calculateOptimalTickInterval(
+    dataMin,
+    dataMax,
+    config.format
+  );
+
   let seriesName = config.label;
   if (isIPCMetric && refIpc) {
     seriesName = `${config.label} (IPC ${refIpc})`;
@@ -116,6 +123,7 @@ export const createSingleChartOptions = (
       title: {
         text: config.label,
       },
+      tickInterval: tickInterval,
       labels: {
         formatter: function (this: any) {
           const value = this.value as number;

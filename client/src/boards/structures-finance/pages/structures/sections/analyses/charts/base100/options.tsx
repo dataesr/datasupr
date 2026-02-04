@@ -1,5 +1,6 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
 
 interface MetricConfig {
   label: string;
@@ -58,6 +59,23 @@ export const createBase100ChartOptions = (
     };
   });
 
+  let dataMin = Infinity,
+    dataMax = -Infinity;
+  series.forEach((s) => {
+    s.data.forEach((val) => {
+      if (val !== null) {
+        dataMin = Math.min(dataMin, val);
+        dataMax = Math.max(dataMax, val);
+      }
+    });
+  });
+
+  const tickInterval = calculateOptimalTickInterval(
+    dataMin,
+    dataMax,
+    "decimal"
+  );
+
   return createChartOptions("line", {
     chart: {
       height: 500,
@@ -74,6 +92,7 @@ export const createBase100ChartOptions = (
       title: {
         text: "Index (base 100 = première année)",
       },
+      tickInterval: tickInterval,
       labels: {
         formatter: function (this: any) {
           return this.value.toFixed(1);
