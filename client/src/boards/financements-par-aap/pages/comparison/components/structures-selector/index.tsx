@@ -142,18 +142,13 @@ export default function StructuresSelector() {
     }) || [];
 
   const handleStructureChange = (selectedStructure?: string) => {
-    if (selectedStructure) {
-      const selectedStructureId = selectedStructure.split('###')[0];
-      if (!selectedStructures.includes(selectedStructureId)) {
-        searchParams.append("structure", selectedStructureId);
-        setSearchParams(searchParams);
-      }
-    } else {
-      structures.forEach((str) => {
-        searchParams.append("structure", str.id);
-      })
-      setSearchParams(searchParams);
-    }
+    // If I click on only one structure, convert it into an array
+    // If I click on "Add multiple structures", convert the array of structure objects into an array on string ids
+    let structureIdsToAdd = selectedStructure ? [selectedStructure] : structures.map((str) => str.id);
+    // Do not add duplicates as selected structures
+    structureIdsToAdd = structureIdsToAdd.filter((str: string) => !selectedStructures.includes(str));
+    structureIdsToAdd.forEach((str: string) => searchParams.append("structure", str))
+    setSearchParams(searchParams);
   };
 
   const handleTagClick = (selectedStructure: string) => {
