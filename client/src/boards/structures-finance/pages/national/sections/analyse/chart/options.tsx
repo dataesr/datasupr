@@ -6,11 +6,18 @@ import {
 } from "../../../../../constants/colors";
 import type { ThresholdConfig } from "../../../../../config";
 
+interface MetricConfig {
+  label: string;
+  format: "number" | "percent" | "decimal" | "euro";
+  color: string;
+  suffix?: string;
+}
+
 export interface ComparisonBarConfig {
   metric: string;
   metricLabel: string;
+  metricConfig: MetricConfig;
   topN: number;
-  format?: (value: number) => string;
   threshold?: ThresholdConfig | null;
 }
 const ALERT_COLOR = THRESHOLD_COLORS.alertBackground;
@@ -42,7 +49,7 @@ const createThresholdPlotBands = (
     plotLines.push({
       value: threshold.vig_min,
       color: VIGILANCE_LINE,
-      width: 1.5,
+      width: 2,
       zIndex: 1,
     });
   }
@@ -117,10 +124,17 @@ export const createComparisonBarOptions = (
       },
       labels: {
         formatter: function () {
-          if (config.format) {
-            return config.format(this.value as number);
+          const value = this.value as number;
+          if (config.metricConfig.format === "euro") {
+            return `${Highcharts.numberFormat(value, 0, ",", " ")} €`;
           }
-          return String(this.value);
+          if (config.metricConfig.format === "percent") {
+            return `${value.toFixed(1)}%`;
+          }
+          if (config.metricConfig.format === "decimal") {
+            return value.toFixed(2);
+          }
+          return Highcharts.numberFormat(value, 0, ",", " ");
         },
       },
       plotBands:
@@ -133,15 +147,30 @@ export const createComparisonBarOptions = (
           : undefined,
     },
     tooltip: {
+      useHTML: true,
+      borderWidth: 1,
+      borderRadius: 8,
+      shadow: false,
       formatter: function () {
-        const value = this.y as number;
-        const formatted = config.format
-          ? config.format(value)
-          : value.toLocaleString("fr-FR");
+        const point = this as any;
+        const value = point.y as number;
+        let formatted: string;
+        if (config.metricConfig.format === "euro") {
+          formatted = `${Highcharts.numberFormat(value, 0, ",", " ")} €`;
+        } else if (config.metricConfig.format === "percent") {
+          formatted = `${value.toFixed(2)}%`;
+        } else if (config.metricConfig.format === "decimal") {
+          formatted = value.toFixed(2);
+        } else {
+          formatted = Highcharts.numberFormat(value, 0, ",", " ");
+        }
+
         return `
-          <div style="padding:8px">
-            <div style="font-weight:600;margin-bottom:4px">${this.category}</div>
-            <div>
+          <div class="fr-p-2w">
+            <div class="fr-text--bold fr-mb-1v">
+              ${point.category}
+            </div>
+            <div class="fr-mt-1w">
               <strong>${config.metricLabel}:</strong> ${formatted}
             </div>
           </div>

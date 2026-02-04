@@ -1,17 +1,24 @@
+interface MetricConfig {
+  label: string;
+  format: "number" | "percent" | "decimal" | "euro";
+  color: string;
+  suffix?: string;
+}
+
 interface RenderDataProps {
   data: any[];
   metric: string;
   metricLabel: string;
+  metricConfig: MetricConfig;
   topN: number;
-  format?: (value: number) => string;
 }
 
 export function RenderData({
   data,
   metric,
   metricLabel,
+  metricConfig,
   topN,
-  format,
 }: RenderDataProps) {
   const chartData = data
     .filter((item: any) => {
@@ -35,10 +42,16 @@ export function RenderData({
   }
 
   const formatValue = (value: number) => {
-    if (format) {
-      return format(value);
+    if (metricConfig.format === "euro") {
+      return `${value.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} €`;
     }
-    return value.toLocaleString("fr-FR");
+    if (metricConfig.format === "percent") {
+      return `${value.toFixed(2)} %`;
+    }
+    if (metricConfig.format === "decimal") {
+      return value.toFixed(2);
+    }
+    return value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
   };
 
   return (

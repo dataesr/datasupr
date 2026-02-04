@@ -126,33 +126,14 @@ export default function NationalChart({
   }, [isStacked, analysisConfig, selectedMetricIndex, data]);
 
   const chartOptions: Highcharts.Options | null = useMemo(() => {
-    if (!data || !data.length || !activeMetricKey) return null;
-
-    const formatValue = (value: number): string => {
-      if (!metricConfig) return String(value);
-
-      switch (metricConfig.format) {
-        case "euro":
-          return `${(value / 1000000).toFixed(1)} M€`;
-        case "number":
-          return value.toLocaleString("fr-FR");
-        case "percent":
-          return `${value.toFixed(1)}%`;
-        case "decimal":
-          return value.toFixed(2);
-        default:
-          return String(value);
-      }
-    };
+    if (!data || !data.length || !activeMetricKey || !metricConfig) return null;
 
     return createComparisonBarOptions(
       {
         metric: activeMetricKey,
-        metricLabel: activeMetricKey
-          ? getMetricLabel(activeMetricKey)
-          : activeMetricKey,
+        metricLabel: getMetricLabel(activeMetricKey),
+        metricConfig,
         topN: topN ?? data.length,
-        format: formatValue,
         threshold: metricThreshold,
       },
       data
@@ -160,8 +141,8 @@ export default function NationalChart({
   }, [
     data,
     activeMetricKey,
-    topN,
     metricConfig,
+    topN,
     metricThreshold,
     getMetricLabel,
   ]);
@@ -309,22 +290,8 @@ export default function NationalChart({
                 metricLabel={
                   activeMetricKey ? getMetricLabel(activeMetricKey) : ""
                 }
+                metricConfig={metricConfig!}
                 topN={topN ?? data.length}
-                format={(value: number) => {
-                  if (!metricConfig) return String(value);
-                  switch (metricConfig.format) {
-                    case "euro":
-                      return `${(value / 1000000).toFixed(1)} M€`;
-                    case "number":
-                      return value.toLocaleString("fr-FR");
-                    case "percent":
-                      return `${value.toFixed(1)}%`;
-                    case "decimal":
-                      return value.toFixed(2);
-                    default:
-                      return String(value);
-                  }
-                }}
               />
             )}
           />
