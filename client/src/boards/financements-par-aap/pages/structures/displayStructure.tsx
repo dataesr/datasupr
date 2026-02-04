@@ -146,24 +146,23 @@ export default function DisplayStructure() {
                     ))}
                   </select>
                 </Col>
-                <Col></Col>
                 <Col md="1" style={{ display: "contents" }}>
                   <>
-                  <Text className="fr-mx-1w" style={{ margin: "auto" }}>
-                    à
-                  </Text>
-                  <select
-                    className="fr-select"
-                    onChange={(e) => handleYearMaxChange(e.target.value)}
-                    style={{ width: "fit-content" }}
-                    value={yearMax}
-                  >
-                    {[...years].sort((a, b) => b - a).map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
+                    <Text className="fr-mx-1w" style={{ margin: "auto" }}>
+                      à
+                    </Text>
+                    <select
+                      className="fr-select"
+                      onChange={(e) => handleYearMaxChange(e.target.value)}
+                      style={{ width: "fit-content" }}
+                      value={yearMax}
+                    >
+                      {[...years].sort((a, b) => b - a).map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
                   </>
                 </Col>
               </Row>

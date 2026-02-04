@@ -1,4 +1,4 @@
-import { Alert, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Alert, Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -85,13 +85,48 @@ export default function Comparison() {
                     role="navigation"
                   >
                     <button
+                      aria-controls="section-nav-list"
+                      aria-expanded={isOpen}
                       className="fr-btn fr-btn--secondary fr-btn--sm fr-icon-menu-fill data-mobile-burger"
                       onClick={() => setIsOpen(!isOpen)}
-                      aria-expanded={isOpen}
-                      aria-controls="section-nav-list"
                     >
                       Menu
                     </button>
+                    <Row horizontalAlign="right" style={{ float: "right" }}>
+                      <Col md="1" style={{ display: "contents" }}>
+                        <select
+                          className="fr-select"
+                          onChange={(e) => handleYearMinChange(e.target.value)}
+                          style={{ width: "fit-content" }}
+                          value={yearMin}
+                        >
+                          {[...years].sort((a, b) => b - a).map((year) => (
+                            <option key={year} value={year}>
+                              {year}
+                            </option>
+                          ))}
+                        </select>
+                      </Col>
+                      <Col md="1" style={{ display: "contents" }}>
+                        <>
+                          <Text className="fr-mx-1w" style={{ margin: "auto" }}>
+                            à
+                          </Text>
+                          <select
+                            className="fr-select"
+                            onChange={(e) => handleYearMaxChange(e.target.value)}
+                            style={{ width: "fit-content" }}
+                            value={yearMax}
+                          >
+                            {[...years].sort((a, b) => b - a).map((year) => (
+                              <option key={year} value={year}>
+                                {year}
+                              </option>
+                            ))}
+                          </select>
+                        </>
+                      </Col>
+                    </Row>
                     <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
                       {sections.map((item) => (
                         <li key={item.id} className="fr-nav__item">
@@ -104,32 +139,6 @@ export default function Comparison() {
                           </button>
                         </li>
                       ))}
-                      <li className="fr-nav__item fundings-ml-auto">
-                        <select
-                          className="fr-select"
-                          onChange={(e) => handleYearMinChange(e.target.value)}
-                          value={yearMin}
-                        >
-                          {[...years].sort((a, b) => b - a).map((year) => (
-                            <option key={year} value={year}>
-                              {year}
-                            </option>
-                          ))}
-                        </select>
-                      </li>
-                      <li className="fr-nav__item fr-ml-1w">
-                        <select
-                          className="fr-select"
-                          onChange={(e) => handleYearMaxChange(e.target.value)}
-                          value={yearMax}
-                        >
-                          {[...years].sort((a, b) => b - a).map((year) => (
-                            <option key={year} value={year}>
-                              {year}
-                            </option>
-                          ))}
-                        </select>
-                      </li>
                     </ul>
                   </nav>
                 </Col>
