@@ -8,6 +8,8 @@ import {
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
 import RessourcesPropresEvolutionChart from "../../../resources/charts/ressources-propres-evolution";
+import RessourcesPropresDecompositionChart from "../../../resources/charts/ressources-propres-decomposition";
+import RessourcesFormationDecompositionChart from "../../../resources/charts/ressources-formation-decomposition";
 import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import {
   ThresholdLegend,
@@ -161,11 +163,27 @@ export default function SingleEvolutionChart({
 
       {selectedAnalysis === "ressources-propres" && (
         <div className="fr-mt-3w">
+          <RessourcesPropresDecompositionChart
+            etablissementName={etablissementName}
+          />
+        </div>
+      )}
+      {selectedAnalysis === "ressources-propres" && (
+        <div className="fr-mt-3w">
           <RessourcesPropresEvolutionChart
             etablissementName={etablissementName}
           />
         </div>
       )}
+
+      {selectedAnalysis === "ressources-formation" && (
+        <div className="fr-mt-3w">
+          <RessourcesFormationDecompositionChart
+            etablissementName={etablissementName}
+          />
+        </div>
+      )}
+
       <MetricDefinitionsTable metricKeys={[selectedMetric]} />
     </>
   );

@@ -718,17 +718,6 @@ export const PREDEFINED_ANALYSES = {
     category: "Indicateurs financiers",
     showBase100: false,
   },
-  "ressources-propres-decomposition": {
-    label: "Décomposition des ressources propres",
-    metrics: [
-      "tot_ress_formation",
-      "tot_ress_recherche",
-      "tot_ress_autres_recette",
-    ],
-    category: "Indicateurs financiers",
-    showBase100: false,
-    chartType: "stacked",
-  },
   "ressources-propres-encaissables": {
     label: "Ressources propres encaissables",
     metrics: [
