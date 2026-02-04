@@ -5,7 +5,7 @@ import ItemFilter, {
 import {
   PREDEFINED_ANALYSES,
   type AnalysisKey,
-} from "../../../analyses/charts/evolution/config";
+} from "../../../../../../config/config";
 
 interface PositioningMetricFilterProps {
   data: any[];

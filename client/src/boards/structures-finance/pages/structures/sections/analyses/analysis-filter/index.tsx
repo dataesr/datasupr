@@ -5,7 +5,7 @@ import ItemFilter, {
 import {
   PREDEFINED_ANALYSES,
   type AnalysisKey,
-} from "../charts/evolution/config";
+} from "../../../../../config/config";
 
 interface AnalysisFilterProps {
   analysesWithData: Set<AnalysisKey>;

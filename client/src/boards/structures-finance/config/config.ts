@@ -1,7 +1,4 @@
-import {
-  CHART_COLORS,
-  METRIC_COLORS,
-} from "../../../../../../constants/colors";
+import { CHART_COLORS, METRIC_COLORS } from "../constants/colors";
 
 export const METRICS_CONFIG = {
   effectif_sans_cpge: {

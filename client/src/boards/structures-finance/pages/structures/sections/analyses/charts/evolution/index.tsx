@@ -26,7 +26,7 @@ import {
   METRIC_TO_PART,
   type MetricKey,
   type AnalysisKey,
-} from "./config";
+} from "../../../../../../config/config";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
 import {
   FINANCIAL_HEALTH_INDICATORS,

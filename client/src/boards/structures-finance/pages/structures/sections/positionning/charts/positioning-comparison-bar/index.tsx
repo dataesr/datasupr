@@ -17,7 +17,7 @@ import {
   METRIC_TO_PART,
   type AnalysisKey,
   type MetricKey,
-} from "../../../analyses/charts/evolution/config";
+} from "../../../../../../config/config";
 import {
   FINANCIAL_HEALTH_INDICATORS,
   ThresholdLegend,

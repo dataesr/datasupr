@@ -3,7 +3,7 @@ import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import NationalChart from "./chart";
 import AnalysisFilter from "./analysis-filter";
-import { type AnalysisKey } from "../../../structures/sections/analyses/charts/evolution/config";
+import { type AnalysisKey } from "../../../../config/config";
 import { useFinanceYears } from "../../../../api/common";
 import { useFinanceAdvancedComparison } from "../../../../api/api";
 import { useFilteredNationalData } from "../../hooks/useFilteredNationalData";

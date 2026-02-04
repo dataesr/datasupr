@@ -13,7 +13,7 @@ import {
 import {
   type AnalysisKey,
   PREDEFINED_ANALYSES,
-} from "../analyses/charts/evolution/config";
+} from "../../../../config/config";
 import { Select } from "../../../../components/select";
 import "../styles.scss";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";

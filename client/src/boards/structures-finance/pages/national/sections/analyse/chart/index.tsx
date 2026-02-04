@@ -19,7 +19,7 @@ import {
   METRIC_TO_PART,
   type AnalysisKey,
   type MetricKey,
-} from "../../../../structures/sections/analyses/charts/evolution/config.ts";
+} from "../../../../../config/config.ts";
 import { RenderData } from "./render-data.tsx";
 import {
   FINANCIAL_HEALTH_INDICATORS,
