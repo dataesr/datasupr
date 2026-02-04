@@ -4,8 +4,8 @@ import { createPositioningScatterOptions, ScatterConfig } from "./options";
 import { RenderData } from "./render-data";
 
 interface ScatterChartProps {
-  config: ScatterConfig;
-  data: any[];
+  config?: ScatterConfig;
+  data?: any[];
   currentStructureId?: string;
   currentStructureName?: string;
 }
@@ -16,6 +16,10 @@ export default function ScatterChart({
   currentStructureId,
   currentStructureName = "",
 }: ScatterChartProps) {
+  if (!config) {
+    return;
+  }
+
   const chartOptions = useMemo(() => {
     return createPositioningScatterOptions(
       config,
