@@ -123,9 +123,19 @@ export default function ComparisonBarChart({
     title: `${metricLabel}${selectedYear ? ` — ${selectedYear}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
   };
 
+  const currentStructureHasData = useMemo(() => {
+    if (!data?.length || !currentStructureId) return false;
+    const currentStructureData = data.find(
+      (item) => item.etablissement_id_paysage_actuel === currentStructureId
+    );
+    if (!currentStructureData) return false;
+    const value = currentStructureData[selectedMetric];
+    return value != null && value !== 0;
+  }, [data, currentStructureId, selectedMetric]);
+
   return (
     <div>
-      {isStacked && displayMetrics.length > 1 && (
+      {isStacked && displayMetrics.length > 1 && currentStructureHasData && (
         <Row gutters className="fr-mb-3w">
           <Col xs="12" md="6">
             <Text className="fr-text--sm fr-text--bold fr-mb-1w">Métrique</Text>
@@ -153,7 +163,7 @@ export default function ComparisonBarChart({
         </Row>
       )}
 
-      {hasPartVersion && (
+      {hasPartVersion && currentStructureHasData && (
         <Row gutters className="fr-mb-3w">
           <Col xs="12" md="6">
             <Text className="fr-text--sm fr-text--bold fr-mb-1w">
@@ -180,14 +190,17 @@ export default function ComparisonBarChart({
         </Row>
       )}
 
-      <BudgetWarning data={data} metrics={[selectedMetric]} />
+      {currentStructureHasData && (
+        <BudgetWarning data={data} metrics={[selectedMetric]} />
+      )}
 
-      {!chartOptions || !data?.length ? (
+      {!chartOptions || !data?.length || !currentStructureHasData ? (
         <div className="fr-alert fr-alert--warning">
           <p className="fr-alert__title">Aucune donnée disponible</p>
           <p>
-            Aucun établissement ne dispose de données pour cette métrique avec
-            les filtres sélectionnés.
+            Aucune donnée disponible pour{" "}
+            {currentStructureName || "l'établissement"}
+            {selectedYear ? ` en ${selectedYear}` : ""}.
           </p>
         </div>
       ) : (

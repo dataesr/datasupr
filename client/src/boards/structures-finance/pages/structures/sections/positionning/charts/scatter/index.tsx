@@ -8,6 +8,7 @@ interface ScatterChartProps {
   data?: any[];
   currentStructureId?: string;
   currentStructureName?: string;
+  selectedYear?: string | number;
 }
 
 export default function ScatterChart({
@@ -15,6 +16,7 @@ export default function ScatterChart({
   data = [],
   currentStructureId,
   currentStructureName = "",
+  selectedYear,
 }: ScatterChartProps) {
   if (!config) {
     return;
@@ -39,11 +41,27 @@ export default function ScatterChart({
     return `${config.xMetric}-${config.yMetric}-${currentStructureId}-${dataIds}`;
   }, [config.xMetric, config.yMetric, currentStructureId, data]);
 
-  if (!data || data.length === 0) {
+  // Check if current structure has data for both metrics
+  const currentStructureHasData = useMemo(() => {
+    if (!data?.length || !currentStructureId) return false;
+    const currentStructureData = data.find(
+      (item) => item.etablissement_id_paysage_actuel === currentStructureId
+    );
+    if (!currentStructureData) return false;
+    const xValue = currentStructureData[config.xMetric];
+    const yValue = currentStructureData[config.yMetric];
+    return xValue != null && xValue !== 0 && yValue != null && yValue !== 0;
+  }, [data, currentStructureId, config.xMetric, config.yMetric]);
+
+  if (!data || data.length === 0 || !currentStructureHasData) {
     return (
       <div className="fr-alert fr-alert--warning">
         <p className="fr-alert__title">Aucune donnée disponible</p>
-        <p>Aucune donnée n'est disponible pour ce graphique.</p>
+        <p>
+          Aucune donnée disponible pour{" "}
+          {currentStructureName || "l'établissement"}
+          {selectedYear ? ` en ${selectedYear}` : ""}.
+        </p>
       </div>
     );
   }

@@ -34,7 +34,11 @@ export const createPositioningScatterOptions = (
 
   uniqueData
     .filter(
-      (item) => item[config.xMetric] != null && item[config.yMetric] != null
+      (item) =>
+        item[config.xMetric] != null &&
+        item[config.yMetric] != null &&
+        item[config.xMetric] !== 0 &&
+        item[config.yMetric] !== 0
     )
     .forEach((item) => {
       const region =

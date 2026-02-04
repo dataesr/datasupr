@@ -100,7 +100,7 @@ export const createPositioningComparisonBarOptions = (
     })
     .filter((d) => {
       const value = d.value;
-      return value != null && !isNaN(value);
+      return value != null && !isNaN(value) && value !== 0;
     })
     .sort((a, b) => b.value - a.value);
 

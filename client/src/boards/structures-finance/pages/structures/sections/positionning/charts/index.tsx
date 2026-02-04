@@ -93,6 +93,7 @@ export default function PositioningCharts({
         data={data}
         currentStructureId={currentStructureId}
         currentStructureName={currentStructureName}
+        selectedYear={selectedYear}
       />
       <MetricDefinitionsTable metricKeys={metricKeys} />
     </>
