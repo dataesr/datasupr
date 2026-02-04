@@ -1,17 +1,29 @@
+import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
-
 import "highcharts/modules/flowmap";
 
-import dataCountries from "../../../../../../assets/countriesCentroids.json";
-import topology from "../../../../../../assets/world.topo.json";
-import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { CreateChartOptions } from "../../../../components/chart-ep";
+import { getCollaborations } from "../countries-collaborations-table/query";
 import { getCssColor } from "../../../../../../utils/colors";
+import { useGetParams } from "../countries-collaborations-table/utils";
+import ChartWrapper from "../../../../../../components/chart-wrapper";
+import MapSkeleton from "../../../../../../components/charts-skeletons/map";
 
-export default function MapOfEuropeCollaborationsFlow(data) {
+import topology from "../../../../../../assets/world.topo.json";
+import dataCountries from "../../../../../../assets/countriesCentroids.json";
+
+export default function MapOfEuropeCollaborationsFlow() {
   const [searchParams] = useSearchParams();
-  const countryCode = searchParams.get("country_code");
+  const params = useGetParams();
+  const countryCode = searchParams.get("country_code") || "FRA";
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["CountriesCollaborationsTable", params],
+    queryFn: () => getCollaborations(params),
+  });
+
+  const dataMap = isLoading || !data ? [] : data.map((item) => ({ from: countryCode, to: item.country_code, weight: item.total_collaborations }));
 
   const config = {
     id: "map-of-europe-collaborations-flow",
@@ -23,8 +35,8 @@ export default function MapOfEuropeCollaborationsFlow(data) {
 
   // Extract unique country codes from flow data
   const countriesWithData = new Set<string>();
-  if (data.data && Array.isArray(data.data)) {
-    data.data.forEach((flow) => {
+  if (Array.isArray(dataMap)) {
+    dataMap.forEach((flow) => {
       if (flow.from) countriesWithData.add(flow.from);
       if (flow.to) countriesWithData.add(flow.to);
     });
@@ -114,7 +126,7 @@ export default function MapOfEuropeCollaborationsFlow(data) {
         fillOpacity: 1,
         color: getCssColor("main-partner"),
         fillColor: "#38104d",
-        data: data.data,
+        data: dataMap,
       },
     ],
   };
@@ -132,6 +144,10 @@ export default function MapOfEuropeCollaborationsFlow(data) {
   ];
 
   const options = CreateChartOptions("packedbubble", mapOptions);
+
+  if (isLoading) {
+    return <MapSkeleton />;
+  }
 
   return <ChartWrapper config={config} options={options} constructorType={"mapChart"} />;
 }

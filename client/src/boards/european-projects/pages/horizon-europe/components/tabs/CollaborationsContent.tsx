@@ -1,46 +1,21 @@
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "react-router-dom";
-
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
+
+import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
+import Callout from "../../../../../../components/callout";
 import CountriesCollaborationsBubble from "../../../collaborations/charts/countries-collaborations-bubble";
 import CountriesCollaborationsTable from "../../../collaborations/charts/countries-collaborations-table";
-import EntityVariablePie from "../../../collaborations/charts/entity-variable-pie";
 import CountryNeighbourgs from "../../../collaborations/charts/country-neighbourgs";
-import Callout from "../../../../../../components/callout";
+import EntityVariablePie from "../../../collaborations/charts/entity-variable-pie";
 import MapOfEuropeCollaborationsFlow from "../../../collaborations/charts/map-of-europe-collaborations-flow";
-import { useGetParams } from "../../../collaborations/charts/countries-collaborations-table/utils";
-import { getCollaborations } from "../../../collaborations/charts/countries-collaborations-table/query";
-import MapSkeleton from "../../../../../../components/charts-skeletons/map";
-import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
 
 export default function CollaborationsContent() {
-  const [searchParams] = useSearchParams();
-  const params = useGetParams();
-  const currentCountryCode = searchParams.get("country_code") || "FRA";
-
-  const { data, isLoading } = useQuery({
-    queryKey: ["CountriesCollaborationsTable", params],
-    queryFn: () => getCollaborations(params),
-  });
-
-  const dataMap =
-    isLoading || !data ? [] : data.map((item) => ({ from: currentCountryCode, to: item.country_code, weight: item.total_collaborations }));
-
   return (
     <div>
-      {isLoading ? (
-        <Row>
-          <Col>
-            <MapSkeleton />
-          </Col>
-        </Row>
-      ) : (
-        <Row>
-          <Col>
-            <MapOfEuropeCollaborationsFlow data={dataMap} />
-          </Col>
-        </Row>
-      )}
+      <Row>
+        <Col>
+          <MapOfEuropeCollaborationsFlow />
+        </Col>
+      </Row>
       <Row>
         <Col>
           <CountriesCollaborationsTable />
