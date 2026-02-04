@@ -10,6 +10,8 @@ import MetricDefinitionsTable from "../../../../../../components/metric-definiti
 import RessourcesPropresEvolutionChart from "../../../resources/charts/ressources-propres-evolution";
 import RessourcesPropresDecompositionChart from "../../../resources/charts/ressources-propres-decomposition";
 import RessourcesFormationDecompositionChart from "../../../resources/charts/ressources-formation-decomposition";
+import RessourcesRechercheDecompositionChart from "../../../resources/charts/ressources-recherche-decomposition";
+import RessourcesAutresDecompositionChart from "../../../resources/charts/ressources-autres-decomposition";
 import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import {
   ThresholdLegend,
@@ -179,6 +181,22 @@ export default function SingleEvolutionChart({
       {selectedAnalysis === "ressources-formation" && (
         <div className="fr-mt-3w">
           <RessourcesFormationDecompositionChart
+            etablissementName={etablissementName}
+          />
+        </div>
+      )}
+
+      {selectedAnalysis === "ressources-recherche" && (
+        <div className="fr-mt-3w">
+          <RessourcesRechercheDecompositionChart
+            etablissementName={etablissementName}
+          />
+        </div>
+      )}
+
+      {selectedAnalysis === "ressources-autres-recettes" && (
+        <div className="fr-mt-3w">
+          <RessourcesAutresDecompositionChart
             etablissementName={etablissementName}
           />
         </div>
