@@ -43,7 +43,6 @@ export const useCheckMultipleStructures = (
       return response.json();
     },
     enabled: enabled && Boolean(id),
-    staleTime: 5 * 60 * 1000,
   });
 };
 
@@ -63,7 +62,6 @@ export const useFinanceEtablissements = (annee?: string, enabled = true) => {
       return response.json();
     },
     enabled,
-    staleTime: 5 * 60 * 1000,
   });
 };
 

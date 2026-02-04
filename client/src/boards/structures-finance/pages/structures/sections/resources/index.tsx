@@ -5,6 +5,7 @@ import { SECTION_COLORS } from "../../../../constants/colors";
 import RessourcesPropresChart from "./charts/ressources-propres";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
+import { SectionBudgetWarning } from "../../../../components/section-budget-warning";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
@@ -36,6 +37,17 @@ export function FinancementsSection({
           Les ressources de l'établissement
         </Title>
       </div>
+
+      <SectionBudgetWarning
+        metrics={[
+          "produits_de_fonctionnement_encaissables",
+          "recettes_propres",
+          "ressources_propres_produits_encaissables",
+          "tot_ress_formation",
+          "tot_ress_recherche",
+          "tot_ress_autres_recette",
+        ]}
+      />
 
       <div className="fr-mb-4w">
         <Row gutters>

@@ -1,4 +1,4 @@
-import { Row, Col, Title } from "@dataesr/dsfr-plus";
+import { Row, Col, Title, Text } from "@dataesr/dsfr-plus";
 import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../components/metric-chart-card";
 import { SECTION_COLORS } from "../../../../constants/colors";
@@ -6,6 +6,7 @@ import StatusIndicator from "../../../../components/status-indicator";
 import { parseMarkdown } from "../../../../../../utils/format";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
+import { useBudgetInfo } from "../../../../components/section-budget-warning/useBudgetInfo";
 
 type FinanceStatus = "alerte" | "vigilance" | "normal";
 
@@ -53,6 +54,18 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
     data?.resultat_net_comptable != null &&
     data?.resultat_net_comptable_hors_sie != null &&
     data.resultat_net_comptable !== data.resultat_net_comptable_hors_sie;
+
+  const { hasBudgetData, budgetYears } = useBudgetInfo([
+    "resultat_net_comptable",
+    "resultat_net_comptable_hors_sie",
+    "capacite_d_autofinancement",
+    "caf_produits_encaissables",
+    "fonds_de_roulement_net_global",
+    "besoin_en_fonds_de_roulement",
+    "tresorerie",
+    "fonds_de_roulement_en_jours_de_fonctionnement",
+    "tresorerie_en_jours_de_fonctionnement",
+  ]);
 
   const Metric = ({
     id,
@@ -107,39 +120,61 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
         </Title>
       </div>
 
-      {data?.is_rce && (
+      {(hasBudgetData || data?.is_rce) && (
         <div className="fr-callout fr-mb-4w">
-          <h3 className="fr-callout__title">Point d'attention</h3>
-          <p className="fr-callout__text fr-text--sm">
-            Pour les établissements qui bénéficient des responsabilités et
-            compétences élargies (RCE), un ou deux niveaux d'alerte ont été
-            définis pour chaque indicateur :
-          </p>
-          <ul className="fr-callout__text fr-text--sm fr-ml-2w">
-            <li>
-              <strong style={{ color: "var(--text-default-warning)" }}>
-                Orange
-              </strong>{" "}
-              : seuil à partir duquel une vigilance particulière doit être
-              accordée sur la santé financière de l'établissement, situation à
-              surveiller.
-            </li>
-            <li>
-              <strong style={{ color: "var(--text-default-error)" }}>
-                Rouge
-              </strong>{" "}
-              : seuil qui révèle un risque quant à la santé financière de
-              l'établissement. Alerte.
-            </li>
-          </ul>
-          <p className="fr-callout__text fr-text--sm fr-mb-0">
-            Ces seuils d'alerte doivent être interprétés au regard de l'activité
-            de l'établissement, du groupe disciplinaire auquel il appartient et
-            des évènements significatifs intervenus au cours de l'exercice.
-            L'appréciation du niveau de risque résulte également de
-            l'interprétation d'un ensemble d'indicateurs mis en relation les uns
-            avec les autres. Ces alertes doivent toujours être contextualisées.
-          </p>
+          <Title look="h3" as="h3" className="fr-callout__title">
+            Point d'attention
+          </Title>
+
+          {hasBudgetData && (
+            <Text className="fr-callout__text fr-text--sm fr-mb-2w">
+              <strong>Données budgétaires</strong>
+              <br />
+              Certaines données de{" "}
+              {budgetYears.length === 1 ? "l'année" : "des années"}{" "}
+              <strong>{budgetYears.join(", ")}</strong> présentées sur cette
+              page sont des données budgétaires qui correspondent à des
+              prévisions ou des objectifs financiers établis par
+              l'établissement. Elles ne reflètent pas nécessairement les
+              réalisations effectives.
+            </Text>
+          )}
+
+          {data?.is_rce && (
+            <>
+              <Text className="fr-callout__text fr-text--sm">
+                Pour les établissements qui bénéficient des responsabilités et
+                compétences élargies (RCE), un ou deux niveaux d'alerte ont été
+                définis pour chaque indicateur :
+              </Text>
+              <ul className="fr-callout__text fr-text--sm fr-ml-2w">
+                <li>
+                  <strong style={{ color: "var(--text-default-warning)" }}>
+                    Orange
+                  </strong>{" "}
+                  : seuil à partir duquel une vigilance particulière doit être
+                  accordée sur la santé financière de l'établissement, situation
+                  à surveiller.
+                </li>
+                <li>
+                  <strong style={{ color: "var(--text-default-error)" }}>
+                    Rouge
+                  </strong>{" "}
+                  : seuil qui révèle un risque quant à la santé financière de
+                  l'établissement. Alerte.
+                </li>
+              </ul>
+              <p className="fr-callout__text fr-text--sm fr-mb-0">
+                Ces seuils d'alerte doivent être interprétés au regard de
+                l'activité de l'établissement, du groupe disciplinaire auquel il
+                appartient et des évènements significatifs intervenus au cours
+                de l'exercice. L'appréciation du niveau de risque résulte
+                également de l'interprétation d'un ensemble d'indicateurs mis en
+                relation les uns avec les autres. Ces alertes doivent toujours
+                être contextualisées.
+              </p>
+            </>
+          )}
         </div>
       )}
 

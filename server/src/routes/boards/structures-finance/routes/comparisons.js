@@ -217,6 +217,7 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
         "rce",
         "devimmo",
         "is_devimmo",
+        "sanfin_source",
       ],
       where: whereCondition,
       orderBy: "etablissement_actuel_lib ASC",

@@ -23,6 +23,7 @@ import {
 } from "../../../../../config/config.ts";
 import { RenderData } from "./render-data.tsx";
 import { ThresholdLegend } from "../../../../../config/index.tsx";
+import { BudgetWarning } from "../../../../../components/budget-warning";
 
 interface NationalChartProps {
   data: any[];
@@ -264,6 +265,11 @@ export default function NationalChart({
           </Col>
         </Row>
       )}
+
+      <BudgetWarning
+        data={data}
+        metrics={activeMetricKey ? [activeMetricKey] : []}
+      />
 
       {isLoading ? (
         <div className="fr-text--center fr-py-5w">

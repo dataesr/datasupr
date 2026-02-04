@@ -21,6 +21,7 @@ import {
 } from "../../../../../../config/config";
 import { ThresholdLegend } from "../../../../../../config/index";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
+import { BudgetWarning } from "../../../../../../components/budget-warning";
 
 const filterDisplayMetrics = (metrics: readonly string[]) =>
   metrics.filter(
@@ -178,6 +179,8 @@ export default function ComparisonBarChart({
           </Col>
         </Row>
       )}
+
+      <BudgetWarning data={data} metrics={[selectedMetric]} />
 
       {!chartOptions || !data?.length ? (
         <div className="fr-alert fr-alert--warning">

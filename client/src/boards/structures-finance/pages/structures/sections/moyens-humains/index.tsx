@@ -4,6 +4,7 @@ import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../components/metric-chart-card";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
+import { SectionBudgetWarning } from "../../../../components/section-budget-warning";
 
 const SECTION_COLOR = SECTION_COLORS.moyensHumains;
 
@@ -28,6 +29,14 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
           Les enseignants permanents
         </Title>
       </div>
+
+      <SectionBudgetWarning
+        metrics={[
+          "charges_de_personnel",
+          "charges_de_personnel_produits_encaissables",
+          "taux_de_remuneration_des_permanents",
+        ]}
+      />
 
       <div className="fr-mb-5w">
         <Row gutters>

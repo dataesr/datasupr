@@ -20,7 +20,9 @@ export const useMetricEvolution = (metricKey: string) => {
       .filter((item: any) => !yearNum || Number(item.exercice) <= yearNum)
       .map((item: any) => ({
         exercice: Number(item.exercice),
+        anuniv: item.anuniv,
         value: Number(item[metricKey]),
+        sanfin_source: item.sanfin_source,
       }))
       .filter((item: any) => item.value != null && !isNaN(item.value));
   }, [evolutionData, metricKey, selectedYear]);
