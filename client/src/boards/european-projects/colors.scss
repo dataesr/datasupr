@@ -1,8 +1,11 @@
 :root {
+  --evaluated-project: #009099; // projets évalués
+  --successful-project: #233e41; // projets lauréats
+  --successRate: #1f8d49; // taux de succès
+
   --label-color: var(--text-action-high-grey);
   --evaluated-project-color: #009099; // projets évalués
   --successful-project-color: #233e41; // projets lauréats
-  --successRate: #1f8d49; // taux de succès
   --averageSuccessRate-color: #d75521; // taux de succès moyen
   --cumulativeSuccessRate-color: #d75521; // taux de succès moyen
   --selected-country-color: #6dd897; // pays sélectionné

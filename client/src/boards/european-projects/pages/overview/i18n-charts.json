@@ -14,5 +14,17 @@
   "successRate": {
     "fr": "Taux de succès",
     "en": "Success rate"
+  },
+  "totalFunding": {
+    "fr": "Total des subventions",
+    "en": "Total funding"
+  },
+  "evaluatedProjects": {
+    "fr": "Projets évalués",
+    "en": "Evaluated projects"
+  },
+  "successfulProjects": {
+    "fr": "Projets lauréats",
+    "en": "Successful projects"
   }
 }

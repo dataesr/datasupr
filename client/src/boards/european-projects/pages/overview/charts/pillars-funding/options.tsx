@@ -2,16 +2,17 @@ import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
+import { getCssColor } from "../../../../../../utils/colors";
+import { getI18nLabel } from "../../../../../../utils";
+import i18n from "../../i18n-charts.json";
 
 export default function Options(data) {
   if (!data) return null;
 
-  const rootStyles = getComputedStyle(document.documentElement);
   const height = data.data.length * 50;
   
   const newOptions: HighchartsInstance.Options = {
     chart: { height: height },
-    legend: { enabled: true },
     xAxis: {
       type: "category",
     },
@@ -20,22 +21,29 @@ export default function Options(data) {
       title: {
         text: "Euros € (millions)",
       },
+      gridLineColor: "var(--background-default-grey-hover)",
+      gridLineWidth: 0.5,
     },
     tooltip: {
       pointFormatter: function () {
-        return `Total des subventions : <b>${formatToMillions(this.y ?? 0)}</b>`;
+        return `${getI18nLabel(i18n, "totalFunding")} : <b>${formatToMillions(this.y ?? 0)}</b>`;
       },
     },
     plotOptions: {
       series: {
         dataLabels: { enabled: true },
       },
+      bar: {
+        pointWidth: 25,
+        borderWidth: 0,
+        borderRadius: 0,
+      },
     },
     series: [
       {
         type: "bar",
-        name: "Projets évalués",
-        color: rootStyles.getPropertyValue("--evaluated-project-color"),
+        name: getI18nLabel(i18n, "evaluatedProjects"),
+        color: getCssColor("evaluated-project"),
         groupPadding: 0,
         data: data.data.filter((item) => item.stage === "evaluated").map((item) => [item.pilier_name_fr, item.total_fund_eur]),
         dataLabels: {
@@ -46,8 +54,8 @@ export default function Options(data) {
       },
       {
         type: "bar",
-        name: "Projets lauréats",
-        color: rootStyles.getPropertyValue("--successful-project-color"),
+        name: getI18nLabel(i18n, "successfulProjects"),
+        color: getCssColor("successful-project"),
         groupPadding: 0,
         data: data.data.filter((item) => item.stage === "successful").map((item) => [item.pilier_name_fr, item.total_fund_eur]),
         dataLabels: {

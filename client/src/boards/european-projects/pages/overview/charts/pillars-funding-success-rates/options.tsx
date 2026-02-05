@@ -45,13 +45,7 @@ export default function Options(data) {
       {
         type: "bar",
         name: getI18nLabel(i18n, "successRate"),
-        color: {
-          linearGradient: { x1: 0, x2: 1, y1: 0, y2: 0 },
-          stops: [
-            [0, getCssColor("successRate")],
-            [1, "#0d4a24"],
-          ],
-        },
+        color: getCssColor("successRate"),
         groupPadding: 0,
         data: data.successRateByPillar.map((item) => ({
           name: item.pillar,
