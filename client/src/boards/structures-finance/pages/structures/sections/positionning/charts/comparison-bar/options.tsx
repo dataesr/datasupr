@@ -98,10 +98,6 @@ export const createPositioningComparisonBarOptions = (
         isCurrentStructure,
       };
     })
-    .filter((d) => {
-      const value = d.value;
-      return value != null && !isNaN(value) && value !== 0;
-    })
     .sort((a, b) => b.value - a.value);
 
   let dataMin = Infinity;

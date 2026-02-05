@@ -84,45 +84,6 @@ export default function ComparisonBarChart({
   const selectedMetricConfig =
     METRICS_CONFIG[selectedMetric] || METRICS_CONFIG["effectif_sans_cpge"];
 
-  const chartOptions = useMemo(() => {
-    if (!data?.length) return null;
-
-    return createPositioningComparisonBarOptions(
-      {
-        metric: selectedMetric,
-        metricLabel,
-        metricConfig: selectedMetricConfig,
-        threshold: metricThreshold,
-      },
-      data,
-      currentStructureId,
-      currentStructureName
-    );
-  }, [
-    data,
-    selectedMetric,
-    metricLabel,
-    selectedMetricConfig,
-    metricThreshold,
-    currentStructureId,
-    currentStructureName,
-  ]);
-
-  const chartKey = useMemo(() => {
-    if (!data || !Array.isArray(data))
-      return `comparison-${currentStructureId}`;
-    const dataIds = data
-      .map((d) => d?.etablissement_id_paysage_actuel)
-      .sort()
-      .join(",");
-    return `comparison-${currentStructureId}-${dataIds}`;
-  }, [currentStructureId, data]);
-
-  const chartConfig = {
-    id: "positioning-comparison-bar",
-    title: `${metricLabel}${selectedYear ? ` — ${selectedYear}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
-  };
-
   const currentStructureHasData = useMemo(() => {
     if (!data?.length || !currentStructureId) return false;
     const currentStructureData = data.find(
@@ -132,6 +93,53 @@ export default function ComparisonBarChart({
     const value = currentStructureData[selectedMetric];
     return value != null && value !== 0;
   }, [data, currentStructureId, selectedMetric]);
+
+  const filteredData = useMemo(() => {
+    if (!data?.length) return data;
+    return data.filter((item) => {
+      const value = item[selectedMetric];
+      return value != null && !isNaN(value) && value !== 0;
+    });
+  }, [data, selectedMetric]);
+
+  const chartOptions = useMemo(() => {
+    if (!filteredData?.length) return null;
+
+    return createPositioningComparisonBarOptions(
+      {
+        metric: selectedMetric,
+        metricLabel,
+        metricConfig: selectedMetricConfig,
+        threshold: metricThreshold,
+      },
+      filteredData,
+      currentStructureId,
+      currentStructureName
+    );
+  }, [
+    filteredData,
+    selectedMetric,
+    metricLabel,
+    selectedMetricConfig,
+    metricThreshold,
+    currentStructureId,
+    currentStructureName,
+  ]);
+
+  const chartKey = useMemo(() => {
+    if (!filteredData || !Array.isArray(filteredData))
+      return `comparison-${currentStructureId}`;
+    const dataIds = filteredData
+      .map((d) => d?.etablissement_id_paysage_actuel)
+      .sort()
+      .join(",");
+    return `comparison-${currentStructureId}-${dataIds}`;
+  }, [currentStructureId, filteredData]);
+
+  const chartConfig = {
+    id: "positioning-comparison-bar",
+    title: `${metricLabel}${selectedYear ? ` — ${selectedYear}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
+  };
 
   return (
     <div>
@@ -191,10 +199,10 @@ export default function ComparisonBarChart({
       )}
 
       {currentStructureHasData && (
-        <BudgetWarning data={data} metrics={[selectedMetric]} />
+        <BudgetWarning data={filteredData} metrics={[selectedMetric]} />
       )}
 
-      {!chartOptions || !data?.length || !currentStructureHasData ? (
+      {!chartOptions || !filteredData?.length || !currentStructureHasData ? (
         <div className="fr-alert fr-alert--warning">
           <p className="fr-alert__title">Aucune donnée disponible</p>
           <p>
@@ -211,7 +219,7 @@ export default function ComparisonBarChart({
           legend={<ThresholdLegend threshold={metricThreshold} />}
           renderData={() => (
             <RenderData
-              data={data}
+              data={filteredData}
               metric={selectedMetric}
               metricLabel={metricLabel}
               metricConfig={selectedMetricConfig}

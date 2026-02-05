@@ -97,7 +97,9 @@ export function RenderData({
                   >
                     <td>{index + 1}</td>
                     <td>{item.name}</td>
-                    <td>{formatValue(item.value)}</td>
+                    <td style={{ textAlign: "right" }}>
+                      {formatValue(item.value)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
