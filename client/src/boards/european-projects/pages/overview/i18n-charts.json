@@ -10,5 +10,9 @@
   "year": {
     "fr": "Année",
     "en": "Year"
+  },
+  "successRate": {
+    "fr": "Taux de succès",
+    "en": "Success rate"
   }
 }

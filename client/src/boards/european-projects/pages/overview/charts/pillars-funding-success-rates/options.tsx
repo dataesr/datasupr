@@ -2,16 +2,17 @@ import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToRates } from "../../../../../../utils/format";
+import { getCssColor } from "../../../../../../utils/colors";
+import { getI18nLabel } from "../../../../../../utils";
+import i18n from "../../i18n-charts.json";
 
 export default function Options(data) {
   if (!data) return null;
 
-  // const rootStyles = getComputedStyle(document.documentElement);
   const height = data.data.length * 50;
 
   const newOptions: HighchartsInstance.Options = {
     chart: { height: height },
-    legend: { enabled: true },
     xAxis: {
       labels: {
         enabled: false,
@@ -22,12 +23,12 @@ export default function Options(data) {
       title: {
         text: "%",
       },
-      gridLineColor: "#5f5f5f",
+      gridLineColor: "var(--background-default-grey-hover)",
       gridLineWidth: 0.5,
     },
     tooltip: {
       pointFormatter: function () {
-        return `Taux de succès : <b>${formatToRates(this.y ?? 0)}</b>`;
+        return `${getI18nLabel(i18n, "successRate")} : <b>${formatToRates(this.y ?? 0)}</b>`;
       },
     },
     plotOptions: {
@@ -43,11 +44,11 @@ export default function Options(data) {
     series: [
       {
         type: "bar",
-        name: "Taux de succès",
+        name: getI18nLabel(i18n, "successRate"),
         color: {
           linearGradient: { x1: 0, x2: 1, y1: 0, y2: 0 },
           stops: [
-            [0, "#1f8d49"],
+            [0, getCssColor("successRate")],
             [1, "#0d4a24"],
           ],
         },

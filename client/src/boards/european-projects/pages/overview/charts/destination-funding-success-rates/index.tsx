@@ -18,7 +18,7 @@ const config = {
 };
 
 export default function DestinationFundingSuccessRates() {
-  const { params } = useGetParams();
+  const { params, currentLang } = useGetParams();
   const { data, isLoading } = useQuery({
     queryKey: [config.idQuery, params],
     queryFn: () => getData(params),
@@ -26,5 +26,5 @@ export default function DestinationFundingSuccessRates() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} options={options(data)} renderData={() => renderDataTable(data)} />;
+  return <ChartWrapper config={config} options={options(data)} renderData={() => renderDataTable(data, currentLang)} />;
 }

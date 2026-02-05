@@ -2,11 +2,13 @@ import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToRates } from "../../../../../../utils/format";
+import { getCssColor } from "../../../../../../utils/colors";
+import { getI18nLabel } from "../../../../../../utils";
+import i18n from "../../i18n-charts.json";
 
 export default function Options(data) {
   if (!data) return null;
 
-  const rootStyles = getComputedStyle(document.documentElement);
   const height = data.data.length * 50;
   
   const newOptions: HighchartsInstance.Options = {
@@ -20,12 +22,14 @@ export default function Options(data) {
     yAxis: {
       min: 0,
       title: {
-        text: "Taux de succès",
+        text: "%",
       },
+      gridLineColor: "var(--background-default-grey-hover)",
+      gridLineWidth: 0.5,
     },
     tooltip: {
       pointFormatter: function () {
-        return `Taux de succès : <b>${formatToRates(this.y ?? 0)}</b>`;
+        return `${getI18nLabel(i18n, "successRate")} : <b>${formatToRates(this.y ?? 0)}</b>`;
       },
     },
     plotOptions: {
@@ -33,21 +37,37 @@ export default function Options(data) {
         dataLabels: { enabled: true },
       },
       bar: {
-        pointWidth: 50,
+        pointWidth: 25,
+        borderWidth: 0,
+        borderRadius: 0,
       },
     },
     series: [
       {
         type: "bar",
-        name: "Taux de succès",
-        color: rootStyles.getPropertyValue("--successRate-color"),
+        name: getI18nLabel(i18n, "successRate"),
+        color: getCssColor("successRate"),
         groupPadding: 0,
-        data: data.successRateByProgram.map((item) => [item.program, item.successRate]),
-        dataLabels: {
-          formatter: function () {
-            return formatToRates(this.y ?? 0);
+        data: data.successRateByProgram.map((item) => ({
+          name: item.program,
+          y: item.successRate,
+        })),
+        dataLabels: [
+          {
+            formatter: function () {
+              return this.name;
+            },
+            inside: true,
+            align: "left",
           },
-        },
+          {
+            formatter: function () {
+              return formatToRates(this.y ?? 0);
+            },
+            inside: false,
+            align: "right",
+          },
+        ],
       },
     ],
   };
