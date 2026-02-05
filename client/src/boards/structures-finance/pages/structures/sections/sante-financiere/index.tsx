@@ -254,7 +254,9 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
       </div>
 
       <div className="fr-mb-4w">
-        <h3 className="fr-h5 fr-mb-3w">Cycle d'exploitation</h3>
+        <Title as="h3" look="h5" className="fr-mb-3w">
+          Cycle d'exploitation
+        </Title>
         <Row gutters>
           <Metric
             id="fonds_de_roulement_net_global"

@@ -135,7 +135,7 @@ export function RenderData({
     },
     {
       title: "Financement de l'activité",
-      className: "section financement",
+      className: "section cycle",
       items: [
         {
           label: "Charges décaissables / Produits encaissables (en %)",
