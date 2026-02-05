@@ -1,128 +1,114 @@
-import { Button, Container, FastAccess, Header, Link, Logo, Nav, Service } from "@dataesr/dsfr-plus";
-import { useState } from "react";
-import { Outlet, useLocation, useSearchParams } from "react-router-dom";
+import { Logo, Service } from "@dataesr/dsfr-plus";
+import { useEffect } from "react";
+import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
 import Footer from "../../../../components/footer";
-import SwitchTheme from "../../../../components/switch-theme";
 import { getI18nLabel } from "../../../../utils";
+import { years } from "../../utils";
 import i18n from "./i18n.json";
 
-import "../styles.scss";
+import "./styles.scss";
+
+const { VITE_MINISTER_NAME } = import.meta.env;
 
 
-export default function GlobalLayout({ languageSelector = false }) {
+export default function GlobalLayout() {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
-  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (!searchParams.get("yearMax") || !searchParams.get("yearMin")) {
+      if (!searchParams.get("yearMax")) {
+        searchParams.set("yearMax", String(years[years.length - 2]));
+      }
+      if (!searchParams.get("yearMin")) {
+        searchParams.set("yearMin", String(years[years.length - 2]));
+      }
+      setSearchParams(searchParams);
+    }
+  }, [searchParams, setSearchParams]);
+
+  const searchParamsFiltered = () => {
+    if (!searchParams.has("section")) return searchParams;
+    // Deep copy of searchParams
+    const searchParamsCopy = new URLSearchParams(searchParams);
+    searchParamsCopy.delete("section");
+    return searchParamsCopy;
+  }
 
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
 
   return (
     <>
-      <Header>
-        <Logo text="Ministère|de l'Enseignement|supérieur,|de la Recherche|et de l'Espace" />
-        <Service name="DataSupR" tagline={getI18nLabel(i18n, "tagline")} />
-        <FastAccess>
-          <Button as="a" href="/" icon="github-fill" size="sm" variant="text">
-            {getI18nLabel(i18n, "explore")}
-          </Button>
-          <Button
-            as="a"
-            href="https://data.enseignementsup-recherche.gouv.fr/explore/dataset/fr-esr-atlas_regional-effectifs-d-etudiants-inscrits/table/?disjunctive.rgp_formations_ou_etablissements&sort=-rentree"
-            icon="code-s-slash-line"
-            rel="noreferer noopener"
-            size="sm"
-            target="_blank"
-            variant="text"
-          >
-            {getI18nLabel(i18n, "datasets")}
-          </Button>
-          <Button aria-controls="fr-theme-modal" className="fr-btn fr-icon-theme-fill" data-fr-opened="false">
-            {getI18nLabel(i18n, "themes")}
-          </Button>
-          {languageSelector && (
-            <nav role="navigation" className="fr-translate fr-nav">
-              <div className="fr-nav__item">
-                <button
-                  aria-controls="translate-1177"
-                  aria-expanded="false"
-                  className="fr-translate__btn fr-btn fr-btn--tertiary"
-                  title={getI18nLabel(i18n, "languagesSelector")}
-                >
-                  {currentLang === "fr" ? (
-                    <>
-                      FR<span className="fr-hidden-lg"> - Français</span>
-                    </>
-                  ) : (
-                    <>
-                      EN<span className="fr-hidden-lg"> - English</span>
-                    </>
-                  )}
-                </button>
-                <div className="fr-collapse fr-translate__menu fr-menu" id="translate-1177">
-                  <ul className="fr-menu__list">
-                    <li>
-                      <Button
-                        aria-current={searchParams.get("language") === "fr"}
-                        className="fr-translate__language fr-nav__link"
-                        onClick={() => {
-                          searchParams.set("language", "fr");
-                          setSearchParams(searchParams);
-                        }}
-                      >
-                        FR - Français
-                      </Button>
-                    </li>
-                    <li>
-                      <Button
-                        aria-current={searchParams.get("language") === "en"}
-                        className="fr-translate__language fr-nav__link"
-                        onClick={() => {
-                          searchParams.set("language", "en");
-                          setSearchParams(searchParams);
-                        }}
-                      >
-                        EN - English
-                      </Button>
-                    </li>
-                  </ul>
+      <header role="banner" className="fr-header">
+        <div className="fr-header__body">
+          <div className="fr-container">
+            <div className="fr-header__body-row">
+              <div className="fr-header__brand fr-enlarge-link">
+                <div className="fr-header__brand-top">
+                  <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
+                  <Service
+                    href="/valorisation-recherche-innovation/accueil"
+                    name="Valorisation de la recherche - innovation"
+                    tagline=""
+                  />
+                  <div className="fr-header__navbar">
+                    <button
+                      data-fr-opened="false"
+                      aria-controls="modal-header"
+                      title="Menu"
+                      type="button"
+                      id="button-header"
+                      className="fr-btn--menu fr-btn"
+                    >
+                      Menu
+                    </button>
+                  </div>
                 </div>
               </div>
-            </nav>
-          )}
-        </FastAccess>
-      </Header>
-      <div className="tm-main-menu">
-        <Container>
-          <div className="actions">
-            <button
-              className="tm-menu-toggle fr-btn fr-btn--tertiary"
-              onClick={() => setMenuOpen(!menuOpen)}
-              aria-expanded={menuOpen}
-              aria-controls="tm-main-nav"
-            >
-              {menuOpen ? <i className="ri-close-line" /> : <i className="ri-menu-line" />}
-              Menu
-            </button>
-            <div className={`tm-nav-wrapper ${menuOpen ? "tm-nav-open" : ""}`} id="tm-main-nav">
-              <Nav aria-label="Main navigation">
-                <Link current={is("/valorisation-recherche-innovation/home")} href="/valorisation-recherche-innovation/home">
-                  <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
-                  {getI18nLabel(i18n, "home")}
-                </Link>
-                <Link current={is("/valorisation-recherche-innovation/overview")} href="/valorisation-recherche-innovation/overview">
-                  {getI18nLabel(i18n, "overview")}
-                </Link>
-              </Nav>
             </div>
           </div>
-        </Container>
-      </div>
+        </div>
+        <div className="fr-header__menu fr-modal" id="modal-header" aria-labelledby="button-header">
+          <div className="fr-container">
+            <button aria-controls="modal-header" title="Fermer" type="button" id="button-2168" className="fr-btn--close fr-btn">
+              {getI18nLabel(i18n, "close")}
+            </button>
+            <div className="fr-header__menu-links"></div>
+            <nav className="fr-nav" role="navigation" aria-label="Menu principal">
+              <ul className="fr-nav__list">
+                <li className="fr-nav__item">
+                  <Link
+                    {...(pathname === "/valorisation-recherche-innovation/accueil" && { "aria-current": "page" })}
+                    className="fr-nav__link"
+                    target="_self"
+                    to="/valorisation-recherche-innovation/accueil"
+                  >
+                    <span className="fr-icon-home-4-line fr-mr-1w" aria-hidden="true" />
+                    {getI18nLabel(i18n, "accueil")}
+                  </Link>
+                </li>
+                <li className="fr-nav__item">
+                  <Link
+                    {...(is("/valorisation-recherche-innovation/etablissement") && { "aria-current": "page" })}
+                    className="fr-nav__link"
+                    target="_self"
+                    to={`/valorisation-recherche-innovation/etablissement?${searchParamsFiltered()}`}
+                  >
+                    {getI18nLabel(i18n, "etablissement")}
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      </header>
       <Outlet />
-      <Footer />
-      <SwitchTheme />
+      <Footer
+        href="/valorisation-recherche-innovation/accueil"
+        title="Valorisation de la recherche - innovation - Tableaux"
+      />
     </>
   );
 }

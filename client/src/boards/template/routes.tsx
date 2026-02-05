@@ -22,6 +22,7 @@ export default function TemplateRoutes() {
     <Routes>
       <Route element={<GlobalLayout languageSelector />}>
         <Route index element={<Navigate to="home" replace />} />
+        <Route path="" element={<Navigate to="home" replace />} />
         <Route path="home" element={<RouteWithTitle titleKey="home" element={<Home />} />} />
         <Route element={<SidemenuLayout />}>
           <Route path="overview" element={<RouteWithTitle titleKey="overview" element={<Overview />} />} />

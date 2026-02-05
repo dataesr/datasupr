@@ -1,11 +1,12 @@
-import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
+import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
 export default function Home() {
+  console.log('lalilou');
   return (
     <Container>
       <Row>
         <Col>
-          <Title as="h1">ValorisationRechercheInnovation Home Page</Title>
+          <Title as="h1">Valorisation de la recherche - innovation</Title>
         </Col>
       </Row>
     </Container>

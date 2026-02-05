@@ -1,10 +1,8 @@
 {
   "home": {
-    "fr": "ValorisationRechercheInnovation - Accueil",
-    "en": "ValorisationRechercheInnovation - Home"
+    "fr": "Accueil - Valorisation de la recherche - innovation - Tableaux"
   },
-  "overview": {
-    "fr": "ValorisationRechercheInnovation - Overview",
-    "en": "ValorisationRechercheInnovation - Overview"
+  "etablissement": {
+    "fr": "Vue par structure - Valorisation de la recherche - innovation - Tableaux"
   }
 }

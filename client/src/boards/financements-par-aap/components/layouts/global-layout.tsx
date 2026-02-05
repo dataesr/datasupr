@@ -117,7 +117,7 @@ export default function GlobalLayout() {
       <Outlet />
       <Footer
         href="/financements-par-aap/accueil"
-        title="Financements par appels à projets - DataESR"
+        title="Financements par appels à projets - Tableaux"
       />
     </>
   );

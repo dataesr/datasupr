@@ -4,9 +4,8 @@ import NotFoundPage from "../../components/not-found-page.tsx";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import { getI18nLabel } from "../../utils";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
-import SidemenuLayout from "./components/layouts/sidemenu-layout.tsx";
-import Home from "./pages/home/index.tsx";
-import Overview from "./pages/overview/index.tsx";
+import Home from "./pages/home";
+import Structures from "./pages/structures";
 import i18n from "./title-i18n.json";
 
 import "./styles.scss";
@@ -20,12 +19,11 @@ const RouteWithTitle = ({ titleKey, element }) => {
 export default function ValorisationRechercheInnovationRoutes() {
   return (
     <Routes>
-      <Route element={<GlobalLayout languageSelector />}>
-        <Route index element={<Navigate to="home" replace />} />
-        <Route path="home" element={<RouteWithTitle titleKey="home" element={<Home />} />} />
-        <Route element={<SidemenuLayout />}>
-          <Route path="overview" element={<RouteWithTitle titleKey="overview" element={<Overview />} />} />
-        </Route>
+      <Route element={<GlobalLayout />}>
+        <Route index element={<Navigate to="accueil" replace />} />
+        <Route path="" element={<Navigate to="accueil" replace />} />
+        <Route path="accueil" element={<RouteWithTitle titleKey="accueil" element={<Home />} />} />
+        <Route path="etablissement" element={<RouteWithTitle titleKey="etablissement" element={<Structures />} />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

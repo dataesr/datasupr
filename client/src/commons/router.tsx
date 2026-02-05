@@ -49,7 +49,7 @@ export default function Router() {
       <Route path="/template/*" element={<TemplateRoutes />} />
       <Route
         path="/valorisation-recherche-innovation"
-        element={<Navigate to="/valorisation-recherche-innovation/home" replace />}
+        element={<Navigate to="/valorisation-recherche-innovation/accueil" replace />}
       />
       <Route path="/valorisation-recherche-innovation/*" element={<ValorisationRechercheInnovationRoutes />} />
       <Route path="*" element={<NotFoundPage />} />
