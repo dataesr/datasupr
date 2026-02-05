@@ -12,6 +12,7 @@ import RessourcesPropresDecompositionChart from "../../../resources/charts/resso
 import RessourcesFormationDecompositionChart from "../../../resources/charts/ressources-formation-decomposition";
 import RessourcesRechercheDecompositionChart from "../../../resources/charts/ressources-recherche-decomposition";
 import RessourcesAutresDecompositionChart from "../../../resources/charts/ressources-autres-decomposition";
+import SanteFinanciereTableau from "../../../sante-financiere/charts/sante-financiere-tableau";
 import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import {
   ThresholdLegend,
@@ -75,6 +76,13 @@ export default function SingleEvolutionChart({
       ? partKey
       : null;
   }, [baseMetrics, data]);
+
+  const isSanteFinanciere = useMemo(() => {
+    const config = METRICS_CONFIG[selectedMetric];
+    return (
+      config && "category" in config && config.category === "Santé financière"
+    );
+  }, [selectedMetric]);
 
   const handleIPCChange = (show: boolean) => {
     setShowIPC(show);
@@ -199,6 +207,12 @@ export default function SingleEvolutionChart({
           <RessourcesAutresDecompositionChart
             etablissementName={etablissementName}
           />
+        </div>
+      )}
+
+      {isSanteFinanciere && (
+        <div className="fr-mt-3w">
+          <SanteFinanciereTableau data={data?.[0]} />
         </div>
       )}
 

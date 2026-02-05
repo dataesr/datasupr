@@ -197,7 +197,7 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
                 __html: parseMarkdown(data.analyse_financiere),
               }}
             />
-            <p
+            <Text
               className="fr-text--sm fr-mb-0"
               style={{
                 fontStyle: "italic",
@@ -213,7 +213,7 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
               prédéfinies, et sont adaptées aux spécificités de chaque
               établissement et exercice. Cette approche permet une analyse
               objective, reproductible et exhaustive des données financières.
-            </p>
+            </Text>
           </div>
         </section>
       )}

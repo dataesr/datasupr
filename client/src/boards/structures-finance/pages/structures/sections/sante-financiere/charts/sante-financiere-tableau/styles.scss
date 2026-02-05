@@ -1,0 +1,128 @@
+.sf-table {
+  overflow-x: auto;
+  width: 100%;
+
+  table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.875rem;
+    border: 1px solid var(--border-default-grey);
+  }
+
+  thead {
+    background-color: var(--background-action-low-blue-france);
+
+    th {
+      padding: var(--spacing-4w) var(--spacing-3w);
+      font-weight: 700;
+      color: var(--text-title-blue-france);
+      text-align: center;
+      border-bottom: 3px solid var(--border-action-high-blue-france);
+
+      &:first-child {
+        text-align: left;
+        position: sticky;
+        left: 0;
+        z-index: 2;
+        background-color: var(--background-action-low-blue-france);
+        min-width: 280px;
+        max-width: 280px;
+        border-right: 1px solid var(--border-default-grey);
+      }
+    }
+  }
+
+  .section td {
+    padding: var(--spacing-3w) var(--spacing-4w);
+    font-weight: 700;
+    font-size: 0.9375rem;
+    border-top: 2px solid var(--border-default-grey);
+  }
+
+  .equilibre td {
+    background-color: var(--background-contrast-blue-france);
+    color: var(--text-title-blue-france);
+  }
+
+  .cycle td {
+    background-color: var(--background-contrast-info);
+    color: var(--text-label-blue-france);
+  }
+
+  .financement td {
+    background-color: var(--background-contrast-grey);
+    color: var(--text-title-grey);
+  }
+
+  tbody tr:not(.section) {
+    td:first-child {
+      text-align: left;
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      padding: var(--spacing-3w) var(--spacing-4w);
+      background-color: var(--background-contrast-grey);
+      min-width: 280px;
+      max-width: 280px;
+      border-right: 1px solid var(--border-default-grey);
+    }
+
+    td:not(:first-child) {
+      text-align: center;
+      padding: var(--spacing-3w);
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+  }
+
+  .normal {
+    background-color: var(--background-default-grey);
+    color: var(--text-default-grey);
+  }
+
+  .vigilance {
+    background-color: var(--background-flat-warning);
+    color: var(--text-default-grey);
+    font-weight: 700;
+  }
+
+  .alerte {
+    background-color: var(--background-flat-error);
+    color: var(--text-inverted-grey);
+    font-weight: 700;
+  }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 48px;
+    margin-top: var(--spacing-6w);
+    padding: var(--spacing-4w) 0;
+
+    > div {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-2w);
+    }
+
+    span:first-child {
+      width: 16px;
+      height: 16px;
+      border: 1px solid var(--border-default-grey);
+
+      &.vigilance {
+        background-color: var(--background-flat-warning);
+      }
+
+      &.alerte {
+        background-color: var(--background-flat-error);
+      }
+    }
+
+    span:last-child {
+      font-size: 0.875rem;
+      color: var(--text-default-grey);
+    }
+  }
+}
