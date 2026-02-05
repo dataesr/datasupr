@@ -52,6 +52,7 @@ router.route("/admin/add-dashboard").post(async (req, res) => {
       data: [],
       constants: [],
       createdAt: new Date().toISOString(),
+      icon: 'question-mark',
     };
 
     await db.collection("boards").insertOne(newDashboard);
@@ -956,11 +957,11 @@ router.route("/admin/initialize-dashboard-structure").post(async (req, res) => {
     copyAndReplace(serverTemplateDir, serverTargetDir);
 
     // Modifier client/src/router.tsx
-    const clientRouterPath = path.join(projectRoot, 'client/src/router.tsx');
+    const clientRouterPath = path.join(projectRoot, 'client/src/commons/router.tsx');
     let clientRouterContent = fs.readFileSync(clientRouterPath, 'utf8');
     
     // Ajouter l'import
-    const importLine = `import ${dashboardIdPascal}Routes from "./boards/${dashboardIdKebab}/routes.tsx";`;
+    const importLine = `import ${dashboardIdPascal}Routes from "../boards/${dashboardIdKebab}/routes.tsx";`;
     const importInsertionPoint = clientRouterContent.indexOf('import TemplateRoutes');
     if (importInsertionPoint !== -1) {
       clientRouterContent = 
@@ -970,7 +971,13 @@ router.route("/admin/initialize-dashboard-structure").post(async (req, res) => {
     }
     
     // Ajouter la route
-    const routeLine = `      <Route path="/${dashboardIdKebab}/*" element={<${dashboardIdPascal}Routes />} />`;
+    const routeLine = ```
+      <Route
+        path="/${dashboardIdKebab}"
+        element={<Navigate to="/${dashboardIdKebab}/home" replace />}
+      />
+      <Route path="/${dashboardIdKebab}/*" element={<${dashboardIdPascal}Routes />} />
+      ```
     const routeInsertionPoint = clientRouterContent.indexOf('<Route path="/template/*"');
     if (routeInsertionPoint !== -1) {
       const lineEnd = clientRouterContent.indexOf('\n', routeInsertionPoint);

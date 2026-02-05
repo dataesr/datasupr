@@ -1,0 +1,66 @@
+{
+  "active-filters": {
+    "fr": "Filtres actifs",
+    "en": "Active filters"
+  },
+  "back": {
+    "fr": "Retour à la selection des filtres",
+    "en": "Back to filters selection"
+  },
+  "beneficiaries": {
+    "fr": "Entités bénéficiaires",
+    "en": "Beneficiaries entities"
+  },
+  "beneficiaries-types": {
+    "fr": "Types de bénéficiaires",
+    "en": "Types of beneficiaries"
+  },
+  "collaborations": {
+    "fr": "Collaborations",
+    "en": "Collaborations"
+  },
+  "by-country": {
+    "fr": "Par pays",
+    "en": "By country"
+  },
+  "by-entity": {
+    "fr": "Par entité",
+    "en": "By entity"
+  },
+  "destinations": {
+    "fr": "Destinations",
+    "en": "Destinations"
+  },
+  "pillars": {
+    "fr": "Piliers",
+    "en": "Pillars"
+  },
+  "positioning": {
+    "fr": "Positionnement",
+    "en": "Positioning"
+  },
+  "programs": {
+    "fr": "Programmes",
+    "en": "Programs"
+  },
+  "synthesis": {
+    "fr": "Synthèse",
+    "en": "Synthesis"
+  },
+  "thematics": {
+    "fr": "Thématiques",
+    "en": "Topics"
+  },
+  "show-less": {
+    "fr": "Voir moins",
+    "en": "Show less"
+  },
+  "show": {
+    "fr": "Voir les",
+    "en": "Show the"
+  },
+  "others": {
+    "fr": "autres",
+    "en": "others"
+  }
+}

@@ -13,6 +13,7 @@ import OpenAlexRoutes from "../boards/open-alex/routes.tsx";
 import StructuresFinanceRoutes from "../boards/structures-finance/routes.tsx";
 import TedsRoutes from "../boards/teds/routes.tsx";
 import TemplateRoutes from "../boards/template/routes.tsx";
+import ValorisationRechercheInnovationRoutes from "../boards/valorisation-recherche-innovation/routes.tsx";
 import CookiePolicyPage from "../components/cookies/cookie-policy-page/index.tsx";
 import NotFoundPage from "../components/not-found-page.tsx";
 
@@ -46,6 +47,11 @@ export default function Router() {
       />
       <Route path="/teds/*" element={<TedsRoutes />} />
       <Route path="/template/*" element={<TemplateRoutes />} />
+      <Route
+        path="/valorisation-recherche-innovation"
+        element={<Navigate to="/valorisation-recherche-innovation/home" replace />}
+      />
+      <Route path="/valorisation-recherche-innovation/*" element={<ValorisationRechercheInnovationRoutes />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
