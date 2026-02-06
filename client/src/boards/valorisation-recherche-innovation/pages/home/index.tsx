@@ -1,7 +1,6 @@
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
 export default function Home() {
-  console.log('lalilou');
   return (
     <Container>
       <Row>

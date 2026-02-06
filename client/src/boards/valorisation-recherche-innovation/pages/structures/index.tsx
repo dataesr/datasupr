@@ -54,13 +54,13 @@ export default function Structures() {
         </Row>
         <Row gutters>
           {structures.map((structure: any) => (
-            <Col key={structure.id} xs="12" md="6" lg="4">
+            <Col key={structure.value} xs="12" md="6" lg="4">
               <CardSimple
                 // description={structure.region}
-                onClick={() => handleStructure(structure.id)}
+                onClick={() => handleStructure(structure.value)}
                 // subtitle={structure.typologie_1}
                 // title={structure.label}
-                title={structure.id}
+                title={structure.label}
                 // year={structure.label}
               />
             </Col>

@@ -5,6 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
+import { getEsQuery } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -16,6 +17,7 @@ export default function StructureSelector({ setStructures }) {
   const structure = searchParams.get("structure") ?? "";
 
   const bodyCounties: any = {
+    ...getEsQuery({}),
     aggregations: {
       by_county: {
         terms: {
@@ -49,6 +51,7 @@ export default function StructureSelector({ setStructures }) {
     .sort((a, b) => a.normalize('NFD').replace(/[\u0300-\u036f]/g, '') - b.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
 
   const bodyTypologies: any = {
+    ...getEsQuery({}),
     aggregations: {
       by_typology: {
         terms: {
@@ -79,6 +82,7 @@ export default function StructureSelector({ setStructures }) {
   const typologies = (dataTypologies?.aggregations?.by_typology?.buckets ?? []).map((bucket) => bucket.key);
 
   const bodyStructures: any = {
+    ...getEsQuery({}),
     aggregations: {
       by_structure: {
         terms: {
@@ -109,7 +113,6 @@ export default function StructureSelector({ setStructures }) {
         }
       ).then((response) => response.json()),
   });
-  console.log(dataStructures);
 
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => ({
@@ -126,11 +129,11 @@ export default function StructureSelector({ setStructures }) {
   };
 
   useEffect(() => {
-    setStructures((dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
-      const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
-      structureInfo.searchableText = structureInfo?.id?.normalize("NFD")?.replace(/[\u0300-\u036f]/g, "") ?? "";
-      return structureInfo;
-    }) || []);
+    setStructures((dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => ({
+      label: bucket.key,
+      searchableText: bucket.key.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+      value: bucket.key,
+    })) || []);
   }, [dataStructures])
 
   return (
