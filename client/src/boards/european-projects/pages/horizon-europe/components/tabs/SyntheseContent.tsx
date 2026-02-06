@@ -56,10 +56,12 @@ export default function SyntheseContent() {
       return (
         <Container fluid className="fr-pb-3w">
           <Row>
-            <Col md={8}>
+            <Col>
               <SynthesisFocus />
             </Col>
-            <Col className="fr-mt-8w fr-pl-2w">
+          </Row>
+          <Row>
+            <Col>
               <PillarsOverview />
             </Col>
           </Row>

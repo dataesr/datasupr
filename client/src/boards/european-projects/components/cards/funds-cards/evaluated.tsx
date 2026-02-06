@@ -21,6 +21,10 @@ export default function EvaluatedCard({ fund, loading, nb }: { fund: string; loa
             {fund}
             <span className="label fr-ml-1w">demandés</span>
           </p>
+
+          <div className="bottom-progress-bar">
+            <div className="progress-fill" />
+          </div>
         </>
       )}
     </div>

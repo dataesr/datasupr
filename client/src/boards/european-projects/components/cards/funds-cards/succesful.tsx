@@ -21,6 +21,10 @@ export default function SuccessfulCard({ nb, fund, loading }: { nb: number; fund
             {fund}
             <span className="label fr-ml-1w">obtenus</span>
           </p>
+
+          <div className="bottom-progress-bar">
+            <div className="progress-fill" />
+          </div>
         </>
       )}
     </div>
