@@ -26,5 +26,9 @@
   "successfulProjects": {
     "fr": "Projets lauréats",
     "en": "Successful projects"
+  },
+  "fundingProportion": {
+    "fr": "Part des subventions",
+    "en": "Funding proportion"
   }
 }
