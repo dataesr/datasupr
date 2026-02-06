@@ -9,7 +9,6 @@ import i18n from "../../i18n-charts.json";
 export default function Options(data) {
   if (!data) return null;
 
-
   const newOptions: HighchartsInstance.Options = {
     xAxis: {
       type: "category",
