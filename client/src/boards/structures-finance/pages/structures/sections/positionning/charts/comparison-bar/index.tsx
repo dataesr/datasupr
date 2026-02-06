@@ -155,7 +155,7 @@ export default function ComparisonBarChart({
 
   const chartConfig = {
     id: "positioning-comparison-bar",
-    title: `${metricLabel}${selectedYear ? ` — ${selectedYear}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
+    title: `${metricLabel}${selectedYear ? ` — Exercice ${selectedYear}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
   };
 
   return (

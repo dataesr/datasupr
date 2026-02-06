@@ -114,7 +114,7 @@ export const createSingleChartOptions = (
     xAxis: {
       categories: sortedData.map((item) => String(item[xAxisField])),
       title: {
-        text: xAxisField === "anuniv" ? "Année universitaire" : "Année",
+        text: xAxisField === "anuniv" ? "Année universitaire" : "Exercice",
       },
       crosshair: true,
       lineWidth: 1,
