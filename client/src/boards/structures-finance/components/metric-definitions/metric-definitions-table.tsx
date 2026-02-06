@@ -18,6 +18,7 @@ export default function MetricDefinitionsTable({
     if (!definitions || !metricKeys) return [];
 
     const result: Array<{
+      PageDefinition: boolean;
       calculfr: string;
       indicateur: string;
       libelle: string;
@@ -37,9 +38,13 @@ export default function MetricDefinitionsTable({
     for (const category of definitions) {
       for (const sousRubrique of category.sousRubriques) {
         for (const def of sousRubrique.definitions) {
-          if (metricKeys.includes(def.indicateur)) {
+          if (
+            metricKeys.includes(def.indicateur) &&
+            def.PageDefinition !== false
+          ) {
             result.push({
               calculfr: def.calculfr,
+              PageDefinition: def.PageDefinition,
               indicateur: def.indicateur,
               libelle: def.libelle,
               definition: def.definition,

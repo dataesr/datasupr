@@ -6,6 +6,7 @@ export interface Definition {
   calculfr: string;
   indicateur: string;
   libelle: string;
+  PageDefinition: boolean;
   definition: string;
   interpretation: string;
   source1fr?: string | null;

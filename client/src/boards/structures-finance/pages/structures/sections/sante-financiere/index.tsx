@@ -124,7 +124,9 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
       {(hasBudgetData || data?.is_rce) && (
         <div className="fr-callout fr-mb-4w">
           <Title look="h3" as="h3" className="fr-callout__title">
-            Point d'attention
+            {hasBudgetData && data?.is_rce
+              ? "Points d'attention"
+              : "Point d'attention"}
           </Title>
 
           {hasBudgetData && (
@@ -143,7 +145,9 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
 
           {data?.is_rce && (
             <>
-              <Text className="fr-callout__text fr-text--sm">
+              <Text className="fr-callout__text fr-text--sm fr-mb-2w">
+                <strong>Seuils de vigilance et d'alerte</strong>
+                <br />
                 Pour les établissements qui bénéficient des responsabilités et
                 compétences élargies (RCE), un ou deux niveaux d'alerte ont été
                 définis pour chaque indicateur :
