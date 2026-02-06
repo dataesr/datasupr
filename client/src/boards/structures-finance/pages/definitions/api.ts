@@ -23,6 +23,7 @@ export interface Definition {
   vig_min?: number | null;
   vig_max?: number | null;
   vig_lib?: string | null;
+  sens?: "augmentation" | "diminution" | null;
 }
 
 export interface DefinitionCategory {

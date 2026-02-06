@@ -10,6 +10,7 @@ interface RenderDataProps {
   metric: string;
   metricLabel: string;
   metricConfig: MetricConfig;
+  metricSens?: "augmentation" | "diminution" | null;
   currentStructureId?: string;
   currentStructureName?: string;
 }
@@ -19,6 +20,7 @@ export function RenderData({
   metric,
   metricLabel,
   metricConfig,
+  metricSens,
   currentStructureId,
 }: RenderDataProps) {
   const seenIds = new Set<string>();
@@ -46,7 +48,14 @@ export function RenderData({
       const value = d.value;
       return value != null && !isNaN(value);
     })
-    .sort((a, b) => b.value - a.value);
+    .sort((a, b) => {
+      if (metricSens === "augmentation") {
+        return a.value - b.value;
+      } else if (metricSens === "diminution") {
+        return b.value - a.value;
+      }
+      return b.value - a.value;
+    });
 
   if (chartData.length === 0) {
     return (

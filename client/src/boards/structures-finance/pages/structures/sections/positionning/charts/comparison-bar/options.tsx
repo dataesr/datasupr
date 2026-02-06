@@ -16,6 +16,7 @@ export interface PositioningComparisonBarConfig {
   metricLabel: string;
   metricConfig: MetricConfig;
   threshold?: ThresholdConfig | null;
+  sens?: "augmentation" | "diminution" | null;
 }
 
 const ALERT_COLOR = THRESHOLD_COLORS.alertBackground;
@@ -98,7 +99,18 @@ export const createPositioningComparisonBarOptions = (
         isCurrentStructure,
       };
     })
-    .sort((a, b) => b.value - a.value);
+    .sort((a, b) => {
+      // Appliquer la logique du sens uniquement si défini
+      if (config.sens === "augmentation") {
+        // Tri croissant : plus petites valeurs d'abord
+        return a.value - b.value;
+      } else if (config.sens === "diminution") {
+        // Tri décroissant : plus grandes valeurs d'abord
+        return b.value - a.value;
+      }
+      // Tri décroissant par défaut pour les métriques sans sens défini
+      return b.value - a.value;
+    });
 
   let dataMin = Infinity;
   let dataMax = -Infinity;

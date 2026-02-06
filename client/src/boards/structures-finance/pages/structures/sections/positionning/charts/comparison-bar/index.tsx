@@ -22,6 +22,7 @@ import {
 import { ThresholdLegend } from "../../../../../../config/index";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
 import { BudgetWarning } from "../../../../../../components/budget-warning";
+import { useFinanceDefinitions } from "../../../../../definitions/api";
 
 const filterDisplayMetrics = (metrics: readonly string[]) =>
   metrics.filter(
@@ -47,6 +48,7 @@ export default function ComparisonBarChart({
   const [showPart, setShowPart] = useState(false);
 
   const getMetricLabel = useMetricLabel();
+  const { data: definitions } = useFinanceDefinitions();
 
   const analysisConfig = selectedAnalysis
     ? PREDEFINED_ANALYSES[selectedAnalysis]
@@ -78,6 +80,19 @@ export default function ComparisonBarChart({
 
   const selectedMetric: MetricKey =
     showPart && hasPartVersion && partMetric ? partMetric : baseMetric;
+
+  const metricSens = useMemo(() => {
+    if (!definitions) return null;
+    for (const category of definitions) {
+      for (const sousRubrique of category.sousRubriques) {
+        const def = sousRubrique.definitions.find(
+          (d) => d.indicateur === selectedMetric
+        );
+        if (def) return def.sens || null;
+      }
+    }
+    return null;
+  }, [definitions, selectedMetric]);
 
   const metricThreshold = useMetricThreshold(selectedMetric);
   const metricLabel = getMetricLabel(selectedMetric);
@@ -111,6 +126,7 @@ export default function ComparisonBarChart({
         metricLabel,
         metricConfig: selectedMetricConfig,
         threshold: metricThreshold,
+        sens: metricSens,
       },
       filteredData,
       currentStructureId,
@@ -122,6 +138,7 @@ export default function ComparisonBarChart({
     metricLabel,
     selectedMetricConfig,
     metricThreshold,
+    metricSens,
     currentStructureId,
     currentStructureName,
   ]);
@@ -223,6 +240,7 @@ export default function ComparisonBarChart({
               metric={selectedMetric}
               metricLabel={metricLabel}
               metricConfig={selectedMetricConfig}
+              metricSens={metricSens}
               currentStructureId={currentStructureId}
               currentStructureName={currentStructureName}
             />
