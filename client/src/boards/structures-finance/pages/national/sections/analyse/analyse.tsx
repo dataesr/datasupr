@@ -33,7 +33,7 @@ export function AnalyseSection({
     null
   );
   const [selectedCategory, setSelectedCategory] = useState<string>(
-    "Indicateurs financiers"
+    "Ressources financières"
   );
 
   const { data: yearsData } = useFinanceYears();

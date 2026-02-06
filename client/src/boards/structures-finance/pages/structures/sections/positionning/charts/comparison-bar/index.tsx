@@ -215,10 +215,6 @@ export default function ComparisonBarChart({
         </Row>
       )}
 
-      {currentStructureHasData && (
-        <BudgetWarning data={filteredData} metrics={[selectedMetric]} />
-      )}
-
       {!chartOptions || !filteredData?.length || !currentStructureHasData ? (
         <div className="fr-alert fr-alert--warning">
           <p className="fr-alert__title">Aucune donnée disponible</p>
@@ -229,23 +225,27 @@ export default function ComparisonBarChart({
           </p>
         </div>
       ) : (
-        <ChartWrapper
-          key={chartKey}
-          config={chartConfig}
-          options={chartOptions}
-          legend={<ThresholdLegend threshold={metricThreshold} />}
-          renderData={() => (
-            <RenderData
-              data={filteredData}
-              metric={selectedMetric}
-              metricLabel={metricLabel}
-              metricConfig={selectedMetricConfig}
-              metricSens={metricSens}
-              currentStructureId={currentStructureId}
-              currentStructureName={currentStructureName}
-            />
-          )}
-        />
+        <>
+          <ChartWrapper
+            key={chartKey}
+            config={chartConfig}
+            options={chartOptions}
+            legend={<ThresholdLegend threshold={metricThreshold} />}
+            renderData={() => (
+              <RenderData
+                data={filteredData}
+                metric={selectedMetric}
+                metricLabel={metricLabel}
+                metricConfig={selectedMetricConfig}
+                metricSens={metricSens}
+                currentStructureId={currentStructureId}
+                currentStructureName={currentStructureName}
+              />
+            )}
+          />
+
+          <BudgetWarning data={data} metrics={[selectedMetric]} />
+        </>
       )}
 
       <MetricDefinitionsTable metricKeys={displayMetrics} />

@@ -117,14 +117,14 @@ export function FinancementsSection({
 
           <Col xs="12" md="3">
             <MetricChartCard
-              title={`SCSP par étudiant financé`}
+              title={`Dotation de l’État par étudiant financé`}
               value={`${euro(data.scsp_par_etudiants)} €`}
               detail={
                 data.scsp_etudiants
-                  ? `${data.is_rce === false ? " (inclut la masse salariale prise en charge par l'État)" : ""}`
+                  ? `${data.is_rce === false ? " (inclut la masse salariale prise en charge par l'État)" : ""}${data.etablissement_categorie === "École normale supérieure" ? " (inclut le salaire des élèves fonctionnaires)" : ""}`
                   : data.is_rce === false
-                    ? "Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par l'État)"
-                    : "Ratio SCSP / étudiants financés"
+                    ? `Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par l'État)${data.etablissement_categorie === "École normale supérieure" ? " et le salaire des élèves fonctionnaires" : ""}`
+                    : `Ratio SCSP / étudiants financés${data.etablissement_categorie === "École normale supérieure" ? " (inclut le salaire des élèves fonctionnaires)" : ""}`
               }
               color={SECTION_COLOR}
               evolutionData={useMetricEvolution("scsp_par_etudiants")}

@@ -100,11 +100,15 @@ export const createPositioningComparisonBarOptions = (
       };
     })
     .sort((a, b) => {
+      // Logique métier warning warning
+      // Appliquer le sens de tri spécifique si défini,
+      // sinon tri décroissant par défaut
       if (config.sens === "augmentation") {
         return a.value - b.value;
       } else if (config.sens === "diminution") {
         return b.value - a.value;
       }
+      // Tri par défaut : décroissant
       return b.value - a.value;
     });
 

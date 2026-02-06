@@ -7,6 +7,7 @@ import {
 } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
+import { BudgetWarning } from "../../../../../../components/budget-warning";
 import { RenderDataComparison } from "../render-data";
 import { createDualChartOptions } from "./options";
 import { METRICS_CONFIG } from "../../../../../../config/config";
@@ -98,6 +99,7 @@ export default function DualEvolutionChart({
           />
         )}
       />
+      <BudgetWarning data={data} metrics={baseMetrics} />
       <MetricDefinitionsTable metricKeys={[metric1, metric2]} />
     </>
   );

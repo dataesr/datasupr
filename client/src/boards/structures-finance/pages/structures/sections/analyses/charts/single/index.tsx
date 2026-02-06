@@ -7,6 +7,7 @@ import {
 } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
+import { BudgetWarning } from "../../../../../../components/budget-warning";
 import RessourcesPropresEvolutionChart from "../../../resources/charts/ressources-propres-evolution";
 import RessourcesPropresDecompositionChart from "../../../resources/charts/ressources-propres-decomposition";
 import RessourcesFormationDecompositionChart from "../../../resources/charts/ressources-formation-decomposition";
@@ -209,6 +210,7 @@ export default function SingleEvolutionChart({
         </div>
       )}
 
+      <BudgetWarning data={data} metrics={baseMetrics} />
       <MetricDefinitionsTable metricKeys={[selectedMetric]} />
     </>
   );

@@ -266,11 +266,6 @@ export default function NationalChart({
         </Row>
       )}
 
-      <BudgetWarning
-        data={data}
-        metrics={activeMetricKey ? [activeMetricKey] : []}
-      />
-
       {isLoading ? (
         <div className="fr-text--center fr-py-5w">
           <DefaultSkeleton />
@@ -300,6 +295,11 @@ export default function NationalChart({
                 topN={topN ?? data.length}
               />
             )}
+          />
+
+          <BudgetWarning
+            data={data}
+            metrics={activeMetricKey ? [activeMetricKey] : []}
           />
           <MetricDefinitionsTable
             metricKeys={activeMetricKey ? [activeMetricKey] : []}

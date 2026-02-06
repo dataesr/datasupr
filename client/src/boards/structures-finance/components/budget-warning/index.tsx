@@ -16,7 +16,7 @@ export function BudgetWarning({ data, metrics }: BudgetWarningProps) {
   if (budgetYears.length === 0) return null;
 
   return (
-    <div className="fr-alert fr-alert--warning fr-mb-2w">
+    <div className="fr-alert fr-alert--info fr-mb-2w">
       <p className="fr-alert__title">Données budgétaires</p>
       <Text>
         Les données pour {budgetYears.length === 1 ? "l'année" : "les années"}{" "}

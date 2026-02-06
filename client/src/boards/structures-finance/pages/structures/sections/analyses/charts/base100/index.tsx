@@ -1,6 +1,7 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
+import { BudgetWarning } from "../../../../../../components/budget-warning";
 import { RenderDataBase100, RenderDataSingle } from "../render-data";
 import { createBase100ChartOptions } from "./options";
 import { METRICS_CONFIG } from "../../../../../../config/config";
@@ -9,6 +10,7 @@ import type { MetricKey } from "../../../../../../config/config";
 interface Base100EvolutionChartProps {
   etablissementId: string;
   selectedMetrics: MetricKey[];
+  baseMetrics: MetricKey[];
   comparisonConfig: any;
   createChartConfig: (chartId: string, titleOverride?: string) => any;
   getMetricLabel: (metricKey: MetricKey) => string;
@@ -29,6 +31,7 @@ const cleanPriceLabel = (label: string): string => {
 
 export default function Base100EvolutionChart({
   selectedMetrics,
+  baseMetrics,
   comparisonConfig,
   createChartConfig,
   getMetricLabel,
@@ -140,6 +143,7 @@ export default function Base100EvolutionChart({
           </Row>
         )}
       </div>
+      <BudgetWarning data={data} metrics={baseMetrics} />
       <MetricDefinitionsTable metricKeys={selectedMetrics} />
     </>
   );

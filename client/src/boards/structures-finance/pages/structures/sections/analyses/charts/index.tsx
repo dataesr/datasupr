@@ -14,7 +14,6 @@ import {
   type MetricKey,
   type AnalysisKey,
 } from "../../../../../config/config";
-import { BudgetWarning } from "../../../../../components/budget-warning";
 
 interface EvolutionChartProps {
   etablissementId?: string;
@@ -72,7 +71,7 @@ export default function EvolutionChart({
   const isStacked = (analysisConfig as any).chartType === "stacked";
   const isBase100 = analysisConfig.showBase100;
   const isFormationsCategory =
-    analysisConfig.category === "Étudiants et formation";
+    analysisConfig.category === "Dîplomes et formations";
   const xAxisField = isFormationsCategory ? "anuniv" : "exercice";
 
   const selectedMetrics = useMemo(() => {
@@ -126,100 +125,90 @@ export default function EvolutionChart({
 
   if (isStacked) {
     return (
-      <>
-        <BudgetWarning data={data} metrics={baseMetrics} />
-        <StackedEvolutionChart
-          etablissementId={activeEtablissementId}
-          selectedMetrics={selectedMetrics}
-          chartConfig={createChartConfig(
-            "evolution-stacked",
-            undefined,
-            <>
-              Évolution des effectifs par{" "}
-              {analysisConfig.label.toLowerCase().replace("effectifs par ", "")}
-            </>
-          )}
-          displayMode={displayMode}
-          onDisplayModeChange={setDisplayMode}
-          xAxisField={xAxisField}
-          data={data}
-        />
-      </>
+      <StackedEvolutionChart
+        etablissementId={activeEtablissementId}
+        selectedMetrics={selectedMetrics}
+        baseMetrics={baseMetrics}
+        chartConfig={createChartConfig(
+          "evolution-stacked",
+          undefined,
+          <>
+            Évolution des effectifs par{" "}
+            {analysisConfig.label.toLowerCase().replace("effectifs par ", "")}
+          </>
+        )}
+        displayMode={displayMode}
+        onDisplayModeChange={setDisplayMode}
+        xAxisField={xAxisField}
+        data={data}
+      />
     );
   }
 
   if (selectedMetrics.length === 1) {
     return (
-      <>
-        <BudgetWarning data={data} metrics={baseMetrics} />
-        <SingleEvolutionChart
-          etablissementId={activeEtablissementId}
-          selectedMetric={selectedMetrics[0]}
-          baseMetrics={baseMetrics}
-          chartConfig={createChartConfig(
-            "evolution-single",
-            undefined,
-            <>
-              Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()}{" "}
-              sur la période {periodText}.
-            </>
-          )}
-          metricThreshold={metricThreshold}
-          selectedAnalysis={activeSelectedAnalysis}
-          etablissementName={etabName}
-          xAxisField={xAxisField}
-          onIPCChange={setShowIPC}
-          onPartChange={setShowPart}
-          data={data}
-        />
-      </>
+      <SingleEvolutionChart
+        etablissementId={activeEtablissementId}
+        selectedMetric={selectedMetrics[0]}
+        baseMetrics={baseMetrics}
+        chartConfig={createChartConfig(
+          "evolution-single",
+          undefined,
+          <>
+            Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()} sur
+            la période {periodText}.
+          </>
+        )}
+        metricThreshold={metricThreshold}
+        selectedAnalysis={activeSelectedAnalysis}
+        etablissementName={etabName}
+        xAxisField={xAxisField}
+        onIPCChange={setShowIPC}
+        onPartChange={setShowPart}
+        data={data}
+      />
     );
   }
 
   if (selectedMetrics.length === 2 && !analysisConfig.showBase100) {
     return (
-      <>
-        <BudgetWarning data={data} metrics={baseMetrics} />
-        <DualEvolutionChart
-          etablissementId={activeEtablissementId}
-          metric1={selectedMetrics[0]}
-          metric2={selectedMetrics[1]}
-          baseMetrics={baseMetrics}
-          chartConfig={createChartConfig(
-            "evolution-dual",
-            undefined,
-            <>
-              Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()} et{" "}
-              {getMetricLabel(selectedMetrics[1]).toLowerCase()} sur la période{" "}
-              {periodText}.
-            </>
-          )}
-          xAxisField={xAxisField}
-          onIPCChange={setShowIPC}
-          data={data}
-        />
-      </>
+      <DualEvolutionChart
+        etablissementId={activeEtablissementId}
+        metric1={selectedMetrics[0]}
+        metric2={selectedMetrics[1]}
+        baseMetrics={baseMetrics}
+        chartConfig={createChartConfig(
+          "evolution-dual",
+          undefined,
+          <>
+            Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()} et{" "}
+            {getMetricLabel(selectedMetrics[1]).toLowerCase()} sur la période{" "}
+            {periodText}.
+          </>
+        )}
+        xAxisField={xAxisField}
+        onIPCChange={setShowIPC}
+        data={data}
+      />
     );
   }
 
   if (selectedMetrics.length >= 2 && analysisConfig.showBase100) {
     return (
-      <>
-        <BudgetWarning data={data} metrics={baseMetrics} />
-        <Base100EvolutionChart
-          etablissementId={activeEtablissementId}
-          selectedMetrics={selectedMetrics}
-          comparisonConfig={createChartConfig(
-            "evolution-comparison",
-            undefined,
-            <>Comparaison en base 100 sur la période {periodText}.</>
-          )}
-          createChartConfig={createChartConfig}
-          getMetricLabel={getMetricLabel}
-          xAxisField={xAxisField}
-          data={data}
-        />
-      </>
+      <Base100EvolutionChart
+        etablissementId={activeEtablissementId}
+        selectedMetrics={selectedMetrics}
+        baseMetrics={baseMetrics}
+        comparisonConfig={createChartConfig(
+          "evolution-comparison",
+          undefined,
+          <>Comparaison en base 100 sur la période {periodText}.</>
+        )}
+        createChartConfig={createChartConfig}
+        getMetricLabel={getMetricLabel}
+        xAxisField={xAxisField}
+        data={data}
+      />
     );
   }
 

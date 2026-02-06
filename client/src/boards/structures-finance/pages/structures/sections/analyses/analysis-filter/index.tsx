@@ -19,7 +19,7 @@ export default function AnalysisFilter({
   onSelectAnalysis,
 }: AnalysisFilterProps) {
   const [selectedCategory, setSelectedCategory] = useState<string>(
-    "Indicateurs financiers"
+    "Ressources financières"
   );
   const items: FilterItem[] = useMemo(() => {
     return Object.entries(PREDEFINED_ANALYSES).map(([key, analysis]) => ({

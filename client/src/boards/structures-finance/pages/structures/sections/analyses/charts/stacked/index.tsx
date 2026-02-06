@@ -1,6 +1,7 @@
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
+import { BudgetWarning } from "../../../../../../components/budget-warning";
 import { RenderDataStacked } from "../render-data";
 import { createStackedChartOptions } from "./options";
 import { METRICS_CONFIG } from "../../../../../../config/config";
@@ -9,6 +10,7 @@ import type { MetricKey } from "../../../../../../config/config";
 interface StackedEvolutionChartProps {
   etablissementId: string;
   selectedMetrics: MetricKey[];
+  baseMetrics: MetricKey[];
   chartConfig: any;
   displayMode: "values" | "percentage";
   onDisplayModeChange: (mode: "values" | "percentage") => void;
@@ -18,6 +20,7 @@ interface StackedEvolutionChartProps {
 
 export default function StackedEvolutionChart({
   selectedMetrics,
+  baseMetrics,
   chartConfig,
   displayMode,
   onDisplayModeChange,
@@ -73,6 +76,7 @@ export default function StackedEvolutionChart({
           />
         )}
       />
+      <BudgetWarning data={data} metrics={baseMetrics} />
       <MetricDefinitionsTable metricKeys={selectedMetrics} />
     </>
   );
