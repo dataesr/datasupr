@@ -1,7 +1,6 @@
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
-import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import { RenderDataStacked } from "../render-data";
 import { createStackedChartOptions } from "./options";
 import { METRICS_CONFIG } from "../../../../../../config/config";
@@ -14,18 +13,17 @@ interface StackedEvolutionChartProps {
   displayMode: "values" | "percentage";
   onDisplayModeChange: (mode: "values" | "percentage") => void;
   xAxisField: "exercice" | "anuniv";
+  data: any[];
 }
 
 export default function StackedEvolutionChart({
-  etablissementId,
   selectedMetrics,
   chartConfig,
   displayMode,
   onDisplayModeChange,
   xAxisField,
+  data,
 }: StackedEvolutionChartProps) {
-  const { data } = useFinanceEtablissementEvolution(etablissementId);
-
   const chartOptions = createStackedChartOptions(
     data || [],
     selectedMetrics,

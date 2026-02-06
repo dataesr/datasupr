@@ -1,7 +1,6 @@
 import { Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
-import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import { RenderDataBase100, RenderDataSingle } from "../render-data";
 import { createBase100ChartOptions } from "./options";
 import { METRICS_CONFIG } from "../../../../../../config/config";
@@ -14,6 +13,7 @@ interface Base100EvolutionChartProps {
   createChartConfig: (chartId: string, titleOverride?: string) => any;
   getMetricLabel: (metricKey: MetricKey) => string;
   xAxisField: "exercice" | "anuniv";
+  data: any[];
 }
 
 // Helper pour nettoyer les labels des mentions de prix courant/constant
@@ -28,15 +28,13 @@ const cleanPriceLabel = (label: string): string => {
 };
 
 export default function Base100EvolutionChart({
-  etablissementId,
   selectedMetrics,
   comparisonConfig,
   createChartConfig,
   getMetricLabel,
   xAxisField,
+  data,
 }: Base100EvolutionChartProps) {
-  const { data } = useFinanceEtablissementEvolution(etablissementId);
-
   const chartOptionsBase100 = createBase100ChartOptions(
     data || [],
     selectedMetrics,

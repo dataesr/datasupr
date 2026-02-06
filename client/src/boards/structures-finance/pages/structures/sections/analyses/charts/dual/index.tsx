@@ -7,7 +7,6 @@ import {
 } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
-import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import { RenderDataComparison } from "../render-data";
 import { createDualChartOptions } from "./options";
 import { METRICS_CONFIG } from "../../../../../../config/config";
@@ -21,18 +20,18 @@ interface DualEvolutionChartProps {
   chartConfig: any;
   xAxisField: "exercice" | "anuniv";
   onIPCChange: (show: boolean) => void;
+  data: any[];
 }
 
 export default function DualEvolutionChart({
-  etablissementId,
   metric1,
   metric2,
   baseMetrics,
   chartConfig,
   xAxisField,
   onIPCChange,
+  data,
 }: DualEvolutionChartProps) {
-  const { data } = useFinanceEtablissementEvolution(etablissementId);
   const [showIPC, setShowIPC] = useState(false);
 
   const hasIPCMetrics = useMemo(

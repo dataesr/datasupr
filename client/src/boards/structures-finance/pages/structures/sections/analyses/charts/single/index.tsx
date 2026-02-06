@@ -13,7 +13,6 @@ import RessourcesFormationDecompositionChart from "../../../resources/charts/res
 import RessourcesRechercheDecompositionChart from "../../../resources/charts/ressources-recherche-decomposition";
 import RessourcesAutresDecompositionChart from "../../../resources/charts/ressources-autres-decomposition";
 import SanteFinanciereTableau from "../../../sante-financiere/charts/sante-financiere-tableau";
-import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import {
   ThresholdLegend,
   type ThresholdConfig,
@@ -37,10 +36,10 @@ interface SingleEvolutionChartProps {
   xAxisField: "exercice" | "anuniv";
   onIPCChange: (show: boolean) => void;
   onPartChange: (show: boolean) => void;
+  data: any[];
 }
 
 export default function SingleEvolutionChart({
-  etablissementId,
   selectedMetric,
   baseMetrics,
   chartConfig,
@@ -50,8 +49,8 @@ export default function SingleEvolutionChart({
   xAxisField,
   onIPCChange,
   onPartChange,
+  data,
 }: SingleEvolutionChartProps) {
-  const { data } = useFinanceEtablissementEvolution(etablissementId);
   const [showIPC, setShowIPC] = useState(false);
   const [showPart, setShowPart] = useState(false);
 

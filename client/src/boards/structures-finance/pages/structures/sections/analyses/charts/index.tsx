@@ -41,7 +41,27 @@ export default function EvolutionChart({
   const activeSelectedAnalysis =
     selectedAnalysis || (searchParams.get("analysis") as AnalysisKey);
 
-  const { data } = useFinanceEtablissementEvolution(activeEtablissementId);
+  const { data: rawData } = useFinanceEtablissementEvolution(
+    activeEtablissementId
+  );
+
+  // Logique métier en lien avec les id actual etc......
+  // Nécessaire pour les institutions fusionnées qui ont plusieurs
+  // lignes pour une même année (ex: Université de Lille 2018-2020).
+  const data = useMemo(() => {
+    if (!rawData) return undefined;
+
+    const uniqueByExercice = new Map();
+    rawData.forEach((item: any) => {
+      const key = item.exercice || item.anuniv;
+      if (!uniqueByExercice.has(key)) {
+        uniqueByExercice.set(key, item);
+      }
+    });
+
+    return Array.from(uniqueByExercice.values());
+  }, [rawData]);
+
   const getMetricLabel = useMetricLabel();
 
   const etabName = etablissementName || data?.[0]?.etablissement_lib || "";
@@ -122,6 +142,7 @@ export default function EvolutionChart({
           displayMode={displayMode}
           onDisplayModeChange={setDisplayMode}
           xAxisField={xAxisField}
+          data={data}
         />
       </>
     );
@@ -149,6 +170,7 @@ export default function EvolutionChart({
           xAxisField={xAxisField}
           onIPCChange={setShowIPC}
           onPartChange={setShowPart}
+          data={data}
         />
       </>
     );
@@ -174,6 +196,7 @@ export default function EvolutionChart({
           )}
           xAxisField={xAxisField}
           onIPCChange={setShowIPC}
+          data={data}
         />
       </>
     );
@@ -194,6 +217,7 @@ export default function EvolutionChart({
           createChartConfig={createChartConfig}
           getMetricLabel={getMetricLabel}
           xAxisField={xAxisField}
+          data={data}
         />
       </>
     );
