@@ -14,6 +14,15 @@ export function useAnalysesWithData(etablissementId: string) {
     analysisKeys.forEach((key) => {
       const analysis = PREDEFINED_ANALYSES[key];
       const isStacked = (analysis as any).chartType === "stacked";
+      const isSynthese = (analysis as any).chartType === "synthese";
+
+      // Pour les synthèses, on vérifie juste qu'il y a des données
+      if (isSynthese) {
+        if (data.length > 0) {
+          available.add(key);
+        }
+        return;
+      }
 
       const hasData = isStacked
         ? analysis.metrics.some((metric) => {

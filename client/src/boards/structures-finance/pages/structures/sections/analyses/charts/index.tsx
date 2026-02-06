@@ -7,6 +7,7 @@ import StackedEvolutionChart from "./stacked";
 import SingleEvolutionChart from "./single";
 import DualEvolutionChart from "./dual";
 import Base100EvolutionChart from "./base100";
+import SyntheseSanteFinanciere from "./synthese-sante-financiere";
 import {
   METRICS_CONFIG,
   PREDEFINED_ANALYSES,
@@ -69,6 +70,7 @@ export default function EvolutionChart({
   const primaryMetric = baseMetrics.find((m) => !m.endsWith("_ipc"));
   const metricThreshold = useMetricThreshold(primaryMetric);
   const isStacked = (analysisConfig as any).chartType === "stacked";
+  const isSynthese = (analysisConfig as any).chartType === "synthese";
   const isBase100 = analysisConfig.showBase100;
   const isFormationsCategory =
     analysisConfig.category === "Dîplomes et formations";
@@ -120,6 +122,15 @@ export default function EvolutionChart({
       <div className="fr-alert fr-alert--info">
         <p>Aucune donnée disponible</p>
       </div>
+    );
+  }
+
+  if (isSynthese) {
+    return (
+      <SyntheseSanteFinanciere
+        etablissementId={activeEtablissementId}
+        etablissementName={etabName}
+      />
     );
   }
 

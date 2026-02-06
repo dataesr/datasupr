@@ -847,6 +847,13 @@ export const PREDEFINED_ANALYSES = {
   },
 
   // Santé financière
+  "sante-financiere-synthese": {
+    label: "Synthèse",
+    metrics: [],
+    category: "Santé financière",
+    showBase100: false,
+    chartType: "synthese" as const,
+  },
   "sante-resultat-net": {
     label: "Résultat net comptable",
     metrics: ["resultat_net_comptable", "resultat_net_comptable_ipc"],

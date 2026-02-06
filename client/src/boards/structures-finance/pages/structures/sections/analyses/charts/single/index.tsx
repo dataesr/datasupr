@@ -13,7 +13,6 @@ import RessourcesPropresDecompositionChart from "../../../resources/charts/resso
 import RessourcesFormationDecompositionChart from "../../../resources/charts/ressources-formation-decomposition";
 import RessourcesRechercheDecompositionChart from "../../../resources/charts/ressources-recherche-decomposition";
 import RessourcesAutresDecompositionChart from "../../../resources/charts/ressources-autres-decomposition";
-import SanteFinanciereTableau from "../../../sante-financiere/charts/sante-financiere-tableau";
 import {
   ThresholdLegend,
   type ThresholdConfig,
@@ -41,6 +40,7 @@ interface SingleEvolutionChartProps {
 }
 
 export default function SingleEvolutionChart({
+  etablissementId,
   selectedMetric,
   baseMetrics,
   chartConfig,
@@ -70,13 +70,6 @@ export default function SingleEvolutionChart({
       ? partKey
       : null;
   }, [baseMetrics, data]);
-
-  const isSanteFinanciere = useMemo(() => {
-    const config = METRICS_CONFIG[selectedMetric];
-    return (
-      config && "category" in config && config.category === "Santé financière"
-    );
-  }, [selectedMetric]);
 
   const handleIPCChange = (show: boolean) => {
     setShowIPC(show);
@@ -168,6 +161,7 @@ export default function SingleEvolutionChart({
       {selectedAnalysis === "ressources-propres" && (
         <div className="fr-mt-3w">
           <RessourcesPropresDecompositionChart
+            etablissementId={etablissementId}
             etablissementName={etablissementName}
           />
         </div>
@@ -175,6 +169,7 @@ export default function SingleEvolutionChart({
       {selectedAnalysis === "ressources-propres" && (
         <div className="fr-mt-3w">
           <RessourcesPropresEvolutionChart
+            etablissementId={etablissementId}
             etablissementName={etablissementName}
           />
         </div>
@@ -183,6 +178,7 @@ export default function SingleEvolutionChart({
       {selectedAnalysis === "ressources-formation" && (
         <div className="fr-mt-3w">
           <RessourcesFormationDecompositionChart
+            etablissementId={etablissementId}
             etablissementName={etablissementName}
           />
         </div>
@@ -191,6 +187,7 @@ export default function SingleEvolutionChart({
       {selectedAnalysis === "ressources-recherche" && (
         <div className="fr-mt-3w">
           <RessourcesRechercheDecompositionChart
+            etablissementId={etablissementId}
             etablissementName={etablissementName}
           />
         </div>
@@ -199,14 +196,9 @@ export default function SingleEvolutionChart({
       {selectedAnalysis === "ressources-autres-recettes" && (
         <div className="fr-mt-3w">
           <RessourcesAutresDecompositionChart
+            etablissementId={etablissementId}
             etablissementName={etablissementName}
           />
-        </div>
-      )}
-
-      {isSanteFinanciere && (
-        <div className="fr-mt-3w">
-          <SanteFinanciereTableau data={data?.[0]} />
         </div>
       )}
 

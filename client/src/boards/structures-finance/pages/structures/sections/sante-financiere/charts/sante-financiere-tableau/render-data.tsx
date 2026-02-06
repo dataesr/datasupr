@@ -28,6 +28,14 @@ interface SanteFinanciereData {
   charges_decaissables_produits_encaissables_etat?: string;
   taux_de_remuneration_des_permanents?: number;
   taux_de_remuneration_des_permanents_etat?: string;
+  ressources_propres_produits_encaissables?: number;
+  ressources_propres_produits_encaissables_etat?: string;
+  charges_de_personnel_produits_encaissables?: number;
+  charges_de_personnel_produits_encaissables_etat?: string;
+  caf_acquisitions_d_immobilisations?: number;
+  caf_acquisitions_d_immobilisations_etat?: string;
+  solde_budgetaire?: number;
+  solde_budgetaire_etat?: string;
 }
 
 interface RenderDataProps {
@@ -148,6 +156,43 @@ export function RenderData({
           valueKey: "taux_de_remuneration_des_permanents",
           statusKey: "taux_de_remuneration_des_permanents_etat",
           formatter: pct,
+        },
+        {
+          label: "Ressources propres / Produits encaissables (en %)",
+          valueKey: "ressources_propres_produits_encaissables",
+          statusKey: "ressources_propres_produits_encaissables_etat",
+          formatter: pct,
+        },
+        {
+          label: "Charges de personnel / Produits encaissables (en %)",
+          valueKey: "charges_de_personnel_produits_encaissables",
+          statusKey: "charges_de_personnel_produits_encaissables_etat",
+          formatter: pct,
+        },
+      ],
+    },
+    {
+      title: "Autofinancement des investissements",
+      className: "section cycle",
+      items: [
+        {
+          label: "CAF / Acquisitions d'immobilisations (en %)",
+          valueKey: "caf_acquisitions_d_immobilisations",
+          statusKey: "caf_acquisitions_d_immobilisations_etat",
+          formatter: pct,
+        },
+      ],
+    },
+    {
+      title: "Indicateurs GBCP",
+      className: "section cycle",
+      items: [
+        {
+          label: "Solde budgétaire (en M€)",
+          valueKey: "solde_budgetaire",
+          statusKey: "solde_budgetaire_etat",
+          formatter: (v?: number) =>
+            v != null ? (v / 1000000).toFixed(1) : "—",
         },
       ],
     },
