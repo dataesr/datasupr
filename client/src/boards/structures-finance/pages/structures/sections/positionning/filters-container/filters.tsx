@@ -25,6 +25,8 @@ export default function PositioningFilters({
     currentStructure?.etablissement_actuel_region ||
     currentStructure?.region ||
     "";
+  const structureIsRce = currentStructure?.is_rce === true;
+  const structureIsDevimmo = currentStructure?.is_devimmo === true;
 
   const handleFilterChange = (key: keyof PositioningFilters, value: string) => {
     onFiltersChange({ ...filters, [key]: value });
@@ -47,13 +49,13 @@ export default function PositioningFilters({
 
   const getRceLabel = () => {
     if (!filters.rce) return "RCE et non RCE";
-    if (filters.rce === "rce") return "RCE uniquement";
+    if (structureIsRce) return "RCE uniquement";
     return "Non RCE uniquement";
   };
 
   const getDevimmoLabel = () => {
     if (!filters.devimmo) return "Avec ou sans dévolution immobilière";
-    if (filters.devimmo === "devimmo") return "Avec dévolution immobilière";
+    if (structureIsDevimmo) return "Avec dévolution immobilière";
     return "Sans dévolution immobilière";
   };
 
@@ -159,16 +161,17 @@ export default function PositioningFilters({
                       RCE et non RCE
                     </Dropdown.Item>
                     <Dropdown.Item
-                      active={filters.rce === "rce"}
-                      onClick={() => handleFilterChange("rce", "rce")}
+                      active={
+                        filters.rce === (structureIsRce ? "rce" : "non-rce")
+                      }
+                      onClick={() =>
+                        handleFilterChange(
+                          "rce",
+                          structureIsRce ? "rce" : "non-rce"
+                        )
+                      }
                     >
-                      RCE uniquement
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      active={filters.rce === "non-rce"}
-                      onClick={() => handleFilterChange("rce", "non-rce")}
-                    >
-                      Non RCE uniquement
+                      {structureIsRce ? "RCE uniquement" : "Non RCE uniquement"}
                     </Dropdown.Item>
                   </Dropdown>
                 </Col>
@@ -191,18 +194,20 @@ export default function PositioningFilters({
                       Avec ou sans dévolution immobilière
                     </Dropdown.Item>
                     <Dropdown.Item
-                      active={filters.devimmo === "devimmo"}
-                      onClick={() => handleFilterChange("devimmo", "devimmo")}
-                    >
-                      Avec dévolution immobilière
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      active={filters.devimmo === "non-devimmo"}
+                      active={
+                        filters.devimmo ===
+                        (structureIsDevimmo ? "devimmo" : "non-devimmo")
+                      }
                       onClick={() =>
-                        handleFilterChange("devimmo", "non-devimmo")
+                        handleFilterChange(
+                          "devimmo",
+                          structureIsDevimmo ? "devimmo" : "non-devimmo"
+                        )
                       }
                     >
-                      Sans dévolution immobilière
+                      {structureIsDevimmo
+                        ? "Avec dévolution immobilière"
+                        : "Sans dévolution immobilière"}
                     </Dropdown.Item>
                   </Dropdown>
                 </Col>
