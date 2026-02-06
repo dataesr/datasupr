@@ -20,8 +20,9 @@ const formatPercent = (number: number, decimals: number = 0): string => {
   return formatter.format(number);
 };
 
-const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
-  { structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
+// const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
+//   { structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
+const getEsQuery = ({ structures }: { structures?: (string | null)[] }) => {
   const query: any = {
     size: 0,
     query: {
