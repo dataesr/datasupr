@@ -2,20 +2,16 @@ import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
-
-import i18n from "./i18n.json";
 import { getCssColor } from "../../../../../../utils/colors";
+import { getI18nLabel } from "../../../../../../utils";
+import i18n from "../../i18n-charts.json";
 
 export default function Options(data, currentLang) {
   if (!data) return null;
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
 const newOptions: HighchartsInstance.Options = {
   chart: {
-    height: data.list.length * 20 + 150,
+    height: data.list.length * 30 + 150,
   },
   xAxis: {
     type: "category",
@@ -25,9 +21,11 @@ const newOptions: HighchartsInstance.Options = {
     title: {
       text: "Euros (M€)",
     },
+    gridLineColor: "var(--background-default-grey-hover)",
+    gridLineWidth: 0.5,
   },
   tooltip: {
-    pointFormat: getI18nLabel("total-subsidies") + "<b>{point.y:,.0f}</b> €",
+    pointFormat: getI18nLabel(i18n, "totalFunding", currentLang) + "<b>{point.y:,.0f}</b> €",
   },
   series: [
     {
@@ -48,6 +46,11 @@ const newOptions: HighchartsInstance.Options = {
           return formatToMillions(this.y ?? 0);
         },
       },
+    },
+    bar: {
+      pointWidth: 25,
+      borderWidth: 0,
+      borderRadius: 0,
     },
   },
 };
