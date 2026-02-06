@@ -20,10 +20,27 @@ export default function RessourcesPropresEvolutionChart({
     propEtablissementId || searchParams.get("structureId") || "";
   const [viewMode, setViewMode] = useState<"value" | "percentage">("value");
 
-  const { data: evolutionData } = useFinanceEtablissementEvolution(
+  const { data: rawData } = useFinanceEtablissementEvolution(
     etablissementId,
     !!etablissementId
   );
+
+  // Logique métier en lien avec les id actual etc......
+  // Nécessaire pour les institutions fusionnées qui ont plusieurs
+  // lignes pour une même année (ex: Université de Lille 2018-2020).
+  const evolutionData = useMemo(() => {
+    if (!rawData) return undefined;
+
+    const uniqueByExercice = new Map();
+    rawData.forEach((item: any) => {
+      const key = item.exercice || item.anuniv;
+      if (!uniqueByExercice.has(key)) {
+        uniqueByExercice.set(key, item);
+      }
+    });
+
+    return Array.from(uniqueByExercice.values());
+  }, [rawData]);
 
   const options = useMemo(() => {
     if (!evolutionData || evolutionData.length === 0) return null;
