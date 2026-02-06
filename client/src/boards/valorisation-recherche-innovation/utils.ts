@@ -4,7 +4,7 @@ import { createChartOptions } from "../../components/chart-wrapper/default-optio
 import { getCssColor as getCssColorGlobal } from "../../utils/colors";
 import { deepMerge } from "../../utils";
 
-const typologiesExcluded = ["Entreprises", "Infrastructures de recherche", "Structures de recherche"];
+const typologiesExcluded = ["Entreprises", "Etablissements étrangers", "Infrastructures de recherche", "Structures de recherche"];
 
 const formatCompactNumber = (number: number): string => {
   const formatter = Intl.NumberFormat("fr", { notation: "compact" });
@@ -27,7 +27,7 @@ const getEsQuery = ({ structures }: { structures?: (string | null)[] }) => {
       bool: {
         filter: [
           { term: { isFrench: true } },
-          { term: { "status.keyword": "active" } },
+          { term: { status: "active" } },
           { bool: { must_not: { terms: { "typologie_1.keyword": typologiesExcluded } } } },
         ],
       },

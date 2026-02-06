@@ -28,8 +28,8 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   };
-  if (typology && typology !== '*') {
-    bodyCounties.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
+  if (typology) {
+    bodyCounties.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": typology } });
   }
   const { data: dataCounties, isLoading: isLoadingCounties } = useQuery({
     queryKey: ["fundings-counties", typology],
@@ -61,8 +61,8 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   };
-  if (county && county !== '*') {
-    bodyTypologies.query.bool.filter.push({ term: { "address.region.keyword": county } });
+  if (county) {
+    bodyTypologies.query.bool.filter.push({ wildcard: { "address.region.keyword": county } });
   }
   const { data: dataTypologies, isLoading: isLoadingTypologies } = useQuery({
     queryKey: ["fundings-typologies", county],
@@ -92,11 +92,11 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   };
-  if (county && county !== '*') {
-    bodyStructures.query.bool.filter.push({ term: { "address.region.keyword": county } });
+  if (county) {
+    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": county } });
   }
-  if (typology && typology !== '*') {
-    bodyStructures.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
+  if (typology) {
+    bodyStructures.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": typology } });
   }
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
     queryKey: ["fundings-structures", county, typology],
