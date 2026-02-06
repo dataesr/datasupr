@@ -60,12 +60,6 @@ export default function SingleEvolutionChart({
     [baseMetrics]
   );
 
-  const nominalMetric = useMemo(() => {
-    if (!hasIPCMetrics) return null;
-    const metric = baseMetrics.find((m) => !m.endsWith("_ipc"));
-    return metric ? METRICS_CONFIG[metric]?.label : null;
-  }, [hasIPCMetrics, baseMetrics]);
-
   const partMetricKey = useMemo(() => {
     if (baseMetrics.length !== 1) return null;
     const partKey = METRIC_TO_PART[baseMetrics[0]];
@@ -122,13 +116,13 @@ export default function SingleEvolutionChart({
               >
                 <SegmentedElement
                   checked={!showIPC}
-                  label={`${nominalMetric || "Valeur"} à prix courant`}
+                  label="À prix courant"
                   onClick={() => handleIPCChange(false)}
                   value="nominal"
                 />
                 <SegmentedElement
                   checked={showIPC}
-                  label={`${nominalMetric || "Valeur"} à prix constant`}
+                  label="À prix constant"
                   onClick={() => handleIPCChange(true)}
                   value="constant"
                 />

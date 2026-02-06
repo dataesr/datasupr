@@ -40,12 +40,6 @@ export default function DualEvolutionChart({
     [baseMetrics]
   );
 
-  const nominalMetric = useMemo(() => {
-    if (!hasIPCMetrics) return null;
-    const metric = baseMetrics.find((m) => !m.endsWith("_ipc"));
-    return metric ? METRICS_CONFIG[metric]?.label : null;
-  }, [hasIPCMetrics, baseMetrics]);
-
   const handleIPCChange = (show: boolean) => {
     setShowIPC(show);
     onIPCChange(show);
@@ -78,13 +72,13 @@ export default function DualEvolutionChart({
             >
               <SegmentedElement
                 checked={!showIPC}
-                label={`${nominalMetric || "Valeur"} à prix courant`}
+                label="À prix courant"
                 onClick={() => handleIPCChange(false)}
                 value="nominal"
               />
               <SegmentedElement
                 checked={showIPC}
-                label={`${nominalMetric || "Valeur"} à prix constant`}
+                label="À prix constant"
                 onClick={() => handleIPCChange(true)}
                 value="constant"
               />

@@ -100,15 +100,11 @@ export const createPositioningComparisonBarOptions = (
       };
     })
     .sort((a, b) => {
-      // Appliquer la logique du sens uniquement si défini
       if (config.sens === "augmentation") {
-        // Tri croissant : plus petites valeurs d'abord
         return a.value - b.value;
       } else if (config.sens === "diminution") {
-        // Tri décroissant : plus grandes valeurs d'abord
         return b.value - a.value;
       }
-      // Tri décroissant par défaut pour les métriques sans sens défini
       return b.value - a.value;
     });
 

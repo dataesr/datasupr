@@ -392,7 +392,7 @@ export const METRICS_CONFIG = {
     category: "Santé financière",
   },
   resultat_net_comptable_ipc: {
-    label: "Résultat net comptable (à prix constant)",
+    label: "à prix constant",
     format: "euro" as const,
     color: METRIC_COLORS.tauxEncadrement,
     category: "Santé financière",
