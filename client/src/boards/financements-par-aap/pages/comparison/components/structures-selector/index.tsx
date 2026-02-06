@@ -7,7 +7,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
 import { getEsQuery } from "../../../../utils.ts";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function StructuresSelector() {
@@ -35,7 +35,7 @@ export default function StructuresSelector() {
     queryKey: ["fundings-counties", typology],
     queryFn: () =>
       fetch(
-        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
         {
           body: JSON.stringify(bodyCounties),
           headers: {
@@ -66,7 +66,7 @@ export default function StructuresSelector() {
     queryKey: ["fundings-typologies", county],
     queryFn: () =>
       fetch(
-        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
         {
           body: JSON.stringify(bodyTypologies),
           headers: {
@@ -95,7 +95,7 @@ export default function StructuresSelector() {
     queryKey: ["fundings-structures"],
     queryFn: () =>
       fetch(
-        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
         {
           body: JSON.stringify(bodyStructuresAll),
           headers: {
@@ -122,7 +122,7 @@ export default function StructuresSelector() {
     queryKey: ["fundings-structures", county, typology],
     queryFn: () =>
       fetch(
-        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
         {
           body: JSON.stringify(bodyStructures),
           headers: {

@@ -9,7 +9,7 @@ import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
 import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, years } from "../../../../utils.ts";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function ProjectsOverTimeByStructure({ name }: { name: string | undefined }) {
@@ -52,7 +52,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   const { data, isLoading } = useQuery({
     queryKey: ["funding-projects-over-time-by-structure", structure],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",

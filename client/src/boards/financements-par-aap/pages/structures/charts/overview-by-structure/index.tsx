@@ -9,7 +9,7 @@ import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGe
 
 import "highcharts/modules/variwide";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function OverviewByStructure({ name }: { name: string | undefined }) {
@@ -41,7 +41,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   const { data, isLoading } = useQuery({
     queryKey: ["fundings-overview-by-structure", structure, yearMax, yearMin],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",

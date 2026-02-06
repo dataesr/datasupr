@@ -17,7 +17,7 @@ import Cards from "./components/cards";
 
 import "./styles.scss";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function DisplayStructure() {
@@ -58,7 +58,7 @@ export default function DisplayStructure() {
   const { data } = useQuery({
     queryKey: ["fundings-structure", structure, yearMax, yearMin],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",

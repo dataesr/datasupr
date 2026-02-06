@@ -6,7 +6,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, years } from "../../../../utils.ts";
 import ChartCard from "../chart-card/index.tsx";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function Cards() {
@@ -49,7 +49,7 @@ export default function Cards() {
   const { data, isLoading } = useQuery({
     queryKey: ["funding-projects-over-time-by-structure", structure],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",

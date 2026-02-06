@@ -9,7 +9,7 @@ import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
 import { deepMerge, formatCompactNumber, funders, getCssColor, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function LaboratoriesByStructure({ name }: { name: string | undefined }) {
@@ -89,7 +89,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   const { data, isLoading } = useQuery({
     queryKey: ["fundings-projects-by-structures", structure, yearMax, yearMin],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",

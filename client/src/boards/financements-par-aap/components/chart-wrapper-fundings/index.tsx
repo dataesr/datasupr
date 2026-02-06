@@ -5,7 +5,7 @@ import Highcharts from "highcharts";
 import ChartWrapper, { ChartConfig, HighchartsOptions } from "../../../../components/chart-wrapper/index.js";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default.js";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 const fundingsSources = [
   {
@@ -71,7 +71,7 @@ export default function ChartWrapperFundings({
     queryKey: ["fundings-alias"],
     queryFn: () =>
       fetch(
-        `${VITE_APP_SERVER_URL}/elasticsearch/get-index-name-by-alias?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        `${VITE_APP_SERVER_URL}/elasticsearch/get-index-name-by-alias?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
