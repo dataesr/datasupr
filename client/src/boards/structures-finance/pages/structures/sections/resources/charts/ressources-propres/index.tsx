@@ -113,15 +113,19 @@ export default function RessourcesPropresChart({
 
   const etabName = etablissementName || data?.etablissement_lib || "";
 
+  const isBudgetYear = data?.sanfin_source === "Budget";
+  const formattedYear =
+    selectedYear && isBudgetYear ? `${selectedYear} (Budget)` : selectedYear;
+
   const config = {
     id: "ressourcesPropres",
     integrationURL: `/integration?chart_id=ressourcesPropres&structureId=${etablissementId}&year=${selectedYear}`,
-    title: `Décomposition des ressources propres${etabName ? ` — ${etabName}` : ""}${selectedYear ? ` — ${selectedYear}` : ""}`,
+    title: `Décomposition des ressources propres${etabName ? ` — ${etabName}` : ""}${formattedYear ? ` — ${formattedYear}` : ""}`,
     comment: {
       fr: (
         <>
           Ce graphique présente la répartition détaillée des ressources propres
-          de l'établissement pour l'exercice {selectedYear}. Les ressources
+          de l'établissement pour l'exercice {formattedYear}. Les ressources
           propres comprennent notamment les droits d'inscription, la formation
           continue, les contrats de recherche, les subventions régionales et
           européennes.
@@ -132,7 +136,7 @@ export default function RessourcesPropresChart({
       ? {
           fr: (
             <>
-              En {selectedYear}, le total des ressources propres s'élève à{" "}
+              En {formattedYear}, le total des ressources propres s'élève à{" "}
               <strong>{euro(totalRessources)} €</strong>. La principale source
               est {topRessource.label.toLowerCase()} avec{" "}
               <strong>{euro(topRessource.value)} €</strong> (
