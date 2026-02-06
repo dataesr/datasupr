@@ -5,7 +5,6 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
-import { getEsQuery } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -17,7 +16,6 @@ export default function StructureSelector({ setStructures }) {
   const structure = searchParams.get("structure") ?? "";
 
   const bodyCounties: any = {
-    ...getEsQuery({}),
     aggregations: {
       by_county: {
         terms: {
@@ -29,7 +27,7 @@ export default function StructureSelector({ setStructures }) {
     },
   };
   if (typology && typology !== '*') {
-    bodyCounties.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
+    bodyCounties.query.bool.filter.push({ term: { "institutions.denormalized.typologie_1.keyword": typology } });
   }
   const { data: dataCounties, isLoading: isLoadingCounties } = useQuery({
     queryKey: ["fundings-counties", typology],
@@ -51,11 +49,10 @@ export default function StructureSelector({ setStructures }) {
     .sort((a, b) => a.normalize('NFD').replace(/[\u0300-\u036f]/g, '') - b.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
 
   const bodyTypologies: any = {
-    ...getEsQuery({}),
     aggregations: {
       by_typology: {
         terms: {
-          field: "participant_typologie_1.keyword",
+          field: "institutions.denormalized.typologie_1.keyword",
           order: { _key: "desc" },
         },
       },
@@ -82,12 +79,11 @@ export default function StructureSelector({ setStructures }) {
   const typologies = (dataTypologies?.aggregations?.by_typology?.buckets ?? []).map((bucket) => bucket.key);
 
   const bodyStructures: any = {
-    ...getEsQuery({}),
     aggregations: {
       by_structure: {
         terms: {
-          field: "participant_encoded_key",
-          size: 1500,
+          field: "id.keyword",
+          size: 10000,
         },
       },
     },
@@ -96,7 +92,7 @@ export default function StructureSelector({ setStructures }) {
     bodyStructures.query.bool.filter.push({ term: { "address.region.keyword": county } });
   }
   if (typology && typology !== '*') {
-    bodyStructures.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
+    bodyStructures.query.bool.filter.push({ term: { "institutions.denormalized.typologie_1.keyword": typology } });
   }
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
     queryKey: ["fundings-structures", county, typology],
@@ -113,13 +109,14 @@ export default function StructureSelector({ setStructures }) {
         }
       ).then((response) => response.json()),
   });
+  console.log(dataStructures);
 
   const structures =
-    (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
-      const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
-      structureInfo.searchableText = structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-      return structureInfo;
-    }) || [];
+    (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => ({
+      label: bucket.key,
+      searchableText: bucket.key.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
+      value: bucket.key,
+    })) || [];
 
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {
@@ -131,7 +128,7 @@ export default function StructureSelector({ setStructures }) {
   useEffect(() => {
     setStructures((dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
-      structureInfo.searchableText = structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      structureInfo.searchableText = structureInfo?.id?.normalize("NFD")?.replace(/[\u0300-\u036f]/g, "") ?? "";
       return structureInfo;
     }) || []);
   }, [dataStructures])
