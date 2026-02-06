@@ -1,10 +1,8 @@
 import { Logo, Service } from "@dataesr/dsfr-plus";
-import { useEffect } from "react";
-import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 
 import Footer from "../../../../components/footer";
 import { getI18nLabel } from "../../../../utils";
-import { years } from "../../utils";
 import i18n from "./i18n.json";
 
 import "./styles.scss";
@@ -14,27 +12,6 @@ const { VITE_MINISTER_NAME } = import.meta.env;
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
-  const [searchParams, setSearchParams] = useSearchParams();
-
-  useEffect(() => {
-    if (!searchParams.get("yearMax") || !searchParams.get("yearMin")) {
-      if (!searchParams.get("yearMax")) {
-        searchParams.set("yearMax", String(years[years.length - 2]));
-      }
-      if (!searchParams.get("yearMin")) {
-        searchParams.set("yearMin", String(years[years.length - 2]));
-      }
-      setSearchParams(searchParams);
-    }
-  }, [searchParams, setSearchParams]);
-
-  const searchParamsFiltered = () => {
-    if (!searchParams.has("section")) return searchParams;
-    // Deep copy of searchParams
-    const searchParamsCopy = new URLSearchParams(searchParams);
-    searchParamsCopy.delete("section");
-    return searchParamsCopy;
-  }
 
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
@@ -94,7 +71,7 @@ export default function GlobalLayout() {
                     {...(is("/valorisation-recherche-innovation/etablissement") && { "aria-current": "page" })}
                     className="fr-nav__link"
                     target="_self"
-                    to={`/valorisation-recherche-innovation/etablissement?${searchParamsFiltered()}`}
+                    to={`/valorisation-recherche-innovation/etablissement`}
                   >
                     {getI18nLabel(i18n, "etablissement")}
                   </Link>

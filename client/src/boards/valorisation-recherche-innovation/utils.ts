@@ -4,7 +4,7 @@ import { createChartOptions } from "../../components/chart-wrapper/default-optio
 import { getCssColor as getCssColorGlobal } from "../../utils/colors";
 import { deepMerge } from "../../utils";
 
-const years: number[] = Array.from(Array(11).keys()).map((item) => item + 2015);
+const typologiesExcluded = ["Entreprises", "Infrastructures de recherche", "Structures de recherche"];
 
 const formatCompactNumber = (number: number): string => {
   const formatter = Intl.NumberFormat("fr", { notation: "compact" });
@@ -20,28 +20,21 @@ const formatPercent = (number: number, decimals: number = 0): string => {
   return formatter.format(number);
 };
 
-// const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
-//   { structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
 const getEsQuery = ({ structures }: { structures?: (string | null)[] }) => {
   const query: any = {
     size: 0,
     query: {
       bool: {
         filter: [
-          // { range: { project_year: { gte: yearMin, lte: yearMax } } },
-          // { term: { participant_isFrench: true } },
-          // { term: { participant_status: "active" } },
-          // { term: { participant_type: "institution" } },
-          // { term: { participant_is_main_parent: 1 } },
-          // { term: { "participant_kind.keyword": "Secteur public" } },
-          // { terms: { "project_type.keyword": funders } },
-          // { bool: { must_not: { terms: { "participant_typologie_1.keyword": typologiesExcluded } } } },
+          { term: { isFrench: true } },
+          { term: { "status.keyword": "active" } },
+          { bool: { must_not: { terms: { "typologie_1.keyword": typologiesExcluded } } } },
         ],
       },
     },
   };
   if (structures?.length ?? 0 > 0) {
-    query.query.bool.filter.push({ terms: { "participant_id.keyword": structures } });
+    query.query.bool.filter.push({ terms: { "id.keyword": structures } });
   };
   return query;
 };
@@ -96,5 +89,4 @@ export {
   getEsQuery,
   getGeneralOptions,
   getYearRangeLabel,
-  years,
 };

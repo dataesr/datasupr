@@ -40,8 +40,8 @@ const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = y
         filter: [
           { range: { project_year: { gte: yearMin, lte: yearMax } } },
           { term: { participant_isFrench: true } },
-          { term: { participant_status: "active" } },
-          { term: { participant_type: "institution" } },
+          { term: { "participant_status.keyword": "active" } },
+          { term: { "participant_type.keword": "institution" } },
           { term: { participant_is_main_parent: 1 } },
           { term: { "participant_kind.keyword": "Secteur public" } },
           { terms: { "project_type.keyword": funders } },
