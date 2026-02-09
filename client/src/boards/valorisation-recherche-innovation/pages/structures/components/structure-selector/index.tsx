@@ -48,7 +48,7 @@ export default function StructureSelector({ setStructures }) {
   });
   const counties = (dataCounties?.aggregations?.by_county?.buckets ?? [])
     .map((bucket) => bucket.key)
-    .sort((a, b) => a.normalize('NFD').replace(/[\u0300-\u036f]/g, '') - b.normalize('NFD').replace(/[\u0300-\u036f]/g, ''));
+    .sort((a, b) => a.localeCompare(b));
 
   const bodyTypologies: any = {
     ...getEsQuery({}),
@@ -87,7 +87,7 @@ export default function StructureSelector({ setStructures }) {
     aggregations: {
       by_structure: {
         terms: {
-          field: "id.keyword",
+          field: "encoded_key.keyword",
           size: 3000,
         },
       },
@@ -116,25 +116,27 @@ export default function StructureSelector({ setStructures }) {
   });
 
   const structures =
-    (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => ({
-      label: bucket.key,
-      searchableText: bucket.key.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
-      value: bucket.key,
-    })) || [];
+    (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
+      const structureInfo = Object.fromEntries(new URLSearchParams(bucket.key));
+      structureInfo.value = structureInfo.id;
+      structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      return structureInfo;
+    });
 
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {
-      searchParams.set("structure", selectedStructure.split("###")[0]);
+      searchParams.set("structure", selectedStructure);
       setSearchParams(searchParams);
     }
   };
 
   useEffect(() => {
-    setStructures((dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => ({
-      label: bucket.key,
-      searchableText: bucket.key.normalize("NFD").replace(/[\u0300-\u036f]/g, ""),
-      value: bucket.key,
-    })) || []);
+    setStructures((dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
+      const structureInfo = Object.fromEntries(new URLSearchParams(bucket.key));
+      structureInfo.value = structureInfo.id;
+      structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      return structureInfo;
+    }));
   }, [dataStructures])
 
   return (
