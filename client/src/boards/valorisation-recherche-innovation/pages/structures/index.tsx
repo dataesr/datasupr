@@ -56,12 +56,10 @@ export default function Structures() {
           {structures.map((structure: any) => (
             <Col key={structure.value} xs="12" md="6" lg="4">
               <CardSimple
-                // description={structure.region}
-                onClick={() => handleStructure(structure.value)}
-                // subtitle={structure.typologie_1}
-                // title={structure.label}
+                description={structure.region}
+                onClick={() => handleStructure(structure.id)}
+                subtitle={structure.typologie_1}
                 title={structure.label}
-                // year={structure.label}
               />
             </Col>
           ))}
