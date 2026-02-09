@@ -93,7 +93,6 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
     const structure = Object.fromEntries(new URLSearchParams(partner.key));
     return `${structure.label} (${structure.country})`;
   });
-  console.log(categoriesProject);
   const partnersBudget = data?.aggregations?.by_international_partners_budget?.buckets ?? [];
   const seriesBudget = funders.map((funder) => ({
     color: getCssColor({ name: funder, prefix: "funder" }),
