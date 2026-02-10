@@ -47,32 +47,32 @@ export default function EvolutionPcri() {
           <Callout className="callout-style">{calloutContent[currentLang]}</Callout>
         </Col>
       </Row>
-      <Row className="fr-my-2w">
+      <Row className="fr-my-3w">
         <Col>
           <FundingStackedArea />
         </Col>
       </Row>
-      <Row className="fr-my-2w">
+      <Row className="fr-my-5w">
         <Col>
           <SuccessRateEvolution />
         </Col>
       </Row>
-      <Row className="fr-my-2w">
+      <Row className="fr-my-5w">
         <Col>
           <CountriesHeatmap />
         </Col>
       </Row>
-      <Row className="fr-my-2w">
+      <Row className="fr-my-5w">
         <Col>
           <CountriesRanking />
         </Col>
       </Row>
-      <Row className="fr-my-2w">
+      <Row className="fr-my-5w">
         <Col>
           <EfficiencyScatter />
         </Col>
       </Row>
-      <Row className="fr-my-2w">
+      <Row className="fr-my-5w">
         <Col>
           <FundingByCountry />
         </Col>
