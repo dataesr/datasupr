@@ -30,5 +30,13 @@
   "tooltip-projects": {
     "fr": "Projets réussis",
     "en": "Successful projects"
+  },
+  "tooltip-framework": {
+    "fr": "Programme",
+    "en": "Framework"
+  },
+  "tooltip-all-frameworks": {
+    "fr": "Tous les programmes",
+    "en": "All frameworks"
   }
 }
