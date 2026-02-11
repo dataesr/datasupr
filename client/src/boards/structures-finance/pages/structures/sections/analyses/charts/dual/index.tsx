@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import {
   Row,
   Col,
@@ -20,6 +20,7 @@ interface DualEvolutionChartProps {
   baseMetrics: MetricKey[];
   chartConfig: any;
   xAxisField: "exercice" | "anuniv";
+  showIPC: boolean;
   onIPCChange: (show: boolean) => void;
   data: any[];
 }
@@ -30,20 +31,14 @@ export default function DualEvolutionChart({
   baseMetrics,
   chartConfig,
   xAxisField,
+  showIPC,
   onIPCChange,
   data,
 }: DualEvolutionChartProps) {
-  const [showIPC, setShowIPC] = useState(false);
-
   const hasIPCMetrics = useMemo(
     () => baseMetrics.some((m) => m.endsWith("_ipc")),
     [baseMetrics]
   );
-
-  const handleIPCChange = (show: boolean) => {
-    setShowIPC(show);
-    onIPCChange(show);
-  };
 
   const chartOptions = createDualChartOptions(
     data || [],
@@ -73,13 +68,13 @@ export default function DualEvolutionChart({
               <SegmentedElement
                 checked={!showIPC}
                 label="À prix courant"
-                onClick={() => handleIPCChange(false)}
+                onClick={() => onIPCChange(false)}
                 value="nominal"
               />
               <SegmentedElement
                 checked={showIPC}
                 label="À prix constant"
-                onClick={() => handleIPCChange(true)}
+                onClick={() => onIPCChange(true)}
                 value="constant"
               />
             </SegmentedControl>

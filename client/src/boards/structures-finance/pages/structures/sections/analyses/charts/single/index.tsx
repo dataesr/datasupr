@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import {
   Row,
   Col,
@@ -34,6 +34,8 @@ interface SingleEvolutionChartProps {
   selectedAnalysis: AnalysisKey;
   etablissementName: string;
   xAxisField: "exercice" | "anuniv";
+  showIPC: boolean;
+  showPart: boolean;
   onIPCChange: (show: boolean) => void;
   onPartChange: (show: boolean) => void;
   data: any[];
@@ -48,13 +50,12 @@ export default function SingleEvolutionChart({
   selectedAnalysis,
   etablissementName,
   xAxisField,
+  showIPC,
+  showPart,
   onIPCChange,
   onPartChange,
   data,
 }: SingleEvolutionChartProps) {
-  const [showIPC, setShowIPC] = useState(false);
-  const [showPart, setShowPart] = useState(false);
-
   const hasIPCMetrics = useMemo(
     () => baseMetrics.some((m) => m.endsWith("_ipc")),
     [baseMetrics]
@@ -70,16 +71,6 @@ export default function SingleEvolutionChart({
       ? partKey
       : null;
   }, [baseMetrics, data]);
-
-  const handleIPCChange = (show: boolean) => {
-    setShowIPC(show);
-    onIPCChange(show);
-  };
-
-  const handlePartChange = (show: boolean) => {
-    setShowPart(show);
-    onPartChange(show);
-  };
 
   const chartOptions = createSingleChartOptions(
     data || [],
@@ -110,13 +101,13 @@ export default function SingleEvolutionChart({
                 <SegmentedElement
                   checked={!showIPC}
                   label="À prix courant"
-                  onClick={() => handleIPCChange(false)}
+                  onClick={() => onIPCChange(false)}
                   value="nominal"
                 />
                 <SegmentedElement
                   checked={showIPC}
                   label="À prix constant"
-                  onClick={() => handleIPCChange(true)}
+                  onClick={() => onIPCChange(true)}
                   value="constant"
                 />
               </SegmentedControl>
@@ -131,13 +122,13 @@ export default function SingleEvolutionChart({
                 <SegmentedElement
                   checked={!showPart}
                   label="Valeur"
-                  onClick={() => handlePartChange(false)}
+                  onClick={() => onPartChange(false)}
                   value="value"
                 />
                 <SegmentedElement
                   checked={showPart}
                   label="%"
-                  onClick={() => handlePartChange(true)}
+                  onClick={() => onPartChange(true)}
                   value="part"
                 />
               </SegmentedControl>

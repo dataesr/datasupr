@@ -176,6 +176,8 @@ export default function EvolutionChart({
         selectedAnalysis={activeSelectedAnalysis}
         etablissementName={etabName}
         xAxisField={xAxisField}
+        showIPC={showIPC}
+        showPart={showPart}
         onIPCChange={setShowIPC}
         onPartChange={setShowPart}
         data={data}
@@ -200,6 +202,7 @@ export default function EvolutionChart({
           </>
         )}
         xAxisField={xAxisField}
+        showIPC={showIPC}
         onIPCChange={setShowIPC}
         data={data}
       />
