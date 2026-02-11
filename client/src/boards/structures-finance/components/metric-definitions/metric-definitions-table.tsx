@@ -14,53 +14,36 @@ export default function MetricDefinitionsTable({
 }: MetricDefinitionsTableProps) {
   const [isOpen, setIsOpen] = useState(metricKeys.length < 3);
   const { data: definitions, isLoading } = useFinanceDefinitions();
+
   const relevantDefinitions = useMemo(() => {
     if (!definitions || !metricKeys) return [];
+    const allDefs = definitions.flatMap((cat) =>
+      cat.sousRubriques.flatMap((sr) => sr.definitions)
+    );
 
-    const result: Array<{
-      PageDefinition: boolean;
-      calculfr: string;
-      indicateur: string;
-      libelle: string;
-      definition: string;
-      interpretation: string;
-      source1fr?: string | null;
-      opendata1?: string | null;
-      source2fr?: string | null;
-      opendata2?: string | null;
-      source3fr?: string | null;
-      opendata3?: string | null;
-      source4fr?: string | null;
-      opendata4?: string | null;
-      unite: string;
-    }> = [];
+    const findDef = (indicator: string) =>
+      allDefs.find(
+        (d) => d.indicateur === indicator && d.PageDefinition !== false
+      );
 
-    for (const category of definitions) {
-      for (const sousRubrique of category.sousRubriques) {
-        for (const def of sousRubrique.definitions) {
-          if (
-            metricKeys.includes(def.indicateur) &&
-            def.PageDefinition !== false
-          ) {
-            result.push({
-              calculfr: def.calculfr,
-              PageDefinition: def.PageDefinition,
-              indicateur: def.indicateur,
-              libelle: def.libelle,
-              definition: def.definition,
-              interpretation: def.interpretation,
-              source1fr: def.source1fr,
-              opendata1: def.opendata1,
-              source2fr: def.source2fr,
-              opendata2: def.opendata2,
-              source3fr: def.source3fr,
-              opendata3: def.opendata3,
-              source4fr: def.source4fr,
-              opendata4: def.opendata4,
-              unite: def.unite,
-            });
-          }
-        }
+    const added = new Set<string>();
+    const result: any[] = [];
+    const hasIpcKey = metricKeys.some((key) => key.endsWith("_ipc"));
+
+    metricKeys.forEach((key) => {
+      if (key.endsWith("_ipc")) return;
+      const baseKey = key.replace(/_ipc$/, "");
+      const def = findDef(baseKey);
+      if (def && !added.has(baseKey)) {
+        result.push(def);
+        added.add(baseKey);
+      }
+    });
+
+    if (hasIpcKey) {
+      const ipcDef = findDef("ipc");
+      if (ipcDef && !added.has("ipc")) {
+        result.push(ipcDef);
       }
     }
 

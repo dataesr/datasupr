@@ -1,0 +1,20 @@
+.comparison-summary-card {
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-labels,
+  .card-values {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .rank-display {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

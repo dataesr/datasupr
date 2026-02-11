@@ -1,10 +1,35 @@
 import { useMemo } from "react";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
-import { createPositioningScatterOptions, ScatterConfig } from "./options";
+import { createPositioningScatterOptions, type ScatterConfig } from "./options";
 import { RenderData } from "./render-data";
+import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
+
+const SCATTER_CONFIGS: Record<string, ScatterConfig> = {
+  "scatter-1": {
+    title: "Produits de fonctionnement encaissables vs Effectifs d'étudiants",
+    xMetric: "produits_de_fonctionnement_encaissables",
+    yMetric: "effectif_sans_cpge",
+    xLabel: "Produits de fonctionnement encaissables (€)",
+    yLabel: "Effectif étudiants (sans CPGE)",
+  },
+  "scatter-2": {
+    title: "SCSP par étudiant vs Taux d'encadrement",
+    xMetric: "scsp_par_etudiants",
+    yMetric: "taux_encadrement",
+    xLabel: "SCSP par étudiant (€)",
+    yLabel: "Taux d'encadrement (ETPT/étudiant)",
+  },
+  "scatter-3": {
+    title: "SCSP vs Ressources propres",
+    xMetric: "scsp",
+    yMetric: "ressources_propres",
+    xLabel: "SCSP (€)",
+    yLabel: "Ressources propres (€)",
+  },
+};
 
 interface ScatterChartProps {
-  config?: ScatterConfig;
+  chartType: "scatter-1" | "scatter-2" | "scatter-3";
   data?: any[];
   currentStructureId?: string;
   currentStructureName?: string;
@@ -12,15 +37,22 @@ interface ScatterChartProps {
 }
 
 export default function ScatterChart({
-  config,
+  chartType,
   data = [],
   currentStructureId,
   currentStructureName = "",
   selectedYear,
 }: ScatterChartProps) {
-  if (!config) {
-    return;
-  }
+  const baseConfig = SCATTER_CONFIGS[chartType];
+
+  if (!baseConfig) return null;
+
+  const config = {
+    ...baseConfig,
+    title: `${baseConfig.title}${selectedYear ? ` — ${selectedYear}` : ""}`,
+  };
+
+  const metricKeys = [config.xMetric, config.yMetric];
 
   const chartOptions = useMemo(() => {
     return createPositioningScatterOptions(
@@ -41,7 +73,6 @@ export default function ScatterChart({
     return `${config.xMetric}-${config.yMetric}-${currentStructureId}-${dataIds}`;
   }, [config.xMetric, config.yMetric, currentStructureId, data]);
 
-  // Check if current structure has data for both metrics
   const currentStructureHasData = useMemo(() => {
     if (!data?.length || !currentStructureId) return false;
     const currentStructureData = data.find(
@@ -72,18 +103,21 @@ export default function ScatterChart({
   };
 
   return (
-    <ChartWrapper
-      key={chartKey}
-      config={chartConfig}
-      options={chartOptions}
-      renderData={() => (
-        <RenderData
-          config={config}
-          data={data}
-          currentStructureId={currentStructureId}
-          currentStructureName={currentStructureName}
-        />
-      )}
-    />
+    <>
+      <ChartWrapper
+        key={chartKey}
+        config={chartConfig}
+        options={chartOptions}
+        renderData={() => (
+          <RenderData
+            config={config}
+            data={data}
+            currentStructureId={currentStructureId}
+            currentStructureName={currentStructureName}
+          />
+        )}
+      />
+      <MetricDefinitionsTable metricKeys={metricKeys} />
+    </>
   );
 }

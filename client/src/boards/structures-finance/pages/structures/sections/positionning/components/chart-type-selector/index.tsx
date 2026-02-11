@@ -1,6 +1,6 @@
 import { Row, Col, Text } from "@dataesr/dsfr-plus";
-import { Select } from "../../../../../components/select";
-import { type ChartView } from "../charts";
+import { Select } from "../../../../../../components/select";
+import { type ChartView } from "../../charts";
 
 interface ChartTypeSelectorProps {
   activeChart: ChartView;

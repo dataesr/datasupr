@@ -1,7 +1,8 @@
-import { Row, Col, Text } from "@dataesr/dsfr-plus";
-import type { PositioningFilters } from "../../../hooks";
+import { Row, Col, Text, DismissibleTag } from "@dataesr/dsfr-plus";
+import type { PositioningFilters } from "../../../../hooks";
+import "../../charts/shared.scss";
 import "./filters.scss";
-import Dropdown from "../../../../../components/dropdown";
+import Dropdown from "../../../../../../components/dropdown";
 
 interface PositioningFiltersProps {
   data: any[];
@@ -213,6 +214,62 @@ export default function PositioningFilters({
                 </Col>
               </Row>
             </div>
+            {Object.values(filters).some(Boolean) && (
+              <div className="fr-mt-2w">
+                <div className="fr-text--sm fr-mb-1w">Filtres :</div>
+                <div
+                  style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}
+                >
+                  {filters.type && (
+                    <DismissibleTag
+                      color="blue-cumulus"
+                      aria-label={`Retirer filtre type`}
+                      onClick={() => handleFilterChange("type", "")}
+                    >
+                      Même type ({structureType})
+                    </DismissibleTag>
+                  )}
+                  {filters.typologie && (
+                    <DismissibleTag
+                      color="blue-cumulus"
+                      aria-label={`Retirer filtre typologie`}
+                      onClick={() => handleFilterChange("typologie", "")}
+                    >
+                      Même typologie ({structureTypologie})
+                    </DismissibleTag>
+                  )}
+                  {filters.region && (
+                    <DismissibleTag
+                      color="blue-cumulus"
+                      aria-label={`Retirer filtre région`}
+                      onClick={() => handleFilterChange("region", "")}
+                    >
+                      Même région ({structureRegion})
+                    </DismissibleTag>
+                  )}
+                  {filters.rce && (
+                    <DismissibleTag
+                      color="blue-cumulus"
+                      aria-label={`Retirer filtre RCE`}
+                      onClick={() => handleFilterChange("rce", "")}
+                    >
+                      {structureIsRce ? "RCE uniquement" : "Non RCE uniquement"}
+                    </DismissibleTag>
+                  )}
+                  {filters.devimmo && (
+                    <DismissibleTag
+                      color="blue-cumulus"
+                      aria-label={`Retirer filtre dévolution`}
+                      onClick={() => handleFilterChange("devimmo", "")}
+                    >
+                      {structureIsDevimmo
+                        ? "Avec dévolution immobilière"
+                        : "Sans dévolution immobilière"}
+                    </DismissibleTag>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </Col>
       </Row>

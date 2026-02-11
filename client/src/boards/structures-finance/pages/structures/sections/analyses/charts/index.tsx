@@ -74,7 +74,9 @@ export default function EvolutionChart({
   const isBase100 = analysisConfig.showBase100;
   const isFormationsCategory =
     analysisConfig.category === "Dîplomes et formations";
-  const xAxisField = isFormationsCategory ? "anuniv" : "exercice";
+  const useAcademicYear = activeSelectedAnalysis === "scsp-etudiant";
+  const xAxisField =
+    useAcademicYear || isFormationsCategory ? "anuniv" : "exercice";
 
   const selectedMetrics = useMemo(() => {
     let metrics = baseMetrics;

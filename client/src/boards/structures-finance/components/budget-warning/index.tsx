@@ -1,5 +1,11 @@
 import { Text } from "@dataesr/dsfr-plus";
-import { hasBudgetData, getBudgetYears } from "./budgetIndicators";
+import {
+  hasBudgetData,
+  getBudgetYears,
+  BUDGET_SENSITIVE_METRICS,
+} from "./budgetIndicators";
+
+export { BUDGET_SENSITIVE_METRICS };
 
 interface BudgetWarningProps {
   data: any[] | undefined;

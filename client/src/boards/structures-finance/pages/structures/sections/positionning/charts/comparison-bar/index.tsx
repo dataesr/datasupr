@@ -11,6 +11,7 @@ import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import Select from "../../../../../../components/select";
 import { useMetricThreshold } from "../../../../../../hooks/useMetricThreshold";
+import { useMetricSens } from "../../../../../../hooks/useMetricSens";
 import { useMetricLabel } from "../../../../../../hooks/useMetricLabel";
 import {
   PREDEFINED_ANALYSES,
@@ -21,8 +22,12 @@ import {
 } from "../../../../../../config/config";
 import { ThresholdLegend } from "../../../../../../config/index";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
-import { BudgetWarning } from "../../../../../../components/budget-warning";
-import { useFinanceDefinitions } from "../../../../../definitions/api";
+import {
+  BUDGET_SENSITIVE_METRICS,
+  BudgetWarning,
+} from "../../../../../../components/budget-warning";
+import { useComparisonFilters } from "../../hooks";
+import ComparisonSummaryCard from "./comparison-summary-card";
 
 const filterDisplayMetrics = (metrics: readonly string[]) =>
   metrics.filter(
@@ -31,24 +36,42 @@ const filterDisplayMetrics = (metrics: readonly string[]) =>
 
 interface ComparisonBarChartProps {
   data?: any[];
+  allData?: any[];
+  currentStructure?: any;
   currentStructureId?: string;
   currentStructureName?: string;
   selectedYear?: string;
   selectedAnalysis?: AnalysisKey | null;
+  activeFilters?: {
+    type?: string;
+    typologie?: string;
+    region?: string;
+    rce?: string;
+    devimmo?: string;
+  };
 }
 
 export default function ComparisonBarChart({
   data = [],
+  allData = [],
+  currentStructure,
   currentStructureId,
   currentStructureName = "",
   selectedYear = "",
   selectedAnalysis = null,
+  activeFilters = {},
 }: ComparisonBarChartProps) {
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
   const [showPart, setShowPart] = useState(false);
 
   const getMetricLabel = useMetricLabel();
-  const { data: definitions } = useFinanceDefinitions();
+
+  const { baseData, filterByCriteria, visibleCards } = useComparisonFilters(
+    allData,
+    currentStructure,
+    currentStructureId,
+    activeFilters
+  );
 
   const analysisConfig = selectedAnalysis
     ? PREDEFINED_ANALYSES[selectedAnalysis]
@@ -81,18 +104,7 @@ export default function ComparisonBarChart({
   const selectedMetric: MetricKey =
     showPart && hasPartVersion && partMetric ? partMetric : baseMetric;
 
-  const metricSens = useMemo(() => {
-    if (!definitions) return null;
-    for (const category of definitions) {
-      for (const sousRubrique of category.sousRubriques) {
-        const def = sousRubrique.definitions.find(
-          (d) => d.indicateur === selectedMetric
-        );
-        if (def) return def.sens || null;
-      }
-    }
-    return null;
-  }, [definitions, selectedMetric]);
+  const metricSens = useMetricSens(selectedMetric);
 
   const metricThreshold = useMetricThreshold(selectedMetric);
   const metricLabel = getMetricLabel(selectedMetric);
@@ -153,9 +165,21 @@ export default function ComparisonBarChart({
     return `comparison-${currentStructureId}-${dataIds}`;
   }, [currentStructureId, filteredData]);
 
+  const isBudgetYear = useMemo(() => {
+    if (!BUDGET_SENSITIVE_METRICS.has(selectedMetric)) return false;
+    if (!data?.length || !currentStructureId) return false;
+    const currentItem = data.find(
+      (item) => item.etablissement_id_paysage_actuel === currentStructureId
+    );
+    return currentItem?.sanfin_source === "Budget";
+  }, [selectedMetric, data, currentStructureId]);
+
+  const formattedYear =
+    selectedYear && isBudgetYear ? `${selectedYear} (Budget)` : selectedYear;
+
   const chartConfig = {
     id: "positioning-comparison-bar",
-    title: `${metricLabel}${selectedYear ? ` — Exercice ${selectedYear}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
+    title: `${metricLabel}${formattedYear ? ` — Exercice ${formattedYear}` : ""}${currentStructureName ? ` — ${currentStructureName}` : ""}`,
   };
 
   return (
@@ -186,6 +210,25 @@ export default function ComparisonBarChart({
             </Select>
           </Col>
         </Row>
+      )}
+      {currentStructureHasData && (
+        <ComparisonSummaryCard
+          allData={baseData}
+          filterDataByCriteria={filterByCriteria}
+          metric={selectedMetric}
+          metricConfig={selectedMetricConfig}
+          metricLabel={metricLabel}
+          currentStructure={currentStructure}
+          currentStructureId={currentStructureId}
+          currentStructureName={currentStructureName}
+          selectedYear={formattedYear}
+          metricSens={metricSens}
+          metricThreshold={metricThreshold}
+          showAllCard={visibleCards.all}
+          showRegionCard={visibleCards.region}
+          showTypeCard={visibleCards.type}
+          showTypologieCard={visibleCards.typologie}
+        />
       )}
 
       {hasPartVersion && currentStructureHasData && (

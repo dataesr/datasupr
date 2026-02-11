@@ -1,11 +1,11 @@
 import { useMemo, useState } from "react";
 import ItemFilter, {
   type FilterItem,
-} from "../../../../../components/item-filter";
+} from "../../../../../../components/item-filter";
 import {
   PREDEFINED_ANALYSES,
   type AnalysisKey,
-} from "../../../../../config/config";
+} from "../../../../../../config/config";
 
 interface AnalysisFilterProps {
   data: any[];

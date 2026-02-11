@@ -1,76 +1,24 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
-import { THRESHOLD_COLORS } from "../../../../../../constants/colors";
+import { createThresholdPlotBands } from "../../../../../../components/threshold-bands";
 import type { ThresholdConfig } from "../../../../../../config";
 import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
-
-interface MetricConfig {
-  label: string;
-  format: "number" | "percent" | "decimal" | "euro";
-  color: string;
-  suffix?: string;
-}
+import {
+  deduplicateByPaysageId,
+  type MetricConfig,
+} from "../../../../../../utils/utils";
+import {
+  sortByMetricSens,
+  type MetricSens,
+} from "../../../../../../components/metric-sort";
 
 export interface PositioningComparisonBarConfig {
   metric: string;
   metricLabel: string;
   metricConfig: MetricConfig;
   threshold?: ThresholdConfig | null;
-  sens?: "augmentation" | "diminution" | null;
+  sens?: MetricSens;
 }
-
-const ALERT_COLOR = THRESHOLD_COLORS.alertBackground;
-const VIGILANCE_COLOR = THRESHOLD_COLORS.vigilanceBackground;
-const ALERT_LINE = THRESHOLD_COLORS.alertLine;
-const VIGILANCE_LINE = THRESHOLD_COLORS.vigilanceLine;
-
-const createThresholdPlotBands = (
-  threshold: ThresholdConfig | null,
-  dataMin: number,
-  dataMax: number
-): {
-  plotBands: Highcharts.YAxisPlotBandsOptions[];
-  plotLines: Highcharts.YAxisPlotLinesOptions[];
-} => {
-  if (!threshold) return { plotBands: [], plotLines: [] };
-
-  const plotBands: Highcharts.YAxisPlotBandsOptions[] = [];
-  const plotLines: Highcharts.YAxisPlotLinesOptions[] = [];
-  const margin = Math.abs(dataMax - dataMin) * 0.3;
-
-  if (threshold.vig_min != null && threshold.vig_max != null) {
-    plotBands.push({
-      from: threshold.vig_min,
-      to: threshold.vig_max,
-      color: VIGILANCE_COLOR,
-      zIndex: 0,
-    });
-    plotLines.push({
-      value: threshold.vig_min,
-      color: VIGILANCE_LINE,
-      width: 1.5,
-      zIndex: 1,
-    });
-  }
-
-  if (threshold.ale_val != null && threshold.ale_sens) {
-    const isAbove = threshold.ale_sens === "sup";
-    plotBands.push({
-      from: isAbove ? threshold.ale_val : dataMin - margin,
-      to: isAbove ? dataMax + margin : threshold.ale_val,
-      color: ALERT_COLOR,
-      zIndex: 0,
-    });
-    plotLines.push({
-      value: threshold.ale_val,
-      color: ALERT_LINE,
-      width: 2,
-      zIndex: 1,
-    });
-  }
-
-  return { plotBands, plotLines };
-};
 
 export const createPositioningComparisonBarOptions = (
   config: PositioningComparisonBarConfig,
@@ -78,39 +26,22 @@ export const createPositioningComparisonBarOptions = (
   currentStructureId?: string,
   currentStructureName?: string
 ): Highcharts.Options => {
-  const seenIds = new Set<string>();
-  const uniqueData = data.filter((item) => {
+  const uniqueData = deduplicateByPaysageId(data);
+
+  const unsortedData = uniqueData.map((item: any) => {
     const itemId = item.etablissement_id_paysage_actuel;
-    if (!itemId || seenIds.has(itemId)) return false;
-    seenIds.add(itemId);
-    return true;
+    const isCurrentStructure =
+      currentStructureId && itemId === currentStructureId;
+
+    return {
+      name:
+        item.etablissement_actuel_lib || item.etablissement_lib || "Sans nom",
+      value: item[config.metric] || 0,
+      isCurrentStructure,
+    };
   });
 
-  const chartData = uniqueData
-    .map((item: any) => {
-      const itemId = item.etablissement_id_paysage_actuel;
-      const isCurrentStructure =
-        currentStructureId && itemId === currentStructureId;
-
-      return {
-        name:
-          item.etablissement_actuel_lib || item.etablissement_lib || "Sans nom",
-        value: item[config.metric] || 0,
-        isCurrentStructure,
-      };
-    })
-    .sort((a, b) => {
-      // Logique métier warning warning
-      // Appliquer le sens de tri spécifique si défini,
-      // sinon tri décroissant par défaut
-      if (config.sens === "augmentation") {
-        return a.value - b.value;
-      } else if (config.sens === "diminution") {
-        return b.value - a.value;
-      }
-      // Tri par défaut : décroissant
-      return b.value - a.value;
-    });
+  const chartData = sortByMetricSens(unsortedData, config.sens ?? null);
 
   let dataMin = Infinity;
   let dataMax = -Infinity;
@@ -133,7 +64,6 @@ export const createPositioningComparisonBarOptions = (
   );
 
   const chartHeight = Math.max(500, chartData.length * 25);
-  // A voir si on override avec ce que Anne à fait?
 
   return createChartOptions("bar", {
     chart: {

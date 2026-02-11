@@ -1,9 +1,3 @@
-.highlighted-row {
-  background-color: var(--background-contrast-blue-ecume);
-  font-weight: bold;
-  border-left: 4px solid var(--background-active-blue-france);
-}
-
 #positioning-scatter-table {
   width: 100%;
 
@@ -20,8 +14,4 @@
   th:nth-child(5) {
     width: 17.5%;
   }
-}
-
-.text-mention-grey {
-  color: var(--text-mention-grey);
 }

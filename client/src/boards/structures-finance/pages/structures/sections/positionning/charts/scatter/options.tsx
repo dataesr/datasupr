@@ -1,6 +1,7 @@
 import Highcharts from "highcharts";
 import { CHART_COLORS } from "../../../../../../constants/colors";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { deduplicateByPaysageId } from "../../../../../../utils/utils";
 
 export interface ScatterConfig {
   title: string;
@@ -20,17 +21,10 @@ export const createPositioningScatterOptions = (
     return createChartOptions("bubble", {});
   }
 
-  const seenIds = new Set<string>();
-  const uniqueData = data.filter((item) => {
-    const itemId = item.etablissement_id_paysage_actuel;
-    if (!itemId || seenIds.has(itemId)) return false;
-    seenIds.add(itemId);
-    return true;
-  });
+  const uniqueData = deduplicateByPaysageId(data);
 
   const regionGroups = new Map<string, any[]>();
   let currentStructureData: any = null;
-  let matchedItems: any[] = [];
 
   uniqueData
     .filter(
@@ -47,14 +41,6 @@ export const createPositioningScatterOptions = (
 
       const isCurrentStructure =
         currentStructureId && itemId === currentStructureId;
-
-      if (isCurrentStructure) {
-        matchedItems.push({
-          id: itemId,
-          name: item.etablissement_actuel_lib || item.etablissement_lib,
-          region: region,
-        });
-      }
 
       if (!regionGroups.has(region)) {
         regionGroups.set(region, []);

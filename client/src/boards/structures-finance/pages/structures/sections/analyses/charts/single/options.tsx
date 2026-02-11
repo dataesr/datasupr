@@ -1,5 +1,6 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { createThresholdPlotBands } from "../../../../../../components/threshold-bands";
 import { THRESHOLD_COLORS } from "../../../../../../constants/colors";
 import type { ThresholdConfig } from "../../../../../../config";
 import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
@@ -9,59 +10,6 @@ interface MetricConfig {
   format: "number" | "percent" | "decimal" | "euro";
   color: string;
 }
-
-const ALERT_COLOR = THRESHOLD_COLORS.alertBackground;
-const VIGILANCE_COLOR = THRESHOLD_COLORS.vigilanceBackground;
-const ALERT_LINE = THRESHOLD_COLORS.alertLine;
-const VIGILANCE_LINE = THRESHOLD_COLORS.vigilanceLine;
-
-export const createThresholdPlotBands = (
-  threshold: ThresholdConfig | null,
-  dataMin: number,
-  dataMax: number
-): {
-  plotBands: Highcharts.YAxisPlotBandsOptions[];
-  plotLines: Highcharts.YAxisPlotLinesOptions[];
-} => {
-  if (!threshold) return { plotBands: [], plotLines: [] };
-
-  const plotBands: Highcharts.YAxisPlotBandsOptions[] = [];
-  const plotLines: Highcharts.YAxisPlotLinesOptions[] = [];
-  const margin = Math.abs(dataMax - dataMin) * 0.3;
-
-  if (threshold.vig_min != null && threshold.vig_max != null) {
-    plotBands.push({
-      from: threshold.vig_min,
-      to: threshold.vig_max,
-      color: VIGILANCE_COLOR,
-      zIndex: 0,
-    });
-    plotLines.push({
-      value: threshold.vig_min,
-      color: VIGILANCE_LINE,
-      width: 1.5,
-      zIndex: 1,
-    });
-  }
-
-  if (threshold.ale_val != null && threshold.ale_sens) {
-    const isAbove = threshold.ale_sens === "sup";
-    plotBands.push({
-      from: isAbove ? threshold.ale_val : dataMin - margin,
-      to: isAbove ? dataMax + margin : threshold.ale_val,
-      color: ALERT_COLOR,
-      zIndex: 0,
-    });
-    plotLines.push({
-      value: threshold.ale_val,
-      color: ALERT_LINE,
-      width: 2,
-      zIndex: 1,
-    });
-  }
-
-  return { plotBands, plotLines };
-};
 
 export const createSingleChartOptions = (
   data: any[],
@@ -203,9 +151,9 @@ export const createSingleChartOptions = (
               value <= threshold.vig_max;
 
             if (isAlert) {
-              zoneInfo = `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;color:${ALERT_LINE}"><strong>⚠ Zone d'alerte</strong></div>`;
+              zoneInfo = `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;color:${THRESHOLD_COLORS.alertLine}"><strong>⚠ Zone d'alerte</strong></div>`;
             } else if (isVigilance) {
-              zoneInfo = `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;color:${VIGILANCE_LINE}"><strong>⚠ Zone de vigilance</strong></div>`;
+              zoneInfo = `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;color:${THRESHOLD_COLORS.vigilanceLine}"><strong>⚠ Zone de vigilance</strong></div>`;
             }
             tooltip += zoneInfo;
           }

@@ -1,9 +1,10 @@
-import { ScatterConfig } from "./options";
+import { ComparisonScatterConfig } from "./options";
+import { formatMetricValue } from "../../../../../../utils/utils";
 import "../shared.scss";
 import "./render-data.scss";
 
 interface RenderDataProps {
-  config: ScatterConfig;
+  config: ComparisonScatterConfig;
   data: any[];
   currentStructureId?: string;
   currentStructureName?: string;
@@ -15,9 +16,7 @@ export function RenderData({
   currentStructureId,
 }: RenderDataProps) {
   const tableData = data
-    .filter(
-      (item) => item[config.xMetric] != null && item[config.yMetric] != null
-    )
+    .filter((item) => item[config.metric] != null && item[config.metric] !== 0)
     .map((item) => {
       const itemId =
         item.etablissement_id_paysage_actuel || item.etablissement_id_paysage;
@@ -34,15 +33,14 @@ export function RenderData({
         region:
           item.etablissement_actuel_region || item.region || "Non spécifié",
         type: item.etablissement_actuel_type || item.type || "Non spécifié",
-        xValue: item[config.xMetric],
-        yValue: item[config.yMetric],
+        value: item[config.metric],
         isCurrentStructure,
       };
     })
     .sort((a, b) => {
       if (a.isCurrentStructure && !b.isCurrentStructure) return -1;
       if (!a.isCurrentStructure && b.isCurrentStructure) return 1;
-      return b.yValue - a.yValue;
+      return b.value - a.value;
     });
 
   if (tableData.length === 0) {
@@ -53,26 +51,18 @@ export function RenderData({
     );
   }
 
-  const formatNumber = (value: number) => {
-    return value.toLocaleString("fr-FR", {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 2,
-    });
-  };
-
   return (
     <div className="fr-table--sm fr-table fr-table--bordered">
       <div className="fr-table__wrapper">
         <div className="fr-table__container">
           <div className="fr-table__content">
-            <table id="positioning-scatter-table">
+            <table id="comparison-scatter-table">
               <thead>
                 <tr>
                   <th>Établissement</th>
                   <th>Région</th>
                   <th>Type</th>
-                  <th>{config.xLabel}</th>
-                  <th>{config.yLabel}</th>
+                  <th>{config.label}</th>
                 </tr>
               </thead>
               <tbody>
@@ -84,8 +74,7 @@ export function RenderData({
                     <td>{item.name}</td>
                     <td>{item.region}</td>
                     <td>{item.type}</td>
-                    <td>{formatNumber(item.xValue)}</td>
-                    <td>{formatNumber(item.yValue)}</td>
+                    <td>{formatMetricValue(item.value, config.format)}</td>
                   </tr>
                 ))}
               </tbody>

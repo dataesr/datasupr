@@ -1,101 +1,82 @@
-import { useMemo } from "react";
+import { Row, Col } from "@dataesr/dsfr-plus";
 import ComparisonBarChart from "./comparison-bar";
 import ScatterChart from "./scatter";
+import AnalysisFilter from "../components/analysis-filter";
 import { type AnalysisKey } from "../../../../../config/config";
-import MetricDefinitionsTable from "../../../../../components/metric-definitions/metric-definitions-table";
 
 export type ChartView = "comparison" | "scatter-1" | "scatter-2" | "scatter-3";
-
-export interface ScatterConfig {
-  title: string;
-  xMetric: string;
-  yMetric: string;
-  xLabel: string;
-  yLabel: string;
-}
 
 interface PositioningChartsProps {
   activeChart: ChartView;
   data: any[];
-  currentStructureId?: string;
-  currentStructureName: string;
+  allData?: any[];
+  currentStructure?: any;
   selectedYear?: string | number;
   selectedAnalysis: AnalysisKey | null;
+  onSelectAnalysis?: (analysis: string | null) => void;
+  activeFilters?: {
+    type?: string;
+    typologie?: string;
+    region?: string;
+    rce?: string;
+    devimmo?: string;
+  };
 }
-
-const SCATTER_CONFIGS: Record<string, ScatterConfig> = {
-  "scatter-1": {
-    title: "Produits de fonctionnement encaissables vs Effectifs d'étudiants",
-    xMetric: "produits_de_fonctionnement_encaissables",
-    yMetric: "effectif_sans_cpge",
-    xLabel: "Produits de fonctionnement encaissables (€)",
-    yLabel: "Effectif étudiants (sans CPGE)",
-  },
-  "scatter-2": {
-    title: "SCSP par étudiant vs Taux d'encadrement",
-    xMetric: "scsp_par_etudiants",
-    yMetric: "taux_encadrement",
-    xLabel: "SCSP par étudiant (€)",
-    yLabel: "Taux d'encadrement (ETPT/étudiant)",
-  },
-  "scatter-3": {
-    title: "SCSP vs Ressources propres",
-    xMetric: "scsp",
-    yMetric: "ressources_propres",
-    xLabel: "SCSP (€)",
-    yLabel: "Ressources propres (€)",
-  },
-};
 
 export default function PositioningCharts({
   activeChart,
   data,
-  currentStructureId,
-  currentStructureName,
+  allData = [],
+  currentStructure,
   selectedYear,
   selectedAnalysis,
+  onSelectAnalysis,
+  activeFilters = {},
 }: PositioningChartsProps) {
-  const metricKeys = useMemo(() => {
-    if (activeChart === "scatter-1") {
-      return ["produits_de_fonctionnement_encaissables", "effectif_sans_cpge"];
-    } else if (activeChart === "scatter-2") {
-      return ["scsp_par_etudiants", "taux_encadrement"];
-    } else if (activeChart === "scatter-3") {
-      return ["scsp", "ressources_propres"];
-    }
-    return [];
-  }, [activeChart]);
+  const structureName =
+    currentStructure?.etablissement_actuel_lib ||
+    currentStructure?.etablissement_lib ||
+    "l'établissement";
+
+  const structureId = currentStructure?.etablissement_id_paysage_actuel;
 
   if (activeChart === "comparison") {
     return (
-      <ComparisonBarChart
+      <Row gutters>
+        <Col xs="12" md="4">
+          <AnalysisFilter
+            data={data}
+            selectedAnalysis={selectedAnalysis || "ressources-total"}
+            onSelectAnalysis={onSelectAnalysis || (() => {})}
+          />
+        </Col>
+        <Col xs="12" md="8">
+          <ComparisonBarChart
+            data={data}
+            allData={allData}
+            currentStructure={currentStructure}
+            currentStructureId={structureId}
+            currentStructureName={structureName}
+            selectedYear={String(selectedYear)}
+            selectedAnalysis={selectedAnalysis}
+            activeFilters={activeFilters}
+          />
+        </Col>
+      </Row>
+    );
+  }
+
+  if (activeChart.startsWith("scatter-")) {
+    return (
+      <ScatterChart
+        chartType={activeChart as "scatter-1" | "scatter-2" | "scatter-3"}
         data={data}
-        currentStructureId={currentStructureId}
-        currentStructureName={currentStructureName}
-        selectedYear={String(selectedYear)}
-        selectedAnalysis={selectedAnalysis}
+        currentStructureId={structureId}
+        currentStructureName={structureName}
+        selectedYear={selectedYear}
       />
     );
   }
 
-  const scatterConfig = SCATTER_CONFIGS[activeChart];
-  if (!scatterConfig) return null;
-
-  const configWithYear = {
-    ...scatterConfig,
-    title: `${scatterConfig.title}${selectedYear ? ` — ${selectedYear}` : ""}`,
-  };
-
-  return (
-    <>
-      <ScatterChart
-        config={configWithYear}
-        data={data}
-        currentStructureId={currentStructureId}
-        currentStructureName={currentStructureName}
-        selectedYear={selectedYear}
-      />
-      <MetricDefinitionsTable metricKeys={metricKeys} />
-    </>
-  );
+  return null;
 }

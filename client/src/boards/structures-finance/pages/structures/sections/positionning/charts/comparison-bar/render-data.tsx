@@ -1,16 +1,19 @@
-interface MetricConfig {
-  label: string;
-  format: "number" | "percent" | "decimal" | "euro";
-  color: string;
-  suffix?: string;
-}
+import {
+  formatMetricValue,
+  deduplicateByPaysageId,
+  type MetricConfig,
+} from "../../../../../../utils/utils";
+import {
+  sortByMetricSens,
+  type MetricSens,
+} from "../../../../../../components/metric-sort";
 
 interface RenderDataProps {
   data: any[];
   metric: string;
   metricLabel: string;
   metricConfig: MetricConfig;
-  metricSens?: "augmentation" | "diminution" | null;
+  metricSens?: MetricSens;
   currentStructureId?: string;
   currentStructureName?: string;
 }
@@ -23,15 +26,9 @@ export function RenderData({
   metricSens,
   currentStructureId,
 }: RenderDataProps) {
-  const seenIds = new Set<string>();
-  const uniqueData = data.filter((item) => {
-    const itemId = item.etablissement_id_paysage_actuel;
-    if (!itemId || seenIds.has(itemId)) return false;
-    seenIds.add(itemId);
-    return true;
-  });
+  const uniqueData = deduplicateByPaysageId(data);
 
-  const chartData = uniqueData
+  const filtered = uniqueData
     .map((item: any) => {
       const itemId = item.etablissement_id_paysage_actuel;
       const isCurrentStructure =
@@ -47,15 +44,9 @@ export function RenderData({
     .filter((d) => {
       const value = d.value;
       return value != null && !isNaN(value);
-    })
-    .sort((a, b) => {
-      if (metricSens === "augmentation") {
-        return a.value - b.value;
-      } else if (metricSens === "diminution") {
-        return b.value - a.value;
-      }
-      return b.value - a.value;
     });
+
+  const chartData = sortByMetricSens(filtered, metricSens ?? null);
 
   if (chartData.length === 0) {
     return (
@@ -64,19 +55,6 @@ export function RenderData({
       </div>
     );
   }
-
-  const formatValue = (value: number) => {
-    if (metricConfig.format === "euro") {
-      return `${value.toLocaleString("fr-FR", { maximumFractionDigits: 0 })} €`;
-    }
-    if (metricConfig.format === "percent") {
-      return `${value.toFixed(2)} %`;
-    }
-    if (metricConfig.format === "decimal") {
-      return value.toFixed(2);
-    }
-    return value.toLocaleString("fr-FR", { maximumFractionDigits: 0 });
-  };
 
   return (
     <div className="fr-table--sm fr-table fr-table--bordered">
@@ -107,7 +85,7 @@ export function RenderData({
                     <td>{index + 1}</td>
                     <td>{item.name}</td>
                     <td style={{ textAlign: "right" }}>
-                      {formatValue(item.value)}
+                      {formatMetricValue(item.value, metricConfig.format)}
                     </td>
                   </tr>
                 ))}
