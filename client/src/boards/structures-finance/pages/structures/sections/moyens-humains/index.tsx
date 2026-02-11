@@ -131,28 +131,30 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
               metricKey="charges_de_personnel_produits_encaissables"
             />
           </Col>
-          <Col xs="12" md="4">
-            <MetricChartCard
-              title="Rémunération permanents"
-              value={
-                data.taux_de_remuneration_des_permanents != null
-                  ? `${data.taux_de_remuneration_des_permanents.toLocaleString(
-                      "fr-FR",
-                      {
-                        minimumFractionDigits: 1,
-                        maximumFractionDigits: 1,
-                      }
-                    )} %`
-                  : "—"
-              }
-              detail="Part des dépenses de personnel"
-              color={SECTION_COLOR}
-              evolutionData={useMetricEvolution(
-                "taux_de_remuneration_des_permanents"
-              )}
-              unit="%"
-            />
-          </Col>
+          {data?.is_rce && (
+            <Col xs="12" md="4">
+              <MetricChartCard
+                title="Rémunération permanents"
+                value={
+                  data.taux_de_remuneration_des_permanents != null
+                    ? `${data.taux_de_remuneration_des_permanents.toLocaleString(
+                        "fr-FR",
+                        {
+                          minimumFractionDigits: 1,
+                          maximumFractionDigits: 1,
+                        }
+                      )} %`
+                    : "—"
+                }
+                detail="Part des dépenses de personnel"
+                color={SECTION_COLOR}
+                evolutionData={useMetricEvolution(
+                  "taux_de_remuneration_des_permanents"
+                )}
+                unit="%"
+              />
+            </Col>
+          )}
         </Row>
       </div>
 

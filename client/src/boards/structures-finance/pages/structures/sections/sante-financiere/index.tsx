@@ -298,7 +298,9 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
       </div>
 
       <div className="fr-mb-4w">
-        <h3 className="fr-h5 fr-mb-3w">Financement de l'activité</h3>
+        <Title as="h3" look="h5" className="fr-mb-3w">
+          Financement de l'activité
+        </Title>
         <Row gutters>
           <Metric
             id="charges_decaissables_produits_encaissables"
@@ -308,14 +310,17 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
             unit="%"
             colSize="3"
           />
-          <Metric
-            id="taux_de_remuneration_des_permanents"
-            title="Taux de rémunération des permanents"
-            format={pct}
-            detail="Indique la part des recettes consacrée à la rémunération du personnel titulaire."
-            unit="%"
-            colSize="3"
-          />
+
+          {data?.is_rce && (
+            <Metric
+              id="taux_de_remuneration_des_permanents"
+              title="Taux de rémunération des permanents"
+              format={pct}
+              detail="Indique la part des recettes consacrée à la rémunération du personnel titulaire."
+              unit="%"
+              colSize="3"
+            />
+          )}
           <Metric
             id="ressources_propres_produits_encaissables"
             title="Ressources propres / Produits encaissables"
