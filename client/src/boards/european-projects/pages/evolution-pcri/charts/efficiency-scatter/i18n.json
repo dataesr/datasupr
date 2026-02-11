@@ -1,19 +1,67 @@
 {
   "title": {
-    "fr": "Performance des pays : taux de succès vs part de financement",
-    "en": "Country performance: success rate vs funding share"
+    "fr": "Performance des pays : comparaison multivariée",
+    "en": "Country performance: multivariate comparison"
   },
   "comment": {
-    "fr": "Graphique en bulles comparant le taux de succès et la part de financement obtenue par pays, tous frameworks confondus (FP6, FP7, Horizon 2020, Horizon Europe). Le taux de succès est calculé comme le ratio entre les projets réussis et les projets évalués (successful/evaluated × 100). La part de financement représente le pourcentage du financement total obtenu par chaque pays. La taille des bulles représente le nombre de projets réussis. Seuls les 15 premiers pays (classés par financement total obtenu) sont affichés. Pour améliorer la lisibilité, l'échelle des taux de succès va de 15% à 25%.",
-    "en": "Bubble chart comparing success rate and funding share obtained by country, across all frameworks (FP6, FP7, Horizon 2020, Horizon Europe). Success rate is calculated as the ratio between successful projects and evaluated projects (successful/evaluated × 100). Funding share represents the percentage of total funding obtained by each country. Bubble size represents the number of successful projects. Only the top 15 countries (ranked by total funding obtained) are displayed. To improve readability, the success rate scale ranges from 15% to 25%."
+    "fr": "Graphique en bulles permettant de comparer différentes métriques par pays pour chaque programme-cadre (FP7, Horizon 2020, Horizon Europe). Utilisez les sélecteurs pour choisir les variables à afficher sur chaque axe. La taille des bulles représente le nombre de projets réussis. Seuls les 15 premiers pays sont affichés.",
+    "en": "Bubble chart comparing various metrics by country for each framework programme (FP7, Horizon 2020, Horizon Europe). Use the selectors to choose which variables to display on each axis. Bubble size represents the number of successful projects. Only the top 15 countries are displayed."
   },
-  "x-axis-title": {
-    "fr": "Taux de succès (%)",
-    "en": "Success rate (%)"
+  "x-axis-selector": {
+    "fr": "Axe X",
+    "en": "X Axis"
   },
-  "y-axis-title": {
-    "fr": "Part du financement total (%)",
-    "en": "Share of total funding (%)"
+  "y-axis-selector": {
+    "fr": "Axe Y",
+    "en": "Y Axis"
+  },
+  "var-success-rate-project": {
+    "fr": "Taux de succès - Projets (%)",
+    "en": "Success rate - Projects (%)"
+  },
+  "var-success-rate-funding": {
+    "fr": "Taux de succès - Financement (%)",
+    "en": "Success rate - Funding (%)"
+  },
+  "var-success-rate-involved": {
+    "fr": "Taux de succès - Participations (%)",
+    "en": "Success rate - Participations (%)"
+  },
+  "var-success-rate-coordination": {
+    "fr": "Taux de succès - Coordinations (%)",
+    "en": "Success rate - Coordinations (%)"
+  },
+  "var-share-funding": {
+    "fr": "Part du financement (%)",
+    "en": "Funding share (%)"
+  },
+  "var-share-project-number": {
+    "fr": "Part des projets (%)",
+    "en": "Project share (%)"
+  },
+  "var-share-number-involved": {
+    "fr": "Part des participations (%)",
+    "en": "Participation share (%)"
+  },
+  "var-share-coordination-number": {
+    "fr": "Part des coordinations (%)",
+    "en": "Coordination share (%)"
+  },
+  "var-funding": {
+    "fr": "Financement (M€)",
+    "en": "Funding (M€)"
+  },
+  "var-project-number": {
+    "fr": "Nombre de projets",
+    "en": "Number of projects"
+  },
+  "var-number-involved": {
+    "fr": "Nombre de participations",
+    "en": "Number of participations"
+  },
+  "var-coordination-number": {
+    "fr": "Nombre de coordinations",
+    "en": "Number of coordinations"
   },
   "tooltip-country": {
     "fr": "Pays",
@@ -34,9 +82,5 @@
   "tooltip-framework": {
     "fr": "Programme",
     "en": "Framework"
-  },
-  "tooltip-all-frameworks": {
-    "fr": "Tous les programmes",
-    "en": "All frameworks"
   }
 }
