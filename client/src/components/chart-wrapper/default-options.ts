@@ -2,7 +2,6 @@ import HighchartsInstance from "highcharts";
 
 import { deepMerge } from "../../utils";
 
-
 export function createChartOptions(
   type: NonNullable<HighchartsInstance.Options["chart"]>["type"],
   options: NonNullable<HighchartsInstance.Options>
@@ -12,7 +11,7 @@ export function createChartOptions(
 
   const defaultOptions: HighchartsInstance.Options = {
     chart: {
-      backgroundColor: rootStyles.getPropertyValue("--background-default-grey"),
+      backgroundColor: "var(--background-default-grey)",
       style: { fontFamily: "Marianne, sans-serif" },
     },
     title: { text: "" },
@@ -59,12 +58,12 @@ export function createChartOptions(
       style: {
         fontSize: "13px",
         fontFamily: "Marianne, sans-serif",
-        color: labelColor,
+        color: "var(--text-default-grey)",
       },
     },
     title: {
       style: {
-        color: labelColor,
+        color: "var(--text-default-grey)",
       },
     },
   };
@@ -75,12 +74,12 @@ export function createChartOptions(
       style: {
         fontSize: "13px",
         fontFamily: "Marianne, sans-serif",
-        color: labelColor,
+        color: "var(--text-default-grey)",
       },
     },
     title: {
       style: {
-        color: labelColor,
+        color: "var(--text-default-grey)",
       },
     },
   };
@@ -101,7 +100,7 @@ export function createChartOptions(
     defaultOptions.yAxis = defaultYAxisOptions;
   }
 
-  if ((type !== "empty") && defaultOptions.chart) {
+  if (type !== "empty" && defaultOptions.chart) {
     defaultOptions.chart.type = type;
   }
 
