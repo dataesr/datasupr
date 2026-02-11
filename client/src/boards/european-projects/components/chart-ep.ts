@@ -10,7 +10,7 @@ export function CreateChartOptions(
 
   const defaultOptions: HighchartsInstance.Options = {
     chart: {
-      backgroundColor: rootStyles.getPropertyValue("--background-default-grey"),
+      backgroundColor: "var(--background-default-grey)",
     },
     title: { text: "" },
     legend: { enabled: false },
