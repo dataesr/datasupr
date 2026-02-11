@@ -102,11 +102,11 @@ export function FinancementsSection({
         <Row gutters>
           <Col xs="12" md="3">
             <MetricChartCard
-              title="Dotation de l’État"
+              title="Dotation du ministère en charge de l'Enseignement supérieur"
               value={`${euro(data.scsp)} €`}
               detail={
                 data.is_rce === false
-                  ? "Subvention pour charges de service public (SCSP) et dépenses de personnel prises en charge par l’État"
+                  ? "Subvention pour charges de service public (SCSP) et dépenses de personnel prises en charge par le ministère en charge de l'Enseignement supérieur"
                   : "Subvention pour charges de service public (SCSP) "
               }
               color={SECTION_COLOR}
@@ -117,13 +117,13 @@ export function FinancementsSection({
 
           <Col xs="12" md="3">
             <MetricChartCard
-              title={`Dotation de l’État par étudiant financé`}
+              title={`Dotation du ministère en charge de l'Enseignement supérieur par étudiant financé`}
               value={`${euro(data.scsp_par_etudiants)} €`}
               detail={
                 data.scsp_etudiants
-                  ? `${data.is_rce === false ? " (inclut la masse salariale prise en charge par l'État)" : ""}${data.etablissement_categorie === "École normale supérieure" ? " (inclut le salaire des élèves fonctionnaires)" : ""}`
+                  ? `${data.is_rce === false ? " (inclut la masse salariale prise en charge par le ministère en charge de l'Enseignement supérieur)" : ""}${data.etablissement_categorie === "École normale supérieure" ? " (inclut le salaire des élèves fonctionnaires)" : ""}`
                   : data.is_rce === false
-                    ? `Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par l'État)${data.etablissement_categorie === "École normale supérieure" ? " et le salaire des élèves fonctionnaires" : ""}`
+                    ? `Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par le ministère en charge de l'Enseignement supérieur)${data.etablissement_categorie === "École normale supérieure" ? " et le salaire des élèves fonctionnaires" : ""}`
                     : `Ratio SCSP / étudiants financés${data.etablissement_categorie === "École normale supérieure" ? " (inclut le salaire des élèves fonctionnaires)" : ""}`
               }
               color={SECTION_COLOR}
@@ -133,7 +133,7 @@ export function FinancementsSection({
           </Col>
           <Col xs="12" md="3">
             <MetricChartCard
-              title={`Nombre d'étudiants financés par l'État`}
+              title={`Nombre d'étudiants financés par le ministère en charge de l'Enseignement supérieur`}
               value={
                 data.scsp_etudiants != null
                   ? `${data.scsp_etudiants.toLocaleString("fr-FR")} étudiant${data.scsp_etudiants > 1 ? "s" : ""} en ${data.anuniv}`

@@ -32,3 +32,11 @@ export function deduplicateByPaysageId<T extends Record<string, any>>(
     return true;
   });
 }
+
+export const normalizeString = (str: string): string => {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[-]/g, " ");
+};

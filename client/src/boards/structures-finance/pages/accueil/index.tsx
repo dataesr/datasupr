@@ -1,17 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Container } from "@dataesr/dsfr-plus";
+import { Row, Col, Container, Title } from "@dataesr/dsfr-plus";
 import { useMemo, useState } from "react";
 import { useFinanceYears } from "../../api/common";
 import { useFinanceEtablissements } from "./api";
 import Select from "../../components/select";
 import "./styles.scss";
-
-const normalizeString = (str: string): string => {
-  return str
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-};
+import { normalizeString } from "../../utils/utils";
 
 function HeroSection() {
   const navigate = useNavigate();
@@ -25,9 +19,9 @@ function HeroSection() {
           <Col xs="12" lg="6">
             <div className="accueil-hero__text">
               <p className="accueil-hero__label">FINANCES DES ÉTABLISSEMENTS</p>
-              <h1 className="accueil-hero__title">
+              <Title as="h1" look="h1" className="accueil-hero__title">
                 Explorez les données financières de l'enseignement supérieur
-              </h1>
+              </Title>
               <p className="accueil-hero__description">
                 Consultez et analysez les données financières des universités et
                 établissements d'enseignement supérieur français. Visualisez les
@@ -119,7 +113,9 @@ function QuickAccessSection() {
         <Row>
           <Col xs="12" lg="8" offsetLg="2">
             <div className="accueil-quick-access">
-              <h2 className="accueil-section__title">Accès rapide</h2>
+              <Title as="h2" look="h5" className="accueil-section__title">
+                Accès rapide
+              </Title>
               <p className="accueil-section__description">
                 Accédez directement aux données financières détaillées d’un
                 établissement

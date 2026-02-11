@@ -4,13 +4,7 @@ import Select from "../../../components/select";
 import { useFilters } from "../../../hooks/useFilters";
 import "../../national/styles.scss";
 import Dropdown from "../../../components/dropdown";
-
-const normalizeString = (str: string): string => {
-  return str
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-};
+import { normalizeString } from "../../../utils/utils";
 
 interface SelectionUIProps {
   availableTypes: string[];
