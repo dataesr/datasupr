@@ -29,7 +29,7 @@ const SCATTER_CONFIGS: Record<string, ScatterConfig> = {
 };
 
 interface ScatterChartProps {
-  chartType: "scatter-1" | "scatter-2" | "scatter-3";
+  chartType?: "scatter-1" | "scatter-2" | "scatter-3";
   data?: any[];
   currentStructureId?: string;
   currentStructureName?: string;
@@ -37,7 +37,7 @@ interface ScatterChartProps {
 }
 
 export default function ScatterChart({
-  chartType,
+  chartType = "scatter-1",
   data = [],
   currentStructureId,
   currentStructureName = "",
