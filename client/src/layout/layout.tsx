@@ -8,7 +8,6 @@ import SwitchTheme from "../components/switch-theme";
 import { getI18nLabel } from "../utils";
 import i18n from "./i18n.json";
 
-
 export function Layout({ languageSelector = false }) {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
@@ -23,7 +22,7 @@ export function Layout({ languageSelector = false }) {
   return (
     <>
       <Header>
-        <Logo text="Ministère|chargé|de l'enseignement|supérieur|et de la recherche" />
+        <Logo text={import.meta.env.VITE_MINISTER_NAME} />
         <Service name="dataSupR" tagline={getI18nLabel(i18n, "tagline")} />
         <FastAccess>
           <Button as="a" href="/" icon="github-fill" size="sm" variant="text">

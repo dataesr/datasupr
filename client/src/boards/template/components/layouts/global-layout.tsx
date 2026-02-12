@@ -22,7 +22,7 @@ export default function GlobalLayout({ languageSelector = false }) {
   return (
     <>
       <Header>
-        <Logo text="Ministère|de l'Enseignement|supérieur,|de la Recherche|et de l'Espace" />
+        <Logo text={import.meta.env.VITE_MINISTER_NAME} />
         <Service name="DataSupR" tagline={getI18nLabel(i18n, "tagline")} />
         <FastAccess>
           <Button as="a" href="/" icon="github-fill" size="sm" variant="text">

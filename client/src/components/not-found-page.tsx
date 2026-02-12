@@ -29,7 +29,7 @@ export default function NotFoundPage() {
   return (
     <>
       <Header>
-        <Logo text="Ministère|chargé|de l'enseignement|supérieur|et de la recherche" />
+        <Logo text={import.meta.env.VITE_MINISTER_NAME} />
         <Service
           name="dataSupR"
           // tagline="Si c'était pas super ça s'appellerait juste data"

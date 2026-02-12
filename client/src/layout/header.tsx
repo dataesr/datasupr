@@ -3,7 +3,7 @@ import { Button, Header, Logo, Service, FastAccess } from "@dataesr/dsfr-plus";
 export default function HeaderDatasupR() {
   return (
     <Header>
-      <Logo text="Ministère|de l'Enseignement|supérieur,|de la Recherche|et de l'Espace" />
+      <Logo text={import.meta.env.VITE_MINISTER_NAME} />
       <Service
         name="DataSupR"
         tagline="Ensemble de tableaux de bord de l'enseignement supérieur, de la recherche et de l'espace"
