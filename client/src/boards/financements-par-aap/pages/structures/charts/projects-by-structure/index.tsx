@@ -39,6 +39,11 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
               field: "project_budgetFinanced",
             },
           },
+          sum_budget_participation: {
+            sum: {
+              field: "participation_funding",
+            },
+          },
         },
       },
     },
@@ -57,23 +62,36 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  const series: any[] = [];
-  const categories: string[] = [];
   let count = 0;
-  let total = 0;
+  const seriesBudget: any[] = [];
+  const seriesParticipation: any[] = [];
+  const seriesProject: any[] = [];
+  const categories: string[] = [];
+  let totalBudget = 0;
+  let totalParticipation = 0;
+  let totalProjects = 0;
   funders.forEach((funder) => {
     const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
-    if ((funderData?.unique_projects?.value ?? 0) > 0) {
-      total += (selectedControl === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
-    };
+      totalBudget += funderData?.sum_budget?.value ?? 0;
+      totalParticipation += funderData?.sum_budget_participation?.value ?? 0;
+      totalProjects += funderData?.unique_projects?.value ?? 0;
   });
   funders.forEach((funder) => {
     const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
     if ((funderData?.unique_projects?.value ?? 0) > 0) {
-      const current_y = (selectedControl === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
-      series.push({
+      seriesBudget.push({
         color: getCssColor({ name: funder, prefix: "funder" }),
-        data: [{ x: count, y: current_y, y_perc: current_y / total, total }],
+        data: [{ x: count, y: funderData?.sum_budget?.value ?? 0, y_perc: (funderData?.sum_budget?.value ?? 0) / totalBudget, total: totalBudget }],
+        name: funder,
+      });
+      seriesParticipation.push({
+        color: getCssColor({ name: funder, prefix: "funder" }),
+        data: [{ x: count, y: funderData?.sum_budget_participation?.value ?? 0, y_perc: (funderData?.sum_budget_participation?.value ?? 0) / totalParticipation, total: totalParticipation }],
+        name: funder,
+      });
+      seriesProject.push({
+        color: getCssColor({ name: funder, prefix: "funder" }),
+        data: [{ x: count, y: funderData?.unique_projects?.value ?? 0, y_perc: (funderData?.unique_projects?.value ?? 0) / totalProjects, total: totalProjects }],
         name: funder,
       });
       categories.push(funder);
@@ -91,6 +109,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''} (${formatPercent(this.y_perc)})`;
   };
+  let series = seriesProject;
   let title = `Nombre de projets financés auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}, soit ${formatPercent(this.y_perc)} (${this.y} / ${this.total} )`;
@@ -102,6 +121,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
       };
+      series = seriesBudget;
       title = `Montant total des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
@@ -109,7 +129,15 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = 'Montants financés pour cet établissement (€)';
+      axis = 'Montants alloués (€)';
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
+      };
+      series = seriesParticipation;
+      title = `Montant alloué des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> alloués ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
+      };
       break;
   }
 

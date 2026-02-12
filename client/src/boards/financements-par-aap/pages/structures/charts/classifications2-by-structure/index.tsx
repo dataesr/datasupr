@@ -69,6 +69,32 @@ export default function Classifications2ByStructure({ name }: { name: string | u
           },
         },
       },
+      by_classifications_participation: {
+        terms: {
+          field: "project_classification.primary_field.keyword",
+          order: { "sum_budget_participation": "desc" },
+          size: 25,
+        },
+        aggregations: {
+          sum_budget_participation: {
+            sum: {
+              field: "participation_funding",
+            },
+          },
+          by_project_type: {
+            terms: {
+              field: "project_type.keyword",
+            },
+            aggregations: {
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
+                },
+              },
+            },
+          },
+        },
+      },
     },
   };
 
@@ -95,6 +121,12 @@ export default function Classifications2ByStructure({ name }: { name: string | u
   const seriesBudget = classificationsBudget.map((classification) => ({
     color: getCssColor({ name: classification.key, prefix: "classification" }),
     data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.sum_budget?.value ?? 0),
+    name: classification.key,
+  })).reverse();
+  const classificationsParticipation = data?.aggregations?.by_classifications_participation?.buckets ?? [];
+  const seriesParticipation = classificationsParticipation.map((classification) => ({
+    color: getCssColor({ name: classification.key, prefix: "classification" }),
+    data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.sum_budget_participation?.value ?? 0),
     name: classification.key,
   })).reverse();
 
@@ -134,6 +166,16 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
     // If view by amount by structure
     case 'amount_by_structure':
       axis = 'Montants financés pour cet établissement (€)';
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €`;
+      };
+      series = seriesParticipation;
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> alloués pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> en <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+      };
       break;
   }
 

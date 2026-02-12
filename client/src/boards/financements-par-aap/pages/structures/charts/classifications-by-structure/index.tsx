@@ -69,6 +69,32 @@ export default function ClassificationsByStructure({ name }: { name: string | un
           },
         },
       },
+      by_classifications_participation: {
+        terms: {
+          field: "project_classification.primary_field.keyword",
+          order: { "sum_budget_participation": "desc" },
+          size: 25,
+        },
+        aggregations: {
+          sum_budget_participation: {
+            sum: {
+              field: "participation_funding",
+            },
+          },
+          by_project_type: {
+            terms: {
+              field: "project_type.keyword",
+            },
+            aggregations: {
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
+                },
+              },
+            },
+          },
+        },
+      },
     },
   };
 
@@ -99,6 +125,13 @@ export default function ClassificationsByStructure({ name }: { name: string | un
     name: funder,
   })).reverse();
   const categoriesBudget = classificationsBudget.map((classification) => classification.key);
+  const classificationsParticipation = data?.aggregations?.by_classifications_participation?.buckets ?? [];
+  const seriesParticipation = funders.map((funder) => ({
+    color: getCssColor({ name: funder, prefix: "funder" }),
+    data: classificationsParticipation.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.sum_budget_participation?.value ?? 0),
+    name: funder,
+  })).reverse();
+  const categoriesParticipation = classificationsParticipation.map((classification) => classification.key);
 
   const config = {
     comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement selon les grandes classifications disciplinaires.
@@ -117,7 +150,7 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   switch (selectedControl) {
     // If view by global amount
@@ -132,12 +165,23 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
     // If view by amount by structure
     case 'amount_by_structure':
       axis = 'Montants financés pour cet établissement (€)';
+      categories = categoriesParticipation;
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €`;
+      };
+      series = seriesParticipation;
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> alloués pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+      };
       break;
   }
 

@@ -42,6 +42,11 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
                   field: "project_budgetFinanced",
                 },
               },
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
+                },
+              },
             },
           },
         },
@@ -62,9 +67,21 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
       }).then((response) => response.json()),
   });
 
-  const series = funders.map((funder) => ({
+  const seriesBudget = funders.map((funder) => ({
     color: getCssColor({ name: funder, prefix: "funder" }),
-    data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.by_project_year?.buckets.find((item) => item.key === year)?.[selectedControl === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
+    data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget?.value ?? 0),
+    marker: { enabled: false },
+    name: funder,
+  })).reverse();
+  const seriesParticipation = funders.map((funder) => ({
+    color: getCssColor({ name: funder, prefix: "funder" }),
+    data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget_participation?.value ?? 0),
+    marker: { enabled: false },
+    name: funder,
+  })).reverse();
+  const seriesProjects = funders.map((funder) => ({
+    color: getCssColor({ name: funder, prefix: "funder" }),
+    data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.by_project_year?.buckets.find((item) => item.key === year)?.unique_projects?.value ?? 0),
     marker: { enabled: false },
     name: funder,
   })).reverse();
@@ -76,6 +93,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
 
   // If view by number of projects
   let axis = 'Nombre de projets financés';
+  let series = seriesProjects;
   let title = `Evolution temporelle du nombre de projets auxquels participe l'établissement (${name})`;
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> auxquels prend part <b>${name}</b>`;
@@ -84,6 +102,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     // If view by global amount
     case 'amount_global':
       axis = 'Montants globaux financés (€)';
+      series = seriesBudget;
       title = `Evolution temporelle du montant financé pour les projets auxquels participe l'établissement (${name})`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
@@ -92,6 +111,11 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     // If view by amount by structure
     case 'amount_by_structure':
       axis = 'Montants financés pour cet établissement (€)';
+      series = seriesParticipation;
+      title = `Evolution temporelle du montant alloué pour les projets auxquels participe l'établissement (${name})`;
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
+      };
       break;
   }
 

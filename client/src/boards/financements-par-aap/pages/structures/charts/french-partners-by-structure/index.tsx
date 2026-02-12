@@ -67,6 +67,31 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
           },
         },
       },
+      by_french_partners_participation: {
+        terms: {
+          field: "co_partners_fr_inst.keyword",
+          order: { "sum_budget_participation": "desc" },
+        },
+        aggregations: {
+          sum_budget_participation: {
+            sum: {
+              field: "participation_funding",
+            },
+          },
+          by_project_type: {
+            terms: {
+              field: "project_type.keyword",
+            },
+            aggregations: {
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
+                },
+              },
+            },
+          },
+        },
+      },
     },
   };
 
@@ -100,6 +125,16 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
     name: funder,
   })).reverse();
   const categoriesBudget = partnersBudget.map((partner) => {
+    const structure = Object.fromEntries(new URLSearchParams(partner.key));
+    return `${structure.label}`;
+  });
+  const partnersParticipation = data?.aggregations?.by_french_partners_participation?.buckets ?? [];
+  const seriesParticipation = funders.map((funder) => ({
+    color: getCssColor({ name: funder, prefix: "funder" }),
+    data: partnersParticipation.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.sum_budget_participation?.value ?? 0),
+    name: funder,
+  })).reverse();
+  const categoriesParticipation = partnersParticipation.map((partner) => {
     const structure = Object.fromEntries(new URLSearchParams(partner.key));
     return `${structure.label}`;
   });
@@ -144,6 +179,17 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
     // If view by amount by structure
     case 'amount_by_structure':
       axis = 'Montants financés pour cet établissement (€)';
+      categories = categoriesParticipation;
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €`;
+      };
+      series = seriesParticipation;
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> alloués pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+      };
       break;
   }
 

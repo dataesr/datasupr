@@ -69,6 +69,32 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
           },
         },
       },
+      by_instrument_participation: {
+        terms: {
+          field: "project_instrument.keyword",
+          order: { "sum_budget_participation": "desc" },
+          size: 25,
+        },
+        aggregations: {
+          sum_budget_participation: {
+            sum: {
+              field: "participation_funding",
+            },
+          },
+          by_project_type: {
+            terms: {
+              field: "project_type.keyword",
+            },
+            aggregations: {
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
+                },
+              },
+            },
+          },
+        },
+      },
     },
   };
 
@@ -95,6 +121,12 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
   const seriesBudget = instrumentsBudget.map((instrument) => ({
     color: getCssColor({ name: instrument.key, prefix: "instrument" }),
     data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.sum_budget?.value ?? 0),
+    name: instrument.key,
+  })).reverse();
+  const instrumentsParticipation = data?.aggregations?.by_instrument_participation?.buckets ?? [];
+  const seriesParticipation = instrumentsParticipation.map((instrument) => ({
+    color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+    data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.sum_budget_participation?.value ?? 0),
     name: instrument.key,
   })).reverse();
 
@@ -134,6 +166,16 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
     // If view by amount by structure
     case 'amount_by_structure':
       axis = 'Montants financés pour cet établissement (€)';
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €`;
+      };
+      series = seriesParticipation;
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> alloués pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+      };
       break;
   }
 

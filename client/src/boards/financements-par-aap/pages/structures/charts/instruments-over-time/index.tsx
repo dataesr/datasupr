@@ -42,6 +42,11 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
                   field: "project_budgetFinanced",
                 },
               },
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
+                },
+              },
             },
           },
         },
@@ -62,9 +67,21 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  const series = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
+  const seriesBudget = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
     color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
-    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.[selectedControl === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
+    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget?.value ?? 0),
+    marker: { enabled: false },
+    name: instrument.key,
+  }));
+  const seriesParticipation = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
+    color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
+    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget_participation?.value ?? 0),
+    marker: { enabled: false },
+    name: instrument.key,
+  }));
+  const seriesProject = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
+    color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
+    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.unique_projects?.value ?? 0),
     marker: { enabled: false },
     name: instrument.key,
   }));
@@ -76,6 +93,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
 
   // If view by number of projects
   let axis = 'Nombre de projets financés';
+  let series = seriesProject;
   let title = `Evolution temporelle des instruments dont a bénéficié l'établissement (${name})`;
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> instruments <b>${this.series.name}</b> en <b>${this.x}</b> dont a bénéficié <b>${name}</b>`;
@@ -84,14 +102,20 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
     // If view by global amount
     case 'amount_global':
       axis = 'Montants globaux financés (€)';
-      title = `Evolution temporelle du montant financé pour les instruments dont a bénéficié l'établissement (${name})`;
+      series = seriesBudget;
+      title = `Evolution temporelle du montant financé par instrument dont a bénéficié l'établissement (${name})`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les instruments <b>${this.series.name}</b> dont a bénéficié <b>${name}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié <b>${name}</b>`;
       };
       break;
     // If view by amount by structure
     case 'amount_by_structure':
       axis = 'Montants financés pour cet établissement (€)';
+      series = seriesParticipation;
+      title = `Evolution temporelle du montant alloué par instrument dont a bénéficié l'établissement (${name})`;
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié <b>${name}</b>`;
+      };
       break;
   };
 

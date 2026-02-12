@@ -82,7 +82,33 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
             },
           },
         },
-      }
+      },
+      by_laboratory_participation: {
+        terms: {
+          field: "participant_id_name_default.keyword",
+          size: 25,
+          order: { "sum_budget_participation": "desc" },
+        },
+        aggregations: {
+          sum_budget_participation: {
+            sum: {
+              field: "participation_funding",
+            },
+          },
+          by_project_type: {
+            terms: {
+              field: "project_type.keyword",
+            },
+            aggregations: {
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
+                },
+              },
+            },
+          },
+        },
+      },
     },
   };
 
@@ -113,6 +139,13 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
     name: funder,
   })).reverse();
   const categoriesBudget = laboratoriesBudget.map((item) => item.key.split('###')[1]);
+  const laboratoriesParticipation = data?.aggregations?.by_laboratory_participation?.buckets ?? [];
+  const seriesParticipation = funders.map((funder) => ({
+    color: getCssColor({ name: funder, prefix: "funder" }),
+    data: laboratoriesParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.sum_budget_participation?.value ?? 0),
+    name: funder,
+  })).reverse();
+  const categoriesParticipation = laboratoriesParticipation.map((item) => item.key.split('###')[1]);
 
   const config = {
     comment: { "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.
@@ -154,6 +187,17 @@ On observe que certains laboratoires concentrent une part importante des projets
     // If view by amount by structure
     case 'amount_by_structure':
       axis = 'Montants financés pour cet établissement (€)';
+      categories = categoriesParticipation;
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €`;
+      };
+      series = seriesParticipation;
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
+      };
       break;
   }
 
