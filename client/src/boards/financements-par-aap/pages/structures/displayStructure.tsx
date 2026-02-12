@@ -3,11 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { isInProduction } from "../../../../utils";
 import Breadcrumb from "../../components/breadcrumb";
 import { getEsQuery, years } from "../../utils";
 import ClassificationsByStructure from "./charts/classifications-by-structure";
 import Classifications2ByStructure from "./charts/classifications2-by-structure";
 import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
+import InstrumentsByFunder from "./charts/instruments-by-funder";
 import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
 import LaboratoriesByStructure from "./charts/laboratories-by-structure";
 import OverviewByStructure from "./charts/overview-by-structure";
@@ -18,7 +20,6 @@ import Cards from "./components/cards";
 import "./styles.scss";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
-
 
 export default function DisplayStructure() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -34,6 +35,9 @@ export default function DisplayStructure() {
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
   ];
+  if (!isInProduction()) {
+    sections.push({ id: "instrument", label: "Instruments" });
+  }
 
   const handleNavClick = (section: string) => {
     searchParams.set("section", section);
@@ -248,6 +252,13 @@ export default function DisplayStructure() {
                     </Col>
                   </Row>
                 </>
+              )}
+              {(section === "instrument") && (
+                <Row gutters style={{ clear: "both" }}>
+                  <Col>
+                    <InstrumentsByFunder name={label} />
+                  </Col>
+                </Row>
               )}
             </>
           )}

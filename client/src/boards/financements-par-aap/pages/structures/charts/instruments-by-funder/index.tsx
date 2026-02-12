@@ -12,7 +12,7 @@ import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGe
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function Classifications2ByStructure({ name }: { name: string | undefined }) {
+export default function InstrumentsByFunder({ name }: { name: string | undefined }) {
   const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
@@ -23,9 +23,9 @@ export default function Classifications2ByStructure({ name }: { name: string | u
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),
     aggregations: {
-      by_classifications_project: {
+      by_instrument_project: {
         terms: {
-          field: "project_classification.primary_field.keyword",
+          field: "project_instrument.keyword",
           size: 25,
         },
         aggregations: {
@@ -43,9 +43,9 @@ export default function Classifications2ByStructure({ name }: { name: string | u
           },
         },
       },
-      by_classifications_budget: {
+      by_instrument_budget: {
         terms: {
-          field: "project_classification.primary_field.keyword",
+          field: "project_instrument.keyword",
           order: { "sum_budget": "desc" },
           size: 25,
         },
@@ -73,7 +73,7 @@ export default function Classifications2ByStructure({ name }: { name: string | u
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-classifications2", structure, yearMax, yearMin],
+    queryKey: ["fundings-instruments-by-funder", structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -85,23 +85,25 @@ export default function Classifications2ByStructure({ name }: { name: string | u
       }).then((response) => response.json()),
   });
 
-  const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
-  const seriesProject = classificationsProject.map((classification) => ({
-    color: getCssColor({ name: classification.key, prefix: "classification" }),
-    data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.unique_projects?.value ?? 0),
-    name: classification.key,
+  const instrumentsProject = data?.aggregations?.by_instrument_project?.buckets ?? [];
+  console
+  console.log(instrumentsProject.map((instrument) => instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase()));
+  const seriesProject = instrumentsProject.map((instrument) => ({
+    color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
+    data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.unique_projects?.value ?? 0),
+    name: instrument.key,
   })).reverse();
-  const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
-  const seriesBudget = classificationsBudget.map((classification) => ({
-    color: getCssColor({ name: classification.key, prefix: "classification" }),
-    data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.sum_budget?.value ?? 0),
-    name: classification.key,
+  const instrumentsBudget = data?.aggregations?.by_instrument_budget?.buckets ?? [];
+  const seriesBudget = instrumentsBudget.map((instrument) => ({
+    color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+    data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.sum_budget?.value ?? 0),
+    name: instrument.key,
   })).reverse();
 
   const config = {
     comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement, par financeur et selon les grandes classifications disciplinaires.
 Les barres représentent le nombre / le montant total des projets rattachés à chaque domaine, permettant d’identifier les champs scientifiques les plus présents dans les projets auxquels l’établissement participe. Les montants affichés ne correspondent pas aux financements réellement perçus par l’établissement, mais au volume global des projets financés dans lesquels il est impliqué. Ils doivent être interprétés comme un indicateur d’activité disciplinaire, et non comme un budget reçu. Les thématiques ont été estimées par IA, à partir du titre, résumé et mots clés des projets.</> },
-    id: "classifications2ByStructure",
+    id: "instrumentsByFunder",
   };
 
   // If view by number of projects
@@ -114,7 +116,7 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.key}</b> auxquels participe <b>${name}</b> en <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+    return `<b>${this.y}</b> projets <b>${this.key}</b> auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   switch (selectedControl) {
     // If view by global amount
@@ -128,7 +130,7 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> en <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
     // If view by amount by structure
@@ -163,9 +165,9 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
   const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", funders, "", axis), localOptions);
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="classifications2-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="instruments-by-funder">
       <Title as="h2" look="h6">
-        {`Classifications disciplinaires par financeur de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {`Instruments par financeur de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}

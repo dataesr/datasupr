@@ -12,7 +12,7 @@ export default function SegmentedControl({ selectedControl, setSelectedControl }
   }
 
   return (
-    <SegmentedControlDSFR name="financements-par-aap-segmented">
+    <SegmentedControlDSFR name='financements-par-aap-segmented'>
       {controls.map((control) => (
         <SegmentedElement
           checked={selectedControl === control.field}
