@@ -12,7 +12,6 @@ import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGe
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-
 export default function FrenchPartnersByStructure({ name }: { name: string | undefined }) {
   const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
@@ -105,27 +104,6 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
     return `${structure.label}`;
   });
 
-  const axisBudget = "Montants financés (€)";
-  const axisProjects = "Nombre de projets financés";
-  const datalabelBudget = function (this: any) {
-    return `${formatCompactNumber(this.y)} €`;
-  };
-  const datalabelProject = function (this: any) {
-    return `${this.y} projet${this.y > 1 ? 's' : ''}`;
-  };
-  const stacklabelProject = function (this: any) {
-    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
-  };
-  const stacklabelBudget = function (this: any) {
-    return `${formatCompactNumber(this.total)} €`;
-  };
-  const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
-  };
-  const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
-  };
-
   const config = {
     comment: { "fr": <>Ce graphe montre quels établissements français collaborent le plus avec l'établissement sur les projets financés par AAP.
 Les barres représentent le nombre / le montant total des projets auxquels chaque partenaire participe conjointement avec l'établissement.
@@ -133,6 +111,41 @@ Quelques partenaires se distinguent par un volume élevé de projets, lié à le
 Ces montants ne reflètent pas les financements réellement reçus par l'établissement ou ses partenaires, mais indiquent l’importance relative de leur participation dans l’écosystème de projets financés par AAP.</> },
     id: "frenchPartnersByStructure",
   };
+
+  // If view by number of projects
+  let axis = 'Nombre de projets financés';
+  let categories = categoriesProject;
+  let dataLabel = function (this: any) {
+    return `${this.y} projet${this.y > 1 ? 's' : ''}`;
+  };
+  let series = seriesProject;
+  let stackLabel = function (this: any) {
+    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
+  };
+  let tooltip = function (this: any) {
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+  };
+  switch (selectedControl) {
+    // If view by global amount
+    case 'amount_global':
+      axis = 'Montants globaux financés (€)';
+      categories = categoriesBudget;
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €`;
+      };
+      series = seriesBudget;
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+      };
+      break;
+    // If view by amount by structure
+    case 'amount_by_structure':
+      axis = 'Montants financés pour cet établissement (€)';
+      break;
+  }
 
   const localOptions = {
     legend: { enabled: true, reversed: true },
@@ -142,22 +155,22 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
         style: {
           fontWeight: 'bold'
         },
-        formatter: selectedControl === "projects" ? stacklabelProject : stacklabelBudget,
+        formatter: stackLabel,
       }
     },
     plotOptions: {
       series: {
         dataLabels: {
           enabled: true,
-          formatter: selectedControl === "projects" ? datalabelProject : datalabelBudget,
+          formatter: dataLabel,
         },
         stacking: "normal",
       }
     },
-    series: selectedControl === "projects" ? seriesProject : seriesBudget,
-    tooltip: { formatter: selectedControl === "projects" ? tooltipProjects : tooltipBudget },
+    series,
+    tooltip: { formatter: tooltip },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", selectedControl === "projects" ? categoriesProject : categoriesBudget, "", selectedControl === "projects" ? axisProjects : axisBudget), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", axis), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="french-partners-by-structure">

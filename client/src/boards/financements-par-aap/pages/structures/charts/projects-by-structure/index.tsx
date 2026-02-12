@@ -80,49 +80,60 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       count += 1;
     };
   });
-  const axisBudget = "Montants financés (€)";
-  const axisProjects = "Nombre de projets financés";
-  const datalabelBudget = function (this: any) {
-    return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
-  };
-  const datalabelProject = function (this: any) {
-    return `${this.y} projet${this.y > 1 ? 's' : ''} (${formatPercent(this.y_perc)})`;
-  };
-  const titleBudget = `Montant total des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
-  const titleProjects = `Nombre de projets financés auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
-  const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
-  };
-  const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}, soit ${formatPercent(this.y_perc)} (${this.y} / ${this.total} )`;
-  };
 
   const config = {
     comment: { "fr": <>Ce graphique indique, par financeur, le nombre et le montant des projets auxquels participe l'établissement {name}. Les montants affichés ne correspondent pas aux financements effectivement perçus par l'établissement. Ils représentent le volume total de financement des projets auxquels l’établissement participe, indépendamment de la part réelle qui lui est attribuée. </> },
     id: "projectsByStructure",
   };
 
+  // If view by number of projects
+  let axis = 'Nombre de projets financés';
+  let dataLabel = function (this: any) {
+    return `${this.y} projet${this.y > 1 ? 's' : ''} (${formatPercent(this.y_perc)})`;
+  };
+  let title = `Nombre de projets financés auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+  let tooltip = function (this: any) {
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}, soit ${formatPercent(this.y_perc)} (${this.y} / ${this.total} )`;
+  };
+  switch (selectedControl) {
+    // If view by global amount
+    case 'amount_global':
+      axis = 'Montants globaux financés (€)';
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
+      };
+      title = `Montant total des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
+      };
+      break;
+    // If view by amount by structure
+    case 'amount_by_structure':
+      axis = 'Montants financés pour cet établissement (€)';
+      break;
+  }
+
   const localOptions = {
-    exporting: { chartOptions: { title: { text: selectedControl === "projects" ? titleProjects : titleBudget } } },
+    exporting: { chartOptions: { title: { text: title } } },
     plotOptions: {
       bar: {
         dataLabels: {
           align: "right",
           enabled: true,
-          formatter: selectedControl === "projects" ? datalabelProject : datalabelBudget,
+          formatter: dataLabel,
         },
         grouping: false,
       },
     },
     series,
-    tooltip: { formatter: selectedControl === "projects" ? tooltipProjects : tooltipBudget },
+    tooltip: { formatter: tooltip },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", selectedControl === "projects" ? axisProjects : axisBudget), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", axis), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structure">
       <Title as="h2" look="h6">
-        {selectedControl === "projects" ? titleProjects : titleBudget}
+        {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}

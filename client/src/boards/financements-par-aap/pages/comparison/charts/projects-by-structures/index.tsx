@@ -12,7 +12,6 @@ import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGe
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-
 export default function ProjectsByStructures() {
   const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
@@ -101,35 +100,50 @@ export default function ProjectsByStructures() {
   })).reverse();
   const categoriesBudget = structuresBudget.map((item) => item.key.split('###')[1]);
 
-  const titleProjects = `Répartition des projets financés par type de financeur – comparaison entre établissements ${getYearRangeLabel({ yearMax, yearMin })}`;
-  const titleBudget = `Montant total des projets par financeur – comparaison entre établissements ${getYearRangeLabel({ yearMax, yearMin })}`;
-  const axisProjects = "Nombre de projets financés";
-  const axisBudget = "Montants financés (€)";
-  const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${categoriesProject[this.x]}</b>`;
-  };
-  const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesProject[this.x]}</b>`;
-  };
-  const datalabelProject = function (this: any) {
-    return `${this.y} projet${this.y > 1 ? 's' : ''}`;
-  };
-  const datalabelBudget = function (this: any) {
-    return `${formatCompactNumber(this.y)} €`;
-  };
-  const stacklabelProject = function (this: any) {
-    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
-  };
-  const stacklabelBudget = function (this: any) {
-    return `${formatCompactNumber(this.total)} €`;
-  };
-
   const config = {
     comment: { "fr": <>Ce graphique compare la répartition des projets financés par AAP selon les financeurs pour plusieurs établissements.
 L’analyse doit porter en priorité sur les proportions relatives entre catégories de financeurs, plutôt que sur les volumes absolus, afin de comparer la structure des portefeuilles de projets entre établissements de tailles différentes. Les montants indiqués correspondent au financement global des projets auxquels les établissements participent et ne reflètent pas les sommes effectivement perçues.
 </> },
     id: "projectsByStructures",
   };
+
+  // If view by number of projects
+  let axis = 'Nombre de projets financés';
+  let categories = categoriesProject;
+  let dataLabel = function (this: any) {
+    return `${this.y} projet${this.y > 1 ? 's' : ''}`;
+  };
+  let series = seriesProject;
+  let stackLabel = function (this: any) {
+    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
+  };
+  let title = `Répartition des projets financés par type de financeur – comparaison entre établissements ${getYearRangeLabel({ yearMax, yearMin })}`;
+  let tooltip = function (this: any) {
+    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${categoriesProject[this.x]}</b>`;
+  };
+  switch (selectedControl) {
+    // If view by global amount
+    case 'amount_global':
+      axis = 'Montants globaux financés (€)';
+      categories = categoriesBudget;
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €`;
+      };
+      series = seriesBudget;
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
+      title = `Montant total des projets par financeur – comparaison entre établissements ${getYearRangeLabel({ yearMax, yearMin })}`;
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesProject[this.x]}</b>`;
+      };
+      break;
+    // If view by amount by structure
+    case 'amount_by_structure':
+      axis = 'Montants financés pour cet établissement (€)';
+      break;
+  }
+
   const localOptions = {
     legend: { enabled: true, reversed: true },
     yAxis: {
@@ -138,27 +152,27 @@ L’analyse doit porter en priorité sur les proportions relatives entre catégo
         style: {
           fontWeight: "bold",
         },
-        formatter: selectedControl === "projects" ? stacklabelProject : stacklabelBudget,
+        formatter: stackLabel,
       }
     },
     plotOptions: {
       series: {
         dataLabels: {
           enabled: true,
-          formatter: selectedControl === "projects" ? datalabelProject : datalabelBudget,
+          formatter: dataLabel,
         },
         stacking: "normal",
       }
     },
-    series: selectedControl === "projects" ? seriesProject : seriesBudget,
-    tooltip: { formatter: selectedControl === "projects" ? tooltipProjects : tooltipBudget },
+    series,
+    tooltip: { formatter: tooltip },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", selectedControl === "projects" ? categoriesProject : categoriesBudget, "", selectedControl === "projects" ? axisProjects : axisBudget), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", axis), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structures">
       <Title as="h2" look="h6">
-        {selectedControl === "projects" ? titleProjects : titleBudget}
+        {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}

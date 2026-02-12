@@ -11,7 +11,6 @@ import "./styles.scss";
 
 const { VITE_MINISTER_NAME } = import.meta.env;
 
-
 export default function GlobalLayout() {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();

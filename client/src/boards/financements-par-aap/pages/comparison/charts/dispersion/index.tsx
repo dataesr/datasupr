@@ -9,7 +9,6 @@ import { deepMerge, formatCompactNumber, getEsQuery, getGeneralOptions, getYearR
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-
 export default function Dispersion() {
   const [searchParams] = useSearchParams();
   const structures = searchParams.getAll("structure");

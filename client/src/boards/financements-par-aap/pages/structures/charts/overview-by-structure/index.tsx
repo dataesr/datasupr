@@ -11,7 +11,6 @@ import "highcharts/modules/variwide";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-
 export default function OverviewByStructure({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
