@@ -1,4 +1,4 @@
-import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useState } from "react";
@@ -6,14 +6,15 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
+import SegmentedControl from "../../../../components/segmented-control";
 import { deepMerge, formatCompactNumber, funders, getCssColor, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function LaboratoriesByStructure({ name }: { name: string | undefined }) {
-  const [field, setField] = useState("projects");
+  const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
@@ -137,7 +138,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
 
   const config = {
     comment: { "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.
-Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, les données au niveau laboratoire ne sont pas disponibles. 
+Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, les données au niveau laboratoire ne sont pas disponibles.
 Les barres indiquent le nombre / le montant total des projets auxquels chaque laboratoire participe. Les montants indiqués correspondent au financement global des projets auxquels l’établissement participe et ne reflètent pas les sommes effectivement perçues.
 On observe que certains laboratoires concentrent une part importante des projets financés, ce qui peut refléter à la fois la taille des laboratoires, leur historique de participation aux AAP et leur spécialisation thématique.</> },
     id: "projectsByStructures",
@@ -150,32 +151,29 @@ On observe que certains laboratoires concentrent une part importante des projets
         style: {
           fontWeight: 'bold'
         },
-        formatter: field === "projects" ? stacklabelProject : stacklabelBudget,
+        formatter: selectedControl === "projects" ? stacklabelProject : stacklabelBudget,
       }
     },
     plotOptions: {
       series: {
         dataLabels: {
           enabled: true,
-          formatter: field === "projects" ? datalabelProject : datalabelBudget,
+          formatter: selectedControl === "projects" ? datalabelProject : datalabelBudget,
         },
         stacking: "normal",
       }
     },
-    series: field === "projects" ? seriesProject : seriesBudget,
-    tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
+    series: selectedControl === "projects" ? seriesProject : seriesBudget,
+    tooltip: { formatter: selectedControl === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", field === "projects" ? categoriesProject : categoriesBudget, "", field === "projects" ? axisProjects : axisBudget), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", selectedControl === "projects" ? categoriesProject : categoriesBudget, "", selectedControl === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structures">
       <Title as="h2" look="h6">
         {`Principaux laboratoires de ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
-      <SegmentedControl name="projects-by-structures-segmented">
-        <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
-        <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
-      </SegmentedControl>
+      <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );

@@ -1,4 +1,4 @@
-import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useState } from "react";
@@ -6,14 +6,15 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
+import SegmentedControl from "../../../../components/segmented-control";
 import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, years } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function ProjectsOverTimeByStructure({ name }: { name: string | undefined }) {
-  const [field, setField] = useState("projects");
+  const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const color = useChartColor();
@@ -64,7 +65,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
 
   const series = funders.map((funder) => ({
     color: getCssColor({ name: funder, prefix: "funder" }),
-    data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.by_project_year?.buckets.find((item) => item.key === year)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
+    data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.by_project_year?.buckets.find((item) => item.key === year)?.[selectedControl === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
     marker: { enabled: false },
     name: funder
   })).reverse();
@@ -99,9 +100,9 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
       }
     },
     series,
-    tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
+    tooltip: { formatter: selectedControl === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", [], "Année de début du projet", field === "projects" ? axisProjects : axisBudget, "area"), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", [], "Année de début du projet", selectedControl === "projects" ? axisProjects : axisBudget, "area"), localOptions);
 
   // TODO: implement it later
   // const renderData = (options: HighchartsInstance.Options) => {
@@ -148,12 +149,9 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-over-time-by-structure">
       <Title as="h2" look="h6">
-        {field === "projects" ? titleProjects : titleBudget}
+        {selectedControl === "projects" ? titleProjects : titleBudget}
       </Title>
-      <SegmentedControl name="projects-over-time-by-structure-segmented">
-        <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
-        <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
-      </SegmentedControl>
+      <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );

@@ -1,4 +1,4 @@
-import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useState } from "react";
@@ -6,14 +6,15 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
+import SegmentedControl from "../../../../components/segmented-control";
 import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function FrenchPartnersByStructure({ name }: { name: string | undefined }) {
-  const [field, setField] = useState("projects");
+  const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
@@ -141,32 +142,29 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
         style: {
           fontWeight: 'bold'
         },
-        formatter: field === "projects" ? stacklabelProject : stacklabelBudget,
+        formatter: selectedControl === "projects" ? stacklabelProject : stacklabelBudget,
       }
     },
     plotOptions: {
       series: {
         dataLabels: {
           enabled: true,
-          formatter: field === "projects" ? datalabelProject : datalabelBudget,
+          formatter: selectedControl === "projects" ? datalabelProject : datalabelBudget,
         },
         stacking: "normal",
       }
     },
-    series: field === "projects" ? seriesProject : seriesBudget,
-    tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
+    series: selectedControl === "projects" ? seriesProject : seriesBudget,
+    tooltip: { formatter: selectedControl === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", field === "projects" ? categoriesProject : categoriesBudget, "", field === "projects" ? axisProjects : axisBudget), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", selectedControl === "projects" ? categoriesProject : categoriesBudget, "", selectedControl === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="french-partners-by-structure">
       <Title as="h2" look="h6">
         {`Principaux partenaires français de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
-      <SegmentedControl name="french-partners-by-structure-segmented">
-        <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
-        <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
-      </SegmentedControl>
+      <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );

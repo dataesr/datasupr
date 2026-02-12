@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 import "highcharts/modules/variwide";

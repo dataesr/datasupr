@@ -1,4 +1,4 @@
-import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useState } from "react";
@@ -6,15 +6,15 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
+import SegmentedControl from "../../../../components/segmented-control";
 import { deepMerge, formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-
 export default function ProjectsByStructure({ name }: { name: string | undefined }) {
-  const [field, setField] = useState("projects");
   const [searchParams] = useSearchParams();
+  const [selectedControl, setSelectedControl] = useState("projects");
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
   const yearMin = searchParams.get("yearMin");
@@ -64,13 +64,13 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   funders.forEach((funder) => {
     const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
     if ((funderData?.unique_projects?.value ?? 0) > 0) {
-      total += (field === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
+      total += (selectedControl === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
     };
   });
   funders.forEach((funder) => {
     const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
     if ((funderData?.unique_projects?.value ?? 0) > 0) {
-      const current_y = (field === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
+      const current_y = (selectedControl === "projects" ? funderData?.unique_projects?.value ?? 0 : funderData?.sum_budget?.value ?? 0);
       series.push({
         color: getCssColor({ name: funder, prefix: "funder" }),
         data: [{ x: count, y: current_y, y_perc: current_y / total, total }],
@@ -103,31 +103,28 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   };
 
   const localOptions = {
-    exporting: { chartOptions: { title: { text: field === "projects" ? titleProjects : titleBudget } } },
+    exporting: { chartOptions: { title: { text: selectedControl === "projects" ? titleProjects : titleBudget } } },
     plotOptions: {
       bar: {
         dataLabels: {
           align: "right",
           enabled: true,
-          formatter: field === "projects" ? datalabelProject : datalabelBudget,
+          formatter: selectedControl === "projects" ? datalabelProject : datalabelBudget,
         },
         grouping: false,
       },
     },
     series,
-    tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
+    tooltip: { formatter: selectedControl === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", field === "projects" ? axisProjects : axisBudget), localOptions);
+  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", selectedControl === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structure">
       <Title as="h2" look="h6">
-        {field === "projects" ? titleProjects : titleBudget}
+        {selectedControl === "projects" ? titleProjects : titleBudget}
       </Title>
-      <SegmentedControl name="projects-by-structure-segmented">
-        <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
-        <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
-      </SegmentedControl>
+      <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
