@@ -23,9 +23,6 @@ import "./styles.scss";
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function DisplayStructure() {
-  console.log(import.meta.env.PROD);
-  console.log(!isInProduction());
-  console.log(import.meta.env.MODE);
   const [searchParams, setSearchParams] = useSearchParams();
   const section = searchParams.get("section");
   const structure = searchParams.get("structure");

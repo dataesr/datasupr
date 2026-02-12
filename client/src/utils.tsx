@@ -172,19 +172,27 @@ function deepMerge(target, source) {
 }
 
 /**
- * Whether the app is running in development
+ * Whether the client is running in development mode
  * @returns boolean
  */
 function isInDevelopment() {
-  return import.meta.env.DEV;
+  return import.meta.env.MODE === 'development';
 }
 
 /**
- * Whether the app is running in production
+ * Whether the client is running in production mode
  * @returns boolean
  */
 function isInProduction() {
-  return import.meta.env.PROD;
+  return import.meta.env.MODE === 'production';
+}
+
+/**
+ * Whether the client is running in staging mode
+ * @returns boolean
+ */
+function isInStaging() {
+  return import.meta.env.MODE === 'staging';
 }
 
 export {
@@ -200,5 +208,6 @@ export {
   getThemeFromHtmlNode,
   isInDevelopment,
   isInProduction,
+  isInStaging,
   setfavoriteIdsInCookie,
 };
