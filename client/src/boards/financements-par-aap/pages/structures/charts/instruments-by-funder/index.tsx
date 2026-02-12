@@ -86,8 +86,6 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
   });
 
   const instrumentsProject = data?.aggregations?.by_instrument_project?.buckets ?? [];
-  console
-  console.log(instrumentsProject.map((instrument) => instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase()));
   const seriesProject = instrumentsProject.map((instrument) => ({
     color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
     data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.unique_projects?.value ?? 0),

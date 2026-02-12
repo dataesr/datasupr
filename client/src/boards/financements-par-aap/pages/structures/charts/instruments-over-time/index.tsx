@@ -8,11 +8,11 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, years } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, getCssColor, getEsQuery, getGeneralOptions, years } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function ProjectsOverTimeByStructure({ name }: { name: string | undefined }) {
+export default function InstrumentsOverTime({ name }: { name: string | undefined }) {
   const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
@@ -21,10 +21,10 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   const body = {
     ...getEsQuery({ structures: [structure] }),
     aggregations: {
-      by_project_type: {
+      by_instrument: {
         terms: {
-          field: "project_type.keyword",
-          size: 50,
+          field: "project_instrument.keyword",
+          size: 25,
         },
         aggregations: {
           by_project_year: {
@@ -50,7 +50,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["funding-projects-over-time-by-structure", structure],
+    queryKey: ["funding-instruments-over-time-by-structure", structure],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -62,12 +62,12 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
       }).then((response) => response.json()),
   });
 
-  const series = funders.map((funder) => ({
-    color: getCssColor({ name: funder, prefix: "funder" }),
-    data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.by_project_year?.buckets.find((item) => item.key === year)?.[selectedControl === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
+  const series = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
+    color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
+    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.[selectedControl === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
     marker: { enabled: false },
-    name: funder,
-  })).reverse();
+    name: instrument.key,
+  }));
 
   const config = {
     comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs montants associés, ventilée par financeur, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Pour les financements européens, Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027. Les montants indiqués reflètent le financement global des projets auxquels l’établissement participe et ne correspondent pas aux sommes effectivement perçues par celui-ci.</> },
@@ -157,7 +157,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   // };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="projects-over-time-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="instruments-over-time-by-structure">
       <Title as="h2" look="h6">
         {title}
       </Title>

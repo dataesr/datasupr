@@ -16,6 +16,7 @@ import OverviewByStructure from "./charts/overview-by-structure";
 import ProjectsByStructure from "./charts/projects-by-structure";
 import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
 import Cards from "./components/cards";
+import InstrumentsOverTime from "./charts/instruments-over-time";
 
 import "./styles.scss";
 
@@ -254,11 +255,18 @@ export default function DisplayStructure() {
                 </>
               )}
               {(section === "instrument") && (
-                <Row gutters style={{ clear: "both" }}>
-                  <Col>
-                    <InstrumentsByFunder name={label} />
-                  </Col>
-                </Row>
+                <>
+                  <Row gutters style={{ clear: "both" }}>
+                    <Col>
+                      <InstrumentsByFunder name={label} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <InstrumentsOverTime name={label} />
+                    </Col>
+                  </Row>
+                </>
               )}
             </>
           )}
