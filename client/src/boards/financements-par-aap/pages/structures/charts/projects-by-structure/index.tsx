@@ -36,7 +36,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
           },
           sum_budget: {
             sum: {
-              field: "project_budgetTotal",
+              field: "project_budgetFinanced",
             },
           },
         },

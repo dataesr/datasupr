@@ -50,7 +50,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
         aggregations: {
           sum_budget: {
             sum: {
-              field: "project_budgetTotal",
+              field: "project_budgetFinanced",
             },
           },
           by_project_type: {
@@ -60,7 +60,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
             aggregations: {
               sum_budget: {
                 sum: {
-                  field: "project_budgetTotal",
+                  field: "project_budgetFinanced",
                 },
               },
             },

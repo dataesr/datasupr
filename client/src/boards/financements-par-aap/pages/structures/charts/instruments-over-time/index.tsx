@@ -39,7 +39,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
               },
               sum_budget: {
                 sum: {
-                  field: "project_budgetTotal",
+                  field: "project_budgetFinanced",
                 },
               },
             },

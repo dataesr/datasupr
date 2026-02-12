@@ -39,7 +39,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
               },
               sum_budget: {
                 sum: {
-                  field: "project_budgetTotal",
+                  field: "project_budgetFinanced",
                 },
               },
             },

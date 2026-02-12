@@ -37,7 +37,7 @@ export default function Dispersion() {
               },
               sum_budget: {
                 sum: {
-                  field: "project_budgetTotal",
+                  field: "project_budgetFinanced",
                 },
               },
             },

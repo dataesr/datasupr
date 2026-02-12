@@ -52,7 +52,7 @@ export default function ProjectsByStructures() {
         aggregations: {
           sum_budget: {
             sum: {
-              field: "project_budgetTotal",
+              field: "project_budgetFinanced",
             },
           },
           by_project_type: {
@@ -62,7 +62,7 @@ export default function ProjectsByStructures() {
             aggregations: {
               sum_budget: {
                 sum: {
-                  field: "project_budgetTotal",
+                  field: "project_budgetFinanced",
                 },
               },
             },

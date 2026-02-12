@@ -54,7 +54,7 @@ export default function ClassificationsByStructures() {
         aggregations: {
           sum_budget: {
             sum: {
-              field: "project_budgetTotal",
+              field: "project_budgetFinanced",
             },
           },
           by_classifications: {
@@ -65,7 +65,7 @@ export default function ClassificationsByStructures() {
             aggregations: {
               sum_budget: {
                 sum: {
-                  field: "project_budgetTotal",
+                  field: "project_budgetFinanced",
                 },
               },
             },
