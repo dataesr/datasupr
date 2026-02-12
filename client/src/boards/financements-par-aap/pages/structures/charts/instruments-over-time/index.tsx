@@ -76,17 +76,17 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
 
   // If view by number of projects
   let axis = 'Nombre de projets financés';
-  let title = `Evolution temporelle du nombre de projets auxquels participe l'établissement (${name})`;
+  let title = `Evolution temporelle des instruments dont a bénéficié l'établissement (${name})`;
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> auxquels prend part <b>${name}</b>`;
+    return `<b>${this.y}</b> instruments <b>${this.series.name}</b> en <b>${this.x}</b> dont a bénéficié <b>${name}</b>`;
   };
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
       axis = 'Montants globaux financés (€)';
-      title = `Evolution temporelle du montant financé pour les projets auxquels participe l'établissement (${name})`;
+      title = `Evolution temporelle du montant financé pour les instruments dont a bénéficié l'établissement (${name})`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les instruments <b>${this.series.name}</b> dont a bénéficié <b>${name}</b>`;
       };
       break;
     // If view by amount by structure
