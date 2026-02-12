@@ -6,9 +6,6 @@ export function createChartOptions(
   type: NonNullable<HighchartsInstance.Options["chart"]>["type"],
   options: NonNullable<HighchartsInstance.Options>
 ): HighchartsInstance.Options {
-  const rootStyles = getComputedStyle(document.documentElement);
-  const labelColor = rootStyles.getPropertyValue("--text-default-grey").trim();
-
   const defaultOptions: HighchartsInstance.Options = {
     chart: {
       backgroundColor: "var(--background-default-grey)",
@@ -17,8 +14,8 @@ export function createChartOptions(
     title: { text: "" },
     legend: {
       enabled: false,
-      itemStyle: { color: labelColor, fontWeight: "500" },
-      itemHoverStyle: { color: labelColor, fontWeight: "700" },
+      itemStyle: { color: "var(--text-default-grey)", fontWeight: "500" },
+      itemHoverStyle: { color: "var(--text-default-grey)", fontWeight: "700" },
     },
     tooltip: {
       useHTML: true,
@@ -26,7 +23,7 @@ export function createChartOptions(
       borderColor: "var(--border-default-grey)",
       borderWidth: 1,
       style: {
-        color: labelColor,
+        color: "var(--text-default-grey)",
         zIndex: "999999",
         pointerEvents: "none",
       },
