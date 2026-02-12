@@ -93,7 +93,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
     case 'amount_by_structure':
       axis = 'Montants financés pour cet établissement (€)';
       break;
-  }
+  };
 
   const localOptions = {
     legend: { enabled: true, reversed: true },
