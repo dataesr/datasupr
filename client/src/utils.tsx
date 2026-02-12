@@ -171,6 +171,22 @@ function deepMerge(target, source) {
   return target;
 }
 
+/**
+ * Whether the app is running in development
+ * @returns boolean
+ */
+function isInDevelopment() {
+  return import.meta.env.DEV;
+}
+
+/**
+ * Whether the app is running in production
+ * @returns boolean
+ */
+function isInProduction() {
+  return import.meta.env.PROD;
+}
+
 export {
   clearAllfavoriteIdsInCookie,
   deepMerge,
@@ -182,5 +198,7 @@ export {
   getParentFromLevel,
   getSortedfavoriteIdsInCookie,
   getThemeFromHtmlNode,
+  isInDevelopment,
+  isInProduction,
   setfavoriteIdsInCookie,
 };
