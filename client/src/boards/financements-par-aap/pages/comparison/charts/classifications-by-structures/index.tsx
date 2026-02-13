@@ -8,7 +8,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -72,6 +72,33 @@ export default function ClassificationsByStructures() {
           },
         },
       },
+      by_structure_participation: {
+        terms: {
+          field: "participant_id_name_default.keyword",
+          order: { "sum_budget_participation": "desc" },
+          size: structures.length,
+        },
+        aggregations: {
+          sum_budget_participation: {
+            sum: {
+              field: "participation_funding",
+            },
+          },
+          by_classifications: {
+            terms: {
+              field: "project_classification.primary_field.keyword",
+              size: 25,
+            },
+            aggregations: {
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
+                },
+              },
+            },
+          },
+        },
+      },
     },
   };
 
@@ -91,13 +118,22 @@ export default function ClassificationsByStructures() {
   const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
   const categoriesProject = structuresProject.map((bucket) => bucket.key.split("###")[1]);
   const seriesProject = (structuresProject?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
+    color: getCssColor({ name: bucket.key, prefix: "classification" }),
     data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.unique_projects?.value ?? 0),
     name: bucket.key,
   })).reverse();
   const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? [];
   const categoriesBudget = structuresBudget.map((bucket) => bucket.key.split("###")[1]);
   const seriesBudget = (structuresBudget?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
+    color: getCssColor({ name: bucket.key, prefix: "classification" }),
     data: structuresBudget.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.sum_budget?.value ?? 0),
+    name: bucket.key,
+  })).reverse();
+  const structuresParticipation = data?.aggregations?.by_structure_participation?.buckets ?? [];
+  const categoriesParticipation = structuresParticipation.map((bucket) => bucket.key.split("###")[1]);
+  const seriesParticipation = (structuresParticipation?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
+    color: getCssColor({ name: bucket.key, prefix: "classification" }),
+    data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.sum_budget_participation?.value ?? 0),
     name: bucket.key,
   })).reverse();
 
@@ -135,6 +171,18 @@ export default function ClassificationsByStructures() {
     // If view by amount by structure
     case 'amount_by_structure':
       axis = 'Montants financés pour cet établissement (€)';
+      categories = categoriesParticipation;
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €`;
+      };
+      series = seriesParticipation;
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
+      title = `Profils disciplinaires des établissements via le montant des projets alloués ${getYearRangeLabel({ yearMax, yearMin })}`;
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
+      };
       break;
   }
 
