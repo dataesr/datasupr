@@ -2,7 +2,6 @@ import { Container } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
-// import Breadcrumb from "../../../../components/breadcrumb";
 import CountrySelector from "../../../../components/country-selector/selector";
 import Footer from "../../../../components/footer";
 import i18n from "./i18n.json";
@@ -33,7 +32,7 @@ export default function GlobalLayout() {
     return i18n[key][currentLang];
   }
   return (
-    <>
+    <div className="ep-styles">
       <header role="banner" className="fr-header">
         <div className="fr-header__body">
           <div className="fr-container">
@@ -133,15 +132,8 @@ export default function GlobalLayout() {
           </ul>
         </Container>
       </nav>
-      {/* <Container>
-        <Row>
-          <Col>
-            <Breadcrumb config={navigationConfig} />
-          </Col>
-        </Row>
-      </Container> */}
       <Outlet />
       <Footer />
-    </>
+    </div>
   );
 }
