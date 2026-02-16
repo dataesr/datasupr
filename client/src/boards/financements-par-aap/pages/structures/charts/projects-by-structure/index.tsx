@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import "highcharts/modules/pattern-fill";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
@@ -29,19 +30,26 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
           size: 50,
         },
         aggregations: {
-          unique_projects: {
-            cardinality: {
-              field: "project_id.keyword",
+          is_coordinator: {
+            terms: {
+              field: "participation_role.keyword",
             },
-          },
-          sum_budget: {
-            sum: {
-              field: "project_budgetFinanced",
-            },
-          },
-          sum_budget_participation: {
-            sum: {
-              field: "participation_funding",
+            aggregations: {
+              unique_projects: {
+                cardinality: {
+                  field: "project_id.keyword",
+                },
+              },
+              sum_budget: {
+                sum: {
+                  field: "project_budgetFinanced",
+                },
+              },
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
+                },
+              },
             },
           },
         },
@@ -62,41 +70,42 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  let count = 0;
   const seriesBudget: any[] = [];
   const seriesParticipation: any[] = [];
   const seriesProject: any[] = [];
   const categories: string[] = [];
-  let totalBudget = 0;
-  let totalParticipation = 0;
-  let totalProjects = 0;
-  funders.forEach((funder) => {
-    const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
-      totalBudget += funderData?.sum_budget?.value ?? 0;
-      totalParticipation += funderData?.sum_budget_participation?.value ?? 0;
-      totalProjects += funderData?.unique_projects?.value ?? 0;
-  });
-  funders.forEach((funder) => {
-    const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
-    if ((funderData?.unique_projects?.value ?? 0) > 0) {
-      seriesBudget.push({
-        color: getCssColor({ name: funder, prefix: "funder" }),
-        data: [{ x: count, y: funderData?.sum_budget?.value ?? 0, y_perc: (funderData?.sum_budget?.value ?? 0) / totalBudget, total: totalBudget }],
-        name: funder,
-      });
-      seriesParticipation.push({
-        color: getCssColor({ name: funder, prefix: "funder" }),
-        data: [{ x: count, y: funderData?.sum_budget_participation?.value ?? 0, y_perc: (funderData?.sum_budget_participation?.value ?? 0) / totalParticipation, total: totalParticipation }],
-        name: funder,
-      });
-      seriesProject.push({
-        color: getCssColor({ name: funder, prefix: "funder" }),
-        data: [{ x: count, y: funderData?.unique_projects?.value ?? 0, y_perc: (funderData?.unique_projects?.value ?? 0) / totalProjects, total: totalProjects }],
-        name: funder,
-      });
-      categories.push(funder);
-      count += 1;
-    };
+  funders.forEach((funder, index) => {
+    const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder)?.is_coordinator?.buckets;
+    const isCoord = funderData?.find((bucket) => bucket.key === 'coordinator');
+    const isNotCoord = funderData?.filter((bucket) => bucket.key !== 'coordinator');
+    const isCoordBudget = isCoord?.sum_budget?.value ?? 0;
+    const isNotCoordBudget = isNotCoord?.reduce((acc, cur) => acc + (cur?.sum_budget?.value ?? 0), 0);
+    seriesBudget.push({
+      data: [
+        { x: index, y: isCoordBudget, y_perc: isCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget },
+        { x: index, y: isNotCoordBudget, y_perc: isNotCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget },
+      ],
+      name: funder,
+    });
+    const isCoordParticipation = isCoord?.sum_budget_participation?.value ?? 0;
+    const isNotCoordParticipation = isNotCoord?.reduce((acc, cur) => acc + (cur?.sum_budget_participation?.value ?? 0), 0);
+    seriesParticipation.push({
+      data: [
+        { x: index, y: isCoordParticipation, y_perc: isCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation },
+        { x: index, y: isNotCoordParticipation, y_perc: isNotCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation },
+      ],
+      name: funder,
+    });
+    const isCoordProject = isCoord?.unique_projects?.value ?? 0;
+    const isNotCoordProject = isNotCoord?.reduce((acc, cur) => acc + (cur?.unique_projects?.value ?? 0), 0);
+    seriesProject.push({
+      data: [
+        { x: index, y: isCoordProject, y_perc: isCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: { pattern: { backgroundColor: getCssColor({ name: funder, prefix: "funder" }), path: { d: "M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11", stroke: "white" }, width: 10, height: 10 } } },
+        { x: index, y: isNotCoordProject, y_perc: isNotCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: getCssColor({ name: funder, prefix: "funder" }) },
+      ],
+      name: funder,
+    });
+    categories.push(funder);
   });
 
   const config = {
@@ -151,6 +160,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
           formatter: dataLabel,
         },
         grouping: false,
+        stacking: 'normal',
       },
     },
     series,
