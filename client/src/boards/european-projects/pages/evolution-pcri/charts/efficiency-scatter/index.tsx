@@ -182,7 +182,7 @@ export default function EfficiencyScatter() {
           >
             {AXIS_VARIABLES.map((varKey) => (
               <option key={varKey} value={varKey}>
-                {(getI18nLabel(i18n, VARIABLE_CONFIG[varKey].i18nKey), currentLang)}
+                {getI18nLabel(i18n, VARIABLE_CONFIG[varKey].i18nKey, currentLang)}
               </option>
             ))}
           </select>
@@ -197,7 +197,7 @@ export default function EfficiencyScatter() {
           >
             {AXIS_VARIABLES.map((varKey) => (
               <option key={varKey} value={varKey}>
-                {(getI18nLabel(i18n, VARIABLE_CONFIG[varKey].i18nKey), currentLang)}
+                {getI18nLabel(i18n, VARIABLE_CONFIG[varKey].i18nKey, currentLang)}
               </option>
             ))}
           </select>
