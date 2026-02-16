@@ -9,7 +9,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -32,7 +32,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         aggregations: {
           is_coordinator: {
             terms: {
-              field: "participation_role.keyword",
+              field: "participation_is_coordinator",
             },
             aggregations: {
               unique_projects: {
@@ -76,31 +76,31 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   const categories: string[] = [];
   funders.forEach((funder, index) => {
     const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder)?.is_coordinator?.buckets;
-    const isCoord = funderData?.find((bucket) => bucket.key === 'coordinator');
-    const isNotCoord = funderData?.filter((bucket) => bucket.key !== 'coordinator');
+    const isCoord = funderData?.find((bucket) => bucket.key === 1);
+    const isNotCoord = funderData?.find((bucket) => bucket.key === 0);
     const isCoordBudget = isCoord?.sum_budget?.value ?? 0;
-    const isNotCoordBudget = isNotCoord?.reduce((acc, cur) => acc + (cur?.sum_budget?.value ?? 0), 0);
+    const isNotCoordBudget = isNotCoord?.sum_budget?.value ?? 0;
     seriesBudget.push({
       data: [
-        { x: index, y: isCoordBudget, y_perc: isCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget },
-        { x: index, y: isNotCoordBudget, y_perc: isNotCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget },
+        { x: index, y: isCoordBudget, y_perc: isCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } },
+        { x: index, y: isNotCoordBudget, y_perc: isNotCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: getCssColor({ name: funder, prefix: "funder" }) },
       ],
       name: funder,
     });
     const isCoordParticipation = isCoord?.sum_budget_participation?.value ?? 0;
-    const isNotCoordParticipation = isNotCoord?.reduce((acc, cur) => acc + (cur?.sum_budget_participation?.value ?? 0), 0);
+    const isNotCoordParticipation = isNotCoord?.sum_budget_participation?.value ?? 0;
     seriesParticipation.push({
       data: [
-        { x: index, y: isCoordParticipation, y_perc: isCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation },
-        { x: index, y: isNotCoordParticipation, y_perc: isNotCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation },
+        { x: index, y: isCoordParticipation, y_perc: isCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } },
+        { x: index, y: isNotCoordParticipation, y_perc: isNotCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation, color: getCssColor({ name: funder, prefix: "funder" }) },
       ],
       name: funder,
     });
     const isCoordProject = isCoord?.unique_projects?.value ?? 0;
-    const isNotCoordProject = isNotCoord?.reduce((acc, cur) => acc + (cur?.unique_projects?.value ?? 0), 0);
+    const isNotCoordProject = isNotCoord?.unique_projects?.value ?? 0;
     seriesProject.push({
       data: [
-        { x: index, y: isCoordProject, y_perc: isCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: { pattern: { backgroundColor: getCssColor({ name: funder, prefix: "funder" }), path: { d: "M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11", stroke: "white" }, width: 10, height: 10 } } },
+        { x: index, y: isCoordProject, y_perc: isCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } },
         { x: index, y: isNotCoordProject, y_perc: isNotCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: getCssColor({ name: funder, prefix: "funder" }) },
       ],
       name: funder,
@@ -151,6 +151,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   }
 
   const localOptions = {
+    legend: { enabled: true },
     exporting: { chartOptions: { title: { text: title } } },
     plotOptions: {
       bar: {

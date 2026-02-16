@@ -6,6 +6,8 @@ import { deepMerge } from "../../utils";
 
 const funders = ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"];
 
+const pattern = { height: 10, path: { d: "M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11", stroke: "white" }, width: 10 };
+
 const typologiesExcluded = ["Entreprises", "Infrastructures de recherche", "Structures de recherche"];
 
 const years: number[] = Array.from(Array(11).keys()).map((item) => item + 2015);
@@ -100,5 +102,6 @@ export {
   getEsQuery,
   getGeneralOptions,
   getYearRangeLabel,
+  pattern,
   years,
 };

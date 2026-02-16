@@ -101,7 +101,6 @@ export default function DisplayStructure() {
                 <span aria-hidden="true" className="fr-icon-map-pin-2-fill fr-mr-1w"></span>
                 {structureInfo?.region}
               </Text>
-
             </Col>
             <Col>
               <div className="fr-mb-2w">
