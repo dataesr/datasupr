@@ -1,5 +1,6 @@
 import { Row, Col, Title, Text, Button, Tag } from "@dataesr/dsfr-plus";
 import "../styles.scss";
+import { capitalize } from "../../../../../utils/format";
 
 interface PageHeaderProps {
   data: any;
@@ -185,123 +186,180 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                 </div>
               </div>
             </li>
+
+            {data.catjur_lib && (
+              <li>
+                <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
+                  <div className="page-header__stat-card-content">
+                    <span
+                      className="page-header__stat-icon page-header__stat-icon--green-emeraude"
+                      aria-hidden="true"
+                    >
+                      <span
+                        className="fr-icon-briefcase-fill"
+                        aria-hidden="true"
+                      />
+                    </span>
+                    <div>
+                      <Text size="lg" bold className="fr-mb-0">
+                        {data.gdetab_lib
+                          ? `Catégorie juridique · ${data.gdetab_lib}`
+                          : "Catégorie juridique"}
+                      </Text>
+                      <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
+                        {data.catjur_lib}
+                      </Text>
+                    </div>
+                  </div>
+                </div>
+              </li>
+            )}
+
+            {data.tutelle_lib && (
+              <li>
+                <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
+                  <div className="page-header__stat-card-content">
+                    <span
+                      className="page-header__stat-icon page-header__stat-icon--yellow-tournesol"
+                      aria-hidden="true"
+                    >
+                      <span
+                        className="fr-icon-government-fill"
+                        aria-hidden="true"
+                      />
+                    </span>
+                    <div>
+                      <Text size="lg" bold className="fr-mb-0">
+                        {data.tutelle_nb > 1 ? "Tutelles" : "Tutelle"}
+                      </Text>
+                      <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
+                        {capitalize(data.tutelle_lib)}
+                        {data.regime_lib ? ` · ${data.regime_lib}` : ""}
+                      </Text>
+                      {data.etablissement_id_paysage === "u79ZJ" && (
+                        <Text
+                          size="xs"
+                          className="fr-mb-0 fr-text-mention--grey"
+                          style={{ fontStyle: "italic" }}
+                        >
+                          La Fondation nationale des sciences politiques (FNSP)
+                          assure la gestion administrative et financière de
+                          l'institut
+                        </Text>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </li>
+            )}
           </ul>
         </Col>
+        {console.log("hasFormations", hasFormations)}
 
         {hasFormations && (
           <Col xs="12" md="4">
-            <dl className="page-header__formations-table">
+            <div className="page-header__formations-column">
               {hasCursus && (
-                <div className="page-header__formations-row">
-                  <dt className="page-header__formations-label">
-                    <Text size="xs" className="fr-text-mention--grey fr-mb-0">
-                      Cursus
-                    </Text>
-                  </dt>
-                  <dd className="page-header__formations-value">
-                    <ul className="page-header__tag-list">
-                      {data.has_effectif_l && (
-                        <li>
-                          <Tag size="sm">Licence</Tag>
-                        </li>
-                      )}
-                      {data.has_effectif_m && (
-                        <li>
-                          <Tag size="sm">Master</Tag>
-                        </li>
-                      )}
-                      {data.has_effectif_d && (
-                        <li>
-                          <Tag size="sm">Doctorat</Tag>
-                        </li>
-                      )}
-                    </ul>
-                  </dd>
+                <div className="page-header__formations-group fr-mb-3w">
+                  <Text bold className="fr-text-mention--grey fr-mb-1v">
+                    Cursus
+                  </Text>
+                  <ul className="page-header__tag-list">
+                    {data.has_effectif_l && (
+                      <li>
+                        <Tag size="sm">Licence</Tag>
+                      </li>
+                    )}
+                    {data.has_effectif_m && (
+                      <li>
+                        <Tag size="sm">Master</Tag>
+                      </li>
+                    )}
+                    {data.has_effectif_d && (
+                      <li>
+                        <Tag size="sm">Doctorat</Tag>
+                      </li>
+                    )}
+                  </ul>
                 </div>
               )}
               {hasFilieres && (
-                <div className="page-header__formations-row">
-                  <dt className="page-header__formations-label">
-                    <Text size="xs" className="fr-text-mention--grey fr-mb-0">
-                      Filières spécifiques
-                    </Text>
-                  </dt>
-                  <dd className="page-header__formations-value">
-                    <ul className="page-header__tag-list">
-                      {data.has_effectif_iut && (
-                        <li>
-                          <Tag size="sm">IUT</Tag>
-                        </li>
-                      )}
-                      {data.has_effectif_ing && (
-                        <li>
-                          <Tag size="sm">Ingénieur</Tag>
-                        </li>
-                      )}
-                      {data.has_effectif_sante && (
-                        <li>
-                          <Tag size="sm">Santé</Tag>
-                        </li>
-                      )}
-                    </ul>
-                  </dd>
+                <div className="page-header__formations-group fr-mb-3w">
+                  <Text bold className="fr-text-mention--grey fr-mb-1v">
+                    Filières spécifiques
+                  </Text>
+                  <ul className="page-header__tag-list">
+                    {data.has_effectif_iut && (
+                      <li>
+                        <Tag size="sm">IUT</Tag>
+                      </li>
+                    )}
+                    {data.has_effectif_ing && (
+                      <li>
+                        <Tag size="sm">Ingénieur</Tag>
+                      </li>
+                    )}
+                    {data.has_effectif_sante && (
+                      <li>
+                        <Tag size="sm">Santé</Tag>
+                      </li>
+                    )}
+                  </ul>
                 </div>
               )}
               {hasDisciplines && (
-                <div className="page-header__formations-row">
-                  <dt className="page-header__formations-label">
-                    <Text size="xs" className="fr-text-mention--grey fr-mb-0">
-                      Disciplines
-                    </Text>
-                  </dt>
-                  <dd className="page-header__formations-value">
-                    <ul className="page-header__tag-list">
-                      {data.has_effectif_dsa && (
-                        <li>
-                          <Tag size="sm">Droit Éco</Tag>
-                        </li>
-                      )}
-                      {data.has_effectif_llsh && (
-                        <li>
-                          <Tag size="sm">Lettres SHS</Tag>
-                        </li>
-                      )}
-                      {data.has_effectif_si && (
-                        <li>
-                          <Tag size="sm">Sciences</Tag>
-                        </li>
-                      )}
-                      {data.has_effectif_staps && (
-                        <li>
-                          <Tag size="sm">STAPS</Tag>
-                        </li>
-                      )}
-                      {data.has_effectif_theo && (
-                        <li>
-                          <Tag size="sm">Théologie</Tag>
-                        </li>
-                      )}
-                      {data.has_effectif_veto && (
-                        <li>
-                          <Tag size="sm">Vétérinaire</Tag>
-                        </li>
-                      )}
-                      {(data.has_effectif_sante_disc ||
-                        data.has_effectif_sante) && (
-                        <li>
-                          <Tag size="sm">Santé</Tag>
-                        </li>
-                      )}
-                      {data.has_effectif_interd && (
-                        <li>
-                          <Tag size="sm">Pluridisciplinaire</Tag>
-                        </li>
-                      )}
-                    </ul>
-                  </dd>
+                <div className="page-header__formations-group">
+                  <Text bold className="fr-text-mention--grey fr-mb-1v">
+                    Disciplines
+                  </Text>
+                  <ul className="page-header__tag-list">
+                    {data.has_effectif_dsa && (
+                      <li>
+                        <Tag size="sm">Droit Éco</Tag>
+                      </li>
+                    )}
+                    {data.has_effectif_llsh && (
+                      <li>
+                        <Tag size="sm">Lettres SHS</Tag>
+                      </li>
+                    )}
+                    {data.has_effectif_si && (
+                      <li>
+                        <Tag size="sm">Sciences</Tag>
+                      </li>
+                    )}
+                    {data.has_effectif_staps && (
+                      <li>
+                        <Tag size="sm">STAPS</Tag>
+                      </li>
+                    )}
+                    {data.has_effectif_theo && (
+                      <li>
+                        <Tag size="sm">Théologie</Tag>
+                      </li>
+                    )}
+                    {data.has_effectif_veto && (
+                      <li>
+                        <Tag size="sm">Vétérinaire</Tag>
+                      </li>
+                    )}
+                    {(data.has_effectif_sante_disc ||
+                      data.has_effectif_sante) && (
+                      <li>
+                        <Tag size="sm">Santé</Tag>
+                      </li>
+                    )}
+                    {data.has_effectif_interd && (
+                      <li>
+                        <Tag color="green-bourgeon" size="sm">
+                          Pluridisciplinaire
+                        </Tag>
+                      </li>
+                    )}
+                  </ul>
                 </div>
               )}
-            </dl>
+            </div>
           </Col>
         )}
       </Row>
