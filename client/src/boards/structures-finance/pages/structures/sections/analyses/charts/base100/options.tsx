@@ -1,6 +1,7 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
+import { getCssColor } from "../../../../../../../../utils/colors";
 
 interface MetricConfig {
   label: string;
@@ -48,7 +49,7 @@ export const createBase100ChartOptions = (
         if (isNaN(value) || !baseValues[metricKey]) return null;
         return (value / baseValues[metricKey]) * 100;
       }),
-      color: config.color,
+      color: getCssColor(config.color),
       lineWidth: 2,
       marker: {
         enabled: true,

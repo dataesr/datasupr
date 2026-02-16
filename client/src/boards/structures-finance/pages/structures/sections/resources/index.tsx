@@ -1,16 +1,14 @@
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../components/metric-chart-card";
-import { SECTION_COLORS } from "../../../../constants/colors";
 import RessourcesPropresChart from "./charts/ressources-propres";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 import { SectionBudgetWarning } from "../../../../components/section-budget-warning";
+import { getCssColor } from "../../../../../../utils/colors";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
-
-const SECTION_COLOR = SECTION_COLORS.ressources;
 
 interface FinancementsSectionProps {
   data: any;
@@ -56,7 +54,7 @@ export function FinancementsSection({
               title="Total"
               value={`${euro(data.produits_de_fonctionnement_encaissables)} €`}
               detail="Hors opérations en capital"
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution(
                 "produits_de_fonctionnement_encaissables"
               )}
@@ -68,7 +66,7 @@ export function FinancementsSection({
             <MetricChartCard
               title="Ressources propres"
               value={`${euro(data.recettes_propres)} €`}
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("recettes_propres")}
               unit="€"
               metricKey="recettes_propres"
@@ -83,7 +81,7 @@ export function FinancementsSection({
                   : "—"
               }
               detail="Part des ressources propres sur le total"
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution(
                 "ressources_propres_produits_encaissables"
               )}
@@ -109,7 +107,7 @@ export function FinancementsSection({
                   ? "Subvention pour charges de service public (SCSP) et dépenses de personnel prises en charge par le ministère en charge de l'Enseignement supérieur"
                   : "Subvention pour charges de service public (SCSP) "
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("scsp")}
               unit="€"
             />
@@ -126,7 +124,7 @@ export function FinancementsSection({
                     ? `Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par le ministère en charge de l'Enseignement supérieur)${data.etablissement_categorie === "École normale supérieure" ? " et le salaire des élèves fonctionnaires" : ""}`
                     : `Ratio SCSP / étudiants financés${data.etablissement_categorie === "École normale supérieure" ? " (inclut le salaire des élèves fonctionnaires)" : ""}`
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("scsp_par_etudiants")}
               unit="€"
             />
@@ -139,7 +137,7 @@ export function FinancementsSection({
                   ? `${data.scsp_etudiants.toLocaleString("fr-FR")} étudiant${data.scsp_etudiants > 1 ? "s" : ""} en ${data.anuniv}`
                   : "—"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("scsp_etudiants")}
               unit="étudiants"
             />
@@ -152,7 +150,7 @@ export function FinancementsSection({
                   ? `${data.part_scsp_etudiants_effectif_sans_cpge.toFixed(1)} %`
                   : "—"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution(
                 "part_scsp_etudiants_effectif_sans_cpge"
               )}
@@ -180,7 +178,7 @@ export function FinancementsSection({
                   ? `${data.part_ress_formation.toFixed(1)} % des ressources propres`
                   : "Part des ressources propres"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("tot_ress_formation")}
               unit="€"
               metricKey="tot_ress_formation"
@@ -201,7 +199,7 @@ export function FinancementsSection({
                   ? `${data.part_ress_recherche.toFixed(1)} % des ressources propres`
                   : "Part des ressources propres"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("tot_ress_recherche")}
               unit="€"
               metricKey="tot_ress_recherche"
@@ -222,7 +220,7 @@ export function FinancementsSection({
                   ? `${data.part_ress_autres_recette.toFixed(1)} % des ressources propres`
                   : "Part des ressources propres"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("tot_ress_autres_recette")}
               unit="€"
               metricKey="tot_ress_autres_recette"

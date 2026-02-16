@@ -4,8 +4,8 @@ import MetricDefinitionsTable from "../../../../../../components/metric-definiti
 import { BudgetWarning } from "../../../../../../components/budget-warning";
 import { RenderDataBase100, RenderDataSingle } from "../render-data";
 import { createBase100ChartOptions } from "./options";
-import { METRICS_CONFIG } from "../../../../../../config/config";
-import type { MetricKey } from "../../../../../../config/config";
+import { METRICS_CONFIG } from "../../../../../../config/metrics-config";
+import type { MetricKey } from "../../../../../../config/metrics-config";
 
 interface Base100EvolutionChartProps {
   etablissementId: string;

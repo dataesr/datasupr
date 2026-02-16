@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
-import { CHART_COLORS } from "../../../../../../constants/colors";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { getCssColor } from "../../../../../../../../utils/colors";
 
 interface EvolutionDataItem {
   exercice: number;
@@ -21,57 +21,57 @@ const RESSOURCES_CATEGORIES = [
   {
     key: "droits_d_inscription",
     label: "Droits d'inscription",
-    color: CHART_COLORS.palette[0],
+    color: getCssColor("ress-droits-inscription"),
   },
   {
     key: "formation_continue_diplomes_propres_et_vae",
     label: "Formation continue",
-    color: CHART_COLORS.palette[1],
+    color: getCssColor("ress-formation-continue"),
   },
   {
     key: "taxe_d_apprentissage",
     label: "Taxe d'apprentissage",
-    color: CHART_COLORS.palette[2],
+    color: getCssColor("ress-taxe-apprentissage"),
   },
   {
     key: "valorisation",
     label: "Valorisation",
-    color: CHART_COLORS.palette[3],
+    color: getCssColor("ress-valorisation"),
   },
   {
     key: "anr_hors_investissements_d_avenir",
     label: "ANR hors IA",
-    color: CHART_COLORS.palette[4],
+    color: getCssColor("ress-anr-hors-ia"),
   },
   {
     key: "anr_investissements_d_avenir",
     label: "ANR IA",
-    color: CHART_COLORS.palette[5],
+    color: getCssColor("ress-anr-ia"),
   },
   {
     key: "contrats_et_prestations_de_recherche_hors_anr",
     label: "Contrats recherche",
-    color: CHART_COLORS.palette[6],
+    color: getCssColor("ress-contrats-recherche"),
   },
   {
     key: "subventions_de_la_region",
     label: "Subventions région",
-    color: CHART_COLORS.palette[7],
+    color: getCssColor("ress-subventions-region"),
   },
   {
     key: "subventions_union_europeenne",
     label: "Subventions UE",
-    color: CHART_COLORS.palette[8],
+    color: getCssColor("ress-subventions-ue"),
   },
   {
     key: "autres_ressources_propres",
     label: "Autres ressources",
-    color: CHART_COLORS.palette[9],
+    color: getCssColor("ress-autres-ressources"),
   },
   {
     key: "autres_subventions",
     label: "Autres subventions",
-    color: CHART_COLORS.palette[10],
+    color: getCssColor("ress-autres-subventions"),
   },
 ];
 

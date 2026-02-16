@@ -1,6 +1,7 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
+import { getCssColor } from "../../../../../../../../utils/colors";
 
 interface MetricConfig {
   label: string;
@@ -48,7 +49,7 @@ export const createStackedChartOptions = (
           }
           return typeof value === "number" ? value : 0;
         }),
-        color: config.color,
+        color: getCssColor(config.color),
         type: "column" as const,
         legendIndex: selectedMetrics.length - 1 - index,
       };

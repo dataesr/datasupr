@@ -1,12 +1,10 @@
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
-import { SECTION_COLORS } from "../../../../constants/colors";
 import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../components/metric-chart-card";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 import { SectionBudgetWarning } from "../../../../components/section-budget-warning";
-
-const SECTION_COLOR = SECTION_COLORS.moyensHumains;
+import { getCssColor } from "../../../../../../utils/colors";
 
 interface MoyensHumainsSectionProps {
   data: any;
@@ -52,7 +50,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                   : "—"
               }
               detail="Équivalent temps plein travaillé (ETPT)"
-              color={SECTION_COLOR}
+              color={getCssColor("section-moyens-humains")}
               evolutionData={useMetricEvolution("emploi_etpt")}
               unit="ETPT"
             />
@@ -75,7 +73,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                     )} étudiants`
                   : "Enseignants permanents"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-moyens-humains")}
               evolutionData={useMetricEvolution("taux_encadrement")}
               unit="%"
             />
@@ -102,7 +100,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                   : "—"
               }
               detail="Dépenses de masse salariale"
-              color={SECTION_COLOR}
+              color={getCssColor("section-moyens-humains")}
               evolutionData={useMetricEvolution("charges_de_personnel")}
               unit="€"
               metricKey="charges_de_personnel"
@@ -123,7 +121,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                   : "—"
               }
               detail="Part des produits encaissables"
-              color={SECTION_COLOR}
+              color={getCssColor("section-moyens-humains")}
               evolutionData={useMetricEvolution(
                 "charges_de_personnel_produits_encaissables"
               )}
@@ -147,7 +145,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                     : "—"
                 }
                 detail="Part des dépenses de personnel"
-                color={SECTION_COLOR}
+                color={getCssColor("section-moyens-humains")}
                 evolutionData={useMetricEvolution(
                   "taux_de_remuneration_des_permanents"
                 )}

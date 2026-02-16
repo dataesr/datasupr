@@ -10,8 +10,8 @@ import MetricDefinitionsTable from "../../../../../../components/metric-definiti
 import { BudgetWarning } from "../../../../../../components/budget-warning";
 import { RenderDataComparison } from "../render-data";
 import { createDualChartOptions } from "./options";
-import { METRICS_CONFIG } from "../../../../../../config/config";
-import type { MetricKey } from "../../../../../../config/config";
+import { METRICS_CONFIG } from "../../../../../../config/metrics-config";
+import type { MetricKey } from "../../../../../../config/metrics-config";
 
 interface DualEvolutionChartProps {
   etablissementId: string;

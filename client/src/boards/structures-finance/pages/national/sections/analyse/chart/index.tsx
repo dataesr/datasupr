@@ -20,9 +20,9 @@ import {
   METRIC_TO_PART,
   type AnalysisKey,
   type MetricKey,
-} from "../../../../../config/config.ts";
+} from "../../../../../config/metrics-config.ts";
 import { RenderData } from "./render-data.tsx";
-import { ThresholdLegend } from "../../../../../config/index.tsx";
+import { ThresholdLegend } from "../../../../../components/threshold/threshold-legend.tsx";
 import { BudgetWarning } from "../../../../../components/budget-warning";
 
 interface NationalChartProps {

@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
-import { CHART_COLORS } from "../../../../../../constants/colors";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { getCssColor } from "../../../../../../../../utils/colors";
 
 interface EvolutionDataItem {
   exercice: number;
@@ -19,25 +19,25 @@ export const RECHERCHE_CATEGORIES = [
     valueKey: "valorisation",
     partKey: "part_valorisation",
     label: "Valorisation",
-    color: CHART_COLORS.palette[3],
+    color: getCssColor("ress-valorisation"),
   },
   {
     valueKey: "anr_hors_investissements_d_avenir",
     partKey: "part_anr_hors_investissements_d_avenir",
     label: "ANR hors investissements d'avenir",
-    color: CHART_COLORS.palette[4],
+    color: getCssColor("ress-anr-hors-ia"),
   },
   {
     valueKey: "anr_investissements_d_avenir",
     partKey: "part_anr_investissements_d_avenir",
     label: "ANR investissements d'avenir",
-    color: CHART_COLORS.palette[5],
+    color: getCssColor("ress-anr-ia"),
   },
   {
     valueKey: "contrats_et_prestations_de_recherche_hors_anr",
     partKey: "part_contrats_et_prestations_de_recherche_hors_anr",
     label: "Contrats et prestations de recherche hors ANR",
-    color: CHART_COLORS.palette[6],
+    color: getCssColor("ress-contrats-recherche"),
   },
 ];
 

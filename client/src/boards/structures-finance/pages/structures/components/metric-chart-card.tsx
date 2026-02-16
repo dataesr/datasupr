@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import Highcharts from "highcharts";
-import { DSFR_COLORS } from "../../../constants/colors";
 import { BUDGET_SENSITIVE_METRICS } from "../../../components/budget-warning/budgetIndicators";
+import { getCssColor } from "../../../../../utils/colors";
 
 interface MetricChartCardProps {
   title: string;
@@ -22,7 +22,7 @@ export function MetricChartCard({
   title,
   value,
   detail,
-  color = "var(--blue-france-sun-113)",
+  color = getCssColor("blue-france"),
   evolutionData,
   unit = "",
   metricKey,
@@ -244,7 +244,7 @@ export function MetricChartCard({
         borderLeft: "none",
         borderRight: "none",
         borderBottom: "none",
-        backgroundColor: DSFR_COLORS.backgroundAlt,
+        backgroundColor: "var(--background-alt-grey)",
         display: "flex",
         flexDirection: "column",
       }}
@@ -260,7 +260,7 @@ export function MetricChartCard({
           <p
             className="fr-text--sm fr-text--bold fr-mb-1v"
             style={{
-              color: DSFR_COLORS.textDefault,
+              color: "var(--text-default-grey)",
               textTransform: "uppercase",
               letterSpacing: "0.5px",
             }}
@@ -274,7 +274,7 @@ export function MetricChartCard({
             <p
               className="fr-text--sm"
               style={{
-                color: DSFR_COLORS.textDefault,
+                color: "var(--text-default-grey)",
                 margin: 0,
               }}
             >

@@ -1,13 +1,9 @@
-// --- Shared types ---
-
 export interface MetricConfig {
   label: string;
   format: "number" | "percent" | "decimal" | "euro";
   color: string;
   suffix?: string;
 }
-
-// --- Shared helpers ---
 
 export function formatMetricValue(
   value: number | null | undefined,

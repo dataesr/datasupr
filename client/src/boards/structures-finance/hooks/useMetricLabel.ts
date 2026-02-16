@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useFinanceDefinitions } from "../pages/definitions/api";
-import { METRICS_CONFIG, type MetricKey } from "../config/config";
+import { METRICS_CONFIG, type MetricKey } from "../config/metrics-config";
 
 export function useMetricLabel() {
   const { data: definitionsData } = useFinanceDefinitions();

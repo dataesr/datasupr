@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
-import { METRIC_COLORS } from "../../../../../../constants/colors";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { getCssColor } from "../../../../../../../../utils/colors";
 
 interface EvolutionDataItem {
   exercice: number;
@@ -17,19 +17,19 @@ const DECOMPOSITION_CATEGORIES = [
     valueKey: "tot_ress_formation",
     partKey: "part_ress_formation",
     label: "Formation",
-    color: METRIC_COLORS.droitsInscription,
+    color: getCssColor("ress-decomp-formation"),
   },
   {
     valueKey: "tot_ress_recherche",
     partKey: "part_ress_recherche",
     label: "Recherche",
-    color: METRIC_COLORS.contratsRecherche,
+    color: getCssColor("ress-decomp-recherche"),
   },
   {
     valueKey: "tot_ress_autres_recette",
     partKey: "part_ress_autres_recette",
     label: "Autres recettes",
-    color: METRIC_COLORS.subventionsUE,
+    color: getCssColor("ress-decomp-autres"),
   },
 ];
 

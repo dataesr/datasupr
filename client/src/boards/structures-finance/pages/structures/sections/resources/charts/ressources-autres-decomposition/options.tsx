@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
-import { CHART_COLORS } from "../../../../../../constants/colors";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { getCssColor } from "../../../../../../../../utils/colors";
 
 interface EvolutionDataItem {
   exercice: number;
@@ -19,25 +19,25 @@ export const AUTRES_CATEGORIES = [
     valueKey: "subventions_de_la_region",
     partKey: "part_subventions_de_la_region",
     label: "Subventions de la région",
-    color: CHART_COLORS.palette[7],
+    color: getCssColor("ress-subventions-region"),
   },
   {
     valueKey: "subventions_union_europeenne",
     partKey: "part_subventions_union_europeenne",
     label: "Subventions Union Européenne",
-    color: CHART_COLORS.palette[8],
+    color: getCssColor("ress-subventions-ue"),
   },
   {
     valueKey: "autres_subventions",
     partKey: "part_autres_subventions",
     label: "Autres subventions",
-    color: CHART_COLORS.palette[10],
+    color: getCssColor("ress-autres-subventions"),
   },
   {
     valueKey: "autres_ressources_propres",
     partKey: "part_autres_ressources_propres",
     label: "Autres ressources propres",
-    color: CHART_COLORS.palette[9],
+    color: getCssColor("ress-autres-ressources"),
   },
 ];
 

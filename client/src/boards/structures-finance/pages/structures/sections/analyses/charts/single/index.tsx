@@ -16,14 +16,17 @@ import RessourcesAutresDecompositionChart from "../../../resources/charts/ressou
 import {
   ThresholdLegend,
   type ThresholdConfig,
-} from "../../../../../../config/index";
+} from "../../../../../../components/threshold/threshold-legend";
 import { RenderDataSingle } from "../render-data";
 import { createSingleChartOptions } from "./options";
 import {
   METRICS_CONFIG,
   METRIC_TO_PART,
-} from "../../../../../../config/config";
-import type { MetricKey, AnalysisKey } from "../../../../../../config/config";
+} from "../../../../../../config/metrics-config";
+import type {
+  MetricKey,
+  AnalysisKey,
+} from "../../../../../../config/metrics-config";
 
 interface SingleEvolutionChartProps {
   etablissementId: string;

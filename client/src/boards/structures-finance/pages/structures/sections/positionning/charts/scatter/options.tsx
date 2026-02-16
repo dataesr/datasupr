@@ -1,5 +1,5 @@
 import Highcharts from "highcharts";
-import { CHART_COLORS } from "../../../../../../constants/colors";
+import { getCssColor } from "../../../../../../../../utils/colors";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { deduplicateByPaysageId } from "../../../../../../utils/utils";
 
@@ -68,7 +68,25 @@ export const createPositioningScatterOptions = (
       regionGroups.get(region)!.push(point);
     });
 
-  const colors = CHART_COLORS.palette;
+  const colors = [
+    getCssColor("blue-cumulus"),
+    getCssColor("green-emeraude"),
+    getCssColor("pink-tuile"),
+    getCssColor("purple-glycine"),
+    getCssColor("yellow-moutarde"),
+    getCssColor("orange-terre-battue"),
+    getCssColor("green-archipel"),
+    getCssColor("blue-ecume"),
+    getCssColor("brown-caramel"),
+    getCssColor("pink-macaron"),
+    getCssColor("green-bourgeon"),
+    getCssColor("yellow-tournesol"),
+    getCssColor("green-menthe"),
+    getCssColor("brown-opera"),
+    getCssColor("green-tilleul"),
+    getCssColor("beige-gris-galet"),
+    getCssColor("brown-cafe-creme"),
+  ];
   const series = Array.from(regionGroups.entries())
     .sort(([regionA], [regionB]) =>
       regionA.localeCompare(regionB, "fr", { sensitivity: "base" })

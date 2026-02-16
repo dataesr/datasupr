@@ -19,8 +19,8 @@ import {
   METRIC_TO_PART,
   type AnalysisKey,
   type MetricKey,
-} from "../../../../../../config/config";
-import { ThresholdLegend } from "../../../../../../config/index";
+} from "../../../../../../config/metrics-config";
+import { ThresholdLegend } from "../../../../../../components/threshold/threshold-legend";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
 import {
   BUDGET_SENSITIVE_METRICS,

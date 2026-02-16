@@ -2,7 +2,7 @@ import { Row, Col } from "@dataesr/dsfr-plus";
 import ComparisonBarChart from "./comparison-bar";
 import ScatterChart from "./scatter";
 import AnalysisFilter from "../components/analysis-filter";
-import { type AnalysisKey } from "../../../../../config/config";
+import { type AnalysisKey } from "../../../../../config/metrics-config";
 
 export type ChartView = "comparison" | "scatter-1" | "scatter-2" | "scatter-3";
 

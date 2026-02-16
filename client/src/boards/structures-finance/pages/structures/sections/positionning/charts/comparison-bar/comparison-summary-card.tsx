@@ -7,7 +7,7 @@ import {
   STATUS_BADGE_CONFIG,
 } from "../../../../../../components/metric-status";
 import { calculateRank } from "../../../../../../components/metric-sort";
-import type { ThresholdConfig } from "../../../../../../config";
+import type { ThresholdConfig } from "../../../../../../components/threshold/threshold-legend";
 import type { ScatterDataset } from "../scatter-comparision/options";
 import {
   formatMetricValue,

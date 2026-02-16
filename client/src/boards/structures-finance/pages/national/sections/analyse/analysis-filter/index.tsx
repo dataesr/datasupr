@@ -5,7 +5,7 @@ import ItemFilter, {
 import {
   PREDEFINED_ANALYSES,
   type AnalysisKey,
-} from "../../../../../config/config";
+} from "../../../../../config/metrics-config";
 
 interface AnalysisFilterProps {
   selectedAnalysis: AnalysisKey | null;

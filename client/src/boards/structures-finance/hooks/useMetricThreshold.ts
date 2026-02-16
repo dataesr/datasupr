@@ -3,8 +3,8 @@ import { useFinanceDefinitions } from "../pages/definitions/api";
 import {
   FINANCIAL_HEALTH_INDICATORS,
   type ThresholdConfig,
-} from "../config/index";
-import type { MetricKey } from "../config/config";
+} from "../components/threshold/threshold-legend";
+import type { MetricKey } from "../config/metrics-config";
 
 export function useMetricThreshold(
   metricKey: MetricKey | null | undefined

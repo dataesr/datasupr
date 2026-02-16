@@ -1,6 +1,9 @@
 import { useMemo } from "react";
 import { useFinanceEtablissementEvolution } from "../api/api";
-import { PREDEFINED_ANALYSES, type AnalysisKey } from "../config/config";
+import {
+  PREDEFINED_ANALYSES,
+  type AnalysisKey,
+} from "../config/metrics-config";
 
 export function useAnalysesWithData(etablissementId: string) {
   const { data, isLoading } = useFinanceEtablissementEvolution(etablissementId);

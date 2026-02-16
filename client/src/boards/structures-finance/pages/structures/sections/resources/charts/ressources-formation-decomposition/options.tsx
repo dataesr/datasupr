@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
-import { CHART_COLORS } from "../../../../../../constants/colors";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { getCssColor } from "../../../../../../../../utils/colors";
 
 interface EvolutionDataItem {
   exercice: number;
@@ -17,19 +17,19 @@ const FORMATION_CATEGORIES = [
     valueKey: "droits_d_inscription",
     partKey: "part_droits_d_inscription",
     label: "Droits d'inscription",
-    color: CHART_COLORS.palette[0],
+    color: getCssColor("ress-droits-inscription"),
   },
   {
     valueKey: "formation_continue_diplomes_propres_et_vae",
     partKey: "part_formation_continue_diplomes_propres_et_vae",
     label: "Formation continue et VAE",
-    color: CHART_COLORS.palette[1],
+    color: getCssColor("ress-formation-continue"),
   },
   {
     valueKey: "taxe_d_apprentissage",
     partKey: "part_taxe_d_apprentissage",
     label: "Taxe d'apprentissage",
-    color: CHART_COLORS.palette[2],
+    color: getCssColor("ress-taxe-apprentissage"),
   },
 ];
 

@@ -14,7 +14,7 @@ import {
   METRIC_TO_PART,
   type MetricKey,
   type AnalysisKey,
-} from "../../../../../config/config";
+} from "../../../../../config/metrics-config";
 
 interface EvolutionChartProps {
   etablissementId?: string;

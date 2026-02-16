@@ -8,7 +8,7 @@ import {
   EmptyState,
 } from "../../components/analyses/section-wrapper";
 import "../styles.scss";
-import { AnalysisKey } from "../../../../config/config";
+import { AnalysisKey } from "../../../../config/metrics-config";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
 interface AnalysesSectionProps {

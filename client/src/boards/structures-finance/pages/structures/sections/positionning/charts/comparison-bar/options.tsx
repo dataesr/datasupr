@@ -1,7 +1,7 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
-import { createThresholdPlotBands } from "../../../../../../components/threshold-bands";
-import type { ThresholdConfig } from "../../../../../../config";
+import { createThresholdPlotBands } from "../../../../../../components/threshold/threshold-bands";
+import type { ThresholdConfig } from "../../../../../../components/threshold/threshold-legend";
 import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
 import {
   deduplicateByPaysageId,
@@ -11,6 +11,7 @@ import {
   sortByMetricSens,
   type MetricSens,
 } from "../../../../../../components/metric-sort";
+import { getCssColor } from "../../../../../../../../utils/colors";
 
 export interface PositioningComparisonBarConfig {
   metric: string;
@@ -157,8 +158,8 @@ export const createPositioningComparisonBarOptions = (
         data: chartData.map((d) => ({
           y: d.value,
           color: d.isCurrentStructure
-            ? "var(--background-flat-info)"
-            : "var(--text-default-grey)",
+            ? `${getCssColor("scale-1")}`
+            : `${getCssColor("scale-8")}`,
         })),
       },
     ],

@@ -1,8 +1,8 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../components/chart-wrapper/default-options";
-import { CHART_COLORS } from "../../../../../constants/colors";
-import { createThresholdPlotBands } from "../../../../../components/threshold-bands";
-import type { ThresholdConfig } from "../../../../../config";
+import { getCssColor } from "../../../../../../../utils/colors";
+import { createThresholdPlotBands } from "../../../../../components/threshold/threshold-bands";
+import type { ThresholdConfig } from "../../../../../components/threshold/threshold-legend";
 import { calculateOptimalTickInterval } from "../../../../../utils/chartUtils";
 
 interface MetricConfig {
@@ -136,7 +136,7 @@ export const createComparisonBarOptions = (
         dataLabels: {
           enabled: false,
         },
-        color: CHART_COLORS.primary,
+        color: getCssColor("scale-1"),
         borderRadius: 4,
       },
     },

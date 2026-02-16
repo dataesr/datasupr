@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
-import { CHART_COLORS } from "../../../../../../constants/colors";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { getCssColor } from "../../../../../../../../utils/colors";
 
 interface RessourcesPropresData {
   droits_d_inscription?: number;
@@ -73,7 +73,19 @@ export const createRessourcesPropresChartOptions = (
     data.part_autres_subventions || 0,
   ];
 
-  const colors = CHART_COLORS.palette;
+  const colors = [
+    getCssColor("ress-droits-inscription"),
+    getCssColor("ress-formation-continue"),
+    getCssColor("ress-taxe-apprentissage"),
+    getCssColor("ress-valorisation"),
+    getCssColor("ress-anr-hors-ia"),
+    getCssColor("ress-anr-ia"),
+    getCssColor("ress-contrats-recherche"),
+    getCssColor("ress-subventions-region"),
+    getCssColor("ress-subventions-ue"),
+    getCssColor("ress-autres-ressources"),
+    getCssColor("ress-autres-subventions"),
+  ];
 
   const seriesData = categories.map((cat, idx) => ({
     name: cat,

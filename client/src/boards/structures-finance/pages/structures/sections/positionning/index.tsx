@@ -6,6 +6,7 @@ import { usePositioningData } from "../../hooks";
 import { usePositioningParams } from "./hooks";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import "../styles.scss";
+import { Text } from "@dataesr/dsfr-plus";
 
 interface PositionnementSectionProps {
   data: any;
@@ -48,10 +49,10 @@ export function PositionnementSection({
     return (
       <PositionningSectionWrapper structureName={structureName}>
         <div className="fr-alert fr-alert--warning">
-          <p>
+          <Text>
             Les données de comparaison ne sont pas disponibles pour l'année
             sélectionnée.
-          </p>
+          </Text>
         </div>
       </PositionningSectionWrapper>
     );
@@ -73,7 +74,9 @@ export function PositionnementSection({
 
       {filteredItems.length === 0 ? (
         <div className="fr-alert fr-alert--warning">
-          <p>Aucun établissement ne correspond aux filtres sélectionnés.</p>
+          <Text>
+            Aucun établissement ne correspond aux filtres sélectionnés.
+          </Text>
         </div>
       ) : (
         <PositioningCharts

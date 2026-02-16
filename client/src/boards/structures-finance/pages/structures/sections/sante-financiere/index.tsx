@@ -1,12 +1,12 @@
 import { Row, Col, Title, Text } from "@dataesr/dsfr-plus";
 import { useMetricEvolution } from "../api";
 import { MetricChartCard } from "../../components/metric-chart-card";
-import { SECTION_COLORS } from "../../../../constants/colors";
 import StatusIndicator from "../../../../components/status-indicator";
 import { parseMarkdown } from "../../../../../../utils/format";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 import { useBudgetInfo } from "../../../../components/section-budget-warning/useBudgetInfo";
+import { getCssColor } from "../../../../../../utils/colors";
 
 type FinanceStatus = "alerte" | "vigilance" | "normal";
 
@@ -22,8 +22,6 @@ const jours = (n?: number) => {
   const val = n.toFixed(1);
   return `${val} jour${Math.abs(n) > 1 ? "s" : ""}`;
 };
-
-const SECTION_COLOR = SECTION_COLORS.santeFinanciere;
 
 const ValueWithStatus = ({
   value,
@@ -96,7 +94,7 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
           )
         }
         detail={detail}
-        color={SECTION_COLOR}
+        color={getCssColor("section-sante-financiere")}
         evolutionData={useMetricEvolution(id)}
         unit={unit}
         metricKey={id}

@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useFinanceDefinitions } from "../pages/definitions/api";
-import type { MetricKey } from "../config/config";
+import type { MetricKey } from "../config/metrics-config";
 import type { MetricSens } from "../components/metric-sort";
 
 /**

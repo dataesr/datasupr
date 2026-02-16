@@ -270,7 +270,7 @@ export default function SelectionUI({
           </Select>
         </div>
       </Col>
-      <Col xs="12" md="4">
+      <Col xs="12" md="4" className="fr-mt-4w text-center">
         <svg
           className="fr-artwork"
           aria-hidden="true"

@@ -6,7 +6,7 @@ import "../styles.scss";
 export default function SectionNavigation() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isOpen, setIsOpen] = useState(false);
-  const activeSection = searchParams.get("section") || "produits-vs-etudiants";
+  const activeSection = searchParams.get("section") || "comparison";
 
   const handleSectionChange = (section: string) => {
     searchParams.set("section", section);
@@ -15,10 +15,10 @@ export default function SectionNavigation() {
   };
 
   const navItems = [
+    { id: "comparison", label: "Comparaison de métriques" },
     { id: "produits-vs-etudiants", label: "Produits vs Effectifs" },
     { id: "scsp-vs-encadrement", label: "SCSP vs Encadrement" },
     { id: "scsp-vs-ressources-propres", label: "SCSP vs Ressources propres" },
-    { id: "comparison", label: "Comparaison de métriques" },
   ];
 
   return (

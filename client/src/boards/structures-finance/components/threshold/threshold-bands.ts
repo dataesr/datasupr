@@ -7,8 +7,8 @@
  */
 
 import Highcharts from "highcharts";
-import { THRESHOLD_COLORS } from "../../constants/colors";
-import type { ThresholdConfig } from "../../config";
+import { getCssColor } from "../../../../utils/colors";
+import type { ThresholdConfig } from "./threshold-legend";
 
 export interface ThresholdPlotConfig {
   plotBands: Highcharts.YAxisPlotBandsOptions[];
@@ -41,12 +41,12 @@ export function createThresholdPlotBands(
     plotBands.push({
       from: threshold.vig_min,
       to: threshold.vig_max,
-      color: THRESHOLD_COLORS.vigilanceBackground,
+      color: getCssColor("threshold-vigilance-bg"),
       zIndex: 0,
     });
     plotLines.push({
       value: threshold.vig_min,
-      color: THRESHOLD_COLORS.vigilanceLine,
+      color: getCssColor("threshold-vigilance-line"),
       width: 1.5,
       zIndex: 1,
     });
@@ -58,12 +58,12 @@ export function createThresholdPlotBands(
     plotBands.push({
       from: isAbove ? threshold.ale_val : dataMin - margin,
       to: isAbove ? dataMax + margin : threshold.ale_val,
-      color: THRESHOLD_COLORS.alertBackground,
+      color: getCssColor("threshold-alert-bg"),
       zIndex: 0,
     });
     plotLines.push({
       value: threshold.ale_val,
-      color: THRESHOLD_COLORS.alertLine,
+      color: getCssColor("threshold-alert-line"),
       width: 2,
       zIndex: 1,
     });

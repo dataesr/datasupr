@@ -1,9 +1,9 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
-import { createThresholdPlotBands } from "../../../../../../components/threshold-bands";
-import { THRESHOLD_COLORS } from "../../../../../../constants/colors";
-import type { ThresholdConfig } from "../../../../../../config";
+import { createThresholdPlotBands } from "../../../../../../components/threshold/threshold-bands";
+import type { ThresholdConfig } from "../../../../../../components/threshold/threshold-legend";
 import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
+import { getCssColor } from "../../../../../../../../utils/colors";
 
 interface MetricConfig {
   label: string;
@@ -151,10 +151,11 @@ export const createSingleChartOptions = (
               value <= threshold.vig_max;
 
             if (isAlert) {
-              zoneInfo = `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;color:${THRESHOLD_COLORS.alertLine}"><strong>⚠ Zone d'alerte</strong></div>`;
+              zoneInfo = `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;color:${getCssColor("threshold-alert-line")}"><strong>⚠ Zone d'alerte</strong></div>`;
             } else if (isVigilance) {
-              zoneInfo = `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;color:${THRESHOLD_COLORS.vigilanceLine}"><strong>⚠ Zone de vigilance</strong></div>`;
+              zoneInfo = `<div style="margin-top:8px;padding-top:8px;border-top:1px solid #ddd;color:${getCssColor("threshold-vigilance-line")}"><strong>⚠ Zone de vigilance</strong></div>`;
             }
+
             tooltip += zoneInfo;
           }
         }
