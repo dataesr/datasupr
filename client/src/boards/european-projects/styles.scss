@@ -66,10 +66,10 @@
   // Badge réutilisable pour les graphiques
   .chart-badge {
     position: absolute;
-    top: -8px;
+    top: -24px;
     left: -8px;
     background-color: var(--background-action-high-blue-france);
-    color: white;
+    color: var(--text-default-grey);
     padding: 4px 12px;
     border-radius: 4px;
     font-size: 0.75rem;
@@ -83,7 +83,6 @@
 
   .chart-container--pillars {
     background-color: color-mix(in srgb, var(--background-default-grey-hover) 20%, transparent) !important;
-
   }
   .chart-container--programs {
     background-color: var(--background-contrast-purple-glycine) !important;
