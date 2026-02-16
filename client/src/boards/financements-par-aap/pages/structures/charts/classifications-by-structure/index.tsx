@@ -142,7 +142,7 @@ export default function ClassificationsByStructure({ name }: { name: string | un
   })).reverse();
   const seriesProjectNotCoord: any = funders.map((funder) => ({
     color: getCssColor({ name: funder, prefix: "funder" }),
-    data: classificationsProject.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+    data: classificationsProject.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
     name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
   })).reverse();
   const categoriesProject = classificationsProject.map((classification) => classification.key);
@@ -154,7 +154,7 @@ export default function ClassificationsByStructure({ name }: { name: string | un
   })).reverse();
   const seriesBudgetNotCoord: any = funders.map((funder) => ({
     color: getCssColor({ name: funder, prefix: "funder" }),
-    data: classificationsBudget.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
+    data: classificationsBudget.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
     name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
   })).reverse();
   const categoriesBudget = classificationsBudget.map((classification) => classification.key);
@@ -166,7 +166,7 @@ export default function ClassificationsByStructure({ name }: { name: string | un
   })).reverse();
   const seriesParticipationNotCoord: any = funders.map((funder) => ({
     color: getCssColor({ name: funder, prefix: "funder" }),
-    data: classificationsParticipation.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+    data: classificationsParticipation.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
     name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
   })).reverse();
   const categoriesParticipation = classificationsParticipation.map((classification) => classification.key);
