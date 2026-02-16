@@ -29,7 +29,7 @@ interface ComparisonBarChartProps {
   currentStructureId?: string;
   currentStructureName?: string;
   selectedYear?: string;
-  selectedMetric: MetricKey;
+  selectedMetric?: MetricKey;
 }
 
 export default function ComparisonBarChart({
@@ -37,7 +37,7 @@ export default function ComparisonBarChart({
   currentStructureId,
   currentStructureName = "",
   selectedYear = "",
-  selectedMetric: baseMetric,
+  selectedMetric: baseMetric = "effectif_sans_cpge" as MetricKey,
 }: ComparisonBarChartProps) {
   const [showPart, setShowPart] = useState(false);
 
