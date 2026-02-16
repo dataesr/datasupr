@@ -78,6 +78,17 @@ export const createPositioningComparisonBarOptions = (
     },
     xAxis: {
       categories: chartData.map((d) => d.name),
+      labels: {
+        useHTML: true,
+        formatter: function () {
+          const index = this.pos;
+          const item = chartData[index];
+          if (item?.isCurrentStructure) {
+            return `<span style="font-weight: bold; color: ${getCssColor("scale-1")}">◆ ${this.value}</span>`;
+          }
+          return `${this.value}`;
+        },
+      },
       gridLineWidth: 0,
     },
     yAxis: {

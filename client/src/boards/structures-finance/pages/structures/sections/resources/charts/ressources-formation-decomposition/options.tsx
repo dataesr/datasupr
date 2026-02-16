@@ -15,19 +15,19 @@ interface EvolutionDataItem {
 const FORMATION_CATEGORIES = [
   {
     valueKey: "droits_d_inscription",
-    partKey: "part_droits_d_inscription",
+    partKey: "part_droits_d_inscription_part",
     label: "Droits d'inscription",
     color: getCssColor("ress-droits-inscription"),
   },
   {
     valueKey: "formation_continue_diplomes_propres_et_vae",
-    partKey: "part_formation_continue_diplomes_propres_et_vae",
+    partKey: "part_formation_continue_diplomes_propres_et_vae_part",
     label: "Formation continue et VAE",
     color: getCssColor("ress-formation-continue"),
   },
   {
     valueKey: "taxe_d_apprentissage",
-    partKey: "part_taxe_d_apprentissage",
+    partKey: "part_taxe_d_apprentissage_part",
     label: "Taxe d'apprentissage",
     color: getCssColor("ress-taxe-apprentissage"),
   },

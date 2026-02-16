@@ -9,15 +9,12 @@ import {
 import { createPositioningComparisonBarOptions } from "./options";
 import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
-import Select from "../../../../../../components/select";
 import { useMetricThreshold } from "../../../../../../hooks/useMetricThreshold";
 import { useMetricSens } from "../../../../../../hooks/useMetricSens";
 import { useMetricLabel } from "../../../../../../hooks/useMetricLabel";
 import {
-  PREDEFINED_ANALYSES,
   METRICS_CONFIG,
   METRIC_TO_PART,
-  type AnalysisKey,
   type MetricKey,
 } from "../../../../../../config/metrics-config";
 import { ThresholdLegend } from "../../../../../../components/threshold/threshold-legend";
@@ -26,70 +23,25 @@ import {
   BUDGET_SENSITIVE_METRICS,
   BudgetWarning,
 } from "../../../../../../components/budget-warning";
-import { useComparisonFilters } from "../../hooks";
-import ComparisonSummaryCard from "./comparison-summary-card";
-
-const filterDisplayMetrics = (metrics: readonly string[]) =>
-  metrics.filter(
-    (m) => !m.includes("_ipc") && m !== "effectif_sans_cpge_veto"
-  ) as MetricKey[];
 
 interface ComparisonBarChartProps {
   data?: any[];
-  allData?: any[];
-  currentStructure?: any;
   currentStructureId?: string;
   currentStructureName?: string;
   selectedYear?: string;
-  selectedAnalysis?: AnalysisKey | null;
-  activeFilters?: {
-    type?: string;
-    typologie?: string;
-    region?: string;
-    rce?: string;
-    devimmo?: string;
-  };
+  selectedMetric: MetricKey;
 }
 
 export default function ComparisonBarChart({
   data = [],
-  allData = [],
-  currentStructure,
   currentStructureId,
   currentStructureName = "",
   selectedYear = "",
-  selectedAnalysis = null,
-  activeFilters = {},
+  selectedMetric: baseMetric,
 }: ComparisonBarChartProps) {
-  const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
   const [showPart, setShowPart] = useState(false);
 
   const getMetricLabel = useMetricLabel();
-
-  const { baseData, filterByCriteria, visibleCards } = useComparisonFilters(
-    allData,
-    currentStructure,
-    currentStructureId,
-    activeFilters
-  );
-
-  const analysisConfig = selectedAnalysis
-    ? PREDEFINED_ANALYSES[selectedAnalysis]
-    : null;
-  const isStacked = (analysisConfig as any)?.chartType === "stacked";
-
-  const displayMetrics = analysisConfig
-    ? filterDisplayMetrics(analysisConfig.metrics)
-    : [];
-
-  const baseMetric = useMemo(() => {
-    if (!analysisConfig) return "effectif_sans_cpge" as MetricKey;
-    if (isStacked) {
-      return (displayMetrics[selectedMetricIndex] ||
-        displayMetrics[0]) as MetricKey;
-    }
-    return analysisConfig.metrics[0] as MetricKey;
-  }, [analysisConfig, isStacked, displayMetrics, selectedMetricIndex]);
 
   const partMetric = METRIC_TO_PART[baseMetric];
   const hasPartVersion = useMemo(() => {
@@ -105,7 +57,6 @@ export default function ComparisonBarChart({
     showPart && hasPartVersion && partMetric ? partMetric : baseMetric;
 
   const metricSens = useMetricSens(selectedMetric);
-
   const metricThreshold = useMetricThreshold(selectedMetric);
   const metricLabel = getMetricLabel(selectedMetric);
   const selectedMetricConfig =
@@ -184,54 +135,7 @@ export default function ComparisonBarChart({
 
   return (
     <div>
-      {isStacked && displayMetrics.length > 1 && currentStructureHasData && (
-        <Row gutters className="fr-mb-3w">
-          <Col xs="12" md="6">
-            <Text className="fr-text--sm fr-text--bold fr-mb-1w">Métrique</Text>
-            <Select
-              label={
-                METRICS_CONFIG[displayMetrics[selectedMetricIndex] as MetricKey]
-                  ?.label || "Sélectionner"
-              }
-              size="sm"
-              fullWidth
-              className="fr-mb-0"
-            >
-              {displayMetrics.map((metric, index) => (
-                <Select.Checkbox
-                  key={metric}
-                  value={String(index)}
-                  checked={selectedMetricIndex === index}
-                  onChange={() => setSelectedMetricIndex(index)}
-                >
-                  {METRICS_CONFIG[metric as MetricKey]?.label || metric}
-                </Select.Checkbox>
-              ))}
-            </Select>
-          </Col>
-        </Row>
-      )}
-      {currentStructureHasData && (
-        <ComparisonSummaryCard
-          allData={baseData}
-          filterDataByCriteria={filterByCriteria}
-          metric={selectedMetric}
-          metricConfig={selectedMetricConfig}
-          metricLabel={metricLabel}
-          currentStructure={currentStructure}
-          currentStructureId={currentStructureId}
-          currentStructureName={currentStructureName}
-          selectedYear={formattedYear}
-          metricSens={metricSens}
-          metricThreshold={metricThreshold}
-          showAllCard={visibleCards.all}
-          showRegionCard={visibleCards.region}
-          showTypeCard={visibleCards.type}
-          showTypologieCard={visibleCards.typologie}
-        />
-      )}
-
-      {hasPartVersion && currentStructureHasData && (
+      {currentStructureHasData && hasPartVersion && (
         <Row gutters className="fr-mb-3w">
           <Col xs="12" md="6">
             <Text className="fr-text--sm fr-text--bold fr-mb-1w">
@@ -291,7 +195,7 @@ export default function ComparisonBarChart({
         </>
       )}
 
-      <MetricDefinitionsTable metricKeys={displayMetrics} />
+      <MetricDefinitionsTable metricKeys={[baseMetric]} />
     </div>
   );
 }

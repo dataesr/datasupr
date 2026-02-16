@@ -17,25 +17,25 @@ interface EvolutionDataItem {
 export const RECHERCHE_CATEGORIES = [
   {
     valueKey: "valorisation",
-    partKey: "part_valorisation",
+    partKey: "part_valorisation_part",
     label: "Valorisation",
     color: getCssColor("ress-valorisation"),
   },
   {
     valueKey: "anr_hors_investissements_d_avenir",
-    partKey: "part_anr_hors_investissements_d_avenir",
+    partKey: "part_anr_hors_investissements_d_avenir_part",
     label: "ANR hors investissements d'avenir",
     color: getCssColor("ress-anr-hors-ia"),
   },
   {
     valueKey: "anr_investissements_d_avenir",
-    partKey: "part_anr_investissements_d_avenir",
+    partKey: "part_anr_investissements_d_avenir_part",
     label: "ANR investissements d'avenir",
     color: getCssColor("ress-anr-ia"),
   },
   {
     valueKey: "contrats_et_prestations_de_recherche_hors_anr",
-    partKey: "part_contrats_et_prestations_de_recherche_hors_anr",
+    partKey: "part_contrats_et_prestations_de_recherche_hors_anr_part",
     label: "Contrats et prestations de recherche hors ANR",
     color: getCssColor("ress-contrats-recherche"),
   },

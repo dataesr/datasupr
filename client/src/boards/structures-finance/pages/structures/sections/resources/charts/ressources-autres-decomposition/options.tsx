@@ -17,25 +17,25 @@ interface EvolutionDataItem {
 export const AUTRES_CATEGORIES = [
   {
     valueKey: "subventions_de_la_region",
-    partKey: "part_subventions_de_la_region",
+    partKey: "part_subventions_de_la_region_part",
     label: "Subventions de la région",
     color: getCssColor("ress-subventions-region"),
   },
   {
     valueKey: "subventions_union_europeenne",
-    partKey: "part_subventions_union_europeenne",
+    partKey: "part_subventions_union_europeenne_part",
     label: "Subventions Union Européenne",
     color: getCssColor("ress-subventions-ue"),
   },
   {
     valueKey: "autres_subventions",
-    partKey: "part_autres_subventions",
+    partKey: "part_autres_subventions_part",
     label: "Autres subventions",
     color: getCssColor("ress-autres-subventions"),
   },
   {
     valueKey: "autres_ressources_propres",
-    partKey: "part_autres_ressources_propres",
+    partKey: "part_autres_ressources_propres_part",
     label: "Autres ressources propres",
     color: getCssColor("ress-autres-ressources"),
   },
