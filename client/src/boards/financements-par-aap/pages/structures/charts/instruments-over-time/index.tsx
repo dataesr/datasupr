@@ -6,9 +6,11 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, getCssColor, getEsQuery, getGeneralOptions, years } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, getCssColor, getEsQuery, getGeneralOptions, pattern, years } from "../../../../utils.ts";
+import i18n from "../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -32,19 +34,26 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
               field: "project_year",
             },
             aggregations: {
-              unique_projects: {
-                cardinality: {
-                  field: "project_id.keyword",
+              is_coordinator: {
+                terms: {
+                  field: "participation_is_coordinator",
                 },
-              },
-              sum_budget: {
-                sum: {
-                  field: "project_budgetFinanced",
-                },
-              },
-              sum_budget_participation: {
-                sum: {
-                  field: "participation_funding",
+                aggregations: {
+                  unique_projects: {
+                    cardinality: {
+                      field: "project_id.keyword",
+                    },
+                  },
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
+                  sum_budget_participation: {
+                    sum: {
+                      field: "participation_funding",
+                    },
+                  },
                 },
               },
             },
@@ -67,23 +76,41 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  const seriesBudget = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
-    color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
-    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget?.value ?? 0),
+  const seriesBudgetCoord = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
+    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }) } },
+    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
     marker: { enabled: false },
-    name: instrument.key,
+    name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
   }));
-  const seriesParticipation = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
+  const seriesBudgetNotCoord = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
     color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
-    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget_participation?.value ?? 0),
+    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
     marker: { enabled: false },
-    name: instrument.key,
+    name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
   }));
-  const seriesProject = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
-    color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
-    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.unique_projects?.value ?? 0),
+  const seriesParticipationCoord = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
+    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }) } },
+    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
     marker: { enabled: false },
-    name: instrument.key,
+    name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+  }));
+  const seriesParticipationNotCoord = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
+    color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
+    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+    marker: { enabled: false },
+    name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+  }));
+  const seriesProjectCoord = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
+    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }) } },
+    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+    marker: { enabled: false },
+    name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+  }));
+  const seriesProjectNotCoord = (data?.aggregations?.by_instrument?.buckets ?? []).map((instrument) => ({
+    color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
+    data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+    marker: { enabled: false },
+    name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
   }));
 
   const config = {
@@ -93,7 +120,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
 
   // If view by number of projects
   let axis = 'Nombre de projets financés';
-  let series = seriesProject;
+  let series = seriesProjectNotCoord.concat(seriesProjectCoord);
   let title = `Evolution temporelle des instruments dont a bénéficié l'établissement (${name})`;
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> instruments <b>${this.series.name}</b> en <b>${this.x}</b> dont a bénéficié <b>${name}</b>`;
@@ -102,7 +129,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
     // If view by global amount
     case 'amount_global':
       axis = 'Montants globaux financés (€)';
-      series = seriesBudget;
+      series = seriesBudgetNotCoord.concat(seriesBudgetCoord);
       title = `Evolution temporelle du montant financé par instrument dont a bénéficié l'établissement (${name})`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié <b>${name}</b>`;
@@ -111,7 +138,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
     // If view by amount by structure
     case 'amount_by_structure':
       axis = 'Montants financés pour cet établissement (€)';
-      series = seriesParticipation;
+      series = seriesParticipationNotCoord.concat(seriesParticipationCoord);
       title = `Evolution temporelle du montant alloué par instrument dont a bénéficié l'établissement (${name})`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié <b>${name}</b>`;
