@@ -158,7 +158,7 @@ export default function Cards() {
                   className="fr-text--sm fr-text--bold fr-mb-1v"
                   style={{ letterSpacing: "0.5px", textTransform: "uppercase" }}
                 >
-                  {`Financements perçus pour les projets auxquels l'établissement participe`}
+                  {`Financements globaux des projets auxquels l'établissement participe`}
                 </p>
               </div>
             </div>
@@ -171,7 +171,7 @@ export default function Cards() {
                 color={getCssColor({ name: funder, prefix: "funder" })}
                 data={dataFunders[funder].budget}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
-                title={`Montants des projets ${funder}`}
+                title={`Financement global des projets ${funder}`}
                 tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y)} € par ${funder} en ${this.key}` }}
                 value={`${formatCompactNumber(dataFunders[funder].budget.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
                 yAxisMax={maxBudget}
@@ -214,7 +214,7 @@ export default function Cards() {
                 color={getCssColor({ name: funder, prefix: "funder" })}
                 data={dataFunders[funder].participation}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
-                title={`Financements alloués des projets ${funder}`}
+                title={`Financements perçus des projets ${funder}`}
                 tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y)} € par ${funder} en ${this.key}` }}
                 value={`${formatCompactNumber(dataFunders[funder].participation.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
                 yAxisMax={maxParticipation}
