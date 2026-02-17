@@ -35,9 +35,9 @@ export default function OverviewByStructure({ name }: { name: string | undefined
               field: "participation_is_coordinator",
             },
             aggregations: {
-              sum_budget: {
+              sum_budget_participation: {
                 sum: {
-                  field: "project_budgetFinanced",
+                  field: "participation_funding",
                 },
               },
             },
@@ -65,8 +65,8 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     // Filter on not empty item
     .filter((item) => !!item)
     .map((bucket) => [
-      [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.doc_count ?? 0],
-      [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
+      [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.doc_count ?? 0],
+      [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
     ])
     .flat();
   const colors = funders.map((funder) => [{ pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } }, getCssColor({ name: funder, prefix: "funder" })]).flat();
@@ -133,7 +133,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       title: { text: "Nombre de projets" },
       type: "category",
     },
-    yAxis: { title: { text: getI18nLabel(i18n, 'funding_total') } },
+    yAxis: { title: { text: getI18nLabel(i18n, 'funding_by_structure') } },
   };
   const generalOptions = createChartOptions("variwide", { chart: { height: "600px" } });
   const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);

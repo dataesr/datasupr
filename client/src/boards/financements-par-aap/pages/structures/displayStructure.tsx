@@ -30,6 +30,7 @@ export default function DisplayStructure() {
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
   const [isOpen, setIsOpen] = useState(false);
   const sections = [
+    { id: "apercu", label: "Aperçu" },
     { id: "financements", label: "Volume et répartition des financements" },
     { id: "evolution", label: "Evolution temporelle" },
     { id: "partenaires", label: "Institutions partenaires" },
@@ -196,10 +197,12 @@ export default function DisplayStructure() {
           (<Alert description="Merci de choisir une année de fin supérieure ou égale à l'année de début" title="Erreur dans le choix des années" variant="error" />) :
           (
             <>
+              {(section === "apercu") && (
+                <Cards />
+              )}
               {(section === "financements") && (
                 <>
-                  <Cards />
-                  <Row gutters>
+                  <Row gutters style={{ clear: "both" }}>
                     <Col>
                       <ProjectsByStructure name={label} />
                     </Col>

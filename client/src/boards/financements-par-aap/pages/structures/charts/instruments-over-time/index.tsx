@@ -4,6 +4,7 @@ import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
@@ -26,7 +27,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
       by_instrument: {
         terms: {
           field: "project_instrument.keyword",
-          size: 15,
+          size: 10,
         },
         aggregations: {
           by_project_year: {
@@ -144,9 +145,9 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, 'funding_by_structure');
       series = seriesParticipation.reverse();
-      title = `Evolution temporelle du montant alloué par instrument dont a bénéficié l'établissement (${name})`;
+      title = `Evolution temporelle du montant perçu par instrument dont a bénéficié l'établissement (${name})`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié <b>${name}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié <b>${name}</b>`;
       };
       break;
   };
@@ -154,21 +155,25 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
   const localOptions = {
     legend: { enabled: true, reversed: true },
     plotOptions: {
-      series: { pointStart: Number(years[0]) },
       area: {
         stacking: "normal",
         marker: {
           enabled: false,
           lineColor: "#666666",
           lineWidth: 1,
-          symbol: "circle"
-        }
-      }
+          symbol: "circle",
+        },
+      },
+      series: { pointStart: Number(years[0]) },
     },
     series,
+    title: { text: "" },
     tooltip: { formatter: tooltip },
+    xAxis: { categories: [], title: { text: "Année de début du projet" } },
+    yAxis: { title: { text: "" } },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", [], "Année de début du projet", axis, "area"), localOptions);
+  const generalOptions = createChartOptions("area", { chart: { height: "800px" } });
+  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   // TODO: implement it later
   // const renderData = (options: HighchartsInstance.Options) => {

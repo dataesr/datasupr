@@ -4,12 +4,13 @@ import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getCssColor, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -239,22 +240,13 @@ On observe que certains laboratoires concentrent une part importante des projets
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
       };
       break;
   }
 
   const localOptions = {
     legend: { enabled: true, reversed: true },
-    yAxis: {
-      stackLabels: {
-        enabled: true,
-        style: {
-          fontWeight: 'bold'
-        },
-        formatter: stackLabel,
-      }
-    },
     plotOptions: {
       series: {
         dataLabels: {
@@ -262,12 +254,25 @@ On observe que certains laboratoires concentrent une part importante des projets
           formatter: dataLabel,
         },
         stacking: "normal",
-      }
+      },
     },
     series,
+    title: { text: "" },
     tooltip: { formatter: tooltip },
+    xAxis: { categories, title: { text: "" } },
+    yAxis: {
+      stackLabels: {
+        enabled: true,
+        style: {
+          fontWeight: "bold",
+        },
+        formatter: stackLabel,
+      },
+      title: { text: axis },
+    },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", axis), localOptions);
+  const generalOptions = createChartOptions("bar", { chart: { height: "1000px" } });
+  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structures">

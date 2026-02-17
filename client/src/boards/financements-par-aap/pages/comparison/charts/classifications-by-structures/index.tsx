@@ -226,9 +226,9 @@ export default function ClassificationsByStructures() {
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
-      title = `Profils disciplinaires des établissements via le montant des projets alloués ${getYearRangeLabel({ yearMax, yearMin })}`;
+      title = `Profils disciplinaires des établissements via les montants perçus ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
       };
       break;
   }

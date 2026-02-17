@@ -164,9 +164,9 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
-      title = `Montant alloué des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+      title = `Financement perçu pour des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> alloués ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
+        return `<b>${formatCompactNumber(this.y)} €</b> perçus ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
       };
       break;
   };

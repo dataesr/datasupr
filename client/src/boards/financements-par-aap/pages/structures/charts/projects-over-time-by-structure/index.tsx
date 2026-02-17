@@ -145,9 +145,9 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, 'funding_by_structure');
       series = seriesParticipation.reverse();
-      title = `Evolution temporelle du montant alloué pour les projets auxquels participe l'établissement (${name})`;
+      title = `Evolution temporelle du montant perçu pour les projets auxquels participe l'établissement (${name})`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
       };
       break;
   }

@@ -54,9 +54,9 @@ export default function Home() {
             Financements ANR
           </Title>
           <Text>
-            L'Agence Nationale de la Recherche (ANR) expose en open data deux jeux de données 
-            (DGDS pour les projets ANR et DGPIE pour les projets PIA ANR). Ces sources fournissent 
-            des informations détaillées sur les projets financés par l’ANR, avec une description des 
+            L'Agence Nationale de la Recherche (ANR) expose en open data deux jeux de données
+            (DGDS pour les projets ANR et DGPIE pour les projets PIA ANR). Ces sources fournissent
+            des informations détaillées sur les projets financés par l’ANR, avec une description des
             participants généralement disponible au niveau des laboratoires pour les projets DGDS.
           </Text>
           <Title as="h3" look="h6">
@@ -71,7 +71,7 @@ export default function Home() {
             Elles décrivent principalement les participants au niveau institutionnel. Un
             travail complémentaire est mené avec le CNRS, le CEA, l’INRAE, l’INRIA et l’ONERA afin
             d’enrichir ces données et de reconstituer, lorsque cela est possible, le niveau
-            laboratoire pour les financements européens. Horizon 2020 couvre la période 2014–2020, 
+            laboratoire pour les financements européens. Horizon 2020 couvre la période 2014–2020,
             tandis que son successeur, Horizon Europe couvre 2021-2027.
           </Text>
           <Title as="h3" look="h6">
@@ -82,7 +82,7 @@ export default function Home() {
             pilotés par l’ANR sont issues des données affichées sur Piaweb. Elles sont
             principalement disponibles à un niveau institutionnel.
           </Text>
-          <Text>De plus, les <strong>référentiels de structures (RNSR)</strong> et d'<strong>établissements 
+          <Text>De plus, les <strong>référentiels de structures (RNSR)</strong> et d'<strong>établissements
             (Paysage)</strong> permettent de rattacher chaque participation observée aux
             structures parentes (tutelles).
           </Text>
@@ -91,7 +91,7 @@ export default function Home() {
           </Title>
           <Text>
             Les sources de financements ne renseignent pas de manière homogène les montants
-            alloués à chaque participant. Dans la majorité des cas, seul le montant global du
+            perçus par chaque participant. Dans la majorité des cas, seul le montant global du
             projet est disponible.
           </Text>
           <Text>

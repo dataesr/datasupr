@@ -223,7 +223,7 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> alloués pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> perçus pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
   }

@@ -227,7 +227,7 @@ L’analyse doit porter en priorité sur les proportions relatives entre catégo
       };
       title = `Montant total des projets par financeur – comparaison entre établissements ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesProject[this.x]}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesProject[this.x]}</b>`;
       };
       break;
   }

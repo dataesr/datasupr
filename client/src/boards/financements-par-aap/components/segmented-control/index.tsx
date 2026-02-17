@@ -12,7 +12,7 @@ export default function SegmentedControl({ selectedControl, setSelectedControl }
   const id = useId();
 
   if (!isInProduction()) {
-    controls.push({ field: 'amount_by_structure', label: 'Financement alloué (implication)' });
+    controls.push({ field: 'amount_by_structure', label: 'Financement perçu (implication)' });
   }
 
   return (

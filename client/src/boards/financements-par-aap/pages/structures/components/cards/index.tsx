@@ -39,6 +39,11 @@ export default function Cards() {
                   field: "project_budgetFinanced",
                 },
               },
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
+                },
+              },
             },
           },
         },
@@ -73,11 +78,17 @@ export default function Cards() {
         y: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget?.value ?? 0,
         yDisplay: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget?.value ?? 0,
       })),
+      participation: years.map((year) => ({
+        x: year,
+        y: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget_participation?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget_participation?.value ?? 0,
+      })),
     };
   });
 
   const maxProjects: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.projects.map((project) => project.y)).flat());
-  const maxBudget: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.budget.map((project) => project.y)).flat());
+  const maxBudget: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.budget.map((budget) => budget.y)).flat());
+  const maxParticipation: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.participation.map((participation) => participation.y)).flat());
 
   return (
     <>
@@ -127,9 +138,9 @@ export default function Cards() {
         ))}
       </Row>
       <Row gutters>
-        <Col xs="12" md="2" key={`card-projects-intro`}>
+        <Col xs="12" md="2" key={`card-budget-intro`}>
           <div
-            aria-label={`Montants financés ${getYearRangeLabel({ yearMax, yearMin })} par financeur`}
+            aria-label={`Financements ${getYearRangeLabel({ yearMax, yearMin })} par financeur`}
             className="fr-card"
             role="article"
             style={{
@@ -147,7 +158,7 @@ export default function Cards() {
                   className="fr-text--sm fr-text--bold fr-mb-1v"
                   style={{ letterSpacing: "0.5px", textTransform: "uppercase" }}
                 >
-                  {`Montants financés pour les projets auxquels l'établissement participe`}
+                  {`Financements perçus pour les projets auxquels l'établissement participe`}
                 </p>
               </div>
             </div>
@@ -161,9 +172,52 @@ export default function Cards() {
                 data={dataFunders[funder].budget}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Montants des projets ${funder}`}
-                tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y - 1)} € par ${funder} en ${this.key}` }}
+                tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y)} € par ${funder} en ${this.key}` }}
                 value={`${formatCompactNumber(dataFunders[funder].budget.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
                 yAxisMax={maxBudget}
+              />
+            }
+          </Col>
+        ))}
+      </Row>
+      <Row gutters>
+        <Col xs="12" md="2" key={`card-participation-intro`}>
+          <div
+            aria-label={`Financements perçus ${getYearRangeLabel({ yearMax, yearMin })} par financeur`}
+            className="fr-card"
+            role="article"
+            style={{
+              borderBottom: "none",
+              borderLeft: "none",
+              borderRight: "none",
+              height: "100%",
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
+            <div className="fr-card__body fr-p-2w" style={{ pointerEvents: "none", position: "relative" }}>
+              <div className="fr-card__content">
+                <p
+                  className="fr-text--sm fr-text--bold fr-mb-1v"
+                  style={{ letterSpacing: "0.5px", textTransform: "uppercase" }}
+                >
+                  {`Financements perçus pour les projets auxquels l'établissement participe`}
+                </p>
+              </div>
+            </div>
+          </div>
+        </Col>
+        {Object.keys(dataFunders).map((funder) => (
+          <Col xs="12" md="2" key={`card-participation-${funder}`}>
+            {isLoading ? <DefaultSkeleton height="250px" /> :
+              <ChartCard
+                color={getCssColor({ name: funder, prefix: "funder" })}
+                data={dataFunders[funder].participation}
+                detail={getYearRangeLabel({ yearMax, yearMin })}
+                title={`Financements alloués des projets ${funder}`}
+                tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y)} € par ${funder} en ${this.key}` }}
+                value={`${formatCompactNumber(dataFunders[funder].participation.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
+                yAxisMax={maxParticipation}
               />
             }
           </Col>
