@@ -16,7 +16,6 @@ const RouteWithTitle = ({ titleKey, element }) => {
   return element;
 };
 
-
 export default function FundingsRoutes() {
   return (
     <Routes>

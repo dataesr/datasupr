@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import Highcharts from "highcharts";
 import React from "react";
 
-import Highcharts from "highcharts";
+import { createChartOptions } from "../../../../components/chart-wrapper/default-options";
 import ChartWrapper, { ChartConfig, HighchartsOptions } from "../../../../components/chart-wrapper/index.js";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default.js";
+import { deepMerge } from "../../utils.js";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 

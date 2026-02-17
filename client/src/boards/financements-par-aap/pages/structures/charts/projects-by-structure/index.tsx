@@ -1,17 +1,18 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
+import "highcharts/modules/pattern-fill";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import "highcharts/modules/pattern-fill";
 
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
+import { deepMerge, formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -155,7 +156,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = 'Montants alloués (€)';
+      axis = getI18nLabel(i18n, 'funding_by_structure');
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
       };
@@ -184,7 +185,12 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       },
     },
     series,
+    title: { text: "" },
     tooltip: { formatter: tooltip },
+    xAxis: {
+      categories,
+      title: { text: "" },
+    },
     yAxis: {
       stackLabels: {
         enabled: true,
@@ -193,9 +199,11 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         },
         formatter: stackLabel,
       },
+      title: { text: axis }
     },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", axis), localOptions);
+  const generalOptions = createChartOptions("bar", { chart: { height: "600px" } });
+  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structure">

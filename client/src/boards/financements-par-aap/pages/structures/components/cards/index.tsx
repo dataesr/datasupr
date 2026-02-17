@@ -47,7 +47,7 @@ export default function Cards() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["funding-projects-over-time-by-structure", structure],
+    queryKey: ["funding-cards", structure],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

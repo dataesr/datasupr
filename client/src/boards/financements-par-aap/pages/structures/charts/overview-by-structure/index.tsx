@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
 
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
@@ -121,16 +122,21 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       legendType: "point",
       type: "variwide",
     }],
+    title: { text: "" },
     tooltip: {
       formatter: function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> financés pour <b>${this.z}</b> projets <b>${this.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       },
     },
     xAxis: {
+      categories: undefined,
+      title: { text: "Nombre de projets" },
       type: "category",
     },
+    yAxis: { title: { text: "Montants financés (€)" } },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", undefined, "Nombre de projets", "Montants financés (€)", "variwide"), localOptions);
+  const generalOptions = createChartOptions("variwide", { chart: { height: "600px" } });
+  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   // TODO: implement it later
   // const renderData = (options: any) => {
