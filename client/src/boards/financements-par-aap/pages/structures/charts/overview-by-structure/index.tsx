@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
