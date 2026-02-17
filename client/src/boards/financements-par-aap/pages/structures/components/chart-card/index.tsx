@@ -12,8 +12,7 @@ interface ChartCardProps {
   yAxisMax?: number;
 }
 
-
-export default function evolution({
+export default function ChartCard({
   color = "var(--blue-france-sun-113)",
   data,
   detail,
@@ -64,7 +63,6 @@ export default function evolution({
         tickLength: 0,
       },
       yAxis: {
-        // type: "logarithmic",
         visible: false,
         title: {
           text: undefined,

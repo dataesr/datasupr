@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, years } from "../../../../utils.ts";
-import ChartCard from "../chart-card/index.tsx";
+import ChartCard from "../chart-card";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -62,20 +62,18 @@ export default function Cards() {
   const dataFunders = {};
   funders.forEach((funder) => {
     const dataByFunder = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
-    if (dataByFunder) {
-      dataFunders[funder] = {
-        projects: years.map((year) => ({
-          x: year,
-          y: 1 + (dataByFunder?.by_project_year?.buckets.find((item) => item.key === year)?.unique_projects?.value ?? 0),
-          yDisplay: dataByFunder?.by_project_year?.buckets.find((item) => item.key === year)?.unique_projects?.value ?? 0,
-        })),
-        budget: years.map((year) => ({
-          x: year,
-          y: 1 + (dataByFunder?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget?.value ?? 0),
-          yDisplay: dataByFunder?.by_project_year?.buckets.find((item) => item.key === year)?.sum_budget?.value ?? 0,
-        })),
-      };
-    }
+    dataFunders[funder] = {
+      projects: years.map((year) => ({
+        x: year,
+        y: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.unique_projects?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets.find((item) => item.key === year)?.unique_projects?.value ?? 0,
+      })),
+      budget: years.map((year) => ({
+        x: year,
+        y: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget?.value ?? 0,
+      })),
+    };
   });
 
   const maxProjects: number = Math.max.apply(null, Object.values(dataFunders).map((dataFunder: any) => dataFunder.projects.map((project) => project.y)).flat());
@@ -119,8 +117,7 @@ export default function Cards() {
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Projets ${funder}`}
                 tooltipFormatter={function (this: any) {
-                  const nbProjects = this.y - 1;
-                  return `${nbProjects} ${nbProjects > 1 ? "projets" : "projet"} ${funder} en ${this.key}`;
+                  return `${this.y} ${this.y > 1 ? "projets" : "projet"} ${funder} en ${this.key}`;
                 }}
                 value={`${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0)} projet${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0) > 1 ? 's' : ''}`}
                 yAxisMax={maxProjects}

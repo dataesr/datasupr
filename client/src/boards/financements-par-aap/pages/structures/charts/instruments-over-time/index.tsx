@@ -26,7 +26,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
       by_instrument: {
         terms: {
           field: "project_instrument.keyword",
-          size: 25,
+          size: 15,
         },
         aggregations: {
           by_project_year: {
