@@ -27,7 +27,7 @@ export default function ClassificationsByStructures() {
     aggregations: {
       by_structure_project: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           size: structures.length,
 
         },
@@ -56,7 +56,7 @@ export default function ClassificationsByStructures() {
       },
       by_structure_budget: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           order: { "sum_budget": "desc" },
           size: structures.length,
         },
@@ -90,7 +90,7 @@ export default function ClassificationsByStructures() {
       },
       by_structure_participation: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           order: { "sum_budget_participation": "desc" },
           size: structures.length,
         },
@@ -180,9 +180,9 @@ export default function ClassificationsByStructures() {
       name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
   });
-  const categoriesBudget = structuresBudget.map((bucket) => bucket.key.split("###")[1]);
-  const categoriesParticipation = structuresParticipation.map((bucket) => bucket.key.split("###")[1]);
-  const categoriesProject = structuresProject.map((bucket) => bucket.key.split("###")[1]);
+  const categoriesBudget = structuresBudget.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+  const categoriesParticipation = structuresParticipation.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+  const categoriesProject = structuresProject.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
 
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');

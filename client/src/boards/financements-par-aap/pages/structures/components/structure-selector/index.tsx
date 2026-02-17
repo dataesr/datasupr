@@ -123,7 +123,7 @@ export default function StructureSelector({ setStructures }) {
 
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {
-      searchParams.set("structure", selectedStructure.split("###")[0]);
+      searchParams.set("structure", selectedStructure);
       setSearchParams(searchParams);
     }
   };

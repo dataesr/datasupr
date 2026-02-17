@@ -41,7 +41,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
     aggregations: {
       by_laboratory_project: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           size: 25,
         },
         aggregations: {
@@ -68,7 +68,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
       },
       by_laboratory_budget: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           size: 25,
           order: { "sum_budget": "desc" },
         },
@@ -101,7 +101,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
       },
       by_laboratory_participation: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           size: 25,
           order: { "sum_budget_participation": "desc" },
         },
@@ -186,9 +186,9 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
   });
-  const categoriesProject = laboratoriesProject.map((item) => item.key.split('###')[1]);
-  const categoriesBudget = laboratoriesBudget.map((item) => item.key.split('###')[1]);
-  const categoriesParticipation = laboratoriesParticipation.map((item) => item.key.split('###')[1]);
+  const categoriesBudget = laboratoriesBudget.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+  const categoriesParticipation = laboratoriesParticipation.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+  const categoriesProject = laboratoriesProject.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
 
   const config = {
     comment: { "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.

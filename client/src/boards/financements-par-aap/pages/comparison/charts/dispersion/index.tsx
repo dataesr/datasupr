@@ -28,7 +28,7 @@ export default function Dispersion() {
         aggregations: {
           by_structure: {
             terms: {
-              field: "participant_id_name_default.keyword",
+              field: "participant_encoded_key",
               size: structures.length,
             },
             aggregations: {
@@ -64,7 +64,7 @@ export default function Dispersion() {
 
   const series = (data?.aggregations?.by_typology?.buckets ?? []).map((typology) => ({
     data: (typology?.by_structure?.buckets ?? []).map((structure) => ({
-      name: structure.key.split("###")[1],
+      name: (Object.fromEntries(new URLSearchParams(structure.key))).label,
       x: structure?.unique_projects?.value ?? 0,
       y: structure?.sum_budget?.value ?? 0,
       yFormatted: `${formatCompactNumber(structure?.sum_budget?.value ?? 0)} €`,
@@ -114,7 +114,7 @@ et ceux combinant volume et intensité financière.</> },
       lineWidth: 1,
       plotLines: [{
         dashStyle: "dot",
-        label: { align: "right", style: { fontStyle: "italic" }, text: `Montants moyen des projets = ${formatCompactNumber(meanY || 0)} €`, x: -8, y: -8 },
+        label: { align: "right", style: { fontStyle: "italic" }, text: `Montant moyen des projets = ${formatCompactNumber(meanY || 0)} €`, x: -8, y: -8 },
         value: meanY,
         width: 2,
         zIndex: 3
