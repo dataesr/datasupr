@@ -12,12 +12,13 @@ import {
 import { Container, Row, Col, Checkbox } from "@dataesr/dsfr-plus";
 
 // import { getI18nLabel } from "../../../../utils";
-// import i18nLocal from "./i18n.json";
-// import i18nGlobal from "../../i18n-global.json";
-// const i18n = { ...i18nGlobal, ...i18nLocal };
+import i18nLocal from "./i18n.json";
+import i18nGlobal from "../../i18n-global.json";
+const i18n = { ...i18nGlobal, ...i18nLocal };
 
 import styles from "./styles.module.scss";
 import RangeOfYears from "../../../../components/range-of-years";
+import { getI18nLabel } from "../../../../utils";
 
 const i18nFilters = {
   "more-filters": { fr: "Plus de filtres", en: "More filters" },
@@ -158,7 +159,7 @@ export default function EpNavigator() {
         {/* Piliers */}
         <Col lg={3} sm={12}>
           <label className="fr-label" htmlFor="select-pillar-label">
-            Selection des piliers
+            {getI18nLabel(i18n, "pillar_selection_button_title", currentLang)}
           </label>
           <select
             aria-describedby="select-pillar-label"
@@ -176,7 +177,7 @@ export default function EpNavigator() {
             }}
           >
             <option value="" selected={!pillarId}>
-              Pas de selection
+              {getI18nLabel(i18n, "no-selection", currentLang)}
             </option>
             {pillarsData &&
               pillarsData.map((pillar: FilterItem) => (
@@ -189,7 +190,7 @@ export default function EpNavigator() {
         {/* Programmes dépendants du pilier sélectionné */}
         <Col lg={3} sm={12}>
           <label className="fr-label" htmlFor="select-program-label">
-            Selection des programmes
+            {getI18nLabel(i18n, "program_selection_button_title", currentLang)}
           </label>
           <select
             aria-describedby="select-program-label"
@@ -222,7 +223,7 @@ export default function EpNavigator() {
         <Col lg={3} sm={12}>
           <div className={styles.dropdownContainer} ref={thematicsDropdownRef}>
             <label className="fr-label" htmlFor="select-thematics-label">
-              Selection des thématiques
+              {getI18nLabel(i18n, "thematic_selection_title", currentLang)}
             </label>
             <button
               aria-expanded={isThematicsOpen}
@@ -251,10 +252,10 @@ export default function EpNavigator() {
                 {selectedThematics.size > 0 && (
                   <>
                     <button className={styles.bottomButton} onClick={handleApplyThematics}>
-                      Appliquer
+                      {getI18nLabel(i18n, "apply_selection", currentLang)}
                     </button>
                     <button className={styles.bottomButton} onClick={handleClearThematics}>
-                      Effacer la sélection
+                      {getI18nLabel(i18n, "erase_selection", currentLang)}
                     </button>
                   </>
                 )}
@@ -265,7 +266,7 @@ export default function EpNavigator() {
         <Col lg={3} sm={12}>
           <div className={styles.dropdownContainer} ref={destinationsDropdownRef}>
             <label className="fr-label" htmlFor="select-destinations-label">
-              Selection des destinations
+              {getI18nLabel(i18n, "destination_selection_title", currentLang)}
             </label>
             <button
               aria-expanded={isDestinationsOpen}
@@ -294,10 +295,10 @@ export default function EpNavigator() {
                 {selectedDestinations.size > 0 && (
                   <>
                     <button className={styles.bottomButton} onClick={handleApplyDestinations}>
-                      Appliquer
+                      {getI18nLabel(i18n, "apply_selection", currentLang)}
                     </button>
                     <button className={styles.bottomButton} onClick={handleClearDestinations}>
-                      Effacer la sélection
+                      {getI18nLabel(i18n, "erase_selection", currentLang)}
                     </button>
                   </>
                 )}
