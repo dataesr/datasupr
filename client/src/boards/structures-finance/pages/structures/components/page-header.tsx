@@ -202,12 +202,10 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                     </span>
                     <div>
                       <Text size="lg" bold className="fr-mb-0">
-                        {data.gdetab_lib
-                          ? `Catégorie juridique · ${data.gdetab_lib}`
-                          : "Catégorie juridique"}
+                        Catégorie juridique
                       </Text>
                       <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
-                        {data.catjur_lib}
+                        {data.catjur_lib}. <br /> {data.gdetab_lib}
                       </Text>
                     </div>
                   </div>
@@ -234,7 +232,8 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                       </Text>
                       <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
                         {capitalize(data.tutelle_lib)}
-                        {data.regime_lib ? ` · ${data.regime_lib}` : ""}
+                        <br />
+                        {data.regime_lib ? `${data.regime_lib}` : ""}
                       </Text>
                       {data.etablissement_id_paysage === "u79ZJ" && (
                         <Text
@@ -254,7 +253,6 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
             )}
           </ul>
         </Col>
-        {console.log("hasFormations", hasFormations)}
 
         {hasFormations && (
           <Col xs="12" md="4">
@@ -351,9 +349,7 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                     )}
                     {data.has_effectif_interd && (
                       <li>
-                        <Tag color="green-bourgeon" size="sm">
-                          Pluridisciplinaire
-                        </Tag>
+                        <Tag size="sm">Pluridisciplinaire</Tag>
                       </li>
                     )}
                   </ul>
