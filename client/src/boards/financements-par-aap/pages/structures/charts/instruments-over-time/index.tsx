@@ -170,7 +170,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
     title: { text: "" },
     tooltip: { formatter: tooltip },
     xAxis: { categories: [], title: { text: "Année de début du projet" } },
-    yAxis: { title: { text: "" } },
+    yAxis: { title: { text: axis } },
   };
   const generalOptions = createChartOptions("area", { chart: { height: "800px" } });
   const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
