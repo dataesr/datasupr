@@ -10,7 +10,7 @@ import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -253,7 +253,6 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
       title: { text: axis }
     },
   };
-  // const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", funders, "", axis), localOptions);
   const generalOptions = createChartOptions("bar", { chart: { height: "800px" } });
   const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
