@@ -7,9 +7,11 @@ import "highcharts/modules/pattern-fill";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
 import { deepMerge, formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import i18n from "../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -81,29 +83,38 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
     const isCoordBudget = isCoord?.sum_budget?.value ?? 0;
     const isNotCoordBudget = isNotCoord?.sum_budget?.value ?? 0;
     seriesBudget.push({
-      data: [
-        { x: index, y: isCoordBudget, y_perc: isCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } },
-        { x: index, y: isNotCoordBudget, y_perc: isNotCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: getCssColor({ name: funder, prefix: "funder" }) },
-      ],
-      name: funder,
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: [{ name: funder, x: index, y: isNotCoordBudget, y_perc: isNotCoordBudget === 0 ? 0 : isNotCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesBudget.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: [{ name: funder, x: index, y: isCoordBudget, y_perc: isCoordBudget === 0 ? 0 : isCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     const isCoordParticipation = isCoord?.sum_budget_participation?.value ?? 0;
     const isNotCoordParticipation = isNotCoord?.sum_budget_participation?.value ?? 0;
     seriesParticipation.push({
-      data: [
-        { x: index, y: isCoordParticipation, y_perc: isCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } },
-        { x: index, y: isNotCoordParticipation, y_perc: isNotCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation, color: getCssColor({ name: funder, prefix: "funder" }) },
-      ],
-      name: funder,
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: [{ name: funder, x: index, y: isNotCoordParticipation, y_perc: isNotCoordParticipation === 0 ? 0 : isNotCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesParticipation.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: [{ name: funder, x: index, y: isCoordParticipation, y_perc: isCoordParticipation === 0 ? 0 : isCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     const isCoordProject = isCoord?.unique_projects?.value ?? 0;
     const isNotCoordProject = isNotCoord?.unique_projects?.value ?? 0;
     seriesProject.push({
-      data: [
-        { x: index, y: isCoordProject, y_perc: isCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } },
-        { x: index, y: isNotCoordProject, y_perc: isNotCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: getCssColor({ name: funder, prefix: "funder" }) },
-      ],
-      name: funder,
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: [{ name: funder, x: index, y: isNotCoordProject, y_perc: isNotCoordProject === 0 ? 0 : isNotCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesProject.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: [{ name: funder, x: index, y: isCoordProject, y_perc: isCoordProject === 0 ? 0 : isCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     categories.push(funder);
   });
@@ -148,11 +159,11 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         return `<b>${formatCompactNumber(this.y)} €</b> alloués ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
       };
       break;
-  }
+  };
 
   const localOptions = {
-    legend: { enabled: true },
     exporting: { chartOptions: { title: { text: title } } },
+    legend: { enabled: true },
     plotOptions: {
       bar: {
         dataLabels: {

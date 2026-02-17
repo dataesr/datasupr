@@ -235,7 +235,7 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
         return `<b>${formatCompactNumber(this.y)} €</b> alloués pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
-  }
+  };
 
   const localOptions = {
     legend: { enabled: true, reversed: true },

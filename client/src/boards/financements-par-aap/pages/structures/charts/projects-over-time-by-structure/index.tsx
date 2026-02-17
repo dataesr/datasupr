@@ -151,13 +151,13 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     plotOptions: {
       series: { pointStart: Number(years[0]) },
       area: {
-        stacking: "normal",
         marker: {
           enabled: false,
           lineColor: "#666666",
           lineWidth: 1,
           symbol: "circle"
-        }
+        },
+        stacking: "normal",
       }
     },
     series,
