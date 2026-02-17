@@ -4,8 +4,10 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import { deepMerge, formatCompactNumber, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -106,7 +108,7 @@ et ceux combinant volume et intensité financière.</> },
         zIndex: 3,
       }],
       tickInterval,
-      title: { text: "Nombre de projets financés" },
+      title: { text: getI18nLabel(i18n, 'number_of_projects_funded') },
     },
     yAxis: {
       lineWidth: 1,

@@ -10,7 +10,7 @@ import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
 import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
-import i18n from "../../../i18n.json";
+import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -192,7 +192,7 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
   };
 
   // If view by number of projects
-  let axis = 'Nombre de projets financés';
+  let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let categories = categoriesProject;
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
@@ -207,7 +207,7 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
-      axis = 'Montants globaux financés (€)';
+      axis = getI18nLabel(i18n, 'funding_total');
       categories = categoriesBudget;
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
@@ -222,7 +222,7 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = 'Montants financés pour cet établissement (€)';
+      axis = getI18nLabel(i18n, 'funding_by_structure');
       categories = categoriesParticipation;
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;

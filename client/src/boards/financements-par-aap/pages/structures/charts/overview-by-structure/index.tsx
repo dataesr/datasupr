@@ -7,7 +7,7 @@ import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
-import i18n from "../../../i18n.json";
+import i18n from "../../../../i18n.json";
 
 import "highcharts/modules/variwide";
 

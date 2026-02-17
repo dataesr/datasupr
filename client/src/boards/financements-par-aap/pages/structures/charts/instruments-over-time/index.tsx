@@ -10,7 +10,7 @@ import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
 import { deepMerge, formatCompactNumber, getCssColor, getEsQuery, getGeneralOptions, pattern, years } from "../../../../utils.ts";
-import i18n from "../../../i18n.json";
+import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -119,7 +119,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
   };
 
   // If view by number of projects
-  let axis = 'Nombre de projets financés';
+  let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let series = seriesProjectNotCoord.concat(seriesProjectCoord);
   let title = `Evolution temporelle des instruments dont a bénéficié l'établissement (${name})`;
   let tooltip = function (this: any) {
@@ -128,7 +128,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
-      axis = 'Montants globaux financés (€)';
+      axis = getI18nLabel(i18n, 'funding_total');
       series = seriesBudgetNotCoord.concat(seriesBudgetCoord);
       title = `Evolution temporelle du montant financé par instrument dont a bénéficié l'établissement (${name})`;
       tooltip = function (this: any) {
@@ -137,7 +137,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = 'Montants financés pour cet établissement (€)';
+      axis = getI18nLabel(i18n, 'funding_by_structure');
       series = seriesParticipationNotCoord.concat(seriesParticipationCoord);
       title = `Evolution temporelle du montant alloué par instrument dont a bénéficié l'établissement (${name})`;
       tooltip = function (this: any) {
