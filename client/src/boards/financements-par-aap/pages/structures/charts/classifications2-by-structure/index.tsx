@@ -134,39 +134,48 @@ export default function Classifications2ByStructure({ name }: { name: string | u
       }).then((response) => response.json()),
   });
 
-  const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
-  const seriesProjectCoord = classificationsProject.map((classification) => ({
-    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: classification.key, prefix: "classification" }) } },
-    data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
-    name: [classification.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
-  })).reverse();
-  const seriesProjectNotCoord = classificationsProject.map((classification) => ({
-    color: getCssColor({ name: classification.key, prefix: "classification" }),
-    data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
-    name: [classification.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-  })).reverse();
+  const seriesBudget: any = [];
+  const seriesParticipation: any = [];
+  const seriesProject: any = [];
   const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
-  const seriesBudgetCoord = classificationsBudget.map((classification) => ({
-    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: classification.key, prefix: "classification" }) } },
-    data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
-    name: [classification.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
-  })).reverse();
-  const seriesBudgetNotCoord = classificationsBudget.map((classification) => ({
-    color: getCssColor({ name: classification.key, prefix: "classification" }),
-    data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
-    name: [classification.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-  })).reverse();
   const classificationsParticipation = data?.aggregations?.by_classifications_participation?.buckets ?? [];
-  const seriesParticipationCoord = classificationsParticipation.map((classification) => ({
-    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: classification.key, prefix: "classification" }) } },
-    data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
-    name: [classification.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
-  })).reverse();
-  const seriesParticipationNotCoord = classificationsParticipation.map((classification) => ({
-    color: getCssColor({ name: classification.key, prefix: "classification" }),
-    data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
-    name: [classification.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-  })).reverse();
+  const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
+  classificationsBudget.forEach((classification) => {
+    seriesBudget.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: classification.key, prefix: "classification" }) } },
+      data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
+      name: [classification.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesBudget.push({
+      color: getCssColor({ name: classification.key, prefix: "classification" }),
+      data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+      name: [classification.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+  });
+  classificationsParticipation.forEach((classification) => {
+    seriesParticipation.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: classification.key, prefix: "classification" }) } },
+      data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+      name: [classification.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesParticipation.push({
+      color: getCssColor({ name: classification.key, prefix: "classification" }),
+      data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+      name: [classification.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+  });
+  classificationsProject.forEach((classification) => {
+    seriesProject.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: classification.key, prefix: "classification" }) } },
+      data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+      name: [classification.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesProject.push({
+      color: getCssColor({ name: classification.key, prefix: "classification" }),
+      data: funders.map((funder) => classification?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+      name: [classification.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+  });
 
   const config = {
     comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement, par financeur et selon les grandes classifications disciplinaires.
@@ -179,7 +188,7 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  let series = seriesProjectNotCoord.concat(seriesProjectCoord);
+  let series = seriesProject.reverse();
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
@@ -193,7 +202,7 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesBudgetNotCoord.concat(seriesBudgetCoord);
+      series = seriesBudget.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
@@ -207,7 +216,7 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesParticipationNotCoord.concat(seriesParticipationCoord);
+      series = seriesParticipation.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
