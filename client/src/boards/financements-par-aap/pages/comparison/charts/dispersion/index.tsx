@@ -2,12 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
 
-import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
-import { deepMerge, formatCompactNumber, getEsQuery, getYearRangeLabel } from "../../../../utils.ts";
+import { formatCompactNumber, getEsQuery, getYearRangeLabel } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -96,7 +95,7 @@ et ceux combinant volume et intensité financière.</> },
     title: `Positionnement des établissements selon le nombre de projets et le montant associé ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
-  const localOptions = {
+  const options: HighchartsInstance.Options = {
     chart: { plotBorderWidth: 1, type: "bubble", zooming: { type: "xy" } },
     legend: { enabled: true },
     plotOptions: { series: { dataLabels: { enabled: true, format: "{point.name}" } } },
@@ -109,7 +108,7 @@ et ceux combinant volume et intensité financière.</> },
       gridLineWidth: 1,
       lineWidth: 1,
       plotLines: [{
-        dashStyle: "dot",
+        dashStyle: "Dot",
         label: { rotation: 0, style: { fontStyle: "italic" }, text: `Nombre moyen de projets = ${Math.round(meanX || 0)}`, x: 10, y: 15 },
         value: meanX,
         width: 2,
@@ -121,7 +120,7 @@ et ceux combinant volume et intensité financière.</> },
     yAxis: {
       lineWidth: 1,
       plotLines: [{
-        dashStyle: "dot",
+        dashStyle: "Dot",
         label: { align: "right", style: { fontStyle: "italic" }, text: `Montant moyen des projets = ${formatCompactNumber(meanY || 0)} €`, x: -8, y: -8 },
         value: meanY,
         width: 2,
@@ -131,12 +130,10 @@ et ceux combinant volume et intensité financière.</> },
     },
     title: { text: "" },
   };
-  const generalOptions = createChartOptions("bubble", { chart: { height: "600px" } });
-  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="dispersion">
-      {isLoading ? <DefaultSkeleton height={ String(options?.chart?.height) } /> : <ChartWrapperFundings config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 }

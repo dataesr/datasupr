@@ -4,14 +4,13 @@ import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -229,7 +228,7 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
       break;
   }
 
-  const localOptions = {
+  const options: HighchartsInstance.Options = {
     legend: { enabled: true, reversed: true },
     plotOptions: {
       series: {
@@ -253,8 +252,6 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
       title: { text: axis },
     },
   };
-  const generalOptions = createChartOptions("bar", { chart: { height: "600px" } });
-  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="classifications-by-structure">
@@ -262,7 +259,7 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
         {`Financements par classifications disciplinaires de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 };

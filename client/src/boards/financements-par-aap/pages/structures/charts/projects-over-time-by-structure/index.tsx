@@ -4,14 +4,13 @@ import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, pattern, years } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, pattern, years } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -152,7 +151,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
       break;
   }
 
-  const localOptions = {
+  const options: HighchartsInstance.Options = {
     legend: { enabled: true, reversed: true },
     plotOptions: {
       series: { pointStart: Number(years[0]) },
@@ -172,8 +171,6 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     xAxis: { categories: [], title: { text: "Année de début du projet" } },
     yAxis: { title: { text: axis } },
   };
-  const generalOptions = createChartOptions("area", { chart: { height: "600px" } });
-  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   // TODO: implement it later
   // const renderData = (options: HighchartsInstance.Options) => {
@@ -223,7 +220,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 }

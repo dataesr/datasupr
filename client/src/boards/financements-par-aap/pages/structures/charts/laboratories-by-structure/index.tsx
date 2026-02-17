@@ -4,13 +4,12 @@ import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import { formatCompactNumber, funders, getCssColor, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -245,7 +244,8 @@ On observe que certains laboratoires concentrent une part importante des projets
       break;
   }
 
-  const localOptions = {
+  const options: HighchartsInstance.Options = {
+    chart: { height: "1000px" },
     legend: { enabled: true, reversed: true },
     plotOptions: {
       series: {
@@ -271,8 +271,6 @@ On observe que certains laboratoires concentrent une part importante des projets
       title: { text: axis },
     },
   };
-  const generalOptions = createChartOptions("bar", { chart: { height: "1000px" } });
-  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structures">
@@ -280,7 +278,7 @@ On observe que certains laboratoires concentrent une part importante des projets
         {`Principaux laboratoires de ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height="1000px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 }

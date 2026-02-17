@@ -1,8 +1,4 @@
-import HighchartsInstance from "highcharts";
-
-import { createChartOptions } from "../../components/chart-wrapper/default-options";
 import { getCssColor as getCssColorGlobal } from "../../utils/colors";
-import { deepMerge } from "../../utils";
 
 const funders = ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"];
 
@@ -58,21 +54,6 @@ const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = y
   return query;
 };
 
-const getGeneralOptions = (
-  title: HighchartsInstance.TitleOptions["text"],
-  categories: HighchartsInstance.XAxisOptions["categories"],
-  title_x_axis: HighchartsInstance.XAxisTitleOptions["text"],
-  title_y_axis: HighchartsInstance.YAxisTitleOptions["text"],
-  type: HighchartsInstance.ChartOptions["type"] = "bar",
-) => {
-  return createChartOptions(type, {
-    chart: { height: "600px" },
-    title: { text: title },
-    xAxis: { categories, title: { text: title_x_axis } },
-    yAxis: { title: { text: title_y_axis } },
-  });
-};
-
 const getYearRangeLabel = ({ isBold = false, yearMax, yearMin }: { isBold?: boolean, yearMax: string | null, yearMin: string | null }): string => {
   let label = "";
   if (yearMin === yearMax) {
@@ -94,13 +75,11 @@ const getYearRangeLabel = ({ isBold = false, yearMax, yearMin }: { isBold?: bool
 };
 
 export {
-  deepMerge,
   formatCompactNumber,
   formatPercent,
   funders,
   getCssColor,
   getEsQuery,
-  getGeneralOptions,
   getYearRangeLabel,
   pattern,
   years,

@@ -9,8 +9,8 @@ import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
+import { formatCompactNumber, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -243,17 +243,9 @@ export default function ClassificationsByStructures() {
     },
     id: "classificationsByStructures",
   };
-  const localOptions = {
+
+  const options: HighchartsInstance.Options = {
     legend: { enabled: true, reversed: true },
-    yAxis: {
-      stackLabels: {
-        enabled: true,
-        style: {
-          fontWeight: 'bold'
-        },
-        formatter: stackLabel,
-      }
-    },
     plotOptions: {
       series: {
         dataLabels: {
@@ -265,8 +257,17 @@ export default function ClassificationsByStructures() {
     },
     series,
     tooltip: { formatter: tooltip },
+    title: { text: "" },
+    xAxis: { categories, title: { text: "" } },
+    yAxis: {
+      stackLabels: {
+        enabled: true,
+        formatter: stackLabel,
+        style: { fontWeight: "bold" },
+      },
+      title: { text: axis },
+    },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", axis), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="classifications-by-structures">
@@ -274,7 +275,7 @@ export default function ClassificationsByStructures() {
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 }

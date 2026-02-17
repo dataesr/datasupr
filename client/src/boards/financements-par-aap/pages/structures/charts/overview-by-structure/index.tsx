@@ -2,12 +2,11 @@ import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
 
-import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
 
 import "highcharts/modules/variwide";
@@ -78,8 +77,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   };
 
   let hiddenPoints: string[] = [];
-
-  const localOptions = {
+  const options: HighchartsInstance.Options = {
     legend: { enabled: true },
     plotOptions: {
       series: {
@@ -117,9 +115,8 @@ export default function OverviewByStructure({ name }: { name: string | undefined
         enabled: true,
         formatter: function (this: any) {
           return `${formatCompactNumber(this.y)} €`;
-        }
+        },
       },
-      legendType: "point",
       type: "variwide",
     }],
     title: { text: "" },
@@ -135,8 +132,6 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     },
     yAxis: { title: { text: getI18nLabel(i18n, 'funding_by_structure') } },
   };
-  const generalOptions = createChartOptions("variwide", { chart: { height: "600px" } });
-  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   // TODO: implement it later
   // const renderData = (options: any) => {
@@ -186,7 +181,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
 
   return (
     <div className={`chart-container chart-container--${color}`} id="overview-by-structure">
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 }
