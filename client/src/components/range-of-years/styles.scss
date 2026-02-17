@@ -1,0 +1,22 @@
+.range-of-years-selector {
+  .range-of-years-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .range-of-years-label {
+    font-size: 0.875rem;
+  }
+
+  .range-of-years-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1rem;
+
+    .fr-checkbox-group {
+      margin: 0;
+    }
+  }
+}

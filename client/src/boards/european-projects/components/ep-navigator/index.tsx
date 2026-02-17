@@ -17,6 +17,12 @@ import { Container, Row, Col, Checkbox } from "@dataesr/dsfr-plus";
 // const i18n = { ...i18nGlobal, ...i18nLocal };
 
 import styles from "./styles.module.scss";
+import RangeOfYears from "../../../../components/range-of-years";
+
+const i18nFilters = {
+  "more-filters": { fr: "Plus de filtres", en: "More filters" },
+  "less-filters": { fr: "Afficher moins", en: "Show less" },
+};
 
 interface FilterItem {
   id: string;
@@ -27,6 +33,8 @@ interface FilterItem {
 export default function EpNavigator() {
   const [searchParams, setSearchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
+
+  const [isMoreFiltersOpen, setIsMoreFiltersOpen] = useState(false);
 
   const [selectedThematics, setSelectedThematics] = useState<Set<string>>(new Set());
   const [isThematicsOpen, setIsThematicsOpen] = useState(false);
@@ -296,6 +304,28 @@ export default function EpNavigator() {
               </div>
             )}
           </div>
+        </Col>
+      </Row>
+      <Row className="fr-mt-1w">
+        <Col>
+          {!isMoreFiltersOpen && (
+            <button type="button" className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm" onClick={() => setIsMoreFiltersOpen(true)}>
+              {i18nFilters["more-filters"][currentLang]}
+            </button>
+          )}
+          {isMoreFiltersOpen && (
+            <div className={styles.moreFiltersContainer}>
+              <RangeOfYears
+                availableYears={["2021", "2022", "2023", "2024", "2025", "2026"]}
+                defaultYears={["2021", "2022", "2023", "2024", "2025", "2026"]}
+              />
+              <div className={styles.moreFiltersFooter}>
+                <button type="button" className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm" onClick={() => setIsMoreFiltersOpen(false)}>
+                  {i18nFilters["less-filters"][currentLang]}
+                </button>
+              </div>
+            </div>
+          )}
         </Col>
       </Row>
     </Container>

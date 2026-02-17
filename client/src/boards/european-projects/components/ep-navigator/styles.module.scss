@@ -72,3 +72,16 @@
     opacity: 0.9;
   }
 }
+
+.moreFiltersContainer {
+  width: 100%;
+  padding: 0.75rem;
+  background-color: var(--background-alt-grey);
+  border-radius: 4px;
+}
+
+.moreFiltersFooter {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-end;
+}

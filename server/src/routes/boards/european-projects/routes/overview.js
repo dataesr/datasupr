@@ -32,6 +32,8 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
   }
+  console.log(req.query);
+  
 
   const dataSuccessful = await db
     .collection("fr-esr-all-projects-synthese")
