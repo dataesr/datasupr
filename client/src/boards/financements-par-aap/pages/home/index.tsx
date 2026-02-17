@@ -49,7 +49,6 @@ export default function Home() {
           <Text>
             Les informations présentées reposent sur trois grandes catégories de sources de
             financements.
-            
             <br/> <strong>Financements ANR</strong> : 
             L'Agence Nationale de la Recherche (ANR) expose en open data deux jeux de données 
             (DGDS pour les projets ANR et DGPIE pour les projets PIA ANR). Ces sources fournissent 
@@ -67,9 +66,8 @@ export default function Home() {
             Elles décrivent principalement les participants au niveau institutionnel. Un
             travail complémentaire est mené avec le CNRS, le CEA, l’INRAE, l’INRIA et l’ONERA afin
             d’enrichir ces données et de reconstituer, lorsque cela est possible, le niveau
-            laboratoire pour les financements européens. Horizon 2020 couvre la période 2014–2020, 
+            laboratoire pour les financements européens. Horizon 2020 couvre la période 2014–2020,
             tandis que son successeur, Horizon Europe couvre 2021-2027.
-            
           </Text>
           <Title as="h2" look="h5">
             ⚠️ Financement global / Financement perçu
@@ -78,8 +76,9 @@ export default function Home() {
           Deux modes de comptabilisation des financements sont exposés.
           <br/> <strong>Financement global (présence)</strong> : on compte le financement global du projet, en l'affectant à chaque établissement participant de manière égale. Cela ne correspondent pas aux financements effectivement perçus
               par un établissement. Cela représente le volume total de financements des projets
-              auxquels l’établissement participe, indépendamment de la part réelle qui lui est
-              attribuée.
+            Les sources de financements ne renseignent pas de manière homogène les montants
+            perçus par chaque participant. Dans la majorité des cas, seul le montant global du
+            projet est disponible.
           <br/> <strong>Financement perçu (implication)</strong> : on compte la part réelle allouée à chaque établissement partenaire d’un projet (colonne « Projet.Partenaire.Aide_allouee.ANR » dans la base ANR, « montant des subvention » dans la base Horizon Europe, « consommation » dans la base PIA. Attention, on mélange ici pour le PIA de la consommation avec des subventions allouées pour ANR et Europe. Les consommations sont affectées à l'année d'édition du projet, et pas à l'année de consommation (il peut y avoir un décalage de plusieurs années). Cela reste une <strong>approximation</strong> de l'implication de l'établissement.  
           </Text>
           <Title as="h2" look="h5">

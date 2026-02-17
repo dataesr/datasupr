@@ -77,7 +77,7 @@ export const createComparisonOverviewOptions = (
       const pct = total > 1 ? (i / (total - 1)) * 100 : 50;
       return {
         x: d.value,
-        y: isAugmentation ? 100 - pct : pct,
+        y: isAugmentation ? pct : 100 - pct,
         custom: {
           name: d.name,
           id: d.id,
@@ -108,7 +108,7 @@ export const createComparisonOverviewOptions = (
     if (rankIdx !== -1) {
       const val = sorted[rankIdx].value;
       const rawPct = total > 1 ? (rankIdx / (total - 1)) * 100 : 50;
-      const pct = isAugmentation ? 100 - rawPct : rawPct;
+      const pct = isAugmentation ? rawPct : 100 - rawPct;
       series.push({
         type: "scatter" as const,
         name: `${ds.label} — position`,

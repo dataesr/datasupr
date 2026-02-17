@@ -4,12 +4,13 @@ import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -28,7 +29,7 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
       by_instrument_project: {
         terms: {
           field: "project_instrument.keyword",
-          size: 15,
+          size: 10,
         },
         aggregations: {
           by_project_type: {
@@ -56,7 +57,7 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
         terms: {
           field: "project_instrument.keyword",
           order: { "sum_budget": "desc" },
-          size: 15,
+          size: 10,
         },
         aggregations: {
           sum_budget: {
@@ -89,7 +90,7 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
         terms: {
           field: "project_instrument.keyword",
           order: { "sum_budget_participation": "desc" },
-          size: 15,
+          size: 10,
         },
         aggregations: {
           sum_budget_participation: {
@@ -221,22 +222,13 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> alloués pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> perçus pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
   }
 
   const localOptions = {
     legend: { enabled: true, reversed: true },
-    yAxis: {
-      stackLabels: {
-        enabled: true,
-        style: {
-          fontWeight: 'bold'
-        },
-        formatter: stackLabel,
-      }
-    },
     plotOptions: {
       series: {
         dataLabels: {
@@ -244,12 +236,25 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
           formatter: dataLabel,
         },
         stacking: "normal",
-      }
+      },
     },
     series: series,
+    title: { text: "" },
     tooltip: { formatter: tooltip },
+    xAxis: { categories: funders, title: { text: "" } },
+    yAxis: {
+      stackLabels: {
+        enabled: true,
+        style: {
+          fontWeight: "bold",
+        },
+        formatter: stackLabel,
+      },
+      title: { text: axis }
+    },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", funders, "", axis), localOptions);
+  const generalOptions = createChartOptions("bar", { chart: { height: "800px" } });
+  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="instruments-by-funder">

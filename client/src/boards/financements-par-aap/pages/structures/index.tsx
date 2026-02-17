@@ -17,7 +17,7 @@ export default function Structures() {
 
   useEffect(() => {
     if (!searchParams.get("section")) {
-      searchParams.set("section", "financements");
+      searchParams.set("section", "apercu");
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams]);

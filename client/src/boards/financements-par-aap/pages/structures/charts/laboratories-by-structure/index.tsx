@@ -4,12 +4,13 @@ import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getCssColor, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -41,7 +42,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
     aggregations: {
       by_laboratory_project: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           size: 25,
         },
         aggregations: {
@@ -68,7 +69,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
       },
       by_laboratory_budget: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           size: 25,
           order: { "sum_budget": "desc" },
         },
@@ -101,7 +102,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
       },
       by_laboratory_participation: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           size: 25,
           order: { "sum_budget_participation": "desc" },
         },
@@ -186,9 +187,9 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
   });
-  const categoriesProject = laboratoriesProject.map((item) => item.key.split('###')[1]);
-  const categoriesBudget = laboratoriesBudget.map((item) => item.key.split('###')[1]);
-  const categoriesParticipation = laboratoriesParticipation.map((item) => item.key.split('###')[1]);
+  const categoriesBudget = laboratoriesBudget.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+  const categoriesParticipation = laboratoriesParticipation.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+  const categoriesProject = laboratoriesProject.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
 
   const config = {
     comment: { "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.
@@ -239,22 +240,13 @@ On observe que certains laboratoires concentrent une part importante des projets
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
       };
       break;
   }
 
   const localOptions = {
     legend: { enabled: true, reversed: true },
-    yAxis: {
-      stackLabels: {
-        enabled: true,
-        style: {
-          fontWeight: 'bold'
-        },
-        formatter: stackLabel,
-      }
-    },
     plotOptions: {
       series: {
         dataLabels: {
@@ -262,12 +254,25 @@ On observe que certains laboratoires concentrent une part importante des projets
           formatter: dataLabel,
         },
         stacking: "normal",
-      }
+      },
     },
     series,
+    title: { text: "" },
     tooltip: { formatter: tooltip },
+    xAxis: { categories, title: { text: "" } },
+    yAxis: {
+      stackLabels: {
+        enabled: true,
+        style: {
+          fontWeight: "bold",
+        },
+        formatter: stackLabel,
+      },
+      title: { text: axis },
+    },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", axis), localOptions);
+  const generalOptions = createChartOptions("bar", { chart: { height: "1000px" } });
+  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-by-structures">

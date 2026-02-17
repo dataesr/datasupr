@@ -4,12 +4,13 @@ import HighchartsInstance from "highcharts";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -237,22 +238,13 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> alloués pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> perçus pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
   }
 
   const localOptions = {
     legend: { enabled: true, reversed: true },
-    yAxis: {
-      stackLabels: {
-        enabled: true,
-        style: {
-          fontWeight: 'bold'
-        },
-        formatter: stackLabel,
-      }
-    },
     plotOptions: {
       series: {
         dataLabels: {
@@ -263,9 +255,22 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
       }
     },
     series,
+    title: { text: "" },
     tooltip: { formatter: tooltip },
+    xAxis: { categories, title: { text: "" } },
+    yAxis: {
+      stackLabels: {
+        enabled: true,
+        style: {
+          fontWeight: 'bold'
+        },
+        formatter: stackLabel,
+      },
+      title: { text: axis },
+    },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", axis), localOptions);
+  const generalOptions = createChartOptions("bar", { chart: { height: "600px" } });
+  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="international-partners-by-structure">

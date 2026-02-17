@@ -27,7 +27,7 @@ export default function ProjectsByStructures() {
     aggregations: {
       by_structure_project: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           size: structures.length,
         },
         aggregations: {
@@ -54,7 +54,7 @@ export default function ProjectsByStructures() {
       },
       by_structure_budget: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           order: { "sum_budget": "desc" },
           size: structures.length,
         },
@@ -87,7 +87,7 @@ export default function ProjectsByStructures() {
       },
       by_structure_participation: {
         terms: {
-          field: "participant_id_name_default.keyword",
+          field: "participant_encoded_key",
           order: { "sum_budget_participation": "desc" },
           size: structures.length,
         },
@@ -172,9 +172,9 @@ export default function ProjectsByStructures() {
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
   });
-  const categoriesBudget = structuresBudget.map((item) => item.key.split('###')[1]);
-  const categoriesParticipation = structuresParticipation.map((item) => item.key.split('###')[1]);
-  const categoriesProject = structuresProject.map((item) => item.key.split('###')[1]);
+  const categoriesBudget = structuresBudget.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+  const categoriesParticipation = structuresParticipation.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+  const categoriesProject = structuresProject.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
 
   const config = {
     comment: { "fr": <>Ce graphique compare la répartition des projets financés par AAP selon les financeurs pour plusieurs établissements.
@@ -227,7 +227,7 @@ L’analyse doit porter en priorité sur les proportions relatives entre catégo
       };
       title = `Montant total des projets par financeur – comparaison entre établissements ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été alloués par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesProject[this.x]}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesProject[this.x]}</b>`;
       };
       break;
   }
