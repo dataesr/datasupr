@@ -28,8 +28,14 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
       by_french_partners_project: {
         terms: {
           field: "co_partners_fr_inst.keyword",
+          order: { "by_unique_projects": "desc" },
         },
         aggregations: {
+          by_unique_projects: {
+            cardinality: {
+              field: "project_id.keyword",
+            },
+          },
           by_project_type: {
             terms: {
               field: "project_type.keyword",

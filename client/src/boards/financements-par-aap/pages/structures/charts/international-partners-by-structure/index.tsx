@@ -28,8 +28,14 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
       by_international_partners_project: {
         terms: {
           field: "co_partners_foreign_inst.keyword",
+          order: { "by_unique_projects": "desc" },
         },
         aggregations: {
+          by_unique_projects: {
+            cardinality: {
+              field: "project_id.keyword",
+            },
+          },
           by_project_type: {
             terms: {
               field: "project_type.keyword",
