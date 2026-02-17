@@ -43,11 +43,15 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
               Actuellement : {data.etablissement_actuel_lib}
             </Text>
           )}
-          {data.etablissement_actuel_categorie && (
-            <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
-              {data.etablissement_actuel_categorie}
-            </Text>
-          )}
+          <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
+            {[
+              data.etablissement_actuel_categorie,
+              data.catjur_lib,
+              data.gdetab_lib,
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+          </Text>
         </Col>
         <Col xs="12" md="4" className="text-right">
           <Button
@@ -139,6 +143,44 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
               </li>
             )}
 
+            {data.tutelle_lib && (
+              <li>
+                <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
+                  <div className="page-header__stat-card-content">
+                    <span
+                      className="page-header__stat-icon page-header__stat-icon--yellow-tournesol"
+                      aria-hidden="true"
+                    >
+                      <span
+                        className="fr-icon-government-fill"
+                        aria-hidden="true"
+                      />
+                    </span>
+                    <div>
+                      <Text size="lg" bold className="fr-mb-0">
+                        {data.tutelle_nb > 1 ? "Tutelles" : "Tutelle"}
+                      </Text>
+                      <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
+                        {capitalize(data.tutelle_lib)}
+                        <br />
+                        {data.regime_lib ? `${data.regime_lib}` : ""}
+                      </Text>
+                      {data.etablissement_id_paysage === "u79ZJ" && (
+                        <Text
+                          size="xs"
+                          className="fr-mb-0 fr-text-mention--grey"
+                          style={{ fontStyle: "italic" }}
+                        >
+                          La Fondation nationale des sciences politiques (FNSP)
+                          assure la gestion administrative et financière de
+                          l'institut
+                        </Text>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </li>
+            )}
             <li>
               <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
                 <div className="page-header__stat-card-content">
@@ -186,71 +228,6 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                 </div>
               </div>
             </li>
-
-            {data.catjur_lib && (
-              <li>
-                <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
-                  <div className="page-header__stat-card-content">
-                    <span
-                      className="page-header__stat-icon page-header__stat-icon--green-emeraude"
-                      aria-hidden="true"
-                    >
-                      <span
-                        className="fr-icon-briefcase-fill"
-                        aria-hidden="true"
-                      />
-                    </span>
-                    <div>
-                      <Text size="lg" bold className="fr-mb-0">
-                        Catégorie juridique
-                      </Text>
-                      <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
-                        {data.catjur_lib}. <br /> {data.gdetab_lib}
-                      </Text>
-                    </div>
-                  </div>
-                </div>
-              </li>
-            )}
-
-            {data.tutelle_lib && (
-              <li>
-                <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
-                  <div className="page-header__stat-card-content">
-                    <span
-                      className="page-header__stat-icon page-header__stat-icon--yellow-tournesol"
-                      aria-hidden="true"
-                    >
-                      <span
-                        className="fr-icon-government-fill"
-                        aria-hidden="true"
-                      />
-                    </span>
-                    <div>
-                      <Text size="lg" bold className="fr-mb-0">
-                        {data.tutelle_nb > 1 ? "Tutelles" : "Tutelle"}
-                      </Text>
-                      <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
-                        {capitalize(data.tutelle_lib)}
-                        <br />
-                        {data.regime_lib ? `${data.regime_lib}` : ""}
-                      </Text>
-                      {data.etablissement_id_paysage === "u79ZJ" && (
-                        <Text
-                          size="xs"
-                          className="fr-mb-0 fr-text-mention--grey"
-                          style={{ fontStyle: "italic" }}
-                        >
-                          La Fondation nationale des sciences politiques (FNSP)
-                          assure la gestion administrative et financière de
-                          l'institut
-                        </Text>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </li>
-            )}
           </ul>
         </Col>
 
