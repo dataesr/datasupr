@@ -119,13 +119,22 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
         </Title>
       </div>
 
-      {(hasBudgetData || data?.is_rce) && (
+      {(hasBudgetData || data?.is_rce || data?.contexte_etab) && (
         <div className="fr-callout fr-mb-4w">
           <Title look="h3" as="h3" className="fr-callout__title">
-            {hasBudgetData && data?.is_rce
+            {[hasBudgetData, data?.is_rce, data?.contexte_etab].filter(Boolean)
+              .length > 1
               ? "Points d'attention"
               : "Point d'attention"}
           </Title>
+
+          {data?.contexte_etab && (
+            <Text className="fr-callout__text fr-text--sm fr-mb-2w">
+              <strong>Contexte établissement</strong>
+              <br />
+              {data.contexte_etab}
+            </Text>
+          )}
 
           {hasBudgetData && (
             <Text className="fr-callout__text fr-text--sm fr-mb-2w">
