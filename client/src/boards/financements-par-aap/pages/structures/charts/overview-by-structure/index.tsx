@@ -133,7 +133,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       title: { text: "Nombre de projets" },
       type: "category",
     },
-    yAxis: { title: { text: "Montants financés (€)" } },
+    yAxis: { title: { text: getI18nLabel(i18n, 'funding_total') } },
   };
   const generalOptions = createChartOptions("variwide", { chart: { height: "600px" } });
   const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);

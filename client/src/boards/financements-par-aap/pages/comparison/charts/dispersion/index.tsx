@@ -2,11 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
 
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
-import { deepMerge, formatCompactNumber, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, getEsQuery, getYearRangeLabel } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -42,6 +43,11 @@ export default function Dispersion() {
                   field: "project_budgetFinanced",
                 },
               },
+              unique_labs: {
+                cardinality: {
+                  field: "co_partners_fr_labs.keyword"
+                }
+              }
             },
           },
         },
@@ -68,6 +74,7 @@ export default function Dispersion() {
       x: structure?.unique_projects?.value ?? 0,
       y: structure?.sum_budget?.value ?? 0,
       yFormatted: `${formatCompactNumber(structure?.sum_budget?.value ?? 0)} €`,
+      z: structure?.unique_labs?.value ?? 0,
     })),
     name: typology.key,
   }));
@@ -95,9 +102,10 @@ et ceux combinant volume et intensité financière.</> },
     plotOptions: { series: { dataLabels: { enabled: true, format: "{point.name}" } } },
     series,
     tooltip: {
-      format: `<b>{point.name}</b> a participé à <b>{point.x} projets</b> dont le montant total représente <b>{point.yFormatted}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}</b>`,
+      format: `<b>{point.name}</b> a participé à <b>{point.x} projets</b> dont le montant total représente <b>{point.yFormatted}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}</b> et a <b>{point.z}</b> laboratoires`,
     },
     xAxis: {
+      categories: [],
       gridLineWidth: 1,
       lineWidth: 1,
       plotLines: [{
@@ -119,10 +127,12 @@ et ceux combinant volume et intensité financière.</> },
         width: 2,
         zIndex: 3
       }],
-      title: { text: "Montants financés (€)" },
-    }
+      title: { text: getI18nLabel(i18n, 'funding_total') },
+    },
+    title: { text: "" },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", [], "", "", "bubble"), localOptions);
+  const generalOptions = createChartOptions("bubble", { chart: { height: "600px" } });
+  const options: HighchartsInstance.Options = deepMerge(generalOptions, localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="dispersion">
