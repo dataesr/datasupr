@@ -239,15 +239,6 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
 
   const localOptions = {
     legend: { enabled: true, reversed: true },
-    yAxis: {
-      stackLabels: {
-        enabled: true,
-        style: {
-          fontWeight: 'bold'
-        },
-        formatter: stackLabel,
-      }
-    },
     plotOptions: {
       series: {
         dataLabels: {
@@ -255,10 +246,19 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
           formatter: dataLabel,
         },
         stacking: "normal",
-      }
+      },
     },
     series,
     tooltip: { formatter: tooltip },
+    yAxis: {
+      stackLabels: {
+        enabled: true,
+        style: {
+          fontWeight: "bold",
+        },
+        formatter: stackLabel,
+      },
+    },
   };
   const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", axis), localOptions);
 

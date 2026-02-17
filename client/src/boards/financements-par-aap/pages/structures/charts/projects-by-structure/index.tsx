@@ -130,6 +130,9 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
     return `${this.y} projet${this.y > 1 ? 's' : ''} (${formatPercent(this.y_perc)})`;
   };
   let series = seriesProject;
+  let stackLabel = function (this: any) {
+    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
+  };
   let title = `Nombre de projets financés auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}, soit ${formatPercent(this.y_perc)} (${this.y} / ${this.total} )`;
@@ -142,6 +145,9 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
       };
       series = seriesBudget;
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
       title = `Montant total des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
@@ -154,6 +160,9 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
       };
       series = seriesParticipation;
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
       title = `Montant alloué des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> alloués ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
@@ -168,15 +177,23 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       bar: {
         dataLabels: {
           align: "right",
-          enabled: true,
+          enabled: false,
           formatter: dataLabel,
         },
-        grouping: false,
-        stacking: 'normal',
+        stacking: "normal",
       },
     },
     series,
     tooltip: { formatter: tooltip },
+    yAxis: {
+      stackLabels: {
+        enabled: true,
+        style: {
+          fontWeight: "bold",
+        },
+        formatter: stackLabel,
+      },
+    },
   };
   const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", categories, "", axis), localOptions);
 

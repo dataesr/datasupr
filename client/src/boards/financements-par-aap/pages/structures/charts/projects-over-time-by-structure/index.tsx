@@ -155,10 +155,10 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
           enabled: false,
           lineColor: "#666666",
           lineWidth: 1,
-          symbol: "circle"
+          symbol: "circle",
         },
         stacking: "normal",
-      }
+      },
     },
     series,
     tooltip: { formatter: tooltip },
