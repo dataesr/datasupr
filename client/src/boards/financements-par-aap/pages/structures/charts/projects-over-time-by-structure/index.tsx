@@ -152,9 +152,10 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   }
 
   const options: HighchartsInstance.Options = {
+    chart: { type: "area" },
     legend: { enabled: true, reversed: true },
     plotOptions: {
-      series: { pointStart: Number(years[0]) },
+      series: { legendSymbol: "rectangle", pointStart: Number(years[0]) },
       area: {
         marker: {
           enabled: false,

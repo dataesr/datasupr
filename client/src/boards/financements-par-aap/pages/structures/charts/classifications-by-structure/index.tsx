@@ -28,7 +28,7 @@ export default function ClassificationsByStructure({ name }: { name: string | un
       by_classifications_project: {
         terms: {
           field: "project_classification.primary_field.keyword",
-          size: 25,
+          size: 15,
         },
         aggregations: {
           by_project_type: {
@@ -56,7 +56,7 @@ export default function ClassificationsByStructure({ name }: { name: string | un
         terms: {
           field: "project_classification.primary_field.keyword",
           order: { "sum_budget": "desc" },
-          size: 25,
+          size: 15,
         },
         aggregations: {
           sum_budget: {
@@ -89,7 +89,7 @@ export default function ClassificationsByStructure({ name }: { name: string | un
         terms: {
           field: "project_classification.primary_field.keyword",
           order: { "sum_budget_participation": "desc" },
-          size: 25,
+          size: 15,
         },
         aggregations: {
           sum_budget_participation: {

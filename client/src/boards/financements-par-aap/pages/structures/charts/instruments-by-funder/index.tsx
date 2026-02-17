@@ -142,7 +142,7 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
   const instrumentsProject = data?.aggregations?.by_instrument_project?.buckets ?? [];
   instrumentsBudget.forEach((instrument) => {
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -154,7 +154,7 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
   });
   instrumentsParticipation.forEach((instrument) => {
     seriesParticipation.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -166,12 +166,12 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
   });
   instrumentsProject.forEach((instrument) => {
     seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
-      color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
+      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });

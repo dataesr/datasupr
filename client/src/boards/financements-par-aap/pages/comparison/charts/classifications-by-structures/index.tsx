@@ -35,7 +35,7 @@ export default function ClassificationsByStructures() {
           by_classifications: {
             terms: {
               field: "project_classification.primary_field.keyword",
-              size: 25,
+              size: 15,
             },
             aggregations: {
               is_coordinator: {
@@ -69,7 +69,7 @@ export default function ClassificationsByStructures() {
           by_classifications: {
             terms: {
               field: "project_classification.primary_field.keyword",
-              size: 25,
+              size: 15,
             },
             aggregations: {
               is_coordinator: {
@@ -103,7 +103,7 @@ export default function ClassificationsByStructures() {
           by_classifications: {
             terms: {
               field: "project_classification.primary_field.keyword",
-              size: 25,
+              size: 15,
             },
             aggregations: {
               is_coordinator: {

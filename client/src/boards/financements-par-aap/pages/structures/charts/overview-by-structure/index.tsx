@@ -77,7 +77,8 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   };
 
   let hiddenPoints: string[] = [];
-  const options: HighchartsInstance.Options = {
+  const options = {
+    chart: { type: "variwide" },
     legend: { enabled: true },
     plotOptions: {
       series: {
@@ -108,15 +109,16 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       },
     },
     series: [{
-      data: series,
       colorByPoint: true,
       colors,
+      data: series,
       dataLabels: {
         enabled: true,
         formatter: function (this: any) {
           return `${formatCompactNumber(this.y)} €`;
         },
       },
+      legendType: "point",
       type: "variwide",
     }],
     title: { text: "" },

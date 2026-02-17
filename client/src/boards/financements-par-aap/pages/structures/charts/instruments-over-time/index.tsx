@@ -81,37 +81,37 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
   const seriesProject: any = [];
   (data?.aggregations?.by_instrument?.buckets ?? []).forEach((instrument) => {
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesBudget.push({
-      color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
+      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesParticipation.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesParticipation.push({
-      color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
+      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }) } },
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
-      color: getCssColor({ name: instrument.key.split('-')?.[0].split(' ')?.[0].trim().toLowerCase(), prefix: "instrument" }),
+      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
@@ -152,7 +152,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
   };
 
   const options: HighchartsInstance.Options = {
-    chart: { height: "800px" },
+    chart: { height: "800px", type: "area" },
     legend: { enabled: true, reversed: true },
     plotOptions: {
       area: {
@@ -164,7 +164,7 @@ export default function InstrumentsOverTime({ name }: { name: string | undefined
           symbol: "circle",
         },
       },
-      series: { pointStart: Number(years[0]) },
+      series: { legendSymbol: "rectangle", pointStart: Number(years[0]) },
     },
     series,
     title: { text: "" },

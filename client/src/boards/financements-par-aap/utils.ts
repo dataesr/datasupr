@@ -22,11 +22,16 @@ const formatPercent = (number: number, decimals: number = 0): string => {
   return formatter.format(number);
 };
 
-const getCssColor = ({ name, prefix = "" }: { name: string, prefix?: string }) => {
+const getCssColor = ({ name, prefix = "" }: { name: string, prefix?: string }): string => {
   let variableName: string = "";
   if (prefix?.length > 0) variableName += `${prefix}-`;
   variableName += name.toLowerCase().replace(/[^0-9a-z ]/g, "").replace(/  +/g, " ").replaceAll(" ", "-");
-  return getCssColorGlobal(variableName);
+  let color = getCssColorGlobal(variableName);
+  if (color === '') {
+    console.error(`No CSS color for ${variableName}`);
+    color = "#c3c3c3";
+  }
+  return color;
 };
 
 const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
