@@ -10,7 +10,7 @@ import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
 import { deepMerge, formatCompactNumber, getCssColor, getEsQuery, getGeneralOptions, pattern, years } from "../../../../utils.ts";
-import i18n from "../i18n.json";
+import i18n from "../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 

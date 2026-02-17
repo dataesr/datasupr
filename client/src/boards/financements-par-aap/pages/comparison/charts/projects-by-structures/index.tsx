@@ -6,9 +6,11 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import i18n from "../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -34,9 +36,16 @@ export default function ProjectsByStructures() {
               field: "project_type.keyword",
             },
             aggregations: {
-              unique_projects: {
-                cardinality: {
-                  field: "project_id.keyword",
+              is_coordinator: {
+                terms: {
+                  field: "participation_is_coordinator",
+                },
+                aggregations: {
+                  unique_projects: {
+                    cardinality: {
+                      field: "project_id.keyword",
+                    },
+                  },
                 },
               },
             },
@@ -60,9 +69,16 @@ export default function ProjectsByStructures() {
               field: "project_type.keyword",
             },
             aggregations: {
-              sum_budget: {
-                sum: {
-                  field: "project_budgetFinanced",
+              is_coordinator: {
+                terms: {
+                  field: "participation_is_coordinator",
+                },
+                aggregations: {
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
                 },
               },
             },
@@ -86,9 +102,16 @@ export default function ProjectsByStructures() {
               field: "project_type.keyword",
             },
             aggregations: {
-              sum_budget_participation: {
-                sum: {
-                  field: "participation_funding",
+              is_coordinator: {
+                terms: {
+                  field: "participation_is_coordinator",
+                },
+                aggregations: {
+                  sum_budget_participation: {
+                    sum: {
+                      field: "participation_funding",
+                    },
+                  },
                 },
               },
             },
@@ -112,24 +135,39 @@ export default function ProjectsByStructures() {
   });
 
   const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
-  const seriesProject = funders.map((funder) => ({
+  const seriesProjectCoord: any = funders.map((funder) => ({
+    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+    data: structuresProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+    name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+  })).reverse();
+  const seriesProjectNotCoord: any = funders.map((funder) => ({
     color: getCssColor({ name: funder, prefix: "funder" }),
-    data: structuresProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.unique_projects?.value ?? 0),
-    name: funder,
+    data: structuresProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+    name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
   })).reverse();
   const categoriesProject = structuresProject.map((item) => item.key.split('###')[1]);
   const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? [];
-  const seriesBudget = funders.map((funder) => ({
+  const seriesBudgetCoord: any = funders.map((funder) => ({
+    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+    data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
+    name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+  })).reverse();
+  const seriesBudgetNotCoord: any = funders.map((funder) => ({
     color: getCssColor({ name: funder, prefix: "funder" }),
-    data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.sum_budget?.value ?? 0),
-    name: funder,
+    data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+    name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
   })).reverse();
   const categoriesBudget = structuresBudget.map((item) => item.key.split('###')[1]);
   const structuresParticipation = data?.aggregations?.by_structure_participation?.buckets ?? [];
-  const seriesParticipation = funders.map((funder) => ({
+  const seriesParticipationCoord: any = funders.map((funder) => ({
+    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+    data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+    name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+  })).reverse();
+  const seriesParticipationNotCoord: any = funders.map((funder) => ({
     color: getCssColor({ name: funder, prefix: "funder" }),
-    data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.sum_budget_participation?.value ?? 0),
-    name: funder,
+    data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+    name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
   })).reverse();
   const categoriesParticipation = structuresParticipation.map((item) => item.key.split('###')[1]);
 
@@ -146,7 +184,7 @@ L’analyse doit porter en priorité sur les proportions relatives entre catégo
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  let series = seriesProject;
+  let series = seriesProjectNotCoord.concat(seriesProjectCoord);
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
@@ -162,7 +200,7 @@ L’analyse doit porter en priorité sur les proportions relatives entre catégo
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesBudget;
+      series = seriesBudgetNotCoord.concat(seriesBudgetCoord);
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
@@ -178,7 +216,7 @@ L’analyse doit porter en priorité sur les proportions relatives entre catégo
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesParticipation;
+      series = seriesParticipationNotCoord.concat(seriesParticipationCoord);
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };

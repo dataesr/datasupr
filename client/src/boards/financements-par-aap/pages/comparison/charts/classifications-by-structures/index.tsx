@@ -6,9 +6,11 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
+import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { deepMerge, formatCompactNumber, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { deepMerge, formatCompactNumber, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import i18n from "../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -36,9 +38,16 @@ export default function ClassificationsByStructures() {
               size: 25,
             },
             aggregations: {
-              unique_projects: {
-                cardinality: {
-                  field: "project_id.keyword",
+              is_coordinator: {
+                terms: {
+                  field: "participation_is_coordinator",
+                },
+                aggregations: {
+                  unique_projects: {
+                    cardinality: {
+                      field: "project_id.keyword",
+                    },
+                  },
                 },
               },
             },
@@ -63,9 +72,16 @@ export default function ClassificationsByStructures() {
               size: 25,
             },
             aggregations: {
-              sum_budget: {
-                sum: {
-                  field: "project_budgetFinanced",
+              is_coordinator: {
+                terms: {
+                  field: "participation_is_coordinator",
+                },
+                aggregations: {
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
                 },
               },
             },
@@ -90,9 +106,16 @@ export default function ClassificationsByStructures() {
               size: 25,
             },
             aggregations: {
-              sum_budget_participation: {
-                sum: {
-                  field: "participation_funding",
+              is_coordinator: {
+                terms: {
+                  field: "participation_is_coordinator",
+                },
+                aggregations: {
+                  sum_budget_participation: {
+                    sum: {
+                      field: "participation_funding",
+                    },
+                  },
                 },
               },
             },
@@ -117,24 +140,39 @@ export default function ClassificationsByStructures() {
 
   const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
   const categoriesProject = structuresProject.map((bucket) => bucket.key.split("###")[1]);
-  const seriesProject = (structuresProject?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
+  const seriesProjectCoord = (structuresProject?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
+    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
+    data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+    name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+  })).reverse();
+  const seriesProjectNotCoord = (structuresProject?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
     color: getCssColor({ name: bucket.key, prefix: "classification" }),
-    data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.unique_projects?.value ?? 0),
-    name: bucket.key,
+    data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+    name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
   })).reverse();
   const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? [];
   const categoriesBudget = structuresBudget.map((bucket) => bucket.key.split("###")[1]);
-  const seriesBudget = (structuresBudget?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
+  const seriesBudgetCoord = (structuresBudget?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
+    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
+    data: structuresBudget.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
+    name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+  })).reverse();
+  const seriesBudgetNotCoord = (structuresBudget?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
     color: getCssColor({ name: bucket.key, prefix: "classification" }),
-    data: structuresBudget.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.sum_budget?.value ?? 0),
-    name: bucket.key,
+    data: structuresBudget.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+    name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
   })).reverse();
   const structuresParticipation = data?.aggregations?.by_structure_participation?.buckets ?? [];
   const categoriesParticipation = structuresParticipation.map((bucket) => bucket.key.split("###")[1]);
-  const seriesParticipation = (structuresParticipation?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
+  const seriesParticipationCoord = (structuresParticipation?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
+    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
+    data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+    name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+  })).reverse();
+  const seriesParticipationNotCoord = (structuresParticipation?.[0]?.by_classifications?.buckets ?? []).map((bucket) => ({
     color: getCssColor({ name: bucket.key, prefix: "classification" }),
-    data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.sum_budget_participation?.value ?? 0),
-    name: bucket.key,
+    data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+    name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
   })).reverse();
 
   // If view by number of projects
@@ -143,7 +181,7 @@ export default function ClassificationsByStructures() {
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  let series = seriesProject;
+  let series = seriesProjectNotCoord.concat(seriesProjectCoord);
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
@@ -159,7 +197,7 @@ export default function ClassificationsByStructures() {
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesBudget;
+      series = seriesBudgetNotCoord.concat(seriesBudgetCoord);
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
@@ -175,7 +213,7 @@ export default function ClassificationsByStructures() {
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesParticipation;
+      series = seriesParticipationNotCoord.concat(seriesParticipationCoord);
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
