@@ -1,6 +1,7 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
+import "highcharts/modules/treemap";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
@@ -9,12 +10,12 @@ import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
+import { formatCompactNumber, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function InstrumentsByFunder({ name }: { name: string | undefined }) {
+export default function InstrumentsForEurope({ name }: { name: string | undefined }) {
   const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
@@ -31,21 +32,14 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
           size: 10,
         },
         aggregations: {
-          by_project_type: {
+          is_coordinator: {
             terms: {
-              field: "project_type.keyword",
+              field: "participation_is_coordinator",
             },
             aggregations: {
-              is_coordinator: {
-                terms: {
-                  field: "participation_is_coordinator",
-                },
-                aggregations: {
-                  unique_projects: {
-                    cardinality: {
-                      field: "project_id.keyword",
-                    },
-                  },
+              unique_projects: {
+                cardinality: {
+                  field: "project_id.keyword",
                 },
               },
             },
@@ -64,21 +58,14 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
               field: "project_budgetFinanced",
             },
           },
-          by_project_type: {
+          is_coordinator: {
             terms: {
-              field: "project_type.keyword",
+              field: "participation_is_coordinator",
             },
             aggregations: {
-              is_coordinator: {
-                terms: {
-                  field: "participation_is_coordinator",
-                },
-                aggregations: {
-                  sum_budget: {
-                    sum: {
-                      field: "project_budgetFinanced",
-                    },
-                  },
+              sum_budget: {
+                sum: {
+                  field: "project_budgetFinanced",
                 },
               },
             },
@@ -97,21 +84,14 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
               field: "participation_funding",
             },
           },
-          by_project_type: {
+          is_coordinator: {
             terms: {
-              field: "project_type.keyword",
+              field: "participation_is_coordinator",
             },
             aggregations: {
-              is_coordinator: {
-                terms: {
-                  field: "participation_is_coordinator",
-                },
-                aggregations: {
-                  sum_budget_participation: {
-                    sum: {
-                      field: "participation_funding",
-                    },
-                  },
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
                 },
               },
             },
@@ -120,9 +100,10 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
       },
     },
   };
+  body.query.bool.filter.push({ terms: { "project_type.keyword": ["Horizon 2020", "Horizon Europe"] } });
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-instruments-by-funder", structure, yearMax, yearMin],
+    queryKey: ["fundings-instruments-for-europe", structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -143,124 +124,92 @@ export default function InstrumentsByFunder({ name }: { name: string | undefined
   instrumentsBudget.forEach((instrument) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
-      data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+      value: instrument?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0,
     });
     seriesBudget.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
-      data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+      value: instrument?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0,
     });
   });
   instrumentsParticipation.forEach((instrument) => {
     seriesParticipation.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
-      data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+      value: instrument?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0,
     });
     seriesParticipation.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
-      data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+      value: instrument?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0,
     });
   });
   instrumentsProject.forEach((instrument) => {
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
-      data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+      value: instrument?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0,
     });
     seriesProject.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
-      data: funders.map((funder) => instrument?.by_project_type?.buckets?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+      value: instrument?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0,
     });
   });
 
   const config = {
     comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement, par financeur et selon les grandes classifications disciplinaires.
 Les barres représentent le nombre / le montant total des projets rattachés à chaque domaine, permettant d’identifier les champs scientifiques les plus présents dans les projets auxquels l’établissement participe. Les montants affichés ne correspondent pas aux financements réellement perçus par l’établissement, mais au volume global des projets financés dans lesquels il est impliqué. Ils doivent être interprétés comme un indicateur d’activité disciplinaire, et non comme un budget reçu. Les thématiques ont été estimées par IA, à partir du titre, résumé et mots clés des projets.</> },
-    id: "instrumentsByFunder",
+    id: "instrumentsForEurope",
   };
 
   // If view by number of projects
-  let axis = getI18nLabel(i18n, 'number_of_projects_funded');
-  let dataLabel = function (this: any) {
-    return `${this.y} projet${this.y > 1 ? 's' : ''}`;
-  };
   let series = seriesProject.reverse();
-  let stackLabel = function (this: any) {
-    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
-  };
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.key}</b> auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+    return `<b>${this.value}</b> projets <b>${this.key}</b> auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
-      axis = getI18nLabel(i18n, 'funding_total');
-      dataLabel = function (this: any) {
-        return `${formatCompactNumber(this.y)} €`;
-      };
       series = seriesBudget.reverse();
-      stackLabel = function (this: any) {
-        return `${formatCompactNumber(this.total)} €`;
-      };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.value)} €</b> financés pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = getI18nLabel(i18n, 'funding_by_structure');
-      dataLabel = function (this: any) {
-        return `${formatCompactNumber(this.y)} €`;
-      };
       series = seriesParticipation.reverse();
-      stackLabel = function (this: any) {
-        return `${formatCompactNumber(this.total)} €`;
-      };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> perçus pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.value)} €</b> perçus pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
-  }
+  };
 
   const options: HighchartsInstance.Options = {
-    chart: { height: "800px" },
-    legend: { enabled: true, reversed: true },
+    chart: { type: "treemap" },
+    legend: { enabled: true },
     plotOptions: {
-      series: {
+      treemap: {
         dataLabels: {
-          enabled: true,
-          formatter: dataLabel,
+          style: {
+            textOutline: "1px contrast",
+          },
         },
-        stacking: "normal",
       },
     },
-    series: series,
+    series: [{ data: series, layoutAlgorithm: "squarified", type: "treemap" }],
     title: { text: "" },
     tooltip: { formatter: tooltip },
-    xAxis: { categories: funders, title: { text: "" } },
-    yAxis: {
-      stackLabels: {
-        enabled: true,
-        style: {
-          fontWeight: "bold",
-        },
-        formatter: stackLabel,
-      },
-      title: { text: axis }
-    },
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="instruments-by-funder">
+    <div className={`chart-container chart-container--${color}`} id="instruments-for-europe">
       <Title as="h2" look="h6">
-        {`Instruments par financeur de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {`Instruments pour l'Europe de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
-      {isLoading ? <DefaultSkeleton height="800px" /> : <ChartWrapperFundings config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 };
