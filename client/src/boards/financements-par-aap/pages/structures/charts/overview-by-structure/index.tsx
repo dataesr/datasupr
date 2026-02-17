@@ -64,8 +64,8 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     // Filter on not empty item
     .filter((item) => !!item)
     .map((bucket) => [
-      [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket.is_coordinator.buckets.find((bucket) => bucket.key === 1).sum_budget.value, bucket.is_coordinator.buckets.find((bucket) => bucket.key === 1).doc_count],
-      [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket.is_coordinator.buckets.find((bucket) => bucket.key === 0).sum_budget.value, bucket.is_coordinator.buckets.find((bucket) => bucket.key === 0).doc_count],
+      [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.doc_count ?? 0],
+      [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
     ])
     .flat();
   const colors = funders.map((funder) => [{ pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } }, getCssColor({ name: funder, prefix: "funder" })]).flat();
