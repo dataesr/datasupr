@@ -134,42 +134,47 @@ export default function ProjectsByStructures() {
       }).then((response) => response.json()),
   });
 
-  const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
-  const seriesProjectCoord: any = funders.map((funder) => ({
-    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-    data: structuresProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
-    name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
-  })).reverse();
-  const seriesProjectNotCoord: any = funders.map((funder) => ({
-    color: getCssColor({ name: funder, prefix: "funder" }),
-    data: structuresProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
-    name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-  })).reverse();
-  const categoriesProject = structuresProject.map((item) => item.key.split('###')[1]);
+  const seriesBudget: any[] = [];
+  const seriesParticipation: any[] = [];
+  const seriesProject: any[] = [];
   const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? [];
-  const seriesBudgetCoord: any = funders.map((funder) => ({
-    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-    data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
-    name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
-  })).reverse();
-  const seriesBudgetNotCoord: any = funders.map((funder) => ({
-    color: getCssColor({ name: funder, prefix: "funder" }),
-    data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
-    name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-  })).reverse();
-  const categoriesBudget = structuresBudget.map((item) => item.key.split('###')[1]);
   const structuresParticipation = data?.aggregations?.by_structure_participation?.buckets ?? [];
-  const seriesParticipationCoord: any = funders.map((funder) => ({
-    color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-    data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
-    name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
-  })).reverse();
-  const seriesParticipationNotCoord: any = funders.map((funder) => ({
-    color: getCssColor({ name: funder, prefix: "funder" }),
-    data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
-    name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-  })).reverse();
+  const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
+  funders.forEach((funder) => {
+    seriesBudget.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesBudget.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesParticipation.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesParticipation.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesProject.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: structuresProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesProject.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: structuresProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+  });
+  const categoriesBudget = structuresBudget.map((item) => item.key.split('###')[1]);
   const categoriesParticipation = structuresParticipation.map((item) => item.key.split('###')[1]);
+  const categoriesProject = structuresProject.map((item) => item.key.split('###')[1]);
 
   const config = {
     comment: { "fr": <>Ce graphique compare la répartition des projets financés par AAP selon les financeurs pour plusieurs établissements.
@@ -184,7 +189,7 @@ L’analyse doit porter en priorité sur les proportions relatives entre catégo
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  let series = seriesProjectNotCoord.concat(seriesProjectCoord);
+  let series = seriesProject.reverse();
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
@@ -200,7 +205,7 @@ L’analyse doit porter en priorité sur les proportions relatives entre catégo
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesBudgetNotCoord.concat(seriesBudgetCoord);
+      series = seriesBudget.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
@@ -216,7 +221,7 @@ L’analyse doit porter en priorité sur les proportions relatives entre catégo
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesParticipationNotCoord.concat(seriesParticipationCoord);
+      series = seriesParticipation.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
