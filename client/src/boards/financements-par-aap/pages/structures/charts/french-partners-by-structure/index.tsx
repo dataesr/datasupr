@@ -202,11 +202,11 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
     // If view by global amount
     case 'amount_global':
       axis = 'Montants globaux financés (€)';
-      categories = seriesBudgetNotCoord.concat(categoriesBudget);
+      categories = categoriesBudget;
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesBudgetCoord;
+      series = seriesBudgetNotCoord.concat(seriesBudgetCoord);
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
