@@ -54,6 +54,7 @@ router.get("/structures-finance/definitions", async (req, res) => {
         vig_min: item.vig_min ?? null,
         vig_max: item.vig_max ?? null,
         vig_lib: item.vig_libfr || null,
+        sens: item.sens || null,
       });
 
       return acc;

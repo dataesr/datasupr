@@ -3,10 +3,7 @@ import {
   deduplicateByPaysageId,
   type MetricConfig,
 } from "../../../../../../utils/utils";
-import {
-  sortByMetricSens,
-  type MetricSens,
-} from "../../../../../../components/metric-sort";
+import type { MetricSens } from "../../../../../../components/metric-sort";
 
 interface RenderDataProps {
   data: any[];
@@ -46,7 +43,11 @@ export function RenderData({
       return value != null && !isNaN(value);
     });
 
-  const chartData = sortByMetricSens(filtered, metricSens ?? null);
+  // - "augmentation" → ascendant (le plus bas = meilleur)
+  // - "diminution" ou null → descendant (le plus haut = meilleur)
+  const chartData = [...filtered].sort((a, b) =>
+    metricSens === "augmentation" ? a.value - b.value : b.value - a.value
+  );
 
   if (chartData.length === 0) {
     return (

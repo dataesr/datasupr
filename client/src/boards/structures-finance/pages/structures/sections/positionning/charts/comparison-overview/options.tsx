@@ -72,18 +72,22 @@ export const createComparisonOverviewOptions = (
     const total = sorted.length;
     const color = SERIES_COLORS[dsIndex]();
 
-    const lineData = sorted.map((d, i) => ({
-      x: d.value,
-      y: ((i + 1) / total) * 100,
-      custom: {
-        name: d.name,
-        id: d.id,
-        rank: i + 1,
-        total,
-        value: d.value,
-        filterLabel: ds.label,
-      },
-    }));
+    const isAugmentation = config.sens === "augmentation";
+    const lineData = sorted.map((d, i) => {
+      const pct = total > 1 ? (i / (total - 1)) * 100 : 50;
+      return {
+        x: d.value,
+        y: isAugmentation ? 100 - pct : pct,
+        custom: {
+          name: d.name,
+          id: d.id,
+          rank: i + 1,
+          total,
+          value: d.value,
+          filterLabel: ds.label,
+        },
+      };
+    });
 
     const rankIdx = sorted.findIndex((d) => d.id === currentStructureId);
 
@@ -93,15 +97,18 @@ export const createComparisonOverviewOptions = (
       color,
       data: lineData,
       marker: {
-        enabled: false,
-        states: { hover: { enabled: true, radius: 4 } },
+        enabled: true,
+        radius: 2,
+        symbol: "circle",
+        states: { hover: { enabled: true, radius: 5 } },
       },
       lineWidth: 2.5,
     });
 
     if (rankIdx !== -1) {
       const val = sorted[rankIdx].value;
-      const pct = ((rankIdx + 1) / total) * 100;
+      const rawPct = total > 1 ? (rankIdx / (total - 1)) * 100 : 50;
+      const pct = isAugmentation ? 100 - rawPct : rawPct;
       series.push({
         type: "scatter" as const,
         name: `${ds.label} — position`,

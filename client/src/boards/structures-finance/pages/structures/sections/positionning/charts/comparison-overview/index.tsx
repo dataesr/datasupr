@@ -7,6 +7,36 @@ import {
 } from "./options";
 import { RenderData } from "./render-data";
 
+function buildComment(
+  config: ComparisonOverviewConfig,
+  structureName?: string
+) {
+  const isAugmentation = config.sens === "augmentation";
+  const order = isAugmentation ? "croissant" : "décroissant";
+  const orderAdj = isAugmentation
+    ? "de la plus petite valeur à la plus grande"
+    : "de la plus grande valeur à la plus petite";
+
+  return (
+    <p
+      className="fr-text--xs fr-mb-0"
+      style={{ color: "var(--text-mention-grey)" }}
+    >
+      Ce graphique montre la répartition des valeurs de l'indicateur «&nbsp;
+      {config.metricLabel.toLowerCase()}&nbsp;» parmi les établissements
+      d'enseignement supérieur, classées {orderAdj}. Chaque courbe relie les
+      points correspondant à chaque établissement, dans l'ordre {order} des
+      valeurs. Les extrémités de chaque courbe montrent les valeurs minimales et
+      maximales pour chaque regroupement d'établissements. Les losanges
+      indiquent la position de {structureName || "l'établissement"} en{" "}
+      {config.metricConfig.year} par rapport aux autres établissements. L'axe
+      vertical (50&nbsp;%) permet de repérer la médiane&nbsp;: la moitié des
+      établissements ont des valeurs supérieures à cette valeur, et l'autre
+      moitié des valeurs inférieures.
+    </p>
+  );
+}
+
 interface ComparisonOverviewChartProps {
   config: ComparisonOverviewConfig;
   allData: any[];
@@ -113,6 +143,7 @@ export default function ComparisonOverviewChart({
       config={{
         id: `comparison-overview-${config.metric}`,
         title: `${config.metricLabel} - Positionnement de ${currentStructureName || "l'établissement"} pour l'année ${config.metricConfig.year}`,
+        comment: { fr: buildComment(config, currentStructureName) },
       }}
       options={chartOptions}
       renderData={() => (

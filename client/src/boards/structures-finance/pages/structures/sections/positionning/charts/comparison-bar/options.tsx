@@ -7,10 +7,7 @@ import {
   deduplicateByPaysageId,
   type MetricConfig,
 } from "../../../../../../utils/utils";
-import {
-  sortByMetricSens,
-  type MetricSens,
-} from "../../../../../../components/metric-sort";
+import type { MetricSens } from "../../../../../../components/metric-sort";
 import { getCssColor } from "../../../../../../../../utils/colors";
 
 export interface PositioningComparisonBarConfig {
@@ -42,7 +39,11 @@ export const createPositioningComparisonBarOptions = (
     };
   });
 
-  const chartData = sortByMetricSens(unsortedData, config.sens ?? null);
+  // - "augmentation" → ascendant (le plus bas = meilleur, ex: charges/produits)
+  // - "diminution" ou null → descendant (le plus haut = meilleur)
+  const chartData = [...unsortedData].sort((a, b) =>
+    config.sens === "augmentation" ? a.value - b.value : b.value - a.value
+  );
 
   let dataMin = Infinity;
   let dataMax = -Infinity;
