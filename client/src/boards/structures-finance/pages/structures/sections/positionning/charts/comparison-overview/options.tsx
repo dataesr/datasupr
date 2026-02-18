@@ -23,9 +23,9 @@ export interface ComparisonOverviewConfig {
 }
 
 const SERIES_COLORS = [
-  () => getCssColor("scale-1"),
-  () => getCssColor("scale-4"),
+  () => getCssColor("scale-2"),
   () => getCssColor("scale-7"),
+  () => getCssColor("scale-8"),
   () => getCssColor("scale-10"),
 ];
 
@@ -161,7 +161,20 @@ export const createComparisonOverviewOptions = (
       title: { text: "" },
       min: 0,
       max: 100,
-      labels: { format: "{value} %" },
+      tickInterval: 25,
+      labels: {
+        formatter: function () {
+          const value = this.value as number;
+          const labels: { [key: number]: string } = {
+            0: "Minimum",
+            25: "1er quartile",
+            50: "Médiane",
+            75: "3ème quartile",
+            100: "Maximum",
+          };
+          return labels[value] || `${value}%`;
+        },
+      },
     },
     tooltip: {
       useHTML: true,
