@@ -113,11 +113,9 @@ export function successRatesReadingKey(data, displayType, currentLang) {
   };
 }
 
-export function valuesSuccessReadingKey(data, displayType, currentLang) {
+export function valuesSuccessReadingKey(data, displayType) {
   const dataSelectedCountry = data?.filter((item) => item.country !== "all")[0];
   const year = dataSelectedCountry?.data[0]?.topics[0]?.years[0]?.year || "2021";
-  const topics = dataSelectedCountry?.data[0]?.topics || [];
-  const topicName = currentLang === "fr" ? topics[0]?.thema_name_fr : topics[0]?.thema_name_en;
 
   const dataYearEvaluated = dataSelectedCountry?.data?.find((d) => d.stage === "evaluated")?.topics[0]?.years?.find((y) => y.year === year);
   const dataYearSuccessful = dataSelectedCountry?.data?.find((d) => d.stage === "successful")?.topics[0]?.years?.find((y) => y.year === year);

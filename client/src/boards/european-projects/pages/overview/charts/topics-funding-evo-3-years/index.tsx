@@ -55,7 +55,7 @@ export default function TopicsFundingEvo3Years() {
         </>
       ),
     },
-    readingKey: valuesSuccessReadingKey(data, displayType, currentLang),
+    readingKey: valuesSuccessReadingKey(data, displayType),
     sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/topics-types-3",
   };
