@@ -60,11 +60,11 @@ export default function DisplayStructure() {
   };
 
   const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ structures: [structure] }),
     size: 1,
   };
   const { data } = useQuery({
-    queryKey: ["fundings-structure", structure, yearMax, yearMin],
+    queryKey: ["fundings-structure", structure],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
