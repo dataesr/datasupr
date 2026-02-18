@@ -73,13 +73,11 @@ export default function Home() {
             ⚠️ Financement global / Financement perçu
           </Title>
           <Text>
-          Deux modes de comptabilisation des financements sont exposés.
-          <br/> <strong>Financement global (présence)</strong> : on compte le financement global du projet, en l'affectant à chaque établissement participant de manière égale. Cela ne correspondent pas aux financements effectivement perçus
-              par un établissement. Cela représente le volume total de financements des projets
-            Les sources de financements ne renseignent pas de manière homogène les montants
-            perçus par chaque participant. Dans la majorité des cas, seul le montant global du
-            projet est disponible.
-          <br/> <strong>Financement perçu (implication)</strong> : on compte la part réelle allouée à chaque établissement partenaire d’un projet (colonne « Projet.Partenaire.Aide_allouee.ANR » dans la base ANR, « montant des subvention » dans la base Horizon Europe, « consommation » dans la base PIA. Attention, on mélange ici pour le PIA de la consommation avec des subventions allouées pour ANR et Europe. Les consommations sont affectées à l'année d'édition du projet, et pas à l'année de consommation (il peut y avoir un décalage de plusieurs années). Cela reste une <strong>approximation</strong> de l'implication de l'établissement.  
+          Trois modes de comptabilisation des financements sont exposés.
+          <br/> <strong>Nombre de projets financés (participation)</strong> : on compte le nombre de projets pour lesquels l’établissement est partenaire, indépendamment des financements associés.
+          <br/> <strong>Financement global (volume)</strong> : on compte le financement global du projet, c'est-à-dire le montant total attribué, en l'affectant à chaque établissement participant. Cela ne correspond pas aux financements effectivement perçus par l'établissement. Cela représente le volume total de financements des projets auxquels participe l'établissement. Cet indicateur permet de traduire l'envergure des projets auxquels l'établissement participe.
+          <br/> <strong>Financement perçu (implication)</strong> : on compte la part réelle allouée à chaque établissement partenaire d’un projet (colonne « Projet.Partenaire.Aide_allouee.ANR » dans la base ANR, « montant des subvention » dans la base Horizon Europe, « consommation » dans la base PIA. Attention, on mélange ici de la consommation (pour le PIA) avec des subventions allouées (pour l'ANR et Europe). Les consommations sont affectées à l'année d'édition du projet, et pas à l'année de consommation (il peut y avoir un décalage de plusieurs années). Cela reste une <strong>approximation</strong> de l'<strong>implication</strong> de l'établissement.
+<br/><em>NB : Il ne s'agit pas de compte fractionnaire, aucun calcul de répartition n'est effectué.</em> 
           </Text>
           <Title as="h2" look="h5">
             🏛️ Identification des partenaires
