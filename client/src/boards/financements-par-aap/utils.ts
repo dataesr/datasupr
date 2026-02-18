@@ -2,7 +2,7 @@ import { getCssColor as getCssColorGlobal } from "../../utils/colors";
 
 const funders = ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"];
 
-const pattern = { height: 10, path: { d: "M 0 0 L 10 10 M 9 -1 L 11 1 M -1 9 L 1 11", stroke: "white" }, width: 10 };
+const pattern = { height: 4, path: "M 2 2 l 2 2", width: 4 };
 
 const typologiesExcluded = ["Entreprises", "Infrastructures de recherche", "Structures de recherche"];
 

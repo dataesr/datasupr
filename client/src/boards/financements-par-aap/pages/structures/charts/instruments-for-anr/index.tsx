@@ -29,7 +29,6 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
       by_instrument_project: {
         terms: {
           field: "project_instrument.keyword",
-          size: 10,
         },
         aggregations: {
           is_coordinator: {
@@ -50,7 +49,6 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
         terms: {
           field: "project_instrument.keyword",
           order: { "sum_budget": "desc" },
-          size: 10,
         },
         aggregations: {
           sum_budget: {
@@ -76,7 +74,6 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
         terms: {
           field: "project_instrument.keyword",
           order: { "sum_budget_participation": "desc" },
-          size: 10,
         },
         aggregations: {
           sum_budget_participation: {
@@ -193,6 +190,9 @@ Les barres représentent le nombre / le montant total des projets rattachés à 
       treemap: {
         dataLabels: {
           style: {
+            color: "black",
+            fontWeight: "bold",
+            fontSize: "14px",
             textOutline: "1px contrast",
           },
         },
