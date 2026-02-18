@@ -23,23 +23,6 @@ import {
 import { RenderData } from "./render-data";
 import { ThresholdLegend } from "../../../../../../components/threshold/threshold-legend";
 
-function buildComment(config: ComparisonOverviewConfig) {
-  return (
-    <p
-      className="fr-text--xs fr-mb-0"
-      style={{ color: "var(--text-mention-grey)" }}
-    >
-      Ce graphique montre la répartition des valeurs de l'indicateur «&nbsp;
-      {config.metricLabel.toLowerCase()}&nbsp;» parmi les établissements
-      d'enseignement supérieur, classées de la plus petite valeur à la plus
-      grande. Chaque courbe relie les points correspondant à chaque
-      établissement, dans l'ordre croissant des valeurs. Les extrémités de
-      chaque courbe montrent les valeurs minimales et maximales pour chaque
-      regroupement d'établissements.
-    </p>
-  );
-}
-
 interface ComparisonOverviewChartProps {
   config: ComparisonOverviewConfig;
   allData: any[];
@@ -219,7 +202,25 @@ export default function ComparisonOverviewChart({
         config={{
           id: `comparison-overview-${activeMetric}`,
           title: `${activeMetricLabel} - Positionnement de ${currentStructureName || "l'établissement"} pour l'année ${activeConfig.metricConfig.year}`,
-          comment: { fr: buildComment(activeConfig) },
+          comment: {
+            fr: (
+              <p
+                className="fr-text--xs fr-mb-0"
+                style={{ color: "var(--text-mention-grey)" }}
+              >
+                La médiane est la valeur centrale qui partage une série de
+                données en deux parties égales : 50 % des établissements ont des
+                valeurs inférieures ou égales à cette valeur, et 50 % des
+                valeurs supérieures ou égales. Le premier quartile correspond à
+                la valeur en dessous de laquelle se situent 25 % des
+                établissements, tandis que le dernier quartile est la valeur
+                au-dessus de laquelle se trouvent les 25 % d'établissements
+                ayant les valeurs les plus élevées. Ces trois indicateurs
+                permettent de résumer la distribution des données en quatre
+                groupes égaux.
+              </p>
+            ),
+          },
           readingKey: {
             fr: (
               <p
@@ -229,10 +230,7 @@ export default function ComparisonOverviewChart({
                 Les losanges indiquent la position de{" "}
                 {currentStructureName || "l'établissement"} en{" "}
                 {activeConfig.metricConfig.year} par rapport aux autres
-                établissements. L'axe vertical (50&nbsp;%) permet de repérer la
-                médiane&nbsp;: la moitié des établissements ont des valeurs
-                supérieures à cette valeur, et l'autre moitié des valeurs
-                inférieures.
+                établissements.
               </p>
             ),
           },
