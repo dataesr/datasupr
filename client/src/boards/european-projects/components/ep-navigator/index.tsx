@@ -161,8 +161,14 @@ export default function EpNavigator() {
     setIsDestinationsOpen(false);
   };
 
-  const thematicsLabel = selectedThematics.size > 0 ? `${selectedThematics.size} sélectionnée(s)` : "Pas de sélection";
-  const destinationsLabel = selectedDestinations.size > 0 ? `${selectedDestinations.size} sélectionnée(s)` : "Pas de sélection";
+  const thematicsLabel =
+    selectedThematics.size > 0
+      ? `${selectedThematics.size} ${getI18nLabel(i18n, "n_selected", currentLang)}`
+      : getI18nLabel(i18n, "no-selection", currentLang);
+  const destinationsLabel =
+    selectedDestinations.size > 0
+      ? `${selectedDestinations.size} ${getI18nLabel(i18n, "n_selected", currentLang)}`
+      : getI18nLabel(i18n, "no-selection", currentLang);
 
   return (
     <Container>

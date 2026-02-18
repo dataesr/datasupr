@@ -187,6 +187,10 @@
     "fr": "Pas de sélection",
     "en": "No selection"
   },
+  "n_selected": {
+    "fr": "sélectionnée(s)",
+    "en": "selected"
+  },
   "apply_selection": {
     "fr": "Appliquer la sélection",
     "en": "Apply selection"

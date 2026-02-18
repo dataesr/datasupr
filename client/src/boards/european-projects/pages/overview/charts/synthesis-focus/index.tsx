@@ -9,6 +9,7 @@ import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 
 import "./styles.scss";
 import RateCard from "../../../../components/cards/funds-cards/rate";
+
 import i18n from "./i18n.json";
 
 export default function SynthesisFocus() {
@@ -39,7 +40,7 @@ export default function SynthesisFocus() {
 
   return (
     <Container as="section" fluid className="fr-mb-2w">
-      <Title as="h2">Grands chiffres</Title>
+      <Title as="h2">{currentLang === "en" ? "Key figures" : "Grands chiffres"}</Title>
       <Row gutters>
         <Col md={6}>
           <RateCard
