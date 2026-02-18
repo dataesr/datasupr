@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import {
   Row,
   Col,
@@ -30,8 +30,8 @@ interface ComparisonBarChartProps {
   currentStructureName?: string;
   selectedYear?: string;
   selectedMetric?: MetricKey;
-  showPart: boolean;
-  onShowPartChange: (value: boolean) => void;
+  showPart?: boolean;
+  onShowPartChange?: (value: boolean) => void;
 }
 
 export default function ComparisonBarChart({
@@ -40,9 +40,14 @@ export default function ComparisonBarChart({
   currentStructureName = "",
   selectedYear = "",
   selectedMetric: baseMetric = "effectif_sans_cpge" as MetricKey,
-  showPart,
-  onShowPartChange,
+  showPart: externalShowPart,
+  onShowPartChange: externalOnShowPartChange,
 }: ComparisonBarChartProps) {
+  const [localShowPart, setLocalShowPart] = useState(false);
+
+  const showPart =
+    externalShowPart !== undefined ? externalShowPart : localShowPart;
+  const onShowPartChange = externalOnShowPartChange || setLocalShowPart;
   const getMetricLabel = useMetricLabel();
 
   const partMetric = METRIC_TO_PART[baseMetric];
