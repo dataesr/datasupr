@@ -51,6 +51,7 @@ export default function PositioningCharts({
   activeFilters = {},
 }: PositioningChartsProps) {
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
+  const [showPart, setShowPart] = useState(false);
 
   const structureName =
     currentStructure?.etablissement_actuel_lib ||
@@ -151,6 +152,8 @@ export default function PositioningCharts({
               showRegion={visibleCards.region}
               showType={visibleCards.type}
               showTypologie={visibleCards.typologie}
+              showPart={showPart}
+              onShowPartChange={setShowPart}
             />
             <ComparisonBarChart
               data={data}
@@ -158,6 +161,8 @@ export default function PositioningCharts({
               currentStructureName={structureName}
               selectedYear={String(selectedYear)}
               selectedMetric={selectedMetric}
+              showPart={showPart}
+              onShowPartChange={setShowPart}
             />
           </Col>
         </Row>

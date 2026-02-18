@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   Row,
   Col,
@@ -30,6 +30,8 @@ interface ComparisonBarChartProps {
   currentStructureName?: string;
   selectedYear?: string;
   selectedMetric?: MetricKey;
+  showPart: boolean;
+  onShowPartChange: (value: boolean) => void;
 }
 
 export default function ComparisonBarChart({
@@ -38,9 +40,9 @@ export default function ComparisonBarChart({
   currentStructureName = "",
   selectedYear = "",
   selectedMetric: baseMetric = "effectif_sans_cpge" as MetricKey,
+  showPart,
+  onShowPartChange,
 }: ComparisonBarChartProps) {
-  const [showPart, setShowPart] = useState(false);
-
   const getMetricLabel = useMetricLabel();
 
   const partMetric = METRIC_TO_PART[baseMetric];
@@ -148,13 +150,13 @@ export default function ComparisonBarChart({
               <SegmentedElement
                 checked={!showPart}
                 label="Valeur"
-                onClick={() => setShowPart(false)}
+                onClick={() => onShowPartChange(false)}
                 value="value"
               />
               <SegmentedElement
                 checked={showPart}
                 label="%"
-                onClick={() => setShowPart(true)}
+                onClick={() => onShowPartChange(true)}
                 value="part"
               />
             </SegmentedControl>

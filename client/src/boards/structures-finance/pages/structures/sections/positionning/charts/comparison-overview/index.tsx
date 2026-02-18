@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import {
   Row,
   Col,
@@ -50,6 +50,8 @@ interface ComparisonOverviewChartProps {
   showRegion: boolean;
   showType: boolean;
   showTypologie: boolean;
+  showPart: boolean;
+  onShowPartChange: (value: boolean) => void;
 }
 
 export default function ComparisonOverviewChart({
@@ -62,8 +64,9 @@ export default function ComparisonOverviewChart({
   showRegion,
   showType,
   showTypologie,
+  showPart,
+  onShowPartChange,
 }: ComparisonOverviewChartProps) {
-  const [showPart, setShowPart] = useState(false);
   const getMetricLabel = useMetricLabel();
 
   const partMetric = METRIC_TO_PART[config.metric as MetricKey];
@@ -199,13 +202,13 @@ export default function ComparisonOverviewChart({
               <SegmentedElement
                 checked={!showPart}
                 label="Valeur"
-                onClick={() => setShowPart(false)}
+                onClick={() => onShowPartChange(false)}
                 value="value"
               />
               <SegmentedElement
                 checked={showPart}
                 label="%"
-                onClick={() => setShowPart(true)}
+                onClick={() => onShowPartChange(true)}
                 value="part"
               />
             </SegmentedControl>
