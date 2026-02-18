@@ -37,11 +37,17 @@ export default function EpNavigator() {
 
   const [isMoreFiltersOpen, setIsMoreFiltersOpen] = useState(false);
 
-  const [selectedThematics, setSelectedThematics] = useState<Set<string>>(new Set());
+  // Initialiser les thématiques sélectionnées depuis l'URL
+  const thematicIdsFromUrl = searchParams.get("thematicIds");
+  const [selectedThematics, setSelectedThematics] = useState<Set<string>>(() => new Set(thematicIdsFromUrl ? thematicIdsFromUrl.split(",") : []));
   const [isThematicsOpen, setIsThematicsOpen] = useState(false);
   const thematicsDropdownRef = useRef<HTMLDivElement>(null);
 
-  const [selectedDestinations, setSelectedDestinations] = useState<Set<string>>(new Set());
+  // Initialiser les destinations sélectionnées depuis l'URL
+  const destinationIdsFromUrl = searchParams.get("destinationIds");
+  const [selectedDestinations, setSelectedDestinations] = useState<Set<string>>(
+    () => new Set(destinationIdsFromUrl ? destinationIdsFromUrl.split(",") : []),
+  );
   const [isDestinationsOpen, setIsDestinationsOpen] = useState(false);
   const destinationsDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -102,8 +108,10 @@ export default function EpNavigator() {
 
   const handleClearThematics = () => {
     setSelectedThematics(new Set());
+    setSelectedDestinations(new Set());
     const newSearchParams = new URLSearchParams(searchParams);
     newSearchParams.delete("thematicIds");
+    newSearchParams.delete("destinationIds");
     setSearchParams(newSearchParams);
     setIsThematicsOpen(false);
   };
@@ -115,6 +123,9 @@ export default function EpNavigator() {
     } else {
       newSearchParams.delete("thematicIds");
     }
+    // Réinitialiser les destinations quand on change les thématiques
+    newSearchParams.delete("destinationIds");
+    setSelectedDestinations(new Set());
     setSearchParams(newSearchParams);
     setIsThematicsOpen(false);
   };
@@ -166,6 +177,7 @@ export default function EpNavigator() {
             className="fr-select"
             id="select-pillar"
             name="select-pillar"
+            value={pillarId || ""}
             onChange={(e) => {
               const newSearchParams = new URLSearchParams(searchParams);
               if (e.target.value) {
@@ -173,15 +185,19 @@ export default function EpNavigator() {
               } else {
                 newSearchParams.delete("pillarId");
               }
+              // Réinitialiser les sélections enfants
+              newSearchParams.delete("programId");
+              newSearchParams.delete("thematicIds");
+              newSearchParams.delete("destinationIds");
+              setSelectedThematics(new Set());
+              setSelectedDestinations(new Set());
               setSearchParams(newSearchParams);
             }}
           >
-            <option value="" selected={!pillarId}>
-              {getI18nLabel(i18n, "no-selection", currentLang)}
-            </option>
+            <option value="">{getI18nLabel(i18n, "no-selection", currentLang)}</option>
             {pillarsData &&
               pillarsData.map((pillar: FilterItem) => (
-                <option key={pillar.id} value={pillar.id} selected={pillar.id === pillarId}>
+                <option key={pillar.id} value={pillar.id}>
                   {`pilier${pillar.id.split(".")[1]}`} - {pillar[`label_${currentLang}`]}
                 </option>
               ))}
@@ -198,6 +214,7 @@ export default function EpNavigator() {
             disabled={isLoadingPrograms || !programsData || programsData.length === 0}
             id="select-program"
             name="select-program"
+            value={programId || ""}
             onChange={(e) => {
               const newSearchParams = new URLSearchParams(searchParams);
               if (e.target.value) {
@@ -205,15 +222,18 @@ export default function EpNavigator() {
               } else {
                 newSearchParams.delete("programId");
               }
+              // Réinitialiser les sélections enfants
+              newSearchParams.delete("thematicIds");
+              newSearchParams.delete("destinationIds");
+              setSelectedThematics(new Set());
+              setSelectedDestinations(new Set());
               setSearchParams(newSearchParams);
             }}
           >
-            <option value="" selected={!programId}>
-              Pas de selection
-            </option>
+            <option value="">{getI18nLabel(i18n, "no-selection", currentLang)}</option>
             {programsData &&
               programsData.map((program: FilterItem) => (
-                <option key={program.id} value={program.id} selected={program.id === programId}>
+                <option key={program.id} value={program.id}>
                   {program[`label_${currentLang}`]}
                 </option>
               ))}
