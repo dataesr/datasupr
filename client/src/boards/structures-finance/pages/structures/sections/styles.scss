@@ -59,7 +59,7 @@
 .threshold-legend {
   display: flex;
   gap: 1.5rem;
-  flex-wrap: wrap;
+  justify-content: center;
 
   &__item {
     display: flex;

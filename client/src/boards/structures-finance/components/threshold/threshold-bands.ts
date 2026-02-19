@@ -47,7 +47,7 @@ export function createThresholdPlotBands(
     plotLines.push({
       value: threshold.vig_min,
       color: getCssColor("threshold-vigilance-line"),
-      width: 1.5,
+      width: 2,
       zIndex: 1,
     });
   }
