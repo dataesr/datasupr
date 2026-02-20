@@ -24,9 +24,11 @@ import {
 import { RenderData } from "./render-data.tsx";
 import { ThresholdLegend } from "../../../../../components/threshold/threshold-legend.tsx";
 import { BudgetWarning } from "../../../../../components/budget-warning";
+import { SanteFinanciereTable } from "./national-synthese-sante-financiere";
 
 interface NationalChartProps {
   data: any[];
+  allYearsData: any[];
   selectedAnalysis: AnalysisKey;
   selectedYear: string;
   availableYears: number[];
@@ -36,6 +38,7 @@ interface NationalChartProps {
 
 export default function NationalChart({
   data,
+  allYearsData,
   selectedAnalysis,
   selectedYear,
   availableYears,
@@ -50,6 +53,7 @@ export default function NationalChart({
 
   const analysisConfig = PREDEFINED_ANALYSES[selectedAnalysis];
   const isStacked = (analysisConfig as any)?.chartType === "stacked";
+  const isSanteFinanciere = analysisConfig?.category === "Santé financière";
 
   const activeMetricKey = useMemo(() => {
     if (!analysisConfig) return null;
@@ -296,6 +300,32 @@ export default function NationalChart({
               />
             )}
           />
+
+          {isSanteFinanciere && activeMetricKey && (
+            <div className="fr-mt-3w">
+              <SanteFinanciereTable
+                allYearsData={allYearsData}
+                indicatorKey={activeMetricKey}
+                indicatorLabel={
+                  activeMetricKey ? getMetricLabel(activeMetricKey) : ""
+                }
+                availableYears={availableYears}
+                formatter={
+                  metricConfig?.format === "euro"
+                    ? (v?: number) =>
+                        v != null
+                          ? (v / 1000000).toFixed(1) + " M\u20AC"
+                          : "\u2014"
+                    : metricConfig?.format === "percent"
+                      ? (v?: number) =>
+                          v != null ? v.toFixed(1) + " %" : "\u2014"
+                      : metricConfig?.format === "decimal"
+                        ? (v?: number) => (v != null ? v.toFixed(2) : "\u2014")
+                        : undefined
+                }
+              />
+            </div>
+          )}
 
           <BudgetWarning
             data={data}

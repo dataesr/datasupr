@@ -49,13 +49,36 @@ export function AnalyseSection({
     !!localYear
   );
 
+  const { data: allYearsComparisonData } = useFinanceAdvancedComparison(
+    {
+      type: "",
+      typologie: "",
+      region: "",
+    },
+    true
+  );
+
   const allItems = useMemo(() => {
     if (!comparisonData || !comparisonData.items) return [];
     return comparisonData.items;
   }, [comparisonData]);
 
+  const allYearsItems = useMemo(() => {
+    if (!allYearsComparisonData || !allYearsComparisonData.items) return [];
+    return allYearsComparisonData.items;
+  }, [allYearsComparisonData]);
+
   const data = useFilteredNationalData(
     allItems,
+    selectedType || "",
+    selectedTypologie || "",
+    selectedRegion || "",
+    selectedRce || "",
+    selectedDevimmo || ""
+  );
+
+  const allYearsData = useFilteredNationalData(
+    allYearsItems,
     selectedType || "",
     selectedTypologie || "",
     selectedRegion || "",
@@ -108,6 +131,7 @@ export function AnalyseSection({
           {selectedAnalysis && (
             <NationalChart
               data={data}
+              allYearsData={allYearsData}
               selectedAnalysis={selectedAnalysis}
               selectedYear={localYear}
               availableYears={years}
