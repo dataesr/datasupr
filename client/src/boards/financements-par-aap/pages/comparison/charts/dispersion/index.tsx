@@ -39,7 +39,7 @@ export default function Dispersion() {
               },
               sum_budget: {
                 sum: {
-                  field: "project_budgetFinanced",
+                  field: "participation_funding",
                 },
               },
               unique_labs: {
@@ -87,12 +87,14 @@ export default function Dispersion() {
   const config = {
     comment: { "fr": <>Ce graphique positionne chaque établissement selon deux dimensions :
 – en abscisse, le nombre de projets financés auxquels il participe ;
-– en ordonnée, le montant total des projets correspondants. Il permet d’identifier différents profils :
+– en ordonnée, le financement perçu des projets correspondants. Il permet d’identifier différents profils :
 des établissements impliqués dans un grand nombre de projets,
 d'autres positionnés sur moins de projets mais de montant élevé,
-et ceux combinant volume et intensité financière.</> },
+et ceux combinant volume et intensité financière.
+Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
+</> },
     id: "dispersion",
-    title: `Positionnement des établissements selon le nombre de projets et le montant associé ${getYearRangeLabel({ yearMax, yearMin })}`,
+    title: `Positionnement des établissements selon le nombre de projets et le financement perçu associé ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   const options: HighchartsInstance.Options = {
@@ -101,7 +103,7 @@ et ceux combinant volume et intensité financière.</> },
     plotOptions: { series: { dataLabels: { enabled: true, format: "{point.name}" } } },
     series,
     tooltip: {
-      format: `<b>{point.name}</b> a participé à <b>{point.x} projets</b> dont le montant total représente <b>{point.yFormatted}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}</b> et a <b>{point.z}</b> laboratoires`,
+      format: `<b>{point.name}</b> a participé à <b>{point.x} projets</b> dont le financement perçu représente <b>{point.yFormatted}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}</b> et a <b>{point.z}</b> laboratoires`,
     },
     xAxis: {
       categories: [],

@@ -196,7 +196,7 @@ export default function ClassificationsByStructures() {
   };
   let title = `Profils disciplinaires des établissements via les projets financés ${getYearRangeLabel({ yearMax, yearMin })}`;
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${categoriesProject[this.x]}</b>`;
+    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} en <b>${this.series.name}</b> auxquels prend part <b>${categoriesProject[this.x]}</b>`;
   };
   switch (selectedControl) {
     // If view by global amount
@@ -212,7 +212,7 @@ export default function ClassificationsByStructures() {
       };
       title = `Profils disciplinaires des établissements via le montant des projets financés ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés au global en <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
       };
       break;
     // If view by amount by structure
@@ -228,7 +228,7 @@ export default function ClassificationsByStructures() {
       };
       title = `Profils disciplinaires des établissements via les montants perçus ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesBudget[this.x]}</b> pour des projets en <b>${this.series.name}</b> débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
   }
@@ -238,8 +238,8 @@ export default function ClassificationsByStructures() {
       "fr": <>Ce graphe présente, pour chaque établissement, la répartition des projets financés par AAP selon les grandes classifications disciplinaires.
         Chaque barre correspond à un établissement et est ventilée par discipline, permettant d’observer la structure scientifique de sa participation aux projets financés.
         L’analyse doit se concentrer sur la composition relative des barres, afin de comparer les profils disciplinaires indépendamment de la taille des établissements.
-        Les montants indiqués correspondent au financement global des projets auxquels les établissements participent et ne reflètent pas les sommes effectivement perçues.
-      </>
+  Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).    
+  </>
     },
     id: "classificationsByStructures",
   };
