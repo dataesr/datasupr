@@ -190,9 +190,7 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
 
   const config = {
     comment: { "fr": <>Ce graphe montre quels partenaires internationaux collaborent le plus avec l'établissement sur les projets financés par AAP.
-Les barres représentent le nombre / le montant total des projets auxquels chaque partenaire participe conjointement avec l'établissement.
-Certains partenaires internationaux se distinguent par un volume élevé de projets, signalant des collaborations stratégiques et récurrentes à l’international.
-Ces montants ne reflètent pas les financements réellement reçus par l'établissement ou ses partenaires, mais indiquent l’importance relative de leur participation dans l’écosystème de projets financés par AAP</> },
+Les barres représentent le nombre, les financements globaux et perçus pour les projets auxquels l'établissement participe avec chaque partenaire. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </> },
     id: "internationalPartnersByStructure",
   };
 
@@ -222,7 +220,7 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> financés au global pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
     // If view by amount by structure
@@ -237,7 +235,7 @@ Ces montants ne reflètent pas les financements réellement reçus par l'établi
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> perçus pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> perçus par <b>${name}</b> pour les projets <b>${this.series.name}</b> où l'établissement est en collaboration avec <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
   }

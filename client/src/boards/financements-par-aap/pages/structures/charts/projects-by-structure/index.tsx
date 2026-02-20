@@ -120,7 +120,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   });
 
   const config = {
-    comment: { "fr": <>Ce graphique indique, par financeur, le nombre et le montant des projets auxquels participe l'établissement {name}. Les montants affichés ne correspondent pas aux financements effectivement perçus par l'établissement. Ils représentent le volume total de financement des projets auxquels l’établissement participe, indépendamment de la part réelle qui lui est attribuée. </> },
+    comment: { "fr": <>Ce graphique indique, par financeur, le nombre, les financements globaux et les financements perçus des projets auxquels participe l'établissement {name}. Pour chaque financeur, la barre correspondante est subdivisée en deux en fonction du rôle de l'établissement : la partie pointillée quand l'établissement est coordinateur, en couleur simple quand il est partenaire non coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
     id: "projectsByStructure",
   };
 

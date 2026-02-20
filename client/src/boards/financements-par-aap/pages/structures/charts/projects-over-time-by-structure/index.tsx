@@ -119,7 +119,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   });
 
   const config = {
-    comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs montants associés, ventilée par financeur, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Pour les financements européens, Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027. Les montants indiqués reflètent le financement global des projets auxquels l’établissement participe et ne correspondent pas aux sommes effectivement perçues par celui-ci.</> },
+    comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets, des financements globaux et des financements perçus, ventilée par financeur, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Pour les financements européens, Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
     id: "projectsOverTimeByStructure",
   };
 
@@ -135,7 +135,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     case 'amount_global':
       axis = getI18nLabel(i18n, 'funding_total');
       series = seriesBudget.reverse();
-      title = `Evolution temporelle du montant financé pour les projets auxquels participe l'établissement (${name})`;
+      title = `Evolution temporelle des financements globaux pour les projets auxquels participe l'établissement (${name})`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
       };
@@ -144,7 +144,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, 'funding_by_structure');
       series = seriesParticipation.reverse();
-      title = `Evolution temporelle du montant perçu pour les projets auxquels participe l'établissement (${name})`;
+      title = `Evolution temporelle des financements perçus pour les projets auxquels participe l'établissement (${name})`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
       };

@@ -70,9 +70,9 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   const colors = funders.map((funder) => [{ pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } }, getCssColor({ name: funder, prefix: "funder" })]).flat();
 
   const config = {
-    comment: { "fr": <>Ce graphique met en regard le volume de projets et les montants de financement associés : la largeur des barres représente le nombre de projets, tandis que leur hauteur correspond au montant total de financement. Les montants indiqués reflètent le financement global des projets auxquels l’établissement participe et ne correspondent pas aux sommes effectivement perçues par celui-ci.</> },
+    comment: { "fr": <>Ce graphique met en regard le volume de projets et les financements perçus associés : la largeur des barres représente le nombre de projets, tandis que leur hauteur correspond au financement perçu. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </> },
     id: "overviewByStructure",
-    title: `Structure du financement : nombre de projets et montants associés pour les projets auxquels participe l'établissement (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,
+    title: `Structure du financement : nombre de projets et financements perçus associés pour les projets auxquels participe l'établissement (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   let hiddenPoints: string[] = [];

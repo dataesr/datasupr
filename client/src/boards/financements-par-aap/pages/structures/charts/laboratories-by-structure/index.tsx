@@ -193,8 +193,8 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   const config = {
     comment: { "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.
 Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, les données au niveau laboratoire ne sont pas disponibles.
-Les barres indiquent le nombre / le montant total des projets auxquels chaque laboratoire participe. Les montants indiqués correspondent au financement global des projets auxquels l’établissement participe et ne reflètent pas les sommes effectivement perçues.
-On observe que certains laboratoires concentrent une part importante des projets financés, ce qui peut refléter à la fois la taille des laboratoires, leur historique de participation aux AAP et leur spécialisation thématique.</> },
+Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
+</> },
     id: "projectsByStructures",
   };
 
@@ -224,7 +224,7 @@ On observe que certains laboratoires concentrent une part importante des projets
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés au global dans le cadre de projets <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
       };
       break;
     // If view by amount by structure
@@ -239,7 +239,7 @@ On observe que certains laboratoires concentrent une part importante des projets
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesBudget[this.x]}</b> dans le cadre de projets <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
   }
