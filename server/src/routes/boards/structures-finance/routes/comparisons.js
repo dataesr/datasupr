@@ -145,6 +145,7 @@ router.get("/structures-finance/comparisons/advanced", async (req, res) => {
         "charges_de_personnel",
         "charges_de_personnel_ipc",
         "produits_de_fonctionnement_encaissables",
+        "produits_de_fonctionnement_encaissables_ipc",
         "ressources_propres",
         "ressources_propres_ipc",
         "ressources_propres_encaissables",

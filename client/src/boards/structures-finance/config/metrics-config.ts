@@ -678,7 +678,10 @@ export const PREDEFINED_ANALYSES = {
   // Indicateurs financiers
   "ressources-total": {
     label: "Total des ressources",
-    metrics: ["produits_de_fonctionnement_encaissables"],
+    metrics: [
+      "produits_de_fonctionnement_encaissables",
+      "produits_de_fonctionnement_encaissables_ipc",
+    ],
     category: "Ressources financières",
     showBase100: false,
   },

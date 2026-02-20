@@ -80,12 +80,11 @@ export const createPositioningComparisonBarOptions = (
     xAxis: {
       categories: chartData.map((d) => d.name),
       labels: {
-        useHTML: true,
         formatter: function () {
           const index = this.pos;
           const item = chartData[index];
           if (item?.isCurrentStructure) {
-            return `<span style="font-weight: bold; color: ${getCssColor("scale-1")}">◆ ${this.value}</span>`;
+            return `◆ ${this.value}`;
           }
           return `${this.value}`;
         },
@@ -122,10 +121,6 @@ export const createPositioningComparisonBarOptions = (
           : undefined,
     },
     tooltip: {
-      useHTML: true,
-      borderWidth: 1,
-      borderRadius: 8,
-      shadow: false,
       formatter: function () {
         const point = this as any;
         const value = point.y as number;
@@ -141,7 +136,7 @@ export const createPositioningComparisonBarOptions = (
         }
 
         return `
-          <div class="fr-p-2w">
+          <div class="fr-p-2w" >
             <div class="fr-text--bold fr-mb-1v">
               ${point.category}
             </div>
@@ -161,7 +156,7 @@ export const createPositioningComparisonBarOptions = (
       },
     },
     legend: {
-      enabled: false,
+      enabled: true,
     },
     series: [
       {

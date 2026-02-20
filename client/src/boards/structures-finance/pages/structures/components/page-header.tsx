@@ -38,11 +38,6 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
           <Title as="h1" look="h4" className="fr-mb-0">
             {data.etablissement_lib || data.etablissement_actuel_lib}
           </Title>
-          {showActuelName && (
-            <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
-              Actuellement : {data.etablissement_actuel_lib}
-            </Text>
-          )}
           <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
             {[
               data.etablissement_actuel_categorie,
@@ -52,6 +47,11 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
               .filter(Boolean)
               .join(" · ")}
           </Text>
+          {showActuelName && (
+            <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
+              Actuellement : {data.etablissement_actuel_lib}
+            </Text>
+          )}
         </Col>
         <Col xs="12" md="4" className="text-right">
           <Button
