@@ -43,7 +43,8 @@ export default function EffectifsChart({
     );
   }, [propData, evolutionData, selectedYear]);
 
-  const hasCursusData = data?.has_effectif_l || data?.has_effectif_m || data?.has_effectif_d;
+  const hasCursusData =
+    data?.has_effectif_l || data?.has_effectif_m || data?.has_effectif_d;
 
   const hasSpecifiquesData =
     (data?.has_effectif_iut && data?.effectif_sans_cpge_iut > 0) ||

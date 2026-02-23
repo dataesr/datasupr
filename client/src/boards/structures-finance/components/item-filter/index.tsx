@@ -32,9 +32,10 @@ export default function ItemFilter({
 
   const categories = [...new Set(availableItems.map((item) => item.category))];
 
-  const filteredItems = selectedCategory === "all"
-    ? availableItems
-    : availableItems.filter((item) => item.category === selectedCategory);
+  const filteredItems =
+    selectedCategory === "all"
+      ? availableItems
+      : availableItems.filter((item) => item.category === selectedCategory);
 
   return (
     <aside className="item-filter" aria-label={title}>

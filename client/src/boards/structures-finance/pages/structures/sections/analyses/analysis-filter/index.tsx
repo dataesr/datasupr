@@ -21,11 +21,13 @@ export default function AnalysisFilter({
   const [selectedCategory, setSelectedCategory] = useState<string>(
     "Ressources financières"
   );
-  const items: FilterItem[] = Object.entries(PREDEFINED_ANALYSES).map(([key, analysis]) => ({
-    key,
-    label: analysis.label,
-    category: analysis.category,
-  }));
+  const items: FilterItem[] = Object.entries(PREDEFINED_ANALYSES).map(
+    ([key, analysis]) => ({
+      key,
+      label: analysis.label,
+      category: analysis.category,
+    })
+  );
 
   return (
     <ItemFilter
