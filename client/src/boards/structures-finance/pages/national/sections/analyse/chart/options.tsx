@@ -48,7 +48,7 @@ export const createComparisonBarOptions = (
   });
 
   const thresholdConfig = config.threshold
-    ? createThresholdPlotBands(config.threshold, dataMin, dataMax)
+    ? createThresholdPlotBands(config.threshold)
     : { plotBands: [], plotLines: [] };
 
   const tickInterval = calculateOptimalTickInterval(
@@ -136,7 +136,7 @@ export const createComparisonBarOptions = (
         dataLabels: {
           enabled: false,
         },
-        color: getCssColor("scale-1"),
+        color: getCssColor("scale-6"),
         borderRadius: 4,
       },
     },

@@ -1,3 +1,5 @@
+import { getCssColor } from "../../../../utils/colors";
+
 export const FINANCIAL_HEALTH_INDICATORS = [
   "resultat_net_comptable",
   "resultat_net_comptable_hors_sie",
@@ -38,18 +40,36 @@ export function ThresholdLegend({
 
   return (
     <div
-      className="threshold-legend fr-text--sm"
-      style={{ fontSize: "0.875rem" }}
+      style={{
+        display: "flex",
+        gap: "1.5rem",
+        justifyContent: "center",
+        fontSize: "0.875rem",
+      }}
     >
       {hasVigilance && (
-        <div className="threshold-legend__item">
-          <span className="threshold-legend__marker threshold-legend__marker--warning" />
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <span
+            style={{
+              display: "inline-block",
+              width: 12,
+              height: 12,
+              backgroundColor: getCssColor("threshold-vigilance-line"),
+            }}
+          />
           <span>Zone de vigilance : {threshold.vig_lib}</span>
         </div>
       )}
       {hasAlert && (
-        <div className="threshold-legend__item">
-          <span className="threshold-legend__marker threshold-legend__marker--error" />
+        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+          <span
+            style={{
+              display: "inline-block",
+              width: 12,
+              height: 12,
+              backgroundColor: getCssColor("threshold-alert-line"),
+            }}
+          />
           <span>Zone d'alerte : {threshold.ale_lib}</span>
         </div>
       )}

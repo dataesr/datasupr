@@ -82,14 +82,14 @@
   }
 
   .vigilance {
-    background-color: var(--background-flat-warning);
+    background-color: var(--threshold-vigilance-bg);
     color: var(--text-default-grey);
     font-weight: 700;
   }
 
   .alerte {
-    background-color: var(--background-flat-error);
-    color: var(--text-inverted-grey);
+    background-color: var(--threshold-alert-bg);
+    color: var(--text-default-grey);
     font-weight: 700;
   }
 
@@ -112,11 +112,11 @@
       border: 1px solid var(--border-default-grey);
 
       &.vigilance {
-        background-color: var(--background-flat-warning);
+        background-color: var(--threshold-vigilance-bg);
       }
 
       &.alerte {
-        background-color: var(--background-flat-error);
+        background-color: var(--threshold-alert-bg);
       }
     }
 

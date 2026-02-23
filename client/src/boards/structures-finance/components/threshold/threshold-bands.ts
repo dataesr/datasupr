@@ -17,47 +17,38 @@ export interface ThresholdPlotConfig {
 
 const EMPTY_CONFIG: ThresholdPlotConfig = { plotBands: [], plotLines: [] };
 
-/**
- * Génère les plotBands et plotLines Highcharts à partir d'une configuration de seuils.
- *
- * @param threshold - Configuration des seuils (depuis `useMetricThreshold`)
- * @param dataMin - Valeur minimale des données du graphique
- * @param dataMax - Valeur maximale des données du graphique
- * @returns Les plotBands (zones colorées) et plotLines (lignes de séparation)
- */
 export function createThresholdPlotBands(
-  threshold: ThresholdConfig | null,
-  dataMin: number,
-  dataMax: number
+  threshold: ThresholdConfig | null
 ): ThresholdPlotConfig {
   if (!threshold) return EMPTY_CONFIG;
 
   const plotBands: Highcharts.YAxisPlotBandsOptions[] = [];
   const plotLines: Highcharts.YAxisPlotLinesOptions[] = [];
-  const margin = Math.abs(dataMax - dataMin) * 0.3;
 
   // Zone de vigilance
   if (threshold.vig_min != null && threshold.vig_max != null) {
+    const isAbove = threshold.ale_sens === "sup";
     plotBands.push({
       from: threshold.vig_min,
       to: threshold.vig_max,
       color: getCssColor("threshold-vigilance-bg"),
       zIndex: 0,
     });
+    // Ligne à la frontière normal ↔ vigilance
     plotLines.push({
-      value: threshold.vig_min,
+      value: isAbove ? threshold.vig_min : threshold.vig_max,
       color: getCssColor("threshold-vigilance-line"),
       width: 2,
-      zIndex: 1,
+      zIndex: 10,
     });
   }
-
+  console.log(threshold.ale_val, threshold.ale_sens, threshold.ale_lib);
   // Zone d'alerte
   if (threshold.ale_val != null && threshold.ale_sens) {
     const isAbove = threshold.ale_sens === "sup";
     plotBands.push({
-      from: isAbove ? threshold.ale_val : dataMin - margin,
-      to: isAbove ? dataMax + margin : threshold.ale_val,
+      from: isAbove ? threshold.ale_val : -Infinity,
+      to: isAbove ? Infinity : threshold.ale_val,
       color: getCssColor("threshold-alert-bg"),
       zIndex: 0,
     });
@@ -65,7 +56,7 @@ export function createThresholdPlotBands(
       value: threshold.ale_val,
       color: getCssColor("threshold-alert-line"),
       width: 2,
-      zIndex: 1,
+      zIndex: 10,
     });
   }
 

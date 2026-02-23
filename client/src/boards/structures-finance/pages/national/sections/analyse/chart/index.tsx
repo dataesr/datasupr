@@ -310,6 +310,7 @@ export default function NationalChart({
                   activeMetricKey ? getMetricLabel(activeMetricKey) : ""
                 }
                 availableYears={availableYears}
+                selectedYear={selectedYear}
                 formatter={
                   metricConfig?.format === "euro"
                     ? (v?: number) =>

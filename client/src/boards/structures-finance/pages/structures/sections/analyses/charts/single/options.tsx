@@ -36,7 +36,7 @@ export const createSingleChartOptions = (
   });
 
   const thresholdConfig = threshold
-    ? createThresholdPlotBands(threshold, dataMin, dataMax)
+    ? createThresholdPlotBands(threshold)
     : { plotBands: [], plotLines: [] };
 
   const config = metricsConfig[metricKey];
@@ -184,7 +184,9 @@ export const createSingleChartOptions = (
           const value = Number(item[metricKey]);
           return isNaN(value) ? null : value;
         }),
-        color: isIPCMetric ? "var(--text-title-blue-france)" : config.color,
+        color: isIPCMetric
+          ? "var(--text-title-blue-france)"
+          : getCssColor("scale-4"),
         type: "line" as const,
       },
     ] as any,

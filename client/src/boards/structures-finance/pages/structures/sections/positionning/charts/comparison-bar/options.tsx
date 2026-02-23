@@ -56,7 +56,7 @@ export const createPositioningComparisonBarOptions = (
   });
 
   const thresholdConfig = config.threshold
-    ? createThresholdPlotBands(config.threshold, dataMin, dataMax)
+    ? createThresholdPlotBands(config.threshold)
     : { plotBands: [], plotLines: [] };
 
   const tickInterval = calculateOptimalTickInterval(

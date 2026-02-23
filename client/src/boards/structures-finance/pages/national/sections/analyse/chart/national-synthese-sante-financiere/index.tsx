@@ -1,8 +1,11 @@
+import { getCssColor } from "../../../../../../../../utils/colors";
+
 interface Props {
   allYearsData: any[];
   indicatorKey: string;
   indicatorLabel: string;
   availableYears: number[];
+  selectedYear: string;
   formatter?: (v?: number) => string;
 }
 
@@ -11,21 +14,26 @@ const defaultFormat = (v?: number) => (v != null ? String(v) : "—");
 const truncate = (s: string, max = 40) =>
   s.length <= max ? s : s.slice(0, max - 1) + "…";
 
-const cellClass = (status?: string) =>
+const cellStyle = (status?: string): React.CSSProperties =>
   status === "alerte"
-    ? "alerte"
+    ? { backgroundColor: getCssColor("threshold-alert-line") }
     : status === "vigilance"
-      ? "vigilance"
-      : "normal";
+      ? { backgroundColor: getCssColor("threshold-vigilance-line") }
+      : {};
 
 export function SanteFinanciereTable({
   allYearsData,
   indicatorKey,
   indicatorLabel,
   availableYears,
+  selectedYear,
   formatter = defaultFormat,
 }: Props) {
-  const years = availableYears.slice(-4).sort((a, b) => a - b);
+  const refYear = Number(selectedYear);
+  const years = availableYears
+    .filter((y) => y <= refYear)
+    .sort((a, b) => a - b)
+    .slice(-4);
   const statusKey = `${indicatorKey}_etat`;
 
   const relevant = allYearsData.filter(
@@ -63,7 +71,7 @@ export function SanteFinanciereTable({
               {years.map((y) => {
                 const d = byEtab.get(etab)?.get(y);
                 return (
-                  <td key={y} className={cellClass(d?.[statusKey])}>
+                  <td key={y} style={cellStyle(d?.[statusKey])}>
                     {formatter(d?.[indicatorKey])}
                   </td>
                 );
@@ -74,11 +82,15 @@ export function SanteFinanciereTable({
       </table>
       <div className="legend fr-mt-2w">
         <div>
-          <span className="vigilance" />
+          <span
+            style={{ backgroundColor: getCssColor("threshold-vigilance-line") }}
+          />
           <span>Vigilance</span>
         </div>
         <div>
-          <span className="alerte" />
+          <span
+            style={{ backgroundColor: getCssColor("threshold-alert-line") }}
+          />
           <span>Alerte</span>
         </div>
       </div>

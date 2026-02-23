@@ -50,7 +50,7 @@ export const createComparisonOverviewOptions = (
   });
 
   const thresholdConfig = config.threshold
-    ? createThresholdPlotBands(config.threshold, dataMin, dataMax)
+    ? createThresholdPlotBands(config.threshold)
     : { plotBands: [], plotLines: [] };
 
   datasets.forEach((ds, dsIndex) => {
