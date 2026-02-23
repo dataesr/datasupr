@@ -8,11 +8,11 @@ import { EPChartsSources } from "../../../config";
 export default function PillarsFunding() {
   return (
     <Container fluid>
-      <Row className="chart-container chart-container--pillars" style={{ marginLeft: "var(--spacing-1w)", marginRight: "var(--spacing-1w)" }}>
-        <Col md={6}>
+      <Row className="chart-container chart-container--pillars">
+        <Col md={8}>
           <PillarsFundingValues />
         </Col>
-        <Col md={6}>
+        <Col md={4}>
           <PillarsFundingSuccessRates />
         </Col>
         <Col md={12} className="chart-footer">

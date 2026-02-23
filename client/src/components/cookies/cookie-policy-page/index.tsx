@@ -199,7 +199,7 @@ export default function CookiePolicyPage() {
                 <strong>Contact :</strong>
               </p>
               <p>
-                Ministère de l'Enseignement supérieur et de la Recherche
+                Ministère de l'Enseignement supérieur, de la Recherche et de l'Espace
                 <br />
                 Direction des systèmes d'information
                 <br />

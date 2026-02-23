@@ -7,7 +7,7 @@ import { getData } from "../charts/pillars-funding/query";
 import { useGetParams } from "../charts/pillars-funding/utils";
 import EvaluatedCard from "../../../components/cards/funds-cards/evaluated";
 import SuccessfulCard from "../../../components/cards/funds-cards/succesful";
-import SuccessRateCard from "../../../components/cards/funds-cards/success-rate";
+// import SuccessRateCard from "../../../components/cards/funds-cards/success-rate";
 
 import "../charts/synthesis-focus/styles.scss";
 
@@ -27,24 +27,12 @@ export default function PillarsOverview() {
   const successfulItem = data?.data.find((item) => item.stage === "successful") || {};
   const fundsEvaluated = evaluatedItem.total_fund_eur || 0;
   const fundsSuccessful = successfulItem.total_fund_eur || 0;
-  const successRate = fundsEvaluated > 0 ? fundsSuccessful / fundsEvaluated : 0;
+  // const successRate = fundsEvaluated > 0 ? fundsSuccessful / fundsEvaluated : 0;
 
   if (isLoading) {
     return (
       <Container as="section" fluid className="synthesis-focus-template">
         <Row gutters>
-          <Col md={12}>
-            <div className="fake-tile" />
-          </Col>
-          <Col md={12}>
-            <div className="fake-tile" />
-          </Col>
-          <Col md={12}>
-            <div className="fake-tile" />
-          </Col>
-          <Col md={12}>
-            <div className="fake-tile" />
-          </Col>
           <Col md={12}>
             <div className="fake-tile" />
           </Col>
@@ -57,16 +45,13 @@ export default function PillarsOverview() {
   }
 
   return (
-    <Container fluid>
+    <Container fluid className="fr-mt-1w">
       <Row gutters>
-        <Col lg={12} md={12} xs={12}>
+        <Col md={6}>
           <EvaluatedCard fund={formatToMillions(fundsEvaluated)} loading={isLoading} nb={evaluatedItem.count || 0} />
         </Col>
-        <Col lg={12} md={12} xs={12}>
+        <Col md={6}>
           <SuccessfulCard fund={formatToMillions(fundsSuccessful)} loading={isLoading} nb={successfulItem.count || 0} />
-        </Col>
-        <Col lg={12} md={12} xs={12}>
-          <SuccessRateCard loading={isLoading} nb={successRate} />
         </Col>
       </Row>
     </Container>

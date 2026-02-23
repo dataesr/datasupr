@@ -14,7 +14,6 @@ router.route("/european-projects/overview/graph1").get(async (req, res) => {
 });
 
 router.route("/european-projects/synthesis-focus").get(async (req, res) => {
-  // const filters = checkQuery(req.query, ["stage"], res);
   const filters = {};
   if (req.query.pillars) {
     const pillars = req.query.pillars.split("|");
@@ -31,6 +30,10 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
   if (req.query.destinations) {
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
+  }
+  if (req.query.range_of_years) {
+    const rangeOfYears = req.query.range_of_years.split(",");
+    filters.call_year = { $in: rangeOfYears };
   }
 
   const dataSuccessful = await db
@@ -118,24 +121,28 @@ router.route("/european-projects/synthesis-focus").get(async (req, res) => {
     .toArray();
 
   if (req.query.country_code) {
-    res.json({
-      successful: {
-        total_fund_eur: dataSuccessful[0].total_fund_eur,
-        total_involved: dataSuccessful[0].total_involved,
-        total_coordination_number: dataSuccessful[0].total_coordination_number,
-        countries: dataSuccessful[0].countries.filter((el) => el.country_code.toLowerCase() === req.query.country_code.toLowerCase()),
-      },
-      evaluated: {
-        total_fund_eur: dataEvaluated[0].total_fund_eur,
-        total_involved: dataEvaluated[0].total_involved,
-        total_coordination_number: dataEvaluated[0].total_coordination_number,
-        countries: dataEvaluated[0].countries.filter((el) => el.country_code.toLowerCase() === req.query.country_code.toLowerCase()),
-      },
+    return res.json({
+      successful: dataSuccessful[0]
+        ? {
+            total_fund_eur: dataSuccessful[0].total_fund_eur,
+            total_involved: dataSuccessful[0].total_involved,
+            total_coordination_number: dataSuccessful[0].total_coordination_number,
+            countries: dataSuccessful[0].countries.filter((el) => el.country_code.toLowerCase() === req.query.country_code.toLowerCase()),
+          }
+        : null,
+      evaluated: dataEvaluated[0]
+        ? {
+            total_fund_eur: dataEvaluated[0].total_fund_eur,
+            total_involved: dataEvaluated[0].total_involved,
+            total_coordination_number: dataEvaluated[0].total_coordination_number,
+            countries: dataEvaluated[0].countries.filter((el) => el.country_code.toLowerCase() === req.query.country_code.toLowerCase()),
+          }
+        : null,
     });
   }
   res.json({
-    successful: dataSuccessful[0],
-    evaluated: dataEvaluated[0],
+    successful: dataSuccessful[0] || null,
+    evaluated: dataEvaluated[0] || null,
   });
 });
 
@@ -1061,7 +1068,8 @@ router.route("/european-projects/overview/topics-funding-evo-3-years").get(async
     filters.thema_code = req.query.thema_code;
   }
 
-  filters.call_year = { $in: rangeOfYears };
+  // TODO: implémenter le filtre rangeOfYears côté client
+  // filters.call_year = { $in: rangeOfYears };
 
   delete filters.pilier_code;
   delete filters.programme_code;

@@ -14,7 +14,10 @@ export function useFilteredNationalData(
   return useMemo(() => {
     return allItems.filter((item: any) => {
       if (selectedType && item.type !== selectedType) return false;
-      if (selectedTypologie && item.typologie !== selectedTypologie)
+      if (
+        selectedTypologie &&
+        item.etablissement_categorie !== selectedTypologie
+      )
         return false;
       if (selectedRegion && item.region !== selectedRegion) return false;
       if (selectedRce === "rce" && !isRce(item)) return false;

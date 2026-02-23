@@ -3,7 +3,7 @@ import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import NationalChart from "./chart";
 import AnalysisFilter from "./analysis-filter";
-import { type AnalysisKey } from "../../../structures/sections/analyses/charts/evolution/config";
+import { type AnalysisKey } from "../../../../config/metrics-config";
 import { useFinanceYears } from "../../../../api/common";
 import { useFinanceAdvancedComparison } from "../../../../api/api";
 import { useFilteredNationalData } from "../../hooks/useFilteredNationalData";
@@ -33,7 +33,7 @@ export function AnalyseSection({
     null
   );
   const [selectedCategory, setSelectedCategory] = useState<string>(
-    "Indicateurs financiers"
+    "Ressources financières"
   );
 
   const { data: yearsData } = useFinanceYears();
@@ -49,13 +49,36 @@ export function AnalyseSection({
     !!localYear
   );
 
+  const { data: allYearsComparisonData } = useFinanceAdvancedComparison(
+    {
+      type: "",
+      typologie: "",
+      region: "",
+    },
+    true
+  );
+
   const allItems = useMemo(() => {
     if (!comparisonData || !comparisonData.items) return [];
     return comparisonData.items;
   }, [comparisonData]);
 
+  const allYearsItems = useMemo(() => {
+    if (!allYearsComparisonData || !allYearsComparisonData.items) return [];
+    return allYearsComparisonData.items;
+  }, [allYearsComparisonData]);
+
   const data = useFilteredNationalData(
     allItems,
+    selectedType || "",
+    selectedTypologie || "",
+    selectedRegion || "",
+    selectedRce || "",
+    selectedDevimmo || ""
+  );
+
+  const allYearsData = useFilteredNationalData(
+    allYearsItems,
     selectedType || "",
     selectedTypologie || "",
     selectedRegion || "",
@@ -108,6 +131,7 @@ export function AnalyseSection({
           {selectedAnalysis && (
             <NationalChart
               data={data}
+              allYearsData={allYearsData}
               selectedAnalysis={selectedAnalysis}
               selectedYear={localYear}
               availableYears={years}

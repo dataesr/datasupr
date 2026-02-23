@@ -1,15 +1,14 @@
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import { useMetricEvolution } from "../api";
-import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
-import { SECTION_COLORS } from "../../../../constants/colors";
+import { MetricChartCard } from "../../components/metric-chart-card";
 import RessourcesPropresChart from "./charts/ressources-propres";
 import "../styles.scss";
-import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
+import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
+import { SectionBudgetWarning } from "../../../../components/section-budget-warning";
+import { getCssColor } from "../../../../../../utils/colors";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
-
-const SECTION_COLOR = SECTION_COLORS.ressources;
 
 interface FinancementsSectionProps {
   data: any;
@@ -37,6 +36,17 @@ export function FinancementsSection({
         </Title>
       </div>
 
+      <SectionBudgetWarning
+        metrics={[
+          "produits_de_fonctionnement_encaissables",
+          "recettes_propres",
+          "ressources_propres_produits_encaissables",
+          "tot_ress_formation",
+          "tot_ress_recherche",
+          "tot_ress_autres_recette",
+        ]}
+      />
+
       <div className="fr-mb-4w">
         <Row gutters>
           <Col xs="12" md="4">
@@ -44,20 +54,22 @@ export function FinancementsSection({
               title="Total"
               value={`${euro(data.produits_de_fonctionnement_encaissables)} €`}
               detail="Hors opérations en capital"
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution(
                 "produits_de_fonctionnement_encaissables"
               )}
               unit="€"
+              metricKey="produits_de_fonctionnement_encaissables"
             />
           </Col>
           <Col xs="12" md="4">
             <MetricChartCard
               title="Ressources propres"
               value={`${euro(data.recettes_propres)} €`}
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("recettes_propres")}
               unit="€"
+              metricKey="recettes_propres"
             />
           </Col>
           <Col xs="12" md="4">
@@ -69,11 +81,12 @@ export function FinancementsSection({
                   : "—"
               }
               detail="Part des ressources propres sur le total"
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution(
                 "ressources_propres_produits_encaissables"
               )}
               unit="%"
+              metricKey="ressources_propres_produits_encaissables"
             />
           </Col>
         </Row>
@@ -87,14 +100,14 @@ export function FinancementsSection({
         <Row gutters>
           <Col xs="12" md="3">
             <MetricChartCard
-              title="Dotation de l’État"
+              title="Dotation du ministère en charge de l'Enseignement supérieur"
               value={`${euro(data.scsp)} €`}
               detail={
                 data.is_rce === false
-                  ? "Subvention pour charges de service public (SCSP) et dépenses de personnel prises en charge par l’État"
+                  ? "Subvention pour charges de service public (SCSP) et dépenses de personnel prises en charge par le ministère en charge de l'Enseignement supérieur"
                   : "Subvention pour charges de service public (SCSP) "
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("scsp")}
               unit="€"
             />
@@ -102,29 +115,29 @@ export function FinancementsSection({
 
           <Col xs="12" md="3">
             <MetricChartCard
-              title={`SCSP par étudiant financé`}
+              title={`Dotation du ministère en charge de l'Enseignement supérieur par étudiant financé`}
               value={`${euro(data.scsp_par_etudiants)} €`}
               detail={
                 data.scsp_etudiants
-                  ? `${data.is_rce === false ? " (inclut la masse salariale prise en charge par l'État)" : ""}`
+                  ? `${data.is_rce === false ? " (inclut la masse salariale prise en charge par le ministère en charge de l'Enseignement supérieur)" : ""}${data.etablissement_categorie === "École normale supérieure" ? " (inclut le salaire des élèves fonctionnaires)" : ""}`
                   : data.is_rce === false
-                    ? "Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par l'État)"
-                    : "Ratio SCSP / étudiants financés"
+                    ? `Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par le ministère en charge de l'Enseignement supérieur)${data.etablissement_categorie === "École normale supérieure" ? " et le salaire des élèves fonctionnaires" : ""}`
+                    : `Ratio SCSP / étudiants financés${data.etablissement_categorie === "École normale supérieure" ? " (inclut le salaire des élèves fonctionnaires)" : ""}`
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("scsp_par_etudiants")}
               unit="€"
             />
           </Col>
           <Col xs="12" md="3">
             <MetricChartCard
-              title={`Nombre d'étudiants financés par l'État`}
+              title={`Nombre d'étudiants financés par le ministère en charge de l'Enseignement supérieur`}
               value={
                 data.scsp_etudiants != null
                   ? `${data.scsp_etudiants.toLocaleString("fr-FR")} étudiant${data.scsp_etudiants > 1 ? "s" : ""} en ${data.anuniv}`
                   : "—"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("scsp_etudiants")}
               unit="étudiants"
             />
@@ -137,7 +150,7 @@ export function FinancementsSection({
                   ? `${data.part_scsp_etudiants_effectif_sans_cpge.toFixed(1)} %`
                   : "—"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution(
                 "part_scsp_etudiants_effectif_sans_cpge"
               )}
@@ -165,9 +178,10 @@ export function FinancementsSection({
                   ? `${data.part_ress_formation.toFixed(1)} % des ressources propres`
                   : "Part des ressources propres"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("tot_ress_formation")}
               unit="€"
+              metricKey="tot_ress_formation"
             />
           </Col>
           <Col xs="12" sm="6" md="4">
@@ -185,9 +199,10 @@ export function FinancementsSection({
                   ? `${data.part_ress_recherche.toFixed(1)} % des ressources propres`
                   : "Part des ressources propres"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("tot_ress_recherche")}
               unit="€"
+              metricKey="tot_ress_recherche"
             />
           </Col>
           <Col xs="12" md="4">
@@ -205,9 +220,10 @@ export function FinancementsSection({
                   ? `${data.part_ress_autres_recette.toFixed(1)} % des ressources propres`
                   : "Part des ressources propres"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-ressources")}
               evolutionData={useMetricEvolution("tot_ress_autres_recette")}
               unit="€"
+              metricKey="tot_ress_autres_recette"
             />
           </Col>
         </Row>

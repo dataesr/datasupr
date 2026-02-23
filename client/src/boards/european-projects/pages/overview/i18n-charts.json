@@ -1,6 +1,6 @@
 {
   "funding-evo-3-years": {
-    "fr": "Évolution des subventions",
+    "fr": "Évolution des financements",
     "en": "Funding Evolution"
   },
   "amount": {
@@ -10,5 +10,25 @@
   "year": {
     "fr": "Année",
     "en": "Year"
+  },
+  "successRate": {
+    "fr": "Taux de succès",
+    "en": "Success rate"
+  },
+  "totalFunding": {
+    "fr": "Total des financements",
+    "en": "Total funding"
+  },
+  "evaluatedProjects": {
+    "fr": "Projets évalués",
+    "en": "Evaluated projects"
+  },
+  "successfulProjects": {
+    "fr": "Projets lauréats",
+    "en": "Successful projects"
+  },
+  "fundingProportion": {
+    "fr": "Part des financements",
+    "en": "Funding proportion"
   }
 }

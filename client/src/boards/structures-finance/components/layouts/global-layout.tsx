@@ -15,8 +15,6 @@ export default function GlobalLayout() {
   FILTER_PARAMS.forEach((key) => paramsWithoutFilters.delete(key));
   const cleanParams = paramsWithoutFilters.toString();
 
-  const { VITE_MINISTER_NAME } = import.meta.env;
-
   if (!pathname) return null;
   const is = (str: string): boolean => pathname?.startsWith(str);
 
@@ -28,7 +26,7 @@ export default function GlobalLayout() {
             <div className="fr-header__body-row">
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
-                  <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
+                  <Logo text={import.meta.env.VITE_MINISTER_NAME} />
                   <Service
                     href="/structures-finance/accueil"
                     name="#dataESR tableaux de bord"

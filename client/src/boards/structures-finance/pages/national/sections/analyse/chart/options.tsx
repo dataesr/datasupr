@@ -1,70 +1,24 @@
 import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../components/chart-wrapper/default-options";
-import {
-  CHART_COLORS,
-  THRESHOLD_COLORS,
-} from "../../../../../constants/colors";
-import type { ThresholdConfig } from "../../../../../config";
+import { getCssColor } from "../../../../../../../utils/colors";
+import { createThresholdPlotBands } from "../../../../../components/threshold/threshold-bands";
+import type { ThresholdConfig } from "../../../../../components/threshold/threshold-legend";
+import { calculateOptimalTickInterval } from "../../../../../utils/chartUtils";
+
+interface MetricConfig {
+  label: string;
+  format: "number" | "percent" | "decimal" | "euro";
+  color: string;
+  suffix?: string;
+}
 
 export interface ComparisonBarConfig {
   metric: string;
   metricLabel: string;
+  metricConfig: MetricConfig;
   topN: number;
-  format?: (value: number) => string;
   threshold?: ThresholdConfig | null;
 }
-const ALERT_COLOR = THRESHOLD_COLORS.alertBackground;
-const VIGILANCE_COLOR = THRESHOLD_COLORS.vigilanceBackground;
-const ALERT_LINE = THRESHOLD_COLORS.alertLine;
-const VIGILANCE_LINE = THRESHOLD_COLORS.vigilanceLine;
-
-const createThresholdPlotBands = (
-  threshold: ThresholdConfig | null,
-  dataMin: number,
-  dataMax: number
-): {
-  plotBands: Highcharts.YAxisPlotBandsOptions[];
-  plotLines: Highcharts.YAxisPlotLinesOptions[];
-} => {
-  if (!threshold) return { plotBands: [], plotLines: [] };
-
-  const plotBands: Highcharts.YAxisPlotBandsOptions[] = [];
-  const plotLines: Highcharts.YAxisPlotLinesOptions[] = [];
-  const margin = Math.abs(dataMax - dataMin) * 0.3;
-
-  if (threshold.vig_min != null && threshold.vig_max != null) {
-    plotBands.push({
-      from: threshold.vig_min,
-      to: threshold.vig_max,
-      color: VIGILANCE_COLOR,
-      zIndex: 0,
-    });
-    plotLines.push({
-      value: threshold.vig_min,
-      color: VIGILANCE_LINE,
-      width: 1.5,
-      zIndex: 1,
-    });
-  }
-
-  if (threshold.ale_val != null && threshold.ale_sens) {
-    const isAbove = threshold.ale_sens === "sup";
-    plotBands.push({
-      from: isAbove ? threshold.ale_val : dataMin - margin,
-      to: isAbove ? dataMax + margin : threshold.ale_val,
-      color: ALERT_COLOR,
-      zIndex: 0,
-    });
-    plotLines.push({
-      value: threshold.ale_val,
-      color: ALERT_LINE,
-      width: 2,
-      zIndex: 1,
-    });
-  }
-
-  return { plotBands, plotLines };
-};
 
 export const createComparisonBarOptions = (
   config: ComparisonBarConfig,
@@ -80,7 +34,7 @@ export const createComparisonBarOptions = (
         item.etablissement_actuel_lib || item.etablissement_lib || "Sans nom",
       value: item[config.metric],
     }))
-    .sort((a, b) => Math.abs(b.value) - Math.abs(a.value))
+    .sort((a, b) => b.value - a.value)
     .slice(0, config.topN);
 
   let dataMin = Infinity;
@@ -94,8 +48,14 @@ export const createComparisonBarOptions = (
   });
 
   const thresholdConfig = config.threshold
-    ? createThresholdPlotBands(config.threshold, dataMin, dataMax)
+    ? createThresholdPlotBands(config.threshold)
     : { plotBands: [], plotLines: [] };
+
+  const tickInterval = calculateOptimalTickInterval(
+    dataMin,
+    dataMax,
+    config.metricConfig.format
+  );
 
   return createChartOptions("bar", {
     chart: {
@@ -115,12 +75,20 @@ export const createComparisonBarOptions = (
       title: {
         text: "",
       },
+      tickInterval: tickInterval,
       labels: {
         formatter: function () {
-          if (config.format) {
-            return config.format(this.value as number);
+          const value = this.value as number;
+          if (config.metricConfig.format === "euro") {
+            return `${Highcharts.numberFormat(value, 0, ",", " ")} €`;
           }
-          return String(this.value);
+          if (config.metricConfig.format === "percent") {
+            return `${value.toFixed(1)}%`;
+          }
+          if (config.metricConfig.format === "decimal") {
+            return value.toFixed(2);
+          }
+          return Highcharts.numberFormat(value, 0, ",", " ");
         },
       },
       plotBands:
@@ -133,15 +101,30 @@ export const createComparisonBarOptions = (
           : undefined,
     },
     tooltip: {
+      useHTML: true,
+      borderWidth: 1,
+      borderRadius: 8,
+      shadow: false,
       formatter: function () {
-        const value = this.y as number;
-        const formatted = config.format
-          ? config.format(value)
-          : value.toLocaleString("fr-FR");
+        const point = this as any;
+        const value = point.y as number;
+        let formatted: string;
+        if (config.metricConfig.format === "euro") {
+          formatted = `${Highcharts.numberFormat(value, 0, ",", " ")} €`;
+        } else if (config.metricConfig.format === "percent") {
+          formatted = `${value.toFixed(2)}%`;
+        } else if (config.metricConfig.format === "decimal") {
+          formatted = value.toFixed(2);
+        } else {
+          formatted = Highcharts.numberFormat(value, 0, ",", " ");
+        }
+
         return `
-          <div style="padding:8px">
-            <div style="font-weight:600;margin-bottom:4px">${this.category}</div>
-            <div>
+          <div class="fr-p-2w">
+            <div class="fr-text--bold fr-mb-1v">
+              ${point.category}
+            </div>
+            <div class="fr-mt-1w">
               <strong>${config.metricLabel}:</strong> ${formatted}
             </div>
           </div>
@@ -153,7 +136,7 @@ export const createComparisonBarOptions = (
         dataLabels: {
           enabled: false,
         },
-        color: CHART_COLORS.primary,
+        color: getCssColor("scale-6"),
         borderRadius: 4,
       },
     },

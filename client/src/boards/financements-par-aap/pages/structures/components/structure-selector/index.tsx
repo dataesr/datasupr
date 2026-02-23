@@ -7,7 +7,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
 import { getEsQuery } from "../../../../utils.ts";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function StructureSelector({ setStructures }) {
@@ -28,14 +28,14 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   };
-  if (typology && typology !== '*') {
-    bodyCounties.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
+  if (typology) {
+    bodyCounties.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": typology } });
   }
   const { data: dataCounties, isLoading: isLoadingCounties } = useQuery({
     queryKey: ["fundings-counties", typology],
     queryFn: () =>
       fetch(
-        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
         {
           body: JSON.stringify(bodyCounties),
           headers: {
@@ -46,7 +46,9 @@ export default function StructureSelector({ setStructures }) {
         }
       ).then((response) => response.json()),
   });
-  const counties = (dataCounties?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket.key);
+  const counties = (dataCounties?.aggregations?.by_county?.buckets ?? [])
+    .map((bucket) => bucket.key)
+    .sort((a, b) => a.localeCompare(b));
 
   const bodyTypologies: any = {
     ...getEsQuery({}),
@@ -59,14 +61,14 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   };
-  if (county && county !== '*') {
-    bodyTypologies.query.bool.filter.push({ term: { "address.region.keyword": county } });
+  if (county) {
+    bodyTypologies.query.bool.filter.push({ wildcard: { "address.region.keyword": county } });
   }
   const { data: dataTypologies, isLoading: isLoadingTypologies } = useQuery({
     queryKey: ["fundings-typologies", county],
     queryFn: () =>
       fetch(
-        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
         {
           body: JSON.stringify(bodyTypologies),
           headers: {
@@ -90,17 +92,17 @@ export default function StructureSelector({ setStructures }) {
       },
     },
   };
-  if (county && county !== '*') {
-    bodyStructures.query.bool.filter.push({ term: { "address.region.keyword": county } });
+  if (county) {
+    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": county } });
   }
-  if (typology && typology !== '*') {
-    bodyStructures.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
+  if (typology) {
+    bodyStructures.query.bool.filter.push({ wildcard: { "participant_typologie_1.keyword": typology } });
   }
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
     queryKey: ["fundings-structures", county, typology],
     queryFn: () =>
       fetch(
-        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
         {
           body: JSON.stringify(bodyStructures),
           headers: {
@@ -121,7 +123,7 @@ export default function StructureSelector({ setStructures }) {
 
   const handleStructureChange = (selectedStructure?: string) => {
     if (selectedStructure) {
-      searchParams.set("structure", selectedStructure.split("###")[0]);
+      searchParams.set("structure", selectedStructure);
       setSearchParams(searchParams);
     }
   };

@@ -33,19 +33,28 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
       </div>
 
       <ul className="fr-grid-row fr-grid-row--gutters" role="list">
-        {data.implantations.map((implantation: any, index: number) => (
-          <li
-            key={implantation.implantation_id || index}
-            className="fr-col-12 fr-col-md-6 fr-col-lg-4"
-          >
-            <CardSimple
-              description={implantation.siege ? "Site principal" : ""}
-              stat={implantation.effectif_sans_cpge}
-              title={implantation.implantation}
-              year={data.anuniv}
-            />
-          </li>
-        ))}
+        {data.implantations.map((implantation: any, index: number) => {
+          const partEffectif = implantation.part_effectif_sans_cpge;
+          const description = implantation.siege ? "Site principal" : "";
+          const bottomText = partEffectif
+            ? `${partEffectif.toFixed(1)} % de l'ensemble des étudiants inscrits`
+            : undefined;
+
+          return (
+            <li
+              key={implantation.implantation_id || index}
+              className="fr-col-12 fr-col-md-6 fr-col-lg-4"
+            >
+              <CardSimple
+                bottomText={bottomText}
+                description={description}
+                stat={implantation.effectif_sans_cpge}
+                title={implantation.implantation}
+                year={data.anuniv}
+              />
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

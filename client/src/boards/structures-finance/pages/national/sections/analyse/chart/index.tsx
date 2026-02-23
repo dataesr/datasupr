@@ -1,27 +1,34 @@
 import { useMemo, useState } from "react";
 import Highcharts from "highcharts";
-import { Text, Row, Col } from "@dataesr/dsfr-plus";
+import {
+  Text,
+  Row,
+  Col,
+  SegmentedControl,
+  SegmentedElement,
+} from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../components/chart-wrapper/index.tsx";
 import { createComparisonBarOptions } from "./options.tsx";
-import Select from "../../../../../../../components/select/index.tsx";
+import Select from "../../../../../components/select/index.tsx";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
-import MetricDefinitionsTable from "../../../../../components/layouts/metric-definitions-table";
-import { useFinanceDefinitions } from "../../../../definitions/api";
+import MetricDefinitionsTable from "../../../../../components/metric-definitions/metric-definitions-table.tsx";
+import { useMetricLabel } from "../../../../../hooks/useMetricLabel";
+import { useMetricThreshold } from "../../../../../hooks/useMetricThreshold";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
+  METRIC_TO_PART,
   type AnalysisKey,
   type MetricKey,
-} from "../../../../structures/sections/analyses/charts/evolution/config.ts";
+} from "../../../../../config/metrics-config.ts";
 import { RenderData } from "./render-data.tsx";
-import {
-  FINANCIAL_HEALTH_INDICATORS,
-  ThresholdLegend,
-  type ThresholdConfig,
-} from "../../../../../config/index.tsx";
+import { ThresholdLegend } from "../../../../../components/threshold/threshold-legend.tsx";
+import { BudgetWarning } from "../../../../../components/budget-warning";
+import { SanteFinanciereTable } from "./national-synthese-sante-financiere";
 
 interface NationalChartProps {
   data: any[];
+  allYearsData: any[];
   selectedAnalysis: AnalysisKey;
   selectedYear: string;
   availableYears: number[];
@@ -31,6 +38,7 @@ interface NationalChartProps {
 
 export default function NationalChart({
   data,
+  allYearsData,
   selectedAnalysis,
   selectedYear,
   availableYears,
@@ -39,92 +47,110 @@ export default function NationalChart({
 }: NationalChartProps) {
   const [topN, setTopN] = useState<number | null>(20);
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
+  const [showPart, setShowPart] = useState(false);
 
-  const { data: definitionsData } = useFinanceDefinitions();
+  const getMetricLabel = useMetricLabel();
 
   const analysisConfig = PREDEFINED_ANALYSES[selectedAnalysis];
   const isStacked = (analysisConfig as any)?.chartType === "stacked";
+  const isSanteFinanciere = analysisConfig?.category === "Santé financière";
 
   const activeMetricKey = useMemo(() => {
     if (!analysisConfig) return null;
+
+    let baseMetric: MetricKey;
 
     if (isStacked) {
       const metrics = analysisConfig.metrics.filter(
         (metric) =>
           !metric.includes("_ipc") && metric !== "effectif_sans_cpge_veto"
       );
-      return (metrics[selectedMetricIndex] || metrics[0]) as MetricKey;
+      baseMetric = (metrics[selectedMetricIndex] || metrics[0]) as MetricKey;
+    } else {
+      const nonIpcMetric = analysisConfig.metrics.find(
+        (metric) => !metric.includes("_ipc")
+      );
+      baseMetric = nonIpcMetric as MetricKey;
     }
 
-    const nonIpcMetric = analysisConfig.metrics.find(
-      (metric) => !metric.includes("_ipc")
-    );
+    // Si le mode est "part" et que la version part existe, utiliser celle-ci
+    if (showPart && baseMetric) {
+      const partMetric = METRIC_TO_PART[baseMetric];
+      if (partMetric && METRICS_CONFIG[partMetric]) {
+        const hasPartData = data?.some((item: any) => {
+          const value = item[partMetric];
+          return value != null && value !== 0;
+        });
+        if (hasPartData) {
+          return partMetric;
+        }
+      }
+    }
 
-    return nonIpcMetric as MetricKey;
-  }, [selectedAnalysis, analysisConfig, isStacked, selectedMetricIndex]);
+    return baseMetric;
+  }, [
+    selectedAnalysis,
+    analysisConfig,
+    isStacked,
+    selectedMetricIndex,
+    showPart,
+    data,
+  ]);
+
+  const metricThreshold = useMetricThreshold(activeMetricKey);
 
   const metricConfig = activeMetricKey
     ? METRICS_CONFIG[activeMetricKey as MetricKey]
     : null;
 
-  const metricThreshold = useMemo((): ThresholdConfig | null => {
-    if (!definitionsData || !activeMetricKey) return null;
-    if (!FINANCIAL_HEALTH_INDICATORS.includes(activeMetricKey)) return null;
+  const hasPartVersion = useMemo(() => {
+    if (!analysisConfig || !data || data.length === 0) return false;
 
-    for (const cat of definitionsData) {
-      for (const sr of cat.sousRubriques) {
-        const def = sr.definitions.find(
-          (d) => d.indicateur === activeMetricKey
-        );
-        if (
-          def &&
-          (def.ale_val != null || (def.vig_min != null && def.vig_max != null))
-        ) {
-          return {
-            ale_sens: def.ale_sens,
-            ale_val: def.ale_val,
-            ale_lib: def.ale_lib,
-            vig_min: def.vig_min,
-            vig_max: def.vig_max,
-            vig_lib: def.vig_lib,
-          };
-        }
-      }
+    let baseMetric: MetricKey;
+    if (isStacked) {
+      const metrics = analysisConfig.metrics.filter(
+        (metric) =>
+          !metric.includes("_ipc") && metric !== "effectif_sans_cpge_veto"
+      );
+      baseMetric = (metrics[selectedMetricIndex] || metrics[0]) as MetricKey;
+    } else {
+      const nonIpcMetric = analysisConfig.metrics.find(
+        (metric) => !metric.includes("_ipc")
+      );
+      baseMetric = nonIpcMetric as MetricKey;
     }
-    return null;
-  }, [definitionsData, activeMetricKey]);
+
+    const partMetric = METRIC_TO_PART[baseMetric];
+
+    if (!partMetric || !METRICS_CONFIG[partMetric]) return false;
+
+    return data.some((item: any) => {
+      const value = item[partMetric];
+      return value != null && value !== 0;
+    });
+  }, [isStacked, analysisConfig, selectedMetricIndex, data]);
 
   const chartOptions: Highcharts.Options | null = useMemo(() => {
-    if (!data || !data.length || !activeMetricKey) return null;
-
-    const formatValue = (value: number): string => {
-      if (!metricConfig) return String(value);
-
-      switch (metricConfig.format) {
-        case "euro":
-          return `${(value / 1000000).toFixed(1)} M€`;
-        case "number":
-          return value.toLocaleString("fr-FR");
-        case "percent":
-          return `${value.toFixed(1)}%`;
-        case "decimal":
-          return value.toFixed(2);
-        default:
-          return String(value);
-      }
-    };
+    if (!data || !data.length || !activeMetricKey || !metricConfig) return null;
 
     return createComparisonBarOptions(
       {
         metric: activeMetricKey,
-        metricLabel: metricConfig?.label || activeMetricKey,
+        metricLabel: getMetricLabel(activeMetricKey),
+        metricConfig,
         topN: topN ?? data.length,
-        format: formatValue,
         threshold: metricThreshold,
       },
       data
     );
-  }, [data, activeMetricKey, topN, metricConfig, metricThreshold]);
+  }, [
+    data,
+    activeMetricKey,
+    metricConfig,
+    topN,
+    metricThreshold,
+    getMetricLabel,
+  ]);
 
   const TOP_N_OPTIONS: (number | null)[] = [10, 20, 30, 50, 100, null];
 
@@ -133,7 +159,7 @@ export default function NationalChart({
 
   const config = {
     id: "national-comparison",
-    title: `${analysisConfig.label} (${selectedYear})`,
+    title: `${activeMetricKey ? getMetricLabel(activeMetricKey) : analysisConfig.label} (${selectedYear})`,
   };
 
   return (
@@ -153,7 +179,34 @@ export default function NationalChart({
               </Select.Checkbox>
             ))}
           </Select>
+          {hasPartVersion && (
+            <Row gutters className="fr-mt-2w">
+              <Col xs="12" md="6">
+                <Text className="fr-text--sm fr-text--bold fr-mb-1w">
+                  Affichage
+                </Text>
+                <SegmentedControl
+                  className="fr-segmented--sm"
+                  name="national-part-mode"
+                >
+                  <SegmentedElement
+                    checked={!showPart}
+                    label="Valeur"
+                    onClick={() => setShowPart(false)}
+                    value="value"
+                  />
+                  <SegmentedElement
+                    checked={showPart}
+                    label="%"
+                    onClick={() => setShowPart(true)}
+                    value="part"
+                  />
+                </SegmentedControl>
+              </Col>
+            </Row>
+          )}
         </Col>
+
         <Col xs="12" md="4" offsetMd="4">
           <Text className="fr-text--sm fr-text--bold fr-mb-1w">
             Nombre d'établissements
@@ -239,25 +292,45 @@ export default function NationalChart({
               <RenderData
                 data={data}
                 metric={activeMetricKey!}
-                metricLabel={metricConfig?.label || activeMetricKey || ""}
+                metricLabel={
+                  activeMetricKey ? getMetricLabel(activeMetricKey) : ""
+                }
+                metricConfig={metricConfig!}
                 topN={topN ?? data.length}
-                format={(value: number) => {
-                  if (!metricConfig) return String(value);
-                  switch (metricConfig.format) {
-                    case "euro":
-                      return `${(value / 1000000).toFixed(1)} M€`;
-                    case "number":
-                      return value.toLocaleString("fr-FR");
-                    case "percent":
-                      return `${value.toFixed(1)}%`;
-                    case "decimal":
-                      return value.toFixed(2);
-                    default:
-                      return String(value);
-                  }
-                }}
               />
             )}
+          />
+
+          {isSanteFinanciere && activeMetricKey && (
+            <div className="fr-mt-3w">
+              <SanteFinanciereTable
+                allYearsData={allYearsData}
+                indicatorKey={activeMetricKey}
+                indicatorLabel={
+                  activeMetricKey ? getMetricLabel(activeMetricKey) : ""
+                }
+                availableYears={availableYears}
+                selectedYear={selectedYear}
+                formatter={
+                  metricConfig?.format === "euro"
+                    ? (v?: number) =>
+                        v != null
+                          ? (v / 1000000).toFixed(1) + " M\u20AC"
+                          : "\u2014"
+                    : metricConfig?.format === "percent"
+                      ? (v?: number) =>
+                          v != null ? v.toFixed(1) + " %" : "\u2014"
+                      : metricConfig?.format === "decimal"
+                        ? (v?: number) => (v != null ? v.toFixed(2) : "\u2014")
+                        : undefined
+                }
+              />
+            </div>
+          )}
+
+          <BudgetWarning
+            data={data}
+            metrics={activeMetricKey ? [activeMetricKey] : []}
           />
           <MetricDefinitionsTable
             metricKeys={activeMetricKey ? [activeMetricKey] : []}

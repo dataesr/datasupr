@@ -56,8 +56,8 @@
     "en": "Program selection"
   },
   "program_selection_button_title": {
-    "fr": "Sélection d'un ou plusieurs programmes",
-    "en": "Selection of one or more programs"
+    "fr": "Sélection d'un programme",
+    "en": "Selection of one program"
   },
   "thematic_selection_title": {
     "fr": "Sélection des thématiques",
@@ -182,5 +182,21 @@
   "navigation_description": {
     "fr": "La navigation se fait de manière progressive : vous devez d'abord sélectionner un pilier avant de pouvoir accéder aux programmes, puis aux thématiques et enfin aux destinations.",
     "en": "Navigation is done progressively: you must first select a pillar before being able to access programs, then thematics and finally destinations."
+  },
+  "no-selection": {
+    "fr": "Pas de sélection",
+    "en": "No selection"
+  },
+  "n_selected": {
+    "fr": "sélectionnée(s)",
+    "en": "selected"
+  },
+  "apply_selection": {
+    "fr": "Appliquer la sélection",
+    "en": "Apply selection"
+  },
+  "erase_selection": {
+    "fr": "Effacer la sélection",
+    "en": "Erase selection"
   }
 }

@@ -1,16 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { getI18nLabel } from "../../../../../../utils";
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import i18n from "../../../../i18n.json";
 
 import "highcharts/modules/variwide";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
-
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function OverviewByStructure({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
@@ -28,9 +28,16 @@ export default function OverviewByStructure({ name }: { name: string | undefined
           size: 50,
         },
         aggregations: {
-          sum_budget: {
-            sum: {
-              field: "project_budgetTotal",
+          is_coordinator: {
+            terms: {
+              field: "participation_is_coordinator",
+            },
+            aggregations: {
+              sum_budget_participation: {
+                sum: {
+                  field: "participation_funding",
+                },
+              },
             },
           },
         },
@@ -41,7 +48,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   const { data, isLoading } = useQuery({
     queryKey: ["fundings-overview-by-structure", structure, yearMax, yearMin],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -53,19 +60,24 @@ export default function OverviewByStructure({ name }: { name: string | undefined
 
   const series = funders
     .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder))
+    // Filter on not empty item
     .filter((item) => !!item)
-    .map((bucket) => [bucket.key, bucket.sum_budget.value, bucket.doc_count]);
-  const colors = series.map((item) => getCssColor({ name: item[0], prefix: "funder" }));
+    .map((bucket) => [
+      [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.doc_count ?? 0],
+      [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
+    ])
+    .flat();
+  const colors = funders.map((funder) => [{ pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } }, getCssColor({ name: funder, prefix: "funder" })]).flat();
 
   const config = {
-    comment: { "fr": <>Ce graphique met en regard le volume de projets et les montants de financement associés : la largeur des barres représente le nombre de projets, tandis que leur hauteur correspond au montant total de financement. Les montants indiqués reflètent le financement global des projets auxquels l’établissement participe et ne correspondent pas aux sommes effectivement perçues par celui-ci.</> },
+    comment: { "fr": <>Ce graphique met en regard le volume de projets et les financements perçus associés : la largeur des barres représente le nombre de projets, tandis que leur hauteur correspond au financement perçu. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </> },
     id: "overviewByStructure",
-    title: `Structure du financement : nombre de projets et montants associés pour les projets auxquels participe l'établissement (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,
+    title: `Structure du financement : nombre de projets et financements perçus associés pour les projets auxquels participe l'établissement (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   let hiddenPoints: string[] = [];
-
-  const localOptions = {
+  const options = {
+    chart: { type: "variwide" },
     legend: { enabled: true },
     plotOptions: {
       series: {
@@ -96,28 +108,31 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       },
     },
     series: [{
-      data: series,
       colorByPoint: true,
       colors,
+      data: series,
       dataLabels: {
         enabled: true,
         formatter: function (this: any) {
           return `${formatCompactNumber(this.y)} €`;
-        }
+        },
       },
       legendType: "point",
       type: "variwide",
     }],
+    title: { text: "" },
     tooltip: {
       formatter: function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> financés pour <b>${this.z}</b> projets <b>${this.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       },
     },
     xAxis: {
+      categories: undefined,
+      title: { text: "Nombre de projets" },
       type: "category",
     },
+    yAxis: { title: { text: getI18nLabel(i18n, 'funding_by_structure') } },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", undefined, "Nombre de projets", "Montants financés (€)", "variwide"), localOptions);
 
   // TODO: implement it later
   // const renderData = (options: any) => {
@@ -167,7 +182,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
 
   return (
     <div className={`chart-container chart-container--${color}`} id="overview-by-structure">
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 }

@@ -3,59 +3,19 @@ import { useSearchParams } from "react-router-dom";
 import Cookies from "js-cookie";
 
 import { GetData } from "./query";
-import optionsSubsidiesValues from "./options-values";
-import optionsSubsidiesRates from "./options-rates";
-import optionsSubsidiesCountryRates from "./options-success-rates";
+import optionsValues from "./options-values";
+import optionsSuccessRates from "./options-success-rates";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
-import { getDefaultParams } from "./utils";
+import { getDefaultParams, successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import { RenderDataSubsidiesValuesAndRates } from "./render-data";
 import { useState } from "react";
+import { getI18nLabel } from "../../../../../../utils";
 
-import i18n from "./i18n.json";
-import { normalizeIdForCssColorNames } from "../../../../utils";
-
-const configChart1 = {
-  id: "programsEvolutionFundingLines",
-  title: {
-    fr: "Programmes - Evolution des subventions demandées et obtenues (M€)",
-    en: "Programs - Financing applied for and obtained (€m)",
-  },
-  description: {
-    fr: "",
-    en: "",
-  },
-  subtitle: "",
-  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
-};
-const configChart2 = {
-  id: "programsEvolutionFundingLinesRates",
-  title: {
-    fr: "Programmes - Evolution du taux de succès des subventions demandées et obtenues",
-    en: "Programs - Trend in the success rate of financing applications and grants",
-  },
-  description: {
-    fr: "",
-    en: "",
-  },
-  subtitle: "",
-  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
-};
-const configChart3 = {
-  id: "programsEvolutionFundingLinesSuccessRate",
-  title: {
-    fr: "Programmes - Part des subventions du pays demandées et obtenues par rapport au total des participants",
-    en: "Programs - Percentage of country funding applied for and obtained as a proportion of total participants",
-  },
-  description: {
-    fr: "",
-    en: "",
-  },
-  subtitle: "",
-  integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
-};
+import i18nLocal from "./i18n.json";
+import i18nGlobal from "../../../../i18n-global.json";
+import { EPChartsSources } from "../../../../config.js";
 
 export default function ProgramsFundingEvo3Years() {
   const [searchParams] = useSearchParams();
@@ -75,74 +35,83 @@ export default function ProgramsFundingEvo3Years() {
   if (isLoading || !data)
     return (
       <>
-        <DefaultSkeleton col={2} />
+        <DefaultSkeleton />
         <DefaultSkeleton />
       </>
     );
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
+  const configChart1 = {
+    id: "programsEvolutionFundingLines",
+    title: {
+      fr: "Evolution des financements demandés et obtenus (M€) par programme - 3 dernières années",
+      en: "Financing applied for and obtained (€m) evolution by program - last 3 years",
+    },
+    comment: {
+      fr: (
+        <>
+          Ce graphique montre l'évolution des financements demandés et obtenus pour les programmes du programme Horizon Europe sur les trois dernières
+          années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de succès correspondant.
+        </>
+      ),
+      en: (
+        <>
+          This chart shows the evolution of funding applied for and obtained for the programs of the Horizon Europe programme over the last three
+          years. The bars represent the amounts applied for and obtained. The line indicates the corresponding success rate.
+        </>
+      ),
+    },
+    readingKey: valuesSuccessReadingKey(data, displayType),
+    sources: EPChartsSources,
+    integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  };
 
-  function Legend() {
-    const rootStyles = getComputedStyle(document.documentElement);
-    return (
-      <fieldset className="legend">
-        <legend>Légende</legend>
-        <ul>
-          {data
-            .find((item) => item.country !== "all")
-            .data[0].programs.map((item) => (
-              <li key={item.programme_code}>
-                <div
-                  style={{
-                    background: rootStyles.getPropertyValue(`--program-${normalizeIdForCssColorNames(item.programme_code)}-color`),
-                  }}
-                />
-                <span>{item[`programme_name_${currentLang}`]}</span>
-              </li>
-            ))}
-        </ul>
-      </fieldset>
-    );
-  }
+  const configChart3 = {
+    id: "programsEvolutionFundingLinesSuccessRate",
+    title: {
+      fr: "Part des financements du pays demandés et obtenus par rapport au total des participants",
+      en: "Percentage of country funding applied for and obtained as a proportion of total participants",
+    },
+    comment: {
+      fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
+      en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
+    },
+    readingKey: successRatesReadingKey(data, displayType),
+    sources: EPChartsSources,
+    integrationURL: "/european-projects/components/pages/analysis/overview/charts/projects-types-3",
+  };
+
+  const i18n = {
+    ...i18nLocal,
+    ...i18nGlobal,
+  };
 
   return (
-    <Container fluid>
+    <Container fluid className="chart-container chart-container--programs">
       <Row className="fr-my-1w">
         <Col>
           <select className="fr-select" onChange={(e) => setDisplayType(e.target.value)}>
-            <option value="total_fund_eur">{getI18nLabel("total-fund-eur")}</option>
-            <option value="total_coordination_number">{getI18nLabel("total-coordination-number")}</option>
-            <option value="total_number_involved">{getI18nLabel("total-number-involved")}</option>
+            <option value="total_fund_eur">{getI18nLabel(i18n, "total-fund-eur")}</option>
+            <option value="total_coordination_number">{getI18nLabel(i18n, "total-coordination-number")}</option>
+            <option value="total_number_involved">{getI18nLabel(i18n, "total-number-involved")}</option>
           </select>
         </Col>
       </Row>
       <Row>
-        <Col md={6}>
-          <ChartWrapper config={configChart1} options={optionsSubsidiesValues(data, displayType)} renderData={RenderDataSubsidiesValuesAndRates} />
-        </Col>
-        <Col>
-          <ChartWrapper config={configChart2} options={optionsSubsidiesRates(data, displayType)} renderData={RenderDataSubsidiesValuesAndRates} />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <Legend />
-        </Col>
-      </Row>
-      <Row>
-        <Col>
+        <Col md={12}>
           <ChartWrapper
-            config={configChart3}
-            options={optionsSubsidiesCountryRates(data, displayType)}
-            renderData={RenderDataSubsidiesValuesAndRates}
+            config={configChart1}
+            options={optionsValues(data, displayType, currentLang)}
+            renderData={() => renderDataTable(data, currentLang, displayType)}
           />
         </Col>
       </Row>
-      <Row>
+      <Row className="fr-my-1w">
         <Col>
-          <Legend />
+          <ChartWrapper
+            config={configChart3}
+            options={optionsSuccessRates(data, displayType, currentLang)}
+            renderData={() => renderDataTableRates(data, currentLang, displayType)}
+          />
         </Col>
       </Row>
     </Container>

@@ -13,7 +13,7 @@ export function useNationalFilters(
 
     if (selectedTypologie) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.typologie === selectedTypologie
+        (item: any) => item.etablissement_categorie === selectedTypologie
       );
     }
     if (selectedRegion) {
@@ -60,7 +60,8 @@ export function useNationalFilters(
 
     const typologies = new Set<string>();
     itemsToConsider.forEach((item: any) => {
-      if (item.typologie) typologies.add(item.typologie);
+      if (item.etablissement_categorie)
+        typologies.add(item.etablissement_categorie);
     });
 
     return Array.from(typologies).sort((a, b) => {
@@ -90,7 +91,7 @@ export function useNationalFilters(
     }
     if (selectedTypologie) {
       itemsToConsider = itemsToConsider.filter(
-        (item: any) => item.typologie === selectedTypologie
+        (item: any) => item.etablissement_categorie === selectedTypologie
       );
     }
 

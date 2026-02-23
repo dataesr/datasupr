@@ -21,11 +21,11 @@ export default function NationalContent() {
   const selectedRegion = searchParams.get("region") || "";
   const selectedRce = searchParams.get("rce") || "";
   const selectedDevimmo = searchParams.get("devimmo") || "";
-  const activeSection = searchParams.get("section") || "produits-vs-etudiants";
+  const activeSection = searchParams.get("section") || "comparison";
 
   useEffect(() => {
     if (!searchParams.get("section")) {
-      searchParams.set("section", "produits-vs-etudiants");
+      searchParams.set("section", "comparison");
       setSearchParams(searchParams, { replace: true });
     }
   }, [searchParams, setSearchParams]);

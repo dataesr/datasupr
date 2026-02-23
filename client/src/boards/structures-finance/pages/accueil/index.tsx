@@ -1,10 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Container } from "@dataesr/dsfr-plus";
+import { Row, Col, Container, Title } from "@dataesr/dsfr-plus";
 import { useMemo, useState } from "react";
 import { useFinanceYears } from "../../api/common";
 import { useFinanceEtablissements } from "./api";
-import SearchableSelect from "../../../../components/searchable-select";
+import Select from "../../components/select";
 import "./styles.scss";
+import { normalizeString } from "../../utils/utils";
 
 function HeroSection() {
   const navigate = useNavigate();
@@ -18,16 +19,25 @@ function HeroSection() {
           <Col xs="12" lg="6">
             <div className="accueil-hero__text">
               <p className="accueil-hero__label">FINANCES DES ÉTABLISSEMENTS</p>
-              <h1 className="accueil-hero__title">Explorez les données financières de l'enseignement supérieur</h1>
+              <Title as="h1" look="h1" className="accueil-hero__title">
+                Explorez les données financières de l'enseignement supérieur
+              </Title>
               <p className="accueil-hero__description">
-                Consultez et analysez les données financières des universités et établissements d'enseignement supérieur français. Visualisez les
+                Consultez et analysez les données financières des universités et
+                établissements d'enseignement supérieur français. Visualisez les
                 tendances nationales et les indicateurs clés.
               </p>
               <div className="accueil-hero__cta">
-                <button className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line" onClick={() => navigate("/structures-finance/etablissements")}>
+                <button
+                  className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
+                  onClick={() => navigate("/structures-finance/etablissements")}
+                >
                   Explorer un établissement
                 </button>
-                <button className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line" onClick={() => navigate("/structures-finance/national")}>
+                <button
+                  className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
+                  onClick={() => navigate("/structures-finance/national")}
+                >
                   Explorer la vue nationale
                 </button>
               </div>
@@ -35,7 +45,11 @@ function HeroSection() {
           </Col>
           <Col xs="12" lg="6">
             <div className="accueil-hero__illustration">
-              <img src="/artwork/pictograms/institutions/money.svg" alt="" aria-hidden="true" />
+              <img
+                src="/artwork/pictograms/institutions/money.svg"
+                alt=""
+                aria-hidden="true"
+              />
             </div>
           </Col>
         </Row>
@@ -66,9 +80,11 @@ function QuickAccessSection() {
     return etablissementsData
       .map((etab: any) => {
         const displayName = etab.nom || "";
-        const searchText = [displayName, etab.type, etab.region]
-          .filter(Boolean)
-          .join(" ");
+        const searchText = normalizeString(
+          [displayName, etab.champ_recherche, etab.type, etab.region]
+            .filter(Boolean)
+            .join(" ")
+        );
 
         return {
           id: etab.id,
@@ -97,19 +113,54 @@ function QuickAccessSection() {
         <Row>
           <Col xs="12" lg="8" offsetLg="2">
             <div className="accueil-quick-access">
-              <h2 className="accueil-section__title">Accès rapide</h2>
+              <Title as="h2" look="h5" className="accueil-section__title">
+                Accès rapide
+              </Title>
               <p className="accueil-section__description">
                 Accédez directement aux données financières détaillées d’un
                 établissement
               </p>
               <div className="accueil-quick-access__search">
-                <SearchableSelect
-                  options={etablissementOptions}
-                  value={searchValue}
-                  onChange={handleEtablissementSelect}
-                  placeholder="Rechercher un établissement..."
-                  label=""
-                />
+                <Select
+                  label="Rechercher un établissement..."
+                  icon="search-line"
+                  size="md"
+                  fullWidth
+                >
+                  <Select.Search
+                    placeholder="Rechercher un établissement..."
+                    value={searchValue}
+                    onChange={(e) => setSearchValue(e.target.value)}
+                  />
+                  <Select.Content maxHeight="300px">
+                    {etablissementOptions
+                      .filter((opt) =>
+                        searchValue
+                          ? opt.searchableText.includes(
+                              normalizeString(searchValue)
+                            )
+                          : true
+                      )
+                      .map((opt) => (
+                        <Select.Option
+                          key={opt.id}
+                          value={opt.id}
+                          onClick={() => handleEtablissementSelect(opt.id)}
+                        >
+                          {opt.label}
+                        </Select.Option>
+                      ))}
+                    {etablissementOptions.filter((opt) =>
+                      searchValue
+                        ? opt.searchableText.includes(
+                            normalizeString(searchValue)
+                          )
+                        : true
+                    ).length === 0 && (
+                      <Select.Empty>Aucun établissement trouvé</Select.Empty>
+                    )}
+                  </Select.Content>
+                </Select>
               </div>
             </div>
           </Col>

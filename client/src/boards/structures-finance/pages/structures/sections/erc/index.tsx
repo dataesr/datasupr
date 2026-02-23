@@ -1,11 +1,9 @@
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
-import { SECTION_COLORS } from "../../../../constants/colors";
-import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
+import { MetricChartCard } from "../../components/metric-chart-card";
 import { useMetricEvolution } from "../api";
 import "../styles.scss";
-import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
-
-const SECTION_COLOR = SECTION_COLORS.erc;
+import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
+import { getCssColor } from "../../../../../../utils/colors";
 
 interface ErcSectionProps {
   data: any;
@@ -42,7 +40,7 @@ export function ErcSection({ data }: ErcSectionProps) {
                   : "—"
               }
               detail={`Pour les calls de l'année ${exercice}`}
-              color={SECTION_COLOR}
+              color={getCssColor("section-erc")}
               evolutionData={useMetricEvolution("erc_nb")}
               unit="projets"
             />
@@ -56,7 +54,7 @@ export function ErcSection({ data }: ErcSectionProps) {
                   : "—"
               }
               detail={`Pour les calls de l'année ${exercice}`}
-              color={SECTION_COLOR}
+              color={getCssColor("section-erc")}
               evolutionData={useMetricEvolution("erc_sub")}
               unit="€"
             />
@@ -75,7 +73,7 @@ export function ErcSection({ data }: ErcSectionProps) {
                 title="Dont pour les jeunes chercheurs prometteurs"
                 value={`${data.erc_nb_stg.toLocaleString("fr-FR")} projet(s)`}
                 detail="Starting Grants"
-                color={SECTION_COLOR}
+                color={getCssColor("section-erc")}
               />
             </Col>
           )}
@@ -85,7 +83,7 @@ export function ErcSection({ data }: ErcSectionProps) {
                 title="Dont pour les chercheurs confirmés souhaitant consolider leur équipe"
                 value={`${data.erc_nb_cog.toLocaleString("fr-FR")} projet(s)`}
                 detail="Consolidator Grants"
-                color={SECTION_COLOR}
+                color={getCssColor("section-erc")}
               />
             </Col>
           )}
@@ -95,7 +93,7 @@ export function ErcSection({ data }: ErcSectionProps) {
                 title="Dont pour les chercheurs expérimentés"
                 value={`${data.erc_nb_adg.toLocaleString("fr-FR")} projet(s)`}
                 detail="Advanced Grants"
-                color={SECTION_COLOR}
+                color={getCssColor("section-erc")}
               />
             </Col>
           )}
@@ -105,7 +103,7 @@ export function ErcSection({ data }: ErcSectionProps) {
                 title="Dont pour des projets collaboratifs ambitieux"
                 value={`${data.erc_nb_syg.toLocaleString("fr-FR")} projet(s)`}
                 detail="Synergy Grants"
-                color={SECTION_COLOR}
+                color={getCssColor("section-erc")}
               />
             </Col>
           )}
@@ -115,7 +113,7 @@ export function ErcSection({ data }: ErcSectionProps) {
                 title="Dont pour aider à transformer des résultats de recherche en innovations"
                 value={`${data.erc_nb_poc.toLocaleString("fr-FR")} projet(s)`}
                 detail="Proof of Concept"
-                color={SECTION_COLOR}
+                color={getCssColor("section-erc")}
               />
             </Col>
           )}

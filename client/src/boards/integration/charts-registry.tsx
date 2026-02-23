@@ -99,35 +99,35 @@ export const chartsRegistry = {
   ),
   "evolution-stacked": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+      import("../structures-finance/pages/structures/sections/analyses/charts")
   ),
   "evolution-single": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+      import("../structures-finance/pages/structures/sections/analyses/charts")
   ),
   "evolution-comparison": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+      import("../structures-finance/pages/structures/sections/analyses/charts")
   ),
   "evolution-part": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+      import("../structures-finance/pages/structures/sections/analyses/charts")
   ),
   "evolution-metric1": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+      import("../structures-finance/pages/structures/sections/analyses/charts")
   ),
   "evolution-metric2": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/analyses/charts/evolution")
+      import("../structures-finance/pages/structures/sections/analyses/charts")
   ),
   "positioning-comparison-bar": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/positionning/charts/positioning-comparison-bar/index")
+      import("../structures-finance/pages/structures/sections/positionning/charts/comparison-bar/index")
   ),
   "positioning-scatter": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/positionning/charts/positioning-scatter/index")
+      import("../structures-finance/pages/structures/sections/positionning/charts/scatter/index")
   ),
 };
 

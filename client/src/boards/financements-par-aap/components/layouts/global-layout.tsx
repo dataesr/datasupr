@@ -9,9 +9,6 @@ import i18n from "./i18n.json";
 
 import "./styles.scss";
 
-const { VITE_MINISTER_NAME } = import.meta.env;
-
-
 export default function GlobalLayout() {
   const { pathname } = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -47,7 +44,7 @@ export default function GlobalLayout() {
             <div className="fr-header__body-row">
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
-                  <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
+                  <Logo text={import.meta.env.VITE_MINISTER_NAME} />
                   <Service
                     href="/financements-par-aap/accueil"
                     name="Financements par appels à projets"
@@ -117,7 +114,7 @@ export default function GlobalLayout() {
       <Outlet />
       <Footer
         href="/financements-par-aap/accueil"
-        title="Financements par appels à projets - DataESR"
+        title="Financements par appels à projets - Tableaux"
       />
     </>
   );

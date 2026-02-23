@@ -1,18 +1,14 @@
 import HighchartsInstance from "highcharts";
-import { CreateChartOptions } from "../../../../components/chart-ep";
 
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
-
-import i18nGlobal from "../../../../i18n-global.json";
+import { getCssColor } from "../../../../../../utils/colors";
+import { getI18nLabel } from "../../../../../../utils";
+import i18n from "../../i18n-charts.json";
 
 export default function Options(data, displayType, currentLang): HighchartsOptions {
   if (!data) return null;
-  const rootStyles = getComputedStyle(document.documentElement);
-
-  function getI18nLabel(key) {
-    return i18nGlobal[key][currentLang];
-  }
 
   const years = new Set();
   const filteredData = data.filter((item) => item.country !== "all")[0].data;
@@ -48,12 +44,14 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         title: {
           text: displayType === "total_fund_eur" ? "M€" : "Nombre",
         },
+        gridLineColor: "var(--background-default-grey-hover)",
+        gridLineWidth: 0.5,
       },
       {
         min: 0,
         max: 100,
         title: {
-          text: `${getI18nLabel("success-rate")} (%)`,
+          text: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
         },
         opposite: true,
         labels: {
@@ -61,6 +59,8 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
             return `${this.value}%`;
           },
         },
+        gridLineColor: "var(--background-default-grey-hover)",
+        gridLineWidth: 0.5,
       },
     ],
     legend: {
@@ -74,6 +74,7 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
         grouping: false,
         shadow: false,
         borderWidth: 0,
+        borderRadius: 0,
         dataLabels: {
           enabled: true,
           formatter: function () {
@@ -86,8 +87,8 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       // Série pour les projets évalués
       {
         type: "column",
-        name: getI18nLabel("evaluated-projects"),
-        color: rootStyles.getPropertyValue("--evaluated-project-color") || "#009099",
+        name: getI18nLabel(i18n, "evaluatedProjects", currentLang),
+        color: getCssColor("evaluated-project"),
         data: (() => {
           const data: number[] = [];
           sortedYears.forEach((year) => {
@@ -104,8 +105,8 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       // Série pour les projets lauréats
       {
         type: "column",
-        name: getI18nLabel("successful-projects"),
-        color: rootStyles.getPropertyValue("--successful-project-color") || "#233e41",
+        name: getI18nLabel(i18n, "successfulProjects", currentLang),
+        color: getCssColor("successful-project"),
         data: (() => {
           const data: number[] = [];
           sortedYears.forEach((year) => {
@@ -122,8 +123,8 @@ export default function Options(data, displayType, currentLang): HighchartsOptio
       // Série pour les taux de succès
       {
         type: "line",
-        name: `${getI18nLabel("success-rate")} (%)`,
-        color: rootStyles.getPropertyValue("--successRate-color") || "#1f8d49",
+        name: `${getI18nLabel(i18n, "successRate", currentLang)} (%)`,
+        color: getCssColor("successRate"),
         yAxis: 1,
         data: (() => {
           const data: number[] = [];

@@ -1,11 +1,12 @@
-import { Row, Col, Title } from "@dataesr/dsfr-plus";
+import { Row, Col, Title, Text } from "@dataesr/dsfr-plus";
 import { useMetricEvolution } from "../api";
-import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
-import { SECTION_COLORS } from "../../../../constants/colors";
-import StatusIndicator from "../../../../../../components/status-indicator";
+import { MetricChartCard } from "../../components/metric-chart-card";
+import StatusIndicator from "../../../../components/status-indicator";
 import { parseMarkdown } from "../../../../../../utils/format";
 import "../styles.scss";
-import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
+import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
+import { useBudgetInfo } from "../../../../components/section-budget-warning/useBudgetInfo";
+import { getCssColor } from "../../../../../../utils/colors";
 
 type FinanceStatus = "alerte" | "vigilance" | "normal";
 
@@ -21,8 +22,6 @@ const jours = (n?: number) => {
   const val = n.toFixed(1);
   return `${val} jour${Math.abs(n) > 1 ? "s" : ""}`;
 };
-
-const SECTION_COLOR = SECTION_COLORS.santeFinanciere;
 
 const ValueWithStatus = ({
   value,
@@ -54,6 +53,18 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
     data?.resultat_net_comptable_hors_sie != null &&
     data.resultat_net_comptable !== data.resultat_net_comptable_hors_sie;
 
+  const { hasBudgetData, budgetYears } = useBudgetInfo([
+    "resultat_net_comptable",
+    "resultat_net_comptable_hors_sie",
+    "capacite_d_autofinancement",
+    "caf_produits_encaissables",
+    "fonds_de_roulement_net_global",
+    "besoin_en_fonds_de_roulement",
+    "tresorerie",
+    "fonds_de_roulement_en_jours_de_fonctionnement",
+    "tresorerie_en_jours_de_fonctionnement",
+  ]);
+
   const Metric = ({
     id,
     title,
@@ -83,9 +94,10 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
           )
         }
         detail={detail}
-        color={SECTION_COLOR}
+        color={getCssColor("section-sante-financiere")}
         evolutionData={useMetricEvolution(id)}
         unit={unit}
+        metricKey={id}
       />
     </Col>
   );
@@ -107,39 +119,74 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
         </Title>
       </div>
 
-      {data?.is_rce && (
+      {(hasBudgetData || data?.is_rce || data?.contexte_etab) && (
         <div className="fr-callout fr-mb-4w">
-          <h3 className="fr-callout__title">Point d'attention</h3>
-          <p className="fr-callout__text fr-text--sm">
-            Pour les établissements qui bénéficient des responsabilités et
-            compétences élargies (RCE), un ou deux niveaux d'alerte ont été
-            définis pour chaque indicateur :
-          </p>
-          <ul className="fr-callout__text fr-text--sm fr-ml-2w">
-            <li>
-              <strong style={{ color: "var(--text-default-warning)" }}>
-                Orange
-              </strong>{" "}
-              : seuil à partir duquel une vigilance particulière doit être
-              accordée sur la santé financière de l'établissement, situation à
-              surveiller.
-            </li>
-            <li>
-              <strong style={{ color: "var(--text-default-error)" }}>
-                Rouge
-              </strong>{" "}
-              : seuil qui révèle un risque quant à la santé financière de
-              l'établissement. Alerte.
-            </li>
-          </ul>
-          <p className="fr-callout__text fr-text--sm fr-mb-0">
-            Ces seuils d'alerte doivent être interprétés au regard de l'activité
-            de l'établissement, du groupe disciplinaire auquel il appartient et
-            des évènements significatifs intervenus au cours de l'exercice.
-            L'appréciation du niveau de risque résulte également de
-            l'interprétation d'un ensemble d'indicateurs mis en relation les uns
-            avec les autres. Ces alertes doivent toujours être contextualisées.
-          </p>
+          <Title look="h3" as="h3" className="fr-callout__title">
+            {[hasBudgetData, data?.is_rce, data?.contexte_etab].filter(Boolean)
+              .length > 1
+              ? "Points d'attention"
+              : "Point d'attention"}
+          </Title>
+
+          {data?.contexte_etab && (
+            <Text className="fr-callout__text fr-text--sm fr-mb-2w">
+              <strong>Contexte établissement</strong>
+              <br />
+              {data.contexte_etab}
+            </Text>
+          )}
+
+          {hasBudgetData && (
+            <Text className="fr-callout__text fr-text--sm fr-mb-2w">
+              <strong>Données budgétaires</strong>
+              <br />
+              Certaines données de{" "}
+              {budgetYears.length === 1 ? "l'année" : "des années"}{" "}
+              <strong>{budgetYears.join(", ")}</strong> présentées sur cette
+              page sont des données budgétaires qui correspondent à des
+              prévisions ou des objectifs financiers établis par
+              l'établissement. Elles ne reflètent pas nécessairement les
+              réalisations effectives.
+            </Text>
+          )}
+
+          {data?.is_rce && (
+            <>
+              <Text className="fr-callout__text fr-text--sm fr-mb-2w">
+                <strong>Seuils de vigilance et d'alerte</strong>
+                <br />
+                Pour les établissements qui bénéficient des responsabilités et
+                compétences élargies (RCE), un ou deux niveaux d'alerte ont été
+                définis pour chaque indicateur :
+              </Text>
+              <ul className="fr-callout__text fr-text--sm fr-ml-2w">
+                <li>
+                  <strong style={{ color: "var(--text-default-warning)" }}>
+                    Orange
+                  </strong>{" "}
+                  : seuil à partir duquel une vigilance particulière doit être
+                  accordée sur la santé financière de l'établissement, situation
+                  à surveiller.
+                </li>
+                <li>
+                  <strong style={{ color: "var(--text-default-error)" }}>
+                    Rouge
+                  </strong>{" "}
+                  : seuil qui révèle un risque quant à la santé financière de
+                  l'établissement. Alerte.
+                </li>
+              </ul>
+              <p className="fr-callout__text fr-text--sm fr-mb-0">
+                Ces seuils d'alerte doivent être interprétés au regard de
+                l'activité de l'établissement, du groupe disciplinaire auquel il
+                appartient et des évènements significatifs intervenus au cours
+                de l'exercice. L'appréciation du niveau de risque résulte
+                également de l'interprétation d'un ensemble d'indicateurs mis en
+                relation les uns avec les autres. Ces alertes doivent toujours
+                être contextualisées.
+              </p>
+            </>
+          )}
         </div>
       )}
 
@@ -161,7 +208,7 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
                 __html: parseMarkdown(data.analyse_financiere),
               }}
             />
-            <p
+            <Text
               className="fr-text--sm fr-mb-0"
               style={{
                 fontStyle: "italic",
@@ -177,7 +224,7 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
               prédéfinies, et sont adaptées aux spécificités de chaque
               établissement et exercice. Cette approche permet une analyse
               objective, reproductible et exhaustive des données financières.
-            </p>
+            </Text>
           </div>
         </section>
       )}
@@ -218,7 +265,9 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
       </div>
 
       <div className="fr-mb-4w">
-        <h3 className="fr-h5 fr-mb-3w">Cycle d'exploitation</h3>
+        <Title as="h3" look="h5" className="fr-mb-3w">
+          Cycle d'exploitation
+        </Title>
         <Row gutters>
           <Metric
             id="fonds_de_roulement_net_global"
@@ -256,7 +305,9 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
       </div>
 
       <div className="fr-mb-4w">
-        <h3 className="fr-h5 fr-mb-3w">Financement de l'activité</h3>
+        <Title as="h3" look="h5" className="fr-mb-3w">
+          Financement de l'activité
+        </Title>
         <Row gutters>
           <Metric
             id="charges_decaissables_produits_encaissables"
@@ -266,14 +317,17 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
             unit="%"
             colSize="3"
           />
-          <Metric
-            id="taux_de_remuneration_des_permanents"
-            title="Taux de rémunération des permanents"
-            format={pct}
-            detail="Indique la part des recettes consacrée à la rémunération du personnel titulaire."
-            unit="%"
-            colSize="3"
-          />
+
+          {data?.is_rce && (
+            <Metric
+              id="taux_de_remuneration_des_permanents"
+              title="Taux de rémunération des permanents"
+              format={pct}
+              detail="Indique la part des recettes consacrée à la rémunération du personnel titulaire."
+              unit="%"
+              colSize="3"
+            />
+          )}
           <Metric
             id="ressources_propres_produits_encaissables"
             title="Ressources propres / Produits encaissables"

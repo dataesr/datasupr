@@ -1,66 +1,50 @@
 {
   "accessibility": {
-    "en": "Accessibility : non/partially/totally compliant",
     "fr": "Accessibilité : non/partiellement/totalement conforme"
   },
   "accueil": {
-    "en": "Home",
     "fr": "Accueil"
   },
   "close": {
-    "fr": "Fermer",
-    "en": "Close"
+    "fr": "Fermer"
   },
   "comparaison": {
-    "en": "Comparison between structures",
     "fr": "Comparaison entre établissements"
   },
   "contact": {
-    "en": "Contact",
     "fr": "Contact"
   },
   "cookies": {
-    "en": "Cookies",
     "fr": "Cookies"
   },
   "datasets": {
-    "en": "Datasets",
     "fr": "Jeux de données"
   },
   "etablissement": {
-    "en": "View by structure",
     "fr": "Vue par établissement"
   },
   "explore": {
-    "en": "Explore dashboards",
     "fr": "Explorer d'autres tableaux de bord"
   },
   "languagesSelector": {
-    "en": "Select a language",
     "fr": "Sélectionner une langue"
   },
   "legalNotice": {
-    "en": "Legal notice",
     "fr": "Mentions légales"
   },
   "personalData": {
-    "en": "Personal data",
     "fr": "Données personnelles"
   },
   "rightsReserved": {
-    "en": "Unless otherwise stated, the content of this site is offered under an <a href='https://github.com/etalab/licence-ouverte/blob/master/LO.md' target='_blank' rel='noopener external' title='View etalab 2.0 licence in new tab'>etalab-2.0 licence</a>",
     "fr": "Sauf mention explicite de propriété intellectuelle détenue par des tiers, les contenus de ce site sont proposés sous <a href='https://github.com/etalab/licence-ouverte/blob/master/LO.md' target='_blank' rel='noopener external' title='Voir la licence Etalab-2.0 dans une nouvelle fenêtre'>licence etalab-2.0</a>"
   },
   "sitemap": {
-    "en": "Sitemap",
     "fr": "Plan du site"
   },
   "tagline": {
-    "en": "Dashboard fundings",
     "fr": "Tableau de bord des financements par appels à projets"
   },
   "themes": {
-    "en": "Themes",
     "fr": "Thèmes"
   }
 }

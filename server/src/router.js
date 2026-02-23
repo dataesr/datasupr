@@ -13,6 +13,7 @@ import geoRouter from "./routes/geo.js";
 import graduatesRouter from "./routes/boards/graduates/index.js";
 import datasuprDocRouter from "./routes/boards/datasupr-doc/index.js";
 import structuresFinanceRouter from "./routes/boards/structures-finance/index.js";
+import valorisationRechercheInnovationRouter from "./routes/boards/valorisation-recherche-innovation/index.js";
 import templateRouter from "./routes/boards/template/index.js";
 
 const router = new express.Router();
@@ -29,6 +30,7 @@ router.use(tableauxRouter);
 router.use(geoRouter);
 router.use(graduatesRouter);
 router.use(templateRouter);
+router.use(valorisationRechercheInnovationRouter);
 router.use(structuresFinanceRouter);
 router.use(datasuprDocRouter);
 

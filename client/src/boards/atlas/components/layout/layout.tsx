@@ -5,7 +5,6 @@ import { Outlet, useSearchParams } from "react-router-dom";
 import Footer from "../../../../components/footer";
 import SwitchTheme from "../../../../components/switch-theme";
 
-
 export function Layout({ languageSelector = false }) {
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -25,7 +24,7 @@ export function Layout({ languageSelector = false }) {
   return (
     <>
       <Header>
-        <Logo text="Ministère|de l'enseignement|supérieur|de la recherche|et de l'espace" />
+        <Logo text={import.meta.env.VITE_MINISTER_NAME} />
         <Service name="Atlas des effectifs étudiants" />
         <FastAccess>
           <Button
@@ -76,4 +75,3 @@ export function Layout({ languageSelector = false }) {
     </>
   )
 }
-

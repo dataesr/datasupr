@@ -1,4 +1,4 @@
-import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useState } from "react";
@@ -6,14 +6,16 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, getYearRangeLabel } from "../../../../utils.ts";
+import { getI18nLabel } from "../../../../../../utils";
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
+import SegmentedControl from "../../../../components/segmented-control";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import i18n from "../../../../i18n.json";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
-
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function InternationalPartnersByStructure({ name }: { name: string | undefined }) {
-  const [field, setField] = useState("projects");
+  const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
@@ -26,16 +28,29 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
       by_international_partners_project: {
         terms: {
           field: "co_partners_foreign_inst.keyword",
+          order: { "by_unique_projects": "desc" },
         },
         aggregations: {
+          by_unique_projects: {
+            cardinality: {
+              field: "project_id.keyword",
+            },
+          },
           by_project_type: {
             terms: {
               field: "project_type.keyword",
             },
             aggregations: {
-              unique_projects: {
-                cardinality: {
-                  field: "project_id.keyword",
+              is_coordinator: {
+                terms: {
+                  field: "participation_is_coordinator",
+                },
+                aggregations: {
+                  unique_projects: {
+                    cardinality: {
+                      field: "project_id.keyword",
+                    },
+                  },
                 },
               },
             },
@@ -50,7 +65,7 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
         aggregations: {
           sum_budget: {
             sum: {
-              field: "project_budgetTotal",
+              field: "project_budgetFinanced",
             },
           },
           by_project_type: {
@@ -58,9 +73,48 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
               field: "project_type.keyword",
             },
             aggregations: {
-              sum_budget: {
-                sum: {
-                  field: "project_budgetTotal",
+              is_coordinator: {
+                terms: {
+                  field: "participation_is_coordinator",
+                },
+                aggregations: {
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      by_international_partners_participation: {
+        terms: {
+          field: "co_partners_foreign_inst.keyword",
+          order: { "sum_budget_participation": "desc" },
+        },
+        aggregations: {
+          sum_budget_participation: {
+            sum: {
+              field: "participation_funding",
+            },
+          },
+          by_project_type: {
+            terms: {
+              field: "project_type.keyword",
+            },
+            aggregations: {
+              is_coordinator: {
+                terms: {
+                  field: "participation_is_coordinator",
+                },
+                aggregations: {
+                  sum_budget_participation: {
+                    sum: {
+                      field: "participation_funding",
+                    },
+                  },
                 },
               },
             },
@@ -73,7 +127,7 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
   const { data, isLoading } = useQuery({
     queryKey: ["fundings-international-partners", structure, yearMax, yearMin],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -83,85 +137,143 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
       }).then((response) => response.json()),
   });
 
-  const partnersProject = data?.aggregations?.by_international_partners_project?.buckets ?? [];
-  const seriesProject = funders.map((funder) => ({
-    color: getCssColor({ name: funder, prefix: "funder" }),
-    data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.unique_projects?.value ?? 0),
-    name: funder,
-  })).reverse();
-  const categoriesProject = partnersProject.map((partner) => partner.key.split("###")[1].split("_")[1]);
+  const seriesBudget: any = [];
+  const seriesParticipation: any = [];
+  const seriesProject: any = [];
   const partnersBudget = data?.aggregations?.by_international_partners_budget?.buckets ?? [];
-  const seriesBudget = funders.map((funder) => ({
-    color: getCssColor({ name: funder, prefix: "funder" }),
-    data: partnersBudget.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.sum_budget?.value ?? 0),
-    name: funder,
-  })).reverse();
-  const categoriesBudget = partnersBudget.map((partner) => partner.key.split("###")[1].split("_")[1]);
-
-  const axisBudget = "Montants financés (€)";
-  const axisProjects = "Nombre de projets financés";
-  const datalabelBudget = function (this: any) {
-    return `${formatCompactNumber(this.y)} €`;
-  };
-  const datalabelProject = function (this: any) {
-    return `${this.y} projet${this.y > 1 ? 's' : ''}`;
-  };
-  const stacklabelProject = function (this: any) {
-    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
-  };
-  const stacklabelBudget = function (this: any) {
-    return `${formatCompactNumber(this.total)} €`;
-  };
-  const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> financés pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
-  };
-  const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
-  };
+  const partnersParticipation = data?.aggregations?.by_international_partners_participation?.buckets ?? [];
+  const partnersProject = data?.aggregations?.by_international_partners_project?.buckets ?? [];
+  funders.forEach((funder) => {
+    seriesBudget.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: partnersBudget.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesBudget.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: partnersBudget.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesParticipation.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: partnersParticipation.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesParticipation.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: partnersParticipation.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesProject.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesProject.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+  });
+  const categoriesProject = partnersProject?.map((partner) => {
+    const structure = Object.fromEntries(new URLSearchParams(partner.key));
+    return `${structure.label} (${structure.country})`;
+  });
+  const categoriesBudget = partnersBudget.map((partner) => {
+    const structure = Object.fromEntries(new URLSearchParams(partner.key));
+    return `${structure.label} (${structure.country})`;
+  });
+  const categoriesParticipation = partnersParticipation.map((partner) => {
+    const structure = Object.fromEntries(new URLSearchParams(partner.key));
+    return `${structure.label} (${structure.country})`;
+  });
 
   const config = {
     comment: { "fr": <>Ce graphe montre quels partenaires internationaux collaborent le plus avec l'établissement sur les projets financés par AAP.
-Les barres représentent le nombre / le montant total des projets auxquels chaque partenaire participe conjointement avec l'établissement.
-Certains partenaires internationaux se distinguent par un volume élevé de projets, signalant des collaborations stratégiques et récurrentes à l’international.
-Ces montants ne reflètent pas les financements réellement reçus par l'établissement ou ses partenaires, mais indiquent l’importance relative de leur participation dans l’écosystème de projets financés par AAP</> },
+Les barres représentent le nombre, les financements globaux et perçus pour les projets auxquels l'établissement participe avec chaque partenaire. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </> },
     id: "internationalPartnersByStructure",
   };
 
-  const localOptions = {
+  // If view by number of projects
+  let axis = getI18nLabel(i18n, 'number_of_projects_funded');
+  let categories = categoriesProject;
+  let dataLabel = function (this: any) {
+    return `${this.y} projet${this.y > 1 ? 's' : ''}`;
+  };
+  let series = seriesProject.reverse();
+  let stackLabel = function (this: any) {
+    return `${this.total} projet${this.total > 1 ? 's' : ''}`;
+  };
+  let tooltip = function (this: any) {
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+  };
+  switch (selectedControl) {
+    // If view by global amount
+    case 'amount_global':
+      axis = getI18nLabel(i18n, 'funding_total');
+      categories = categoriesBudget;
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €`;
+      };
+      series = seriesBudget.reverse();
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> financés au global pour les projets <b>${this.series.name}</b> auxquels participent <b>${name}</b> et <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+      };
+      break;
+    // If view by amount by structure
+    case 'amount_by_structure':
+      axis = getI18nLabel(i18n, 'funding_by_structure');
+      categories = categoriesParticipation;
+      dataLabel = function (this: any) {
+        return `${formatCompactNumber(this.y)} €`;
+      };
+      series = seriesParticipation.reverse();
+      stackLabel = function (this: any) {
+        return `${formatCompactNumber(this.total)} €`;
+      };
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> perçus par <b>${name}</b> pour les projets <b>${this.series.name}</b> où l'établissement est en collaboration avec <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+      };
+      break;
+  }
+
+  const options: HighchartsInstance.Options = {
     legend: { enabled: true, reversed: true },
+    plotOptions: {
+      series: {
+        dataLabels: {
+          enabled: true,
+          formatter: dataLabel,
+        },
+        stacking: "normal",
+      }
+    },
+    series,
+    title: { text: "" },
+    tooltip: { formatter: tooltip },
+    xAxis: { categories, title: { text: "" } },
     yAxis: {
       stackLabels: {
         enabled: true,
         style: {
           fontWeight: 'bold'
         },
-        formatter: field === "projects" ? stacklabelProject : stacklabelBudget,
-      }
+        formatter: stackLabel,
+      },
+      title: { text: axis },
     },
-    plotOptions: {
-      series: {
-        dataLabels: {
-          enabled: true,
-          formatter: field === "projects" ? datalabelProject : datalabelBudget,
-        },
-        stacking: "normal",
-      }
-    },
-    series: field === "projects" ? seriesProject : seriesBudget,
-    tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", field === "projects" ? categoriesProject : categoriesBudget, "", field === "projects" ? axisProjects : axisBudget), localOptions);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="international-partners-by-structure">
       <Title as="h2" look="h6">
         {`Principaux partenaires internationaux de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>
-      <SegmentedControl name="international-partners-by-structure-segmented">
-        <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
-        <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
-      </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
+      <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 };

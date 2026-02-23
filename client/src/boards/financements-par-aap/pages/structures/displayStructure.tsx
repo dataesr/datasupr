@@ -8,6 +8,10 @@ import { getEsQuery, years } from "../../utils";
 import ClassificationsByStructure from "./charts/classifications-by-structure";
 import Classifications2ByStructure from "./charts/classifications2-by-structure";
 import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
+import InstrumentsForAnr from "./charts/instruments-for-anr";
+import InstrumentsForEurope from "./charts/instruments-for-europe";
+import InstrumentsOverTimeForAnr from "./charts/instruments-over-time-for-anr";
+import InstrumentsOverTimeForEurope from "./charts/instruments-over-time-for-europe";
 import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
 import LaboratoriesByStructure from "./charts/laboratories-by-structure";
 import OverviewByStructure from "./charts/overview-by-structure";
@@ -17,8 +21,7 @@ import Cards from "./components/cards";
 
 import "./styles.scss";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
-
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function DisplayStructure() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -28,13 +31,14 @@ export default function DisplayStructure() {
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
   const [isOpen, setIsOpen] = useState(false);
   const sections = [
+    { id: "apercu", label: "Aperçu" },
     { id: "financements", label: "Volume et répartition des financements" },
     { id: "evolution", label: "Evolution temporelle" },
     { id: "partenaires", label: "Institutions partenaires" },
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
+    { id: "instrument", label: "Instruments" },
   ];
-
 
   const handleNavClick = (section: string) => {
     searchParams.set("section", section);
@@ -53,13 +57,13 @@ export default function DisplayStructure() {
   };
 
   const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ structures: [structure] }),
     size: 1,
   };
   const { data } = useQuery({
-    queryKey: ["fundings-structure", structure, yearMax, yearMin],
+    queryKey: ["fundings-structure", structure],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -97,7 +101,6 @@ export default function DisplayStructure() {
                 <span aria-hidden="true" className="fr-icon-map-pin-2-fill fr-mr-1w"></span>
                 {structureInfo?.region}
               </Text>
-
             </Col>
             <Col>
               <div className="fr-mb-2w">
@@ -146,24 +149,23 @@ export default function DisplayStructure() {
                     ))}
                   </select>
                 </Col>
-                <Col></Col>
                 <Col md="1" style={{ display: "contents" }}>
                   <>
-                  <Text className="fr-mx-1w" style={{ margin: "auto" }}>
-                    à
-                  </Text>
-                  <select
-                    className="fr-select"
-                    onChange={(e) => handleYearMaxChange(e.target.value)}
-                    style={{ width: "fit-content" }}
-                    value={yearMax}
-                  >
-                    {[...years].sort((a, b) => b - a).map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
+                    <Text className="fr-mx-1w" style={{ margin: "auto" }}>
+                      à
+                    </Text>
+                    <select
+                      className="fr-select"
+                      onChange={(e) => handleYearMaxChange(e.target.value)}
+                      style={{ width: "fit-content" }}
+                      value={yearMax}
+                    >
+                      {[...years].sort((a, b) => b - a).map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
                   </>
                 </Col>
               </Row>
@@ -183,70 +185,102 @@ export default function DisplayStructure() {
             </nav>
           </Col>
         </Row>
-        {((Number(yearMax) >= 2023) || (Number(yearMin) >= 2023)) &&
+        {((Number(yearMax) >= 2024) || (Number(yearMin) >= 2024)) &&
           <div style={{ float: "right" }}>
             <div>
               <Alert description="Les sources disponibles ne fournissent que des données provisoires pour 2024 et 2025" size="sm" variant="warning" />
             </div>
           </div>
         }
-        {(section === "financements") && (
-          <>
-            <Cards />
-            <Row gutters>
-              <Col>
-                <ProjectsByStructure name={label} />
-              </Col>
-            </Row>
-            <Row gutters>
-              <Col>
-                <OverviewByStructure name={label} />
-              </Col>
-            </Row>
-          </>
-        )}
-        {(section === "evolution") && (
-          <Row gutters style={{ clear: "both" }}>
-            <Col>
-              <ProjectsOverTimeByStructure name={label} />
-            </Col>
-          </Row>
-        )}
-        {(section === "partenaires") && (
-          <>
-            <Row gutters style={{ clear: "both" }}>
-              <Col>
-                <FrenchPartnersByStructure name={label} />
-              </Col>
-            </Row>
-            <Row gutters>
-              <Col>
-                <InternationalPartnersByStructure name={label} />
-              </Col>
-            </Row>
-          </>
-        )}
-        {(section === "laboratoires") && (
-          <Row gutters style={{ clear: "both" }}>
-            <Col>
-              <LaboratoriesByStructure name={label} />
-            </Col>
-          </Row>
-        )}
-        {(section === "disciplines") && (
-          <>
-            <Row gutters style={{ clear: "both" }}>
-              <Col>
-                <ClassificationsByStructure name={label} />
-              </Col>
-            </Row>
-            <Row gutters>
-              <Col>
-                <Classifications2ByStructure name={label} />
-              </Col>
-            </Row>
-          </>
-        )}
+        {(yearMax < yearMin) ?
+          (<Alert description="Merci de choisir une année de fin supérieure ou égale à l'année de début" title="Erreur dans le choix des années" variant="error" />) :
+          (
+            <>
+              {(section === "apercu") && (
+                <Cards />
+              )}
+              {(section === "financements") && (
+                <>
+                  <Row gutters style={{ clear: "both" }}>
+                    <Col>
+                      <ProjectsByStructure name={label} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <OverviewByStructure name={label} />
+                    </Col>
+                  </Row>
+                </>
+              )}
+              {(section === "evolution") && (
+                <Row gutters style={{ clear: "both" }}>
+                  <Col>
+                    <ProjectsOverTimeByStructure name={label} />
+                  </Col>
+                </Row>
+              )}
+              {(section === "partenaires") && (
+                <>
+                  <Row gutters style={{ clear: "both" }}>
+                    <Col>
+                      <FrenchPartnersByStructure name={label} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <InternationalPartnersByStructure name={label} />
+                    </Col>
+                  </Row>
+                </>
+              )}
+              {(section === "laboratoires") && (
+                <Row gutters style={{ clear: "both" }}>
+                  <Col>
+                    <LaboratoriesByStructure name={label} />
+                  </Col>
+                </Row>
+              )}
+              {(section === "disciplines") && (
+                <>
+                  <Row gutters style={{ clear: "both" }}>
+                    <Col>
+                      <ClassificationsByStructure name={label} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <Classifications2ByStructure name={label} />
+                    </Col>
+                  </Row>
+                </>
+              )}
+              {(section === "instrument") && (
+                <>
+                  <Row gutters style={{ clear: "both" }}>
+                    <Col>
+                      <InstrumentsForAnr name={label} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <InstrumentsForEurope name={label} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <InstrumentsOverTimeForAnr name={label} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <InstrumentsOverTimeForEurope name={label} />
+                    </Col>
+                  </Row>
+                </>
+              )}
+            </>
+          )}
       </Container>
     </>
   );

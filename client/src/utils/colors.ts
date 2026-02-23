@@ -4,9 +4,15 @@ export function getCssColor(variableName: string): string {
   // Détecte le thème actuel
   const isDarkTheme = document.documentElement.getAttribute("data-fr-theme") === "dark";
 
-  // Construit le nom de la variable CSS en fonction du thème
-  const cssVariableName = isDarkTheme ? `--${variableName}-dark` : `--${variableName}`;
+  // En thème dark, teste si la variable avec le suffixe "-dark" existe
+  if (isDarkTheme) {
+    const darkVariableName = `--${variableName}-dark`;
+    const darkValue = rootStyles.getPropertyValue(darkVariableName).trim();
+    if (darkValue) {
+      return darkValue;
+    }
+  }
 
-  // Récupère et retourne la valeur de la variable CSS
-  return rootStyles.getPropertyValue(cssVariableName).trim();
+  // Récupère et retourne la variable CSS sans le suffixe "dark"
+  return rootStyles.getPropertyValue(`--${variableName}`).trim();
 }

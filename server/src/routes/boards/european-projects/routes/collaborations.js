@@ -181,7 +181,7 @@ router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
             _id: "$country_code_collab",
             country_name_fr: { $first: "$country_name_fr_collab" },
             country_name_en: { $first: "$country_name_en_collab" },
-            total_collaborations: { $sum: 1 },
+            unique_project_ids: { $addToSet: "$project_id" },
           },
         },
         {
@@ -190,7 +190,7 @@ router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
             country_code: "$_id",
             country_name_fr: 1,
             country_name_en: 1,
-            total_collaborations: 1,
+            total_collaborations: { $size: "$unique_project_ids" },
           },
         },
         {
@@ -218,12 +218,13 @@ router.route(routesPrefix + "/get-collaborations_indexes").get(async (req, res) 
         country_code_collab: 1,
         country_name_fr_collab: 1,
         country_name_en_collab: 1,
+        project_id: 1,
         pilier_code: 1,
         programme_code: 1,
         thema_code: 1,
         destination_code: 1,
       },
-      "idx_collaborations_covered"
+      "idx_collaborations_covered",
     );
 
     res.status(201).json({ message: "Index recréé avec succès" });

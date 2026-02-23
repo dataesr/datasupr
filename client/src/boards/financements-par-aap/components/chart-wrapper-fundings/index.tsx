@@ -1,11 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
+import Highcharts from "highcharts";
 import React from "react";
 
-import Highcharts from "highcharts";
+import { createChartOptions } from "../../../../components/chart-wrapper/default-options";
 import ChartWrapper, { ChartConfig, HighchartsOptions } from "../../../../components/chart-wrapper/index.js";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default.js";
+import { deepMerge } from "../../../../utils.js";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 const fundingsSources = [
   {
@@ -71,7 +73,7 @@ export default function ChartWrapperFundings({
     queryKey: ["fundings-alias"],
     queryFn: () =>
       fetch(
-        `${VITE_APP_SERVER_URL}/elasticsearch/get-index-name-by-alias?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`,
+        `${VITE_APP_SERVER_URL}/elasticsearch/get-index-name-by-alias?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
         {
           headers: {
             "Access-Control-Allow-Origin": "*",
@@ -93,12 +95,14 @@ export default function ChartWrapperFundings({
     sources: fundingsSources.map((source) => ({ ...source, update })),
   };
 
+  const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "600px" } }), options);
+
   return isLoadingAlias ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapper
     config={configLocal}
     constructorType={constructorType}
     hideTitle={hideTitle}
     legend={legend}
-    options={options}
+    options={optionsLocal}
     renderData={renderData}
   />
 }

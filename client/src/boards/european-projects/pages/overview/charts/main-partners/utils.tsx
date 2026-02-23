@@ -64,7 +64,7 @@ export function readingKey(data) {
         <strong>
           {partnerAcronym} ({partnerName})
         </strong>{" "}
-        a reçu un total de <strong>{formatToMillions(totalFundEur)}</strong> de subventions.
+        a reçu un financement total de <strong>{formatToMillions(totalFundEur)}</strong>.
       </>
     ),
     en: (
@@ -106,7 +106,7 @@ export function renderDataTable(data: { list: Array<{ id: string; name: string; 
     unit: "M€",
     caption:
       currentLang === "fr"
-        ? "Liste des principaux bénéficiaires récupérant 50% des subventions (en millions d'euros)"
+        ? "Liste des principaux bénéficiaires récupérant 50% des financements (en millions d'euros)"
         : "List of main beneficiaries receiving 50% of funding (in millions of euros)",
   };
 

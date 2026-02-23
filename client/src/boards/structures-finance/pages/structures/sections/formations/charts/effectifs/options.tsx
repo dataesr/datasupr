@@ -1,6 +1,6 @@
 import Highcharts from "highcharts";
-import { CHART_COLORS } from "../../../../../../constants/colors";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
+import { getCssColor } from "../../../../../../../../utils/colors";
 interface EffectifsData {
   effectif_sans_cpge?: number;
   effectif_sans_cpge_l?: number;
@@ -63,21 +63,21 @@ export const createEffectifsNiveauChartOptions = (
     {
       name: "1er cycle (cursus L)",
       y: data.effectif_sans_cpge_l || 0,
-      color: CHART_COLORS.primary,
+      color: getCssColor("scale-1"),
       percentage: data.part_effectif_sans_cpge_l || 0,
       has: data.has_effectif_l,
     },
     {
       name: "2ème cycle (cursus M)",
       y: data.effectif_sans_cpge_m || 0,
-      color: CHART_COLORS.secondary,
+      color: getCssColor("scale-2"),
       percentage: data.part_effectif_sans_cpge_m || 0,
       has: data.has_effectif_m,
     },
     {
       name: "3ème cycle (cursus D)",
       y: data.effectif_sans_cpge_d || 0,
-      color: CHART_COLORS.tertiary,
+      color: getCssColor("scale-3"),
       percentage: data.part_effectif_sans_cpge_d || 0,
       has: data.has_effectif_d,
     },
@@ -127,26 +127,24 @@ export const createEffectifsNiveauChartOptions = (
 export const createEffectifsSpecifiquesChartOptions = (
   data: EffectifsData
 ): Highcharts.Options => {
-  const colors = CHART_COLORS.palette;
-
   const specifiques = [
     {
       name: "Formations d'IUT",
       y: data.effectif_sans_cpge_iut || 0,
       has: data.has_effectif_iut,
-      color: colors[0],
+      color: getCssColor("scale-1"),
     },
     {
       name: "Formations d'ingénieurs",
       y: data.effectif_sans_cpge_ing || 0,
       has: data.has_effectif_ing,
-      color: colors[10],
+      color: getCssColor("scale-2"),
     },
     {
       name: "Formation de santé",
       y: data.effectif_sans_cpge_sante || 0,
       has: data.has_effectif_sante,
-      color: colors[7],
+      color: getCssColor("scale-3"),
     },
   ].filter((item) => item.has && item.y > 0);
 
@@ -214,64 +212,62 @@ export const createEffectifsSpecifiquesChartOptions = (
 export const createEffectifsDisciplinesChartOptions = (
   data: EffectifsData
 ): Highcharts.Options => {
-  const colors = CHART_COLORS.palette;
-
   const disciplines = [
     {
       name: "Droit, sciences économiques, AES",
       y: data.effectif_sans_cpge_dsa || 0,
       percentage: data.part_effectif_sans_cpge_dsa || 0,
       has: data.has_effectif_dsa,
-      color: colors[1],
+      color: getCssColor("scale-1"),
     },
     {
       name: "Lettres, langues et sciences humaines",
       y: data.effectif_sans_cpge_llsh || 0,
       percentage: data.part_effectif_sans_cpge_llsh || 0,
       has: data.has_effectif_llsh,
-      color: colors[2],
+      color: getCssColor("scale-2"),
     },
     {
       name: "Théologie",
       y: data.effectif_sans_cpge_theo || 0,
       percentage: data.part_effectif_sans_cpge_theo || 0,
       has: data.has_effectif_theo,
-      color: colors[4],
+      color: getCssColor("scale-3"),
     },
     {
       name: "Sciences et sciences de l'ingénieur",
       y: data.effectif_sans_cpge_si || 0,
       percentage: data.part_effectif_sans_cpge_si || 0,
       has: data.has_effectif_si,
-      color: colors[5],
+      color: getCssColor("scale-4"),
     },
     {
       name: "STAPS",
       y: data.effectif_sans_cpge_staps || 0,
       percentage: data.part_effectif_sans_cpge_staps || 0,
       has: data.has_effectif_staps,
-      color: colors[6],
+      color: getCssColor("scale-5"),
     },
     {
       name: "Santé",
       y: data.effectif_sans_cpge_sante || 0,
       percentage: data.part_effectif_sans_cpge_sante || 0,
       has: data.has_effectif_sante,
-      color: colors[7],
+      color: getCssColor("scale-6"),
     },
     {
       name: "Vétérinaire",
       y: data.effectif_sans_cpge_veto || 0,
       percentage: data.part_effectif_sans_cpge_veto || 0,
       has: data.has_effectif_veto,
-      color: colors[8],
+      color: getCssColor("scale-7"),
     },
     {
       name: "Interdisciplinaire",
       y: data.effectif_sans_cpge_interd || 0,
       percentage: data.part_effectif_sans_cpge_interd || 0,
       has: data.has_effectif_interd,
-      color: colors[9],
+      color: getCssColor("scale-8"),
     },
   ].filter((item) => item.has && item.y > 0);
 
@@ -319,48 +315,46 @@ export const createEffectifsDisciplinesChartOptions = (
 export const createEffectifsDegreesChartOptions = (
   data: EffectifsData
 ): Highcharts.Options => {
-  const colors = CHART_COLORS.palette;
-
   const degrees = [
     {
       name: "BAC ou inférieur",
       y: data.effectif_sans_cpge_deg0 || 0,
-      color: colors[0],
+      color: getCssColor("scale-1"),
     },
     {
       name: "BAC + 1",
       y: data.effectif_sans_cpge_deg1 || 0,
-      color: colors[1],
+      color: getCssColor("scale-2"),
     },
     {
       name: "BAC + 2",
       y: data.effectif_sans_cpge_deg2 || 0,
-      color: colors[2],
+      color: getCssColor("scale-3"),
     },
     {
       name: "BAC + 3",
       y: data.effectif_sans_cpge_deg3 || 0,
-      color: colors[3],
+      color: getCssColor("scale-4"),
     },
     {
       name: "BAC + 4",
       y: data.effectif_sans_cpge_deg4 || 0,
-      color: colors[4],
+      color: getCssColor("scale-5"),
     },
     {
       name: "BAC + 5",
       y: data.effectif_sans_cpge_deg5 || 0,
-      color: colors[5],
+      color: getCssColor("scale-6"),
     },
     {
       name: "BAC + 6 et plus",
       y: data.effectif_sans_cpge_deg6 || 0,
-      color: colors[6],
+      color: getCssColor("scale-7"),
     },
     {
       name: "Non renseigné",
       y: data.effectif_sans_cpge_deg9 || 0,
-      color: colors[8],
+      color: getCssColor("scale-8"),
     },
   ].filter((item) => item.y > 0);
 

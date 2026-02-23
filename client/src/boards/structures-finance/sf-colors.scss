@@ -1,0 +1,226 @@
+:root {
+  --blue-france: #000091;
+  --blue-france-dark: #8585f6;
+
+  --blue-ecume: #465f9d;
+  --blue-ecume-dark: #869ece;
+
+  --blue-cumulus: #417dc4;
+  --blue-cumulus-dark: #7ab1e8;
+
+  --green-tilleul: #b7a73f;
+  --green-tilleul-dark: #d8c634;
+
+  --green-bourgeon: #68a532;
+  --green-bourgeon-dark: #99c221;
+
+  --green-emeraude: #00a95f;
+  --green-emeraude-dark: #34cb6a;
+
+  --green-menthe: #009081;
+  --green-menthe-dark: #21ab8e;
+
+  --green-archipel: #009099;
+  --green-archipel-dark: #34bab5;
+
+  --purple-glycine: #a558a0;
+  --purple-glycine-dark: #ce70cc;
+
+  --pink-macaron: #e18b76;
+  --pink-macaron-dark: #ffb7ae;
+
+  --pink-tuile: #ce614a;
+  --pink-tuile-dark: #ff9575;
+
+  --yellow-tournesol: #c8aa39;
+  --yellow-tournesol-dark: #ffe552;
+
+  --yellow-moutarde: #c3992a;
+  --yellow-moutarde-dark: #ffca00;
+
+  --orange-terre-battue: #e4794a;
+  --orange-terre-battue-dark: #ff732c;
+
+  --brown-cafe-creme: #d1b781;
+  --brown-cafe-creme-dark: #ecd7a2;
+
+  --brown-caramel: #c08c65;
+  --brown-caramel-dark: #fbd8ab;
+
+  --brown-opera: #bd987a;
+  --brown-opera-dark: #e6be92;
+
+  --beige-gris-galet: #aea397;
+  --beige-gris-galet-dark: #d0c3b7;
+
+  --blue-cumulus-light: #b6cffb;
+  --blue-cumulus-light-dark: #263b58;
+
+  --green-emeraude-light: #6fe49d;
+  --green-emeraude-light-dark: #21402c;
+
+  --pink-tuile-light: #fcbfb7;
+  --pink-tuile-light-dark: #55302a;
+
+  --yellow-moutarde-light: #fcc63a;
+  --yellow-moutarde-light-dark: #453820;
+
+  --purple-glycine-light: #fbb8f6;
+  --purple-glycine-light-dark: #502e4d;
+
+  --orange-terre-battue-light: #fcc0b0;
+  --orange-terre-battue-light-dark: #543125;
+
+  --green-menthe-light: #73e0cf;
+  --green-menthe-light-dark: #223f3a;
+
+  --brown-caramel-light: #eac7b2;
+  --brown-caramel-light-dark: #4b3525;
+
+  --green-archipel-light: #60e0eb;
+  --green-archipel-light-dark: #233e41;
+
+  --pink-macaron-light: #fcc0b4;
+  --pink-macaron-light-dark: #52312a;
+
+  --yellow-tournesol-light: #efcb3a;
+  --yellow-tournesol-light-dark: #43391a;
+
+  --brown-opera-light: #eac7ad;
+  --brown-opera-light-dark: #493625;
+
+  --green-bourgeon-light: #95e257;
+  --green-bourgeon-light-dark: #2a4019;
+
+  --section-ressources: var(--blue-france);
+  --section-ressources-dark: var(--blue-france-dark);
+
+  --section-sante-financiere: var(--green-emeraude);
+  --section-sante-financiere-dark: var(--green-emeraude-dark);
+
+  --section-moyens-humains: var(--pink-tuile);
+  --section-moyens-humains-dark: var(--pink-tuile-dark);
+
+  --section-diplomes-formations: var(--yellow-moutarde);
+  --section-diplomes-formations-dark: var(--yellow-moutarde-dark);
+
+  --section-erc: var(--orange-terre-battue);
+  --section-erc-dark: var(--orange-terre-battue-dark);
+
+  --metric-effectifs: var(--blue-cumulus);
+  --metric-effectifs-dark: var(--blue-cumulus-dark);
+
+  --metric-effectifs-licence: var(--blue-cumulus);
+  --metric-effectifs-licence-dark: var(--blue-cumulus-dark);
+
+  --metric-effectifs-master: var(--pink-tuile);
+  --metric-effectifs-master-dark: var(--pink-tuile-dark);
+
+  --metric-effectifs-doctorat: var(--orange-terre-battue);
+  --metric-effectifs-doctorat-dark: var(--orange-terre-battue-dark);
+
+  --metric-scsp: var(--blue-cumulus);
+  --metric-scsp-dark: var(--blue-cumulus-dark);
+
+  --metric-ressources-propres: var(--green-archipel);
+  --metric-ressources-propres-dark: var(--green-archipel-dark);
+
+  --metric-droits-inscription: var(--green-menthe);
+  --metric-droits-inscription-dark: var(--green-menthe-dark);
+
+  --metric-charges-personnel: var(--pink-tuile);
+  --metric-charges-personnel-dark: var(--pink-tuile-dark);
+
+  --metric-produits-fonctionnement: var(--orange-terre-battue);
+  --metric-produits-fonctionnement-dark: var(--orange-terre-battue-dark);
+
+  --metric-anr: var(--purple-glycine);
+  --metric-anr-dark: var(--purple-glycine-dark);
+
+  --metric-subventions-ue: var(--blue-cumulus);
+  --metric-subventions-ue-dark: var(--blue-cumulus-dark);
+
+  --metric-contrats-recherche: var(--blue-ecume);
+  --metric-contrats-recherche-dark: var(--blue-ecume-dark);
+
+  --metric-taux-encadrement: var(--green-emeraude);
+  --metric-taux-encadrement-dark: var(--green-emeraude-dark);
+
+  --metric-emploi-etpt: var(--brown-caramel);
+  --metric-emploi-etpt-dark: var(--brown-caramel-dark);
+
+  --metric-formation-continue: var(--pink-tuile);
+  --metric-formation-continue-dark: var(--pink-tuile-dark);
+
+  --metric-taxe-apprentissage: var(--yellow-moutarde);
+  --metric-taxe-apprentissage-dark: var(--yellow-moutarde-dark);
+
+  --metric-autres-ressources: var(--beige-gris-galet);
+  --metric-autres-ressources-dark: var(--beige-gris-galet-dark);
+
+  --metric-autres-subventions: var(--brown-opera);
+  --metric-autres-subventions-dark: var(--brown-opera-dark);
+
+  --card-effectifs: var(--blue-cumulus);
+  --card-effectifs-dark: var(--blue-cumulus-dark);
+
+  --card-finances: var(--green-archipel);
+  --card-finances-dark: var(--green-archipel-dark);
+
+  --card-personnel: var(--pink-tuile);
+  --card-personnel-dark: var(--pink-tuile-dark);
+
+  --card-recherche: var(--purple-glycine);
+  --card-recherche-dark: var(--purple-glycine-dark);
+
+  --ress-droits-inscription: var(--blue-cumulus);
+  --ress-droits-inscription-dark: var(--blue-cumulus-dark);
+
+  --ress-formation-continue: var(--green-emeraude);
+  --ress-formation-continue-dark: var(--green-emeraude-dark);
+
+  --ress-taxe-apprentissage: var(--yellow-moutarde);
+  --ress-taxe-apprentissage-dark: var(--yellow-moutarde-dark);
+
+  --ress-valorisation: var(--purple-glycine);
+  --ress-valorisation-dark: var(--purple-glycine-dark);
+
+  --ress-anr-hors-ia: var(--pink-tuile);
+  --ress-anr-hors-ia-dark: var(--pink-tuile-dark);
+
+  --ress-anr-ia: var(--orange-terre-battue);
+  --ress-anr-ia-dark: var(--orange-terre-battue-dark);
+
+  --ress-contrats-recherche: var(--blue-ecume);
+  --ress-contrats-recherche-dark: var(--blue-ecume-dark);
+
+  --ress-subventions-region: var(--green-bourgeon);
+  --ress-subventions-region-dark: var(--green-bourgeon-dark);
+
+  --ress-subventions-ue: var(--green-archipel);
+  --ress-subventions-ue-dark: var(--green-archipel-dark);
+
+  --ress-autres-ressources: var(--brown-caramel);
+  --ress-autres-ressources-dark: var(--brown-caramel-dark);
+
+  --ress-autres-subventions: var(--pink-macaron);
+  --ress-autres-subventions-dark: var(--pink-macaron-dark);
+
+  --threshold-alert-bg: rgba(206, 13, 13, 0.15);
+  --threshold-vigilance-bg: rgba(255, 182, 0, 0.2);
+  --threshold-alert-line: #ce0d0d;
+  --threshold-vigilance-line: #c3992a;
+  --scale-1: var(--green-tilleul-verveine-main-707);
+  --scale-2: var(--green-bourgeon-main-640);
+  --scale-3: var(--green-emeraude-main-632);
+  --scale-4: var(--green-menthe-main-548);
+  --scale-5: var(--green-archipel-main-557);
+  --scale-6: var(--blue-ecume-main-400);
+  --scale-7: var(--blue-cumulus-main-526);
+  --scale-8: var(--purple-glycine-main-494);
+  --scale-9: var(--pink-macaron-main-689);
+  --scale-10: var(--pink-tuile-main-556);
+  --scale-11: var(--yellow-tournesol-main-731);
+  --scale-12: var(--green-tilleul-verveine-sun-418);
+  --scale-12-dark: var(--green-tilleul-verveine-moon-817);
+}

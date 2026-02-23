@@ -1,15 +1,17 @@
 import { Route, Routes } from "react-router-dom";
+
+import NotFoundPage from "../../components/not-found-page.tsx";
+import { Layout } from "../../layout/layout.tsx";
+import Glossary from "./components/glossary/index.tsx";
 import { FacultyMembers } from "./index.tsx";
 import { FacultyLayout } from "./layout/index.tsx";
-
-import UniversityOverview from "./pages/university/university-overview.tsx";
-import FieldsOverview from "./pages/fields/fields-overview.tsx";
 import { Evolution } from "./pages/evolutions/index.tsx";
-import { ResearchTeachers } from "./pages/research-teachers/index.tsx";
+import FieldsOverview from "./pages/fields/fields-overview.tsx";
 import RegionsOverview from "./pages/geo/geo-overview.tsx";
-import { Layout } from "../../layout/layout.tsx";
+import { ResearchTeachers } from "./pages/research-teachers/index.tsx";
 import { Typologie } from "./pages/typology/index.tsx";
-import Glossary from "./components/glossary/index.tsx";
+import UniversityOverview from "./pages/university/university-overview.tsx";
+
 
 export default function FacultyMembersRoutes() {
   return (
@@ -53,6 +55,7 @@ export default function FacultyMembersRoutes() {
           <Route path="/glossaire/" element={<Glossary />} />
         </Route>
       </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

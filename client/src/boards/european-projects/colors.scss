@@ -1,8 +1,11 @@
 :root {
+  --evaluated-project: #009099; // projets évalués
+  --successful-project: #233e41; // projets lauréats
+  --successRate: #1f8d49; // taux de succès
+
   --label-color: var(--text-action-high-grey);
   --evaluated-project-color: #009099; // projets évalués
   --successful-project-color: #233e41; // projets lauréats
-  --successRate-color: #1f8d49; // taux de succès
   --averageSuccessRate-color: #d75521; // taux de succès moyen
   --cumulativeSuccessRate-color: #d75521; // taux de succès moyen
   --selected-country-color: #6dd897; // pays sélectionné
@@ -169,4 +172,10 @@
   --framework-fp7-color: var(--scale-2-color);
   --framework-horizon2020-color: var(--scale-3-color);
   --framework-horizoneurope-color: var(--scale-4-color);
+
+  --framework-fp6: var(--scale-1-color);
+  --framework-fp7: var(--scale-2-color);
+  --framework-horizon-2020: var(--scale-3-color);
+  --framework-horizon-europe: var(--scale-4-color);
+
 }

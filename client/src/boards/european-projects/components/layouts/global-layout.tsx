@@ -2,7 +2,6 @@ import { Container } from "@dataesr/dsfr-plus";
 import { useEffect } from "react";
 import { Link, Outlet, useLocation, useSearchParams } from "react-router-dom";
 
-// import Breadcrumb from "../../../../components/breadcrumb";
 import CountrySelector from "../../../../components/country-selector/selector";
 import Footer from "../../../../components/footer";
 import i18n from "./i18n.json";
@@ -24,6 +23,10 @@ export default function GlobalLayout() {
       searchParams.set("country_code", "FRA"); // default value
       setSearchParams(searchParams);
     }
+    if (!searchParams.get("range_of_years")) {
+      searchParams.set("range_of_years", "2021|2022|2023|2024|2025|2026"); // default value
+      setSearchParams(searchParams);
+    }
   }, [searchParams, setSearchParams]);
 
   if (!pathname) return null;
@@ -33,7 +36,7 @@ export default function GlobalLayout() {
     return i18n[key][currentLang];
   }
   return (
-    <>
+    <div className="ep-styles">
       <header role="banner" className="fr-header">
         <div className="fr-header__body">
           <div className="fr-container">
@@ -89,7 +92,7 @@ export default function GlobalLayout() {
             </li>
             <li className="fr-nav__item">
               <Link
-                to={`/european-projects/horizon-europe?${filtersParams}`}
+                to={`/european-projects/horizon-europe?section=synthesis&${filtersParams}`}
                 target="_self"
                 {...(is("/european-projects/horizon-europe") && { "aria-current": "page" })}
                 className="fr-nav__link"
@@ -133,15 +136,8 @@ export default function GlobalLayout() {
           </ul>
         </Container>
       </nav>
-      {/* <Container>
-        <Row>
-          <Col>
-            <Breadcrumb config={navigationConfig} />
-          </Col>
-        </Row>
-      </Container> */}
       <Outlet />
       <Footer />
-    </>
+    </div>
   );
 }

@@ -2,7 +2,18 @@ import { useId } from "react";
 import { formatToRates } from "../../../../../utils/format";
 import "./styles.scss";
 
-export default function RateCard({ nb, label, loading, tooltipText }: { nb: number; label: string; loading: boolean; tooltipText?: string }) {
+interface RateCardProps {
+  nb: number;
+  label: string;
+  loading: boolean;
+  tooltipText?: string;
+  numerator?: number;
+  denominator?: number;
+  numeratorLabel?: string;
+  denominatorLabel?: string;
+}
+
+export default function RateCard({ nb, label, loading, tooltipText, numerator, denominator, numeratorLabel, denominatorLabel }: RateCardProps) {
   const tooltipId = useId();
 
   return (
@@ -30,6 +41,18 @@ export default function RateCard({ nb, label, loading, tooltipText }: { nb: numb
               )}
             </div>
             <p className="nb">{formatToRates(nb)}</p>
+            {numerator !== undefined && denominator !== undefined && (
+              <div className="calculation-details">
+                <div className="calculation-item">
+                  <span className="calculation-label">{numeratorLabel}</span>
+                  <span className="calculation-value">{numerator.toLocaleString()}</span>
+                </div>
+                <div className="calculation-item">
+                  <span className="calculation-label">{denominatorLabel}</span>
+                  <span className="calculation-value">{denominator.toLocaleString()}</span>
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="bottom-progress-bar">

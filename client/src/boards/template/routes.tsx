@@ -1,5 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 
+import NotFoundPage from "../../components/not-found-page.tsx";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import { getI18nLabel } from "../../utils";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
@@ -21,11 +22,13 @@ export default function TemplateRoutes() {
     <Routes>
       <Route element={<GlobalLayout languageSelector />}>
         <Route index element={<Navigate to="home" replace />} />
+        <Route path="" element={<Navigate to="home" replace />} />
         <Route path="home" element={<RouteWithTitle titleKey="home" element={<Home />} />} />
         <Route element={<SidemenuLayout />}>
           <Route path="overview" element={<RouteWithTitle titleKey="overview" element={<Overview />} />} />
         </Route>
       </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

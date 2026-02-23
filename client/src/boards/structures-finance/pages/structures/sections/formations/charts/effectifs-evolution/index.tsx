@@ -4,7 +4,7 @@ import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import { createStackedEvolutionChartOptions } from "./options";
 import { RenderDataStacked } from "./render-data";
-import { CHART_COLORS } from "../../../../../../constants/colors";
+import { getCssColor } from "../../../../../../../../utils/colors";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../../../components/charts-skeletons/default";
 
@@ -28,12 +28,12 @@ const VIEWS_CONFIG: Record<
     categories: {
       effectif_sans_cpge_l: {
         label: "Licence",
-        color: CHART_COLORS.palette[0],
+        color: getCssColor("scale-1"),
       },
-      effectif_sans_cpge_m: { label: "Master", color: CHART_COLORS.palette[1] },
+      effectif_sans_cpge_m: { label: "Master", color: getCssColor("scale-2") },
       effectif_sans_cpge_d: {
         label: "Doctorat",
-        color: CHART_COLORS.palette[2],
+        color: getCssColor("scale-3"),
       },
     },
   },
@@ -52,35 +52,35 @@ const VIEWS_CONFIG: Record<
     categories: {
       effectif_sans_cpge_deg0: {
         label: "BAC ou inférieur",
-        color: CHART_COLORS.palette[0],
+        color: getCssColor("scale-1"),
       },
       effectif_sans_cpge_deg1: {
         label: "BAC + 1",
-        color: CHART_COLORS.palette[1],
+        color: getCssColor("scale-2"),
       },
       effectif_sans_cpge_deg2: {
         label: "BAC + 2",
-        color: CHART_COLORS.palette[2],
+        color: getCssColor("scale-3"),
       },
       effectif_sans_cpge_deg3: {
         label: "BAC + 3",
-        color: CHART_COLORS.palette[3],
+        color: getCssColor("scale-4"),
       },
       effectif_sans_cpge_deg4: {
         label: "BAC + 4",
-        color: CHART_COLORS.palette[4],
+        color: getCssColor("scale-5"),
       },
       effectif_sans_cpge_deg5: {
         label: "BAC + 5",
-        color: CHART_COLORS.palette[5],
+        color: getCssColor("scale-6"),
       },
       effectif_sans_cpge_deg6: {
         label: "BAC + 6 et +",
-        color: CHART_COLORS.palette[6],
+        color: getCssColor("scale-7"),
       },
       effectif_sans_cpge_deg9: {
         label: "Indéterminé",
-        color: CHART_COLORS.palette[7],
+        color: getCssColor("scale-8"),
       },
     },
   },
@@ -99,35 +99,35 @@ const VIEWS_CONFIG: Record<
     categories: {
       effectif_sans_cpge_dsa: {
         label: "Droit, Sc. éco., AES",
-        color: CHART_COLORS.palette[0],
+        color: getCssColor("scale-1"),
       },
       effectif_sans_cpge_llsh: {
         label: "Lettres, Langues, SHS",
-        color: CHART_COLORS.palette[1],
+        color: getCssColor("scale-2"),
       },
       effectif_sans_cpge_si: {
         label: "Sciences et Ingénierie",
-        color: CHART_COLORS.palette[2],
+        color: getCssColor("scale-3"),
       },
       effectif_sans_cpge_sante: {
         label: "Santé",
-        color: CHART_COLORS.palette[3],
+        color: getCssColor("scale-4"),
       },
       effectif_sans_cpge_staps: {
         label: "STAPS",
-        color: CHART_COLORS.palette[4],
+        color: getCssColor("scale-5"),
       },
       effectif_sans_cpge_theo: {
         label: "Théologie",
-        color: CHART_COLORS.palette[5],
+        color: getCssColor("scale-6"),
       },
       effectif_sans_cpge_veto: {
         label: "Vétérinaire",
-        color: CHART_COLORS.palette[6],
+        color: getCssColor("scale-7"),
       },
       effectif_sans_cpge_interd: {
         label: "Pluridisciplinaire",
-        color: CHART_COLORS.palette[7],
+        color: getCssColor("scale-8"),
       },
     },
   },
@@ -137,11 +137,11 @@ const VIEWS_CONFIG: Record<
     categories: {
       effectif_sans_cpge_dn: {
         label: "Diplômes nationaux",
-        color: CHART_COLORS.palette[0],
+        color: getCssColor("scale-1"),
       },
       effectif_sans_cpge_du: {
         label: "Diplômes d'établissement",
-        color: CHART_COLORS.palette[1],
+        color: getCssColor("scale-2"),
       },
     },
   },

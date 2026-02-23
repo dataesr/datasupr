@@ -4,10 +4,10 @@ import NotFoundPage from "../../components/not-found-page.tsx";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import { getI18nLabel } from "../../utils";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
+import i18n from "./i18n.json";
 import Comparison from "./pages/comparison/index.tsx";
 import Home from "./pages/home/index.tsx";
 import Structures from "./pages/structures/index.tsx";
-import i18n from "./title-i18n.json";
 
 import "./styles.scss";
 
@@ -15,7 +15,6 @@ const RouteWithTitle = ({ titleKey, element }) => {
   useTitle(getI18nLabel(i18n, titleKey))
   return element;
 };
-
 
 export default function FundingsRoutes() {
   return (

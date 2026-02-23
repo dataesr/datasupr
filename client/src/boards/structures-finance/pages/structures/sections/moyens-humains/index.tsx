@@ -1,11 +1,10 @@
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
-import { SECTION_COLORS } from "../../../../constants/colors";
 import { useMetricEvolution } from "../api";
-import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
+import { MetricChartCard } from "../../components/metric-chart-card";
 import "../styles.scss";
-import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
-
-const SECTION_COLOR = SECTION_COLORS.moyensHumains;
+import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
+import { SectionBudgetWarning } from "../../../../components/section-budget-warning";
+import { getCssColor } from "../../../../../../utils/colors";
 
 interface MoyensHumainsSectionProps {
   data: any;
@@ -29,6 +28,14 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
         </Title>
       </div>
 
+      <SectionBudgetWarning
+        metrics={[
+          "charges_de_personnel",
+          "charges_de_personnel_produits_encaissables",
+          "taux_de_remuneration_des_permanents",
+        ]}
+      />
+
       <div className="fr-mb-5w">
         <Row gutters>
           <Col xs="12" md="6">
@@ -43,7 +50,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                   : "—"
               }
               detail="Équivalent temps plein travaillé (ETPT)"
-              color={SECTION_COLOR}
+              color={getCssColor("section-moyens-humains")}
               evolutionData={useMetricEvolution("emploi_etpt")}
               unit="ETPT"
             />
@@ -66,7 +73,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                     )} étudiants`
                   : "Enseignants permanents"
               }
-              color={SECTION_COLOR}
+              color={getCssColor("section-moyens-humains")}
               evolutionData={useMetricEvolution("taux_encadrement")}
               unit="%"
             />
@@ -93,9 +100,10 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                   : "—"
               }
               detail="Dépenses de masse salariale"
-              color={SECTION_COLOR}
+              color={getCssColor("section-moyens-humains")}
               evolutionData={useMetricEvolution("charges_de_personnel")}
               unit="€"
+              metricKey="charges_de_personnel"
             />
           </Col>
           <Col xs="12" sm="6" md="4">
@@ -113,35 +121,38 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                   : "—"
               }
               detail="Part des produits encaissables"
-              color={SECTION_COLOR}
+              color={getCssColor("section-moyens-humains")}
               evolutionData={useMetricEvolution(
                 "charges_de_personnel_produits_encaissables"
               )}
               unit="%"
+              metricKey="charges_de_personnel_produits_encaissables"
             />
           </Col>
-          <Col xs="12" md="4">
-            <MetricChartCard
-              title="Rémunération permanents"
-              value={
-                data.taux_de_remuneration_des_permanents != null
-                  ? `${data.taux_de_remuneration_des_permanents.toLocaleString(
-                      "fr-FR",
-                      {
-                        minimumFractionDigits: 1,
-                        maximumFractionDigits: 1,
-                      }
-                    )} %`
-                  : "—"
-              }
-              detail="Part des dépenses de personnel"
-              color={SECTION_COLOR}
-              evolutionData={useMetricEvolution(
-                "taux_de_remuneration_des_permanents"
-              )}
-              unit="%"
-            />
-          </Col>
+          {data?.is_rce && (
+            <Col xs="12" md="4">
+              <MetricChartCard
+                title="Rémunération permanents"
+                value={
+                  data.taux_de_remuneration_des_permanents != null
+                    ? `${data.taux_de_remuneration_des_permanents.toLocaleString(
+                        "fr-FR",
+                        {
+                          minimumFractionDigits: 1,
+                          maximumFractionDigits: 1,
+                        }
+                      )} %`
+                    : "—"
+                }
+                detail="Part des dépenses de personnel"
+                color={getCssColor("section-moyens-humains")}
+                evolutionData={useMetricEvolution(
+                  "taux_de_remuneration_des_permanents"
+                )}
+                unit="%"
+              />
+            </Col>
+          )}
         </Row>
       </div>
 

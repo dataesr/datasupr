@@ -1,7 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 
-import Home from "./index.tsx";
+import NotFoundPage from "../../components/not-found-page.tsx";
 import { Layout } from "../../layout/layout.tsx";
+import Home from "./index.tsx";
+
 
 export default function GraduatesRoutes() {
   return (
@@ -9,6 +11,7 @@ export default function GraduatesRoutes() {
       <Route element={<Layout languageSelector />}>
         <Route path="/" element={<Home />} />
       </Route>
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }

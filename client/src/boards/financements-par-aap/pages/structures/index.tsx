@@ -2,9 +2,8 @@ import { Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import CardSimple from "../../../../components/card-simple";
+import CardSimple from "./components/card-simple";
 import Breadcrumb from "../../components/breadcrumb";
-import { years } from "../../utils";
 import StructureSelector from "./components/structure-selector";
 import DisplayStructure from "./displayStructure";
 
@@ -14,13 +13,11 @@ import "./styles.scss";
 export default function Structures() {
   const [searchParams, setSearchParams] = useSearchParams();
   const structure = searchParams.get("structure");
-  const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
-  const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
   const [structures, setStructures] = useState([]);
 
   useEffect(() => {
     if (!searchParams.get("section")) {
-      searchParams.set("section", "financements");
+      searchParams.set("section", "apercu");
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams]);
@@ -31,7 +28,7 @@ export default function Structures() {
   };
 
   return (
-    (Number(yearMin) <= Number(yearMax)) && structure ? (
+    structure ? (
       <DisplayStructure />
     ) : (
       <>

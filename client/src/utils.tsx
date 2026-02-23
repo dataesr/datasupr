@@ -1,6 +1,4 @@
 import Cookies from "js-cookie";
-import { useSearchParams } from "react-router-dom";
-
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 type Geo = {
@@ -133,10 +131,7 @@ async function getNeighbouringCountriesFromIso3(iso3: string) {
   }
 }
 
-function getI18nLabel(i18n: Record<string, unknown>, key: string) {
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
-
+function getI18nLabel(i18n: Record<string, unknown>, key: string, currentLang: string = "fr") {
   try {
     const keys = key.split(".");
     let value: Record<string, unknown> = i18n;
@@ -162,7 +157,7 @@ function deepMerge(target, source) {
   if (!isObject(target) || !isObject(source)) {
     return source;
   }
-  Object.keys(source).forEach(key => {
+  Object.keys(source).forEach((key) => {
     const targetValue = target[key];
     const sourceValue = source[key];
     if (Array.isArray(targetValue) && Array.isArray(sourceValue)) {
@@ -174,7 +169,31 @@ function deepMerge(target, source) {
     }
   });
   return target;
-};
+}
+
+/**
+ * Whether the client is running in development mode
+ * @returns boolean
+ */
+function isInDevelopment() {
+  return import.meta.env.MODE === 'development';
+}
+
+/**
+ * Whether the client is running in production mode
+ * @returns boolean
+ */
+function isInProduction() {
+  return import.meta.env.MODE === 'production';
+}
+
+/**
+ * Whether the client is running in staging mode
+ * @returns boolean
+ */
+function isInStaging() {
+  return import.meta.env.MODE === 'staging';
+}
 
 export {
   clearAllfavoriteIdsInCookie,
@@ -187,6 +206,8 @@ export {
   getParentFromLevel,
   getSortedfavoriteIdsInCookie,
   getThemeFromHtmlNode,
+  isInDevelopment,
+  isInProduction,
+  isInStaging,
   setfavoriteIdsInCookie,
 };
-

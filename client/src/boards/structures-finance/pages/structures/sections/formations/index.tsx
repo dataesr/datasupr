@@ -1,12 +1,10 @@
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import EffectifsChart from "./charts/effectifs";
-import { MetricChartCard } from "../../../../../../components/metric-chart-card/metric-chart-card";
-import { SECTION_COLORS } from "../../../../constants/colors";
+import { MetricChartCard } from "../../components/metric-chart-card";
 import { useMetricEvolution } from "../api";
 import "../styles.scss";
-import MetricDefinitionsTable from "../../../../components/layouts/metric-definitions-table";
-
-const SECTION_COLOR = SECTION_COLORS.diplomesFormations;
+import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
+import { getCssColor } from "../../../../../../utils/colors";
 
 interface EtudiantsSectionProps {
   data: any;
@@ -48,7 +46,7 @@ export function EtudiantsSection({
               title="Total des étudiants"
               value={`${num(data.effectif_sans_cpge)} étudiants inscrits`}
               detail="Hors doubles inscriptions CPGE"
-              color={SECTION_COLOR}
+              color={getCssColor("section-diplomes-formations")}
               evolutionData={effectifEvolution}
             />
           </Col>
@@ -57,7 +55,7 @@ export function EtudiantsSection({
               title="Dont dans les diplômes nationaux"
               value={num(data.effectif_sans_cpge_dn)}
               detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_dn / data.effectif_sans_cpge) * 100).toFixed(1) : 0}% du total des étudiants inscrits`}
-              color={SECTION_COLOR}
+              color={getCssColor("section-diplomes-formations")}
               evolutionData={effectifDnEvolution}
             />
           </Col>
@@ -66,7 +64,7 @@ export function EtudiantsSection({
               title="Dont dans les diplômes d'établissement"
               value={num(data.effectif_sans_cpge_du)}
               detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_du / data.effectif_sans_cpge) * 100).toFixed(1) : 0}% du total des étudiants inscrits`}
-              color={SECTION_COLOR}
+              color={getCssColor("section-diplomes-formations")}
               evolutionData={effectifDuEvolution}
             />
           </Col>

@@ -1,4 +1,4 @@
-import { CHART_COLORS } from "../../../../../../constants/colors";
+import { getCssColor } from "../../../../../../../../utils/colors";
 
 const euro = (n?: number) =>
   n != null ? n.toLocaleString("fr-FR", { maximumFractionDigits: 0 }) : "—";
@@ -40,67 +40,67 @@ export function RenderData({ data }: RenderDataProps) {
       label: "Droits d'inscription",
       value: data?.droits_d_inscription,
       part: data?.part_droits_d_inscription,
-      color: CHART_COLORS.palette[0],
+      color: getCssColor("ress-droits-inscription"),
     },
     {
       label: "Formation continue",
       value: data?.formation_continue_diplomes_propres_et_vae,
       part: data?.part_formation_continue_diplomes_propres_et_vae,
-      color: CHART_COLORS.palette[1],
+      color: getCssColor("ress-formation-continue"),
     },
     {
       label: "Taxe d'apprentissage",
       value: data?.taxe_d_apprentissage,
       part: data?.part_taxe_d_apprentissage,
-      color: CHART_COLORS.palette[2],
+      color: getCssColor("ress-taxe-apprentissage"),
     },
     {
       label: "Valorisation",
       value: data?.valorisation,
       part: data?.part_valorisation,
-      color: CHART_COLORS.palette[3],
+      color: getCssColor("ress-valorisation"),
     },
     {
       label: "ANR hors investissements d'avenir",
       value: data?.anr_hors_investissements_d_avenir,
       part: data?.part_anr_hors_investissements_d_avenir,
-      color: CHART_COLORS.palette[4],
+      color: getCssColor("ress-anr-hors-ia"),
     },
     {
       label: "ANR investissements d'avenir",
       value: data?.anr_investissements_d_avenir,
       part: data?.part_anr_investissements_d_avenir,
-      color: CHART_COLORS.palette[5],
+      color: getCssColor("ress-anr-ia"),
     },
     {
       label: "Contrats & prestations",
       value: data?.contrats_et_prestations_de_recherche_hors_anr,
       part: data?.part_contrats_et_prestations_de_recherche_hors_anr,
-      color: CHART_COLORS.palette[6],
+      color: getCssColor("ress-contrats-recherche"),
     },
     {
       label: "Subventions région",
       value: data?.subventions_de_la_region,
       part: data?.part_subventions_de_la_region,
-      color: CHART_COLORS.palette[7],
+      color: getCssColor("ress-subventions-region"),
     },
     {
       label: "Subventions UE",
       value: data?.subventions_union_europeenne,
       part: data?.part_subventions_union_europeenne,
-      color: CHART_COLORS.palette[8],
+      color: getCssColor("ress-subventions-ue"),
     },
     {
       label: "Autres ressources",
       value: data?.autres_ressources_propres,
       part: data?.part_autres_ressources_propres,
-      color: CHART_COLORS.palette[9],
+      color: getCssColor("ress-autres-ressources"),
     },
     {
       label: "Autres subventions",
       value: data?.autres_subventions,
       part: data?.part_autres_subventions,
-      color: CHART_COLORS.palette[10],
+      color: getCssColor("ress-autres-subventions"),
     },
   ];
 

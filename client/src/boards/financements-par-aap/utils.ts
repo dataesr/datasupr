@@ -1,10 +1,8 @@
-import HighchartsInstance from "highcharts";
-
-import { createChartOptions } from "../../components/chart-wrapper/default-options";
 import { getCssColor as getCssColorGlobal } from "../../utils/colors";
-import { deepMerge } from "../../utils";
 
 const funders = ["ANR", "PIA ANR", "PIA hors ANR", "Horizon 2020", "Horizon Europe"];
+
+const pattern = { height: 4, path: "M 2 2 l 2 2", width: 4 };
 
 const typologiesExcluded = ["Entreprises", "Infrastructures de recherche", "Structures de recherche"];
 
@@ -24,11 +22,16 @@ const formatPercent = (number: number, decimals: number = 0): string => {
   return formatter.format(number);
 };
 
-const getCssColor = ({ name, prefix = "" }: { name: string, prefix?: string }) => {
+const getCssColor = ({ name, prefix = "" }: { name: string, prefix?: string }): string => {
   let variableName: string = "";
   if (prefix?.length > 0) variableName += `${prefix}-`;
   variableName += name.toLowerCase().replace(/[^0-9a-z ]/g, "").replace(/  +/g, " ").replaceAll(" ", "-");
-  return getCssColorGlobal(variableName);
+  let color = getCssColorGlobal(variableName);
+  if (color === '') {
+    console.error(`No CSS color for ${variableName}`);
+    color = "#c3c3c3";
+  }
+  return color;
 };
 
 const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
@@ -56,21 +59,6 @@ const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = y
   return query;
 };
 
-const getGeneralOptions = (
-  title: HighchartsInstance.TitleOptions["text"],
-  categories: HighchartsInstance.XAxisOptions["categories"],
-  title_x_axis: HighchartsInstance.XAxisTitleOptions["text"],
-  title_y_axis: HighchartsInstance.YAxisTitleOptions["text"],
-  type: HighchartsInstance.ChartOptions["type"] = "bar",
-) => {
-  return createChartOptions(type, {
-    chart: { height: "600px" },
-    title: { text: title },
-    xAxis: { categories, title: { text: title_x_axis } },
-    yAxis: { title: { text: title_y_axis } },
-  });
-};
-
 const getYearRangeLabel = ({ isBold = false, yearMax, yearMin }: { isBold?: boolean, yearMax: string | null, yearMin: string | null }): string => {
   let label = "";
   if (yearMin === yearMax) {
@@ -92,13 +80,12 @@ const getYearRangeLabel = ({ isBold = false, yearMax, yearMin }: { isBold?: bool
 };
 
 export {
-  deepMerge,
   formatCompactNumber,
   formatPercent,
   funders,
   getCssColor,
   getEsQuery,
-  getGeneralOptions,
   getYearRangeLabel,
+  pattern,
   years,
 };

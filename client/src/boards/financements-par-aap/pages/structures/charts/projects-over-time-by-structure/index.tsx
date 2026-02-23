@@ -1,4 +1,4 @@
-import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
+import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import HighchartsInstance from "highcharts";
 import { useState } from "react";
@@ -6,14 +6,16 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings/index.tsx";
-import { deepMerge, formatCompactNumber, funders, getCssColor, getEsQuery, getGeneralOptions, years } from "../../../../utils.ts";
+import { getI18nLabel } from "../../../../../../utils";
+import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
+import SegmentedControl from "../../../../components/segmented-control";
+import i18n from "../../../../i18n.json";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, pattern, years } from "../../../../utils.ts";
 
-const { VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
-
+const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function ProjectsOverTimeByStructure({ name }: { name: string | undefined }) {
-  const [field, setField] = useState("projects");
+  const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const color = useChartColor();
@@ -27,19 +29,31 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
           size: 50,
         },
         aggregations: {
-          by_project_year: {
+          is_coordinator: {
             terms: {
-              field: "project_year",
+              field: "participation_is_coordinator",
             },
             aggregations: {
-              unique_projects: {
-                cardinality: {
-                  field: "project_id.keyword",
+              by_project_year: {
+                terms: {
+                  field: "project_year",
                 },
-              },
-              sum_budget: {
-                sum: {
-                  field: "project_budgetTotal",
+                aggregations: {
+                  unique_projects: {
+                    cardinality: {
+                      field: "project_id.keyword",
+                    },
+                  },
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
+                  sum_budget_participation: {
+                    sum: {
+                      field: "participation_funding",
+                    },
+                  },
                 },
               },
             },
@@ -52,7 +66,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   const { data, isLoading } = useQuery({
     queryKey: ["funding-projects-over-time-by-structure", structure],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_FUNDINGS_ES_INDEX_PARTICIPATIONS}`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -62,46 +76,102 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
       }).then((response) => response.json()),
   });
 
-  const series = funders.map((funder) => ({
-    color: getCssColor({ name: funder, prefix: "funder" }),
-    data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.by_project_year?.buckets.find((item) => item.key === year)?.[field === "projects" ? "unique_projects" : "sum_budget"]?.value ?? 0),
-    marker: { enabled: false },
-    name: funder
-  })).reverse();
+  const seriesBudget: any[] = [];
+  const seriesParticipation: any[] = [];
+  const seriesProject: any[] = [];
+  funders.map((funder) => {
+    seriesBudget.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.sum_budget?.value ?? 0),
+      marker: { enabled: false },
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesBudget.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.sum_budget?.value ?? 0),
+      marker: { enabled: false },
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesParticipation.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.sum_budget_participation?.value ?? 0),
+      marker: { enabled: false },
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesParticipation.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.sum_budget_participation?.value ?? 0),
+      marker: { enabled: false },
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesProject.push({
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
+      marker: { enabled: false },
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesProject.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
+      marker: { enabled: false },
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+  });
 
-  const titleProjects = `Evolution temporelle du nombre de projets auxquels participe l'établissement (${name})`;
-  const titleBudget = `Evolution temporelle du montant financé pour les projets auxquels participe l'établissement (${name})`;
-  const axisProjects = "Nombre de projets financés";
-  const axisBudget = "Montants financés (€)";
-  const tooltipProjects = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> auxquels prend part <b>${name}</b>`;
-  };
-  const tooltipBudget = function (this: any) {
-    return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
-  };
   const config = {
-    comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs montants associés, ventilée par financeur, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Pour les financements européens, Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027. Les montants indiqués reflètent le financement global des projets auxquels l’établissement participe et ne correspondent pas aux sommes effectivement perçues par celui-ci.</> },
+    comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets, des financements globaux et des financements perçus, ventilée par financeur, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Pour les financements européens, Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
     id: "projectsOverTimeByStructure",
   };
 
-  const localOptions = {
+  // If view by number of projects
+  let axis = getI18nLabel(i18n, 'number_of_projects_funded');
+  let series = seriesProject.reverse();
+  let title = `Evolution temporelle du nombre de projets auxquels participe l'établissement (${name})`;
+  let tooltip = function (this: any) {
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> auxquels prend part <b>${name}</b>`;
+  };
+  switch (selectedControl) {
+    // If view by global amount
+    case 'amount_global':
+      axis = getI18nLabel(i18n, 'funding_total');
+      series = seriesBudget.reverse();
+      title = `Evolution temporelle des financements globaux pour les projets auxquels participe l'établissement (${name})`;
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
+      };
+      break;
+    // If view by amount by structure
+    case 'amount_by_structure':
+      axis = getI18nLabel(i18n, 'funding_by_structure');
+      series = seriesParticipation.reverse();
+      title = `Evolution temporelle des financements perçus pour les projets auxquels participe l'établissement (${name})`;
+      tooltip = function (this: any) {
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
+      };
+      break;
+  }
+
+  const options: HighchartsInstance.Options = {
+    chart: { type: "area" },
     legend: { enabled: true, reversed: true },
     plotOptions: {
-      series: { pointStart: Number(years[0]) },
+      series: { legendSymbol: "rectangle", pointStart: Number(years[0]) },
       area: {
-        stacking: "normal",
         marker: {
           enabled: false,
           lineColor: "#666666",
           lineWidth: 1,
-          symbol: "circle"
-        }
-      }
+          symbol: "circle",
+        },
+        stacking: "normal",
+      },
     },
     series,
-    tooltip: { formatter: field === "projects" ? tooltipProjects : tooltipBudget },
+    title: { text: "" },
+    tooltip: { formatter: tooltip },
+    xAxis: { categories: [], title: { text: "Année de début du projet" } },
+    yAxis: { title: { text: axis } },
   };
-  const options: HighchartsInstance.Options = deepMerge(getGeneralOptions("", [], "Année de début du projet", field === "projects" ? axisProjects : axisBudget, "area"), localOptions);
 
   // TODO: implement it later
   // const renderData = (options: HighchartsInstance.Options) => {
@@ -148,13 +218,10 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   return (
     <div className={`chart-container chart-container--${color}`} id="projects-over-time-by-structure">
       <Title as="h2" look="h6">
-        {field === "projects" ? titleProjects : titleBudget}
+        {title}
       </Title>
-      <SegmentedControl name="projects-over-time-by-structure-segmented">
-        <SegmentedElement checked={field === "projects"} label="Nombre de projets financés" onClick={() => setField("projects")} value="projects" />
-        <SegmentedElement checked={field === "budget"} label="Montants financés" onClick={() => setField("budget")} value="budget" />
-      </SegmentedControl>
-      {isLoading ? <DefaultSkeleton height={String(options?.chart?.height)} /> : <ChartWrapperFundings config={config} options={options} />}
+      <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );
 }

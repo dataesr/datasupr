@@ -1,0 +1,45 @@
+.efficiency-scatter {
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: right;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  &__buttons {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  &__framework-btn {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    border: 1px solid var(--border-default-grey);
+    border-radius: 4px;
+    background: var(--background-default-grey);
+    cursor: pointer;
+    font-weight: normal;
+    transition: all 0.2s ease;
+
+    &--active {
+      border: 2px solid var(--text-active-blue-france);
+      background: var(--background-action-low-blue-france);
+      font-weight: bold;
+    }
+  }
+
+  &__select {
+    min-width: 200px;
+  }
+}
+
+@keyframes efficiency-scatter-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}

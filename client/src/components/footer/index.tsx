@@ -16,7 +16,7 @@ export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { h
         <div className="fr-footer__body">
           <div className="fr-footer__brand fr-enlarge-link">
             <a href={href} title={title}>
-              <Logo splitCharacter="<br>" text={VITE_MINISTER_NAME} />
+              <Logo text={VITE_MINISTER_NAME} />
             </a>
           </div>
           <div>

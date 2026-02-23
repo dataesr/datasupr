@@ -2,14 +2,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
 import { GetData } from "./query";
-import optionsSubsidiesValues from "./options-values";
-import optionsSubsidiesCountryRates from "./options-success-rates";
+import optionsValues from "./options-values";
+import optionsSuccessRates from "./options-success-rates";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import { getDefaultParams, successRatesReadingKey, valuesSuccessReadingKey, renderDataTable, renderDataTableRates } from "./utils";
 import { Container, Row, Col } from "@dataesr/dsfr-plus";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useState } from "react";
+import { getI18nLabel } from "../../../../../../utils";
 
 import i18nLocal from "./i18n.json";
 import i18nGlobal from "../../../../i18n-global.json";
@@ -39,13 +40,13 @@ export default function PillarsFundingEvo3Years() {
   const configChart1 = {
     id: "pillarsEvolutionFundingLines",
     title: {
-      fr: "Evolution des subventions demandées et obtenues (M€) sur Horizon Europe - 3 dernières années",
+      fr: "Evolution des financements demandées et obtenues (M€) sur Horizon Europe - 3 dernières années",
       en: "Financing applied for and obtained (€m) evolution on Horizon Europe - last 3 years",
     },
     comment: {
       fr: (
         <>
-          Ce graphique montre l'évolution des subventions demandées et obtenues pour les piliers du programme Horizon Europe sur les trois dernières
+          Ce graphique montre l'évolution des financements demandés et obtenus pour les piliers du programme Horizon Europe sur les trois dernières
           années. Les barres représentent les montants demandés et obtenus. La ligne verte indique le taux de succès correspondant.
         </>
       ),
@@ -64,13 +65,11 @@ export default function PillarsFundingEvo3Years() {
   const configChart3 = {
     id: "pillarsEvolutionFundingLinesSuccessRate",
     title: {
-      fr: "Part des subventions du pays demandées et obtenues par rapport au total des participants",
+      fr: "Part des financements du pays demandés et obtenus par rapport au total des participants",
       en: "Percentage of country funding applied for and obtained as a proportion of total participants",
     },
     comment: {
-      fr: (
-        <>Ce graphique montre le pourcentage des subventions demandées et obtenues par le pays sélectionné par rapport au total des participants.</>
-      ),
+      fr: <>Ce graphique montre le pourcentage des financements demandés et obtenus par le pays sélectionné par rapport au total des participants.</>,
       en: <>This chart shows the percentage of funding applied for and obtained by the selected country as a proportion of total participants.</>,
     },
     readingKey: successRatesReadingKey(data, displayType),
@@ -83,18 +82,14 @@ export default function PillarsFundingEvo3Years() {
     ...i18nGlobal,
   };
 
-  function getI18nLabel(key) {
-    return i18n[key][currentLang];
-  }
-
   return (
     <Container fluid className="chart-container chart-container--pillars">
       <Row className="fr-my-1w">
         <Col>
           <select className="fr-select" onChange={(e) => setDisplayType(e.target.value)}>
-            <option value="total_fund_eur">{getI18nLabel("total-fund-eur")}</option>
-            <option value="total_coordination_number">{getI18nLabel("total-coordination-number")}</option>
-            <option value="total_number_involved">{getI18nLabel("total-number-involved")}</option>
+            <option value="total_fund_eur">{getI18nLabel(i18n, "total-fund-eur")}</option>
+            <option value="total_coordination_number">{getI18nLabel(i18n, "total-coordination-number")}</option>
+            <option value="total_number_involved">{getI18nLabel(i18n, "total-number-involved")}</option>
           </select>
         </Col>
       </Row>
@@ -102,7 +97,7 @@ export default function PillarsFundingEvo3Years() {
         <Col md={12}>
           <ChartWrapper
             config={configChart1}
-            options={optionsSubsidiesValues(data, displayType, currentLang)}
+            options={optionsValues(data, displayType, currentLang)}
             renderData={() => renderDataTable(data, currentLang, displayType)}
           />
         </Col>
@@ -111,7 +106,7 @@ export default function PillarsFundingEvo3Years() {
         <Col>
           <ChartWrapper
             config={configChart3}
-            options={optionsSubsidiesCountryRates(data, displayType, currentLang)}
+            options={optionsSuccessRates(data, displayType, currentLang)}
             renderData={() => renderDataTableRates(data, currentLang, displayType)}
           />
         </Col>

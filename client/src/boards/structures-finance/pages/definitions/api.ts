@@ -3,11 +3,20 @@ import { useQuery } from "@tanstack/react-query";
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 export interface Definition {
+  calculfr: string;
   indicateur: string;
   libelle: string;
+  PageDefinition: boolean;
   definition: string;
   interpretation: string;
-  source: string;
+  source1fr?: string | null;
+  opendata1?: string | null;
+  source2fr?: string | null;
+  opendata2?: string | null;
+  source3fr?: string | null;
+  opendata3?: string | null;
+  source4fr?: string | null;
+  opendata4?: string | null;
   unite: string;
   ale_sens?: "sup" | "inf" | "infegal" | null;
   ale_val?: number | null;
@@ -15,6 +24,7 @@ export interface Definition {
   vig_min?: number | null;
   vig_max?: number | null;
   vig_lib?: string | null;
+  sens?: "augmentation" | "diminution" | null;
 }
 
 export interface DefinitionCategory {
