@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import ItemFilter, {
   type FilterItem,
 } from "../../../../../components/item-filter";
@@ -21,13 +21,11 @@ export default function AnalysisFilter({
   const [selectedCategory, setSelectedCategory] = useState<string>(
     "Ressources financières"
   );
-  const items: FilterItem[] = useMemo(() => {
-    return Object.entries(PREDEFINED_ANALYSES).map(([key, analysis]) => ({
-      key,
-      label: analysis.label,
-      category: analysis.category,
-    }));
-  }, []);
+  const items: FilterItem[] = Object.entries(PREDEFINED_ANALYSES).map(([key, analysis]) => ({
+    key,
+    label: analysis.label,
+    category: analysis.category,
+  }));
 
   return (
     <ItemFilter

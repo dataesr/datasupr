@@ -51,14 +51,14 @@ export default function ComparisonBarChart({
   const getMetricLabel = useMetricLabel();
 
   const partMetric = METRIC_TO_PART[baseMetric];
-  const hasPartVersion = useMemo(() => {
+  const hasPartVersion = (() => {
     if (!partMetric || !METRICS_CONFIG[partMetric] || !data?.length)
       return false;
     return data.some((item: any) => {
       const value = item[partMetric];
       return value != null && value !== 0;
     });
-  }, [partMetric, data]);
+  })();
 
   const selectedMetric: MetricKey =
     showPart && hasPartVersion && partMetric ? partMetric : baseMetric;
@@ -69,7 +69,7 @@ export default function ComparisonBarChart({
   const selectedMetricConfig =
     METRICS_CONFIG[selectedMetric] || METRICS_CONFIG["effectif_sans_cpge"];
 
-  const currentStructureHasData = useMemo(() => {
+  const currentStructureHasData = (() => {
     if (!data?.length || !currentStructureId) return false;
     const currentStructureData = data.find(
       (item) => item.etablissement_id_paysage_actuel === currentStructureId
@@ -77,7 +77,7 @@ export default function ComparisonBarChart({
     if (!currentStructureData) return false;
     const value = currentStructureData[selectedMetric];
     return value != null && value !== 0;
-  }, [data, currentStructureId, selectedMetric]);
+  })();
 
   const filteredData = useMemo(() => {
     if (!data?.length) return data;
@@ -113,7 +113,7 @@ export default function ComparisonBarChart({
     currentStructureName,
   ]);
 
-  const chartKey = useMemo(() => {
+  const chartKey = (() => {
     if (!filteredData || !Array.isArray(filteredData))
       return `comparison-${currentStructureId}`;
     const dataIds = filteredData
@@ -121,16 +121,16 @@ export default function ComparisonBarChart({
       .sort()
       .join(",");
     return `comparison-${currentStructureId}-${dataIds}`;
-  }, [currentStructureId, filteredData]);
+  })();
 
-  const isBudgetYear = useMemo(() => {
+  const isBudgetYear = (() => {
     if (!BUDGET_SENSITIVE_METRICS.has(selectedMetric)) return false;
     if (!data?.length || !currentStructureId) return false;
     const currentItem = data.find(
       (item) => item.etablissement_id_paysage_actuel === currentStructureId
     );
     return currentItem?.sanfin_source === "Budget";
-  }, [selectedMetric, data, currentStructureId]);
+  })();
 
   const formattedYear =
     selectedYear && isBudgetYear ? `${selectedYear} (Budget)` : selectedYear;

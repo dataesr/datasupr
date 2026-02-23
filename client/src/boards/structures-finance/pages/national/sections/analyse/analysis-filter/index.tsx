@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import ItemFilter, {
   type FilterItem,
 } from "../../../../../components/item-filter";
@@ -20,26 +19,22 @@ export default function AnalysisFilter({
   onSelectAnalysis,
   onSelectCategory,
 }: AnalysisFilterProps) {
-  const items: FilterItem[] = useMemo(() => {
-    return Object.entries(PREDEFINED_ANALYSES)
-      .filter(([_, analysis]) => {
-        if (analysis.showBase100) return false;
+  const items: FilterItem[] = Object.entries(PREDEFINED_ANALYSES)
+    .filter(([_, analysis]) => {
+      if (analysis.showBase100) return false;
 
-        const hasNonIpcMetric = analysis.metrics.some(
-          (metric) => !metric.includes("_ipc")
-        );
-        return hasNonIpcMetric;
-      })
-      .map(([key, analysis]) => ({
-        key,
-        label: analysis.label,
-        category: analysis.category,
-      }));
-  }, []);
+      const hasNonIpcMetric = analysis.metrics.some(
+        (metric) => !metric.includes("_ipc")
+      );
+      return hasNonIpcMetric;
+    })
+    .map(([key, analysis]) => ({
+      key,
+      label: analysis.label,
+      category: analysis.category,
+    }));
 
-  const availableKeys = useMemo(() => {
-    return new Set(items.map((item) => item.key));
-  }, [items]);
+  const availableKeys = new Set(items.map((item) => item.key));
 
   return (
     <ItemFilter

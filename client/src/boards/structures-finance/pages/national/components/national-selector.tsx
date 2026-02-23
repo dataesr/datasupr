@@ -1,6 +1,6 @@
 import { Row, Col, Container, Title, Button, Text } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
-import { useMemo, useEffect } from "react";
+import { useEffect } from "react";
 import { useFinanceYears } from "../../../api/common";
 import { useFinanceAdvancedComparison } from "../../../api/api";
 import { useNationalFilters } from "../hooks/useNationalFilters";
@@ -15,7 +15,7 @@ const DEFAULT_YEAR = "2024";
 export default function NationalSelector() {
   const [searchParams, setSearchParams] = useSearchParams();
   const { data: yearsData } = useFinanceYears();
-  const years = useMemo(() => yearsData?.years || [], [yearsData]);
+  const years = yearsData?.years || [];
 
   const yearFromUrl = searchParams.get("year") || "";
   const selectedYear = yearFromUrl || DEFAULT_YEAR;
@@ -47,10 +47,7 @@ export default function NationalSelector() {
     !!selectedYear
   );
 
-  const allItems = useMemo(() => {
-    if (!comparisonData || !comparisonData.items) return [];
-    return comparisonData.items;
-  }, [comparisonData]);
+  const allItems = comparisonData?.items || [];
 
   const {
     selectedType,

@@ -42,7 +42,6 @@ export function createThresholdPlotBands(
       zIndex: 10,
     });
   }
-  console.log(threshold.ale_val, threshold.ale_sens, threshold.ale_lib);
   // Zone d'alerte
   if (threshold.ale_val != null && threshold.ale_sens) {
     const isAbove = threshold.ale_sens === "sup";

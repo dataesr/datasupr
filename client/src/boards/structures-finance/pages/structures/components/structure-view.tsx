@@ -1,5 +1,4 @@
 import { useSearchParams } from "react-router-dom";
-import { useMemo } from "react";
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { useFinanceYears } from "../../../api/common";
 import {
@@ -33,7 +32,7 @@ export default function StructureView() {
   const section = searchParams.get("section") || "ressources";
 
   const { data: yearsData } = useFinanceYears();
-  const years = useMemo(() => yearsData?.years || [], [yearsData]);
+  const years = yearsData?.years || [];
 
   const { data: multiplesData, isLoading: isCheckingMultiples } =
     useCheckMultipleStructures(

@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import {
   Row,
   Col,
@@ -35,10 +34,7 @@ export default function DualEvolutionChart({
   onIPCChange,
   data,
 }: DualEvolutionChartProps) {
-  const hasIPCMetrics = useMemo(
-    () => baseMetrics.some((m) => m.endsWith("_ipc")),
-    [baseMetrics]
-  );
+  const hasIPCMetrics = baseMetrics.some((m) => m.endsWith("_ipc"));
 
   const chartOptions = createDualChartOptions(
     data || [],

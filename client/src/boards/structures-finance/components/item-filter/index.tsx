@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Title } from "@dataesr/dsfr-plus";
 import Select from "../select";
 import "./styles.scss";
@@ -29,18 +28,13 @@ export default function ItemFilter({
   onSelectItem,
   onSelectCategory,
 }: ItemFilterProps) {
-  const availableItems = useMemo(() => {
-    return items.filter((item) => availableKeys.has(item.key));
-  }, [items, availableKeys]);
+  const availableItems = items.filter((item) => availableKeys.has(item.key));
 
-  const categories = useMemo(() => {
-    return [...new Set(availableItems.map((item) => item.category))];
-  }, [availableItems]);
+  const categories = [...new Set(availableItems.map((item) => item.category))];
 
-  const filteredItems = useMemo(() => {
-    if (selectedCategory === "all") return availableItems;
-    return availableItems.filter((item) => item.category === selectedCategory);
-  }, [availableItems, selectedCategory]);
+  const filteredItems = selectedCategory === "all"
+    ? availableItems
+    : availableItems.filter((item) => item.category === selectedCategory);
 
   return (
     <aside className="item-filter" aria-label={title}>

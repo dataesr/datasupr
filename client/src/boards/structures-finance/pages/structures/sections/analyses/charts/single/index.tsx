@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import {
   Row,
   Col,
@@ -59,12 +58,9 @@ export default function SingleEvolutionChart({
   onPartChange,
   data,
 }: SingleEvolutionChartProps) {
-  const hasIPCMetrics = useMemo(
-    () => baseMetrics.some((m) => m.endsWith("_ipc")),
-    [baseMetrics]
-  );
+  const hasIPCMetrics = baseMetrics.some((m) => m.endsWith("_ipc"));
 
-  const partMetricKey = useMemo(() => {
+  const partMetricKey = (() => {
     if (baseMetrics.length !== 1) return null;
     const partKey = METRIC_TO_PART[baseMetrics[0]];
     if (!partKey) return null;
@@ -73,7 +69,7 @@ export default function SingleEvolutionChart({
     )
       ? partKey
       : null;
-  }, [baseMetrics, data]);
+  })();
 
   const chartOptions = createSingleChartOptions(
     data || [],

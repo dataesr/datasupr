@@ -103,7 +103,7 @@ export default function NationalChart({
     ? METRICS_CONFIG[activeMetricKey as MetricKey]
     : null;
 
-  const hasPartVersion = useMemo(() => {
+  const hasPartVersion = (() => {
     if (!analysisConfig || !data || data.length === 0) return false;
 
     let baseMetric: MetricKey;
@@ -128,7 +128,7 @@ export default function NationalChart({
       const value = item[partMetric];
       return value != null && value !== 0;
     });
-  }, [isStacked, analysisConfig, selectedMetricIndex, data]);
+  })();
 
   const chartOptions: Highcharts.Options | null = useMemo(() => {
     if (!data || !data.length || !activeMetricKey || !metricConfig) return null;

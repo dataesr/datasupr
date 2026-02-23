@@ -50,13 +50,13 @@ export default function RessourcesPropresDecompositionChart({
     );
   }, [evolutionData, viewMode]);
 
-  const years = useMemo(() => {
+  const years = (() => {
     if (!evolutionData || evolutionData.length === 0) return [];
     return evolutionData
       .map((d: any) => d.exercice)
       .filter((y: any) => typeof y === "number")
       .sort((a: number, b: number) => a - b);
-  }, [evolutionData]);
+  })();
 
   const periodText =
     years.length === 0

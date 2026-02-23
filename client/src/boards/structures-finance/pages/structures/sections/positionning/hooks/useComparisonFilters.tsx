@@ -67,7 +67,7 @@ export function useComparisonFilters(
     };
   }, [baseData, currentStructure, currentStructureId]);
 
-  const visibleCards = useMemo(() => {
+  const visibleCards = (() => {
     const hasTypeFilter = activeFilters.type === "same-type";
     const hasTypologieFilter = activeFilters.typologie === "same-typologie";
     const hasRegionFilter = activeFilters.region === "same-region";
@@ -79,7 +79,7 @@ export function useComparisonFilters(
       type: !hasAnyFilter || hasTypeFilter,
       typologie: !hasAnyFilter || hasTypologieFilter,
     };
-  }, [activeFilters.type, activeFilters.typologie, activeFilters.region]);
+  })();
 
   return {
     baseData,

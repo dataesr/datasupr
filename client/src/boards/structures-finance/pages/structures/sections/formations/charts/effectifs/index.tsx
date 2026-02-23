@@ -43,43 +43,32 @@ export default function EffectifsChart({
     );
   }, [propData, evolutionData, selectedYear]);
 
-  const hasCursusData = useMemo(() => {
-    return data?.has_effectif_l || data?.has_effectif_m || data?.has_effectif_d;
-  }, [data]);
+  const hasCursusData = data?.has_effectif_l || data?.has_effectif_m || data?.has_effectif_d;
 
-  const hasSpecifiquesData = useMemo(() => {
-    return (
-      (data?.has_effectif_iut && data?.effectif_sans_cpge_iut > 0) ||
-      (data?.has_effectif_ing && data?.effectif_sans_cpge_ing > 0) ||
-      (data?.has_effectif_sante && data?.effectif_sans_cpge_sante > 0)
-    );
-  }, [data]);
+  const hasSpecifiquesData =
+    (data?.has_effectif_iut && data?.effectif_sans_cpge_iut > 0) ||
+    (data?.has_effectif_ing && data?.effectif_sans_cpge_ing > 0) ||
+    (data?.has_effectif_sante && data?.effectif_sans_cpge_sante > 0);
 
-  const hasDisciplinesData = useMemo(() => {
-    return (
-      (data?.has_effectif_dsa && data?.effectif_sans_cpge_dsa > 0) ||
-      (data?.has_effectif_llsh && data?.effectif_sans_cpge_llsh > 0) ||
-      (data?.has_effectif_theo && data?.effectif_sans_cpge_theo > 0) ||
-      (data?.has_effectif_si && data?.effectif_sans_cpge_si > 0) ||
-      (data?.has_effectif_staps && data?.effectif_sans_cpge_staps > 0) ||
-      (data?.has_effectif_sante && data?.effectif_sans_cpge_sante > 0) ||
-      (data?.has_effectif_veto && data?.effectif_sans_cpge_veto > 0) ||
-      (data?.has_effectif_interd && data?.effectif_sans_cpge_interd > 0)
-    );
-  }, [data]);
+  const hasDisciplinesData =
+    (data?.has_effectif_dsa && data?.effectif_sans_cpge_dsa > 0) ||
+    (data?.has_effectif_llsh && data?.effectif_sans_cpge_llsh > 0) ||
+    (data?.has_effectif_theo && data?.effectif_sans_cpge_theo > 0) ||
+    (data?.has_effectif_si && data?.effectif_sans_cpge_si > 0) ||
+    (data?.has_effectif_staps && data?.effectif_sans_cpge_staps > 0) ||
+    (data?.has_effectif_sante && data?.effectif_sans_cpge_sante > 0) ||
+    (data?.has_effectif_veto && data?.effectif_sans_cpge_veto > 0) ||
+    (data?.has_effectif_interd && data?.effectif_sans_cpge_interd > 0);
 
-  const hasDegreesData = useMemo(() => {
-    return (
-      (data?.effectif_sans_cpge_deg0 || 0) > 0 ||
-      (data?.effectif_sans_cpge_deg1 || 0) > 0 ||
-      (data?.effectif_sans_cpge_deg2 || 0) > 0 ||
-      (data?.effectif_sans_cpge_deg3 || 0) > 0 ||
-      (data?.effectif_sans_cpge_deg4 || 0) > 0 ||
-      (data?.effectif_sans_cpge_deg5 || 0) > 0 ||
-      (data?.effectif_sans_cpge_deg6 || 0) > 0 ||
-      (data?.effectif_sans_cpge_deg9 || 0) > 0
-    );
-  }, [data]);
+  const hasDegreesData =
+    (data?.effectif_sans_cpge_deg0 || 0) > 0 ||
+    (data?.effectif_sans_cpge_deg1 || 0) > 0 ||
+    (data?.effectif_sans_cpge_deg2 || 0) > 0 ||
+    (data?.effectif_sans_cpge_deg3 || 0) > 0 ||
+    (data?.effectif_sans_cpge_deg4 || 0) > 0 ||
+    (data?.effectif_sans_cpge_deg5 || 0) > 0 ||
+    (data?.effectif_sans_cpge_deg6 || 0) > 0 ||
+    (data?.effectif_sans_cpge_deg9 || 0) > 0;
 
   const cursusOptions = useMemo(() => {
     if (!data) return {} as Highcharts.Options;

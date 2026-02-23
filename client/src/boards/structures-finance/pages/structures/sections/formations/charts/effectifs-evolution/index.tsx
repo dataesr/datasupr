@@ -184,12 +184,9 @@ export default function EffectifsEvolutionChart({
     );
   }, [data, viewConfig]);
 
-  const years = useMemo(() => {
-    if (!data) return [];
-    return [...new Set(data.map((d: any) => d.exercice))]
-      .filter((y): y is number => typeof y === "number")
-      .sort((a, b) => a - b);
-  }, [data]);
+  const years = !data ? [] : [...new Set(data.map((d: any) => d.exercice))]
+    .filter((y): y is number => typeof y === "number")
+    .sort((a, b) => a - b);
 
   const periodText =
     years.length === 0

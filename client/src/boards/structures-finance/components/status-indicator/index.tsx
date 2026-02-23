@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useFinanceDefinitions } from "../../pages/definitions/api";
 import "./styles.scss";
 
@@ -39,20 +38,21 @@ export default function StatusIndicator({
   const { data: definitions } = useFinanceDefinitions();
   const tooltipId = `tooltip-status-${indicateur}-${status}`;
 
-  const interpretation = useMemo(() => {
-    if (!definitions || !indicateur) return null;
+  let interpretation: string | null = null;
+  if (definitions && indicateur) {
     for (const category of definitions) {
       for (const subCategory of category.sousRubriques) {
         const def = subCategory.definitions.find(
           (d) => d.indicateur === indicateur
         );
         if (def?.interpretation) {
-          return def.interpretation;
+          interpretation = def.interpretation;
+          break;
         }
       }
+      if (interpretation) break;
     }
-    return null;
-  }, [definitions, indicateur]);
+  }
 
   const displayText = interpretation
     ? `${config.label} : ${truncateText(interpretation, MAX_CHARS)}`

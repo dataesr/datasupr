@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useFinanceDefinitions } from "../pages/definitions/api";
 import type { MetricKey } from "../config/metrics-config";
 import type { MetricSens } from "../components/metric-sort";
@@ -12,18 +11,16 @@ export function useMetricSens(
 ): MetricSens {
   const { data: definitions } = useFinanceDefinitions();
 
-  return useMemo(() => {
-    if (!definitions || !metricKey) return null;
+  if (!definitions || !metricKey) return null;
 
-    for (const category of definitions) {
-      for (const sousRubrique of category.sousRubriques) {
-        const def = sousRubrique.definitions.find(
-          (d) => d.indicateur === metricKey
-        );
-        if (def) return def.sens || null;
-      }
+  for (const category of definitions) {
+    for (const sousRubrique of category.sousRubriques) {
+      const def = sousRubrique.definitions.find(
+        (d) => d.indicateur === metricKey
+      );
+      if (def) return def.sens || null;
     }
+  }
 
-    return null;
-  }, [definitions, metricKey]);
+  return null;
 }

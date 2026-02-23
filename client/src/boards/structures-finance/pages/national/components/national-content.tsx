@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { useMemo, useEffect } from "react";
+import { useEffect } from "react";
 import { Container, Text, Title } from "@dataesr/dsfr-plus";
 import { useFinanceAdvancedComparison } from "../../../api/api";
 import { useFilteredNationalData } from "../hooks/useFilteredNationalData";
@@ -41,10 +41,7 @@ export default function NationalContent() {
       !!selectedYear
     );
 
-  const allItems = useMemo(() => {
-    if (!comparisonData || !comparisonData.items) return [];
-    return comparisonData.items;
-  }, [comparisonData]);
+  const allItems = comparisonData?.items || [];
 
   const filteredItems = useFilteredNationalData(
     allItems,

@@ -26,10 +26,7 @@ export default function SanteFinanciereTableau({
       .reverse();
   }, [evolutionData]);
 
-  const data = useMemo(() => {
-    if (propData) return propData;
-    return null;
-  }, [propData]);
+  const data = propData || null;
 
   const showResultatHorsSie =
     data?.resultat_net_comptable != null &&

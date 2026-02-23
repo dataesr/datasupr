@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Row, Col, Text } from "@dataesr/dsfr-plus";
 import ComparisonBarChart from "./comparison-bar";
 import ComparisonOverviewChart from "./comparison-overview";
@@ -78,14 +78,14 @@ export default function PositioningCharts({
     ? filterDisplayMetrics(analysisConfig.metrics)
     : [];
 
-  const selectedMetric = useMemo(() => {
+  const selectedMetric = (() => {
     if (!analysisConfig) return "effectif_sans_cpge" as MetricKey;
     if (isStacked) {
       return (displayMetrics[selectedMetricIndex] ||
         displayMetrics[0]) as MetricKey;
     }
     return analysisConfig.metrics[0] as MetricKey;
-  }, [analysisConfig, isStacked, displayMetrics, selectedMetricIndex]);
+  })();
 
   const selectedMetricConfig =
     METRICS_CONFIG[selectedMetric] || METRICS_CONFIG["effectif_sans_cpge"];

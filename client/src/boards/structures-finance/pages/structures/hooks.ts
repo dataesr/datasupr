@@ -75,17 +75,15 @@ function useAvailableTypes(allEtablissements: any[]) {
 }
 
 function useDefaultType(availableTypes: string[]) {
-  return useMemo(() => {
-    if (availableTypes.length === 0) return null;
+  if (availableTypes.length === 0) return null;
 
-    const universiteType = availableTypes.find(
-      (t) =>
-        t.toLowerCase().includes("université") ||
-        t.toLowerCase().includes("universite")
-    );
+  const universiteType = availableTypes.find(
+    (t) =>
+      t.toLowerCase().includes("université") ||
+      t.toLowerCase().includes("universite")
+  );
 
-    return universiteType || availableTypes[0];
-  }, [availableTypes]);
+  return universiteType || availableTypes[0];
 }
 
 function useAvailableRegions(

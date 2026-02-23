@@ -1,5 +1,4 @@
 import { useSearchParams } from "react-router-dom";
-import { useMemo } from "react";
 import { Col, Container, Row, Text } from "@dataesr/dsfr-plus";
 import { useStructuresFilters } from "../hooks";
 import { useFinanceYears } from "../../../api/common";
@@ -13,10 +12,10 @@ export default function StructureSelection() {
   const [, setSearchParams] = useSearchParams();
 
   const { data: yearsData, isLoading: isLoadingYears } = useFinanceYears();
-  const latestYear = useMemo(() => {
+  const latestYear = (() => {
     if (!yearsData?.years?.length) return "2024";
     return String(Math.max(...yearsData.years));
-  }, [yearsData]);
+  })();
 
   const {
     selectedType,

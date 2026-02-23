@@ -66,10 +66,7 @@ function QuickAccessSection() {
   const navigate = useNavigate();
   const [searchValue, setSearchValue] = useState("");
   const { data: yearsData } = useFinanceYears();
-  const latestYear = useMemo(
-    () => (yearsData?.years || [])[0] || "2024",
-    [yearsData]
-  );
+  const latestYear = (yearsData?.years || [])[0] || "2024";
   const { data: etablissementsData } = useFinanceEtablissements(
     String(latestYear)
   );

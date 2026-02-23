@@ -53,14 +53,14 @@ export default function ComparisonOverviewChart({
   const getMetricLabel = useMetricLabel();
 
   const partMetric = METRIC_TO_PART[config.metric as MetricKey];
-  const hasPartVersion = useMemo(() => {
+  const hasPartVersion = (() => {
     if (!partMetric || !METRICS_CONFIG[partMetric] || !allData?.length)
       return false;
     return allData.some((item: any) => {
       const value = item[partMetric];
       return value != null && value !== 0;
     });
-  }, [partMetric, allData]);
+  })();
 
   const activeMetric: MetricKey =
     showPart && hasPartVersion && partMetric
@@ -140,7 +140,7 @@ export default function ComparisonOverviewChart({
     showTypologie,
   ]);
 
-  const hasData = useMemo(() => {
+  const hasData = (() => {
     if (!datasets.length || !currentStructureId) return false;
     return datasets.some((ds) =>
       ds.data.some(
@@ -150,7 +150,7 @@ export default function ComparisonOverviewChart({
           item[activeMetric] !== 0
       )
     );
-  }, [datasets, currentStructureId, activeMetric]);
+  })();
 
   const currentStructureName =
     currentStructure?.etablissement_actuel_lib ||

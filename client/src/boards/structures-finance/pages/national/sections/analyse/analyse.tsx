@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import NationalChart from "./chart";
@@ -37,7 +37,7 @@ export function AnalyseSection({
   );
 
   const { data: yearsData } = useFinanceYears();
-  const years = useMemo(() => yearsData?.years || [], [yearsData]);
+  const years = yearsData?.years || [];
 
   const { data: comparisonData, isLoading } = useFinanceAdvancedComparison(
     {
@@ -58,15 +58,9 @@ export function AnalyseSection({
     true
   );
 
-  const allItems = useMemo(() => {
-    if (!comparisonData || !comparisonData.items) return [];
-    return comparisonData.items;
-  }, [comparisonData]);
+  const allItems = comparisonData?.items || [];
 
-  const allYearsItems = useMemo(() => {
-    if (!allYearsComparisonData || !allYearsComparisonData.items) return [];
-    return allYearsComparisonData.items;
-  }, [allYearsComparisonData]);
+  const allYearsItems = allYearsComparisonData?.items || [];
 
   const data = useFilteredNationalData(
     allItems,

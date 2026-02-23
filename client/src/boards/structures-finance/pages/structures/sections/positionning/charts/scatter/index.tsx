@@ -63,7 +63,7 @@ export default function ScatterChart({
     );
   }, [config, data, currentStructureId, currentStructureName]);
 
-  const chartKey = useMemo(() => {
+  const chartKey = (() => {
     if (!data || !Array.isArray(data))
       return `${config.xMetric}-${config.yMetric}`;
     const dataIds = data
@@ -71,9 +71,9 @@ export default function ScatterChart({
       .sort()
       .join(",");
     return `${config.xMetric}-${config.yMetric}-${currentStructureId}-${dataIds}`;
-  }, [config.xMetric, config.yMetric, currentStructureId, data]);
+  })();
 
-  const currentStructureHasData = useMemo(() => {
+  const currentStructureHasData = (() => {
     if (!data?.length || !currentStructureId) return false;
     const currentStructureData = data.find(
       (item) => item.etablissement_id_paysage_actuel === currentStructureId
@@ -82,7 +82,7 @@ export default function ScatterChart({
     const xValue = currentStructureData[config.xMetric];
     const yValue = currentStructureData[config.yMetric];
     return xValue != null && xValue !== 0 && yValue != null && yValue !== 0;
-  }, [data, currentStructureId, config.xMetric, config.yMetric]);
+  })();
 
   if (!data || data.length === 0 || !currentStructureHasData) {
     return (

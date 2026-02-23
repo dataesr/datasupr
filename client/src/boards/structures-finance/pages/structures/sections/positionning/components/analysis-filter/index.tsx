@@ -22,15 +22,13 @@ export default function AnalysisFilter({
     "Ressources financières"
   );
 
-  const items: FilterItem[] = useMemo(() => {
-    return Object.entries(PREDEFINED_ANALYSES)
-      .filter(([, analysis]) => !analysis.showBase100)
-      .map(([key, analysis]) => ({
-        key,
-        label: analysis.label,
-        category: analysis.category,
-      }));
-  }, []);
+  const items: FilterItem[] = Object.entries(PREDEFINED_ANALYSES)
+    .filter(([, analysis]) => !analysis.showBase100)
+    .map(([key, analysis]) => ({
+      key,
+      label: analysis.label,
+      category: analysis.category,
+    }));
 
   const availableKeys = useMemo(() => {
     if (!data || !Array.isArray(data)) return new Set<string>();

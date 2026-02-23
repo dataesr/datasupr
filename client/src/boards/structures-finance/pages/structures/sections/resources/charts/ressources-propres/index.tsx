@@ -44,66 +44,63 @@ export default function RessourcesPropresChart({
     return createRessourcesPropresChartOptions(data);
   }, [data]);
 
-  const ressourcesPropresDecomposition = useMemo(
-    () => [
-      {
-        label: "Droits d'inscription",
-        value: data?.droits_d_inscription,
-        part: data?.part_droits_d_inscription,
-      },
-      {
-        label: "Formation continue",
-        value: data?.formation_continue_diplomes_propres_et_vae,
-        part: data?.part_formation_continue_diplomes_propres_et_vae,
-      },
-      {
-        label: "Taxe d'apprentissage",
-        value: data?.taxe_d_apprentissage,
-        part: data?.part_taxe_d_apprentissage,
-      },
-      {
-        label: "Valorisation",
-        value: data?.valorisation,
-        part: data?.part_valorisation,
-      },
-      {
-        label: "ANR hors investissements",
-        value: data?.anr_hors_investissements_d_avenir,
-        part: data?.part_anr_hors_investissements_d_avenir,
-      },
-      {
-        label: "ANR investissements d'avenir",
-        value: data?.anr_investissements_d_avenir,
-        part: data?.part_anr_investissements_d_avenir,
-      },
-      {
-        label: "Contrats & prestations",
-        value: data?.contrats_et_prestations_de_recherche_hors_anr,
-        part: data?.part_contrats_et_prestations_de_recherche_hors_anr,
-      },
-      {
-        label: "Subventions région",
-        value: data?.subventions_de_la_region,
-        part: data?.part_subventions_de_la_region,
-      },
-      {
-        label: "Subventions UE",
-        value: data?.subventions_union_europeenne,
-        part: data?.part_subventions_union_europeenne,
-      },
-      {
-        label: "Autres ressources",
-        value: data?.autres_ressources_propres,
-        part: data?.part_autres_ressources_propres,
-      },
-      {
-        label: "Autres subventions",
-        value: data?.autres_subventions,
-        part: data?.part_autres_subventions,
-      },
-    ],
-    [data]
-  );
+  const ressourcesPropresDecomposition = [
+    {
+      label: "Droits d'inscription",
+      value: data?.droits_d_inscription,
+      part: data?.part_droits_d_inscription,
+    },
+    {
+      label: "Formation continue",
+      value: data?.formation_continue_diplomes_propres_et_vae,
+      part: data?.part_formation_continue_diplomes_propres_et_vae,
+    },
+    {
+      label: "Taxe d'apprentissage",
+      value: data?.taxe_d_apprentissage,
+      part: data?.part_taxe_d_apprentissage,
+    },
+    {
+      label: "Valorisation",
+      value: data?.valorisation,
+      part: data?.part_valorisation,
+    },
+    {
+      label: "ANR hors investissements",
+      value: data?.anr_hors_investissements_d_avenir,
+      part: data?.part_anr_hors_investissements_d_avenir,
+    },
+    {
+      label: "ANR investissements d'avenir",
+      value: data?.anr_investissements_d_avenir,
+      part: data?.part_anr_investissements_d_avenir,
+    },
+    {
+      label: "Contrats & prestations",
+      value: data?.contrats_et_prestations_de_recherche_hors_anr,
+      part: data?.part_contrats_et_prestations_de_recherche_hors_anr,
+    },
+    {
+      label: "Subventions région",
+      value: data?.subventions_de_la_region,
+      part: data?.part_subventions_de_la_region,
+    },
+    {
+      label: "Subventions UE",
+      value: data?.subventions_union_europeenne,
+      part: data?.part_subventions_union_europeenne,
+    },
+    {
+      label: "Autres ressources",
+      value: data?.autres_ressources_propres,
+      part: data?.part_autres_ressources_propres,
+    },
+    {
+      label: "Autres subventions",
+      value: data?.autres_subventions,
+      part: data?.part_autres_subventions,
+    },
+  ];
 
   const topRessource = ressourcesPropresDecomposition
     .filter((r) => r.value != null && r.value > 0)
