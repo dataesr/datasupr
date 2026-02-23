@@ -3,7 +3,6 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { isInProduction } from "../../../../utils";
 import Breadcrumb from "../../components/breadcrumb";
 import { getEsQuery, years } from "../../utils";
 import ClassificationsByStructure from "./charts/classifications-by-structure";
@@ -38,10 +37,8 @@ export default function DisplayStructure() {
     { id: "partenaires", label: "Institutions partenaires" },
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
+    { id: "instrument", label: "Instruments" },
   ];
-  if (!isInProduction()) {
-    sections.push({ id: "instrument", label: "Instruments" });
-  }
 
   const handleNavClick = (section: string) => {
     searchParams.set("section", section);
