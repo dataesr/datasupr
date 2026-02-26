@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { Container, Text, Title } from "@dataesr/dsfr-plus";
-import { useFinanceAdvancedComparison } from "../../../api/api";
+import { useFinanceAdvancedComparison } from "../../../api";
 import { useFilteredNationalData } from "../hooks/useFilteredNationalData";
 import SectionNavigation from "./section-navigation";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";

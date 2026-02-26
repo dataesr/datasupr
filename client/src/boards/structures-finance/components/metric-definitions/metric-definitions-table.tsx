@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import "./metric-definitions-table.scss";
 import { Title, Link } from "@dataesr/dsfr-plus";
-import { useFinanceDefinitions } from "../../pages/definitions/api";
+import { useFinanceDefinitions } from "../../api";
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import { parseMarkdown } from "../../../../utils/format";
 

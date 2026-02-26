@@ -1,7 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import { Col, Container, Row, Text } from "@dataesr/dsfr-plus";
 import { useStructuresFilters } from "../hooks";
-import { useFinanceYears } from "../../../api/common";
+import { useFinanceYears } from "../../../api";
 import { useFilters } from "../../../hooks/useFilters";
 import SelectionUI from "./selection-ui";
 import CardSimple from "../../../../../components/card-simple";

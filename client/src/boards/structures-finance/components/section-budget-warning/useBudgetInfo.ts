@@ -1,5 +1,5 @@
 import { BUDGET_SENSITIVE_METRICS } from "../budget-warning/budgetIndicators";
-import { useMetricEvolution } from "../../pages/structures/sections/api";
+import { useMetricEvolution } from "../../pages/structures/api";
 
 export function useBudgetInfo(metrics: string[]) {
   const hasSensitiveMetric = metrics.some((metric) =>

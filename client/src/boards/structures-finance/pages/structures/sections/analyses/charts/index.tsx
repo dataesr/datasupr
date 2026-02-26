@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useFinanceEtablissementEvolution } from "../../../../../api/api";
+import { useFinanceEtablissementEvolution } from "../../../../../api";
 import { useMetricLabel } from "../../../../../hooks/useMetricLabel";
 import { useMetricThreshold } from "../../../../../hooks/useMetricThreshold";
 import StackedEvolutionChart from "./stacked";

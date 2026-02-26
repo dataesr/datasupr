@@ -120,52 +120,6 @@ router.get(
 );
 
 router.get(
-  "/structures-finance/etablissements/:id/overview",
-  async (req, res) => {
-    try {
-      const key = cacheKey(req.path, req.query);
-      const hit = getCached(key);
-      if (hit) return res.json(hit);
-
-      const { id } = req.params;
-      const { annee } = req.query;
-
-      const whereCondition = {
-        $or: [{ etablissement_id_paysage_actuel: id }],
-      };
-
-      if (annee) {
-        whereCondition.exercice = Number(annee);
-      }
-
-      const records = await fetchRecords({
-        select: [
-          "etablissement_id_paysage",
-          "etablissement_id_paysage_actuel",
-          "etablissement_actuel_lib",
-          "recettes_propres",
-          "scsp",
-          "region",
-          "scsp_par_etudiants",
-          "effectif_sans_cpge",
-          "etablissement_actuel_typologie",
-        ],
-        where: whereCondition,
-        orderBy: "exercice DESC",
-        limit: 1,
-      });
-
-      const doc = records.length > 0 ? records[0] : null;
-
-      setCached(key, doc);
-      res.json(doc);
-    } catch (e) {
-      res.status(500).json({ error: "Server error", details: e.message });
-    }
-  }
-);
-
-router.get(
   "/structures-finance/etablissements/:id/evolution",
   async (req, res) => {
     try {

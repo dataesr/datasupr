@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Row, Col, Container, Title } from "@dataesr/dsfr-plus";
 import { useMemo, useState } from "react";
-import { useFinanceYears } from "../../api/common";
+import { useFinanceYears } from "../../api";
 import { useFinanceEtablissements } from "./api";
 import Select from "../../components/select";
 import "./styles.scss";

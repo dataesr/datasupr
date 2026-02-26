@@ -4,8 +4,8 @@ import { useSearchParams } from "react-router-dom";
 import NationalChart from "./chart";
 import AnalysisFilter from "./analysis-filter";
 import { type AnalysisKey } from "../../../../config/metrics-config";
-import { useFinanceYears } from "../../../../api/common";
-import { useFinanceAdvancedComparison } from "../../../../api/api";
+import { useFinanceYears } from "../../../../api";
+import { useFinanceAdvancedComparison } from "../../../../api";
 import { useFilteredNationalData } from "../../hooks/useFilteredNationalData";
 import "../../../structures/sections/styles.scss";
 

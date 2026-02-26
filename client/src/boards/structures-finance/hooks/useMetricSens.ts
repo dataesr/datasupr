@@ -1,4 +1,4 @@
-import { useFinanceDefinitions } from "../pages/definitions/api";
+import { useFinanceDefinitions } from "../api";
 import type { MetricKey } from "../config/metrics-config";
 import type { MetricSens } from "../components/metric-sort";
 

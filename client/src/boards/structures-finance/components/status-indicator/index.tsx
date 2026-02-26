@@ -1,4 +1,4 @@
-import { useFinanceDefinitions } from "../../pages/definitions/api";
+import { useFinanceDefinitions } from "../../api";
 import "./styles.scss";
 
 interface StatusIndicatorProps {

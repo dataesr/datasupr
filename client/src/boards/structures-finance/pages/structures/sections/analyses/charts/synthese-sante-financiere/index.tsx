@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
+import { useFinanceEtablissementEvolution } from "../../../../../../api";
 import SanteFinanciereTableau from "../../../sante-financiere/charts/sante-financiere-tableau";
 import DefaultSkeleton from "../../../../../../../../components/charts-skeletons/default";
 import { Title } from "@dataesr/dsfr-plus";

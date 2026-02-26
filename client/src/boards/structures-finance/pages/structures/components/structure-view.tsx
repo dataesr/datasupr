@@ -1,11 +1,11 @@
 import { useSearchParams } from "react-router-dom";
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
-import { useFinanceYears } from "../../../api/common";
+import { useFinanceYears } from "../../../api";
 import {
   useFinanceStructureDetail,
   useCheckMultipleStructures,
   useCheckStructureExists,
-} from "../../../api/api";
+} from "../api";
 import PageHeader from "./page-header";
 import SectionNavigation from "./section-navigation";
 import {

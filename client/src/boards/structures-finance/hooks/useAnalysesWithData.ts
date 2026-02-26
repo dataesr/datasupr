@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useFinanceEtablissementEvolution } from "../api/api";
+import { useFinanceEtablissementEvolution } from "../api";
 import {
   PREDEFINED_ANALYSES,
   type AnalysisKey,
@@ -19,7 +19,6 @@ export function useAnalysesWithData(etablissementId: string) {
       const isStacked = (analysis as any).chartType === "stacked";
       const isSynthese = (analysis as any).chartType === "synthese";
 
-      // Pour les synthèses, on vérifie juste qu'il y a des données
       if (isSynthese) {
         if (data.length > 0) {
           available.add(key);
@@ -49,9 +48,11 @@ export function useAnalysesWithData(etablissementId: string) {
     return available;
   }, [data]);
 
-  const years = !data ? [] : [...new Set(data.map((d: any) => d.exercice))]
-    .filter((y): y is number => typeof y === "number")
-    .sort((a, b) => a - b);
+  const years = !data
+    ? []
+    : [...new Set(data.map((d: any) => d.exercice))]
+        .filter((y): y is number => typeof y === "number")
+        .sort((a, b) => a - b);
 
   const periodText =
     years.length > 0 ? `${years[0]} - ${years[years.length - 1]}` : "";

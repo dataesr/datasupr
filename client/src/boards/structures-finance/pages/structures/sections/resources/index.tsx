@@ -1,5 +1,5 @@
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
-import { useMetricEvolution } from "../api";
+import { useMetricEvolution } from "../../api";
 import { MetricChartCard } from "../../components/metric-chart-card";
 import RessourcesPropresChart from "./charts/ressources-propres";
 import "../styles.scss";

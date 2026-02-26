@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { useFinanceDefinitions } from "../pages/definitions/api";
+import { useFinanceDefinitions } from "../api";
 import {
   FINANCIAL_HEALTH_INDICATORS,
   type ThresholdConfig,

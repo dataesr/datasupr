@@ -1,10 +1,10 @@
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import EffectifsChart from "./charts/effectifs";
 import { MetricChartCard } from "../../components/metric-chart-card";
-import { useMetricEvolution } from "../api";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 import { getCssColor } from "../../../../../../utils/colors";
+import { useMetricEvolution } from "../../api";
 
 interface EtudiantsSectionProps {
   data: any;

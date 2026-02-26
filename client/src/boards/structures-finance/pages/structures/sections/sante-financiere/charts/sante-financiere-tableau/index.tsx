@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { useFinanceEtablissementEvolution } from "../../../../../../api/api";
 import { RenderData } from "./render-data";
+import { useFinanceEtablissementEvolution } from "../../../../../../api";
 
 interface SanteFinanciereTableauProps {
   data?: any;
