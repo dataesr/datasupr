@@ -16,7 +16,7 @@ export const createSingleChartOptions = (
   metricKey: string,
   metricsConfig: Record<string, MetricConfig>,
   threshold: ThresholdConfig | null,
-  xAxisField: "exercice" | "anuniv"
+  xAxisField: "exercice" | "exercice_fin" | "anuniv"
 ): Highcharts.Options => {
   const sortedData = [...data]
     .sort((a, b) => a.exercice - b.exercice)

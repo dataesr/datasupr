@@ -27,9 +27,7 @@ export function AnalysesSection({
 
   const { analysesWithData, periodText, isLoading } =
     useAnalysesWithData(etablissementId);
-  {
-    console.log(data);
-  }
+
   if (isLoading) {
     return (
       <AnalysesSectionWrapper>

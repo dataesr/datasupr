@@ -13,7 +13,7 @@ export const createDualChartOptions = (
   metric1Key: string,
   metric2Key: string,
   metricsConfig: Record<string, MetricConfig>,
-  xAxisField: "exercice" | "anuniv"
+  xAxisField: "exercice" | "exercice_fin" | "anuniv"
 ): Highcharts.Options => {
   const sortedData = [...data]
     .sort((a, b) => a.exercice - b.exercice)

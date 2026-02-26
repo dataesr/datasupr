@@ -18,7 +18,7 @@ interface DualEvolutionChartProps {
   metric2: MetricKey;
   baseMetrics: MetricKey[];
   chartConfig: any;
-  xAxisField: "exercice" | "anuniv";
+  xAxisField: "exercice" | "exercice_fin" | "anuniv";
   showIPC: boolean;
   onIPCChange: (show: boolean) => void;
   data: any[];

@@ -14,7 +14,7 @@ interface Base100EvolutionChartProps {
   comparisonConfig: any;
   createChartConfig: (chartId: string, titleOverride?: string) => any;
   getMetricLabel: (metricKey: MetricKey) => string;
-  xAxisField: "exercice" | "anuniv";
+  xAxisField: "exercice" | "exercice_fin" | "anuniv";
   data: any[];
 }
 

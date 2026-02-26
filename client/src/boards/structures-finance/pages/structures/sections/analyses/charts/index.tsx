@@ -59,7 +59,13 @@ export default function EvolutionChart({
       }
     });
 
-    return Array.from(uniqueByExercice.values());
+    return Array.from(uniqueByExercice.values()).map((item: any) => ({
+      ...item,
+      exercice_fin:
+        item.sanfin_source === "Budget"
+          ? `${item.exercice} (budget)`
+          : String(item.exercice),
+    }));
   }, [rawData]);
 
   const getMetricLabel = useMetricLabel();
@@ -76,7 +82,7 @@ export default function EvolutionChart({
     analysisConfig.category === "Dîplomes et formations";
   const useAcademicYear = activeSelectedAnalysis === "scsp-etudiant";
   const xAxisField =
-    useAcademicYear || isFormationsCategory ? "anuniv" : "exercice";
+    useAcademicYear || isFormationsCategory ? "anuniv" : "exercice_fin";
 
   const selectedMetrics = useMemo(() => {
     let metrics = baseMetrics;

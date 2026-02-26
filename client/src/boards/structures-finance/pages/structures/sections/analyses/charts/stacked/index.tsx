@@ -14,7 +14,7 @@ interface StackedEvolutionChartProps {
   chartConfig: any;
   displayMode: "values" | "percentage";
   onDisplayModeChange: (mode: "values" | "percentage") => void;
-  xAxisField: "exercice" | "anuniv";
+  xAxisField: "exercice" | "exercice_fin" | "anuniv";
   data: any[];
 }
 

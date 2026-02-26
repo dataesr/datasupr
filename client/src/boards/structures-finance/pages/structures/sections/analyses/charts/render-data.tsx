@@ -7,6 +7,7 @@ interface MetricConfig {
 
 interface EvolutionData {
   exercice: number;
+  exercice_fin?: string;
   [key: string]: any;
 }
 
@@ -66,7 +67,7 @@ export function RenderDataSingle({
               <tbody>
                 {sortedData.map((item, index) => (
                   <tr key={index}>
-                    <td>{item.exercice}</td>
+                    <td>{item.exercice_fin ?? item.exercice}</td>
                     <td style={{ textAlign: "right" }}>
                       {formatValue(item[metricKey], metricConfig.format)}
                     </td>
@@ -122,7 +123,7 @@ export function RenderDataComparison({
               <tbody>
                 {sortedData.map((item, index) => (
                   <tr key={index}>
-                    <td>{item.exercice}</td>
+                    <td>{item.exercice_fin ?? item.exercice}</td>
                     <td>
                       {formatValue(item[metric1Key], metric1Config.format)}
                     </td>
@@ -174,6 +175,7 @@ export function RenderDataBase100({
 
     return {
       exercice: item.exercice,
+      exercice_fin: item.exercice_fin,
       value1Original: value1,
       value2Original: value2,
       value1Base100:
@@ -213,7 +215,7 @@ export function RenderDataBase100({
               <tbody>
                 {tableData.map((item, index) => (
                   <tr key={index}>
-                    <td>{item.exercice}</td>
+                    <td>{item.exercice_fin ?? item.exercice}</td>
                     <td>
                       {formatValue(item.value1Original, metric1Config.format)}
                     </td>
@@ -297,7 +299,7 @@ export function RenderDataStacked({
 
                   return (
                     <tr key={index}>
-                      <td>{item.exercice}</td>
+                      <td>{item.exercice_fin ?? item.exercice}</td>
                       {activeMetrics.map((metricKey) => (
                         <td key={metricKey} style={{ textAlign: "right" }}>
                           {formatValue(item[metricKey], "number")}

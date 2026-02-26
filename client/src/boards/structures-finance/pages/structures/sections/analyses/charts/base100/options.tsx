@@ -13,7 +13,7 @@ export const createBase100ChartOptions = (
   data: any[],
   selectedMetrics: string[],
   metricsConfig: Record<string, MetricConfig>,
-  xAxisField: "exercice" | "anuniv"
+  xAxisField: "exercice" | "exercice_fin" | "anuniv"
 ): Highcharts.Options => {
   const sortedData = [...data]
     .sort((a, b) => a.exercice - b.exercice)

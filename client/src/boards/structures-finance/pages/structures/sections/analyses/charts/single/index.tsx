@@ -35,7 +35,7 @@ interface SingleEvolutionChartProps {
   metricThreshold: ThresholdConfig | null;
   selectedAnalysis: AnalysisKey;
   etablissementName: string;
-  xAxisField: "exercice" | "anuniv";
+  xAxisField: "exercice" | "exercice_fin" | "anuniv";
   showIPC: boolean;
   showPart: boolean;
   onIPCChange: (show: boolean) => void;
