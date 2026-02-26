@@ -119,7 +119,7 @@ export function FinancementsSection({
               value={`${euro(data.scsp_par_etudiants)} €`}
               detail={
                 data.scsp_etudiants
-                  ? `${data.is_rce === false ? " (inclut la masse salariale prise en charge par le ministère en charge de l'Enseignement supérieur)" : ""}${data.etablissement_categorie === "École normale supérieure" ? " (inclut le salaire des élèves fonctionnaires)" : ""}`
+                  ? `${data.is_rce === false ? "Subvention pour charges de service public (SCSP) (inclut la masse salariale prise en charge par le ministère en charge de l'Enseignement supérieur). " : "Subvention pour charges de service public (SCSP)"}${data.etablissement_categorie === "École normale supérieure" ? " (inclut le salaire des élèves fonctionnaires)" : ""}`
                   : data.is_rce === false
                     ? `Ratio SCSP / étudiants financés (inclut la masse salariale prise en charge par le ministère en charge de l'Enseignement supérieur)${data.etablissement_categorie === "École normale supérieure" ? " et le salaire des élèves fonctionnaires" : ""}`
                     : `Ratio SCSP / étudiants financés${data.etablissement_categorie === "École normale supérieure" ? " (inclut le salaire des élèves fonctionnaires)" : ""}`
