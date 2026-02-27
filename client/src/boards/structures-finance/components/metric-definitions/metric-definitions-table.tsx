@@ -32,7 +32,7 @@ export default function MetricDefinitionsTable({
 
     metricKeys.forEach((key) => {
       if (key.endsWith("_ipc")) return;
-      const baseKey = key.replace(/_ipc$/, "");
+      const baseKey = key.replace(/_ipc$/, "").replace(/^part_/, "");
       const def = findDef(baseKey);
       if (def && !added.has(baseKey)) {
         result.push(def);

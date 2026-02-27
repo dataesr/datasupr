@@ -22,6 +22,7 @@ import {
 } from "./options";
 import { RenderData } from "./render-data";
 import { ThresholdLegend } from "../../../../../../components/threshold/threshold-legend";
+import { sortByMetricSens } from "../../../../../../components/metric-sort";
 
 interface ComparisonOverviewChartProps {
   config: ComparisonOverviewConfig;
@@ -73,6 +74,48 @@ export default function ComparisonOverviewChart({
   const activeMetricSens = useMetricSens(activeMetric);
 
   const metricThreshold = useMetricThreshold(activeMetric);
+
+  const ordinal = (n: number) => (n === 1 ? "1er" : `${n}e`);
+
+  const getPositionText = (pct: number): string => {
+    if (pct === 0) return "avec la valeur la plus basse";
+    if (pct === 100) return "avec la valeur la plus haute";
+    if (pct < 5) return "parmi les valeurs les plus basses";
+    if (pct < 23) return "dans le 1er quartile";
+    if (pct < 27) return "autour du 1er quartile";
+    if (pct < 48) return "entre le 1er quartile et la médiane";
+    if (pct < 52) return "autour de la médiane";
+    if (pct < 73) return "entre la médiane et le 3ème quartile";
+    if (pct < 77) return "autour du 3ème quartile";
+    if (pct < 95) return "au-dessus du 3ème quartile";
+    return "parmi les valeurs les plus hautes";
+  };
+
+  const positionInfo = useMemo(() => {
+    if (!allData?.length || !currentStructureId) return null;
+
+    const seen = new Set<string>();
+    const unique: { value: number; id: string }[] = [];
+    allData.forEach((item: any) => {
+      const id = item.etablissement_id_paysage_actuel;
+      const value = item[activeMetric];
+      if (!id || seen.has(id) || value == null || isNaN(value)) return;
+      seen.add(id);
+      unique.push({ value, id });
+    });
+
+    const sorted = sortByMetricSens(unique, activeMetricSens ?? null);
+    const rankIdx = sorted.findIndex((d) => d.id === currentStructureId);
+    if (rankIdx === -1) return null;
+
+    const rank = rankIdx + 1;
+    const total = sorted.length;
+    const isDecroissant = activeMetricSens !== "augmentation";
+    const rawPct = total > 1 ? (rank - 1) / (total - 1) : 0.5;
+    const pct = (isDecroissant ? 1 - rawPct : rawPct) * 100;
+
+    return { rank, total, pct, isDecroissant };
+  }, [allData, currentStructureId, activeMetric, activeMetricSens]);
 
   const activeConfig: ComparisonOverviewConfig = useMemo(
     () => ({
@@ -221,19 +264,27 @@ export default function ComparisonOverviewChart({
               </p>
             ),
           },
-          readingKey: {
-            fr: (
-              <p
-                className="fr-text--xs fr-mb-0"
-                style={{ color: "var(--text-mention-grey)" }}
-              >
-                Les losanges indiquent la position de{" "}
-                {currentStructureName || "l'établissement"} en{" "}
-                {activeConfig.metricConfig.year} par rapport aux autres
-                établissements.
-              </p>
-            ),
-          },
+          readingKey: positionInfo
+            ? {
+                fr: (
+                  <p
+                    className="fr-text--xs fr-mb-0"
+                    style={{ color: "var(--text-mention-grey)" }}
+                  >
+                    Le losange indique la position de{" "}
+                    <strong>{currentStructureName || "l'établissement"}</strong>{" "}
+                    en <strong>{activeConfig.metricConfig.year}</strong> par
+                    rapport aux autres établissements d'enseignement supérieur.
+                    Pour l'indicateur <strong>{activeMetricLabel}</strong>, cet
+                    établissement se positionne au{" "}
+                    <strong>{ordinal(positionInfo.rank)} rang</strong> sur{" "}
+                    {positionInfo.total} (par ordre{" "}
+                    {positionInfo.isDecroissant ? "décroissant" : "croissant"}),{" "}
+                    <strong>{getPositionText(positionInfo.pct)}</strong>.
+                  </p>
+                ),
+              }
+            : undefined,
         }}
         legend={<ThresholdLegend threshold={metricThreshold} />}
         options={chartOptions}
