@@ -320,29 +320,80 @@ export default function CountriesCollaborationsTable() {
                     </Col>
                   </Row>
 
-                  {/* Récapitulatif en tags */}
-                  <div className="fr-mt-4w">
-                    <TagGroup>
-                      <Tag>
-                        <span className="fr-icon-calendar-line fr-mr-1w" aria-hidden="true" />
-                        {selectedYear === "all" ? "Toutes les années" : selectedYear.includes("-") ? `${selectedYear} (Toutes)` : selectedYear}
-                      </Tag>
-                      <Tag>
-                        <span className="fr-icon-folder-2-line fr-mr-1w" aria-hidden="true" />
-                        {filterData(collaborationDetails, false).length} projets
-                      </Tag>
-                      <Tag>
-                        <span className="fr-icon-money-euro-circle-line fr-mr-1w" aria-hidden="true" />
-                        Budget total :{" "}
-                        {formatToMillions(filterData(collaborationDetails, false).reduce((sum, item) => sum + (item.total_cost || 0), 0))}
-                      </Tag>
-                      <Tag>
-                        <span className="fr-icon-money-euro-box-line fr-mr-1w" aria-hidden="true" />
-                        Budget proposé :{" "}
-                        {formatToMillions(filterData(collaborationDetails, false).reduce((sum, item) => sum + (item.proposal_budget || 0), 0))}
-                      </Tag>
-                    </TagGroup>
-                  </div>
+                  <Row>
+                    {/* Récapitulatif en tags */}
+                    <Col className="fr-pt-2w" md={7}>
+                      <Row>
+                        <Col>
+                          <TagGroup>
+                            <Tag>
+                              <span className="fr-icon-calendar-line fr-mr-1w" aria-hidden="true" />
+                              {selectedYear === "all" ? "Toutes les années" : selectedYear.includes("-") ? `${selectedYear} (Toutes)` : selectedYear}
+                            </Tag>
+                            <Tag>
+                              <span className="fr-icon-folder-2-line fr-mr-1w" aria-hidden="true" />
+                              {filterData(collaborationDetails, false).length} projets
+                            </Tag>
+                          </TagGroup>
+                        </Col>
+                        <Col>
+                          <TagGroup>
+                            <Tag>
+                              <span className="fr-icon-money-euro-circle-line fr-mr-1w" aria-hidden="true" />
+                              Budget total :{" "}
+                              {formatToMillions(filterData(collaborationDetails, false).reduce((sum, item) => sum + (item.total_cost || 0), 0))}
+                            </Tag>
+                            <Tag>
+                              <span className="fr-icon-money-euro-box-line fr-mr-1w" aria-hidden="true" />
+                              Budget proposé :{" "}
+                              {formatToMillions(filterData(collaborationDetails, false).reduce((sum, item) => sum + (item.proposal_budget || 0), 0))}
+                            </Tag>
+                          </TagGroup>
+                        </Col>
+                      </Row>
+                    </Col>
+
+                    {/* Bouton de téléchargement */}
+                    <Col className="text-center fr-pt-2w">
+                      <Button
+                        icon="download-line"
+                        size="sm"
+                        variant="secondary"
+                        onClick={() => {
+                          const dataToExport = filterData(collaborationDetails, false);
+                          const headers =
+                            currentLang === "fr"
+                              ? ["Année", "ID Projet", "Rôle pays", "Rôle collab.", "Budget total", "Budget proposé"]
+                              : ["Year", "Project ID", "Country role", "Collab. role", "Total budget", "Proposed budget"];
+                          const csvContent =
+                            "data:text/csv;charset=utf-8," +
+                            headers.join(",") +
+                            "\n" +
+                            dataToExport
+                              .map((item) =>
+                                [
+                                  item.call_year,
+                                  item.project_id,
+                                  item.participates_as,
+                                  item.participates_as_collab,
+                                  item.total_cost || "",
+                                  item.proposal_budget || "",
+                                ].join(","),
+                              )
+                              .join("\n");
+                          const encodedUri = encodeURI(csvContent);
+                          const link = document.createElement("a");
+                          link.setAttribute("href", encodedUri);
+                          link.setAttribute("download", `collaborations_${country_code}_${collabCountry?.country_code}.csv`);
+                          document.body.appendChild(link);
+                          link.click();
+                          document.body.removeChild(link);
+                        }}
+                      >
+                        {getI18nLabel("download_data")}
+                      </Button>
+                    </Col>
+                  </Row>
 
                   {/* Liste des projets */}
                   <div className="fr-table fr-table--sm">
@@ -358,8 +409,6 @@ export default function CountriesCollaborationsTable() {
                                 <th>Rôle collab.</th>
                                 <th>Budget total</th>
                                 <th>Budget proposé</th>
-                                <th>participation_nuts</th>
-                                <th>participation_nuts_collab</th>
                               </tr>
                             </thead>
                             <tbody>
@@ -371,8 +420,6 @@ export default function CountriesCollaborationsTable() {
                                   <td className="fr-py-0">{item.participates_as_collab}</td>
                                   <td className="fr-py-0">{formatToMillions(item.total_cost, 2)}</td>
                                   <td className="fr-py-0">{item.proposal_budget ? `${formatToMillions(item.proposal_budget, 2)}` : "-"}</td>
-                                  <td className="fr-py-0">{item.participation_nuts || "-"}</td>
-                                  <td className="fr-py-0">{item.participation_nuts_collab || "-"}</td>
                                 </tr>
                               ))}
                             </tbody>
