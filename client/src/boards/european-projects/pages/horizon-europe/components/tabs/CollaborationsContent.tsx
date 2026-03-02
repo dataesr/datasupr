@@ -27,10 +27,24 @@ export default function CollaborationsContent() {
 
   return (
     <div>
+      Focus Monde (carte actuelle)
+      <br />
+      <br />
+      Focus Pays (avec entités du pays)
       <Row>
         <Col>
           <MapOfEuropeCollaborationsFlow />
         </Col>
+      </Row>
+      <Row>
+        <Col className="arrow-down" />
+      </Row>
+      <Row>
+        <Col md={4}>Focus Europe</Col>
+        <Col>heat map des collaborations entre pays</Col>
+      </Row>
+      <Row>
+        <Col className="arrow-down" />
       </Row>
       <Row>
         <Col>
