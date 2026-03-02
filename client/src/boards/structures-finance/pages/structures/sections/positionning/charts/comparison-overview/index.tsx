@@ -271,7 +271,7 @@ export default function ComparisonOverviewChart({
                     className="fr-text--xs fr-mb-0"
                     style={{ color: "var(--text-mention-grey)" }}
                   >
-                    Le losange indique la position de{" "}
+                    Le losange vert indique la position de{" "}
                     <strong>{currentStructureName || "l'établissement"}</strong>{" "}
                     en <strong>{activeConfig.metricConfig.year}</strong> par
                     rapport aux autres établissements d'enseignement supérieur.
