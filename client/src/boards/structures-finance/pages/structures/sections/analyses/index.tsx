@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Row, Col } from "@dataesr/dsfr-plus";
 import EvolutionChart from "./charts";
 import { useAnalysesWithData } from "../../../../hooks/useAnalysesWithData";
@@ -21,12 +22,39 @@ export function AnalysesSection({
   selectedStructure,
 }: AnalysesSectionProps) {
   const etablissementId = selectedStructure || "";
-  const [selectedAnalysis, setSelectedAnalysis] = useState<AnalysisKey | null>(
-    null
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedAnalysisParam = searchParams.get(
+    "analysis"
+  ) as AnalysisKey | null;
 
   const { analysesWithData, periodText, isLoading } =
     useAnalysesWithData(etablissementId);
+
+  useEffect(() => {
+    if (analysesWithData.size === 0) return;
+
+    if (selectedAnalysisParam && analysesWithData.has(selectedAnalysisParam)) {
+      return;
+    }
+
+    const fallbackAnalysis = Array.from(analysesWithData)[0];
+    if (!fallbackAnalysis) return;
+
+    const params = new URLSearchParams(searchParams);
+    params.set("analysis", fallbackAnalysis);
+    setSearchParams(params, { replace: true });
+  }, [analysesWithData, selectedAnalysisParam, searchParams, setSearchParams]);
+
+  const selectedAnalysis =
+    selectedAnalysisParam && analysesWithData.has(selectedAnalysisParam)
+      ? selectedAnalysisParam
+      : null;
+
+  const handleSelectAnalysis = (analysis: AnalysisKey) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("analysis", analysis);
+    setSearchParams(params, { replace: true });
+  };
 
   if (isLoading) {
     return (
@@ -60,7 +88,7 @@ export function AnalysesSection({
           <AnalysisFilter
             analysesWithData={analysesWithData}
             selectedAnalysis={selectedAnalysis}
-            onSelectAnalysis={setSelectedAnalysis}
+            onSelectAnalysis={handleSelectAnalysis}
           />
         </Col>
 

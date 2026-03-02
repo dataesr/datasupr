@@ -73,9 +73,10 @@ export default function StructureView() {
 
   const handleSectionChange = (newSection: string) => {
     const params = Object.fromEntries(searchParams);
-    // Nettoie les params spécifiques au positionnement
-    // à revoir rapidement !
     delete params.analysis;
+    delete params.analysisDisplay;
+    delete params.analysisPrice;
+    delete params.analysisValue;
     delete params.chart;
     delete params.filterType;
     delete params.filterTypologie;

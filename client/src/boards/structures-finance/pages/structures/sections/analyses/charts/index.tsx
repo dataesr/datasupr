@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useFinanceEtablissementEvolution } from "../../../../../api";
 import { useMetricLabel } from "../../../../../hooks/useMetricLabel";
@@ -30,6 +30,7 @@ export default function EvolutionChart({
   periodText = "",
 }: EvolutionChartProps) {
   const [searchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
   const [displayMode, setDisplayMode] = useState<"values" | "percentage">(
     "values"
   );
@@ -40,6 +41,43 @@ export default function EvolutionChart({
     etablissementId || searchParams.get("structureId") || "";
   const activeSelectedAnalysis =
     selectedAnalysis || (searchParams.get("analysis") as AnalysisKey);
+
+  const displayModeParam = searchParams.get("analysisDisplay");
+  const priceModeParam = searchParams.get("analysisPrice");
+  const valueModeParam = searchParams.get("analysisValue");
+
+  const syncParam = (key: string, value: string) => {
+    const params = new URLSearchParams(searchParams);
+    params.set(key, value);
+    setSearchParams(params, { replace: true });
+  };
+
+  const handleDisplayModeChange = (mode: "values" | "percentage") => {
+    setDisplayMode(mode);
+    syncParam("analysisDisplay", mode);
+  };
+
+  const handleIPCChange = (show: boolean) => {
+    setShowIPC(show);
+    syncParam("analysisPrice", show ? "constant" : "current");
+  };
+
+  const handlePartChange = (show: boolean) => {
+    setShowPart(show);
+    syncParam("analysisValue", show ? "part" : "value");
+  };
+
+  useEffect(() => {
+    setDisplayMode(displayModeParam === "percentage" ? "percentage" : "values");
+  }, [displayModeParam]);
+
+  useEffect(() => {
+    setShowIPC(priceModeParam === "constant");
+  }, [priceModeParam]);
+
+  useEffect(() => {
+    setShowPart(valueModeParam === "part");
+  }, [valueModeParam]);
 
   const { data: rawData } = useFinanceEtablissementEvolution(
     activeEtablissementId
@@ -166,7 +204,7 @@ export default function EvolutionChart({
           </>
         )}
         displayMode={displayMode}
-        onDisplayModeChange={setDisplayMode}
+        onDisplayModeChange={handleDisplayModeChange}
         xAxisField={xAxisField}
         data={data}
       />
@@ -193,8 +231,8 @@ export default function EvolutionChart({
         xAxisField={xAxisField}
         showIPC={showIPC}
         showPart={showPart}
-        onIPCChange={setShowIPC}
-        onPartChange={setShowPart}
+        onIPCChange={handleIPCChange}
+        onPartChange={handlePartChange}
         data={data}
       />
     );
@@ -218,7 +256,7 @@ export default function EvolutionChart({
         )}
         xAxisField={xAxisField}
         showIPC={showIPC}
-        onIPCChange={setShowIPC}
+        onIPCChange={handleIPCChange}
         data={data}
       />
     );

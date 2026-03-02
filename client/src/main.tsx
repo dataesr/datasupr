@@ -10,6 +10,7 @@ import AppRoutes from "./commons/router.js";
 import RouterLink from "./components/router-link.js";
 import { ScrollToTop } from "./components/scroll-to-top.js";
 import CookieConsent from "./components/cookies/cookie-consent/index.js";
+import MatomoTracker from "./components/matomo-tracker/index.js";
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,6 +26,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <ScrollToTop />
+        <MatomoTracker />
         <DSFRConfig routerComponent={RouterLink}>
           <AppRoutes />
         </DSFRConfig>
