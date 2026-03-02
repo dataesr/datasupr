@@ -51,8 +51,17 @@ export default function EvolutionChart({
   const data = useMemo(() => {
     if (!rawData) return undefined;
 
+    const currentStructureId = String(activeEtablissementId || "").trim();
+    const filteredData = rawData.filter((item: any) => {
+      if (!currentStructureId) return true;
+      return (
+        String(item.etablissement_id_paysage || "").trim() ===
+        currentStructureId
+      );
+    });
+
     const uniqueByExercice = new Map();
-    rawData.forEach((item: any) => {
+    filteredData.forEach((item: any) => {
       const key = item.exercice || item.anuniv;
       if (!uniqueByExercice.has(key)) {
         uniqueByExercice.set(key, item);
@@ -66,7 +75,7 @@ export default function EvolutionChart({
           ? `${item.exercice} (budget)`
           : String(item.exercice),
     }));
-  }, [rawData]);
+  }, [rawData, activeEtablissementId]);
 
   const getMetricLabel = useMetricLabel();
 
