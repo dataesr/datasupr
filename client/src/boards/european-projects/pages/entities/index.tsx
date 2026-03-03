@@ -8,6 +8,7 @@ import { useState } from "react";
 
 export default function Entities({ entity_id }: { entity_id?: string }) {
   const [entityId, setEntityId] = useState<string>(entity_id || "");
+console.log(entityId);
 
   return (
     <Container as="section" className="fr-mt-2w">
