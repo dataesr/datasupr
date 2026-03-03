@@ -1,70 +1,74 @@
 {
   "accueil": {
-    "fr": "Projet européen - Accueil",
-    "en": "European project - Home"
+    "fr": "Projets européens - Accueil",
+    "en": "European projects - Home"
   },
   "search": {
-    "fr": "Projet européen - Recherche",
-    "en": "European project - Search"
+    "fr": "Projets européens - Recherche",
+    "en": "European projects - Search"
   },
   "synthese": {
-    "fr": "Projet européen - Synthèse",
-    "en": "European project - Synthesis"
+    "fr": "Projets européens - Synthèse",
+    "en": "European projects - Synthesis"
   },
   "positionnement": {
-    "fr": "Projet européen - Positionnement",
-    "en": "European project - Positioning"
+    "fr": "Projets européens - Positionnement",
+    "en": "European projects - Positioning"
   },
   "collaborations": {
-    "fr": "Projet européen - Collaborations",
-    "en": "European project - Collaborations"
+    "fr": "Projets européens - Collaborations",
+    "en": "European projects - Collaborations"
   },
   "beneficiaires": {
-    "fr": "Projet européen - Bénéficiaires",
-    "en": "European project - Beneficiaries"
+    "fr": "Projets européens - Bénéficiaires",
+    "en": "European projects - Beneficiaries"
   },
   "beneficiaires-types": {
-    "fr": "Projet européen - Types de bénéficiaires",
-    "en": "European project - Types of beneficiaries"
+    "fr": "Projets européens - Types de bénéficiaires",
+    "en": "European projects - Types of beneficiaries"
   },
   "msca": {
-    "fr": "Projet européen - MSCA",
-    "en": "European project - MSCA "
+    "fr": "Projets européens - MSCA",
+    "en": "European projects - MSCA "
   },
   "erc": {
-    "fr": "Projet européen - ERC",
-    "en": "European project - ERC"
+    "fr": "Projets européens - ERC",
+    "en": "European projects - ERC"
   },
   "evolution": {
-    "fr": "Projet européen - Evolution",
-    "en": "European project - Evolution"
+    "fr": "Projets européens - Evolution",
+    "en": "European projects - Evolution"
   },
   "objectifs-types-projets": {
-    "fr": "Projet européen - Objectifs types projets",
-    "en": "European project - Project types objectives"
+    "fr": "Projets européens - Objectifs types projets",
+    "en": "European projects - Project types objectives"
   },
   "programme-mires": {
-    "fr": "Projet européen - Programme MIRES",
-    "en": "European project - MIRES program"
+    "fr": "Projets européens - Programme MIRES",
+    "en": "European projects - MIRES program"
   },
   "appel-a-projets": {
-    "fr": "Projet européen - Appel à projets",
-    "en": "European project - Call for projects"
+    "fr": "Projets européens - Appel à projets",
+    "en": "European projects - Call for projects"
   },
   "donnees-reference": {
-    "fr": "Projet européen - Données de référence",
-    "en": "European project - Reference data"
+    "fr": "Projets européens - Données de référence",
+    "en": "European projects - Reference data"
   },
   "informations": {
-    "fr": "Projet européen - Informations",
-    "en": "European project - Information"
+    "fr": "Projets européens - Informations",
+    "en": "European projects - Information"
   },
   "horizon-europe": {
-    "fr": "Projet européen - horizon-europe",
-    "en": "European project - horizon-europe"
+    "fr": "Projets européens - horizon-europe",
+    "en": "European projects - horizon-europe"
   },
   "evolution-pcri": {
-    "fr": "Projet européen - Evolution PCRI",
-    "en": "European project - PCRI Evolution"
+    "fr": "Projets européens - Evolution PCRI",
+    "en": "European projects - PCRI Evolution"
+  },
+  "entities": {
+    "fr": "Projets européens - Entités",
+    "en": "European projects - Entities"
   }
 }

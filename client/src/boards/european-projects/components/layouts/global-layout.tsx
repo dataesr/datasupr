@@ -107,7 +107,7 @@ export default function GlobalLayout() {
                 {...(is("/european-projects/msca") && { "aria-current": "page" })}
                 className="fr-nav__link"
               >
-                MSCA
+                Focus MSCA
               </Link>
             </li>
             <li className="fr-nav__item">
@@ -117,7 +117,7 @@ export default function GlobalLayout() {
                 {...(is("/european-projects/erc") && { "aria-current": "page" })}
                 className="fr-nav__link"
               >
-                ERC
+                Focus ERC
               </Link>
             </li>
             <li className="fr-nav__item">
@@ -128,6 +128,16 @@ export default function GlobalLayout() {
                 className="fr-nav__link"
               >
                 {getI18nLabel("evolutionPcri")}
+              </Link>
+            </li>
+            <li>
+              <Link
+                to={`/european-projects/entities?${filtersParams}`}
+                target="_self"
+                {...(is("/european-projects/entities") && { "aria-current": "page" })}
+                className="fr-nav__link"
+              >
+                {getI18nLabel("entities")}
               </Link>
             </li>
             <li className="fr-nav__item" style={{ marginLeft: "auto" }}>

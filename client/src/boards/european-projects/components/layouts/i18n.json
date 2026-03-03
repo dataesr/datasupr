@@ -71,6 +71,10 @@
     "fr": "Évolution des PCRI",
     "en": "Evolution of R&I programs"
   },
+  "entities": {
+    "fr": "Entités",
+    "en": "Entities"
+  },
   "close": {
     "fr": "Fermer",
     "en": "Close"
