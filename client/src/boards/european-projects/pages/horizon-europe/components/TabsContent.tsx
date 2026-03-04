@@ -4,6 +4,7 @@ import i18n from "../../../i18n-global.json";
 import SyntheseContent from "./tabs/SyntheseContent";
 import PositionnementContent from "./tabs/PositionnementContent";
 import CollaborationsContent from "./tabs/CollaborationsContent";
+import CheckEICAccelerator from "../../../components/check-eic-accelerator";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -24,6 +25,7 @@ export default function TabsContent() {
 
   return (
     <div>
+      <CheckEICAccelerator />
       <nav className="fr-nav" role="navigation" aria-label="Menu principal">
         <ul className="fr-nav__list">
           <li className="fr-nav__item">
@@ -64,7 +66,6 @@ export default function TabsContent() {
           </li>
         </ul>
       </nav>
-
       <div className="fr-mt-3w">
         {activeTab === "synthesis" && <SyntheseContent />}
         {activeTab === "positioning" && <PositionnementContent />}
