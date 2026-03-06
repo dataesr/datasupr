@@ -80,7 +80,6 @@ export async function getErcSynthesis(params?: {
   call_year?: string;
   destination_code?: string;
   panel_id?: string;
-  framework?: string;
 }): Promise<ErcSynthesisResponse> {
   const searchParams = new URLSearchParams();
 
@@ -88,7 +87,6 @@ export async function getErcSynthesis(params?: {
   if (params?.call_year) searchParams.append("call_year", params.call_year);
   if (params?.destination_code) searchParams.append("destination_code", params.destination_code);
   if (params?.panel_id) searchParams.append("panel_id", params.panel_id);
-  if (params?.framework) searchParams.append("framework", params.framework);
 
   const queryString = searchParams.toString();
   const url = `${VITE_APP_SERVER_URL}/european-projects/erc/synthesis${queryString ? `?${queryString}` : ""}`;
@@ -104,14 +102,12 @@ export async function getErcSynthesisByDestination(params?: {
   country_code?: string;
   call_year?: string;
   panel_id?: string;
-  framework?: string;
 }): Promise<ErcDestinationData[]> {
   const searchParams = new URLSearchParams();
 
   if (params?.country_code) searchParams.append("country_code", params.country_code);
   if (params?.call_year) searchParams.append("call_year", params.call_year);
   if (params?.panel_id) searchParams.append("panel_id", params.panel_id);
-  if (params?.framework) searchParams.append("framework", params.framework);
 
   const queryString = searchParams.toString();
   const url = `${VITE_APP_SERVER_URL}/european-projects/erc/synthesis-by-destination${queryString ? `?${queryString}` : ""}`;
@@ -123,18 +119,12 @@ export async function getErcSynthesisByDestination(params?: {
   return response.json();
 }
 
-export async function getErcSynthesisByPanel(params?: {
-  country_code?: string;
-  call_year?: string;
-  destination_code?: string;
-  framework?: string;
-}): Promise<ErcPanelData[]> {
+export async function getErcSynthesisByPanel(params?: { country_code?: string; call_year?: string; destination_code?: string }): Promise<ErcPanelData[]> {
   const searchParams = new URLSearchParams();
 
   if (params?.country_code) searchParams.append("country_code", params.country_code);
   if (params?.call_year) searchParams.append("call_year", params.call_year);
   if (params?.destination_code) searchParams.append("destination_code", params.destination_code);
-  if (params?.framework) searchParams.append("framework", params.framework);
 
   const queryString = searchParams.toString();
   const url = `${VITE_APP_SERVER_URL}/european-projects/erc/synthesis-by-panel${queryString ? `?${queryString}` : ""}`;
@@ -146,18 +136,12 @@ export async function getErcSynthesisByPanel(params?: {
   return response.json();
 }
 
-export async function getErcEvolution(params?: {
-  country_code?: string;
-  destination_code?: string;
-  panel_id?: string;
-  framework?: string;
-}): Promise<ErcEvolutionResponse> {
+export async function getErcEvolution(params?: { country_code?: string; destination_code?: string; panel_id?: string }): Promise<ErcEvolutionResponse> {
   const searchParams = new URLSearchParams();
 
   if (params?.country_code) searchParams.append("country_code", params.country_code);
   if (params?.destination_code) searchParams.append("destination_code", params.destination_code);
   if (params?.panel_id) searchParams.append("panel_id", params.panel_id);
-  if (params?.framework) searchParams.append("framework", params.framework);
 
   const queryString = searchParams.toString();
   const url = `${VITE_APP_SERVER_URL}/european-projects/erc/evolution${queryString ? `?${queryString}` : ""}`;

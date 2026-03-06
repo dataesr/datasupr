@@ -15,7 +15,6 @@ interface ErcSynthesisCardsProps {
   countryCode?: string;
   callYear?: string;
   destinationCode?: string;
-  framework?: string;
   countryAdj?: CountryAdjectives;
 }
 
@@ -23,17 +22,15 @@ export default function ErcSynthesisCards({
   countryCode = "FRA",
   callYear,
   destinationCode,
-  framework,
   countryAdj = { m: "français", f: "française" },
 }: ErcSynthesisCardsProps) {
   const { data, isLoading } = useQuery<ErcSynthesisResponse>({
-    queryKey: ["erc-synthesis", countryCode, callYear, destinationCode, framework],
+    queryKey: ["erc-synthesis", countryCode, callYear, destinationCode],
     queryFn: () =>
       getErcSynthesis({
         country_code: countryCode,
         call_year: callYear,
         destination_code: destinationCode,
-        framework,
       }),
   });
 

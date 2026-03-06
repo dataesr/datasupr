@@ -15,17 +15,15 @@ const DESTINATION_NAMES: Record<string, string> = {
 interface ErcDestinationCardsProps {
   countryCode?: string;
   callYear?: string;
-  framework?: string;
 }
 
-export default function ErcDestinationCards({ countryCode, callYear, framework }: ErcDestinationCardsProps) {
+export default function ErcDestinationCards({ countryCode, callYear }: ErcDestinationCardsProps) {
   const { data, isLoading } = useQuery<ErcDestinationData[]>({
-    queryKey: ["erc-synthesis-by-destination", countryCode, callYear, framework],
+    queryKey: ["erc-synthesis-by-destination", countryCode, callYear],
     queryFn: () =>
       getErcSynthesisByDestination({
         country_code: countryCode,
         call_year: callYear,
-        framework,
       }),
   });
 
