@@ -245,9 +245,12 @@ router.route("/european-projects/erc/synthesis-by-destination").get(async (req, 
 /**
  * Route de synthèse par panel ERC
  * Retourne les données agrégées par panel_id
+ * Paramètres optionnels:
+ * - stage: "successful" (défaut) ou "evaluated"
  */
 router.route("/european-projects/erc/synthesis-by-panel").get(async (req, res) => {
   const filters = {};
+  const stage = req.query.stage || "successful";
 
   if (req.query.call_year) {
     const years = req.query.call_year.split(",");
@@ -269,7 +272,7 @@ router.route("/european-projects/erc/synthesis-by-panel").get(async (req, res) =
   const data = await db
     .collection(COLLECTION_NAME)
     .aggregate([
-      { $match: { ...filters, stage: "successful" } },
+      { $match: { ...filters, stage } },
       {
         $group: {
           _id: {

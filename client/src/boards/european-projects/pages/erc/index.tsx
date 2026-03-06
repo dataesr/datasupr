@@ -8,6 +8,7 @@ import { ErcSynthesisCards, ErcDestinationCards } from "../../components/cards/e
 import { getCountryAdjectives } from "../../../../components/country-selector/utils";
 import { getErcFilters } from "../../api/erc";
 import { cleanUrlParams, needsUrlCleaning, rangeOfYearsToApiFormat } from "./url-utils";
+import PanelFundingChart from "./charts/panel-funding";
 import navigationConfig from "./navigation-config.json";
 
 export default function ERC() {
@@ -65,13 +66,9 @@ export default function ERC() {
           {/* Cartes par type de financement */}
           <ErcDestinationCards countryCode={countryCode} callYear={callYear} />
 
-          {/* TODO: Sections à implémenter */}
+          {/* Graphique par panel ERC */}
           <div className="fr-mt-4w">
-            <h3>Par panel</h3>
-            <p className="fr-text--sm fr-text--muted">
-              Graphique des financements obtenus par porteurs de projets ventilé par panel et type de financement (ordonnées : financements en M€,
-              abscisses : Nombre de porteurs de projets PI). Légende: Panel ERC en couleur, type de financement en forme.
-            </p>
+            <PanelFundingChart countryAdjective={countryAdj.m} />
           </div>
 
           <div className="fr-mt-4w">
