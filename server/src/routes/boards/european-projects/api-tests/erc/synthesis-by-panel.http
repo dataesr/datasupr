@@ -1,0 +1,17 @@
+### Test de synthèse par panel - global
+GET http://localhost:3000/api/european-projects/erc/synthesis-by-panel
+
+### Test de synthèse par panel - France
+GET http://localhost:3000/api/european-projects/erc/synthesis-by-panel?country_code=FRA
+
+### Test de synthèse par panel - avec type de financement
+GET http://localhost:3000/api/european-projects/erc/synthesis-by-panel?destination_code=COG
+
+### Test de synthèse par panel - France avec Consolidator grants
+GET http://localhost:3000/api/european-projects/erc/synthesis-by-panel?country_code=FRA&destination_code=COG
+
+### Test de synthèse par panel - France avec années spécifiques
+GET http://localhost:3000/api/european-projects/erc/synthesis-by-panel?country_code=FRA&call_year=2018,2019,2020
+
+### Test de synthèse par panel - Horizon 2020
+GET http://localhost:3000/api/european-projects/erc/synthesis-by-panel?framework=Horizon 2020

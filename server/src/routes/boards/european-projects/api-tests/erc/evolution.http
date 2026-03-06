@@ -1,0 +1,17 @@
+### Test d'évolution temporelle - global
+GET http://localhost:3000/api/european-projects/erc/evolution
+
+### Test d'évolution temporelle - France
+GET http://localhost:3000/api/european-projects/erc/evolution?country_code=FRA
+
+### Test d'évolution temporelle - avec type de financement spécifique
+GET http://localhost:3000/api/european-projects/erc/evolution?destination_code=COG
+
+### Test d'évolution temporelle - France avec Consolidator grants
+GET http://localhost:3000/api/european-projects/erc/evolution?country_code=FRA&destination_code=COG
+
+### Test d'évolution temporelle - avec panel spécifique
+GET http://localhost:3000/api/european-projects/erc/evolution?panel_id=SH4
+
+### Test d'évolution temporelle - Horizon 2020
+GET http://localhost:3000/api/european-projects/erc/evolution?framework=Horizon 2020

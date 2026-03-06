@@ -20,6 +20,23 @@ export const formatToRates = (value: number): string => {
   return `${(value * 100).toFixed(1)} %`;
 };
 
+export const formatNumber = (value: number): string => {
+  return value.toLocaleString("fr-FR");
+};
+
+export const formatCurrency = (amount: number): string => {
+  if (amount >= 1_000_000_000) {
+    return `${(amount / 1_000_000_000).toFixed(2)} Md€`;
+  }
+  if (amount >= 1_000_000) {
+    return `${(amount / 1_000_000).toFixed(1)} M€`;
+  }
+  if (amount >= 1_000) {
+    return `${(amount / 1_000).toFixed(1)} K€`;
+  }
+  return `${amount.toFixed(0)} €`;
+};
+
 export function capitalize(word: string) {
   return String(word).charAt(0).toUpperCase() + String(word).slice(1);
 }

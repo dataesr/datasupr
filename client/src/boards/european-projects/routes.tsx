@@ -4,6 +4,7 @@ import Beneficiaries from "./pages/beneficiaries/index.tsx";
 import Collaborations from "./pages/collaborations/index.tsx";
 import CollaborationsEntity from "./pages/collaborations/index-entity.tsx";
 import Entities from "./pages/entities/index.tsx";
+import ERC from "./pages/erc/index.tsx";
 import EvolutionPcri from "./pages/evolution-pcri/index.tsx";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 import Home from "./pages/home/index.tsx";
@@ -52,8 +53,7 @@ export default function EuropeanProjectsRoutes() {
           <Route path="beneficiaires-types" element={<RouteWithTitle titleKey="beneficiaires-types" element={<TypeOfBeneficiaries />} />} />
         </Route>
         <Route path="msca" element={<RouteWithTitle titleKey="msca" element={<div>MSCA</div>} />} />
-        <Route path="erc" element={<RouteWithTitle titleKey="erc" element={<div>ERC</div>} />} />
-        <Route path="evolution" element={<RouteWithTitle titleKey="evolution" element={<div>Evolution</div>} />} />
+        <Route path="erc" element={<RouteWithTitle titleKey="erc" element={<ERC />} />} />
         <Route path="entities" element={<RouteWithTitle titleKey="entities" element={<Entities />} />} />
         <Route path="objectifs-types-projets" element={<RouteWithTitle titleKey="objectifs-types-projets" element={<ProjectsTypes />} />} />
         <Route path="programme-mires" element={<RouteWithTitle titleKey="programme-mires" element={<div>Programme MIRES</div>} />} />

@@ -1,0 +1,23 @@
+### Test de synthèse ERC global
+GET http://localhost:3000/api/european-projects/erc/synthesis
+
+### Test de synthèse ERC pour la France
+GET http://localhost:3000/api/european-projects/erc/synthesis?country_code=FRA
+
+### Test de synthèse ERC pour la Suisse
+GET http://localhost:3000/api/european-projects/erc/synthesis?country_code=CHE
+
+### Test de synthèse ERC pour Horizon 2020
+GET http://localhost:3000/api/european-projects/erc/synthesis?framework=Horizon 2020
+
+### Test de synthèse ERC pour une année spécifique
+GET http://localhost:3000/api/european-projects/erc/synthesis?call_year=2018
+
+### Test de synthèse ERC pour plusieurs années
+GET http://localhost:3000/api/european-projects/erc/synthesis?call_year=2018,2019,2020
+
+### Test de synthèse ERC pour un type de financement (Consolidator grants)
+GET http://localhost:3000/api/european-projects/erc/synthesis?destination_code=COG
+
+### Test de synthèse ERC France avec filtres combinés
+GET http://localhost:3000/api/european-projects/erc/synthesis?country_code=FRA&call_year=2018,2019&destination_code=COG,STG

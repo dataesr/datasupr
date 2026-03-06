@@ -1,0 +1,14 @@
+### Test de synthèse par type de financement - global
+GET http://localhost:3000/api/european-projects/erc/synthesis-by-destination
+
+### Test de synthèse par type de financement - France
+GET http://localhost:3000/api/european-projects/erc/synthesis-by-destination?country_code=FRA
+
+### Test de synthèse par type de financement - Horizon 2020
+GET http://localhost:3000/api/european-projects/erc/synthesis-by-destination?framework=Horizon 2020
+
+### Test de synthèse par type de financement - France avec années
+GET http://localhost:3000/api/european-projects/erc/synthesis-by-destination?country_code=FRA&call_year=2018,2019,2020
+
+### Test de synthèse par type de financement - avec panel spécifique
+GET http://localhost:3000/api/european-projects/erc/synthesis-by-destination?panel_id=SH4

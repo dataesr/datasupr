@@ -1,6 +1,9 @@
 import { Text } from "@dataesr/dsfr-plus";
 import { Link } from "react-router-dom";
 
+export { default as ErcSynthesisCards } from "./synthesis-cards";
+export { default as ErcDestinationCards } from "./destination-cards";
+
 export default function ErcCard({ title, subtitle, description, to }: { title: string; subtitle?: string; description?: string; to: string }) {
   return (
     <div className="fr-card fr-enlarge-link" style={{ borderBottom: "4px solid #03a037ff" }}>
