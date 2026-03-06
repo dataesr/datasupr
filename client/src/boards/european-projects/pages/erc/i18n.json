@@ -1,0 +1,156 @@
+{
+  "page": {
+    "title": {
+      "fr": "Synthèse ERC",
+      "en": "ERC Synthesis"
+    }
+  },
+  "panelFunding": {
+    "sectionTitle": {
+      "fr": "Par panel",
+      "en": "By panel"
+    },
+    "projectStatus": {
+      "fr": "Statut de projets",
+      "en": "Project status"
+    },
+    "successfulProjects": {
+      "fr": "Projets lauréats",
+      "en": "Successful projects"
+    },
+    "evaluatedProjects": {
+      "fr": "Projets évalués",
+      "en": "Evaluated projects"
+    },
+    "ercPanel": {
+      "fr": "Panel ERC",
+      "en": "ERC Panel"
+    },
+    "fundingType": {
+      "fr": "Type de financement",
+      "en": "Funding type"
+    },
+    "chartTitle": {
+      "fr": "Financements obtenus par porteurs de projets {adjective} ventilés par panel et type de financement",
+      "en": "Funding obtained by {adjective} project PIs by panel and funding type"
+    },
+    "xAxisTitle": {
+      "fr": "Nombre de porteurs de projets PI",
+      "en": "Number of project PIs"
+    },
+    "yAxisTitle": {
+      "fr": "Financements (M€)",
+      "en": "Funding (M€)"
+    },
+    "average": {
+      "fr": "Moyenne",
+      "en": "Average"
+    },
+    "domain": {
+      "fr": "Domaine",
+      "en": "Domain"
+    },
+    "type": {
+      "fr": "Type",
+      "en": "Type"
+    },
+    "funding": {
+      "fr": "Financements",
+      "en": "Funding"
+    },
+    "numberOfPIs": {
+      "fr": "Nombre de PI",
+      "en": "Number of PIs"
+    },
+    "tableCaption": {
+      "fr": "Financements par panel ERC",
+      "en": "ERC Panel Funding"
+    },
+    "tablePanel": {
+      "fr": "Panel",
+      "en": "Panel"
+    },
+    "tableScientificDomain": {
+      "fr": "Domaine scientifique",
+      "en": "Scientific domain"
+    },
+    "tableFunding": {
+      "fr": "Financement (M€)",
+      "en": "Funding (M€)"
+    }
+  },
+  "evolution": {
+    "sectionTitle": {
+      "fr": "Évolution de la participation {adjective}",
+      "en": "Evolution of {adjective} participation"
+    },
+    "noDataAvailable": {
+      "fr": "Aucune donnée d'évolution disponible.",
+      "en": "No evolution data available."
+    },
+    "weightChartTitle": {
+      "fr": "Poids des projets {adjective} lauréats depuis {year}",
+      "en": "Share of {adjective} successful projects since {year}"
+    },
+    "successRateChartTitle": {
+      "fr": "Taux de succès sur les projets {adjective} depuis {year}",
+      "en": "Success rate on {adjective} projects since {year}"
+    },
+    "weightTableCaption": {
+      "fr": "Poids des projets lauréats",
+      "en": "Share of successful projects"
+    },
+    "successRateTableCaption": {
+      "fr": "Taux de succès",
+      "en": "Success rate"
+    },
+    "year": {
+      "fr": "Année",
+      "en": "Year"
+    },
+    "share": {
+      "fr": "Poids (%)",
+      "en": "Share (%)"
+    },
+    "rate": {
+      "fr": "Taux (%)",
+      "en": "Rate (%)"
+    }
+  },
+  "domains": {
+    "LS": {
+      "fr": "Sciences de la vie",
+      "en": "Life Sciences"
+    },
+    "PE": {
+      "fr": "Sciences physiques et ingénierie",
+      "en": "Physical Sciences and Engineering"
+    },
+    "SH": {
+      "fr": "Sciences sociales et humaines",
+      "en": "Social Sciences and Humanities"
+    }
+  },
+  "destinations": {
+    "ADG": {
+      "fr": "Advanced grants (ADG)",
+      "en": "Advanced grants (ADG)"
+    },
+    "COG": {
+      "fr": "Consolidator grants (COG)",
+      "en": "Consolidator grants (COG)"
+    },
+    "STG": {
+      "fr": "Starting grants (STG)",
+      "en": "Starting grants (STG)"
+    },
+    "SYG": {
+      "fr": "Synergy grants (SYG)",
+      "en": "Synergy grants (SYG)"
+    },
+    "POC": {
+      "fr": "Proof of Concept (POC)",
+      "en": "Proof of Concept (POC)"
+    }
+  }
+}

@@ -4,14 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import { getData } from "./query";
 import Options, { getLegendItems } from "./options";
 import { useGetParams, renderDataTable } from "./utils";
+import { getI18nLabel } from "../../../../../../utils";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+import i18n from "../../i18n.json";
 import "./styles.scss";
 
 interface PanelFundingChartProps {
   countryAdjective?: string;
+  currentLang?: string;
 }
 
 const config = {
@@ -53,14 +56,15 @@ const config = {
   integrationURL: "/european-projects/components/pages/erc/charts/panel-funding",
 };
 
-const STAGE_OPTIONS = [
-  { value: "successful", label: "Projets lauréats" },
-  { value: "evaluated", label: "Projets évalués" },
-];
-
-export default function PanelFundingChart({ countryAdjective = "français" }: PanelFundingChartProps) {
+export default function PanelFundingChart({ countryAdjective = "français", currentLang: propLang }: PanelFundingChartProps) {
   const [stage, setStage] = useState<string>("successful");
-  const { params, currentLang } = useGetParams(stage);
+  const { params, currentLang: urlLang } = useGetParams(stage);
+  const currentLang = propLang || urlLang;
+
+  const stageOptions = [
+    { value: "successful", label: getI18nLabel(i18n, "panelFunding.successfulProjects", currentLang) },
+    { value: "evaluated", label: getI18nLabel(i18n, "panelFunding.evaluatedProjects", currentLang) },
+  ];
 
   const { data, isLoading } = useQuery({
     queryKey: [config.idQuery, params],
@@ -76,14 +80,14 @@ export default function PanelFundingChart({ countryAdjective = "français" }: Pa
   return (
     <div className="panel-funding-chart">
       <div className="panel-funding-chart__header">
-        <h3>Par panel</h3>
+        <h3>{getI18nLabel(i18n, "panelFunding.sectionTitle", currentLang)}</h3>
         <div className="panel-funding-chart__filter">
           <div className="fr-select-group">
             <label className="fr-label" htmlFor="stage-select">
-              Statut de projets
+              {getI18nLabel(i18n, "panelFunding.projectStatus", currentLang)}
             </label>
             <select className="fr-select" id="stage-select" value={stage} onChange={(e) => setStage(e.target.value)}>
-              {STAGE_OPTIONS.map((option) => (
+              {stageOptions.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -98,7 +102,7 @@ export default function PanelFundingChart({ countryAdjective = "français" }: Pa
       {/* Légende personnalisée */}
       <div className="panel-funding-chart__legend">
         <div className="panel-funding-chart__legend-section">
-          <span className="panel-funding-chart__legend-title">Panel ERC</span>
+          <span className="panel-funding-chart__legend-title">{getI18nLabel(i18n, "panelFunding.ercPanel", currentLang)}</span>
           <div className="panel-funding-chart__legend-items">
             {domainItems.map((item) => (
               <span key={item.key} className="panel-funding-chart__legend-item">
@@ -109,7 +113,7 @@ export default function PanelFundingChart({ countryAdjective = "français" }: Pa
           </div>
         </div>
         <div className="panel-funding-chart__legend-section">
-          <span className="panel-funding-chart__legend-title">Type de financement</span>
+          <span className="panel-funding-chart__legend-title">{getI18nLabel(i18n, "panelFunding.fundingType", currentLang)}</span>
           <div className="panel-funding-chart__legend-items">
             {destinationItems.map((item) => (
               <span key={item.key} className="panel-funding-chart__legend-item">

@@ -3,12 +3,16 @@ import { useQuery } from "@tanstack/react-query";
 import { getData } from "./query";
 import Options from "./options";
 import { useGetParams, processEvolutionData, renderDataTable } from "./utils";
+import { getI18nLabel } from "../../../../../../utils";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 
+import i18n from "../../i18n.json";
+
 interface EvolutionChartsProps {
   countryAdjective?: string;
+  currentLang?: string;
 }
 
 const configWeight = {
@@ -67,8 +71,9 @@ const configSuccessRate = {
   integrationURL: "/european-projects/components/pages/erc/charts/evolution-success-rate",
 };
 
-export default function EvolutionCharts({ countryAdjective = "français" }: EvolutionChartsProps) {
-  const { params, currentLang } = useGetParams();
+export default function EvolutionCharts({ countryAdjective = "français", currentLang: propLang }: EvolutionChartsProps) {
+  const { params, currentLang: urlLang } = useGetParams();
+  const currentLang = propLang || urlLang;
 
   const { data, isLoading } = useQuery({
     queryKey: ["ercEvolution", params],
@@ -83,7 +88,7 @@ export default function EvolutionCharts({ countryAdjective = "français" }: Evol
   if (processedData.years.length === 0) {
     return (
       <div className="fr-alert fr-alert--info">
-        <p>Aucune donnée d'évolution disponible.</p>
+        <p>{getI18nLabel(i18n, "evolution.noDataAvailable", currentLang)}</p>
       </div>
     );
   }
@@ -104,7 +109,9 @@ export default function EvolutionCharts({ countryAdjective = "français" }: Evol
 
   return (
     <div className="evolution-charts">
-      <h3>Évolution de la participation {countryAdjective}</h3>
+      <h3>
+        {getI18nLabel(i18n, "evolution.sectionTitle", currentLang)} {countryAdjective}
+      </h3>
 
       {/* Graphique 1: Poids des projets */}
       <div className="fr-mb-4w">

@@ -8,9 +8,11 @@ import { ErcSynthesisCards, ErcDestinationCards } from "../../components/cards/e
 import { getCountryAdjectives } from "../../../../components/country-selector/utils";
 import { getErcFilters } from "../../api/erc";
 import { cleanUrlParams, needsUrlCleaning, rangeOfYearsToApiFormat } from "./url-utils";
+import { getI18nLabel } from "../../../../utils";
 import PanelFundingChart from "./charts/panel-funding";
 import EvolutionCharts from "./charts/evolution";
 import navigationConfig from "./navigation-config.json";
+import i18n from "./i18n.json";
 
 export default function ERC() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -33,6 +35,7 @@ export default function ERC() {
   const countryCode = searchParams.get("country_code") || "FRA";
   const rangeOfYears = searchParams.get("range_of_years");
   const callYear = rangeOfYearsToApiFormat(rangeOfYears);
+  const currentLang = searchParams.get("language") || "fr";
 
   // Adjectifs de nationalité (masculin et féminin)
   const countryAdj = getCountryAdjectives(countryCode);
@@ -59,7 +62,7 @@ export default function ERC() {
           </Container>
         </div>
         <Container>
-          <h2 className="fr-mb-3w">Synthèse ERC</h2>
+          <h2 className="fr-mb-3w">{getI18nLabel(i18n, "page.title", currentLang)}</h2>
 
           {/* Cartes de synthèse principales */}
           <ErcSynthesisCards countryCode={countryCode} callYear={callYear} countryAdj={countryAdj} />
@@ -69,12 +72,12 @@ export default function ERC() {
 
           {/* Graphique par panel ERC */}
           <div className="fr-mt-4w">
-            <PanelFundingChart countryAdjective={countryAdj.m} />
+            <PanelFundingChart countryAdjective={countryAdj.m} currentLang={currentLang} />
           </div>
 
           {/* Graphiques d'évolution */}
           <div className="fr-mt-4w">
-            <EvolutionCharts countryAdjective={countryAdj.f} />
+            <EvolutionCharts countryAdjective={countryAdj.f} currentLang={currentLang} />
           </div>
         </Container>
       </Container>
