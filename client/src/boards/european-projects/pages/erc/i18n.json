@@ -81,20 +81,12 @@
   },
   "evolution": {
     "sectionTitle": {
-      "fr": "Évolution de la participation {adjective}",
-      "en": "Evolution of {adjective} participation"
+      "fr": "Évolution de la participation",
+      "en": "Evolution of participation"
     },
     "noDataAvailable": {
       "fr": "Aucune donnée d'évolution disponible.",
       "en": "No evolution data available."
-    },
-    "weightChartTitle": {
-      "fr": "Poids des projets {adjective} lauréats depuis {year}",
-      "en": "Share of {adjective} successful projects since {year}"
-    },
-    "successRateChartTitle": {
-      "fr": "Taux de succès sur les projets {adjective} depuis {year}",
-      "en": "Success rate on {adjective} projects since {year}"
     },
     "weightTableCaption": {
       "fr": "Poids des projets lauréats",
