@@ -312,90 +312,80 @@ router.route("/european-projects/erc/synthesis-by-panel").get(async (req, res) =
 /**
  * Route d'évolution temporelle ERC
  * Retourne les données agrégées par année et type de financement
+ * Inclut les données du pays sélectionné ET les totaux globaux pour calculer les poids
  */
 router.route("/european-projects/erc/evolution").get(async (req, res) => {
-  const filters = {};
+  const baseFilters = {};
+  const countryFilters = {};
 
   if (req.query.destination_code) {
     const destinations = req.query.destination_code.split(",");
-    filters.destination_code = { $in: destinations };
+    baseFilters.destination_code = { $in: destinations };
+    countryFilters.destination_code = { $in: destinations };
   }
   if (req.query.panel_id) {
     const panels = req.query.panel_id.split(",");
-    filters.panel_id = { $in: panels };
+    baseFilters.panel_id = { $in: panels };
+    countryFilters.panel_id = { $in: panels };
   }
   if (req.query.framework) {
-    filters.framework = req.query.framework;
+    baseFilters.framework = req.query.framework;
+    countryFilters.framework = req.query.framework;
   }
   if (req.query.country_code) {
-    filters.country_code = req.query.country_code.toUpperCase();
+    countryFilters.country_code = req.query.country_code.toUpperCase();
   }
 
-  const dataSuccessful = await db
-    .collection(COLLECTION_NAME)
-    .aggregate([
-      { $match: { ...filters, stage: "successful" } },
-      {
-        $group: {
-          _id: {
-            call_year: "$call_year",
-            destination_code: "$destination_code",
-            destination_name_en: "$destination_name_en",
-          },
-          total_funding_project: { $sum: "$funding_project" },
-          total_involved: { $sum: "$number_involved" },
-          total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
+  // Agrégation commune
+  const aggregationPipeline = (filters, stage) => [
+    { $match: { ...filters, stage } },
+    {
+      $group: {
+        _id: {
+          call_year: "$call_year",
+          destination_code: "$destination_code",
+          destination_name_en: "$destination_name_en",
         },
+        total_funding_project: { $sum: "$funding_project" },
+        total_involved: { $sum: "$number_involved" },
+        total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
       },
-      {
-        $project: {
-          _id: 0,
-          call_year: "$_id.call_year",
-          destination_code: "$_id.destination_code",
-          destination_name_en: "$_id.destination_name_en",
-          total_funding_project: 1,
-          total_involved: 1,
-          total_pi: 1,
-        },
+    },
+    {
+      $project: {
+        _id: 0,
+        call_year: "$_id.call_year",
+        destination_code: "$_id.destination_code",
+        destination_name_en: "$_id.destination_name_en",
+        total_funding_project: 1,
+        total_involved: 1,
+        total_pi: 1,
       },
-      { $sort: { call_year: 1, destination_code: 1 } },
-    ])
-    .toArray();
+    },
+    { $sort: { call_year: 1, destination_code: 1 } },
+  ];
 
-  const dataEvaluated = await db
-    .collection(COLLECTION_NAME)
-    .aggregate([
-      { $match: { ...filters, stage: "evaluated" } },
-      {
-        $group: {
-          _id: {
-            call_year: "$call_year",
-            destination_code: "$destination_code",
-            destination_name_en: "$destination_name_en",
-          },
-          total_funding_project: { $sum: "$funding_project" },
-          total_involved: { $sum: "$number_involved" },
-          total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          call_year: "$_id.call_year",
-          destination_code: "$_id.destination_code",
-          destination_name_en: "$_id.destination_name_en",
-          total_funding_project: 1,
-          total_involved: 1,
-          total_pi: 1,
-        },
-      },
-      { $sort: { call_year: 1, destination_code: 1 } },
-    ])
-    .toArray();
+  // Données pour le pays sélectionné
+  const [countrySuccessful, countryEvaluated] = await Promise.all([
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "successful")).toArray(),
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "evaluated")).toArray(),
+  ]);
+
+  // Données globales (tous pays) pour calculer les poids
+  const [totalSuccessful, totalEvaluated] = await Promise.all([
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "successful")).toArray(),
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "evaluated")).toArray(),
+  ]);
 
   res.json({
-    successful: dataSuccessful,
-    evaluated: dataEvaluated,
+    country: {
+      successful: countrySuccessful,
+      evaluated: countryEvaluated,
+    },
+    total: {
+      successful: totalSuccessful,
+      evaluated: totalEvaluated,
+    },
   });
 });
 

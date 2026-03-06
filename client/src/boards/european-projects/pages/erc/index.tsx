@@ -9,6 +9,7 @@ import { getCountryAdjectives } from "../../../../components/country-selector/ut
 import { getErcFilters } from "../../api/erc";
 import { cleanUrlParams, needsUrlCleaning, rangeOfYearsToApiFormat } from "./url-utils";
 import PanelFundingChart from "./charts/panel-funding";
+import EvolutionCharts from "./charts/evolution";
 import navigationConfig from "./navigation-config.json";
 
 export default function ERC() {
@@ -71,12 +72,9 @@ export default function ERC() {
             <PanelFundingChart countryAdjective={countryAdj.m} />
           </div>
 
+          {/* Graphiques d'évolution */}
           <div className="fr-mt-4w">
-            <h3>Évolution temporelle</h3>
-            <p className="fr-text--sm fr-text--muted">
-              Graphiques d'évolution de la participation {countryAdj.f} dans les ERC au fil du temps (poids de projets lauréats et taux de succès par
-              type de financement).
-            </p>
+            <EvolutionCharts countryAdjective={countryAdj.f} />
           </div>
         </Container>
       </Container>
