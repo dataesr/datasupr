@@ -6,6 +6,7 @@ import "highcharts/modules/map";
 import regionsTopology from "../../../../../../assets/regions.json";
 import { getCssColor } from "../../../../../../utils/colors";
 import "../styles.scss";
+import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
 
 type HighchartsOptions = Highcharts.Options;
 
@@ -355,6 +356,7 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
           </div>
         )}
       </div>
+      <MetricDefinitionsTable metricKeys={["nb_sites"]} />
     </section>
   );
 }
