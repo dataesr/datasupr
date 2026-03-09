@@ -131,18 +131,21 @@ export const createEffectifsSpecifiquesChartOptions = (
     {
       name: "Formations d'IUT",
       y: data.effectif_sans_cpge_iut || 0,
+      percentage: data.part_effectif_sans_cpge_iut || 0,
       has: data.has_effectif_iut,
       color: getCssColor("scale-1"),
     },
     {
       name: "Formations d'ingénieurs",
       y: data.effectif_sans_cpge_ing || 0,
+      percentage: data.part_effectif_sans_cpge_ing || 0,
       has: data.has_effectif_ing,
       color: getCssColor("scale-2"),
     },
     {
       name: "Formation de santé",
       y: data.effectif_sans_cpge_sante || 0,
+      percentage: data.part_effectif_sans_cpge_sante || 0,
       has: data.has_effectif_sante,
       color: getCssColor("scale-3"),
     },
@@ -153,6 +156,7 @@ export const createEffectifsSpecifiquesChartOptions = (
     y: item.y,
     color: item.color,
     name: item.name,
+    percentage: item.percentage,
   }));
 
   return createChartOptions("column", {
@@ -175,7 +179,7 @@ export const createEffectifsSpecifiquesChartOptions = (
     tooltip: {
       formatter: function () {
         const point = this as any;
-        return `<strong>${point.name}</strong><br/>${Highcharts.numberFormat(point.y, 0, ",", " ")} étudiants`;
+        return `<strong>${point.name}</strong><br/>${Highcharts.numberFormat(point.y, 0, ",", " ")} étudiants<br/>${point.percentage.toFixed(1)}% du total`;
       },
     },
     plotOptions: {
@@ -358,11 +362,14 @@ export const createEffectifsDegreesChartOptions = (
     },
   ].filter((item) => item.y > 0);
 
+  const total = degrees.reduce((sum, item) => sum + item.y, 0);
+
   const categories = degrees.map((item) => item.name);
   const values = degrees.map((item) => ({
     y: item.y,
     color: item.color,
     name: item.name,
+    percentage: total > 0 ? (item.y / total) * 100 : 0,
   }));
 
   return createChartOptions("column", {
@@ -391,7 +398,7 @@ export const createEffectifsDegreesChartOptions = (
     tooltip: {
       formatter: function () {
         const point = this as any;
-        return `<strong>${point.name}</strong><br/>${Highcharts.numberFormat(point.y, 0, ",", " ")} étudiants`;
+        return `<strong>${point.name}</strong><br/>${Highcharts.numberFormat(point.y, 0, ",", " ")} étudiants<br/>${point.percentage.toFixed(1)}% du total`;
       },
     },
     plotOptions: {
