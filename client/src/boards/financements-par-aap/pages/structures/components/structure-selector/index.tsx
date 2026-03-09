@@ -12,8 +12,8 @@ const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.en
 
 export default function StructureSelector({ setStructures }) {
   const [county, setCounty] = useState("*");
-  const [typology, setTypology] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
+  const [typology, setTypology] = useState("*");
   const structure = searchParams.get("structure") ?? "";
 
   const bodyCounties: any = {
