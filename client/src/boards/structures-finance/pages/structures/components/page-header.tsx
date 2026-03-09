@@ -135,7 +135,7 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                         {data.nb_sites}
                       </Text>
                       <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
-                        {data.nb_sites > 1 ? "Sites" : "Site"}
+                        {data.nb_sites > 1 ? "Implantations" : "Implantation"}
                       </Text>
                     </div>
                   </div>
