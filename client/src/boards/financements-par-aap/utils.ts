@@ -6,7 +6,9 @@ const pattern = { height: 4, path: "M 2 2 l 2 2", width: 4 };
 
 const typologiesExcluded = ["Entreprises", "Infrastructures de recherche", "Structures de recherche"];
 
-const years: number[] = Array.from(Array(11).keys()).map((item) => item + 2009);
+const YEAR_MIN = 2009;
+const YEAR_MAX = 2025
+const years: number[] = Array.from(Array(YEAR_MAX - YEAR_MIN + 1).keys()).map((item) => item + YEAR_MIN);
 
 const formatCompactNumber = (number: number): string => {
   const formatter = Intl.NumberFormat("fr", { notation: "compact" });
