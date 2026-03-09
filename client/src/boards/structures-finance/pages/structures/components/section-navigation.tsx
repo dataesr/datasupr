@@ -20,13 +20,17 @@ export default function SectionNavigation({
 }: SectionNavigationProps) {
   const showImplantations = data?.nb_sites > 1;
   const showErc = data?.is_erc === true;
+  const showFormations =
+    data?.effectif_sans_cpge != null && data?.effectif_sans_cpge !== 0;
 
   const navItems = [
     { id: "ressources", label: "Ressources" },
     { id: "sante-financiere", label: "Santé financière" },
     { id: "moyens-humains", label: "Moyens humains" },
     ...(showErc ? [{ id: "erc", label: "ERC" }] : []),
-    { id: "diplomes-formations", label: "Diplômes et formations" },
+    ...(showFormations
+      ? [{ id: "diplomes-formations", label: "Diplômes et formations" }]
+      : []),
     ...(showImplantations
       ? [{ id: "implantations", label: "Implantations" }]
       : []),
