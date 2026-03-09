@@ -91,32 +91,6 @@ export default function ComparisonOverviewChart({
     return "parmi les valeurs les plus hautes";
   };
 
-  const positionInfo = useMemo(() => {
-    if (!allData?.length || !currentStructureId) return null;
-
-    const seen = new Set<string>();
-    const unique: { value: number; id: string }[] = [];
-    allData.forEach((item: any) => {
-      const id = item.etablissement_id_paysage_actuel;
-      const value = item[activeMetric];
-      if (!id || seen.has(id) || value == null || isNaN(value)) return;
-      seen.add(id);
-      unique.push({ value, id });
-    });
-
-    const sorted = sortByMetricSens(unique, activeMetricSens ?? null);
-    const rankIdx = sorted.findIndex((d) => d.id === currentStructureId);
-    if (rankIdx === -1) return null;
-
-    const rank = rankIdx + 1;
-    const total = sorted.length;
-    const isDecroissant = activeMetricSens !== "augmentation";
-    const rawPct = total > 1 ? (rank - 1) / (total - 1) : 0.5;
-    const pct = (isDecroissant ? 1 - rawPct : rawPct) * 100;
-
-    return { rank, total, pct, isDecroissant };
-  }, [allData, currentStructureId, activeMetric, activeMetricSens]);
-
   const activeConfig: ComparisonOverviewConfig = useMemo(
     () => ({
       ...config,
@@ -182,6 +156,37 @@ export default function ComparisonOverviewChart({
     showType,
     showTypologie,
   ]);
+
+  const positionInfo = useMemo(() => {
+    if (!datasets.length || !currentStructureId) return null;
+
+    const seen = new Set<string>();
+    const unique: { value: number; id: string }[] = [];
+
+    datasets.forEach((dataset) => {
+      dataset.data.forEach((item: any) => {
+        const id = item.etablissement_id_paysage_actuel;
+        const value = item[activeMetric];
+        if (!id || seen.has(id) || value == null || isNaN(value)) return;
+        seen.add(id);
+        unique.push({ value, id });
+      });
+    });
+
+    if (!unique.length) return null;
+
+    const sorted = sortByMetricSens(unique, activeMetricSens ?? null);
+    const rankIdx = sorted.findIndex((d) => d.id === currentStructureId);
+    if (rankIdx === -1) return null;
+
+    const rank = rankIdx + 1;
+    const total = sorted.length;
+    const isDecroissant = activeMetricSens !== "augmentation";
+    const rawPct = total > 1 ? (rank - 1) / (total - 1) : 0.5;
+    const pct = (isDecroissant ? 1 - rawPct : rawPct) * 100;
+
+    return { rank, total, pct, isDecroissant };
+  }, [datasets, currentStructureId, activeMetric, activeMetricSens]);
 
   const hasData = (() => {
     if (!datasets.length || !currentStructureId) return false;
@@ -273,10 +278,11 @@ export default function ComparisonOverviewChart({
                   >
                     Le losange vert indique la position de{" "}
                     <strong>{currentStructureName || "l'établissement"}</strong>{" "}
-                    en <strong>{activeConfig.metricConfig.year}</strong> par
-                    rapport aux autres établissements d'enseignement supérieur.
-                    Pour l'indicateur <strong>{activeMetricLabel}</strong>, cet
-                    établissement se positionne au{" "}
+                    en <strong>{activeConfig.metricConfig.year}</strong> sur le
+                    périmètre actuellement affiché (selon les filtres
+                    sélectionnés). Pour l'indicateur{" "}
+                    <strong>{activeMetricLabel}</strong>, cet établissement se
+                    positionne au{" "}
                     <strong>{ordinal(positionInfo.rank)} rang</strong> sur{" "}
                     {positionInfo.total} (par ordre{" "}
                     {positionInfo.isDecroissant ? "décroissant" : "croissant"}),{" "}
