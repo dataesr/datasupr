@@ -1,0 +1,33 @@
+.collaborations-by-continent {
+  &__header {
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__segmented-col {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  &__legend {
+    margin-top: 8px;
+  }
+
+  &__legend-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+  }
+
+  &__legend-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    border-bottom: 1px solid #eee;
+  }
+
+  &__legend-value {
+    font-weight: 600;
+  }
+}

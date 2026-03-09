@@ -11,7 +11,7 @@ import i18nGlobal from "../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";
 import { getFlagEmoji } from "../../../../utils";
 import { getNeighbouringCountriesFromIso3 } from "../../../../../../utils";
-import { formatToMillions } from "../../../../../../utils/format";
+import { formatCurrency, formatToMillions } from "../../../../../../utils/format";
 
 type CollaborationDetail = {
   project_id: string;
@@ -39,11 +39,18 @@ export default function CountriesCollaborationsTable() {
   const [selectedParticipationType, setSelectedParticipationType] = useState("all");
   const [displayLimit, setDisplayLimit] = useState(20);
 
+  type YearData = {
+    year: string;
+    count: number;
+  };
+
   type CollaborationCountry = {
     country_code: string;
     country_name_fr: string;
     country_name_en: string;
     total_collaborations: number;
+    total_amount: number;
+    by_year: YearData[];
   };
 
   const [collabCountry, setCollabCountry] = useState<CollaborationCountry | null>(null);
@@ -89,6 +96,9 @@ export default function CountriesCollaborationsTable() {
     return [...data].sort((a, b) => {
       if (sortColumn === "country") {
         return sortDirection === "asc" ? a.country_name_fr.localeCompare(b.country_name_fr) : b.country_name_fr.localeCompare(a.country_name_fr);
+      }
+      if (sortColumn === "amount") {
+        return sortDirection === "asc" ? (a.total_amount || 0) - (b.total_amount || 0) : (b.total_amount || 0) - (a.total_amount || 0);
       }
       return sortDirection === "asc" ? a.total_collaborations - b.total_collaborations : b.total_collaborations - a.total_collaborations;
     });
@@ -196,43 +206,116 @@ export default function CountriesCollaborationsTable() {
                             {getI18nLabel("collaborations-count")} {sortColumn === "collaborations" && (sortDirection === "asc" ? "↑" : "↓")}
                           </button>
                         </th>
+                        <th>
+                          <button className="fr-btn fr-btn--tertiary-no-outline" onClick={() => handleSort("amount")}>
+                            {currentLang === "fr" ? "Montant" : "Amount"} {sortColumn === "amount" && (sortDirection === "asc" ? "↑" : "↓")}
+                          </button>
+                        </th>
+                        <th style={{ minWidth: "120px" }}>{currentLang === "fr" ? "Évolution 2021-2025" : "Trend 2021-2025"}</th>
                       </tr>
                     </thead>
                     <tbody>
-                      {displayedData.map((collab) => (
-                        <tr key={collab.country_code}>
-                          <td className="fr-py-0">
-                            <button className="fr-btn fr-btn--tertiary-no-outline fr-p-0" onClick={() => handleCountryClick(collab.country_code)}>
-                              {getFlagEmoji(collab.country_code)}
-                              <span className="fr-ml-1w">{collab[`country_name_${currentLang}`]}</span>
-                              {
-                                // ajoute un badge si le pays est un pays frontalier
-                                dataCountries && dataCountries.includes(collab.country_code) && (
-                                  <span
-                                    className="fr-mx-1w"
-                                    style={{ display: "inline-block", width: "5px", height: "5px", backgroundColor: "#000091", borderRadius: "50%" }}
-                                  />
-                                )
-                              }
-                            </button>
-                          </td>
-                          <td className="fr-py-0" style={{ textAlign: "center" }}>
-                            {collab.total_collaborations}
-                            <Button
-                              icon="eye-line"
-                              className="fr-ml-1w"
-                              size="sm"
-                              variant="text"
-                              onClick={() => {
-                                setCollabCountry(collab);
-                                setIsModalOpen(true);
-                              }}
-                            />
-                          </td>
-                        </tr>
-                      ))}
+                      {displayedData.map((collab) => {
+                        // Préparer les données sparkline pour 2021-2025
+                        const years = ["2021", "2022", "2023", "2024", "2025"];
+                        const yearCounts = years.map((year) => {
+                          const found = collab.by_year?.find((y) => y.year === year);
+                          return found?.count || 0;
+                        });
+                        const maxCount = Math.max(...yearCounts, 1);
+
+                        return (
+                          <tr key={collab.country_code}>
+                            <td className="fr-py-0">
+                              <button className="fr-btn fr-btn--tertiary-no-outline fr-p-0" onClick={() => handleCountryClick(collab.country_code)}>
+                                {getFlagEmoji(collab.country_code)}
+                                <span className="fr-ml-1w">{collab[`country_name_${currentLang}`]}</span>
+                                {
+                                  // ajoute un badge si le pays est un pays frontalier
+                                  dataCountries && dataCountries.includes(collab.country_code) && (
+                                    <span
+                                      className="fr-mx-1w"
+                                      style={{
+                                        display: "inline-block",
+                                        width: "5px",
+                                        height: "5px",
+                                        backgroundColor: "#000091",
+                                        borderRadius: "50%",
+                                      }}
+                                    />
+                                  )
+                                }
+                              </button>
+                            </td>
+                            <td className="fr-py-0" style={{ textAlign: "center" }}>
+                              {collab.total_collaborations}
+                              <Button
+                                icon="eye-line"
+                                className="fr-ml-1w"
+                                size="sm"
+                                variant="text"
+                                onClick={() => {
+                                  setCollabCountry(collab);
+                                  setIsModalOpen(true);
+                                }}
+                              />
+                            </td>
+                            <td className="fr-py-0" style={{ textAlign: "right" }}>
+                              {formatCurrency(collab.total_amount || 0)}
+                            </td>
+                            <td className="fr-py-0">
+                              <div style={{ display: "flex", alignItems: "flex-end", gap: "2px", height: "24px", position: "relative" }}>
+                                {yearCounts.map((count, idx) => {
+                                  // Dégradé violet de clair à foncé selon l'année
+                                  const purpleGradient = ["#c8b6ff", "#a78bfa", "#8b5cf6", "#7c3aed", "#6d28d9"];
+                                  return (
+                                    <div
+                                      key={years[idx]}
+                                      className="sparkline-bar"
+                                      data-tooltip={`${years[idx]}: ${count} projet${count > 1 ? "s" : ""}`}
+                                      style={{
+                                        width: "16px",
+                                        height: `${Math.max((count / maxCount) * 24, 2)}px`,
+                                        backgroundColor: count > 0 ? purpleGradient[idx] : "#e0e0e0",
+                                        borderRadius: "2px",
+                                        cursor: "pointer",
+                                        position: "relative",
+                                      }}
+                                    />
+                                  );
+                                })}
+                              </div>
+                              <style>{`
+                                .sparkline-bar {
+                                  position: relative;
+                                }
+                                .sparkline-bar::after {
+                                  content: attr(data-tooltip);
+                                  position: absolute;
+                                  bottom: 100%;
+                                  left: 50%;
+                                  transform: translateX(-50%);
+                                  background: #333;
+                                  color: white;
+                                  padding: 4px 8px;
+                                  border-radius: 4px;
+                                  font-size: 12px;
+                                  white-space: nowrap;
+                                  opacity: 0;
+                                  pointer-events: none;
+                                  transition: opacity 0.2s;
+                                  z-index: 100;
+                                }
+                                .sparkline-bar:hover::after {
+                                  opacity: 1;
+                                }
+                              `}</style>
+                            </td>
+                          </tr>
+                        );
+                      })}
                       <tr>
-                        <td colSpan={2} className="fr-text--sm">
+                        <td colSpan={4} className="fr-text--sm">
                           {getI18nLabel("total-collaborations")}
                           {total_collaborations.toLocaleString()}
                         </td>
@@ -250,8 +333,16 @@ export default function CountriesCollaborationsTable() {
           )}
           <Button
             onClick={() => {
-              const csvContent =
-                "data:text/csv;charset=utf-8," + data.map((e) => `${e.country_code},${e.country_name_fr},${e.total_collaborations}`).join("\n");
+              const header = "country_code,country_name,total_collaborations,total_amount,2021,2022,2023,2024,2025";
+              const rows = data.map((e) => {
+                const years = ["2021", "2022", "2023", "2024", "2025"];
+                const yearCounts = years.map((year) => {
+                  const found = e.by_year?.find((y) => y.year === year);
+                  return found?.count || 0;
+                });
+                return `${e.country_code},${e.country_name_fr},${e.total_collaborations},${e.total_amount || 0},${yearCounts.join(",")}`;
+              });
+              const csvContent = "data:text/csv;charset=utf-8," + header + "\n" + rows.join("\n");
               const encodedUri = encodeURI(csvContent);
               const link = document.createElement("a");
               link.setAttribute("href", encodedUri);
@@ -288,7 +379,7 @@ export default function CountriesCollaborationsTable() {
                         <Tag color="green-bourgeon">{processCollaborationDetails(collaborationDetails).stats.total} projets</Tag>
                         <Tag color="green-emeraude">
                           <span className="fr-icon-money-euro-circle-line fr-mr-1w" aria-hidden="true" />
-                          {formatToMillions(processCollaborationDetails(collaborationDetails).stats.totalBudget)}
+                          {formatCurrency(processCollaborationDetails(collaborationDetails).stats.totalBudget)}
                         </Tag>
                         <Tag color="yellow-tournesol">
                           {processCollaborationDetails(collaborationDetails).stats.asCoordinator} en tant que coordinateur
@@ -341,7 +432,7 @@ export default function CountriesCollaborationsTable() {
                             <Tag>
                               <span className="fr-icon-money-euro-circle-line fr-mr-1w" aria-hidden="true" />
                               Budget total :{" "}
-                              {formatToMillions(filterData(collaborationDetails, false).reduce((sum, item) => sum + (item.total_cost || 0), 0))}
+                              {formatCurrency(filterData(collaborationDetails, false).reduce((sum, item) => sum + (item.total_cost || 0), 0))}
                             </Tag>
                             <Tag>
                               <span className="fr-icon-money-euro-box-line fr-mr-1w" aria-hidden="true" />

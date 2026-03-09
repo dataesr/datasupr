@@ -1,0 +1,77 @@
+.european-cards {
+  &__skeleton {
+    height: 80px;
+    border-radius: 4px;
+
+    &--card {
+      height: 180px;
+      border-radius: 4px;
+    }
+  }
+
+  &__reading-key {
+    background: var(--background-alt-blue-france);
+    border-left: 4px solid var(--border-action-high-blue-france);
+
+    .fr-card__content {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+  }
+
+  &__reading-key-icon {
+    color: var(--text-action-high-blue-france);
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  &__stat-card {
+    border-bottom: 4px solid var(--border-action-high-blue-france);
+    background: linear-gradient(135deg, var(--background-default-grey) 0%, var(--background-contrast-grey) 100%);
+  }
+
+  &__stat-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  &__stat-header--top5 {
+    margin-bottom: 0.75rem;
+  }
+
+  &__stat-icon {
+    color: var(--text-action-high-blue-france);
+  }
+
+  &__stat-number {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--text-action-high-blue-france);
+    line-height: 1.2;
+  }
+
+  &__top5-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__top5-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__top5-item-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__text-grey {
+    color: var(--text-mention-grey);
+  }
+}

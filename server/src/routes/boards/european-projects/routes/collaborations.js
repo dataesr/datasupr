@@ -178,10 +178,29 @@ router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
         { $match: { ...filters } },
         {
           $group: {
-            _id: "$country_code_collab",
+            _id: {
+              country_code: "$country_code_collab",
+              call_year: "$call_year",
+            },
             country_name_fr: { $first: "$country_name_fr_collab" },
             country_name_en: { $first: "$country_name_en_collab" },
             unique_project_ids: { $addToSet: "$project_id" },
+            total_cost: { $sum: "$total_cost" },
+          },
+        },
+        {
+          $group: {
+            _id: "$_id.country_code",
+            country_name_fr: { $first: "$country_name_fr" },
+            country_name_en: { $first: "$country_name_en" },
+            unique_project_ids: { $push: "$unique_project_ids" },
+            total_amount: { $sum: "$total_cost" },
+            by_year: {
+              $push: {
+                year: "$_id.call_year",
+                count: { $size: "$unique_project_ids" },
+              },
+            },
           },
         },
         {
@@ -190,7 +209,17 @@ router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
             country_code: "$_id",
             country_name_fr: 1,
             country_name_en: 1,
-            total_collaborations: { $size: "$unique_project_ids" },
+            total_collaborations: {
+              $size: {
+                $reduce: {
+                  input: "$unique_project_ids",
+                  initialValue: [],
+                  in: { $setUnion: ["$$value", "$$this"] },
+                },
+              },
+            },
+            total_amount: 1,
+            by_year: 1,
           },
         },
         {
