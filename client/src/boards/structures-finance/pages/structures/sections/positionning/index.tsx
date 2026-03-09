@@ -78,6 +78,13 @@ export function PositionnementSection({
             Aucun établissement ne correspond aux filtres sélectionnés.
           </Text>
         </div>
+      ) : filteredItems.length === 1 ? (
+        <div className="fr-alert fr-alert--warning">
+          <Text>
+            Le graphique ne peut pas être affiché lorsqu'il n'y a qu'un seul
+            point.
+          </Text>
+        </div>
       ) : (
         <PositioningCharts
           activeChart={activeChart}
