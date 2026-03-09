@@ -692,13 +692,13 @@ export const PREDEFINED_ANALYSES = {
     showBase100: true,
   },
   "ressources-scsp": {
-    label: "Dotation de l'état",
+    label: "Dotation du MESRE",
     metrics: ["scsp", "scsp_ipc"],
     category: "Ressources financières",
     showBase100: false,
   },
   "scsp-par-etudiant": {
-    label: "Dotation de l'état par étudiant",
+    label: "Dotation du MESRE par étudiant",
     metrics: ["scsp_par_etudiants", "scsp_par_etudiants_ipc"],
     category: "Ressources financières",
     showBase100: false,
@@ -711,7 +711,7 @@ export const PREDEFINED_ANALYSES = {
   },
   "scsp-comparaison-complete": {
     label:
-      "Dotation de l'état, étudiants financés et dotation de l'état par étudiant (base 100)",
+      "Dotation du MESRE, étudiants financés et dotation du MESRE par étudiant (base 100)",
     metrics: ["scsp", "scsp_etudiants", "scsp_par_etudiants"],
     category: "Ressources financières",
     showBase100: true,
