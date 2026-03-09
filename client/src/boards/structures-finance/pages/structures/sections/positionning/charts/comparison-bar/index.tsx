@@ -180,6 +180,8 @@ export default function ComparisonBarChart({
         </div>
       ) : (
         <>
+          <BudgetWarning data={data} metrics={[selectedMetric]} />
+
           <ChartWrapper
             key={chartKey}
             config={chartConfig}
@@ -197,8 +199,6 @@ export default function ComparisonBarChart({
               />
             )}
           />
-
-          <BudgetWarning data={data} metrics={[selectedMetric]} />
         </>
       )}
 
