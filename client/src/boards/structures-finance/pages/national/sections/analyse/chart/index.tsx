@@ -14,6 +14,7 @@ import DefaultSkeleton from "../../../../../../../components/charts-skeletons/de
 import MetricDefinitionsTable from "../../../../../components/metric-definitions/metric-definitions-table.tsx";
 import { useMetricLabel } from "../../../../../hooks/useMetricLabel";
 import { useMetricThreshold } from "../../../../../hooks/useMetricThreshold";
+import ColumnRangeChart from "./column-range/index.tsx";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
@@ -48,6 +49,7 @@ export default function NationalChart({
   const [topN, setTopN] = useState<number | null>(20);
   const [selectedMetricIndex, setSelectedMetricIndex] = useState(0);
   const [showPart, setShowPart] = useState(false);
+  const [viewMode, setViewMode] = useState<"bar" | "columnrange">("bar");
 
   const getMetricLabel = useMetricLabel();
 
@@ -73,7 +75,6 @@ export default function NationalChart({
       baseMetric = nonIpcMetric as MetricKey;
     }
 
-    // Si le mode est "part" et que la version part existe, utiliser celle-ci
     if (showPart && baseMetric) {
       const partMetric = METRIC_TO_PART[baseMetric];
       if (partMetric && METRICS_CONFIG[partMetric]) {
@@ -165,178 +166,219 @@ export default function NationalChart({
   return (
     <div>
       <Row gutters className="fr-mb-3w">
-        <Col xs="12" md="4">
-          <Text className="fr-text--sm fr-text--bold fr-mb-1w">Année</Text>
-          <Select label={selectedYear} size="sm" fullWidth className="fr-mb-0">
-            {availableYears.map((year) => (
-              <Select.Checkbox
-                key={year}
-                value={String(year)}
-                checked={selectedYear === String(year)}
-                onChange={() => onYearChange(String(year))}
+        <Col xs="12">
+          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
+            Mode de représentation
+          </Text>
+          <SegmentedControl className="fr-segmented--sm" name="view-mode">
+            <SegmentedElement
+              checked={viewMode === "bar"}
+              label="Classement"
+              onClick={() => setViewMode("bar")}
+              value="bar"
+            />
+            <SegmentedElement
+              checked={viewMode === "columnrange"}
+              label="Variation entre deux années"
+              onClick={() => setViewMode("columnrange")}
+              value="columnrange"
+            />
+          </SegmentedControl>
+        </Col>
+      </Row>
+      {viewMode === "columnrange" && activeMetricKey && (
+        <ColumnRangeChart
+          allYearsData={allYearsData}
+          metricKey={activeMetricKey}
+          availableYears={availableYears}
+          isLoading={isLoading}
+        />
+      )}
+      {viewMode === "bar" && (
+        <>
+          <Row gutters className="fr-mb-3w">
+            <Col xs="12" md="4">
+              <Text className="fr-text--sm fr-text--bold fr-mb-1w">Année</Text>
+              <Select
+                label={selectedYear}
+                size="sm"
+                fullWidth
+                className="fr-mb-0"
               >
-                {year}
-              </Select.Checkbox>
-            ))}
-          </Select>
-          {hasPartVersion && (
-            <Row gutters className="fr-mt-2w">
+                {availableYears.map((year) => (
+                  <Select.Checkbox
+                    key={year}
+                    value={String(year)}
+                    checked={selectedYear === String(year)}
+                    onChange={() => onYearChange(String(year))}
+                  >
+                    {year}
+                  </Select.Checkbox>
+                ))}
+              </Select>
+              {hasPartVersion && (
+                <Row gutters className="fr-mt-2w">
+                  <Col xs="12" md="6">
+                    <Text className="fr-text--sm fr-text--bold fr-mb-1w">
+                      Affichage
+                    </Text>
+                    <SegmentedControl
+                      className="fr-segmented--sm"
+                      name="national-part-mode"
+                    >
+                      <SegmentedElement
+                        checked={!showPart}
+                        label="Valeur"
+                        onClick={() => setShowPart(false)}
+                        value="value"
+                      />
+                      <SegmentedElement
+                        checked={showPart}
+                        label="%"
+                        onClick={() => setShowPart(true)}
+                        value="part"
+                      />
+                    </SegmentedControl>
+                  </Col>
+                </Row>
+              )}
+            </Col>
+
+            <Col xs="12" md="4" offsetMd="4">
+              <Text className="fr-text--sm fr-text--bold fr-mb-1w">
+                Nombre d'établissements
+              </Text>
+              <Select
+                label={getTopNLabel(topN)}
+                size="sm"
+                fullWidth
+                className="fr-mb-0"
+              >
+                {TOP_N_OPTIONS.map((n) => (
+                  <Select.Checkbox
+                    key={String(n)}
+                    value={String(n)}
+                    checked={topN === n}
+                    onChange={() => setTopN(n)}
+                  >
+                    {getTopNLabel(n)}
+                  </Select.Checkbox>
+                ))}
+              </Select>
+            </Col>
+          </Row>
+
+          {isStacked && analysisConfig && (
+            <Row gutters className="fr-mb-3w">
               <Col xs="12" md="6">
                 <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-                  Affichage
+                  Métrique
                 </Text>
-                <SegmentedControl
-                  className="fr-segmented--sm"
-                  name="national-part-mode"
+                <Select
+                  label={
+                    METRICS_CONFIG[
+                      analysisConfig.metrics.filter(
+                        (metric) =>
+                          !metric.includes("_ipc") &&
+                          metric !== "effectif_sans_cpge_veto"
+                      )[selectedMetricIndex] as MetricKey
+                    ]?.label || "Sélectionner"
+                  }
+                  size="sm"
+                  fullWidth
+                  className="fr-mb-0"
                 >
-                  <SegmentedElement
-                    checked={!showPart}
-                    label="Valeur"
-                    onClick={() => setShowPart(false)}
-                    value="value"
-                  />
-                  <SegmentedElement
-                    checked={showPart}
-                    label="%"
-                    onClick={() => setShowPart(true)}
-                    value="part"
-                  />
-                </SegmentedControl>
+                  {analysisConfig.metrics
+                    .filter(
+                      (metric) =>
+                        !metric.includes("_ipc") &&
+                        metric !== "effectif_sans_cpge_veto"
+                    )
+                    .map((metric, index) => (
+                      <Select.Checkbox
+                        key={metric}
+                        value={String(index)}
+                        checked={selectedMetricIndex === index}
+                        onChange={() => setSelectedMetricIndex(index)}
+                      >
+                        {METRICS_CONFIG[metric as MetricKey]?.label || metric}
+                      </Select.Checkbox>
+                    ))}
+                </Select>
               </Col>
             </Row>
           )}
-        </Col>
 
-        <Col xs="12" md="4" offsetMd="4">
-          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-            Nombre d'établissements
-          </Text>
-          <Select
-            label={getTopNLabel(topN)}
-            size="sm"
-            fullWidth
-            className="fr-mb-0"
-          >
-            {TOP_N_OPTIONS.map((n) => (
-              <Select.Checkbox
-                key={String(n)}
-                value={String(n)}
-                checked={topN === n}
-                onChange={() => setTopN(n)}
-              >
-                {getTopNLabel(n)}
-              </Select.Checkbox>
-            ))}
-          </Select>
-        </Col>
-      </Row>
-
-      {isStacked && analysisConfig && (
-        <Row gutters className="fr-mb-3w">
-          <Col xs="12" md="6">
-            <Text className="fr-text--sm fr-text--bold fr-mb-1w">Métrique</Text>
-            <Select
-              label={
-                METRICS_CONFIG[
-                  analysisConfig.metrics.filter(
-                    (metric) =>
-                      !metric.includes("_ipc") &&
-                      metric !== "effectif_sans_cpge_veto"
-                  )[selectedMetricIndex] as MetricKey
-                ]?.label || "Sélectionner"
-              }
-              size="sm"
-              fullWidth
-              className="fr-mb-0"
-            >
-              {analysisConfig.metrics
-                .filter(
-                  (metric) =>
-                    !metric.includes("_ipc") &&
-                    metric !== "effectif_sans_cpge_veto"
-                )
-                .map((metric, index) => (
-                  <Select.Checkbox
-                    key={metric}
-                    value={String(index)}
-                    checked={selectedMetricIndex === index}
-                    onChange={() => setSelectedMetricIndex(index)}
-                  >
-                    {METRICS_CONFIG[metric as MetricKey]?.label || metric}
-                  </Select.Checkbox>
-                ))}
-            </Select>
-          </Col>
-        </Row>
-      )}
-
-      {isLoading ? (
-        <div className="fr-text--center fr-py-5w">
-          <DefaultSkeleton />
-        </div>
-      ) : !chartOptions || !data || data.length === 0 ? (
-        <div className="fr-alert fr-alert--warning">
-          <p className="fr-alert__title">Aucune donnée disponible</p>
-          <p>
-            Aucun établissement ne dispose de données pour cette métrique avec
-            les filtres sélectionnés.
-          </p>
-        </div>
-      ) : (
-        <>
-          <ChartWrapper
-            config={config}
-            options={chartOptions}
-            legend={<ThresholdLegend threshold={metricThreshold} />}
-            renderData={() => (
-              <RenderData
-                data={data}
-                metric={activeMetricKey!}
-                metricLabel={
-                  activeMetricKey ? getMetricLabel(activeMetricKey) : ""
-                }
-                metricConfig={metricConfig!}
-                topN={topN ?? data.length}
-              />
-            )}
-          />
-
-          {isSanteFinanciere && activeMetricKey && (
-            <div className="fr-mt-3w">
-              <SanteFinanciereTable
-                allYearsData={allYearsData}
-                indicatorKey={activeMetricKey}
-                indicatorLabel={
-                  activeMetricKey ? getMetricLabel(activeMetricKey) : ""
-                }
-                availableYears={availableYears}
-                selectedYear={selectedYear}
-                formatter={
-                  metricConfig?.format === "euro"
-                    ? (v?: number) =>
-                        v != null
-                          ? (v / 1000000).toFixed(1) + " M\u20AC"
-                          : "\u2014"
-                    : metricConfig?.format === "percent"
-                      ? (v?: number) =>
-                          v != null ? v.toFixed(1) + " %" : "\u2014"
-                      : metricConfig?.format === "decimal"
-                        ? (v?: number) => (v != null ? v.toFixed(2) : "\u2014")
-                        : undefined
-                }
-              />
+          {isLoading ? (
+            <div className="fr-text--center fr-py-5w">
+              <DefaultSkeleton />
             </div>
-          )}
+          ) : !chartOptions || !data || data.length === 0 ? (
+            <div className="fr-alert fr-alert--warning">
+              <p className="fr-alert__title">Aucune donnée disponible</p>
+              <p>
+                Aucun établissement ne dispose de données pour cette métrique
+                avec les filtres sélectionnés.
+              </p>
+            </div>
+          ) : (
+            <>
+              <ChartWrapper
+                config={config}
+                options={chartOptions}
+                legend={<ThresholdLegend threshold={metricThreshold} />}
+                renderData={() => (
+                  <RenderData
+                    data={data}
+                    metric={activeMetricKey!}
+                    metricLabel={
+                      activeMetricKey ? getMetricLabel(activeMetricKey) : ""
+                    }
+                    metricConfig={metricConfig!}
+                    topN={topN ?? data.length}
+                  />
+                )}
+              />
 
-          <BudgetWarning
-            data={data}
-            metrics={activeMetricKey ? [activeMetricKey] : []}
-          />
-          <MetricDefinitionsTable
-            metricKeys={activeMetricKey ? [activeMetricKey] : []}
-          />
+              {isSanteFinanciere && activeMetricKey && (
+                <div className="fr-mt-3w">
+                  <SanteFinanciereTable
+                    allYearsData={allYearsData}
+                    indicatorKey={activeMetricKey}
+                    indicatorLabel={
+                      activeMetricKey ? getMetricLabel(activeMetricKey) : ""
+                    }
+                    availableYears={availableYears}
+                    selectedYear={selectedYear}
+                    formatter={
+                      metricConfig?.format === "euro"
+                        ? (v?: number) =>
+                            v != null
+                              ? (v / 1000000).toFixed(1) + " M\u20AC"
+                              : "\u2014"
+                        : metricConfig?.format === "percent"
+                          ? (v?: number) =>
+                              v != null ? v.toFixed(1) + " %" : "\u2014"
+                          : metricConfig?.format === "decimal"
+                            ? (v?: number) =>
+                                v != null ? v.toFixed(2) : "\u2014"
+                            : undefined
+                    }
+                  />
+                </div>
+              )}
+
+              <BudgetWarning
+                data={data}
+                metrics={activeMetricKey ? [activeMetricKey] : []}
+              />
+              <MetricDefinitionsTable
+                metricKeys={activeMetricKey ? [activeMetricKey] : []}
+              />
+            </>
+          )}
         </>
-      )}
+      )}{" "}
     </div>
   );
 }
