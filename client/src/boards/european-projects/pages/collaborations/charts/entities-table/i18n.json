@@ -66,5 +66,13 @@
   "downloadProjects": {
     "fr": "Télécharger les projets",
     "en": "Download projects"
+  },
+  "totalProjectsCount": {
+    "fr": "Total projets de l'entité",
+    "en": "Entity's total projects"
+  },
+  "ratio": {
+    "fr": "Ratio",
+    "en": "Ratio"
   }
 }

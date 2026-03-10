@@ -373,6 +373,60 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
     return res.status(400).json({ error: "L'identifiant de l'entité est requis" });
   }
 
+  // Construire les filtres optionnels
+  const filters = { entities_id: entity_id };
+  // Filtres sans entity_id pour le lookup total_projects
+  const additionalFilters = {};
+
+  if (req.query.pillars) {
+    const pillars = req.query.pillars.split("|");
+    filters.pilier_code = { $in: pillars };
+    additionalFilters.pilier_code = { $in: pillars };
+  }
+  if (req.query.programs) {
+    const programs = req.query.programs.split("|");
+    filters.programme_code = { $in: programs };
+    additionalFilters.programme_code = { $in: programs };
+  }
+  if (req.query.thematics) {
+    const thematics = req.query.thematics.split(",");
+    filters.thema_code = { $in: thematics };
+    additionalFilters.thema_code = { $in: thematics };
+  }
+  if (req.query.destinations) {
+    const destinations = req.query.destinations.split(",");
+    filters.destination_code = { $in: destinations };
+    additionalFilters.destination_code = { $in: destinations };
+  }
+  if (req.query.call_year) {
+    const callYears = req.query.call_year.split(",");
+    filters.call_year = { $in: callYears };
+    additionalFilters.call_year = { $in: callYears };
+  }
+
+  // Construire le match pour le lookup total_projects
+  const totalProjectsMatchConditions = [{ $eq: ["$entities_id", "$$entityId"] }];
+  if (req.query.call_year) {
+    const callYears = req.query.call_year.split(",");
+    totalProjectsMatchConditions.push({ $in: ["$call_year", callYears] });
+  }
+  if (req.query.pillars) {
+    const pillars = req.query.pillars.split("|");
+    totalProjectsMatchConditions.push({ $in: ["$pilier_code", pillars] });
+  }
+  if (req.query.programs) {
+    const programs = req.query.programs.split("|");
+    totalProjectsMatchConditions.push({ $in: ["$programme_code", programs] });
+  }
+  if (req.query.thematics) {
+    const thematics = req.query.thematics.split(",");
+    totalProjectsMatchConditions.push({ $in: ["$thema_code", thematics] });
+  }
+  if (req.query.destinations) {
+    const destinations = req.query.destinations.split(",");
+    totalProjectsMatchConditions.push({ $in: ["$destination_code", destinations] });
+  }
+
   try {
     // Récupérer d'abord les informations de l'entité
     const entityInfo = await db
@@ -386,11 +440,9 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
     const entityCollaborations = await db
       .collection("european-projects_projects-entities_staging")
       .aggregate([
-        // Étape 1 : Récupérer tous les project_ids de l'entité
+        // Étape 1 : Récupérer tous les project_ids de l'entité avec les filtres
         {
-          $match: {
-            entities_id: entity_id,
-          },
+          $match: filters,
         },
         {
           $group: {
@@ -433,7 +485,7 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
                   total_collaborations: { $size: "$total_collaborations" },
                 },
               },
-              // Ajout d'une étape pour compter le nombre total de projets
+              // Ajout d'une étape pour compter le nombre total de projets (avec les mêmes filtres)
               {
                 $lookup: {
                   from: "european-projects_projects-entities_staging",
@@ -441,7 +493,7 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
                   pipeline: [
                     {
                       $match: {
-                        $expr: { $eq: ["$entities_id", "$$entityId"] },
+                        $expr: { $and: totalProjectsMatchConditions },
                       },
                     },
                     {

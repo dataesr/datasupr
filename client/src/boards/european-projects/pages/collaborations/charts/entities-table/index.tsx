@@ -17,15 +17,23 @@ interface Entity {
   country_name_fr: string;
   country_name_en: string;
   projects: Array<{ project_id: string; role: string }>;
+  total_projects: number;
 }
 
 export default function EntitiesTable({ entityId }) {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
+  // Extraire les paramètres pertinents pour la queryKey
+  const rangeOfYears = searchParams.get("range_of_years") || "";
+  const pillarId = searchParams.get("pillarId") || "";
+  const programId = searchParams.get("programId") || "";
+  const thematicIds = searchParams.get("thematicIds") || "";
+  const destinationIds = searchParams.get("destinationIds") || "";
+
   const { data, isLoading } = useQuery({
-    queryKey: ["EntitiesCollaborations", entityId],
-    queryFn: () => getCollaborations(entityId),
+    queryKey: ["EntitiesCollaborations", entityId, rangeOfYears, pillarId, programId, thematicIds, destinationIds],
+    queryFn: () => getCollaborations(entityId, searchParams),
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -55,6 +63,14 @@ export default function EntitiesTable({ entityId }) {
     return [...items]?.sort((a, b) => {
       if (sortColumn === "entities_name") {
         return sortDirection === "asc" ? a.entities_name.localeCompare(b.entities_name) : b.entities_name.localeCompare(a.entities_name);
+      }
+      if (sortColumn === "total_collaborations") {
+        return sortDirection === "asc" ? a.projects.length - b.projects.length : b.projects.length - a.projects.length;
+      }
+      if (sortColumn === "ratio") {
+        const ratioA = a.total_projects > 0 ? a.projects.length / a.total_projects : 0;
+        const ratioB = b.total_projects > 0 ? b.projects.length / b.total_projects : 0;
+        return sortDirection === "asc" ? ratioA - ratioB : ratioB - ratioA;
       }
       return sortDirection === "asc" ? a[sortColumn] - b[sortColumn] : b[sortColumn] - a[sortColumn];
     });
@@ -147,6 +163,17 @@ export default function EntitiesTable({ entityId }) {
                             {sortColumn === "total_collaborations" && (sortDirection === "asc" ? "↑" : "↓")}
                           </Button>
                         </th>
+                        <th>
+                          <Button variant="text" onClick={() => handleSort("total_projects")}>
+                            {getI18nLabel(i18n, "totalProjectsCount", currentLang)}{" "}
+                            {sortColumn === "total_projects" && (sortDirection === "asc" ? "↑" : "↓")}
+                          </Button>
+                        </th>
+                        <th>
+                          <Button variant="text" onClick={() => handleSort("ratio")}>
+                            {getI18nLabel(i18n, "ratio", currentLang)} {sortColumn === "ratio" && (sortDirection === "asc" ? "↑" : "↓")}
+                          </Button>
+                        </th>
                         <th>{getI18nLabel(i18n, "list", currentLang)}</th>
                       </tr>
                     </thead>
@@ -155,6 +182,10 @@ export default function EntitiesTable({ entityId }) {
                         <tr key={item._id}>
                           <td className="fr-p-1w">{`${getFlagEmoji(item.country_code)} ${item.entities_name}`}</td>
                           <td className="fr-p-1w text-center">{item.projects.length.toLocaleString()}</td>
+                          <td className="fr-p-1w text-center">{item.total_projects.toLocaleString()}</td>
+                          <td className="fr-p-1w text-center">
+                            {item.total_projects > 0 ? `${((item.projects.length / item.total_projects) * 100).toFixed(1)}%` : "-"}
+                          </td>
                           <td className="fr-p-1w">
                             <Button
                               icon="eye-line"
@@ -170,13 +201,21 @@ export default function EntitiesTable({ entityId }) {
                       ))}
                       <tr>
                         <td className="fr-text--sm text-right">
-                          <i>{getI18nLabel(i18n, "totalCollaborations", currentLang)}</i>
+                          <strong>
+                            <i>Total</i>
+                          </strong>
                         </td>
                         <td className="text-center">
                           <strong>
                             <i>{sortedData.reduce((acc, item) => acc + item.projects.length, 0).toLocaleString()}</i>
                           </strong>
                         </td>
+                        <td className="text-center">
+                          <strong>
+                            <i>{sortedData.reduce((acc, item) => acc + item.total_projects, 0).toLocaleString()}</i>
+                          </strong>
+                        </td>
+                        <td />
                         <td />
                       </tr>
                     </tbody>
@@ -199,7 +238,10 @@ export default function EntitiesTable({ entityId }) {
           {selectedEntity && (
             <>
               <div className="entities-modal__header">
-                <Title as="h2">{`${selectedEntity.entities_name} ${getFlagEmoji(selectedEntity.country_code)}`}</Title>
+                <Title
+                  as="h2"
+                  className="entities-modal__title"
+                >{`${selectedEntity.entities_name} ${getFlagEmoji(selectedEntity.country_code)}`}</Title>
                 <div className="entities-modal__header-count">
                   {selectedEntity.projects.length}{" "}
                   {selectedEntity.projects.length > 1
