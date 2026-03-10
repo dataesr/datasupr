@@ -44,10 +44,10 @@ export default function Id3Charts() {
             <br />
             <Badge color="purple-glycine">Objet de configuration</Badge>
             <br />
-            Chaque graphique doit posserder un objet de configuration contenant les propriétés suivantes :
+            Chaque graphique doit posséder un objet de configuration contenant les propriétés suivantes :
             <br />- id : identifiant unique du graphique
             <br />- title : titre international du graphique (facultatif)
-            <br />- comment : description internationnale du graphique (facultatif). Affiché dans le footer du graphique
+            <br />- comment : description internationale du graphique (facultatif). Affiché dans le footer du graphique
             <br />- readingKey : fonction retournant la clé de lecture des données
             <br />- source : source des données
             <br />- updateDate : date de mise à jour des données

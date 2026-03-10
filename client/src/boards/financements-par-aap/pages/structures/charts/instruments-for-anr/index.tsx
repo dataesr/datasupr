@@ -160,6 +160,7 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
  Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
 </> },
     id: "instrumentsForAnr",
+    integrationURL: `/integration?chart_id=instrumentsForAnr&${searchParams.toString()}`,
   };
 
   // If view by number of projects

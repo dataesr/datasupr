@@ -9,12 +9,12 @@ import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
-import { formatCompactNumber, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function ClassificationsByStructures() {
+export default function ProjectsByComparison() {
   const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
   const structures = searchParams.getAll("structure");
@@ -29,13 +29,11 @@ export default function ClassificationsByStructures() {
         terms: {
           field: "participant_encoded_key",
           size: structures.length,
-
         },
         aggregations: {
-          by_classifications: {
+          by_project_type: {
             terms: {
-              field: "project_classification.primary_field.keyword",
-              size: 15,
+              field: "project_type.keyword",
             },
             aggregations: {
               is_coordinator: {
@@ -66,10 +64,9 @@ export default function ClassificationsByStructures() {
               field: "project_budgetFinanced",
             },
           },
-          by_classifications: {
+          by_project_type: {
             terms: {
-              field: "project_classification.primary_field.keyword",
-              size: 15,
+              field: "project_type.keyword",
             },
             aggregations: {
               is_coordinator: {
@@ -100,10 +97,9 @@ export default function ClassificationsByStructures() {
               field: "participation_funding",
             },
           },
-          by_classifications: {
+          by_project_type: {
             terms: {
-              field: "project_classification.primary_field.keyword",
-              size: 15,
+              field: "project_type.keyword",
             },
             aggregations: {
               is_coordinator: {
@@ -126,7 +122,7 @@ export default function ClassificationsByStructures() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-classifications-by-structures", structures, yearMax, yearMin],
+    queryKey: ["fundings-projects-by-structures", structures, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -144,45 +140,50 @@ export default function ClassificationsByStructures() {
   const structuresBudget = data?.aggregations?.by_structure_budget?.buckets ?? [];
   const structuresParticipation = data?.aggregations?.by_structure_participation?.buckets ?? [];
   const structuresProject = data?.aggregations?.by_structure_project?.buckets ?? [];
-  (structuresBudget?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
+  funders.forEach((funder) => {
     seriesBudget.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
-      data: structuresBudget.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
-      name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesBudget.push({
-      color: getCssColor({ name: bucket.key, prefix: "classification" }),
-      data: structuresBudget.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
-      name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
-    });
-  });
-  (structuresParticipation?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
-    seriesParticipation.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
-      data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
-      name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: structuresBudget.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesParticipation.push({
-      color: getCssColor({ name: bucket.key, prefix: "classification" }),
-      data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
-      name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
-  });
-  (structuresProject?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
-    seriesProject.push({
-      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
-      data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
-      name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    seriesParticipation.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProject.push({
-      color: getCssColor({ name: bucket.key, prefix: "classification" }),
-      data: structuresProject.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
-      name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+      color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
+      data: structuresProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesProject.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: structuresProject.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+      name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
   });
   const categoriesBudget = structuresBudget.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
   const categoriesParticipation = structuresParticipation.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
   const categoriesProject = structuresProject.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
+
+  const config = {
+    comment: { "fr": <>Ce graphique compare la répartition des projets financés par AAP selon les financeurs pour plusieurs établissements.
+L’analyse doit porter en priorité sur les proportions relatives entre catégories de financeurs, plutôt que sur les volumes absolus, afin de comparer la structure des portefeuilles de projets entre établissements de tailles différentes.
+Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
+</> },
+    id: "projectsByComparison",
+    integrationURL: `/integration?chart_id=projectsByComparison&${searchParams.toString()}`,
+  };
 
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
@@ -194,9 +195,9 @@ export default function ClassificationsByStructures() {
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
-  let title = `Profils disciplinaires des établissements via les projets financés ${getYearRangeLabel({ yearMax, yearMin })}`;
+  let title = `Répartition des projets financés par type de financeur – comparaison entre établissements ${getYearRangeLabel({ yearMax, yearMin })}`;
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} en <b>${this.series.name}</b> auxquels prend part <b>${categoriesProject[this.x]}</b>`;
+    return `<b>${this.y}</b> projets ont débuté ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} grâce aux financements de <b>${this.series.name}</b> auxquels prend part <b>${categoriesProject[this.x]}</b>`;
   };
   switch (selectedControl) {
     // If view by global amount
@@ -210,9 +211,9 @@ export default function ClassificationsByStructures() {
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
-      title = `Profils disciplinaires des établissements via le montant des projets financés ${getYearRangeLabel({ yearMax, yearMin })}`;
+      title = `Montant total des projets par financeur – comparaison entre établissements ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés au global en <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesBudget[this.x]}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés au global par <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} auxquels prend part <b>${categoriesProject[this.x]}</b>`;
       };
       break;
     // If view by amount by structure
@@ -226,23 +227,12 @@ export default function ClassificationsByStructures() {
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
-      title = `Profils disciplinaires des établissements via les montants perçus ${getYearRangeLabel({ yearMax, yearMin })}`;
+      title = `Montant total des projets par financeur – comparaison entre établissements ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesBudget[this.x]}</b> pour des projets en <b>${this.series.name}</b> débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesProject[this.x]}</b> pour des projets <b>${this.series.name}</b> débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} `;
       };
       break;
   }
-
-  const config = {
-    comment: {
-      "fr": <>Ce graphe présente, pour chaque établissement, la répartition des projets financés par AAP selon les grandes classifications disciplinaires.
-        Chaque barre correspond à un établissement et est ventilée par discipline, permettant d’observer la structure scientifique de sa participation aux projets financés.
-        L’analyse doit se concentrer sur la composition relative des barres, afin de comparer les profils disciplinaires indépendamment de la taille des établissements.
-  Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).    
-  </>
-    },
-    id: "classificationsByStructures",
-  };
 
   const options: HighchartsInstance.Options = {
     legend: { enabled: true, reversed: true },
@@ -256,8 +246,8 @@ export default function ClassificationsByStructures() {
       }
     },
     series,
-    tooltip: { formatter: tooltip },
     title: { text: "" },
+    tooltip: { formatter: tooltip },
     xAxis: { categories, title: { text: "" } },
     yAxis: {
       stackLabels: {
@@ -270,7 +260,7 @@ export default function ClassificationsByStructures() {
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="classifications-by-structures">
+    <div className={`chart-container chart-container--${color}`} id="projects-by-comparison">
       <Title as="h2" look="h6">
         {title}
       </Title>

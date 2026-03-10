@@ -11,7 +11,7 @@ import i18n from "../../../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function Dispersion() {
+export default function DispersionByComparison() {
   const [searchParams] = useSearchParams();
   const structures = searchParams.getAll("structure");
   const yearMax = searchParams.get("yearMax");
@@ -93,7 +93,8 @@ d'autres positionnés sur moins de projets mais de montant élevé,
 et ceux combinant volume et intensité financière.
 Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
 </> },
-    id: "dispersion",
+    id: "dispersionByComparison",
+    integrationURL: `/integration?chart_id=dispersionByComparison&${searchParams.toString()}`,
     title: `Positionnement des établissements selon le nombre de projets et le financement perçu associé ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
@@ -134,7 +135,7 @@ Le financement perçu approxime la part réelle allouée à chaque établissemen
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="dispersion">
+    <div className={`chart-container chart-container--${color}`} id="dispersion-by-comparison">
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );

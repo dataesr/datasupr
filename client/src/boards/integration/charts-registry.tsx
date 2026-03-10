@@ -123,11 +123,58 @@ export const chartsRegistry = {
   ),
   "positioning-comparison-bar": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/positionning/charts/comparison-bar/index")
+      import("../structures-finance/pages/structures/sections/positionning/charts/comparison-bar")
   ),
   "positioning-scatter": lazy(
     () =>
-      import("../structures-finance/pages/structures/sections/positionning/charts/scatter/index")
+      import("../structures-finance/pages/structures/sections/positionning/charts/scatter")
+  ),
+
+  // Financements par APP - Fundings
+  "projectsByStructure": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/projects-by-structure")
+  ),
+  "classificationsByStructure": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/classifications-by-structure")
+  ),
+  "classifications2ByStructure": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/classifications2-by-structure")
+  ),
+  "frenchPartnersByStructure": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/french-partners-by-structure")
+  ),
+  "instrumentsForAnr": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/instruments-for-anr")
+  ),
+  "instrumentsForEurope": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/instruments-for-europe")
+  ),
+  "instrumentsOverTimeForAnr": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/instruments-over-time-for-anr")
+  ),
+  "instrumentsOverTimeForEurope": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/instruments-for-europe")
+  ),
+  "internationalPartnersByStructure": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/international-partners-by-structure")
+  ),
+  "laboratoriesByStructures": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/laboratories-by-structure")
+  ),
+  "overviewByStructure": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/overview-by-structure")
+  ),
+  "projectsOverTimeByStructure": lazy(
+    () => import("../financements-par-aap/pages/structures/charts/projects-over-time-by-structure")
+  ),
+  "classificationsByComparison": lazy(
+    () => import("../financements-par-aap/pages/comparison/charts/classifications-by-comparison")
+  ),
+  "dispersionByComparison": lazy(
+    () => import("../financements-par-aap/pages/comparison/charts/dispersion-by-comparison")
+  ),
+  "projectsByComparison": lazy(
+    () => import("../financements-par-aap/pages/comparison/charts/projects-by-comparison")
   ),
 };
 

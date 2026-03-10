@@ -179,10 +179,11 @@ export default function Classifications2ByStructure({ name }: { name: string | u
 
   const config = {
     comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement, par financeur et selon les grandes classifications disciplinaires.
-Les barres représentent le nombre / le financement global ou perçu pour les projets rattachés à chaque domaine, permettant d’identifier les champs scientifiques les plus présents dans les projets auxquels l’établissement participe. 
+Les barres représentent le nombre / le financement global ou perçu pour les projets rattachés à chaque domaine, permettant d’identifier les champs scientifiques les plus présents dans les projets auxquels l’établissement participe.
  Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). Les thématiques ont été estimées par IA, à partir du titre, résumé et mots clés des projets.
 Les disciplines ont été estimées par IA, à partir du titre, résumé et mots clés des projets.</> },
     id: "classifications2ByStructure",
+    integrationURL: `/integration?chart_id=classifications2ByStructure&${searchParams.toString()}`,
   };
 
   // If view by number of projects

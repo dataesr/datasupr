@@ -4,9 +4,9 @@ import { useSearchParams } from "react-router-dom";
 
 import Breadcrumb from "../../components/breadcrumb";
 import { years } from "../../utils";
-import ClassificationsByStructures from "./charts/classifications-by-structures";
-import Dispersion from "./charts/dispersion";
-import ProjectsByStructures from "./charts/projects-by-structures";
+import ClassificationsByComparison from "./charts/classifications-by-comparison";
+import DispersionByComparison from "./charts/dispersion-by-comparison";
+import ProjectsByComparison from "./charts/projects-by-comparison";
 import StructuresSelector from "./components/structures-selector";
 
 import "./styles.scss";
@@ -150,12 +150,12 @@ export default function Comparison() {
                     <>
                       <Row gutters>
                         <Col>
-                          <ProjectsByStructures />
+                          <ProjectsByComparison />
                         </Col>
                       </Row>
                       <Row gutters>
                         <Col>
-                          <Dispersion />
+                          <DispersionByComparison />
                         </Col>
                       </Row>
                     </>
@@ -163,7 +163,7 @@ export default function Comparison() {
                   {(section === "disciplines") && (
                     <Row gutters>
                       <Col>
-                        <ClassificationsByStructures />
+                        <ClassificationsByComparison />
                       </Col>
                     </Row>
                   )}

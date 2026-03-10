@@ -72,6 +72,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   const config = {
     comment: { "fr": <>Ce graphique met en regard le volume de projets et les financements perçus associés : la largeur des barres représente le nombre de projets, tandis que leur hauteur correspond au financement perçu. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </> },
     id: "overviewByStructure",
+    integrationURL: `/integration?chart_id=overviewByStructure&${searchParams.toString()}`,
     title: `Structure du financement : nombre de projets et financements perçus associés pour les projets auxquels participe l'établissement (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
@@ -133,52 +134,6 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     },
     yAxis: { title: { text: getI18nLabel(i18n, 'funding_by_structure') } },
   };
-
-  // TODO: implement it later
-  // const renderData = (options: any) => {
-  //   const columns: any = [];
-  //   const budget: any = [];
-  //   const projects: any = [];
-  //   (options?.series ?? [])?.[0]?.data.forEach((d: string[]) => {
-  //     columns.push(d[0]);
-  //     budget.push(d[1]);
-  //     projects.push(d[2]);
-  //   });
-
-  //   return (
-  //     <div style={{ width: "100%" }}>
-  //       <div className="fr-table-responsive">
-  //         <table
-  //           className="fr-table fr-table--bordered fr-table--sm"
-  //           style={{ width: "100%" }}
-  //         >
-  //           <thead>
-  //             <tr>
-  //               <th></th>
-  //               {columns.map((column) => (
-  //                 <th key={column} scope="col">{column}</th>
-  //               ))}
-  //             </tr>
-  //           </thead>
-  //           <tbody>
-  //             <tr>
-  //               <th scope="row">Montants</th>
-  //               {budget.map((r) => (
-  //                 <td key={r}>{formatCompactNumber(r)} €</td>
-  //               ))}
-  //             </tr>
-  //             <tr>
-  //               <th scope="row">Projets</th>
-  //               {projects.map((r) => (
-  //                 <td key={r}>{r}</td>
-  //               ))}
-  //             </tr>
-  //           </tbody>
-  //         </table>
-  //       </div>
-  //     </div>
-  //   );
-  // };
 
   return (
     <div className={`chart-container chart-container--${color}`} id="overview-by-structure">

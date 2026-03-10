@@ -195,7 +195,8 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
 Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, les données au niveau laboratoire ne sont pas disponibles.
 Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
 </> },
-    id: "projectsByStructures",
+    id: "laboratoriesByStructures",
+    integrationURL: `/integration?chart_id=laboratoriesByStructures&${searchParams.toString()}`,
   };
 
   // If view by number of projects
@@ -273,7 +274,7 @@ Le type de participation est distingué, en pointillé quand l'établissement es
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="projects-by-structures">
+    <div className={`chart-container chart-container--${color}`} id="laboratories-by-structures">
       <Title as="h2" look="h6">
         {`Principaux laboratoires de ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`}
       </Title>

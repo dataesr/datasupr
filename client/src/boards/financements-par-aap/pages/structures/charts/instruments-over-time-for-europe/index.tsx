@@ -121,7 +121,8 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
   const config = {
     comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs financements associés, ventilée par instrument, pour les projets européens, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
 </> },
-    id: "projectsOverTimeForEurope",
+    id: "instrumentsOverTimeForEurope",
+    integrationURL: `/integration?chart_id=instrumentsOverTimeForEurope&${searchParams.toString()}`,
   };
 
   // If view by number of projects
@@ -173,48 +174,6 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
     xAxis: { categories: [], title: { text: "Année de début du projet" } },
     yAxis: { title: { text: axis } },
   };
-
-  // TODO: implement it later
-  // const renderData = (options: HighchartsInstance.Options) => {
-  //   const columns = (options?.series ?? []).map((serie) => serie.name);
-  //   const rows: any = [];
-  //   (options?.series ?? []).forEach((serie: any, i) => {
-  //     (serie?.data ?? []).forEach((d, j) => {
-  //       if (i === 0) rows.push([]);
-  //       rows[j].push(d ?? 0);
-  //     });
-  //   });
-
-  //   return (
-  //     <div style={{ width: "100%" }}>
-  //       <div className="fr-table-responsive">
-  //         <table
-  //           className="fr-table fr-table--bordered fr-table--sm"
-  //           style={{ width: "100%" }}
-  //         >
-  //           <thead>
-  //             <tr>
-  //               <th>Année</th>
-  //               {columns.map((column) => (
-  //                 <th key={column} scope="col">{column}</th>
-  //               ))}
-  //             </tr>
-  //           </thead>
-  //           <tbody>
-  //             {rows.map((row, index) => (
-  //               <tr key={index}>
-  //                 <th scope="row">{index + years[0]}</th>
-  //                 {row.map((r) => (
-  //                   <td key={r}>{r}</td>
-  //                 ))}
-  //               </tr>
-  //             ))}
-  //           </tbody>
-  //         </table>
-  //       </div>
-  //     </div>
-  //   );
-  // };
 
   return (
     <div className={`chart-container chart-container--${color}`} id="instruments-over-time-for-europe">

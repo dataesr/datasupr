@@ -159,6 +159,7 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
     comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement, par type d'instrument (action), pour les projets européens. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
 </> },
     id: "instrumentsForEurope",
+    integrationURL: `/integration?chart_id=instrumentsForEurope&${searchParams.toString()}`,
   };
 
   // If view by number of projects

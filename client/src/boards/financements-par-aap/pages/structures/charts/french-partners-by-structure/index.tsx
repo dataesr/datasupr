@@ -192,6 +192,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
     comment: { "fr": <>Ce graphe montre quels établissements français collaborent le plus avec l'établissement sur les projets financés par AAP.
 Les barres représentent le nombre, les financements globaux et perçus pour les projets auxquels l'établissement participe avec chaque partenaire. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
     id: "frenchPartnersByStructure",
+    integrationURL: `/integration?chart_id=frenchPartnersByStructure&${searchParams.toString()}`,
   };
 
   // If view by number of projects
