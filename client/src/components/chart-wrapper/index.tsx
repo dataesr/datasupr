@@ -2,6 +2,7 @@ import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Ti
 import Highcharts from "highcharts";
 import HighchartsReact from "highcharts-react-official";
 import "highcharts/modules/exporting";
+import "highcharts/modules/export-data";
 import "highcharts/modules/map";
 import "highcharts/modules/offline-exporting";
 import React, { useId, useRef, useState } from "react";
@@ -9,7 +10,7 @@ import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 import { useSearchParams } from "react-router-dom";
-import { getI18nLabel } from "../../utils";
+import { deepMerge, getI18nLabel } from "../../utils";
 import ChartFooter from "../chart-footer";
 import CopyButton from "../copy-button";
 import i18n from "./i18n.json";
@@ -62,8 +63,18 @@ function extractTextFromReactNode(node: React.ReactNode): string {
 }
 
 export type ChartConfig = {
+  comment?: LocalizedContent;
+  description?:
+    | string
+    | {
+        [key: string]: React.ReactNode;
+      }
+    | null;
   id: string;
   idQuery?: string;
+  integrationURL?: string;
+  readingKey?: LocalizedContent;
+  sources?: Source[];
   subtitle?: string;
   title?:
     | string
@@ -73,16 +84,6 @@ export type ChartConfig = {
         look?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
         className?: string;
       };
-  description?:
-    | string
-    | {
-        [key: string]: React.ReactNode;
-      }
-    | null;
-  integrationURL?: string;
-  comment?: LocalizedContent;
-  readingKey?: LocalizedContent;
-  sources?: Source[];
 };
 
 export type HighchartsOptions = Highcharts.Options | any | null;
@@ -449,6 +450,8 @@ export default function ChartWrapper({
     }
   };
 
+  const optionsTmp: HighchartsOptions = deepMerge(options, { exporting: { filename: config?.title ?? 'chart' } });
+
   return (
     <section className="chart-container">
       {!hideTitle && <ChartTitle config={config} />}
@@ -463,9 +466,9 @@ export default function ChartWrapper({
         />
       </div>
       {displayType === "data" && renderData && options && <>{renderData(options)}</>}
-      {displayType === "chart" && options && (
+      {displayType === "chart" && optionsTmp && (
         <figure className="chart">
-          <HighchartsReact highcharts={Highcharts} options={options} ref={chart} constructorType={constructorType} />
+          <HighchartsReact highcharts={Highcharts} options={optionsTmp} ref={chart} constructorType={constructorType} />
         </figure>
       )}
       <div className="fr-pt-1w">
