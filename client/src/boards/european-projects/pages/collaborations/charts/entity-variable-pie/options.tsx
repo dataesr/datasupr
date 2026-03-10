@@ -5,7 +5,19 @@ import "highcharts/modules/variable-pie.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import i18n from "./i18n.json";
-// const rootStyles = getComputedStyle(document.documentElement);
+
+// Récupérer les couleurs DSFR depuis les variables CSS
+const getDSFRColors = () => {
+  const rootStyles = getComputedStyle(document.documentElement);
+  const colors: string[] = [];
+  for (let i = 1; i <= 20; i++) {
+    const color = rootStyles.getPropertyValue(`--scale-${i}-color`).trim();
+    if (color) {
+      colors.push(color);
+    }
+  }
+  return colors.length > 0 ? colors : undefined;
+};
 
 export default function Options(data, currentLang = "fr") {
   if (!data) return null;
@@ -14,7 +26,10 @@ export default function Options(data, currentLang = "fr") {
     return i18n[key][currentLang];
   }
 
+  const dsfrColors = getDSFRColors();
+
   const newOptions: HighchartsInstance.Options = {
+    colors: dsfrColors,
     series: [
       {
         type: "variablepie",
