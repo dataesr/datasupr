@@ -108,13 +108,15 @@ export default function EntitiesTable({ entityId }) {
           <label className="fr-label">{getI18nLabel(i18n, "filterByCountry", currentLang)}</label>
           <select className="fr-select" value={countryFilter} onChange={(e) => setCountryFilter(e.target.value)}>
             <option value="">{getI18nLabel(i18n, "allCountries", currentLang)}</option>
-            {Array.from(
-              new Map(
-                data.collaborations.map((item: Entity) => [
-                  item.country_code,
-                  { code: item.country_code, name_fr: item.country_name_fr, name_en: item.country_name_en },
-                ]),
-              ).values(),
+            {(
+              Array.from(
+                new Map(
+                  data.collaborations.map((item: Entity) => [
+                    item.country_code,
+                    { code: item.country_code, name_fr: item.country_name_fr, name_en: item.country_name_en },
+                  ]),
+                ).values(),
+              ) as Array<{ code: string; name_fr: string; name_en: string }>
             )
               .sort((a, b) => (currentLang === "fr" ? a.name_fr : a.name_en).localeCompare(currentLang === "fr" ? b.name_fr : b.name_en))
               .map((country) => (
