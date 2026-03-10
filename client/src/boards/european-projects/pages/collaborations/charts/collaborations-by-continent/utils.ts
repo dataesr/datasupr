@@ -9,12 +9,14 @@ export function useGetParams() {
   const programs = searchParams.get("programs");
   const thematics = searchParams.get("thematics");
   const destinations = searchParams.get("destinations");
+  const rangeOfYears = searchParams.get("range_of_years");
 
   if (country_code) params.append("country_code", country_code);
   if (pillars) params.append("pillars", pillars);
   if (programs) params.append("programs", programs);
   if (thematics) params.append("thematics", thematics);
   if (destinations) params.append("destinations", destinations);
+  if (rangeOfYears) params.append("call_year", rangeOfYears.split("|").join(","));
 
   return params.toString();
 }

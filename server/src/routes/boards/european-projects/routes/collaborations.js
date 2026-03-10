@@ -170,6 +170,10 @@ router.route(routesPrefix + "/get-collaborations").get(async (req, res) => {
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
   }
+  if (req.query.call_year) {
+    const callYears = req.query.call_year.split(",");
+    filters.call_year = { $in: callYears };
+  }
 
   try {
     const collaborations = await db
@@ -287,6 +291,10 @@ router.route(routesPrefix + "/get-collaborations-by-country").get(async (req, re
   if (req.query.destinations) {
     const destinations = req.query.destinations.split(",");
     filters.destination_code = { $in: destinations };
+  }
+  if (req.query.call_year) {
+    const callYears = req.query.call_year.split(",");
+    filters.call_year = { $in: callYears };
   }
 
   try {

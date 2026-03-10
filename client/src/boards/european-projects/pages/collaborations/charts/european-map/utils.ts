@@ -35,6 +35,13 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
+  // Récupérer le paramètre range_of_years et le convertir en call_year pour l'API
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    const years = rangeOfYears.split("|").join(",");
+    params.push(`call_year=${years}`);
+  }
+
   // Ajouter le paramètre stage par défaut
   params.push("stage=successful");
 

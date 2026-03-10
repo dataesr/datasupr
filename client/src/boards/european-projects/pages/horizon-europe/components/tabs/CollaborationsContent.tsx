@@ -35,11 +35,7 @@ export default function CollaborationsContent() {
   const currentLang = searchParams.get("language") || "fr";
 
   return (
-    <div>
-      Focus Monde (carte actuelle)
-      <br />
-      <br />
-      Focus Pays (avec entités du pays)
+    <>
       <Row>
         <Col>
           <MapOfEuropeCollaborationsFlow />
@@ -96,6 +92,6 @@ export default function CollaborationsContent() {
           <BoardsSuggestComponent />
         </Col>
       </Row>
-    </div>
+    </>
   );
 }
