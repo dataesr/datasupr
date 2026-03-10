@@ -173,7 +173,6 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   };
 
   const options: HighchartsInstance.Options = {
-    exporting: { chartOptions: { title: { text: title } } },
     legend: { enabled: true },
     plotOptions: {
       bar: {

@@ -369,10 +369,6 @@ export default function ChartWrapper({
         currentChart.exportChart(
           {
             type: "image/png",
-            filename:
-              config.title && typeof config.title === "string"
-                ? config.title
-                : "graphique",
             sourceWidth: 800,
             sourceHeight: 600,
             scale: 2, // Pour une meilleure qualité
@@ -450,7 +446,7 @@ export default function ChartWrapper({
     }
   };
 
-  const optionsTmp: HighchartsOptions = deepMerge(options, { exporting: { filename: config?.title ?? 'chart' } });
+  const optionsTmp: HighchartsOptions = deepMerge(options, { exporting: { chartOptions: { title: { text: config?.title } }, filename: config?.title ?? 'chart' } });
 
   return (
     <section className="chart-container">
