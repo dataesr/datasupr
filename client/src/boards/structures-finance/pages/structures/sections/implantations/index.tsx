@@ -1,14 +1,18 @@
-import { useMemo, useRef, useEffect } from "react";
+import { useMemo } from "react";
 import { Title } from "@dataesr/dsfr-plus";
 import CardSimple from "../../../../../../components/card-simple";
-import Highcharts from "highcharts";
-import "highcharts/modules/map";
-import regionsTopology from "../../../../../../assets/regions.json";
+import {
+  MapContainer,
+  TileLayer,
+  CircleMarker,
+  Popup,
+  useMap,
+} from "react-leaflet";
+import type { LatLngBoundsExpression, LatLngTuple } from "leaflet";
+import "leaflet/dist/leaflet.css";
 import { getCssColor } from "../../../../../../utils/colors";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
-
-type HighchartsOptions = Highcharts.Options;
 
 interface ImplantationsSectionProps {
   data: any;
@@ -106,28 +110,11 @@ const extractCoordinates = (
   return null;
 };
 
-const getFilteredTopology = (topology: any, includeOverseas: boolean) => {
-  if (includeOverseas) {
-    return topology;
-  }
-
-  const filtered = {
-    ...topology,
-    objects: {
-      default: {
-        ...topology.objects.default,
-        geometries: topology.objects.default.geometries.filter((geo: any) => {
-          const lat = geo.properties?.["hc-middle-lat"];
-          const lon = geo.properties?.["hc-middle-lon"];
-          return (
-            lat && lon && lat >= 41 && lat <= 51.5 && lon >= -9 && lon <= 9
-          );
-        }),
-      },
-    },
-  };
-  return filtered;
-};
+function FitBounds({ bounds }: { bounds: LatLngBoundsExpression }) {
+  const map = useMap();
+  map.fitBounds(bounds, { padding: [40, 40], maxZoom: 13 });
+  return null;
+}
 
 export function ImplantationsSection({ data }: ImplantationsSectionProps) {
   if (
@@ -138,172 +125,67 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
     return null;
   }
 
-  const mapOptions = useMemo<HighchartsOptions | null>(() => {
-    const pointsFromImplantations = (data.implantations || [])
+  const points = useMemo(() => {
+    const fromImplantations = (data.implantations as any[])
       .map((implantation: any, index: number) => {
         const coords = extractCoordinates(implantation);
-        if (!coords) {
-          return null;
-        }
-
+        if (!coords) return null;
         return {
           id: String(implantation.implantation_id || index),
           name: implantation.implantation || `Implantation ${index + 1}`,
           lat: coords.lat,
           lon: coords.lon,
-          effectif: implantation.effectif_sans_cpge,
-          partEffectif: implantation.part_effectif_sans_cpge,
+          effectif: implantation.effectif_sans_cpge as number | null,
+          partEffectif: implantation.part_effectif_sans_cpge as number | null,
           siege: Boolean(implantation.siege),
         };
       })
-      .filter(Boolean);
+      .filter(Boolean) as {
+      id: string;
+      name: string;
+      lat: number;
+      lon: number;
+      effectif: number | null;
+      partEffectif: number | null;
+      siege: boolean;
+    }[];
 
-    const uniquePoints = Array.from(
+    // Deduplicate by name + coordinates
+    const unique = Array.from(
       new Map(
-        pointsFromImplantations.map((p: any) => [
+        fromImplantations.map((p) => [
           `${p.name}-${p.lat.toFixed(6)}-${p.lon.toFixed(6)}`,
           p,
         ])
       ).values()
     );
 
-    const fallbackCoords = extractCoordinates(data);
+    if (unique.length > 0) return unique;
 
-    const points =
-      uniquePoints.length > 0
-        ? uniquePoints
-        : fallbackCoords
-          ? [
-              {
-                id: "main",
-                name: data?.etablissement_lib || "Établissement",
-                lat: fallbackCoords.lat,
-                lon: fallbackCoords.lon,
-                effectif: data?.effectif_sans_cpge,
-                siege: true,
-              },
-            ]
-          : [];
-
-    if (points.length === 0) {
-      return null;
+    const fallback = extractCoordinates(data);
+    if (fallback) {
+      return [
+        {
+          id: "main",
+          name: data?.etablissement_lib || "Établissement",
+          lat: fallback.lat,
+          lon: fallback.lon,
+          effectif: data?.effectif_sans_cpge ?? null,
+          partEffectif: null,
+          siege: true,
+        },
+      ];
     }
 
-    const isMetropole = points.every(
-      (p: any) => p.lat >= 41 && p.lat <= 51.5 && p.lon >= -5 && p.lon <= 10
-    );
-
-    // Filtre la topologie pour exclure les DOM-TOM si tous les points sont en métropole
-    const filteredTopology = getFilteredTopology(regionsTopology, !isMetropole);
-
-    const regionColor = "white";
-    const regionBorderColor = getCssColor("beige-gris-galet");
-    const markerMainColor = getCssColor("blue-france");
-    const markerSiegeColor = getCssColor("yellow-tournesol");
-
-    return {
-      chart: {
-        map: filteredTopology as any,
-        backgroundColor: "transparent",
-      },
-      title: { text: "" },
-      credits: { enabled: false },
-      legend: { enabled: false },
-      mapNavigation: {
-        enabled: true,
-        buttonOptions: {
-          verticalAlign: "bottom",
-        },
-      },
-      mapView: {
-        projection: {
-          name: "WebMercator",
-        },
-        fitToGeometry: {
-          type: "MultiPoint",
-          coordinates: points.map((p: any) => [p.lon, p.lat]),
-        },
-        padding: [50, 50, 70, 50],
-      },
-      tooltip: {
-        useHTML: true,
-        headerFormat: "",
-        pointFormatter: function () {
-          const point = this as any;
-          const effectifText =
-            point.effectif != null
-              ? `${Number(point.effectif).toLocaleString("fr-FR")} étudiants`
-              : "Effectif non renseigné";
-
-          const partText =
-            point.partEffectif != null
-              ? `<br/><strong>${point.partEffectif.toFixed(1)} %</strong> des étudiants`
-              : "";
-
-          return `<strong>${point.name}</strong><br/>${effectifText}${partText}${
-            point.siege
-              ? `<br/><span style='color: ${markerSiegeColor};'>★</span> Site principal`
-              : ""
-          }`;
-        },
-      },
-      series: [
-        {
-          type: "map",
-          name: "Régions françaises",
-          showInLegend: false,
-          enableMouseTracking: false,
-          color: regionColor,
-          borderColor: regionBorderColor,
-          borderWidth: 1.5,
-          states: {
-            inactive: {
-              enabled: false,
-            },
-            hover: {
-              enabled: false,
-            },
-          },
-        },
-        {
-          type: "mappoint",
-          name: "Implantations",
-          data: points.map((p: any) => ({
-            ...p,
-            marker: {
-              radius: p.partEffectif
-                ? Math.max(5, Math.min(15, 5 + p.partEffectif / 5))
-                : p.siege
-                  ? 8
-                  : 6,
-              fillColor: p.siege ? markerSiegeColor : markerMainColor,
-              lineColor: "white",
-              lineWidth: 2,
-            },
-          })),
-          color: markerMainColor,
-          dataLabels: {
-            enabled: points.length <= 8,
-            format: "{point.name}",
-            style: {
-              fontSize: "11px",
-              fontWeight: "500",
-              textOutline: "3px white",
-              color: "#161616",
-            },
-          },
-        },
-      ],
-    };
+    return [];
   }, [data]);
 
-  const mapContainerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (mapOptions && mapContainerRef.current) {
-      Highcharts.mapChart(mapContainerRef.current, mapOptions);
-    }
-  }, [mapOptions]);
+  const bounds = useMemo<LatLngBoundsExpression | null>(() => {
+    if (points.length === 0) return null;
+    return points.map(
+      (p) => [p.lat, p.lon] as LatLngTuple
+    ) as LatLngBoundsExpression;
+  }, [points]);
 
   return (
     <section
@@ -323,7 +205,9 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
       </div>
 
       <div className="fr-grid-row fr-grid-row--gutters">
-        <div className={mapOptions ? "fr-col-12 fr-col-lg-6" : "fr-col-12"}>
+        <div
+          className={points.length > 0 ? "fr-col-12 fr-col-lg-6" : "fr-col-12"}
+        >
           <ul className="fr-grid-row fr-grid-row--gutters" role="list">
             {data.implantations.map((implantation: any, index: number) => {
               const partEffectif = implantation.part_effectif_sans_cpge;
@@ -350,9 +234,54 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
           </ul>
         </div>
 
-        {mapOptions && (
+        {points.length > 0 && bounds && (
           <div className="fr-col-12 fr-col-lg-6">
-            <div ref={mapContainerRef} style={{ height: "420px" }} />
+            <MapContainer
+              style={{ height: "420px", width: "100%" }}
+              bounds={bounds}
+              scrollWheelZoom={false}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <FitBounds bounds={bounds} />
+              {points.map((point) => (
+                <CircleMarker
+                  key={point.id}
+                  center={[point.lat, point.lon]}
+                  radius={point.siege ? 10 : 7}
+                  pathOptions={{
+                    fillColor: point.siege
+                      ? getCssColor("yellow-moutarde-dark")
+                      : getCssColor("blue-france"),
+                    fillOpacity: 0.9,
+                    color: getCssColor("beige-gris-galet"),
+                    weight: 2,
+                  }}
+                >
+                  <Popup>
+                    <strong>{point.name}</strong>
+                    <br />
+                    {point.effectif != null
+                      ? `${Number(point.effectif).toLocaleString("fr-FR")} étudiants`
+                      : "Effectif non renseigné"}
+                    {point.partEffectif != null && (
+                      <>
+                        <br />
+                        <strong>{point.partEffectif.toFixed(1)} %</strong> des
+                        étudiants
+                      </>
+                    )}
+                    {point.siege && (
+                      <>
+                        <br />★ Site principal
+                      </>
+                    )}
+                  </Popup>
+                </CircleMarker>
+              ))}
+            </MapContainer>
           </div>
         )}
       </div>
