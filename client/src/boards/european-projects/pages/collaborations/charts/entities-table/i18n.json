@@ -1,0 +1,70 @@
+{
+  "title": {
+    "fr": "Collaborations de",
+    "en": "Collaborations of"
+  },
+  "searchEntity": {
+    "fr": "Rechercher une entité",
+    "en": "Search for an entity"
+  },
+  "searchPlaceholder": {
+    "fr": "Nom de l'entité...",
+    "en": "Entity name..."
+  },
+  "filterByCountry": {
+    "fr": "Filtrer par pays",
+    "en": "Filter by country"
+  },
+  "allCountries": {
+    "fr": "Tous les pays",
+    "en": "All countries"
+  },
+  "entities": {
+    "fr": "Entités",
+    "en": "Entities"
+  },
+  "collaborationsCount": {
+    "fr": "Nombre de collaborations",
+    "en": "Number of collaborations"
+  },
+  "list": {
+    "fr": "Liste",
+    "en": "List"
+  },
+  "totalCollaborations": {
+    "fr": "Nombre total de collaborations",
+    "en": "Total number of collaborations"
+  },
+  "showLess": {
+    "fr": "Voir moins",
+    "en": "Show less"
+  },
+  "showAll": {
+    "fr": "Voir tout",
+    "en": "Show all"
+  },
+  "collaboration": {
+    "fr": "collaboration",
+    "en": "collaboration"
+  },
+  "collaborations": {
+    "fr": "collaborations",
+    "en": "collaborations"
+  },
+  "downloadAllProjects": {
+    "fr": "Télécharger tous les projets (csv)",
+    "en": "Download all projects (csv)"
+  },
+  "project": {
+    "fr": "projet",
+    "en": "project"
+  },
+  "projects": {
+    "fr": "projets",
+    "en": "projects"
+  },
+  "downloadProjects": {
+    "fr": "Télécharger les projets",
+    "en": "Download projects"
+  }
+}

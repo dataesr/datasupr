@@ -1,0 +1,79 @@
+.entities-modal {
+  &__header {
+    background: linear-gradient(135deg, #000091 0%, #6a6af4 100%);
+    color: white;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+
+    h2 {
+      color: white;
+      margin-bottom: 0.5rem;
+    }
+
+    .fr-btn--secondary {
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border-color: white;
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+    }
+  }
+
+  &__header-count {
+    font-size: 1.25rem;
+    font-weight: 500;
+  }
+
+  &__role-card {
+    background: #f6f6f6;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    border-left: 4px solid #6a6af4;
+
+    &--coordinator {
+      border-left-color: #00a95f;
+    }
+  }
+
+  &__role-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  &__role-badge {
+    background: #6a6af4;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: capitalize;
+
+    &--coordinator {
+      background: #00a95f;
+    }
+  }
+
+  &__role-count {
+    color: #666;
+    font-weight: 500;
+  }
+
+  &__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}

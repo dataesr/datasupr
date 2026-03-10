@@ -1,23 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
-// import { useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { useState } from "react";
-import { Button, Col, Container, Row, Title, Modal, ModalContent, Tag, TagGroup, Link } from "@dataesr/dsfr-plus";
+import { Button, Col, Container, Row, Title, Modal, ModalContent, Tag } from "@dataesr/dsfr-plus";
 
 import { getCollaborations } from "./query";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { getFlagEmoji } from "../../../../utils";
+import { getI18nLabel } from "../../../../../../utils";
+
+import i18n from "./i18n.json";
+import "./styles.scss";
 
 interface Entity {
   entities_name: string;
   country_code: string;
+  country_name_fr: string;
+  country_name_en: string;
   projects: Array<{ project_id: string; role: string }>;
 }
 
 export default function EntitiesTable({ entityId }) {
-  // const [searchParams] = useSearchParams();
-  // const currentLang = searchParams.get("language") || "fr";
-  // TODO: traduction
-  // const entityId = window.location.pathname.split("/").pop()?.split("?")[0] || "";
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
 
   const { data, isLoading } = useQuery({
     queryKey: ["EntitiesCollaborations", entityId],
@@ -31,6 +35,20 @@ export default function EntitiesTable({ entityId }) {
   const [showAll, setShowAll] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [countryFilter, setCountryFilter] = useState("");
+
+  // Fonction de téléchargement CSV
+  const downloadCSV = (projects: Array<{ project_id: string; role: string }>, filename: string) => {
+    const header = "project_id,role,cordis_url\n";
+    const rows = projects.map((p) => `${p.project_id},${p.role},https://cordis.europa.eu/project/${p.project_id}`).join("\n");
+    const csv = header + rows;
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = filename;
+    link.click();
+    URL.revokeObjectURL(url);
+  };
 
   // Fonction de tri
   const sortData = (items) => {
@@ -71,30 +89,39 @@ export default function EntitiesTable({ entityId }) {
     <Container fluid className="fr-mt-5w">
       <Row>
         <Title as="h2" look="h4">
-          Collaborations de {data.name_fr}
+          {getI18nLabel(i18n, "title", currentLang)} {currentLang === "fr" ? data.name_fr : data.name_en || data.name_fr}
         </Title>
       </Row>
       {/* Filtres */}
       <Row gutters className="fr-mb-2w">
         <Col>
-          <label className="fr-label">Rechercher une entité</label>
+          <label className="fr-label">{getI18nLabel(i18n, "searchEntity", currentLang)}</label>
           <input
             type="text"
             className="fr-input"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            placeholder="Nom de l'entité..."
+            placeholder={getI18nLabel(i18n, "searchPlaceholder", currentLang)}
           />
         </Col>
         <Col>
-          <label className="fr-label">Filtrer par pays</label>
+          <label className="fr-label">{getI18nLabel(i18n, "filterByCountry", currentLang)}</label>
           <select className="fr-select" value={countryFilter} onChange={(e) => setCountryFilter(e.target.value)}>
-            <option value="">Tous les pays</option>
-            {Array.from(new Set(data.collaborations.map((item: Entity) => item.country_code))).map((code) => (
-              <option key={code as string} value={code as string}>
-                {code as string}
-              </option>
-            ))}
+            <option value="">{getI18nLabel(i18n, "allCountries", currentLang)}</option>
+            {Array.from(
+              new Map(
+                data.collaborations.map((item: Entity) => [
+                  item.country_code,
+                  { code: item.country_code, name_fr: item.country_name_fr, name_en: item.country_name_en },
+                ]),
+              ).values(),
+            )
+              .sort((a, b) => (currentLang === "fr" ? a.name_fr : a.name_en).localeCompare(currentLang === "fr" ? b.name_fr : b.name_en))
+              .map((country) => (
+                <option key={country.code} value={country.code}>
+                  {currentLang === "fr" ? country.name_fr : country.name_en}
+                </option>
+              ))}
           </select>
         </Col>
       </Row>
@@ -109,24 +136,23 @@ export default function EntitiesTable({ entityId }) {
                       <tr>
                         <th>
                           <Button variant="text" onClick={() => handleSort("entities_name")}>
-                            Entités {sortColumn === "entities_name" && (sortDirection === "asc" ? "↑" : "↓")}
+                            {getI18nLabel(i18n, "entities", currentLang)} {sortColumn === "entities_name" && (sortDirection === "asc" ? "↑" : "↓")}
                           </Button>
                         </th>
                         <th>
                           <Button variant="text" onClick={() => handleSort("total_collaborations")}>
-                            Nombre de collaborations {sortColumn === "total_collaborations" && (sortDirection === "asc" ? "↑" : "↓")}
+                            {getI18nLabel(i18n, "collaborationsCount", currentLang)}{" "}
+                            {sortColumn === "total_collaborations" && (sortDirection === "asc" ? "↑" : "↓")}
                           </Button>
                         </th>
-                        <th>Liste</th>
+                        <th>{getI18nLabel(i18n, "list", currentLang)}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {displayedData.map((item) => (
                         <tr key={item._id}>
                           <td className="fr-p-1w">{`${getFlagEmoji(item.country_code)} ${item.entities_name}`}</td>
-                          <td className="fr-p-1w" style={{ textAlign: "center" }}>
-                            {item.projects.length.toLocaleString()}
-                          </td>
+                          <td className="fr-p-1w text-center">{item.projects.length.toLocaleString()}</td>
                           <td className="fr-p-1w">
                             <Button
                               icon="eye-line"
@@ -141,11 +167,10 @@ export default function EntitiesTable({ entityId }) {
                         </tr>
                       ))}
                       <tr>
-                        <td className="fr-text--sm" style={{ textAlign: "right" }}>
-                          {/* {getI18nLabel("total-collaborations")} */}
-                          <i>Nombre total de collaborations</i>
+                        <td className="fr-text--sm text-right">
+                          <i>{getI18nLabel(i18n, "totalCollaborations", currentLang)}</i>
                         </td>
-                        <td style={{ textAlign: "center" }}>
+                        <td className="text-center">
                           <strong>
                             <i>{sortedData.reduce((acc, item) => acc + item.projects.length, 0).toLocaleString()}</i>
                           </strong>
@@ -161,50 +186,84 @@ export default function EntitiesTable({ entityId }) {
 
           {sortedData.length > 20 && (
             <Button onClick={() => setShowAll(!showAll)} size="sm">
-              {showAll ? "Voir moins" : "Voir tout"}
+              {showAll ? getI18nLabel(i18n, "showLess", currentLang) : getI18nLabel(i18n, "showAll", currentLang)}
             </Button>
           )}
         </Col>
       </Row>
       {/* Modale des projets */}
-      <Modal isOpen={isModalOpen} hide={() => setIsModalOpen(false)} size="sm">
+      <Modal isOpen={isModalOpen} hide={() => setIsModalOpen(false)} size="xl">
         <ModalContent>
           {selectedEntity && (
             <>
-              <Title as="h2">{`${selectedEntity.entities_name} ${getFlagEmoji(selectedEntity.country_code)}`}</Title>
-              <TagGroup className="fr-mb-2w">
-                <Tag color="yellow-tournesol">{selectedEntity.projects.length} collaborations</Tag>
-                <Tag color="green-bourgeon">{selectedEntity.projects.filter((p) => p.role === "coordinator").length} coordinations</Tag>
-              </TagGroup>
+              <div className="entities-modal__header">
+                <Title as="h2">{`${selectedEntity.entities_name} ${getFlagEmoji(selectedEntity.country_code)}`}</Title>
+                <div className="entities-modal__header-count">
+                  {selectedEntity.projects.length}{" "}
+                  {selectedEntity.projects.length > 1
+                    ? getI18nLabel(i18n, "collaborations", currentLang)
+                    : getI18nLabel(i18n, "collaboration", currentLang)}
+                </div>
+                <Button
+                  className="fr-mt-2w"
+                  icon="download-line"
+                  size="sm"
+                  variant="secondary"
+                  onClick={() => downloadCSV(selectedEntity.projects, `${selectedEntity.entities_name}_all_projects.csv`)}
+                >
+                  {getI18nLabel(i18n, "downloadAllProjects", currentLang)}
+                </Button>
+              </div>
 
-              <div className="fr-table fr-table--sm fr-table--no-caption fr-pt-0">
-                <div className="fr-table__wrapper">
-                  <div className="fr-table__container">
-                    <div className="fr-table__content">
-                      <table className="fr-table--layout-fixed">
-                        <thead>
-                          <tr>
-                            <th>Projet ID</th>
-                            <th>Rôle</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {selectedEntity.projects.map((project) => (
-                            <tr key={project.project_id}>
-                              <td>
-                                <Link href={`https://cordis.europa.eu/project/${project.project_id}`} target="_blank" rel="noopener noreferrer">
-                                  {project.project_id}
-                                </Link>
-                              </td>
-                              <td>{project.role}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
+              {/* Grouper les projets par rôle */}
+              {Object.entries(
+                selectedEntity.projects.reduce(
+                  (acc, project) => {
+                    if (!acc[project.role]) acc[project.role] = [];
+                    acc[project.role].push(project);
+                    return acc;
+                  },
+                  {} as Record<string, typeof selectedEntity.projects>,
+                ),
+              ).map(([role, projects]) => (
+                <div
+                  key={role}
+                  className={`entities-modal__role-card ${role.toLowerCase() === "coordinator" ? "entities-modal__role-card--coordinator" : ""}`}
+                >
+                  <div className="entities-modal__role-header">
+                    <span
+                      className={`entities-modal__role-badge ${role.toLowerCase() === "coordinator" ? "entities-modal__role-badge--coordinator" : ""}`}
+                    >
+                      {role}
+                    </span>
+                    <span className="entities-modal__role-count">
+                      {projects.length}{" "}
+                      {projects.length > 1 ? getI18nLabel(i18n, "projects", currentLang) : getI18nLabel(i18n, "project", currentLang)}
+                    </span>
+                    <Button
+                      icon="download-line"
+                      size="sm"
+                      variant="text"
+                      onClick={() => downloadCSV(projects, `${selectedEntity.entities_name}_${role}_projects.csv`)}
+                      title={`${getI18nLabel(i18n, "downloadProjects", currentLang)} ${role}`}
+                    />
+                  </div>
+                  <div className="entities-modal__tags">
+                    {projects.map((project) => (
+                      <Tag
+                        key={project.project_id}
+                        as="a"
+                        href={`https://cordis.europa.eu/project/${project.project_id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        color={role.toLowerCase() === "coordinator" ? "green-emeraude" : "purple-glycine"}
+                      >
+                        {project.project_id}
+                      </Tag>
+                    ))}
                   </div>
                 </div>
-              </div>
+              ))}
             </>
           )}
         </ModalContent>

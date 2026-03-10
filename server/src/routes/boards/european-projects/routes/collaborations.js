@@ -416,6 +416,8 @@ router.route(routesPrefix + "/get-collaborations-by-entity").get(async (req, res
                   _id: "$entities_id",
                   entities_name: { $first: "$entities_name" },
                   country_code: { $first: "$country_code" },
+                  country_name_fr: { $first: "$country_name_fr" },
+                  country_name_en: { $first: "$country_name_en" },
                   projects: {
                     $addToSet: {
                       project_id: "$project_id",
