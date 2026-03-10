@@ -53,7 +53,7 @@ export default function Integration() {
               </div>
             }
           >
-            <LazyComponent {...componentProps} />
+            <LazyComponent name={undefined} {...componentProps} />
           </Suspense>
         </Col>
       </Row>
