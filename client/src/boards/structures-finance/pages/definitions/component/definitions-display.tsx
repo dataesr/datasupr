@@ -1,4 +1,5 @@
 import { Link } from "@dataesr/dsfr-plus";
+import { parseMarkdown } from "../../../../../utils/format";
 
 interface Definition {
   indicateur: string;
@@ -132,13 +133,21 @@ export default function Definitions({
                               <br />
                             </td>
                             <td>
-                              {def.definition}
+                              <span
+                                dangerouslySetInnerHTML={{
+                                  __html: parseMarkdown(def.definition),
+                                }}
+                              />
                               {def.interpretation && (
                                 <>
                                   <br />
                                   <br />
                                   <strong>Interprétation :</strong>{" "}
-                                  {def.interpretation}
+                                  <span
+                                    dangerouslySetInnerHTML={{
+                                      __html: parseMarkdown(def.interpretation),
+                                    }}
+                                  />
                                 </>
                               )}
                             </td>
