@@ -487,7 +487,6 @@ export default function ChartWrapper({
         setIsOpenIntegration={setIsOpenIntegration}
       />
       <IntegrationModal
-        config={config}
         graphConfig={config}
         isOpen={isOpenIntegration && !!config.integrationURL}
         modalId={modalId}
