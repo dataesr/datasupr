@@ -9,12 +9,14 @@ import {
 
 interface AnalysisFilterProps {
   data: any[];
+  currentStructure?: any;
   selectedAnalysis: AnalysisKey | null;
   onSelectAnalysis: (analysis: AnalysisKey) => void;
 }
 
 export default function AnalysisFilter({
   data,
+  currentStructure,
   selectedAnalysis,
   onSelectAnalysis,
 }: AnalysisFilterProps) {
@@ -31,12 +33,13 @@ export default function AnalysisFilter({
     }));
 
   const availableKeys = useMemo(() => {
-    if (!data || !Array.isArray(data)) return new Set<string>();
+    const source = currentStructure ? [currentStructure] : data;
+    if (!source || source.length === 0) return new Set<string>();
 
     const available = Object.keys(PREDEFINED_ANALYSES).filter((key) => {
       const analysis = PREDEFINED_ANALYSES[key as AnalysisKey];
       return analysis.metrics.some((metricKey) => {
-        return data.some((item) => {
+        return source.some((item) => {
           const value = item[metricKey];
           return value != null && !isNaN(value) && value > 0;
         });
@@ -44,7 +47,15 @@ export default function AnalysisFilter({
     });
 
     return new Set(available);
-  }, [data]);
+  }, [data, currentStructure]);
+
+  const availableItems = items.filter((item) => availableKeys.has(item.key));
+  const availableCategories = [
+    ...new Set(availableItems.map((item) => item.category)),
+  ];
+  const activeCategory = availableCategories.includes(selectedCategory)
+    ? selectedCategory
+    : (availableCategories[0] ?? "");
 
   return (
     <ItemFilter
@@ -52,7 +63,7 @@ export default function AnalysisFilter({
       items={items}
       availableKeys={availableKeys}
       selectedKey={selectedAnalysis}
-      selectedCategory={selectedCategory}
+      selectedCategory={activeCategory}
       onSelectItem={(key) => onSelectAnalysis(key as AnalysisKey)}
       onSelectCategory={setSelectedCategory}
     />

@@ -100,6 +100,7 @@ export default function PositioningCharts({
           <Col xs="12" md="4">
             <AnalysisFilter
               data={data}
+              currentStructure={currentStructure}
               selectedAnalysis={selectedAnalysis || "ressources-total"}
               onSelectAnalysis={onSelectAnalysis || (() => {})}
             />
