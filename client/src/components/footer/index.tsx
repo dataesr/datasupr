@@ -1,6 +1,8 @@
 import { Logo } from "@dataesr/dsfr-plus";
+import { useSearchParams } from "react-router-dom";
 
 import { getI18nLabel } from "../../utils";
+import SwitchLanguage from "../switch-language";
 import SwitchTheme from "../switch-theme";
 import i18n from "./i18n.json";
 
@@ -9,7 +11,15 @@ import "./styles.scss";
 const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env;
 
 
+const LANGUAGE_LABELS: Record<string, string> = {
+  fr: "Français",
+  en: "English",
+};
+
 export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { href?: string, title?: string }) {
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+
   return (
     <footer className="fr-footer" role="contentinfo" id="footer">
       <div className="fr-container">
@@ -21,10 +31,7 @@ export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { h
           </div>
           <div>
             <svg aria-hidden="true" viewBox="0 0 1167.77 752.85" width="100%">
-              <use
-                className="sies-logo"
-                href="/logos/sies_logo_signature.svg#sies-logo-text"
-              />
+              <use className="sies-logo" href="/logos/sies_logo_signature.svg#sies-logo-text" />
               <use href="/logos/sies_logo_signature.svg#sies-logo-artwork" />
             </svg>
           </div>
@@ -120,14 +127,21 @@ export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { h
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <button
-                className="fr-footer__bottom-link fr-fi-theme-fill fr-link--icon-left"
-                aria-controls="fr-theme-modal"
-                data-fr-opened="false"
-              >
+              <button className="fr-footer__bottom-link fr-fi-theme-fill fr-link--icon-left" aria-controls="fr-theme-modal" data-fr-opened="false">
                 Paramètres d'affichage
               </button>
             </li>
+            {searchParams.has("language") && (
+              <li className="fr-footer__bottom-item">
+                <button
+                  className="fr-footer__bottom-link fr-icon-translate-2 fr-link--icon-left"
+                  aria-controls="fr-translate-modal"
+                  data-fr-opened="false"
+                >
+                  {LANGUAGE_LABELS[currentLang] || LANGUAGE_LABELS.fr}
+                </button>
+              </li>
+            )}
           </ul>
           <div className="fr-footer__bottom-copy">
             <p
@@ -139,6 +153,7 @@ export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { h
         </div>
       </div>
       <SwitchTheme />
+      <SwitchLanguage />
     </footer>
   );
 }
