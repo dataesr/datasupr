@@ -119,12 +119,6 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
     categories.push(funder);
   });
 
-  const config = {
-    comment: { "fr": <>Ce graphique indique, par financeur, le nombre, les financements globaux et les financements perçus des projets auxquels participe l'établissement {name}. Pour chaque financeur, la barre correspondante est subdivisée en deux en fonction du rôle de l'établissement : la partie pointillée quand l'établissement est coordinateur, en couleur simple quand il est partenaire non coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
-    id: "projectsByStructure",
-    integrationURL: `/integration?chart_id=projectsByStructure&${searchParams.toString()}`,
-  };
-
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let dataLabel = function (this: any) {
@@ -169,6 +163,13 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         return `<b>${formatCompactNumber(this.y)} €</b> perçus ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
       };
       break;
+  };
+
+  const config = {
+    comment: { "fr": <>Ce graphique indique, par financeur, le nombre, les financements globaux et les financements perçus des projets auxquels participe l'établissement {name}. Pour chaque financeur, la barre correspondante est subdivisée en deux en fonction du rôle de l'établissement : la partie pointillée quand l'établissement est coordinateur, en couleur simple quand il est partenaire non coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
+    id: "projectsByStructure",
+    integrationURL: `/integration?chart_id=projectsByStructure&${searchParams.toString()}`,
+    title,
   };
 
   const options: HighchartsInstance.Options = {

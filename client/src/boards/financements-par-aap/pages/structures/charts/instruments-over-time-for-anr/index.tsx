@@ -118,14 +118,6 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
     });
   });
 
-  const config = {
-    comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs financements associés, ventilée par instrument, pour les projets ANR, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps.
-Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
-</> },
-    id: "instrumentsOverTimeForAnr",
-    integrationURL: `/integration?chart_id=instrumentsOverTimeForAnr&${searchParams.toString()}`,
-  };
-
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let series = seriesProject.reverse();
@@ -152,6 +144,15 @@ Le type de participation est distingué, en pointillé quand l'établissement es
         return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié <b>${name}</b>`;
       };
       break;
+  };
+
+  const config = {
+    comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs financements associés, ventilée par instrument, pour les projets ANR, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps.
+Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
+</> },
+    id: "instrumentsOverTimeForAnr",
+    integrationURL: `/integration?chart_id=instrumentsOverTimeForAnr&${searchParams.toString()}`,
+    title,
   };
 
   const options: HighchartsInstance.Options = {

@@ -118,12 +118,6 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
     });
   });
 
-  const config = {
-    comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets, des financements globaux et des financements perçus, ventilée par financeur, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Pour les financements européens, Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
-    id: "projectsOverTimeByStructure",
-    integrationURL: `/integration?chart_id=projectsOverTimeByStructure&${searchParams.toString()}`,
-  };
-
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let series = seriesProject.reverse();
@@ -150,7 +144,14 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
         return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
       };
       break;
-  }
+  };
+
+  const config = {
+    comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets, des financements globaux et des financements perçus, ventilée par financeur, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Pour les financements européens, Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
+    id: "projectsOverTimeByStructure",
+    integrationURL: `/integration?chart_id=projectsOverTimeByStructure&${searchParams.toString()}`,
+    title,
+  };
 
   const options: HighchartsInstance.Options = {
     chart: { type: "area" },

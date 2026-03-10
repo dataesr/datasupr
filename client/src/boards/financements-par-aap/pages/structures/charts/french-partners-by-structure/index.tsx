@@ -188,13 +188,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
     return `${structure.label}`;
   });
 
-  const config = {
-    comment: { "fr": <>Ce graphe montre quels établissements français collaborent le plus avec l'établissement sur les projets financés par AAP.
-Les barres représentent le nombre, les financements globaux et perçus pour les projets auxquels l'établissement participe avec chaque partenaire. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
-    id: "frenchPartnersByStructure",
-    integrationURL: `/integration?chart_id=frenchPartnersByStructure&${searchParams.toString()}`,
-  };
-
+  const title = `Principaux partenaires français de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let categories = categoriesProject;
@@ -241,6 +235,14 @@ Les barres représentent le nombre, les financements globaux et perçus pour les
       break;
   };
 
+  const config = {
+    comment: { "fr": <>Ce graphe montre quels établissements français collaborent le plus avec l'établissement sur les projets financés par AAP.
+Les barres représentent le nombre, les financements globaux et perçus pour les projets auxquels l'établissement participe avec chaque partenaire. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
+    id: "frenchPartnersByStructure",
+    integrationURL: `/integration?chart_id=frenchPartnersByStructure&${searchParams.toString()}`,
+    title,
+  };
+
   const options: HighchartsInstance.Options = {
     legend: { enabled: true, reversed: true },
     plotOptions: {
@@ -272,7 +274,7 @@ Les barres représentent le nombre, les financements globaux et perçus pour les
   return (
     <div className={`chart-container chart-container--${color}`} id="french-partners-by-structure">
       <Title as="h2" look="h6">
-        {`Principaux partenaires français de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}

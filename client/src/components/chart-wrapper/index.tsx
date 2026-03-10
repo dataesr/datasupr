@@ -136,23 +136,23 @@ function MenuModal({
 }) {
   return (
     <Modal
-      isOpen={isOpen}
       hide={() => setIsOpen(false)}
-      size="sm"
+      isOpen={isOpen}
       key={modalId}
+      size="sm"
     >
       <ModalContent className="modal-actions">
         <Title as="h1" look="h6">
           <span
-            className="fr-icon-bar-chart-box-line fr-mr-1w"
             aria-hidden="true"
+            className="fr-icon-bar-chart-box-line fr-mr-1w"
           />
           {getI18nLabel(i18n, "modalTitle")}
         </Title>
 
         <fieldset
-          className="fr-fieldset"
           aria-labelledby="sélection du type d'affichage"
+          className="fr-fieldset"
         >
           <legend
             className="fr-fieldset__legend--regular fr-fieldset__legend"
@@ -182,9 +182,9 @@ function MenuModal({
           <li>
             <Button
               icon="file-download-line"
-              title="téléchargement des données du graphique"
-              variant="text"
               onClick={downloadCSV}
+              title="Téléchargement des données du graphique"
+              variant="text"
             >
               {getI18nLabel(i18n, "downloadCSV")}
             </Button>
@@ -192,9 +192,9 @@ function MenuModal({
           <li>
             <Button
               icon="image-line"
-              title="téléchargement de l'image"
-              variant="text"
               onClick={downloadPNG}
+              title="Téléchargement de l'image"
+              variant="text"
             >
               {getI18nLabel(i18n, "downloadPNG")}
             </Button>
@@ -202,9 +202,9 @@ function MenuModal({
           <li>
             <Button
               icon="printer-line"
-              title="lancement de l'impression"
-              variant="text"
               onClick={printChart}
+              title="Lancement de l'impression"
+              variant="text"
             >
               {getI18nLabel(i18n, "print")}
             </Button>
@@ -219,22 +219,22 @@ function MenuModal({
               </Title>
               <div className="share">
                 <Button
+                  disabled
                   icon="twitter-x-fill"
                   title="Twitter-X"
                   variant="text"
-                  disabled
                 />
                 <Button
+                  disabled
                   icon="linkedin-box-fill"
                   title="Linkedin"
                   variant="text"
-                  disabled
                 />
                 <Button
-                  icon="facebook-circle-fill"
-                  title="Linkedin"
-                  variant="text"
                   disabled
+                  icon="facebook-circle-fill"
+                  title="Facebook"
+                  variant="text"
                 />
               </div>
             </Col>
@@ -244,6 +244,7 @@ function MenuModal({
               </Title>
               <div className="share text-right">
                 <Button
+                  disabled={!config.integrationURL}
                   icon="code-s-slash-line"
                   onClick={() => {
                     if (config.integrationURL) {
@@ -253,7 +254,6 @@ function MenuModal({
                   }}
                   title={getI18nLabel(i18n, "integration")}
                   variant="secondary"
-                  disabled={!config.integrationURL}
                 >
                   {getI18nLabel(i18n, "integration")}
                 </Button>
@@ -302,8 +302,8 @@ function ChartTitle({
     <>
       <Title
         as={config.title.size ? config.title.size : "h2"}
-        look={config.title.look ? config.title.look : "h6"}
         className={config.title.className ? config.title.className : "fr-my-0"}
+        look={config.title.look ? config.title.look : "h6"}
       >
         {config.title[currentLang]}
       </Title>
@@ -477,20 +477,21 @@ export default function ChartWrapper({
       <MenuModal
         config={config}
         displayType={displayType}
+        downloadCSV={downloadCSV}
+        downloadPNG={downloadPNG}
         isOpen={isOpen}
+        modalId={modalId}
+        printChart={printChart}
         setDisplayType={setDisplayType}
         setIsOpen={setIsOpen}
         setIsOpenIntegration={setIsOpenIntegration}
-        modalId={modalId}
-        downloadCSV={downloadCSV}
-        downloadPNG={downloadPNG}
-        printChart={printChart}
       />
       <IntegrationModal
+        config={config}
         graphConfig={config}
         isOpen={isOpenIntegration && !!config.integrationURL}
-        setIsOpen={setIsOpenIntegration}
         modalId={modalId}
+        setIsOpen={setIsOpenIntegration}
       />
     </section>
   );

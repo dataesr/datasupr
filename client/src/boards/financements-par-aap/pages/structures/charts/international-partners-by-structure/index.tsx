@@ -188,13 +188,7 @@ export default function InternationalPartnersByStructure({ name }: { name: strin
     return `${structure.label} (${structure.country})`;
   });
 
-  const config = {
-    comment: { "fr": <>Ce graphe montre quels partenaires internationaux collaborent le plus avec l'établissement sur les projets financés par AAP.
-Les barres représentent le nombre, les financements globaux et perçus pour les projets auxquels l'établissement participe avec chaque partenaire. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </> },
-    id: "internationalPartnersByStructure",
-    integrationURL: `/integration?chart_id=internationalPartnersByStructure&${searchParams.toString()}`,
-  };
-
+  const title = `Principaux partenaires internationaux de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let categories = categoriesProject;
@@ -239,7 +233,15 @@ Les barres représentent le nombre, les financements globaux et perçus pour les
         return `<b>${formatCompactNumber(this.y)} €</b> perçus par <b>${name}</b> pour les projets <b>${this.series.name}</b> où l'établissement est en collaboration avec <b>${this.key}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
-  }
+  };
+
+  const config = {
+    comment: { "fr": <>Ce graphe montre quels partenaires internationaux collaborent le plus avec l'établissement sur les projets financés par AAP.
+Les barres représentent le nombre, les financements globaux et perçus pour les projets auxquels l'établissement participe avec chaque partenaire. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </> },
+    id: "internationalPartnersByStructure",
+    integrationURL: `/integration?chart_id=internationalPartnersByStructure&${searchParams.toString()}`,
+    title,
+  };
 
   const options: HighchartsInstance.Options = {
     legend: { enabled: true, reversed: true },
@@ -271,7 +273,7 @@ Les barres représentent le nombre, les financements globaux et perçus pour les
   return (
     <div className={`chart-container chart-container--${color}`} id="international-partners-by-structure">
       <Title as="h2" look="h6">
-        {`Principaux partenaires internationaux de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}

@@ -155,13 +155,7 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
     });
   });
 
-  const config = {
-    comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement, par type d'instrument (action), pour les projets européens. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
-</> },
-    id: "instrumentsForEurope",
-    integrationURL: `/integration?chart_id=instrumentsForEurope&${searchParams.toString()}`,
-  };
-
+  const title = `Instruments de financement européen pour les projets auxquels participe ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
   let series = seriesProject.reverse();
   let tooltip = function (this: any) {
@@ -182,6 +176,14 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
         return `<b>${formatCompactNumber(this.value)} €</b> perçus par <b>${name}</b> pour les projets européens au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
+  };
+
+  const config = {
+    comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement, par type d'instrument (action), pour les projets européens. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
+</> },
+    id: "instrumentsForEurope",
+    integrationURL: `/integration?chart_id=instrumentsForEurope&${searchParams.toString()}`,
+    title,
   };
 
   const options: HighchartsInstance.Options = {
@@ -207,7 +209,7 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
   return (
     <div className={`chart-container chart-container--${color}`} id="instruments-for-europe">
       <Title as="h2" look="h6">
-        {`Instruments de financement européen pour les projets auxquels participe ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}

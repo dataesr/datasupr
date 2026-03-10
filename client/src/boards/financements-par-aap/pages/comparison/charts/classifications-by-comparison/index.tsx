@@ -231,7 +231,7 @@ export default function ClassificationsByComparison() {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesBudget[this.x]}</b> pour des projets en <b>${this.series.name}</b> débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
-  }
+  };
 
   const config = {
     comment: {
@@ -243,6 +243,7 @@ export default function ClassificationsByComparison() {
     },
     id: "classificationsByComparison",
     integrationURL: `/integration?chart_id=classificationsByComparison&${searchParams.toString()}`,
+    title,
   };
 
   const options: HighchartsInstance.Options = {

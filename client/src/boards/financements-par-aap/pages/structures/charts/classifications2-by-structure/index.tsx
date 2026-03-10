@@ -177,15 +177,7 @@ export default function Classifications2ByStructure({ name }: { name: string | u
     });
   });
 
-  const config = {
-    comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement, par financeur et selon les grandes classifications disciplinaires.
-Les barres représentent le nombre / le financement global ou perçu pour les projets rattachés à chaque domaine, permettant d’identifier les champs scientifiques les plus présents dans les projets auxquels l’établissement participe.
- Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). Les thématiques ont été estimées par IA, à partir du titre, résumé et mots clés des projets.
-Les disciplines ont été estimées par IA, à partir du titre, résumé et mots clés des projets.</> },
-    id: "classifications2ByStructure",
-    integrationURL: `/integration?chart_id=classifications2ByStructure&${searchParams.toString()}`,
-  };
-
+  const title = `Disciplines par financeur de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let dataLabel = function (this: any) {
@@ -229,6 +221,16 @@ Les disciplines ont été estimées par IA, à partir du titre, résumé et mots
       break;
   };
 
+  const config = {
+    comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement, par financeur et selon les grandes classifications disciplinaires.
+Les barres représentent le nombre / le financement global ou perçu pour les projets rattachés à chaque domaine, permettant d’identifier les champs scientifiques les plus présents dans les projets auxquels l’établissement participe.
+ Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). Les thématiques ont été estimées par IA, à partir du titre, résumé et mots clés des projets.
+Les disciplines ont été estimées par IA, à partir du titre, résumé et mots clés des projets.</> },
+    id: "classifications2ByStructure",
+    integrationURL: `/integration?chart_id=classifications2ByStructure&${searchParams.toString()}`,
+    title,
+  };
+
   const options: HighchartsInstance.Options = {
     legend: { enabled: true, reversed: true },
     plotOptions: {
@@ -257,7 +259,7 @@ Les disciplines ont été estimées par IA, à partir du titre, résumé et mots
   return (
     <div className={`chart-container chart-container--${color}`} id="classifications2-by-structure">
       <Title as="h2" look="h6">
-        {`Disciplines par financeur de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}

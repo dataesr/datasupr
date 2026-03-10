@@ -190,15 +190,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   const categoriesParticipation = laboratoriesParticipation.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
   const categoriesProject = laboratoriesProject.map((bucket) => (Object.fromEntries(new URLSearchParams(bucket.key))).label);
 
-  const config = {
-    comment: { "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.
-Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, les données au niveau laboratoire ne sont pas disponibles.
-Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
-</> },
-    id: "laboratoriesByStructures",
-    integrationURL: `/integration?chart_id=laboratoriesByStructures&${searchParams.toString()}`,
-  };
-
+  const title = `Principaux laboratoires de ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let categories = categoriesProject;
@@ -243,7 +235,17 @@ Le type de participation est distingué, en pointillé quand l'établissement es
         return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus par <b>${categoriesBudget[this.x]}</b> dans le cadre de projets <b>${this.series.name}</b> pour des projets débutés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
-  }
+  };
+
+  const config = {
+    comment: { "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.
+Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, les données au niveau laboratoire ne sont pas disponibles.
+Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
+</> },
+    id: "laboratoriesByStructures",
+    integrationURL: `/integration?chart_id=laboratoriesByStructures&${searchParams.toString()}`,
+    title,
+  };
 
   const options: HighchartsInstance.Options = {
     chart: { height: "1000px" },
@@ -276,7 +278,7 @@ Le type de participation est distingué, en pointillé quand l'établissement es
   return (
     <div className={`chart-container chart-container--${color}`} id="laboratories-by-structures">
       <Title as="h2" look="h6">
-        {`Principaux laboratoires de ${name} impliqués dans les projets par AAP ${getYearRangeLabel({ yearMax, yearMin })}`}
+        {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
       {isLoading ? <DefaultSkeleton height="1000px" /> : <ChartWrapperFundings config={config} options={options} />}
