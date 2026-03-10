@@ -49,14 +49,15 @@ export function AnalyseSection({
     !!localYear
   );
 
-  const { data: allYearsComparisonData } = useFinanceAdvancedComparison(
-    {
-      type: "",
-      typologie: "",
-      region: "",
-    },
-    true
-  );
+  const { data: allYearsComparisonData, isLoading: isLoadingAllYears } =
+    useFinanceAdvancedComparison(
+      {
+        type: "",
+        typologie: "",
+        region: "",
+      },
+      true
+    );
 
   const allItems = comparisonData?.items || [];
 
@@ -130,7 +131,7 @@ export function AnalyseSection({
               selectedYear={localYear}
               availableYears={years}
               onYearChange={setLocalYear}
-              isLoading={isLoading}
+              isLoading={isLoading || isLoadingAllYears}
             />
           )}
         </Col>

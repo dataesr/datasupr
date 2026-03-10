@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import Highcharts from "highcharts";
+import "../../../../styles.scss";
 import "highcharts/highcharts-more";
 import { Text, Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper/index.tsx";
@@ -50,7 +51,6 @@ export default function ColumnRangeChart({
     "variation"
   );
 
-  // Construire un index établissement → {annee → valeur}
   const pointsAll = useMemo<ColumnRangePoint[]>(() => {
     const byId = new Map<
       string,
@@ -134,7 +134,6 @@ export default function ColumnRangeChart({
 
   return (
     <div>
-      {/* Contrôles */}
       <Row gutters className="fr-mb-3w">
         <Col xs="12" md="3">
           <Text className="fr-text--sm fr-text--bold fr-mb-1w">
@@ -221,48 +220,18 @@ export default function ColumnRangeChart({
         </Col>
       </Row>
 
-      {/* Légende couleurs */}
       <Row gutters className="fr-mb-2w">
         <Col xs="12">
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              marginRight: 16,
-              fontSize: 13,
-            }}
-          >
-            <span
-              style={{
-                display: "inline-block",
-                width: 14,
-                height: 14,
-                borderRadius: 2,
-                background: "var(--background-flat-success)",
-              }}
-            />
-            Hausse
-          </span>
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              fontSize: 13,
-            }}
-          >
-            <span
-              style={{
-                display: "inline-block",
-                width: 14,
-                height: 14,
-                borderRadius: 2,
-                background: "var(--background-flat-error)",
-              }}
-            />
-            Baisse
-          </span>
+          <div className="column-range-legend">
+            <span className="column-range-legend__item">
+              <span className="column-range-legend__swatch column-range-legend__swatch--up" />
+              Hausse
+            </span>
+            <span className="column-range-legend__item">
+              <span className="column-range-legend__swatch column-range-legend__swatch--down" />
+              Baisse
+            </span>
+          </div>
         </Col>
       </Row>
 

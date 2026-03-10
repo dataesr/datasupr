@@ -46,9 +46,34 @@
   }
 }
 
-.section-navigation {
-  border-bottom: 1px solid var(--border-default-grey);
+.column-range-legend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.8rem;
 
+  &__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+  }
+
+  &__swatch {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    border-radius: 2px;
+    flex-shrink: 0;
+
+    &--up {
+      background: var(--background-flat-success);
+    }
+    &--down {
+      background: var(--background-flat-error);
+    }
+  }
+}
+
+.section-navigation {
   &__burger {
     display: none;
   }
