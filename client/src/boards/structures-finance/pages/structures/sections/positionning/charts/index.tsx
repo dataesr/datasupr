@@ -15,6 +15,7 @@ import { useComparisonFilters } from "../hooks";
 import { useMetricLabel } from "../../../../../hooks/useMetricLabel";
 import { useMetricThreshold } from "../../../../../hooks/useMetricThreshold";
 import { useMetricSens } from "../../../../../hooks/useMetricSens";
+import { BudgetWarning } from "../../../../../components/budget-warning";
 
 export type ChartView = "comparison" | "scatter-1" | "scatter-2" | "scatter-3";
 
@@ -106,6 +107,7 @@ export default function PositioningCharts({
             />
           </Col>
           <Col xs="12" md="8">
+            <BudgetWarning data={data} metrics={[selectedMetric]} />
             {isStacked && displayMetrics.length > 1 && (
               <Row gutters className="fr-mb-3w">
                 <Col xs="12" md="6">

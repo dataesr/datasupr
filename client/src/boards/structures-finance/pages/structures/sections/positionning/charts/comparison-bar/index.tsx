@@ -19,10 +19,7 @@ import {
 } from "../../../../../../config/metrics-config";
 import { ThresholdLegend } from "../../../../../../components/threshold/threshold-legend";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table";
-import {
-  BUDGET_SENSITIVE_METRICS,
-  BudgetWarning,
-} from "../../../../../../components/budget-warning";
+import { BUDGET_SENSITIVE_METRICS } from "../../../../../../components/budget-warning";
 
 interface ComparisonBarChartProps {
   data?: any[];
@@ -180,8 +177,6 @@ export default function ComparisonBarChart({
         </div>
       ) : (
         <>
-          <BudgetWarning data={data} metrics={[selectedMetric]} />
-
           <ChartWrapper
             key={chartKey}
             config={chartConfig}
