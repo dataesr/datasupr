@@ -42,26 +42,6 @@ interface Source {
   url: LocalizedUrl;
 }
 
-// Fonction utilitaire pour extraire le texte d'un ReactNode
-function extractTextFromReactNode(node: React.ReactNode): string {
-  if (typeof node === "string" || typeof node === "number") {
-    return String(node);
-  }
-  if (React.isValidElement(node)) {
-    const props = node.props as { children?: React.ReactNode };
-    if (props.children) {
-      if (Array.isArray(props.children)) {
-        return props.children.map(extractTextFromReactNode).join("");
-      }
-      return extractTextFromReactNode(props.children);
-    }
-  }
-  if (Array.isArray(node)) {
-    return node.map(extractTextFromReactNode).join("");
-  }
-  return "";
-}
-
 export type ChartConfig = {
   comment?: LocalizedContent;
   description?:
@@ -296,7 +276,7 @@ function ChartTitle({
         {children}
       </>
     );
-  }
+  };
 
   // Si title est un objet avec configuration
   return (
@@ -339,20 +319,13 @@ export default function ChartWrapper({
   const [isOpenIntegration, setIsOpenIntegration] = useState(false);
   const [displayType, setDisplayType] = useState("chart"); // ["chart", "data"]
   const modalId = useId();
-  const [searchParams] = useSearchParams();
-  const currentLang = searchParams.get("language") || "fr";
 
   const chart = useRef<HighchartsReact.RefObject>(null);
-
-  if (displayType === "data" && !renderData) {
-    setDisplayType("chart");
-    return null;
-  }
 
   // Si les options sont null, ne pas afficher le graphique
   if (!options) {
     return null;
-  }
+  };
 
   const downloadCSV = () => {
     if (chart && chart.current && chart.current.chart) {
@@ -381,10 +354,6 @@ export default function ChartWrapper({
         );
       } catch (error) {
         console.error("Erreur lors de l'export PNG:", error);
-        // Fallback alternatif : essayer avec la méthode print
-        alert(
-          "L'export PNG a échoué. Vous pouvez utiliser Ctrl+P pour imprimer la page."
-        );
       }
     }
   };
@@ -393,50 +362,9 @@ export default function ChartWrapper({
     if (chart && chart.current && chart.current.chart) {
       const currentChart = chart.current.chart as CurrentChart;
       try {
-        // Obtenir le titre du graphique
-        let chartTitle = "Graphique";
-        if (config.title && typeof config.title === "string") {
-          chartTitle = config.title;
-        } else if (config.title && typeof config.title === "object" && config.title[currentLang]) {
-          // Si c'est un ReactNode, essayer d'extraire le texte
-          const titleContent = config.title[currentLang];
-          if (typeof titleContent === "string") {
-            chartTitle = titleContent;
-          } else {
-            // Pour les ReactNode complexes, utiliser la fonction d'extraction
-            const extractedText = extractTextFromReactNode(titleContent);
-            chartTitle = extractedText || "Graphique";
-          }
-        }
-        // Sauvegarder le titre actuel
-        const currentTitle = currentChart.options.title;
-        // Mettre à jour temporairement le titre pour l'impression
-        currentChart.update(
-          {
-            title: {
-              text: chartTitle,
-              style: {
-                fontSize: "18px",
-                fontWeight: "bold",
-              },
-            },
-          },
-          false
-        );
         currentChart.print();
-        // Restaurer le titre original après un délai
-        setTimeout(() => {
-          if (currentChart) {
-            currentChart.update(
-              {
-                title: currentTitle,
-              },
-              false
-            );
-          }
-        }, 100);
       } catch (error) {
-        console.error("Erreur lors de l'impression:", error);
+        console.error("Erreur lors de l'impression: ", error);
         // Fallback : ouvrir la fenêtre d'impression du navigateur
         window.print();
       }
@@ -446,7 +374,29 @@ export default function ChartWrapper({
     }
   };
 
-  const optionsTmp: HighchartsOptions = deepMerge(options, { exporting: { chartOptions: { title: { text: config?.title } }, filename: config?.title ?? 'chart' } });
+  const exportingOptions = {
+    exporting: {
+      chartOptions: { title: { text: config?.title } },
+      filename: config?.title ?? 'chart',
+      showTable: displayType === 'data',
+    }
+  };
+  const optionsTmp: HighchartsOptions = deepMerge(options, exportingOptions);
+
+  if (chart && chart.current && chart.current.chart && !renderData) {
+    const currentChart = chart.current.chart as CurrentChart;
+    currentChart.update({
+      exporting: {
+        showTable: displayType === 'data',
+        tableCaption: getI18nLabel(i18n, "data"),
+      }
+    });
+  };
+
+  // Force delete element DOM of data table of Highchart
+  if (displayType !== 'data') {
+    document.getElementsByClassName("highcharts-data-table")?.[0]?.style?.setProperty("display", "none");
+  };
 
   return (
     <section className="chart-container">
@@ -462,9 +412,9 @@ export default function ChartWrapper({
         />
       </div>
       {displayType === "data" && renderData && options && <>{renderData(options)}</>}
-      {displayType === "chart" && optionsTmp && (
+      {((displayType === "chart" && renderData) || (!renderData)) && optionsTmp && (
         <figure className="chart">
-          <HighchartsReact highcharts={Highcharts} options={optionsTmp} ref={chart} constructorType={constructorType} />
+          <HighchartsReact constructorType={constructorType} highcharts={Highcharts} options={optionsTmp} ref={chart} />
         </figure>
       )}
       <div className="fr-pt-1w">
