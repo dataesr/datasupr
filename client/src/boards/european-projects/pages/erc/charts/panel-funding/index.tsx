@@ -11,6 +11,7 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 
 import i18n from "../../i18n.json";
 import "./styles.scss";
+import { Title } from "@dataesr/dsfr-plus";
 
 interface PanelFundingChartProps {
   countryAdjective?: string;
@@ -20,10 +21,10 @@ interface PanelFundingChartProps {
 const config = {
   id: "ercPanelFunding",
   idQuery: "ercPanelFunding",
-  title: {
-    en: "Funding by ERC Panel",
-    fr: "Financements par Panel ERC",
-  },
+  // title: {
+  //   en: "Funding by ERC Panel",
+  //   fr: "Financements par Panel ERC",
+  // },
   comment: {
     fr: (
       <>
@@ -78,9 +79,9 @@ export default function PanelFundingChart({ countryAdjective = "français", curr
   const { domainItems, destinationItems } = getLegendItems(currentLang);
 
   return (
-    <div className="panel-funding-chart">
+    <div className="panel-funding-chart fr-my-5w">
       <div className="panel-funding-chart__header">
-        <h3>{getI18nLabel(i18n, "panelFunding.sectionTitle", currentLang)}</h3>
+        <Title as="h4">Croisements panel ERC/types de financements</Title>
         <div className="panel-funding-chart__filter">
           <div className="fr-select-group">
             <label className="fr-label" htmlFor="stage-select">

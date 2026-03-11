@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { getErcSynthesisByDestination, ErcDestinationData } from "../../../api/erc";
-import { formatNumber, formatToRates } from "../../../../../utils/format";
+import { ErcStatCard, ErcStatCardSkeleton, ViewMode } from "./stat-card";
 import "./styles.scss";
 
 // Mapping des codes de destination vers des noms lisibles
@@ -18,6 +20,8 @@ interface ErcDestinationCardsProps {
 }
 
 export default function ErcDestinationCards({ countryCode, callYear }: ErcDestinationCardsProps) {
+  const [viewMode, setViewMode] = useState<ViewMode>("projects");
+
   const { data, isLoading } = useQuery<ErcDestinationData[]>({
     queryKey: ["erc-synthesis-by-destination", countryCode, callYear],
     queryFn: () =>
@@ -31,9 +35,9 @@ export default function ErcDestinationCards({ countryCode, callYear }: ErcDestin
     return (
       <div className="erc-destination-section">
         <h3>Par type de financement</h3>
-        <div className="erc-destination-cards">
+        <div className="erc-stat-cards">
           {[1, 2, 3, 4, 5].map((i) => (
-            <DestinationCardSkeleton key={i} />
+            <ErcStatCardSkeleton key={i} />
           ))}
         </div>
       </div>
@@ -46,76 +50,31 @@ export default function ErcDestinationCards({ countryCode, callYear }: ErcDestin
 
   return (
     <div className="erc-destination-section">
-      <h3>Par type de financement</h3>
-      <div className="erc-destination-cards">
-        {data.map((destination) => (
-          <DestinationCard key={destination.destination_code} data={destination} />
-        ))}
+      <div className="section-header">
+        <h3>Par type de financement</h3>
+        <SegmentedControl className="fr-segmented--sm" name="destination-view-mode">
+          <SegmentedElement checked={viewMode === "projects"} label="Projets" onClick={() => setViewMode("projects")} value="projects" />
+          <SegmentedElement checked={viewMode === "funding"} label="Financements" onClick={() => setViewMode("funding")} value="funding" />
+        </SegmentedControl>
       </div>
-    </div>
-  );
-}
-
-interface DestinationCardProps {
-  data: ErcDestinationData;
-}
-
-function DestinationCard({ data }: DestinationCardProps) {
-  const evaluatedProjects = data.evaluated?.total_involved || 0;
-  const successfulProjects = data.successful?.total_involved || 0;
-  const successRate = evaluatedProjects > 0 ? successfulProjects / evaluatedProjects : 0;
-
-  const displayName = DESTINATION_NAMES[data.destination_code] || data.destination_name_en || data.destination_code;
-
-  return (
-    <div className="erc-destination-card">
-      <div className="destination-header">
-        <h4 className="destination-title">{displayName}</h4>
-        <span className="destination-code">{data.destination_code}</span>
-      </div>
-
-      <div className="destination-stats">
-        <div className="stat-group evaluated">
-          <div className="stat-label">Projets évalués</div>
-          <div className="stat-value">{formatNumber(evaluatedProjects)}</div>
-        </div>
-
-        <div className="stat-group successful">
-          <div className="stat-label">Projets lauréats</div>
-          <div className="stat-value">{formatNumber(successfulProjects)}</div>
-        </div>
-      </div>
-
-      <div className="success-rate">
-        <span className="rate-label">Taux de succès</span>
-        <span className="rate-value">{formatToRates(successRate)}</span>
-      </div>
-    </div>
-  );
-}
-
-function DestinationCardSkeleton() {
-  return (
-    <div className="erc-destination-card">
-      <div className="destination-header">
-        <div className="loader-skeleton" style={{ width: "60%", height: "1rem" }}></div>
-        <div className="loader-skeleton" style={{ width: "3rem", height: "1.5rem" }}></div>
-      </div>
-
-      <div className="destination-stats">
-        <div className="stat-group">
-          <div className="loader-skeleton" style={{ width: "80%", height: "0.75rem", marginBottom: "0.25rem" }}></div>
-          <div className="loader-skeleton" style={{ width: "50%", height: "1.5rem" }}></div>
-        </div>
-        <div className="stat-group">
-          <div className="loader-skeleton" style={{ width: "80%", height: "0.75rem", marginBottom: "0.25rem" }}></div>
-          <div className="loader-skeleton" style={{ width: "50%", height: "1.5rem" }}></div>
-        </div>
-      </div>
-
-      <div className="success-rate">
-        <div className="loader-skeleton" style={{ width: "40%", height: "0.875rem" }}></div>
-        <div className="loader-skeleton" style={{ width: "20%", height: "1.25rem" }}></div>
+      <div className="erc-stat-cards">
+        {data.map((destination) => {
+          const displayName = DESTINATION_NAMES[destination.destination_code] || destination.destination_name_en || destination.destination_code;
+          return (
+            <ErcStatCard
+              key={destination.destination_code}
+              data={{
+                title: displayName,
+                code: destination.destination_code,
+                evaluatedCount: destination.evaluated?.total_involved || 0,
+                successfulCount: destination.successful?.total_involved || 0,
+                fundingAmount: destination.successful?.total_funding_entity || 0,
+                piCount: destination.successful?.total_pi || 0,
+              }}
+              viewMode={viewMode}
+            />
+          );
+        })}
       </div>
     </div>
   );

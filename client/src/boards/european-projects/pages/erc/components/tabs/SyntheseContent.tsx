@@ -1,10 +1,11 @@
 import { useSearchParams } from "react-router-dom";
-import { ErcSynthesisCards, ErcDestinationCards } from "../../../../components/cards/erc";
+import { ErcSynthesisCards, ErcDestinationCards, ErcPanelCards } from "../../../../components/cards/erc";
 import { getCountryAdjectives } from "../../../../../../components/country-selector/utils";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 import { getI18nLabel } from "../../../../../../utils";
 import PanelFundingChart from "../../charts/panel-funding";
 import i18n from "../../i18n.json";
+import { Title } from "@dataesr/dsfr-plus";
 
 export default function SyntheseContent() {
   const [searchParams] = useSearchParams();
@@ -25,10 +26,13 @@ export default function SyntheseContent() {
       <ErcSynthesisCards countryCode={countryCode} callYear={callYear} countryAdj={countryAdj} />
       {/* Cartes par type de financement */}
       <ErcDestinationCards countryCode={countryCode} callYear={callYear} />
-      {/* Graphique par panel ERC */}
-      <div className="fr-mt-4w">
-        <PanelFundingChart countryAdjective={countryAdj.m} currentLang={currentLang} />
-      </div>
+
+      {/* Cartes par panel ERC */}
+      <Title as="h3" className="fr-mt-4w">
+        {getI18nLabel(i18n, "panelFunding.sectionTitle", currentLang)}
+      </Title>
+      <ErcPanelCards countryCode={countryCode} callYear={callYear} />
+      <PanelFundingChart countryAdjective={countryAdj.m} currentLang={currentLang} />
       {/* TODO: Graph de performance avec croisement d'indicateurs Par panel, type de financement */}
       {/* TODO: Stats par type de financement + genre du porteur + tranche age du porteur */}
     </div>

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 export { default as ErcSynthesisCards } from "./synthesis-cards";
 export { default as ErcDestinationCards } from "./destination-cards";
+export { default as ErcPanelCards } from "./panel-cards";
 
 export default function ErcCard({ title, subtitle, description, to }: { title: string; subtitle?: string; description?: string; to: string }) {
   return (

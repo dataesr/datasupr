@@ -18,6 +18,15 @@
 
   --main-partner: #7C3AED; // principal bénéficiaire
   --main-partner-dark: #684579; // principal bénéficiaire
+}
+
+// Thème dark - couleurs plus lumineuses pour meilleure lisibilité
+:root[data-fr-scheme="dark"] {
+  --evaluated-project-color: #4dd4db; // projets évalués (plus clair)
+  --successful-project-color: #6dd897; // projets lauréats (vert lumineux)
+  --candidats-color: #4dd4db;
+  --participants-color: #6dd897;
+
 
   // Pillars colors
   --pillar-p1-color: var(--scale-1-color); // pilier 1

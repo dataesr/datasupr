@@ -47,10 +47,16 @@ export interface ErcPanelData {
   panel_lib: string;
   domaine_scientifique: string;
   domaine_name_scientifique: string;
-  destination_code: string;
-  destination_name_en: string;
-  total_funding_entity: number;
-  total_pi: number;
+  evaluated: {
+    total_funding_entity: number;
+    total_involved: number;
+    total_pi: number;
+  } | null;
+  successful: {
+    total_funding_entity: number;
+    total_involved: number;
+    total_pi: number;
+  } | null;
 }
 
 export interface ErcEvolutionData {

@@ -17,5 +17,5 @@ export async function getData(params: string): Promise<PanelFundingItem[]> {
     return [];
   }
 
-  return fetch(`${VITE_APP_SERVER_URL}/european-projects/erc/synthesis-by-panel?${params}`).then((response) => response.json());
+  return fetch(`${VITE_APP_SERVER_URL}/european-projects/erc/panel-funding?${params}`).then((response) => response.json());
 }
