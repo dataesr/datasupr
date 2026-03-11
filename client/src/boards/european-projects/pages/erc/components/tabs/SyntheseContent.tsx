@@ -1,0 +1,36 @@
+import { useSearchParams } from "react-router-dom";
+import { ErcSynthesisCards, ErcDestinationCards } from "../../../../components/cards/erc";
+import { getCountryAdjectives } from "../../../../../../components/country-selector/utils";
+import { rangeOfYearsToApiFormat } from "../../url-utils";
+import { getI18nLabel } from "../../../../../../utils";
+import PanelFundingChart from "../../charts/panel-funding";
+import i18n from "../../i18n.json";
+
+export default function SyntheseContent() {
+  const [searchParams] = useSearchParams();
+
+  // Récupérer les paramètres de filtres depuis l'URL
+  const countryCode = searchParams.get("country_code") || "FRA";
+  const rangeOfYears = searchParams.get("range_of_years");
+  const callYear = rangeOfYearsToApiFormat(rangeOfYears);
+  const currentLang = searchParams.get("language") || "fr";
+
+  // Adjectifs de nationalité (masculin et féminin)
+  const countryAdj = getCountryAdjectives(countryCode);
+
+  return (
+    <div>
+      <h2 className="fr-mb-3w">{getI18nLabel(i18n, "page.title", currentLang)}</h2>
+      {/* Cartes de synthèse principales */}
+      <ErcSynthesisCards countryCode={countryCode} callYear={callYear} countryAdj={countryAdj} />
+      {/* Cartes par type de financement */}
+      <ErcDestinationCards countryCode={countryCode} callYear={callYear} />
+      {/* Graphique par panel ERC */}
+      <div className="fr-mt-4w">
+        <PanelFundingChart countryAdjective={countryAdj.m} currentLang={currentLang} />
+      </div>
+      {/* TODO: Graph de performance avec croisement d'indicateurs Par panel, type de financement */}
+      {/* TODO: Stats par type de financement + genre du porteur + tranche age du porteur */}
+    </div>
+  );
+}
