@@ -395,7 +395,8 @@ export default function ChartWrapper({
 
   // Force delete element DOM of data table of Highchart
   if (displayType !== 'data') {
-    document.getElementsByClassName("highcharts-data-table")?.[0]?.style?.setProperty("display", "none");
+    const elt: HTMLElement = document.getElementsByClassName("highcharts-data-table")?.[0] as HTMLElement;
+    elt?.style?.setProperty("display", "none");
   };
 
   return (
