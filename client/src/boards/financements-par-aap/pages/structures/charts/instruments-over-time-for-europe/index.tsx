@@ -182,7 +182,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
-      {isLoading ? <DefaultSkeleton height="800px" /> : <ChartWrapperFundings config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height="800px" /> : <ChartWrapperFundings config={config} hideTitle options={options} />}
     </div>
   );
 }

@@ -185,7 +185,6 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       },
     },
     series,
-    title: { text: "" },
     tooltip: { formatter: tooltip },
     xAxis: {
       categories,
@@ -209,7 +208,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
         {title}
       </Title>
       <SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />
-      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
+      {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} hideTitle options={options} />}
     </div>
   );
 }
