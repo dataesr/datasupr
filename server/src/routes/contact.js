@@ -19,11 +19,16 @@ router.post("/contact", async (req, res) => {
         .json({ error: "L'adresse email n'est pas valide." });
     }
 
-    const response = await fetch(process.env.TICKET_OFFICE_API_URL, {
+    const ticketOfficeUrl =
+      process.env.NODE_ENV === "production"
+        ? process.env.TICKET_OFFICE_PROD_API_URL
+        : process.env.TICKET_OFFICE_STAGING_API_URL;
+
+    const response = await fetch(ticketOfficeUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: process.env.TICKET_OFFICE_BASIC_AUTH,
+        Authorization: `Basic ${process.env.TICKET_OFFICE_BASIC_AUTH}`,
       },
       body: JSON.stringify({ name, email, message, fromApplication, extra }),
     });

@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
-import { DSFRConfig } from "@dataesr/dsfr-plus";
+import { DSFRConfig, ToastContextProvider } from "@dataesr/dsfr-plus";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import "remixicon/fonts/remixicon.css";
@@ -27,9 +27,11 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       <QueryClientProvider client={queryClient}>
         <ScrollToTop />
         <MatomoTracker />
-        <DSFRConfig routerComponent={RouterLink}>
-          <AppRoutes />
-        </DSFRConfig>
+        <ToastContextProvider>
+          <DSFRConfig routerComponent={RouterLink}>
+            <AppRoutes />
+          </DSFRConfig>
+        </ToastContextProvider>
         <ReactQueryDevtools initialIsOpen={false} />
         <CookieConsent />
       </QueryClientProvider>

@@ -1,5 +1,5 @@
 import { Logo } from "@dataesr/dsfr-plus";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useSearchParams } from "react-router-dom";
 
 import { getI18nLabel } from "../../utils";
 import SwitchLanguage from "../switch-language";
@@ -10,16 +10,25 @@ import "./styles.scss";
 
 const { VITE_MINISTER_NAME, VITE_VERSION } = import.meta.env;
 
-
 const LANGUAGE_LABELS: Record<string, string> = {
   fr: "Français",
   en: "English",
 };
 
-export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { href?: string, title?: string }) {
+export default function Footer({
+  href = "/",
+  title = "Accueil - DataSupR",
+}: {
+  href?: string;
+  title?: string;
+}) {
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
 
+  const pathParts = location.pathname.split("/").filter(Boolean);
+  const dashboard = pathParts.length > 0 ? pathParts[0] : "general";
+  const contactUrl = `/contact?from=${dashboard}`;
   return (
     <footer className="fr-footer" role="contentinfo" id="footer">
       <div className="fr-container">
@@ -31,7 +40,10 @@ export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { h
           </div>
           <div>
             <svg aria-hidden="true" viewBox="0 0 1167.77 752.85" width="100%">
-              <use className="sies-logo" href="/logos/sies_logo_signature.svg#sies-logo-text" />
+              <use
+                className="sies-logo"
+                href="/logos/sies_logo_signature.svg#sies-logo-text"
+              />
               <use href="/logos/sies_logo_signature.svg#sies-logo-artwork" />
             </svg>
           </div>
@@ -112,7 +124,7 @@ export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { h
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <a className="fr-footer__bottom-link" href="#">
+              <a className="fr-footer__bottom-link" href={contactUrl}>
                 {getI18nLabel(i18n, "contact")}
               </a>
             </li>
@@ -127,7 +139,11 @@ export default function Footer({ href = "/", title = "Accueil - DataSupR" }: { h
               </a>
             </li>
             <li className="fr-footer__bottom-item">
-              <button className="fr-footer__bottom-link fr-fi-theme-fill fr-link--icon-left" aria-controls="fr-theme-modal" data-fr-opened="false">
+              <button
+                className="fr-footer__bottom-link fr-fi-theme-fill fr-link--icon-left"
+                aria-controls="fr-theme-modal"
+                data-fr-opened="false"
+              >
                 Paramètres d'affichage
               </button>
             </li>

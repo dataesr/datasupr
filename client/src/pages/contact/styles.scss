@@ -1,0 +1,11 @@
+.contact-form {
+  .fr-input {
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
+.contact-info-card {
+  height: 100%;
+}

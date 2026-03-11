@@ -16,7 +16,8 @@ import TemplateRoutes from "../boards/template/routes.tsx";
 import ValorisationRechercheInnovationRoutes from "../boards/valorisation-recherche-innovation/routes.tsx";
 import CookiePolicyPage from "../components/cookies/cookie-policy-page/index.tsx";
 import NotFoundPage from "../components/not-found-page.tsx";
-
+import ContactPage from "../pages/contact/index.tsx";
+import ContactLayout from "../pages/contact/layouts/global-layout.tsx";
 
 export default function Router() {
   return (
@@ -25,6 +26,9 @@ export default function Router() {
       <Route path="/admin/*" element={<AdminRoutes />} />
       <Route path="/atlas/*" element={<AtlasRoutes />} />
       <Route path="/cookies" element={<CookiePolicyPage />} />
+      <Route path="/contact" element={<ContactLayout />}>
+        <Route index element={<ContactPage />} />
+      </Route>
       <Route path="/datasupr-doc/*" element={<DatasuprDocRoutes />} />
       <Route
         path="/european-projects"
@@ -39,19 +43,27 @@ export default function Router() {
       <Route path="/graduates/*" element={<GraduatesRoutes />} />
       <Route path="/integration" element={<Integration />} />
       <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
-      <Route path="/personnel-enseignant/*" element={<FacultyMembersRoutes />} />
-      <Route path="/structures-finance/*" element={<StructuresFinanceRoutes />} />
       <Route
-        path="/teds"
-        element={<Navigate to="/teds/home" replace />}
+        path="/personnel-enseignant/*"
+        element={<FacultyMembersRoutes />}
       />
+      <Route
+        path="/structures-finance/*"
+        element={<StructuresFinanceRoutes />}
+      />
+      <Route path="/teds" element={<Navigate to="/teds/home" replace />} />
       <Route path="/teds/*" element={<TedsRoutes />} />
       <Route path="/template/*" element={<TemplateRoutes />} />
       <Route
         path="/valorisation-recherche-innovation"
-        element={<Navigate to="/valorisation-recherche-innovation/accueil" replace />}
+        element={
+          <Navigate to="/valorisation-recherche-innovation/accueil" replace />
+        }
       />
-      <Route path="/valorisation-recherche-innovation/*" element={<ValorisationRechercheInnovationRoutes />} />
+      <Route
+        path="/valorisation-recherche-innovation/*"
+        element={<ValorisationRechercheInnovationRoutes />}
+      />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
