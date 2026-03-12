@@ -101,7 +101,7 @@ export default function DataTable() {
     <Row gutters style={{ clear: "both" }}>
       <Col>
         <>
-          {isLoading ? <Spinner /> : <Grid options={options} gridRef={gridRef} />}
+          {isLoading ? <Spinner /> : <Grid options={options} />}
         </>
       </Col>
     </Row>
