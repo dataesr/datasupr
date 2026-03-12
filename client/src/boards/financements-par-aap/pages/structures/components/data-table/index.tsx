@@ -34,15 +34,24 @@ export default function DataTable() {
   });
 
   if (!isLoading && (options?.dataTable?.columns ?? []).length === 0) {
-    const hits = data?.hits?.hits ?? [];
-    const projectYear = hits.map((hit) => hit._source?.project_year ?? '');
-    const projectType = hits.map((hit) => hit._source?.project_type ?? '')
-    const projectId = hits.map((hit) => hit._source?.project_id ?? '');
-    const projectLabel = hits.map((hit) => hit._source?.project_label ?? '');
-    const projectInstrument = hits.map((hit) => hit._source?.project_instrument ?? '');
-    const participationIsCoordinator = hits.map((hit) => hit._source?.participation_is_coordinator ?? '');
-    const projectBudgetFinanced = hits.map((hit) => hit._source?.project_budgetFinanced ?? '');
-    const participationFunding = hits.map((hit) => hit._source?.participation_funding ?? '');
+    let projectYear = [];
+    let projectType = [];
+    let projectId = [];
+    let projectLabel = [];
+    let projectInstrument = [];
+    let participationIsCoordinator = [];
+    let projectBudgetFinanced = [];
+    let participationFunding = [];
+    (data?.hits?.hits ?? []).forEach((hit) => {
+      projectYear = projectYear.concat(hit._source?.project_year ?? '');
+      projectType = projectType.concat(hit._source?.project_type ?? '');
+      projectId = projectId.concat(hit._source?.project_id ?? '');
+      projectLabel = projectLabel.concat(hit._source?.project_label ?? '');
+      projectInstrument = projectInstrument.concat(hit._source?.project_instrument ?? '');
+      participationIsCoordinator = participationIsCoordinator.concat(hit._source?.participation_is_coordinator ?? '');
+      projectBudgetFinanced = projectBudgetFinanced.concat(hit._source?.project_budgetFinanced ?? '');
+      participationFunding = participationFunding.concat(hit._source?.participation_funding ?? '');
+    });
 
     setOptions({
       dataTable: {
