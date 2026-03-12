@@ -3,11 +3,11 @@ import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { PanelChartItem } from "./query";
 import { formatNumber, formatToRates } from "../../../../../../utils/format";
 
-// Couleurs par domaine scientifique
-const DOMAIN_COLORS: Record<string, string> = {
-  LS: "#3ec97c", // Life Sciences - Vert
-  PE: "#5b9bd5", // Physical Sciences and Engineering - Bleu
-  SH: "#c45850", // Social Sciences and Humanities - Rouge
+// Mapping des domaines vers les variables CSS
+const DOMAIN_CSS_VARS: Record<string, string> = {
+  LS: "--erc-domain-ls-color",
+  PE: "--erc-domain-pe-color",
+  SH: "--erc-domain-sh-color",
 };
 
 // Labels des domaines scientifiques
@@ -71,14 +71,15 @@ export default function OptionsProjects({ data, currentLang = "fr" }: OptionsPar
   // Préparer les catégories
   const categories = sortedDomains.map((d) => d.domain);
 
+  // Récupérer les couleurs CSS
+  const rootStyles = getComputedStyle(document.documentElement);
+  const getDomainColor = (domain: string) => rootStyles.getPropertyValue(DOMAIN_CSS_VARS[domain] || "--erc-domain-ls-color").trim() || "#666666";
+
   // Préparer les données pour les barres
-  const evaluatedData = sortedDomains.map((d) => ({
-    y: d.evaluatedCount,
-    color: DOMAIN_COLORS[d.domain] || "#666666",
-  }));
+  const evaluatedData = sortedDomains.map((d) => d.evaluatedCount);
   const successfulData = sortedDomains.map((d) => ({
     y: d.successfulCount,
-    color: DOMAIN_COLORS[d.domain] || "#666666",
+    color: getDomainColor(d.domain),
   }));
 
   // Calculer les taux de succès
@@ -86,10 +87,8 @@ export default function OptionsProjects({ data, currentLang = "fr" }: OptionsPar
     return d.evaluatedCount > 0 ? (d.successfulCount / d.evaluatedCount) * 100 : 0;
   });
 
-  // Récupérer les couleurs CSS
-  const rootStyles = getComputedStyle(document.documentElement);
+  // Récupérer les autres couleurs CSS
   const evaluatedColor = rootStyles.getPropertyValue("--evaluated-project-color").trim() || "#009099";
-  const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
   const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
 
   const titleText = currentLang === "fr" ? "Projets par domaine scientifique ERC" : "Projects by ERC scientific domain";
@@ -188,14 +187,13 @@ export default function OptionsProjects({ data, currentLang = "fr" }: OptionsPar
         type: "column",
         name: currentLang === "fr" ? "Projets évalués" : "Evaluated projects",
         color: evaluatedColor,
-        data: evaluatedData.map((d) => d.y),
+        data: evaluatedData,
         yAxis: 0,
       },
       {
         type: "column",
         name: currentLang === "fr" ? "Projets lauréats" : "Successful projects",
-        color: successfulColor,
-        data: successfulData.map((d) => d.y),
+        data: successfulData,
         yAxis: 0,
       },
       {

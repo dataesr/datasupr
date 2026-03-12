@@ -3,12 +3,19 @@ import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
 import type { PanelFundingItem } from "./query";
 
-// Couleurs par domaine scientifique
-const DOMAIN_COLORS: Record<string, string> = {
-  LS: "#3ec97c", // Life Science - Vert
-  PE: "#5b9bd5", // Physical Sciences and Engineering - Bleu
-  SH: "#c45850", // Social Sciences and Humanities - Rouge
+// Variables CSS pour les couleurs par domaine scientifique
+const DOMAIN_CSS_VARS: Record<string, string> = {
+  LS: "--erc-domain-ls-color",
+  PE: "--erc-domain-pe-color",
+  SH: "--erc-domain-sh-color",
 };
+
+// Récupère la couleur CSS pour un domaine
+function getDomainColor(domain: string): string {
+  const cssVar = DOMAIN_CSS_VARS[domain];
+  if (!cssVar) return "#666666";
+  return getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim() || "#666666";
+}
 
 // Formes par type de financement
 const DESTINATION_MARKERS: Record<string, HighchartsInstance.SymbolKeyValue> = {
@@ -109,7 +116,7 @@ export default function Options({ data, countryAdjective = "", currentLang = "fr
   const series: HighchartsInstance.SeriesOptionsType[] = Array.from(domainSeries.entries()).map(([domain, points]) => ({
     type: "scatter" as const,
     name: DOMAIN_LABELS[domain]?.[currentLang] || domain,
-    color: DOMAIN_COLORS[domain] || "#666666",
+    color: getDomainColor(domain),
     data: points,
   }));
 
@@ -240,7 +247,7 @@ export function getLegendItems(currentLang: string = "fr") {
     type: "domain" as const,
     key,
     label: label[currentLang] || label.fr,
-    color: DOMAIN_COLORS[key],
+    color: getDomainColor(key),
   }));
 
   const destinationItems = Object.entries(DESTINATION_LABELS)

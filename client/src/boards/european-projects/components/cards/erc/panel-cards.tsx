@@ -6,11 +6,11 @@ import { formatNumber, formatCurrency, formatToRates } from "../../../../../util
 import { ErcStatCard, ViewMode } from "./stat-card";
 import "./styles.scss";
 
-// Couleurs par domaine scientifique
-const DOMAIN_COLORS: Record<string, string> = {
-  LS: "#22c55e", // Life Sciences - Vert
-  PE: "#3b82f6", // Physical Sciences & Engineering - Bleu
-  SH: "#f59e0b", // Social Sciences & Humanities - Orange
+// Variables CSS pour les couleurs de domaine
+const DOMAIN_CSS_VARS: Record<string, { color: string; bg: string }> = {
+  LS: { color: "var(--erc-domain-ls-color)", bg: "var(--erc-domain-ls-bg-color)" },
+  PE: { color: "var(--erc-domain-pe-color)", bg: "var(--erc-domain-pe-bg-color)" },
+  SH: { color: "var(--erc-domain-sh-color)", bg: "var(--erc-domain-sh-bg-color)" },
 };
 
 // Ordre de tri des domaines (Autre en dernier)
@@ -184,14 +184,14 @@ interface DomainCardProps {
 }
 
 function DomainCard({ data, isExpanded, onToggle, viewMode }: DomainCardProps) {
-  const domainColor = DOMAIN_COLORS[data.domain_code] || "#6b7280";
+  const domainVars = DOMAIN_CSS_VARS[data.domain_code] || { color: "#6b7280", bg: "#6b728020" };
   const successRate = data.evaluated_involved > 0 ? data.successful_involved / data.evaluated_involved : 0;
 
   return (
-    <div className="erc-domain-card" style={{ borderLeftColor: domainColor }}>
+    <div className="erc-domain-card" style={{ borderLeftColor: domainVars.color }}>
       <button className="domain-card-header" onClick={onToggle} type="button">
         <div className="domain-info">
-          <span className="domain-badge" style={{ backgroundColor: `${domainColor}20`, color: domainColor }}>
+          <span className="domain-badge" style={{ backgroundColor: domainVars.bg, color: domainVars.color }}>
             {data.domain_code}
           </span>
           <h4 className="domain-name">{data.domain_name}</h4>
@@ -228,7 +228,7 @@ function DomainCard({ data, isExpanded, onToggle, viewMode }: DomainCardProps) {
         <div className="domain-card-content">
           <div className="erc-stat-cards">
             {data.panels.map((panel) => {
-              const domainColor = DOMAIN_COLORS[panel.domaine_scientifique] || "#6b7280";
+              const domainVars = DOMAIN_CSS_VARS[panel.domaine_scientifique] || { color: "#6b7280", bg: "#6b728020" };
               return (
                 <ErcStatCard
                   key={panel.panel_id}
@@ -242,8 +242,8 @@ function DomainCard({ data, isExpanded, onToggle, viewMode }: DomainCardProps) {
                     piCount: panel.total_pi,
                   }}
                   viewMode={viewMode}
-                  accentColor={domainColor}
-                  badgeColor={domainColor}
+                  accentColor={domainVars.color}
+                  badgeColor={domainVars.color}
                 />
               );
             })}

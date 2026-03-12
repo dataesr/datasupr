@@ -3,6 +3,13 @@ import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { PanelChartItem } from "./query";
 import { formatCurrency, formatToRates } from "../../../../../../utils/format";
 
+// Mapping des domaines vers les variables CSS
+const DOMAIN_CSS_VARS: Record<string, string> = {
+  LS: "--erc-domain-ls-color",
+  PE: "--erc-domain-pe-color",
+  SH: "--erc-domain-sh-color",
+};
+
 // Labels des domaines scientifiques
 const DOMAIN_LABELS: Record<string, { fr: string; en: string }> = {
   LS: { fr: "Sciences de la vie", en: "Life Sciences" },
@@ -64,19 +71,24 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
   // Préparer les catégories
   const categories = sortedDomains.map((d) => d.domain);
 
+  // Récupérer les couleurs CSS
+  const rootStyles = getComputedStyle(document.documentElement);
+  const getDomainColor = (domain: string) => rootStyles.getPropertyValue(DOMAIN_CSS_VARS[domain] || "--erc-domain-ls-color").trim() || "#666666";
+
   // Préparer les données pour les barres (en millions d'euros)
   const evaluatedData = sortedDomains.map((d) => d.evaluatedFunding / 1000000);
-  const successfulData = sortedDomains.map((d) => d.successfulFunding / 1000000);
+  const successfulData = sortedDomains.map((d) => ({
+    y: d.successfulFunding / 1000000,
+    color: getDomainColor(d.domain),
+  }));
 
   // Calculer les taux de succès
   const successRates = sortedDomains.map((d) => {
     return d.evaluatedFunding > 0 ? (d.successfulFunding / d.evaluatedFunding) * 100 : 0;
   });
 
-  // Récupérer les couleurs CSS
-  const rootStyles = getComputedStyle(document.documentElement);
+  // Récupérer les autres couleurs CSS
   const evaluatedColor = rootStyles.getPropertyValue("--evaluated-project-color").trim() || "#009099";
-  const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
   const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
 
   const titleText = currentLang === "fr" ? "Financements par domaine scientifique ERC" : "Funding by ERC scientific domain";
@@ -186,7 +198,6 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
       {
         type: "column",
         name: currentLang === "fr" ? "Financements obtenus" : "Obtained funding",
-        color: successfulColor,
         data: successfulData,
         yAxis: 0,
       },

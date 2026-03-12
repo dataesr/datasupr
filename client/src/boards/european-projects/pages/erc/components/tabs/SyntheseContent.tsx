@@ -6,6 +6,7 @@ import { getI18nLabel } from "../../../../../../utils";
 import PanelFundingChart from "../../charts/panel-funding";
 import DestinationChart from "../../charts/destination-chart";
 import PanelChart from "../../charts/panel-chart";
+import PanelDetailChart from "../../charts/panel-detail-chart";
 import i18n from "../../i18n.json";
 import { Title } from "@dataesr/dsfr-plus";
 
@@ -38,6 +39,8 @@ export default function SyntheseContent() {
       <ErcPanelCards countryCode={countryCode} callYear={callYear} />
       {/* Graphique par panel ERC */}
       <PanelChart countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
+      {/* Graphique détaillé par panel ERC */}
+      <PanelDetailChart countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
 
       <PanelFundingChart countryAdjective={countryAdj.m} currentLang={currentLang} />
       {/* TODO: Graph de performance avec croisement d'indicateurs Par panel, type de financement */}

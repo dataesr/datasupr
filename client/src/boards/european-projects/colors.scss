@@ -18,6 +18,14 @@
 
   --main-partner: #7C3AED; // principal bénéficiaire
   --main-partner-dark: #684579; // principal bénéficiaire
+
+  // ERC domain colors
+  --erc-domain-ls-color: #22c55e; // Life Sciences - Vert
+  --erc-domain-pe-color: #3b82f6; // Physical Sciences & Engineering - Bleu
+  --erc-domain-sh-color: #f59e0b; // Social Sciences & Humanities - Orange
+  --erc-domain-ls-bg-color: #22c55e20; // Life Sciences - Vert avec transparence
+  --erc-domain-pe-bg-color: #3b82f620; // Physical Sciences & Engineering - Bleu avec transparence
+  --erc-domain-sh-bg-color: #f59e0b20; // Social Sciences & Humanities - Orange avec transparence
 }
 
 // Thème dark - couleurs plus lumineuses pour meilleure lisibilité
