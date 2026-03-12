@@ -55,9 +55,10 @@ export default function OptionsFunding({ data, domain, currentLang }: OptionsFun
     return requested > 0 ? (obtained / requested) * 100 : 0;
   });
 
-  // Couleur du domaine depuis les variables CSS
+  // Couleurs depuis les variables CSS
   const rootStyles = getComputedStyle(document.documentElement);
   const domainColor = rootStyles.getPropertyValue(DOMAIN_CSS_VARS[domain] || "--erc-domain-ls-color").trim() || "#6b7280";
+  const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
@@ -94,10 +95,15 @@ export default function OptionsFunding({ data, domain, currentLang }: OptionsFun
       {
         title: {
           text: currentLang === "fr" ? "Taux de succès (%)" : "Success rate (%)",
+          style: { fontSize: "13px", color: successRateColor },
         },
         opposite: true,
         min: 0,
         max: 100,
+        labels: {
+          format: "{value}%",
+          style: { color: successRateColor },
+        },
       },
     ],
     tooltip: {
