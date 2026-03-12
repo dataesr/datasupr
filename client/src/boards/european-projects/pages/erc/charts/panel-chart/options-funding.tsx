@@ -1,0 +1,208 @@
+import HighchartsInstance from "highcharts";
+import { CreateChartOptions } from "../../../../components/chart-ep";
+import type { PanelChartItem } from "./query";
+import { formatCurrency, formatToRates } from "../../../../../../utils/format";
+
+// Labels des domaines scientifiques
+const DOMAIN_LABELS: Record<string, { fr: string; en: string }> = {
+  LS: { fr: "Sciences de la vie", en: "Life Sciences" },
+  PE: { fr: "Sciences physiques et ingénierie", en: "Physical Sciences & Engineering" },
+  SH: { fr: "Sciences sociales et humaines", en: "Social Sciences & Humanities" },
+};
+
+// Ordre de tri des domaines
+const DOMAIN_ORDER = ["LS", "PE", "SH"];
+
+interface OptionsParams {
+  data: PanelChartItem[];
+  currentLang?: string;
+}
+
+export default function OptionsFunding({ data, currentLang = "fr" }: OptionsParams) {
+  if (!data || data.length === 0) return null;
+
+  // Filtrer les données avec domaine_scientifique valide (LS, PE, SH)
+  const validDomains = ["LS", "PE", "SH"];
+  const filteredData = data.filter((item) => validDomains.includes(item.domaine_scientifique));
+
+  if (filteredData.length === 0) return null;
+
+  // Agréger par domaine scientifique
+  const domainAggregates = new Map<
+    string,
+    {
+      domain: string;
+      domainName: string;
+      evaluatedFunding: number;
+      successfulFunding: number;
+    }
+  >();
+
+  filteredData.forEach((item) => {
+    const domain = item.domaine_scientifique;
+    if (!domainAggregates.has(domain)) {
+      domainAggregates.set(domain, {
+        domain,
+        domainName: item.domaine_name_scientifique,
+        evaluatedFunding: 0,
+        successfulFunding: 0,
+      });
+    }
+
+    const agg = domainAggregates.get(domain)!;
+    agg.evaluatedFunding += item.evaluated?.total_funding_entity || 0;
+    agg.successfulFunding += item.successful?.total_funding_entity || 0;
+  });
+
+  // Trier selon l'ordre défini
+  const sortedDomains = Array.from(domainAggregates.values()).sort((a, b) => {
+    const indexA = DOMAIN_ORDER.indexOf(a.domain);
+    const indexB = DOMAIN_ORDER.indexOf(b.domain);
+    return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
+  });
+
+  // Préparer les catégories
+  const categories = sortedDomains.map((d) => d.domain);
+
+  // Préparer les données pour les barres (en millions d'euros)
+  const evaluatedData = sortedDomains.map((d) => d.evaluatedFunding / 1000000);
+  const successfulData = sortedDomains.map((d) => d.successfulFunding / 1000000);
+
+  // Calculer les taux de succès
+  const successRates = sortedDomains.map((d) => {
+    return d.evaluatedFunding > 0 ? (d.successfulFunding / d.evaluatedFunding) * 100 : 0;
+  });
+
+  // Récupérer les couleurs CSS
+  const rootStyles = getComputedStyle(document.documentElement);
+  const evaluatedColor = rootStyles.getPropertyValue("--evaluated-project-color").trim() || "#009099";
+  const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
+  const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
+
+  const titleText = currentLang === "fr" ? "Financements par domaine scientifique ERC" : "Funding by ERC scientific domain";
+
+  const newOptions: HighchartsInstance.Options = {
+    chart: {
+      height: 400,
+    },
+    title: {
+      text: titleText,
+      style: {
+        fontSize: "14px",
+        fontWeight: "600",
+      },
+    },
+    xAxis: {
+      categories,
+      crosshair: true,
+      labels: {
+        formatter: function () {
+          const code = this.value as string;
+          return DOMAIN_LABELS[code]?.[currentLang] || code;
+        },
+        style: { fontSize: "12px" },
+      },
+    },
+    yAxis: [
+      {
+        title: {
+          text: currentLang === "fr" ? "Financements (M€)" : "Funding (M€)",
+          style: { fontSize: "13px" },
+        },
+        min: 0,
+        labels: {
+          formatter: function () {
+            return `${this.value} M€`;
+          },
+        },
+      },
+      {
+        title: {
+          text: currentLang === "fr" ? "Taux de succès (%)" : "Success rate (%)",
+          style: { fontSize: "13px", color: successRateColor },
+        },
+        opposite: true,
+        min: 0,
+        max: 100,
+        labels: {
+          format: "{value}%",
+          style: { color: successRateColor },
+        },
+      },
+    ],
+    legend: {
+      align: "center",
+      verticalAlign: "bottom",
+      layout: "horizontal",
+    },
+    tooltip: {
+      shared: true,
+      useHTML: true,
+      formatter: function () {
+        const points = this.points;
+        if (!points) return "";
+
+        const domainCode = String(this.x);
+        const domainName = DOMAIN_LABELS[domainCode]?.[currentLang] || domainCode;
+
+        let html = `<strong>${domainName}</strong><br/>`;
+
+        points.forEach((point) => {
+          const seriesName = point.series.name;
+          const value = point.y || 0;
+
+          if (point.series.type === "line") {
+            html += `<span style="color:${point.color}">●</span> ${seriesName}: <strong>${formatToRates(value / 100)}</strong><br/>`;
+          } else {
+            html += `<span style="color:${point.color}">●</span> ${seriesName}: <strong>${formatCurrency(value * 1000000)}</strong><br/>`;
+          }
+        });
+
+        return html;
+      },
+    },
+    plotOptions: {
+      column: {
+        grouping: true,
+        borderWidth: 0,
+        borderRadius: 2,
+      },
+      line: {
+        marker: {
+          enabled: true,
+          radius: 5,
+        },
+        lineWidth: 2,
+      },
+    },
+    series: [
+      {
+        type: "column",
+        name: currentLang === "fr" ? "Financements demandés" : "Requested funding",
+        color: evaluatedColor,
+        data: evaluatedData,
+        yAxis: 0,
+      },
+      {
+        type: "column",
+        name: currentLang === "fr" ? "Financements obtenus" : "Obtained funding",
+        color: successfulColor,
+        data: successfulData,
+        yAxis: 0,
+      },
+      {
+        type: "line",
+        name: currentLang === "fr" ? "Taux de succès" : "Success rate",
+        color: successRateColor,
+        data: successRates,
+        yAxis: 1,
+        marker: {
+          symbol: "circle",
+        },
+        zIndex: 5,
+      },
+    ],
+  };
+
+  return CreateChartOptions("column", newOptions);
+}
