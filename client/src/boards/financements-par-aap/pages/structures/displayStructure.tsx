@@ -18,6 +18,7 @@ import OverviewByStructure from "./charts/overview-by-structure";
 import ProjectsByStructure from "./charts/projects-by-structure";
 import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
 import Cards from "./components/cards";
+import DataTable from "./components/data-table";
 
 import "./styles.scss";
 
@@ -37,7 +38,8 @@ export default function DisplayStructure() {
     { id: "partenaires", label: "Institutions partenaires" },
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
-    { id: "instrument", label: "Instruments" },
+    { id: "instruments", label: "Instruments" },
+    { id: "donnees", label: "Données" },
   ];
 
   const handleNavClick = (section: string) => {
@@ -255,7 +257,7 @@ export default function DisplayStructure() {
                   </Row>
                 </>
               )}
-              {(section === "instrument") && (
+              {(section === "instruments") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
@@ -278,6 +280,9 @@ export default function DisplayStructure() {
                     </Col>
                   </Row>
                 </>
+              )}
+              {(section === "donnees") && (
+                <DataTable />
               )}
             </>
           )}
