@@ -34,23 +34,23 @@ export default function DataTable() {
   });
 
   if (!isLoading && (options?.dataTable?.columns ?? []).length === 0) {
-    let projectYear = [];
-    let projectType = [];
-    let projectId = [];
-    let projectLabel = [];
-    let projectInstrument = [];
-    let participationIsCoordinator = [];
-    let projectBudgetFinanced = [];
-    let participationFunding = [];
-    (data?.hits?.hits ?? []).forEach((hit) => {
-      projectYear = projectYear.concat(hit._source?.project_year ?? '');
-      projectType = projectType.concat(hit._source?.project_type ?? '');
-      projectId = projectId.concat(hit._source?.project_id ?? '');
-      projectLabel = projectLabel.concat(hit._source?.project_label ?? '');
-      projectInstrument = projectInstrument.concat(hit._source?.project_instrument ?? '');
-      participationIsCoordinator = participationIsCoordinator.concat(hit._source?.participation_is_coordinator ?? '');
-      projectBudgetFinanced = projectBudgetFinanced.concat(hit._source?.project_budgetFinanced ?? '');
-      participationFunding = participationFunding.concat(hit._source?.participation_funding ?? '');
+    let projectYear: any[] = [];
+    let projectType: any[] = [];
+    let projectId: any[] = [];
+    let projectLabel: any[] = [];
+    let projectInstrument: any[] = [];
+    let participationIsCoordinator: any[] = [];
+    let projectBudgetFinanced: any[] = [];
+    let participationFunding: any[] = [];
+    (data?.hits?.hits ?? []).forEach((hit: any) => {
+      projectYear.push(hit._source?.project_year ?? '');
+      projectType.push(hit._source?.project_type ?? '');
+      projectId.push(hit._source?.project_id ?? '');
+      projectLabel.push(hit._source?.project_label ?? '');
+      projectInstrument.push(hit._source?.project_instrument ?? '');
+      participationIsCoordinator.push(hit._source?.participation_is_coordinator ?? '');
+      projectBudgetFinanced.push(hit._source?.project_budgetFinanced ?? '');
+      participationFunding.push(hit._source?.participation_funding ?? '');
     });
 
     setOptions({
