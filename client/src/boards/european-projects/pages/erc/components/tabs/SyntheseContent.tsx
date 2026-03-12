@@ -4,6 +4,7 @@ import { getCountryAdjectives } from "../../../../../../components/country-selec
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 import { getI18nLabel } from "../../../../../../utils";
 import PanelFundingChart from "../../charts/panel-funding";
+import DestinationChart from "../../charts/destination-chart";
 import i18n from "../../i18n.json";
 import { Title } from "@dataesr/dsfr-plus";
 
@@ -26,6 +27,8 @@ export default function SyntheseContent() {
       <ErcSynthesisCards countryCode={countryCode} callYear={callYear} countryAdj={countryAdj} />
       {/* Cartes par type de financement */}
       <ErcDestinationCards countryCode={countryCode} callYear={callYear} />
+      {/* Graphique par type de financement */}
+      <DestinationChart countryCode={countryCode} callYear={callYear} currentLang={currentLang} />
 
       {/* Cartes par panel ERC */}
       <Title as="h3" className="fr-mt-4w">
