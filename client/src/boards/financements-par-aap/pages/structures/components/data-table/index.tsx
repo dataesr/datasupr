@@ -117,8 +117,10 @@ export default function DataTable({ name }: { name: string | undefined }) {
   const downloadCsv = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (gridRef?.current?.grid) {
-      gridRef.current.grid.exporting.downloadCSV();
+    // Use the bracket notation to suppress the error "Property 'grid' does not exist on type 'never'."
+    if (gridRef?.current?.['grid']) {
+      const currentGrid: any = gridRef?.current['grid'];
+      currentGrid.grid.exporting.downloadCSV();
     }
   };
 

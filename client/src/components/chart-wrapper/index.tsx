@@ -295,9 +295,9 @@ function ChartTitle({
 
 // See bug here : https://github.com/highcharts/highcharts/issues/23268
 interface CurrentChart extends Highcharts.Chart {
-   downloadCSV: () => string;
-   exportChart: (exportingOptions: Highcharts.ExportingOptions, chartOptions: Highcharts.Options) => string;
-   print: () => string;
+  downloadCSV: () => string;
+  exportChart: (exportingOptions: Highcharts.ExportingOptions, chartOptions: Highcharts.Options) => string;
+  print: () => string;
 }
 
 export default function ChartWrapper({
