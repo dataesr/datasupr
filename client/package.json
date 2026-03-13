@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@dataesr/dsfr-plus": "^0.5.1",
-    "@highcharts/grid-lite-react": "^1.0.0",
+    "@highcharts/grid-pro-react": "^1.0.0",
     "@highcharts/map-collection": "^2.3.2",
     "@tanstack/react-query": "^5.90.12",
     "@turf/turf": "^7.3.1",

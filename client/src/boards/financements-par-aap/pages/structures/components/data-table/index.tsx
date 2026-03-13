@@ -1,5 +1,5 @@
 import { Col, Row, Spinner } from "@dataesr/dsfr-plus";
-import { Grid, type GridOptions } from "@highcharts/grid-lite-react";
+import { Grid, type GridOptions } from "@highcharts/grid-pro-react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -66,37 +66,41 @@ export default function DataTable() {
           participationFunding,
         }
       },
+      credits: { enabled: false },
       columnDefaults: {
         sorting: { enabled: false },
       },
       columns: [{
-        id: "projectYear",
+        filtering: { enabled: true },
         header: { format: "Année du projet" },
+        id: "projectYear",
         sorting: { enabled: true },
       }, {
-        id: "projectType",
+        filtering: { enabled: true },
         header: { format: "Type de projet" },
-        sorting: { enabled: true },
-        }, {
-          id: "projectId",
-          header: { format: "Identifiant du projet" },
-        }, {
-          id: "projectLabel",
-          header: { format: "Nom du projet" },
-        }, {
-        id: "projectInstrument",
-        header: { format: "Instrument de financement" },
-        sorting: { enabled: true },
-        }, {
-          id: "participationIsCoordinator",
-          header: { format: "Coordinateur" },
-        }, {
-        id: "projectBudgetFinanced",
-        header: { format: "Financement global (présence)" },
+        id: "projectType",
         sorting: { enabled: true },
       }, {
-        id: "participationFunding",
+        header: { format: "Identifiant du projet" },
+        id: "projectId",
+      }, {
+        header: { format: "Nom du projet" },
+        id: "projectLabel",
+      }, {
+        header: { format: "Instrument de financement" },
+        id: "projectInstrument",
+        sorting: { enabled: true },
+      }, {
+        filtering: { enabled: true },
+        header: { format: "Coordinateur" },
+        id: "participationIsCoordinator",
+      }, {
+        header: { format: "Financement global (présence)" },
+        id: "projectBudgetFinanced",
+        sorting: { enabled: true },
+      }, {
         header: { format: "Financement perçu (implication)" },
+        id: "participationFunding",
         sorting: { enabled: true },
       }],
       rendering: {

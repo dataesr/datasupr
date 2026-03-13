@@ -21,7 +21,7 @@ import Cards from "./components/cards";
 import DataTable from "./components/data-table";
 
 import "./styles.scss";
-import { isInStaging } from "../../../../utils";
+import { isInProduction } from "../../../../utils";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -42,9 +42,9 @@ export default function DisplayStructure() {
     { id: "instruments", label: "Instruments" },
   ];
 
-  if (isInStaging()) {
+  if (!isInProduction()) {
     sections.push({ id: "donnees", label: "Données" });
-  }
+  };
 
   const handleNavClick = (section: string) => {
     searchParams.set("section", section);
