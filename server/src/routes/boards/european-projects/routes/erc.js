@@ -563,6 +563,93 @@ router.route("/european-projects/erc/evolution-by-domain").get(async (req, res) 
 });
 
 /**
+ * Route d'évolution temporelle ERC par panel
+ * Retourne les données agrégées par année et panel_id
+ * Inclut les données du pays sélectionné ET les totaux globaux pour calculer les poids
+ */
+router.route("/european-projects/erc/evolution-by-panel").get(async (req, res) => {
+  const baseFilters = {};
+  const countryFilters = {};
+
+  if (req.query.destination_code) {
+    const destinations = req.query.destination_code.split(",");
+    baseFilters.destination_code = { $in: destinations };
+    countryFilters.destination_code = { $in: destinations };
+  }
+  if (req.query.domaine_scientifique) {
+    baseFilters.domaine_scientifique = req.query.domaine_scientifique;
+    countryFilters.domaine_scientifique = req.query.domaine_scientifique;
+  }
+  if (req.query.framework) {
+    baseFilters.framework = req.query.framework;
+    countryFilters.framework = req.query.framework;
+  }
+  if (req.query.country_code) {
+    countryFilters.country_code = req.query.country_code.toUpperCase();
+  }
+
+  // Agrégation par panel
+  const aggregationPipeline = (filters, stage) => [
+    { $match: { ...filters, stage } },
+    {
+      $group: {
+        _id: {
+          call_year: "$call_year",
+          panel_id: "$panel_id",
+          panel_name: "$panel_name",
+          panel_lib: "$panel_lib",
+          domaine_scientifique: "$domaine_scientifique",
+          domaine_name_scientifique: "$domaine_name_scientifique",
+        },
+        total_funding_project: { $sum: "$funding_project" },
+        total_funding_entity: { $sum: "$funding_entity" },
+        total_involved: { $sum: "$number_involved" },
+        total_pi: { $sum: { $cond: [{ $eq: ["$role_entity", "PI"] }, "$number_involved", 0] } },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        call_year: "$_id.call_year",
+        panel_id: "$_id.panel_id",
+        panel_name: "$_id.panel_name",
+        panel_lib: "$_id.panel_lib",
+        domaine_scientifique: "$_id.domaine_scientifique",
+        domaine_name_scientifique: "$_id.domaine_name_scientifique",
+        total_funding_project: 1,
+        total_funding_entity: 1,
+        total_involved: 1,
+        total_pi: 1,
+      },
+    },
+    { $sort: { call_year: 1, domaine_scientifique: 1, panel_id: 1 } },
+  ];
+
+  // Données pour le pays sélectionné
+  const [countrySuccessful, countryEvaluated] = await Promise.all([
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "successful")).toArray(),
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "evaluated")).toArray(),
+  ]);
+
+  // Données globales (tous pays) pour calculer les poids
+  const [totalSuccessful, totalEvaluated] = await Promise.all([
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "successful")).toArray(),
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "evaluated")).toArray(),
+  ]);
+
+  res.json({
+    country: {
+      successful: countrySuccessful,
+      evaluated: countryEvaluated,
+    },
+    total: {
+      successful: totalSuccessful,
+      evaluated: totalEvaluated,
+    },
+  });
+});
+
+/**
  * Route pour récupérer les filtres disponibles (années, destinations, panels)
  */
 router.route("/european-projects/erc/filters").get(async (req, res) => {
