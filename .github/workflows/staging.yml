@@ -61,6 +61,7 @@ jobs:
           restart: ${{ env.DEPLOYMENT }}
 
   notify:
+    name: Notification
     needs: deploy
     if: always()
     runs-on: ubuntu-latest
