@@ -1,6 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import { getCountryAdjectives } from "../../../../../../components/country-selector/utils";
-import EvolutionCharts from "../../charts/evolution";
+import EvolutionFundingsCharts from "../../charts/evolution-fundings";
 
 export default function EvolutionContent() {
   const [searchParams] = useSearchParams();
@@ -15,8 +15,8 @@ export default function EvolutionContent() {
   return (
     <div>
       {/* Graphiques d'évolution */}
-      <div className="fr-mt-4w">
-        <EvolutionCharts countryAdjective={countryAdj.f} currentLang={currentLang} />
+      <div className="fr-my-4w">
+        <EvolutionFundingsCharts countryAdjective={countryAdj.f} currentLang={currentLang} />
       </div>
     </div>
   );

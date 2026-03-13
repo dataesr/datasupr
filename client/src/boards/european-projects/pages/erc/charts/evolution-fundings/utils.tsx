@@ -24,14 +24,25 @@ export const DESTINATION_LABELS: Record<string, { fr: string; en: string }> = {
   POC: { fr: "Proof of concept grants", en: "Proof of concept grants" },
 };
 
-// Couleurs par type de financement
-export const DESTINATION_COLORS: Record<string, string> = {
-  ADG: "#a0a0a0", // Gris
-  COG: "#9b59b6", // Violet
-  STG: "#3498db", // Bleu
-  SYG: "#f1c40f", // Jaune
-  POC: "#e67e22", // Orange
+// Variables CSS pour les couleurs des destinations ERC
+export const DESTINATION_CSS_VARS: Record<string, string> = {
+  ADG: "--erc-destination-adg-color",
+  COG: "--erc-destination-cog-color",
+  STG: "--erc-destination-stg-color",
+  SYG: "--erc-destination-syg-color",
+  POC: "--erc-destination-poc-color",
 };
+
+// Fonction pour récupérer la couleur d'une destination depuis le CSS
+export function getDestinationColor(destCode: string): string {
+  const rootStyles = getComputedStyle(document.documentElement);
+  const cssVar = DESTINATION_CSS_VARS[destCode];
+  if (cssVar) {
+    const color = rootStyles.getPropertyValue(cssVar).trim();
+    if (color) return color;
+  }
+  return "#666666";
+}
 
 export interface ProcessedEvolutionData {
   years: string[];
@@ -91,7 +102,7 @@ export function processEvolutionData(data: EvolutionData, currentLang: string = 
 
       return {
         name: DESTINATION_LABELS[destCode]?.[currentLang] || destCode,
-        color: DESTINATION_COLORS[destCode] || "#666666",
+        color: getDestinationColor(destCode),
         data: seriesData,
       };
     });
@@ -115,7 +126,7 @@ export function processEvolutionData(data: EvolutionData, currentLang: string = 
 
       return {
         name: DESTINATION_LABELS[destCode]?.[currentLang] || destCode,
-        color: DESTINATION_COLORS[destCode] || "#666666",
+        color: getDestinationColor(destCode),
         data: seriesData,
       };
     });
@@ -126,11 +137,7 @@ export function processEvolutionData(data: EvolutionData, currentLang: string = 
 /**
  * Render le tableau de données pour l'export
  */
-export function renderDataTable(
-  processedData: ProcessedEvolutionData,
-  chartType: "weight" | "successRate",
-  currentLang: string
-) {
+export function renderDataTable(processedData: ProcessedEvolutionData, chartType: "weight" | "successRate", currentLang: string) {
   if (!processedData || processedData.years.length === 0) return null;
 
   const series = chartType === "weight" ? processedData.weightSeries : processedData.successRateSeries;

@@ -71,7 +71,7 @@ const configSuccessRate = {
   integrationURL: "/european-projects/components/pages/erc/charts/evolution-success-rate",
 };
 
-export default function EvolutionCharts({ countryAdjective = "français", currentLang: propLang }: EvolutionChartsProps) {
+export default function EvolutionFundingsCharts({ countryAdjective = "français", currentLang: propLang }: EvolutionChartsProps) {
   const { params, currentLang: urlLang } = useGetParams();
   const currentLang = propLang || urlLang;
 
