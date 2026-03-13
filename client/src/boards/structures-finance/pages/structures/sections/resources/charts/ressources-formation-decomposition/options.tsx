@@ -4,6 +4,7 @@ import { getCssColor } from "../../../../../../../../utils/colors";
 
 interface EvolutionDataItem {
   exercice: number;
+  sanfin_source?: string;
   droits_d_inscription?: number;
   formation_continue_diplomes_propres_et_vae?: number;
   taxe_d_apprentissage?: number;
@@ -40,7 +41,9 @@ export const createRessourcesFormationDecompositionChartOptions = (
   mode: "value" | "percentage" = "value"
 ): Highcharts.Options => {
   const sortedData = [...data].sort((a, b) => a.exercice - b.exercice);
-  const years = sortedData.map((d) => String(d.exercice));
+  const years = sortedData.map((d) =>
+    d.sanfin_source === "Budget" ? `${d.exercice} (budget)` : String(d.exercice)
+  );
 
   const series: Highcharts.SeriesColumnOptions[] = FORMATION_CATEGORIES.map(
     (cat) => ({
