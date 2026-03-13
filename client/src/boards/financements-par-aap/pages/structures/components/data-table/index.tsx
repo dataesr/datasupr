@@ -1,19 +1,20 @@
-import { Col, Row, Spinner } from "@dataesr/dsfr-plus";
+import { Button, Col, Row, Spinner } from "@dataesr/dsfr-plus";
 import { Grid, type GridOptions } from "@highcharts/grid-pro-react";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { getEsQuery } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function DataTable() {
+export default function DataTable({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
   const yearMin = searchParams.get("yearMin");
   const [options, setOptions] = useState<GridOptions>({});
+  const gridRef = useRef(null);
 
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),
@@ -66,7 +67,6 @@ export default function DataTable() {
           participationFunding,
         }
       },
-      credits: { enabled: false },
       columnDefaults: {
         sorting: { enabled: false },
       },
@@ -103,18 +103,36 @@ export default function DataTable() {
         id: "participationFunding",
         sorting: { enabled: true },
       }],
+      credits: { enabled: false },
+      exporting: {
+        filename: `tableaux_financements_par_aap_${name?.toLowerCase().replace(/[-,'’\s]/g, '_')}`,
+      },
       rendering: {
         columns: { resizing: { enabled: false } },
-        rows: { minVisibleRows: 10 },
+        rows: { minVisibleRows: 50 },
       }
     });
+  };
+
+  const downloadCsv = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (gridRef?.current?.grid) {
+      gridRef.current.grid.exporting.downloadCSV();
+    }
   };
 
   return (
     <Row gutters style={{ clear: "both" }}>
       <Col>
         <>
-          {isLoading ? <Spinner /> : <Grid options={options} />}
+          <Button className="fr-mb-2w" onClick={(e) => downloadCsv(e)}>
+            Export CSV
+          </Button>
+          {isLoading ? <Spinner /> : <Grid options={options} gridRef={gridRef} />}
+          <Button className="fr-mt-2w" onClick={(e) => downloadCsv(e)}>
+            Export CSV
+          </Button>
         </>
       </Col>
     </Row>

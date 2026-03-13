@@ -79,8 +79,8 @@ export default function DisplayStructure() {
       }).then((response) => response.json()),
   });
   const structureInfo = Object.fromEntries(new URLSearchParams(data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? ""));
-  const label = structureInfo?.label ?? "";
-  const scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522${structure}%2522%252C%2522label%2522%253A%2522${label}%2522%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`;
+  const name = structureInfo?.label ?? "";
+  const scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522${structure}%2522%252C%2522label%2522%253A%2522${name}%2522%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`;
 
   return (
     <>
@@ -91,14 +91,14 @@ export default function DisplayStructure() {
               <Breadcrumb items={[
                 { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
                 { href: "/financements-par-aap/etablissement", label: "Vue par établissement" },
-                { label }
+                { label: name }
               ]} />
             </Col>
           </Row>
           <Row gutters>
             <Col xs="12" md="8">
               <Title as="h1" className="fr-mb-1w" look="h4">
-                {label}
+                {name}
               </Title>
               <Text size="xs">
                 {structureInfo?.typologie_2}
@@ -209,12 +209,12 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <ProjectsByStructure name={label} />
+                      <ProjectsByStructure name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <OverviewByStructure name={label} />
+                      <OverviewByStructure name={name} />
                     </Col>
                   </Row>
                 </>
@@ -222,7 +222,7 @@ export default function DisplayStructure() {
               {(section === "evolution") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
-                    <ProjectsOverTimeByStructure name={label} />
+                    <ProjectsOverTimeByStructure name={name} />
                   </Col>
                 </Row>
               )}
@@ -230,12 +230,12 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <FrenchPartnersByStructure name={label} />
+                      <FrenchPartnersByStructure name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InternationalPartnersByStructure name={label} />
+                      <InternationalPartnersByStructure name={name} />
                     </Col>
                   </Row>
                 </>
@@ -243,7 +243,7 @@ export default function DisplayStructure() {
               {(section === "laboratoires") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
-                    <LaboratoriesByStructure name={label} />
+                    <LaboratoriesByStructure name={name} />
                   </Col>
                 </Row>
               )}
@@ -251,12 +251,12 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <ClassificationsByStructure name={label} />
+                      <ClassificationsByStructure name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <Classifications2ByStructure name={label} />
+                      <Classifications2ByStructure name={name} />
                     </Col>
                   </Row>
                 </>
@@ -265,28 +265,28 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <InstrumentsForAnr name={label} />
+                      <InstrumentsForAnr name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsForEurope name={label} />
+                      <InstrumentsForEurope name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsOverTimeForAnr name={label} />
+                      <InstrumentsOverTimeForAnr name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsOverTimeForEurope name={label} />
+                      <InstrumentsOverTimeForEurope name={name} />
                     </Col>
                   </Row>
                 </>
               )}
               {(section === "donnees") && (
-                <DataTable />
+                <DataTable name={name} />
               )}
             </>
           )}
