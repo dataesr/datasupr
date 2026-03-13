@@ -109,17 +109,48 @@ export default function DisplayStructure() {
               </Text>
             </Col>
             <Col>
-              <div className="fr-mb-2w">
+              <Row gutters className="fr-mb-2w">
                 <Link href="/financements-par-aap/etablissement">
                   <span aria-hidden="true" className="fr-icon-arrow-go-back-line fr-mr-1w" />
                   Changer d'établissement
                 </Link>
-              </div>
-              <div>
+              </Row>
+              <Row gutters className="fr-mb-4w">
                 <Link href={scanrUrl} target="_blank">
                   Voir la liste de ces projets sur scanR
                 </Link>
-              </div>
+              </Row>
+              <Row gutters>
+                <Col md="1" style={{ display: "ruby" }}>
+                  <select
+                    className="fr-select"
+                    onChange={(e) => handleYearMinChange(e.target.value)}
+                    style={{ width: "fit-content" }}
+                    value={yearMin}
+                  >
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  <Text className="fr-mx-1w" style={{ margin: "auto" }}>
+                      à
+                    </Text>
+                    <select
+                      className="fr-select"
+                      onChange={(e) => handleYearMaxChange(e.target.value)}
+                      style={{ width: "fit-content" }}
+                      value={yearMax}
+                    >
+                      {[...years].sort((a, b) => b - a).map((year) => (
+                        <option key={year} value={year}>
+                          {year}
+                        </option>
+                      ))}
+                    </select>
+                </Col>
+              </Row>
             </Col>
           </Row>
         </Container>
@@ -141,39 +172,8 @@ export default function DisplayStructure() {
                 Menu
               </button>
               <Row horizontalAlign="right" style={{ float: "right" }}>
-                <Col md="1" style={{ display: "contents" }}>
-                  <select
-                    className="fr-select"
-                    onChange={(e) => handleYearMinChange(e.target.value)}
-                    style={{ width: "fit-content" }}
-                    value={yearMin}
-                  >
-                    {[...years].sort((a, b) => b - a).map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </Col>
-                <Col md="1" style={{ display: "contents" }}>
-                  <>
-                    <Text className="fr-mx-1w" style={{ margin: "auto" }}>
-                      à
-                    </Text>
-                    <select
-                      className="fr-select"
-                      onChange={(e) => handleYearMaxChange(e.target.value)}
-                      style={{ width: "fit-content" }}
-                      value={yearMax}
-                    >
-                      {[...years].sort((a, b) => b - a).map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </select>
-                  </>
-                </Col>
+                
+                
               </Row>
               <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
                 {sections.map((item) => (

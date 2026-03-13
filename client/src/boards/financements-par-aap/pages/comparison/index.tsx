@@ -60,10 +60,41 @@ export default function Comparison() {
             </Col>
           </Row>
           <Row gutters>
-            <Col>
+            <Col md="9">
               <Title as="h1" look="h4">
                 Comparaison entre établissements
               </Title>
+            </Col>
+            <Col md="3">
+              <div style={{ display: "flex", float: "right" }}>
+                <select
+                  className="fr-select"
+                  onChange={(e) => handleYearMinChange(e.target.value)}
+                  style={{ width: "fit-content" }}
+                  value={yearMin}
+                >
+                  {[...years].sort((a, b) => b - a).map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+                <Text className="fr-mx-1w" style={{ margin: "auto" }}>
+                  à
+                </Text>
+                <select
+                  className="fr-select"
+                  onChange={(e) => handleYearMaxChange(e.target.value)}
+                  style={{ width: "fit-content" }}
+                  value={yearMax}
+                >
+                  {[...years].sort((a, b) => b - a).map((year) => (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </Col>
           </Row>
           <Row gutters>
@@ -91,41 +122,6 @@ export default function Comparison() {
                   >
                     Menu
                   </button>
-                  <Row horizontalAlign="right" style={{ float: "right" }}>
-                    <Col md="1" style={{ display: "contents" }}>
-                      <select
-                        className="fr-select"
-                        onChange={(e) => handleYearMinChange(e.target.value)}
-                        style={{ width: "fit-content" }}
-                        value={yearMin}
-                      >
-                        {[...years].sort((a, b) => b - a).map((year) => (
-                          <option key={year} value={year}>
-                            {year}
-                          </option>
-                        ))}
-                      </select>
-                    </Col>
-                    <Col md="1" style={{ display: "contents" }}>
-                      <>
-                        <Text className="fr-mx-1w" style={{ margin: "auto" }}>
-                          à
-                        </Text>
-                        <select
-                          className="fr-select"
-                          onChange={(e) => handleYearMaxChange(e.target.value)}
-                          style={{ width: "fit-content" }}
-                          value={yearMax}
-                        >
-                          {[...years].sort((a, b) => b - a).map((year) => (
-                            <option key={year} value={year}>
-                              {year}
-                            </option>
-                          ))}
-                        </select>
-                      </>
-                    </Col>
-                  </Row>
                   <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
                     {sections.map((item) => (
                       <li key={item.id} className="fr-nav__item">
