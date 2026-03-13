@@ -386,5 +386,9 @@
   "caption-participants-success-rate": {
     "fr": "Taux de succès des participants par pays",
     "en": "Participants success rate by country"
+  },
+  "entities": {
+    "fr": "Entités/porteurs",
+    "en": "Entities/holders"
   }
 }

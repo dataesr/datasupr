@@ -4,6 +4,7 @@ import i18n from "../../../i18n-global.json";
 import SyntheseContent from "./tabs/SyntheseContent";
 import PositionnementContent from "./tabs/PositionnementContent";
 import EvolutionContent from "./tabs/EvolutionContent";
+import EntitiesContent from "./tabs/EntitiesContent";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -16,7 +17,7 @@ export default function TabsContent() {
   }
 
   // Fonction pour changer d'onglet
-  const handleTabChange = (newTab: "synthesis" | "positioning" | "evolution") => {
+  const handleTabChange = (newTab: "synthesis" | "positioning" | "evolution" | "entities") => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set("section", newTab);
     setSearchParams(newParams);
@@ -62,12 +63,25 @@ export default function TabsContent() {
               {getIntlLabel("evolution")}
             </button>
           </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("entities");
+              }}
+              aria-current={activeTab === "entities" ? "page" : undefined}
+            >
+              {getIntlLabel("entities")}
+            </button>
+          </li>
         </ul>
       </nav>
       <div className="fr-mt-3w">
         {activeTab === "synthesis" && <SyntheseContent />}
         {activeTab === "positioning" && <PositionnementContent />}
         {activeTab === "evolution" && <EvolutionContent />}
+        {activeTab === "entities" && <EntitiesContent />}
       </div>
     </div>
   );
