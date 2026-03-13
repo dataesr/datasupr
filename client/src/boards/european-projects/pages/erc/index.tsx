@@ -35,6 +35,10 @@ export default function ERC() {
       ? availableYears.slice(-3) // Les 3 dernières années par défaut
       : [];
 
+  // Ne pas afficher le filtre d'années dans l'onglet évolution
+  const activeSection = searchParams.get("section") || "synthesis";
+  const showYearsFilter = activeSection !== "evolution";
+
   return (
     <>
       <Container as="main" fluid>
@@ -42,7 +46,7 @@ export default function ERC() {
           <Container>
             <Breadcrumb config={navigationConfig} />
             {/* Filtre de sélection des années */}
-            {!isLoadingFilters && availableYears.length > 0 && (
+            {showYearsFilter && !isLoadingFilters && availableYears.length > 0 && (
               <div className="fr-mt-2w">
                 <RangeOfYears availableYears={availableYears} defaultYears={defaultYears} />
               </div>

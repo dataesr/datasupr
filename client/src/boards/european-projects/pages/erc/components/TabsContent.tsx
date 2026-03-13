@@ -56,18 +56,6 @@ export default function TabsContent() {
               className="fr-nav__link"
               onClick={(e) => {
                 e.preventDefault();
-                handleTabChange("evolution");
-              }}
-              aria-current={activeTab === "evolution" ? "page" : undefined}
-            >
-              {getIntlLabel("evolution")}
-            </button>
-          </li>
-          <li className="fr-nav__item">
-            <button
-              className="fr-nav__link"
-              onClick={(e) => {
-                e.preventDefault();
                 handleTabChange("entities");
               }}
               aria-current={activeTab === "entities" ? "page" : undefined}
@@ -75,13 +63,25 @@ export default function TabsContent() {
               {getIntlLabel("entities")}
             </button>
           </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("evolution");
+              }}
+              aria-current={activeTab === "evolution" ? "page" : undefined}
+            >
+              {getIntlLabel("evolution")}
+            </button>
+          </li>
         </ul>
       </nav>
       <div className="fr-mt-3w">
         {activeTab === "synthesis" && <SyntheseContent />}
         {activeTab === "positioning" && <PositionnementContent />}
-        {activeTab === "evolution" && <EvolutionContent />}
         {activeTab === "entities" && <EntitiesContent />}
+        {activeTab === "evolution" && <EvolutionContent />}
       </div>
     </div>
   );
