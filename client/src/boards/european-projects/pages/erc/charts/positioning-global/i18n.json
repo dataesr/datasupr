@@ -1,0 +1,46 @@
+{
+  "title-projects": {
+    "en": "Global positioning - Projects",
+    "fr": "Positionnement global - Projets"
+  },
+  "title-funding": {
+    "en": "Global positioning - Funding",
+    "fr": "Positionnement global - Financements"
+  },
+  "comment-projects": {
+    "fr": "Ce graphique présente le classement des pays par nombre de porteurs de projets ERC lauréats. Le pays sélectionné est mis en évidence en bleu foncé. Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.",
+    "en": "This chart shows the country ranking by number of successful ERC project PIs. The selected country is highlighted in dark blue. If the selected country is not in the top 10, it is displayed at the last position for comparison."
+  },
+  "comment-funding": {
+    "fr": "Ce graphique présente le classement des pays par montant de financements ERC obtenus. Le pays sélectionné est mis en évidence en bleu foncé. Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.",
+    "en": "This chart shows the country ranking by ERC funding amount obtained. The selected country is highlighted in dark blue. If the selected country is not in the top 10, it is displayed at the last position for comparison."
+  },
+  "reading-key-projects": {
+    "fr": "Un pays bien positionné dans ce classement a un nombre élevé de porteurs de projets ERC lauréats, ce qui reflète la capacité de recherche d'excellence du pays.",
+    "en": "A well-positioned country in this ranking has a high number of successful ERC project PIs, which reflects the country's research excellence capacity."
+  },
+  "reading-key-funding": {
+    "fr": "Un pays bien positionné dans ce classement a obtenu des montants élevés de financements ERC, ce qui reflète l'attractivité et la compétitivité de sa recherche.",
+    "en": "A well-positioned country in this ranking has obtained high amounts of ERC funding, which reflects the attractiveness and competitiveness of its research."
+  },
+  "no-data": {
+    "fr": "Aucune donnée disponible.",
+    "en": "No data available."
+  },
+  "main-title": {
+    "fr": "Positionnement global du pays",
+    "en": "Country global positioning"
+  },
+  "main-title-with-country": {
+    "fr": "Positionnement global de {country} sur les {metric} ERC",
+    "en": "{country}'s global positioning on ERC {metric}"
+  },
+  "projects": {
+    "fr": "Projets",
+    "en": "Projects"
+  },
+  "funding": {
+    "fr": "Financements",
+    "en": "Funding"
+  }
+}

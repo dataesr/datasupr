@@ -5,9 +5,13 @@ import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { getData } from "./query";
 import Options from "./options";
 import { useGetParams, processPositioningData, renderDataTable } from "./utils";
+import i18n from "./i18n.json";
+import { getI18nLabel } from "../../../../../../utils";
+import { getCountryNameWithDe, getCountryNameWithArticle } from "../../../../utils/country-mapping";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import "./styles.scss";
 
 type MetricType = "projects" | "funding";
 
@@ -16,87 +20,31 @@ interface PositioningGlobalChartProps {
   currentLang?: string;
 }
 
-const configProjects = {
-  id: "ercPositioningGlobalProjects",
-  idQuery: "ercPositioningGlobal",
-  title: {
-    en: "Global positioning - Projects",
-    fr: "Positionnement global - Projets",
-  },
-  comment: {
-    fr: (
-      <>
-        Ce graphique présente le classement des pays par nombre de porteurs de projets ERC lauréats. Le pays sélectionné est mis en évidence en bleu
-        foncé. Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the country ranking by number of successful ERC project PIs. The selected country is highlighted in dark blue. If the
-        selected country is not in the top 10, it is displayed at the last position for comparison.
-      </>
-    ),
-  },
-  readingKey: {
-    fr: (
-      <>
-        Un pays bien positionné dans ce classement a un nombre élevé de porteurs de projets ERC lauréats, ce qui reflète la capacité de recherche
-        d'excellence du pays.
-      </>
-    ),
-    en: (
-      <>
-        A well-positioned country in this ranking has a high number of successful ERC project PIs, which reflects the country's research excellence
-        capacity.
-      </>
-    ),
-  },
-  integrationURL: "/european-projects/components/pages/erc/charts/positioning-global",
+const getConfig = (metric: MetricType) => {
+  const isProjects = metric === "projects";
+  return {
+    id: isProjects ? "ercPositioningGlobalProjects" : "ercPositioningGlobalFunding",
+    idQuery: "ercPositioningGlobal",
+    title: {
+      en: getI18nLabel(i18n, isProjects ? "title-projects" : "title-funding", "en"),
+      fr: getI18nLabel(i18n, isProjects ? "title-projects" : "title-funding", "fr"),
+    },
+    comment: {
+      fr: <>{getI18nLabel(i18n, isProjects ? "comment-projects" : "comment-funding", "fr")}</>,
+      en: <>{getI18nLabel(i18n, isProjects ? "comment-projects" : "comment-funding", "en")}</>,
+    },
+    readingKey: {
+      fr: <>{getI18nLabel(i18n, isProjects ? "reading-key-projects" : "reading-key-funding", "fr")}</>,
+      en: <>{getI18nLabel(i18n, isProjects ? "reading-key-projects" : "reading-key-funding", "en")}</>,
+    },
+    integrationURL: isProjects
+      ? "/european-projects/components/pages/erc/charts/positioning-global"
+      : "/european-projects/components/pages/erc/charts/positioning-global-funding",
+  };
 };
 
-const configFunding = {
-  id: "ercPositioningGlobalFunding",
-  idQuery: "ercPositioningGlobal",
-  title: {
-    en: "Global positioning - Funding",
-    fr: "Positionnement global - Financements",
-  },
-  comment: {
-    fr: (
-      <>
-        Ce graphique présente le classement des pays par montant de financements ERC obtenus. Le pays sélectionné est mis en évidence en bleu foncé.
-        Si le pays sélectionné n'est pas dans le top 10, il est affiché en dernière position pour comparaison.
-      </>
-    ),
-    en: (
-      <>
-        This chart shows the country ranking by ERC funding amount obtained. The selected country is highlighted in dark blue. If the selected country
-        is not in the top 10, it is displayed at the last position for comparison.
-      </>
-    ),
-  },
-  readingKey: {
-    fr: (
-      <>
-        Un pays bien positionné dans ce classement a obtenu des montants élevés de financements ERC, ce qui reflète l'attractivité et la compétitivité
-        de sa recherche.
-      </>
-    ),
-    en: (
-      <>
-        A well-positioned country in this ranking has obtained high amounts of ERC funding, which reflects the attractiveness and competitiveness of
-        its research.
-      </>
-    ),
-  },
-  integrationURL: "/european-projects/components/pages/erc/charts/positioning-global-funding",
-};
-
-function PositioningGlobalChartInner({
-  countryCode: propCountryCode,
-  currentLang: propLang,
-  metric,
-}: PositioningGlobalChartProps & { metric: MetricType }) {
+function PositioningGlobalChartInner({ countryCode: propCountryCode, currentLang: propLang }: PositioningGlobalChartProps) {
+  const [metric, setMetric] = useState<MetricType>("projects");
   const { params, currentLang: urlLang, countryCode: urlCountryCode } = useGetParams();
   const currentLang = propLang || urlLang;
   const countryCode = propCountryCode || urlCountryCode;
@@ -111,10 +59,22 @@ function PositioningGlobalChartInner({
 
   const processedData = processPositioningData(data, countryCode, currentLang, metric);
 
+  // Récupérer le nom du pays avec préposition appropriée
+  const fallbackName = processedData.selectedCountry
+    ? currentLang === "fr"
+      ? processedData.selectedCountry.country_name_fr
+      : processedData.selectedCountry.country_name_en
+    : "";
+
+  // Pour le français, utiliser "de" + article (ex: "de la France", "de l'Allemagne")
+  // Pour l'anglais, utiliser le nom simple (ex: "France", "Germany")
+  const countryName =
+    currentLang === "fr" ? getCountryNameWithDe(countryCode, fallbackName) : getCountryNameWithArticle(countryCode, "en", fallbackName);
+
   if (processedData.countries.length === 0) {
     return (
       <div className="fr-alert fr-alert--info">
-        <p>{currentLang === "fr" ? "Aucune donnée disponible." : "No data available."}</p>
+        <p>{getI18nLabel(i18n, "no-data", currentLang)}</p>
       </div>
     );
   }
@@ -124,36 +84,36 @@ function PositioningGlobalChartInner({
     currentLang,
   });
 
-  const config = metric === "projects" ? configProjects : configFunding;
+  const config = getConfig(metric);
 
-  return <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />;
-}
-
-export default function PositioningGlobalChart({ countryCode, currentLang: propLang }: PositioningGlobalChartProps) {
-  const [metric, setMetric] = useState<MetricType>("projects");
-  const { currentLang: urlLang } = useGetParams();
-  const currentLang = propLang || urlLang;
+  // Construire le titre dynamique avec le nom du pays
+  const metricLabel = getI18nLabel(i18n, metric === "projects" ? "projects" : "funding", currentLang).toLowerCase();
+  const title = getI18nLabel(i18n, "main-title-with-country", currentLang).replace("{country}", countryName).replace("{metric}", metricLabel);
 
   return (
-    <div className="fr-my-3w">
-      <h3>{currentLang === "fr" ? "Positionnement global du pays" : "Country global positioning"}</h3>
-      <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "1rem" }}>
+    <div className="positioning-global-chart">
+      <h3>{title}</h3>
+      <div className="positioning-global-chart__controls">
         <SegmentedControl className="fr-segmented--sm" name="positioning-global-metric">
           <SegmentedElement
             checked={metric === "projects"}
-            label={currentLang === "fr" ? "Projets" : "Projects"}
+            label={getI18nLabel(i18n, "projects", currentLang)}
             onClick={() => setMetric("projects")}
             value="projects"
           />
           <SegmentedElement
             checked={metric === "funding"}
-            label={currentLang === "fr" ? "Financements" : "Funding"}
+            label={getI18nLabel(i18n, "funding", currentLang)}
             onClick={() => setMetric("funding")}
             value="funding"
           />
         </SegmentedControl>
       </div>
-      <PositioningGlobalChartInner countryCode={countryCode} currentLang={currentLang} metric={metric} />
+      <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />
     </div>
   );
+}
+
+export default function PositioningGlobalChart({ countryCode, currentLang }: PositioningGlobalChartProps) {
+  return <PositioningGlobalChartInner countryCode={countryCode} currentLang={currentLang} />;
 }
