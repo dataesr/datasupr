@@ -1,0 +1,70 @@
+{
+  "main-title-with-country": {
+    "fr": "Positionnement de {country} sur les {metric} ERC – {fundingType}",
+    "en": "{country}'s positioning on ERC {metric} – {fundingType}"
+  },
+  "projects": {
+    "fr": "Projets",
+    "en": "Projects"
+  },
+  "funding": {
+    "fr": "Financements",
+    "en": "Funding"
+  },
+  "select-funding-type": {
+    "fr": "Type de financement",
+    "en": "Funding type"
+  },
+  "chart-title-projects": {
+    "fr": "Classement des pays par nombre de porteurs de projets ERC lauréats",
+    "en": "Country ranking by number of successful ERC project PIs"
+  },
+  "chart-title-funding": {
+    "fr": "Classement des pays par montant de financements ERC obtenus",
+    "en": "Country ranking by ERC funding amount obtained"
+  },
+  "y-axis-projects": {
+    "fr": "Nombre de porteurs de projets",
+    "en": "Number of project PIs"
+  },
+  "y-axis-funding": {
+    "fr": "Financements (M€)",
+    "en": "Funding (M€)"
+  },
+  "title-projects": {
+    "fr": "Positionnement par type de financement – Projets",
+    "en": "Positioning by funding type – Projects"
+  },
+  "title-funding": {
+    "fr": "Positionnement par type de financement – Financements",
+    "en": "Positioning by funding type – Funding"
+  },
+  "comment-projects": {
+    "fr": "Ce graphique présente le classement des pays par nombre de porteurs de projets ERC lauréats pour le type de financement sélectionné. Le pays sélectionné est mis en évidence en bleu foncé.",
+    "en": "This chart shows the country ranking by number of successful ERC project PIs for the selected funding type. The selected country is highlighted in dark blue."
+  },
+  "comment-funding": {
+    "fr": "Ce graphique présente le classement des pays par montant de financements ERC obtenus pour le type de financement sélectionné. Le pays sélectionné est mis en évidence en bleu foncé.",
+    "en": "This chart shows the country ranking by ERC funding amount obtained for the selected funding type. The selected country is highlighted in dark blue."
+  },
+  "reading-key-projects": {
+    "fr": "Un pays bien positionné dans ce classement a un nombre élevé de porteurs de projets ERC lauréats pour ce type de financement.",
+    "en": "A well-positioned country in this ranking has a high number of successful ERC project PIs for this funding type."
+  },
+  "reading-key-funding": {
+    "fr": "Un pays bien positionné dans ce classement a obtenu des montants élevés de financements ERC pour ce type de financement.",
+    "en": "A well-positioned country in this ranking has obtained high amounts of ERC funding for this funding type."
+  },
+  "no-data": {
+    "fr": "Aucune donnée disponible pour ce type de financement.",
+    "en": "No data available for this funding type."
+  },
+  "avg-top10": {
+    "fr": "Moyenne top 10",
+    "en": "Top 10 average"
+  },
+  "avg-all": {
+    "fr": "Moyenne tous pays",
+    "en": "All countries average"
+  }
+}

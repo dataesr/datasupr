@@ -1,5 +1,6 @@
 import { useSearchParams } from "react-router-dom";
 import PositioningGlobalChart from "../../charts/positioning-global";
+import PositioningFundingTypeChart from "../../charts/positioning-funding-type";
 
 export default function PositionnementContent() {
   const [searchParams] = useSearchParams();
@@ -15,11 +16,9 @@ export default function PositionnementContent() {
         <PositioningGlobalChart countryCode={countryCode} currentLang={currentLang} />
       </div>
 
-      {/* TODO: Graphique par type de financement */}
-      <div className="fr-my-4w fr-p-3w" style={{ backgroundColor: "#f6f6f6", borderRadius: "8px" }}>
-        <p className="fr-text--sm fr-mb-0">
-          {currentLang === "fr" ? "🚧 Graphique par type de financement (à venir)" : "🚧 Chart by funding type (coming soon)"}
-        </p>
+      {/* Graphique par type de financement */}
+      <div className="fr-my-4w">
+        <PositioningFundingTypeChart countryCode={countryCode} currentLang={currentLang} />
       </div>
 
       {/* TODO: Graphique par domaine scientifique */}
