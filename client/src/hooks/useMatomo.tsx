@@ -7,10 +7,7 @@ declare global {
   }
 }
 
-const MATOMO_URL =
-  import.meta.env.MODE === "production"
-    ? import.meta.env.VITE_APP_MATOMO_PROD_URL
-    : import.meta.env.VITE_APP_MATOMO_STAGING_URL;
+const MATOMO_URL = import.meta.env.VITE_APP_MATOMO_PROD_URL;
 
 const SITE_ID =
   import.meta.env.MODE === "production"
