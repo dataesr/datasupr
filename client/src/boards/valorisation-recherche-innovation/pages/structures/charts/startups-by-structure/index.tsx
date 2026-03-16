@@ -49,9 +49,7 @@ export default function StartupsByStructure({ name }: { name: string | undefined
   });
 
   const categories = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.key);
-  const series: HighchartsInstance.SeriesOptionsType[] = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.doc_count);
-
-  // If view by number of start-ups
+  const series: string[] = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.doc_count);
   const axis = getI18nLabel(i18n, 'number_of_startups');
   const title = `Nombre de start-up par année de création ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
@@ -65,7 +63,7 @@ export default function StartupsByStructure({ name }: { name: string | undefined
     title,
   };
 
-  const options: HighchartsInstance.Options = {
+  const options = {
     chart: { type: 'column' },
     legend: { enabled: false },
     plotOptions: {
@@ -76,7 +74,7 @@ export default function StartupsByStructure({ name }: { name: string | undefined
         stacking: 'normal',
       },
     },
-    series: [{ "data": series }],
+    series: [{ data: series }],
     title: { text: "" },
     tooltip: { formatter: tooltip },
     xAxis: {
@@ -96,7 +94,6 @@ export default function StartupsByStructure({ name }: { name: string | undefined
       <Title as="h2" look="h6">
         {title}
       </Title>
-      {/*<SegmentedControl selectedControl={selectedControl} setSelectedControl={setSelectedControl} />*/}
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapper config={config} hideTitle options={optionsLocal} />}
     </div>
   );
