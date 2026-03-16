@@ -34,11 +34,16 @@ export function useGetParams() {
   return { params: params.join("&"), currentLang, countryCode };
 }
 
-// Couleurs pour distinguer le pays sélectionné des autres
-export const COLORS = {
-  selectedCountry: "#000091", // Bleu France
-  otherCountries: "#CACAFB", // Bleu clair
-};
+const css = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+export function getChartColors() {
+  return {
+    selectedCountry: css("--selected-country-color"),
+    otherCountries: css("--erc-destination-stg-color"),
+    avgTop10: css("--erc-avg-top10-color"),
+    avgAll: css("--erc-avg-all-color"),
+  };
+}
 
 export interface ProcessedPositioningData {
   countries: {
@@ -49,6 +54,8 @@ export interface ProcessedPositioningData {
   }[];
   selectedCountry: CountryData | null;
   metric: "projects" | "funding";
+  avgTop10: number;
+  avgAll: number;
 }
 
 /**
@@ -61,49 +68,38 @@ export function processPositioningData(
   metric: "projects" | "funding" = "projects",
 ): ProcessedPositioningData {
   if (!data || !data.successful || !data.successful.countries) {
-    return { countries: [], selectedCountry: null, metric };
+    return { countries: [], selectedCountry: null, metric, avgTop10: 0, avgAll: 0 };
   }
 
   const countries = data.successful.countries;
 
-  // Trouver le pays sélectionné
   const selectedCountry = countries.find((c) => c.country_code === countryCode) || null;
 
-  // Trier par la métrique choisie
-  const sortedCountries = [...countries].sort((a, b) => {
-    if (metric === "projects") {
-      return b.total_pi - a.total_pi;
-    }
-    return b.total_funding_project - a.total_funding_project;
-  });
+  const getValue = (c: CountryData) => (metric === "projects" ? c.total_pi : c.total_funding_project);
 
-  // Trouver le rang du pays sélectionné
+  const sortedCountries = [...countries].sort((a, b) => getValue(b) - getValue(a));
+
+  const top10 = sortedCountries.slice(0, 10);
+  const avgTop10 = top10.length > 0 ? top10.reduce((sum, c) => sum + getValue(c), 0) / top10.length : 0;
+  const avgAll = countries.length > 0 ? countries.reduce((sum, c) => sum + getValue(c), 0) / countries.length : 0;
+
   const selectedRank = sortedCountries.findIndex((c) => c.country_code === countryCode);
 
-  // Prendre le top 10 ou inclure le pays sélectionné s'il n'est pas dans le top 10
   let displayCountries = sortedCountries.slice(0, 10);
-
-  // Si le pays sélectionné n'est pas dans le top 10, l'ajouter
   if (selectedRank >= 10 && selectedCountry) {
     displayCountries = [...displayCountries.slice(0, 9), selectedCountry];
   }
 
-  // Formater les données pour le graphique
   const formattedCountries = displayCountries.map((c) => ({
     code: c.country_code,
     name: currentLang === "fr" ? c.country_name_fr : c.country_name_en,
-    value: metric === "projects" ? c.total_pi : c.total_funding_project,
+    value: getValue(c),
     isSelected: c.country_code === countryCode,
   }));
 
-  // Re-trier pour l'affichage (du plus grand au plus petit)
   formattedCountries.sort((a, b) => b.value - a.value);
 
-  return {
-    countries: formattedCountries,
-    selectedCountry,
-    metric,
-  };
+  return { countries: formattedCountries, selectedCountry, metric, avgTop10, avgAll };
 }
 
 /**

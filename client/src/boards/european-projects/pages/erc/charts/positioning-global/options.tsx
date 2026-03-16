@@ -1,7 +1,9 @@
 import Highcharts from "highcharts";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { ProcessedPositioningData } from "./utils";
-import { COLORS } from "./utils";
+import { getChartColors } from "./utils";
+import { getI18nLabel } from "../../../../../../utils";
+import i18n from "./i18n.json";
 
 interface OptionsParams {
   processedData: ProcessedPositioningData;
@@ -12,30 +14,28 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
   if (!processedData || processedData.countries.length === 0) return null;
 
   const titleText =
-    currentLang === "fr"
-      ? processedData.metric === "projects"
-        ? "Classement des pays par nombre de porteurs de projets ERC lauréats"
-        : "Classement des pays par montant de financements ERC obtenus"
-      : processedData.metric === "projects"
-        ? "Country ranking by number of successful ERC project PIs"
-        : "Country ranking by ERC funding amount obtained";
+    processedData.metric === "projects"
+      ? getI18nLabel(i18n, "chart-title-projects", currentLang)
+      : getI18nLabel(i18n, "chart-title-funding", currentLang);
 
   const yAxisLabel =
-    currentLang === "fr"
-      ? processedData.metric === "projects"
-        ? "Nombre de porteurs de projets"
-        : "Financements (M€)"
-      : processedData.metric === "projects"
-        ? "Number of project PIs"
-        : "Funding (M€)";
+    processedData.metric === "projects" ? getI18nLabel(i18n, "y-axis-projects", currentLang) : getI18nLabel(i18n, "y-axis-funding", currentLang);
 
-  // Préparer les données pour le graphique à barres horizontales
+  const colors = getChartColors();
+
   const categories = processedData.countries.map((c) => c.name);
   const dataPoints = processedData.countries.map((c) => ({
     y: processedData.metric === "funding" ? c.value / 1_000_000 : c.value,
-    color: c.isSelected ? COLORS.selectedCountry : COLORS.otherCountries,
+    color: c.isSelected ? colors.selectedCountry : colors.otherCountries,
     name: c.name,
   }));
+
+  const scale = processedData.metric === "funding" ? 1_000_000 : 1;
+  const avgTop10Display = processedData.avgTop10 / scale;
+  const avgAllDisplay = processedData.avgAll / scale;
+
+  const labelAvgTop10 = getI18nLabel(i18n, "avg-top10", currentLang);
+  const labelAvgAll = getI18nLabel(i18n, "avg-all", currentLang);
 
   const newOptions: Highcharts.Options = {
     chart: {
@@ -75,10 +75,16 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
     },
     tooltip: {
       useHTML: true,
+      shared: false,
       formatter: function () {
         const ctx = this as unknown as { x: string; y: number };
-        const value = processedData.metric === "funding" ? `${ctx.y.toFixed(1)} M€` : `${ctx.y}`;
-        return `<b>${ctx.x}</b><br/>${yAxisLabel}: ${value}`;
+        const fmt = (v: number) => (processedData.metric === "funding" ? `${v.toFixed(1)} M€` : `${Math.round(v)}`);
+        return [
+          `<b>Position : ${ctx.x}</b>`,
+          `${yAxisLabel}\u00a0: <b>${fmt(ctx.y)}</b>`,
+          `<span style="color:${colors.avgTop10}">&#9135;</span> ${labelAvgTop10}\u00a0: <b>${fmt(avgTop10Display)}</b>`,
+          `<span style="color:${colors.avgAll}">&#8943;</span> ${labelAvgAll}\u00a0: <b>${fmt(avgAllDisplay)}</b>`,
+        ].join("<br/>");
       },
     },
     plotOptions: {
@@ -94,11 +100,42 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
         borderRadius: 3,
       },
     },
+    legend: {
+      enabled: true,
+      align: "center",
+      verticalAlign: "bottom",
+      layout: "horizontal",
+    },
     series: [
       {
         type: "bar",
         name: yAxisLabel,
+        showInLegend: false,
         data: dataPoints,
+      },
+      {
+        type: "line",
+        name: labelAvgTop10,
+        color: colors.avgTop10,
+        dashStyle: "ShortDash" as Highcharts.DashStyleValue,
+        lineWidth: 2,
+        marker: { enabled: false },
+        enableMouseTracking: false,
+        showInLegend: true,
+        data: categories.map(() => avgTop10Display),
+        zIndex: 5,
+      },
+      {
+        type: "line",
+        name: labelAvgAll,
+        color: colors.avgAll,
+        dashStyle: "Dot" as Highcharts.DashStyleValue,
+        lineWidth: 2,
+        marker: { enabled: false },
+        enableMouseTracking: false,
+        showInLegend: true,
+        data: categories.map(() => avgAllDisplay),
+        zIndex: 5,
       },
     ],
   };

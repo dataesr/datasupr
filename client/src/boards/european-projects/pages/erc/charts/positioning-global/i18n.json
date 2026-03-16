@@ -27,6 +27,14 @@
     "fr": "Aucune donnée disponible.",
     "en": "No data available."
   },
+  "chart-title-projects": {
+    "fr": "Classement des pays par nombre de porteurs de projets ERC lauréats",
+    "en": "Country ranking by number of successful ERC project PIs"
+  },
+  "chart-title-funding": {
+    "fr": "Classement des pays par montant de financements ERC obtenus",
+    "en": "Country ranking by ERC funding amount obtained"
+  },
   "main-title": {
     "fr": "Positionnement global du pays",
     "en": "Country global positioning"
@@ -42,5 +50,21 @@
   "funding": {
     "fr": "Financements",
     "en": "Funding"
+  },
+  "y-axis-projects": {
+    "fr": "Nombre de porteurs de projets",
+    "en": "Number of project PIs"
+  },
+  "y-axis-funding": {
+    "fr": "Financements (M€)",
+    "en": "Funding (M€)"
+  },
+  "avg-top10": {
+    "fr": "Moyenne top 10",
+    "en": "Top 10 average"
+  },
+  "avg-all": {
+    "fr": "Moyenne tous pays",
+    "en": "All countries average"
   }
 }
