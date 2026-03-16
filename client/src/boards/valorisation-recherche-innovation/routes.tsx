@@ -4,9 +4,9 @@ import NotFoundPage from "../../components/not-found-page.tsx";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import { getI18nLabel } from "../../utils";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
+import i18n from "./i18n.json";
 import Home from "./pages/home";
 import Structures from "./pages/structures";
-import i18n from "./title-i18n.json";
 
 import "./styles.scss";
 

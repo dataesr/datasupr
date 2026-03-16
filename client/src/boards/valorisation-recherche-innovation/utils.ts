@@ -2,9 +2,12 @@ import HighchartsInstance from "highcharts";
 
 import { createChartOptions } from "../../components/chart-wrapper/default-options";
 import { getCssColor as getCssColorGlobal } from "../../utils/colors";
-import { deepMerge } from "../../utils";
 
-const typologiesExcluded = ["Entreprises", "Etablissements étrangers", "Infrastructures de recherche", "Structures de recherche"];
+const pattern = { height: 4, path: "M 2 2 l 2 2", width: 4 };
+
+const YEAR_MIN = 2009;
+const YEAR_MAX = 2025
+const years: number[] = Array.from(Array(YEAR_MAX - YEAR_MIN + 1).keys()).map((item) => item + YEAR_MIN);
 
 const formatCompactNumber = (number: number): string => {
   const formatter = Intl.NumberFormat("fr", { notation: "compact" });
@@ -20,21 +23,26 @@ const formatPercent = (number: number, decimals: number = 0): string => {
   return formatter.format(number);
 };
 
-const getEsQuery = ({ structures }: { structures?: (string | null)[] }) => {
+const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
+  { structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
   const query: any = {
     size: 0,
     query: {
       bool: {
         filter: [
-          { term: { isFrench: true } },
-          { term: { status: "active" } },
-          { bool: { must_not: { terms: { "typologie_1.keyword": typologiesExcluded } } } },
+          { range: { creationYear: { gte: yearMin, lte: yearMax } } },
+          { term: { "startup_links.denormalized.isFrench": true } },
+          { term: { "startup_links.denormalized.status.keyword": "active" } },
+          // { term: { participant_type: "institution" } },
+          { term: { "startup_links.denormalized.is_main_parent": 1 } },
+          { term: { "startup_links.denormalized.kind.keyword": "Secteur public" } },
+          // { bool: { must_not: { terms: { "startup_links.denormalized.typologie_1.keyword": typologiesExcluded } } } },
         ],
       },
     },
   };
   if (structures?.length ?? 0 > 0) {
-    query.query.bool.filter.push({ terms: { "id.keyword": structures } });
+    query.query.bool.filter.push({ terms: { "startup_links.structure.keyword": structures } });
   };
   return query;
 };
@@ -82,11 +90,12 @@ const getYearRangeLabel = ({ isBold = false, yearMax, yearMin }: { isBold?: bool
 };
 
 export {
-  deepMerge,
   formatCompactNumber,
   formatPercent,
   getCssColor,
   getEsQuery,
   getGeneralOptions,
   getYearRangeLabel,
+  pattern,
+  years,
 };

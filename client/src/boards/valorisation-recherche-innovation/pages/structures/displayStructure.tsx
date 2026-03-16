@@ -3,23 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import { isInProduction } from "../../../../utils";
 import Breadcrumb from "../../components/breadcrumb";
 import { getEsQuery, years } from "../../utils";
-import ClassificationsByStructure from "./charts/classifications-by-structure";
-import Classifications2ByStructure from "./charts/classifications2-by-structure";
-import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
-import InstrumentsForAnr from "./charts/instruments-for-anr";
-import InstrumentsForEurope from "./charts/instruments-for-europe";
-import InstrumentsOverTimeForAnr from "./charts/instruments-over-time-for-anr";
-import InstrumentsOverTimeForEurope from "./charts/instruments-over-time-for-europe";
-import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
-import LaboratoriesByStructure from "./charts/laboratories-by-structure";
-import OverviewByStructure from "./charts/overview-by-structure";
-import ProjectsByStructure from "./charts/projects-by-structure";
-import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
-import Cards from "./components/cards";
-import DataTable from "./components/data-table";
+import StartupsByStructure from "./charts/startups-by-structure";
 
 import "./styles.scss";
 
@@ -34,17 +20,7 @@ export default function DisplayStructure() {
   const [isOpen, setIsOpen] = useState(false);
   const sections = [
     { id: "apercu", label: "Aperçu" },
-    { id: "financements", label: "Volume et répartition des financements" },
-    { id: "evolution", label: "Evolution temporelle" },
-    { id: "partenaires", label: "Institutions partenaires" },
-    { id: "laboratoires", label: "Laboratoires" },
-    { id: "disciplines", label: "Disciplines" },
-    { id: "instruments", label: "Instruments" },
   ];
-
-  if (!isInProduction()) {
-    sections.push({ id: "donnees", label: "Données" });
-  };
 
   const handleNavClick = (section: string) => {
     searchParams.set("section", section);
@@ -173,7 +149,6 @@ export default function DisplayStructure() {
               </button>
               <Row horizontalAlign="right" style={{ float: "right" }}>
 
-
               </Row>
               <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
                 {sections.map((item) => (
@@ -198,98 +173,13 @@ export default function DisplayStructure() {
             </div>
           </div>
         }
-        {(yearMax < yearMin) ?
+        {
+          (yearMax < yearMin) ?
           (<Alert description="Merci de choisir une année de fin supérieure ou égale à l'année de début" title="Erreur dans le choix des années" variant="error" />) :
           (
-            <>
-              {(section === "apercu") && (
-                <Cards />
-              )}
-              {(section === "financements") && (
-                <>
-                  <Row gutters style={{ clear: "both" }}>
-                    <Col>
-                      <ProjectsByStructure name={name} />
-                    </Col>
-                  </Row>
-                  <Row gutters>
-                    <Col>
-                      <OverviewByStructure name={name} />
-                    </Col>
-                  </Row>
-                </>
-              )}
-              {(section === "evolution") && (
-                <Row gutters style={{ clear: "both" }}>
-                  <Col>
-                    <ProjectsOverTimeByStructure name={name} />
-                  </Col>
-                </Row>
-              )}
-              {(section === "partenaires") && (
-                <>
-                  <Row gutters style={{ clear: "both" }}>
-                    <Col>
-                      <FrenchPartnersByStructure name={name} />
-                    </Col>
-                  </Row>
-                  <Row gutters>
-                    <Col>
-                      <InternationalPartnersByStructure name={name} />
-                    </Col>
-                  </Row>
-                </>
-              )}
-              {(section === "laboratoires") && (
-                <Row gutters style={{ clear: "both" }}>
-                  <Col>
-                    <LaboratoriesByStructure name={name} />
-                  </Col>
-                </Row>
-              )}
-              {(section === "disciplines") && (
-                <>
-                  <Row gutters style={{ clear: "both" }}>
-                    <Col>
-                      <ClassificationsByStructure name={name} />
-                    </Col>
-                  </Row>
-                  <Row gutters>
-                    <Col>
-                      <Classifications2ByStructure name={name} />
-                    </Col>
-                  </Row>
-                </>
-              )}
-              {(section === "instruments") && (
-                <>
-                  <Row gutters style={{ clear: "both" }}>
-                    <Col>
-                      <InstrumentsForAnr name={name} />
-                    </Col>
-                  </Row>
-                  <Row gutters>
-                    <Col>
-                      <InstrumentsForEurope name={name} />
-                    </Col>
-                  </Row>
-                  <Row gutters>
-                    <Col>
-                      <InstrumentsOverTimeForAnr name={name} />
-                    </Col>
-                  </Row>
-                  <Row gutters>
-                    <Col>
-                      <InstrumentsOverTimeForEurope name={name} />
-                    </Col>
-                  </Row>
-                </>
-              )}
-              {(section === "donnees") && (
-                <DataTable name={name} />
-              )}
-            </>
-          )}
+            <StartupsByStructure name={name} />
+          )
+        }
       </Container>
     </>
   );
