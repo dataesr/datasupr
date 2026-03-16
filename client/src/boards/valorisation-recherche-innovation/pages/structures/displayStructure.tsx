@@ -65,8 +65,8 @@ export default function DisplayStructure() {
           <Row gutters>
             <Col>
               <Breadcrumb items={[
-                { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
-                { href: "/financements-par-aap/etablissement", label: "Vue par établissement" },
+                { href: "/valorisation-recherche-innovation/accueil", label: "Valorisation de la recherche - innovation" },
+                { href: "/valorisation-recherche-innovation/etablissement", label: "Vue par établissement" },
                 { label: name }
               ]} />
             </Col>
@@ -86,7 +86,7 @@ export default function DisplayStructure() {
             </Col>
             <Col>
               <Row gutters className="fr-mb-2w">
-                <Link href="/financements-par-aap/etablissement">
+                <Link href="/valorisation-recherche-innovation/etablissement">
                   <span aria-hidden="true" className="fr-icon-arrow-go-back-line fr-mr-1w" />
                   Changer d'établissement
                 </Link>

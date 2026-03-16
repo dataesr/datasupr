@@ -1,6 +1,5 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import HighchartsInstance from "highcharts";
 import "highcharts/modules/pattern-fill";
 import { useSearchParams } from "react-router-dom";
 
@@ -50,6 +49,7 @@ export default function StartupsByStructure({ name }: { name: string | undefined
 
   const categories = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.key);
   const series: string[] = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.doc_count);
+  console.log(series);
   const axis = getI18nLabel(i18n, 'number_of_startups');
   const title = `Nombre de start-up par année de création ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
@@ -57,7 +57,7 @@ export default function StartupsByStructure({ name }: { name: string | undefined
   };
 
   const config = {
-    comment: { "fr": <>Ce graphique indique, par financeur, le nombre, les financements globaux et les financements perçus des projets auxquels participe l'établissement {name}. Pour chaque financeur, la barre correspondante est subdivisée en deux en fonction du rôle de l'établissement : la partie pointillée quand l'établissement est coordinateur, en couleur simple quand il est partenaire non coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
+    // comment: { "fr": <>Ce graphique indique, par financeur, le nombre, les financements globaux et les financements perçus des projets auxquels participe l'établissement {name}. Pour chaque financeur, la barre correspondante est subdivisée en deux en fonction du rôle de l'établissement : la partie pointillée quand l'établissement est coordinateur, en couleur simple quand il est partenaire non coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
     id: "startupsByStructure",
     integrationURL: `/integration?chart_id=startupsByStructure&${searchParams.toString()}`,
     title,
