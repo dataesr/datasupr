@@ -49,7 +49,7 @@ export default function StartupsByStructure({ name }: { name: string | undefined
   });
 
   const categories = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.key);
-  const series: any[] = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.doc_count);
+  const series: HighchartsInstance.SeriesOptionsType[] = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.doc_count);
 
   // If view by number of start-ups
   const axis = getI18nLabel(i18n, 'number_of_startups');

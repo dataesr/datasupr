@@ -1,6 +1,7 @@
 import HighchartsInstance from "highcharts";
-import { CreateChartOptions } from "../../../../components/chart-ep";
+
 import { formatToMillions } from "../../../../../../utils/format";
+import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { PanelFundingItem } from "./query";
 
 // Variables CSS pour les couleurs par domaine scientifique
