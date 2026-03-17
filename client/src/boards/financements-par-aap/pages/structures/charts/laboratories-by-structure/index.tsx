@@ -32,7 +32,6 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
           { term: { participant_isFrench: true } },
           { term: { participant_status: "active" } },
           { term: { participant_type: "laboratory" } },
-          { term: { "participant_kind.keyword": "Secteur public" } },
           { terms: { "project_type.keyword": funders } },
           { term: { "participant_institutions.structure.keyword": structure } }
         ],
