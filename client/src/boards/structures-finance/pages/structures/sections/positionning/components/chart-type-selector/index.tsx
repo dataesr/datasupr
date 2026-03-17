@@ -13,6 +13,7 @@ export default function ChartTypeSelector({
 }: ChartTypeSelectorProps) {
   const getChartLabel = () => {
     if (activeChart === "comparison") return "Comparaison par analyse";
+    if (activeChart === "column-range") return "Variation entre deux années";
     if (activeChart === "scatter-1") return "Produits vs Effectifs";
     if (activeChart === "scatter-2") return "SCSP vs Encadrement";
     if (activeChart === "scatter-3") return "SCSP vs Ressources";
@@ -32,6 +33,13 @@ export default function ChartTypeSelector({
             onChange={() => onChartChange("comparison")}
           >
             Comparaison par analyse
+          </Select.Checkbox>
+          <Select.Checkbox
+            value="column-range"
+            checked={activeChart === "column-range"}
+            onChange={() => onChartChange("column-range")}
+          >
+            Variation entre deux années
           </Select.Checkbox>
           <Select.Checkbox
             value="scatter-1"

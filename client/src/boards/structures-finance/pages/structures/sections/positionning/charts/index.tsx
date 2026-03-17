@@ -1,5 +1,11 @@
 import { useState } from "react";
-import { Row, Col, Text } from "@dataesr/dsfr-plus";
+import {
+  Row,
+  Col,
+  Text,
+  SegmentedControl,
+  SegmentedElement,
+} from "@dataesr/dsfr-plus";
 import ComparisonBarChart from "./comparison-bar";
 import ComparisonOverviewChart from "./comparison-overview";
 import ScatterChart from "./scatter";
@@ -16,8 +22,14 @@ import { useMetricLabel } from "../../../../../hooks/useMetricLabel";
 import { useMetricThreshold } from "../../../../../hooks/useMetricThreshold";
 import { useMetricSens } from "../../../../../hooks/useMetricSens";
 import { BudgetWarning } from "../../../../../components/budget-warning";
+import PositioningColumnRange from "./column-range";
 
-export type ChartView = "comparison" | "scatter-1" | "scatter-2" | "scatter-3";
+export type ChartView =
+  | "comparison"
+  | "column-range"
+  | "scatter-1"
+  | "scatter-2"
+  | "scatter-3";
 
 const filterDisplayMetrics = (metrics: readonly string[]) =>
   metrics.filter(
@@ -26,6 +38,7 @@ const filterDisplayMetrics = (metrics: readonly string[]) =>
 
 interface PositioningChartsProps {
   activeChart: ChartView;
+  onChartChange?: (chart: ChartView) => void;
   data: any[];
   allData?: any[];
   currentStructure?: any;
@@ -43,6 +56,7 @@ interface PositioningChartsProps {
 
 export default function PositioningCharts({
   activeChart,
+  onChartChange,
   data,
   allData = [],
   currentStructure,
@@ -94,9 +108,56 @@ export default function PositioningCharts({
   const metricThreshold = useMetricThreshold(selectedMetric);
   const metricSens = useMetricSens(selectedMetric);
 
+  const comparisonSegmentedControl = onChartChange ? (
+    <SegmentedControl
+      className="fr-segmented--sm fr-mb-3w"
+      name="positioning-view-mode"
+    >
+      <SegmentedElement
+        value="comparison"
+        label="Comparaison"
+        checked={activeChart === "comparison"}
+        onClick={() => onChartChange("comparison")}
+      />
+      <SegmentedElement
+        value="column-range"
+        label="Variation entre deux années"
+        checked={activeChart === "column-range"}
+        onClick={() => onChartChange("column-range")}
+      />
+    </SegmentedControl>
+  ) : null;
+
+  if (activeChart === "column-range") {
+    return (
+      <div>
+        {comparisonSegmentedControl}
+        <Row gutters>
+          <Col xs="12" md="4">
+            <AnalysisFilter
+              data={data}
+              currentStructure={currentStructure}
+              selectedAnalysis={selectedAnalysis || "ressources-total"}
+              onSelectAnalysis={onSelectAnalysis || (() => {})}
+            />
+          </Col>
+          <Col xs="12" md="8">
+            <PositioningColumnRange
+              metricKey={selectedMetric}
+              currentStructureId={structureId}
+              currentStructure={currentStructure}
+              activeFilters={activeFilters}
+            />
+          </Col>
+        </Row>
+      </div>
+    );
+  }
+
   if (activeChart === "comparison") {
     return (
       <div>
+        {comparisonSegmentedControl}
         <Row gutters>
           <Col xs="12" md="4">
             <AnalysisFilter

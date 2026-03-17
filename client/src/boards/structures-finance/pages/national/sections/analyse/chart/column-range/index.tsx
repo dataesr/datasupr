@@ -20,6 +20,8 @@ interface ColumnRangeChartProps {
   metricKey: MetricKey;
   availableYears: number[];
   isLoading: boolean;
+  currentStructureId?: string;
+  initialTopN?: number | null;
 }
 
 const TOP_N_OPTIONS: (number | null)[] = [10, 20, 30, 50, 100, null];
@@ -31,6 +33,8 @@ export default function ColumnRangeChart({
   metricKey,
   availableYears,
   isLoading,
+  currentStructureId,
+  initialTopN = 20,
 }: ColumnRangeChartProps) {
   const getMetricLabel = useMetricLabel();
   const metricConfig = METRICS_CONFIG[metricKey];
@@ -46,7 +50,7 @@ export default function ColumnRangeChart({
 
   const [yearFrom, setYearFrom] = useState<string>(defaultYearFrom);
   const [yearTo, setYearTo] = useState<string>(defaultYearTo);
-  const [topN, setTopN] = useState<number | null>(20);
+  const [topN, setTopN] = useState<number | null>(initialTopN);
   const [sortMode, setSortMode] = useState<"variation" | "alphabetical">(
     "variation"
   );
@@ -54,7 +58,7 @@ export default function ColumnRangeChart({
   const pointsAll = useMemo<ColumnRangePoint[]>(() => {
     const byId = new Map<
       string,
-      { name: string; values: Record<string, number> }
+      { name: string; values: Record<string, number>; isHighlighted: boolean }
     >();
 
     allYearsData.forEach((item: any) => {
@@ -75,13 +79,14 @@ export default function ColumnRangeChart({
             item.etablissement_lib ||
             "Sans nom",
           values: {},
+          isHighlighted: !!currentStructureId && id === currentStructureId,
         });
       }
       byId.get(id)!.values[year] = value;
     });
 
     const result: ColumnRangePoint[] = [];
-    byId.forEach(({ name, values }) => {
+    byId.forEach(({ name, values, isHighlighted }) => {
       const vFrom = values[yearFrom];
       const vTo = values[yearTo];
       if (vFrom == null || vTo == null) return;
@@ -96,18 +101,25 @@ export default function ColumnRangeChart({
         valueTo: vTo,
         variation,
         variationPct,
+        isHighlighted,
       });
     });
 
     return result;
-  }, [allYearsData, metricKey, yearFrom, yearTo]);
+  }, [allYearsData, metricKey, yearFrom, yearTo, currentStructureId]);
 
   const points = useMemo<ColumnRangePoint[]>(() => {
     const sorted =
       sortMode === "variation"
         ? [...pointsAll].sort((a, b) => b.variation - a.variation)
         : [...pointsAll].sort((a, b) => a.name.localeCompare(b.name, "fr"));
-    return topN != null ? sorted.slice(0, topN) : sorted;
+    if (topN == null) return sorted;
+    const sliced = sorted.slice(0, topN);
+    const highlighted = sorted.find((p) => p.isHighlighted);
+    if (highlighted && !sliced.some((p) => p.isHighlighted)) {
+      sliced.push(highlighted);
+    }
+    return sliced;
   }, [pointsAll, topN, sortMode]);
 
   const chartOptions = useMemo<Highcharts.Options | null>(() => {
@@ -131,6 +143,7 @@ export default function ColumnRangeChart({
   };
 
   const noData = !isLoading && points.length === 0;
+  const highlightedName = pointsAll.find((p) => p.isHighlighted)?.name;
 
   return (
     <div>
@@ -171,28 +184,7 @@ export default function ColumnRangeChart({
           </Select>
         </Col>
 
-        <Col xs="12" md="3">
-          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
-            Nombre d'établissements
-          </Text>
-          <Select
-            label={getTopNLabel(topN)}
-            size="sm"
-            fullWidth
-            className="fr-mb-0"
-          >
-            {TOP_N_OPTIONS.map((n) => (
-              <Select.Checkbox
-                key={String(n)}
-                value={String(n)}
-                checked={topN === n}
-                onChange={() => setTopN(n)}
-              >
-                {getTopNLabel(n)}
-              </Select.Checkbox>
-            ))}
-          </Select>
-        </Col>
+
 
         <Col xs="12" md="3">
           <Text className="fr-text--sm fr-text--bold fr-mb-1w">Tri</Text>
@@ -218,7 +210,31 @@ export default function ColumnRangeChart({
             </Select.Checkbox>
           </Select>
         </Col>
+        <Col xs="12" md="3">
+          <Text className="fr-text--sm fr-text--bold fr-mb-1w">
+            Nombre d'établissements
+          </Text>
+          <Select
+            label={getTopNLabel(topN)}
+            size="sm"
+            fullWidth
+            className="fr-mb-0"
+          >
+            {TOP_N_OPTIONS.map((n) => (
+              <Select.Checkbox
+                key={String(n)}
+                value={String(n)}
+                checked={topN === n}
+                onChange={() => setTopN(n)}
+              >
+                {getTopNLabel(n)}
+              </Select.Checkbox>
+            ))}
+          </Select>
+        </Col>
       </Row>
+
+
 
       <Row gutters className="fr-mb-2w">
         <Col xs="12">
@@ -231,6 +247,12 @@ export default function ColumnRangeChart({
               <span className="column-range-legend__swatch column-range-legend__swatch--down" />
               Baisse
             </span>
+            {currentStructureId && highlightedName && (
+              <span className="column-range-legend__item">
+                <span className="column-range-legend__swatch column-range-legend__swatch--highlight" />
+                {highlightedName}
+              </span>
+            )}
           </div>
         </Col>
       </Row>

@@ -88,6 +88,7 @@ export function PositionnementSection({
       ) : (
         <PositioningCharts
           activeChart={activeChart}
+          onChartChange={setActiveChart}
           data={filteredItems}
           allData={allItems}
           currentStructure={data}

@@ -1,6 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { useFinanceEtablissementEvolution } from "../../../../../api";
+import StructureColumnRangeChart from "./column-range";
 import { useMetricLabel } from "../../../../../hooks/useMetricLabel";
 import { useMetricThreshold } from "../../../../../hooks/useMetricThreshold";
 import StackedEvolutionChart from "./stacked";
@@ -29,13 +31,15 @@ export default function EvolutionChart({
   selectedAnalysis = "" as AnalysisKey,
   periodText = "",
 }: EvolutionChartProps) {
-  const [searchParams] = useSearchParams();
-  const [, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [displayMode, setDisplayMode] = useState<"values" | "percentage">(
     "values"
   );
   const [showIPC, setShowIPC] = useState(false);
   const [showPart, setShowPart] = useState(false);
+  const [viewMode, setViewMode] = useState<"evolution" | "variation">(
+    "evolution"
+  );
 
   const activeEtablissementId =
     etablissementId || searchParams.get("structureId") || "";
@@ -213,28 +217,55 @@ export default function EvolutionChart({
 
   if (selectedMetrics.length === 1) {
     return (
-      <SingleEvolutionChart
-        etablissementId={activeEtablissementId}
-        selectedMetric={selectedMetrics[0]}
-        baseMetrics={baseMetrics}
-        chartConfig={createChartConfig(
-          "evolution-single",
-          undefined,
-          <>
-            Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()} sur
-            la période {periodText}.
-          </>
+      <>
+        <SegmentedControl
+          className="fr-segmented--sm fr-mb-3w"
+          name="analysis-view-mode"
+        >
+          <SegmentedElement
+            checked={viewMode === "evolution"}
+            label="Évolution"
+            onClick={() => setViewMode("evolution")}
+            value="evolution"
+          />
+          <SegmentedElement
+            checked={viewMode === "variation"}
+            label="Variation"
+            onClick={() => setViewMode("variation")}
+            value="variation"
+          />
+        </SegmentedControl>
+        {viewMode === "variation" ? (
+          <StructureColumnRangeChart
+            data={data}
+            metricKey={selectedMetrics[0]}
+            etablissementName={etabName}
+          />
+        ) : (
+          <SingleEvolutionChart
+            etablissementId={activeEtablissementId}
+            selectedMetric={selectedMetrics[0]}
+            baseMetrics={baseMetrics}
+            chartConfig={createChartConfig(
+              "evolution-single",
+              undefined,
+              <>
+                Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()}{" "}
+                sur la période {periodText}.
+              </>
+            )}
+            metricThreshold={metricThreshold}
+            selectedAnalysis={activeSelectedAnalysis}
+            etablissementName={etabName}
+            xAxisField={xAxisField}
+            showIPC={showIPC}
+            showPart={showPart}
+            onIPCChange={handleIPCChange}
+            onPartChange={handlePartChange}
+            data={data}
+          />
         )}
-        metricThreshold={metricThreshold}
-        selectedAnalysis={activeSelectedAnalysis}
-        etablissementName={etabName}
-        xAxisField={xAxisField}
-        showIPC={showIPC}
-        showPart={showPart}
-        onIPCChange={handleIPCChange}
-        onPartChange={handlePartChange}
-        data={data}
-      />
+      </>
     );
   }
 
