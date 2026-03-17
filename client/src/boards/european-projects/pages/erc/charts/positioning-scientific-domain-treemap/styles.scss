@@ -1,0 +1,42 @@
+.positioning-scientific-domain-treemap {
+  margin: 1.5rem 0;
+
+  &__controls {
+    display: flex;
+    align-items: flex-end;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+
+    .select-wrapper {
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .segmented-wrapper {
+      flex-shrink: 0;
+    }
+  }
+
+  &__legend {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 0.75rem;
+    font-size: 0.85rem;
+
+    &-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    &-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+  }
+}

@@ -1,0 +1,66 @@
+{
+  "main-title-with-country": {
+    "fr": "Positionnement {country} par rapport aux autres pays européens – par domaine scientifique",
+    "en": "{country}'s positioning compared to other European countries – ERC projects and funding distribution by scientific domain"
+  },
+  "projects": {
+    "fr": "Projets",
+    "en": "Projects"
+  },
+  "funding": {
+    "fr": "Financements",
+    "en": "Funding"
+  },
+  "select-domain": {
+    "fr": "Domaine scientifique",
+    "en": "Scientific domain"
+  },
+  "title-projects": {
+    "fr": "Répartition des porteurs de projets ERC par pays pour {domain}",
+    "en": "ERC project PIs distribution by country for {domain}"
+  },
+  "title-funding": {
+    "fr": "Répartition des financements ERC par pays pour {domain}",
+    "en": "ERC funding distribution by country for {domain}"
+  },
+  "comment-projects": {
+    "fr": "Ce treemap représente le poids de chaque pays en nombre de porteurs de projets ERC lauréats. Les pays européens sont représentés individuellement ; les autres pays sont regroupés. Le pays sélectionné est mis en évidence.",
+    "en": "This treemap shows each country's share of successful ERC project PIs. European countries are shown individually; others are grouped. The selected country is highlighted."
+  },
+  "comment-funding": {
+    "fr": "Ce treemap représente le poids de chaque pays en montant de financements ERC obtenus. Les pays européens sont représentés individuellement ; les autres pays sont regroupés. Le pays sélectionné est mis en évidence.",
+    "en": "This treemap shows each country's share of ERC funding obtained. European countries are shown individually; others are grouped. The selected country is highlighted."
+  },
+  "reading-key-projects": {
+    "fr": "La taille de chaque case est proportionnelle au nombre de porteurs de projets ERC lauréats dans ce domaine scientifique. Le pays sélectionné est mis en évidence en vert.",
+    "en": "The size of each box is proportional to the number of successful ERC project PIs in this scientific domain. The selected country is highlighted in green."
+  },
+  "reading-key-funding": {
+    "fr": "La taille de chaque case est proportionnelle aux montants de financements ERC obtenus dans ce domaine scientifique. Le pays sélectionné est mis en évidence en vert.",
+    "en": "The size of each box is proportional to ERC funding amounts obtained in this scientific domain. The selected country is highlighted in green."
+  },
+  "other-countries": {
+    "fr": "Autres pays",
+    "en": "Other countries"
+  },
+  "other-countries-projects-note": {
+    "fr": "Entités impliquées (porteurs de projets ERC non éligibles comme PI)",
+    "en": "Involved entities (non-eligible ERC project PIs)"
+  },
+  "tooltip-projects": {
+    "fr": "Porteurs de projets",
+    "en": "Project PIs"
+  },
+  "tooltip-involved": {
+    "fr": "Entités impliquées",
+    "en": "Involved entities"
+  },
+  "tooltip-funding": {
+    "fr": "Financements",
+    "en": "Funding"
+  },
+  "no-data": {
+    "fr": "Aucune donnée disponible pour ce domaine scientifique.",
+    "en": "No data available for this scientific domain."
+  }
+}
