@@ -31,6 +31,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
           by_project_year: {
             terms: {
               field: "project_year",
+              size: 25,
             },
             aggregations: {
               is_coordinator: {

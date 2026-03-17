@@ -27,6 +27,7 @@ export default function Cards() {
           by_project_year: {
             terms: {
               field: "project_year",
+              size: 25,
             },
             aggregations: {
               unique_projects: {
