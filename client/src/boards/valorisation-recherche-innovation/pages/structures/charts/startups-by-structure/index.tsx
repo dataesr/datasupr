@@ -10,7 +10,7 @@ import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils.tsx";
 import { deepMerge } from "../../../../../../utils.tsx";
 import i18n from "../../../../i18n.json";
-import { formatPercent, getEsQuery, getYearRangeLabel } from "../../../../utils.ts";
+import { getEsQuery, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
