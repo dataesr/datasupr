@@ -1,6 +1,7 @@
 import { useSearchParams } from "react-router-dom";
 import PositioningGlobalChart from "../../charts/positioning-global";
 import PositioningFundingTypeChart from "../../charts/positioning-funding-type";
+import PositioningScientificDomainChart from "../../charts/positioning-scientific-domain";
 
 export default function PositionnementContent() {
   const [searchParams] = useSearchParams();
@@ -21,11 +22,9 @@ export default function PositionnementContent() {
         <PositioningFundingTypeChart countryCode={countryCode} currentLang={currentLang} />
       </div>
 
-      {/* TODO: Graphique par domaine scientifique */}
-      <div className="fr-my-4w fr-p-3w" style={{ backgroundColor: "#f6f6f6", borderRadius: "8px" }}>
-        <p className="fr-text--sm fr-mb-0">
-          {currentLang === "fr" ? "🚧 Graphique par domaine scientifique (à venir)" : "🚧 Chart by scientific domain (coming soon)"}
-        </p>
+      {/* Graphique par domaine scientifique */}
+      <div className="fr-my-4w">
+        <PositioningScientificDomainChart countryCode={countryCode} currentLang={currentLang} />
       </div>
 
       {/* TODO: Graphique par panel */}

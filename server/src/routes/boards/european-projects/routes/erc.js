@@ -28,6 +28,9 @@ router.route("/european-projects/erc/synthesis").get(async (req, res) => {
     const panels = req.query.panel_id.split(",");
     filters.panel_id = { $in: panels };
   }
+  if (req.query.domaine_scientifique) {
+    filters.domaine_scientifique = req.query.domaine_scientifique.toUpperCase();
+  }
   if (req.query.framework) {
     filters.framework = req.query.framework;
   }
