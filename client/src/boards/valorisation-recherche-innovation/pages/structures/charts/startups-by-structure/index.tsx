@@ -53,7 +53,7 @@ export default function StartupsByStructure({ name }: { name: string | undefined
   const axis = getI18nLabel(i18n, 'number_of_startups');
   const title = `Nombre de start-up par année de création ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
-    return `<b>${this.y}</b> start-ups <b>${this.series.name}</b> auxquelles participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}, soit ${formatPercent(this.y_perc)} (${this.y} / ${this.total} )`;
+    return `<b>${this.y}</b> start-ups ont été créées en <b>${this.x}</b> auxquelles participe <b>${name}</b>)`;
   };
 
   const config = {
