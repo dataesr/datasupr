@@ -55,28 +55,28 @@ figure {
 
 // highchart-data-table
 .highcharts-data-table table {
-    border-collapse: collapse;
-    border-spacing: 0;
-    background: var(--background-default-grey);
-    min-width: 100%;
-    margin-top: 10px;
-    font-family: sans-serif;
-    font-size: 0.9em;
+  border-collapse: collapse;
+  border-spacing: 0;
+  background: var(--background-default-grey);
+  min-width: 100%;
+  margin-top: 10px;
+  font-family: sans-serif;
+  font-size: 0.9em;
 }
 .highcharts-data-table td, .highcharts-data-table th, .highcharts-data-table caption {
-    border: 1px solid silver;
-    padding: 0.5em;
+  border: 1px solid silver;
+  padding: 0.5em;
 }
 .highcharts-data-table tr:nth-child(even), .highcharts-data-table thead tr {
-    background: var(--background-default-grey);
+  background: var(--background-default-grey);
 }
 .highcharts-data-table tr:hover {
-    background: #6a6a6a;
+  background: #6a6a6a;
 }
 .highcharts-data-table caption {
-    background: var(--background-default-grey);
-    border-bottom: none;
-    color: var(--text-default-grey);
-    font-size: 1.1em;
-    font-weight: bold;
+  background: var(--background-default-grey);
+  border-bottom: none;
+  color: var(--text-default-grey);
+  font-size: 1.1em;
+  font-weight: bold;
 }

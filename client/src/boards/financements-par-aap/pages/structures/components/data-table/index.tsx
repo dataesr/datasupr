@@ -6,6 +6,8 @@ import { useSearchParams } from "react-router-dom";
 
 import { getEsQuery } from "../../../../utils.ts";
 
+import "./styles.scss";
+
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function DataTable({ name }: { name: string | undefined }) {
@@ -72,6 +74,7 @@ export default function DataTable({ name }: { name: string | undefined }) {
       },
       columns: [{
         filtering: { enabled: true },
+        cells: { format: '{value}' },
         header: { format: "Année du projet" },
         id: "projectYear",
         sorting: { enabled: true },
@@ -86,6 +89,7 @@ export default function DataTable({ name }: { name: string | undefined }) {
       }, {
         header: { format: "Nom du projet" },
         id: "projectLabel",
+        width: 300
       }, {
         header: { format: "Instrument de financement" },
         id: "projectInstrument",
@@ -96,10 +100,12 @@ export default function DataTable({ name }: { name: string | undefined }) {
         id: "participationIsCoordinator",
       }, {
         header: { format: "Financement global (présence)" },
+        cells: { format: '{value} €' },
         id: "projectBudgetFinanced",
         sorting: { enabled: true },
       }, {
         header: { format: "Financement perçu (implication)" },
+        cells: { format: '{value} €' },
         id: "participationFunding",
         sorting: { enabled: true },
       }],
@@ -109,6 +115,7 @@ export default function DataTable({ name }: { name: string | undefined }) {
       },
       rendering: {
         columns: { resizing: { enabled: false } },
+        theme: 'hcg-theme-default theme-tableaux',
         rows: { minVisibleRows: 50 },
       }
     });
@@ -131,7 +138,7 @@ export default function DataTable({ name }: { name: string | undefined }) {
           <Button className="fr-mb-2w" onClick={(e) => downloadCsv(e)}>
             Export CSV
           </Button>
-          {isLoading ? <Spinner /> : <Grid options={options} gridRef={gridRef} />}
+          {isLoading ? <Spinner /> : <Grid gridRef={gridRef} options={options} />}
           <Button className="fr-mt-2w" onClick={(e) => downloadCsv(e)}>
             Export CSV
           </Button>
