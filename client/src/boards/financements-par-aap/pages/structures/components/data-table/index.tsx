@@ -1,7 +1,6 @@
-import { Button, Col, Row, Spinner } from "@dataesr/dsfr-plus";
+import { Button, Col, Row } from "@dataesr/dsfr-plus";
 import { Grid, type GridOptions } from "@highcharts/grid-pro-react";
-import { useQuery } from "@tanstack/react-query";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { getEsQuery } from "../../../../utils.ts";
@@ -15,110 +14,110 @@ export default function DataTable({ name }: { name: string | undefined }) {
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
   const yearMin = searchParams.get("yearMin");
-  const [options, setOptions] = useState<GridOptions>({});
   const gridRef = useRef(null);
 
-  const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
-    size: 10000,
-  };
+  const options: GridOptions = {
+    data: {
+      providerType: 'remote',
+      fetchCallback: async () => {
+        // setIsLoading(true);
+        const response = await fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
+          body: JSON.stringify({
+            ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+            size: 10000,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+          method: "POST",
+        });
+        const results = await response.json();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["funding-data", structure, yearMax, yearMin],
-    queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
-        body: JSON.stringify(body),
-        headers: {
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Origin": "*",
-        },
-        method: "POST",
-      }).then((response) => response.json()),
-  });
-
-  if (!isLoading && (options?.dataTable?.columns ?? []).length === 0) {
-    let projectYear: any[] = [];
-    let projectType: any[] = [];
-    let projectId: any[] = [];
-    let projectLabel: any[] = [];
-    let projectInstrument: any[] = [];
-    let participationIsCoordinator: any[] = [];
-    let projectBudgetFinanced: any[] = [];
-    let participationFunding: any[] = [];
-    (data?.hits?.hits ?? []).forEach((hit: any) => {
-      projectYear.push(hit._source?.project_year ?? '');
-      projectType.push(hit._source?.project_type ?? '');
-      projectId.push(hit._source?.project_id ?? '');
-      projectLabel.push(hit._source?.project_label ?? '');
-      projectInstrument.push(hit._source?.project_instrument ?? '');
-      participationIsCoordinator.push(hit._source?.participation_is_coordinator ?? '');
-      projectBudgetFinanced.push(hit._source?.project_budgetFinanced ?? '');
-      participationFunding.push(hit._source?.participation_funding ?? '');
-    });
-
-    setOptions({
-      dataTable: {
-        columns: {
-          projectYear,
-          projectType,
-          projectId,
-          projectLabel,
-          projectInstrument,
-          participationIsCoordinator,
-          projectBudgetFinanced,
-          participationFunding,
-        }
+        let projectYear: any[] = [];
+        let projectType: any[] = [];
+        let projectId: any[] = [];
+        let projectLabel: any[] = [];
+        let projectInstrument: any[] = [];
+        let participationIsCoordinator: any[] = [];
+        let projectBudgetFinanced: any[] = [];
+        let participationFunding: any[] = [];
+        (results?.hits?.hits ?? []).forEach((hit: any) => {
+          projectYear.push(hit._source?.project_year ?? '');
+          projectType.push(hit._source?.project_type ?? '');
+          projectId.push(hit._source?.project_id ?? '');
+          projectLabel.push(hit._source?.project_label ?? '');
+          projectInstrument.push(hit._source?.project_instrument ?? '');
+          participationIsCoordinator.push(hit._source?.participation_is_coordinator ?? '');
+          projectBudgetFinanced.push(hit._source?.project_budgetFinanced ?? '');
+          participationFunding.push(hit._source?.participation_funding ?? '');
+        });
+        // setIsLoading(false);
+        return {
+          columns: {
+            projectYear,
+            projectType,
+            projectId,
+            projectLabel,
+            projectInstrument,
+            participationIsCoordinator,
+            projectBudgetFinanced,
+            participationFunding,
+          },
+          totalRowCount: projectYear.length,
+          rowIds: projectId,
+        };
       },
-      columnDefaults: {
-        sorting: { enabled: false },
-      },
-      columns: [{
-        filtering: { enabled: true },
-        cells: { format: '{value}' },
-        header: { format: "Année du projet" },
-        id: "projectYear",
-        sorting: { enabled: true },
-      }, {
-        filtering: { enabled: true },
-        header: { format: "Type de projet" },
-        id: "projectType",
-        sorting: { enabled: true },
-      }, {
-        header: { format: "Identifiant du projet" },
-        id: "projectId",
-      }, {
-        header: { format: "Nom du projet" },
-        id: "projectLabel",
-        width: 300
-      }, {
-        header: { format: "Instrument de financement" },
-        id: "projectInstrument",
-        sorting: { enabled: true },
-      }, {
-        filtering: { enabled: true },
-        header: { format: "Coordinateur" },
-        id: "participationIsCoordinator",
-      }, {
-        header: { format: "Financement global (présence)" },
-        cells: { format: '{value} €' },
-        id: "projectBudgetFinanced",
-        sorting: { enabled: true },
-      }, {
-        header: { format: "Financement perçu (implication)" },
-        cells: { format: '{value} €' },
-        id: "participationFunding",
-        sorting: { enabled: true },
-      }],
-      credits: { enabled: false },
-      exporting: {
-        filename: `tableaux_financements_par_aap_${name?.toLowerCase().replace(/[-,'’\s]/g, '_')}`,
-      },
-      rendering: {
-        columns: { resizing: { enabled: false } },
-        theme: 'hcg-theme-default theme-tableaux',
-        rows: { minVisibleRows: 50 },
-      }
-    });
+    },
+    columnDefaults: {
+      sorting: { enabled: false },
+    },
+    columns: [{
+      filtering: { enabled: true },
+      cells: { format: '{value}' },
+      header: { format: "Année du projet" },
+      id: "projectYear",
+      sorting: { enabled: true },
+    }, {
+      filtering: { enabled: true },
+      header: { format: "Type de projet" },
+      id: "projectType",
+      sorting: { enabled: true },
+    }, {
+      header: { format: "Identifiant du projet" },
+      id: "projectId",
+    }, {
+      header: { format: "Nom du projet" },
+      id: "projectLabel",
+      width: 300
+    }, {
+      header: { format: "Instrument de financement" },
+      id: "projectInstrument",
+      sorting: { enabled: true },
+    }, {
+      filtering: { enabled: true },
+      header: { format: "Coordinateur" },
+      id: "participationIsCoordinator",
+    }, {
+      header: { format: "Financement global (présence)" },
+      cells: { format: '{value} €' },
+      id: "projectBudgetFinanced",
+      sorting: { enabled: true },
+    }, {
+      header: { format: "Financement perçu (implication)" },
+      cells: { format: '{value} €' },
+      id: "participationFunding",
+      sorting: { enabled: true },
+    }],
+    credits: { enabled: false },
+    exporting: {
+      filename: `tableaux_financements_par_aap_${name?.toLowerCase().replace(/[-,'’\s]/g, '_')}`,
+    },
+    rendering: {
+      columns: { resizing: { enabled: false } },
+      theme: 'hcg-theme-default theme-tableaux',
+      rows: { minVisibleRows: 50 },
+    }
   };
 
   const downloadCsv = (e) => {
@@ -138,7 +137,7 @@ export default function DataTable({ name }: { name: string | undefined }) {
           <Button className="fr-mb-2w" onClick={(e) => downloadCsv(e)}>
             Export CSV
           </Button>
-          {isLoading ? <Spinner /> : <Grid gridRef={gridRef} options={options} />}
+          <Grid gridRef={gridRef} options={options} />
           <Button className="fr-mt-2w" onClick={(e) => downloadCsv(e)}>
             Export CSV
           </Button>
