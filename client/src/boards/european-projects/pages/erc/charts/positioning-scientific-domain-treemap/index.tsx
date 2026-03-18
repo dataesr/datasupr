@@ -42,7 +42,10 @@ const getConfig = (metric: MetricType, domainCode: ScientificDomainCode, domainL
   };
 };
 
-function PositioningScientificDomainTreemapInner({ countryCode: propCountryCode, currentLang: propLang }: PositioningScientificDomainTreemapProps) {
+export default function PositioningScientificDomainTreemapInner({
+  countryCode: propCountryCode,
+  currentLang: propLang,
+}: PositioningScientificDomainTreemapProps) {
   const [metric, setMetric] = useState<MetricType>("projects");
   const [domainCode, setDomainCode] = useState<ScientificDomainCode>(SCIENTIFIC_DOMAINS[0].code);
 
@@ -64,7 +67,6 @@ function PositioningScientificDomainTreemapInner({ countryCode: propCountryCode,
   const processedData = processTreemapData(data, countryCode, currentLang, metric, domainCode);
 
   const domainLabel = SCIENTIFIC_DOMAINS.find((d) => d.code === domainCode)?.label[currentLang as "fr" | "en"] ?? domainCode;
-  // const metricLabel = getI18nLabel(i18n, metric === "projects" ? "projects" : "funding", currentLang).toLowerCase();
   const fallbackName = processedData.selectedCountry
     ? currentLang === "fr"
       ? processedData.selectedCountry.country_name_fr
@@ -81,7 +83,6 @@ function PositioningScientificDomainTreemapInner({ countryCode: propCountryCode,
     <div className="positioning-scientific-domain-treemap">
       <h3>{title}</h3>
 
-      {/* Contrôles : sélecteur de domaine + toggle métrique */}
       <div className="positioning-scientific-domain-treemap__controls">
         <div className="select-wrapper">
           <div className="fr-select-group">
@@ -130,8 +131,4 @@ function PositioningScientificDomainTreemapInner({ countryCode: propCountryCode,
       )}
     </div>
   );
-}
-
-export default function PositioningScientificDomainTreemap({ countryCode, currentLang }: PositioningScientificDomainTreemapProps) {
-  return <PositioningScientificDomainTreemapInner countryCode={countryCode} currentLang={currentLang} />;
 }

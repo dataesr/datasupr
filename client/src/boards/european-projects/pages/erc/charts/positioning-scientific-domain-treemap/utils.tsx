@@ -7,40 +7,40 @@ export { SCIENTIFIC_DOMAINS, type ScientificDomainCode };
 
 // Liste des codes pays considérés comme "européens" (ERC + associés)
 export const EUROPEAN_COUNTRY_CODES = new Set([
-  "FRA",
-  "DEU",
-  "NLD",
-  "ITA",
-  "ESP",
-  "BEL",
-  "AUT",
-  "SWE",
-  "CHE",
-  "NOR",
-  "DNK",
-  "FIN",
-  "PRT",
-  "POL",
-  "GRC",
-  "CZE",
-  "HUN",
-  "IRL",
-  "SVN",
-  "SVK",
-  "HRV",
-  "BGR",
-  "ROU",
-  "EST",
-  "LVA",
-  "LTU",
-  "LUX",
-  "MLT",
-  "CYP",
-  "GBR",
-  "ISL",
-  "TUR",
-  "ISR",
-  "UKR",
+  "AUT", //CEE
+  "BEL", //CEE
+  "BGR", //CEE
+  // "CHE",
+  "CYP", //CEE
+  "CZE", //CEE
+  "DEU", //CEE
+  "DNK", //CEE
+  "ESP", //CEE
+  "EST", //CEE
+  "FIN", //CEE
+  "FRA", //CEE
+  // "GBR",
+  "GRC", //CEE
+  "HRV", //CEE
+  "HUN", //CEE
+  "IRL", //CEE
+  // "ISL",
+  // "ISR",
+  "ITA", //CEE
+  "LTU", //CEE
+  "LUX", //CEE
+  "LVA", //CEE
+  "MLT", //CEE
+  "NLD", //CEE
+  // "NOR",
+  "POL", //CEE
+  "PRT", //CEE
+  "ROU", //CEE
+  "SVK", //CEE
+  "SVN", //CEE
+  "SWE", //CEE
+  // "TUR",
+  // "UKR",
 ]);
 
 const css = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
