@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Container } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -11,8 +11,13 @@ import navigationConfig from "./navigation-config.json";
 
 import "./styles.scss";
 
+const i18n = {
+  "filter-by-years": { fr: "Filtrer par années", en: "Filter by years" },
+};
+
 export default function ERC() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
 
   // Nettoyer l'URL des paramètres non autorisés
   useEffect(() => {
@@ -39,24 +44,35 @@ export default function ERC() {
   const activeSection = searchParams.get("section") || "synthesis";
   const showYearsFilter = activeSection !== "evolution";
 
+  const [isYearsFilterOpen, setIsYearsFilterOpen] = useState(false);
+
   return (
-    <>
-      <Container as="main" fluid>
-        <div className="ep-navigator-wrapper">
-          <Container>
-            <Breadcrumb config={navigationConfig} />
-            {/* Filtre de sélection des années */}
-            {showYearsFilter && !isLoadingFilters && availableYears.length > 0 && (
-              <div className="fr-mt-2w">
+    <Container as="main" fluid>
+      <div className="ep-navigator-wrapper">
+        <Container>
+          <Breadcrumb config={navigationConfig} />
+          {/* Filtre de sélection des années */}
+          {showYearsFilter && !isLoadingFilters && availableYears.length > 0 && (
+            <div className="fr-mt-2w years-filter-collapsible">
+              <button
+                type="button"
+                className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm years-filter-toggle"
+                onClick={() => setIsYearsFilterOpen((prev) => !prev)}
+                aria-expanded={isYearsFilterOpen}
+              >
+                <span className={`years-filter-chevron${isYearsFilterOpen ? " open" : ""}`} aria-hidden="true" />
+                {i18n["filter-by-years"][currentLang] ?? i18n["filter-by-years"].fr}
+              </button>
+              <div className={`years-filter-body${isYearsFilterOpen ? " open" : ""}`}>
                 <RangeOfYears availableYears={availableYears} defaultYears={defaultYears} />
               </div>
-            )}
-          </Container>
-        </div>
-        <Container>
-          <TabsContent />
+            </div>
+          )}
         </Container>
+      </div>
+      <Container>
+        <TabsContent />
       </Container>
-    </>
+    </Container>
   );
 }
