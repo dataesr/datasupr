@@ -63,6 +63,7 @@ export interface TreemapCountryPoint {
 
 export interface ProcessedTreemapData {
   european: TreemapCountryPoint[];
+  others: TreemapCountryPoint[];
   otherTotal: number;
   otherCount: number;
   selectedCountry: CountryData | null;
@@ -113,13 +114,14 @@ export function processTreemapData(
   domainCode: ScientificDomainCode = "LS",
 ): ProcessedTreemapData {
   if (!data?.successful?.countries) {
-    return { european: [], otherTotal: 0, otherCount: 0, selectedCountry: null, metric, domainCode };
+    return { european: [], others: [], otherTotal: 0, otherCount: 0, selectedCountry: null, metric, domainCode };
   }
 
   const countries = data.successful.countries;
   const selectedCountry = countries.find((c) => c.country_code === countryCode) || null;
 
   const european: TreemapCountryPoint[] = [];
+  const others: TreemapCountryPoint[] = [];
   let otherTotal = 0;
   let otherCount = 0;
 
@@ -137,17 +139,27 @@ export function processTreemapData(
       });
     } else {
       const otherVal = getValueForOthers(c, metric);
-      otherTotal += otherVal;
-      otherCount += otherVal > 0 ? 1 : 0;
+      if (otherVal > 0) {
+        otherTotal += otherVal;
+        otherCount++;
+        others.push({
+          code: c.country_code,
+          name: currentLang === "fr" ? c.country_name_fr : c.country_name_en,
+          value: otherVal,
+          isSelected: false,
+          isEuropean: false,
+        });
+      }
     }
   }
 
   european.sort((a, b) => b.value - a.value);
+  others.sort((a, b) => b.value - a.value);
 
-  return { european, otherTotal, otherCount, selectedCountry, metric, domainCode };
+  return { european, others, otherTotal, otherCount, selectedCountry, metric, domainCode };
 }
 
-export function renderDataTable(processedData: ProcessedTreemapData, currentLang: string = "fr"): JSX.Element {
+export function renderDataTable(processedData: ProcessedTreemapData, currentLang: string = "fr", showOthersDetail: boolean = false): JSX.Element {
   const headers =
     currentLang === "fr"
       ? ["Pays", processedData.metric === "projects" ? "Porteurs de projets" : "Financements (M€)"]
@@ -158,7 +170,7 @@ export function renderDataTable(processedData: ProcessedTreemapData, currentLang
     processedData.metric === "funding" ? `${(c.value / 1_000_000).toFixed(1)} M€` : String(c.value),
   ]);
 
-  const othersLabel = currentLang === "fr" ? "Autres pays" : "Other countries";
+  const othersLabel = currentLang === "fr" ? "Pays non-européens" : "Other countries";
   const othersValue =
     processedData.metric === "funding" ? `${(processedData.otherTotal / 1_000_000).toFixed(1)} M€` : String(processedData.otherTotal);
 
@@ -180,12 +192,19 @@ export function renderDataTable(processedData: ProcessedTreemapData, currentLang
             ))}
           </tr>
         ))}
-        {processedData.otherTotal > 0 && (
-          <tr>
-            <td>{othersLabel}</td>
-            <td>{othersValue}</td>
-          </tr>
-        )}
+        {showOthersDetail
+          ? processedData.others.map((c, i) => (
+              <tr key={`other_${i}`}>
+                <td>{c.name}</td>
+                <td>{processedData.metric === "funding" ? `${(c.value / 1_000_000).toFixed(1)} M€` : String(c.value)}</td>
+              </tr>
+            ))
+          : processedData.otherTotal > 0 && (
+              <tr>
+                <td>{othersLabel}</td>
+                <td>{othersValue}</td>
+              </tr>
+            )}
       </tbody>
     </table>
   );

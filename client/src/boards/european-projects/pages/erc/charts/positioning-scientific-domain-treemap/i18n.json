@@ -40,7 +40,7 @@
     "en": "The size of each box is proportional to ERC funding amounts obtained in this scientific domain. The selected country is highlighted in green."
   },
   "other-countries": {
-    "fr": "Autres pays",
+    "fr": "Pays non-européens",
     "en": "Other countries"
   },
   "other-countries-projects-note": {
@@ -58,6 +58,14 @@
   "tooltip-funding": {
     "fr": "Financements",
     "en": "Funding"
+  },
+  "others-aggregated": {
+    "fr": "Agrégés",
+    "en": "Aggregated"
+  },
+  "others-detail": {
+    "fr": "Détaillés",
+    "en": "Detailed"
   },
   "no-data": {
     "fr": "Aucune donnée disponible pour ce domaine scientifique.",

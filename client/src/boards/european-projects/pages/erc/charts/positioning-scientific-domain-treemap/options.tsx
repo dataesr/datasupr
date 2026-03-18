@@ -7,9 +7,10 @@ import i18n from "./i18n.json";
 interface OptionsParams {
   processedData: ProcessedTreemapData;
   currentLang?: string;
+  showOthersDetail?: boolean;
 }
 
-export default function Options({ processedData, currentLang = "fr" }: OptionsParams): Highcharts.Options | null {
+export default function Options({ processedData, currentLang = "fr", showOthersDetail = false }: OptionsParams): Highcharts.Options | null {
   if (!processedData || processedData.european.length === 0) return null;
 
   const colors = getTreemapColors(processedData.domainCode);
@@ -27,8 +28,12 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
     color: c.isSelected ? colors.selectedCountry : colors.europeanCountry,
   }));
 
-  // Case "Autres pays"
-  if (processedData.otherTotal > 0) {
+  // Case "Pays non-européens"
+  if (showOthersDetail) {
+    processedData.others.forEach((c) => {
+      points.push({ id: `OTHER_${c.code}`, name: c.name, value: c.value, color: colors.otherCountries });
+    });
+  } else if (processedData.otherTotal > 0) {
     points.push({
       id: "OTHERS",
       name: othersLabel,
@@ -134,7 +139,7 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
         const pt = this as unknown as { name: string; point: { id: string; value: number; color: string } };
         const total = processedData.european.reduce((s, c) => s + c.value, 0) + processedData.otherTotal;
         const pct = total > 0 ? ((pt.point.value / total) * 100).toFixed(1) : "0";
-        const isOthers = pt.point.id === "OTHERS";
+        const isOthers = pt.point.id === "OTHERS" || (pt.point.id?.startsWith("OTHER_") ?? false);
         const involvedLabel = getI18nLabel(i18n, "tooltip-involved", currentLang);
         const label = isOthers && processedData.metric === "projects" ? involvedLabel : valueLabel;
         const lines = [`<b>${pt.name}</b>`, `${label} : <b>${fmtValue(pt.point.value)}</b>`, `Part : <b>${pct} %</b>`];

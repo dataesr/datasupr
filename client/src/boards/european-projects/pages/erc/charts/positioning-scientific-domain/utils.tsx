@@ -7,22 +7,22 @@ export const SCIENTIFIC_DOMAINS = [
   {
     code: "LS",
     label: {
-      fr: "Sciences de la vie (LS)",
-      en: "Life Sciences (LS)",
+      fr: "Sciences de la vie",
+      en: "Life Sciences",
     },
   },
   {
     code: "PE",
     label: {
-      fr: "Sciences physiques et ingénierie (PE)",
-      en: "Physical Sciences & Engineering (PE)",
+      fr: "Sciences physiques et ingénierie",
+      en: "Physical Sciences & Engineering",
     },
   },
   {
     code: "SH",
     label: {
-      fr: "Sciences sociales et humaines (SH)",
-      en: "Social Sciences & Humanities (SH)",
+      fr: "Sciences sociales et humaines",
+      en: "Social Sciences & Humanities",
     },
   },
 ] as const;

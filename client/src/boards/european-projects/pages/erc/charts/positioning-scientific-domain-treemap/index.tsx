@@ -48,6 +48,7 @@ export default function PositioningScientificDomainTreemapInner({
 }: PositioningScientificDomainTreemapProps) {
   const [metric, setMetric] = useState<MetricType>("projects");
   const [domainCode, setDomainCode] = useState<ScientificDomainCode>(SCIENTIFIC_DOMAINS[0].code);
+  const [showOthersDetail, setShowOthersDetail] = useState(false);
 
   const { params, currentLang: urlLang, countryCode: urlCountryCode } = useGetParams();
   const currentLang = propLang || urlLang;
@@ -76,7 +77,7 @@ export default function PositioningScientificDomainTreemapInner({
     currentLang === "fr" ? getCountryNameWithDe(countryCode, fallbackName) : getCountryNameWithArticle(countryCode, "en", fallbackName);
   const title = getI18nLabel(i18n, "main-title-with-country", currentLang).replace("{country}", countryDisplayName);
 
-  const options = processedData.european.length > 0 ? Options({ processedData, currentLang }) : null;
+  const options = processedData.european.length > 0 ? Options({ processedData, currentLang, showOthersDetail }) : null;
   const config = getConfig(metric, domainCode, domainLabel);
 
   return (
@@ -119,6 +120,22 @@ export default function PositioningScientificDomainTreemapInner({
             />
           </SegmentedControl>
         </div>
+        <div className="segmented-wrapper">
+          <SegmentedControl className="fr-segmented--sm" name="positioning-treemap-others">
+            <SegmentedElement
+              checked={!showOthersDetail}
+              label={getI18nLabel(i18n, "others-aggregated", currentLang)}
+              onClick={() => setShowOthersDetail(false)}
+              value="aggregated"
+            />
+            <SegmentedElement
+              checked={showOthersDetail}
+              label={getI18nLabel(i18n, "others-detail", currentLang)}
+              onClick={() => setShowOthersDetail(true)}
+              value="detail"
+            />
+          </SegmentedControl>
+        </div>
       </div>
 
       {/* Graphique */}
@@ -127,7 +144,7 @@ export default function PositioningScientificDomainTreemapInner({
           <p>{getI18nLabel(i18n, "no-data", currentLang)}</p>
         </div>
       ) : (
-        <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang)} />
+        <ChartWrapper config={config} options={options} renderData={() => renderDataTable(processedData, currentLang, showOthersDetail)} />
       )}
     </div>
   );
