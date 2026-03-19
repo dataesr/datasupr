@@ -13,13 +13,15 @@ const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env
 
 export default function DisplayStructure() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const section = searchParams.get("section");
+  const section = searchParams.get("section") ?? "startups";
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
   const [isOpen, setIsOpen] = useState(false);
   const sections = [
-    { id: "apercu", label: "Aperçu" },
+    { id: "startups", label: "Start-ups" },
+    { id: "brevets", label: "Brevets" },
+    { id: "academiques", label: "Liens académiques" },
   ];
 
   const handleNavClick = (section: string) => {
@@ -177,7 +179,30 @@ export default function DisplayStructure() {
           (yearMax < yearMin) ?
           (<Alert description="Merci de choisir une année de fin supérieure ou égale à l'année de début" title="Erreur dans le choix des années" variant="error" />) :
           (
-            <StartupsByStructure name={name} />
+            <>
+              {(section === "startups") && (
+                <>
+                  <StartupsByStructure name={name} />
+                  <div>nb de startup par région (en colonnes), splitté par statut actif / old</div>
+                  <div>nb de startup par incubateur (en colonnes), splitté par statut actif / old</div>
+                  <div>tableaux de données avec label (filter), acronyme(filter), le site web, la region(sort + filter), la creation year (sort+filter), le status (sort + filter)</div>
+                </>
+              )}
+              {(section === "brevets") && (
+                <>
+                  <div>nb de brevet par année splitté par isInternational</div>
+                  <div>nb de brevet par classe splitté par isInternational</div>
+                  <div>top co-déposants (splitté par classe - ou pas ?)</div>
+                </>
+              )}
+              {(section === "academiques") && (
+                <>
+                  <div>nb de publis avec une private company, par topics.field, splitté par private company</div>
+                  <div>nb de publi avec une private company, par private company, splitté par année</div>
+                  <div>principaux labos par private company</div>
+                </>
+              )}
+            </>
           )
         }
       </Container>

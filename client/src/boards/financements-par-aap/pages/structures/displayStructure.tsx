@@ -173,7 +173,6 @@ export default function DisplayStructure() {
               </button>
               <Row horizontalAlign="right" style={{ float: "right" }}>
 
-
               </Row>
               <ul className={`fr-nav__list ${isOpen ? 'fr-nav__list-open' : ''}`}>
                 {sections.map((item) => (

@@ -1,5 +1,5 @@
 import { Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import CardSimple from "./components/card-simple";
@@ -14,6 +14,13 @@ export default function Structures() {
   const [searchParams, setSearchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const [structures, setStructures] = useState([]);
+
+  useEffect(() => {
+    if (!searchParams.get("section")) {
+      searchParams.set("section", "startups");
+      setSearchParams(searchParams);
+    }
+  }, [searchParams, setSearchParams]);
 
   const handleStructure = (structure) => {
     searchParams.set("structure", structure);
