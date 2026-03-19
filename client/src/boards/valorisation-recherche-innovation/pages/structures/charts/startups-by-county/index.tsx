@@ -14,7 +14,7 @@ import { getEsQuery, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function StartupsByStructure({ name }: { name: string | undefined }) {
+export default function StartupsByCounty({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
@@ -24,18 +24,24 @@ export default function StartupsByStructure({ name }: { name: string | undefined
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),
     aggregations: {
-      by_creation_year: {
+      by_county: {
         terms: {
-          field: "creationYear",
-          order: { _key: "asc" },
-          size: 25,
+          field: "address.region.keyword",
+          size: 20,
         },
+        // aggregations: {
+        //   by_status: {
+        //     terms: {
+        //       field: "startup_links.denormalized.status.keyword",
+        //     },
+        //   },
+        // },
       },
     },
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-projects-by-structure", structure, yearMax, yearMin],
+    queryKey: ["valo-startups-by-county", structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_ORGANIZATIONS}`, {
         body: JSON.stringify(body),
@@ -47,18 +53,18 @@ export default function StartupsByStructure({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  const categories = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.key);
-  const series: string[] = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.doc_count);
+  const categories = (data?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket?.key);
+  const series: string[] = (data?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket?.doc_count);
   const axis = getI18nLabel(i18n, 'number_of_startups');
-  const title = `Nombre de start-up par année de création ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const title = `Nombre de start-up par région ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
-    return `<b>${this.y}</b> start-ups ont été créées en <b>${this.x}</b> auxquelles participe <b>${name}</b>)`;
+    return `<b>${this.y}</b> start-ups sont implantées dans la région <b>${this.x}</b> auxquelles participe <b>${name}</b>)`;
   };
 
   const config = {
     // comment: { "fr": <>Ce graphique indique, par financeur, le nombre, les financements globaux et les financements perçus des projets auxquels participe l'établissement {name}. Pour chaque financeur, la barre correspondante est subdivisée en deux en fonction du rôle de l'établissement : la partie pointillée quand l'établissement est coordinateur, en couleur simple quand il est partenaire non coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
-    id: "startupsByStructure",
-    integrationURL: `/integration?chart_id=startupsByStructure&${searchParams.toString()}`,
+    id: "startupsByCounty",
+    integrationURL: `/integration?chart_id=startupsByCounty&${searchParams.toString()}`,
     title,
   };
 
@@ -67,9 +73,7 @@ export default function StartupsByStructure({ name }: { name: string | undefined
     legend: { enabled: false },
     plotOptions: {
       column: {
-        dataLabels: {
-          enabled: false,
-        },
+        dataLabels: { enabled: false },
         stacking: 'normal',
       },
     },
@@ -78,7 +82,7 @@ export default function StartupsByStructure({ name }: { name: string | undefined
     tooltip: { formatter: tooltip },
     xAxis: {
       categories,
-      title: { text: "" },
+      title: { text: "Région d'implantation" },
     },
     yAxis: {
       stackLabels: { enabled: true },
@@ -89,7 +93,7 @@ export default function StartupsByStructure({ name }: { name: string | undefined
   const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "600px" } }), options);
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="startups-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="startups-by-county">
       <Title as="h2" look="h6">
         {title}
       </Title>

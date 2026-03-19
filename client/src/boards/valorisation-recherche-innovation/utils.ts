@@ -32,7 +32,7 @@ const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = y
         filter: [
           { range: { creationYear: { gte: yearMin, lte: yearMax } } },
           { term: { "startup_links.denormalized.isFrench": true } },
-          { term: { "startup_links.denormalized.status.keyword": "active" } },
+          // { term: { "startup_links.denormalized.status.keyword": "active" } },
           // { term: { participant_type: "institution" } },
           { term: { "startup_links.denormalized.is_main_parent": 1 } },
           { term: { "startup_links.denormalized.kind.keyword": "Secteur public" } },

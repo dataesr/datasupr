@@ -5,7 +5,8 @@ import { useSearchParams } from "react-router-dom";
 
 import Breadcrumb from "../../components/breadcrumb";
 import { getEsQuery, years } from "../../utils";
-import StartupsByStructure from "./charts/startups-by-structure";
+import StartupsByYear from "./charts/startups-by-year";
+import StartupsByCounty from "./charts/startups-by-county";
 
 import "./styles.scss";
 
@@ -182,24 +183,64 @@ export default function DisplayStructure() {
             <>
               {(section === "startups") && (
                 <>
-                  <StartupsByStructure name={name} />
-                  <div>nb de startup par région (en colonnes), splitté par statut actif / old</div>
-                  <div>nb de startup par incubateur (en colonnes), splitté par statut actif / old</div>
-                  <div>tableaux de données avec label (filter), acronyme(filter), le site web, la region(sort + filter), la creation year (sort+filter), le status (sort + filter)</div>
+                  <Row gutters style={{ clear: "both" }}>
+                    <Col>
+                      <StartupsByYear name={name} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <StartupsByCounty name={name} />
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <div>nb de startup par incubateur (en colonnes), splitté par statut actif / old</div>
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <div>tableaux de données avec label (filter), acronyme(filter), le site web, la region(sort + filter), la creation year (sort+filter), le status (sort + filter)</div>
+                    </Col>
+                  </Row>
                 </>
               )}
               {(section === "brevets") && (
                 <>
-                  <div>nb de brevet par année splitté par isInternational</div>
-                  <div>nb de brevet par classe splitté par isInternational</div>
-                  <div>top co-déposants (splitté par classe - ou pas ?)</div>
+                  <Row gutters style={{ clear: "both" }}>
+                    <Col>
+                      <div>nb de brevet par année splitté par isInternational</div>
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <div>nb de brevet par classe splitté par isInternational</div>
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <div>top co-déposants (splitté par classe - ou pas ?)</div>
+                    </Col>
+                  </Row>
                 </>
               )}
               {(section === "academiques") && (
                 <>
-                  <div>nb de publis avec une private company, par topics.field, splitté par private company</div>
-                  <div>nb de publi avec une private company, par private company, splitté par année</div>
-                  <div>principaux labos par private company</div>
+                  <Row gutters style={{ clear: "both" }}>
+                    <Col>
+                      <div>nb de publis avec une private company, par topics.field, splitté par private company</div>
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <div>nb de publi avec une private company, par private company, splitté par année</div>
+                    </Col>
+                  </Row>
+                  <Row gutters>
+                    <Col>
+                      <div>principaux labos par private company</div>
+                    </Col>
+                  </Row>
                 </>
               )}
             </>
