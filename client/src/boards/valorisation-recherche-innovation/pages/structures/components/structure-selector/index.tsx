@@ -87,7 +87,7 @@ export default function StructureSelector({ setStructures }) {
     aggregations: {
       by_structure: {
         terms: {
-          field: "encoded_key.keyword",
+          field: "startup_links.denormalized.encoded_key.keyword",
           size: 3000,
         },
       },
