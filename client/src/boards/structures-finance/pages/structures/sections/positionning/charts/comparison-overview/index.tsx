@@ -271,25 +271,25 @@ export default function ComparisonOverviewChart({
           },
           readingKey: positionInfo
             ? {
-                fr: (
-                  <p
-                    className="fr-text--xs fr-mb-0"
-                    style={{ color: "var(--text-mention-grey)" }}
-                  >
-                    Le losange vert indique la position de{" "}
-                    <strong>{currentStructureName || "l'établissement"}</strong>{" "}
-                    en <strong>{activeConfig.metricConfig.year}</strong> sur le
-                    périmètre actuellement affiché (selon les filtres
-                    sélectionnés). Pour l'indicateur{" "}
-                    <strong>{activeMetricLabel}</strong>, cet établissement se
-                    positionne au{" "}
-                    <strong>{ordinal(positionInfo.rank)} rang</strong> sur{" "}
-                    {positionInfo.total} (par ordre{" "}
-                    {positionInfo.isDecroissant ? "décroissant" : "croissant"}),{" "}
-                    <strong>{getPositionText(positionInfo.pct)}</strong>.
-                  </p>
-                ),
-              }
+              fr: (
+                <p
+                  className="fr-text--xs fr-mb-0"
+                  style={{ color: "var(--text-mention-grey)" }}
+                >
+                  Le losange vert indique la position de{" "}
+                  <strong>{currentStructureName || "l'établissement"}</strong>{" "}
+                  en <strong>{activeConfig.metricConfig.year}</strong> sur le
+                  périmètre actuellement affiché (selon les filtres
+                  sélectionnés). Pour l'indicateur{" "}
+                  <strong>{activeMetricLabel}</strong>, cet établissement se
+                  positionne au{" "}
+                  <strong>{ordinal(positionInfo.rank)} rang</strong> sur{" "}
+                  {positionInfo.total} (par ordre{" "}
+                  {positionInfo.isDecroissant ? "décroissant" : "croissant"}),{" "}
+                  <strong>{getPositionText(positionInfo.pct)}</strong>.
+                </p>
+              ),
+            }
             : undefined,
         }}
         legend={<ThresholdLegend threshold={metricThreshold} />}

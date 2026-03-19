@@ -12,9 +12,8 @@ export function ProduitsEffectifsSection({
   selectedYear,
 }: ProduitsEffectifsSectionProps) {
   const scatterConfig = {
-    title: `Total des ressources hors opérations en capital vs Effectifs d'étudiants${
-      selectedYear ? ` — ${selectedYear}` : ""
-    }`,
+    title: `Total des ressources hors opérations en capital vs Effectifs d'étudiants${selectedYear ? ` — ${selectedYear}` : ""
+      }`,
     xMetric: "produits_de_fonctionnement_encaissables",
     yMetric: "effectif_sans_cpge",
     xLabel: "Produits de fonctionnement encaissables (€)",

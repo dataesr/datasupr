@@ -18,7 +18,7 @@ export default function ScatterChart({ config, data }: ScatterChartProps) {
     title: {
       className: "fr-mt-0w",
       look: "h5" as const,
-      size: "h3" as const,
+      size: "h2" as const,
       fr: config.title,
     },
   };

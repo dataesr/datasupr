@@ -32,7 +32,6 @@ export default function SecondaryNavigation({
     <nav
       aria-label={ariaLabel}
       className="fr-nav fr-mb-1w secondary-navigation"
-      role="navigation"
     >
       <button
         aria-controls="secondary-nav-list"

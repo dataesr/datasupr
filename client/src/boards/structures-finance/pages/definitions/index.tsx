@@ -1,4 +1,4 @@
-import { Container, Row, Col } from "@dataesr/dsfr-plus";
+import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
 import Definitions from "./component/definitions-display";
 import { useFinanceDefinitions } from "../../api";
 import Breadcrumb from "../../components/breadcrumb";
@@ -53,7 +53,7 @@ export default function DefinitionsView() {
           </Row>
           <Row>
             <Col>
-              <h3 className="fr-h1">Définitions des indicateurs</h3>
+              <Title as="h1" look="h3">Définitions des indicateurs</Title>
               <p className="fr-text--lead fr-mb-4w">
                 Retrouvez les définitions détaillées de tous les indicateurs
                 financiers utilisés dans les tableaux de bord.

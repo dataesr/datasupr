@@ -12,9 +12,8 @@ export function ScspRessourcesSection({
   selectedYear,
 }: ScspRessourcesSectionProps) {
   const scatterConfig = {
-    title: `SCSP vs Ressources propres${
-      selectedYear ? ` — ${selectedYear}` : ""
-    }`,
+    title: `SCSP vs Ressources propres${selectedYear ? ` — ${selectedYear}` : ""
+      }`,
     xMetric: "scsp",
     yMetric: "ressources_propres",
     xLabel: "SCSP (€)",

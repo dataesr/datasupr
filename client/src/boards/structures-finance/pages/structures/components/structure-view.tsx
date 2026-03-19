@@ -58,9 +58,9 @@ export default function StructureView() {
     selectedStructure,
     String(selectedYear || years[0] || ""),
     !!selectedStructure &&
-      !!(selectedYear || years[0]) &&
-      !showMultipleSelector &&
-      !showNotExistsAlert,
+    !!(selectedYear || years[0]) &&
+    !showMultipleSelector &&
+    !showNotExistsAlert,
     useHistorical
   );
 
@@ -233,7 +233,7 @@ export default function StructureView() {
         />
       </Container>
 
-      <Container as="section" className="fr-mt-4w">
+      <Container as="section" className="fr-mt-4w" aria-label={section}>
         {renderSectionContent()}
       </Container>
     </main>
