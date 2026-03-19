@@ -1,6 +1,6 @@
 import { Button, Col, Row } from "@dataesr/dsfr-plus";
 import { Grid, type GridOptions } from "@highcharts/grid-pro-react";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import { getEsQuery } from "../../../../utils.ts";
@@ -14,13 +14,10 @@ export default function DataTable({ name }: { name: string | undefined }) {
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
   const yearMin = searchParams.get("yearMin");
-  const gridRef = useRef(null);
-
-  const options: GridOptions = {
+  const [options, setOptions] = useState<GridOptions>({
     data: {
       providerType: 'remote',
       fetchCallback: async () => {
-        // setIsLoading(true);
         const response = await fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
           body: JSON.stringify({
             ...getEsQuery({ structures: [structure], yearMax, yearMin }),
@@ -52,7 +49,6 @@ export default function DataTable({ name }: { name: string | undefined }) {
           projectBudgetFinanced.push(hit._source?.project_budgetFinanced ?? '');
           participationFunding.push(hit._source?.participation_funding ?? '');
         });
-        // setIsLoading(false);
         return {
           columns: {
             projectYear,
@@ -100,12 +96,12 @@ export default function DataTable({ name }: { name: string | undefined }) {
       id: "participationIsCoordinator",
     }, {
       header: { format: "Financement global (présence)" },
-      cells: { format: '{value} €' },
+      cells: { formatter: function() { return String(this.value).length > 0 ? `${this.value} €` : ''; }  },
       id: "projectBudgetFinanced",
       sorting: { enabled: true },
     }, {
       header: { format: "Financement perçu (implication)" },
-      cells: { format: '{value} €' },
+      cells: { formatter: function() { return String(this.value).length > 0 ? `${this.value} €` : ''; } },
       id: "participationFunding",
       sorting: { enabled: true },
     }],
@@ -117,8 +113,14 @@ export default function DataTable({ name }: { name: string | undefined }) {
       columns: { resizing: { enabled: false } },
       theme: 'hcg-theme-default theme-tableaux',
       rows: { minVisibleRows: 50 },
-    }
-  };
+    },
+  });
+  const gridRef = useRef(null);
+
+  // Reload data
+  useEffect(() => {
+    setOptions({ ...options });
+  }, [yearMax, yearMin]);
 
   const downloadCsv = (e) => {
     e.preventDefault();
