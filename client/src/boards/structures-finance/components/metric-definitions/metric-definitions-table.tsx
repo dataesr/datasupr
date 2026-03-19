@@ -112,7 +112,7 @@ export default function MetricDefinitionsTable({
             className="fr-icon-information-line fr-icon--lg"
             aria-hidden="true"
           />
-          <Title as="h4" look="h6" className="fr-mb-0">
+          <Title as="h2" look="h6" className="fr-mb-0">
             À propos des indicateurs
           </Title>
           <span className="definitions-count">
@@ -131,7 +131,7 @@ export default function MetricDefinitionsTable({
           {relevantDefinitions.map((def, index) => (
             <div key={`${def.indicateur}-${index}`} className="definition-card">
               <div className="definition-card-header">
-                <Title as="h5" look="h6" className="definition-title">
+                <Title as="h3" look="h6" className="definition-title">
                   {def.libelle}
                 </Title>
                 {def.unite && def.unite !== "-" && (
