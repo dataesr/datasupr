@@ -32,11 +32,6 @@ export default function PositionnementContent() {
       <div className="fr-my-4w">
         <PositioningScientificDomainTreemap countryCode={countryCode} currentLang={currentLang} />
       </div>
-
-      {/* TODO: Graphique par panel */}
-      <div className="fr-my-4w fr-p-3w" style={{ backgroundColor: "#f6f6f6", borderRadius: "8px" }}>
-        <p className="fr-text--sm fr-mb-0">{currentLang === "fr" ? "🚧 Graphique par panel (à venir)" : "🚧 Chart by panel (coming soon)"}</p>
-      </div>
     </div>
   );
 }

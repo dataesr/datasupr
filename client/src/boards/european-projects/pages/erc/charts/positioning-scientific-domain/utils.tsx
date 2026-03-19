@@ -2,6 +2,21 @@ import { useSearchParams } from "react-router-dom";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 import type { PositioningByDomainData, CountryData } from "./query";
 
+export interface ProcessedPositioningMultiPanelData {
+  countries: {
+    code: string;
+    name: string;
+    isSelected: boolean;
+  }[];
+  panels: {
+    panelId: string;
+    panelName: string;
+    values: number[];
+  }[];
+  metric: "projects" | "funding";
+  domainCode: ScientificDomainCode;
+}
+
 // Domaines scientifiques ERC
 export const SCIENTIFIC_DOMAINS = [
   {
@@ -146,6 +161,91 @@ export function renderDataTable(processedData: ProcessedPositioningByDomainData,
           <tr key={i} style={processedData.countries[i]?.isSelected ? { fontWeight: "bold" } : {}}>
             {row.map((cell, j) => (
               <td key={j}>{cell}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+export function processDataMultiPanel(
+  panelDataArray: Array<{ panelId: string; panelName: string; data: PositioningByDomainData }>,
+  countryCode: string,
+  currentLang: string = "fr",
+  metric: "projects" | "funding" = "projects",
+  domainCode: ScientificDomainCode = "LS",
+): ProcessedPositioningMultiPanelData {
+  if (!panelDataArray.length) return { countries: [], panels: [], metric, domainCode };
+
+  const getValue = (c: CountryData) => (metric === "projects" ? c.total_pi : c.total_funding_project);
+
+  // Collect all countries and cumulate values across panels to determine top 10
+  const countryNamesMap = new Map<string, { fr: string; en: string }>();
+  const countryTotals = new Map<string, number>();
+
+  panelDataArray.forEach(({ data }) => {
+    if (data.successful?.countries) {
+      data.successful.countries.forEach((c) => {
+        if (!countryNamesMap.has(c.country_code)) {
+          countryNamesMap.set(c.country_code, { fr: c.country_name_fr, en: c.country_name_en });
+        }
+        countryTotals.set(c.country_code, (countryTotals.get(c.country_code) || 0) + getValue(c));
+      });
+    }
+  });
+
+  const sortedCodes = [...countryTotals.keys()].sort((a, b) => (countryTotals.get(b) || 0) - (countryTotals.get(a) || 0));
+  let displayCodes = sortedCodes.slice(0, 10);
+
+  // Ensure selected country is included
+  if (!displayCodes.includes(countryCode) && countryNamesMap.has(countryCode)) {
+    displayCodes = [...displayCodes.slice(0, 9), countryCode];
+    displayCodes.sort((a, b) => (countryTotals.get(b) || 0) - (countryTotals.get(a) || 0));
+  }
+
+  const countries = displayCodes.map((code) => {
+    const names = countryNamesMap.get(code) || { fr: code, en: code };
+    return { code, name: currentLang === "fr" ? names.fr : names.en, isSelected: code === countryCode };
+  });
+
+  const panels = panelDataArray.map(({ panelId, panelName, data }) => {
+    const countryMap = new Map<string, CountryData>();
+    if (data.successful?.countries) {
+      data.successful.countries.forEach((c) => countryMap.set(c.country_code, c));
+    }
+    const values = displayCodes.map((code) => {
+      const c = countryMap.get(code);
+      return c ? getValue(c) : 0;
+    });
+    return { panelId, panelName, values };
+  });
+
+  return { countries, panels, metric, domainCode };
+}
+
+export function renderDataTableMultiPanel(multiPanelData: ProcessedPositioningMultiPanelData, currentLang: string = "fr"): JSX.Element {
+  const countryHeader = currentLang === "fr" ? "Pays" : "Country";
+  const headers = [countryHeader, ...multiPanelData.panels.map((p) => p.panelName || p.panelId)];
+
+  return (
+    <table className="fr-table">
+      <caption>{currentLang === "fr" ? "Classement des pays par panel ERC" : "Country ranking by ERC panel"}</caption>
+      <thead>
+        <tr>
+          {headers.map((h) => (
+            <th key={h}>{h}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {multiPanelData.countries.map((country, ci) => (
+          <tr key={country.code} style={country.isSelected ? { fontWeight: "bold" } : {}}>
+            <td>{country.name}</td>
+            {multiPanelData.panels.map((panel) => (
+              <td key={panel.panelId}>
+                {multiPanelData.metric === "funding" ? `${(panel.values[ci] / 1_000_000).toFixed(1)} M€` : String(panel.values[ci])}
+              </td>
             ))}
           </tr>
         ))}

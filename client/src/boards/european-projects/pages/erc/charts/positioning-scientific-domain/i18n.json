@@ -15,6 +15,14 @@
     "fr": "Domaine scientifique",
     "en": "Scientific domain"
   },
+  "select-panel": {
+    "fr": "Panel",
+    "en": "Panel"
+  },
+  "all-panels": {
+    "fr": "Cumul",
+    "en": "Cumulative"
+  },
   "chart-title-projects": {
     "fr": "Classement des pays par nombre de porteurs de projets ERC lauréats",
     "en": "Country ranking by number of successful ERC project PIs"
@@ -38,6 +46,14 @@
   "title-funding": {
     "fr": "Positionnement par domaine scientifique – Financements",
     "en": "Positioning by scientific domain – Funding"
+  },
+  "title-projects-panel": {
+    "fr": "Positionnement par panel – Projets",
+    "en": "Positioning by panel – Projects"
+  },
+  "title-funding-panel": {
+    "fr": "Positionnement par panel – Financements",
+    "en": "Positioning by panel – Funding"
   },
   "comment-projects": {
     "fr": "Ce graphique présente le classement des pays par nombre de porteurs de projets ERC lauréats pour le domaine scientifique sélectionné. Le pays sélectionné est mis en évidence.",
