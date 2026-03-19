@@ -49,7 +49,6 @@ export default function StartupsByStructure({ name }: { name: string | undefined
 
   const categories = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.key);
   const series: string[] = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.doc_count);
-  console.log(series);
   const axis = getI18nLabel(i18n, 'number_of_startups');
   const title = `Nombre de start-up par année de création ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
