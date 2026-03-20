@@ -8,6 +8,8 @@ import { years } from "../../utils";
 import PatentsByClass from "./charts/patents-by-class";
 import PatentsByYear from "./charts/patents-by-year";
 import PatentsCoApplicants from "./charts/patents-co-applicants";
+import PublicationsByTopic from "./charts/publications-by-topic";
+import PublicationsByYear from "./charts/publications-by-year";
 import StartupsByCounty from "./charts/startups-by-county";
 import StartupsByIncubator from "./charts/startups-by-incubator";
 import StartupsByYear from "./charts/startups-by-year";
@@ -229,11 +231,13 @@ export default function DisplayStructure() {
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
                       <div>nb de publis avec une private company, par topics.field, splitté par private company</div>
+                      <PublicationsByTopic name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
                       <div>nb de publi avec une private company, par private company, splitté par année</div>
+                      <PublicationsByYear name={name} />
                     </Col>
                   </Row>
                   <Row gutters>

@@ -8,11 +8,11 @@ import ChartWrapper, { HighchartsOptions } from "../../../../../../components/ch
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { deepMerge } from "../../../../../../utils.tsx";
-import { getEsQueryPatents, getYearRangeLabel } from "../../../../utils.ts";
+import { getEsQueryPublications, getYearRangeLabel } from "../../../../utils.ts";
 
-const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_ES_INDEX_PATENTS, VITE_APP_SERVER_URL } = import.meta.env;
+const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_ES_INDEX_PUBLICATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function PatentsCoApplicants({ name }: { name: string | undefined }) {
+export default function PublicationsByTopic({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
@@ -34,17 +34,18 @@ export default function PatentsCoApplicants({ name }: { name: string | undefined
   const structureIds = dataInfo?.hits?.hits?.[0]?._source?.externalIds.map((item) => item.id) ?? [];
 
   const body = {
-    ...getEsQueryPatents({ structureIds, yearMax, yearMin }),
+    ...getEsQueryPublications({ structureIds, yearMax, yearMin }),
+    size: 0,
     aggregations: {
-      by_co_applicants: {
+      by_topic: {
         terms: {
-          field: "applicants.id_name.keyword",
-          size: 16,
+          field: "topics.field.display_name.keyword",
+          size: 25,
         },
         aggregations: {
-          by_class: {
+          by_company: {
             terms: {
-              field: "cpc.classe.id_name.keyword",
+              field: "structured_acknowledgments.private_companies.entity.keyword",
             },
           },
         },
@@ -53,9 +54,9 @@ export default function PatentsCoApplicants({ name }: { name: string | undefined
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["valo-patents-co-applicants", structure, structureIds, yearMax, yearMin],
+    queryKey: ["valo-publications-by-topic", structure, structureIds, yearMax, yearMin],
     queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PATENTS}`, {
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PUBLICATIONS}`, {
         body: JSON.stringify(body),
         headers: {
           "Content-Type": "application/json",
@@ -64,32 +65,32 @@ export default function PatentsCoApplicants({ name }: { name: string | undefined
         method: "POST",
       }).then((response) => response.json()),
   });
+  console.log(data?.aggregations?.by_topic);
 
-  const filteredData = (data?.aggregations?.by_co_applicants?.buckets ?? []).filter((item) => !structureIds.includes(item.key.split('###')[0]));
-  const categories = filteredData.map((bucket) => bucket?.key?.split('###')[1]);
+  const categories = (data?.aggregations?.by_topic?.buckets ?? []).map((bucket) => bucket?.key);
   // const isInternational: Number[] = [];
   // const isNotInternational: Number[] = [];
-  // (data?.aggregations?.by_co_applicants?.buckets ?? []).forEach((bucket) => {
+  // (data?.aggregations?.by_creation_year?.buckets ?? []).forEach((bucket) => {
   //   isInternational.push(bucket?.by_international?.buckets?.find((item) => item.key_as_string === 'true')?.doc_count ?? 0);
   //   isNotInternational.push(bucket?.by_international?.buckets?.find((item) => item.key_as_string === 'false')?.doc_count ?? 0);
   // });
   // const series = [{ color: 'green', data: isInternational, name: 'International' }, { color: 'blue', data: isNotInternational, name: 'Non international' }];
-  const series = [{ data: filteredData.map((item) => item.doc_count) }];
-  const title = `Top 15 des co-déposants de brevets de l'établissement ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const series = [{ data: (data?.aggregations?.by_topic?.buckets ?? []).map((bucket) => bucket?.doc_count) }];
+  const title = `Nombre de publications avec une société privée par année de publication ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
-    return `<b>${this.y}</b> familles de brevets ont été déposées conjointement entre les établissements <b>${name}</b> et ${categories[this.x]}</b>`;
+    return `<b>${this.y}</b> familles de brevets de statut ${this.series.name.toLowerCase()} et liées à l'établissement <b>${name}</b> ont été crées en <b>${categories[this.x]}</b>`;
   };
 
   const config = {
-    comment: { "fr": <>Ce graphique indique, par classe, les co-déposants de l'établissement {name}.</> },
-    id: "patentsCoApplicants",
-    integrationURL: `/integration?chart_id=patentsCoApplicants&${searchParams.toString()}`,
+    comment: { "fr": <>Ce graphique indique, par années de création, le nombre de familles de brevets liées à l'établissement {name}.</> },
+    id: "publicationsByTopic",
+    integrationURL: `/integration?chart_id=publicationsByTopic&${searchParams.toString()}`,
     title,
   };
 
   const options = {
     chart: { type: 'column' },
-    legend: { enabled: false },
+    legend: { enabled: true },
     plotOptions: {
       column: {
         dataLabels: { enabled: false }, 
@@ -101,7 +102,7 @@ export default function PatentsCoApplicants({ name }: { name: string | undefined
     tooltip: { formatter: tooltip },
     xAxis: {
       categories,
-      title: { text: "Co-déposant" },
+      title: { text: "Année de création" },
     },
     yAxis: {
       stackLabels: { enabled: true },
@@ -112,7 +113,7 @@ export default function PatentsCoApplicants({ name }: { name: string | undefined
   const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "600px" } }), options);
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="patents-co-applicants">
+    <div className={`chart-container chart-container--${color}`} id="publications-by-topic">
       <Title as="h2" look="h6">
         {title}
       </Title>

@@ -38,6 +38,24 @@ const getEsQueryPatents = ({ structureIds, yearMax = years[years.length - 1], ye
   };
   return query;
 };
+
+const getEsQueryPublications = ({ structureIds, yearMax = years[years.length - 1], yearMin = years[0] }:
+  { structureIds?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
+  const query: any = {
+    size: 0,
+    query: {
+      bool: {
+        filter: [
+          { range: { "year": { gte: yearMin, lte: yearMax } } },
+          { terms: { "affiliations.id.keyword": structureIds } },
+          { wildcard: { "structured_acknowledgments.private_companies.entity": "*" } }
+        ],
+      },
+    },
+  };
+  return query;
+};
+
 const getEsQueryStartups = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
   { structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
   const query: any = {
@@ -106,6 +124,7 @@ export {
   formatPercent,
   getCssColor,
   getEsQueryPatents,
+  getEsQueryPublications,
   getEsQueryStartups,
   getGeneralOptions,
   getYearRangeLabel,
