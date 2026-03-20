@@ -30,6 +30,13 @@ export default function StartupsByYear({ name }: { name: string | undefined }) {
           order: { _key: "asc" },
           size: 25,
         },
+        aggregations: {
+          by_status: {
+            terms: {
+              field: "status.keyword",
+            },
+          },
+        },
       },
     },
   };
@@ -48,15 +55,21 @@ export default function StartupsByYear({ name }: { name: string | undefined }) {
   });
 
   const categories = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.key);
-  const series: string[] = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.doc_count);
+  const actives: Number[] = [];
+  const notActives: Number[] = [];
+  (data?.aggregations?.by_creation_year?.buckets ?? []).forEach((bucket) => {
+    actives.push(bucket?.by_status?.buckets?.find((item) => item.key === 'active')?.doc_count ?? 0);
+    notActives.push(bucket?.by_status?.buckets?.find((item) => item.key === 'old')?.doc_count ?? 0);
+  });
+  const series = [{ name: 'Actives', data: actives }, { name: 'Non actives', data: notActives }];
   const axis = getI18nLabel(i18n, 'number_of_startups');
-  const title = `Nombre de start-up par année de création ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const title = `Nombre de start-ups par année de création ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
-    return `<b>${this.y}</b> start-ups ont été créées en <b>${this.x}</b> auxquelles participe <b>${name}</b>)`;
+    return `<b>${this.y}</b> start-ups de statut ${this.series.name.toLowerCase()} et liées à l'établissement <b>${name}</b> ont été crées en <b>${this.x}</b>`;
   };
 
   const config = {
-    // comment: { "fr": <>Ce graphique indique, par financeur, le nombre, les financements globaux et les financements perçus des projets auxquels participe l'établissement {name}. Pour chaque financeur, la barre correspondante est subdivisée en deux en fonction du rôle de l'établissement : la partie pointillée quand l'établissement est coordinateur, en couleur simple quand il est partenaire non coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
+    comment: { "fr": <>Ce graphique indique, par années de création, le nombre de start-ups liées à l'établissement {name}.</> },
     id: "startupsByYear",
     integrationURL: `/integration?chart_id=startupsByYear&${searchParams.toString()}`,
     title,
@@ -64,14 +77,14 @@ export default function StartupsByYear({ name }: { name: string | undefined }) {
 
   const options = {
     chart: { type: 'column' },
-    legend: { enabled: false },
+    legend: { enabled: true },
     plotOptions: {
       column: {
         dataLabels: { enabled: false }, 
         stacking: 'normal',
       },
     },
-    series: [{ data: series }],
+    series,
     title: { text: "" },
     tooltip: { formatter: tooltip },
     xAxis: {
