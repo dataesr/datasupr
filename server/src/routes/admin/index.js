@@ -1,8 +1,8 @@
 import express from "express";
 import fs from "fs";
 import path from "path";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
+import { fileURLToPath } from "url";
+import { dirname } from "path";
 
 import { db } from "../../services/mongo.js";
 import { checkQuery } from "./utils.js";
@@ -26,16 +26,42 @@ router.route("/admin/list-dashboards").get(async (req, res) => {
 
 // add a new dashboard
 router.route("/admin/add-dashboard").post(async (req, res) => {
-  const filters = checkQuery(req.body, ["name_fr", "name_en", "id", "description_fr", "description_en", "url", "api_url"], res);
-  const { name_fr, name_en, id, description_fr, description_en, url, api_url, isMultilingual, homePageVisible } = req.body;
+  const filters = checkQuery(
+    req.body,
+    [
+      "name_fr",
+      "name_en",
+      "id",
+      "description_fr",
+      "description_en",
+      "url",
+      "api_url",
+    ],
+    res,
+  );
+  const {
+    name_fr,
+    name_en,
+    id,
+    description_fr,
+    description_en,
+    url,
+    api_url,
+    isMultilingual,
+    homePageVisible,
+  } = req.body;
 
-  getEmbeddings([name_fr, name_en, description_fr, description_en]).catch(console.error);
+  getEmbeddings([name_fr, name_en, description_fr, description_en]).catch(
+    console.error,
+  );
 
   try {
     // Vérifier si un dashboard avec cet ID existe déjà
     const existingDashboard = await db.collection("boards").findOne({ id });
     if (existingDashboard) {
-      return res.status(409).json({ error: "A dashboard with this ID already exists" });
+      return res
+        .status(409)
+        .json({ error: "A dashboard with this ID already exists" });
     }
 
     // Créer le nouveau dashboard
@@ -52,14 +78,19 @@ router.route("/admin/add-dashboard").post(async (req, res) => {
       data: [],
       constants: [],
       createdAt: new Date().toISOString(),
-      icon: 'question-mark',
+      icon: "question-mark",
     };
 
     await db.collection("boards").insertOne(newDashboard);
-    res.json({ message: "Dashboard added successfully", dashboard: newDashboard });
+    res.json({
+      message: "Dashboard added successfully",
+      dashboard: newDashboard,
+    });
   } catch (error) {
     console.error("Error adding dashboard:", error);
-    res.status(500).json({ error: "Unable to add dashboard", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Unable to add dashboard", details: error.message });
   }
 });
 
@@ -68,23 +99,32 @@ router.route("/admin/update-dashboard-visibility").post(async (req, res) => {
   const { dashboardId, homePageVisible } = req.body;
 
   if (!dashboardId || homePageVisible === undefined) {
-    return res.status(400).json({ error: "dashboardId and homePageVisible are required" });
+    return res
+      .status(400)
+      .json({ error: "dashboardId and homePageVisible are required" });
   }
 
   try {
-    const result = await db.collection("boards").updateOne(
-      { id: dashboardId },
-      { $set: { homePageVisible } }
-    );
+    const result = await db
+      .collection("boards")
+      .updateOne({ id: dashboardId }, { $set: { homePageVisible } });
 
     if (result.matchedCount === 0) {
       return res.status(404).json({ error: "Dashboard not found" });
     }
 
-    res.json({ message: "Dashboard visibility updated successfully", homePageVisible });
+    res.json({
+      message: "Dashboard visibility updated successfully",
+      homePageVisible,
+    });
   } catch (error) {
     console.error("Error updating dashboard visibility:", error);
-    res.status(500).json({ error: "Unable to update dashboard visibility", details: error.message });
+    res
+      .status(500)
+      .json({
+        error: "Unable to update dashboard visibility",
+        details: error.message,
+      });
   }
 });
 
@@ -92,7 +132,7 @@ router.route("/admin/list-all-collections").get(async (req, res) => {
   try {
     // Liste de toutes les collections
     const collections = await db.listCollections().toArray();
-    
+
     // Récupérer tous les dashboards pour avoir les createdAt
     const dashboards = await db.collection("dashboards").find({}).toArray();
 
@@ -108,16 +148,16 @@ router.route("/admin/list-all-collections").get(async (req, res) => {
         const collectionName = collection.name;
 
         // Chercher la date de création dans la collection dashboards
-        const dashboard = dashboards.find(d => d.boardName === boardName);
+        const dashboard = dashboards.find((d) => d.boardName === boardName);
         const collectionInfo = dashboard?.collections
-          ?.filter(c => c.name === collectionName)
+          ?.filter((c) => c.name === collectionName)
           .sort((a, b) => b.createdAt - a.createdAt)[0];
-        
+
         return {
           boardName: parts[0],
           collectionName: parts[1],
           version: parts[2],
-          createdAt: collectionInfo?.createdAt || null
+          createdAt: collectionInfo?.createdAt || null,
         };
       })
       .filter((board) => board !== null);
@@ -125,9 +165,9 @@ router.route("/admin/list-all-collections").get(async (req, res) => {
     res.json(boards);
   } catch (error) {
     console.error("Error listing boards:", error);
-    res.status(500).json({ 
-      error: "Unable to list boards", 
-      details: error.message 
+    res.status(500).json({
+      error: "Unable to list boards",
+      details: error.message,
     });
   }
 });
@@ -137,20 +177,25 @@ router.route("/admin/copy-collection").post(async (req, res) => {
   const filters = checkQuery(req.body, ["sourceName", "targetName"], res);
   const { sourceName, targetName } = filters;
   const timestamp = req.body.timestamp || Math.floor(Date.now() / 1000);
-console.log("Copying collection from", sourceName, "to", targetName, );
+  console.log("Copying collection from", sourceName, "to", targetName);
   try {
     // Vérifier si la collection source existe
-    const sourceExists = await db.listCollections({ name: sourceName }).hasNext();
+    const sourceExists = await db
+      .listCollections({ name: sourceName })
+      .hasNext();
     if (!sourceExists) {
       return res.status(404).json({ error: "Source collection not found" });
     }
 
     // Vérifier si la collection cible existe déjà
-    const targetExists = await db.listCollections({ name: targetName }).hasNext();
+    const targetExists = await db
+      .listCollections({ name: targetName })
+      .hasNext();
     if (targetExists) {
-      return res.status(409).json({ 
+      return res.status(409).json({
         error: "Target collection already exists : " + targetName,
-        message: "Please choose a different target name or delete the existing collection first"
+        message:
+          "Please choose a different target name or delete the existing collection first",
       });
     }
 
@@ -158,11 +203,14 @@ console.log("Copying collection from", sourceName, "to", targetName, );
     await db.createCollection(targetName);
 
     // Copier les documents avec une agrégation
-    await db.collection(sourceName).aggregate([
-      {
-        $out: targetName
-      }
-    ]).toArray();
+    await db
+      .collection(sourceName)
+      .aggregate([
+        {
+          $out: targetName,
+        },
+      ])
+      .toArray();
 
     // Copier les index
     const indexes = await db.collection(sourceName).indexes();
@@ -179,29 +227,31 @@ console.log("Copying collection from", sourceName, "to", targetName, );
 
     // Extraire le nom du tableau de bord depuis le nom de la collection
     // Format attendu: boardName_*
-    const boardName = targetName.split('_')[0];
+    const boardName = targetName.split("_")[0];
 
     // Mettre à jour la collection dashboards
     await db.collection("dashboards").updateOne(
-      { 
+      {
         boardName,
-        "collections.name": targetName
+        "collections.name": targetName,
       },
       {
         $push: {
           collections: {
             name: targetName,
-            createdAt: timestamp
-          }
-        }
+            createdAt: timestamp,
+          },
+        },
       },
-      { upsert: true }
+      { upsert: true },
     );
 
     res.json({ message: "Collection copied successfully", targetName });
   } catch (error) {
     console.error("Error copying collection:", error);
-    res.status(500).json({ error: "Unable to copy collection", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Unable to copy collection", details: error.message });
   }
 });
 
@@ -251,7 +301,7 @@ router.route("/admin/set-current-version").post(async (req, res) => {
   const filters = checkQuery(
     req.body,
     ["dashboardId", "dataId", "versionId"],
-    res
+    res,
   );
 
   const { dashboardId, dataId, versionId } = filters;
@@ -260,7 +310,7 @@ router.route("/admin/set-current-version").post(async (req, res) => {
     .collection("boards")
     .updateOne(
       { id: dashboardId, "data.id": dataId },
-      { $set: { "data.$.current": versionId } }
+      { $set: { "data.$.current": versionId } },
     );
 
   if (response.matchedCount === 0) {
@@ -278,15 +328,13 @@ router.route("/admin/update-constant").post(async (req, res) => {
   const filters = checkQuery(req.body, ["dashboardId", "key", "value"], res);
   const { dashboardId, key, value } = filters;
 
-  const response = await db
-    .collection("boards")
-    .updateOne(
-      { id: dashboardId },
-      { $set: { "constants.$[elem].value": value } },
-      {
-        arrayFilters: [{ "elem.key": key }]
-      }
-    );
+  const response = await db.collection("boards").updateOne(
+    { id: dashboardId },
+    { $set: { "constants.$[elem].value": value } },
+    {
+      arrayFilters: [{ "elem.key": key }],
+    },
+  );
 
   if (response.matchedCount === 0) {
     return res.status(404).json({ error: "No document found" });
@@ -322,7 +370,7 @@ router.route("/admin/delete-version").delete(async (req, res) => {
   const filters = checkQuery(
     req.body,
     ["dashboardId", "collectionId", "versionId"],
-    res
+    res,
   );
   const { dashboardId, collectionId, versionId } = filters;
 
@@ -331,7 +379,7 @@ router.route("/admin/delete-version").delete(async (req, res) => {
     .collection("boards")
     .findOne(
       { id: dashboardId, "data.id": collectionId },
-      { projection: { "data.$": 1 } }
+      { projection: { "data.$": 1 } },
     );
 
   if (!board) {
@@ -349,7 +397,7 @@ router.route("/admin/delete-version").delete(async (req, res) => {
       $pull: {
         "data.$.versions": { id: versionId },
       },
-    }
+    },
   );
 
   if (response.modifiedCount === 0) {
@@ -391,94 +439,109 @@ router.route("/admin/delete-uploaded-files").delete((req, res) => {
 });
 
 // Update a collection from another collection with script execution
-router.route('/admin/update-version-from-dependent-collection').post(async (req, res) => {
-  const filters = checkQuery(req.body, ["dashboardId", "collectionId"], res);
-  const { dashboardId, collectionId } = filters;
+router
+  .route("/admin/update-version-from-dependent-collection")
+  .post(async (req, res) => {
+    const filters = checkQuery(req.body, ["dashboardId", "collectionId"], res);
+    const { dashboardId, collectionId } = filters;
 
-  const board = await db.collection("boards").findOne({ id: dashboardId });
-  if (!board) {
-    return res.status(404).json({ error: "No document found" });
-  }
-  
-  const dependsOf = board.data.find((d) => d.id === collectionId).dependsOf;
-  if (!dependsOf) {
-    return res.status(400).json({ error: "No dependency found" });
-  }
+    const board = await db.collection("boards").findOne({ id: dashboardId });
+    if (!board) {
+      return res.status(404).json({ error: "No document found" });
+    }
 
-  // get the current version of the dependent collection - ex:atlas2024
-  const dependentCollectionId = board.data.find((d) => d.id === dependsOf).current;
-  
-  
-async function run({dependentCollectionId}) {
-  try {
-    const atlasCollection = db.collection(dependentCollectionId);
-    const newCollectionId = 'similar-elements_' + Date.now();
-    const similarElementsCollection = db.collection(newCollectionId);
+    const dependsOf = board.data.find((d) => d.id === collectionId).dependsOf;
+    if (!dependsOf) {
+      return res.status(400).json({ error: "No dependency found" });
+    }
 
-    // await similarElementsCollection.deleteMany({});
+    // get the current version of the dependent collection - ex:atlas2024
+    const dependentCollectionId = board.data.find(
+      (d) => d.id === dependsOf,
+    ).current;
 
-    const years = await atlasCollection.distinct("annee_universitaire");
-    const geoIds = await atlasCollection.distinct("geo_id");
+    async function run({ dependentCollectionId }) {
+      try {
+        const atlasCollection = db.collection(dependentCollectionId);
+        const newCollectionId = "similar-elements_" + Date.now();
+        const similarElementsCollection = db.collection(newCollectionId);
 
-    // for (let i = 0; i < years.length; i++) {
-    for (let i = years.length-1; i < years.length; i++) { // TODO: remove this line
-      for (let j = 0; j < geoIds.length; j++) {
-        const query = { geo_id: geoIds[j], annee_universitaire: years[i], regroupement: 'TOTAL' };
-        const data = await atlasCollection.find(query).toArray();
+        // await similarElementsCollection.deleteMany({});
 
-        const effectifPR = data.filter((item) => item.secteur === 'PR').reduce((acc, item) => acc + item.effectif, 0);
-        const effectifPU = data.filter((item) => item.secteur === 'PU').reduce((acc, item) => acc + item.effectif, 0);
-        const pctPR = effectifPR / (effectifPR + effectifPU) * 100;
-        const pctPU = effectifPU / (effectifPR + effectifPU) * 100;
+        const years = await atlasCollection.distinct("annee_universitaire");
+        const geoIds = await atlasCollection.distinct("geo_id");
 
-        const effectifF = data.filter((item) => item.sexe === '2').reduce((acc, item) => acc + item.effectif, 0);
-        const effectifM = data.filter((item) => item.sexe === '1').reduce((acc, item) => acc + item.effectif, 0);
-        const pctF = effectifF / (effectifF + effectifM) * 100;
-        const pctM = effectifM / (effectifF + effectifM) * 100;
+        // for (let i = 0; i < years.length; i++) {
+        for (let i = years.length - 1; i < years.length; i++) {
+          // TODO: remove this line
+          for (let j = 0; j < geoIds.length; j++) {
+            const query = {
+              geo_id: geoIds[j],
+              annee_universitaire: years[i],
+              regroupement: "TOTAL",
+            };
+            const data = await atlasCollection.find(query).toArray();
 
-        const similarElement = {
-          geo_id: geoIds[j],
-          annee_universitaire: years[i],
-          niveau_geo: data[0]?.niveau_geo,
-          geo_nom: data[0]?.geo_nom,
-          effectifPR: effectifPR,
-          effectifPU: effectifPU,
-          pctPR: pctPR,
-          pctPU: pctPU,
-          effectifF: effectifF,
-          effectifM: effectifM,
-          pctF: pctF,
-          pctM: pctM,
-        };
+            const effectifPR = data
+              .filter((item) => item.secteur === "PR")
+              .reduce((acc, item) => acc + item.effectif, 0);
+            const effectifPU = data
+              .filter((item) => item.secteur === "PU")
+              .reduce((acc, item) => acc + item.effectif, 0);
+            const pctPR = (effectifPR / (effectifPR + effectifPU)) * 100;
+            const pctPU = (effectifPU / (effectifPR + effectifPU)) * 100;
 
-        const result = await similarElementsCollection.insertOne(similarElement);
+            const effectifF = data
+              .filter((item) => item.sexe === "2")
+              .reduce((acc, item) => acc + item.effectif, 0);
+            const effectifM = data
+              .filter((item) => item.sexe === "1")
+              .reduce((acc, item) => acc + item.effectif, 0);
+            const pctF = (effectifF / (effectifF + effectifM)) * 100;
+            const pctM = (effectifM / (effectifF + effectifM)) * 100;
 
-        // insert dans la collection board de la nouvelle version
-        const response = await db.collection("boards").updateOne(
-          { id: dashboardId, "data.id": collectionId },
-          {
-            $push: {
-              "data.$.versions": {
-                id: newCollectionId,
-                createdAt: new Date().toISOString().split('T')[0], // yyyy-mm-dd
-                from: dependentCollectionId,
-              }
-            }
+            const similarElement = {
+              geo_id: geoIds[j],
+              annee_universitaire: years[i],
+              niveau_geo: data[0]?.niveau_geo,
+              geo_nom: data[0]?.geo_nom,
+              effectifPR: effectifPR,
+              effectifPU: effectifPU,
+              pctPR: pctPR,
+              pctPU: pctPU,
+              effectifF: effectifF,
+              effectifM: effectifM,
+              pctF: pctF,
+              pctM: pctM,
+            };
+
+            const result =
+              await similarElementsCollection.insertOne(similarElement);
+
+            // insert dans la collection board de la nouvelle version
+            const response = await db.collection("boards").updateOne(
+              { id: dashboardId, "data.id": collectionId },
+              {
+                $push: {
+                  "data.$.versions": {
+                    id: newCollectionId,
+                    createdAt: new Date().toISOString().split("T")[0], // yyyy-mm-dd
+                    from: dependentCollectionId,
+                  },
+                },
+              },
+            );
           }
-        );
-      };
-    };
-  } finally {
-    await db.close();
-    res.status(200).json({ message: "Update done" });
-  }
-}
-  
-await run({dependentCollectionId}).catch(console.dir);
+        }
+      } finally {
+        await db.close();
+        res.status(200).json({ message: "Update done" });
+      }
+    }
 
-  console.log('------------------------- fin ----------------------');
-  
-});
+    await run({ dependentCollectionId }).catch(console.dir);
+    console.log("------------------------- fin ----------------------");
+  });
 
 // get constants from a dashboard
 router.route("/admin/get-constants").get(async (req, res) => {
@@ -541,15 +604,21 @@ router.route("/admin/list-collection-fields").get(async (req, res) => {
 
   try {
     // Vérifier si la collection existe
-    const collectionExists = await db.listCollections({ name: collectionName }).hasNext();
+    const collectionExists = await db
+      .listCollections({ name: collectionName })
+      .hasNext();
     if (!collectionExists) {
       return res.status(404).json({ error: "Collection not found" });
     }
 
     // Récupérer un échantillon de documents pour analyser les champs
     const sampleSize = 100;
-    const documents = await db.collection(collectionName).find({}).limit(sampleSize).toArray();
-    
+    const documents = await db
+      .collection(collectionName)
+      .find({})
+      .limit(sampleSize)
+      .toArray();
+
     if (documents.length === 0) {
       return res.json({ fields: [] });
     }
@@ -557,17 +626,17 @@ router.route("/admin/list-collection-fields").get(async (req, res) => {
     // Analyser les champs et leurs types
     const fieldsMap = new Map();
 
-    documents.forEach(doc => {
+    documents.forEach((doc) => {
       Object.entries(doc).forEach(([key, value]) => {
-        if (key === '_id') return; // Ignorer le champ _id
+        if (key === "_id") return; // Ignorer le champ _id
 
         let type = typeof value;
         if (Array.isArray(value)) {
-          type = 'array';
+          type = "array";
         } else if (value === null) {
-          type = 'null';
+          type = "null";
         } else if (value instanceof Date) {
-          type = 'date';
+          type = "date";
         }
 
         if (fieldsMap.has(key)) {
@@ -585,23 +654,27 @@ router.route("/admin/list-collection-fields").get(async (req, res) => {
     const fields = Array.from(fieldsMap.entries())
       .map(([name, types]) => ({
         name,
-        types: types.sort()
+        types: types.sort(),
       }))
       .sort((a, b) => a.name.localeCompare(b.name));
 
     res.json({ fields });
   } catch (error) {
     console.error("Error listing collection fields:", error);
-    res.status(500).json({ 
-      error: "Unable to list collection fields", 
-      details: error.message 
+    res.status(500).json({
+      error: "Unable to list collection fields",
+      details: error.message,
     });
   }
 });
 
 // Characterize a field - store all distinct values in cross-boards collection
 router.route("/admin/characterize-field").post(async (req, res) => {
-  const filters = checkQuery(req.body, ["boardId", "collectionId", "field", "associatedRoute"], res);
+  const filters = checkQuery(
+    req.body,
+    ["boardId", "collectionId", "field", "associatedRoute"],
+    res,
+  );
   const { boardId, collectionId, field, associatedRoute } = filters;
 
   try {
@@ -609,54 +682,64 @@ router.route("/admin/characterize-field").post(async (req, res) => {
     const fullCollectionName = `${boardId}_${collectionId}_staging`;
 
     // Vérifier si la collection existe
-    const collectionExists = await db.listCollections({ name: fullCollectionName }).hasNext();
+    const collectionExists = await db
+      .listCollections({ name: fullCollectionName })
+      .hasNext();
     if (!collectionExists) {
-      return res.status(404).json({ error: `Collection ${fullCollectionName} not found` });
+      return res
+        .status(404)
+        .json({ error: `Collection ${fullCollectionName} not found` });
     }
 
     // Récupérer toutes les valeurs distinctes du champ
-    const distinctValues = await db.collection(fullCollectionName).distinct(field);
+    const distinctValues = await db
+      .collection(fullCollectionName)
+      .distinct(field);
 
     // Supprimer les anciennes entrées pour ce champ
     await db.collection("cross-boards").deleteMany({
       boardId,
       collectionId,
-      field
+      field,
     });
 
     // Insérer chaque valeur distincte dans la collection cross-boards
-    const documents = distinctValues.map(value => ({
+    const documents = distinctValues.map((value) => ({
       boardId,
       collectionId,
       field,
       value,
       associatedRoute,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     }));
 
     if (documents.length > 0) {
       await db.collection("cross-boards").insertMany(documents);
     }
 
-    res.json({ 
+    res.json({
       message: "Field characterized successfully",
       count: documents.length,
       boardId,
       collectionId,
-      field
+      field,
     });
   } catch (error) {
     console.error("Error characterizing field:", error);
-    res.status(500).json({ 
-      error: "Unable to characterize field", 
-      details: error.message 
+    res.status(500).json({
+      error: "Unable to characterize field",
+      details: error.message,
     });
   }
 });
 
 // Add manual characterization - add a single value to cross-boards collection
 router.route("/admin/add-manual-characterization").post(async (req, res) => {
-  const filters = checkQuery(req.body, ["boardId", "field", "value", "associatedRoute"], res);
+  const filters = checkQuery(
+    req.body,
+    ["boardId", "field", "value", "associatedRoute"],
+    res,
+  );
   const { boardId, field, value, associatedRoute } = filters;
 
   try {
@@ -668,22 +751,22 @@ router.route("/admin/add-manual-characterization").post(async (req, res) => {
       value,
       associatedRoute,
       createdAt: new Date().toISOString(),
-      isManual: true // Marquer comme ajout manuel
+      isManual: true, // Marquer comme ajout manuel
     };
 
     await db.collection("cross-boards").insertOne(document);
 
-    res.json({ 
+    res.json({
       message: "Manual characterization added successfully",
       boardId,
       field,
-      value
+      value,
     });
   } catch (error) {
     console.error("Error adding manual characterization:", error);
-    res.status(500).json({ 
-      error: "Unable to add manual characterization", 
-      details: error.message 
+    res.status(500).json({
+      error: "Unable to add manual characterization",
+      details: error.message,
     });
   }
 });
@@ -692,43 +775,46 @@ router.route("/admin/add-manual-characterization").post(async (req, res) => {
 router.route("/admin/list-characterizations").get(async (req, res) => {
   try {
     // Récupérer toutes les caractérisations avec leurs valeurs
-    const characterizations = await db.collection("cross-boards").aggregate([
-      {
-        $group: {
-          _id: {
-            boardId: "$boardId",
-            collectionId: "$collectionId",
-            field: "$field",
-            associatedRoute: "$associatedRoute"
+    const characterizations = await db
+      .collection("cross-boards")
+      .aggregate([
+        {
+          $group: {
+            _id: {
+              boardId: "$boardId",
+              collectionId: "$collectionId",
+              field: "$field",
+              associatedRoute: "$associatedRoute",
+            },
+            count: { $sum: 1 },
+            values: { $push: "$value" },
+            createdAt: { $first: "$createdAt" },
           },
-          count: { $sum: 1 },
-          values: { $push: "$value" },
-          createdAt: { $first: "$createdAt" }
-        }
-      },
-      {
-        $project: {
-          _id: 0,
-          boardId: "$_id.boardId",
-          collectionId: "$_id.collectionId",
-          field: "$_id.field",
-          associatedRoute: "$_id.associatedRoute",
-          count: 1,
-          values: 1,
-          createdAt: 1
-        }
-      },
-      {
-        $sort: { boardId: 1, collectionId: 1, field: 1 }
-      }
-    ]).toArray();
+        },
+        {
+          $project: {
+            _id: 0,
+            boardId: "$_id.boardId",
+            collectionId: "$_id.collectionId",
+            field: "$_id.field",
+            associatedRoute: "$_id.associatedRoute",
+            count: 1,
+            values: 1,
+            createdAt: 1,
+          },
+        },
+        {
+          $sort: { boardId: 1, collectionId: 1, field: 1 },
+        },
+      ])
+      .toArray();
 
     res.json(characterizations);
   } catch (error) {
     console.error("Error listing characterizations:", error);
-    res.status(500).json({ 
-      error: "Unable to list characterizations", 
-      details: error.message 
+    res.status(500).json({
+      error: "Unable to list characterizations",
+      details: error.message,
     });
   }
 });
@@ -738,24 +824,29 @@ router.route("/admin/search-cross-boards").get(async (req, res) => {
   try {
     // Récupérer tous les paramètres de l'URL
     const urlParams = req.query;
-    
+
     if (Object.keys(urlParams).length === 0) {
       return res.json([]);
     }
 
     // Construire les requêtes pour chaque paramètre
     // Chercher soit la valeur exacte, soit les champs avec des valeurs commençant par $
-    const searchQueries = Object.entries(urlParams).flatMap(([field, value]) => [
-      // Match exact sur field et value
-      { field, value },
-      // Match sur field uniquement si value commence par $
-      { field, value: { $regex: /^\$/ } }
-    ]);
+    const searchQueries = Object.entries(urlParams).flatMap(
+      ([field, value]) => [
+        // Match exact sur field et value
+        { field, value },
+        // Match sur field uniquement si value commence par $
+        { field, value: { $regex: /^\$/ } },
+      ],
+    );
 
     // Rechercher dans cross-boards toutes les correspondances
-    const results = await db.collection("cross-boards").find({
-      $or: searchQueries
-    }).toArray();
+    const results = await db
+      .collection("cross-boards")
+      .find({
+        $or: searchQueries,
+      })
+      .toArray();
 
     // Grouper les résultats par boardId et associatedRoute
     const grouped = results.reduce((acc, item) => {
@@ -764,17 +855,19 @@ router.route("/admin/search-cross-boards").get(async (req, res) => {
         acc[key] = {
           boardId: item.boardId,
           associatedRoute: item.associatedRoute,
-          matches: []
+          matches: [],
         };
       }
-      
+
       // Si la valeur commence par $, utiliser la valeur du paramètre d'URL
-      const actualValue = item.value.startsWith('$') ? urlParams[item.field] : item.value;
-      
+      const actualValue = item.value.startsWith("$")
+        ? urlParams[item.field]
+        : item.value;
+
       acc[key].matches.push({
         field: item.field,
         value: actualValue,
-        collectionId: item.collectionId
+        collectionId: item.collectionId,
       });
       return acc;
     }, {});
@@ -782,16 +875,20 @@ router.route("/admin/search-cross-boards").get(async (req, res) => {
     res.json(Object.values(grouped));
   } catch (error) {
     console.error("Error searching cross-boards:", error);
-    res.status(500).json({ 
-      error: "Unable to search cross-boards", 
-      details: error.message 
+    res.status(500).json({
+      error: "Unable to search cross-boards",
+      details: error.message,
     });
   }
 });
 
 // Refresh characterization - delete and recreate values for a specific field
 router.route("/admin/refresh-characterization").post(async (req, res) => {
-  const filters = checkQuery(req.body, ["boardId", "collectionId", "field", "associatedRoute"], res);
+  const filters = checkQuery(
+    req.body,
+    ["boardId", "collectionId", "field", "associatedRoute"],
+    res,
+  );
   const { boardId, collectionId, field, associatedRoute } = filters;
 
   try {
@@ -799,47 +896,53 @@ router.route("/admin/refresh-characterization").post(async (req, res) => {
     const fullCollectionName = `${boardId}_${collectionId}_staging`;
 
     // Vérifier si la collection existe
-    const collectionExists = await db.listCollections({ name: fullCollectionName }).hasNext();
+    const collectionExists = await db
+      .listCollections({ name: fullCollectionName })
+      .hasNext();
     if (!collectionExists) {
-      return res.status(404).json({ error: `Collection ${fullCollectionName} not found` });
+      return res
+        .status(404)
+        .json({ error: `Collection ${fullCollectionName} not found` });
     }
 
     // Supprimer les anciennes entrées pour ce champ
     await db.collection("cross-boards").deleteMany({
       boardId,
       collectionId,
-      field
+      field,
     });
 
     // Récupérer toutes les valeurs distinctes du champ
-    const distinctValues = await db.collection(fullCollectionName).distinct(field);
+    const distinctValues = await db
+      .collection(fullCollectionName)
+      .distinct(field);
 
     // Insérer chaque valeur distincte dans la collection cross-boards
-    const documents = distinctValues.map(value => ({
+    const documents = distinctValues.map((value) => ({
       boardId,
       collectionId,
       field,
       value,
       associatedRoute,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
     }));
 
     if (documents.length > 0) {
       await db.collection("cross-boards").insertMany(documents);
     }
 
-    res.json({ 
+    res.json({
       message: "Characterization refreshed successfully",
       count: documents.length,
       boardId,
       collectionId,
-      field
+      field,
     });
   } catch (error) {
     console.error("Error refreshing characterization:", error);
-    res.status(500).json({ 
-      error: "Unable to refresh characterization", 
-      details: error.message 
+    res.status(500).json({
+      error: "Unable to refresh characterization",
+      details: error.message,
     });
   }
 });
@@ -852,9 +955,9 @@ router.route("/admin/collection-size/:name").get(async (req, res) => {
     res.json({ size: totalDocs });
   } catch (error) {
     console.error("Error getting collection size:", error);
-    res.status(500).json({ 
-      error: "Unable to get collection size", 
-      details: error.message 
+    res.status(500).json({
+      error: "Unable to get collection size",
+      details: error.message,
     });
   }
 });
@@ -867,9 +970,9 @@ router.route("/admin/copy-progress/:name").get(async (req, res) => {
     res.json({ copiedSize });
   } catch (error) {
     console.error("Error getting copy progress:", error);
-    res.status(500).json({ 
-      error: "Unable to get copy progress", 
-      details: error.message 
+    res.status(500).json({
+      error: "Unable to get copy progress",
+      details: error.message,
     });
   }
 });
@@ -877,10 +980,10 @@ router.route("/admin/copy-progress/:name").get(async (req, res) => {
 // Initialize dashboard structure from template
 router.route("/admin/initialize-dashboard-structure").post(async (req, res) => {
   // Vérifier que l'on est en localhost
-  const host = req.get('host');
-  if (!host || !host.includes('localhost')) {
-    return res.status(403).json({ 
-      error: "This operation is only allowed on localhost" 
+  const host = req.get("host");
+  if (!host || !host.includes("localhost")) {
+    return res.status(403).json({
+      error: "This operation is only allowed on localhost",
     });
   }
 
@@ -889,41 +992,63 @@ router.route("/admin/initialize-dashboard-structure").post(async (req, res) => {
 
   try {
     // Convertir l'ID en différents formats
-    const dashboardIdKebab = dashboardId.toLowerCase().replace(/_/g, '-');
+    const dashboardIdKebab = dashboardId.toLowerCase().replace(/_/g, "-");
     const dashboardIdCamel = dashboardId
       .split(/[-_]/)
       .map((word, index) => {
         const lowerWord = word.toLowerCase();
-        return index === 0 ? lowerWord : lowerWord.charAt(0).toUpperCase() + lowerWord.slice(1);
+        return index === 0
+          ? lowerWord
+          : lowerWord.charAt(0).toUpperCase() + lowerWord.slice(1);
       })
-      .join('');
+      .join("");
     const dashboardIdPascal = dashboardId
       .split(/[-_]/)
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join('');
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join("");
 
     // Chemins des répertoires
-    const projectRoot = path.resolve(__dirname, '../../../..');
-    const clientTemplateDir = path.join(projectRoot, 'client/src/boards/template');
-    const serverTemplateDir = path.join(projectRoot, 'server/src/routes/boards/template');
-    
-    const clientTargetDir = path.join(projectRoot, `client/src/boards/${dashboardIdKebab}`);
-    const serverTargetDir = path.join(projectRoot, `server/src/routes/boards/${dashboardIdKebab}`);
+    const projectRoot = path.resolve(__dirname, "../../../..");
+    const clientTemplateDir = path.join(
+      projectRoot,
+      "client/src/boards/template",
+    );
+    const serverTemplateDir = path.join(
+      projectRoot,
+      "server/src/routes/boards/template",
+    );
+
+    const clientTargetDir = path.join(
+      projectRoot,
+      `client/src/boards/${dashboardIdKebab}`,
+    );
+    const serverTargetDir = path.join(
+      projectRoot,
+      `server/src/routes/boards/${dashboardIdKebab}`,
+    );
 
     // Vérifier que les répertoires template existent
     if (!fs.existsSync(clientTemplateDir)) {
-      return res.status(404).json({ error: "Client template directory not found" });
+      return res
+        .status(404)
+        .json({ error: "Client template directory not found" });
     }
     if (!fs.existsSync(serverTemplateDir)) {
-      return res.status(404).json({ error: "Server template directory not found" });
+      return res
+        .status(404)
+        .json({ error: "Server template directory not found" });
     }
 
     // Vérifier que le dashboard n'existe pas déjà
     if (fs.existsSync(clientTargetDir)) {
-      return res.status(409).json({ error: "Client dashboard directory already exists" });
+      return res
+        .status(409)
+        .json({ error: "Client dashboard directory already exists" });
     }
     if (fs.existsSync(serverTargetDir)) {
-      return res.status(409).json({ error: "Server dashboard directory already exists" });
+      return res
+        .status(409)
+        .json({ error: "Server dashboard directory already exists" });
     }
 
     // Fonction pour copier récursivement en remplaçant les templates
@@ -941,13 +1066,13 @@ router.route("/admin/initialize-dashboard-structure").post(async (req, res) => {
         if (entry.isDirectory()) {
           copyAndReplace(srcPath, destPath);
         } else {
-          let content = fs.readFileSync(srcPath, 'utf8');
-          
+          let content = fs.readFileSync(srcPath, "utf8");
+
           // Remplacements
           content = content.replace(/template/g, dashboardIdKebab);
           content = content.replace(/Template/g, dashboardIdPascal);
-          
-          fs.writeFileSync(destPath, content, 'utf8');
+
+          fs.writeFileSync(destPath, content, "utf8");
         }
       }
     };
@@ -957,19 +1082,25 @@ router.route("/admin/initialize-dashboard-structure").post(async (req, res) => {
     copyAndReplace(serverTemplateDir, serverTargetDir);
 
     // Modifier client/src/router.tsx
-    const clientRouterPath = path.join(projectRoot, 'client/src/commons/router.tsx');
-    let clientRouterContent = fs.readFileSync(clientRouterPath, 'utf8');
-    
+    const clientRouterPath = path.join(
+      projectRoot,
+      "client/src/commons/router.tsx",
+    );
+    let clientRouterContent = fs.readFileSync(clientRouterPath, "utf8");
+
     // Ajouter l'import
     const importLine = `import ${dashboardIdPascal}Routes from "../boards/${dashboardIdKebab}/routes.tsx";`;
-    const importInsertionPoint = clientRouterContent.indexOf('import TemplateRoutes');
+    const importInsertionPoint = clientRouterContent.indexOf(
+      "import TemplateRoutes",
+    );
     if (importInsertionPoint !== -1) {
-      clientRouterContent = 
-        clientRouterContent.slice(0, importInsertionPoint) + 
-        importLine + '\n' +
+      clientRouterContent =
+        clientRouterContent.slice(0, importInsertionPoint) +
+        importLine +
+        "\n" +
         clientRouterContent.slice(importInsertionPoint);
     }
-    
+
     // Ajouter la route
     const routeLine = ```
       <Route
@@ -977,56 +1108,68 @@ router.route("/admin/initialize-dashboard-structure").post(async (req, res) => {
         element={<Navigate to="/${dashboardIdKebab}/home" replace />}
       />
       <Route path="/${dashboardIdKebab}/*" element={<${dashboardIdPascal}Routes />} />
-      ```
-    const routeInsertionPoint = clientRouterContent.indexOf('<Route path="/template/*"');
+      ```;
+    const routeInsertionPoint = clientRouterContent.indexOf(
+      '<Route path="/template/*"',
+    );
     if (routeInsertionPoint !== -1) {
-      const lineEnd = clientRouterContent.indexOf('\n', routeInsertionPoint);
-      clientRouterContent = 
-        clientRouterContent.slice(0, lineEnd + 1) + 
-        routeLine + '\n' +
+      const lineEnd = clientRouterContent.indexOf("\n", routeInsertionPoint);
+      clientRouterContent =
+        clientRouterContent.slice(0, lineEnd + 1) +
+        routeLine +
+        "\n" +
         clientRouterContent.slice(lineEnd + 1);
     }
-    
-    fs.writeFileSync(clientRouterPath, clientRouterContent, 'utf8');
+
+    fs.writeFileSync(clientRouterPath, clientRouterContent, "utf8");
 
     // Modifier server/src/router.js
-    const serverRouterPath = path.join(projectRoot, 'server/src/router.js');
-    let serverRouterContent = fs.readFileSync(serverRouterPath, 'utf8');
-    
+    const serverRouterPath = path.join(projectRoot, "server/src/router.js");
+    let serverRouterContent = fs.readFileSync(serverRouterPath, "utf8");
+
     // Ajouter l'import (utiliser camelCase pour le nom de variable)
     const serverImportLine = `import ${dashboardIdCamel}Router from "./routes/boards/${dashboardIdKebab}/index.js";`;
-    const serverImportInsertionPoint = serverRouterContent.indexOf('import templateRouter');
+    const serverImportInsertionPoint = serverRouterContent.indexOf(
+      "import templateRouter",
+    );
     if (serverImportInsertionPoint !== -1) {
-      serverRouterContent = 
-        serverRouterContent.slice(0, serverImportInsertionPoint) + 
-        serverImportLine + '\n' +
+      serverRouterContent =
+        serverRouterContent.slice(0, serverImportInsertionPoint) +
+        serverImportLine +
+        "\n" +
         serverRouterContent.slice(serverImportInsertionPoint);
     }
-    
+
     // Ajouter l'utilisation du router
     const useRouterLine = `router.use(${dashboardIdCamel}Router);`;
-    const useRouterInsertionPoint = serverRouterContent.indexOf('router.use(templateRouter)');
+    const useRouterInsertionPoint = serverRouterContent.indexOf(
+      "router.use(templateRouter)",
+    );
     if (useRouterInsertionPoint !== -1) {
-      const lineEnd = serverRouterContent.indexOf('\n', useRouterInsertionPoint);
-      serverRouterContent = 
-        serverRouterContent.slice(0, lineEnd + 1) + 
-        useRouterLine + '\n' +
+      const lineEnd = serverRouterContent.indexOf(
+        "\n",
+        useRouterInsertionPoint,
+      );
+      serverRouterContent =
+        serverRouterContent.slice(0, lineEnd + 1) +
+        useRouterLine +
+        "\n" +
         serverRouterContent.slice(lineEnd + 1);
     }
-    
-    fs.writeFileSync(serverRouterPath, serverRouterContent, 'utf8');
 
-    res.json({ 
+    fs.writeFileSync(serverRouterPath, serverRouterContent, "utf8");
+
+    res.json({
       message: "Dashboard structure initialized successfully",
       dashboardId,
       clientDir: clientTargetDir,
-      serverDir: serverTargetDir
+      serverDir: serverTargetDir,
     });
   } catch (error) {
     console.error("Error initializing dashboard structure:", error);
-    res.status(500).json({ 
-      error: "Unable to initialize dashboard structure", 
-      details: error.message 
+    res.status(500).json({
+      error: "Unable to initialize dashboard structure",
+      details: error.message,
     });
   }
 });

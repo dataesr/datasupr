@@ -7,8 +7,7 @@ import EntitySearchBar from "../../components/entity-searchbar";
 import { useState } from "react";
 
 export default function Entities({ entity_id }: { entity_id?: string }) {
-  const [entityId, setEntityId] = useState<string>(entity_id || "");
-console.log(entityId);
+  const [, setEntityId] = useState<string>(entity_id || "");
 
   return (
     <Container as="section" className="fr-mt-2w">
