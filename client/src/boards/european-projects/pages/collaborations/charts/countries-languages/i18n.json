@@ -1,0 +1,42 @@
+{
+  "title": {
+    "fr": "Focus sur les langues partagées",
+    "en": "Focus on shared languages"
+  },
+  "shared-language-countries": {
+    "fr": "Pays partageant une langue",
+    "en": "Countries sharing a language"
+  },
+  "countries": {
+    "fr": "pays",
+    "en": "countries"
+  },
+  "projects": {
+    "fr": "projets",
+    "en": "projects"
+  },
+  "selected-country-languages": {
+    "fr": "Langues du pays sélectionné",
+    "en": "Selected country's languages"
+  },
+  "no-languages": {
+    "fr": "Aucune langue répertoriée",
+    "en": "No languages listed"
+  },
+  "shared-language-collaborations-text": {
+    "fr": "Les pays partageant au moins une langue comptabilisent",
+    "en": "Countries sharing at least one language account for"
+  },
+  "which-is": {
+    "fr": "soit",
+    "en": "which is"
+  },
+  "of-total-collaborations": {
+    "fr": "des collaborations totales",
+    "en": "of total collaborations"
+  },
+  "top-languages": {
+    "fr": "Langues les plus représentées",
+    "en": "Most represented languages"
+  }
+}

@@ -6,6 +6,7 @@ import Callout from "../../../../../../components/callout";
 import CountriesCollaborationsBubble from "../../../collaborations/charts/countries-collaborations-bubble";
 import CountriesCollaborationsTable from "../../../collaborations/charts/countries-collaborations-table";
 import CountryNeighbourgs from "../../../collaborations/charts/country-neighbourgs";
+import CountryLanguages from "../../../collaborations/charts/countries-languages";
 import EntityVariablePie from "../../../collaborations/charts/entity-variable-pie";
 import MapOfEuropeCollaborationsFlow from "../../../collaborations/charts/map-of-europe-collaborations-flow";
 
@@ -69,9 +70,12 @@ export default function CollaborationsContent() {
           </Row>
         </>
       )}
-      <Row>
+      <Row gutters>
         <Col>
           <CountryNeighbourgs />
+        </Col>
+        <Col>
+          <CountryLanguages />
         </Col>
       </Row>
       <Row className="fr-mt-5w">
