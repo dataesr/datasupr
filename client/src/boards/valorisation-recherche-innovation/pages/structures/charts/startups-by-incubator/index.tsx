@@ -14,7 +14,7 @@ import { getEsQuery, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function StartupsByCounty({ name }: { name: string | undefined }) {
+export default function StartupsByIncubator({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
@@ -24,9 +24,9 @@ export default function StartupsByCounty({ name }: { name: string | undefined })
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),
     aggregations: {
-      by_county: {
+      by_incubator: {
         terms: {
-          field: "address.region.keyword",
+          field: "incubateurs.denormalized.encoded_key.keyword",
           size: 20,
         },
         aggregations: {
@@ -41,7 +41,7 @@ export default function StartupsByCounty({ name }: { name: string | undefined })
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["valo-startups-by-county", structure, yearMax, yearMin],
+    queryKey: ["valo-startups-by-incubator", structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_ORGANIZATIONS}`, {
         body: JSON.stringify(body),
@@ -53,24 +53,27 @@ export default function StartupsByCounty({ name }: { name: string | undefined })
       }).then((response) => response.json()),
   });
 
-  const categories = (data?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket?.key);
+  const categories = (data?.aggregations?.by_incubator?.buckets ?? []).map((bucket) => {
+    const incubatorInfo = Object.fromEntries(new URLSearchParams(bucket.key));
+    return incubatorInfo.label;
+  });
   const actives: Number[] = [];
   const notActives: Number[] = [];
-  (data?.aggregations?.by_county?.buckets ?? []).forEach((bucket) => {
+  (data?.aggregations?.by_incubator?.buckets ?? []).forEach((bucket) => {
     actives.push(bucket?.by_status?.buckets?.find((item) => item.key === 'active')?.doc_count ?? 0);
     notActives.push(bucket?.by_status?.buckets?.find((item) => item.key === 'old')?.doc_count ?? 0);
   });
   const series = [{ color: 'green', data: actives, name: 'Actives' }, { color: 'blue', data: notActives, name: 'Non actives' }];
   const axis = getI18nLabel(i18n, 'number_of_startups');
-  const title = `Nombre de start-ups par région ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const title = `Nombre de start-ups par incubateur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
-    return `<b>${this.y}</b> start-ups de statut ${this.series.name.toLowerCase()} et liées à l'établissement <b>${name}</b> sont implantées dans la région <b>${categories[this.x]}</b>`;
+    return `<b>${this.y}</b> start-ups de statut ${this.series.name.toLowerCase()} et liées à l'établissement <b>${name}</b> sont dans l'incubateur <b>${categories[this.x]}</b>`;
   };
 
   const config = {
-    comment: { "fr": <>Ce graphique indique, par région, le nombre de start-ups liées à l'établissement {name}.</> },
-    id: "startupsByCounty",
-    integrationURL: `/integration?chart_id=startupsByCounty&${searchParams.toString()}`,
+    comment: { "fr": <>Ce graphique indique, par incubateur, le nombre de start-ups liées à l'établissement {name}.</> },
+    id: "startupsByIncubator",
+    integrationURL: `/integration?chart_id=startupsByIncubator&${searchParams.toString()}`,
     title,
   };
 
@@ -88,7 +91,7 @@ export default function StartupsByCounty({ name }: { name: string | undefined })
     tooltip: { formatter: tooltip },
     xAxis: {
       categories,
-      title: { text: "Région d'implantation" },
+      title: { text: "Incubateur" },
     },
     yAxis: {
       stackLabels: { enabled: true },
@@ -99,7 +102,7 @@ export default function StartupsByCounty({ name }: { name: string | undefined })
   const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "600px" } }), options);
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="startups-by-county">
+    <div className={`chart-container chart-container--${color}`} id="startups-by-incubator">
       <Title as="h2" look="h6">
         {title}
       </Title>

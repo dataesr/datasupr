@@ -61,7 +61,7 @@ export default function StartupsByYear({ name }: { name: string | undefined }) {
     actives.push(bucket?.by_status?.buckets?.find((item) => item.key === 'active')?.doc_count ?? 0);
     notActives.push(bucket?.by_status?.buckets?.find((item) => item.key === 'old')?.doc_count ?? 0);
   });
-  const series = [{ name: 'Actives', data: actives }, { name: 'Non actives', data: notActives }];
+  const series = [{ color: 'green', data: actives, name: 'Actives' }, { color: 'blue', data: notActives, name: 'Non actives' }];
   const axis = getI18nLabel(i18n, 'number_of_startups');
   const title = `Nombre de start-ups par année de création ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {

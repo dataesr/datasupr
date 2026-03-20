@@ -5,8 +5,9 @@ import { useSearchParams } from "react-router-dom";
 
 import Breadcrumb from "../../components/breadcrumb";
 import { getEsQuery, years } from "../../utils";
-import StartupsByYear from "./charts/startups-by-year";
 import StartupsByCounty from "./charts/startups-by-county";
+import StartupsByIncubator from "./charts/startups-by-incubator";
+import StartupsByYear from "./charts/startups-by-year";
 
 import "./styles.scss";
 
@@ -195,7 +196,7 @@ export default function DisplayStructure() {
                   </Row>
                   <Row gutters>
                     <Col>
-                      <div>nb de startup par incubateur (en colonnes), splitté par statut actif / old</div>
+                      <StartupsByIncubator name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
