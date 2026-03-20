@@ -21,7 +21,7 @@ export default function StructureSelector({ setStructures }) {
     aggregations: {
       by_county: {
         terms: {
-          field: "address.region.keyword",
+          field: "startup_links.denormalized.mainAddress.region.keyword",
           order: { _key: "asc" },
           size: 30,
         },
@@ -29,7 +29,7 @@ export default function StructureSelector({ setStructures }) {
     },
   };
   if (typology) {
-    bodyCounties.query.bool.filter.push({ wildcard: { "typologie_1.keyword": typology } });
+    bodyCounties.query.bool.filter.push({ wildcard: { "startup_links.denormalized.typologie_1.keyword": typology } });
   }
   const { data: dataCounties, isLoading: isLoadingCounties } = useQuery({
     queryKey: ["valo-counties", typology],
@@ -55,14 +55,14 @@ export default function StructureSelector({ setStructures }) {
     aggregations: {
       by_typology: {
         terms: {
-          field: "typologie_1.keyword",
+          field: "startup_links.denormalized.typologie_1.keyword",
           order: { _key: "desc" },
         },
       },
     },
   };
   if (county) {
-    bodyTypologies.query.bool.filter.push({ wildcard: { "address.region.keyword": county } });
+    bodyTypologies.query.bool.filter.push({ wildcard: { "startup_links.denormalized.mainAddress.region.keyword": county } });
   }
   const { data: dataTypologies, isLoading: isLoadingTypologies } = useQuery({
     queryKey: ["valo-typologies", county],
@@ -94,10 +94,10 @@ export default function StructureSelector({ setStructures }) {
     },
   };
   if (county) {
-    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": county } });
+    bodyStructures.query.bool.filter.push({ wildcard: { "startup_links.denormalized.mainAddress.region.keyword": county } });
   }
   if (typology) {
-    bodyStructures.query.bool.filter.push({ wildcard: { "typologie_1.keyword": typology } });
+    bodyStructures.query.bool.filter.push({ wildcard: { "startup_links.denormalized.typologie_1.keyword": typology } });
   }
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
     queryKey: ["valo-structures", county, typology],
