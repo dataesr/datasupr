@@ -12,7 +12,7 @@ import { getEsQueryPatents, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_ES_INDEX_PATENTS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function PatentsByYear({ name }: { name: string | undefined }) {
+export default function PatentsByClass({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
@@ -36,11 +36,10 @@ export default function PatentsByYear({ name }: { name: string | undefined }) {
   const body = {
     ...getEsQueryPatents({ structureIds, yearMax, yearMin }),
     aggregations: {
-      by_creation_year: {
+      by_class: {
         terms: {
-          field: "patents.yearPublication",
-          order: { _key: "asc" },
-          size: 25,
+          field: "cpc.classe.id_name.keyword",
+          size: 15,
         },
         aggregations: {
           by_international: {
@@ -54,7 +53,7 @@ export default function PatentsByYear({ name }: { name: string | undefined }) {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["valo-patents-by-year", structure, structureIds, yearMax, yearMin],
+    queryKey: ["valo-patents-by-class", structure, structureIds, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PATENTS}`, {
         body: JSON.stringify(body),
@@ -66,23 +65,23 @@ export default function PatentsByYear({ name }: { name: string | undefined }) {
       }).then((response) => response.json()),
   });
 
-  const categories = (data?.aggregations?.by_creation_year?.buckets ?? []).map((bucket) => bucket?.key);
+  const categories = (data?.aggregations?.by_class?.buckets ?? []).map((bucket) => bucket?.key.split('###')[1]);
   const isInternational: Number[] = [];
   const isNotInternational: Number[] = [];
-  (data?.aggregations?.by_creation_year?.buckets ?? []).forEach((bucket) => {
+  (data?.aggregations?.by_class?.buckets ?? []).forEach((bucket) => {
     isInternational.push(bucket?.by_international?.buckets?.find((item) => item.key_as_string === 'true')?.doc_count ?? 0);
     isNotInternational.push(bucket?.by_international?.buckets?.find((item) => item.key_as_string === 'false')?.doc_count ?? 0);
   });
   const series = [{ color: 'green', data: isInternational, name: 'International' }, { color: 'blue', data: isNotInternational, name: 'Non international' }];
-  const title = `Nombre de familles de brevets par année de création ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const title = `Top 15 des classes de familles de brevets ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
-    return `<b>${this.y}</b> familles de brevets de statut ${this.series.name.toLowerCase()} et liées à l'établissement <b>${name}</b> ont été crées en <b>${categories[this.x]}</b>`;
+    return `<b>${this.y}</b> familles de brevets de statut ${this.series.name.toLowerCase()} et liées à l'établissement <b>${name}</b> ont été crées en classe <b>${categories[this.x]}</b>`;
   };
 
   const config = {
-    comment: { "fr": <>Ce graphique indique, par années de création, le nombre de familles de brevets liées à l'établissement {name}.</> },
-    id: "patentsByYear",
-    integrationURL: `/integration?chart_id=patentsByYear&${searchParams.toString()}`,
+    comment: { "fr": <>Ce graphique indique, par classe, le nombre de brevets liées à l'établissement {name}.</> },
+    id: "patentsByClass",
+    integrationURL: `/integration?chart_id=patentsByClass&${searchParams.toString()}`,
     title,
   };
 
@@ -100,7 +99,7 @@ export default function PatentsByYear({ name }: { name: string | undefined }) {
     tooltip: { formatter: tooltip },
     xAxis: {
       categories,
-      title: { text: "Année de création" },
+      title: { text: "Classe" },
     },
     yAxis: {
       stackLabels: { enabled: true },
@@ -111,7 +110,7 @@ export default function PatentsByYear({ name }: { name: string | undefined }) {
   const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "600px" } }), options);
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="patents-by-year">
+    <div className={`chart-container chart-container--${color}`} id="patents-by-class">
       <Title as="h2" look="h6">
         {title}
       </Title>

@@ -5,10 +5,11 @@ import { useSearchParams } from "react-router-dom";
 
 import Breadcrumb from "../../components/breadcrumb";
 import { years } from "../../utils";
+import PatentsByClass from "./charts/patents-by-class";
+import PatentsByYear from "./charts/patents-by-year";
 import StartupsByCounty from "./charts/startups-by-county";
 import StartupsByIncubator from "./charts/startups-by-incubator";
 import StartupsByYear from "./charts/startups-by-year";
-import PatentsByYear from "./charts/patents-by-year";
 
 import "./styles.scss";
 
@@ -207,13 +208,12 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <div>nb de brevets par année splitté par isInternational</div>
                       <PatentsByYear name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <div>nb de brevets par classe splitté par isInternational</div>
+                      <PatentsByClass name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
