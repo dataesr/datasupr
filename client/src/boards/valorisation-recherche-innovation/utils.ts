@@ -26,22 +26,16 @@ const formatPercent = (number: number, decimals: number = 0): string => {
 const getEsQueryPatents = ({ structureIds, yearMax = years[years.length - 1], yearMin = years[0] }:
   { structureIds?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
   const query: any = {
-    size: 10,
+    size: 0,
     query: {
       bool: {
         filter: [
           { range: { "patents.yearPublication": { gte: yearMin, lte: yearMax } } },
-          // { term: { "startup_links.denormalized.isFrench": true } },
-          // { term: { "startup_links.denormalized.is_main_parent": 1 } },
-          // { term: { "startup_links.denormalized.kind.keyword": "Secteur public" } },
           { terms: { "applicants.ids.id.keyword": structureIds } }
         ],
       },
     },
   };
-  // if (structures?.length ?? 0 > 0) {
-  //   query.query.bool.filter.push({ terms: { "startup_links.structure.keyword": structures } });
-  // };
   return query;
 };
 const getEsQueryStartups = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:

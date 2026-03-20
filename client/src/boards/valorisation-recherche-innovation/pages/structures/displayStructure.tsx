@@ -7,6 +7,7 @@ import Breadcrumb from "../../components/breadcrumb";
 import { years } from "../../utils";
 import PatentsByClass from "./charts/patents-by-class";
 import PatentsByYear from "./charts/patents-by-year";
+import PatentsCoApplicants from "./charts/patents-co-applicants";
 import StartupsByCounty from "./charts/startups-by-county";
 import StartupsByIncubator from "./charts/startups-by-incubator";
 import StartupsByYear from "./charts/startups-by-year";
@@ -218,7 +219,7 @@ export default function DisplayStructure() {
                   </Row>
                   <Row gutters>
                     <Col>
-                      <div>top co-déposants (splitté par classe - ou pas ?)</div>
+                      <PatentsCoApplicants name={name} />
                     </Col>
                   </Row>
                 </>
