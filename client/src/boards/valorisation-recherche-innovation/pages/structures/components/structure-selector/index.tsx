@@ -5,7 +5,7 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
-import { getEsQuery } from "../../../../utils.ts";
+import { getEsQueryStartups } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -17,7 +17,7 @@ export default function StructureSelector({ setStructures }) {
   const structure = searchParams.get("structure") ?? "";
 
   const bodyCounties: any = {
-    ...getEsQuery({}),
+    ...getEsQueryStartups({}),
     aggregations: {
       by_county: {
         terms: {
@@ -51,7 +51,7 @@ export default function StructureSelector({ setStructures }) {
     .sort((a, b) => a.localeCompare(b));
 
   const bodyTypologies: any = {
-    ...getEsQuery({}),
+    ...getEsQueryStartups({}),
     aggregations: {
       by_typology: {
         terms: {
@@ -83,7 +83,7 @@ export default function StructureSelector({ setStructures }) {
     .map((bucket) => bucket.key);
 
   const bodyStructures: any = {
-    ...getEsQuery({}),
+    ...getEsQueryStartups({}),
     aggregations: {
       by_structure: {
         terms: {

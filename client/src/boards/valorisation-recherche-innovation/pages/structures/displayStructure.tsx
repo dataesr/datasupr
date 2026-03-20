@@ -4,10 +4,11 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import Breadcrumb from "../../components/breadcrumb";
-import { getEsQuery, years } from "../../utils";
+import { years } from "../../utils";
 import StartupsByCounty from "./charts/startups-by-county";
 import StartupsByIncubator from "./charts/startups-by-incubator";
 import StartupsByYear from "./charts/startups-by-year";
+import PatentsByYear from "./charts/patents-by-year";
 
 import "./styles.scss";
 
@@ -42,15 +43,11 @@ export default function DisplayStructure() {
     setSearchParams(searchParams);
   };
 
-  const body = {
-    ...getEsQuery({ structures: [structure] }),
-    size: 1,
-  };
   const { data } = useQuery({
-    queryKey: ["fundings-structure", structure],
+    queryKey: ["valo-structure", structure],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_ORGANIZATIONS}`, {
-        body: JSON.stringify(body),
+        body: JSON.stringify({ size: 1, query: { bool: { filter: [ { term: { "id.keyword": structure } } ] } } }),
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -58,8 +55,8 @@ export default function DisplayStructure() {
         method: "POST",
       }).then((response) => response.json()),
   });
-  const structureInfo = Object.fromEntries(new URLSearchParams(data?.hits?.hits?.[0]?._source?.startup_links?.find((item) => item.structure === structure)?.denormalized?.encoded_key ?? ""));
-  const name = structureInfo?.label ?? "No French label";
+  const structureInfo = data?.hits?.hits?.[0]?._source ?? {};
+  const name = structureInfo?.label?.fr ?? "No French label";
   // const scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522${structure}%2522%252C%2522label%2522%253A%2522${name}%2522%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`;
 
   return (
@@ -85,7 +82,7 @@ export default function DisplayStructure() {
               </Text>
               <Text>
                 <span aria-hidden="true" className="fr-icon-map-pin-2-fill fr-mr-1w"></span>
-                {structureInfo?.region}
+                {structureInfo?.address?.[0]?.region}
               </Text>
             </Col>
             <Col>
@@ -210,12 +207,13 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <div>nb de brevet par année splitté par isInternational</div>
+                      <div>nb de brevets par année splitté par isInternational</div>
+                      <PatentsByYear name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <div>nb de brevet par classe splitté par isInternational</div>
+                      <div>nb de brevets par classe splitté par isInternational</div>
                     </Col>
                   </Row>
                   <Row gutters>

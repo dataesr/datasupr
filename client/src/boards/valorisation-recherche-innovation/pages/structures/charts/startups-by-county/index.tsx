@@ -3,14 +3,13 @@ import { useQuery } from "@tanstack/react-query";
 import "highcharts/modules/pattern-fill";
 import { useSearchParams } from "react-router-dom";
 
-import ChartWrapper, { HighchartsOptions } from "../../../../../../components/chart-wrapper/index.tsx";
 import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options.ts";
+import ChartWrapper, { HighchartsOptions } from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../../../utils.tsx";
-import { deepMerge } from "../../../../../../utils.tsx";
+import { deepMerge, getI18nLabel } from "../../../../../../utils.tsx";
 import i18n from "../../../../i18n.json";
-import { getEsQuery, getYearRangeLabel } from "../../../../utils.ts";
+import { getEsQueryStartups, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -22,7 +21,7 @@ export default function StartupsByCounty({ name }: { name: string | undefined })
   const color = useChartColor();
 
   const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+    ...getEsQueryStartups({ structures: [structure], yearMax, yearMin }),
     aggregations: {
       by_county: {
         terms: {
