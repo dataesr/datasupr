@@ -35,7 +35,7 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
 
   const body = {
     ...getEsQueryPublications({ structureIds, yearMax, yearMin }),
-    size: 10,
+    size: 0,
     aggregations: {
       by_year: {
         terms: {
@@ -43,13 +43,14 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
           order: { _key: "asc" },
           size: 25,
         },
-        // aggregations: {
-        //   by_international: {
-        //     terms: {
-        //       field: "isInternational",
-        //     },
-        //   },
-        // },
+        aggregations: {
+          by_company: {
+            terms: {
+              field: "structured_acknowledgments.private_companies.entity.keyword",
+              size: 25,
+            },
+          },
+        },
       },
     },
   };
@@ -68,14 +69,19 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
   });
 
   const categories = (data?.aggregations?.by_year?.buckets ?? []).map((bucket) => bucket?.key);
-  // const isInternational: Number[] = [];
-  // const isNotInternational: Number[] = [];
-  // (data?.aggregations?.by_creation_year?.buckets ?? []).forEach((bucket) => {
-  //   isInternational.push(bucket?.by_international?.buckets?.find((item) => item.key_as_string === 'true')?.doc_count ?? 0);
-  //   isNotInternational.push(bucket?.by_international?.buckets?.find((item) => item.key_as_string === 'false')?.doc_count ?? 0);
-  // });
-  // const series = [{ color: 'green', data: isInternational, name: 'International' }, { color: 'blue', data: isNotInternational, name: 'Non international' }];
-  const series = [{ data: (data?.aggregations?.by_year?.buckets ?? []).map((bucket) => bucket?.doc_count) }];
+  let companies = (data?.aggregations?.by_year?.buckets ?? []).map((bucket) => bucket.by_company.buckets.map((bucket2) => bucket2.key));
+  companies = [...new Set(companies.flat())]
+  const d = {};
+  companies.forEach((company) => {
+    if (!Object.keys(d).includes((company))) {
+      d[company] = [];
+    }
+    categories.forEach((category) => {
+      d[company].push(data?.aggregations?.by_year?.buckets?.find((item) => item.key === category)?.by_company?.buckets?.find((item) => item.key === company)?.doc_count ?? 0);
+    });
+  });
+  const series = Object.keys(d).map((a) => ({ data: d[a], name: a }));
+
   const title = `Nombre de publications avec une société privée par année de publication ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
     return `<b>${this.y}</b> familles de brevets de statut ${this.series.name.toLowerCase()} et liées à l'établissement <b>${name}</b> ont été crées en <b>${categories[this.x]}</b>`;
@@ -102,11 +108,11 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
     tooltip: { formatter: tooltip },
     xAxis: {
       categories,
-      title: { text: "Année de création" },
+      title: { text: "Année de publication" },
     },
     yAxis: {
       stackLabels: { enabled: true },
-      title: { text: 'Nombre de familles de brevets' },
+      title: { text: 'Nombre de publications' },
     },
   };
 
