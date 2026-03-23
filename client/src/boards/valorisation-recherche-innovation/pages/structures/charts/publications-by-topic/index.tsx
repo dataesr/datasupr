@@ -37,15 +37,16 @@ export default function PublicationsByTopic({ name }: { name: string | undefined
     ...getEsQueryPublications({ structureIds, yearMax, yearMin }),
     size: 0,
     aggregations: {
-      by_topic: {
+      by_company: {
         terms: {
-          field: "topics.field.display_name.keyword",
+          field: "structured_acknowledgments.private_companies.entity.keyword",
           size: 25,
         },
         aggregations: {
-          by_company: {
+          by_topic: {
             terms: {
-              field: "structured_acknowledgments.private_companies.entity.keyword",
+              field: "topics.field.display_name.keyword",
+              size: 25,
             },
           },
         },
@@ -65,17 +66,20 @@ export default function PublicationsByTopic({ name }: { name: string | undefined
         method: "POST",
       }).then((response) => response.json()),
   });
-  console.log(data?.aggregations?.by_topic);
 
-  const categories = (data?.aggregations?.by_topic?.buckets ?? []).map((bucket) => bucket?.key);
-  // const isInternational: Number[] = [];
-  // const isNotInternational: Number[] = [];
-  // (data?.aggregations?.by_creation_year?.buckets ?? []).forEach((bucket) => {
-  //   isInternational.push(bucket?.by_international?.buckets?.find((item) => item.key_as_string === 'true')?.doc_count ?? 0);
-  //   isNotInternational.push(bucket?.by_international?.buckets?.find((item) => item.key_as_string === 'false')?.doc_count ?? 0);
-  // });
-  // const series = [{ color: 'green', data: isInternational, name: 'International' }, { color: 'blue', data: isNotInternational, name: 'Non international' }];
-  const series = [{ data: (data?.aggregations?.by_topic?.buckets ?? []).map((bucket) => bucket?.doc_count) }];
+  const categories = (data?.aggregations?.by_company?.buckets ?? []).map((bucket) => bucket?.key);
+  let topics = (data?.aggregations?.by_company?.buckets ?? []).map((bucket) => bucket.by_topic.buckets.map((bucket2) => bucket2.key));
+  topics = [...new Set(topics.flat())]
+  const d = {};
+  topics.forEach((topic) => {
+    if (!Object.keys(d).includes((topic))) {
+      d[topic] = [];
+    }
+    categories.forEach((category) => {
+      d[topic].push(data?.aggregations?.by_company?.buckets?.find((item) => item.key === category)?.by_topic?.buckets?.find((item) => item.key === topic)?.doc_count ?? 0);
+    });
+  });
+  const series = Object.keys(d).map((a) => ({ data: d[a], name: a }));
   const title = `Nombre de publications avec une société privée par année de publication ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
     return `<b>${this.y}</b> familles de brevets de statut ${this.series.name.toLowerCase()} et liées à l'établissement <b>${name}</b> ont été crées en <b>${categories[this.x]}</b>`;
@@ -102,11 +106,11 @@ export default function PublicationsByTopic({ name }: { name: string | undefined
     tooltip: { formatter: tooltip },
     xAxis: {
       categories,
-      title: { text: "Année de création" },
+      title: { text: "Société privée" },
     },
     yAxis: {
       stackLabels: { enabled: true },
-      title: { text: 'Nombre de familles de brevets' },
+      title: { text: 'Nombre de publications' },
     },
   };
 
