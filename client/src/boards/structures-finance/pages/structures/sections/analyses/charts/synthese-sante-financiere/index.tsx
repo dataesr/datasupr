@@ -54,7 +54,7 @@ export default function SyntheseSanteFinanciere({
 
   return (
     <div>
-      <Title as="h3" look="h3" className="fr-mb-3w">
+      <Title as="h3" look="h3" className="fr-h5 fr-mb-3w">
         Synthèse de la santé financière
         {etablissementName ? ` — ${etablissementName}` : ""}
       </Title>

@@ -132,8 +132,24 @@ export const useMetricEvolution = (metricKey: string) => {
 
   return useMemo(() => {
     if (!evolutionData || evolutionData.length === 0) return undefined;
+
+    const currentStructureId = String(etablissementId || "").trim();
+    const filteredData = evolutionData.filter((item: any) => {
+      if (!currentStructureId) return true;
+      return (
+        String(item.etablissement_id_paysage || "").trim() ===
+        currentStructureId
+      );
+    });
+
+    const uniqueByExercice = new Map();
+    filteredData.forEach((item: any) => {
+      const key = item.exercice || item.anuniv;
+      if (!uniqueByExercice.has(key)) uniqueByExercice.set(key, item);
+    });
+
     const yearNum = selectedYear ? Number(selectedYear) : null;
-    return evolutionData
+    return Array.from(uniqueByExercice.values())
       .sort((a: any, b: any) => Number(a.exercice) - Number(b.exercice))
       .filter((item: any) => !yearNum || Number(item.exercice) <= yearNum)
       .map((item: any) => ({
@@ -143,5 +159,5 @@ export const useMetricEvolution = (metricKey: string) => {
         sanfin_source: item.sanfin_source,
       }))
       .filter((item: any) => item.value != null && !isNaN(item.value));
-  }, [evolutionData, metricKey, selectedYear]);
+  }, [evolutionData, metricKey, selectedYear, etablissementId]);
 };
