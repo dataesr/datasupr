@@ -6,6 +6,15 @@
     padding-left: 0;
   }
 
+  .years-filter-ratio {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--text-mention-grey);
+    background-color: var(--background-alt-grey);
+    border-radius: 2px;
+    padding: 0.05rem 0.35rem;
+  }
+
   .years-filter-chevron {
     display: inline-block;
     width: 0.9rem;

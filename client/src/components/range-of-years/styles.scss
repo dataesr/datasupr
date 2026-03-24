@@ -19,4 +19,46 @@
       margin: 0;
     }
   }
+
+  .range-of-years-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .range-of-years-group {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .range-of-years-framework-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--text-mention-grey);
+    background-color: var(--background-alt-grey);
+    border: 1px solid transparent;
+    border-radius: 2px;
+    padding: 0.15rem 0.5rem;
+    min-width: 9rem;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s, border-color 0.15s;
+
+    &:hover {
+      border-color: var(--border-default-grey);
+    }
+
+    &.active {
+      color: var(--text-inverted-blue-france);
+      background-color: var(--background-action-high-blue-france);
+    }
+
+    .range-of-years-framework-ratio {
+      margin-left: 0.4rem;
+      font-size: 0.7rem;
+      opacity: 0.75;
+    }
+  }
 }

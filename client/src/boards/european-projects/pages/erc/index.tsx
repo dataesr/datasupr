@@ -41,6 +41,8 @@ export default function ERC() {
   const activeSection = searchParams.get("section") || "synthesis";
   const showYearsFilter = activeSection !== "evolution";
 
+  const selectedYearsCount = (searchParams.get("range_of_years") || "").split("|").filter(Boolean).length;
+
   const [isYearsFilterOpen, setIsYearsFilterOpen] = useState(false);
 
   return (
@@ -59,9 +61,12 @@ export default function ERC() {
               >
                 <span className={`years-filter-chevron${isYearsFilterOpen ? " open" : ""}`} aria-hidden="true" />
                 {i18n["filter-by-years"][currentLang] ?? i18n["filter-by-years"].fr}
+                <span className="years-filter-ratio">
+                  {selectedYearsCount}/{availableYears.length}
+                </span>
               </button>
               <div className={`years-filter-body${isYearsFilterOpen ? " open" : ""}`}>
-                <RangeOfYears availableYears={availableYears} defaultYears={defaultYears} />
+                <RangeOfYears availableYears={availableYears} defaultYears={defaultYears} yearsByFramework={filtersData?.yearsByFramework} />
               </div>
             </div>
           )}
