@@ -78,6 +78,7 @@ export interface ErcFiltersResponse {
   destinations: { code: string; name: string }[];
   panels: { id: string; name: string; lib: string; domaine: string; domaine_name: string }[];
   frameworks: string[];
+  yearsByFramework: Record<string, string[]>;
 }
 
 // API Functions

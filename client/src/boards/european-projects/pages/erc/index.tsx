@@ -35,10 +35,7 @@ export default function ERC() {
 
   // Années disponibles et par défaut
   const availableYears = filtersData?.years?.sort() || [];
-  const defaultYears =
-    availableYears.length > 0
-      ? availableYears.slice(-3) // Les 3 dernières années par défaut
-      : [];
+  const defaultYears = filtersData?.yearsByFramework?.["Horizon Europe"]?.sort() || (availableYears.length > 0 ? availableYears.slice(-3) : []);
 
   // Ne pas afficher le filtre d'années dans l'onglet évolution
   const activeSection = searchParams.get("section") || "synthesis";

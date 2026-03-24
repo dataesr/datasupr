@@ -656,7 +656,7 @@ router.route("/european-projects/erc/evolution-by-panel").get(async (req, res) =
  * Route pour récupérer les filtres disponibles (années, destinations, panels)
  */
 router.route("/european-projects/erc/filters").get(async (req, res) => {
-  const [years, destinations, panels, frameworks] = await Promise.all([
+  const [years, destinations, panels, frameworks, yearsByFrameworkRaw] = await Promise.all([
     db.collection(COLLECTION_NAME).distinct("call_year"),
     db
       .collection(COLLECTION_NAME)
@@ -685,13 +685,27 @@ router.route("/european-projects/erc/filters").get(async (req, res) => {
       ])
       .toArray(),
     db.collection(COLLECTION_NAME).distinct("framework"),
+    db
+      .collection(COLLECTION_NAME)
+      .aggregate([
+        { $group: { _id: { framework: "$framework", call_year: "$call_year" } } },
+        { $group: { _id: "$_id.framework", years: { $addToSet: "$_id.call_year" } } },
+        { $project: { _id: 0, framework: "$_id", years: 1 } },
+      ])
+      .toArray(),
   ]);
+
+  const yearsByFramework = yearsByFrameworkRaw.reduce((acc, { framework, years: fwYears }) => {
+    acc[framework] = fwYears.sort();
+    return acc;
+  }, {});
 
   res.json({
     years: years.sort(),
     destinations,
     panels,
     frameworks,
+    yearsByFramework,
   });
 });
 
