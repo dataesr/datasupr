@@ -1,13 +1,7 @@
 import { useMemo } from "react";
-import { Title } from "@dataesr/dsfr-plus";
+import { Title, Row, Col, Text } from "@dataesr/dsfr-plus";
 import CardSimple from "../../../../../../components/card-simple";
-import {
-  MapContainer,
-  TileLayer,
-  CircleMarker,
-  Popup,
-  useMap,
-} from "react-leaflet";
+import { MapContainer, TileLayer, CircleMarker, Popup, useMap } from "react-leaflet";
 import type { LatLngBoundsExpression, LatLngTuple } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { getCssColor } from "../../../../../../utils/colors";
@@ -23,10 +17,7 @@ const toNumber = (value: unknown): number | null => {
   return Number.isFinite(num) ? num : null;
 };
 
-const normalizeLatLon = (
-  maybeLat: unknown,
-  maybeLon: unknown
-): { lat: number; lon: number } | null => {
+const normalizeLatLon = (maybeLat: unknown, maybeLon: unknown): { lat: number; lon: number } | null => {
   const lat = toNumber(maybeLat);
   const lon = toNumber(maybeLon);
   if (lat == null || lon == null) return null;
@@ -34,80 +25,38 @@ const normalizeLatLon = (
   return { lat, lon };
 };
 
-const parseCoordString = (
-  value: string
-): { lat: number; lon: number } | null => {
+const parseCoordString = (value: string): { lat: number; lon: number } | null => {
   const trimmed = value.trim();
   if (!trimmed) return null;
-
   try {
-    const parsed = JSON.parse(trimmed);
-    return extractCoordinates(parsed);
+    return extractCoordinates(JSON.parse(trimmed));
   } catch {
-    const parts = trimmed
-      .split(/[;,\s]+/)
-      .map((v) => v.trim())
-      .filter(Boolean);
-
+    const parts = trimmed.split(/[;,\s]+/).map((v) => v.trim()).filter(Boolean);
     if (parts.length >= 2) {
       const a = toNumber(parts[0]);
       const b = toNumber(parts[1]);
-      if (a != null && b != null) {
-        const latLon = normalizeLatLon(a, b);
-        if (latLon) return latLon;
-        const lonLat = normalizeLatLon(b, a);
-        if (lonLat) return lonLat;
-      }
+      if (a != null && b != null) return normalizeLatLon(a, b) || normalizeLatLon(b, a);
     }
   }
-
   return null;
 };
 
-const extractCoordinates = (
-  source: any
-): { lat: number; lon: number } | null => {
+const extractCoordinates = (source: any): { lat: number; lon: number } | null => {
   if (!source) return null;
-
-  if (typeof source === "string") {
-    return parseCoordString(source);
-  }
-
+  if (typeof source === "string") return parseCoordString(source);
   if (Array.isArray(source) && source.length >= 2) {
-    const first = toNumber(source[0]);
-    const second = toNumber(source[1]);
-    if (first != null && second != null) {
-      const latLon = normalizeLatLon(first, second);
-      if (latLon) return latLon;
-      const lonLat = normalizeLatLon(second, first);
-      if (lonLat) return lonLat;
-    }
+    const [first, second] = [toNumber(source[0]), toNumber(source[1])];
+    if (first != null && second != null) return normalizeLatLon(first, second) || normalizeLatLon(second, first);
   }
-
-  const direct =
+  return (
     normalizeLatLon(source.lat, source.lon) ||
     normalizeLatLon(source.latitude, source.longitude) ||
     normalizeLatLon(source.y, source.x) ||
-    normalizeLatLon(source.geo_lat, source.geo_lon);
-
-  if (direct) return direct;
-
-  if (source.gps) {
-    const gpsCoords = parseCoordString(source.gps);
-    if (gpsCoords) return gpsCoords;
-  }
-
-  if (source.coordonnees) {
-    const nested = extractCoordinates(source.coordonnees);
-    if (nested) return nested;
-  }
-
-  if (source.coordinates) {
-    const nested = extractCoordinates(source.coordinates);
-    if (nested) return nested;
-  }
-
-  return null;
+    normalizeLatLon(source.geo_lat, source.geo_lon) ||
+    (source.gps ? parseCoordString(source.gps) : null) ||
+    (source.coordonnees ? extractCoordinates(source.coordonnees) : null) ||
+    (source.coordinates ? extractCoordinates(source.coordinates) : null)
+  );
 };
 
 function FitBounds({ bounds }: { bounds: LatLngBoundsExpression }) {
@@ -117,13 +66,7 @@ function FitBounds({ bounds }: { bounds: LatLngBoundsExpression }) {
 }
 
 export function ImplantationsSection({ data }: ImplantationsSectionProps) {
-  if (
-    !data?.implantations ||
-    !Array.isArray(data.implantations) ||
-    data.implantations.length === 0
-  ) {
-    return null;
-  }
+  if (!data?.implantations || !Array.isArray(data.implantations) || data.implantations.length === 0) return null;
 
   const points = useMemo(() => {
     const fromImplantations = (data.implantations as any[])
@@ -141,106 +84,42 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
         };
       })
       .filter(Boolean) as {
-      id: string;
-      name: string;
-      lat: number;
-      lon: number;
-      effectif: number | null;
-      partEffectif: number | null;
-      siege: boolean;
-    }[];
+        id: string;
+        name: string;
+        lat: number;
+        lon: number;
+        effectif: number | null;
+        partEffectif: number | null;
+        siege: boolean;
+      }[];
 
-    // Deduplicate by name + coordinates
     const unique = Array.from(
-      new Map(
-        fromImplantations.map((p) => [
-          `${p.name}-${p.lat.toFixed(6)}-${p.lon.toFixed(6)}`,
-          p,
-        ])
-      ).values()
+      new Map(fromImplantations.map((p) => [`${p.name}-${p.lat.toFixed(6)}-${p.lon.toFixed(6)}`, p])).values()
     );
-
     if (unique.length > 0) return unique;
 
     const fallback = extractCoordinates(data);
-    if (fallback) {
-      return [
-        {
-          id: "main",
-          name: data?.etablissement_lib || "Établissement",
-          lat: fallback.lat,
-          lon: fallback.lon,
-          effectif: data?.effectif_sans_cpge ?? null,
-          partEffectif: null,
-          siege: true,
-        },
-      ];
-    }
-
+    if (fallback) return [{ id: "main", name: data?.etablissement_lib || "Établissement", lat: fallback.lat, lon: fallback.lon, effectif: data?.effectif_sans_cpge ?? null, partEffectif: null, siege: true }];
     return [];
   }, [data]);
 
   const bounds = useMemo<LatLngBoundsExpression | null>(() => {
     if (points.length === 0) return null;
-    return points.map(
-      (p) => [p.lat, p.lon] as LatLngTuple
-    ) as LatLngBoundsExpression;
+    return points.map((p) => [p.lat, p.lon] as LatLngTuple) as LatLngBoundsExpression;
   }, [points]);
 
   return (
-    <section
-      id="section-implantations"
-      aria-labelledby="section-implantations-title"
-      className="section-container"
-    >
+    <section id="section-implantations" aria-labelledby="section-implantations-title" className="section-container">
       <div className="section-header fr-mb-4w">
-        <Title
-          as="h2"
-          look="h5"
-          id="section-implantations-title"
-          className="section-header__title"
-        >
+        <Title as="h2" look="h5" id="section-implantations-title" className="section-header__title">
           Implantations géographiques
         </Title>
       </div>
 
-      <div className="fr-grid-row fr-grid-row--gutters">
-        <div
-          className={points.length > 0 ? "fr-col-12 fr-col-lg-6" : "fr-col-12"}
-        >
-          <ul className="fr-grid-row fr-grid-row--gutters" role="list">
-            {data.implantations.map((implantation: any, index: number) => {
-              const partEffectif = implantation.part_effectif_sans_cpge;
-              const description = implantation.siege ? "Site principal" : "";
-              const bottomText = partEffectif
-                ? `${partEffectif.toFixed(1)} % de l'ensemble des étudiants inscrits`
-                : undefined;
-
-              return (
-                <li
-                  key={implantation.implantation_id || index}
-                  className="fr-col-12 fr-col-md-6"
-                >
-                  <CardSimple
-                    bottomText={bottomText}
-                    description={description}
-                    stat={implantation.effectif_sans_cpge}
-                    title={implantation.implantation}
-                    year={data.anuniv}
-                  />
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-
-        {points.length > 0 && bounds && (
-          <div className="fr-col-12 fr-col-lg-6">
-            <MapContainer
-              style={{ height: "420px", width: "100%" }}
-              bounds={bounds}
-              scrollWheelZoom={false}
-            >
+      {points.length > 0 && bounds && (
+        <Row className="fr-mb-4w">
+          <Col xs="12">
+            <MapContainer className="implantations-map" bounds={bounds} scrollWheelZoom={false}>
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -252,39 +131,54 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
                   center={[point.lat, point.lon]}
                   radius={point.siege ? 10 : 7}
                   pathOptions={{
-                    fillColor: point.siege
-                      ? getCssColor("yellow-moutarde-dark")
-                      : getCssColor("blue-france"),
+                    fillColor: point.siege ? getCssColor("yellow-moutarde") : getCssColor("blue-france"),
                     fillOpacity: 0.9,
                     color: getCssColor("beige-gris-galet"),
                     weight: 2,
                   }}
                 >
                   <Popup>
-                    <strong>{point.name}</strong>
-                    <br />
-                    {point.effectif != null
-                      ? `${Number(point.effectif).toLocaleString("fr-FR")} étudiants`
-                      : "Effectif non renseigné"}
-                    {point.partEffectif != null && (
-                      <>
-                        <br />
-                        <strong>{point.partEffectif.toFixed(1)} %</strong> des
-                        étudiants
-                      </>
-                    )}
-                    {point.siege && (
-                      <>
-                        <br />★ Site principal
-                      </>
-                    )}
+                    <div className="implantations-map__popup">
+                      {point.siege && <Text className="fr-text--sm">Site principal</Text>}
+                      <Text className="fr-text--sm fr-mb-0" >{point.name}</Text>
+                      <Text className="fr-text--xs fr-mb-0" style={{ color: "var(--text-mention-grey)" }}>
+                        {point.effectif != null ? `${Number(point.effectif).toLocaleString("fr-FR")} étudiants` : "Effectif non renseigné"}
+                      </Text>
+                      {point.partEffectif != null && (
+                        <Text className="fr-text--xs fr-mb-0" style={{ color: "var(--text-mention-grey)" }}>
+                          {point.partEffectif.toFixed(1)} % des étudiants
+                        </Text>
+                      )}
+                    </div>
                   </Popup>
                 </CircleMarker>
               ))}
             </MapContainer>
-          </div>
-        )}
-      </div>
+            <Row gutters className="fr-mt-1w fr-text--sm">
+              <div className="fr-col">
+                <span className="implantations-map__legend-dot implantations-map__legend-dot--siege" aria-hidden="true" />
+                Site principal
+                <span className="implantations-map__legend-dot implantations-map__legend-dot--site" aria-hidden="true" />
+                Site secondaire
+              </div>
+            </Row>
+          </Col>
+        </Row>
+      )}
+
+      <Row gutters>
+        {data.implantations.map((implantation: any, index: number) => (
+          <Col key={implantation.implantation_id || index} xs="12" md="6" lg="4">
+            <CardSimple
+              bottomText={implantation.part_effectif_sans_cpge ? `${implantation.part_effectif_sans_cpge.toFixed(1)} % de l'ensemble des étudiants inscrits` : undefined}
+              description={implantation.siege ? "Site principal" : ""}
+              stat={implantation.effectif_sans_cpge}
+              title={implantation.implantation}
+              year={data.anuniv}
+            />
+          </Col>
+        ))}
+      </Row>
       <MetricDefinitionsTable metricKeys={["nb_sites"]} />
     </section>
   );

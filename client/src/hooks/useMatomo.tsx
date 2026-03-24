@@ -24,6 +24,8 @@ export function useMatomo() {
     if (!initialized.current) {
       initialized.current = true;
       window._paq = window._paq || [];
+      window._paq.push(["setTrackerUrl", `${MATOMO_URL}matomo.php`]);
+      window._paq.push(["setSiteId", SITE_ID]);
       window._paq.push(["enableLinkTracking"]);
       const g = document.createElement("script");
       g.async = true;
@@ -32,8 +34,6 @@ export function useMatomo() {
     }
 
     const url = pathname + search;
-    window._paq.push(["setTrackerUrl", `${MATOMO_URL}matomo.php`]);
-    window._paq.push(["setSiteId", SITE_ID]);
     window._paq.push(["setCustomUrl", url]);
     window._paq.push(["setDocumentTitle", document.title]);
     window._paq.push(["trackPageView"]);

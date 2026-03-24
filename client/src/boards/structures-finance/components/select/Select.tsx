@@ -123,9 +123,9 @@ export function Select({
           id={menuId}
           role="listbox"
           aria-labelledby={triggerId}
-          aria-hidden={!isOpen}
           aria-multiselectable={multiple || undefined}
           className={popoverClasses}
+          {...(!isOpen ? { inert: true } : {})}
         >
           <div className="fx-select__popover-inner">{children}</div>
         </div>

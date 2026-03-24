@@ -20,7 +20,7 @@ export default function GlobalLayout() {
 
   return (
     <>
-      <header role="banner" className="fr-header">
+      <header className="fr-header">
         <div className="fr-header__body">
           <div className="fr-container">
             <div className="fr-header__body-row">
@@ -67,7 +67,6 @@ export default function GlobalLayout() {
             <div className="fr-header__menu-links"></div>
             <nav
               className="fr-nav"
-              role="navigation"
               aria-label="Menu principal"
             >
               <ul className="fr-nav__list">
@@ -89,9 +88,8 @@ export default function GlobalLayout() {
                 </li>
                 <li className="fr-nav__item">
                   <Link
-                    to={`/structures-finance/etablissements?${cleanParams}${
-                      cleanParams ? "&" : ""
-                    }section=ressources`}
+                    to={`/structures-finance/etablissements?${cleanParams}${cleanParams ? "&" : ""
+                      }section=ressources`}
                     target="_self"
                     {...(is("/structures-finance/etablissements") && {
                       "aria-current": "page",

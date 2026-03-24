@@ -46,8 +46,8 @@ export function MetricChartCard({
 
     const resolvedColor = color.startsWith("var(")
       ? getComputedStyle(document.documentElement)
-          .getPropertyValue(color.slice(4, -1))
-          .trim()
+        .getPropertyValue(color.slice(4, -1))
+        .trim()
       : color;
 
     chartInstance.current = Highcharts.chart({
@@ -145,6 +145,9 @@ export function MetricChartCard({
       exporting: {
         enabled: false,
       },
+      accessibility: {
+        enabled: false,
+      },
       tooltip: {
         shared: true,
         useHTML: true,
@@ -198,15 +201,8 @@ export function MetricChartCard({
           type: "areaspline",
           name: displayTitle,
           data: values,
-          accessibility: {
-            description: `${displayTitle}: Évolution de ${years[0]} à ${years[years.length - 1]}`,
-          },
         },
       ],
-      accessibility: {
-        enabled: true,
-        description: `Graphique montrant l'évolution de ${displayTitle} sur la période ${years[0]}-${years[years.length - 1]}`,
-      },
     });
 
     return () => {
@@ -236,7 +232,6 @@ export function MetricChartCard({
   return (
     <div
       className="fr-card"
-      tabIndex={0}
       role="article"
       aria-label={`${displayTitle}: ${value}${detail ? `, ${detail}` : ""}`}
       style={{
@@ -287,6 +282,7 @@ export function MetricChartCard({
       {hasChart && (
         <div
           ref={chartRef}
+          aria-hidden="true"
           style={{
             width: "100%",
             height: `${chartHeight}px`,

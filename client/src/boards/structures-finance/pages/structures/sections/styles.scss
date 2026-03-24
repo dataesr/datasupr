@@ -55,3 +55,33 @@
   color: var(--text-default-grey);
   margin: 0;
 }
+
+.implantations-map {
+  height: 420px;
+
+  .leaflet-popup-content {
+    margin: 0;
+  }
+
+  &__popup {
+    padding: 3px;
+  }
+
+  &__legend-dot {
+    display: inline-block;
+    vertical-align: middle;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-left: 4px;
+    margin-right: 4px;
+
+    &--siege {
+      background: var(--yellow-moutarde);
+    }
+
+    &--site {
+      background: var(--blue-france);
+    }
+  }
+}
