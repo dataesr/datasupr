@@ -15,27 +15,11 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 import YearSelector from "../../../../components/YearSelector";
 import FiltersWrapper from "../../../../components/filters-wrapper";
 
-import { Text } from "@dataesr/dsfr-plus";
-
 const config = {
   id: "typeBeneficiariesEvolution",
   title: {
-    fr: (
-      <>
-        Évolution des types de bénéficiaires
-        <Text className="fr-text--light">
-          <i>Évolution des subventions par pays (en millions d'euros)</i>
-        </Text>
-      </>
-    ),
-    en: (
-      <>
-        Type of beneficiaries evolution
-        <Text className="fr-text--light">
-          <i>Evolution of funding by country (in millions of euros)</i>
-        </Text>
-      </>
-    ),
+    fr: "Évolution des types de bénéficiaires — Évolution des subventions par pays (en millions d'euros)",
+    en: "Type of beneficiaries evolution — Evolution of funding by country (in millions of euros)",
   },
   description: {
     fr: "Évolution des subventions obtenues par type d'entités selon les pays du top 10.",

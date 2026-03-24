@@ -27,8 +27,8 @@ export default function ProgramsFundingProportion() {
     readingKey: readingKey(data, isLoading),
     sources: EPChartsSources,
     title: {
-      fr: <>Part des financement demandés et obtenus par le pays sur l'ensemble des pays</>,
-      en: <>Funding requested and obtained by the country on all countries</>,
+      fr: "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
+      en: "Funding requested and obtained by the country on all countries",
     },
     integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-proportion",
   };
