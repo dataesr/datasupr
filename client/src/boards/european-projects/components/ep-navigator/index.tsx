@@ -342,10 +342,7 @@ export default function EpNavigator() {
           )}
           {isMoreFiltersOpen && (
             <div className={styles.moreFiltersContainer}>
-              <RangeOfYears
-                availableYears={["2021", "2022", "2023", "2024", "2025", "2026"]}
-                defaultYears={["2021", "2022", "2023", "2024", "2025", "2026"]}
-              />
+              <RangeOfYears availableYears={["2021", "2022", "2023", "2024", "2025"]} defaultYears={["2021", "2022", "2023", "2024", "2025"]} />
               <div className={styles.moreFiltersFooter}>
                 <button type="button" className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm" onClick={() => setIsMoreFiltersOpen(false)}>
                   {i18nFilters["less-filters"][currentLang]}

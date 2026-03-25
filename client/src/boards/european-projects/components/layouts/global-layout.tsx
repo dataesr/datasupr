@@ -24,7 +24,7 @@ export default function GlobalLayout() {
       setSearchParams(searchParams);
     }
     if (!searchParams.get("range_of_years")) {
-      searchParams.set("range_of_years", "2021|2022|2023|2024|2025|2026"); // default value
+      searchParams.set("range_of_years", "2021|2022|2023|2024|2025"); // default value
       setSearchParams(searchParams);
     }
   }, [searchParams, setSearchParams]);
