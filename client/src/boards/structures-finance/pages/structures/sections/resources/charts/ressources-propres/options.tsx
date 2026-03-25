@@ -2,140 +2,108 @@ import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { getCssColor } from "../../../../../../../../utils/colors";
 
-interface RessourcesPropresData {
-  droits_d_inscription?: number;
-  formation_continue_diplomes_propres_et_vae?: number;
-  taxe_d_apprentissage?: number;
-  valorisation?: number;
-  anr_hors_investissements_d_avenir?: number;
-  anr_investissements_d_avenir?: number;
-  contrats_et_prestations_de_recherche_hors_anr?: number;
-  subventions_de_la_region?: number;
-  subventions_union_europeenne?: number;
-  autres_ressources_propres?: number;
-  autres_subventions?: number;
-  part_droits_d_inscription?: number;
-  part_formation_continue_diplomes_propres_et_vae?: number;
-  part_taxe_d_apprentissage?: number;
-  part_valorisation?: number;
-  part_anr_hors_investissements_d_avenir?: number;
-  part_anr_investissements_d_avenir?: number;
-  part_contrats_et_prestations_de_recherche_hors_anr?: number;
-  part_subventions_de_la_region?: number;
-  part_subventions_union_europeenne?: number;
-  part_autres_ressources_propres?: number;
-  part_autres_subventions?: number;
-}
+const GROUPS = [
+  {
+    id: "g-formation",
+    name: "Formation",
+    colorKey: "ress-groupe-formation",
+    items: [
+      { key: "droits_d_inscription", partKey: "part_droits_d_inscription", label: "Droits d'inscription" },
+      { key: "formation_continue_diplomes_propres_et_vae", partKey: "part_formation_continue_diplomes_propres_et_vae", label: "Formation continue" },
+      { key: "taxe_d_apprentissage", partKey: "part_taxe_d_apprentissage", label: "Taxe d'apprentissage" },
+    ],
+  },
+  {
+    id: "g-recherche",
+    name: "Recherche",
+    colorKey: "ress-groupe-recherche",
+    items: [
+      { key: "valorisation", partKey: "part_valorisation", label: "Valorisation" },
+      { key: "anr_hors_investissements_d_avenir", partKey: "part_anr_hors_investissements_d_avenir", label: "ANR hors investissements d'avenir" },
+      { key: "anr_investissements_d_avenir", partKey: "part_anr_investissements_d_avenir", label: "ANR investissements d'avenir" },
+      { key: "contrats_et_prestations_de_recherche_hors_anr", partKey: "part_contrats_et_prestations_de_recherche_hors_anr", label: "Contrats & prestations" },
+    ],
+  },
+  {
+    id: "g-autres",
+    name: "Autres",
+    colorKey: "ress-groupe-autres",
+    items: [
+      { key: "subventions_de_la_region", partKey: "part_subventions_de_la_region", label: "Subventions région" },
+      { key: "subventions_union_europeenne", partKey: "part_subventions_union_europeenne", label: "Subventions UE" },
+      { key: "autres_subventions", partKey: "part_autres_subventions", label: "Autres subventions" },
+      { key: "autres_ressources_propres", partKey: "part_autres_ressources_propres", label: "Autres ressources" },
+    ],
+  },
+];
+
+export { GROUPS };
 
 export const createRessourcesPropresChartOptions = (
-  data: RessourcesPropresData,
+  data: Record<string, any>,
   viewMode: "value" | "percentage" = "value"
 ): Highcharts.Options => {
-  const categories = [
-    "Droits d'inscription",
-    "Formation continue",
-    "Taxe d'apprentissage",
-    "Valorisation",
-    "ANR hors investissements d'avenir",
-    "ANR investissements d'avenir",
-    "Contrats & prestations",
-    "Subventions région",
-    "Subventions UE",
-    "Autres ressources",
-    "Autres subventions",
-  ];
+  const flatData: any[] = [];
+  const legendItems: Array<{ name: string; color: string }> = [];
 
-  const values = [
-    data.droits_d_inscription || 0,
-    data.formation_continue_diplomes_propres_et_vae || 0,
-    data.taxe_d_apprentissage || 0,
-    data.valorisation || 0,
-    data.anr_hors_investissements_d_avenir || 0,
-    data.anr_investissements_d_avenir || 0,
-    data.contrats_et_prestations_de_recherche_hors_anr || 0,
-    data.subventions_de_la_region || 0,
-    data.subventions_union_europeenne || 0,
-    data.autres_ressources_propres || 0,
-    data.autres_subventions || 0,
-  ];
-
-  const percentages = [
-    data.part_droits_d_inscription || 0,
-    data.part_formation_continue_diplomes_propres_et_vae || 0,
-    data.part_taxe_d_apprentissage || 0,
-    data.part_valorisation || 0,
-    data.part_anr_hors_investissements_d_avenir || 0,
-    data.part_anr_investissements_d_avenir || 0,
-    data.part_contrats_et_prestations_de_recherche_hors_anr || 0,
-    data.part_subventions_de_la_region || 0,
-    data.part_subventions_union_europeenne || 0,
-    data.part_autres_ressources_propres || 0,
-    data.part_autres_subventions || 0,
-  ];
-
-  const colors = [
-    getCssColor("ress-droits-inscription"),
-    getCssColor("ress-formation-continue"),
-    getCssColor("ress-taxe-apprentissage"),
-    getCssColor("ress-valorisation"),
-    getCssColor("ress-anr-hors-ia"),
-    getCssColor("ress-anr-ia"),
-    getCssColor("ress-contrats-recherche"),
-    getCssColor("ress-subventions-region"),
-    getCssColor("ress-subventions-ue"),
-    getCssColor("ress-autres-ressources"),
-    getCssColor("ress-autres-subventions"),
-  ];
-
-  const seriesData = categories.map((cat, idx) => ({
-    name: cat,
-    value: viewMode === "value" ? values[idx] : percentages[idx],
-    actualValue: values[idx],
-    color: colors[idx],
-    percentage: percentages[idx],
-  }));
+  for (const group of GROUPS) {
+    const color = getCssColor(group.colorKey);
+    legendItems.push({ name: group.name, color });
+    for (const item of group.items) {
+      const value = data[item.key] || 0;
+      const part = data[item.partKey] || 0;
+      if (value === 0) continue;
+      flatData.push({
+        name: item.label,
+        value: viewMode === "percentage" ? part : value,
+        custom: { actualValue: value, part, groupe: group.name },
+        color,
+      });
+    }
+  }
 
   return createChartOptions("treemap", {
     chart: {
-      height: 500,
+      height: 530,
       spacing: [0, 0, 0, 0],
-      margin: [0, 0, 0, 0],
+      margin: [0, 0, 30, 0],
+      events: {
+        render: function () {
+          const chart = this as any;
+          if (chart._customLegend) {
+            chart._customLegend.forEach((el: any) => el.destroy());
+          }
+          chart._customLegend = [];
+
+          const y = chart.chartHeight - 12;
+          let x = chart.plotLeft;
+
+          legendItems.forEach(({ name, color }) => {
+            const dot = chart.renderer
+              .circle(x + 6, y, 6)
+              .attr({ fill: color, zIndex: 5 })
+              .add();
+            const label = chart.renderer
+              .text(name, x + 16, y + 4)
+              .css({ fontSize: "12px", color: "var(--text-default-grey)", fontFamily: "Marianne, sans-serif" })
+              .attr({ zIndex: 5 })
+              .add();
+            chart._customLegend.push(dot, label);
+            x += name.length * 8 + 30;
+          });
+        },
+      },
     },
     tooltip: {
       shadow: false,
       formatter: function () {
-        const point = this as any;
-        if (viewMode === "value") {
-          return `<div style="padding:10px">
-                  <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
-                    point.name
-                  }</div>
-                  <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${Highcharts.numberFormat(
-                    point.actualValue,
-                    0,
-                    ",",
-                    " "
-                  )} €</div>
-                  <div style="font-size:13px">${point.percentage.toFixed(
-                    1
-                  )}% des ressources propres</div>
-                  </div>`;
-        } else {
-          return `<div style="padding:10px">
-                  <div style="font-weight:bold;margin-bottom:5px;font-size:14px">${
-                    point.name
-                  }</div>
-                  <div style="font-size:16px;font-weight:bold;margin-bottom:8px">${point.percentage.toFixed(
-                    1
-                  )}%</div>
-                  <div style="font-size:13px">${Highcharts.numberFormat(
-                    point.actualValue,
-                    0,
-                    ",",
-                    " "
-                  )} €</div>
-                  </div>`;
-        }
+        const point = (this as any).point ?? this;
+        if (!point.custom) return `<b>${point.name}</b>`;
+        const { actualValue, part, groupe } = point.custom;
+        const valStr = Highcharts.numberFormat(actualValue, 0, ",", "\u00a0") + "\u00a0\u20ac";
+        return viewMode === "value"
+          ? `<b>${point.name}</b><br/><i>${groupe}</i><br/>${valStr}<br/>${part.toFixed(1)}\u00a0% des ressources propres`
+          : `<b>${point.name}</b><br/><i>${groupe}</i><br/>${part.toFixed(1)}\u00a0%<br/>${valStr}`;
       },
     },
     plotOptions: {
@@ -143,45 +111,10 @@ export const createRessourcesPropresChartOptions = (
         layoutAlgorithm: "squarified",
         dataLabels: {
           enabled: true,
-          useHTML: true,
-          formatter: function () {
-            const point = this as any;
-            if (point.value === 0) return null;
-            if (viewMode === "value") {
-              return `<div style="text-align:center">
-                        <div style="font-weight:bold;font-size:12px;margin-bottom:2px">${
-                          point.name
-                        }</div>
-                        <div style="font-size:11px">${Highcharts.numberFormat(
-                          point.actualValue,
-                          0,
-                          ",",
-                          " "
-                        )} €</div>
-                        <div style="font-size:10px">${point.percentage.toFixed(
-                          1
-                        )}%</div>
-                      </div>`;
-            } else {
-              return `<div style="text-align:center">
-                        <div style="font-weight:bold;font-size:12px;margin-bottom:2px">${
-                          point.name
-                        }</div>
-                        <div style="font-size:11px">${point.percentage.toFixed(
-                          1
-                        )}%</div>
-                      </div>`;
-            }
-          },
+          style: { fontSize: "11px", fontWeight: "400", color: "var(--text-inverted-grey)", textOutline: "none" },
         },
       },
     },
-    series: [
-      {
-        name: "Ressources propres",
-        type: "treemap",
-        data: seriesData,
-      },
-    ],
+    series: [{ name: "Ressources propres", type: "treemap", data: flatData }],
   });
 };

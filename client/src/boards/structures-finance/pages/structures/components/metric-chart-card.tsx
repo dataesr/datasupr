@@ -56,7 +56,7 @@ export function MetricChartCard({
         type: "areaspline",
         height: 80,
         backgroundColor: "transparent",
-        margin: [0, -40, 0, -45],
+        margin: [2, -45, 2, -45],
         spacing: [0, 0, 0, 0],
       },
       title: {
@@ -227,7 +227,6 @@ export function MetricChartCard({
   //     : null;
 
   const hasChart = evolutionData && evolutionData.length > 0;
-  const chartHeight = 100;
 
   return (
     <div
@@ -242,6 +241,8 @@ export function MetricChartCard({
         backgroundColor: "var(--background-alt-grey)",
         display: "flex",
         flexDirection: "column",
+        overflow: "hidden",
+        paddingBottom: 0,
       }}
     >
       <div
@@ -276,21 +277,46 @@ export function MetricChartCard({
               {detail}
             </p>
           )}
+
         </div>
       </div>
 
       {hasChart && (
         <div
-          ref={chartRef}
-          aria-hidden="true"
           style={{
-            width: "100%",
-            height: `${chartHeight}px`,
+            position: "relative",
             flex: "0 0 auto",
             order: 2,
-            marginBottom: -1,
           }}
-        />
+        >
+          <div
+            ref={chartRef}
+            aria-hidden="true"
+            style={{
+              width: "100%",
+            }}
+          />
+          {evolutionData && evolutionData.length >= 2 && (
+            <div
+              style={{
+                position: "absolute",
+                bottom: 2,
+                left: 8,
+                right: 8,
+                display: "flex",
+                justifyContent: "space-between",
+                pointerEvents: "none",
+              }}
+            >
+              <span style={{ fontWeight: "bold", fontSize: "10px", color: "var(--text-mention-grey)" }}>
+                {evolutionData[0].exercice}
+              </span>
+              <span style={{ fontWeight: "bold", fontSize: "10px", color: "var(--text-mention-grey)" }}>
+                {evolutionData[evolutionData.length - 1].exercice}
+              </span>
+            </div>
+          )}
+        </div>
       )}
     </div>
   );

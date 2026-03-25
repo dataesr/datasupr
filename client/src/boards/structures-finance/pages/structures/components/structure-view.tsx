@@ -1,6 +1,7 @@
+import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Col, Container, Row } from "@dataesr/dsfr-plus";
-import { useFinanceYears } from "../../../api";
+import { useFinanceYears, useFinanceEtablissementEvolution } from "../../../api";
 import {
   useFinanceStructureDetail,
   useCheckMultipleStructures,
@@ -19,6 +20,7 @@ import {
   PositionnementSection,
 } from "../sections/sections";
 import StructureNotExistsAlert from "./structure-not-exists-alert";
+import NoDataForYearAlert from "./no-data-for-year-alert";
 import MultipleStructuresSelector from "./multiple-structures-selector";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import Breadcrumb from "../../../components/breadcrumb";
@@ -31,8 +33,20 @@ export default function StructureView() {
   const useHistorical = searchParams.get("useHistorical") === "true";
   const section = searchParams.get("section") || "ressources";
 
-  const { data: yearsData } = useFinanceYears();
+  const { data: yearsData, isLoading: isLoadingYears } = useFinanceYears();
   const years = yearsData?.years || [];
+
+  const { data: evolutionData } = useFinanceEtablissementEvolution(
+    selectedStructure,
+    !!selectedStructure
+  );
+
+  const availableYears = useMemo(() => {
+    if (!evolutionData?.length) return years;
+    const exerciceSet = new Set(evolutionData.map((d: any) => String(d.exercice)));
+    const filtered = years.filter((y: number) => exerciceSet.has(String(y)));
+    return filtered.length > 0 ? filtered : years;
+  }, [evolutionData, years]);
 
   const { data: multiplesData, isLoading: isCheckingMultiples } =
     useCheckMultipleStructures(
@@ -51,8 +65,14 @@ export default function StructureView() {
   const showMultipleSelector =
     !useHistorical && multiplesData?.hasMultiples && !isCheckingMultiples;
 
+  // Cas fusion/remplacement : l'établissement actuel est différent ET a des données pour cette année
   const showNotExistsAlert =
-    existsData && !existsData.exists && existsData.etablissementActuel;
+    existsData?.isRedirectAvailable === true &&
+    existsData.etablissementActuel &&
+    existsData.etablissementActuel.etablissement_id_paysage !== selectedStructure;
+
+  // Cas pas de données pour l'année : l'établissement existe mais pas pour cette année
+  const showNoDataAlert = existsData && !existsData.exists && !showNotExistsAlert;
 
   const { data: detailData, isLoading } = useFinanceStructureDetail(
     selectedStructure,
@@ -60,9 +80,7 @@ export default function StructureView() {
     !!selectedStructure &&
     !!(selectedYear || years[0]) &&
     !showMultipleSelector &&
-    !showNotExistsAlert,
-    useHistorical
-  );
+    !showNotExistsAlert);
 
   const handleClearSelection = () => {
     const params = Object.fromEntries(searchParams);
@@ -133,7 +151,7 @@ export default function StructureView() {
     }
   };
 
-  if (isLoading || isCheckingMultiples || isCheckingExists) {
+  if (isLoading || isCheckingMultiples || isCheckingExists || isLoadingYears) {
     return (
       <main>
         <Container fluid className="etablissement-selector__wrapper">
@@ -146,6 +164,7 @@ export default function StructureView() {
   }
 
   if (showNotExistsAlert && existsData?.etablissementActuel) {
+
     return (
       <main>
         <StructureNotExistsAlert
@@ -156,6 +175,21 @@ export default function StructureView() {
           selectedYear={selectedYear}
         />
       </main>
+    );
+  }
+
+  if (showNoDataAlert) {
+
+    return (
+      <NoDataForYearAlert
+        etablissementLib={
+          existsData?.etablissement_lib_historique || selectedStructure
+        }
+        selectedYear={selectedYear}
+        availableYears={availableYears}
+        onYearChange={handleYearChange}
+        onClearSelection={handleClearSelection}
+      />
     );
   }
 

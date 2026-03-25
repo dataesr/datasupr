@@ -131,16 +131,16 @@ export default function RessourcesPropresChart({
     },
     readingKey: topRessource
       ? {
-          fr: (
-            <>
-              En {formattedYear}, le total des ressources propres s'élève à{" "}
-              <strong>{euro(totalRessources)} €</strong>. La principale source
-              est {topRessource.label.toLowerCase()} avec{" "}
-              <strong>{euro(topRessource.value)} €</strong> (
-              {pct(topRessource.part)}).
-            </>
-          ),
-        }
+        fr: (
+          <>
+            En {formattedYear}, le total des ressources propres s'élève à{" "}
+            <strong>{euro(totalRessources)} €</strong>. La principale source
+            est {topRessource.label.toLowerCase()} avec{" "}
+            <strong>{euro(topRessource.value)} €</strong> (
+            {pct(topRessource.part)}).
+          </>
+        ),
+      }
       : undefined,
   };
 

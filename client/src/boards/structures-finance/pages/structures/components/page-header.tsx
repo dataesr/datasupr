@@ -320,10 +320,10 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
                     )}
                     {(data.has_effectif_sante_disc ||
                       data.has_effectif_sante) && (
-                      <li>
-                        <Tag size="sm">Santé</Tag>
-                      </li>
-                    )}
+                        <li>
+                          <Tag size="sm">Santé</Tag>
+                        </li>
+                      )}
                     {data.has_effectif_interd && (
                       <li>
                         <Tag size="sm">Pluridisciplinaire</Tag>

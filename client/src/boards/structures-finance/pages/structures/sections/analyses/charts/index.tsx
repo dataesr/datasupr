@@ -94,20 +94,21 @@ export default function EvolutionChart({
     if (!rawData) return undefined;
 
     const currentStructureId = String(activeEtablissementId || "").trim();
-    const filteredData = rawData.filter((item: any) => {
-      if (!currentStructureId) return true;
-      return (
-        String(item.etablissement_id_paysage || "").trim() ===
-        currentStructureId
-      );
-    });
 
-    const uniqueByExercice = new Map();
-    filteredData.forEach((item: any) => {
-      const key = item.exercice || item.anuniv;
-      if (!uniqueByExercice.has(key)) {
-        uniqueByExercice.set(key, item);
-      }
+    // On ne garde que les lignes correspondant strictement à l'établissement courant,
+    // puis on déduplique par année (en cas de doublons résiduels).
+    const filtered = currentStructureId
+      ? rawData.filter(
+        (item: any) =>
+          String(item.etablissement_id_paysage || "").trim() === currentStructureId
+      )
+      : rawData;
+
+    const uniqueByExercice = new Map<string, any>();
+    filtered.forEach((item: any) => {
+      const key = String(item.exercice ?? item.anuniv ?? "");
+      if (!key || uniqueByExercice.has(key)) return;
+      uniqueByExercice.set(key, item);
     });
 
     return Array.from(uniqueByExercice.values()).map((item: any) => ({

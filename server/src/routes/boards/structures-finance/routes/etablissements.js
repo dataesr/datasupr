@@ -316,8 +316,12 @@ router.get(
         limit: 1,
       });
 
+      const actuelIdDiffers =
+        historicalDoc.etablissement_id_paysage_actuel !== id;
+
       const payload = {
         exists: false,
+        isRedirectAvailable: !!currentDoc && actuelIdDiffers,
         etablissement_lib_historique: historicalDoc.etablissement_lib,
         etablissementActuel: currentDoc
           ? {
