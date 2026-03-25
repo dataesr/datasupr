@@ -74,13 +74,13 @@ export default function PatentsByYear({ name }: { name: string | undefined }) {
     isNotInternational.push(bucket?.by_international?.buckets?.find((item) => item.key_as_string === 'false')?.doc_count ?? 0);
   });
   const series = [{ color: 'green', data: isInternational, name: 'International' }, { color: 'blue', data: isNotInternational, name: 'Non international' }];
-  const title = `Nombre de familles de brevets par année de création ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const title = `Nombre de familles de brevets par année de soumission ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
     return `<b>${this.y}</b> familles de brevets de statut ${this.series.name.toLowerCase()} et liées à l'établissement <b>${name}</b> ont été crées en <b>${categories[this.x]}</b>`;
   };
 
   const config = {
-    comment: { "fr": <>Ce graphique indique, par années de création, le nombre de familles de brevets liées à l'établissement {name}.</> },
+    comment: { "fr": <>Ce graphique indique, par années de soumission, le nombre de familles de brevets liées à l'établissement {name}.</> },
     id: "patentsByYear",
     integrationURL: `/integration?chart_id=patentsByYear&${searchParams.toString()}`,
     title,
@@ -100,7 +100,7 @@ export default function PatentsByYear({ name }: { name: string | undefined }) {
     tooltip: { formatter: tooltip },
     xAxis: {
       categories,
-      title: { text: "Année de création" },
+      title: { text: "Année de soumission" },
     },
     yAxis: {
       stackLabels: { enabled: true },

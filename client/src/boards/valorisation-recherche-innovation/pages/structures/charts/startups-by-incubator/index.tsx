@@ -77,10 +77,10 @@ export default function StartupsByIncubator({ name }: { name: string | undefined
   };
 
   const options = {
-    chart: { type: 'column' },
+    chart: { type: 'bar' },
     legend: { enabled: true },
     plotOptions: {
-      column: {
+      bar: {
         dataLabels: { enabled: false },
         stacking: 'normal',
       },

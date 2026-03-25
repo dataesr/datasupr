@@ -65,7 +65,7 @@ export default function PatentsByClass({ name }: { name: string | undefined }) {
       }).then((response) => response.json()),
   });
 
-  const categories = (data?.aggregations?.by_class?.buckets ?? []).map((bucket) => bucket?.key.split('###')[1]);
+  const categories = (data?.aggregations?.by_class?.buckets ?? []).map((bucket) => bucket?.key.split('###')[1].charAt(0).toUpperCase() + bucket?.key.split('###')[1].slice(1).toLowerCase());
   const isInternational: Number[] = [];
   const isNotInternational: Number[] = [];
   (data?.aggregations?.by_class?.buckets ?? []).forEach((bucket) => {
@@ -86,10 +86,10 @@ export default function PatentsByClass({ name }: { name: string | undefined }) {
   };
 
   const options = {
-    chart: { type: 'column' },
+    chart: { type: 'bar' },
     legend: { enabled: true },
     plotOptions: {
-      column: {
+      bar: {
         dataLabels: { enabled: false }, 
         stacking: 'normal',
       },

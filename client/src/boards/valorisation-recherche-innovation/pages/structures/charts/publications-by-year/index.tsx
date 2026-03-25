@@ -23,7 +23,7 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
     queryKey: ["valo-structure", structure],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_ORGANIZATIONS}`, {
-        body: JSON.stringify({ size: 1, query: { bool: { filter: [ { term: { "id.keyword": structure } } ] } } }),
+        body: JSON.stringify({ size: 1, query: { bool: { filter: [{ term: { "id.keyword": structure } }] } } }),
         headers: {
           "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
@@ -37,16 +37,16 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
     ...getEsQueryPublications({ structureIds, yearMax, yearMin }),
     size: 0,
     aggregations: {
-      by_year: {
+      by_company: {
         terms: {
-          field: "year",
-          order: { _key: "asc" },
+          field: "structured_acknowledgments.private_companies.entity.keyword",
           size: 25,
         },
         aggregations: {
-          by_company: {
+          by_year: {
             terms: {
-              field: "structured_acknowledgments.private_companies.entity.keyword",
+              field: "year",
+              order: { _key: "asc" },
               size: 25,
             },
           },
@@ -68,23 +68,23 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
       }).then((response) => response.json()),
   });
 
-  const categories = (data?.aggregations?.by_year?.buckets ?? []).map((bucket) => bucket?.key);
-  let companies = (data?.aggregations?.by_year?.buckets ?? []).map((bucket) => bucket.by_company.buckets.map((bucket2) => bucket2.key));
-  companies = [...new Set(companies.flat())]
+  const categories = (data?.aggregations?.by_company?.buckets ?? []).map((bucket) => bucket?.key);
+  let years = (data?.aggregations?.by_company?.buckets ?? []).map((bucket) => bucket.by_year.buckets.map((bucket2) => bucket2.key));
+  years = [...new Set(years.flat())];
   const d = {};
-  companies.forEach((company) => {
-    if (!Object.keys(d).includes((company))) {
-      d[company] = [];
+  years.forEach((year) => {
+    if (!Object.keys(d).includes((year))) {
+      d[year] = [];
     }
     categories.forEach((category) => {
-      d[company].push(data?.aggregations?.by_year?.buckets?.find((item) => item.key === category)?.by_company?.buckets?.find((item) => item.key === company)?.doc_count ?? 0);
+      d[year].push(data?.aggregations?.by_company?.buckets?.find((item) => item.key === category)?.by_year?.buckets?.find((item) => item.key === year)?.doc_count ?? 0);
     });
   });
   const series = Object.keys(d).map((a) => ({ data: d[a], name: a }));
 
   const title = `Nombre de publications avec une société privée par année de publication ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
-    return `<b>${this.y}</b> familles de brevets de statut ${this.series.name.toLowerCase()} et liées à l'établissement <b>${name}</b> ont été crées en <b>${categories[this.x]}</b>`;
+    return `<b>${this.y}</b> publications sont parues en <b>${this.series.name}</b> co-signées par l'établissement <b>${name}</b> et par la société <b>${categories[this.x]}</b>`;
   };
 
   const config = {
@@ -95,11 +95,11 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
   };
 
   const options = {
-    chart: { type: 'column' },
+    chart: { type: 'bar' },
     legend: { enabled: true },
     plotOptions: {
-      column: {
-        dataLabels: { enabled: false }, 
+      bar: {
+        dataLabels: { enabled: false },
         stacking: 'normal',
       },
     },
@@ -116,7 +116,7 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
     },
   };
 
-  const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "600px" } }), options);
+  const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "1000px" } }), options);
 
   return (
     <div className={`chart-container chart-container--${color}`} id="publications-by-year">

@@ -230,19 +230,17 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <div>nb de publis avec une private company, par topics.field, splitté par private company</div>
                       <PublicationsByTopic name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <div>nb de publi avec une private company, par private company, splitté par année</div>
                       <PublicationsByYear name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <div>principaux labos par private company</div>
+                      <div>principaux labos stackés par private company, champs co_labs à venir sur l'index scanr-publications</div>
                     </Col>
                   </Row>
                 </>

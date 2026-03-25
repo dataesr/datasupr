@@ -66,14 +66,7 @@ export default function PatentsCoApplicants({ name }: { name: string | undefined
   });
 
   const filteredData = (data?.aggregations?.by_co_applicants?.buckets ?? []).filter((item) => !structureIds.includes(item.key.split('###')[0]));
-  const categories = filteredData.map((bucket) => bucket?.key?.split('###')[1]);
-  // const isInternational: Number[] = [];
-  // const isNotInternational: Number[] = [];
-  // (data?.aggregations?.by_co_applicants?.buckets ?? []).forEach((bucket) => {
-  //   isInternational.push(bucket?.by_international?.buckets?.find((item) => item.key_as_string === 'true')?.doc_count ?? 0);
-  //   isNotInternational.push(bucket?.by_international?.buckets?.find((item) => item.key_as_string === 'false')?.doc_count ?? 0);
-  // });
-  // const series = [{ color: 'green', data: isInternational, name: 'International' }, { color: 'blue', data: isNotInternational, name: 'Non international' }];
+  const categories = filteredData.map((bucket) => `${bucket?.key?.split('###')[1]} (${bucket?.key?.split('###')[2]})`);
   const series = [{ data: filteredData.map((item) => item.doc_count) }];
   const title = `Top 15 des co-déposants de brevets de l'établissement ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
@@ -88,10 +81,10 @@ export default function PatentsCoApplicants({ name }: { name: string | undefined
   };
 
   const options = {
-    chart: { type: 'column' },
+    chart: { type: 'bar' },
     legend: { enabled: false },
     plotOptions: {
-      column: {
+      bar: {
         dataLabels: { enabled: false }, 
         stacking: 'normal',
       },
