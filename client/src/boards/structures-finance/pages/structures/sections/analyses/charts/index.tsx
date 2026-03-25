@@ -17,6 +17,37 @@ import {
   type MetricKey,
   type AnalysisKey,
 } from "../../../../../config/metrics-config";
+export type InstitutionSeries = { id: string; label: string; isCurrent: boolean; records: any[] };
+
+function buildInstitutionSeries(rawData: any[], currentId: string): InstitutionSeries[] {
+  const groups = new Map<string, InstitutionSeries>();
+  for (const item of rawData) {
+    const id = String(item.etablissement_id_paysage || "").trim();
+    if (!id) continue;
+    if (!groups.has(id))
+      groups.set(id, { id, label: item.etablissement_lib || id, isCurrent: id === currentId, records: [] });
+    groups.get(id)!.records.push(item);
+  }
+  for (const group of groups.values()) {
+    const byYear = new Map<string, any>();
+    for (const item of group.records)
+      byYear.set(String(item.exercice ?? item.anuniv ?? ""), item);
+    group.records = Array.from(byYear.values())
+      .sort((a, b) => Number(a.exercice ?? a.anuniv) - Number(b.exercice ?? b.anuniv))
+      .map(r => ({ ...r, exercice_fin: r.sanfin_source === "Budget" ? `${r.exercice} (budget)` : String(r.exercice) }));
+  }
+  const result = Array.from(groups.values())
+    .sort((a, b) => Number(a.isCurrent) - Number(b.isCurrent) || a.label.localeCompare(b.label));
+  const current = result.find(g => g.isCurrent);
+  if (current) {
+    const conflicts = result.filter(g => !g.isCurrent && g.label === current.label);
+    if (conflicts.length > 0) {
+      current.label += " (nouveau)";
+      for (const g of conflicts) g.label += " (ancien)";
+    }
+  }
+  return result;
+}
 
 interface EvolutionChartProps {
   etablissementId?: string;
@@ -73,56 +104,27 @@ export default function EvolutionChart({
 
   useEffect(() => {
     setDisplayMode(displayModeParam === "percentage" ? "percentage" : "values");
-  }, [displayModeParam]);
-
-  useEffect(() => {
     setShowIPC(priceModeParam === "constant");
-  }, [priceModeParam]);
-
-  useEffect(() => {
     setShowPart(valueModeParam === "part");
-  }, [valueModeParam]);
+  }, [displayModeParam, priceModeParam, valueModeParam]);
 
   const { data: rawData } = useFinanceEtablissementEvolution(
     activeEtablissementId
   );
 
-  // Logique métier en lien avec les id actual etc......
-  // Nécessaire pour les institutions fusionnées qui ont plusieurs
-  // lignes pour une même année (ex: Université de Lille 2018-2020).
-  const data = useMemo(() => {
-    if (!rawData) return undefined;
-
-    const currentStructureId = String(activeEtablissementId || "").trim();
-
-    // On ne garde que les lignes correspondant strictement à l'établissement courant,
-    // puis on déduplique par année (en cas de doublons résiduels).
-    const filtered = currentStructureId
-      ? rawData.filter(
-        (item: any) =>
-          String(item.etablissement_id_paysage || "").trim() === currentStructureId
-      )
-      : rawData;
-
-    const uniqueByExercice = new Map<string, any>();
-    filtered.forEach((item: any) => {
-      const key = String(item.exercice ?? item.anuniv ?? "");
-      if (!key || uniqueByExercice.has(key)) return;
-      uniqueByExercice.set(key, item);
-    });
-
-    return Array.from(uniqueByExercice.values()).map((item: any) => ({
-      ...item,
-      exercice_fin:
-        item.sanfin_source === "Budget"
-          ? `${item.exercice} (budget)`
-          : String(item.exercice),
-    }));
+  const institutionSeries = useMemo((): InstitutionSeries[] => {
+    if (!rawData) return [];
+    return buildInstitutionSeries(rawData, String(activeEtablissementId || "").trim());
   }, [rawData, activeEtablissementId]);
+
+  const data = useMemo(() => {
+    const current = institutionSeries.find(s => s.isCurrent) ?? institutionSeries[institutionSeries.length - 1];
+    return current?.records ?? [];
+  }, [institutionSeries]);
 
   const getMetricLabel = useMetricLabel();
 
-  const etabName = etablissementName || data?.[0]?.etablissement_lib || "";
+  const etabName = etablissementName || data?.[0]?.etablissement_actuel_lib || data?.[0]?.etablissement_lib || "";
   const analysisConfig = PREDEFINED_ANALYSES[activeSelectedAnalysis];
   const baseMetrics = [...analysisConfig.metrics] as MetricKey[];
   const primaryMetric = baseMetrics.find((m) => !m.endsWith("_ipc"));
@@ -137,32 +139,26 @@ export default function EvolutionChart({
     useAcademicYear || isFormationsCategory ? "anuniv" : "exercice_fin";
 
   const selectedMetrics = useMemo(() => {
-    let metrics = baseMetrics;
-    const hasIPCMetrics = baseMetrics.some((m) => m.endsWith("_ipc"));
-
-    // En base 100, on exclut TOUJOURS les métriques IPC, sinon ça veut rien dire
-    if (isBase100) {
-      metrics = baseMetrics.filter((m) => !m.endsWith("_ipc"));
-    } else if (!hasIPCMetrics || showIPC) {
-      metrics = baseMetrics;
-    } else {
-      metrics = baseMetrics.filter((m) => !m.endsWith("_ipc"));
-    }
+    const hasIPC = baseMetrics.some(m => m.endsWith("_ipc"));
+    const metrics = (isBase100 || (hasIPC && !showIPC))
+      ? baseMetrics.filter(m => !m.endsWith("_ipc"))
+      : baseMetrics;
 
     if (showPart && metrics.length === 1) {
       const partKey = METRIC_TO_PART[metrics[0]];
-      if (partKey && METRICS_CONFIG[partKey]) {
-        const hasPartData = data?.some(
-          (item: any) => item[partKey] != null && item[partKey] !== 0
-        );
-        if (hasPartData) {
-          return [partKey];
-        }
-      }
+      if (partKey && METRICS_CONFIG[partKey] && data?.some((item: any) => item[partKey] != null && item[partKey] !== 0))
+        return [partKey];
     }
-
     return metrics;
   }, [baseMetrics, showIPC, showPart, data, isBase100]);
+
+  const hasFusion = institutionSeries.some(s => !s.isCurrent);
+  const hasNameClash = institutionSeries.some(s => s.label.endsWith(" (nouveau)"));
+  const fusionNote = hasFusion
+    ? hasNameClash
+      ? <> Cet établissement est issu d'une fusion : <strong>(nouveau)</strong> désigne l'établissement actuel, <strong>(ancien)</strong> ses prédécesseurs.</>
+      : <> Cet établissement est issu d'une fusion. Les données des établissements prédécesseurs sont représentées séparément.</>
+    : null;
 
   const createChartConfig = (
     chartId: string,
@@ -174,10 +170,10 @@ export default function EvolutionChart({
     title:
       titleOverride ||
       `${getMetricLabel(baseMetrics[0])}${etabName ? ` — ${etabName}` : ""}`,
-    comment: periodText ? { fr: commentOverride || <></> } : undefined,
+    comment: (commentOverride || fusionNote) ? { fr: <>{commentOverride}{fusionNote}</> } : undefined,
   });
 
-  if (!data || data.length === 0) {
+  if (institutionSeries.length === 0) {
     return (
       <div className="fr-alert fr-alert--info">
         <p>Aucune donnée disponible</p>
@@ -197,7 +193,6 @@ export default function EvolutionChart({
   if (isStacked) {
     return (
       <StackedEvolutionChart
-        etablissementId={activeEtablissementId}
         selectedMetrics={selectedMetrics}
         baseMetrics={baseMetrics}
         chartConfig={createChartConfig(
@@ -211,7 +206,7 @@ export default function EvolutionChart({
         displayMode={displayMode}
         onDisplayModeChange={handleDisplayModeChange}
         xAxisField={xAxisField}
-        data={data}
+        seriesGroups={institutionSeries}
       />
     );
   }
@@ -250,10 +245,7 @@ export default function EvolutionChart({
             chartConfig={createChartConfig(
               "evolution-single",
               undefined,
-              <>
-                Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()}{" "}
-                sur la période {periodText}.
-              </>
+              periodText ? <>Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()} sur la période {periodText}.</> : undefined
             )}
             metricThreshold={metricThreshold}
             selectedAnalysis={activeSelectedAnalysis}
@@ -263,7 +255,7 @@ export default function EvolutionChart({
             showPart={showPart}
             onIPCChange={handleIPCChange}
             onPartChange={handlePartChange}
-            data={data}
+            seriesGroups={institutionSeries}
           />
         )}
       </>
@@ -273,23 +265,18 @@ export default function EvolutionChart({
   if (selectedMetrics.length === 2 && !analysisConfig.showBase100) {
     return (
       <DualEvolutionChart
-        etablissementId={activeEtablissementId}
         metric1={selectedMetrics[0]}
         metric2={selectedMetrics[1]}
         baseMetrics={baseMetrics}
         chartConfig={createChartConfig(
           "evolution-dual",
           undefined,
-          <>
-            Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()} et{" "}
-            {getMetricLabel(selectedMetrics[1]).toLowerCase()} sur la période{" "}
-            {periodText}.
-          </>
+          periodText ? <>Évolution de {getMetricLabel(selectedMetrics[0]).toLowerCase()} et {getMetricLabel(selectedMetrics[1]).toLowerCase()} sur la période {periodText}.</> : undefined
         )}
         xAxisField={xAxisField}
         showIPC={showIPC}
         onIPCChange={handleIPCChange}
-        data={data}
+        seriesGroups={institutionSeries}
       />
     );
   }
@@ -303,7 +290,7 @@ export default function EvolutionChart({
         comparisonConfig={createChartConfig(
           "evolution-comparison",
           undefined,
-          <>Comparaison en base 100 sur la période {periodText}.</>
+          periodText ? <>Comparaison en base 100 sur la période {periodText}.</> : undefined
         )}
         createChartConfig={createChartConfig}
         getMetricLabel={getMetricLabel}

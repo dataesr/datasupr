@@ -2,6 +2,7 @@ import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { calculateOptimalTickInterval } from "../../../../../../utils/chartUtils";
 import { getCssColor } from "../../../../../../../../utils/colors";
+import type { InstitutionSeries } from "..";
 
 interface MetricConfig {
   label: string;
@@ -10,20 +11,20 @@ interface MetricConfig {
 }
 
 export const createStackedChartOptions = (
-  data: any[],
+  seriesGroups: InstitutionSeries[],
   selectedMetrics: string[],
   metricsConfig: Record<string, MetricConfig>,
   showPercentage: boolean,
   xAxisField: "exercice" | "exercice_fin" | "anuniv"
 ): Highcharts.Options => {
-  const sortedData = [...data]
-    .sort((a, b) => a.exercice - b.exercice)
-    .filter((item) =>
-      selectedMetrics.some((metric) => {
-        const value = item[metric];
-        return value != null && value !== 0;
-      })
-    );
+  const hasMultiple = seriesGroups.length > 1;
+  const yearToInstitution = new Map<string, string>();
+  seriesGroups.forEach(g => g.records.forEach(r => yearToInstitution.set(String(r[xAxisField]), g.label)));
+
+  const sortedData = seriesGroups
+    .flatMap(g => g.records)
+    .sort((a, b) => Number(a.exercice ?? a.anuniv) - Number(b.exercice ?? b.anuniv))
+    .filter(item => selectedMetrics.some(m => item[m] != null && item[m] !== 0));
 
   const series = [...selectedMetrics]
     .reverse()
@@ -141,7 +142,9 @@ export const createStackedChartOptions = (
         );
         const etablissement =
           yearIndex >= 0 ? sortedData[yearIndex].etablissement_lib || "" : "";
-        let tooltip = `<div style="padding:10px"><div style="font-weight:bold;margin-bottom:8px">${etablissement}</div>`;
+        const inst = hasMultiple ? yearToInstitution.get(String(year)) ?? "" : etablissement;
+        let tooltip = `<div style="padding:10px"><div style="font-weight:bold;margin-bottom:4px">${year}</div>`;
+        if (inst) tooltip += `<div style="margin-bottom:8px;color:var(--text-mention-grey);font-size:12px">${inst}</div>`;
         let total = 0;
 
         this.points?.forEach((point: any) => {

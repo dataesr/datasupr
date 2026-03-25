@@ -11,9 +11,9 @@ import { RenderDataComparison } from "../render-data";
 import { createDualChartOptions } from "./options";
 import { METRICS_CONFIG } from "../../../../../../config/metrics-config";
 import type { MetricKey } from "../../../../../../config/metrics-config";
+import { InstitutionSeries } from "..";
 
 interface DualEvolutionChartProps {
-  etablissementId: string;
   metric1: MetricKey;
   metric2: MetricKey;
   baseMetrics: MetricKey[];
@@ -21,7 +21,7 @@ interface DualEvolutionChartProps {
   xAxisField: "exercice" | "exercice_fin" | "anuniv";
   showIPC: boolean;
   onIPCChange: (show: boolean) => void;
-  data: any[];
+  seriesGroups: InstitutionSeries[];
 }
 
 export default function DualEvolutionChart({
@@ -32,12 +32,13 @@ export default function DualEvolutionChart({
   xAxisField,
   showIPC,
   onIPCChange,
-  data,
+  seriesGroups,
 }: DualEvolutionChartProps) {
+  const data = seriesGroups.flatMap(g => g.records);
   const hasIPCMetrics = baseMetrics.some((m) => m.endsWith("_ipc"));
 
   const chartOptions = createDualChartOptions(
-    data || [],
+    seriesGroups,
     metric1,
     metric2,
     METRICS_CONFIG,

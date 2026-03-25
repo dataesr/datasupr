@@ -7,15 +7,16 @@ import { createStackedChartOptions } from "./options";
 import { METRICS_CONFIG } from "../../../../../../config/metrics-config";
 import type { MetricKey } from "../../../../../../config/metrics-config";
 
+import type { InstitutionSeries } from "..";
+
 interface StackedEvolutionChartProps {
-  etablissementId: string;
   selectedMetrics: MetricKey[];
   baseMetrics: MetricKey[];
   chartConfig: any;
   displayMode: "values" | "percentage";
   onDisplayModeChange: (mode: "values" | "percentage") => void;
   xAxisField: "exercice" | "exercice_fin" | "anuniv";
-  data: any[];
+  seriesGroups: InstitutionSeries[];
 }
 
 export default function StackedEvolutionChart({
@@ -25,17 +26,18 @@ export default function StackedEvolutionChart({
   displayMode,
   onDisplayModeChange,
   xAxisField,
-  data,
+  seriesGroups,
 }: StackedEvolutionChartProps) {
+  const data = seriesGroups.flatMap(g => g.records);
   const chartOptions = createStackedChartOptions(
-    data || [],
+    seriesGroups,
     selectedMetrics,
     METRICS_CONFIG,
     displayMode === "percentage",
     xAxisField
   );
 
-  if (!data || data.length === 0) {
+  if (data.length === 0) {
     return (
       <div className="fr-alert fr-alert--info">
         <p>Aucune donnée disponible</p>

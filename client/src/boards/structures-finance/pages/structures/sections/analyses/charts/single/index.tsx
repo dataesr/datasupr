@@ -26,6 +26,7 @@ import type {
   MetricKey,
   AnalysisKey,
 } from "../../../../../../config/metrics-config";
+import type { InstitutionSeries } from "..";
 
 interface SingleEvolutionChartProps {
   etablissementId: string;
@@ -40,7 +41,7 @@ interface SingleEvolutionChartProps {
   showPart: boolean;
   onIPCChange: (show: boolean) => void;
   onPartChange: (show: boolean) => void;
-  data: any[];
+  seriesGroups: InstitutionSeries[];
 }
 
 export default function SingleEvolutionChart({
@@ -56,8 +57,9 @@ export default function SingleEvolutionChart({
   showPart,
   onIPCChange,
   onPartChange,
-  data,
+  seriesGroups,
 }: SingleEvolutionChartProps) {
+  const data = seriesGroups.find(s => s.isCurrent)?.records ?? seriesGroups[0]?.records ?? [];
   const hasIPCMetrics = baseMetrics.some((m) => m.endsWith("_ipc"));
 
   const partMetricKey = (() => {
@@ -72,7 +74,7 @@ export default function SingleEvolutionChart({
   })();
 
   const chartOptions = createSingleChartOptions(
-    data || [],
+    seriesGroups,
     selectedMetric,
     METRICS_CONFIG,
     metricThreshold,
