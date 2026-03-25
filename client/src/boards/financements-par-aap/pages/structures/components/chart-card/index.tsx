@@ -44,7 +44,7 @@ export default function ChartCard({
         type: "areaspline",
         height: 110,
         backgroundColor: "transparent",
-        margin: [-0, -45, 0, -40],
+        margin: [0, 0, 0, 0],
         spacing: [0, 0, 0, 0],
       },
       title: {
