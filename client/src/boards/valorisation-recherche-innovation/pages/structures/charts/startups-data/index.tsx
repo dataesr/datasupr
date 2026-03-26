@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { SortingState, TableOptions } from '@tanstack/react-table'
+import { ColumnDef, SortingState } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
@@ -8,6 +8,15 @@ import { getEsQueryStartups } from '../../../../utils.ts'
 import DataTable from './datatable.tsx'
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env;
+
+type StartUps = {
+  acronym: string
+  county: string
+  creationYear: number
+  label: string
+  status: number
+  website: 'active' | 'old'
+}
 
 export default function StartupsData() {
   const [searchParams] = useSearchParams()
@@ -52,7 +61,7 @@ export default function StartupsData() {
       }).then((response) => response.json()),
   })
 
-  const dataTable = (data?.hits?.hits ?? []).map((hit) => ({
+  const dataTable: StartUps[] = (data?.hits?.hits ?? []).map((hit) => ({
     acronym: hit?._source?.acronym?.fr ?? hit?._source?.acronym?.default ?? '',
     county: hit?._source?.address?.map((item) => item?.region).join(',') ?? '',
     creationYear: hit?._source?.creationYear ?? '',
@@ -61,12 +70,12 @@ export default function StartupsData() {
     website: hit?._source?.links?.[0]?.url ?? '',
   }))
 
-  const columns: TableOptions = useMemo(() => [
+  const columns = useMemo<ColumnDef<StartUps>[]>(() => [
     {
       accessorKey: 'label',
       enableSorting: false,
       header: 'Label',
-      
+
     },
     {
       accessorKey: 'acronym',
@@ -75,7 +84,7 @@ export default function StartupsData() {
     },
     {
       accessorKey: 'website',
-      cell: (props) => props.getValue().length > 0 ? <a href={`${props.getValue()}`} target="_blank">{`${props.getValue()}`}</a> : '',
+      cell: (props: any) => props.getValue().length > 0 ? <a href={`${props.getValue()}`} target="_blank">{`${props.getValue()}`}</a> : '',
       enableSorting: false,
       header: 'Site web',
     },
