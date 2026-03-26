@@ -7,8 +7,7 @@ import { createChartOptions } from "../../../../../../components/chart-wrapper/d
 import ChartWrapper, { HighchartsOptions } from "../../../../../../components/chart-wrapper/index.tsx";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { deepMerge, getI18nLabel } from "../../../../../../utils.tsx";
-import i18n from "../../../../i18n.json";
+import { deepMerge } from "../../../../../../utils.tsx";
 import { getEsQueryStartups, getYearRangeLabel } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -63,7 +62,6 @@ export default function StartupsByIncubator({ name }: { name: string | undefined
     notActives.push(bucket?.by_status?.buckets?.find((item) => item.key === 'old')?.doc_count ?? 0);
   });
   const series = [{ color: 'green', data: actives, name: 'Actives' }, { color: 'blue', data: notActives, name: 'Non actives' }];
-  const axis = getI18nLabel(i18n, 'number_of_startups');
   const title = `Nombre de start-ups par incubateur ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
     return `<b>${this.y}</b> start-ups de statut ${this.series.name.toLowerCase()} et liées à l'établissement <b>${name}</b> sont dans l'incubateur <b>${categories[this.x]}</b>`;
@@ -94,7 +92,7 @@ export default function StartupsByIncubator({ name }: { name: string | undefined
     },
     yAxis: {
       stackLabels: { enabled: true },
-      title: { text: axis },
+      title: { text: 'Nombre de start-ups' },
     },
   };
 

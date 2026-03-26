@@ -13,6 +13,7 @@ import PublicationsByYear from "./charts/publications-by-year";
 import StartupsByCounty from "./charts/startups-by-county";
 import StartupsByIncubator from "./charts/startups-by-incubator";
 import StartupsByYear from "./charts/startups-by-year";
+import StartupsData from "./charts/startups-data";
 
 import "./styles.scss";
 
@@ -202,7 +203,7 @@ export default function DisplayStructure() {
                   </Row>
                   <Row gutters>
                     <Col>
-                      <div>tableaux de données avec label (filter), acronyme(filter), le site web, la region(sort + filter), la creation year (sort+filter), le status (sort + filter)</div>
+                      <StartupsData />
                     </Col>
                   </Row>
                 </>
