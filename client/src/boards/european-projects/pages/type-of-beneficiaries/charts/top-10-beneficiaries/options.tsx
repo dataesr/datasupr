@@ -27,6 +27,9 @@ export default function Options(data, currentLang) {
         },
       },
     ],
+    legend: {
+      enabled: true,
+    },
     series: [
       {
         name: getI18nLabel("REC"),

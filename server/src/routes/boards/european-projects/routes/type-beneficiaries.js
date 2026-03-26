@@ -12,10 +12,8 @@ router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries").get(asy
   }
 
   try {
-    const filters = { framework: "Horizon Europe" };
-    const targetCountry = req.query.country_code.toUpperCase();
+    const filters = { framework: "Horizon Europe", country_code: req.query.country_code.toUpperCase() };
 
-    // test filters (thematics, programs, thematics, destinations) - sans country_code
     if (req.query.pillars) {
       const pillars = req.query.pillars.split("|");
       filters.pilier_code = { $in: pillars };
@@ -98,129 +96,9 @@ router.route(routesPrefix + "/top10-countries-by-type-of-beneficiaries").get(asy
 
     const total = data.reduce((acc, el) => acc + el.total_fund_eur, 0);
 
-    // Récupérer toutes les années disponibles SANS le filtre d'années (pour afficher toutes les années possibles)
-    const baseFilters = { framework: "Horizon Europe" };
-
-    // Ajouter les mêmes filtres sauf les années
-    if (req.query.pillars) {
-      const pillars = req.query.pillars.split("|");
-      baseFilters.pilier_code = { $in: pillars };
-    }
-    if (req.query.programs) {
-      const programs = req.query.programs.split("|");
-      baseFilters.programme_code = { $in: programs };
-    }
-    if (req.query.thematics) {
-      const thematics = req.query.thematics.split(",");
-      const filteredThematics = thematics.filter((thematic) => !["ERC", "MSCA"].includes(thematic));
-      baseFilters.thema_code = { $in: filteredThematics };
-    }
-    if (req.query.destinations) {
-      const destinations = req.query.destinations.split(",");
-      baseFilters.destination_code = { $in: destinations };
-    }
-
-    const allYears = await db
-      .collection("european-projects_projects-entities_staging")
-      .aggregate([
-        {
-          $match: baseFilters,
-        },
-        {
-          $group: {
-            _id: "$call_year",
-          },
-        },
-        {
-          $sort: { _id: 1 },
-        },
-      ])
-      .toArray();
-
-    const rangeOfYears = allYears.map((y) => y._id).filter((year) => year != null);
-
-    // Logique pour le top 10 avec remplacement
-    let resultData = [...data];
-    const top10 = resultData.slice(0, 10);
-    const targetCountryIndex = resultData.findIndex((item) => item.country_code === targetCountry);
-
-    if (targetCountryIndex >= 10) {
-      // Le pays cible n'est pas dans le top 10, remplacer le 10ème par le pays cible
-      const targetCountryData = resultData[targetCountryIndex];
-      top10[9] = targetCountryData;
-    } else if (targetCountryIndex === -1) {
-      // Le pays cible n'existe pas dans les données filtrées
-      // Essayer de récupérer les données du pays cible avec les filtres actuels
-      const targetCountryData = await db
-        .collection("european-projects_projects-entities_staging")
-        .aggregate([
-          {
-            $match: { ...filters, country_code: targetCountry },
-          },
-          {
-            $group: {
-              _id: {
-                country_code: "$country_code",
-                country_name_fr: "$country_name_fr",
-                country_name_en: "$country_name_en",
-                cordis_type_entity_code: "$cordis_type_entity_code",
-              },
-              total_fund_eur: { $sum: "$fund_eur" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.country_code",
-              country_name_fr: { $first: "$_id.country_name_fr" },
-              country_name_en: { $first: "$_id.country_name_en" },
-              types: {
-                $push: {
-                  cordis_type_entity_code: "$_id.cordis_type_entity_code",
-                  total_fund_eur: "$total_fund_eur",
-                },
-              },
-              total_fund_eur: { $sum: "$total_fund_eur" },
-            },
-          },
-          {
-            $project: {
-              _id: 0,
-              country_code: "$_id",
-              country_name_fr: 1,
-              country_name_en: 1,
-              types: {
-                $map: {
-                  input: {
-                    $sortArray: {
-                      input: "$types",
-                      sortBy: { cordis_type_entity_code: -1 },
-                    },
-                  },
-                  as: "type",
-                  in: "$$type",
-                },
-              },
-              total_fund_eur: 1,
-            },
-          },
-        ])
-        .toArray();
-
-      if (targetCountryData.length > 0) {
-        // Remplacer le 10ème élément par le pays cible
-        top10[9] = targetCountryData[0];
-      } else {
-        // Aucune donnée trouvée pour ce pays avec ces filtres
-        // On peut soit retourner le top 10 sans le pays cible, soit une erreur
-        // Pour l'instant, on retourne le top 10 disponible
-        console.warn(`Aucune donnée trouvée pour le pays ${targetCountry} avec les filtres appliqués`);
-      }
-    }
-
     res.status(200).json({
       total_fund_eur: total,
-      data: top10,
-      rangeOfYears,
+      data,
     });
   } catch (error) {
     console.error("Error fetching type by country:", error);
