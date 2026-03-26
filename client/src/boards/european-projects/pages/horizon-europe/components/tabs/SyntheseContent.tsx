@@ -1,23 +1,22 @@
 import { useSearchParams } from "react-router-dom";
-// import { ContentType } from "../../utils/displayRules";
+import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
+import Callout from "../../../../../../components/callout";
+
 import PillarsFunding from "../../../overview/components/pillars-funding";
 import ProgramsFunding from "../../../overview/components/programs-funding";
-import { Container, Row, Col, Title } from "@dataesr/dsfr-plus";
 import TopicsFunding from "../../../overview/components/topics-funding";
 import DestinationsFunding from "../../../overview/components/destinations-funding";
 import PillarsOverview from "../../../overview/components/pillars-overview";
 import ProgramsOverview from "../../../overview/components/programs-overview";
 import ThematicsOverview from "../../../overview/components/destinations-overview";
 import DestinationsOverview from "../../../overview/components/destinations-overview";
-import MainPartners from "../../../overview/charts/main-partners";
 import SynthesisFocus from "../../../overview/charts/synthesis-focus";
-import Callout from "../../../../../../components/callout";
 import PillarsFundingEvo3Years from "../../../overview/charts/pillars-funding-evo-3-years";
 import BoardsSuggestComponent from "../../../../../../components/boards-suggest-component";
-import { getI18nLabel } from "../../../../../../utils";
 import ProgramsFundingEvo3Years from "../../../overview/charts/programs-funding-evo-3-years";
 import TopicsFundingEvo3Years from "../../../overview/charts/topics-funding-evo-3-years";
-// import DestinationsFunding from "../../../overview/components/destinations-funding";
+
+import { getI18nLabel } from "../../../../../../utils";
 
 const i18n = {
   "pillar-comparison-title": { fr: "Comparaison de la répartition des subventions par pilier", en: "Comparison of grant distribution by pillar" },
@@ -85,7 +84,6 @@ export default function SyntheseContent() {
             {getI18nLabel(i18n, "pillar-comparison-title", currentLang)}
           </Title>
           <PillarsFunding />
-          <MainPartners />
         </div>
       );
 
@@ -106,7 +104,6 @@ export default function SyntheseContent() {
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "main-partner-title", currentLang)}
           </Title>
-          <MainPartners />
 
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "pillar-detail-title", currentLang)}
@@ -140,7 +137,6 @@ export default function SyntheseContent() {
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "main-partner-title", currentLang)}
           </Title>
-          <MainPartners />
 
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "program-detail-title", currentLang)}
@@ -175,7 +171,6 @@ export default function SyntheseContent() {
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "main-partner-title", currentLang)}
           </Title>
-          <MainPartners />
 
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "thematic-detail-title", currentLang)}
@@ -202,7 +197,6 @@ export default function SyntheseContent() {
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "main-partner-title", currentLang)}
           </Title>
-          <MainPartners />
 
           <BoardsSuggestComponent />
         </Container>

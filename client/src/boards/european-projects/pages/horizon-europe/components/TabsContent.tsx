@@ -5,6 +5,7 @@ import SyntheseContent from "./tabs/SyntheseContent";
 import PositionnementContent from "./tabs/PositionnementContent";
 import CollaborationsContent from "./tabs/CollaborationsContent";
 import CheckEICAccelerator from "../../../components/check-eic-accelerator";
+import EntitiesContent from "./tabs/EntitiesContent";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,7 +18,7 @@ export default function TabsContent() {
   }
 
   // Fonction pour changer d'onglet
-  const handleTabChange = (newTab: "synthesis" | "positioning" | "collaborations") => {
+  const handleTabChange = (newTab: "synthesis" | "positioning" | "collaborations" | "entities") => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set("section", newTab);
     setSearchParams(newParams);
@@ -64,12 +65,25 @@ export default function TabsContent() {
               {getIntlLabel("collaborations")}
             </button>
           </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
+                handleTabChange("entities");
+              }}
+              aria-current={activeTab === "entities" ? "page" : undefined}
+            >
+              {getIntlLabel("country-entities")}
+            </button>
+          </li>
         </ul>
       </nav>
       <div className="fr-mt-3w">
         {activeTab === "synthesis" && <SyntheseContent />}
         {activeTab === "positioning" && <PositionnementContent />}
         {activeTab === "collaborations" && <CollaborationsContent />}
+        {activeTab === "entities" && <EntitiesContent />}
       </div>
     </div>
   );

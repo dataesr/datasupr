@@ -30,6 +30,10 @@
     "collaborations": {
       "label": { "fr": "Collaborations", "en": "Collaborations" },
       "link": "/european-projects/horizon-europe?section=collaborations"
+    },
+    "entities": {
+      "label": { "fr": "Entités", "en": "Focus Entities" },
+      "link": "/european-projects/horizon-europe?section=entities"
     }
   },
   "msca": {

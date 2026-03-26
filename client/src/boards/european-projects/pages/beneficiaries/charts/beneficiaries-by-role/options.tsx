@@ -41,15 +41,15 @@ export default function Options(data, currentLang) {
     series: [
       {
         type: "bar",
-        name: getI18nLabel("coordinator"),
-        data: (data as DataItem[]).map((item) => item.total_fund_eur_coordination || 0),
-        color: rootStyles.getPropertyValue("--coordination-color"),
-      },
-      {
-        type: "bar",
         name: getI18nLabel("partner"),
         data: (data as DataItem[]).map((item) => item.total_fund_eur_partner || 0),
         color: rootStyles.getPropertyValue("--partner-color"),
+      },
+      {
+        type: "bar",
+        name: getI18nLabel("coordinator"),
+        data: (data as DataItem[]).map((item) => item.total_fund_eur_coordination || 0),
+        color: rootStyles.getPropertyValue("--coordination-color"),
       },
     ] as ChartSeriesData[],
     tooltip: {

@@ -390,5 +390,9 @@
   "entities": {
     "fr": "Entités/porteurs",
     "en": "Entities/holders"
+  },
+  "country-entities": {
+    "fr": "Entités du pays",
+    "en": "Country entities"
   }
 }

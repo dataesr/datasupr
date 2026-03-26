@@ -137,6 +137,8 @@ router.route(routesPrefix + "/beneficiaries-by-role").get(async (req, res) => {
       filters.destination_code = { $in: destinations };
     }
 
+    filters.country_code = req.query.country_code; // Filtre obligatoire TODO
+
     const data = await db
       .collection("european-projects_projects-entities_staging")
       .aggregate([
@@ -194,7 +196,7 @@ router.route(routesPrefix + "/beneficiaries-by-role").get(async (req, res) => {
                         input: {
                           $filter: {
                             input: "$roles",
-                            cond: { $eq: ["$$this.role", "coordinator"] },
+                            cond: { $eq: [{ $toLower: "$$this.role" }, "coordinator"] },
                           },
                         },
                         as: "item",
@@ -216,7 +218,7 @@ router.route(routesPrefix + "/beneficiaries-by-role").get(async (req, res) => {
                         input: {
                           $filter: {
                             input: "$roles",
-                            cond: { $eq: ["$$this.role", "partner"] },
+                            cond: { $eq: [{ $toLower: "$$this.role" }, "partner"] },
                           },
                         },
                         as: "item",
