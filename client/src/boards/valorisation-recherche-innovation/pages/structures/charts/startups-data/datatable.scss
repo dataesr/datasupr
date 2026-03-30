@@ -1,20 +1,26 @@
 table.datatable {
-  border: var(--text-default-grey) 2px solid !important;
-  border-radius: 25px;
-  border-collapse: collapse;
+  border-spacing: 0;
 
   thead tr {
-    border: var(--text-default-grey) 2px solid !important;
-    border-radius: 25px;
+    background-color: var(--background-alt-grey);
+    text-align: left;
   }
-  
-  td, th {
-    border: var(--text-default-grey) 1px solid;
-    border-radius: 25px;
+
+  thead th,
+  tbody td {
     padding: 10px;
   }
-  
-  tr:hover {
-    background-color: #21213f;
+
+  tbody tr {
+    &:hover {
+      background-color: var(--background-contrast-blue-ecume);
+    }
+
+    &:nth-child(even) {
+      background-color: var(--background-alt-grey);
+    }
+    &:nth-child(odd) {
+      background-color: var(--background-default-grey-hover);
+    }
   }
 }
