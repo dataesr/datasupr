@@ -1,5 +1,7 @@
 import { flexRender, getCoreRowModel, useReactTable } from '@tanstack/react-table'
 
+import './datatable.scss'
+
 export default function DataTable({ columns, dataTable, setSorting, sorting }) {
   const table = useReactTable({
     columns,
@@ -10,7 +12,7 @@ export default function DataTable({ columns, dataTable, setSorting, sorting }) {
   })
 
   return (
-    <table>
+    <table className="datatable">
       <thead>
         {table.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
@@ -40,9 +42,9 @@ export default function DataTable({ columns, dataTable, setSorting, sorting }) {
                         header.getContext(),
                       )}
                       {{
-                        asc: ' ^',
-                        desc: ' v',
-                      }[header.column.getIsSorted() as string] ?? header.column.getCanSort() ? ' -' : ''}
+                        asc: <i className="ri-sort-asc fr-ml-1w" />,
+                        desc: <i className="ri-sort-desc fr-ml-1w" />,
+                      }[header.column.getIsSorted() as string] ?? (header.column.getCanSort() ? <i className="ri-subtract-line fr-ml-1w"></i> : '')}
                     </div>
                   )}
                 </th>
