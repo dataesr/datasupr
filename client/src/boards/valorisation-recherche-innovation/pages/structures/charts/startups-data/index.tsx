@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query'
-import { ColumnDef, SortingState } from '@tanstack/react-table'
+import { ColumnDef, ColumnFiltersState } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
@@ -18,20 +18,32 @@ type StartUps = {
   website: 'active' | 'old'
 }
 
+type Column = {
+  id: string
+  isSortable: boolean
+  label: string
+}
+
+type Sort = {
+  id: string
+  direction: 'asc' | 'desc'
+}
+
 export default function StartupsData() {
   const [searchParams] = useSearchParams()
   const structure = searchParams.get('structure')
   const yearMax = searchParams.get('yearMax')
   const yearMin = searchParams.get('yearMin')
 
-  const [sorting, setSorting] = useState<SortingState>([])
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+  const [sorting, setSorting] = useState<Sort>()
 
   const body = {
     ...getEsQueryStartups({ structures: [structure], yearMax, yearMin }),
     size: 100,
   }
-  if (sorting.length > 0) {
-    const sortField = sorting[0].id
+  if (sorting?.id) {
+    const sortField = sorting.id
     let esSortField = sortField
     switch (sortField) {
       case 'creationYear':
@@ -46,8 +58,13 @@ export default function StartupsData() {
       default:
         break;
     }
-    body.sort = { [esSortField]: sorting[0].desc ? 'desc' : 'asc' }
+    body.sort = { [esSortField]: sorting.direction }
   }
+  // if (columnFilters.length > 0) {
+  //   columnFilters.forEach((columnFilter) => {
+  //     body.query.bool.filter.push({ term: { [columnFilter.id]: columnFilter.value } })
+  //   })
+  // }
   const { data, isLoading } = useQuery({
     queryKey: ["valo-startups-data", sorting, structure, yearMax, yearMin],
     queryFn: () =>
@@ -62,50 +79,61 @@ export default function StartupsData() {
   })
 
   const dataTable: StartUps[] = (data?.hits?.hits ?? []).map((hit) => ({
-    acronym: hit?._source?.acronym?.fr ?? hit?._source?.acronym?.default ?? '',
-    county: hit?._source?.address?.map((item) => item?.region).join(',') ?? '',
-    creationYear: hit?._source?.creationYear ?? '',
-    label: hit?._source?.label?.fr ?? hit?._source?.label?.default ?? '',
-    status: hit?._source?.status ?? '',
-    website: hit?._source?.links?.[0]?.url ?? '',
+    acronym: hit._source?.acronym?.fr ?? hit?._source?.acronym?.default ?? '',
+    county: hit._source?.address?.map((item) => item?.region).join(',') ?? '',
+    creationYear: hit._source?.creationYear ?? '',
+    id: hit._source.id,
+    label: hit._source?.label?.fr ?? hit?._source?.label?.default ?? '',
+    status: hit._source?.status ?? '',
+    website: hit._source?.links?.[0]?.url ?? '',
   }))
 
-  const columns = useMemo<ColumnDef<StartUps>[]>(() => [
+  const columns = useMemo<Column[]>(() => [
     {
-      accessorKey: 'label',
-      enableSorting: false,
-      header: 'Label',
-
+      id: 'label',
+      isSortable: false,
+      label: 'Label',
+      meta: { filterVariant: 'text' },
     },
     {
-      accessorKey: 'acronym',
-      enableSorting: false,
-      header: 'Acronyme',
+      id: 'acronym',
+      isSortable: false,
+      label: 'Acronyme',
+      meta: { filterVariant: 'text' },
     },
     {
-      accessorKey: 'website',
-      cell: (props: any) => props.getValue().length > 0 ? <a href={`${props.getValue()}`} target="_blank">{`${props.getValue()}`}</a> : '',
-      enableSorting: false,
-      header: 'Site web',
+      id: 'website',
+      isSortable: false,
+      label: 'Site web',
+      getCellValue: (row) => <a href={row.website} target="_blank">{row.website}</a>
     },
     {
-      accessorKey: 'county',
-      enableMultiSort: false,
-      header: 'Région',
+      id: 'county',
+      isSortable: true,
+      label: 'Région',
     },
     {
-      accessorKey: 'creationYear',
-      enableMultiSort: false,
-      header: 'Année de création',
+      id: 'creationYear',
+      isSortable: true,
+      label: 'Année de création',
+      meta: { filterVariant: 'range' },
     },
     {
-      accessorKey: 'status',
-      enableMultiSort: false,
-      header: 'Statut',
+      id: 'status',
+      isSortable: true,
+      label: 'Statut',
+      meta: { filterVariant: 'select' },
     },
   ], [])
 
   if (isLoading) return <DefaultSkeleton height="600px" />
 
-  return <DataTable columns={columns} dataTable={dataTable} setSorting={setSorting} sorting={sorting} />
+  return <DataTable
+    columns={columns}
+    columnFilters={columnFilters}
+    dataTable={dataTable}
+    setColumnFilters={(p) => setColumnFilters(p)}
+    setSorting={setSorting}
+    sorting={sorting}
+  />
 }

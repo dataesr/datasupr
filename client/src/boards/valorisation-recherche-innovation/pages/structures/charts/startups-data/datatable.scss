@@ -1,4 +1,4 @@
-table.datatable {
+.valo-datatable {
   border-spacing: 0;
 
   thead tr {
@@ -12,15 +12,15 @@ table.datatable {
   }
 
   tbody tr {
-    &:hover {
-      background-color: var(--background-contrast-blue-ecume);
-    }
-
     &:nth-child(even) {
       background-color: var(--background-alt-grey);
     }
     &:nth-child(odd) {
       background-color: var(--background-default-grey-hover);
+    }
+
+    &:hover {
+      background-color: var(--background-contrast-blue-ecume);
     }
   }
 }
