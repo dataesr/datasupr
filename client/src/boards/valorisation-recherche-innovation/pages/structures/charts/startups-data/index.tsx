@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import { ColumnDef, ColumnFiltersState } from '@tanstack/react-table'
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
@@ -9,6 +8,12 @@ import DataTable from './datatable.tsx'
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
+type Column = {
+  id: string
+  isSortable: boolean
+  label: string
+}
+
 type StartUps = {
   acronym: string
   county: string
@@ -16,12 +21,6 @@ type StartUps = {
   label: string
   status: number
   website: 'active' | 'old'
-}
-
-type Column = {
-  id: string
-  isSortable: boolean
-  label: string
 }
 
 type Sort = {
@@ -35,13 +34,13 @@ export default function StartupsData() {
   const yearMax = searchParams.get('yearMax')
   const yearMin = searchParams.get('yearMin')
 
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [sorting, setSorting] = useState<Sort>()
 
   const body = {
     ...getEsQueryStartups({ structures: [structure], yearMax, yearMin }),
     size: 100,
   }
+
   if (sorting?.id) {
     const sortField = sorting.id
     let esSortField = sortField
@@ -60,11 +59,7 @@ export default function StartupsData() {
     }
     body.sort = { [esSortField]: sorting.direction }
   }
-  // if (columnFilters.length > 0) {
-  //   columnFilters.forEach((columnFilter) => {
-  //     body.query.bool.filter.push({ term: { [columnFilter.id]: columnFilter.value } })
-  //   })
-  // }
+
   const { data, isLoading } = useQuery({
     queryKey: ["valo-startups-data", sorting, structure, yearMax, yearMin],
     queryFn: () =>
@@ -130,9 +125,7 @@ export default function StartupsData() {
 
   return <DataTable
     columns={columns}
-    columnFilters={columnFilters}
     dataTable={dataTable}
-    setColumnFilters={(p) => setColumnFilters(p)}
     setSorting={setSorting}
     sorting={sorting}
   />
