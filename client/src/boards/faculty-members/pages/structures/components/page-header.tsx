@@ -1,0 +1,278 @@
+import { useMemo } from "react";
+import { Row, Col, Title, Text, Button } from "@dataesr/dsfr-plus";
+import { ViewType } from "../api";
+import { getCssColor } from "../../../../../utils/colors";
+import "../styles.scss";
+
+const VIEW_BACK_LABELS: Record<ViewType, string> = {
+    structure: "Changer d'établissement",
+    discipline: "Changer de discipline",
+    region: "Changer de région",
+    academie: "Changer d'académie",
+};
+
+const VIEW_TOP_LABELS: Record<ViewType, string> = {
+    structure: "Top 5 établissements",
+    discipline: "Top 5 disciplines",
+    region: "Top 5 régions",
+    academie: "Top 5 académies",
+};
+
+const STATUS_LABELS: Record<string, string> = {
+    enseignant_chercheur: "Enseignants-chercheurs",
+    titulaire_non_chercheur: "Autres permanents",
+    non_titulaire: "Non permanents",
+};
+
+const STATUS_ICONS: Record<string, string> = {
+    enseignant_chercheur: "fr-icon-microscope-fill",
+    titulaire_non_chercheur: "fr-icon-briefcase-fill",
+    non_titulaire: "fr-icon-time-fill",
+};
+
+const STATUS_ICON_VARIANTS: Record<string, string> = {
+    enseignant_chercheur: "page-header__stat-icon--blue-france",
+    titulaire_non_chercheur: "page-header__stat-icon--green-emeraude",
+    non_titulaire: "page-header__stat-icon--yellow-tournesol",
+};
+
+function femalePctOf(items: any[]): string {
+    const total = items.reduce((s: number, i: any) => s + (i.count || 0), 0);
+    const female = items.find((i: any) => i.gender === "Féminin")?.count || 0;
+    return total > 0 ? ((female / total) * 100).toFixed(0) : "–";
+}
+
+interface PageHeaderProps {
+    data: any;
+    evolutionData?: any;
+    entityName: string;
+    selectedYear: string;
+    totalCount: number;
+    viewType: ViewType;
+    onClose: () => void;
+}
+
+export default function PageHeader({
+    data,
+    evolutionData,
+    entityName,
+    selectedYear,
+    totalCount,
+    viewType,
+    onClose,
+}: PageHeaderProps) {
+    const genderDistribution = data?.gender_distribution || [];
+    const statusDistribution = data?.status_distribution || [];
+    const ageDistribution = data?.age_distribution || [];
+    const topItems = data?.top_items || [];
+
+    const maleCount =
+        genderDistribution.find((g: any) => g._id === "Masculin")?.count || 0;
+    const femaleCount =
+        genderDistribution.find((g: any) => g._id === "Féminin")?.count || 0;
+    const femalePct = totalCount > 0 ? ((femaleCount / totalCount) * 100).toFixed(1) : "0";
+    const malePct = totalCount > 0 ? ((maleCount / totalCount) * 100).toFixed(1) : "0";
+
+    const contextInfo = data?.context_info || {};
+    const metaItems: string[] = [];
+    if (viewType === "structure") {
+        if (contextInfo.structure_type) metaItems.push(contextInfo.structure_type);
+        if (contextInfo.academie) metaItems.push(`Académie de ${contextInfo.academie}`);
+        if (contextInfo.region) metaItems.push(contextInfo.region);
+    } else if (viewType === "academie") {
+        if (contextInfo.region) metaItems.push(contextInfo.region);
+    }
+
+    const trends = useMemo(() => {
+        const globalEvo = evolutionData?.global_evolution;
+        if (!globalEvo?.length || globalEvo.length < 2) return null;
+
+        const currentYearData = globalEvo.find((e: any) => String(e._id) === selectedYear);
+        const currentIdx = globalEvo.indexOf(currentYearData);
+        if (!currentYearData || currentIdx < 1) return null;
+
+        const prevYearData = globalEvo[currentIdx - 1];
+        const prevTotal = prevYearData?.total || 0;
+        const currTotal = currentYearData?.total || 0;
+        const totalDiff = currTotal - prevTotal;
+        const totalPct = prevTotal > 0 ? ((totalDiff / prevTotal) * 100).toFixed(1) : null;
+
+        const prevFemale = prevYearData?.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
+        const currFemale = currentYearData?.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
+        const prevFemalePct = prevTotal > 0 ? (prevFemale / prevTotal) * 100 : 0;
+        const currFemalePct = currTotal > 0 ? (currFemale / currTotal) * 100 : 0;
+        const femalePctDiff = currFemalePct - prevFemalePct;
+
+        const firstYear = globalEvo[0]?._id;
+        const lastYear = globalEvo[globalEvo.length - 1]?._id;
+
+        return {
+            prevYear: prevYearData._id,
+            totalDiff,
+            totalPct,
+            femalePctDiff: femalePctDiff.toFixed(1),
+            yearRange: firstYear && lastYear ? `${firstYear}–${lastYear}` : null,
+        };
+    }, [evolutionData, selectedYear]);
+
+    return (
+        <header className="page-header fr-mb-4w">
+            <Row gutters className="fr-grid-row--middle fr-mb-2w">
+                <Col xs="12" md="8">
+                    <Title as="h1" look="h4" className="fr-mb-0">
+                        {entityName}
+                    </Title>
+                    {metaItems.length > 0 && (
+                        <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
+                            {metaItems.join(" · ")}
+                        </Text>
+                    )}
+                </Col>
+                <Col xs="12" md="4" className="text-right">
+                    <Button
+                        variant="tertiary"
+                        icon="arrow-go-back-line"
+                        iconPosition="left"
+                        onClick={onClose}
+                    >
+                        {VIEW_BACK_LABELS[viewType]}
+                    </Button>
+                </Col>
+            </Row>
+
+            <Row gutters className="fr-mb-2w">
+                <Col xs="12">
+                    <ul className="page-header__stats-list">
+                        <li>
+                            <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
+                                <div className="page-header__stat-card-content">
+                                    <span className="page-header__stat-icon page-header__stat-icon--blue-france" aria-hidden="true">
+                                        <span className="fr-icon-team-fill" aria-hidden="true" />
+                                    </span>
+                                    <div>
+                                        <Text size="lg" bold className="fr-mb-0">
+                                            {totalCount.toLocaleString("fr-FR")} enseignants en {selectedYear}
+                                        </Text>
+                                        {trends?.totalPct && (
+                                            <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
+                                                <span className={`page-header__trend ${Number(trends.totalDiff) >= 0 ? "page-header__trend--up" : "page-header__trend--down"}`}>
+                                                    {Number(trends.totalDiff) >= 0 ? "↑" : "↓"} {trends.totalDiff >= 0 ? "+" : ""}{trends.totalPct}%
+                                                </span>
+                                                {" "}vs {trends.prevYear}
+                                                {trends.yearRange && <> · Données {trends.yearRange}</>}
+                                            </Text>
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li>
+                            <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__stat-card">
+                                <div className="page-header__stat-card-content">
+                                    <span className="page-header__stat-icon page-header__stat-icon--pink-tuile" aria-hidden="true">
+                                        <span className="fr-icon-user-fill" aria-hidden="true" />
+                                    </span>
+                                    <div>
+                                        <Text size="lg" bold className="fr-mb-0">
+                                            {femalePct}% de femmes
+                                        </Text>
+                                        <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
+                                            {femaleCount.toLocaleString("fr-FR")} F · {maleCount.toLocaleString("fr-FR")} H ({malePct}%)
+                                            {trends && (
+                                                <>
+                                                    {" · "}
+                                                    <span className={`page-header__trend ${Number(trends.femalePctDiff) >= 0 ? "page-header__trend--up" : "page-header__trend--down"}`}>
+                                                        {Number(trends.femalePctDiff) >= 0 ? "↑" : "↓"} {Number(trends.femalePctDiff) >= 0 ? "+" : ""}{trends.femalePctDiff} pts
+                                                    </span>
+                                                </>
+                                            )}
+                                        </Text>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </Col>
+            </Row>
+
+            <Row gutters>
+                <Col xs="12" md="4">
+                    <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__detail-card">
+                        <Text size="sm" bold className="fr-mb-1w">Statuts</Text>
+                        <ul className="page-header__detail-list">
+                            {["enseignant_chercheur", "titulaire_non_chercheur", "non_titulaire"].map((key) => {
+                                const item = statusDistribution.find((s: any) => s._id === key);
+                                const count = item?.count || 0;
+                                const pct = totalCount > 0 ? ((count / totalCount) * 100).toFixed(0) : "0";
+                                return (
+                                    <li key={key} className="page-header__detail-row">
+                                        <span className={`page-header__stat-icon page-header__stat-icon--sm ${STATUS_ICON_VARIANTS[key]}`} aria-hidden="true">
+                                            <span className={STATUS_ICONS[key]} aria-hidden="true" />
+                                        </span>
+                                        <span className="page-header__detail-label">{STATUS_LABELS[key]}</span>
+                                        <span className="page-header__detail-value">
+                                            {count.toLocaleString("fr-FR")}
+                                            <span className="page-header__detail-pct"> ({pct}%)</span>
+                                        </span>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                </Col>
+
+                {/* Age distribution */}
+                <Col xs="12" md="4">
+                    <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__detail-card">
+                        <Text size="sm" bold className="fr-mb-1w">Répartition par âge</Text>
+                        <ul className="page-header__detail-list">
+                            {ageDistribution.map((age: any) => {
+                                const agePct = totalCount > 0 ? ((age.total / totalCount) * 100).toFixed(0) : "0";
+                                const fPct = femalePctOf(age.gender_breakdown || []);
+                                return (
+                                    <li key={age._id} className="page-header__detail-row">
+                                        <span className="page-header__detail-label">{age._id || "N/A"}</span>
+                                        <div className="page-header__age-bar-container">
+                                            <div
+                                                className="page-header__age-bar"
+                                                style={{
+                                                    width: `${agePct}%`,
+                                                    backgroundColor: getCssColor("blue-france-main-525"),
+                                                }}
+                                            />
+                                        </div>
+                                        <span className="page-header__detail-value">
+                                            {agePct}%
+                                            <span className="page-header__detail-pct"> ({fPct}% F)</span>
+                                        </span>
+                                    </li>
+                                );
+                            })}
+                        </ul>
+                    </div>
+                </Col>
+
+                <Col xs="12" md="4">
+                    <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__detail-card">
+                        <Text size="sm" bold className="fr-mb-1w">{VIEW_TOP_LABELS[viewType]}</Text>
+                        <ol className="page-header__top-list">
+                            {topItems.map((item: any, idx: number) => {
+                                const label = item._id?.label || "–";
+                                const fPct = femalePctOf(item.gender_breakdown || []);
+                                const isCurrent = item._id?.id === data?.context_info?.id;
+                                return (
+                                    <li key={item._id?.id || idx} className={`page-header__top-item${isCurrent ? " page-header__top-item--current" : ""}`}>
+                                        <span className="page-header__top-rank">{idx + 1}</span>
+                                        <span className="page-header__top-label" title={label}>{label}</span>
+                                        <span className="page-header__top-count">{item.total.toLocaleString("fr-FR")}</span>
+                                        <span className="page-header__top-fpct">{fPct}% F</span>
+                                    </li>
+                                );
+                            })}
+                        </ol>
+                    </div>
+                </Col>
+            </Row>
+        </header>
+    );
+}

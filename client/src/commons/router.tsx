@@ -44,6 +44,10 @@ export default function Router() {
       <Route path="/integration" element={<Integration />} />
       <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
       <Route
+        path="/personnel-enseignant"
+        element={<Navigate to="/personnel-enseignant/accueil" replace />}
+      />
+      <Route
         path="/personnel-enseignant/*"
         element={<FacultyMembersRoutes />}
       />

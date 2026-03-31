@@ -1,195 +1,574 @@
 import { Router } from "express";
 import { db } from "../../../../../services/mongo.js";
-import { recreateIndex } from "../../../../utils.js";
 
 const router = Router();
+const COLLECTION = "faculty-members_main_staging";
 
-router.get("/faculty-members/filters/structures", async (req, res) => {
-  try {
-    const collection = db.collection("faculty-members_main_staging");
+const VALID_VIEWS = ["structure", "discipline", "region", "academie"];
 
-    const structures = await collection
-      .aggregate([
-        {
-          $group: {
-            _id: {
-              id: "$etablissement_id_paysage",
-              lib: "$etablissement_lib",
-            },
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            id: "$_id.id",
-            lib: "$_id.lib",
-          },
-        },
-        {
-          $match: {
-            id: { $ne: null },
-            lib: { $ne: null },
-          },
-        },
-        {
-          $sort: { lib: 1 },
-        },
-      ])
-      .toArray();
+function buildMatchStage(view, id, year) {
+  const match = {};
+  if (year) match.annee_universitaire = year;
+  if (!id) return match;
 
-    res.json({
-      structures: structures,
-    });
-  } catch (error) {
-    console.error("Error fetching structures:", error);
-    res.status(500).json({
-      error: "Server error while fetching structures",
-    });
+  switch (view) {
+    case "structure":
+      match.etablissement_id_paysage = id;
+      break;
+    case "discipline":
+      match.code_grande_discipline = id;
+      break;
+    case "region":
+      match.etablissement_region = id;
+      break;
+    case "academie":
+      match.etablissement_academie = id;
+      break;
   }
-});
+  return match;
+}
 
-router.get("/faculty-members/structures/cnu-analysis", async (req, res) => {
-  try {
-    const { annee_universitaire, structure_id } = req.query;
-    const collection = db.collection("faculty-members_main_staging");
+async function getContextInfo(collection, view, id) {
+  if (!id) return null;
 
-    let matchStage = {};
-    if (annee_universitaire && annee_universitaire !== "all") {
-      matchStage.annee_universitaire = annee_universitaire;
+  const fieldMap = {
+    structure: "etablissement_id_paysage",
+    discipline: "code_grande_discipline",
+    region: "etablissement_region",
+    academie: "etablissement_academie",
+  };
+
+  const doc = await collection.findOne(
+    { [fieldMap[view]]: id },
+    {
+      projection: {
+        etablissement_lib: 1,
+        etablissement_actuel_lib: 1,
+        etablissement_type: 1,
+        etablissement_region: 1,
+        etablissement_academie: 1,
+        grande_discipline: 1,
+      },
     }
+  );
+  if (!doc) return null;
 
-    if (structure_id) {
-      matchStage.$or = [
-        { etablissement_id_paysage: structure_id },
-        { etablissement_id_paysage: structure_id },
-      ];
-    }
+  const base = {
+    region: doc.etablissement_region,
+    academie: doc.etablissement_academie,
+    structure_type: doc.etablissement_type,
+  };
 
-    const cnuGroupsWithSections = await collection
-      .aggregate([
-        { $match: matchStage },
-        {
-          $group: {
-            _id: {
-              discipline_code: "$code_grande_discipline",
-              discipline_name: "$grande_discipline",
-              group_code: "$code_groupe_cnu",
-              group_name: "$groupe_cnu",
-              section_code: "$code_section_cnu",
-              section_name: "$section_cnu",
-              gender: "$sexe",
-              age_range: "$classe_age3",
-            },
-            count: { $sum: "$effectif" },
-          },
-        },
-        {
-          $group: {
-            _id: {
-              discipline_code: "$_id.discipline_code",
-              discipline_name: "$_id.discipline_name",
-              group_code: "$_id.group_code",
-              group_name: "$_id.group_name",
-              section_code: "$_id.section_code",
-              section_name: "$_id.section_name",
-            },
-            details: {
-              $push: {
-                gender: "$_id.gender",
-                age_range: "$_id.age_range",
-                count: "$count",
-              },
-            },
-            section_total: { $sum: "$count" },
-          },
-        },
-        {
-          $group: {
-            _id: {
-              discipline_code: "$_id.discipline_code",
-              discipline_name: "$_id.discipline_name",
-              group_code: "$_id.group_code",
-              group_name: "$_id.group_name",
-            },
-            sections: {
-              $push: {
-                section_code: "$_id.section_code",
-                section_name: "$_id.section_name",
-                section_total: "$section_total",
-                details: "$details",
-              },
-            },
-            group_total: { $sum: "$section_total" },
-          },
-        },
-        {
-          $group: {
-            _id: {
-              discipline_code: "$_id.discipline_code",
-              discipline_name: "$_id.discipline_name",
-            },
-            groups: {
-              $push: {
-                group_code: "$_id.group_code",
-                group_name: "$_id.group_name",
-                group_total: "$group_total",
-                sections: "$sections",
-              },
-            },
-            discipline_total: { $sum: "$group_total" },
-          },
-        },
-        { $sort: { discipline_total: -1 } },
-      ])
-      .toArray();
-
-    res.json({
-      cnu_groups_with_sections: cnuGroupsWithSections,
-      annee_universitaire: annee_universitaire || "current",
-      structure_id: structure_id || null,
-    });
-  } catch (error) {
-    console.error(
-      "Erreur lors de la récupération des données CNU structures:",
-      error
-    );
-    res.status(500).json({
-      message: "Erreur lors de la récupération des données CNU structures",
-      error: error.message,
-    });
-  }
-});
-
-router.get(
-  "/faculty-members/structures/research-teachers",
-  async (req, res) => {
-    try {
-      const { annee_universitaire, structure_id } = req.query;
-      const collection = db.collection("faculty-members_main_staging");
-
-      const matchStage = {
-        is_titulaire: true,
+  switch (view) {
+    case "structure":
+      return {
+        ...base,
+        id,
+        name: doc.etablissement_actuel_lib || doc.etablissement_lib,
       };
-      if (annee_universitaire) {
-        matchStage.annee_universitaire = annee_universitaire;
-      }
-      if (structure_id) {
-        matchStage.$or = [
-          { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage: structure_id },
-        ];
-      }
+    case "discipline":
+      return { ...base, id, name: doc.grande_discipline || id };
+    case "region":
+      return { ...base, id, name: doc.etablissement_region || id };
+    case "academie":
+      return { ...base, id, name: doc.etablissement_academie || id };
+    default:
+      return null;
+  }
+}
 
-      const ageClasses = [
-        "35 ans et moins",
-        "36 à 55 ans",
-        "56 ans et plus",
-        "Non précisé",
-      ];
+router.get("/faculty-members/filters", async (req, res) => {
+  try {
+    const { type } = req.query;
+    const collection = db.collection(COLLECTION);
 
-      const cnuData = await collection
+    const configMap = {
+      structures: {
+        groupId: {
+          id: "$etablissement_id_paysage",
+          label: "$etablissement_lib",
+        },
+      },
+      disciplines: {
+        groupId: {
+          id: "$code_grande_discipline",
+          label: "$grande_discipline",
+        },
+      },
+      regions: {
+        groupId: {
+          id: "$etablissement_region",
+          label: "$etablissement_region",
+        },
+      },
+      academies: {
+        groupId: {
+          id: "$etablissement_academie",
+          label: "$etablissement_academie",
+        },
+      },
+    };
+
+    const config = configMap[type];
+    if (!config) {
+      return res.status(400).json({
+        error:
+          "Invalid type. Must be one of: " + Object.keys(configMap).join(", "),
+      });
+    }
+
+    const items = await collection
+      .aggregate([
+        { $group: { _id: config.groupId } },
+        { $project: { _id: 0, id: "$_id.id", label: "$_id.label" } },
+        { $match: { id: { $ne: null }, label: { $ne: null } } },
+        { $sort: { label: 1 } },
+      ])
+      .toArray();
+
+    res.json({ items });
+  } catch (error) {
+    console.error("Error fetching filters:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/faculty-members/years", async (req, res) => {
+  try {
+    const { view, id } = req.query;
+    const collection = db.collection(COLLECTION);
+    const match = buildMatchStage(view, id);
+    const years = await collection
+      .distinct("annee_universitaire", match)
+      .then((y) => y.filter((v) => v != null).sort());
+    res.json({ years });
+  } catch (error) {
+    console.error("Error fetching years:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/faculty-members/dashboard", async (req, res) => {
+  try {
+    const { view, id, year } = req.query;
+    if (!view || !VALID_VIEWS.includes(view)) {
+      return res.status(400).json({ error: "Invalid or missing view param" });
+    }
+    const collection = db.collection(COLLECTION);
+    const match = buildMatchStage(view, id, year);
+
+    const [
+      genderAgg,
+      statusAgg,
+      disciplineAgg,
+      ageAgg,
+      categoryAgg,
+      establishmentTypeAgg,
+      topItems,
+      contextInfo,
+    ] = await Promise.all([
+      collection
         .aggregate([
-          { $match: matchStage },
+          { $match: match },
+          { $group: { _id: "$sexe", count: { $sum: "$effectif" } } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: {
+                $switch: {
+                  branches: [
+                    {
+                      case: { $eq: ["$is_enseignant_chercheur", true] },
+                      then: "enseignant_chercheur",
+                    },
+                    {
+                      case: {
+                        $and: [
+                          { $eq: ["$is_titulaire", true] },
+                          { $eq: ["$is_enseignant_chercheur", false] },
+                        ],
+                      },
+                      then: "titulaire_non_chercheur",
+                    },
+                  ],
+                  default: "non_titulaire",
+                },
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: {
+                code: "$code_grande_discipline",
+                name: "$grande_discipline",
+                gender: "$sexe",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: { code: "$_id.code", name: "$_id.name" },
+              total: { $sum: "$count" },
+              gender_breakdown: {
+                $push: { gender: "$_id.gender", count: "$count" },
+              },
+            },
+          },
+          { $sort: { total: -1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: { age_class: "$classe_age3", gender: "$sexe" },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.age_class",
+              total: { $sum: "$count" },
+              gender_breakdown: {
+                $push: { gender: "$_id.gender", count: "$count" },
+              },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: { category: "$categorie_assimilation", gender: "$sexe" },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.category",
+              total: { $sum: "$count" },
+              gender_breakdown: {
+                $push: { gender: "$_id.gender", count: "$count" },
+              },
+            },
+          },
+          { $match: { _id: { $ne: null } } },
+          { $sort: { total: -1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: "$etablissement_type",
+              total_count: { $sum: "$effectif" },
+            },
+          },
+          { $match: { _id: { $ne: null } } },
+          { $sort: { total_count: -1 } },
+        ])
+        .toArray(),
+
+      (() => {
+        const topGroupConfig = {
+          structure: {
+            id: "$etablissement_id_paysage",
+            label: "$etablissement_lib",
+          },
+          discipline: {
+            id: "$code_grande_discipline",
+            label: "$grande_discipline",
+          },
+          region: {
+            id: "$etablissement_region",
+            label: "$etablissement_region",
+          },
+          academie: {
+            id: "$etablissement_academie",
+            label: "$etablissement_academie",
+          },
+        };
+        const topGroup = topGroupConfig[view];
+        const yearMatch = year ? { annee_universitaire: year } : {};
+        return collection
+          .aggregate([
+            { $match: yearMatch },
+            {
+              $group: {
+                _id: {
+                  id: topGroup.id,
+                  label: topGroup.label,
+                  gender: "$sexe",
+                },
+                count: { $sum: "$effectif" },
+              },
+            },
+            {
+              $group: {
+                _id: { id: "$_id.id", label: "$_id.label" },
+                total: { $sum: "$count" },
+                gender_breakdown: {
+                  $push: { gender: "$_id.gender", count: "$count" },
+                },
+              },
+            },
+            { $sort: { total: -1 } },
+            { $limit: 5 },
+          ])
+          .toArray();
+      })(),
+
+      getContextInfo(collection, view, id),
+    ]);
+
+    const total_count = genderAgg.reduce((s, g) => s + g.count, 0);
+
+    res.json({
+      context_info: contextInfo,
+      total_count,
+      gender_distribution: genderAgg,
+      status_distribution: statusAgg,
+      discipline_distribution: disciplineAgg,
+      age_distribution: ageAgg,
+      category_distribution: categoryAgg,
+      establishment_type_distribution: establishmentTypeAgg,
+      top_items: topItems,
+    });
+  } catch (error) {
+    console.error("Error fetching dashboard:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/faculty-members/evolution", async (req, res) => {
+  try {
+    const { view, id } = req.query;
+    const collection = db.collection(COLLECTION);
+    const match = buildMatchStage(view, id);
+
+    const [
+      globalEvolution,
+      statusEvolution,
+      ageEvolution,
+      categoryEvolution,
+      disciplineEvolution,
+      contextInfo,
+    ] = await Promise.all([
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: { year: "$annee_universitaire", gender: "$sexe" },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.year",
+              total: { $sum: "$count" },
+              gender_breakdown: {
+                $push: { gender: "$_id.gender", count: "$count" },
+              },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: {
+                year: "$annee_universitaire",
+                status: {
+                  $switch: {
+                    branches: [
+                      {
+                        case: { $eq: ["$is_enseignant_chercheur", true] },
+                        then: "enseignant_chercheur",
+                      },
+                      {
+                        case: {
+                          $and: [
+                            { $eq: ["$is_titulaire", true] },
+                            { $eq: ["$is_enseignant_chercheur", false] },
+                          ],
+                        },
+                        then: "titulaire_non_chercheur",
+                      },
+                    ],
+                    default: "non_titulaire",
+                  },
+                },
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.year",
+              total: { $sum: "$count" },
+              status_breakdown: {
+                $push: { status: "$_id.status", count: "$count" },
+              },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: {
+                year: "$annee_universitaire",
+                age_class: "$classe_age3",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.year",
+              total: { $sum: "$count" },
+              age_breakdown: {
+                $push: { age_class: "$_id.age_class", count: "$count" },
+              },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: {
+                year: "$annee_universitaire",
+                category: "$categorie_personnels",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.year",
+              total: { $sum: "$count" },
+              category_breakdown: {
+                $push: { category: "$_id.category", count: "$count" },
+              },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: {
+                year: "$annee_universitaire",
+                code: "$code_grande_discipline",
+                name: "$grande_discipline",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: { code: "$_id.code", name: "$_id.name" },
+              total: { $sum: "$count" },
+              yearly: {
+                $push: { year: "$_id.year", count: "$count" },
+              },
+            },
+          },
+          { $sort: { total: -1 } },
+        ])
+        .toArray(),
+
+      getContextInfo(collection, view, id),
+    ]);
+
+    res.json({
+      context_info: contextInfo,
+      global_evolution: globalEvolution,
+      status_evolution: statusEvolution,
+      age_evolution: ageEvolution,
+      category_evolution: categoryEvolution,
+      discipline_evolution: disciplineEvolution,
+    });
+  } catch (error) {
+    console.error("Error fetching evolution:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/faculty-members/research-teachers", async (req, res) => {
+  try {
+    const { view, id, year } = req.query;
+    if (!view || !VALID_VIEWS.includes(view)) {
+      return res.status(400).json({ error: "Invalid or missing view param" });
+    }
+    const collection = db.collection(COLLECTION);
+    const match = {
+      ...buildMatchStage(view, id, year),
+      is_enseignant_chercheur: true,
+    };
+    const matchAllYears = {
+      ...buildMatchStage(view, id),
+      is_enseignant_chercheur: true,
+    };
+
+    const ageClasses = [
+      "35 ans et moins",
+      "36 à 55 ans",
+      "56 ans et plus",
+      "Non précisé",
+    ];
+
+    const [
+      cnuData,
+      categoryDistribution,
+      categoryEvolution,
+      genderEvolution,
+      ageDistribution,
+      cnuGroupEvolution,
+      contextInfo,
+    ] = await Promise.all([
+      collection
+        .aggregate([
+          { $match: match },
           {
             $group: {
               _id: {
@@ -240,7 +619,6 @@ router.get(
                 section_code: "$_id.section_code",
                 section_name: "$_id.section_name",
               },
-              groupTotal: { $sum: "$totalCount" },
               maleCount: { $sum: "$maleCount" },
               femaleCount: { $sum: "$femaleCount" },
               totalCount: { $sum: "$totalCount" },
@@ -250,9 +628,7 @@ router.get(
                   count: "$totalCount",
                 },
               },
-              categories: {
-                $push: "$categories",
-              },
+              categories: { $push: "$categories" },
             },
           },
           {
@@ -272,7 +648,17 @@ router.get(
                 $filter: {
                   input: {
                     $map: {
-                      input: { $setUnion: "$categories.categoryName" },
+                      input: {
+                        $setUnion: [
+                          {
+                            $map: {
+                              input: "$categories",
+                              as: "cat",
+                              in: "$$cat.categoryName",
+                            },
+                          },
+                        ],
+                      },
                       as: "catName",
                       in: {
                         categoryName: "$$catName",
@@ -288,8 +674,8 @@ router.get(
                                   },
                                 },
                               },
-                              as: "filteredCat",
-                              in: "$$filteredCat.count",
+                              as: "fcat",
+                              in: "$$fcat.count",
                             },
                           },
                         },
@@ -322,20 +708,7 @@ router.get(
                   categories: "$categories",
                 },
               },
-              groupCategories: {
-                $push: "$categories",
-              },
-            },
-          },
-          {
-            $addFields: {
-              groupCategories: {
-                $reduce: {
-                  input: "$groupCategories",
-                  initialValue: [],
-                  in: { $concatArrays: ["$$value", "$$this"] },
-                },
-              },
+              groupCategories: { $push: "$categories" },
             },
           },
           {
@@ -344,7 +717,25 @@ router.get(
                 $filter: {
                   input: {
                     $map: {
-                      input: { $setUnion: "$groupCategories.categoryName" },
+                      input: {
+                        $setUnion: [
+                          {
+                            $map: {
+                              input: {
+                                $reduce: {
+                                  input: "$groupCategories",
+                                  initialValue: [],
+                                  in: {
+                                    $concatArrays: ["$$value", "$$this"],
+                                  },
+                                },
+                              },
+                              as: "cat",
+                              in: "$$cat.categoryName",
+                            },
+                          },
+                        ],
+                      },
                       as: "catName",
                       in: {
                         categoryName: "$$catName",
@@ -353,15 +744,23 @@ router.get(
                             $map: {
                               input: {
                                 $filter: {
-                                  input: "$groupCategories",
+                                  input: {
+                                    $reduce: {
+                                      input: "$groupCategories",
+                                      initialValue: [],
+                                      in: {
+                                        $concatArrays: ["$$value", "$$this"],
+                                      },
+                                    },
+                                  },
                                   as: "cat",
                                   cond: {
                                     $eq: ["$$cat.categoryName", "$$catName"],
                                   },
                                 },
                               },
-                              as: "filteredCat",
-                              in: "$$filteredCat.count",
+                              as: "fcat",
+                              in: "$$fcat.count",
                             },
                           },
                         },
@@ -448,11 +847,11 @@ router.get(
           },
           { $sort: { groupTotal: -1 } },
         ])
-        .toArray();
+        .toArray(),
 
-      const categoryDistribution = await collection
+      collection
         .aggregate([
-          { $match: matchStage },
+          { $match: match },
           {
             $group: {
               _id: {
@@ -484,371 +883,15 @@ router.get(
           },
           { $sort: { totalCount: -1 } },
         ])
-        .toArray();
-
-      const disciplinesData = await collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: {
-                field_id: "$code_grande_discipline",
-                fieldLabel: "$grande_discipline",
-                gender: "$sexe",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                field_id: "$_id.field_id",
-                fieldLabel: "$_id.fieldLabel",
-              },
-              totalCount: { $sum: "$count" },
-              genderBreakdown: {
-                $push: {
-                  gender: "$_id.gender",
-                  count: "$count",
-                },
-              },
-            },
-          },
-          { $sort: { totalCount: -1 } },
-        ])
-        .toArray();
-
-      const structuresData = await collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: {
-                structure_id: "$etablissement_id_paysage",
-                structureName: "$etablissement_actuel_lib",
-                gender: "$sexe",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                structure_id: "$_id.structure_id",
-                structureName: "$_id.structureName",
-              },
-              totalCount: { $sum: "$count" },
-              genderBreakdown: {
-                $push: {
-                  gender: "$_id.gender",
-                  count: "$count",
-                },
-              },
-            },
-          },
-          { $sort: { totalCount: -1 } },
-        ])
-        .toArray();
-
-      const structures = structuresData
-        .map((item) => {
-          if (!item._id.structure_id || !item._id.structureName) return null;
-
-          const maleCount =
-            item.genderBreakdown.find((g) => g.gender === "Masculin")?.count ||
-            0;
-          const femaleCount =
-            item.genderBreakdown.find((g) => g.gender === "Féminin")?.count ||
-            0;
-
-          return {
-            structure_id: item._id.structure_id,
-            structureName: item._id.structureName,
-            maleCount: maleCount,
-            femaleCount: femaleCount,
-            totalCount: item.totalCount,
-          };
-        })
-        .filter(Boolean);
-
-      res.json({
-        cnuGroups: cnuData.map((group) => ({
-          cnuGroupId: group._id.group_code,
-          cnuGroupLabel: group._id.group_name,
-          maleCount: group.maleCount,
-          femaleCount: group.femaleCount,
-          totalCount: group.groupTotal,
-          ageDistribution: group.ageDistribution,
-          categories: group.categories,
-          cnuSections: group.sections.map((section) => ({
-            cnuSectionId: section.sectionCode,
-            cnuSectionLabel: section.sectionName,
-            maleCount: section.maleCount,
-            femaleCount: section.femaleCount,
-            totalCount: section.totalCount,
-            ageDistribution: ageClasses.map((ageClass) => ({
-              ageClass,
-              count:
-                section.ageDistribution.find((a) => a.ageClass === ageClass)
-                  ?.count || 0,
-            })),
-            categories: section.categories,
-          })),
-        })),
-        structures: structures,
-        categoryDistribution: categoryDistribution.map((cat) => ({
-          categoryCode: cat._id.category_code,
-          categoryName: cat._id.category_name,
-          maleCount: cat.maleCount,
-          femaleCount: cat.femaleCount,
-          totalCount: cat.totalCount,
-        })),
-      });
-    } catch (error) {
-      console.error("Error fetching research teachers by structures:", error);
-      res.status(500).json({ error: "Server error" });
-    }
-  }
-);
-
-router.get("/faculty-members/structures/evolution", async (req, res) => {
-  try {
-    const { structure_id, permanent_category } = req.query;
-    const collection = db.collection("faculty-members_main_staging");
-
-    const matchStage = {};
-    if (structure_id) {
-      matchStage.$or = [
-        { etablissement_id_paysage: structure_id },
-        { etablissement_id_paysage: structure_id },
-      ];
-    }
-
-    if (permanent_category) {
-      if (permanent_category === "professeurs") {
-        matchStage.categorie_assimilation = "Professeur et assimilés";
-      } else if (permanent_category === "maitres_conferences") {
-        matchStage.categorie_assimilation =
-          "Maître de conférences et assimilés";
-      } else if (permanent_category === "enseignants_2nd_degre") {
-        matchStage.categorie_assimilation =
-          "Enseignants du 2nd degré et Arts et métiers";
-      } else if (permanent_category === "non_permanents") {
-        matchStage.statut = "non_titulaire";
-      }
-    }
-
-    const [
-      years,
-      globalEvolution,
-      statusEvolution,
-      ageEvolution,
-      structureEvolution,
-      disciplineEvolution,
-      establishmentTypeEvolution,
-      personnelCategoryEvolution,
-      contextInfo,
-    ] = await Promise.all([
-      collection
-        .distinct("annee_universitaire", matchStage)
-        .then((years) => years.filter((y) => y != null).sort()),
-
-      collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: "$annee_universitaire",
-              total_count: { $sum: "$effectif" },
-              male_count: {
-                $sum: {
-                  $cond: [{ $eq: ["$sexe", "Masculin"] }, "$effectif", 0],
-                },
-              },
-              female_count: {
-                $sum: {
-                  $cond: [{ $eq: ["$sexe", "Féminin"] }, "$effectif", 0],
-                },
-              },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ])
         .toArray(),
 
       collection
         .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: "$annee_universitaire",
-              total_count: { $sum: "$effectif" },
-              enseignant_chercheur_count: {
-                $sum: {
-                  $cond: [
-                    { $eq: ["$is_enseignant_chercheur", true] },
-                    "$effectif",
-                    0,
-                  ],
-                },
-              },
-              titulaire_non_chercheur_count: {
-                $sum: {
-                  $cond: [
-                    {
-                      $and: [
-                        { $eq: ["$is_titulaire", true] },
-                        { $eq: ["$is_enseignant_chercheur", false] },
-                      ],
-                    },
-                    "$effectif",
-                    0,
-                  ],
-                },
-              },
-              non_titulaire_count: {
-                $sum: {
-                  $cond: [{ $eq: ["$is_titulaire", false] }, "$effectif", 0],
-                },
-              },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: matchStage },
+          { $match: matchAllYears },
           {
             $group: {
               _id: {
-                annee_universitaire: "$annee_universitaire",
-                age_class: "$classe_age3",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.annee_universitaire",
-              total_count: { $sum: "$count" },
-              age_breakdown: {
-                $push: {
-                  age_class: "$_id.age_class",
-                  count: "$count",
-                },
-              },
-            },
-          },
-          { $sort: { _id: 1 } },
-        ])
-        .toArray(),
-
-      !structure_id
-        ? collection
-            .aggregate([
-              { $match: matchStage },
-              {
-                $group: {
-                  _id: {
-                    annee_universitaire: "$annee_universitaire",
-                    structure_id: "$etablissement_id_paysage",
-                    structure_name: "$etablissement_actuel_lib",
-                  },
-                  total_count: { $sum: "$effectif" },
-                  male_count: {
-                    $sum: {
-                      $cond: [{ $eq: ["$sexe", "Masculin"] }, "$effectif", 0],
-                    },
-                  },
-                  female_count: {
-                    $sum: {
-                      $cond: [{ $eq: ["$sexe", "Féminin"] }, "$effectif", 0],
-                    },
-                  },
-                },
-              },
-              {
-                $match: {
-                  "_id.structure_id": { $ne: null },
-                  "_id.structure_name": { $ne: null },
-                },
-              },
-              { $sort: { "_id.annee_universitaire": 1, total_count: -1 } },
-              { $limit: 100 },
-            ])
-            .toArray()
-        : Promise.resolve([]),
-
-      collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: {
-                annee_universitaire: "$annee_universitaire",
-                discipline_code: "$code_grande_discipline",
-                discipline_name: "$grande_discipline",
-              },
-              total_count: { $sum: "$effectif" },
-              male_count: {
-                $sum: {
-                  $cond: [{ $eq: ["$sexe", "Masculin"] }, "$effectif", 0],
-                },
-              },
-              female_count: {
-                $sum: {
-                  $cond: [{ $eq: ["$sexe", "Féminin"] }, "$effectif", 0],
-                },
-              },
-            },
-          },
-          {
-            $match: {
-              "_id.discipline_code": { $ne: null },
-              "_id.discipline_name": { $ne: null },
-            },
-          },
-          { $sort: { "_id.annee_universitaire": 1, total_count: -1 } },
-          { $limit: 80 },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: {
-                annee_universitaire: "$annee_universitaire",
-                establishment_type: "$etablissement_type",
-              },
-              total_count: { $sum: "$effectif" },
-              male_count: {
-                $sum: {
-                  $cond: [{ $eq: ["$sexe", "Masculin"] }, "$effectif", 0],
-                },
-              },
-              female_count: {
-                $sum: {
-                  $cond: [{ $eq: ["$sexe", "Féminin"] }, "$effectif", 0],
-                },
-              },
-            },
-          },
-          { $sort: { "_id.annee_universitaire": 1, total_count: -1 } },
-          { $limit: 50 },
-        ])
-        .toArray(),
-
-      collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: {
-                annee_universitaire: "$annee_universitaire",
+                year: "$annee_universitaire",
                 category: "$categorie_personnels",
               },
               count: { $sum: "$effectif" },
@@ -856,13 +899,10 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
           },
           {
             $group: {
-              _id: "$_id.annee_universitaire",
-              total_count: { $sum: "$count" },
+              _id: "$_id.year",
+              total: { $sum: "$count" },
               category_breakdown: {
-                $push: {
-                  category: "$_id.category",
-                  count: "$count",
-                },
+                $push: { category: "$_id.category", count: "$count" },
               },
             },
           },
@@ -870,1118 +910,582 @@ router.get("/faculty-members/structures/evolution", async (req, res) => {
         ])
         .toArray(),
 
-      structure_id
-        ? collection.findOne(
-            {
-              $or: [
-                { etablissement_id_paysage: structure_id },
-                { etablissement_id_paysage: structure_id },
-              ],
+      collection
+        .aggregate([
+          { $match: matchAllYears },
+          {
+            $group: {
+              _id: { year: "$annee_universitaire", gender: "$sexe" },
+              count: { $sum: "$effectif" },
             },
-            {
-              projection: {
-                etablissement_lib: 1,
-                etablissement_actuel_lib: 1,
-                etablissement_id_paysage: 1,
-                etablissement_type: 1,
-                etablissement_region: 1,
+          },
+          {
+            $group: {
+              _id: "$_id.year",
+              total: { $sum: "$count" },
+              gender_breakdown: {
+                $push: { gender: "$_id.gender", count: "$count" },
               },
-            }
-          )
-        : Promise.resolve(null),
+            },
+          },
+          { $sort: { _id: 1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: { age_class: "$classe_age3", gender: "$sexe" },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.age_class",
+              total: { $sum: "$count" },
+              gender_breakdown: {
+                $push: { gender: "$_id.gender", count: "$count" },
+              },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: matchAllYears },
+          {
+            $group: {
+              _id: {
+                year: "$annee_universitaire",
+                group_code: "$code_groupe_cnu",
+                group_name: "$groupe_cnu",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: {
+                group_code: "$_id.group_code",
+                group_name: "$_id.group_name",
+              },
+              yearly: {
+                $push: { year: "$_id.year", count: "$count" },
+              },
+            },
+          },
+        ])
+        .toArray(),
+
+      getContextInfo(collection, view, id),
     ]);
 
-    const processedGlobalEvolution = globalEvolution.map((item) => ({
-      _id: item._id,
-      total_count: item.total_count,
-      gender_breakdown: [
-        { gender: "Masculin", count: item.male_count },
-        { gender: "Féminin", count: item.female_count },
-      ].filter((g) => g.count > 0),
-    }));
-
-    const processedStatusEvolution = statusEvolution.map((item) => ({
-      _id: item._id,
-      total_count: item.total_count,
-      status_breakdown: [
-        {
-          status: "enseignant_chercheur",
-          count: item.enseignant_chercheur_count,
-        },
-        {
-          status: "titulaire_non_chercheur",
-          count: item.titulaire_non_chercheur_count,
-        },
-        { status: "non_titulaire", count: item.non_titulaire_count },
-      ].filter((s) => s.count > 0),
-    }));
-
-    const processedStructureEvolution = structureEvolution
-      .sort((a, b) => b.total_count - a.total_count)
-      .map((item) => ({
-        _id: item._id,
-        total_count: item.total_count,
-        gender_breakdown: [
-          { gender: "Masculin", count: item.male_count },
-          { gender: "Féminin", count: item.female_count },
-        ].filter((g) => g.count > 0),
-      }));
-
-    const processedDisciplineEvolution = disciplineEvolution
-      .sort((a, b) => b.total_count - a.total_count)
-      .slice(0, 10)
-      .map((item) => ({
-        _id: item._id,
-        total_count: item.total_count,
-        gender_breakdown: [
-          { gender: "Masculin", count: item.male_count },
-          { gender: "Féminin", count: item.female_count },
-        ].filter((g) => g.count > 0),
-      }));
-
-    const processedEstablishmentTypeEvolution = establishmentTypeEvolution.map(
-      (item) => ({
-        _id: item._id,
-        total_count: item.total_count,
-        gender_breakdown: [
-          { gender: "Masculin", count: item.male_count },
-          { gender: "Féminin", count: item.female_count },
-        ].filter((g) => g.count > 0),
-      })
-    );
-
-    let processedContextInfo = null;
-    if (structure_id && contextInfo) {
-      processedContextInfo = {
-        id: contextInfo.etablissement_id_paysage,
-        name:
-          contextInfo.etablissement_actuel_lib || contextInfo.etablissement_lib,
-        type: "structure",
-        structure_type: contextInfo.etablissement_type,
-        region: contextInfo.etablissement_region,
-      };
-    }
-
     res.json({
-      context_info: processedContextInfo,
-      years: years,
-      global_evolution: processedGlobalEvolution,
-      status_evolution: processedStatusEvolution,
-      age_evolution: ageEvolution,
-      structure_evolution: processedStructureEvolution,
-      discipline_evolution: processedDisciplineEvolution,
-      establishment_type_evolution: processedEstablishmentTypeEvolution,
-      personnel_category_evolution: personnelCategoryEvolution,
+      context_info: contextInfo,
+      cnuGroups: cnuData.map((group) => ({
+        cnuGroupId: group._id.group_code,
+        cnuGroupLabel: group._id.group_name,
+        maleCount: group.maleCount,
+        femaleCount: group.femaleCount,
+        totalCount: group.groupTotal,
+        ageDistribution: group.ageDistribution,
+        categories: group.categories,
+        cnuSections: group.sections.map((section) => ({
+          cnuSectionId: section.sectionCode,
+          cnuSectionLabel: section.sectionName,
+          maleCount: section.maleCount,
+          femaleCount: section.femaleCount,
+          totalCount: section.totalCount,
+          ageDistribution: ageClasses.map((ageClass) => ({
+            ageClass,
+            count:
+              section.ageDistribution.find((a) => a.ageClass === ageClass)
+                ?.count || 0,
+          })),
+          categories: section.categories,
+        })),
+      })),
+      categoryDistribution: categoryDistribution.map((cat) => ({
+        categoryCode: cat._id.category_code,
+        categoryName: cat._id.category_name,
+        maleCount: cat.maleCount,
+        femaleCount: cat.femaleCount,
+        totalCount: cat.totalCount,
+      })),
+      categoryEvolution,
+      genderEvolution,
+      ageDistribution,
+      cnuGroupEvolution,
     });
   } catch (error) {
-    console.error("Error fetching structures evolution:", error);
+    console.error("Error fetching research teachers:", error);
     res.status(500).json({ error: "Server error" });
   }
 });
 
-router.get("/faculty-members/structures/age-distribution", async (req, res) => {
-  try {
-    const { annee_universitaire, structure_id } = req.query;
-    const collection = db.collection("faculty-members_main_staging");
-
-    const matchStage = {};
-    if (annee_universitaire) {
-      matchStage.annee_universitaire = annee_universitaire;
-    }
-    if (structure_id) {
-      matchStage.$or = [
-        { etablissement_id_paysage: structure_id },
-        { etablissement_id_paysage: structure_id },
-      ];
-    }
-
-    const ageDistribution = await collection
+async function getComparisonStats(collection, match) {
+  const [genderAgg, statusAgg, categoryAgg] = await Promise.all([
+    collection
       .aggregate([
-        { $match: matchStage },
+        { $match: match },
+        { $group: { _id: "$sexe", count: { $sum: "$effectif" } } },
+      ])
+      .toArray(),
+    collection
+      .aggregate([
+        { $match: match },
         {
           $group: {
-            _id: "$classe_age3",
-            count: { $sum: "$effectif" },
-          },
-        },
-        { $sort: { _id: 1 } },
-      ])
-      .toArray();
-
-    let contextInfo = null;
-    if (structure_id) {
-      const structureInfo = await collection.findOne(
-        {
-          $or: [
-            { etablissement_id_paysage: structure_id },
-            { etablissement_id_paysage: structure_id },
-          ],
-        },
-        {
-          projection: {
-            etablissement_lib: 1,
-            etablissement_actuel_lib: 1,
-          },
-        }
-      );
-
-      if (structureInfo) {
-        contextInfo = {
-          id: structure_id,
-          name:
-            structureInfo.etablissement_actuel_lib ||
-            structureInfo.etablissement_lib ||
-            "Nom de l'université inconnu",
-        };
-      }
-    }
-
-    res.json({
-      age_distribution: ageDistribution,
-      context_info: contextInfo,
-    });
-  } catch (error) {
-    console.error("Error fetching age distribution:", error);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-router.get(
-  "/faculty-members/structures/establishment-type-distribution",
-  async (req, res) => {
-    try {
-      const { annee_universitaire, structure_id, status_filter } = req.query;
-      const collection = db.collection("faculty-members_main_staging");
-
-      const matchStage = {};
-      if (annee_universitaire) {
-        matchStage.annee_universitaire = annee_universitaire;
-      }
-      if (structure_id) {
-        matchStage.$or = [
-          { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage: structure_id },
-        ];
-      }
-      if (status_filter) {
-        if (status_filter === "enseignant_chercheur") {
-          matchStage.is_enseignant_chercheur = true;
-        } else if (status_filter === "titulaire_non_chercheur") {
-          matchStage.is_titulaire = true;
-          matchStage.is_enseignant_chercheur = false;
-        } else if (status_filter === "non_titulaire") {
-          matchStage.is_titulaire = false;
-        }
-      }
-
-      const establishmentTypeDistribution = await collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: {
-                establishment_type: "$etablissement_type",
-                gender: "$sexe",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: "$_id.establishment_type",
-              total_count: { $sum: "$count" },
-              gender_breakdown: {
-                $push: {
-                  gender: "$_id.gender",
-                  count: "$count",
-                },
-              },
-            },
-          },
-          {
-            $sort: {
-              total_count: -1,
-            },
-          },
-        ])
-        .toArray();
-
-      let contextInfo = null;
-      if (structure_id) {
-        const structureInfo = await collection.findOne(
-          {
-            $or: [
-              { etablissement_id_paysage: structure_id },
-              { etablissement_id_paysage: structure_id },
-            ],
-          },
-          {
-            projection: {
-              etablissement_lib: 1,
-              etablissement_actuel_lib: 1,
-            },
-          }
-        );
-
-        if (structureInfo) {
-          contextInfo = {
-            id: structure_id,
-            name:
-              structureInfo.etablissement_actuel_lib ||
-              structureInfo.etablissement_lib ||
-              "Nom de l'université inconnu",
-          };
-        }
-      }
-
-      res.json({
-        establishment_type_distribution: establishmentTypeDistribution,
-        context_info: contextInfo,
-      });
-    } catch (error) {
-      console.error("Error fetching establishment type distribution:", error);
-      res.status(500).json({ error: "Server error" });
-    }
-  }
-);
-
-router.get(
-  "/faculty-members/structures/discipline-distribution",
-  async (req, res) => {
-    try {
-      const { annee_universitaire, structure_id } = req.query;
-      const collection = db.collection("faculty-members_main_staging");
-
-      const matchStage = {};
-      if (annee_universitaire) {
-        matchStage.annee_universitaire = annee_universitaire;
-      }
-      if (structure_id) {
-        matchStage.$or = [
-          { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage: structure_id },
-        ];
-      }
-
-      const disciplineDistribution = await collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: {
-                discipline_code: "$code_grande_discipline",
-                discipline_name: "$grande_discipline",
-                gender: "$sexe",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                discipline_code: "$_id.discipline_code",
-                discipline_name: "$_id.discipline_name",
-              },
-              total_count: { $sum: "$count" },
-              gender_breakdown: {
-                $push: {
-                  gender: "$_id.gender",
-                  count: "$count",
-                },
-              },
-            },
-          },
-          { $sort: { total_count: -1 } },
-        ])
-        .toArray();
-
-      let contextInfo = null;
-      if (structure_id) {
-        const structureInfo = await collection.findOne(
-          {
-            $or: [
-              { etablissement_id_paysage: structure_id },
-              { etablissement_id_paysage: structure_id },
-            ],
-          },
-          {
-            projection: {
-              etablissement_lib: 1,
-              etablissement_actuel_lib: 1,
-            },
-          }
-        );
-
-        if (structureInfo) {
-          contextInfo = {
-            id: structure_id,
-            name:
-              structureInfo.etablissement_actuel_lib ||
-              structureInfo.etablissement_lib ||
-              "Nom de l'université inconnu",
-          };
-        }
-      }
-
-      res.json({
-        discipline_distribution: disciplineDistribution,
-        context_info: contextInfo,
-      });
-    } catch (error) {
-      console.error("Error fetching discipline distribution:", error);
-      res.status(500).json({ error: "Server error" });
-    }
-  }
-);
-
-router.get(
-  "/faculty-members/structures/status-distribution",
-  async (req, res) => {
-    try {
-      const { annee_universitaire, structure_id } = req.query;
-      const collection = db.collection("faculty-members_main_staging");
-
-      const matchStage = {};
-      if (annee_universitaire) {
-        matchStage.annee_universitaire = annee_universitaire;
-      }
-      if (structure_id) {
-        matchStage.etablissement_id_paysage = structure_id;
-      }
-
-      const statusDistribution = await collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: {
-                structure_code: "$etablissement_id_paysage",
-                structure_name: "$etablissement_actuel_lib",
-                status: {
-                  $switch: {
-                    branches: [
-                      {
-                        case: { $eq: ["$is_enseignant_chercheur", true] },
-                        then: "enseignant_chercheur",
-                      },
-                      {
-                        case: {
-                          $and: [
-                            { $eq: ["$is_titulaire", true] },
-                            { $eq: ["$is_enseignant_chercheur", false] },
-                          ],
-                        },
-                        then: "titulaire_non_chercheur",
-                      },
-                      {
-                        case: { $eq: ["$is_titulaire", false] },
-                        then: "non_titulaire",
-                      },
-                    ],
-                    default: "non_titulaire",
+            _id: {
+              $switch: {
+                branches: [
+                  {
+                    case: { $eq: ["$is_enseignant_chercheur", true] },
+                    then: "enseignant_chercheur",
                   },
-                },
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                structure_code: "$_id.structure_code",
-                structure_name: "$_id.structure_name",
-              },
-              total_count: { $sum: "$count" },
-              status_breakdown: {
-                $push: {
-                  status: "$_id.status",
-                  count: "$count",
-                },
+                  {
+                    case: {
+                      $and: [
+                        { $eq: ["$is_titulaire", true] },
+                        { $eq: ["$is_enseignant_chercheur", false] },
+                      ],
+                    },
+                    then: "titulaire_non_chercheur",
+                  },
+                ],
+                default: "non_titulaire",
               },
             },
+            count: { $sum: "$effectif" },
           },
-          { $sort: { total_count: -1 } },
-        ])
-        .toArray();
-
-      let contextInfo = null;
-      if (structure_id) {
-        const structureInfo = await collection.findOne(
-          {
-            etablissement_id_paysage: structure_id,
-          },
-          {
-            projection: {
-              etablissement_lib: 1,
-              etablissement_actuel_lib: 1,
-            },
-          }
-        );
-
-        if (structureInfo) {
-          contextInfo = {
-            id: structure_id,
-            name:
-              structureInfo.etablissement_actuel_lib ||
-              structureInfo.etablissement_lib ||
-              "Nom de l'université inconnu",
-          };
-        }
-      }
-
-      res.json({
-        status_distribution: statusDistribution,
-        context_info: contextInfo,
-      });
-    } catch (error) {
-      console.error("Error fetching status distribution:", error);
-      res.status(500).json({ error: "Server error" });
-    }
-  }
-);
-
-router.get(
-  "/faculty-members/structures/general-indicators",
-  async (req, res) => {
-    try {
-      const { annee_universitaire, structure_id } = req.query;
-      const collection = db.collection("faculty-members_main_staging");
-
-      const matchStage = {};
-      if (annee_universitaire) {
-        matchStage.annee_universitaire = annee_universitaire;
-      }
-      if (structure_id) {
-        matchStage.$or = [
-          { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage: structure_id },
-        ];
-      }
-
-      // Distribution par genre
-      const genderDistribution = await collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: "$sexe",
-              count: { $sum: "$effectif" },
-            },
-          },
-        ])
-        .toArray();
-
-      // Total des effectifs
-      const totalCount = await collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: null,
-              total: { $sum: "$effectif" },
-            },
-          },
-        ])
-        .toArray();
-
-      // Informations contextuelles
-      let contextInfo = null;
-      if (structure_id) {
-        const structureInfo = await collection.findOne(
-          {
-            $or: [
-              { etablissement_id_paysage: structure_id },
-              { etablissement_id_paysage: structure_id },
-            ],
-          },
-          {
-            projection: {
-              etablissement_lib: 1,
-              etablissement_actuel_lib: 1,
-            },
-          }
-        );
-
-        if (structureInfo) {
-          contextInfo = {
-            id: structure_id,
-            name:
-              structureInfo.etablissement_actuel_lib ||
-              structureInfo.etablissement_lib ||
-              "Nom de l'université inconnu",
-          };
-        }
-      }
-
-      res.json({
-        gender_distribution: genderDistribution,
-        total_count: totalCount[0]?.total || 0,
-        context_info: contextInfo,
-      });
-    } catch (error) {
-      console.error("Error fetching general indicators:", error);
-      res.status(500).json({ error: "Server error" });
-    }
-  }
-);
-
-router.get(
-  "/faculty-members/structures/gender-distribution",
-  async (req, res) => {
-    try {
-      const { annee_universitaire, structure_id } = req.query;
-      const collection = db.collection("faculty-members_main_staging");
-
-      const matchStage = {};
-      if (annee_universitaire) {
-        matchStage.annee_universitaire = annee_universitaire;
-      }
-      if (structure_id) {
-        matchStage.$or = [
-          { etablissement_id_paysage: structure_id },
-          { etablissement_id_paysage: structure_id },
-        ];
-      }
-
-      const genderDistribution = await collection
-        .aggregate([
-          { $match: matchStage },
-          {
-            $group: {
-              _id: {
-                structure_code: "$etablissement_id_paysage",
-                structure_name: "$etablissement_actuel_lib",
-                gender: "$sexe",
-              },
-              count: { $sum: "$effectif" },
-            },
-          },
-          {
-            $group: {
-              _id: {
-                structure_code: "$_id.structure_code",
-                structure_name: "$_id.structure_name",
-              },
-              total_count: { $sum: "$count" },
-              gender_breakdown: {
-                $push: {
-                  gender: "$_id.gender",
-                  count: "$count",
-                },
-              },
-            },
-          },
-          { $sort: { total_count: -1 } },
-        ])
-        .toArray();
-
-      let contextInfo = null;
-      if (structure_id) {
-        const structureInfo = await collection.findOne(
-          {
-            $or: [
-              { etablissement_id_paysage: structure_id },
-              { etablissement_id_paysage: structure_id },
-            ],
-          },
-          {
-            projection: {
-              etablissement_lib: 1,
-              etablissement_actuel_lib: 1,
-            },
-          }
-        );
-
-        if (structureInfo) {
-          contextInfo = {
-            id: structure_id,
-            name:
-              structureInfo.etablissement_actuel_lib ||
-              structureInfo.etablissement_lib ||
-              "Nom de l'université inconnu",
-          };
-        }
-      }
-
-      res.json({
-        gender_distribution: genderDistribution,
-        context_info: contextInfo,
-      });
-    } catch (error) {
-      console.error("Error fetching gender distribution:", error);
-      res.status(500).json({ error: "Server error" });
-    }
-  }
-);
-
-router.get("/faculty-members/structures/top-indicators", async (req, res) => {
-  try {
-    const { annee_universitaire, structure_id } = req.query;
-    const collection = db.collection("faculty-members_main_staging");
-
-    const matchStage = {};
-    if (annee_universitaire) {
-      matchStage.annee_universitaire = annee_universitaire;
-    }
-    if (structure_id) {
-      matchStage.$or = [
-        { etablissement_id_paysage: structure_id },
-        { etablissement_id_paysage: structure_id },
-      ];
-    }
-
-    const genderDistribution = await collection
+        },
+      ])
+      .toArray(),
+    collection
       .aggregate([
-        { $match: matchStage },
+        { $match: match },
+        {
+          $group: {
+            _id: "$categorie_assimilation",
+            count: { $sum: "$effectif" },
+          },
+        },
+        { $match: { _id: { $ne: null } } },
+        { $sort: { count: -1 } },
+      ])
+      .toArray(),
+  ]);
+
+  const total = genderAgg.reduce((s, g) => s + g.count, 0);
+  return { total, gender: genderAgg, status: statusAgg, category: categoryAgg };
+}
+
+router.get("/faculty-members/comparison", async (req, res) => {
+  try {
+    const { view, id, year } = req.query;
+    if (!view || !VALID_VIEWS.includes(view) || !id || !year) {
+      return res
+        .status(400)
+        .json({ error: "Missing or invalid view/id/year params" });
+    }
+    const collection = db.collection(COLLECTION);
+
+    if (view === "structure") {
+      const doc = await collection.findOne(
+        { etablissement_id_paysage: id },
+        {
+          projection: {
+            etablissement_region: 1,
+            etablissement_academie: 1,
+            etablissement_actuel_lib: 1,
+            etablissement_lib: 1,
+          },
+        }
+      );
+      if (!doc) return res.status(404).json({ error: "Structure not found" });
+
+      const regionName = doc.etablissement_region;
+      const academieName = doc.etablissement_academie;
+      const entityName = doc.etablissement_actuel_lib || doc.etablissement_lib;
+
+      const [entityStats, regionStats, academieStats] = await Promise.all([
+        getComparisonStats(collection, {
+          etablissement_id_paysage: id,
+          annee_universitaire: year,
+        }),
+        getComparisonStats(collection, {
+          etablissement_region: regionName,
+          annee_universitaire: year,
+        }),
+        getComparisonStats(collection, {
+          etablissement_academie: academieName,
+          annee_universitaire: year,
+        }),
+      ]);
+
+      return res.json({
+        type: "structure",
+        entity: { name: entityName, ...entityStats },
+        region: { name: regionName, ...regionStats },
+        academie: { name: academieName, ...academieStats },
+      });
+    }
+
+    const geoField =
+      view === "region" ? "etablissement_region" : "etablissement_academie";
+
+    const establishments = await collection
+      .aggregate([
+        { $match: { [geoField]: id, annee_universitaire: year } },
         {
           $group: {
             _id: {
-              structure_code: "$etablissement_id_paysage",
-              structure_name: "$etablissement_actuel_lib",
+              id: "$etablissement_id_paysage",
+              label: "$etablissement_lib",
               gender: "$sexe",
+              status: {
+                $switch: {
+                  branches: [
+                    {
+                      case: { $eq: ["$is_enseignant_chercheur", true] },
+                      then: "enseignant_chercheur",
+                    },
+                    {
+                      case: {
+                        $and: [
+                          { $eq: ["$is_titulaire", true] },
+                          { $eq: ["$is_enseignant_chercheur", false] },
+                        ],
+                      },
+                      then: "titulaire_non_chercheur",
+                    },
+                  ],
+                  default: "non_titulaire",
+                },
+              },
             },
             count: { $sum: "$effectif" },
           },
         },
         {
           $group: {
-            _id: {
-              structure_code: "$_id.structure_code",
-              structure_name: "$_id.structure_name",
-            },
-            total_count: { $sum: "$count" },
+            _id: { id: "$_id.id", label: "$_id.label" },
+            total: { $sum: "$count" },
             gender_breakdown: {
-              $push: {
-                gender: "$_id.gender",
-                count: "$count",
-              },
+              $push: { gender: "$_id.gender", count: "$count" },
+            },
+            status_breakdown: {
+              $push: { status: "$_id.status", count: "$count" },
             },
           },
         },
-        { $sort: { total_count: -1 } },
+        { $sort: { total: -1 } },
+        { $limit: 20 },
       ])
       .toArray();
 
-    let contextInfo = null;
-    if (structure_id) {
-      const structureInfo = await collection.findOne(
-        {
-          $or: [
-            { etablissement_id_paysage: structure_id },
-            { etablissement_id_paysage: structure_id },
-          ],
-        },
-        {
-          projection: {
-            etablissement_lib: 1,
-            etablissement_actuel_lib: 1,
-          },
-        }
-      );
+    const geoStats = await getComparisonStats(collection, {
+      [geoField]: id,
+      annee_universitaire: year,
+    });
 
-      if (structureInfo) {
-        contextInfo = {
-          id: structure_id,
-          name:
-            structureInfo.etablissement_actuel_lib ||
-            structureInfo.etablissement_lib ||
-            "Nom de l'université inconnu",
-        };
-      }
-    }
-
-    res.json({
-      gender_distribution: genderDistribution,
-      context_info: contextInfo,
+    return res.json({
+      type: view,
+      entity: { name: id, ...geoStats },
+      establishments,
     });
   } catch (error) {
-    console.error("Error fetching gender distribution:", error);
+    console.error("Error fetching comparison:", error);
     res.status(500).json({ error: "Server error" });
   }
 });
 
-// Index routes
-
-router.get("/faculty-members/filters/structures_indexes", async (req, res) => {
+router.get("/faculty-members/positioning", async (req, res) => {
   try {
-    await recreateIndex(
-      db.collection("faculty-members_main_staging"),
-      {
-        etablissement_id_paysage: 1,
-        etablissement_lib: 1,
-      },
-      "idx_structures_filters"
-    );
+    const {
+      view = "structure",
+      year,
+      cnu_type,
+      cnu_code,
+      assimil_code,
+    } = req.query;
+    if (!VALID_VIEWS.includes(view)) {
+      return res.status(400).json({ error: "Invalid view parameter" });
+    }
+    const collection = db.collection(COLLECTION);
+    const match = {};
+    if (year) match.annee_universitaire = year;
+    if (cnu_type === "groupe" && cnu_code)
+      match.code_groupe_cnu = parseInt(cnu_code);
+    if (cnu_type === "section" && cnu_code)
+      match.code_section_cnu = parseInt(cnu_code);
+    if (assimil_code) match.code_categorie_assimil = assimil_code;
 
-    res.status(201).json({
-      message: "Index pour structures filters créé avec succès",
-      indexName: "idx_structures_filters",
-    });
+    const groupId = {
+      structure: {
+        entity_id: "$etablissement_id_paysage_actuel",
+        entity_label: "$etablissement_actuel_lib",
+        entity_type: "$etablissement_type",
+        entity_region: "$etablissement_region",
+        entity_code_region: "$etablissement_code_region",
+        entity_academie: "$etablissement_academie",
+        entity_code_academie: "$etablissement_code_academie",
+      },
+      region: {
+        entity_id: "$etablissement_region",
+        entity_label: "$etablissement_region",
+        entity_code_region: "$etablissement_code_region",
+      },
+      academie: {
+        entity_id: "$etablissement_academie",
+        entity_label: "$etablissement_academie",
+        entity_academie: "$etablissement_academie",
+        entity_code_academie: "$etablissement_code_academie",
+        entity_region: "$etablissement_region",
+        entity_code_region: "$etablissement_code_region",
+      },
+      discipline: {
+        entity_id: "$code_grande_discipline",
+        entity_label: "$grande_discipline",
+      },
+    }[view];
+
+    const items = await collection
+      .aggregate([
+        { $match: match },
+        {
+          $group: {
+            _id: groupId,
+            total: { $sum: "$effectif" },
+            female: {
+              $sum: { $cond: [{ $eq: ["$sexe", "Féminin"] }, "$effectif", 0] },
+            },
+            ec: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$is_enseignant_chercheur", true] },
+                  "$effectif",
+                  0,
+                ],
+              },
+            },
+            titulaires: {
+              $sum: {
+                $cond: [{ $eq: ["$is_titulaire", true] }, "$effectif", 0],
+              },
+            },
+            pr: {
+              $sum: {
+                $cond: [
+                  {
+                    $regexMatch: {
+                      input: { $ifNull: ["$categorie_assimilation", ""] },
+                      regex: "professeur",
+                      options: "i",
+                    },
+                  },
+                  "$effectif",
+                  0,
+                ],
+              },
+            },
+            mcf: {
+              $sum: {
+                $cond: [
+                  {
+                    $regexMatch: {
+                      input: { $ifNull: ["$categorie_assimilation", ""] },
+                      regex: "conf[eé]rences",
+                      options: "i",
+                    },
+                  },
+                  "$effectif",
+                  0,
+                ],
+              },
+            },
+            non_permanents: {
+              $sum: {
+                $cond: [{ $eq: ["$is_titulaire", false] }, "$effectif", 0],
+              },
+            },
+            age_35_moins: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$classe_age3", "35 ans et moins"] },
+                  "$effectif",
+                  0,
+                ],
+              },
+            },
+            age_36_55: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$classe_age3", "36 à 55 ans"] },
+                  "$effectif",
+                  0,
+                ],
+              },
+            },
+            age_56_plus: {
+              $sum: {
+                $cond: [
+                  { $eq: ["$classe_age3", "56 ans et plus"] },
+                  "$effectif",
+                  0,
+                ],
+              },
+            },
+            temps_plein: {
+              $sum: {
+                $cond: [{ $eq: ["$quotite", "Temps plein"] }, "$effectif", 0],
+              },
+            },
+            pers_2nd_degre: {
+              $sum: {
+                $cond: [
+                  {
+                    $eq: [
+                      "$categorie_assimilation",
+                      "Enseignants du 2nd degré et Arts et métiers",
+                    ],
+                  },
+                  "$effectif",
+                  0,
+                ],
+              },
+            },
+          },
+        },
+        { $match: { total: { $gt: 0 } } },
+        { $sort: { total: -1 } },
+      ])
+      .toArray();
+
+    const result = items
+      .filter((item) => item._id.entity_id && item._id.entity_label)
+      .map((item) => ({
+        etablissement_id_paysage_actuel: item._id.entity_id,
+        etablissement_actuel_lib: item._id.entity_label,
+        etablissement_type: item._id.entity_type || null,
+        etablissement_region: item._id.entity_region || null,
+        etablissement_code_region: item._id.entity_code_region || null,
+        etablissement_academie: item._id.entity_academie || null,
+        etablissement_code_academie: item._id.entity_code_academie || null,
+        total_effectif: item.total,
+        taux_feminisation:
+          item.total > 0 ? (item.female / item.total) * 100 : 0,
+        taux_ec: item.total > 0 ? (item.ec / item.total) * 100 : 0,
+        taux_titulaires:
+          item.total > 0 ? (item.titulaires / item.total) * 100 : 0,
+        taux_non_permanents:
+          item.total > 0 ? (item.non_permanents / item.total) * 100 : 0,
+        taux_pr: item.total > 0 ? (item.pr / item.total) * 100 : 0,
+        taux_mcf: item.total > 0 ? (item.mcf / item.total) * 100 : 0,
+        taux_age_35_moins:
+          item.total > 0 ? (item.age_35_moins / item.total) * 100 : 0,
+        taux_age_36_55:
+          item.total > 0 ? (item.age_36_55 / item.total) * 100 : 0,
+        taux_age_56_plus:
+          item.total > 0 ? (item.age_56_plus / item.total) * 100 : 0,
+        taux_temps_plein:
+          item.total > 0 ? (item.temps_plein / item.total) * 100 : 0,
+        taux_2nd_degre:
+          item.total > 0 ? (item.pers_2nd_degre / item.total) * 100 : 0,
+        total_titulaires: item.titulaires,
+        total_ec: item.ec,
+        total_non_permanents: item.non_permanents,
+      }));
+
+    res.json({ items: result });
   } catch (error) {
-    console.error(
-      "Erreur lors de la création de l'index structures filters:",
-      error
-    );
-    res.status(500).json({ error: "Erreur lors de la création de l'index" });
+    console.error("Error fetching positioning data:", error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-router.get(
-  "/faculty-members/structures/cnu-analysis_indexes",
-  async (req, res) => {
-    try {
-      await recreateIndex(
-        db.collection("faculty-members_main_staging"),
-        {
-          annee_universitaire: 1,
-          etablissement_id_paysage: 1,
-          code_grande_discipline: 1,
-          grande_discipline: 1,
-          code_groupe_cnu: 1,
-          groupe_cnu: 1,
-          code_section_cnu: 1,
-          section_cnu: 1,
-          sexe: 1,
-          classe_age3: 1,
-          effectif: 1,
-        },
-        "idx_cnu_analysis"
-      );
+router.get("/faculty-members/cnu-list", async (req, res) => {
+  try {
+    const { year } = req.query;
+    const collection = db.collection(COLLECTION);
+    const match = {};
+    if (year) match.annee_universitaire = year;
 
-      res.status(201).json({
-        message: "Index pour cnu-analysis créé avec succès",
-        indexName: "idx_cnu_analysis",
-      });
-    } catch (error) {
-      console.error(
-        "Erreur lors de la création de l'index cnu-analysis:",
-        error
-      );
-      res.status(500).json({ error: "Erreur lors de la création de l'index" });
-    }
+    const [groupes, sections] = await Promise.all([
+      collection
+        .aggregate([
+          { $match: { ...match, code_groupe_cnu: { $nin: [99, null] } } },
+          {
+            $group: { _id: { code: "$code_groupe_cnu", label: "$groupe_cnu" } },
+          },
+          { $sort: { "_id.code": 1 } },
+          { $project: { _id: 0, code: "$_id.code", label: "$_id.label" } },
+        ])
+        .toArray(),
+      collection
+        .aggregate([
+          { $match: { ...match, code_section_cnu: { $nin: [99, null] } } },
+          {
+            $group: {
+              _id: {
+                code: "$code_section_cnu",
+                label: "$section_cnu",
+                groupe: "$code_groupe_cnu",
+              },
+            },
+          },
+          { $sort: { "_id.code": 1 } },
+          {
+            $project: {
+              _id: 0,
+              code: "$_id.code",
+              label: "$_id.label",
+              groupe: "$_id.groupe",
+            },
+          },
+        ])
+        .toArray(),
+    ]);
+
+    res.json({ groupes, sections });
+  } catch (error) {
+    console.error("Error fetching CNU list:", error);
+    res.status(500).json({ error: "Server error" });
   }
-);
+});
 
-router.get(
-  "/faculty-members/structures/research-teachers_indexes",
-  async (req, res) => {
-    try {
-      await recreateIndex(
-        db.collection("faculty-members_main_staging"),
+router.get("/faculty-members/assimilation-list", async (req, res) => {
+  try {
+    const { year } = req.query;
+    const collection = db.collection(COLLECTION);
+    const match = {};
+    if (year) match.annee_universitaire = year;
+
+    const categories = await collection
+      .aggregate([
+        { $match: { ...match, code_categorie_assimil: { $ne: null } } },
         {
-          annee_universitaire: 1,
-          etablissement_id_paysage: 1,
-          is_titulaire: 1,
-          code_groupe_cnu: 1,
-          groupe_cnu: 1,
-          code_section_cnu: 1,
-          section_cnu: 1,
-          sexe: 1,
-          classe_age3: 1,
-          categorie_assimilation: 1,
-          code_grande_discipline: 1,
-          grande_discipline: 1,
-          etablissement_actuel_lib: 1,
-          effectif: 1,
+          $group: {
+            _id: {
+              code: "$code_categorie_assimil",
+              label: "$categorie_assimilation",
+            },
+          },
         },
-        "idx_research_teachers"
-      );
+        { $sort: { "_id.label": 1 } },
+        { $project: { _id: 0, code: "$_id.code", label: "$_id.label" } },
+      ])
+      .toArray();
 
-      res.status(201).json({
-        message: "Index pour research-teachers créé avec succès",
-        indexName: "idx_research_teachers",
-      });
-    } catch (error) {
-      console.error(
-        "Erreur lors de la création de l'index research-teachers:",
-        error
-      );
-      res.status(500).json({ error: "Erreur lors de la création de l'index" });
-    }
+    res.json({ categories });
+  } catch (error) {
+    console.error("Error fetching assimilation list:", error);
+    res.status(500).json({ error: "Server error" });
   }
-);
-
-router.get(
-  "/faculty-members/structures/evolution_indexes",
-  async (req, res) => {
-    try {
-      await recreateIndex(
-        db.collection("faculty-members_main_staging"),
-        {
-          etablissement_id_paysage: 1,
-          categorie_assimilation: 1,
-          statut: 1,
-          annee_universitaire: 1,
-          sexe: 1,
-          classe_age3: 1,
-          is_enseignant_chercheur: 1,
-          is_titulaire: 1,
-          code_grande_discipline: 1,
-          grande_discipline: 1,
-          etablissement_actuel_lib: 1,
-          etablissement_type: 1,
-          categorie_personnels: 1,
-          etablissement_lib: 1,
-          etablissement_region: 1,
-          effectif: 1,
-        },
-        "idx_evolution"
-      );
-
-      res.status(201).json({
-        message: "Index pour evolution créé avec succès",
-        indexName: "idx_evolution",
-      });
-    } catch (error) {
-      console.error("Erreur lors de la création de l'index evolution:", error);
-      res.status(500).json({ error: "Erreur lors de la création de l'index" });
-    }
-  }
-);
-
-router.get(
-  "/faculty-members/structures/age-distribution_indexes",
-  async (req, res) => {
-    try {
-      await recreateIndex(
-        db.collection("faculty-members_main_staging"),
-        {
-          annee_universitaire: 1,
-          etablissement_id_paysage: 1,
-          classe_age3: 1,
-          etablissement_lib: 1,
-          etablissement_actuel_lib: 1,
-          etablissement_type: 1,
-          etablissement_region: 1,
-          effectif: 1,
-        },
-        "idx_age_distribution"
-      );
-
-      res.status(201).json({
-        message: "Index pour age-distribution créé avec succès",
-        indexName: "idx_age_distribution",
-      });
-    } catch (error) {
-      console.error(
-        "Erreur lors de la création de l'index age-distribution:",
-        error
-      );
-      res.status(500).json({ error: "Erreur lors de la création de l'index" });
-    }
-  }
-);
-
-router.get(
-  "/faculty-members/structures/establishment-type-distribution_indexes",
-  async (req, res) => {
-    try {
-      await recreateIndex(
-        db.collection("faculty-members_main_staging"),
-        {
-          annee_universitaire: 1,
-          etablissement_id_paysage: 1,
-          is_enseignant_chercheur: 1,
-          is_titulaire: 1,
-          etablissement_type: 1,
-          sexe: 1,
-          etablissement_lib: 1,
-          etablissement_actuel_lib: 1,
-          etablissement_region: 1,
-          effectif: 1,
-        },
-        "idx_establishment_type_distribution"
-      );
-
-      res.status(201).json({
-        message: "Index pour establishment-type-distribution créé avec succès",
-        indexName: "idx_establishment_type_distribution",
-      });
-    } catch (error) {
-      console.error(
-        "Erreur lors de la création de l'index establishment-type-distribution:",
-        error
-      );
-      res.status(500).json({ error: "Erreur lors de la création de l'index" });
-    }
-  }
-);
-
-router.get(
-  "/faculty-members/structures/discipline-distribution_indexes",
-  async (req, res) => {
-    try {
-      await recreateIndex(
-        db.collection("faculty-members_main_staging"),
-        {
-          annee_universitaire: 1,
-          etablissement_id_paysage: 1,
-          code_grande_discipline: 1,
-          grande_discipline: 1,
-          sexe: 1,
-          is_enseignant_chercheur: 1,
-          is_titulaire: 1,
-          etablissement_lib: 1,
-          etablissement_actuel_lib: 1,
-          etablissement_type: 1,
-          etablissement_region: 1,
-          effectif: 1,
-        },
-        "idx_discipline_distribution"
-      );
-
-      res.status(201).json({
-        message: "Index pour discipline-distribution créé avec succès",
-        indexName: "idx_discipline_distribution",
-      });
-    } catch (error) {
-      console.error(
-        "Erreur lors de la création de l'index discipline-distribution:",
-        error
-      );
-      res.status(500).json({ error: "Erreur lors de la création de l'index" });
-    }
-  }
-);
-
-router.get(
-  "/faculty-members/structures/status-distribution_indexes",
-  async (req, res) => {
-    try {
-      await recreateIndex(
-        db.collection("faculty-members_main_staging"),
-        {
-          annee_universitaire: 1,
-          etablissement_id_paysage: 1,
-          is_enseignant_chercheur: 1,
-          is_titulaire: 1,
-          sexe: 1,
-          etablissement_lib: 1,
-          etablissement_actuel_lib: 1,
-          etablissement_type: 1,
-          etablissement_region: 1,
-          effectif: 1,
-        },
-        "idx_status_distribution"
-      );
-
-      res.status(201).json({
-        message: "Index pour status-distribution créé avec succès",
-        indexName: "idx_status_distribution",
-      });
-    } catch (error) {
-      console.error(
-        "Erreur lors de la création de l'index status-distribution:",
-        error
-      );
-      res.status(500).json({ error: "Erreur lors de la création de l'index" });
-    }
-  }
-);
-
-router.get(
-  "/faculty-members/structures/general-indicators_indexes",
-  async (req, res) => {
-    try {
-      await recreateIndex(
-        db.collection("faculty-members_main_staging"),
-        {
-          annee_universitaire: 1,
-          etablissement_id_paysage: 1,
-          sexe: 1,
-          is_enseignant_chercheur: 1,
-          is_titulaire: 1,
-          classe_age3: 1,
-          etablissement_lib: 1,
-          etablissement_actuel_lib: 1,
-          etablissement_type: 1,
-          etablissement_region: 1,
-          effectif: 1,
-        },
-        "idx_general_indicators"
-      );
-
-      res.status(201).json({
-        message: "Index pour general-indicators créé avec succès",
-        indexName: "idx_general_indicators",
-      });
-    } catch (error) {
-      console.error(
-        "Erreur lors de la création de l'index general-indicators:",
-        error
-      );
-      res.status(500).json({ error: "Erreur lors de la création de l'index" });
-    }
-  }
-);
-
-router.get(
-  "/faculty-members/structures/gender-distribution_indexes",
-  async (req, res) => {
-    try {
-      await recreateIndex(
-        db.collection("faculty-members_main_staging"),
-        {
-          annee_universitaire: 1,
-          etablissement_id_paysage: 1,
-          is_enseignant_chercheur: 1,
-          is_titulaire: 1,
-          sexe: 1,
-          etablissement_lib: 1,
-          etablissement_actuel_lib: 1,
-          etablissement_type: 1,
-          etablissement_region: 1,
-          effectif: 1,
-        },
-        "idx_gender_distribution"
-      );
-
-      res.status(201).json({
-        message: "Index pour gender-distribution créé avec succès",
-        indexName: "idx_gender_distribution",
-      });
-    } catch (error) {
-      console.error(
-        "Erreur lors de la création de l'index gender-distribution:",
-        error
-      );
-      res.status(500).json({ error: "Erreur lors de la création de l'index" });
-    }
-  }
-);
-
-router.get(
-  "/faculty-members/structures/top-indicators_indexes",
-  async (req, res) => {
-    try {
-      await recreateIndex(
-        db.collection("faculty-members_main_staging"),
-        {
-          annee_universitaire: 1,
-          etablissement_id_paysage: 1,
-          code_grande_discipline: 1,
-          grande_discipline: 1,
-          sexe: 1,
-          is_enseignant_chercheur: 1,
-          is_titulaire: 1,
-          classe_age3: 1,
-          effectif: 1,
-        },
-        "idx_top_indicators"
-      );
-
-      res.status(201).json({
-        message: "Index pour top-indicators créé avec succès",
-        indexName: "idx_top_indicators",
-      });
-    } catch (error) {
-      console.error(
-        "Erreur lors de la création de l'index top-indicators:",
-        error
-      );
-      res.status(500).json({ error: "Erreur lors de la création de l'index" });
-    }
-  }
-);
+});
 
 export default router;

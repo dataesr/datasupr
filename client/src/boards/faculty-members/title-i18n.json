@@ -1,0 +1,30 @@
+{
+  "home": {
+    "fr": "Accueil",
+    "en": "Home"
+  },
+  "overview": {
+    "fr": "Vue d'ensemble",
+    "en": "Overview"
+  },
+  "Accueil - Le personnel enseignant de l'enseignement supérieur français": {
+    "fr": "Accueil - Le personnel enseignant de l'enseignement supérieur français",
+    "en": "Home - Faculty members of French higher education"
+  },
+  "Établissements - Personnel enseignant": {
+    "fr": "Établissements - Personnel enseignant",
+    "en": "Institutions - Faculty members"
+  },
+  "Disciplines - Personnel enseignant": {
+    "fr": "Disciplines - Personnel enseignant",
+    "en": "Disciplines - Faculty members"
+  },
+  "Régions - Personnel enseignant": {
+    "fr": "Régions - Personnel enseignant",
+    "en": "Regions - Faculty members"
+  },
+  "Académies - Personnel enseignant": {
+    "fr": "Académies - Personnel enseignant",
+    "en": "Academies - Faculty members"
+  }
+}

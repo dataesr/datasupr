@@ -1,59 +1,80 @@
 import { Route, Routes } from "react-router-dom";
 
 import NotFoundPage from "../../components/not-found-page.tsx";
-import { Layout } from "../../layout/layout.tsx";
-import Glossary from "./components/glossary/index.tsx";
-import { FacultyMembers } from "./index.tsx";
-import { FacultyLayout } from "./layout/index.tsx";
-import { Evolution } from "./pages/evolutions/index.tsx";
-import FieldsOverview from "./pages/fields/fields-overview.tsx";
-import RegionsOverview from "./pages/geo/geo-overview.tsx";
-import { ResearchTeachers } from "./pages/research-teachers/index.tsx";
-import { Typologie } from "./pages/typology/index.tsx";
-import UniversityOverview from "./pages/university/university-overview.tsx";
+import { useTitle } from "../../hooks/usePageTitle.tsx";
+import { getI18nLabel } from "../../utils.tsx";
+import i18n from "./title-i18n.json";
+
+import "./styles.scss";
+import GlobalLayout from "./components/layouts/global-layout.tsx";
+import Home from "./pages/home/index.tsx";
+import DataView from "./pages/structures/index.tsx";
+import DefinitionsPage from "./pages/definitions/index.tsx";
+
+const RouteWithTitle = ({ titleKey, element }) => {
+  useTitle(getI18nLabel(i18n, titleKey));
+  return element;
+};
 
 
 export default function FacultyMembersRoutes() {
   return (
     <Routes>
-      <Route element={<Layout />}>
-        <Route path="/" element={<FacultyMembers />} />
-        <Route element={<FacultyLayout />}>
-          {/* ROUTES POUR LA GEO */}
-          <Route path="/geo/vue-d'ensemble/" element={<RegionsOverview />} />
-          <Route path="/geo/evolution/" element={<Evolution />} />
-          <Route path="/geo/typologie/" element={<Typologie />} />
-          <Route
-            path="/geo/enseignants-permanents/"
-            element={<ResearchTeachers />}
-          />
-
-          {/* ROUTES POUR LES UNIVERSITES */}
-          <Route
-            path="/universite/vue-d'ensemble/"
-            element={<UniversityOverview />}
-          />
-          <Route path="/universite/evolution/" element={<Evolution />} />
-          <Route path="/universite/typologie/" element={<Typologie />} />
-          <Route
-            path="/universite/enseignants-permanents/"
-            element={<ResearchTeachers />}
-          />
-
-          {/* ROUTES POUR LES DISCIPLINES */}
-          <Route
-            path="/discipline/vue-d'ensemble/"
-            element={<FieldsOverview />}
-          />
-          <Route path="/discipline/evolution/" element={<Evolution />} />
-          <Route path="/discipline/typologie/" element={<Typologie />} />
-          <Route
-            path="/discipline/enseignants-permanents/"
-            element={<ResearchTeachers />}
-          />
-          {/* GLOSSAIRE */}
-          <Route path="/glossaire/" element={<Glossary />} />
-        </Route>
+      <Route element={<GlobalLayout />}>
+        <Route
+          path="accueil"
+          element={
+            <RouteWithTitle
+              titleKey="Accueil - Le personnel enseignant de l'enseignement supérieur français"
+              element={<Home />}
+            />
+          }
+        />
+        <Route
+          path="etablissements"
+          element={
+            <RouteWithTitle
+              titleKey="Établissements - Personnel enseignant"
+              element={<DataView viewType="structure" />}
+            />
+          }
+        />
+        <Route
+          path="disciplines"
+          element={
+            <RouteWithTitle
+              titleKey="Disciplines - Personnel enseignant"
+              element={<DataView viewType="discipline" />}
+            />
+          }
+        />
+        <Route
+          path="regions"
+          element={
+            <RouteWithTitle
+              titleKey="Régions - Personnel enseignant"
+              element={<DataView viewType="region" />}
+            />
+          }
+        />
+        <Route
+          path="academies"
+          element={
+            <RouteWithTitle
+              titleKey="Académies - Personnel enseignant"
+              element={<DataView viewType="academie" />}
+            />
+          }
+        />
+        <Route
+          path="definitions"
+          element={
+            <RouteWithTitle
+              titleKey="Définitions - Personnel enseignant"
+              element={<DefinitionsPage />}
+            />
+          }
+        />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
