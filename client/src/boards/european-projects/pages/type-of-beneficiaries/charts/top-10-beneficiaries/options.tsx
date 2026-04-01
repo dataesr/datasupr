@@ -3,6 +3,7 @@ import HighchartsInstance from "highcharts";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 
 import i18n from "./i18n.json";
+import { formatToMillions } from "../../../../../../utils/format";
 const rootStyles = getComputedStyle(document.documentElement);
 
 export default function Options(data, currentLang) {
@@ -25,10 +26,28 @@ export default function Options(data, currentLang) {
         title: {
           text: getI18nLabel("xAxis-label"),
         },
+        gridLineColor: "var(--background-default-grey-hover)",
+        gridLineWidth: 0.5,
       },
     ],
     legend: {
       enabled: true,
+    },
+    plotOptions: {
+      series: {
+        animation: false,
+        borderWidth: 0,
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            return formatToMillions(this.y ?? 0);
+          },
+        },
+      },
+      column: {
+        borderWidth: 0,
+        borderRadius: 0,
+      },
     },
     series: [
       {

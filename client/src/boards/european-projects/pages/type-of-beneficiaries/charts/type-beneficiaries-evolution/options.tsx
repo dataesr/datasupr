@@ -1,22 +1,25 @@
 import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
+import { getCssColor } from "../../../../../../utils/colors";
 
 import i18n from "./i18n.json";
 
-export default function Options(data, currentLang) {
+export default function Options(data, currentLang, selectedCountry?: string) {
   if (!data || !data.countries || !data.years) return null;
 
   function getI18nLabel(key) {
     return i18n[key][currentLang];
   }
 
-  // Générer des couleurs pour chaque pays
-  const countryColors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
+  // Générer des couleurs pour chaque pays depuis l'échelle définie dans colors.scss
+  const selectedCountryColor = getCssColor("selected-country-color");
+  const countryColors = Array.from({ length: 10 }, (_, i) => getCssColor(`scale-${i + 1}-color`));
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
       type: "line",
+      height: 600,
     },
     xAxis: {
       categories: data.years,
@@ -37,6 +40,8 @@ export default function Options(data, currentLang) {
           return ((this.value as number) / 1000000).toFixed(1) + "M€";
         },
       },
+      gridLineColor: "var(--background-default-grey-hover)",
+      gridLineWidth: 0.5,
     },
     tooltip: {
       shared: true,
@@ -51,12 +56,12 @@ export default function Options(data, currentLang) {
         return tooltip;
       },
     },
-    // legend: {
-    //   enabled: false,
-    //   layout: "horizontal",
-    //   align: "center",
-    //   verticalAlign: "bottom",
-    // },
+    legend: {
+      enabled: true,
+      layout: "horizontal",
+      align: "center",
+      verticalAlign: "bottom",
+    },
     plotOptions: {
       line: {
         marker: {
@@ -75,7 +80,7 @@ export default function Options(data, currentLang) {
       name: country[`country_name_${currentLang}`] || country.country_code,
       data: country.evolution.map((item) => item.total_fund_eur),
       type: "line",
-      color: countryColors[index % countryColors.length],
+      color: selectedCountry && country.country_code === selectedCountry ? selectedCountryColor : countryColors[index % countryColors.length],
       marker: {
         symbol: "circle",
       },

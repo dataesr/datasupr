@@ -29,6 +29,21 @@ export default function BeneficiariesByRole() {
       fr: "Top 10 des bénéficiaires par rôle en fonction des subventions alloués",
       en: "Top 10 beneficiaries by role based on allocated funding",
     },
+    comment: {
+      fr: (
+        <>
+          Ce graphique présente les 10 principaux bénéficiaires de financements européens, classés par montant total décroissant (somme des
+          subventions en tant que coordinateur et partenaire). Chaque barre représente un bénéficiaire, décomposée entre la part reçue en tant que
+          coordinateur et la part reçue en tant que partenaire.
+        </>
+      ),
+      en: (
+        <>
+          This chart presents the top 10 beneficiaries of European funding, ranked by total funding in descending order (sum of grants as coordinator
+          and partner). Each bar represents a beneficiary, broken down between the share received as coordinator and the share received as partner.
+        </>
+      ),
+    },
     sources: EPChartsSources,
     integrationURL: "/european-projects/components/pages/analysis/beneficiaries/charts/beneficiaries-by-role",
   };

@@ -1,39 +1,55 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import Cookies from "js-cookie";
+import { useState } from "react";
 
 import { GetData } from "./query";
 import { getDefaultParams } from "./utils";
 import { getI18nLabel } from "../../../../../../utils";
 import i18n from "../../../../i18n-global.json";
-import { GetLegend } from "../../../../components/legend";
 import { RenderData } from "./render-data";
 import options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-import YearSelector from "../../../../components/YearSelector";
-import FiltersWrapper from "../../../../components/filters-wrapper";
+import { useChartColor } from "../../../../../../hooks/useChartColor";
+import { EPChartsSources } from "../../../../config";
 
 const config = {
   id: "typeBeneficiariesEvolution",
   title: {
-    fr: "Évolution des types de bénéficiaires — Évolution des subventions par pays (en millions d'euros)",
-    en: "Type of beneficiaries evolution — Evolution of funding by country (in millions of euros)",
+    fr: "Évolution des subventions par pays (en millions d'euros)",
+    en: "Evolution of funding by country (in millions of euros)",
   },
   description: {
     fr: "Évolution des subventions obtenues par type d'entités selon les pays du top 10.",
     en: "Temporal evolution of funding obtained by entity types across top 10 countries.",
   },
+  comment: {
+    fr: (
+      <>
+        Ce graphique montre l'évolution des subventions obtenues par type de bénéficiaires (Recherche, Organisme public, Organisme privé,
+        Etablissements d'enseignement supérieur, Auttres) selon les pays du top 10. Il permet d'analyser les tendances de financement pour chaque type
+        de bénéficiares au fil du temps et de comparer les performances des différents pays dans le contexte des projets européens.
+      </>
+    ),
+    en: (
+      <>
+        This chart illustrates the evolution of funding obtained by beneficiary types (Research, Public bodies, Private bodies, Higher education
+        establishments, Others) across the top 10 countries. It allows for analyzing funding trends for each beneficiary type over time and comparing
+        the performance of different countries in the context of European projects.
+      </>
+    ),
+  },
+  sources: EPChartsSources,
   integrationURL: "/european-projects/components/pages/analysis/positioning/charts/type-beneficiaries-evolution",
 };
 
 export default function TypeOfBeneficiariesEvolution() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
+  const selectedCountry = searchParams.get("country_code") || undefined;
   const [selectedEntityType, setSelectedEntityType] = useState("REC");
-  const [selectedYears, setSelectedYears] = useState<string[]>([]);
   const params = getDefaultParams(searchParams);
+  const color = useChartColor();
 
   const entityTypes = [
     { value: "REC", label: getI18nLabel(i18n, "REC") },
@@ -43,68 +59,17 @@ export default function TypeOfBeneficiariesEvolution() {
     { value: "OTH", label: getI18nLabel(i18n, "OTH") },
   ];
 
-  const handleEntityTypeChange = (event) => {
-    setSelectedEntityType(event.target.value);
-  };
-
-  // Query pour récupérer les données initiales (sans filtre d'années)
-  const { data: initialData, isLoading: isInitialLoading } = useQuery({
-    queryKey: [
-      config.id + "_initial",
-      params,
-      selectedEntityType,
-      Cookies.get("selectedPillars"),
-      Cookies.get("selectedPrograms"),
-      Cookies.get("selectedThematics"),
-      Cookies.get("selectedDestinations"),
-    ],
+  const { data, isLoading } = useQuery({
+    queryKey: [config.id, params, selectedEntityType],
     queryFn: () => GetData(params, selectedEntityType),
     enabled: !!params,
   });
 
-  // Query pour récupérer les données filtrées par années (si nécessaire)
-  const { data: filteredData, isLoading: isFilteredLoading } = useQuery({
-    queryKey: [
-      config.id + "_filtered",
-      params,
-      selectedEntityType,
-      selectedYears,
-      Cookies.get("selectedPillars"),
-      Cookies.get("selectedPrograms"),
-      Cookies.get("selectedThematics"),
-      Cookies.get("selectedDestinations"),
-    ],
-    queryFn: () => GetData(params, selectedEntityType, selectedYears, initialData?.years),
-    enabled: !!params && !!initialData?.years && selectedYears.length > 0 && selectedYears.length < initialData.years.length,
-  });
-
-  // Utiliser les données filtrées si disponibles, sinon les données initiales
-  const data = filteredData || initialData;
-  const isLoading = isInitialLoading || isFilteredLoading;
-
-  // Initialiser toutes les années comme sélectionnées par défaut
-  useEffect(() => {
-    if (initialData?.years && selectedYears.length === 0) {
-      const allYears = initialData.years.map((year) => year.toString());
-      setSelectedYears(allYears);
-    }
-  }, [initialData, selectedYears.length]);
-
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  // Générer une légende dynamique basée sur les pays présents dans les données
-  const legendData =
-    data.countries?.map((country, index) => {
-      const countryColors = ["#1f77b4", "#ff7f0e", "#2ca02c", "#d62728", "#9467bd", "#8c564b", "#e377c2", "#7f7f7f", "#bcbd22", "#17becf"];
-      return [country[`country_name_${currentLang}`] || country.country_code, countryColors[index % countryColors.length]];
-    }) || [];
-
   return (
-    <div className="fr-mt-5w ">
+    <div className={`fr-mt-5w chart-container chart-container--${color}`}>
       <ChartWrapper.Title config={config}>
-        <FiltersWrapper>
-          <YearSelector availableYears={initialData?.years || []} selectedYears={selectedYears} onYearsChange={setSelectedYears} />
-        </FiltersWrapper>
         <div className="fr-my-3w">
           <div className="fr-select-group">
             <label className="fr-label" htmlFor="entity-type-select-evolution">
@@ -115,7 +80,7 @@ export default function TypeOfBeneficiariesEvolution() {
               id="entity-type-select-evolution"
               name="entity-type-select-evolution"
               value={selectedEntityType}
-              onChange={handleEntityTypeChange}
+              onChange={(e) => setSelectedEntityType(e.target.value)}
             >
               {entityTypes.map((type) => (
                 <option key={type.value} value={type.value}>
@@ -128,10 +93,9 @@ export default function TypeOfBeneficiariesEvolution() {
       </ChartWrapper.Title>
 
       <ChartWrapper
-        config={config}
+        config={{ ...config, sources: EPChartsSources }}
         hideTitle={true}
-        legend={GetLegend(legendData, "TypeBeneficiariesEvolution", 3)}
-        options={options(data, currentLang)}
+        options={options(data, currentLang, selectedCountry)}
         renderData={() => RenderData(data, currentLang)}
       />
     </div>

@@ -1,11 +1,10 @@
 import HighchartsInstance from "highcharts";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
-
-import i18n from "./i18n.json";
+import { getCssColor } from "../../../../../../utils/colors";
 import { formatToMillions } from "../../../../../../utils/format";
 
-const rootStyles = getComputedStyle(document.documentElement);
+import i18n from "./i18n.json";
 
 export default function Options(data, currentLang) {
   if (!data) return null;
@@ -28,28 +27,37 @@ export default function Options(data, currentLang) {
     color: string;
   }
 
+  const sortedData = [...(data as DataItem[])].sort(
+    (a, b) => b.total_fund_eur_coordination + b.total_fund_eur_partner - (a.total_fund_eur_coordination + a.total_fund_eur_partner),
+  );
+
   const newOptions: HighchartsInstance.Options = {
+    chart: {
+      height: sortedData.length * 30 + 150,
+    },
     xAxis: {
-      categories: (data as DataItem[]).map((item) => item.acronym || item.entity_name || ""),
+      categories: sortedData.map((item) => item.acronym || item.entity_name || ""),
     },
     yAxis: {
       min: 0,
       title: {
         text: "Euros € (millions)",
       },
+      gridLineColor: "var(--background-default-grey-hover)",
+      gridLineWidth: 0.5,
     },
     series: [
       {
         type: "bar",
         name: getI18nLabel("partner"),
-        data: (data as DataItem[]).map((item) => item.total_fund_eur_partner || 0),
-        color: rootStyles.getPropertyValue("--partner-color"),
+        data: sortedData.map((item) => item.total_fund_eur_partner || 0),
+        color: getCssColor("partner-color"),
       },
       {
         type: "bar",
         name: getI18nLabel("coordinator"),
-        data: (data as DataItem[]).map((item) => item.total_fund_eur_coordination || 0),
-        color: rootStyles.getPropertyValue("--coordination-color"),
+        data: sortedData.map((item) => item.total_fund_eur_coordination || 0),
+        color: getCssColor("coordination-color"),
       },
     ] as ChartSeriesData[],
     tooltip: {
@@ -58,12 +66,18 @@ export default function Options(data, currentLang) {
     plotOptions: {
       series: {
         stacking: "normal",
+        borderWidth: 0,
         dataLabels: {
           enabled: true,
           formatter: function () {
             return formatToMillions(this.y ?? 0);
           },
         },
+      },
+      bar: {
+        pointWidth: 25,
+        borderWidth: 0,
+        borderRadius: 0,
       },
     },
     legend: {
