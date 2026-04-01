@@ -7,7 +7,7 @@ export const FUNDING_TYPES = [
   { code: "STG", label: { fr: "Starting Grant (STG)", en: "Starting Grant (STG)" } },
   { code: "COG", label: { fr: "Consolidator Grant (COG)", en: "Consolidator Grant (COG)" } },
   { code: "ADG", label: { fr: "Advanced Grant (ADG)", en: "Advanced Grant (ADG)" } },
-  { code: "SYG", label: { fr: "Synergy Grant (SYG)", en: "Synergy Grant (SYG)" } },
+  { code: "SyG", label: { fr: "Synergy Grant (SYG)", en: "Synergy Grant (SYG)" } },
   { code: "POC", label: { fr: "Proof of Concept (POC)", en: "Proof of Concept (POC)" } },
 ] as const;
 

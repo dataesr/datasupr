@@ -79,6 +79,8 @@
 
   .chart-container--pillars {
     background-color: color-mix(in srgb, var(--background-default-grey-hover) 20%, transparent) !important;
+    background-color: white !important;
+    border: 1px solid var(--background-default-grey-hover) !important;
   }
   .chart-container--programs {
     background-color: var(--background-contrast-purple-glycine) !important;
@@ -88,5 +90,14 @@
   }
   .chart-container--destinations {
     background-color: var(--background-contrast-orange-terre-battue) !important;
+  }
+
+  .chart-container--default {
+    background-color: color-mix(in srgb, var(--background-default-grey) 20%, transparent) !important;
+    border: 1px solid var(--background-contrast-blue-france) !important;
+    .chart-footer{
+      background-color: var(--background-contrast-blue-france);
+      padding: 8px;
+    }
   }
 }

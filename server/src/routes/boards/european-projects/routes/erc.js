@@ -653,6 +653,63 @@ router.route("/european-projects/erc/evolution-by-panel").get(async (req, res) =
 });
 
 /**
+ * Route pour les principales entités ERC (top 10)
+ * Retourne les 10 premières entités par financement ERC pour un pays donné
+ * Paramètres : country_code (requis), destination_code (optionnel), call_year (optionnel)
+ */
+router.route("/european-projects/erc/main-entities").get(async (req, res) => {
+  if (!req.query.country_code) {
+    return res.status(400).json({ error: "Le code pays est requis" });
+  }
+
+  try {
+    const filters = {
+      country_code: req.query.country_code.toUpperCase(),
+      thema_code: "ERC",
+    };
+
+    if (req.query.destination_code) {
+      const destinations = req.query.destination_code.split(",");
+      filters.destination_code = { $in: destinations };
+    }
+    if (req.query.call_year) {
+      const years = req.query.call_year.split(",");
+      filters.call_year = { $in: years };
+    }
+
+    const data = await db
+      .collection("european-projects_projects-entities_staging")
+      .aggregate([
+        { $match: filters },
+        {
+          $group: {
+            _id: { name: "$entities_name", acronym: "$entities_acronym" },
+            total_fund_eur: { $sum: "$fund_eur" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            name: "$_id.name",
+            acronym: "$_id.acronym",
+            total_fund_eur: 1,
+          },
+        },
+        { $sort: { total_fund_eur: -1 } },
+        { $limit: 10 },
+      ])
+      .toArray();
+
+    const total = data.reduce((acc, el) => acc + el.total_fund_eur, 0);
+
+    res.status(200).json({ total_fund_eur: total, list: data });
+  } catch (error) {
+    console.error("Error fetching ERC main entities:", error);
+    res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+});
+
+/**
  * Route pour récupérer les filtres disponibles (années, destinations, panels)
  */
 router.route("/european-projects/erc/filters").get(async (req, res) => {
