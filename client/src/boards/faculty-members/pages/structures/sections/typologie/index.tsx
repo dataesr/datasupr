@@ -4,7 +4,6 @@ import { getCssColor } from "../../../../../../utils/colors";
 import MetricCard from "../../components/metric-card";
 import DisciplineChart from "./charts/disciplines";
 import AgeChart from "./charts/ages";
-import DisciplinesTreemapChart from "./charts/disciplines-treemap";
 
 interface TypologieSectionProps {
     selectedYear: string;
@@ -75,26 +74,33 @@ export default function TypologieSection({
                 ))}
             </Row>
 
-            <Row gutters>
-                <Col xs="12">
-                    <DisciplineChart
-                        selectedYear={selectedYear}
-                        disciplineDistribution={disciplineDistribution}
-                    />
-                </Col>
-                <Col xs="12">
-                    <DisciplinesTreemapChart
-                        selectedYear={selectedYear}
-                        disciplineDistribution={disciplineDistribution}
-                    />
-                </Col>
-                <Col xs="12">
-                    <AgeChart
-                        selectedYear={selectedYear}
-                        ageDistribution={ageDistribution}
-                    />
-                </Col>
-            </Row>
+            <div className="fr-mb-4w">
+                <Title as="h3" look="h5" className="fr-mb-3w">
+                    Répartition par grande discipline
+                </Title>
+                <Row gutters>
+                    <Col xs="12">
+                        <DisciplineChart
+                            selectedYear={selectedYear}
+                            disciplineDistribution={disciplineDistribution}
+                        />
+                    </Col>
+                </Row>
+            </div>
+
+            <div className="fr-mb-4w">
+                <Title as="h3" look="h5" className="fr-mb-3w">
+                    Pyramide des âges
+                </Title>
+                <Row gutters>
+                    <Col xs="12" md="8">
+                        <AgeChart
+                            selectedYear={selectedYear}
+                            ageDistribution={ageDistribution}
+                        />
+                    </Col>
+                </Row>
+            </div>
         </>
     );
 }

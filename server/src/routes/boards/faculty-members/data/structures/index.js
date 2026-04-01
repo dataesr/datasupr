@@ -191,6 +191,8 @@ router.get("/faculty-members/dashboard", async (req, res) => {
       ageAgg,
       categoryAgg,
       establishmentTypeAgg,
+      quotiteByGenderAgg,
+      quotiteByAgeAgg,
       topItems,
       contextInfo,
     ] = await Promise.all([
@@ -207,26 +209,38 @@ router.get("/faculty-members/dashboard", async (req, res) => {
           {
             $group: {
               _id: {
-                $switch: {
-                  branches: [
-                    {
-                      case: { $eq: ["$is_enseignant_chercheur", true] },
-                      then: "enseignant_chercheur",
-                    },
-                    {
-                      case: {
-                        $and: [
-                          { $eq: ["$is_titulaire", true] },
-                          { $eq: ["$is_enseignant_chercheur", false] },
-                        ],
+                status: {
+                  $switch: {
+                    branches: [
+                      {
+                        case: { $eq: ["$is_enseignant_chercheur", true] },
+                        then: "enseignant_chercheur",
                       },
-                      then: "titulaire_non_chercheur",
-                    },
-                  ],
-                  default: "non_titulaire",
+                      {
+                        case: {
+                          $and: [
+                            { $eq: ["$is_titulaire", true] },
+                            { $eq: ["$is_enseignant_chercheur", false] },
+                          ],
+                        },
+                        then: "titulaire_non_chercheur",
+                      },
+                    ],
+                    default: "non_titulaire",
+                  },
                 },
+                gender: "$sexe",
               },
               count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.status",
+              count: { $sum: "$count" },
+              gender_breakdown: {
+                $push: { gender: "$_id.gender", count: "$count" },
+              },
             },
           },
         ])
@@ -317,6 +331,68 @@ router.get("/faculty-members/dashboard", async (req, res) => {
         ])
         .toArray(),
 
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: { quotite: "$quotite", gender: "$sexe" },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.gender",
+              total: { $sum: "$count" },
+              quotite_breakdown: {
+                $push: { quotite: "$_id.quotite", count: "$count" },
+              },
+            },
+          },
+          { $match: { _id: { $ne: null } } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: {
+                age: "$classe_age3",
+                gender: "$sexe",
+                quotite: "$quotite",
+              },
+              count: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: { age: "$_id.age", gender: "$_id.gender" },
+              total: { $sum: "$count" },
+              quotite_breakdown: {
+                $push: { quotite: "$_id.quotite", count: "$count" },
+              },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.age",
+              total: { $sum: "$total" },
+              by_gender: {
+                $push: {
+                  gender: "$_id.gender",
+                  total: "$total",
+                  quotite_breakdown: "$quotite_breakdown",
+                },
+              },
+            },
+          },
+          { $match: { _id: { $ne: null } } },
+          { $sort: { _id: 1 } },
+        ])
+        .toArray(),
+
       (() => {
         const topGroupConfig = {
           structure: {
@@ -380,6 +456,8 @@ router.get("/faculty-members/dashboard", async (req, res) => {
       age_distribution: ageAgg,
       category_distribution: categoryAgg,
       establishment_type_distribution: establishmentTypeAgg,
+      quotite_by_gender: quotiteByGenderAgg,
+      quotite_by_age: quotiteByAgeAgg,
       top_items: topItems,
     });
   } catch (error) {

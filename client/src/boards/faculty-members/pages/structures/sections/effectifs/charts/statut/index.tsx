@@ -7,16 +7,10 @@ interface StatusChartProps {
   statusDistribution: any[];
 }
 
-export default function StatusChart({
-  selectedYear,
-  statusDistribution,
-}: StatusChartProps) {
-  const { options } = useMemo(() => {
-    if (!statusDistribution?.length) return { options: null };
-    return {
-      options: createStatusChartOptions(statusDistribution),
-
-    };
+export default function StatusChart({ selectedYear, statusDistribution }: StatusChartProps) {
+  const options = useMemo(() => {
+    if (!statusDistribution?.length) return null;
+    return createStatusChartOptions(statusDistribution);
   }, [statusDistribution]);
 
   if (!options) return null;
@@ -25,16 +19,8 @@ export default function StatusChart({
     <ChartWrapper
       config={{
         id: "faculty-status-distribution",
-        title: {
-          fr: `Répartition par statut (${selectedYear})`,
-          look: "h5" as const,
-        },
-        sources: [
-          {
-            label: { fr: <>MESR-SIES, SISE</> },
-            url: { fr: "https://data.enseignementsup-recherche.gouv.fr" },
-          },
-        ],
+        title: { fr: `Effectifs par statut (${selectedYear})`, look: "h5" as const },
+        sources: [{ label: { fr: <>MESR-SIES, SISE</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
       }}
       options={options}
     />
