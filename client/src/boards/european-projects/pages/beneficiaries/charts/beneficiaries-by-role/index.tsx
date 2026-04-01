@@ -34,7 +34,7 @@ export default function BeneficiariesByRole() {
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`}>
+    <div className={`fr-mt-5w chart-container chart-container--${color}`}>
       <ChartWrapper config={config} options={options(data, currentLang)} renderData={() => null} />
     </div>
   );

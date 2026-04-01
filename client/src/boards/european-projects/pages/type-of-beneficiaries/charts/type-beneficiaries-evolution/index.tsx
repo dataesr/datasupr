@@ -100,7 +100,7 @@ export default function TypeOfBeneficiariesEvolution() {
     }) || [];
 
   return (
-    <>
+    <div className="fr-mt-5w ">
       <ChartWrapper.Title config={config}>
         <FiltersWrapper>
           <YearSelector availableYears={initialData?.years || []} selectedYears={selectedYears} onYearsChange={setSelectedYears} />
@@ -134,6 +134,6 @@ export default function TypeOfBeneficiariesEvolution() {
         options={options(data, currentLang)}
         renderData={() => RenderData(data, currentLang)}
       />
-    </>
+    </div>
   );
 }

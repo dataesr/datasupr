@@ -52,7 +52,7 @@ export default function MainPartners() {
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`}>
+    <div className={`fr-mt-5w chart-container chart-container--${color}`}>
       <ChartWrapper config={config} options={options(data, currentLang)} renderData={() => renderDataTable(data, currentLang)} />
     </div>
   );
