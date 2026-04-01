@@ -55,10 +55,10 @@ export default function EntitySelector({ viewType }: Props) {
 
     const showMap = viewType === "region";
 
-    const { data, isLoading } = useFacultyFilters(viewType);
-    const { data: yearsData } = useFacultyYears("region", undefined);
-    const years: string[] = yearsData?.years || [];
-    const latestYear = years.length > 0 ? years[years.length - 1] : "";
+    const { data: yearsData } = useFacultyYears(viewType, undefined);
+    const latestYear: string = yearsData?.latestCompleteYear || "";
+
+    const { data, isLoading } = useFacultyFilters(viewType, latestYear || undefined);
 
     const items = useMemo(() => {
         if (!data?.items) return [];
@@ -173,6 +173,8 @@ export default function EntitySelector({ viewType }: Props) {
                                 <CardSimple
                                     title={item.label}
                                     onClick={() => handleSelect(item.id)}
+                                    className="fr-mb-2w"
+                                    description={`${item?.count?.toLocaleString("fr-FR")} enseignant${item.count > 1 ? "s" : ""}  en ${latestYear}`}
                                 />
                             </Col>
                         ))}

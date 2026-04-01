@@ -79,7 +79,7 @@ async function getContextInfo(collection, view, id) {
 
 router.get("/faculty-members/filters", async (req, res) => {
   try {
-    const { type } = req.query;
+    const { type, year } = req.query;
     const collection = db.collection(COLLECTION);
 
     const configMap = {
@@ -117,14 +117,16 @@ router.get("/faculty-members/filters", async (req, res) => {
       });
     }
 
-    const items = await collection
-      .aggregate([
-        { $group: { _id: config.groupId } },
-        { $project: { _id: 0, id: "$_id.id", label: "$_id.label" } },
-        { $match: { id: { $ne: null }, label: { $ne: null } } },
-        { $sort: { label: 1 } },
-      ])
-      .toArray();
+    const pipeline = [];
+    if (year) pipeline.push({ $match: { annee_universitaire: year } });
+    pipeline.push(
+      { $group: { _id: config.groupId, count: { $sum: "$effectif" } } },
+      { $project: { _id: 0, id: "$_id.id", label: "$_id.label", count: 1 } },
+      { $match: { id: { $ne: null }, label: { $ne: null } } },
+      { $sort: { label: 1 } }
+    );
+
+    const items = await collection.aggregate(pipeline).toArray();
 
     res.json({ items });
   } catch (error) {
@@ -138,10 +140,35 @@ router.get("/faculty-members/years", async (req, res) => {
     const { view, id } = req.query;
     const collection = db.collection(COLLECTION);
     const match = buildMatchStage(view, id);
-    const years = await collection
-      .distinct("annee_universitaire", match)
-      .then((y) => y.filter((v) => v != null).sort());
-    res.json({ years });
+
+    const [allYears, completeYearAgg] = await Promise.all([
+      collection
+        .distinct("annee_universitaire", match)
+        .then((y) => y.filter((v) => v != null).sort()),
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: "$annee_universitaire",
+              hasPermanent: {
+                $max: { $cond: [{ $eq: ["$is_titulaire", true] }, 1, 0] },
+              },
+              hasNonPermanent: {
+                $max: { $cond: [{ $ne: ["$is_titulaire", true] }, 1, 0] },
+              },
+            },
+          },
+          { $match: { hasPermanent: 1, hasNonPermanent: 1 } },
+          { $sort: { _id: -1 } },
+          { $limit: 1 },
+        ])
+        .toArray(),
+    ]);
+
+    const latestCompleteYear =
+      completeYearAgg[0]?._id ?? allYears[allYears.length - 1] ?? null;
+    res.json({ years: allYears, latestCompleteYear });
   } catch (error) {
     console.error("Error fetching years:", error);
     res.status(500).json({ error: "Server error" });

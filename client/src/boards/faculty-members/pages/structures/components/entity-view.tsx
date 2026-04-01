@@ -33,8 +33,8 @@ export default function EntityView({ viewType }: Props) {
 
     const { data: yearsData, isLoading: isLoadingYears } = useFacultyYears(viewType, selectedId);
     const years: string[] = yearsData?.years || [];
-    const latestYear = years.length > 0 ? years[years.length - 1] : "";
-    const selectedYear = searchParams.get("year") || latestYear;
+    const latestCompleteYear: string = yearsData?.latestCompleteYear || "";
+    const selectedYear = searchParams.get("year") || latestCompleteYear;
 
     const { data: dashboardData, isLoading: isLoadingDashboard } =
         useFacultyDashboard(viewType, selectedId, selectedYear);

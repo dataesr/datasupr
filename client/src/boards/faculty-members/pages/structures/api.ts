@@ -11,12 +11,14 @@ const FILTER_TYPE_MAP: Record<ViewType, string> = {
   academie: "academies",
 };
 
-export const useFacultyFilters = (viewType: ViewType) =>
+export const useFacultyFilters = (viewType: ViewType, year?: string) =>
   useQuery({
-    queryKey: ["faculty", "filters", viewType],
+    queryKey: ["faculty", "filters", viewType, year ?? null],
     queryFn: async () => {
+      const params = new URLSearchParams({ type: FILTER_TYPE_MAP[viewType] });
+      if (year) params.append("year", year);
       const response = await fetch(
-        `${VITE_APP_SERVER_URL}/faculty-members/filters?type=${FILTER_TYPE_MAP[viewType]}`
+        `${VITE_APP_SERVER_URL}/faculty-members/filters?${params}`
       );
       if (!response.ok) throw new Error("Erreur récupération filtres");
       return response.json();

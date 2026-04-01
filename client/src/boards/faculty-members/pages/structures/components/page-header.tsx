@@ -18,24 +18,6 @@ const VIEW_TOP_LABELS: Record<ViewType, string> = {
     academie: "Top 5 académies",
 };
 
-const STATUS_LABELS: Record<string, string> = {
-    enseignant_chercheur: "Enseignants-chercheurs",
-    titulaire_non_chercheur: "Autres permanents",
-    non_titulaire: "Non permanents",
-};
-
-const STATUS_ICONS: Record<string, string> = {
-    enseignant_chercheur: "fr-icon-microscope-fill",
-    titulaire_non_chercheur: "fr-icon-briefcase-fill",
-    non_titulaire: "fr-icon-time-fill",
-};
-
-const STATUS_ICON_VARIANTS: Record<string, string> = {
-    enseignant_chercheur: "page-header__stat-icon--blue-france",
-    titulaire_non_chercheur: "page-header__stat-icon--green-emeraude",
-    non_titulaire: "page-header__stat-icon--yellow-tournesol",
-};
-
 function femalePctOf(items: any[]): string {
     const total = items.reduce((s: number, i: any) => s + (i.count || 0), 0);
     const female = items.find((i: any) => i.gender === "Féminin")?.count || 0;
@@ -200,23 +182,32 @@ export default function PageHeader({
                     <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__detail-card">
                         <Text size="sm" bold className="fr-mb-1w">Statuts</Text>
                         <ul className="page-header__detail-list">
-                            {["enseignant_chercheur", "titulaire_non_chercheur", "non_titulaire"].map((key) => {
-                                const item = statusDistribution.find((s: any) => s._id === key);
-                                const count = item?.count || 0;
-                                const pct = totalCount > 0 ? ((count / totalCount) * 100).toFixed(0) : "0";
-                                return (
-                                    <li key={key} className="page-header__detail-row">
-                                        <span className={`page-header__stat-icon page-header__stat-icon--sm ${STATUS_ICON_VARIANTS[key]}`} aria-hidden="true">
-                                            <span className={STATUS_ICONS[key]} aria-hidden="true" />
-                                        </span>
-                                        <span className="page-header__detail-label">{STATUS_LABELS[key]}</span>
-                                        <span className="page-header__detail-value">
-                                            {count.toLocaleString("fr-FR")}
-                                            <span className="page-header__detail-pct"> ({pct}%)</span>
-                                        </span>
-                                    </li>
-                                );
-                            })}
+                            {(() => {
+                                const ecCount = statusDistribution.find((s: any) => s._id === "enseignant_chercheur")?.count || 0;
+                                const titNonEcCount = statusDistribution.find((s: any) => s._id === "titulaire_non_chercheur")?.count || 0;
+                                const nonTitCount = statusDistribution.find((s: any) => s._id === "non_titulaire")?.count || 0;
+                                const permanentCount = ecCount + titNonEcCount;
+                                const rows = [
+                                    { key: "permanent", label: "Permanents", icon: "fr-icon-briefcase-fill", variant: "page-header__stat-icon--green-emeraude", count: permanentCount },
+                                    { key: "enseignant_chercheur", label: "Enseignants-chercheurs", icon: "fr-icon-microscope-fill", variant: "page-header__stat-icon--blue-france", count: ecCount },
+                                    { key: "non_titulaire", label: "Non permanents", icon: "fr-icon-time-fill", variant: "page-header__stat-icon--yellow-tournesol", count: nonTitCount },
+                                ];
+                                return rows.map(({ key, label, icon, variant, count }) => {
+                                    const pct = totalCount > 0 ? ((count / totalCount) * 100).toFixed(0) : "0";
+                                    return (
+                                        <li key={key} className="page-header__detail-row">
+                                            <span className={`page-header__stat-icon page-header__stat-icon--sm ${variant}`} aria-hidden="true">
+                                                <span className={icon} aria-hidden="true" />
+                                            </span>
+                                            <span className="page-header__detail-label">{label}</span>
+                                            <span className="page-header__detail-value">
+                                                {count.toLocaleString("fr-FR")}
+                                                <span className="page-header__detail-pct"> ({pct}%)</span>
+                                            </span>
+                                        </li>
+                                    );
+                                });
+                            })()}
                         </ul>
                     </div>
                 </Col>

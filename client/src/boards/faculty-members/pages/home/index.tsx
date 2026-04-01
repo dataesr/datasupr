@@ -99,19 +99,19 @@ function HeroSection() {
           <Col xs="12" lg="6">
             <div className="fm-accueil-hero__cta">
               <button
-                className="fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-arrow-right-line"
+                className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
                 onClick={() => navigate("/personnel-enseignant/disciplines")}
               >
                 Par discipline
               </button>
               <button
-                className="fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-arrow-right-line"
+                className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
                 onClick={() => navigate("/personnel-enseignant/regions")}
               >
                 Par région
               </button>
               <button
-                className="fr-btn fr-btn--secondary fr-btn--icon-right fr-icon-arrow-right-line"
+                className="fr-btn fr-btn--icon-right fr-icon-arrow-right-line"
                 onClick={() => navigate("/personnel-enseignant/academies")}
               >
                 Par académie
