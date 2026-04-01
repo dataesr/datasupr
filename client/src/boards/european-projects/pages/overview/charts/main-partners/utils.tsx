@@ -38,6 +38,12 @@ export function useGetParams() {
     params.push(`destinations=${destinationIds}`);
   }
 
+  // Récupérer le paramètre range_of_years et l'ajouter comme years s'il existe
+  const rangeOfYears = searchParams.get("range_of_years");
+  if (rangeOfYears) {
+    params.push(`years=${rangeOfYears}`);
+  }
+
   // Ajouter le paramètre stage=successful
   // TODO: voir avec ZOE
   // params.push("stage=successful");

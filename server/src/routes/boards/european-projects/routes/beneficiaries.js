@@ -32,6 +32,10 @@ router.route(routesPrefix + "/main-beneficiaries-pct-50").get(async (req, res) =
       const destinations = req.query.destinations.split(",");
       filters.destination_code = { $in: destinations };
     }
+    if (req.query.years) {
+      const years = req.query.years.split("|");
+      filters.call_year = { $in: years };
+    }
 
     filters.framework = "Horizon Europe";
 
@@ -135,6 +139,10 @@ router.route(routesPrefix + "/beneficiaries-by-role").get(async (req, res) => {
     if (req.query.destinations) {
       const destinations = req.query.destinations.split(",");
       filters.destination_code = { $in: destinations };
+    }
+    if (req.query.years) {
+      const years = req.query.years.split("|");
+      filters.call_year = { $in: years };
     }
 
     filters.country_code = req.query.country_code; // Filtre obligatoire TODO
