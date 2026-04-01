@@ -14,6 +14,11 @@ type Column = {
   label: string
 }
 
+type Filter = {
+  id: string
+  value: string
+}
+
 type StartUps = {
   acronym: string
   county: string
@@ -25,7 +30,7 @@ type StartUps = {
 
 type Sort = {
   id: string
-  direction: 'asc' | 'desc'
+  order: 'asc' | 'desc'
 }
 
 export default function StartupsData() {
@@ -34,6 +39,7 @@ export default function StartupsData() {
   const yearMax = searchParams.get('yearMax')
   const yearMin = searchParams.get('yearMin')
 
+  const [filters, setFilters] = useState<Filter[]>([])
   const [sorting, setSorting] = useState<Sort>()
 
   const body = {
@@ -57,11 +63,18 @@ export default function StartupsData() {
       default:
         break;
     }
-    body.sort = { [esSortField]: sorting.direction }
+    body.sort = { [esSortField]: sorting.order }
+  }
+  if (filters.length > 0) {
+    filters.forEach((filter) => {
+      if (filter.id === 'label') {
+        body.query.bool.filter.push({ wildcard: { 'label.fr.keyword': `*${filter.value}*` } })
+      }
+    })
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: ["valo-startups-data", sorting, structure, yearMax, yearMin],
+    queryKey: ["valo-startups-data", sorting, structure, yearMax, yearMin, filters],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_ORGANIZATIONS}`, {
         body: JSON.stringify(body),
@@ -86,6 +99,7 @@ export default function StartupsData() {
   const columns = useMemo<Column[]>(() => [
     {
       id: 'label',
+      isFilterable: true,
       isSortable: false,
       label: 'Label',
       meta: { filterVariant: 'text' },
@@ -97,10 +111,10 @@ export default function StartupsData() {
       meta: { filterVariant: 'text' },
     },
     {
+      getCellValue: (row) => row?.website ? <a href={row.website} target="_blank">{row.website}</a> : '',
       id: 'website',
       isSortable: false,
       label: 'Site web',
-      getCellValue: (row) => <a href={row.website} target="_blank">{row.website}</a>
     },
     {
       id: 'county',
@@ -126,6 +140,8 @@ export default function StartupsData() {
   return <DataTable
     columns={columns}
     dataTable={dataTable}
+    filters={filters}
+    setFilters={setFilters}
     setSorting={setSorting}
     sorting={sorting}
   />
