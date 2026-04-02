@@ -97,6 +97,19 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
       </table>
       <Row className="fr-mt-1w">
         <Col>
+          <select
+            value={pagination.size}
+            onChange={(e) => setPagination({ from: 0, size: Number(e.target.value) })}
+          >
+            {[10, 20, 30, 40, 50].map((pageSize) => (
+              <option key={pageSize} value={pageSize}>
+                {pageSize}
+              </option>
+            ))}
+          </select>
+          résultats par page
+        </Col>
+        <Col style={{ textAlign: 'center' }}>
           <button
             className="border rounded p-1"
             onClick={() => setPagination({ ...pagination, from: 0 })}
@@ -145,21 +158,9 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
             <i className="ri-arrow-right-double-line" />
           </button>
         </Col>
-        <Col>
-          <select
-            value={pagination.size}
-            onChange={(e) => setPagination({ from: 0, size: Number(e.target.value) })}
-          >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
-              <option key={pageSize} value={pageSize}>
-                {pageSize} par page
-              </option>
-            ))}
-          </select>
-        </Col>
-        <Col>
+        <Col style={{ textAlign: 'right' }}>
           <i>
-            {numberOfResults} résultats
+            Résultats {pagination.from + 1} - {Math.min(pagination.from + pagination.size, numberOfResults)} / {numberOfResults}
           </i>
         </Col>
       </Row>
