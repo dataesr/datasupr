@@ -70,6 +70,18 @@ export default function StartupsData() {
       if (filter.id === 'label') {
         body.query.bool.filter.push({ wildcard: { 'label.fr.keyword': `*${filter.value}*` } })
       }
+      if (filter.id === 'acronym') {
+        body.query.bool.filter.push({ wildcard: { 'acronym.fr.keyword': `*${filter.value}*` } })
+      }
+      if (filter.id === 'county') {
+        body.query.bool.filter.push({ wildcard: { 'address.region.keyword': `*${filter.value}*` } })
+      }
+      if (filter.id === 'creationYear') {
+        body.query.bool.filter.push({ term: { creationYear: filter.value } })
+      }
+      if (filter.id === 'status') {
+        body.query.bool.filter.push({ term: { status: filter.value } })
+      }
     })
   }
 
@@ -106,6 +118,7 @@ export default function StartupsData() {
     },
     {
       id: 'acronym',
+      isFilterable: true,
       isSortable: false,
       label: 'Acronyme',
       meta: { filterVariant: 'text' },
@@ -118,17 +131,20 @@ export default function StartupsData() {
     },
     {
       id: 'county',
+      isFilterable: true,
       isSortable: true,
       label: 'Région',
     },
     {
       id: 'creationYear',
+      isFilterable: true,
       isSortable: true,
       label: 'Année de création',
       meta: { filterVariant: 'range' },
     },
     {
       id: 'status',
+      isFilterable: true,
       isSortable: true,
       label: 'Statut',
       meta: { filterVariant: 'select' },

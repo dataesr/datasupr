@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 
-import { capitalize } from '../../../../../../utils/format'
-
 import './datatable.scss'
 
 export default function DataTable({ columns, dataTable, filters, setFilters, setSorting, sorting }) {
-  const [inputLabel, setInputLabel] = useState(filters.find((filter) => filter.id === 'label')?.value ?? '')
+  const inputsTmp = {}
+  filters.forEach((filter) => {
+    inputsTmp[filter.id] = filter.value
+  });
+  const [inputs, setInputs] = useState(inputsTmp)
 
   const getSortableIcon = (column) => {
     if (column.isSortable) {
@@ -30,14 +32,22 @@ export default function DataTable({ columns, dataTable, filters, setFilters, set
     }
   }
 
-  const handleInputLabelChange = (event) => setInputLabel(event.target.value)
+  const handles = {
+    label: (event) => setInputs({ ...inputs, label: event.target.value }),
+    acronym: (event) => setInputs({ ...inputs, acronym: event.target.value }),
+    county: (event) => setInputs({ ...inputs, county: event.target.value }),
+    creationYear: (event) => setInputs({ ...inputs, creationYear: event.target.value }),
+    status: (event) => setInputs({ ...inputs, status: event.target.value }),
+  }
+
+  const handleInputChange = (event, column) => handles[column.id](event)
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      setFilters([...filters.filter((filter) => filter.id !== "label"), { id: "label", value: inputLabel }])
+      setFilters(Object.keys(inputs).map((id) => ({ id, value: inputs[id] })).filter((filter) => filter.value.length > 0))
     }, 500)
     return () => clearTimeout(timeoutId)
-  }, [inputLabel]);
+  }, [inputs]);
 
   return (
     <table className="valo-datatable">
@@ -58,9 +68,9 @@ export default function DataTable({ columns, dataTable, filters, setFilters, set
                     {column?.isFilterable && (
                       <div>
                         <input
-                          onChange={handleInputLabelChange}
+                          onChange={(event) => handleInputChange(event, column)}
                           type="text"
-                          value={eval(`inputValue${capitalize(column.id)}`)}
+                          value={inputs[column.id]}
                         />
                       </div>
                     )}
