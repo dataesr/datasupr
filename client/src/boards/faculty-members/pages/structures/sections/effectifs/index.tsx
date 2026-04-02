@@ -1,12 +1,8 @@
-import { useMemo } from "react";
 import { Col, Row, Title } from "@dataesr/dsfr-plus";
 import { ViewType } from "../../api";
 import { getCssColor } from "../../../../../../utils/colors";
 import MetricCard from "../../components/metric-card";
-import StatusChart from "./charts/statut";
-import CategoryChart from "./charts/categorie";
-import EstablishmentTypeChart from "./charts/type-etablissement";
-import QuotiteChart from "./charts/quotite";
+import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
 
 interface EffectifsSectionProps {
     selectedYear: string;
@@ -16,155 +12,169 @@ interface EffectifsSectionProps {
     viewType: ViewType;
 }
 
+const STATUS_ORDER = ["enseignant_chercheur", "titulaire_non_chercheur", "non_titulaire"];
+const STATUS_LABELS: Record<string, string> = {
+    enseignant_chercheur: "Enseignants-chercheurs",
+    titulaire_non_chercheur: "Titulaires (autres)",
+    non_titulaire: "Non permanents",
+};
+const STATUS_COLORS: Record<string, string> = {
+    enseignant_chercheur: getCssColor("fm-statut-ec"),
+    titulaire_non_chercheur: getCssColor("fm-statut-titulaire"),
+    non_titulaire: getCssColor("fm-statut-non-permanent"),
+};
+
 export default function EffectifsSection({
     selectedYear,
     dashboardData,
     evolutionData,
     totalCount,
-    viewType,
 }: EffectifsSectionProps) {
-    const genderDistribution = dashboardData?.gender_distribution || [];
-    const statusDistribution = dashboardData?.status_distribution || [];
+    const genderDist = dashboardData?.gender_distribution || [];
+    const statusDist = dashboardData?.status_distribution || [];
+    const quotiteByGender = dashboardData?.quotite_by_gender || [];
+    const ageDist: any[] = [...(dashboardData?.age_distribution || [])].sort((a, b) =>
+        (a._id || "").localeCompare(b._id || "")
+    );
 
-    const metrics = useMemo(() => {
-        const femaleCount = genderDistribution.find((g: any) => g._id === "Féminin")?.count || 0;
-        const maleCount = genderDistribution.find((g: any) => g._id === "Masculin")?.count || 0;
-        const femalePct = totalCount > 0 ? (femaleCount / totalCount) * 100 : 0;
-        const ecCount = statusDistribution.find((s: any) => s._id === "enseignant_chercheur")?.count || 0;
-        const titNonEcCount = statusDistribution.find((s: any) => s._id === "titulaire_non_chercheur")?.count || 0;
-        const permanentCount = ecCount + titNonEcCount;
-        const ecPct = totalCount > 0 ? (ecCount / totalCount) * 100 : 0;
-        const permanentPct = totalCount > 0 ? (permanentCount / totalCount) * 100 : 0;
-        return { femaleCount, maleCount, femalePct, ecCount, ecPct, permanentCount, permanentPct };
-    }, [genderDistribution, statusDistribution, totalCount]);
+    const globalEvo = evolutionData?.global_evolution || [];
+    const statusEvo = evolutionData?.status_evolution || [];
+    const ageEvo = evolutionData?.age_evolution || [];
+    const quotiteEvo = evolutionData?.quotite_evolution || [];
 
-    const sparklines = useMemo(() => {
-        const globalEvo: any[] = evolutionData?.global_evolution || [];
-        const statusEvo: any[] = evolutionData?.status_evolution || [];
-        if (!globalEvo.length) return { total: [], femalePct: [], permanentPct: [], ecPct: [] };
+    const femaleCount = genderDist.find((g: any) => g._id === "Féminin")?.count || 0;
+    const maleCount = genderDist.find((g: any) => g._id === "Masculin")?.count || 0;
+    const fullTimeCount = quotiteByGender.reduce((acc: number, g: any) =>
+        acc + (g.quotite_breakdown?.find((q: any) => q.quotite === "Temps plein")?.count || 0), 0);
+    const partTimeCount = Math.max(0, totalCount - fullTimeCount);
 
-        const total = globalEvo.map((e: any) => ({ year: String(e._id), value: e.total || 0 }));
+    const toSpark = (evo: any[], getter: (e: any) => number) =>
+        evo.map((e: any) => ({ year: String(e._id), value: getter(e) }));
 
-        const femalePct = globalEvo.map((e: any) => {
-            const f = e.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
-            return { year: String(e._id), value: e.total > 0 ? (f / e.total) * 100 : 0 };
-        });
-
-        const permanentPct = statusEvo.map((e: any) => {
-            const ec = e.status_breakdown?.find((s: any) => s.status === "enseignant_chercheur")?.count || 0;
-            const tit = e.status_breakdown?.find((s: any) => s.status === "titulaire_non_chercheur")?.count || 0;
-            return { year: String(e._id), value: e.total > 0 ? ((ec + tit) / e.total) * 100 : 0 };
-        });
-
-        const ecPct = statusEvo.map((e: any) => {
-            const ec = e.status_breakdown?.find((s: any) => s.status === "enseignant_chercheur")?.count || 0;
-            return { year: String(e._id), value: e.total > 0 ? (ec / e.total) * 100 : 0 };
-        });
-
-        return { total, femalePct, permanentPct, ecPct };
-    }, [evolutionData]);
+    const pct = (count: number) =>
+        totalCount > 0 ? `${((count / totalCount) * 100).toFixed(1)} % de l'effectif` : "";
 
     return (
         <>
             <div className="section-header fr-mb-5w">
-                <Title as="h2" look="h5" id="section-moyens-humains-title" className="section-header__title">
+                <Title as="h2" look="h5" id="section-effectifs-title" className="section-header__title">
                     Vue d'ensemble des effectifs
                 </Title>
             </div>
 
             <div className="fr-mb-4w">
+                <Title as="h3" look="h6" className="fr-mb-3w">Effectif global</Title>
                 <Row gutters>
-                    <Col xs="12" md="3">
+                    <Col xs="12" md="4">
                         <MetricCard
                             title="Effectif total"
                             value={totalCount.toLocaleString("fr-FR")}
                             detail={`Enseignants en ${selectedYear}`}
                             color={getCssColor("blue-france-main-525")}
-                            evolutionData={sparklines.total}
+                            evolutionData={toSpark(globalEvo, (e) => e.total || 0)}
                         />
                     </Col>
-                    <Col xs="12" md="3">
+                    <Col xs="12" md="4">
                         <MetricCard
-                            title="Part des femmes"
-                            value={`${metrics.femalePct.toFixed(1)} %`}
-                            detail={`${metrics.femaleCount.toLocaleString("fr-FR")} F · ${metrics.maleCount.toLocaleString("fr-FR")} H`}
+                            title="Femmes"
+                            value={femaleCount.toLocaleString("fr-FR")}
+                            detail={pct(femaleCount)}
                             color={getCssColor("fm-femmes")}
-                            evolutionData={sparklines.femalePct}
-                            unit="%"
+                            evolutionData={toSpark(globalEvo, (e) =>
+                                e.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0)}
                         />
                     </Col>
-                    <Col xs="12" md="3">
+                    <Col xs="12" md="4">
                         <MetricCard
-                            title="Part des permanents"
-                            value={`${metrics.permanentPct.toFixed(1)} %`}
-                            detail={`${metrics.permanentCount.toLocaleString("fr-FR")} permanents`}
-                            color={getCssColor("fm-statut-titulaire")}
-                            evolutionData={sparklines.permanentPct}
-                            unit="%"
-                        />
-                    </Col>
-                    <Col xs="12" md="3">
-                        <MetricCard
-                            title="dont Enseignants-chercheurs"
-                            value={`${metrics.ecPct.toFixed(1)} %`}
-                            detail={`${metrics.ecCount.toLocaleString("fr-FR")} EC (permanents)`}
-                            color={getCssColor("fm-statut-ec")}
-                            evolutionData={sparklines.ecPct}
-                            unit="%"
+                            title="Hommes"
+                            value={maleCount.toLocaleString("fr-FR")}
+                            detail={pct(maleCount)}
+                            color={getCssColor("fm-hommes")}
+                            evolutionData={toSpark(globalEvo, (e) =>
+                                e.gender_breakdown?.find((g: any) => g.gender === "Masculin")?.count || 0)}
                         />
                     </Col>
                 </Row>
             </div>
 
             <div className="fr-mb-4w">
-                <Title as="h3" look="h5" className="fr-mb-3w">
-                    Répartition par statut et corps de personnel
-                </Title>
+                <Title as="h3" look="h6" className="fr-mb-3w">Statut</Title>
                 <Row gutters>
-                    <Col xs="12" md="5">
-                        <StatusChart
-                            selectedYear={selectedYear}
-                            statusDistribution={statusDistribution}
-                        />
-                    </Col>
-                    <Col xs="12" md="7">
-                        <CategoryChart
-                            selectedYear={selectedYear}
-                            categoryDistribution={dashboardData?.category_distribution || []}
-                        />
-                    </Col>
+                    {STATUS_ORDER.map((status) => {
+                        const count = statusDist.find((s: any) => s._id === status)?.count || 0;
+                        return (
+                            <Col xs="12" md="4" key={status}>
+                                <MetricCard
+                                    title={STATUS_LABELS[status]}
+                                    value={count.toLocaleString("fr-FR")}
+                                    detail={pct(count)}
+                                    color={STATUS_COLORS[status]}
+                                    evolutionData={toSpark(statusEvo, (e) =>
+                                        e.status_breakdown?.find((s: any) => s.status === status)?.count || 0)}
+                                />
+                            </Col>
+                        );
+                    })}
                 </Row>
             </div>
 
             <div className="fr-mb-4w">
-                <Title as="h3" look="h5" className="fr-mb-3w">
-                    Quotité de travail
-                </Title>
+                <Title as="h3" look="h6" className="fr-mb-3w">Quotité</Title>
                 <Row gutters>
                     <Col xs="12" md="6">
-                        <QuotiteChart
-                            selectedYear={selectedYear}
-                            quotiteByGender={dashboardData?.quotite_by_gender || []}
+                        <MetricCard
+                            title="Temps plein"
+                            value={fullTimeCount.toLocaleString("fr-FR")}
+                            detail={pct(fullTimeCount)}
+                            color={getCssColor("fm-quotite-temps-plein")}
+                            evolutionData={toSpark(quotiteEvo, (e) =>
+                                e.quotite_breakdown?.find((q: any) => q.quotite === "Temps plein")?.count || 0)}
+                        />
+                    </Col>
+                    <Col xs="12" md="6">
+                        <MetricCard
+                            title="Temps partiel"
+                            value={partTimeCount.toLocaleString("fr-FR")}
+                            detail={pct(partTimeCount)}
+                            color={getCssColor("fm-quotite-temps-partiel")}
+                            evolutionData={toSpark(quotiteEvo, (e) =>
+                                Math.max(0, (e.total || 0) - (e.quotite_breakdown?.find((q: any) => q.quotite === "Temps plein")?.count || 0)))}
                         />
                     </Col>
                 </Row>
             </div>
 
-            {viewType !== "structure" && (
-                <div className="fr-mb-4w">
-                    <Title as="h3" look="h5" className="fr-mb-3w">
-                        Répartition par type d'établissement
-                    </Title>
-                    <Row gutters>
-                        <Col xs="12" md="10">
-                            <EstablishmentTypeChart
-                                selectedYear={selectedYear}
-                                establishmentTypeDistribution={dashboardData?.establishment_type_distribution || []}
+            <div className="fr-mb-4w">
+                <Title as="h3" look="h6" className="fr-mb-3w">Âge</Title>
+                <Row gutters>
+                    {ageDist.map((ag: any) => (
+                        <Col xs="12" md="4" key={ag._id}>
+                            <MetricCard
+                                title={ag._id || "Non précisé"}
+                                value={(ag.total || 0).toLocaleString("fr-FR")}
+                                detail={pct(ag.total || 0)}
+                                color={getCssColor("blue-france-main-525")}
+                                evolutionData={toSpark(ageEvo, (e) =>
+                                    e.age_breakdown?.find((a: any) => a.age_class === ag._id)?.count || 0)}
                             />
                         </Col>
-                    </Row>
-                </div>
-            )}
+                    ))}
+                </Row>
+            </div>
+
+            <FmMetricDefinitionsTable
+                definitionKeys={[
+                    "Personnel enseignant",
+                    "Statut : 3 catégories mutuellement exclusives",
+                    "Enseignant-chercheur (EC)",
+                    "Permanent / Non permanent",
+                    "Quotité de travail",
+                    "Temps plein",
+                    "Temps partiel",
+                    "Classe d'\u00e2ge",
+                ]}
+            />
         </>
     );
 }
+

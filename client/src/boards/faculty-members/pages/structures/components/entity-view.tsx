@@ -12,6 +12,7 @@ import SectionsCnuSection from "../sections/sections-cnu";
 import ComparaisonSection from "../sections/positionning";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import Breadcrumb from "../../../components/breadcrumb";
+import { IncompleteYearWarning } from "../../../components/incomplete-year";
 
 const VIEW_LABELS: Record<ViewType, { plural: string; singular: string; basePath: string }> = {
     structure: { plural: "Établissements", singular: "établissement", basePath: "/personnel-enseignant/etablissements" },
@@ -33,7 +34,7 @@ export default function EntityView({ viewType }: Props) {
 
     const { data: yearsData, isLoading: isLoadingYears } = useFacultyYears(viewType, selectedId);
     const years: string[] = yearsData?.years || [];
-    const latestCompleteYear: string = yearsData?.latestCompleteYear || "";
+    const latestCompleteYear = yearsData?.latestCompleteYear || (years.length > 0 ? years[years.length - 1] : "");
     const selectedYear = searchParams.get("year") || latestCompleteYear;
 
     const { data: dashboardData, isLoading: isLoadingDashboard } =
@@ -75,7 +76,7 @@ export default function EntityView({ viewType }: Props) {
                     />
                 );
             case "evolutions":
-                return <EvolutionsSection evolutionData={evolutionData} />;
+                return <EvolutionsSection viewType={viewType} selectedId={selectedId} />;
             case "typologie":
                 return (
                     <TypologieSection
@@ -173,7 +174,10 @@ export default function EntityView({ viewType }: Props) {
                 />
             </Container>
 
-            <Container className="fr-py-4w">{renderSectionContent()}</Container>
+            <Container className="fr-py-4w">
+                <IncompleteYearWarning selectedYear={selectedYear} latestCompleteYear={latestCompleteYear} />
+                {renderSectionContent()}
+            </Container>
         </main>
     );
 }

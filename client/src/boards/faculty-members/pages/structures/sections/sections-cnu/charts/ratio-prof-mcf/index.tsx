@@ -62,7 +62,7 @@ export default function RatioProfMcfChart({ cnuGroups, selectedYear }: Props) {
                         <>
                             Chaque point représente une section CNU. L'axe horizontal indique
                             le nombre de maîtres de conférences, l'axe vertical le nombre de
-                            professeurs. La diagonale représente l'équilibre PR/MCF.
+                            professeurs. La diagonale représente l'équilibre Professeurs et assimilés/MCF.
                         </>
                     ),
                 },

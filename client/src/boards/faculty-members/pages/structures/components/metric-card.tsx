@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import Highcharts from "highcharts";
+import { Title } from "@dataesr/dsfr-plus";
 
 interface MetricCardProps {
     title: string;
@@ -8,15 +9,19 @@ interface MetricCardProps {
     color?: string;
     evolutionData?: Array<{ year: string; value: number }>;
     unit?: string;
+    onToggle?: () => void;
+    isExpanded?: boolean;
 }
 
 export default function MetricCard({
     title,
     value,
     detail,
-    color = "var(--blue-france-main-525)",
+    color = "var(--text-active-blue-france)",
     evolutionData,
     unit = "",
+    onToggle,
+    isExpanded = false,
 }: MetricCardProps) {
     const chartRef = useRef<HTMLDivElement>(null);
     const chartInstance = useRef<Highcharts.Chart | null>(null);
@@ -118,29 +123,39 @@ export default function MetricCard({
                 borderLeft: "none",
                 borderRight: "none",
                 borderBottom: "none",
-                backgroundColor: "var(--background-alt-grey)",
                 display: "flex",
                 flexDirection: "column",
                 overflow: "hidden",
                 paddingBottom: 0,
+                position: "relative",
             }}
         >
             <div className="fr-card__body fr-p-2w" style={{ flex: "1 1 auto", order: 1 }}>
-                <div className="fr-card__content">
-                    <p
-                        className="fr-text--sm fr-text--bold fr-mb-1v"
-                        style={{ color: "var(--text-default-grey)", textTransform: "uppercase", letterSpacing: "0.5px" }}
+                <div className="fr-card__content ">
+                    <Title
+                        className="fr-card__title fr-text--sm fr-text--bold fr-mb-1v"
+                        style={{ color: "var(--text-active-blue-france)", textTransform: "uppercase", letterSpacing: "0.5px" }}
                     >
                         {title}
-                    </p>
-                    <p className="fr-h5 fr-mb-1v">{value}</p>
+                    </Title>
+                    <p className="fr-card__desc fr-h5 fr-mb-1v">{value}</p>
                     {detail && (
-                        <p className="fr-text--sm" style={{ color: "var(--text-default-grey)", margin: 0 }}>
+                        <p className="fr-card__desc fr-text--sm" style={{ color: "var(--text-default-grey)", margin: 0 }}>
                             {detail}
                         </p>
                     )}
                 </div>
             </div>
+            {onToggle && (
+                <button
+                    type="button"
+                    className={`fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-btn--icon-only ${isExpanded ? "fr-icon-arrow-up-s-line" : "fr-icon-arrow-down-s-line"}`}
+                    aria-expanded={isExpanded}
+                    aria-label={isExpanded ? "Masquer le détail" : "Voir le détail"}
+                    onClick={onToggle}
+                    style={{ position: "absolute", top: "0.5rem", right: "0.5rem", zIndex: 1 }}
+                />
+            )}
             {hasChart && (
                 <div style={{ position: "relative", flex: "0 0 auto", order: 2 }}>
                     <div ref={chartRef} aria-hidden="true" style={{ width: "100%" }} />

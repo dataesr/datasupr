@@ -11,6 +11,12 @@ const VIEW_BACK_LABELS: Record<ViewType, string> = {
     academie: "Changer d'académie",
 };
 
+const AGE_COLORS: Record<string, string> = {
+    "35 ans et moins": "fm-age-35-et-moins-ec",
+    "36 à 55 ans": "fm-age-36-55-ec",
+    "56 ans et plus": "fm-age-56-et-plus-ec",
+};
+
 const VIEW_TOP_LABELS: Record<ViewType, string> = {
     structure: "Top 5 établissements",
     discipline: "Top 5 disciplines",
@@ -212,29 +218,39 @@ export default function PageHeader({
                     </div>
                 </Col>
 
-                {/* Age distribution */}
                 <Col xs="12" md="4">
                     <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w page-header__detail-card">
-                        <Text size="sm" bold className="fr-mb-1w">Répartition par âge</Text>
-                        <ul className="page-header__detail-list">
+                        <Text size="sm" bold className="fr-mb-2w">Répartition par âge</Text>
+                        <div className="page-header__age-stacked-bar" role="presentation">
+                            {ageDistribution
+                                .filter((a: any) => a._id && a._id !== "Non précisé")
+                                .map((age: any) => {
+                                    const pct = totalCount > 0 ? (age.total / totalCount) * 100 : 0;
+                                    return (
+                                        <div
+                                            key={age._id}
+                                            className="page-header__age-stacked-segment"
+                                            style={{ flex: pct, backgroundColor: getCssColor(AGE_COLORS[age._id] ?? "blue-france-main-525") }}
+                                            aria-hidden="true"
+                                        />
+                                    );
+                                })}
+                        </div>
+                        <ul className="page-header__detail-list fr-mt-2w">
                             {ageDistribution.map((age: any) => {
-                                const agePct = totalCount > 0 ? ((age.total / totalCount) * 100).toFixed(0) : "0";
+                                const pct = totalCount > 0 ? ((age.total / totalCount) * 100).toFixed(0) : "0";
                                 const fPct = femalePctOf(age.gender_breakdown || []);
                                 return (
                                     <li key={age._id} className="page-header__detail-row">
+                                        <span
+                                            className="page-header__age-dot"
+                                            style={{ backgroundColor: getCssColor(AGE_COLORS[age._id] ?? "blue-france-main-525") }}
+                                            aria-hidden="true"
+                                        />
                                         <span className="page-header__detail-label">{age._id || "N/A"}</span>
-                                        <div className="page-header__age-bar-container">
-                                            <div
-                                                className="page-header__age-bar"
-                                                style={{
-                                                    width: `${agePct}%`,
-                                                    backgroundColor: getCssColor("blue-france-main-525"),
-                                                }}
-                                            />
-                                        </div>
                                         <span className="page-header__detail-value">
-                                            {agePct}%
-                                            <span className="page-header__detail-pct"> ({fPct}% F)</span>
+                                            {age.total.toLocaleString("fr-FR")}
+                                            <span className="page-header__detail-pct"> · {pct}% ({fPct}% F)</span>
                                         </span>
                                     </li>
                                 );

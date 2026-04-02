@@ -1,12 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { Col, Row, Title } from "@dataesr/dsfr-plus";
 import { ViewType, useFacultyResearchTeachers } from "../../api";
 import { getCssColor } from "../../../../../../utils/colors";
 import MetricCard from "../../components/metric-card";
-import CnuTreemapChart from "./charts/cnu-treemap";
-import CnuBubbleChart from "./charts/cnu-bubble";
-import CnuGroupsTable from "./components/cnu-group-table";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
+import { CNU_GROUPS } from "../../../../pages/definitions/cnu-data";
 
 interface GroupesCnuSectionProps {
     viewType: ViewType;
@@ -14,117 +13,205 @@ interface GroupesCnuSectionProps {
     selectedYear: string;
 }
 
+const AGE_CLASSES = [
+    { key: "35 ans et moins", label: "≤ 35 ans", color: "fm-age-35-et-moins-ec" },
+    { key: "36 à 55 ans", label: "36 – 55 ans", color: "fm-age-36-55-ec" },
+    { key: "56 ans et plus", label: "≥ 56 ans", color: "fm-age-56-et-plus-ec" },
+    { key: "Non précisé", label: "Non précisé", color: "blue-france-main-525" },
+];
+
 const SCALE_COLORS = Array.from({ length: 14 }, (_, i) => `scale-${i + 1}`);
 
-export default function GroupesCnuSection({
-    viewType,
-    selectedId,
-    selectedYear,
-}: GroupesCnuSectionProps) {
-    const { data: currentData, isLoading } = useFacultyResearchTeachers(
-        viewType,
-        selectedId,
-        selectedYear
-    );
+export default function GroupesCnuSection({ viewType, selectedId, selectedYear }: GroupesCnuSectionProps) {
+    const { data: currentData, isLoading } = useFacultyResearchTeachers(viewType, selectedId, selectedYear);
+    const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
 
-    const previousYear = useMemo(() => {
-        if (!selectedYear) return undefined;
-        const parts = selectedYear.split("-");
-        if (parts.length === 2) {
-            return `${parseInt(parts[0]) - 1}-${parseInt(parts[1]) - 1}`;
-        }
-        return undefined;
-    }, [selectedYear]);
-
-    const { data: previousData } = useFacultyResearchTeachers(
-        viewType,
-        selectedId,
-        previousYear
-    );
-
-    const groupCards = useMemo(() => {
-        const groups = currentData?.cnuGroups || [];
-        const groupEvo: any[] = currentData?.cnuGroupEvolution || [];
-        const totalEC = groups.reduce((s: number, g: any) => s + (g.totalCount || 0), 0);
-
-        return [...groups]
-            .sort((a: any, b: any) => (b.totalCount || 0) - (a.totalCount || 0))
-            .map((g: any, i: number) => {
-                const total = g.totalCount || 0;
-                const pct = totalEC > 0 ? (total / totalEC) * 100 : 0;
-                const femalePct = total > 0 ? ((g.femaleCount || 0) / total) * 100 : 0;
-                const nbSections = g.cnuSections?.length || 0;
-                const color = getCssColor(SCALE_COLORS[i % SCALE_COLORS.length]);
-
-                const evo = groupEvo.find((e: any) => e._id?.group_code === g.cnuGroupId);
-                const sparkline = evo?.yearly
-                    ?.sort((a: any, b: any) => String(a.year).localeCompare(String(b.year)))
-                    .map((y: any) => ({ year: String(y.year), value: y.count || 0 })) || [];
-
-                return {
-                    id: g.cnuGroupId,
-                    label: g.cnuGroupLabel || `Groupe ${g.cnuGroupId}`,
-                    total,
-                    pct,
-                    femalePct,
-                    nbSections,
-                    color,
-                    sparkline,
-                };
+    const groupEvoMap = useMemo(() => {
+        type GroupEvo = {
+            total: Array<{ year: string; value: number }>;
+            female: Array<{ year: string; value: number }>;
+            male: Array<{ year: string; value: number }>;
+            age: Record<string, Array<{ year: string; value: number }>>;
+        };
+        const map = new Map<string, GroupEvo>();
+        (currentData?.cnuGroupEvolution || []).forEach((e: any) => {
+            const code = e._id?.group_code;
+            if (!code) return;
+            const yearly = [...(e.yearly || [])].sort((a: any, b: any) =>
+                String(a.year).localeCompare(String(b.year))
+            );
+            const total = yearly.map((y: any) => ({ year: String(y.year), value: y.count || 0 }));
+            const female = yearly.map((y: any) => ({
+                year: String(y.year),
+                value: y.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0,
+            }));
+            const male = yearly.map((y: any) => ({
+                year: String(y.year),
+                value: y.gender_breakdown?.find((g: any) => g.gender === "Masculin")?.count || 0,
+            }));
+            const age: Record<string, Array<{ year: string; value: number }>> = {};
+            AGE_CLASSES.forEach(({ key }) => {
+                age[key] = yearly.map((y: any) => ({
+                    year: String(y.year),
+                    value: y.age_breakdown?.find((a: any) => a.age_class === key)?.count || 0,
+                }));
             });
+            map.set(code, { total, female, male, age });
+        });
+        return map;
     }, [currentData]);
 
     if (isLoading) return <DefaultSkeleton />;
     if (!currentData?.cnuGroups?.length) return null;
 
+    const groups = [...currentData.cnuGroups].sort(
+        (a: any, b: any) => (b.totalCount || 0) - (a.totalCount || 0)
+    );
+    const totalEC = groups.reduce((s: number, g: any) => s + (g.totalCount || 0), 0);
+    const pct = (count: number, total: number) =>
+        total > 0 ? `${((count / total) * 100).toFixed(1)} %` : "";
+
     return (
         <>
             <div className="section-header fr-mb-5w">
-                <Title
-                    as="h2"
-                    look="h5"
-                    id="section-groupes-cnu-title"
-                    className="section-header__title"
-                >
-                    Groupes CNU — vue d'ensemble
+                <Title as="h2" look="h5" id="section-groupes-cnu-title" className="section-header__title">
+                    Groupes CNU
                 </Title>
             </div>
 
-            <Row gutters className="fr-mb-3w">
-                {groupCards.map((g) => (
-                    <Col xs="12" md="4" lg="3" key={g.id}>
-                        <MetricCard
-                            title={g.label}
-                            value={g.total.toLocaleString("fr-FR")}
-                            detail={`${g.pct.toFixed(1)} % · ${g.femalePct.toFixed(0)} % femmes · ${g.nbSections} sections`}
-                            color={g.color}
-                            evolutionData={g.sparkline}
-                        />
-                    </Col>
-                ))}
-            </Row>
+            {Array.from({ length: Math.ceil(groups.length / 4) }, (_, rowIdx) => {
+                const rowGroups: any[] = groups.slice(rowIdx * 4, rowIdx * 4 + 4);
+                const rowSelectedGroup = rowGroups.find((g: any) => g.cnuGroupId === selectedGroupId);
 
-            <Row gutters>
-                <Col xs="12" md="6">
-                    <CnuTreemapChart
-                        selectedYear={selectedYear}
-                        cnuGroups={currentData.cnuGroups}
-                    />
-                </Col>
-                <Col xs="12" md="6">
-                    <CnuBubbleChart
-                        selectedYear={selectedYear}
-                        cnuGroups={currentData.cnuGroups}
-                    />
-                </Col>
-            </Row>
-            <Title as="h3" look="h5" className="fr-mt-4w">
-                Groupes CNU — détail
-            </Title>
-            <CnuGroupsTable
-                cnuGroups={currentData.cnuGroups}
-                previousCnuGroups={previousData?.cnuGroups}
-                showAgeDemographics
+                return (
+                    <div key={rowIdx}>
+                        <Row gutters className="fr-mb-2w">
+                            {rowGroups.map((g: any, i: number) => {
+                                const globalIdx = rowIdx * 4 + i;
+                                const total = g.totalCount || 0;
+                                const color = getCssColor(SCALE_COLORS[globalIdx % SCALE_COLORS.length]);
+                                const evo = groupEvoMap.get(g.cnuGroupId);
+                                const isSelected = selectedGroupId === g.cnuGroupId;
+
+                                return (
+                                    <Col xs="12" md="4" lg="3" key={g.cnuGroupId}>
+                                        <div
+                                            role="button"
+                                            tabIndex={0}
+                                            aria-pressed={isSelected}
+                                            aria-label={`${isSelected ? "Masquer" : "Afficher"} le détail du groupe ${g.cnuGroupId}`}
+                                            onClick={() => setSelectedGroupId(isSelected ? null : g.cnuGroupId)}
+                                            onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); setSelectedGroupId(isSelected ? null : g.cnuGroupId); } }}
+                                            style={{
+                                                cursor: "pointer",
+                                                outline: isSelected ? `2px solid ${color}` : "none",
+                                                outlineOffset: "2px",
+                                                borderRadius: "4px",
+                                                height: "100%",
+                                            }}
+                                        >
+                                            <MetricCard
+                                                title={`${g.cnuGroupId} — ${g.cnuGroupLabel}`}
+                                                value={total.toLocaleString("fr-FR")}
+                                                detail={`${pct(total, totalEC)} des enseignants-chercheurs · ${pct(g.femaleCount || 0, total)} de femmes`}
+                                                color={color}
+                                                evolutionData={evo?.total}
+                                            />
+                                        </div>
+                                    </Col>
+                                );
+                            })}
+                        </Row>
+
+                        {rowSelectedGroup && (() => {
+                            const sg = rowSelectedGroup;
+                            const sgIdx = groups.findIndex((g: any) => g.cnuGroupId === sg.cnuGroupId);
+                            const sgEvo = groupEvoMap.get(sg.cnuGroupId);
+                            const sgColor = getCssColor(SCALE_COLORS[sgIdx % SCALE_COLORS.length]);
+                            const sgTotal = sg.totalCount || 0;
+                            return (
+                                <div className="fr-mb-4w fr-p-3w" style={{ backgroundColor: "var(--background-alt-grey)", borderRadius: "4px", borderLeft: `4px solid ${sgColor}` }}>
+                                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }} className="fr-mb-3w">
+                                        <Title as="h3" look="h6" className="fr-mb-0">
+                                            {sg.cnuGroupId} — {sg.cnuGroupLabel}
+                                        </Title>
+                                        <button
+                                            className="fr-btn fr-btn--tertiary-no-outline fr-btn--sm fr-icon-close-line fr-btn--icon-right"
+                                            aria-label="Fermer le détail"
+                                            onClick={() => setSelectedGroupId(null)}
+                                        >
+                                            Fermer
+                                        </button>
+                                    </div>
+                                    <Row gutters className="fr-mb-2w">
+                                        <Col xs="12" md="4">
+                                            <MetricCard
+                                                title="Effectif total"
+                                                value={sgTotal.toLocaleString("fr-FR")}
+                                                detail={`soit ${pct(sgTotal, totalEC)} des enseignants-chercheurs`}
+                                                color={sgColor}
+                                                evolutionData={sgEvo?.total}
+                                            />
+                                        </Col>
+                                        <Col xs="12" md="4">
+                                            <MetricCard
+                                                title="Femmes"
+                                                value={(sg.femaleCount || 0).toLocaleString("fr-FR")}
+                                                detail={`${pct(sg.femaleCount || 0, sgTotal)} du groupe`}
+                                                color={getCssColor("fm-femmes")}
+                                                evolutionData={sgEvo?.female}
+                                            />
+                                        </Col>
+                                        <Col xs="12" md="4">
+                                            <MetricCard
+                                                title="Hommes"
+                                                value={(sg.maleCount || 0).toLocaleString("fr-FR")}
+                                                detail={`${pct(sg.maleCount || 0, sgTotal)} du groupe`}
+                                                color={getCssColor("fm-hommes")}
+                                                evolutionData={sgEvo?.male}
+                                            />
+                                        </Col>
+                                    </Row>
+                                    <Row gutters>
+                                        {AGE_CLASSES.map(({ key, label, color: ageColor }) => {
+                                            const count = sg.ageDistribution?.find((a: any) => a.ageClass === key)?.count || 0;
+                                            return (
+                                                <Col xs="12" md="3" key={key}>
+                                                    <MetricCard
+                                                        title={label}
+                                                        value={count.toLocaleString("fr-FR")}
+                                                        detail={`${pct(count, sgTotal)} du groupe`}
+                                                        color={getCssColor(ageColor)}
+                                                        evolutionData={sgEvo?.age[key]}
+                                                    />
+                                                </Col>
+                                            );
+                                        })}
+                                    </Row>
+                                    {CNU_GROUPS[String(sg.cnuGroupId)] && (
+                                        <p className="fr-text--sm fr-mt-3w fr-mb-0" style={{ color: "var(--text-mention-grey)" }}>
+                                            <span className="fr-icon-information-line fr-icon--sm fr-mr-1w" aria-hidden="true" />
+                                            {CNU_GROUPS[String(sg.cnuGroupId)]}
+                                        </p>
+                                    )}
+                                </div>
+                            );
+                        })()}
+                    </div>
+                );
+            })}
+
+            <FmMetricDefinitionsTable
+                definitionKeys={[
+                    "Groupe CNU",
+                    "Enseignant-chercheur (EC)",
+                    "Taux de féminisation",
+                    "Classe d'\u00e2ge",
+                ]}
+                extraItems={groups.map((g: any) => ({
+                    title: `Groupe ${g.cnuGroupId} — ${g.cnuGroupLabel}`,
+                    definition: CNU_GROUPS[String(g.cnuGroupId)] || g.cnuGroupLabel,
+                }))}
             />
         </>
     );

@@ -5,6 +5,7 @@ import { usePositioningParams } from "./hooks/usePositioningParams";
 import { useFacultyPositioningData } from "./hooks/useFacultyPositioningData";
 import AnalysisFilter from "./components/analysis-filter";
 import ComparisonBarChart from "./charts/comparison-bar";
+import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
 
 interface Props {
     viewType: ViewType;
@@ -89,6 +90,16 @@ export default function ComparaisonSection({ viewType, selectedId, selectedYear 
                     )}
                 </Col>
             </Row>
+
+            <FmMetricDefinitionsTable
+                definitionKeys={[
+                    "Positionnement relatif",
+                    "Personnel enseignant",
+                    "Taux de féminisation",
+                    "Statut : 3 catégories mutuellement exclusives",
+                    "Classe d'\u00e2ge",
+                ]}
+            />
         </section>
     );
 }

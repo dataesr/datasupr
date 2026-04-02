@@ -2,12 +2,17 @@ import Highcharts from "highcharts";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { getCssColor } from "../../../../../../../../utils/colors";
 
-const CATEGORY_COLORS: Record<string, string> = {
-  "Professeurs des universités et assimilés": getCssColor("fm-cat-pr"),
-  "Maîtres de conférences et assimilés": getCssColor("fm-cat-mcf"),
-  "Autres enseignants titulaires": getCssColor("fm-cat-autres-titulaires"),
-  "Enseignants non permanents": getCssColor("fm-cat-non-permanents"),
-};
+const CATEGORY_COLORS: Array<{ pattern: RegExp; color: string }> = [
+  { pattern: /professeur/i, color: getCssColor("fm-cat-pr") },
+  { pattern: /ma[iî]tre.*conf[eé]rence|MCF/i, color: getCssColor("fm-cat-mcf") },
+  { pattern: /2[eè]me degr[eé]|second degr[eé]/i, color: getCssColor("fm-cat-2nd-degre") },
+  { pattern: /non.permanent|vacataire|ATER|contract/i, color: getCssColor("fm-cat-non-permanents") },
+];
+
+function getCategoryColor(name: string): string {
+  const match = CATEGORY_COLORS.find(({ pattern }) => pattern.test(name));
+  return match ? match.color : getCssColor("fm-cat-autres-titulaires");
+}
 
 export function createCategoryEvolutionOptions(
   categories: string[],
@@ -22,7 +27,7 @@ export function createCategoryEvolutionOptions(
     (cat) => ({
       type: "area" as const,
       name: cat,
-      color: CATEGORY_COLORS[cat] || getCssColor("fm-cat-autres-titulaires"),
+      color: getCategoryColor(cat),
       data: categoryEvolution.map((e: any) => {
         const b = e.category_breakdown?.find(
           (c: any) => c.category === cat

@@ -3,7 +3,7 @@ import { Col, Row, Title } from "@dataesr/dsfr-plus";
 import { getCssColor } from "../../../../../../utils/colors";
 import MetricCard from "../../components/metric-card";
 import DisciplineChart from "./charts/disciplines";
-import AgeChart from "./charts/ages";
+import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
 
 interface TypologieSectionProps {
     selectedYear: string;
@@ -21,7 +21,6 @@ export default function TypologieSection({
     totalCount,
 }: TypologieSectionProps) {
     const disciplineDistribution = dashboardData?.discipline_distribution || [];
-    const ageDistribution = dashboardData?.age_distribution || [];
 
     const disciplineCards = useMemo(() => {
         const discEvo: any[] = evolutionData?.discipline_evolution || [];
@@ -75,9 +74,7 @@ export default function TypologieSection({
             </Row>
 
             <div className="fr-mb-4w">
-                <Title as="h3" look="h5" className="fr-mb-3w">
-                    Répartition par grande discipline
-                </Title>
+
                 <Row gutters>
                     <Col xs="12">
                         <DisciplineChart
@@ -88,19 +85,15 @@ export default function TypologieSection({
                 </Row>
             </div>
 
-            <div className="fr-mb-4w">
-                <Title as="h3" look="h5" className="fr-mb-3w">
-                    Pyramide des âges
-                </Title>
-                <Row gutters>
-                    <Col xs="12" md="8">
-                        <AgeChart
-                            selectedYear={selectedYear}
-                            ageDistribution={ageDistribution}
-                        />
-                    </Col>
-                </Row>
-            </div>
+
+            <FmMetricDefinitionsTable
+                definitionKeys={[
+                    "Grande discipline",
+                    "Classe d'\u00e2ge",
+                    "Taux de féminisation",
+                    "Personnel enseignant",
+                ]}
+            />
         </>
     );
 }

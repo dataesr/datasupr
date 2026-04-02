@@ -1,9 +1,9 @@
 .fm-etablissement-selector {
   &__wrapper {
     background: linear-gradient(
-      5deg,
+      15deg,
       var(--background-default-grey) 0%,
-      var(--fm-home) 100%
+      var(--background-alt-orange-terre-battue) 100%
     );
     padding-bottom: 1rem;
   }
@@ -483,18 +483,24 @@
     }
   }
 
-  &__age-bar-container {
-    flex: 0 0 60px;
-    height: 6px;
-    background: var(--background-contrast-grey);
-    border-radius: 3px;
+  &__age-stacked-bar {
+    display: flex;
+    height: 12px;
+    border-radius: 6px;
     overflow: hidden;
   }
 
-  &__age-bar {
+  &__age-stacked-segment {
     height: 100%;
-    border-radius: 3px;
-    transition: width 0.3s ease;
+    transition: flex 0.3s ease;
+  }
+
+  &__age-dot {
+    width: 10px;
+    height: 10px;
+    min-width: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 
   &__top-list {

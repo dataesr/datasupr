@@ -1,129 +1,162 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Col, Row, Title } from "@dataesr/dsfr-plus";
-import { getCssColor } from "../../../../../../utils/colors";
-import MetricCard from "../../components/metric-card";
-import GenderEvolutionChart from "./charts/gender-evolution";
-import StatusEvolutionChart from "./charts/status-evolution";
-import AgeEvolutionChart from "./charts/age-evolution";
-import CategoryEvolutionChart from "./charts/category-evolution";
+import { ViewType, useFacultyAnalyses } from "../../api";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { buildAllFmAnalyses, buildAllFmMetricsConfig } from "../../../../config/analyses-config";
+import FmAnalysisFilter from "./analysis-filter";
+import FmEvolutionChart from "./charts";
+import FmMetricDefinitionsTable from "../../../../components/metric-definitions";
 
-interface EvolutionsSectionProps {
-    evolutionData: any;
+const ANALYSIS_DEFINITION_KEYS: Record<string, string[]> = {
+    "effectif-total": ["Personnel enseignant"],
+    "genre-effectifs": ["Personnel enseignant", "Taux de féminisation"],
+    "statut-effectifs": ["Statut : 3 catégories mutuellement exclusives", "Enseignant-chercheur (EC)", "Permanent / Non permanent"],
+    "quotite-effectifs": ["Quotité de travail", "Temps plein", "Temps partiel"],
+    "age-effectifs": ["Classe d'âge"],
+    "effectifs-base100": ["Personnel enseignant", "Statut : 3 catégories mutuellement exclusives", "Enseignant-chercheur (EC)", "Permanent / Non permanent"],
+    "taux-feminisation": ["Taux de féminisation"],
+    "femi-ec": ["Taux de féminisation", "Enseignant-chercheur (EC)"],
+    "femi-permanents": ["Taux de féminisation", "Permanent / Non permanent"],
+    "femi-non-titulaires": ["Taux de féminisation"],
+    "femi-par-statut-base100": ["Taux de féminisation", "Statut : 3 catégories mutuellement exclusives"],
+    "genre-base100": ["Taux de féminisation"],
+    "taux-permanents": ["Permanent / Non permanent"],
+    "taux-ec": ["Enseignant-chercheur (EC)"],
+    "taux-ec-sur-permanents": ["Enseignant-chercheur (EC)"],
+    "effectif-ec-seul": ["Enseignant-chercheur (EC)"],
+    "effectif-permanents-seul": ["Permanent / Non permanent"],
+    "statut-base100": ["Statut : 3 catégories mutuellement exclusives", "Enseignant-chercheur (EC)"],
+    "taux-temps-partiel": ["Quotité de travail", "Temps partiel"],
+    "temps-partiel-femmes": ["Quotité de travail", "Temps partiel"],
+    "temps-partiel-hommes": ["Quotité de travail", "Temps partiel"],
+    "temps-partiel-base100": ["Quotité de travail", "Temps partiel"],
+    "disciplines-evolution": ["Grande discipline"],
+    "cnu-groups-evolution": ["Groupe CNU"],
+};
+
+function getAnalysisDefinitionKeys(analysis: string | null): string[] {
+    if (!analysis) return [];
+    if (ANALYSIS_DEFINITION_KEYS[analysis]) return ANALYSIS_DEFINITION_KEYS[analysis];
+    if (analysis.startsWith("disc-")) return ["Grande discipline"];
+    if (analysis.startsWith("cnu-g-")) return ["Groupe CNU"];
+    if (analysis.startsWith("cnu-s-")) return ["Section CNU"];
+    if (analysis.startsWith("taux-age-")) return ["Classe d'âge"];
+    return [];
 }
 
-export default function EvolutionsSection({
-    evolutionData,
-}: EvolutionsSectionProps) {
-    const metrics = useMemo(() => {
-        const globalEvo: any[] = evolutionData?.global_evolution || [];
-        const statusEvo: any[] = evolutionData?.status_evolution || [];
-        if (!globalEvo.length) return null;
+interface EvolutionsSectionProps {
+    viewType: ViewType;
+    selectedId: string;
+}
 
-        const first = globalEvo[0];
-        const last = globalEvo[globalEvo.length - 1];
-        const diff = (last?.total || 0) - (first?.total || 0);
-        const diffPct = first?.total > 0 ? (diff / first.total) * 100 : 0;
+export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSectionProps) {
+    const [searchParams, setSearchParams] = useSearchParams();
+    const selectedAnalysis = searchParams.get("fmAnalysis") || null;
+    const ageClass = searchParams.get("fmAgeClass") || "";
 
-        const firstFemale = first?.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
-        const lastFemale = last?.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
-        const firstFemalePct = first?.total > 0 ? (firstFemale / first.total) * 100 : 0;
-        const lastFemalePct = last?.total > 0 ? (lastFemale / last.total) * 100 : 0;
-        const femalePctDiff = lastFemalePct - firstFemalePct;
+    const { data, isLoading } = useFacultyAnalyses(viewType, selectedId, ageClass || undefined);
 
-        const firstStatus = statusEvo[0];
-        const lastStatus = statusEvo[statusEvo.length - 1];
-        const firstEC = firstStatus?.status_breakdown?.find((s: any) => s.status === "enseignant_chercheur")?.count || 0;
-        const lastEC = lastStatus?.status_breakdown?.find((s: any) => s.status === "enseignant_chercheur")?.count || 0;
-        const ecDiff = lastEC - firstEC;
-        const ecDiffPct = firstEC > 0 ? (ecDiff / firstEC) * 100 : 0;
+    const { analysesWithData, allAnalyses, metricsConfig, records, periodText } = useMemo(() => {
+        if (!data?.records?.length) {
+            return { analysesWithData: new Set<string>(), allAnalyses: {}, metricsConfig: {}, records: [], periodText: "" };
+        }
+        const analyses = buildAllFmAnalyses(data);
+        const metrics = buildAllFmMetricsConfig(data);
+        const available = new Set<string>();
 
-        const totalSparkline = globalEvo.map((e: any) => ({ year: String(e._id), value: e.total || 0 }));
-        const femalePctSparkline = globalEvo.map((e: any) => {
-            const f = e.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
-            return { year: String(e._id), value: e.total > 0 ? (f / e.total) * 100 : 0 };
-        });
-        const ecSparkline = statusEvo.map((e: any) => {
-            const ec = e.status_breakdown?.find((s: any) => s.status === "enseignant_chercheur")?.count || 0;
-            return { year: String(e._id), value: ec };
+        Object.entries(analyses).forEach(([key, analysis]) => {
+            const hasData = analysis.metrics.some((m) =>
+                data.records.some((r: any) => r[m] != null && r[m] !== 0)
+            );
+            if (hasData) available.add(key);
         });
 
-        return {
-            from: first._id, to: last._id,
-            diff, diffPct, lastTotal: last.total || 0,
-            femalePctDiff, lastFemalePct,
-            ecDiff, ecDiffPct, lastEC,
-            totalSparkline, femalePctSparkline, ecSparkline,
-        };
-    }, [evolutionData]);
+        const years = data.records.map((r: any) => r.annee_universitaire).filter(Boolean).sort();
+        const period = years.length > 1 ? `${years[0]} — ${years[years.length - 1]}` : years[0] || "";
+
+        return { analysesWithData: available, allAnalyses: analyses, metricsConfig: metrics, records: data.records, periodText: period };
+    }, [data]);
+
+    useEffect(() => {
+        if (analysesWithData.size === 0) return;
+        if (selectedAnalysis && analysesWithData.has(selectedAnalysis)) return;
+        const first = Array.from(analysesWithData)[0];
+        if (!first) return;
+        const params = new URLSearchParams(searchParams);
+        params.set("fmAnalysis", first);
+        setSearchParams(params, { replace: true });
+    }, [analysesWithData, selectedAnalysis, searchParams, setSearchParams]);
+
+    const handleSelectAnalysis = (key: string) => {
+        const params = new URLSearchParams(searchParams);
+        params.set("fmAnalysis", key);
+        setSearchParams(params, { replace: true });
+    };
+
+    const handleAgeClass = (val: string) => {
+        const params = new URLSearchParams(searchParams);
+        if (val) params.set("fmAgeClass", val);
+        else params.delete("fmAgeClass");
+        setSearchParams(params, { replace: true });
+    };
+
 
     return (
         <>
             <div className="section-header fr-mb-5w">
-                <Title
-                    as="h2"
-                    look="h5"
-                    id="section-evolutions-title"
-                    className="section-header__title"
-                >
-                    Évolutions temporelles
+                <Title as="h2" look="h5" id="section-evolutions-title" className="section-header__title">
+                    Analyses et évolutions temporelles
                 </Title>
             </div>
 
-            {metrics && (
-                <Row gutters className="fr-mb-3w">
+            {isLoading && (
+                <Row gutters>
+                    <Col xs="12" md="4"><DefaultSkeleton height="400px" /></Col>
+                    <Col xs="12" md="8"><DefaultSkeleton height="400px" /></Col>
+                </Row>
+            )}
+
+            {!isLoading && analysesWithData.size === 0 && (
+                <div className="fr-alert fr-alert--info">
+                    <p>Aucune donnée d'évolution disponible.</p>
+                </div>
+            )}
+
+            {!isLoading && analysesWithData.size > 0 && (
+                <Row gutters>
                     <Col xs="12" md="4">
-                        <MetricCard
-                            title="Évolution des effectifs"
-                            value={`${metrics.diff >= 0 ? "+" : ""}${metrics.diffPct.toFixed(1)} %`}
-                            detail={`${metrics.diff >= 0 ? "+" : ""}${metrics.diff.toLocaleString("fr-FR")} de ${metrics.from} à ${metrics.to}`}
-                            color={getCssColor("blue-france-main-525")}
-                            evolutionData={metrics.totalSparkline}
+                        <FmAnalysisFilter
+                            allAnalyses={allAnalyses}
+                            analysesWithData={analysesWithData}
+                            selectedAnalysis={selectedAnalysis && analysesWithData.has(selectedAnalysis) ? selectedAnalysis : null}
+                            onSelectAnalysis={handleSelectAnalysis}
                         />
                     </Col>
-                    <Col xs="12" md="4">
-                        <MetricCard
-                            title="Progression féminisation"
-                            value={`${metrics.femalePctDiff >= 0 ? "+" : ""}${metrics.femalePctDiff.toFixed(1)} pts`}
-                            detail={`${metrics.lastFemalePct.toFixed(1)} % de femmes en ${metrics.to}`}
-                            color={getCssColor("fm-femmes")}
-                            evolutionData={metrics.femalePctSparkline}
-                            unit="%"
-                        />
-                    </Col>
-                    <Col xs="12" md="4">
-                        <MetricCard
-                            title="Évolution des EC"
-                            value={`${metrics.ecDiff >= 0 ? "+" : ""}${metrics.ecDiffPct.toFixed(1)} %`}
-                            detail={`${metrics.lastEC.toLocaleString("fr-FR")} EC en ${metrics.to}`}
-                            color={getCssColor("fm-statut-ec")}
-                            evolutionData={metrics.ecSparkline}
-                        />
+                    <Col xs="12" md="8">
+                        {(!selectedAnalysis || !analysesWithData.has(selectedAnalysis)) ? (
+                            <div className="fr-alert fr-alert--info">
+                                <p>Sélectionnez une analyse pour afficher le graphique.</p>
+                            </div>
+                        ) : (
+                            <FmEvolutionChart
+                                records={records}
+                                selectedAnalysis={selectedAnalysis}
+                                allAnalyses={allAnalyses}
+                                metricsConfig={metricsConfig}
+                                periodText={periodText}
+                                ageClass={ageClass}
+                                onAgeClassChange={handleAgeClass}
+                            />
+                        )}
                     </Col>
                 </Row>
             )}
 
-            <Row gutters>
-                <Col xs="12">
-                    <GenderEvolutionChart
-                        globalEvolution={evolutionData?.global_evolution}
-                    />
-                </Col>
-                <Col xs="12" md="6">
-                    <StatusEvolutionChart
-                        statusEvolution={evolutionData?.status_evolution}
-                    />
-                </Col>
-                <Col xs="12" md="6">
-                    <AgeEvolutionChart
-                        ageEvolution={evolutionData?.age_evolution}
-                    />
-                </Col>
-                <Col xs="12">
-                    <CategoryEvolutionChart
-                        categoryEvolution={evolutionData?.category_evolution}
-                    />
-                </Col>
-            </Row>
+            <FmMetricDefinitionsTable
+                definitionKeys={getAnalysisDefinitionKeys(selectedAnalysis)}
+            />
         </>
     );
 }
+

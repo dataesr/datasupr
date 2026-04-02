@@ -73,6 +73,27 @@ export const useFacultyEvolution = (viewType: ViewType, id?: string) =>
     },
   });
 
+export const useFacultyAnalyses = (
+  viewType: ViewType,
+  id?: string,
+  ageClass?: string
+) =>
+  useQuery({
+    queryKey: ["faculty", "analyses", viewType, id, ageClass],
+    queryFn: async () => {
+      const params = new URLSearchParams({ view: viewType });
+      if (id) params.append("id", id);
+      if (ageClass) params.append("age_class", ageClass);
+      const response = await fetch(
+        `${VITE_APP_SERVER_URL}/faculty-members/analyses?${params}`
+      );
+      if (!response.ok) throw new Error("Erreur récupération analyses");
+      return response.json();
+    },
+    enabled: !!id,
+    placeholderData: keepPreviousData,
+  });
+
 export const useFacultyResearchTeachers = (
   viewType: ViewType,
   id?: string,

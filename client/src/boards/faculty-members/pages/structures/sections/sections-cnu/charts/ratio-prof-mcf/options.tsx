@@ -38,7 +38,7 @@ export function createRatioProfMcfOptions(
           Professeurs : <strong>${point.y?.toLocaleString("fr-FR")}</strong><br/>
           MCF : <strong>${point.x?.toLocaleString("fr-FR")}</strong><br/>
           Total : <strong>${point.sectionTotal?.toLocaleString("fr-FR")}</strong><br/>
-          Ratio PR/MCF : <strong>${ratio}</strong>
+          Ratio Professeurs et assimilés/MCF : <strong>${ratio}</strong>
         </div>`;
             },
         },
