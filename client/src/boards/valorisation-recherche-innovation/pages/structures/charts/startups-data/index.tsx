@@ -40,11 +40,13 @@ export default function StartupsData() {
   const yearMin = searchParams.get('yearMin')
 
   const [filters, setFilters] = useState<Filter[]>([])
+  const [pagination, setPagination] = useState({ from: 0, size: 10 })
   const [sorting, setSorting] = useState<Sort>()
 
   const body = {
     ...getEsQueryStartups({ structures: [structure], yearMax, yearMin }),
-    size: 100,
+    from: pagination?.from ?? 0,
+    size: pagination?.size ?? 10,
   }
 
   if (sorting?.id) {
@@ -86,7 +88,7 @@ export default function StartupsData() {
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: ["valo-startups-data", sorting, structure, yearMax, yearMin, filters],
+    queryKey: ["valo-startups-data", filters, pagination, sorting, structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_ORGANIZATIONS}`, {
         body: JSON.stringify(body),
@@ -107,6 +109,7 @@ export default function StartupsData() {
     status: hit._source?.status ?? '',
     website: hit._source?.links?.[0]?.url ?? '',
   }))
+  const numberOfResults = data?.hits?.total?.value ?? 0
 
   const columns = useMemo<Column[]>(() => [
     {
@@ -157,7 +160,10 @@ export default function StartupsData() {
     columns={columns}
     dataTable={dataTable}
     filters={filters}
+    numberOfResults={numberOfResults}
+    pagination={pagination}
     setFilters={setFilters}
+    setPagination={setPagination}
     setSorting={setSorting}
     sorting={sorting}
   />
