@@ -95,60 +95,55 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
           ))}
         </tbody>
       </table>
-      <Row>
+      <Row className="fr-mt-1w">
         <Col>
           <button
             className="border rounded p-1"
             onClick={() => setPagination({ ...pagination, from: 0 })}
             disabled={pagination.from === 0}
           >
-            {'<<'}
+            <i className="ri-arrow-left-double-line" />
           </button>
           <button
             className="border rounded p-1"
             onClick={() => setPagination({ ...pagination, from: pagination.from - pagination.size })}
             disabled={pagination.from === 0}
           >
-            {'<'}
+            <i className="ri-arrow-left-s-line" />
           </button>
+          <span className="fr-mx-1w">
+            Page
+            {' '}
+            <input
+              className="border p-1 rounded w-16"
+              defaultValue={1}
+              max={Math.ceil(numberOfResults / pagination.size)}
+              min="1"
+              onChange={(e) => setPagination({ ...pagination, from: (Number(e.target.value) - 1) * pagination.size })}
+              type="number"
+              value={(pagination.from / pagination.size) + 1}
+            />
+            {' '}
+            of
+            {' '}
+            <strong>
+              {Math.ceil(numberOfResults / pagination.size)}
+            </strong>
+          </span>
           <button
             className="border rounded p-1"
             onClick={() => setPagination({ ...pagination, from: pagination.from + pagination.size })}
             disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
           >
-            {'>'}
+            <i className="ri-arrow-right-s-line" />
           </button>
           <button
             className="border rounded p-1"
             onClick={() => setPagination({ ...pagination, from: Math.floor(numberOfResults / pagination.size) * pagination.size })}
             disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
           >
-            {'>>'}
+            <i className="ri-arrow-right-double-line" />
           </button>
-        </Col>
-        <Col>
-          Page
-          {' '}
-          <strong>
-            {(pagination.from / pagination.size) + 1}
-          </strong>
-          {' '}
-          of
-          {' '}
-          <strong>
-            {Math.ceil(numberOfResults / pagination.size)}
-          </strong>
-        </Col>
-        <Col>
-          Go to page:
-          <input
-            type="number"
-            min="1"
-            max={Math.ceil(numberOfResults / pagination.size)}
-            defaultValue={1}
-            onChange={(e) => setPagination({ ...pagination, from: (Number(e.target.value) - 1) * pagination.size })}
-            className="border p-1 rounded w-16"
-          />
         </Col>
         <Col>
           <select
@@ -157,13 +152,15 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
           >
             {[10, 20, 30, 40, 50].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
-                Show {pageSize}
+                {pageSize} par page
               </option>
             ))}
           </select>
         </Col>
         <Col>
-          {numberOfResults} Rows
+          <i>
+            {numberOfResults} résultats
+          </i>
         </Col>
       </Row>
     </>

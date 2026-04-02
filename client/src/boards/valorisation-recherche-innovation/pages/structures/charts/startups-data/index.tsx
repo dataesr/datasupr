@@ -142,7 +142,7 @@ export default function StartupsData() {
       id: 'creationYear',
       isFilterable: true,
       isSortable: true,
-      label: 'Année de création',
+      label: 'Année',
       meta: { filterVariant: 'range' },
     },
     {
