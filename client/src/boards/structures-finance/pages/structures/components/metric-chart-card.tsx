@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import Highcharts from "highcharts";
 import { BUDGET_SENSITIVE_METRICS } from "../../../components/budget-warning/budgetIndicators";
 import { getCssColor } from "../../../../../utils/colors";
+import { Title } from "@dataesr/dsfr-plus";
 
 interface MetricChartCardProps {
   title: string;
@@ -238,7 +239,6 @@ export function MetricChartCard({
         borderLeft: "none",
         borderRight: "none",
         borderBottom: "none",
-        backgroundColor: "var(--background-alt-grey)",
         display: "flex",
         flexDirection: "column",
         overflow: "hidden",
@@ -246,23 +246,17 @@ export function MetricChartCard({
       }}
     >
       <div
-        className="fr-card__body fr-p-2w"
+        className="fr-p-2w"
         style={{
-          flex: "1 1 auto",
-          order: 1,
         }}
       >
-        <div className="fr-card__content">
-          <p
-            className="fr-text--sm fr-text--bold fr-mb-1v"
-            style={{
-              color: "var(--text-default-grey)",
-              textTransform: "uppercase",
-              letterSpacing: "0.5px",
-            }}
+        <div >
+          <Title
+            className="fr-card__title fr-text--sm fr-text--bold fr-mb-1v"
+            style={{ color: "var(--text-active-blue-france)", textTransform: "uppercase", letterSpacing: "0.5px" }}
           >
             {displayTitle}
-          </p>
+          </Title>
           <p className="fr-h5 fr-mb-1v" style={{ pointerEvents: "auto" }}>
             {value}
           </p>
@@ -277,47 +271,48 @@ export function MetricChartCard({
               {detail}
             </p>
           )}
-
         </div>
       </div>
 
-      {hasChart && (
-        <div
-          style={{
-            position: "relative",
-            flex: "0 0 auto",
-            order: 2,
-          }}
-        >
+      {
+        hasChart && (
           <div
-            ref={chartRef}
-            aria-hidden="true"
             style={{
-              width: "100%",
+              position: "relative",
+              flex: "0 0 auto",
+              order: 2,
             }}
-          />
-          {evolutionData && evolutionData.length >= 2 && (
+          >
             <div
+              ref={chartRef}
+              aria-hidden="true"
               style={{
-                position: "absolute",
-                bottom: 2,
-                left: 8,
-                right: 8,
-                display: "flex",
-                justifyContent: "space-between",
-                pointerEvents: "none",
+                width: "100%",
               }}
-            >
-              <span style={{ fontWeight: "bold", fontSize: "10px", color: "var(--text-mention-grey)" }}>
-                {evolutionData[0].exercice}
-              </span>
-              <span style={{ fontWeight: "bold", fontSize: "10px", color: "var(--text-mention-grey)" }}>
-                {evolutionData[evolutionData.length - 1].exercice}
-              </span>
-            </div>
-          )}
-        </div>
-      )}
-    </div>
+            />
+            {evolutionData && evolutionData.length >= 2 && (
+              <div
+                style={{
+                  position: "absolute",
+                  bottom: 2,
+                  left: 8,
+                  right: 8,
+                  display: "flex",
+                  justifyContent: "space-between",
+                  pointerEvents: "none",
+                }}
+              >
+                <span style={{ fontWeight: "bold", fontSize: "10px", color: "var(--text-mention-grey)" }}>
+                  {evolutionData[0].exercice}
+                </span>
+                <span style={{ fontWeight: "bold", fontSize: "10px", color: "var(--text-mention-grey)" }}>
+                  {evolutionData[evolutionData.length - 1].exercice}
+                </span>
+              </div>
+            )}
+          </div>
+        )
+      }
+    </div >
   );
 }
