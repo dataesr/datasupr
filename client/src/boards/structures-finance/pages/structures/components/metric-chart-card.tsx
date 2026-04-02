@@ -246,7 +246,7 @@ export function MetricChartCard({
       }}
     >
       <div
-        className="fr-p-2w"
+        className="fr-card__body fr-p-2w"
         style={{
         }}
       >
@@ -274,45 +274,43 @@ export function MetricChartCard({
         </div>
       </div>
 
-      {
-        hasChart && (
+      {hasChart && (
+        <div
+          style={{
+            position: "relative",
+            flex: "0 0 auto",
+            order: 2,
+          }}
+        >
           <div
+            ref={chartRef}
+            aria-hidden="true"
             style={{
-              position: "relative",
-              flex: "0 0 auto",
-              order: 2,
+              width: "100%",
             }}
-          >
+          />
+          {evolutionData && evolutionData.length >= 2 && (
             <div
-              ref={chartRef}
-              aria-hidden="true"
               style={{
-                width: "100%",
+                position: "absolute",
+                bottom: 2,
+                left: 8,
+                right: 8,
+                display: "flex",
+                justifyContent: "space-between",
+                pointerEvents: "none",
               }}
-            />
-            {evolutionData && evolutionData.length >= 2 && (
-              <div
-                style={{
-                  position: "absolute",
-                  bottom: 2,
-                  left: 8,
-                  right: 8,
-                  display: "flex",
-                  justifyContent: "space-between",
-                  pointerEvents: "none",
-                }}
-              >
-                <span style={{ fontWeight: "bold", fontSize: "10px", color: "var(--text-mention-grey)" }}>
-                  {evolutionData[0].exercice}
-                </span>
-                <span style={{ fontWeight: "bold", fontSize: "10px", color: "var(--text-mention-grey)" }}>
-                  {evolutionData[evolutionData.length - 1].exercice}
-                </span>
-              </div>
-            )}
-          </div>
-        )
-      }
-    </div >
+            >
+              <span style={{ fontWeight: "bold", fontSize: "10px", color: "var(--text-mention-grey)" }}>
+                {evolutionData[0].exercice}
+              </span>
+              <span style={{ fontWeight: "bold", fontSize: "10px", color: "var(--text-mention-grey)" }}>
+                {evolutionData[evolutionData.length - 1].exercice}
+              </span>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }
