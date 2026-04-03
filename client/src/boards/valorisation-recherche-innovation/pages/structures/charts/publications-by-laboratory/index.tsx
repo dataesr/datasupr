@@ -78,7 +78,7 @@ export default function PublicationsByLaboratory({ name }: { name: string | unde
     });
   });
   const series = Object.keys(d).map((a) => ({ data: d[a], name: a }));
-  const title = `Nombre de publications avec une société privée par laboratoire ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const title = `Nombre de publications affiliées à la structure ${name} remerciant une société privée, par laboratoire co-publiant, parues ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
     return `<b>${this.y}</b> publications par la société <b>${this.series.name}</b> et liées à l'établissement <b>${name}</b> ont été signées par <b>${categories[this.x]}</b>`;
   };

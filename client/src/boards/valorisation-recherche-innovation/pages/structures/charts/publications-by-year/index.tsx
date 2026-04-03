@@ -83,7 +83,7 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
   const series: { data: any[], name: any }[] = Object.keys(d).map((a) => ({ data: d[a], name: a }));
   series.sort((a, b) => b.name - a.name)
 
-  const title = `Nombre de publications avec une société privée par année de publication ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const title = `Nombre de publications affiliées à la structure ${name} remerciant une société privée, par année de publication parues ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
     return `<b>${this.y}</b> publications sont parues en <b>${this.series.name}</b> co-signées par l'établissement <b>${name}</b> et par la société <b>${categories[this.x]}</b>`;
   };
