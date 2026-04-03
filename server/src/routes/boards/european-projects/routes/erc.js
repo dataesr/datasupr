@@ -676,7 +676,6 @@ router.route("/european-projects/erc/main-entities").get(async (req, res) => {
       const years = req.query.call_year.split(",");
       filters.call_year = { $in: years };
     }
-
     const data = await db
       .collection("european-projects_projects-entities_staging")
       .aggregate([
@@ -705,6 +704,73 @@ router.route("/european-projects/erc/main-entities").get(async (req, res) => {
     res.status(200).json({ total_fund_eur: total, list: data });
   } catch (error) {
     console.error("Error fetching ERC main entities:", error);
+    res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+});
+
+/**
+ * Route pour les principales entités ERC filtrées par domaine scientifique ou panel
+ * Interroge la collection synthèse qui contient panel_id et domaine_scientifique
+ */
+router.route("/european-projects/erc/main-entities-by-domain").get(async (req, res) => {
+  if (!req.query.country_code) {
+    return res.status(400).json({ error: "Le code pays est requis" });
+  }
+
+  try {
+    const filters = {
+      country_code: req.query.country_code.toUpperCase(),
+      stage: "successful",
+    };
+
+    if (req.query.call_year) {
+      const years = req.query.call_year.split(",");
+      filters.call_year = { $in: years };
+    }
+    if (req.query.panel_id) {
+      const panels = req.query.panel_id.split(",");
+      filters.panel_id = { $in: panels };
+    } else if (req.query.domaine_scientifique) {
+      filters.domaine_scientifique = req.query.domaine_scientifique.toUpperCase();
+    }
+
+    // Récup des project_id correspondants aux filtres
+    const matchingProjectIds = await db.collection(COLLECTION_NAME).distinct("project_id", filters);
+
+    if (!matchingProjectIds.length) {
+      return res.status(200).json({ total_fund_eur: 0, list: [] });
+    }
+
+    // Agrégation des entités à partir de la collection des entités, filtrée par les project_id
+    const data = await db
+      .collection("european-projects_projects-entities_staging")
+      .aggregate([
+        { $match: { project_id: { $in: matchingProjectIds }, country_code: filters.country_code, thema_code: "ERC" } },
+        {
+          $group: {
+            _id: { name: "$entities_name", acronym: "$entities_acronym" },
+            total_fund_eur: { $sum: "$fund_eur" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            name: "$_id.name",
+            acronym: "$_id.acronym",
+            total_fund_eur: 1,
+          },
+        },
+        { $match: { name: { $ne: null } } },
+        { $sort: { total_fund_eur: -1 } },
+        ...(req.query.limit !== "all" ? [{ $limit: 10 }] : []),
+      ])
+      .toArray();
+
+    const total = data.reduce((acc, el) => acc + el.total_fund_eur, 0);
+
+    res.status(200).json({ total_fund_eur: total, list: data });
+  } catch (error) {
+    console.error("Error fetching ERC main entities by domain:", error);
     res.status(500).json({ error: "Erreur interne du serveur" });
   }
 });
