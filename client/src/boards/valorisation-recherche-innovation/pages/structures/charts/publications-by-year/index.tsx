@@ -81,6 +81,7 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
     });
   });
   const series = Object.keys(d).map((a) => ({ data: d[a], name: a }));
+  series.sort((a, b) => b.name - a.name)
 
   const title = `Nombre de publications avec une société privée par année de publication ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
@@ -96,7 +97,7 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
 
   const options = {
     chart: { type: 'bar' },
-    legend: { enabled: true },
+    legend: { enabled: true, reversed: true },
     plotOptions: {
       bar: {
         dataLabels: { enabled: false },
