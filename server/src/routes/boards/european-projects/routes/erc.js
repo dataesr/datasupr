@@ -696,7 +696,7 @@ router.route("/european-projects/erc/main-entities").get(async (req, res) => {
           },
         },
         { $sort: { total_fund_eur: -1 } },
-        { $limit: 10 },
+        ...(req.query.limit !== "all" ? [{ $limit: 10 }] : []),
       ])
       .toArray();
 

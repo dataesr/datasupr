@@ -2,21 +2,22 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 
-import { getData } from "./query";
+import { getAllData } from "./query";
 import Options from "./options";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useChartColor } from "../../../../../../hooks/useChartColor";
+import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { rangeOfYearsToApiFormat } from "../../url-utils";
 import { formatToMillions } from "../../../../../../utils/format";
 
 const ERC_DESTINATIONS = [
   { code: "ALL", labelFr: "Tous types de financement", labelEn: "All funding types" },
-  { code: "ADG", labelFr: "Advanced grants (ADG)", labelEn: "Advanced grants (ADG)" },
-  { code: "COG", labelFr: "Consolidator grants (COG)", labelEn: "Consolidator grants (COG)" },
   { code: "STG", labelFr: "Starting grants (STG)", labelEn: "Starting grants (STG)" },
-  { code: "SyG", labelFr: "Synergy grants (SyG)", labelEn: "Synergy grants (SyG)" },
+  { code: "COG", labelFr: "Consolidator grants (COG)", labelEn: "Consolidator grants (COG)" },
+  { code: "ADG", labelFr: "Advanced grants (ADG)", labelEn: "Advanced grants (ADG)" },
   { code: "POC", labelFr: "Proof of Concept (POC)", labelEn: "Proof of Concept (POC)" },
+  { code: "SyG", labelFr: "Synergy grants (SyG)", labelEn: "Synergy grants (SyG)" },
 ];
 
 function useGetParams() {
@@ -60,23 +61,31 @@ function renderDataTable(data: { list: { acronym: string | null; name: string; t
 export default function ErcMainEntities() {
   const { params: urlParams, currentLang } = useGetParams();
   const [selectedDestination, setSelectedDestination] = useState("ALL");
+  const [displayLimit, setDisplayLimit] = useState(10);
   const color = useChartColor();
 
   const queryParams = selectedDestination === "ALL" ? urlParams : `${urlParams}&destination_code=${selectedDestination}`;
 
-  const { data, isLoading } = useQuery({
+  const { data: allData, isLoading } = useQuery({
     queryKey: ["ercMainEntities", queryParams],
-    queryFn: () => getData(queryParams),
+    queryFn: () => getAllData(queryParams),
     enabled: !!queryParams,
   });
+
+  const totalCount = allData?.list?.length ?? 0;
+  const displayedList = allData?.list?.slice(0, displayLimit) ?? [];
+  const data = allData ? { ...allData, list: displayedList } : undefined;
 
   const destLabel = ERC_DESTINATIONS.find((d) => d.code === selectedDestination);
   const titleSuffixFr = destLabel && selectedDestination !== "ALL" ? ` — ${destLabel.labelFr}` : "";
   const titleSuffixEn = destLabel && selectedDestination !== "ALL" ? ` — ${destLabel.labelEn}` : "";
 
+  const isShowingAll = displayLimit >= totalCount;
   const titleConfig = {
-    fr: `Top 10 des entités ERC par financement${titleSuffixFr}`,
-    en: `Top 10 ERC entities by funding${titleSuffixEn}`,
+    fr: isShowingAll
+      ? `Toutes les entités ERC par financement${titleSuffixFr}`
+      : `Top ${displayLimit} des entités ERC par financement${titleSuffixFr}`,
+    en: isShowingAll ? `All ERC entities by funding${titleSuffixEn}` : `Top ${displayLimit} ERC entities by funding${titleSuffixEn}`,
   };
 
   const config = {
@@ -92,27 +101,47 @@ export default function ErcMainEntities() {
     <div className={`fr-mt-5w chart-container chart-container--${color}`}>
       {isLoading || !data ? (
         <DefaultSkeleton />
-      ) : !data.list?.length ? (
+      ) : !data?.list?.length ? (
         <p className="fr-text--sm fr-hint-text">{currentLang === "fr" ? "Aucune donnée disponible." : "No data available."}</p>
       ) : (
         <>
           <ChartWrapper.Title config={{ title: titleConfig, id: config.id }} />
-          <div className="fr-select-group fr-m-2w">
-            <label className="fr-label" htmlFor="erc-destination-select">
-              {currentLang === "fr" ? "Type de financement" : "Funding type"}
-            </label>
-            <select
-              className="fr-select"
-              id="erc-destination-select"
-              value={selectedDestination}
-              onChange={(e) => setSelectedDestination(e.target.value)}
-            >
-              {ERC_DESTINATIONS.map((dest) => (
-                <option key={dest.code} value={dest.code}>
-                  {currentLang === "fr" ? dest.labelFr : dest.labelEn}
-                </option>
-              ))}
-            </select>
+          <div style={{ display: "flex", alignItems: "flex-end", gap: "1rem", flexWrap: "wrap" }} className="fr-m-2w">
+            <div className="fr-select-group" style={{ flex: "0 0 auto", maxWidth: "320px", marginBottom: 0 }}>
+              <label className="fr-label" htmlFor="erc-destination-select">
+                {currentLang === "fr" ? "Type de financement" : "Funding type"}
+              </label>
+              <select
+                className="fr-select"
+                id="erc-destination-select"
+                value={selectedDestination}
+                onChange={(e) => {
+                  setSelectedDestination(e.target.value);
+                  setDisplayLimit(10);
+                }}
+              >
+                {ERC_DESTINATIONS.map((dest) => (
+                  <option key={dest.code} value={dest.code}>
+                    {currentLang === "fr" ? dest.labelFr : dest.labelEn}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <SegmentedControl className="fr-segmented--sm" name="erc-entities-limit">
+              <SegmentedElement checked={displayLimit === 10 && !isShowingAll} label="Top 10" onClick={() => setDisplayLimit(10)} value="10" />
+              <SegmentedElement
+                checked={displayLimit > 10 && !isShowingAll}
+                label="+ 5"
+                onClick={() => setDisplayLimit((prev) => Math.min(prev + 5, totalCount))}
+                value="add5"
+              />
+              <SegmentedElement
+                checked={isShowingAll}
+                label={currentLang === "fr" ? `Tout voir (${totalCount})` : `Show all (${totalCount})`}
+                onClick={() => setDisplayLimit(totalCount)}
+                value="all"
+              />
+            </SegmentedControl>
           </div>
           <ChartWrapper config={config} options={Options(data, currentLang)} renderData={() => renderDataTable(data, currentLang)} />
         </>

@@ -15,3 +15,8 @@ export async function getData(params: string): Promise<ErcMainEntitiesData> {
   if (!params) return { total_fund_eur: 0, list: [] };
   return fetch(`${VITE_APP_SERVER_URL}/european-projects/erc/main-entities?${params}`).then((r) => r.json());
 }
+
+export async function getAllData(params: string): Promise<ErcMainEntitiesData> {
+  if (!params) return { total_fund_eur: 0, list: [] };
+  return fetch(`${VITE_APP_SERVER_URL}/european-projects/erc/main-entities?${params}&limit=all`).then((r) => r.json());
+}
