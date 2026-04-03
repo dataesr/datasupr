@@ -12,7 +12,7 @@ import { getEsQueryPublications, getYearRangeLabel } from "../../../../utils.ts"
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_ES_INDEX_PUBLICATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function PublicationsByTopic({ name }: { name: string | undefined }) {
+export default function PublicationsByLaboratory({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
@@ -37,9 +37,9 @@ export default function PublicationsByTopic({ name }: { name: string | undefined
     ...getEsQueryPublications({ structureIds, yearMax, yearMin }),
     size: 0,
     aggregations: {
-      by_topic: {
+      by_structure: {
         terms: {
-          field: "topics.field.display_name.keyword",
+          field: "structures.encoded_key.keyword",
         },
         aggregations: {
           by_company: {
@@ -53,7 +53,7 @@ export default function PublicationsByTopic({ name }: { name: string | undefined
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["valo-publications-by-topic", structure, structureIds, yearMax, yearMin],
+    queryKey: ["valo-publications-by-laboratory", structure, structureIds, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PUBLICATIONS}`, {
         body: JSON.stringify(body),
@@ -65,8 +65,8 @@ export default function PublicationsByTopic({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  const categories = (data?.aggregations?.by_topic?.buckets ?? []).map((bucket) => bucket?.key);
-  let companies = (data?.aggregations?.by_topic?.buckets ?? []).map((bucket) => bucket.by_company.buckets.map((bucket2) => bucket2.key));
+  const categories = (data?.aggregations?.by_structure?.buckets ?? []).map((bucket) => Object.fromEntries(new URLSearchParams(bucket.key)).label);
+  let companies = (data?.aggregations?.by_structure?.buckets ?? []).map((bucket) => bucket.by_company.buckets.map((bucket2) => bucket2.key));
   companies = [...new Set(companies.flat())]
   const d = {};
   companies.forEach((company) => {
@@ -74,19 +74,19 @@ export default function PublicationsByTopic({ name }: { name: string | undefined
       d[company] = [];
     }
     categories.forEach((category) => {
-      d[company].push(data?.aggregations?.by_topic?.buckets?.find((item) => item.key === category)?.by_company?.buckets?.find((item) => item.key === company)?.doc_count ?? 0);
+      d[company].push(data?.aggregations?.by_structure?.buckets?.find((item) => Object.fromEntries(new URLSearchParams(item.key)).label === category)?.by_company?.buckets?.find((item) => item.key === company)?.doc_count ?? 0);
     });
   });
   const series = Object.keys(d).map((a) => ({ data: d[a], name: a }));
-  const title = `Nombre de publications avec une société privée par domaine thématique ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const title = `Nombre de publications avec une société privée par laboratoire ${getYearRangeLabel({ yearMax, yearMin })}`;
   const tooltip = function (this: any) {
-    return `<b>${this.y}</b> publications par la société <b>${this.series.name}</b> et liées à l'établissement <b>${name}</b> ont été crées en <b>${categories[this.x]}</b>`;
+    return `<b>${this.y}</b> publications par la société <b>${this.series.name}</b> et liées à l'établissement <b>${name}</b> ont été signées par <b>${categories[this.x]}</b>`;
   };
 
   const config = {
     comment: { "fr": <>Ce graphique indique, par années de création, le nombre de familles de brevets liées à l'établissement {name}.</> },
-    id: "publicationsByTopic",
-    integrationURL: `/integration?chart_id=publicationsByTopic&${searchParams.toString()}`,
+    id: "publicationsByLaboratory",
+    integrationURL: `/integration?chart_id=publicationsByLaboratory&${searchParams.toString()}`,
     title,
   };
 
@@ -104,7 +104,7 @@ export default function PublicationsByTopic({ name }: { name: string | undefined
     tooltip: { formatter: tooltip },
     xAxis: {
       categories,
-      title: { text: 'Domaine thématique' },
+      title: { text: 'Laboratoire' },
     },
     yAxis: {
       stackLabels: { enabled: true },
@@ -115,7 +115,7 @@ export default function PublicationsByTopic({ name }: { name: string | undefined
   const optionsLocal: HighchartsOptions = deepMerge(createChartOptions("bar", { chart: { height: "1000px" } }), options);
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="publications-by-topic">
+    <div className={`chart-container chart-container--${color}`} id="publications-by-laboratory">
       <Title as="h2" look="h6">
         {title}
       </Title>

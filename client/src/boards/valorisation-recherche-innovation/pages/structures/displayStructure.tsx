@@ -8,6 +8,7 @@ import { years } from "../../utils";
 import PatentsByClass from "./charts/patents-by-class";
 import PatentsByYear from "./charts/patents-by-year";
 import PatentsCoApplicants from "./charts/patents-co-applicants";
+import PublicationsByLaboratory from "./charts/publications-by-laboratory";
 import PublicationsByTopic from "./charts/publications-by-topic";
 import PublicationsByYear from "./charts/publications-by-year";
 import StartupsByCounty from "./charts/startups-by-county";
@@ -241,7 +242,7 @@ export default function DisplayStructure() {
                   </Row>
                   <Row gutters>
                     <Col>
-                      <div>principaux labos stackés par private company, champs co_labs à venir sur l'index scanr-publications</div>
+                      <PublicationsByLaboratory name={name} />
                     </Col>
                   </Row>
                 </>

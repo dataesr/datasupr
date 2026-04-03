@@ -51,10 +51,7 @@ export default function StartupsByIncubator({ name }: { name: string | undefined
       }).then((response) => response.json()),
   });
 
-  const categories = (data?.aggregations?.by_incubator?.buckets ?? []).map((bucket) => {
-    const incubatorInfo = Object.fromEntries(new URLSearchParams(bucket.key));
-    return incubatorInfo.label;
-  });
+  const categories = (data?.aggregations?.by_incubator?.buckets ?? []).map((bucket) => Object.fromEntries(new URLSearchParams(bucket.key)).label);
   const actives: Number[] = [];
   const notActives: Number[] = [];
   (data?.aggregations?.by_incubator?.buckets ?? []).forEach((bucket) => {
