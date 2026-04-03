@@ -80,7 +80,7 @@ export default function PublicationsByYear({ name }: { name: string | undefined 
       d[year].push(data?.aggregations?.by_company?.buckets?.find((item) => item.key === category)?.by_year?.buckets?.find((item) => item.key === year)?.doc_count ?? 0);
     });
   });
-  const series = Object.keys(d).map((a) => ({ data: d[a], name: a }));
+  const series: { data: any[], name: any }[] = Object.keys(d).map((a) => ({ data: d[a], name: a }));
   series.sort((a, b) => b.name - a.name)
 
   const title = `Nombre de publications avec une société privée par année de publication ${getYearRangeLabel({ yearMax, yearMin })}`;
