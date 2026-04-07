@@ -832,4 +832,230 @@ router.route("/european-projects/erc/filters").get(async (req, res) => {
   });
 });
 
+const PERSONS_COLLECTION = "european-projects_erc-persons_staging";
+
+/**
+ * Route genre ERC - répartition par genre selon le type de financement
+ * Paramètres: country_code, call_year, domaine_scientifique, panel_id
+ */
+router.route("/european-projects/erc/gender-by-destination").get(async (req, res) => {
+  if (!req.query.country_code) {
+    return res.status(400).json({ error: "Le code pays est requis" });
+  }
+
+  try {
+    const filters = {
+      country_code: req.query.country_code.toUpperCase(),
+      gender: { $in: ["female", "male", "non binary"] },
+    };
+
+    if (req.query.call_year) {
+      filters.call_year = { $in: req.query.call_year.split(",") };
+    }
+    if (req.query.destination_code) {
+      filters.destination_code = { $in: req.query.destination_code.split(",") };
+    }
+    if (req.query.panel_id) {
+      filters.panel_code = { $in: req.query.panel_id.split(",") };
+    } else if (req.query.domaine_scientifique) {
+      filters.panel_regroupement_code = req.query.domaine_scientifique.toUpperCase();
+    }
+
+    const data = await db
+      .collection(PERSONS_COLLECTION)
+      .aggregate([
+        { $match: filters },
+        {
+          $group: {
+            _id: {
+              destination_code: "$destination_code",
+              gender: "$gender",
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $group: {
+            _id: "$_id.destination_code",
+            genders: {
+              $push: {
+                gender: "$_id.gender",
+                count: "$count",
+              },
+            },
+            total: { $sum: "$count" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            destination_code: "$_id",
+            genders: 1,
+            total: 1,
+          },
+        },
+        { $sort: { destination_code: 1 } },
+      ])
+      .toArray();
+
+    const totalByGender = await db
+      .collection(PERSONS_COLLECTION)
+      .aggregate([{ $match: filters }, { $group: { _id: "$gender", count: { $sum: 1 } } }, { $project: { _id: 0, gender: "$_id", count: 1 } }])
+      .toArray();
+
+    res.status(200).json({ byDestination: data, total: totalByGender });
+  } catch (error) {
+    console.error("Error fetching ERC gender by destination:", error);
+    res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+});
+
+/**
+ * Route genre ERC - évolution annuelle de la répartition par genre
+ * Paramètres: country_code, destination_code, panel_id, domaine_scientifique
+ */
+router.route("/european-projects/erc/gender-evolution").get(async (req, res) => {
+  if (!req.query.country_code) {
+    return res.status(400).json({ error: "Le code pays est requis" });
+  }
+
+  try {
+    const filters = {
+      country_code: req.query.country_code.toUpperCase(),
+      gender: { $in: ["female", "male", "non binary"] },
+    };
+
+    if (req.query.destination_code) {
+      filters.destination_code = { $in: req.query.destination_code.split(",") };
+    }
+    if (req.query.panel_id) {
+      filters.panel_code = { $in: req.query.panel_id.split(",") };
+    } else if (req.query.domaine_scientifique) {
+      filters.panel_regroupement_code = req.query.domaine_scientifique.toUpperCase();
+    }
+
+    const data = await db
+      .collection(PERSONS_COLLECTION)
+      .aggregate([
+        { $match: filters },
+        {
+          $group: {
+            _id: {
+              call_year: "$call_year",
+              gender: "$gender",
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $group: {
+            _id: "$_id.call_year",
+            genders: {
+              $push: {
+                gender: "$_id.gender",
+                count: "$count",
+              },
+            },
+            total: { $sum: "$count" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            call_year: "$_id",
+            genders: 1,
+            total: 1,
+          },
+        },
+        { $sort: { call_year: 1 } },
+      ])
+      .toArray();
+
+    res.status(200).json({ years: data });
+  } catch (error) {
+    console.error("Error fetching ERC gender evolution:", error);
+    res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+});
+
+/**
+ * Route genre ERC - répartition par genre par domaine scientifique et panel
+ * Paramètres: country_code, call_year, destination_code
+ */
+router.route("/european-projects/erc/gender-by-domain").get(async (req, res) => {
+  if (!req.query.country_code) {
+    return res.status(400).json({ error: "Le code pays est requis" });
+  }
+
+  try {
+    const filters = {
+      country_code: req.query.country_code.toUpperCase(),
+      gender: { $in: ["female", "male", "non binary"] },
+      panel_regroupement_code: { $in: ["LS", "PE", "SH"] },
+    };
+
+    if (req.query.call_year) {
+      filters.call_year = { $in: req.query.call_year.split(",") };
+    }
+    if (req.query.destination_code) {
+      filters.destination_code = { $in: req.query.destination_code.split(",") };
+    }
+
+    const groupBy = req.query.panel_id ? "panel_code" : req.query.domaine_scientifique ? "panel_code" : "panel_regroupement_code";
+    const groupFilters = { ...filters };
+    if (req.query.panel_id) {
+      groupFilters.panel_code = { $in: req.query.panel_id.split(",") };
+    } else if (req.query.domaine_scientifique) {
+      groupFilters.panel_regroupement_code = req.query.domaine_scientifique.toUpperCase();
+    }
+
+    const data = await db
+      .collection(PERSONS_COLLECTION)
+      .aggregate([
+        { $match: groupFilters },
+        {
+          $group: {
+            _id: {
+              group: `$${groupBy}`,
+              domain: "$panel_regroupement_code",
+              gender: "$gender",
+            },
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $group: {
+            _id: {
+              group: "$_id.group",
+              domain: "$_id.domain",
+            },
+            genders: {
+              $push: {
+                gender: "$_id.gender",
+                count: "$count",
+              },
+            },
+            total: { $sum: "$count" },
+          },
+        },
+        {
+          $project: {
+            _id: 0,
+            group: "$_id.group",
+            domain: "$_id.domain",
+            genders: 1,
+            total: 1,
+          },
+        },
+        { $sort: { group: 1 } },
+      ])
+      .toArray();
+
+    res.status(200).json({ byGroup: data });
+  } catch (error) {
+    console.error("Error fetching ERC gender by domain:", error);
+    res.status(500).json({ error: "Erreur interne du serveur" });
+  }
+});
+
 export default router;

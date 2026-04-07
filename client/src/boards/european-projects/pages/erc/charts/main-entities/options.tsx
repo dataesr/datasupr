@@ -11,6 +11,7 @@ export default function Options(data: ErcMainEntitiesData, currentLang: string):
     chart: {
       height: data.list.length * 30 + 150,
     },
+    legend: { enabled: true },
     xAxis: {
       type: "category",
     },
