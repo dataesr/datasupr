@@ -6,9 +6,9 @@ import { useFilteredNationalData } from "../hooks/useFilteredNationalData";
 import SectionNavigation from "./section-navigation";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import {
-  ProduitsEffectifsSection,
-  ScspEncadrementSection,
-  ScspRessourcesSection,
+  // ProduitsEffectifsSection,
+  // ScspEncadrementSection,
+  // ScspRessourcesSection,
   AnalyseSection,
 } from "../sections/sections";
 
@@ -54,27 +54,27 @@ export default function NationalContent() {
 
   const renderSectionContent = () => {
     switch (activeSection) {
-      case "produits-vs-etudiants":
-        return (
-          <ProduitsEffectifsSection
-            data={filteredItems}
-            selectedYear={selectedYear}
-          />
-        );
-      case "scsp-vs-encadrement":
-        return (
-          <ScspEncadrementSection
-            data={filteredItems}
-            selectedYear={selectedYear}
-          />
-        );
-      case "scsp-vs-ressources-propres":
-        return (
-          <ScspRessourcesSection
-            data={filteredItems}
-            selectedYear={selectedYear}
-          />
-        );
+      // case "produits-vs-etudiants":
+      //   return (
+      //     <ProduitsEffectifsSection
+      //       data={filteredItems}
+      //       selectedYear={selectedYear}
+      //     />
+      //   );
+      // case "scsp-vs-encadrement":
+      //   return (
+      //     <ScspEncadrementSection
+      //       data={filteredItems}
+      //       selectedYear={selectedYear}
+      //     />
+      //   );
+      // case "scsp-vs-ressources-propres":
+      //   return (
+      //     <ScspRessourcesSection
+      //       data={filteredItems}
+      //       selectedYear={selectedYear}
+      //     />
+      //   );
       case "comparison":
         return (
           <AnalyseSection
