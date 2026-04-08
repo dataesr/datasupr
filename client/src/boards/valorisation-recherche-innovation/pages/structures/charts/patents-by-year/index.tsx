@@ -1,6 +1,5 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import "highcharts/modules/pattern-fill";
 import { useSearchParams } from "react-router-dom";
 
 import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options.ts";
@@ -38,14 +37,14 @@ export default function PatentsByYear({ name }: { name: string | undefined }) {
     aggregations: {
       by_creation_year: {
         terms: {
-          field: "patents.yearPublication",
-          order: { _key: "asc" },
+          field: 'patents.yearPublication',
+          order: { _key: 'asc' },
           size: 25,
         },
         aggregations: {
           by_international: {
             terms: {
-              field: "isInternational",
+              field: 'isInternational',
             },
           },
         },

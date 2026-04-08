@@ -1,6 +1,5 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import "highcharts/modules/pattern-fill";
 import { useSearchParams } from "react-router-dom";
 
 import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options.ts";

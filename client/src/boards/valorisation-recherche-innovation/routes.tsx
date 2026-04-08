@@ -1,14 +1,16 @@
+import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import NotFoundPage from "../../components/not-found-page.tsx";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import { getI18nLabel } from "../../utils";
-import GlobalLayout from "./components/layouts/global-layout.tsx";
 import i18n from "./i18n.json";
-import Home from "./pages/home";
-import Structures from "./pages/structures";
 
 import "./styles.scss";
+
+const GlobalLayout = lazy(() => import('./components/layouts/global-layout.tsx'));
+const Home = lazy(() => import('./pages/home'));
+const NotFoundPage = lazy(() => import('../../components/not-found-page.tsx'));
+const Structures = lazy(() => import('./pages/structures'));
 
 const RouteWithTitle = ({ titleKey, element }) => {
   useTitle(getI18nLabel(i18n, titleKey));
@@ -19,13 +21,13 @@ const RouteWithTitle = ({ titleKey, element }) => {
 export default function ValorisationRechercheInnovationRoutes() {
   return (
     <Routes>
-      <Route element={<GlobalLayout />}>
+      <Route element={<Suspense><GlobalLayout /></Suspense>}>
         <Route index element={<Navigate to="accueil" replace />} />
         <Route path="" element={<Navigate to="accueil" replace />} />
-        <Route path="accueil" element={<RouteWithTitle titleKey="accueil" element={<Home />} />} />
-        <Route path="etablissement" element={<RouteWithTitle titleKey="etablissement" element={<Structures />} />} />
+        <Route path="accueil" element={<RouteWithTitle titleKey="accueil" element={<Suspense><Home /></Suspense>} />} />
+        <Route path="etablissement" element={<RouteWithTitle titleKey="etablissement" element={<Suspense><Structures /></Suspense>} />} />
       </Route>
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="*" element={<Suspense><NotFoundPage /></Suspense>} />
     </Routes>
   );
 }

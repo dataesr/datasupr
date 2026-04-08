@@ -3,8 +3,6 @@ import HighchartsInstance from "highcharts";
 import { createChartOptions } from "../../components/chart-wrapper/default-options";
 import { getCssColor as getCssColorGlobal } from "../../utils/colors";
 
-const pattern = { height: 4, path: "M 2 2 l 2 2", width: 4 };
-
 const YEAR_MIN = 2009;
 const YEAR_MAX = 2025
 const years: number[] = Array.from(Array(YEAR_MAX - YEAR_MIN + 1).keys()).map((item) => item + YEAR_MIN);
@@ -128,6 +126,5 @@ export {
   getEsQueryStartups,
   getGeneralOptions,
   getYearRangeLabel,
-  pattern,
   years,
 };
