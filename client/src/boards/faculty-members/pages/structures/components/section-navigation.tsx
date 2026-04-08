@@ -16,6 +16,7 @@ const ALL_NAV_ITEMS = [
     { id: "effectifs", label: "Vue d'ensemble" },
     { id: "typologie", label: "Disciplines & âges" },
     { id: "enseignants-chercheurs", label: "Enseignants-chercheurs" },
+    { id: "enseignants-2nd-degre-arts-metiers", label: "Enseignants 2nd degré & Arts et Métiers" },
     { id: "groupes-cnu", label: "Groupes CNU" },
     { id: "sections-cnu", label: "Sections CNU" },
     { id: "comparaison", label: "Positionnement" },

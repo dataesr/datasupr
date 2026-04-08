@@ -7,6 +7,7 @@ import EffectifsSection from "../sections/effectifs";
 import EvolutionsSection from "../sections/evolutions";
 import TypologieSection from "../sections/typologie";
 import EnseignantsChercheurSection from "../sections/enseignants-chercheurs";
+import Enseignants2ndDegreArtsMetiersSection from "../sections/enseignants-2nd-degre-arts-metiers";
 import GroupesCnuSection from "../sections/groupes-cnu";
 import SectionsCnuSection from "../sections/sections-cnu";
 import ComparaisonSection from "../sections/positionning";
@@ -89,6 +90,14 @@ export default function EntityView({ viewType }: Props) {
             case "enseignants-chercheurs":
                 return (
                     <EnseignantsChercheurSection
+                        viewType={viewType}
+                        selectedId={selectedId}
+                        selectedYear={selectedYear}
+                    />
+                );
+            case "enseignants-2nd-degre-arts-metiers":
+                return (
+                    <Enseignants2ndDegreArtsMetiersSection
                         viewType={viewType}
                         selectedId={selectedId}
                         selectedYear={selectedYear}
