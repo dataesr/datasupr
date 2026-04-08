@@ -24,41 +24,41 @@ export default function Router() {
   return (
     <Routes>
       <Route path="/" element={<Suspense><HomePage /></Suspense>} />
-      <Route path="/admin/*" element={<AdminRoutes />} />
-      <Route path="/atlas/*" element={<AtlasRoutes />} />
-      <Route path="/cookies" element={<CookiePolicyPage />} />
-      <Route path="/contact" element={<ContactLayout />}>
-        <Route index element={<ContactPage />} />
+      <Route path="/admin/*" element={<Suspense><AdminRoutes /></Suspense>} />
+      <Route path="/atlas/*" element={<Suspense><AtlasRoutes /></Suspense>} />
+      <Route path="/cookies" element={<Suspense><CookiePolicyPage /></Suspense>} />
+      <Route path="/contact" element={<Suspense><ContactLayout /></Suspense>}>
+        <Route index element={<Suspense><ContactPage /></Suspense>} />
       </Route>
-      <Route path="/datasupr-doc/*" element={<DatasuprDocRoutes />} />
+      <Route path="/datasupr-doc/*" element={<Suspense><DatasuprDocRoutes /></Suspense>} />
       <Route
         path="/european-projects"
         element={<Navigate to="/european-projects/accueil" replace />}
       />
-      <Route path="/european-projects/*" element={<EuropeanProjectsRoutes />} />
+      <Route path="/european-projects/*" element={<Suspense><EuropeanProjectsRoutes /></Suspense>} />
       <Route
         path="/financements-par-aap"
         element={<Navigate to="/financements-par-aap/accueil" replace />}
       />
       <Route path="/financements-par-aap/*" element={<Suspense><FundingsRoutes /></Suspense>} />
-      <Route path="/graduates/*" element={<GraduatesRoutes />} />
-      <Route path="/integration" element={<Integration />} />
-      <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
+      <Route path="/graduates/*" element={<Suspense><GraduatesRoutes /></Suspense>} />
+      <Route path="/integration" element={<Suspense><Integration /></Suspense>} />
+      <Route path="/open-alex/*" element={<Suspense><OpenAlexRoutes /></Suspense>} />
       <Route
         path="/personnel-enseignant"
         element={<Navigate to="/personnel-enseignant/accueil" replace />}
       />
       <Route
         path="/personnel-enseignant/*"
-        element={<FacultyMembersRoutes />}
+        element={<Suspense><FacultyMembersRoutes /></Suspense>}
       />
       <Route
         path="/structures-finance/*"
-        element={<StructuresFinanceRoutes />}
+        element={<Suspense><StructuresFinanceRoutes /></Suspense>}
       />
       <Route path="/teds" element={<Navigate to="/teds/home" replace />} />
-      <Route path="/teds/*" element={<TedsRoutes />} />
-      <Route path="/template/*" element={<TemplateRoutes />} />
+      <Route path="/teds/*" element={<Suspense><TedsRoutes /></Suspense>} />
+      <Route path="/template/*" element={<Suspense><TemplateRoutes /></Suspense>} />
       <Route
         path="/valorisation-recherche-innovation"
         element={
@@ -67,9 +67,9 @@ export default function Router() {
       />
       <Route
         path="/valorisation-recherche-innovation/*"
-        element={<ValorisationRechercheInnovationRoutes />}
+        element={<Suspense><ValorisationRechercheInnovationRoutes /></Suspense>}
       />
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="*" element={<Suspense><NotFoundPage /></Suspense>} />
     </Routes>
   );
 }
