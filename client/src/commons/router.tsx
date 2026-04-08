@@ -1,30 +1,29 @@
-import { lazy } from "react";
+import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import HomePage from "../boards/home-page.tsx";
+const AdminRoutes = lazy(() => import('../boards/admin/routes.tsx'));
+const AtlasRoutes = lazy(() => import('../boards/atlas/routes.tsx'));
+const ContactLayout = lazy(() => import('../pages/contact/layouts/global-layout.tsx'));
+const ContactPage = lazy(() => import('../pages/contact/index.tsx'));
+const CookiePolicyPage = lazy(() => import('../components/cookies/cookie-policy-page/index.tsx'));
+const DatasuprDocRoutes = lazy(() => import('../boards/datasupr-doc/routes.tsx'));
+const EuropeanProjectsRoutes = lazy(() => import('../boards/european-projects/routes.tsx'));
+const FacultyMembersRoutes = lazy(() => import('../boards/faculty-members/routes.tsx'));
+const FundingsRoutes = lazy(() => import('../boards/financements-par-aap/routes.tsx'));
+const GraduatesRoutes = lazy(() => import('../boards/graduates/routes.tsx'));
+const HomePage = lazy(() => import('../boards/home-page.tsx'));
+const Integration = lazy(() => import('../boards/integration/index.tsx'));
+const NotFoundPage = lazy(() => import('../components/not-found-page.tsx'));
+const OpenAlexRoutes = lazy(() => import('../boards/open-alex/routes.tsx'));
+const StructuresFinanceRoutes = lazy(() => import('../boards/structures-finance/routes.tsx'));
+const TedsRoutes = lazy(() => import('../boards/teds/routes.tsx'));
+const TemplateRoutes = lazy(() => import('../boards/template/routes.tsx'));
+const ValorisationRechercheInnovationRoutes = lazy(() => import('../boards/valorisation-recherche-innovation/routes.tsx'));
 
 export default function Router() {
-  const AdminRoutes = lazy(() => import('../boards/admin/routes.tsx'));
-  const AtlasRoutes = lazy(() => import('../boards/atlas/routes.tsx'));
-  const ContactLayout = lazy(() => import('../pages/contact/layouts/global-layout.tsx'));
-  const ContactPage = lazy(() => import('../pages/contact/index.tsx'));
-  const CookiePolicyPage = lazy(() => import('../components/cookies/cookie-policy-page/index.tsx'));
-  const DatasuprDocRoutes = lazy(() => import('../boards/datasupr-doc/routes.tsx'));
-  const EuropeanProjectsRoutes = lazy(() => import('../boards/european-projects/routes.tsx'));
-  const FacultyMembersRoutes = lazy(() => import('../boards/faculty-members/routes.tsx'));
-  const FundingsRoutes = lazy(() => import('../boards/financements-par-aap/routes.tsx'));
-  const GraduatesRoutes = lazy(() => import('../boards/graduates/routes.tsx'));
-  const Integration = lazy(() => import('../boards/integration/index.tsx'));
-  const NotFoundPage = lazy(() => import('../components/not-found-page.tsx'));
-  const OpenAlexRoutes = lazy(() => import('../boards/open-alex/routes.tsx'));
-  const StructuresFinanceRoutes = lazy(() => import('../boards/structures-finance/routes.tsx'));
-  const TedsRoutes = lazy(() => import('../boards/teds/routes.tsx'));
-  const TemplateRoutes = lazy(() => import('../boards/template/routes.tsx'));
-  const ValorisationRechercheInnovationRoutes = lazy(() => import('../boards/valorisation-recherche-innovation/routes.tsx'));
-
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route path="/" element={<Suspense><HomePage /></Suspense>} />
       <Route path="/admin/*" element={<AdminRoutes />} />
       <Route path="/atlas/*" element={<AtlasRoutes />} />
       <Route path="/cookies" element={<CookiePolicyPage />} />
@@ -41,7 +40,7 @@ export default function Router() {
         path="/financements-par-aap"
         element={<Navigate to="/financements-par-aap/accueil" replace />}
       />
-      <Route path="/financements-par-aap/*" element={<FundingsRoutes />} />
+      <Route path="/financements-par-aap/*" element={<Suspense><FundingsRoutes /></Suspense>} />
       <Route path="/graduates/*" element={<GraduatesRoutes />} />
       <Route path="/integration" element={<Integration />} />
       <Route path="/open-alex/*" element={<OpenAlexRoutes />} />
