@@ -7,6 +7,7 @@ import Footer from "../../../../components/footer";
 import i18n from "./i18n.json";
 
 import "../styles.scss";
+import "../../colors.scss";
 
 export default function GlobalLayout() {
   const { pathname } = useLocation();
