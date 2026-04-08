@@ -1,7 +1,10 @@
 import { useMemo } from "react";
-import "highcharts/highcharts-more";
+import Highcharts from "highcharts";
+import HighchartsMore from "highcharts/highcharts-more";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import { createCnuBubbleOptions } from "./options";
+
+(HighchartsMore as any)(Highcharts);
 
 interface CnuBubbleChartProps {
     selectedYear: string;
