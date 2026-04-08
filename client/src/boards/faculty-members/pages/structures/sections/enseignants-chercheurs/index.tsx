@@ -207,10 +207,10 @@ export default function EnseignantsChercheurSection({
             </Row>
             <Row gutters className="fr-mt-3w">
                 <Col xs="12" md="6">
-                    <AgeDistributionChart ageDistribution={currentData?.ageDistribution} selectedYear={""} />
+                    <AgeDistributionChart ageDistribution={currentData?.ageDistribution} selectedYear={selectedYear} />
                 </Col>
                 <Col xs="12" md="6">
-                    <CategoryDistributionChart categoryDistribution={currentData?.categoryDistribution} selectedYear={""} />
+                    <CategoryDistributionChart categoryDistribution={currentData?.categoryDistribution} selectedYear={selectedYear} />
                 </Col>
             </Row>
 

@@ -41,7 +41,7 @@ export default function AgeDistributionChart({
             config={{
                 id: "ec-age-distribution",
                 title: {
-                    fr: `Répartition par tranche d'âge (${selectedYear})`,
+                    fr: `Répartition par tranche d'âge et par genre (${selectedYear})`,
                     look: "h5" as const,
                 },
                 readingKey: readingKey || undefined,

@@ -43,7 +43,7 @@ export default function CategoryDistributionChart({
             config={{
                 id: "category-distribution",
                 title: {
-                    fr: "Répartition par catégorie et par genre",
+                    fr: `Répartition par catégorie et par genre (${selectedYear})`,
                     look: "h5" as const,
                 },
                 readingKey: readingKey ? { fr: readingKey } : undefined,

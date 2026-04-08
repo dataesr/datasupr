@@ -17,11 +17,6 @@ export function createGenderEvolutionOptions(
         return m?.count || 0;
     });
 
-    const femalePctData = genderEvolution.map((e: any) => {
-        const f = e.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
-        return e.total > 0 ? Math.round((f / e.total) * 1000) / 10 : 0;
-    });
-
     return createChartOptions("line", {
         chart: { height: 350 },
         xAxis: {
@@ -29,19 +24,7 @@ export function createGenderEvolutionOptions(
             title: { text: null },
             labels: { rotation: -45 },
         },
-        yAxis: [
-            {
-                title: { text: "Effectif" },
-                min: 0,
-            },
-            {
-                title: { text: "% Femmes" },
-                opposite: true,
-                min: 0,
-                max: 100,
-                labels: { format: "{value}%" },
-            },
-        ],
+        yAxis: { min: 0, title: { text: "Effectif" } },
         tooltip: {
             shared: true,
             headerFormat: "<b>{point.key}</b><br/>",
@@ -74,17 +57,7 @@ export function createGenderEvolutionOptions(
                 data: femaleData,
                 color: getCssColor("fm-femmes"),
                 yAxis: 0,
-            },
-            {
-                type: "line",
-                name: "% Femmes",
-                data: femalePctData,
-                color: getCssColor("fm-indicateur"),
-                yAxis: 1,
-                dashStyle: "Dash",
-                tooltip: { valueSuffix: "%" },
-                lineWidth: 2,
-            },
+            }
         ],
     });
 }

@@ -16,17 +16,26 @@ export default function GenderEvolutionChart({
         const last = genderEvolution[genderEvolution.length - 1];
         const firstFemale = first?.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
         const lastFemale = last?.gender_breakdown?.find((g: any) => g.gender === "Féminin")?.count || 0;
-        const firstPct = first?.total > 0 ? ((firstFemale / first.total) * 100).toFixed(1) : "0";
-        const lastPct = last?.total > 0 ? ((lastFemale / last.total) * 100).toFixed(1) : "0";
+        const firstMale = first?.gender_breakdown?.find((g: any) => g.gender === "Masculin")?.count || 0;
+        const lastMale = last?.gender_breakdown?.find((g: any) => g.gender === "Masculin")?.count || 0;
+        const diffFemale = lastFemale - firstFemale;
+        const diffMale = lastFemale - firstFemale;
+        const pctFemale = firstFemale > 0 ? ((diffFemale / firstFemale) * 100).toFixed(1) : "0";
+        const pctMale = firstMale > 0 ? ((diffMale / firstMale) * 100).toFixed(1) : "0";
+
 
         return {
             options: createGenderEvolutionOptions(genderEvolution),
             readingKey: {
                 fr: (
                     <>
-                        La part des femmes parmi les enseignants-chercheurs est passée de{" "}
-                        <strong>{firstPct}%</strong> en {first._id} à{" "}
-                        <strong>{lastPct}%</strong> en {last._id}.
+                        Entre <strong>{first._id}</strong> et <strong>{last._id}</strong>,
+                        l'effectif enseignants-chercheurs des femmes est passé de{" "}
+                        <strong>{firstFemale.toLocaleString("fr-FR")}</strong> à{" "}
+                        <strong>{lastFemale.toLocaleString("fr-FR")}</strong> ({diffFemale >= 0 ? "+" : ""}{pctFemale}%).
+                        En parallèle, l'effectif enseignants-chercheurs des hommes est passé de{" "}
+                        <strong>{firstMale.toLocaleString("fr-FR")}</strong> à{" "}
+                        <strong>{lastMale.toLocaleString("fr-FR")}</strong> ({diffMale >= 0 ? "+" : ""}{pctMale}%).
                     </>
                 ),
             },
