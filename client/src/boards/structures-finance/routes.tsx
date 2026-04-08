@@ -1,12 +1,14 @@
+import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 
-import NotFoundPage from "../../components/not-found-page.tsx";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
-import AccueilView from "./pages/accueil/index.tsx";
-import DefinitionsView from "./pages/definitions/index.tsx";
-import FAQView from "./pages/faq/index.tsx";
-import NationalView from "./pages/national/index.tsx";
-import StructuresView from "./pages/structures/index.tsx";
+
+const NotFoundPage = lazy(() => import("../../components/not-found-page.tsx"));
+const AccueilView = lazy(() => import("./pages/accueil/index.tsx"));
+const DefinitionsView = lazy(() => import("./pages/definitions/index.tsx"));
+const FAQView = lazy(() => import("./pages/faq/index.tsx"));
+const NationalView = lazy(() => import("./pages/national/index.tsx"));
+const StructuresView = lazy(() => import("./pages/structures/index.tsx"));
 
 import "./styles.scss";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
@@ -34,7 +36,7 @@ export default function StructuresFinanceRoutes() {
           element={
             <RouteWithTitle
               titleKey="Accueil - Financement des établissements d'enseignement supérieur français"
-              element={<AccueilView />}
+              element={<Suspense><AccueilView /></Suspense>}
             />
           }
         />
@@ -43,7 +45,7 @@ export default function StructuresFinanceRoutes() {
           element={
             <RouteWithTitle
               titleKey="Definitions - Financement des établissements d'enseignement supérieur français"
-              element={<DefinitionsView />}
+              element={<Suspense><DefinitionsView /></Suspense>}
             />
           }
         />
@@ -53,7 +55,7 @@ export default function StructuresFinanceRoutes() {
             <RouteWithTitle
               titleKey="Vue par établissement - Financement des établissements d'enseignement supérieur français
 "
-              element={<StructuresView />}
+              element={<Suspense><StructuresView /></Suspense>}
             />
           }
         />
@@ -62,7 +64,7 @@ export default function StructuresFinanceRoutes() {
           element={
             <RouteWithTitle
               titleKey="FAQ - Financement des établissements d'enseignement supérieur français"
-              element={<FAQView />}
+              element={<Suspense><FAQView /></Suspense>}
             />
           }
         />
@@ -71,12 +73,12 @@ export default function StructuresFinanceRoutes() {
           element={
             <RouteWithTitle
               titleKey="Vue nationale - Financement des établissements d'enseignement supérieur français"
-              element={<NationalView />}
+              element={<Suspense><NationalView /></Suspense>}
             />
           }
         />
       </Route>
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="*" element={<Suspense><NotFoundPage /></Suspense>} />
     </Routes>
   );
 }

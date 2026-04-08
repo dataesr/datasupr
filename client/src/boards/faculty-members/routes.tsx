@@ -1,15 +1,17 @@
+import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
-import NotFoundPage from "../../components/not-found-page.tsx";
 import { useTitle } from "../../hooks/usePageTitle.tsx";
 import { getI18nLabel } from "../../utils.tsx";
 import i18n from "./title-i18n.json";
 
 import "./styles.scss";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
-import Home from "./pages/home/index.tsx";
-import DataView from "./pages/structures/index.tsx";
-import DefinitionsPage from "./pages/definitions/index.tsx";
+
+const NotFoundPage = lazy(() => import("../../components/not-found-page.tsx"));
+const Home = lazy(() => import("./pages/home/index.tsx"));
+const DataView = lazy(() => import("./pages/structures/index.tsx"));
+const DefinitionsPage = lazy(() => import("./pages/definitions/index.tsx"));
 
 const RouteWithTitle = ({ titleKey, element }) => {
   useTitle(getI18nLabel(i18n, titleKey));
@@ -26,7 +28,7 @@ export default function FacultyMembersRoutes() {
           element={
             <RouteWithTitle
               titleKey="Accueil - Le personnel enseignant de l'enseignement supérieur français"
-              element={<Home />}
+              element={<Suspense><Home /></Suspense>}
             />
           }
         />
@@ -35,7 +37,7 @@ export default function FacultyMembersRoutes() {
           element={
             <RouteWithTitle
               titleKey="Établissements - Personnel enseignant"
-              element={<DataView viewType="structure" />}
+              element={<Suspense><DataView viewType="structure" /></Suspense>}
             />
           }
         />
@@ -44,7 +46,7 @@ export default function FacultyMembersRoutes() {
           element={
             <RouteWithTitle
               titleKey="Disciplines - Personnel enseignant"
-              element={<DataView viewType="discipline" />}
+              element={<Suspense><DataView viewType="discipline" /></Suspense>}
             />
           }
         />
@@ -53,7 +55,7 @@ export default function FacultyMembersRoutes() {
           element={
             <RouteWithTitle
               titleKey="Régions - Personnel enseignant"
-              element={<DataView viewType="region" />}
+              element={<Suspense><DataView viewType="region" /></Suspense>}
             />
           }
         />
@@ -62,7 +64,7 @@ export default function FacultyMembersRoutes() {
           element={
             <RouteWithTitle
               titleKey="Académies - Personnel enseignant"
-              element={<DataView viewType="academie" />}
+              element={<Suspense><DataView viewType="academie" /></Suspense>}
             />
           }
         />
@@ -71,12 +73,12 @@ export default function FacultyMembersRoutes() {
           element={
             <RouteWithTitle
               titleKey="Définitions - Personnel enseignant"
-              element={<DefinitionsPage />}
+              element={<Suspense><DefinitionsPage /></Suspense>}
             />
           }
         />
       </Route>
-      <Route path="*" element={<NotFoundPage />} />
+      <Route path="*" element={<Suspense><NotFoundPage /></Suspense>} />
     </Routes>
   );
 }

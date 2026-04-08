@@ -53,7 +53,7 @@ export default function PageHeader({ data, onClose }: PageHeaderProps) {
             </Text>
           )}
         </Col>
-        <Col xs="12" md="4" className="text-right">
+        <Col xs="12" md="4" style={{ display: "flex", justifyContent: "flex-end" }}>
           <Button
             variant="tertiary"
             icon="arrow-go-back-line"
