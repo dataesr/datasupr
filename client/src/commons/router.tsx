@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { useTitle } from "../hooks/usePageTitle.tsx";
 
 const AdminRoutes = lazy(() => import('../boards/admin/routes.tsx'));
 const AtlasRoutes = lazy(() => import('../boards/atlas/routes.tsx'));
@@ -20,10 +21,15 @@ const TedsRoutes = lazy(() => import('../boards/teds/routes.tsx'));
 const TemplateRoutes = lazy(() => import('../boards/template/routes.tsx'));
 const ValorisationRechercheInnovationRoutes = lazy(() => import('../boards/valorisation-recherche-innovation/routes.tsx'));
 
+const RouteWithTitle = ({ titleKey, element }) => {
+  useTitle(titleKey);
+  return element;
+};
+
 export default function Router() {
   return (
     <Routes>
-      <Route path="/" element={<Suspense><HomePage /></Suspense>} />
+      <Route path="/" element={<RouteWithTitle titleKey="Accueil - dataEsr" element={<Suspense><HomePage /></Suspense>} />} />
       <Route path="/admin/*" element={<Suspense><AdminRoutes /></Suspense>} />
       <Route path="/atlas/*" element={<Suspense><AtlasRoutes /></Suspense>} />
       <Route path="/cookies" element={<Suspense><CookiePolicyPage /></Suspense>} />

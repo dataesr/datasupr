@@ -23,6 +23,11 @@ const STATUS_COLORS: Record<string, string> = {
     titulaire_non_chercheur: getCssColor("fm-statut-titulaire"),
     non_titulaire: getCssColor("fm-statut-non-permanent"),
 };
+const AGE_COLORS: Record<string, string> = {
+    "35 ans et moins": getCssColor("fm-age-35-et-moins-ec"),
+    "36 à 55 ans": getCssColor("fm-age-36-55-ec"),
+    "56 ans et plus": getCssColor("fm-age-56-et-plus-ec"),
+};
 
 export default function EffectifsSection({
     selectedYear,
@@ -58,12 +63,10 @@ export default function EffectifsSection({
         <>
             <div className="section-header fr-mb-5w">
                 <Title as="h2" look="h5" id="section-effectifs-title" className="section-header__title">
-                    Vue d'ensemble des effectifs
+                    Effectif global
                 </Title>
             </div>
-
             <div className="fr-mb-4w">
-                <Title as="h3" look="h6" className="fr-mb-3w">Effectif global</Title>
                 <Row gutters>
                     <Col xs="12" md="4">
                         <MetricCard
@@ -153,7 +156,7 @@ export default function EffectifsSection({
                                 title={ag._id || "Non précisé"}
                                 value={(ag.total || 0).toLocaleString("fr-FR")}
                                 detail={pct(ag.total || 0)}
-                                color={getCssColor("blue-france-main-525")}
+                                color={AGE_COLORS[ag._id] ?? getCssColor("blue-france-main-525")}
                                 evolutionData={toSpark(ageEvo, (e) =>
                                     e.age_breakdown?.find((a: any) => a.age_class === ag._id)?.count || 0)}
                             />

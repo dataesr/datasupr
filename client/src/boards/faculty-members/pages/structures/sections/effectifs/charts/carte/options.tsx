@@ -21,14 +21,20 @@ export function createMapOptions({
 }: MapOptionsParams): Highcharts.Options {
     const hommesColor = getCssColor("fm-hommes");
     const femmesColor = getCssColor("fm-femmes");
+    const colorLight = getCssColor("blue-cumulus-main-526");
+    const colorMid = getCssColor("blue-france-main-525");
+    const colorDark = getCssColor("blue-ecume-main-400");
+    const bgColor = getCssColor("background-default-grey");
+    const textColor = getCssColor("text-default-grey");
+    const borderColor = getCssColor("border-default-grey");
 
     return {
         chart: {
             map: mapDataIE as any,
-            backgroundColor: "var(--background-default-grey)",
+            backgroundColor: "transparent",
             height: "500px",
             spacing: [0, 0, 0, 0],
-            margin: [20, 10, 80, 10],
+            margin: [10, 0, 90, 0],
             style: { fontFamily: "Marianne, sans-serif" },
         },
         title: { text: "" },
@@ -41,32 +47,35 @@ export function createMapOptions({
         },
         colorAxis: {
             stops: [
-                [0, "var(--blue-cumulus-850)"],
-                [0.3, "var(--blue-cumulus-main-526)"],
-                [0.7, "var(--blue-ecume-sun-247)"],
-                [1, "var(--blue-ecume-sun-247)"],
+                [0, colorLight],
+                [0.5, colorMid],
+                [1, colorDark],
             ],
             min: 0,
             max: maxValue,
             type: "linear",
             labels: {
                 format: "{value:,.0f}",
-                style: { fontSize: "12px", color: "var(--text-default-grey)" },
+                style: { fontSize: "11px", color: textColor },
             },
             layout: "horizontal" as any,
-            width: "100%",
+            width: "70%",
         },
         tooltip: {
             useHTML: true,
             headerFormat: "",
+            backgroundColor: bgColor,
+            borderColor: borderColor,
+            shadow: true,
             pointFormatter: function () {
                 const point = this as any;
                 return `
-          <div style="padding:8px;">
-            <strong style="color:var(--blue-france-main-525)">${point.name}</strong><br/>
-            <span>Total : <strong>${point.options.value?.toLocaleString("fr-FR")}</strong></span><br/>
-            <span style="color:${hommesColor}">♂ Hommes : ${point.options.male_count?.toLocaleString("fr-FR")} (${point.options.male_percent}%)</span><br/>
-            <span style="color:${femmesColor}">♀ Femmes : ${point.options.female_count?.toLocaleString("fr-FR")} (${point.options.female_percent}%)</span>
+          <div style="padding:10px 14px; min-width:210px;">
+            <strong style="font-size:13px; color:${colorDark}">${point.name}</strong>
+            <hr style="margin:6px 0; border:none; border-top:1px solid ${borderColor};" />
+            <div style="margin-bottom:6px; font-size:12px;">Total : <strong>${point.options.value?.toLocaleString("fr-FR")}</strong> enseignants</div>
+            <div style="color:${hommesColor}; font-size:12px; margin-bottom:3px;">♂ ${point.options.male_count?.toLocaleString("fr-FR")} hommes (${point.options.male_percent}%)</div>
+            <div style="color:${femmesColor}; font-size:12px;">♀ ${point.options.female_count?.toLocaleString("fr-FR")} femmes (${point.options.female_percent}%)</div>
           </div>`;
             },
         },
@@ -76,19 +85,19 @@ export function createMapOptions({
                 data: chartData,
                 joinBy: "hc-key",
                 name: "Enseignants",
-                borderColor: "var(--border-default-grey)",
-                borderWidth: 0.5,
+                borderColor: bgColor,
+                borderWidth: 1.5,
                 states: {
-                    hover: { color: "var(--blue-france-main-525)", borderWidth: 2 },
+                    hover: { brightness: 0.15, borderWidth: 2, borderColor: colorDark },
                 },
                 dataLabels: {
                     enabled: true,
                     format: "{point.name}",
                     style: {
-                        fontSize: "10px",
+                        fontSize: "9px",
                         fontWeight: "normal",
-                        textOutline: "2px white",
-                        color: "var(--text-default-grey)",
+                        textOutline: `2px ${bgColor}`,
+                        color: textColor,
                     },
                 },
             },

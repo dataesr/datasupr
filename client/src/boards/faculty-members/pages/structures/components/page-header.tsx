@@ -196,7 +196,7 @@ export default function PageHeader({
                                 const rows = [
                                     { key: "permanent", label: "Permanents", icon: "fr-icon-briefcase-fill", variant: "page-header__stat-icon--green-emeraude", count: permanentCount },
                                     { key: "enseignant_chercheur", label: "Enseignants-chercheurs", icon: "fr-icon-microscope-fill", variant: "page-header__stat-icon--blue-france", count: ecCount },
-                                    { key: "non_titulaire", label: "Non permanents", icon: "fr-icon-time-fill", variant: "page-header__stat-icon--yellow-tournesol", count: nonTitCount },
+                                    { key: "non_titulaire", label: "Non permanents", icon: "fr-icon-time-fill", variant: "page-header__stat-icon--purple-glycine", count: nonTitCount },
                                 ];
                                 return rows.map(({ key, label, icon, variant, count }) => {
                                     const pct = totalCount > 0 ? ((count / totalCount) * 100).toFixed(0) : "0";

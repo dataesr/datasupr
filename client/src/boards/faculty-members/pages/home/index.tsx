@@ -60,7 +60,7 @@ function HeroSection() {
           <Col xs="12" lg="6">
             <div className="fm-accueil-hero__illustration">
               <img
-                src="/artwork/pictograms/institutions/money.svg"
+                src="/artwork/pictograms/buildings/school.svg"
                 alt=""
                 aria-hidden="true"
               />
@@ -149,7 +149,7 @@ function MapSection() {
           Cliquez sur une région pour explorer ses données en détail
         </p>
         <Row>
-          <Col xs="12" lg="8" offsetLg="2">
+          <Col xs="12">
             <FranceMap
               year={latestYear}
               onRegionClick={handleRegionClick}

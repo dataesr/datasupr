@@ -80,7 +80,7 @@ export const FM_METRICS_CONFIG = {
   taux_temps_plein: {
     label: "Part temps plein",
     format: "percent" as const,
-    color: getCssColor("scale-3"),
+    color: getCssColor("fm-quotite-temps-plein"),
     category: "Temps de travail",
     suffix: "%",
   },
