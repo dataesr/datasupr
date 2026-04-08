@@ -3,7 +3,7 @@ import { useMetricEvolution } from "../../api";
 import { MetricChartCard } from "../../components/metric-chart-card";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
-import { SectionBudgetWarning } from "../../../../components/section-budget-warning";
+// import { SectionBudgetWarning } from "../../../../components/section-budget-warning";
 import { getCssColor } from "../../../../../../utils/colors";
 
 interface MoyensHumainsSectionProps {
@@ -17,7 +17,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
       aria-labelledby="section-moyens-humains-title"
       className="section-container"
     >
-      <div className="section-header fr-mb-5w">
+      {/* <div className="section-header fr-mb-5w">
         <Title
           as="h2"
           look="h5"
@@ -79,7 +79,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
             />
           </Col>
         </Row>
-      </div>
+      </div> */}
 
       <div>
         <Title as="h3" look="h5" className="fr-mb-3w">
@@ -92,11 +92,11 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
               value={
                 data.charges_de_personnel != null
                   ? `${Number(data.charges_de_personnel).toLocaleString(
-                      "fr-FR",
-                      {
-                        maximumFractionDigits: 0,
-                      }
-                    )} €`
+                    "fr-FR",
+                    {
+                      maximumFractionDigits: 0,
+                    }
+                  )} €`
                   : "—"
               }
               detail="Dépenses de masse salariale"
@@ -112,12 +112,12 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
               value={
                 data.charges_de_personnel_produits_encaissables != null
                   ? `${data.charges_de_personnel_produits_encaissables.toLocaleString(
-                      "fr-FR",
-                      {
-                        minimumFractionDigits: 1,
-                        maximumFractionDigits: 1,
-                      }
-                    )} %`
+                    "fr-FR",
+                    {
+                      minimumFractionDigits: 1,
+                      maximumFractionDigits: 1,
+                    }
+                  )} %`
                   : "—"
               }
               detail="Part des produits encaissables"
@@ -136,12 +136,12 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
                 value={
                   data.taux_de_remuneration_des_permanents != null
                     ? `${data.taux_de_remuneration_des_permanents.toLocaleString(
-                        "fr-FR",
-                        {
-                          minimumFractionDigits: 1,
-                          maximumFractionDigits: 1,
-                        }
-                      )} %`
+                      "fr-FR",
+                      {
+                        minimumFractionDigits: 1,
+                        maximumFractionDigits: 1,
+                      }
+                    )} %`
                     : "—"
                 }
                 detail="Part des dépenses de personnel"

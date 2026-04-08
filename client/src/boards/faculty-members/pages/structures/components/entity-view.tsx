@@ -155,6 +155,7 @@ export default function EntityView({ viewType }: Props) {
                         data={dashboardData}
                         evolutionData={evolutionData}
                         entityName={entityName}
+                        selectedId={selectedId}
                         selectedYear={selectedYear}
                         totalCount={totalCount}
                         viewType={viewType}

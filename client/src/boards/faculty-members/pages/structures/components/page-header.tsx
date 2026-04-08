@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Row, Col, Title, Text, Button } from "@dataesr/dsfr-plus";
-import { ViewType } from "../api";
+import { ViewType, useFacultyResearchTeachers } from "../api";
 import { getCssColor } from "../../../../../utils/colors";
 import "../styles.scss";
 
@@ -34,6 +34,7 @@ interface PageHeaderProps {
     data: any;
     evolutionData?: any;
     entityName: string;
+    selectedId: string;
     selectedYear: string;
     totalCount: number;
     viewType: ViewType;
@@ -44,6 +45,7 @@ export default function PageHeader({
     data,
     evolutionData,
     entityName,
+    selectedId,
     selectedYear,
     totalCount,
     viewType,
@@ -53,6 +55,12 @@ export default function PageHeader({
     const statusDistribution = data?.status_distribution || [];
     const ageDistribution = data?.age_distribution || [];
     const topItems = data?.top_items || [];
+
+    const { data: researchData } = useFacultyResearchTeachers(viewType, selectedId, selectedYear);
+    const cnuGroups: any[] = useMemo(
+        () => [...(researchData?.cnuGroups || [])].sort((a, b) => b.totalCount - a.totalCount).slice(0, 6),
+        [researchData]
+    );
 
     const maleCount =
         genderDistribution.find((g: any) => g._id === "Masculin")?.count || 0;
@@ -147,7 +155,6 @@ export default function PageHeader({
                                                     {Number(trends.totalDiff) >= 0 ? "↑" : "↓"} {trends.totalDiff >= 0 ? "+" : ""}{trends.totalPct}%
                                                 </span>
                                                 {" "}vs {trends.prevYear}
-                                                {trends.yearRange && <> · Données {trends.yearRange}</>}
                                             </Text>
                                         )}
                                     </div>
@@ -280,6 +287,56 @@ export default function PageHeader({
                     </div>
                 </Col>
             </Row>
+
+            {cnuGroups.length > 0 && (
+                <Row gutters>
+                    <Col xs="12">
+                        <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w">
+                            <Text size="xs" className="fr-mb-2w fr-text-mention--grey" bold>
+                                Groupes CNU · Enseignants-chercheurs
+                            </Text>
+                            <div className="page-header__cnu-tree">
+                                {cnuGroups.map((group: any, idx: number) => {
+                                    const color = getCssColor(`scale-${(idx % 14) + 1}`);
+                                    return (
+                                        <div key={group.cnuGroupId} className="page-header__cnu-tree-group">
+                                            <div className="page-header__cnu-tree-group-header">
+                                                <span
+                                                    className="page-header__cnu-dot"
+                                                    style={{ backgroundColor: color }}
+                                                    aria-hidden="true"
+                                                />
+                                                <span className="page-header__cnu-tree-group-name" title={group.cnuGroupLabel}>
+                                                    {group.cnuGroupLabel}
+                                                </span>
+                                                <span className="page-header__cnu-group-count" style={{ color }}>
+                                                    {group.totalCount.toLocaleString("fr-FR")}
+                                                </span>
+                                            </div>
+                                            {group.cnuSections?.length > 0 && (
+                                                <ul className="page-header__cnu-tree-sections">
+                                                    {group.cnuSections.map((s: any) => (
+                                                        <li key={s.cnuSectionId} className="page-header__cnu-tree-section">
+                                                            <span className="page-header__cnu-tree-connector" aria-hidden="true" />
+                                                            <span className="page-header__cnu-tree-section-id">§{s.cnuSectionId}</span>
+                                                            <span className="page-header__cnu-tree-section-label" title={s.cnuSectionLabel}>
+                                                                {s.cnuSectionLabel}
+                                                            </span>
+                                                            <span className="page-header__cnu-group-count">
+                                                                {s.totalCount.toLocaleString("fr-FR")}
+                                                            </span>
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </Col>
+                </Row>
+            )}
         </header>
     );
 }

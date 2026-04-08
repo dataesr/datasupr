@@ -92,7 +92,7 @@ export function FinancementsSection({
         </Row>
       </div>
 
-      <div className="fr-mb-4w">
+      {/* <div className="fr-mb-4w">
         <Title as="h3" look="h5" className="fr-mb-3w">
           Financements attribués à l’établissement par le ministère en charge de
           l'Enseignement supérieur
@@ -158,7 +158,7 @@ export function FinancementsSection({
             />
           </Col>
         </Row>
-      </div>
+      </div> */}
 
       <div className="fr-mb-4w">
         <h3 className="fr-h5 fr-mb-3w">Détail des ressources propres</h3>
@@ -169,8 +169,8 @@ export function FinancementsSection({
               value={
                 data.tot_ress_formation != null
                   ? `${data.tot_ress_formation.toLocaleString("fr-FR", {
-                      maximumFractionDigits: 0,
-                    })} €`
+                    maximumFractionDigits: 0,
+                  })} €`
                   : "—"
               }
               detail={
@@ -190,8 +190,8 @@ export function FinancementsSection({
               value={
                 data.tot_ress_recherche != null
                   ? `${data.tot_ress_recherche.toLocaleString("fr-FR", {
-                      maximumFractionDigits: 0,
-                    })} €`
+                    maximumFractionDigits: 0,
+                  })} €`
                   : "—"
               }
               detail={
@@ -211,8 +211,8 @@ export function FinancementsSection({
               value={
                 data.tot_ress_autres_recette != null
                   ? `${data.tot_ress_autres_recette.toLocaleString("fr-FR", {
-                      maximumFractionDigits: 0,
-                    })} €`
+                    maximumFractionDigits: 0,
+                  })} €`
                   : "—"
               }
               detail={
