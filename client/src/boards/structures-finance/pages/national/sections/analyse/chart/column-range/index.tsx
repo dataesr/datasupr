@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import Highcharts from "highcharts";
-import HighchartsMore from "highcharts/highcharts-more";
+import "highcharts/highcharts-more";
 import "../../../../styles.scss";
 import { Text, Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper/index.tsx";
@@ -14,8 +14,6 @@ import {
 } from "../../../../../../config/metrics-config.ts";
 import { createColumnRangeOptions, type ColumnRangePoint } from "./options.tsx";
 import { RenderDataVariation } from "./render-data.tsx";
-
-(HighchartsMore as any)(Highcharts);
 
 
 interface ColumnRangeChartProps {
