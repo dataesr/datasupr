@@ -5,6 +5,8 @@ import Footer from "../../../../components/footer";
 import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
 
+import "./styles.scss";
+
 const FILTER_PARAMS = ["type", "typologie", "region", "rce", "devimmo"];
 
 export default function GlobalLayout() {
@@ -20,7 +22,7 @@ export default function GlobalLayout() {
 
   return (
     <>
-      <header className="fr-header">
+      <header role="banner" className="fr-header">
         <div className="fr-header__body">
           <div className="fr-container">
             <div className="fr-header__body-row">
@@ -67,6 +69,7 @@ export default function GlobalLayout() {
             <div className="fr-header__menu-links"></div>
             <nav
               className="fr-nav"
+              role="navigation"
               aria-label="Menu principal"
             >
               <ul className="fr-nav__list">
