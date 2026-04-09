@@ -1,6 +1,5 @@
 import { useMemo, useState } from "react";
 import Highcharts from "highcharts";
-import "highcharts/highcharts-more";
 import "../../../../styles.scss";
 import { Text, Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper/index.tsx";
