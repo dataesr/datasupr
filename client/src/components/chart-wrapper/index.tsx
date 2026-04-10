@@ -1,10 +1,15 @@
 import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Title } from "@dataesr/dsfr-plus";
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
-import "highcharts/modules/exporting";
-import "highcharts/modules/export-data";
-import "highcharts/modules/map";
-import "highcharts/modules/offline-exporting";
+import "highcharts/es-modules/masters/highcharts-more.src.js";
+import "highcharts/es-modules/masters/modules/exporting.src.js";
+import "highcharts/es-modules/masters/modules/export-data.src.js";
+import "highcharts/es-modules/masters/modules/map.src.js";
+import "highcharts/es-modules/masters/modules/flowmap.src.js";
+import "highcharts/es-modules/masters/modules/offline-exporting.src.js";
+import "highcharts/es-modules/masters/modules/variable-pie.src.js";
+import "highcharts/es-modules/masters/modules/treemap.src.js";
+
 import React, { useId, useRef, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";

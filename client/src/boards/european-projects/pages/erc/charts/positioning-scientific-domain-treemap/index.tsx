@@ -1,4 +1,4 @@
-import "highcharts/modules/treemap";
+// import "highcharts/modules/treemap";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";

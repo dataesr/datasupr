@@ -5,12 +5,9 @@ import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
 import { useGetParams } from "./utils";
 import { getData } from "./query";
 import options from "./options";
-import Highcharts from "highcharts";
-import HighchartsMore from "highcharts/highcharts-more";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import { useSearchParams } from "react-router-dom";
-(HighchartsMore as any)(Highcharts);
 
 import i18nGlobal from "../../../../i18n-global.json";
 import i18nLocal from "./i18n.json";

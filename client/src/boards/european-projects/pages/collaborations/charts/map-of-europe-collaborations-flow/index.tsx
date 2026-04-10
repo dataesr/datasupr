@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import HighchartsInstance from "highcharts";
 import { useSearchParams } from "react-router-dom";
-import "highcharts/modules/flowmap";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { getCollaborations } from "../countries-collaborations-table/query";
