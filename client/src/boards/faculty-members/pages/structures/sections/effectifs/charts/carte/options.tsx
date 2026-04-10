@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import mapDataIE from "../../../../../../../../assets/regions.json";
 import { getCssColor } from "../../../../../../../../utils/colors";
 

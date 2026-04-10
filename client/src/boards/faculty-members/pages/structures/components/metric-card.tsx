@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { Title } from "@dataesr/dsfr-plus";
 
 interface MetricCardProps {

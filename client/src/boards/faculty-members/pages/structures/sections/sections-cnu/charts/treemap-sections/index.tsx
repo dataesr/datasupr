@@ -1,4 +1,3 @@
-import "highcharts/modules/treemap";
 import { useMemo } from "react";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import { getCssColor } from "../../../../../../../../utils/colors";

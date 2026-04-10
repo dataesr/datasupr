@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import "highcharts/modules/treemap";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
 import { createCnuTreemapOptions } from "./options";
 
