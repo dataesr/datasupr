@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import Highcharts from "highcharts";
+import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import {
   Text,
   Row,

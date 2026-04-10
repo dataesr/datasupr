@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import { getCssColor } from "../../../../../../utils/colors";
 
@@ -108,22 +108,19 @@ export const createScatterOptions = (
         const point = this as any;
         return `
           <div style="padding:10px">
-            <div style="font-weight:bold;margin-bottom:8px;font-size:14px">${
-              point.name
-            }</div>
-            <div style="margin-bottom:4px;color:#666;font-size:12px">${
-              point.type
-            } • ${point.region}</div>
+            <div style="font-weight:bold;margin-bottom:8px;font-size:14px">${point.name
+          }</div>
+            <div style="margin-bottom:4px;color:#666;font-size:12px">${point.type
+          } • ${point.region}</div>
             <div style="margin-top:8px;padding-top:8px;border-top:1px solid #e5e5e5">
-              <div style="margin-bottom:4px"><strong>${
-                config.xLabel
-              }:</strong> ${Highcharts.numberFormat(point.x, 0, ",", " ")}</div>
+              <div style="margin-bottom:4px"><strong>${config.xLabel
+          }:</strong> ${Highcharts.numberFormat(point.x, 0, ",", " ")}</div>
               <div><strong>${config.yLabel}:</strong> ${Highcharts.numberFormat(
-                point.y,
-                2,
-                ",",
-                " "
-              )}</div>
+            point.y,
+            2,
+            ",",
+            " "
+          )}</div>
             </div>
           </div>
         `;

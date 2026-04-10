@@ -6,7 +6,7 @@
  * Ils ne doivent PAS être utilisés pour calculer un statut (utiliser `getMetricStatus` pour ça).
  */
 
-import Highcharts from "highcharts";
+import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { getCssColor } from "../../../../utils/colors";
 import type { ThresholdConfig } from "./threshold-legend";
 

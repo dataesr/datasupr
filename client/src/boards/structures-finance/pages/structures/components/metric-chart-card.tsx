@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { BUDGET_SENSITIVE_METRICS } from "../../../components/budget-warning/budgetIndicators";
 import { getCssColor } from "../../../../../utils/colors";
 import { Title } from "@dataesr/dsfr-plus";

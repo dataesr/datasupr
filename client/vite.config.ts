@@ -32,6 +32,7 @@ export default defineConfig({
             "highcharts/es-modules/masters/modules/flowmap.src.js",
             "highcharts/es-modules/masters/modules/offline-exporting.src.js",
             "highcharts/es-modules/masters/modules/variable-pie.src.js",
+            "highcharts/es-modules/masters/modules/sankey.src.js",
             "highcharts/es-modules/masters/modules/treemap.src.js",
           ],
         },

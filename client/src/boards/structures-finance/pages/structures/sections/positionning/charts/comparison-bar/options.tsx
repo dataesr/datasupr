@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { createThresholdPlotBands } from "../../../../../../components/threshold/threshold-bands";
 import type { ThresholdConfig } from "../../../../../../components/threshold/threshold-legend";

@@ -1,7 +1,6 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import Highcharts from "highcharts";
-import "highcharts/modules/treemap";
+import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { useFinanceEtablissementEvolution } from "../../../../../../api";
 import { createRessourcesPropresChartOptions } from "./options";
 import { RenderData } from "./render-data";

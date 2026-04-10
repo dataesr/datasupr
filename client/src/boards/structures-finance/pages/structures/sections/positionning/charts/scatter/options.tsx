@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { getCssColor } from "../../../../../../../../utils/colors";
 import { createChartOptions } from "../../../../../../../../components/chart-wrapper/default-options";
 import { deduplicateByPaysageId } from "../../../../../../utils/utils";
