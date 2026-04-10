@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Col, Row, Title } from "@dataesr/dsfr-plus";
-import { ViewType, useFacultyResearchTeachers } from "../../api";
+import { ViewType, useFaculty2ndDegreeTeachers } from "../../api";
 import { getCssColor } from "../../../../../../utils/colors";
 import MetricCard from "../../components/metric-card";
 import CategoryEvolutionChart from "./charts/category-evolution";
@@ -30,12 +30,11 @@ export default function Enseignants2ndDegreArtsMetiersSection({
     selectedId,
     selectedYear,
 }: Enseignants2ndDegreArtsMetiersSectionProps) {
-    const { data: currentData, isLoading } = useFacultyResearchTeachers(
+    const { data: currentData, isLoading } = useFaculty2ndDegreeTeachers(
         viewType,
         selectedId,
         selectedYear
     );
-    console.log('currentData',currentData);
     const [selectedCategoryCode, setSelectedCategoryCode] = useState<string | null>(null);
 
     const catEvoMap = useMemo(() => {

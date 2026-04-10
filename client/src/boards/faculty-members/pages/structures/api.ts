@@ -115,6 +115,27 @@ export const useFacultyResearchTeachers = (
     enabled: !!year,
   });
 
+export const useFaculty2ndDegreeTeachers = (
+  viewType: ViewType,
+  id?: string,
+  year?: string
+) =>
+  useQuery({
+    queryKey: ["faculty", "2nd-degree-teachers", viewType, id, year],
+    queryFn: async () => {
+      const params = new URLSearchParams({ view: viewType });
+      if (id) params.append("id", id);
+      if (year) params.append("year", year);
+      const response = await fetch(
+        `${VITE_APP_SERVER_URL}/faculty-members/2nd-degree-teachers?${params}`
+      );
+      if (!response.ok)
+        throw new Error("Erreur récupération Enseignants 2nd Degré & Arts et Métiers");
+      return response.json();
+    },
+    enabled: !!year,
+  });
+
 export type MapLevel = "region" | "academie";
 
 export const useFacultyMapData = (year?: string, level: MapLevel = "region") =>
