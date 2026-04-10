@@ -1,0 +1,18 @@
+{
+  "flux": {
+    "fr": "Outcomes - Flux",
+    "en": "Outcomes - Flow"
+  },
+  "repartition": {
+    "fr": "Outcomes - Répartition",
+    "en": "Outcomes - Distribution"
+  },
+  "plusHautDiplome": {
+    "fr": "Outcomes - Plus haut diplôme",
+    "en": "Outcomes - Highest degree"
+  },
+  "methodologie": {
+    "fr": "Outcomes - Méthodologie",
+    "en": "Outcomes - Methodology"
+  }
+}

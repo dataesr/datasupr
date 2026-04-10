@@ -8,6 +8,7 @@ import "highcharts/es-modules/masters/modules/map.src.js";
 import "highcharts/es-modules/masters/modules/flowmap.src.js";
 import "highcharts/es-modules/masters/modules/offline-exporting.src.js";
 import "highcharts/es-modules/masters/modules/variable-pie.src.js";
+import "highcharts/es-modules/masters/modules/sankey.src.js";
 import "highcharts/es-modules/masters/modules/treemap.src.js";
 
 import React, { useId, useRef, useState } from "react";
@@ -50,11 +51,11 @@ interface Source {
 export type ChartConfig = {
   comment?: LocalizedContent;
   description?:
-    | string
-    | {
-        [key: string]: React.ReactNode;
-      }
-    | null;
+  | string
+  | {
+    [key: string]: React.ReactNode;
+  }
+  | null;
   id: string;
   idQuery?: string;
   integrationURL?: string;
@@ -62,13 +63,13 @@ export type ChartConfig = {
   sources?: Source[];
   subtitle?: string;
   title?:
-    | string
-    | {
-        [key: string]: React.ReactNode;
-        size?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
-        look?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
-        className?: string;
-      };
+  | string
+  | {
+    [key: string]: React.ReactNode;
+    size?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+    look?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6";
+    className?: string;
+  };
 };
 
 export type HighchartsOptions = Highcharts.Options | any | null;

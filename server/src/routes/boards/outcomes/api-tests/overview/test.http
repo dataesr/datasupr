@@ -1,0 +1,5 @@
+GET http://localhost:3000/api/outcomes/overview/test?name=example
+
+###
+
+GET http://localhost:3000/api/outcomes/flux?cohorte_annee=2019-2020&cohorte_situation=L1&annee_rel=0,1,2,3,4&min_value=100

@@ -1,0 +1,20 @@
+:root {
+  // =========================================================================
+  // COULEURS SÉMANTIQUES — Outcomes (Devenir des étudiants)
+  // =========================================================================
+
+  // --- Situations du Sankey ---
+  --outcomes-l1: var(--blue-france-main-525);
+  --outcomes-l2: var(--blue-ecume-main-400);
+  --outcomes-l3: var(--blue-cumulus-main-526);
+  --outcomes-lp: var(--green-emeraude-main-632);
+  --outcomes-m1: var(--green-menthe-main-548);
+  --outcomes-m2: var(--green-archipel-main-557);
+  --outcomes-sts: var(--yellow-tournesol-main-731);
+  --outcomes-iut: var(--yellow-moutarde-main-679);
+  --outcomes-cpge: var(--pink-tuile-main-556);
+  --outcomes-ecoles: var(--orange-terre-battue-main-645);
+  --outcomes-autres: var(--brown-cafe-creme-main-782);
+  --outcomes-sortants-diplomes: var(--purple-glycine-main-494);
+  --outcomes-sortants-non-diplomes: var(--grey-main-525);
+}

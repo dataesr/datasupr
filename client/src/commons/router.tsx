@@ -16,6 +16,7 @@ const HomePage = lazy(() => import('../boards/home-page.tsx'));
 const Integration = lazy(() => import('../boards/integration/index.tsx'));
 const NotFoundPage = lazy(() => import('../components/not-found-page.tsx'));
 const OpenAlexRoutes = lazy(() => import('../boards/open-alex/routes.tsx'));
+const OutcomesRoutes = lazy(() => import('../boards/outcomes/routes.tsx'));
 const StructuresFinanceRoutes = lazy(() => import('../boards/structures-finance/routes.tsx'));
 const TedsRoutes = lazy(() => import('../boards/teds/routes.tsx'));
 const TemplateRoutes = lazy(() => import('../boards/template/routes.tsx'));
@@ -50,6 +51,8 @@ export default function Router() {
       <Route path="/graduates/*" element={<Suspense><GraduatesRoutes /></Suspense>} />
       <Route path="/integration" element={<Suspense><Integration /></Suspense>} />
       <Route path="/open-alex/*" element={<Suspense><OpenAlexRoutes /></Suspense>} />
+      <Route path="/outcomes" element={<Navigate to="/outcomes/flux" replace />} />
+      <Route path="/outcomes/*" element={<Suspense><OutcomesRoutes /></Suspense>} />
       <Route
         path="/personnel-enseignant"
         element={<Navigate to="/personnel-enseignant/accueil" replace />}
