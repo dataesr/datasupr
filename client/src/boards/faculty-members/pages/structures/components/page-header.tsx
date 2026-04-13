@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { Row, Col, Title, Text, Button } from "@dataesr/dsfr-plus";
-import { ViewType, useFacultyResearchTeachers } from "../api";
+import { ViewType } from "../api";
 import { getCssColor } from "../../../../../utils/colors";
 import "../styles.scss";
 
@@ -280,7 +280,6 @@ export default function PageHeader({
                     </div>
                 </Col>
             </Row>
-
         </header>
     );
 }
