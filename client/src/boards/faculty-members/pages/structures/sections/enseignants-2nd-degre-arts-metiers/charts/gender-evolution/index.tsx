@@ -50,7 +50,8 @@ export default function GenderEvolutionChart({
                 id: "ec-gender-evolution",
                 title: {
                     fr: "Évolution de la parité femmes-hommes",
-                    look: "h5" as const,
+                    size: "h3" as const,
+                    look: "h6" as const,
                 },
                 readingKey: readingKey || undefined,
                 sources: [

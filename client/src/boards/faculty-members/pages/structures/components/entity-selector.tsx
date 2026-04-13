@@ -83,12 +83,12 @@ export default function EntitySelector({ viewType }: Props) {
     }, [items, searchQuery]);
 
     const handleSelect = (id: string) => {
-        setSearchParams({ id, section: "effectifs" });
+        setSearchParams({ id, section: "enseignants-chercheurs" });
         setSearchQuery("");
     };
 
     const handleMapRegionClick = (_geoId: string, geoName: string) => {
-        navigate(`/personnel-enseignant/regions?id=${encodeURIComponent(geoName)}&section=effectifs`);
+        navigate(`/personnel-enseignant/regions?id=${encodeURIComponent(geoName)}&section=enseignants-chercheurs`);
     };
     return (
         <main>

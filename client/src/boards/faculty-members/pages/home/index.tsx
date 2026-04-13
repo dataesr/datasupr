@@ -36,7 +36,7 @@ function HeroSection() {
   }, [etablissementOptions, searchValue]);
 
   const handleSelect = (id: string) => {
-    navigate(`/personnel-enseignant/etablissements?id=${encodeURIComponent(id)}&section=effectifs`);
+    navigate(`/personnel-enseignant/etablissements?id=${encodeURIComponent(id)}&section=enseignants-chercheurs`);
     setSearchValue("");
   };
 
@@ -134,7 +134,7 @@ function MapSection() {
   const latestYear = years.length > 0 ? years[years.length - 1] : "";
 
   const handleRegionClick = (_geoId: string, geoName: string) => {
-    navigate(`/personnel-enseignant/regions?id=${encodeURIComponent(geoName)}&section=effectifs`);
+    navigate(`/personnel-enseignant/regions?id=${encodeURIComponent(geoName)}&section=enseignants-chercheurs`);
   };
 
   if (!latestYear) return null;

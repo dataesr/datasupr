@@ -3,13 +3,10 @@ import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { ViewType, useFacultyYears, useFacultyDashboard, useFacultyEvolution } from "../api";
 import PageHeader from "./page-header";
 import SectionNavigation from "./section-navigation";
-import EffectifsSection from "../sections/effectifs";
 import EvolutionsSection from "../sections/evolutions";
-import TypologieSection from "../sections/typologie";
 import EnseignantsChercheurSection from "../sections/enseignants-chercheurs";
 import Enseignants2ndDegreArtsMetiersSection from "../sections/enseignants-2nd-degre-arts-metiers";
 import GroupesCnuSection from "../sections/groupes-cnu";
-import SectionsCnuSection from "../sections/sections-cnu";
 import ComparaisonSection from "../sections/positionning";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import Breadcrumb from "../../../components/breadcrumb";
@@ -31,7 +28,7 @@ export default function EntityView({ viewType }: Props) {
     const labels = VIEW_LABELS[viewType];
 
     const selectedId = searchParams.get("id") || "";
-    const section = searchParams.get("section") || "effectifs";
+    const section = searchParams.get("section") || "enseignants-chercheurs";
 
     const { data: yearsData, isLoading: isLoadingYears } = useFacultyYears(viewType, selectedId);
     const years: string[] = yearsData?.years || [];
@@ -66,33 +63,19 @@ export default function EntityView({ viewType }: Props) {
 
     const renderSectionContent = () => {
         switch (section) {
-            case "effectifs":
-                return (
-                    <EffectifsSection
-                        selectedYear={selectedYear}
-                        dashboardData={dashboardData}
-                        evolutionData={evolutionData}
-                        totalCount={totalCount}
-                        viewType={viewType}
-                    />
-                );
-            case "evolutions":
-                return <EvolutionsSection viewType={viewType} selectedId={selectedId} />;
-            case "typologie":
-                return (
-                    <TypologieSection
-                        selectedYear={selectedYear}
-                        dashboardData={dashboardData}
-                        evolutionData={evolutionData}
-                        totalCount={totalCount}
-                    />
-                );
             case "enseignants-chercheurs":
                 return (
                     <EnseignantsChercheurSection
                         viewType={viewType}
                         selectedId={selectedId}
                         selectedYear={selectedYear}
+                    />
+                );
+            case "evolutions":
+                return (
+                    <EvolutionsSection
+                        viewType={viewType}
+                        selectedId={selectedId}
                     />
                 );
             case "enseignants-2nd-degre-arts-metiers":
@@ -106,14 +89,6 @@ export default function EntityView({ viewType }: Props) {
             case "groupes-cnu":
                 return (
                     <GroupesCnuSection
-                        viewType={viewType}
-                        selectedId={selectedId}
-                        selectedYear={selectedYear}
-                    />
-                );
-            case "sections-cnu":
-                return (
-                    <SectionsCnuSection
                         viewType={viewType}
                         selectedId={selectedId}
                         selectedYear={selectedYear}

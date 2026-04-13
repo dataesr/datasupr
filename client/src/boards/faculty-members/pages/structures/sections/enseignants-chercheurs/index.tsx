@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Col, Row, Title } from "@dataesr/dsfr-plus";
+import { Col, Row, Title, Text } from "@dataesr/dsfr-plus";
 import { ViewType, useFacultyResearchTeachers } from "../../api";
 import { getCssColor } from "../../../../../../utils/colors";
 import MetricCard from "../../components/metric-card";
@@ -89,10 +89,22 @@ export default function EnseignantsChercheurSection({
 
     return (
         <>
-            <div className="section-header fr-mb-5w">
+            <div className="section-header fr-mb-4w">
                 <Title as="h2" look="h5" id="section-ec-title" className="section-header__title">
                     Les enseignants-chercheurs en détail
                 </Title>
+            </div>
+            <div className="fr-callout fr-mb-4w">
+                <Text className="fr-callout__text fr-text--sm">
+                    <strong>Explicitez la définition des EC et nuances entre MCF et Prof </strong>
+                    <br/>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi risus diam,
+                    vestibulum vitae neque at, maximus placerat risus. In malesuada blandit lectus
+                    at scelerisque. Mauris a diam vel ante feugiat accumsan id finibus mi.
+                    Nam pellentesque libero sed turpis varius dapibus. Fusce sit amet urna id eros
+                    venenatis malesuada in et libero. Integer aliquam, magna quis tempus dignissim,
+                    magna metus efficitur nisl, in suscipit velit eros sit amet erat. Fusce dolor nibh, sagittis sed molestie id, auctor et augue. Nam nec magna vel nisl consequat interdum. Maecenas vestibulum lorem sit amet pretium scelerisque.
+                </Text>
             </div>
 
             {Array.from({ length: Math.ceil(categories.length / 4) }, (_, rowIdx) => {
@@ -197,7 +209,7 @@ export default function EnseignantsChercheurSection({
                 );
             })}
 
-            <Row gutters className="fr-mt-3w">
+            <Row gutters className="fr-mb-2w fr-mt-3w">
                 <Col xs="12" md="6">
                     <CategoryEvolutionChart categoryEvolution={currentData?.categoryEvolution} />
                 </Col>

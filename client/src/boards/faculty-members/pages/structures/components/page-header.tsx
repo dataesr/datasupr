@@ -288,7 +288,7 @@ export default function PageHeader({
                 </Col>
             </Row>
 
-            {cnuGroups.length > 0 && (
+           {/*  {cnuGroups.length > 0 && (
                 <Row gutters>
                     <Col xs="12">
                         <div className="fr-card fr-card--shadow fr-px-3v fr-py-2w">
@@ -336,7 +336,7 @@ export default function PageHeader({
                         </div>
                     </Col>
                 </Row>
-            )}
+            )} */}
         </header>
     );
 }
