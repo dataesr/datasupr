@@ -1,4 +1,4 @@
-import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
@@ -117,6 +117,20 @@ export default function PlusHautDiplomePage() {
         filters,
     });
 
+    const activeFiltersElement = (() => {
+        const tags = FILTER_SECTIONS.flatMap(s =>
+            s.fields.filter(f => filters[f.field]).map(f => ({ field: f.field, label: f.label, value: filters[f.field]! }))
+        );
+        if (!tags.length) return null;
+        return (
+            <TagGroup className="fr-mt-1w fr-mb-1w">
+                {tags.map(({ field, label, value }) => (
+                    <DismissibleTag key={field} size="sm" onClick={() => updateFilter(field, null)}>{label} : {value}</DismissibleTag>
+                ))}
+            </TagGroup>
+        );
+    })();
+
     const updateFilter = (field: OutcomesFilterField, value: string | null) => {
         const nextParams = new URLSearchParams(searchParams);
         if (value) {
@@ -164,6 +178,7 @@ export default function PlusHautDiplomePage() {
                         <Title as="h1" look="h3">
                             Le plus haut diplôme obtenu atteint en {diplomaYearLabel}
                         </Title>
+                        {activeFiltersElement}
 
                         {isLoading && <DefaultSkeleton height="400px" />}
                         {!isLoading && error && (

@@ -1,8 +1,9 @@
-import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import ChartWrapper from "../../../../components/chart-wrapper";
 import Callout from "../../../../components/callout.tsx";
 import { type OutcomesFilterField, useOutcomesRepartition } from "../../api";
 import RepartitionChart from "./charts/repartition-column";
@@ -123,6 +124,20 @@ export default function RepartitionPage() {
         relativeYears,
     });
 
+    const activeFiltersElement = (() => {
+        const tags = FILTER_SECTIONS.flatMap(s =>
+            s.fields.filter(f => filters[f.field]).map(f => ({ field: f.field, label: f.label, value: filters[f.field]! }))
+        );
+        if (!tags.length) return null;
+        return (
+            <TagGroup className="fr-mt-1w fr-mb-1w">
+                {tags.map(({ field, label, value }) => (
+                    <DismissibleTag key={field} size="sm" onClick={() => updateFilter(field, null)}>{label} : {value}</DismissibleTag>
+                ))}
+            </TagGroup>
+        );
+    })();
+
     const updateFilter = (field: OutcomesFilterField, value: string | null) => {
         const nextParams = new URLSearchParams(searchParams);
         if (value) {
@@ -180,6 +195,7 @@ export default function RepartitionPage() {
                 </Col>
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
+                        <ChartWrapper.Title config={{ id: "outcomes-repartition", title: { fr: "Répartition selon les inscriptions (en %)", look: "h4" as const } }} />
                         {isLoading && <DefaultSkeleton height="540px" />}
                         {!isLoading && error && (
                             <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
@@ -191,8 +207,10 @@ export default function RepartitionPage() {
                                 Aucune donnée disponible avec les filtres actuellement sélectionnés.
                             </Callout>
                         )}
+                        {activeFiltersElement}
                         {!isLoading && !error && (data?.distribution?.length ?? 0) > 0 && (
                             <RepartitionChart
+                                hideTitle
                                 distribution={data!.distribution}
                                 relativeYears={relativeYears}
                                 yearLabels={YEAR_LABELS}

@@ -1,8 +1,9 @@
-import { Button, Col, Container, Row, Title } from "@dataesr/dsfr-plus";
-import { useMemo } from "react";
+import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
+import ChartWrapper from "../../../../components/chart-wrapper";
 import Callout from "../../../../components/callout.tsx";
 import { type OutcomesFilterField, useOutcomesFlux } from "../../api";
 import SankeyChart from "./charts/sankey";
@@ -110,6 +111,7 @@ export default function FluxPage() {
     const cohortSituation = searchParams.get("cohorte_situation") || DEFAULT_COHORT_SITUATION;
 
     const minValue = Number.parseInt(searchParams.get("min_value") || "", 10) || DEFAULT_MIN_VALUE;
+    const [sliderValue, setSliderValue] = useState(minValue);
     const relativeYears = useMemo(() => {
         const raw = searchParams.get("annee_rel");
         if (!raw) return ALL_RELATIVE_YEARS;
@@ -117,13 +119,27 @@ export default function FluxPage() {
         return parsed.length >= 2 ? parsed : ALL_RELATIVE_YEARS;
     }, [searchParams]);
 
-    const { data, error, isLoading } = useOutcomesFlux({
+    const { data, error, isFetching, isLoading } = useOutcomesFlux({
         cohorteAnnee: cohortYear,
         cohorteSituation: cohortSituation,
         filters,
         minValue,
         relativeYears,
     });
+
+    const activeFiltersElement = (() => {
+        const tags = FILTER_SECTIONS.flatMap(s =>
+            s.fields.filter(f => filters[f.field]).map(f => ({ field: f.field, label: f.label, value: filters[f.field]! }))
+        );
+        if (!tags.length) return null;
+        return (
+            <TagGroup className="fr-mt-1w fr-mb-1w">
+                {tags.map(({ field, label, value }) => (
+                    <DismissibleTag key={field} size="sm" onClick={() => updateFilter(field, null)}>{label} : {value}</DismissibleTag>
+                ))}
+            </TagGroup>
+        );
+    })();
 
     const updateFilter = (field: OutcomesFilterField, value: string | null) => {
         const nextParams = new URLSearchParams(searchParams);
@@ -193,19 +209,26 @@ export default function FluxPage() {
                 </Col>
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
-                        {isLoading && <DefaultSkeleton height="540px" />}
-                        {!isLoading && error && (
+                        <ChartWrapper.Title config={{ id: "outcomes-flux-sankey", title: { fr: "Parcours des néo-bacheliers inscrits en L1 en 2019", look: "h4" as const } }} />
+                        {activeFiltersElement}
+                        {(isLoading || (isFetching && !data)) && <DefaultSkeleton height="540px" />}
+                        {!isLoading && isFetching && data && (
+                            <div style={{ opacity: 0.5, transition: "opacity 0.2s" }}>
+                                <SankeyChart hideTitle links={data.links} />
+                            </div>
+                        )}
+                        {!isLoading && !isFetching && error && (
                             <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
                                 Impossible de récupérer les flux pour cette cohorte.
                             </Callout>
                         )}
-                        {!isLoading && !error && data && !data.links?.length && (
+                        {!isLoading && !isFetching && data && !data.links?.length && (
                             <Callout title="Aucune transition visible" icon="fr-icon-information-line">
                                 Aucun flux ne dépasse le seuil d'affichage avec les filtres actuellement sélectionnés.
                             </Callout>
                         )}
-                        {!isLoading && !error && (data?.links?.length ?? 0) > 0 && (
-                            <SankeyChart links={data!.links} />
+                        {!isLoading && !isFetching && (data?.links?.length ?? 0) > 0 && (
+                            <SankeyChart hideTitle links={data!.links} />
                         )}
 
                         <div className="outcomes-flux-page__params fr-mt-3w fr-mb-3w">
@@ -236,23 +259,24 @@ export default function FluxPage() {
                                 <Col md={6}>
                                     <Title as="h3" look="h6" className="fr-mb-1w">Affichage des flux</Title>
                                     <p className="fr-text--xs fr-mb-1w">
-                                        Afficher les flux regroupant au minimum {minValue} étudiants.
+                                        Afficher les flux regroupant au minimum {sliderValue} étudiants.
                                     </p>
                                     <div className="fr-range-group">
                                         <div className="outcomes-flux-page__slider-labels">
                                             <span className="fr-text--xs">0</span>
-                                            <span className="fr-text--sm fr-text--bold">{minValue}</span>
+                                            <span className="fr-text--sm fr-text--bold">{sliderValue}</span>
                                             <span className="fr-text--xs">1 000</span>
                                         </div>
                                         <input
                                             aria-label="Seuil minimum d'étudiants"
-                                            className="fr-range"
                                             max={1000}
                                             min={0}
-                                            onChange={(e) => updateMinValue(Number(e.target.value))}
+                                            onChange={(e) => setSliderValue(Number(e.target.value))}
+                                            onMouseUp={() => updateMinValue(sliderValue)}
+                                            onTouchEnd={() => updateMinValue(sliderValue)}
                                             step={10}
                                             type="range"
-                                            value={minValue}
+                                            value={sliderValue}
                                         />
                                     </div>
                                 </Col>

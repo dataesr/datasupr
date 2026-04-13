@@ -5,10 +5,11 @@ import { type OutcomesFluxLink } from "../../../../api";
 import { createSankeyOptions } from "./options";
 
 interface SankeyChartProps {
+    hideTitle?: boolean;
     links: OutcomesFluxLink[];
 }
 
-export default function SankeyChart({ links }: SankeyChartProps) {
+export default function SankeyChart({ hideTitle, links }: SankeyChartProps) {
     const options = useMemo(() => {
         if (!links?.length) return null;
         return createSankeyOptions(links);
@@ -18,6 +19,7 @@ export default function SankeyChart({ links }: SankeyChartProps) {
 
     return (
         <ChartWrapper
+            hideTitle={hideTitle}
             config={{
                 id: "outcomes-flux-sankey",
                 title: { fr: "Parcours des néo-bacheliers inscrits en L1 en 2019", look: "h4" as const },
