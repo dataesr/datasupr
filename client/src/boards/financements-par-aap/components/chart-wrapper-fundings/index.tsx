@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import Highcharts from "highcharts";
 import React from "react";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { createChartOptions } from "../../../../components/chart-wrapper/default-options";
 import ChartWrapper, { ChartConfig, HighchartsOptions } from "../../../../components/chart-wrapper/index.js";

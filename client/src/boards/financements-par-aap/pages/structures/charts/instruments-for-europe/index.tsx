@@ -1,9 +1,8 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
-import HighchartsInstance from "highcharts";
-import "highcharts/modules/treemap";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";

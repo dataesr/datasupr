@@ -24,16 +24,18 @@ export default defineConfig({
       output: {
         manualChunks: {
           highcharts: [
-            "highcharts/es-modules/masters/highcharts.src.js",
             "highcharts/es-modules/masters/highcharts-more.src.js",
-            "highcharts/es-modules/masters/modules/exporting.src.js",
+            "highcharts/es-modules/masters/highcharts.src.js",
             "highcharts/es-modules/masters/modules/export-data.src.js",
-            "highcharts/es-modules/masters/modules/map.src.js",
+            "highcharts/es-modules/masters/modules/exporting.src.js",
             "highcharts/es-modules/masters/modules/flowmap.src.js",
+            "highcharts/es-modules/masters/modules/map.src.js",
             "highcharts/es-modules/masters/modules/offline-exporting.src.js",
-            "highcharts/es-modules/masters/modules/variable-pie.src.js",
+            "highcharts/es-modules/masters/modules/pattern-fill.src.js",
             "highcharts/es-modules/masters/modules/sankey.src.js",
             "highcharts/es-modules/masters/modules/treemap.src.js",
+            "highcharts/es-modules/masters/modules/variable-pie.src.js",
+            "highcharts/es-modules/masters/modules/variwide.src.js",
           ],
         },
       },
