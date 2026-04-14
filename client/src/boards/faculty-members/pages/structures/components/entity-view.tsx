@@ -6,6 +6,7 @@ import SectionNavigation from "./section-navigation";
 import EvolutionsSection from "../sections/evolutions";
 import EnseignantsChercheurSection from "../sections/enseignants-chercheurs";
 import Enseignants2ndDegreArtsMetiersSection from "../sections/enseignants-2nd-degre-arts-metiers";
+import EnseignantsNonPermanentsSection from "../sections/enseignants-non-permanents";
 import GroupesCnuSection from "../sections/groupes-cnu";
 import ComparaisonSection from "../sections/positionning";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
@@ -71,16 +72,17 @@ export default function EntityView({ viewType }: Props) {
                         selectedYear={selectedYear}
                     />
                 );
-            case "evolutions":
-                return (
-                    <EvolutionsSection
-                        viewType={viewType}
-                        selectedId={selectedId}
-                    />
-                );
             case "enseignants-2nd-degre-arts-metiers":
                 return (
                     <Enseignants2ndDegreArtsMetiersSection
+                        viewType={viewType}
+                        selectedId={selectedId}
+                        selectedYear={selectedYear}
+                    />
+                );
+            case "enseignants-non-permanents":
+                return (
+                    <EnseignantsNonPermanentsSection
                         viewType={viewType}
                         selectedId={selectedId}
                         selectedYear={selectedYear}
@@ -100,6 +102,13 @@ export default function EntityView({ viewType }: Props) {
                         viewType={viewType}
                         selectedId={selectedId}
                         selectedYear={selectedYear}
+                    />
+                );
+            case "evolutions":
+                return (
+                    <EvolutionsSection
+                        viewType={viewType}
+                        selectedId={selectedId}
                     />
                 );
             default:
