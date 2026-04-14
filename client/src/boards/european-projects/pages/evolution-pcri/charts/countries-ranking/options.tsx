@@ -1,4 +1,4 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
@@ -29,19 +29,22 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
   // Grouper les données par pays et framework
   const dataByCountryFramework: Record<string, CountryFrameworkData> = data
     .filter((item) => item.country_code !== "ALL" && item.country_code !== "UE") // Exclure "Tous pays" et "Etats membres & associés"
-    .reduce((acc, item) => {
-      const key = `${item.country_code}_${item.framework}`;
-      if (!acc[key]) {
-        acc[key] = {
-          country: currentLang === "fr" ? item.country_name_fr : item.country_code,
-          countryCode: item.country_code,
-          framework: item.framework,
-          funding: 0,
-        };
-      }
-      acc[key].funding += item.funding || 0;
-      return acc;
-    }, {} as Record<string, CountryFrameworkData>);
+    .reduce(
+      (acc, item) => {
+        const key = `${item.country_code}_${item.framework}`;
+        if (!acc[key]) {
+          acc[key] = {
+            country: currentLang === "fr" ? item.country_name_fr : item.country_code,
+            countryCode: item.country_code,
+            framework: item.framework,
+            funding: 0,
+          };
+        }
+        acc[key].funding += item.funding || 0;
+        return acc;
+      },
+      {} as Record<string, CountryFrameworkData>,
+    );
 
   const frameworkOrder = ["FP6", "FP7", "Horizon 2020", "Horizon Europe"];
 

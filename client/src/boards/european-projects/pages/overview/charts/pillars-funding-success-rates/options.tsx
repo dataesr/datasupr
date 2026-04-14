@@ -1,4 +1,4 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToRates } from "../../../../../../utils/format";

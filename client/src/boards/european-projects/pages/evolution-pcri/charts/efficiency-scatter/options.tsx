@@ -1,4 +1,4 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { EvolutionDataItem } from "./types";
@@ -16,7 +16,7 @@ export const FRAMEWORK_LABELS: Record<string, string> = {
 };
 
 // Variables disponibles pour les axes
-export type AxisVariable = 
+export type AxisVariable =
   | "success_rate_project"
   | "success_rate_funding"
   | "success_rate_involved"

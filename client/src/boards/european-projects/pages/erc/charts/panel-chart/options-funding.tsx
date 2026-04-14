@@ -1,4 +1,4 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { PanelChartItem } from "./query";
 import { formatCurrency, formatToRates } from "../../../../../../utils/format";

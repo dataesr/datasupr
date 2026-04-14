@@ -1,4 +1,4 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";

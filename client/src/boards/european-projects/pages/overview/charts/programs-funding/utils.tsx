@@ -80,7 +80,7 @@ export function renderDataTable(data, currentLang) {
 
 
 export function readingKey(data, isLoading) {
-  if (isLoading) {
+  if (isLoading || !data) {
     return { fr: <></>, en: <></> };
   }
 

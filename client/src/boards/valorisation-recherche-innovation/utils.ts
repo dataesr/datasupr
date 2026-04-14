@@ -1,10 +1,10 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { createChartOptions } from "../../components/chart-wrapper/default-options";
 import { getCssColor as getCssColorGlobal } from "../../utils/colors";
 
 const YEAR_MIN = 2009;
-const YEAR_MAX = 2025
+const YEAR_MAX = 2025;
 const years: number[] = Array.from(Array(YEAR_MAX - YEAR_MIN + 1).keys()).map((item) => item + YEAR_MIN);
 
 const formatCompactNumber = (number: number): string => {
@@ -21,32 +21,43 @@ const formatPercent = (number: number, decimals: number = 0): string => {
   return formatter.format(number);
 };
 
-const getEsQueryPatents = ({ structureIds, yearMax = years[years.length - 1], yearMin = years[0] }:
-  { structureIds?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
+const getEsQueryPatents = ({
+  structureIds,
+  yearMax = years[years.length - 1],
+  yearMin = years[0],
+}: {
+  structureIds?: (string | null)[];
+  yearMax?: number | string | null;
+  yearMin?: number | string | null;
+}) => {
   const query: any = {
     size: 0,
     query: {
       bool: {
-        filter: [
-          { range: { "patents.yearPublication": { gte: yearMin, lte: yearMax } } },
-          { terms: { "applicants.ids.id.keyword": structureIds } }
-        ],
+        filter: [{ range: { "patents.yearPublication": { gte: yearMin, lte: yearMax } } }, { terms: { "applicants.ids.id.keyword": structureIds } }],
       },
     },
   };
   return query;
 };
 
-const getEsQueryPublications = ({ structureIds, yearMax = years[years.length - 1], yearMin = years[0] }:
-  { structureIds?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
+const getEsQueryPublications = ({
+  structureIds,
+  yearMax = years[years.length - 1],
+  yearMin = years[0],
+}: {
+  structureIds?: (string | null)[];
+  yearMax?: number | string | null;
+  yearMin?: number | string | null;
+}) => {
   const query: any = {
     size: 0,
     query: {
       bool: {
         filter: [
-          { range: { "year": { gte: yearMin, lte: yearMax } } },
+          { range: { year: { gte: yearMin, lte: yearMax } } },
           { terms: { "affiliations.id.keyword": structureIds } },
-          { wildcard: { "structured_acknowledgments.private_companies.entity": "*" } }
+          { wildcard: { "structured_acknowledgments.private_companies.entity": "*" } },
         ],
       },
     },
@@ -54,8 +65,15 @@ const getEsQueryPublications = ({ structureIds, yearMax = years[years.length - 1
   return query;
 };
 
-const getEsQueryStartups = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
-  { structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
+const getEsQueryStartups = ({
+  structures,
+  yearMax = years[years.length - 1],
+  yearMin = years[0],
+}: {
+  structures?: (string | null)[];
+  yearMax?: number | string | null;
+  yearMin?: number | string | null;
+}) => {
   const query: any = {
     size: 0,
     query: {
@@ -71,14 +89,18 @@ const getEsQueryStartups = ({ structures, yearMax = years[years.length - 1], yea
   };
   if (structures?.length ?? 0 > 0) {
     query.query.bool.filter.push({ terms: { "startup_links.structure.keyword": structures } });
-  };
+  }
   return query;
 };
 
-const getCssColor = ({ name, prefix = "" }: { name: string, prefix?: string }) => {
+const getCssColor = ({ name, prefix = "" }: { name: string; prefix?: string }) => {
   let variableName: string = "";
   if (prefix?.length > 0) variableName += `${prefix}-`;
-  variableName += name.toLowerCase().replace(/[^0-9a-z ]/g, "").replace(/  +/g, " ").replaceAll(" ", "-");
+  variableName += name
+    .toLowerCase()
+    .replace(/[^0-9a-z ]/g, "")
+    .replace(/  +/g, " ")
+    .replaceAll(" ", "-");
   return getCssColorGlobal(variableName);
 };
 
@@ -97,7 +119,7 @@ const getGeneralOptions = (
   });
 };
 
-const getYearRangeLabel = ({ isBold = false, yearMax, yearMin }: { isBold?: boolean, yearMax: string | null, yearMin: string | null }): string => {
+const getYearRangeLabel = ({ isBold = false, yearMax, yearMin }: { isBold?: boolean; yearMax: string | null; yearMin: string | null }): string => {
   let label = "";
   if (yearMin === yearMax) {
     label += "en ";

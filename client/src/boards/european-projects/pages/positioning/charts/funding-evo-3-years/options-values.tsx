@@ -1,4 +1,4 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import type { HighchartsOptions } from "../../../../../../components/chart-wrapper";
 
 import { formatToMillions } from "../../../../../../utils/format";
@@ -99,7 +99,7 @@ export default function Options(data, currentLang): HighchartsOptions {
           name: country[`name_${currentLang}`],
           data: country.data.map((year) => year.total_fund_eur),
           color: rootStyles.getPropertyValue(`--scale-${index + 1}-color`),
-        }))
+        })),
       ),
   };
 

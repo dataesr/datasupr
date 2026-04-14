@@ -1,4 +1,4 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { getColorByFramework } from "./utils";
@@ -23,24 +23,27 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
   // Grouper les données par année et framework
   const dataByYearFramework: Record<string, YearFrameworkData> = data
     .filter((item) => item.country_code === "ALL") // Uniquement les totaux
-    .reduce((acc, item) => {
-      const key = `${item.call_year}_${item.framework}`;
-      if (!acc[key]) {
-        acc[key] = {
-          year: item.call_year,
-          framework: item.framework,
-          evaluated: 0,
-          successful: 0,
-          successRate: 0,
-        };
-      }
-      if (item.stage === "evaluated") {
-        acc[key].evaluated = item.project_number || 0;
-      } else if (item.stage === "successful") {
-        acc[key].successful = item.project_number || 0;
-      }
-      return acc;
-    }, {} as Record<string, YearFrameworkData>);
+    .reduce(
+      (acc, item) => {
+        const key = `${item.call_year}_${item.framework}`;
+        if (!acc[key]) {
+          acc[key] = {
+            year: item.call_year,
+            framework: item.framework,
+            evaluated: 0,
+            successful: 0,
+            successRate: 0,
+          };
+        }
+        if (item.stage === "evaluated") {
+          acc[key].evaluated = item.project_number || 0;
+        } else if (item.stage === "successful") {
+          acc[key].successful = item.project_number || 0;
+        }
+        return acc;
+      },
+      {} as Record<string, YearFrameworkData>,
+    );
 
   // Calculer le taux de succès
   Object.values(dataByYearFramework).forEach((item) => {
@@ -119,7 +122,7 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
           s += `<span style="color:${point.color}">\u25CF</span> ${point.series.name}: <b>${point.y?.toFixed(1)}%</b><br/>`;
           if (yearFrameworkData) {
             s += `&nbsp;&nbsp;&nbsp;&nbsp;${getI18nLabel("tooltip-successful")}: ${yearFrameworkData.successful} / ${getI18nLabel(
-              "tooltip-evaluated"
+              "tooltip-evaluated",
             )}: ${yearFrameworkData.evaluated}<br/>`;
           }
         });

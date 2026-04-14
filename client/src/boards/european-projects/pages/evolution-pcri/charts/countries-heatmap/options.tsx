@@ -1,4 +1,4 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import "highcharts/modules/heatmap";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
@@ -23,31 +23,37 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
   // Calculer les totaux par framework (country_code = ALL)
   const totalsByFramework: Record<string, number> = data
     .filter((item) => item.country_code === "ALL")
-    .reduce((acc, item) => {
-      if (!acc[item.framework]) {
-        acc[item.framework] = 0;
-      }
-      acc[item.framework] += item.funding || 0;
-      return acc;
-    }, {} as Record<string, number>);
+    .reduce(
+      (acc, item) => {
+        if (!acc[item.framework]) {
+          acc[item.framework] = 0;
+        }
+        acc[item.framework] += item.funding || 0;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
   // Grouper les données par pays et framework
   const dataByCountryFramework: Record<string, CountryFrameworkData> = data
     .filter((item) => item.country_code !== "ALL" && item.country_code !== "UE") // Exclure "Tous pays" et "Etats membres & associés"
-    .reduce((acc, item) => {
-      const key = `${item.country_code}_${item.framework}`;
-      if (!acc[key]) {
-        acc[key] = {
-          country: currentLang === "fr" ? item.country_name_fr : item.country_code,
-          countryCode: item.country_code,
-          framework: item.framework,
-          share: 0,
-          funding: 0,
-        };
-      }
-      acc[key].funding += item.funding || 0;
-      return acc;
-    }, {} as Record<string, CountryFrameworkData>);
+    .reduce(
+      (acc, item) => {
+        const key = `${item.country_code}_${item.framework}`;
+        if (!acc[key]) {
+          acc[key] = {
+            country: currentLang === "fr" ? item.country_name_fr : item.country_code,
+            countryCode: item.country_code,
+            framework: item.framework,
+            share: 0,
+            funding: 0,
+          };
+        }
+        acc[key].funding += item.funding || 0;
+        return acc;
+      },
+      {} as Record<string, CountryFrameworkData>,
+    );
 
   // Recalculer les parts correctement
   Object.keys(dataByCountryFramework).forEach((key) => {

@@ -1,10 +1,10 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { deepMerge } from "../../utils";
 
 export function createChartOptions(
   type: NonNullable<HighchartsInstance.Options["chart"]>["type"],
-  options: NonNullable<HighchartsInstance.Options>
+  options: NonNullable<HighchartsInstance.Options>,
 ): HighchartsInstance.Options {
   const defaultOptions: HighchartsInstance.Options = {
     chart: {

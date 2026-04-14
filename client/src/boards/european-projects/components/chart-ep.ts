@@ -1,11 +1,8 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { deepMerge } from "../../../utils";
 
-export function CreateChartOptions(
-  type: NonNullable<HighchartsInstance.Options["chart"]>["type"],
-  options: NonNullable<HighchartsInstance.Options>
-) {
+export function CreateChartOptions(type: NonNullable<HighchartsInstance.Options["chart"]>["type"], options: NonNullable<HighchartsInstance.Options>) {
   const rootStyles = getComputedStyle(document.documentElement);
 
   const defaultOptions: HighchartsInstance.Options = {
@@ -31,7 +28,6 @@ export function CreateChartOptions(
           },
         },
       };
-      
     });
   } else {
     defaultOptions.xAxis = {
@@ -41,9 +37,9 @@ export function CreateChartOptions(
           fontSize: "13px",
           fontFamily: "Marianne, sans-serif",
           color: rootStyles.getPropertyValue("--label-color"),
-        }
-      }
-    }
+        },
+      },
+    };
   }
 
   if (type !== "empty") {

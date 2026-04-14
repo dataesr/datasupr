@@ -1,4 +1,4 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
@@ -19,19 +19,22 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
   }
 
   // Grouper les données par année et framework
-  const dataByYear: Record<string, YearFrameworkData> = data.reduce((acc, item) => {
-    if (!acc[item.call_year]) {
-      acc[item.call_year] = {
-        year: item.call_year,
-        frameworks: {},
-      };
-    }
-    if (!acc[item.call_year].frameworks[item.framework]) {
-      acc[item.call_year].frameworks[item.framework] = 0;
-    }
-    acc[item.call_year].frameworks[item.framework] += item.funding || 0;
-    return acc;
-  }, {} as Record<string, YearFrameworkData>);
+  const dataByYear: Record<string, YearFrameworkData> = data.reduce(
+    (acc, item) => {
+      if (!acc[item.call_year]) {
+        acc[item.call_year] = {
+          year: item.call_year,
+          frameworks: {},
+        };
+      }
+      if (!acc[item.call_year].frameworks[item.framework]) {
+        acc[item.call_year].frameworks[item.framework] = 0;
+      }
+      acc[item.call_year].frameworks[item.framework] += item.funding || 0;
+      return acc;
+    },
+    {} as Record<string, YearFrameworkData>,
+  );
 
   // Trier par année
   const sortedYears = Object.values(dataByYear).sort((a, b) => parseInt(a.year) - parseInt(b.year));

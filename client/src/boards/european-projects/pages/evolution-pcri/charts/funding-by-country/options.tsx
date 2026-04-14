@@ -1,4 +1,4 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
@@ -20,17 +20,20 @@ export default function Options(data: EvolutionDataItem[], currentLang: string =
   }
 
   // Grouper les données par call_year
-  const dataByYear: Record<string, YearData> = data.reduce((acc, item) => {
-    if (!acc[item.call_year]) {
-      acc[item.call_year] = {
-        year: item.call_year,
-        funding: 0,
-        framework: item.framework,
-      };
-    }
-    acc[item.call_year].funding += item.funding || 0;
-    return acc;
-  }, {} as Record<string, YearData>);
+  const dataByYear: Record<string, YearData> = data.reduce(
+    (acc, item) => {
+      if (!acc[item.call_year]) {
+        acc[item.call_year] = {
+          year: item.call_year,
+          funding: 0,
+          framework: item.framework,
+        };
+      }
+      acc[item.call_year].funding += item.funding || 0;
+      return acc;
+    },
+    {} as Record<string, YearData>,
+  );
 
   // Convertir en tableau et trier par année
   const sortedData = Object.values(dataByYear).sort((a, b) => parseInt(a.year) - parseInt(b.year));

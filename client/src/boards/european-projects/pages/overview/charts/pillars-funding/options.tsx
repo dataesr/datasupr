@@ -1,4 +1,4 @@
-import HighchartsInstance from "highcharts";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { formatToMillions } from "../../../../../../utils/format";
@@ -10,7 +10,7 @@ export default function Options(data) {
   if (!data) return null;
 
   const height = data.data.length * 50;
-  
+
   const newOptions: HighchartsInstance.Options = {
     chart: { height: height },
     xAxis: {
