@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import ItemFilter, {
   type FilterItem,
 } from "../../../../../components/item-filter";
@@ -7,6 +8,7 @@ import {
 } from "../../../../../config/metrics-config";
 
 interface AnalysisFilterProps {
+  data: any[];
   selectedAnalysis: AnalysisKey | null;
   selectedCategory: string;
   onSelectAnalysis: (analysis: AnalysisKey) => void;
@@ -14,6 +16,7 @@ interface AnalysisFilterProps {
 }
 
 export default function AnalysisFilter({
+  data,
   selectedAnalysis,
   selectedCategory,
   onSelectAnalysis,
@@ -34,7 +37,17 @@ export default function AnalysisFilter({
       category: analysis.category,
     }));
 
-  const availableKeys = new Set(items.map((item) => item.key));
+  const availableKeys = useMemo(() => {
+    const keys = new Set<string>();
+    for (const item of items) {
+      const analysis = PREDEFINED_ANALYSES[item.key as AnalysisKey];
+      const hasData = analysis.metrics.some((metric) =>
+        data.some((d) => d[metric] != null && d[metric] !== 0)
+      );
+      if (hasData) keys.add(item.key);
+    }
+    return keys;
+  }, [items, data]);
 
   return (
     <ItemFilter

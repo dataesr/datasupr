@@ -101,6 +101,7 @@ export function AnalyseSection({
       <Row gutters>
         <Col md="4" xs="12">
           <AnalysisFilter
+            data={data}
             selectedAnalysis={selectedAnalysis}
             selectedCategory={selectedCategory}
             onSelectAnalysis={setSelectedAnalysis}

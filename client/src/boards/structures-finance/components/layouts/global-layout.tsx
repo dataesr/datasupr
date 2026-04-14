@@ -114,7 +114,7 @@ export default function GlobalLayout() {
                     Vue nationale
                   </Link>
                 </li>
-                <li className="fr-nav__item">
+                {/* <li className="fr-nav__item">
                   <Link
                     to={"/structures-finance/faq"}
                     target="_self"
@@ -125,7 +125,7 @@ export default function GlobalLayout() {
                   >
                     FAQ
                   </Link>
-                </li>
+                </li> */}
                 <li className="fr-nav__item">
                   <Link
                     to={"/structures-finance/definitions"}
