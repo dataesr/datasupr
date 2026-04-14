@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 
 type TrendGraphProps = {
@@ -6,11 +6,7 @@ type TrendGraphProps = {
   data: number[];
 };
 
-export default function TrendGraph({
-  color = "#000",
-  data = [],
-}: TrendGraphProps) {
-  
+export default function TrendGraph({ color = "#000", data = [] }: TrendGraphProps) {
   const options = {
     chart: {
       backgroundColor: "transparent",
@@ -44,10 +40,10 @@ export default function TrendGraph({
     },
     tooltip: {
       formatter: function () {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            return `Année universitaire <b>${this.x}-${parseInt(this.x.toString().substring(2))+1}</b><br/>=> <b>${this.y.toLocaleString()}</b> étudiants`;
-      }
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        return `Année universitaire <b>${this.x}-${parseInt(this.x.toString().substring(2)) + 1}</b><br/>=> <b>${this.y.toLocaleString()}</b> étudiants`;
+      },
     },
     colors: [color],
     series: [

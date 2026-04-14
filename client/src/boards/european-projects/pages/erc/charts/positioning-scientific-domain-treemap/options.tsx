@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import type { ProcessedTreemapData } from "./utils";
 import { getTreemapColors } from "./utils";
 import { getI18nLabel } from "../../../../../../utils";

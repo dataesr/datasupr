@@ -1,22 +1,11 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
-import {
-  Button,
-  Col,
-  Container,
-  Modal,
-  ModalContent,
-  ModalTitle,
-  Radio,
-  Row,
-  Text,
-  Title,
-} from "@dataesr/dsfr-plus";
+import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Text, Title } from "@dataesr/dsfr-plus";
 import CopyButton from "../../../components/copy-button/index.tsx";
 import { getConfig } from "../utils.ts";
 
@@ -41,33 +30,17 @@ function IntegrationModal({ isOpen, setIsOpen, graphConfig }) {
   );
 }
 
-function MenuModal({
-  displayType,
-  isOpen,
-  setDisplayType,
-  setIsOpen,
-  setIsOpenIntegration,
-}) {
+function MenuModal({ displayType, isOpen, setDisplayType, setIsOpen, setIsOpenIntegration }) {
   return (
     <Modal isOpen={isOpen} hide={() => setIsOpen(false)} size="sm">
       <ModalContent className="modal-actions">
         <Title as="h1" look="h6">
-          <span
-            className="fr-icon-bar-chart-box-line fr-mr-1w"
-            aria-hidden="true"
-          />
+          <span className="fr-icon-bar-chart-box-line fr-mr-1w" aria-hidden="true" />
           Options du graphique
         </Title>
 
-        <fieldset
-          className="fr-fieldset"
-          id="radio-hint"
-          aria-labelledby="radio-hint-legend radio-hint-messages"
-        >
-          <legend
-            className="fr-fieldset__legend--regular fr-fieldset__legend"
-            id="radio-hint-legend"
-          >
+        <fieldset className="fr-fieldset" id="radio-hint" aria-labelledby="radio-hint-legend radio-hint-messages">
+          <legend className="fr-fieldset__legend--regular fr-fieldset__legend" id="radio-hint-legend">
             Type d'affichage
           </legend>
           <div className="fr-fieldset__element">
@@ -92,35 +65,17 @@ function MenuModal({
         <hr />
         <ul>
           <li>
-            <Button
-              color="beige-gris-galet"
-              icon="file-download-line"
-              title="téléchargement des données du graphique"
-              variant="text"
-              disabled
-            >
+            <Button color="beige-gris-galet" icon="file-download-line" title="téléchargement des données du graphique" variant="text" disabled>
               Télécharger les données (csv)
             </Button>
           </li>
           <li>
-            <Button
-              color="beige-gris-galet"
-              icon="image-line"
-              title="téléchargement de l'image"
-              variant="text"
-              disabled
-            >
+            <Button color="beige-gris-galet" icon="image-line" title="téléchargement de l'image" variant="text" disabled>
               Télécharger l'image (png)
             </Button>
           </li>
           <li>
-            <Button
-              color="beige-gris-galet"
-              icon="printer-line"
-              title="lancement de l'impression"
-              variant="text"
-              disabled
-            >
+            <Button color="beige-gris-galet" icon="printer-line" title="lancement de l'impression" variant="text" disabled>
               Imprimer
             </Button>
           </li>
@@ -133,27 +88,9 @@ function MenuModal({
                 Partager
               </Title>
               <div className="share">
-                <Button
-                  color="beige-gris-galet"
-                  icon="twitter-x-fill"
-                  title="Twitter-X"
-                  variant="text"
-                  disabled
-                />
-                <Button
-                  color="beige-gris-galet"
-                  icon="linkedin-box-fill"
-                  title="Linkedin"
-                  variant="text"
-                  disabled
-                />
-                <Button
-                  color="beige-gris-galet"
-                  icon="facebook-circle-fill"
-                  title="Facebook"
-                  variant="text"
-                  disabled
-                />
+                <Button color="beige-gris-galet" icon="twitter-x-fill" title="Twitter-X" variant="text" disabled />
+                <Button color="beige-gris-galet" icon="linkedin-box-fill" title="Linkedin" variant="text" disabled />
+                <Button color="beige-gris-galet" icon="facebook-circle-fill" title="Facebook" variant="text" disabled />
               </div>
             </Col>
             <Col>
@@ -200,22 +137,14 @@ export default function ChartWrapper({ display_title, id, legend, options }) {
           </Title>
           <Text className="sources">
             Sources :{" "}
-            <a
-              href={graphConfig.sourceURL}
-              target="_blank"
-              rel="noreferrer noopener"
-            >
+            <a href={graphConfig.sourceURL} target="_blank" rel="noreferrer noopener">
               {graphConfig.source[currentLanguage]}
             </a>
           </Text>
         </>
       )}
       {graphConfig.subtitle && (
-        <Title
-          as={graphConfig.title ? "h3" : "h2"}
-          look="h6"
-          className="fr-mb-0"
-        >
+        <Title as={graphConfig.title ? "h3" : "h2"} look="h6" className="fr-mb-0">
           {graphConfig.subtitle[currentLanguage]}
         </Title>
       )}
@@ -229,9 +158,7 @@ export default function ChartWrapper({ display_title, id, legend, options }) {
           variant="text"
         />
       </div>
-      {displayType === "data" && (
-        <pre>{JSON.stringify(options.series, null, 2)}</pre>
-      )}
+      {displayType === "data" && <pre>{JSON.stringify(options.series, null, 2)}</pre>}
       {displayType === "chart" && (
         <figure>
           <HighchartsReact highcharts={Highcharts} options={options} />
@@ -243,9 +170,7 @@ export default function ChartWrapper({ display_title, id, legend, options }) {
           <div className="fr-notice fr-notice--info fr-mt-1w">
             <div className="fr-container">
               <div className="fr-notice__body">
-                <Text className="description">
-                  {graphConfig.description[currentLanguage]}
-                </Text>
+                <Text className="description">{graphConfig.description[currentLanguage]}</Text>
               </div>
             </div>
           </div>
@@ -258,11 +183,7 @@ export default function ChartWrapper({ display_title, id, legend, options }) {
         setIsOpen={setIsOpen}
         setIsOpenIntegration={setIsOpenIntegration}
       />
-      <IntegrationModal
-        graphConfig={graphConfig}
-        isOpen={isOpenIntegration}
-        setIsOpen={setIsOpenIntegration}
-      />
+      <IntegrationModal graphConfig={graphConfig} isOpen={isOpenIntegration} setIsOpen={setIsOpenIntegration} />
     </section>
   );
 }

@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 import "highcharts/modules/map";
 

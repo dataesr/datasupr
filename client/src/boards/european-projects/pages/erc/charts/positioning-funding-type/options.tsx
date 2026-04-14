@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { ProcessedPositioningByFundingTypeData } from "./utils";
 import { getChartColors, FUNDING_TYPES } from "./utils";

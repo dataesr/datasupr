@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 
 type valuesProps = {
@@ -12,7 +12,6 @@ type CardProps = {
 };
 
 import "./styles.scss";
-
 
 export default function SectorsCard({ currentYear, values }: CardProps) {
   const rootStyles = getComputedStyle(document.documentElement);
@@ -36,10 +35,10 @@ export default function SectorsCard({ currentYear, values }: CardProps) {
       },
     },
     legend: {
-      itemStyle:{
+      itemStyle: {
         color: rootStyles.getPropertyValue("--label-color"),
         fontFamily: "Marianne, sans-serif",
-      }
+      },
     },
     tooltip: {
       pointFormat: "{series.name}: <b>{point.percentage:.1f}%</b>",
@@ -67,10 +66,7 @@ export default function SectorsCard({ currentYear, values }: CardProps) {
         type: "pie",
         name: currentYear,
         innerSize: "92%",
-        data: values.labels.map((label, index) => [
-          label,
-          values.values[index],
-        ]),
+        data: values.labels.map((label, index) => [label, values.values[index]]),
         showInLegend: true,
       },
     ],

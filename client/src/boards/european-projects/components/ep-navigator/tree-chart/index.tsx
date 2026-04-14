@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import "highcharts/modules/exporting";
 import "highcharts/modules/offline-exporting";
 import HighchartsReact from "highcharts-react-official";

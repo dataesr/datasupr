@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 
 type HistoData = {
@@ -48,24 +48,12 @@ export default function SectorsHistoChart({
       series = [
         {
           name: "Secteur privé",
-          data: data.map(
-            (item) =>
-              parseFloat((
-              (item.effectif_pr * 100) / (item.effectif_pr + item.effectif_pu)
-                ).toFixed(1)
-              )
-          ),
+          data: data.map((item) => parseFloat(((item.effectif_pr * 100) / (item.effectif_pr + item.effectif_pu)).toFixed(1))),
           color: "#755F4D",
         },
         {
           name: "Secteur public",
-          data: data.map(
-            (item) =>
-              parseFloat((
-                (item.effectif_pu * 100) / (item.effectif_pr + item.effectif_pu)
-                ).toFixed(1)
-              )
-              ),
+          data: data.map((item) => parseFloat(((item.effectif_pu * 100) / (item.effectif_pr + item.effectif_pu)).toFixed(1))),
           color: "#748CC0",
         },
       ];
@@ -86,10 +74,10 @@ export default function SectorsHistoChart({
       backgroundColor: "transparent",
     },
     legend: {
-      itemStyle:{
+      itemStyle: {
         color: rootStyles.getPropertyValue("--label-color"),
         fontFamily: "Marianne, sans-serif",
-      }
+      },
     },
     title: {
       text: "",
@@ -127,8 +115,7 @@ export default function SectorsHistoChart({
     },
     tooltip: {
       headerFormat: "<b>{point.x}</b><br/>",
-      pointFormat: view === 'basic' ? "{series.name}: {point.y}<br/>Total: {point.stackTotal}" : "{series.name}: {point.y}%",
-
+      pointFormat: view === "basic" ? "{series.name}: {point.y}<br/>Total: {point.stackTotal}" : "{series.name}: {point.y}%",
     },
     plotOptions: {
       column: {

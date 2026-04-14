@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 
 type HistoData = {
@@ -48,28 +48,12 @@ export default function GendersHistoChart({
       series = [
         {
           name: "Féminin",
-          data: data.map(
-        (item) =>
-          parseFloat(
-            (
-          (item.effectif_feminin * 100) /
-          (item.effectif_feminin + item.effectif_masculin)
-            ).toFixed(1)
-          )
-          ),
+          data: data.map((item) => parseFloat(((item.effectif_feminin * 100) / (item.effectif_feminin + item.effectif_masculin)).toFixed(1))),
           color: "#e18b76",
         },
         {
           name: "Masculin",
-          data: data.map(
-        (item) =>
-          parseFloat(
-            (
-          (item.effectif_masculin * 100) /
-          (item.effectif_feminin + item.effectif_masculin)
-            ).toFixed(1)
-          )
-          ),
+          data: data.map((item) => parseFloat(((item.effectif_masculin * 100) / (item.effectif_feminin + item.effectif_masculin)).toFixed(1))),
           color: "#efcb3a",
         },
       ];
@@ -90,10 +74,10 @@ export default function GendersHistoChart({
       backgroundColor: "transparent",
     },
     legend: {
-      itemStyle:{
+      itemStyle: {
         color: rootStyles.getPropertyValue("--label-color"),
         fontFamily: "Marianne, sans-serif",
-      }
+      },
     },
     title: { text: "" },
     credits: {
@@ -129,7 +113,7 @@ export default function GendersHistoChart({
     },
     tooltip: {
       headerFormat: "<b>{point.x}</b><br/>",
-      pointFormat: view === 'basic' ? "{series.name}: {point.y}<br/>Total: {point.stackTotal}" : "{series.name}: {point.y}%",
+      pointFormat: view === "basic" ? "{series.name}: {point.y}<br/>Total: {point.stackTotal}" : "{series.name}: {point.y}%",
     },
     plotOptions: {
       column: {

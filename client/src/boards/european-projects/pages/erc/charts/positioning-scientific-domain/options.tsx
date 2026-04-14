@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import type { ProcessedPositioningByDomainData, ProcessedPositioningMultiPanelData } from "./utils";
 import { getChartColors, SCIENTIFIC_DOMAINS } from "./utils";
@@ -130,9 +130,18 @@ export default function Options({ processedData, currentLang = "fr" }: OptionsPa
 
 // Palette de couleurs pour les panels
 const PANEL_COLORS = [
-  "#0063CB", "#8B2FAF", "#3B7A57", "#C74B04", "#805E00",
-  "#164171", "#5E6472", "#D4005A", "#00799B", "#34A853",
-  "#EA4335", "#FBBC04",
+  "#0063CB",
+  "#8B2FAF",
+  "#3B7A57",
+  "#C74B04",
+  "#805E00",
+  "#164171",
+  "#5E6472",
+  "#D4005A",
+  "#00799B",
+  "#34A853",
+  "#EA4335",
+  "#FBBC04",
 ];
 
 export interface MultiPanelOptionsParams {
@@ -144,13 +153,10 @@ export function OptionsMultiPanel({ multiPanelData, currentLang = "fr" }: MultiP
   if (!multiPanelData || multiPanelData.countries.length === 0 || multiPanelData.panels.length === 0) return null;
 
   const yAxisLabel =
-    multiPanelData.metric === "projects"
-      ? getI18nLabel(i18n, "y-axis-projects", currentLang)
-      : getI18nLabel(i18n, "y-axis-funding", currentLang);
+    multiPanelData.metric === "projects" ? getI18nLabel(i18n, "y-axis-projects", currentLang) : getI18nLabel(i18n, "y-axis-funding", currentLang);
 
   const domainLabel =
-    SCIENTIFIC_DOMAINS.find((d) => d.code === multiPanelData.domainCode)?.label[currentLang as "fr" | "en"] ??
-    multiPanelData.domainCode;
+    SCIENTIFIC_DOMAINS.find((d) => d.code === multiPanelData.domainCode)?.label[currentLang as "fr" | "en"] ?? multiPanelData.domainCode;
 
   const titleText =
     multiPanelData.metric === "projects"
@@ -173,7 +179,7 @@ export function OptionsMultiPanel({ multiPanelData, currentLang = "fr" }: MultiP
         y: val,
         borderWidth: isSelected ? 1 : 0,
         borderColor: isSelected ? "#161616" : undefined,
-        
+
         name: categories[ci],
       };
     }),

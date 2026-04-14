@@ -1,25 +1,25 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
-import type { DataByYear } from '../../../types/atlas';
+import type { DataByYear } from "../../../types/atlas";
 
-export default function ColumnsChart({ data, label, currentYear }: { data: DataByYear[], label: string, currentYear: string }) {
+export default function ColumnsChart({ data, label, currentYear }: { data: DataByYear[]; label: string; currentYear: string }) {
   const rootStyles = getComputedStyle(document.documentElement);
   const filieresOptions = {
     chart: {
       backgroundColor: "transparent",
-      height: '250',
-      type: 'column',
+      height: "250",
+      type: "column",
     },
     title: {
-      text: ""
+      text: "",
     },
     subtitle: {
-      align: 'left',
+      align: "left",
       style: {
         color: rootStyles.getPropertyValue("--label-color"),
         fontFamily: "Marianne, sans-serif",
       },
-      text: 'Nombre d\'étudiants inscrits par année universitaire'
+      text: "Nombre d'étudiants inscrits par année universitaire",
     },
     xAxis: {
       categories: data.map((year) => year.annee_universitaire),
@@ -32,60 +32,59 @@ export default function ColumnsChart({ data, label, currentYear }: { data: DataB
       },
       lineWidth: 0,
       title: {
-        text: null
-      }
+        text: null,
+      },
     },
     yAxis: {
       min: 0,
       title: {
-        align: 'high',
+        align: "high",
         style: {
           color: rootStyles.getPropertyValue("--label-color"),
           fontFamily: "Marianne, sans-serif",
         },
-        text: "Nombre d'étudiants"
+        text: "Nombre d'étudiants",
       },
       labels: {
-        overflow: 'justify',
+        overflow: "justify",
         style: {
           color: rootStyles.getPropertyValue("--label-color"),
           fontFamily: "Marianne, sans-serif",
         },
       },
-      gridLineWidth: 0
+      gridLineWidth: 0,
     },
     tooltip: {
-      valueSuffix: ' étudiants'
+      valueSuffix: " étudiants",
     },
     plotOptions: {
       bar: {
-        borderRadius: '50%',
+        borderRadius: "50%",
         dataLabels: {
-          enabled: true
+          enabled: true,
         },
-        groupPadding: 0.1
-      }
+        groupPadding: 0.1,
+      },
     },
     legend: {
-      enabled: false
+      enabled: false,
     },
     credits: {
-      enabled: false
+      enabled: false,
     },
-    series: [{
-      name: "Nombre d'étudiants inscrits",
-      data: data.map((year) => ({
-        y: (year[label]) ? year[label] : 0,
-        color: (year.annee_universitaire === currentYear) ? '#ce614a' : '#999'
-      }))
-    }]
+    series: [
+      {
+        name: "Nombre d'étudiants inscrits",
+        data: data.map((year) => ({
+          y: year[label] ? year[label] : 0,
+          color: year.annee_universitaire === currentYear ? "#ce614a" : "#999",
+        })),
+      },
+    ],
   };
   return (
     <section>
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={filieresOptions}
-      />
+      <HighchartsReact highcharts={Highcharts} options={filieresOptions} />
     </section>
-  )
+  );
 }

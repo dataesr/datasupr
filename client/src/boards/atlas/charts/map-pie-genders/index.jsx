@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-this-alias */
 import React from "react";
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import "highcharts/modules/map";
 import HighchartsReact from "highcharts-react-official";
 import * as turf from "@turf/turf";

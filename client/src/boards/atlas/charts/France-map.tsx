@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 import "highcharts/modules/map";
 import mapDataIE from "../../../assets/regions.json";
@@ -9,13 +9,7 @@ type DataProps = {
   value: number;
 }[];
 
-export default function FranceMap({
-  data,
-  isLoading,
-}: {
-  data: DataProps;
-  isLoading: boolean;
-}) {
+export default function FranceMap({ data, isLoading }: { data: DataProps; isLoading: boolean }) {
   if (isLoading) {
     return <Template />;
   }
@@ -62,8 +56,7 @@ export default function FranceMap({
         },
         cursor: "pointer",
         tooltip: {
-          pointFormat:
-            '{point.name}: {point.value} étudiants<br><span style="color:gray;font-size:11px">Cliquez pour plus de détails</span>',
+          pointFormat: '{point.name}: {point.value} étudiants<br><span style="color:gray;font-size:11px">Cliquez pour plus de détails</span>',
         },
       },
     ],
@@ -71,11 +64,7 @@ export default function FranceMap({
 
   return (
     <section>
-      <HighchartsReact
-        constructorType={"mapChart"}
-        highcharts={Highcharts}
-        options={mapOptions}
-      />
+      <HighchartsReact constructorType={"mapChart"} highcharts={Highcharts} options={mapOptions} />
     </section>
   );
 }

@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 
 import Template from "../../../components/template";
@@ -9,17 +9,11 @@ type DataProps = {
   effectif_PR: number;
 };
 
-export default function FilieresSectorsChart({
-  data,
-  isLoading,
-}: {
-  data: DataProps[];
-  isLoading: boolean;
-}) {
+export default function FilieresSectorsChart({ data, isLoading }: { data: DataProps[]; isLoading: boolean }) {
   if (isLoading || !data || data.length === 0) {
     return <Template />;
   }
-  
+
   const rootStyles = getComputedStyle(document.documentElement);
   const filieresOptions = {
     chart: {
@@ -27,10 +21,10 @@ export default function FilieresSectorsChart({
       type: "bar",
     },
     legend: {
-      itemStyle:{
+      itemStyle: {
         color: rootStyles.getPropertyValue("--label-color"),
         fontFamily: "Marianne, sans-serif",
-      }
+      },
     },
     title: {
       text: "",
@@ -86,16 +80,12 @@ export default function FilieresSectorsChart({
     series: [
       {
         name: "Secteur public",
-        data: data.map((filiere) =>
-          filiere.effectif_PU ? filiere.effectif_PU : 0
-        ),
+        data: data.map((filiere) => (filiere.effectif_PU ? filiere.effectif_PU : 0)),
         color: "#748CC0",
       },
       {
         name: "Secteur privé",
-        data: data.map((filiere) =>
-          filiere.effectif_PR ? filiere.effectif_PR : 0
-        ),
+        data: data.map((filiere) => (filiere.effectif_PR ? filiere.effectif_PR : 0)),
         color: "#755F4D",
       },
     ],

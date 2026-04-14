@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 import Template from "../../../../components/template";
 
@@ -7,13 +7,7 @@ type GenderData = {
   y: number;
 }[];
 
-export default function GenderChart({
-  data = [],
-  isLoading,
-}: {
-  data: GenderData;
-  isLoading: boolean;
-}) {
+export default function GenderChart({ data = [], isLoading }: { data: GenderData; isLoading: boolean }) {
   if (isLoading || !data || (data[0].y === 0 && data[1].y === 0)) {
     return <Template height="250px" />;
   }
@@ -25,10 +19,10 @@ export default function GenderChart({
       backgroundColor: "transparent",
     },
     legend: {
-      itemStyle:{
+      itemStyle: {
         color: rootStyles.getPropertyValue("--label-color"),
         fontFamily: "Marianne, sans-serif",
-      }
+      },
     },
     title: {
       text: "",

@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
 import { getCssColor } from "../../../../../../utils/colors";
 import type { GenderEvolutionData, GenderYearItem } from "./query";

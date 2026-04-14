@@ -1,75 +1,74 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 
 type DataByYear = {
-  annee_universitaire: string,
-  effectif: number,
-}
+  annee_universitaire: string;
+  effectif: number;
+};
 
 export default function AeraChart({ data }: { data: DataByYear[] }) {
   const filieresOptions = {
     chart: {
-      type: 'area',
-      height: '250'
+      type: "area",
+      height: "250",
     },
     title: {
       text: "Données historiques",
-      align: 'left',
+      align: "left",
       style: {
-        fontSize: '1rem',
-      }
+        fontSize: "1rem",
+      },
     },
     subtitle: {
-      text: 'Nombre d\'étudiants inscrits par année universitaire depuis l\'année 2001-2002',
-      align: 'left'
+      text: "Nombre d'étudiants inscrits par année universitaire depuis l'année 2001-2002",
+      align: "left",
     },
     xAxis: {
       categories: data.map((year) => year.annee_universitaire),
       title: {
-        text: null
+        text: null,
       },
       gridLineWidth: 1,
-      lineWidth: 0
+      lineWidth: 0,
     },
     yAxis: {
       min: 0,
       title: {
         text: "Nombre d'étudiants",
-        align: 'high'
+        align: "high",
       },
       labels: {
-        overflow: 'justify'
+        overflow: "justify",
       },
-      gridLineWidth: 0
+      gridLineWidth: 0,
     },
     tooltip: {
-      valueSuffix: ' étudiants'
+      valueSuffix: " étudiants",
     },
     plotOptions: {
       bar: {
-        borderRadius: '50%',
+        borderRadius: "50%",
         dataLabels: {
-          enabled: true
+          enabled: true,
         },
-        groupPadding: 0.1
-      }
+        groupPadding: 0.1,
+      },
     },
     credits: {
-      enabled: false
+      enabled: false,
     },
-    series: [{
-      name: "Nombre d'étudiants inscrits",
-      data: data.map((year) => ({
-        y: year.effectif,
-      }))
-    }]
+    series: [
+      {
+        name: "Nombre d'étudiants inscrits",
+        data: data.map((year) => ({
+          y: year.effectif,
+        })),
+      },
+    ],
   };
   return (
     <section>
-      <HighchartsReact
-        highcharts={Highcharts}
-        options={filieresOptions}
-      />
+      <HighchartsReact highcharts={Highcharts} options={filieresOptions} />
     </section>
-  )
+  );
 }

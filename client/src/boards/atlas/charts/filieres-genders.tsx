@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 
 import Template from "../../../components/template";
@@ -9,17 +9,11 @@ type DataProps = {
   effectif_feminin: number;
 };
 
-export default function FilieresGendersChart({
-  data,
-  isLoading,
-}: {
-  data: DataProps[];
-  isLoading: boolean;
-}) {
+export default function FilieresGendersChart({ data, isLoading }: { data: DataProps[]; isLoading: boolean }) {
   if (isLoading || !data || data.length === 0) {
     return <Template />;
   }
-  
+
   const rootStyles = getComputedStyle(document.documentElement);
   const filieresOptions = {
     chart: {
@@ -27,10 +21,10 @@ export default function FilieresGendersChart({
       type: "bar",
     },
     legend: {
-      itemStyle:{
+      itemStyle: {
         color: rootStyles.getPropertyValue("--label-color"),
         fontFamily: "Marianne, sans-serif",
-      }
+      },
     },
     title: {
       text: "",
@@ -86,16 +80,12 @@ export default function FilieresGendersChart({
     series: [
       {
         name: "Masculin",
-        data: data.map((filiere) =>
-          filiere.effectif_masculin ? filiere.effectif_masculin : 0
-        ),
+        data: data.map((filiere) => (filiere.effectif_masculin ? filiere.effectif_masculin : 0)),
         color: "#efcb3a",
       },
       {
         name: "Féminin",
-        data: data.map((filiere) =>
-          filiere.effectif_feminin ? filiere.effectif_feminin : 0
-        ),
+        data: data.map((filiere) => (filiere.effectif_feminin ? filiere.effectif_feminin : 0)),
         color: "#e18b76",
       },
     ],

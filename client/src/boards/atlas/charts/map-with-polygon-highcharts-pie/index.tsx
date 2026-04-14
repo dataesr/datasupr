@@ -1,4 +1,4 @@
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import HighchartsReact from "highcharts-react-official";
 import "highcharts/modules/map";
 // import { MapBubbleDataProps, PolygonsDataProps } from "../../../../types/atlas";
@@ -23,9 +23,7 @@ export default function MapWithPolygonHighchartsPie() {
 
     accessibility: {
       description:
-        "Complex map demo showing voting results for US " +
-        "states, where each state has a pie chart overlaid showing " +
-        "the vote distribution.",
+        "Complex map demo showing voting results for US " + "states, where each state has a pie chart overlaid showing " + "the vote distribution.",
     },
 
     colorAxis: {
@@ -95,16 +93,7 @@ export default function MapWithPolygonHighchartsPie() {
         name: "States",
         borderColor: "#FFF",
         joinBy: ["name", "id"],
-        keys: [
-          "id",
-          "demVotes",
-          "repVotes",
-          "libVotes",
-          "grnVotes",
-          "sumVotes",
-          "value",
-          "pieOffset",
-        ],
+        keys: ["id", "demVotes", "repVotes", "libVotes", "grnVotes", "sumVotes", "value", "pieOffset"],
       },
       {
         name: "Connectors",
@@ -122,11 +111,7 @@ export default function MapWithPolygonHighchartsPie() {
 
   return (
     <section>
-      <HighchartsReact
-        constructorType={"mapChart"}
-        highcharts={Highcharts}
-        options={mapOptions}
-      />
+      <HighchartsReact constructorType={"mapChart"} highcharts={Highcharts} options={mapOptions} />
     </section>
   );
 }

@@ -14,6 +14,10 @@ To run it locally : `npm start`
 
 And the project should be available via your favorite browser at http://localhost:5173/.
 
+## Serve localy
+To create build: `npm run build`
+To run local server: `serve -s server/dist` (requirement: install serve. `npm -g serve`)
+
 ## Build for production
 
 The react client app is served by the node server in production.
