@@ -13,7 +13,6 @@ import "highcharts/es-modules/masters/modules/treemap.src.js";
 
 import "highcharts/es-modules/masters/modules/accessibility.src.js";
 
-
 import React, { useId, useRef, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 
 import { getData } from "./query";
 import options from "./options";
@@ -7,13 +8,12 @@ import { EPChartsSources } from "../../../../config";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
-
+const title = {
+  fr: "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
+  en: "Funding requested and obtained by the country on all countries",
+};
 const config = {
   id: "pillarsFundingProportion",
-  title: {
-    fr: "Part des financement demandés et obtenus par le pays sur l'ensemble des pays",
-    en: "Funding requested and obtained by the country on all countries",
-  },
   comment: {
     fr: (
       <>
@@ -43,6 +43,9 @@ const config = {
 
 export default function PillarsFundingProportion() {
   const params = useGetParams();
+    const [searchParams] = useSearchParams();
+    const currentLang = searchParams.get("language") || "fr";
+  
   const { data, isLoading } = useQuery({
     queryKey: [config.id, params],
     queryFn: () => getData(params),
@@ -50,5 +53,11 @@ export default function PillarsFundingProportion() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} options={options(data)} renderData={() => renderDataTable(data, "fr")} />;
+  return (
+    <ChartWrapper
+      config={config}
+      options={options(data, currentLang === "fr" ? title.fr : title.en)}
+      renderData={() => renderDataTable(data, "fr")}
+    />
+  );
 }

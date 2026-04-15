@@ -19,6 +19,7 @@ import TopicsFundingEvo3Years from "../../../overview/charts/topics-funding-evo-
 import { getI18nLabel } from "../../../../../../utils";
 
 const i18n = {
+  "synthesis-title": { fr: "Synthèse", en: "Synthesis" },
   "pillar-comparison-title": { fr: "Comparaison de la répartition des subventions par pilier", en: "Comparison of grant distribution by pillar" },
   "pillar-detail-title": { fr: "Détails du pilier sur les 3 dernières années", en: "Pillar details over the last 3 years" },
   "pillar-detail-callout": {
@@ -78,13 +79,16 @@ export default function SyntheseContent() {
   switch (contentType) {
     case "pillar-comparison":
       return (
-        <div className="fr-pb-3w">
+        <section className="fr-pb-3w">
+          <Title as="h1" look="h2">
+            {getI18nLabel(i18n, "synthesis-title", currentLang)}
+          </Title>
           <SynthesisFocus />
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "pillar-comparison-title", currentLang)}
           </Title>
           <PillarsFunding />
-        </div>
+        </section>
       );
 
     case "pillar-detail":

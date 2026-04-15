@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 
 import { getData } from "./query";
 import options from "./options";
@@ -10,15 +11,14 @@ import DefaultSkeleton from "../../../../../../components/charts-skeletons/defau
 const config = {
   id: "pillarsFundingSuccessRates",
   idQuery: "pillarsFunding",
-  title: {
-    fr: "Taux de succès",
-    en: "Success rate",
-  },
   integrationURL: "/european-projects/components/pages/analysis/overview/charts/destination-funding-success-rates",
 };
 
 export default function PillarsFundingSuccessRates() {
   const params = useGetParams();
+  const [searchParams] = useSearchParams();
+  const currentLang = searchParams.get("language") || "fr";
+
   const { data, isLoading } = useQuery({
     queryKey: [config.idQuery, params],
     queryFn: () => getData(params),
@@ -26,5 +26,11 @@ export default function PillarsFundingSuccessRates() {
 
   if (isLoading || !data) return <DefaultSkeleton />;
 
-  return <ChartWrapper config={config} options={options(data)} renderData={() => renderDataTable(data, "fr")} />;
+  return (
+    <ChartWrapper
+      config={config}
+      options={options(data, currentLang === "fr" ? "Taux de succès" : "Success rate")}
+      renderData={() => renderDataTable(data, "fr")}
+    />
+  );
 }

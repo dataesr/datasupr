@@ -99,8 +99,8 @@ export default function ErcGenderEvolution() {
   const destSuffix = selectedDestination !== "ALL" && destLabel ? ` · ${destLabel[currentLang === "fr" ? "labelFr" : "labelEn"]}` : "";
 
   const titleConfig = {
-    fr: `Évolution de la part des femmes candidates à l'ERC${suffix}${destSuffix}`,
-    en: `Evolution of the share of women ERC applicants${suffix}${destSuffix}`,
+    fr: `Évolution de la part des cadidats par genre à l'ERC${suffix}${destSuffix}`,
+    en: `Evolution of the share of ERC applicants by gender${suffix}${destSuffix}`,
   };
 
   return (
