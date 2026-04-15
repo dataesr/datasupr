@@ -228,6 +228,81 @@ export function createFmStackedOptions(
   });
 }
 
+export function createFmStackedAreaOptions(
+  records: Records,
+  metricKeys: string[],
+  metricsConfig: Record<string, FmMetricConfig>,
+  showPercentage: boolean
+): Highcharts.Options {
+  const categories = records.map((r) => r.annee_universitaire);
+
+  const series = [...metricKeys]
+    .reverse()
+    .map((key) => {
+      const cfg = metricsConfig[key];
+      const hasData = records.some((r) => r[key] != null && r[key] !== 0);
+      if (!hasData) return null;
+      return {
+        type: "area" as const,
+        name: cfg?.label || key,
+        color: cfg?.color,
+        fillOpacity: 0.55,
+        lineWidth: 1.5,
+        marker: { enabled: false, symbol: "circle" as const, radius: 3 },
+        data: records.map((r) => {
+          const v = r[key];
+          if (showPercentage) {
+            const total = metricKeys.reduce(
+              (sum, k) => sum + (Number(r[k]) || 0),
+              0
+            );
+            return total > 0 ? (Number(v) / total) * 100 : 0;
+          }
+          return typeof v === "number" ? v : 0;
+        }),
+      };
+    })
+    .filter(Boolean) as Highcharts.SeriesOptionsType[];
+
+  return createChartOptions("area", {
+    chart: { height: 480 },
+    xAxis: {
+      categories,
+      title: { text: "Année universitaire" },
+      crosshair: true,
+    },
+    yAxis: {
+      title: { text: showPercentage ? "Répartition (%)" : "Effectif" },
+      labels: {
+        format: showPercentage ? "{value:.0f}\u00a0%" : "{value:,.0f}",
+      },
+      min: 0,
+      max: showPercentage ? 100 : undefined,
+    },
+    plotOptions: {
+      area: {
+        stacking: showPercentage ? "percent" : "normal",
+        lineWidth: 1.5,
+        marker: { enabled: false },
+      },
+    },
+    tooltip: {
+      shared: true,
+      headerFormat: "<b>{point.key}</b><br/>",
+      pointFormat:
+        '<span style="color:{series.color}">●</span> {series.name}: <b>{point.y:,.0f}</b>' +
+        (showPercentage ? " ({point.percentage:.1f}\u00a0%)" : "") +
+        "<br/>",
+    },
+    legend: {
+      enabled: true,
+      reversed: true,
+      itemStyle: { fontSize: "11px", fontWeight: "normal" },
+    },
+    series,
+  });
+}
+
 export function createFmBase100Options(
   records: Records,
   metricKeys: string[],
@@ -248,9 +323,9 @@ export function createFmBase100Options(
     const values = records.map((r) =>
       typeof r[key] === "number" ? r[key] : null
     );
-    const base = values.find((v) => v !== null);
+    const base = values.find((v) => v != null && v !== 0);
     const normalized = values.map((v) =>
-      v !== null && base ? (v / base) * 100 : null
+      v != null && base != null ? (v / base) * 100 : null
     );
     return {
       type: "line" as const,
@@ -302,5 +377,99 @@ export function createFmBase100Options(
       itemStyle: { fontSize: "11px", fontWeight: "normal" },
     },
     series,
+  });
+}
+
+const AGE_CATEGORIES = ["≤ 35 ans", "36 – 55 ans", "≥ 56 ans"];
+const AGE_H_KEYS = ["age_35_moins_h", "age_36_55_h", "age_56_plus_h"];
+const AGE_F_KEYS = ["age_35_moins_f", "age_36_55_f", "age_56_plus_f"];
+
+export function createFmPyramidOptions(
+  record: Record<string, any>
+): Highcharts.Options {
+  const hommesData = AGE_H_KEYS.map((k) => -(record[k] || 0));
+  const femmesData = AGE_F_KEYS.map((k) => record[k] || 0);
+
+  const maxVal = Math.max(
+    ...AGE_H_KEYS.map((k) => record[k] || 0),
+    ...AGE_F_KEYS.map((k) => record[k] || 0)
+  );
+  const axisMax = Math.ceil(maxVal * 1.15);
+
+  return createChartOptions("bar", {
+    chart: { height: 360 },
+    xAxis: {
+      categories: AGE_CATEGORIES,
+      reversed: false,
+      labels: {
+        style: {
+          fontSize: "12px",
+          fontWeight: "600",
+          color: getCssColor("text-default-grey"),
+        },
+      },
+    },
+    yAxis: {
+      title: { text: "Effectif" },
+      min: -axisMax,
+      max: axisMax,
+      labels: {
+        formatter: function () {
+          return Highcharts.numberFormat(
+            Math.abs(this.value as number),
+            0,
+            ",",
+            "\u00a0"
+          );
+        },
+      },
+    },
+    plotOptions: {
+      bar: {
+        borderWidth: 0,
+        borderRadius: 3,
+        groupPadding: 0.15,
+        pointPadding: 0.05,
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            return Highcharts.numberFormat(
+              Math.abs(this.y as number),
+              0,
+              ",",
+              "\u00a0"
+            );
+          },
+          style: {
+            fontSize: "11px",
+            fontWeight: "normal",
+            textOutline: "none",
+          },
+        },
+      },
+    },
+    tooltip: {
+      formatter: function () {
+        return `<b>${this.series.name}</b><br/>${this.x}: <b>${Highcharts.numberFormat(Math.abs(this.y as number), 0, ",", "\u00a0")}</b>`;
+      },
+    },
+    legend: {
+      enabled: true,
+      itemStyle: { fontSize: "11px", fontWeight: "normal" },
+    },
+    series: [
+      {
+        type: "bar",
+        name: "Hommes",
+        color: getCssColor("fm-hommes"),
+        data: hommesData,
+      },
+      {
+        type: "bar",
+        name: "Femmes",
+        color: getCssColor("fm-femmes"),
+        data: femmesData,
+      },
+    ],
   });
 }

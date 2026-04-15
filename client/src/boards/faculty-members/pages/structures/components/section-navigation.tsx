@@ -18,7 +18,7 @@ const ALL_NAV_ITEMS = [
     { id: "enseignants-non-permanents", label: "Enseignants non permanents" },
     { id: "groupes-cnu", label: "Groupes CNU" },
     { id: "comparaison", label: "Positionnement" },
-    { id: "evolutions", label: "Évolutions" },
+    { id: "analyses", label: "Analyses" },
 ];
 
 const HIDDEN_SECTIONS: Partial<Record<ViewType, string[]>> = {

@@ -12,7 +12,7 @@ export interface FmAnalysisConfig {
   label: string;
   metrics: string[];
   category: string;
-  chartType: "single" | "stacked" | "base100";
+  chartType: "single" | "stacked" | "area" | "pyramid" | "base100";
 }
 
 export const FM_STATIC_METRICS: Record<string, FmMetricConfig> = {
@@ -58,17 +58,17 @@ export const FM_STATIC_METRICS: Record<string, FmMetricConfig> = {
     color: getCssColor("fm-statut-titulaire"),
     category: "Effectifs globaux",
   },
-  effectif_temps_plein: {
-    label: "Temps plein",
+  effectif_pr: {
+    label: "PR et assimilés",
     format: "number",
-    color: getCssColor("fm-quotite-temps-plein"),
-    category: "Effectifs globaux",
+    color: getCssColor("fm-cat-pr"),
+    category: "Enseignants-chercheurs",
   },
-  effectif_temps_partiel: {
-    label: "Temps partiel",
+  effectif_mcf: {
+    label: "MCF et assimilés",
     format: "number",
-    color: getCssColor("fm-quotite-temps-partiel"),
-    category: "Effectifs globaux",
+    color: getCssColor("fm-cat-mcf"),
+    category: "Enseignants-chercheurs",
   },
   effectif_age_35_moins: {
     label: "35 ans et moins",
@@ -87,6 +87,43 @@ export const FM_STATIC_METRICS: Record<string, FmMetricConfig> = {
     format: "number",
     color: getCssColor("fm-age-56-et-plus-ec"),
     category: "Effectifs globaux",
+  },
+
+  age_35_moins_f: {
+    label: "Femmes ≤ 35 ans",
+    format: "number",
+    color: getCssColor("fm-femmes"),
+    category: "Pyramide des âges",
+  },
+  age_35_moins_h: {
+    label: "Hommes ≤ 35 ans",
+    format: "number",
+    color: getCssColor("fm-hommes"),
+    category: "Pyramide des âges",
+  },
+  age_36_55_f: {
+    label: "Femmes 36–55 ans",
+    format: "number",
+    color: getCssColor("fm-femmes"),
+    category: "Pyramide des âges",
+  },
+  age_36_55_h: {
+    label: "Hommes 36–55 ans",
+    format: "number",
+    color: getCssColor("fm-hommes"),
+    category: "Pyramide des âges",
+  },
+  age_56_plus_f: {
+    label: "Femmes ≥ 56 ans",
+    format: "number",
+    color: getCssColor("fm-femmes"),
+    category: "Pyramide des âges",
+  },
+  age_56_plus_h: {
+    label: "Hommes ≥ 56 ans",
+    format: "number",
+    color: getCssColor("fm-hommes"),
+    category: "Pyramide des âges",
   },
 
   taux_feminisation: {
@@ -126,39 +163,39 @@ export const FM_STATIC_METRICS: Record<string, FmMetricConfig> = {
     suffix: "%",
   },
   taux_ec: {
-    label: "Part des EC (total)",
+    label: "Part des enseignants chercheurs (total)",
     format: "percent",
     color: getCssColor("fm-statut-ec"),
     category: "Permanents et EC",
     suffix: "%",
   },
   taux_ec_sur_permanents: {
-    label: "Part des EC parmi les permanents",
+    label: "Part des enseignants chercheurs parmi les permanents",
     format: "percent",
     color: getCssColor("fm-statut-ec"),
     category: "Permanents et EC",
     suffix: "%",
   },
 
-  taux_temps_partiel: {
-    label: "Taux de temps partiel global",
+  taux_pr_sur_ec: {
+    label: "Part des PR parmi les enseignants chercheurs",
     format: "percent",
-    color: getCssColor("fm-quotite-temps-partiel"),
-    category: "Quotité",
+    color: getCssColor("fm-cat-pr"),
+    category: "Enseignants-chercheurs",
     suffix: "%",
   },
-  taux_temps_partiel_femmes: {
-    label: "Temps partiel — femmes",
+  taux_feminisation_pr: {
+    label: "Féminisation des PR",
     format: "percent",
-    color: getCssColor("fm-femmes"),
-    category: "Quotité",
+    color: getCssColor("fm-cat-pr"),
+    category: "Enseignants-chercheurs",
     suffix: "%",
   },
-  taux_temps_partiel_hommes: {
-    label: "Temps partiel — hommes",
+  taux_feminisation_mcf: {
+    label: "Féminisation des MCF",
     format: "percent",
-    color: getCssColor("fm-hommes"),
-    category: "Quotité",
+    color: getCssColor("fm-cat-mcf"),
+    category: "Enseignants-chercheurs",
     suffix: "%",
   },
 
@@ -273,17 +310,11 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
     label: "Femmes et Hommes",
     metrics: ["effectif_hommes", "effectif_femmes"],
     category: "Effectifs globaux",
-    chartType: "stacked",
+    chartType: "area",
   },
   "statut-effectifs": {
     label: "Effectifs par statut (EC, titulaires, non-titulaires)",
     metrics: ["effectif_non_titulaire", "effectif_tit_non_ec", "effectif_ec"],
-    category: "Effectifs globaux",
-    chartType: "stacked",
-  },
-  "quotite-effectifs": {
-    label: "Temps plein et temps partiel",
-    metrics: ["effectif_temps_partiel", "effectif_temps_plein"],
     category: "Effectifs globaux",
     chartType: "stacked",
   },
@@ -295,7 +326,20 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
       "effectif_age_56_plus",
     ],
     category: "Effectifs globaux",
-    chartType: "stacked",
+    chartType: "area",
+  },
+  "pyramide-ages": {
+    label: "Pyramide des âges H/F",
+    metrics: [
+      "age_35_moins_h",
+      "age_35_moins_f",
+      "age_36_55_h",
+      "age_36_55_f",
+      "age_56_plus_h",
+      "age_56_plus_f",
+    ],
+    category: "Effectifs globaux",
+    chartType: "pyramid",
   },
   "effectifs-base100": {
     label: "EC, permanents et non-titulaires (base 100)",
@@ -360,19 +404,19 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
     chartType: "single",
   },
   "taux-ec": {
-    label: "Part des EC (total)",
+    label: "Part des enseignants chercheurs (total)",
     metrics: ["taux_ec"],
     category: "Permanents et EC",
     chartType: "single",
   },
   "taux-ec-sur-permanents": {
-    label: "Part des EC parmi les permanents",
+    label: "Part des enseignants chercheurs parmi les permanents",
     metrics: ["taux_ec_sur_permanents"],
     category: "Permanents et EC",
     chartType: "single",
   },
   "effectif-ec-seul": {
-    label: "Effectif des EC",
+    label: "Effectif des enseignants chercheurs",
     metrics: ["effectif_ec"],
     category: "Permanents et EC",
     chartType: "single",
@@ -384,39 +428,87 @@ export const PREDEFINED_FM_STATIC_ANALYSES: Record<string, FmAnalysisConfig> = {
     chartType: "single",
   },
   "statut-base100": {
-    label: "EC, permanents, non-titulaires (base 100)",
+    label: "Enseignants chercheurs, permanents, non-titulaires (base 100)",
     metrics: ["effectif_ec", "effectif_permanents", "effectif_non_titulaire"],
     category: "Permanents et EC",
     chartType: "base100",
   },
 
-  // Quotité
-  "taux-temps-partiel": {
-    label: "Taux de temps partiel global",
-    metrics: ["taux_temps_partiel"],
-    category: "Quotité",
+  // Enseignants-chercheurs (MCF / PR)
+  "ec-mcf-pr": {
+    label: "Répartition MCF / PR",
+    metrics: ["effectif_mcf", "effectif_pr"],
+    category: "Enseignants-chercheurs",
+    chartType: "stacked",
+  },
+  "effectif-mcf-seul": {
+    label: "Effectif MCF",
+    metrics: ["effectif_mcf"],
+    category: "Enseignants-chercheurs",
     chartType: "single",
   },
-  "temps-partiel-femmes": {
-    label: "Temps partiel — femmes",
-    metrics: ["taux_temps_partiel_femmes"],
-    category: "Quotité",
+  "effectif-pr-seul": {
+    label: "Effectif PR",
+    metrics: ["effectif_pr"],
+    category: "Enseignants-chercheurs",
     chartType: "single",
   },
-  "temps-partiel-hommes": {
-    label: "Temps partiel — hommes",
-    metrics: ["taux_temps_partiel_hommes"],
-    category: "Quotité",
+  "taux-pr-sur-ec": {
+    label: "Part des PR parmi les EC",
+    metrics: ["taux_pr_sur_ec"],
+    category: "Enseignants-chercheurs",
     chartType: "single",
   },
-  "temps-partiel-base100": {
-    label: "Temps partiel H/F vs global (base 100)",
+  "femi-mcf": {
+    label: "Féminisation des MCF",
+    metrics: ["taux_feminisation_mcf"],
+    category: "Enseignants-chercheurs",
+    chartType: "single",
+  },
+  "femi-pr": {
+    label: "Féminisation des PR",
+    metrics: ["taux_feminisation_pr"],
+    category: "Enseignants-chercheurs",
+    chartType: "single",
+  },
+  "femi-mcf-pr-compare": {
+    label: "Féminisation MCF vs PR vs global (base 100)",
     metrics: [
-      "taux_temps_partiel_femmes",
-      "taux_temps_partiel_hommes",
-      "taux_temps_partiel",
+      "taux_feminisation_mcf",
+      "taux_feminisation_pr",
+      "taux_feminisation",
     ],
-    category: "Quotité",
+    category: "Enseignants-chercheurs",
+    chartType: "base100",
+  },
+  "ec-mcf-pr-base100": {
+    label: "MCF vs PR (base 100)",
+    metrics: ["effectif_mcf", "effectif_pr"],
+    category: "Enseignants-chercheurs",
+    chartType: "base100",
+  },
+
+  // Catégories de personnel
+  "categories-personnel": {
+    label: "Effectifs par catégorie de personnel",
+    metrics: [
+      "effectif_non_titulaire",
+      "effectif_tit_non_ec",
+      "effectif_mcf",
+      "effectif_pr",
+    ],
+    category: "Catégories de personnel",
+    chartType: "area",
+  },
+  "categories-base100": {
+    label: "Catégories de personnel (base 100)",
+    metrics: [
+      "effectif_pr",
+      "effectif_mcf",
+      "effectif_tit_non_ec",
+      "effectif_non_titulaire",
+    ],
+    category: "Catégories de personnel",
     chartType: "base100",
   },
 };

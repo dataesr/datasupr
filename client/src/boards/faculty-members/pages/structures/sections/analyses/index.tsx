@@ -12,8 +12,8 @@ const ANALYSIS_DEFINITION_KEYS: Record<string, string[]> = {
     "effectif-total": ["Personnel enseignant"],
     "genre-effectifs": ["Personnel enseignant", "Taux de féminisation"],
     "statut-effectifs": ["Statut : 3 catégories mutuellement exclusives", "Enseignant-chercheur (EC)", "Permanent / Non permanent"],
-    "quotite-effectifs": ["Quotité de travail", "Temps plein", "Temps partiel"],
     "age-effectifs": ["Classe d'âge"],
+    "pyramide-ages": ["Classe d'âge", "Taux de féminisation"],
     "effectifs-base100": ["Personnel enseignant", "Statut : 3 catégories mutuellement exclusives", "Enseignant-chercheur (EC)", "Permanent / Non permanent"],
     "taux-feminisation": ["Taux de féminisation"],
     "femi-ec": ["Taux de féminisation", "Enseignant-chercheur (EC)"],
@@ -27,12 +27,18 @@ const ANALYSIS_DEFINITION_KEYS: Record<string, string[]> = {
     "effectif-ec-seul": ["Enseignant-chercheur (EC)"],
     "effectif-permanents-seul": ["Permanent / Non permanent"],
     "statut-base100": ["Statut : 3 catégories mutuellement exclusives", "Enseignant-chercheur (EC)"],
-    "taux-temps-partiel": ["Quotité de travail", "Temps partiel"],
-    "temps-partiel-femmes": ["Quotité de travail", "Temps partiel"],
-    "temps-partiel-hommes": ["Quotité de travail", "Temps partiel"],
-    "temps-partiel-base100": ["Quotité de travail", "Temps partiel"],
     "disciplines-evolution": ["Grande discipline"],
     "cnu-groups-evolution": ["Groupe CNU"],
+    "ec-mcf-pr": ["Enseignant-chercheur (EC)", "MCF et assimilés", "PR et assimilés"],
+    "effectif-mcf-seul": ["MCF et assimilés"],
+    "effectif-pr-seul": ["PR et assimilés"],
+    "taux-pr-sur-ec": ["Enseignant-chercheur (EC)", "PR et assimilés"],
+    "femi-mcf": ["Taux de féminisation", "MCF et assimilés"],
+    "femi-pr": ["Taux de féminisation", "PR et assimilés"],
+    "femi-mcf-pr-compare": ["Taux de féminisation", "MCF et assimilés", "PR et assimilés"],
+    "ec-mcf-pr-base100": ["MCF et assimilés", "PR et assimilés"],
+    "categories-personnel": ["Statut : 3 catégories mutuellement exclusives", "MCF et assimilés", "PR et assimilés"],
+    "categories-base100": ["Statut : 3 catégories mutuellement exclusives", "MCF et assimilés", "PR et assimilés"],
 };
 
 function getAnalysisDefinitionKeys(analysis: string | null): string[] {
@@ -124,8 +130,8 @@ export default function EvolutionsSection({ viewType, selectedId }: EvolutionsSe
             )}
 
             {!isLoading && analysesWithData.size > 0 && (
-                <Row gutters>
-                    <Col xs="12" md="4">
+                <Row gutters className="analyses-row">
+                    <Col xs="12" md="4" className="analyses-filter-col">
                         <FmAnalysisFilter
                             allAnalyses={allAnalyses}
                             analysesWithData={analysesWithData}

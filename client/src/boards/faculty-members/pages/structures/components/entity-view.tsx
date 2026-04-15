@@ -3,7 +3,6 @@ import { Col, Container, Row } from "@dataesr/dsfr-plus";
 import { ViewType, useFacultyYears, useFacultyDashboard, useFacultyEvolution } from "../api";
 import PageHeader from "./page-header";
 import SectionNavigation from "./section-navigation";
-import EvolutionsSection from "../sections/evolutions";
 import EnseignantsChercheurSection from "../sections/enseignants-chercheurs";
 import Enseignants2ndDegreArtsMetiersSection from "../sections/enseignants-2nd-degre-arts-metiers";
 import EnseignantsNonPermanentsSection from "../sections/enseignants-non-permanents";
@@ -12,6 +11,7 @@ import ComparaisonSection from "../sections/positionning";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import Breadcrumb from "../../../components/breadcrumb";
 import { IncompleteYearWarning } from "../../../components/incomplete-year";
+import EvolutionsSection from "../sections/analyses";
 
 const VIEW_LABELS: Record<ViewType, { plural: string; singular: string; basePath: string }> = {
     structure: { plural: "Établissements", singular: "établissement", basePath: "/personnel-enseignant/etablissements" },
@@ -104,7 +104,7 @@ export default function EntityView({ viewType }: Props) {
                         selectedYear={selectedYear}
                     />
                 );
-            case "evolutions":
+            case "analyses":
                 return (
                     <EvolutionsSection
                         viewType={viewType}

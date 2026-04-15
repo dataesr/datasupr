@@ -20,6 +20,16 @@ export const definitions = [
       "Corps d'enseignants-chercheurs titulaires d'un doctorat, qui assurent des missions d'enseignement et de recherche.",
   },
   {
+    title: "MCF et assimilés",
+    definition:
+      "Ensemble des maîtres de conférences et des enseignants-chercheurs rattachés à un corps assimilé au corps des MCF. Cette catégorie regroupe les MCF au sens strict et les corps équivalents dans certains établissements.",
+  },
+  {
+    title: "PR et assimilés",
+    definition:
+      "Ensemble des professeurs des universités et des enseignants-chercheurs rattachés à un corps assimilé au corps des PR. Cette catégorie regroupe les PR au sens strict et les corps équivalents (directeurs de recherche, etc.).",
+  },
+  {
     title: "Enseignant du second degré affecté dans le supérieur",
     definition:
       "Personnel enseignant du second degré (agrégés, certifiés, professeurs de lycée professionnel, etc.) affecté dans un établissement d'enseignement supérieur. Ils sont titulaires mais ne sont pas enseignants-chercheurs.",

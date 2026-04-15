@@ -685,3 +685,8 @@
     border-left: 1px solid var(--border-default-grey);
   }
 }
+
+.analyses-row,
+.analyses-filter-col {
+  overflow: visible !important;
+}

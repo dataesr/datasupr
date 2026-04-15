@@ -17,8 +17,10 @@ router.get("/faculty-members/analyses", async (req, res) => {
     const [
       globalAgg,
       statusGenderAgg,
+      catBreakdownAgg,
       quotiteGenderAgg,
       ageAgg,
+      ageGenderAgg,
       discYearAgg,
       discGenderAgg,
       cnuGroupYearAgg,
@@ -93,6 +95,59 @@ router.get("/faculty-members/analyses", async (req, res) => {
           { $match: matchAge },
           {
             $group: {
+              _id: {
+                year: "$annee_universitaire",
+                g: "$sexe",
+                cat: {
+                  $switch: {
+                    branches: [
+                      {
+                        case: {
+                          $and: [
+                            { $eq: ["$is_enseignant_chercheur", true] },
+                            { $eq: ["$code_categorie_assimil", "PR"] },
+                          ],
+                        },
+                        then: "pr",
+                      },
+                      {
+                        case: { $eq: ["$is_enseignant_chercheur", true] },
+                        then: "mcf",
+                      },
+                      {
+                        case: {
+                          $and: [
+                            { $eq: ["$is_titulaire", true] },
+                            { $eq: ["$is_enseignant_chercheur", false] },
+                          ],
+                        },
+                        then: "tit_non_ec",
+                      },
+                    ],
+                    default: "non_perm",
+                  },
+                },
+              },
+              c: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.year",
+              breakdown: {
+                $push: { g: "$_id.g", cat: "$_id.cat", c: "$c" },
+              },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: matchAge },
+          {
+            $group: {
               _id: { year: "$annee_universitaire", g: "$sexe", q: "$quotite" },
               c: { $sum: "$effectif" },
             },
@@ -120,6 +175,31 @@ router.get("/faculty-members/analyses", async (req, res) => {
             $group: {
               _id: "$_id.year",
               ages: { $push: { age: "$_id.age", c: "$c" } },
+            },
+          },
+          { $sort: { _id: 1 } },
+        ])
+        .toArray(),
+
+      collection
+        .aggregate([
+          { $match: match },
+          {
+            $group: {
+              _id: {
+                year: "$annee_universitaire",
+                age: "$classe_age3",
+                g: "$sexe",
+              },
+              c: { $sum: "$effectif" },
+            },
+          },
+          {
+            $group: {
+              _id: "$_id.year",
+              breakdown: {
+                $push: { age: "$_id.age", g: "$_id.g", c: "$c" },
+              },
             },
           },
           { $sort: { _id: 1 } },
@@ -282,10 +362,16 @@ router.get("/faculty-members/analyses", async (req, res) => {
     const statusByYear = Object.fromEntries(
       statusGenderAgg.map((e) => [e._id, e])
     );
+    const catByYear = Object.fromEntries(
+      catBreakdownAgg.map((e) => [e._id, e])
+    );
     const quotiteByYear = Object.fromEntries(
       quotiteGenderAgg.map((e) => [e._id, e])
     );
     const ageByYear = Object.fromEntries(ageAgg.map((e) => [e._id, e]));
+    const ageGenderByYear = Object.fromEntries(
+      ageGenderAgg.map((e) => [e._id, e])
+    );
     const discByYear = Object.fromEntries(discYearAgg.map((e) => [e._id, e]));
     const discGenderByYear = Object.fromEntries(
       discGenderAgg.map((e) => [e._id, e])
@@ -305,9 +391,11 @@ router.get("/faculty-members/analyses", async (req, res) => {
       const s = statusByYear[year] || {};
       const q = quotiteByYear[year] || {};
       const a = ageByYear[year] || {};
+      const ag = ageGenderByYear[year] || {};
       const d = discByYear[year] || {};
       const dg = discGenderByYear[year] || {};
       const cg = cnuGroupByYear[year] || {};
+      const cb = catByYear[year] || {};
       const total = g.total || 0;
 
       const femmes = (g.genders || []).find((x) => x.g === "Féminin")?.c || 0;
@@ -327,6 +415,16 @@ router.get("/faculty-members/analyses", async (req, res) => {
         sumStatus("ec", "Féminin") + sumStatus("tit", "Féminin");
       const femmes_non_tit = sumStatus("non_tit", "Féminin");
 
+      const sumCat = (cat, gender) =>
+        (cb.breakdown || [])
+          .filter((x) => x.cat === cat && (!gender || x.g === gender))
+          .reduce((acc, x) => acc + x.c, 0);
+
+      const effectif_pr = sumCat("pr");
+      const effectif_mcf = sumCat("mcf");
+      const femmes_pr = sumCat("pr", "Féminin");
+      const femmes_mcf = sumCat("mcf", "Féminin");
+
       const sumQ = (isPlein, gender) =>
         (q.breakdown || [])
           .filter(
@@ -343,6 +441,21 @@ router.get("/faculty-members/analyses", async (req, res) => {
       const ageFields = {};
       Object.entries(AGE_LABELS).forEach(([label, key]) => {
         ageFields[key] = (a.ages || []).find((x) => x.age === label)?.c || 0;
+      });
+
+      const ageGenderFields = {};
+      const AGE_PYRAMID_LABELS = {
+        "35 ans et moins": "age_35_moins",
+        "36 à 55 ans": "age_36_55",
+        "56 ans et plus": "age_56_plus",
+      };
+      Object.entries(AGE_PYRAMID_LABELS).forEach(([label, key]) => {
+        ageGenderFields[`${key}_f`] = (ag.breakdown || [])
+          .filter((x) => x.age === label && x.g === "Féminin")
+          .reduce((acc, x) => acc + x.c, 0);
+        ageGenderFields[`${key}_h`] = (ag.breakdown || [])
+          .filter((x) => x.age === label && x.g === "Masculin")
+          .reduce((acc, x) => acc + x.c, 0);
       });
 
       const discFields = {};
@@ -400,10 +513,15 @@ router.get("/faculty-members/analyses", async (req, res) => {
         effectif_tit_non_ec,
         effectif_non_titulaire,
         effectif_permanents,
+        effectif_pr,
+        effectif_mcf,
         taux_permanents: pct(effectif_permanents, total),
         taux_ec: pct(effectif_ec, total),
         taux_ec_sur_permanents: pct(effectif_ec, effectif_permanents),
+        taux_pr_sur_ec: pct(effectif_pr, effectif_ec),
         taux_feminisation_ec: pct(femmes_ec, effectif_ec),
+        taux_feminisation_pr: pct(femmes_pr, effectif_pr),
+        taux_feminisation_mcf: pct(femmes_mcf, effectif_mcf),
         taux_feminisation_permanents: pct(femmes_perm, effectif_permanents),
         taux_feminisation_non_titulaires: pct(
           femmes_non_tit,
@@ -417,6 +535,7 @@ router.get("/faculty-members/analyses", async (req, res) => {
         taux_temps_partiel_hommes:
           hommes > 0 ? ((hommes - tp_hommes) / hommes) * 100 : 0,
         ...ageFields,
+        ...ageGenderFields,
         taux_age_35_moins: pct(ageFields.effectif_age_35_moins || 0, total),
         taux_age_56_plus: pct(ageFields.effectif_age_56_plus || 0, total),
         ...discFields,

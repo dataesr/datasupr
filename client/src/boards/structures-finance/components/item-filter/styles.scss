@@ -1,7 +1,7 @@
 .item-filter {
   position: sticky;
   top: 1rem;
-  overflow-y: auto;
+  overflow: visible;
   background-color: var(--background-alt-grey);
   padding: 1.5rem;
 
