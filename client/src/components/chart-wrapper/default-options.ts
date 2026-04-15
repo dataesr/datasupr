@@ -46,7 +46,7 @@ export function createChartOptions(
     },
     exporting: { enabled: false },
     credits: { enabled: false },
-    accessibility: { enabled: false },
+    accessibility: { enabled: true },
   };
 
   const defaultXAxisOptions = {
