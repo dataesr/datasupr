@@ -71,10 +71,12 @@ export function createRepartitionOptions(
                 valueDescriptionFormat: "{series.name}: {point.percentage:.1f}%",
             },
         },
-        chart: { type: "column", backgroundColor: "transparent" },
+        chart: {
+            type: "column", backgroundColor: "transparent",
+        },
         exporting: { enabled: false },
         credits: { enabled: false },
-        legend: { enabled: true, reversed: true },
+        legend: { enabled: true, reversed: true, itemStyle: { color: getCssColor("text-default-grey") } },
         plotOptions: {
             column: {
                 borderWidth: 0,
@@ -98,9 +100,9 @@ export function createRepartitionOptions(
             pointFormat: '<span style="color:{series.color}">\u25CF</span> {series.name}: <b>{point.y}</b> ({point.percentage:.1f}%)<br/>',
             shared: true,
         },
-        xAxis: { categories, crosshair: true },
+        xAxis: { categories, crosshair: true, labels: { style: { color: getCssColor("text-default-grey") } } },
         yAxis: {
-            labels: { format: "{value} %" },
+            labels: { format: "{value} %", style: { color: getCssColor("text-default-grey") } },
             title: { text: undefined },
         },
     };
