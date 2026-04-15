@@ -82,7 +82,7 @@ export function MoyensHumainsSection({ data }: MoyensHumainsSectionProps) {
       </div> */}
 
       <div>
-        <Title as="h3" look="h5" className="fr-mb-3w">
+        <Title as="h2" look="h5" className="fr-mb-3w">
           La masse salariale
         </Title>
         <Row gutters>

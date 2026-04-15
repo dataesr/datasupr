@@ -34,6 +34,7 @@ export function ErcSection({ data }: ErcSectionProps) {
           <Col xs="12" md="6">
             <MetricChartCard
               title="Nombre de projets lauréats"
+              titleAs="h3"
               value={
                 data.erc_nb != null
                   ? `${data.erc_nb.toLocaleString("fr-FR")} projet(s)`
@@ -48,6 +49,7 @@ export function ErcSection({ data }: ErcSectionProps) {
           <Col xs="12" md="6">
             <MetricChartCard
               title="Subvention obtenue"
+              titleAs="h3"
               value={
                 data.erc_sub != null
                   ? `${data.erc_sub.toLocaleString("fr-FR")} €`
@@ -63,7 +65,7 @@ export function ErcSection({ data }: ErcSectionProps) {
       </div>
 
       <div>
-        <Title as="h3" look="h5" className="fr-mb-3w">
+        <Title as="h2" look="h5" className="fr-mb-3w">
           Types de projets
         </Title>
         <Row gutters>
@@ -71,6 +73,7 @@ export function ErcSection({ data }: ErcSectionProps) {
             <Col xs="12" sm="6" md="4">
               <MetricChartCard
                 title="Dont pour les jeunes chercheurs prometteurs"
+                titleAs="h3"
                 value={`${data.erc_nb_stg.toLocaleString("fr-FR")} projet(s)`}
                 detail="Starting Grants"
                 color={getCssColor("section-erc")}
@@ -81,6 +84,7 @@ export function ErcSection({ data }: ErcSectionProps) {
             <Col xs="12" sm="6" md="4">
               <MetricChartCard
                 title="Dont pour les chercheurs confirmés souhaitant consolider leur équipe"
+                titleAs="h3"
                 value={`${data.erc_nb_cog.toLocaleString("fr-FR")} projet(s)`}
                 detail="Consolidator Grants"
                 color={getCssColor("section-erc")}
@@ -91,6 +95,7 @@ export function ErcSection({ data }: ErcSectionProps) {
             <Col xs="12" sm="6" md="4">
               <MetricChartCard
                 title="Dont pour les chercheurs expérimentés"
+                titleAs="h3"
                 value={`${data.erc_nb_adg.toLocaleString("fr-FR")} projet(s)`}
                 detail="Advanced Grants"
                 color={getCssColor("section-erc")}
@@ -101,6 +106,7 @@ export function ErcSection({ data }: ErcSectionProps) {
             <Col xs="12" sm="6" md="4">
               <MetricChartCard
                 title="Dont pour des projets collaboratifs ambitieux"
+                titleAs="h3"
                 value={`${data.erc_nb_syg.toLocaleString("fr-FR")} projet(s)`}
                 detail="Synergy Grants"
                 color={getCssColor("section-erc")}
@@ -111,6 +117,7 @@ export function ErcSection({ data }: ErcSectionProps) {
             <Col xs="12" sm="6" md="4">
               <MetricChartCard
                 title="Dont pour aider à transformer des résultats de recherche en innovations"
+                titleAs="h3"
                 value={`${data.erc_nb_poc.toLocaleString("fr-FR")} projet(s)`}
                 detail="Proof of Concept"
                 color={getCssColor("section-erc")}

@@ -175,6 +175,7 @@ export function ImplantationsSection({ data }: ImplantationsSectionProps) {
               stat={implantation.effectif_sans_cpge}
               title={implantation.implantation}
               year={data.anuniv}
+              as="h3"
             />
           </Col>
         ))}

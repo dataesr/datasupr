@@ -66,38 +66,41 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
   ]);
 
   const Metric = ({
+    detail,
+    format = euro,
     id,
     title,
-    format = euro,
-    detail,
+    titleAs,
     unit,
   }: {
+    colSize?: string;
+    detail?: string;
+    format?: (n?: number) => string;
     id: string;
     title: string;
-    format?: (n?: number) => string;
-    detail?: string;
+    titleAs?: "h2" | "h3" | "h4" | "h5" | "h6";
     unit: string;
-    colSize?: string;
   }) => (
     <Col xs="12" sm="6" md="4">
       <MetricChartCard
+        color={getCssColor("section-sante-financiere")}
+        detail={detail}
+        evolutionData={useMetricEvolution(id)}
+        metricKey={id}
         title={title}
+        titleAs={titleAs}
+        unit={unit}
         value={
           data[`${id}_etat`] ? (
             <ValueWithStatus
-              value={format(data[id])}
-              status={data[`${id}_etat`]}
               indicateur={id}
+              status={data[`${id}_etat`]}
+              value={format(data[id])}
             />
           ) : (
             format(data[id])
           )
         }
-        detail={detail}
-        color={getCssColor("section-sante-financiere")}
-        evolutionData={useMetricEvolution(id)}
-        unit={unit}
-        metricKey={id}
       />
     </Col>
   );
@@ -232,117 +235,130 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
       <div className="fr-mb-4w">
         <Row gutters>
           <Metric
+            colSize={showResultatHorsSie ? "6" : "4"}
+            detail="Le résultat net comptable mesure les ressources nettes restant à l'établissement à l'issue de l'exercice. Indique la performance financière globale de l'établissement."
             id="resultat_net_comptable"
             title="Résultat net comptable"
-            detail="Le résultat net comptable mesure les ressources nettes restant à l'établissement à l'issue de l'exercice. Indique la performance financière globale de l'établissement."
+            titleAs="h3"
             unit="€"
-            colSize={showResultatHorsSie ? "6" : "4"}
           />
           {showResultatHorsSie && (
             <Metric
+              colSize="6"
+              detail="Le résultat net comptable hors services inter-établissements mesure les ressources nettes restant à l'établissement à l'issue de l'exercice sans prendre en compte les services communs à plusieurs établissements (service de documentation par exemple). Indique la performance financière globale de l'établissement."
               id="resultat_net_comptable_hors_sie"
               title="Résultat net comptable hors SIE"
-              detail="Le résultat net comptable hors services inter-établissements mesure les ressources nettes restant à l'établissement à l'issue de l'exercice sans prendre en compte les services communs à plusieurs établissements (service de documentation par exemple). Indique la performance financière globale de l'établissement."
+              titleAs="h3"
               unit="€"
-              colSize="6"
             />
           )}
           <Metric
+            colSize={showResultatHorsSie ? "6" : "4"}
+            detail="Épargne dégagée pendant l'exercice qui permettra d'assurer tout ou partie de l'investissement de l'année et d'augmenter le fonds de roulement."
             id="capacite_d_autofinancement"
             title="Capacité d'autofinancement"
-            detail="Épargne dégagée pendant l'exercice qui permettra d'assurer tout ou partie de l'investissement de l'année et d'augmenter le fonds de roulement."
+            titleAs="h3"
             unit="€"
-            colSize={showResultatHorsSie ? "6" : "4"}
           />
           <Metric
+            colSize={showResultatHorsSie ? "6" : "4"}
+            format={pct}
             id="caf_produits_encaissables"
             title="CAF / Produits encaissables"
-            format={pct}
+            titleAs="h3"
             unit="%"
-            colSize={showResultatHorsSie ? "6" : "4"}
           />
         </Row>
       </div>
 
       <div className="fr-mb-4w">
-        <Title as="h3" look="h5" className="fr-mb-3w">
+        <Title as="h2" look="h5" className="fr-mb-3w">
           Cycle d'exploitation
         </Title>
         <Row gutters>
           <Metric
+            detail="Ressource durable ou structurelle mise à disposition de l'établissement pour financer des emplois (investissements) liés au cycle d'exploitation. Il constitue une marge de sécurité financière destinée à financer une partie de l'actif circulant."
             id="fonds_de_roulement_net_global"
             title="Fonds de roulement net global"
-            detail="Ressource durable ou structurelle mise à disposition de l'établissement pour financer des emplois (investissements) liés au cycle d'exploitation. Il constitue une marge de sécurité financière destinée à financer une partie de l'actif circulant."
+            titleAs="h3"
             unit="€"
           />
           <Metric
+            detail="Le besoin en fonds de roulement mesure le décalage entre les encaissements et les décaissements du cycle d'activité."
             id="besoin_en_fonds_de_roulement"
             title="Besoin en fonds de roulement"
-            detail="Le besoin en fonds de roulement mesure le décalage entre les encaissements et les décaissements du cycle d'activité."
+            titleAs="h3"
             unit="€"
           />
           <Metric
+            detail="Liquidités immédiatement disponibles (caisse, banque, VMP)."
             id="tresorerie"
             title="Trésorerie"
-            detail="Liquidités immédiatement disponibles (caisse, banque, VMP)."
+            titleAs="h3"
             unit="€"
           />
           <Metric
+            detail={`Expression du fonds de roulement en nombre de jours de fonctionnement. Un fonds de roulement net global de ${Math.ceil(data.fonds_de_roulement_en_jours_de_fonctionnement)} jours signifie que l'établissement peut couvrir ${Math.ceil(data.fonds_de_roulement_en_jours_de_fonctionnement)} jours de dépenses courantes.`}
+            format={jours}
             id="fonds_de_roulement_en_jours_de_fonctionnement"
             title="Fonds de roulement en jours de fonctionnement"
-            format={jours}
-            detail={`Expression du fonds de roulement en nombre de jours de fonctionnement. Un fonds de roulement net global de ${Math.ceil(data.fonds_de_roulement_en_jours_de_fonctionnement)} jours signifie que l'établissement peut couvrir ${Math.ceil(data.fonds_de_roulement_en_jours_de_fonctionnement)} jours de dépenses courantes.`}
+            titleAs="h3"
             unit="jours"
           />
           <Metric
+            detail="Expression de la trésorerie en nombre de jours de fonctionnement. Indique la durée pendant laquelle l'établissement peut fonctionner sans nouvel encaissement."
+            format={jours}
             id="tresorerie_en_jours_de_fonctionnement"
             title="Trésorerie en jours de fonctionnement"
-            format={jours}
-            detail="Expression de la trésorerie en nombre de jours de fonctionnement. Indique la durée pendant laquelle l'établissement peut fonctionner sans nouvel encaissement."
+            titleAs="h3"
             unit="jours"
           />
         </Row>
       </div>
 
       <div className="fr-mb-4w">
-        <Title as="h3" look="h5" className="fr-mb-3w">
+        <Title as="h2" look="h5" className="fr-mb-3w">
           Financement de l'activité
         </Title>
         <Row gutters>
           <Metric
+            colSize="3"
+            detail="Ratio mesurant l'équilibre entre les dépenses réelles (décaissables) et les recettes réelles (encaissables)."
+            format={pct}
             id="charges_decaissables_produits_encaissables"
             title="Charges décaissables / Produits encaissables"
-            format={pct}
-            detail="Ratio mesurant l'équilibre entre les dépenses réelles (décaissables) et les recettes réelles (encaissables)."
+            titleAs="h3"
             unit="%"
-            colSize="3"
           />
 
           {data?.is_rce && (
             <Metric
+              colSize="3"
+              detail="Indique la part des recettes consacrée à la rémunération du personnel titulaire."
+              format={pct}
               id="taux_de_remuneration_des_permanents"
               title="Taux de rémunération des permanents"
-              format={pct}
-              detail="Indique la part des recettes consacrée à la rémunération du personnel titulaire."
+              titleAs="h3"
               unit="%"
-              colSize="3"
             />
           )}
           <Metric
+            colSize="3"
+            detail="Part des ressources propres (hors subventions pour charges de service public) dans les produits totaux. Mesure l'autonomie financière."
+            format={pct}
             id="ressources_propres_produits_encaissables"
             title="Ressources propres / Produits encaissables"
-            format={pct}
-            detail="Part des ressources propres (hors subventions pour charges de service public) dans les produits totaux. Mesure l'autonomie financière."
+            titleAs="h3"
             unit="%"
-            colSize="3"
           />
           <Metric
+            colSize="3"
+            detail="Ratio entre la masse salariale et les produits. Évalue le poids des coûts salariaux."
+            format={pct}
             id="charges_de_personnel_produits_encaissables"
             title="Charges de personnel / Produits encaissables"
-            format={pct}
-            detail="Ratio entre la masse salariale et les produits. Évalue le poids des coûts salariaux."
+            titleAs="h3"
             unit="%"
-            colSize="3"
           />
         </Row>
       </div>
@@ -350,19 +366,21 @@ export function SanteFinancierSection({ data }: SanteFinancierSectionProps) {
       <div className="fr-mb-4w">
         <Row gutters>
           <Metric
+            colSize="6"
+            detail="Ratio entre la CAF et les investissements en immobilisations. Indique si l'activité génère suffisamment de ressources pour financer les investissements."
+            format={pct}
             id="caf_acquisitions_d_immobilisations"
             title="CAF / Acquisitions d'immobilisations"
-            format={pct}
-            detail="Ratio entre la CAF et les investissements en immobilisations. Indique si l'activité génère suffisamment de ressources pour financer les investissements."
+            titleAs="h3"
             unit="%"
-            colSize="6"
           />
           <Metric
+            colSize="6"
+            detail="Le solde budgétaire est un solde intermédiaire de trésorerie, reflétant le flux de trésorerie généré par l'activité de l'organisme au cours d'un exercice."
             id="solde_budgetaire"
             title="Solde budgétaire"
-            detail="Le solde budgétaire est un solde intermédiaire de trésorerie, reflétant le flux de trésorerie généré par l'activité de l'organisme au cours d'un exercice."
+            titleAs="h3"
             unit="€"
-            colSize="6"
           />
         </Row>
       </div>

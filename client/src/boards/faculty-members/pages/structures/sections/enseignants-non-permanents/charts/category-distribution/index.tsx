@@ -44,7 +44,7 @@ export default function CategoryDistributionChart({
                 id: "category-distribution",
                 title: {
                     fr: `Répartition par catégorie et par genre (${selectedYear})`,
-                    size: "h3" as const,
+                    size: "h2" as const,
                     look: "h6" as const,
                 },
                 readingKey: readingKey ? { fr: readingKey } : undefined,

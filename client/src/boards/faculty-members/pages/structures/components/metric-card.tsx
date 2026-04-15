@@ -134,6 +134,7 @@ export default function MetricCard({
                 <div className="fr-card__content ">
                     <Title
                         className="fr-card__title fr-text--sm fr-text--bold fr-mb-1v"
+                        as="h2"
                         style={{ color: "var(--text-active-blue-france)", textTransform: "uppercase", letterSpacing: "0.5px" }}
                     >
                         {title}

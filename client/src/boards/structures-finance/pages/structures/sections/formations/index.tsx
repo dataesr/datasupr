@@ -44,6 +44,7 @@ export function EtudiantsSection({
           <Col xs="12" md="4">
             <MetricChartCard
               title="Total des étudiants"
+              titleAs="h3"
               value={`${num(data.effectif_sans_cpge)} étudiants inscrits`}
               detail="Hors doubles inscriptions CPGE"
               color={getCssColor("section-diplomes-formations")}
@@ -53,6 +54,7 @@ export function EtudiantsSection({
           <Col xs="12" md="4">
             <MetricChartCard
               title="Dont dans les diplômes nationaux"
+              titleAs="h3"
               value={num(data.effectif_sans_cpge_dn)}
               detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_dn / data.effectif_sans_cpge) * 100).toFixed(1) : 0}% du total des étudiants inscrits`}
               color={getCssColor("section-diplomes-formations")}
@@ -62,6 +64,7 @@ export function EtudiantsSection({
           <Col xs="12" md="4">
             <MetricChartCard
               title="Dont dans les diplômes d'établissement"
+              titleAs="h3"
               value={num(data.effectif_sans_cpge_du)}
               detail={`${data.effectif_sans_cpge ? ((data.effectif_sans_cpge_du / data.effectif_sans_cpge) * 100).toFixed(1) : 0}% du total des étudiants inscrits`}
               color={getCssColor("section-diplomes-formations")}

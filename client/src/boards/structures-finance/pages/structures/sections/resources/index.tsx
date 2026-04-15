@@ -51,6 +51,7 @@ export function FinancementsSection({
         <Row gutters>
           <Col xs="12" md="4">
             <MetricChartCard
+              titleAs="h3"
               title="Total"
               value={`${euro(data.produits_de_fonctionnement_encaissables)} €`}
               detail="Hors opérations en capital"
@@ -64,6 +65,7 @@ export function FinancementsSection({
           </Col>
           <Col xs="12" md="4">
             <MetricChartCard
+              titleAs="h3"
               title="Ressources propres"
               value={`${euro(data.recettes_propres)} €`}
               color={getCssColor("section-ressources")}
@@ -74,6 +76,7 @@ export function FinancementsSection({
           </Col>
           <Col xs="12" md="4">
             <MetricChartCard
+              titleAs="h3"
               title="Autonomie financière"
               value={
                 data.ressources_propres_produits_encaissables != null
@@ -161,10 +164,11 @@ export function FinancementsSection({
       </div> */}
 
       <div className="fr-mb-4w">
-        <h3 className="fr-h5 fr-mb-3w">Détail des ressources propres</h3>
+        <Title as="h2" look="h5" className="fr-mb-3w">Détail des ressources propres</Title>
         <Row gutters>
           <Col xs="12" sm="6" md="4">
             <MetricChartCard
+              titleAs="h3"
               title="Ressources propres liées aux activités de formation"
               value={
                 data.tot_ress_formation != null
@@ -187,6 +191,7 @@ export function FinancementsSection({
           <Col xs="12" sm="6" md="4">
             <MetricChartCard
               title="Ressources propres liées aux activités de recherche"
+              titleAs="h3"
               value={
                 data.tot_ress_recherche != null
                   ? `${data.tot_ress_recherche.toLocaleString("fr-FR", {
@@ -208,6 +213,7 @@ export function FinancementsSection({
           <Col xs="12" md="4">
             <MetricChartCard
               title="Autres ressources propres"
+              titleAs="h3"
               value={
                 data.tot_ress_autres_recette != null
                   ? `${data.tot_ress_autres_recette.toLocaleString("fr-FR", {

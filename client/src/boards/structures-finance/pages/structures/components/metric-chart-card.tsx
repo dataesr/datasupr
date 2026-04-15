@@ -17,6 +17,7 @@ interface MetricChartCardProps {
   }>;
   unit?: string;
   metricKey?: string;
+  titleAs?: "h2" | "h3" | "h4" | "h5" | "h6";
 }
 
 export function MetricChartCard({
@@ -27,6 +28,7 @@ export function MetricChartCard({
   evolutionData,
   unit = "",
   metricKey,
+  titleAs = "h2",
 }: MetricChartCardProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<Highcharts.Chart | null>(null);
@@ -253,6 +255,7 @@ export function MetricChartCard({
         <div >
           <Title
             className="fr-card__title fr-text--sm fr-text--bold fr-mb-1v"
+            as={titleAs}
             style={{ color: "var(--text-active-blue-france)", textTransform: "uppercase", letterSpacing: "0.5px" }}
           >
             {displayTitle}
