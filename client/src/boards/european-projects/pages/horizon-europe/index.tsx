@@ -29,7 +29,7 @@ export default function HorizonEurope() {
             <EpNavigator />
           </Container>
         </div>
-        <Container>
+        <Container as="section">
           <TabsContent />
         </Container>
       </Container>

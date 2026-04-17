@@ -1,0 +1,36 @@
+{
+  "page": {
+    "title": {
+      "fr": "Synthèse MSCA",
+      "en": "MSCA Synthesis"
+    }
+  },
+  "synthesis": {
+    "sectionTitle": {
+      "fr": "Synthèse",
+      "en": "Synthesis"
+    }
+  },
+  "positioning": {
+    "sectionTitle": {
+      "fr": "Positionnement",
+      "en": "Positioning"
+    }
+  },
+  "entities": {
+    "sectionTitle": {
+      "fr": "Entités",
+      "en": "Entities"
+    }
+  },
+  "evolution": {
+    "sectionTitle": {
+      "fr": "Évolution de la participation",
+      "en": "Evolution of participation"
+    },
+    "noDataAvailable": {
+      "fr": "Aucune donnée d'évolution disponible.",
+      "en": "No evolution data available."
+    }
+  }
+}

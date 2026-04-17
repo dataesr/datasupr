@@ -6,6 +6,7 @@ const Collaborations = lazy(() => import("./pages/collaborations/index.tsx"));
 const CollaborationsEntity = lazy(() => import("./pages/collaborations/index-entity.tsx"));
 const Entities = lazy(() => import("./pages/entities/index.tsx"));
 const ERC = lazy(() => import("./pages/erc/index.tsx"));
+const MSCA = lazy(() => import("./pages/msca/index.tsx"));
 const EvolutionPcri = lazy(() => import("./pages/evolution-pcri/index.tsx"));
 const GlobalLayout = lazy(() => import("./components/layouts/global-layout.tsx"));
 const Home = lazy(() => import("./pages/home/index.tsx"));
@@ -167,7 +168,19 @@ export default function EuropeanProjectsRoutes() {
             }
           />
         </Route>
-        <Route path="msca" element={<RouteWithTitle titleKey="msca" element={<div>MSCA</div>} />} />
+        <Route
+          path="msca"
+          element={
+            <RouteWithTitle
+              titleKey="msca"
+              element={
+                <Suspense>
+                  <MSCA />
+                </Suspense>
+              }
+            />
+          }
+        />
         <Route
           path="erc"
           element={
