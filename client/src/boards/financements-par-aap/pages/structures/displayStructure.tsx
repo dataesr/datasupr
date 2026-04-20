@@ -8,6 +8,7 @@ import Breadcrumb from "../../components/breadcrumb";
 import { getEsQuery, years } from "../../utils";
 import ClassificationsByStructure from "./charts/classifications-by-structure";
 import Classifications2ByStructure from "./charts/classifications2-by-structure";
+import CountiesByStructure from "./charts/counties-by-structure";
 import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
 import InstrumentsForAnr from "./charts/instruments-for-anr";
 import InstrumentsForEurope from "./charts/instruments-for-europe";
@@ -43,6 +44,7 @@ export default function DisplayStructure() {
   ];
 
   if (!isInProduction()) {
+    sections.push({ id: "regions", label: "Régions" });
     sections.push({ id: "donnees", label: "Données" });
   };
 
@@ -135,20 +137,20 @@ export default function DisplayStructure() {
                     ))}
                   </select>
                   <Text className="fr-mx-1w" style={{ margin: "auto" }}>
-                      à
-                    </Text>
-                    <select
-                      className="fr-select"
-                      onChange={(e) => handleYearMaxChange(e.target.value)}
-                      style={{ width: "fit-content" }}
-                      value={yearMax}
-                    >
-                      {[...years].sort((a, b) => b - a).map((year) => (
-                        <option key={year} value={year}>
-                          {year}
-                        </option>
-                      ))}
-                    </select>
+                    à
+                  </Text>
+                  <select
+                    className="fr-select"
+                    onChange={(e) => handleYearMaxChange(e.target.value)}
+                    style={{ width: "fit-content" }}
+                    value={yearMax}
+                  >
+                    {[...years].sort((a, b) => b - a).map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
                 </Col>
               </Row>
             </Col>
@@ -280,6 +282,15 @@ export default function DisplayStructure() {
                   <Row gutters>
                     <Col>
                       <InstrumentsOverTimeForEurope name={name} />
+                    </Col>
+                  </Row>
+                </>
+              )}
+              {(section === "regions") && (
+                <>
+                  <Row gutters style={{ clear: "both" }}>
+                    <Col>
+                      <CountiesByStructure name={name} />
                     </Col>
                   </Row>
                 </>
