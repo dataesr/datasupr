@@ -12,7 +12,6 @@ import i18n from "./i18n.json";
 
 import "./styles.scss";
 
-
 export default function Home() {
   const [searchParams] = useSearchParams();
   const currentLang = searchParams.get("language") || "fr";
