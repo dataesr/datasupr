@@ -39,40 +39,37 @@ export default function ChartCard({
       : color;
 
     chartInstance.current = Highcharts.chart({
+      accessibility: {
+        screenReaderSection: {
+          beforeChartFormat: `<h2>${title}</h2>`,
+        }
+      },
       chart: {
-        renderTo: chartRef.current,
-        type: "areaspline",
+        backgroundColor: 'transparent',
         height: 110,
-        backgroundColor: "transparent",
         margin: [0, 0, 0, 0],
+        renderTo: chartRef.current,
         spacing: [0, 0, 0, 0],
+        type: 'areaspline',
       },
-      title: {
-        text: undefined,
-      },
-      credits: {
-        enabled: false,
-      },
+      title: { text: '' },
+      subtitle: { text: '' },
+      credits: { enabled: false },
       xAxis: {
         categories,
-        visible: false,
-        labels: {
-          enabled: false,
-        },
+        labels: { enabled: false },
         lineWidth: 0,
         tickLength: 0,
+        title: { text: '' },
+        visible: false,
       },
       yAxis: {
-        visible: false,
-        title: {
-          text: undefined,
-        },
-        labels: {
-          enabled: false,
-        },
         gridLineWidth: 0,
+        labels: { enabled: false },
         max: yAxisMax,
         min: 1,
+        title: { text: '' },
+        visible: false,
       },
       legend: {
         enabled: false,
@@ -163,6 +160,7 @@ export default function ChartCard({
     >
       {data && data.length > 0 && (
         <div
+          className="lalilou"
           ref={chartRef}
           style={{
             bottom: "20px",
