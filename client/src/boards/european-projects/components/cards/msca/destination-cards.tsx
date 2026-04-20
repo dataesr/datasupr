@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useId, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
 import { getMscaSynthesisByDestination, MscaDestinationData } from "../../../api/msca";
@@ -68,6 +68,7 @@ export default function MscaDestinationCards({ countryCode, callYear }: MscaDest
 // ─── MscaStatCard ─────────────────────────────────────────────────────────────
 
 function MscaStatCard({ data, viewMode }: { data: MscaDestinationData; viewMode: ViewMode }) {
+  const tooltipId = useId();
   const label = DESTINATION_LABELS[data.destination_code] || data.destination_name_en || data.destination_code;
   const evaluatedProjects = data.evaluated?.total_projects || 0;
   const successfulProjects = data.successful?.total_projects || 0;
@@ -93,7 +94,15 @@ function MscaStatCard({ data, viewMode }: { data: MscaDestinationData; viewMode:
             </div>
           </div>
           <div className="success-rate">
-            <span className="rate-label">Taux de succès</span>
+            <span className="rate-label">
+              Taux de succès
+              <button className="info-button" aria-describedby={tooltipId} type="button">
+                <span className="fr-icon-information-line" aria-hidden="true"></span>
+              </button>
+              <span className="fr-tooltip fr-placement" id={tooltipId} role="tooltip" aria-hidden="true">
+                Projets lauréats / Projets évalués = {formatNumber(successfulProjects)} / {formatNumber(evaluatedProjects)}
+              </span>
+            </span>
             <span className="rate-value">{formatToRates(successRate)}</span>
           </div>
         </>

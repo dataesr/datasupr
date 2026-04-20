@@ -55,6 +55,24 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
   const newOptions: HighchartsInstance.Options = {
     chart: {
       height: 400,
+      events: {
+        render(this: any) {
+          (this._stems || []).forEach((el: any) => el.destroy());
+          this._stems = [];
+          const scatter = this.series.find((s: any) => s.type === "scatter");
+          if (!scatter) return;
+          const y0 = (this.yAxis[1] as any).toPixels(0);
+          scatter.points.forEach((pt: any) => {
+            if (pt.plotX == null || pt.plotY == null) return;
+            this._stems.push(
+              this.renderer
+                .path(["M", this.plotLeft + pt.plotX, y0, "L", this.plotLeft + pt.plotX, this.plotTop + pt.plotY])
+                .attr({ stroke: successRateColor, "stroke-width": 1.5, dashstyle: "Dot", zIndex: 3 })
+                .add(),
+            );
+          });
+        },
+      },
     },
     title: {
       text: titleText,
@@ -104,6 +122,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
       },
     ],
     legend: {
+      enabled: true,
       align: "center",
       verticalAlign: "bottom",
       layout: "horizontal",
@@ -124,7 +143,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
           const seriesName = point.series.name;
           const value = point.y || 0;
 
-          if (point.series.type === "line") {
+          if (point.series.type === "scatter") {
             html += `<span style="color:${point.color}">●</span> ${seriesName}: <strong>${formatToRates(value / 100)}</strong><br/>`;
           } else {
             html += `<span style="color:${point.color}">●</span> ${seriesName}: <strong>${formatCurrency(value * 1000000)}</strong><br/>`;
@@ -164,13 +183,25 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
         yAxis: 0,
       },
       {
-        type: "line",
+        type: "scatter",
         name: currentLang === "fr" ? "Taux de succès" : "Success rate",
         color: successRateColor,
         data: successRates,
         yAxis: 1,
-        marker: {
-          symbol: "circle",
+        pointPlacement: 0,
+        marker: { symbol: "circle", radius: 6 },
+        dataLabels: {
+          enabled: true,
+          formatter: function () {
+            return formatToRates(((this as any).y || 0) / 100);
+          },
+          y: -10,
+          style: {
+            fontSize: "11px",
+            fontWeight: "600",
+            color: successRateColor,
+            textOutline: "none",
+          },
         },
         zIndex: 5,
       },

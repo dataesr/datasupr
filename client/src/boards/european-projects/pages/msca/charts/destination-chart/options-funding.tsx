@@ -1,56 +1,43 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import type { DestinationChartItem } from "./query";
-import { formatNumber, formatToRates } from "../../../../../../utils/format";
+import type { MscaDestinationChartItem } from "./query";
+import { formatCurrency, formatToRates } from "../../../../../../utils/format";
 
-// Mapping des codes de destination vers des noms lisibles
 const DESTINATION_NAMES: Record<string, { fr: string; en: string }> = {
-  STG: { fr: "Starting Grants", en: "Starting Grants" },
-  COG: { fr: "Consolidator Grants", en: "Consolidator Grants" },
-  ADG: { fr: "Advanced Grants", en: "Advanced Grants" },
-  SYG: { fr: "Synergy Grants", en: "Synergy Grants" },
-  POC: { fr: "Proof of Concept", en: "Proof of Concept" },
+  PF: { fr: "Postdoctoral Fellowships", en: "Postdoctoral Fellowships" },
+  DN: { fr: "Doctoral Networks", en: "Doctoral Networks" },
+  SE: { fr: "Staff Exchanges", en: "Staff Exchanges" },
+  COFUND: { fr: "COFUND", en: "COFUND" },
+  ITN: { fr: "Innovative Training Networks", en: "Innovative Training Networks" },
+  RISE: { fr: "RISE", en: "RISE" },
+  IF: { fr: "Individual Fellowships", en: "Individual Fellowships" },
 };
 
-// Ordre de tri des destinations
-const DESTINATION_ORDER = ["STG", "COG", "ADG", "SYG", "POC"];
-
 interface OptionsParams {
-  data: DestinationChartItem[];
+  data: MscaDestinationChartItem[];
   currentLang?: string;
 }
 
-export default function Options({ data, currentLang = "fr" }: OptionsParams) {
+export default function OptionsFunding({ data, currentLang = "fr" }: OptionsParams) {
   if (!data || data.length === 0) return null;
 
-  // Trier les données selon l'ordre défini
-  const sortedData = [...data].sort((a, b) => {
-    const indexA = DESTINATION_ORDER.indexOf(a.destination_code);
-    const indexB = DESTINATION_ORDER.indexOf(b.destination_code);
-    return (indexA === -1 ? 999 : indexA) - (indexB === -1 ? 999 : indexB);
-  });
+  const sortedData = [...data].sort((a, b) => a.destination_code.localeCompare(b.destination_code));
 
-  // Préparer les catégories (codes de destination)
   const categories = sortedData.map((d) => d.destination_code);
-
-  // Préparer les données pour les barres
-  const evaluatedData = sortedData.map((d) => d.evaluated?.total_involved || 0);
-  const successfulData = sortedData.map((d) => d.successful?.total_involved || 0);
-
-  // Calculer les taux de succès
+  const evaluatedData = sortedData.map((d) => (d.evaluated?.total_funding || 0) / 1_000_000);
+  const successfulData = sortedData.map((d) => (d.successful?.total_funding || 0) / 1_000_000);
   const successRates = sortedData.map((d) => {
-    const evaluated = d.evaluated?.total_involved || 0;
-    const successful = d.successful?.total_involved || 0;
+    const evaluated = d.evaluated?.total_funding || 0;
+    const successful = d.successful?.total_funding || 0;
     return evaluated > 0 ? (successful / evaluated) * 100 : 0;
   });
 
-  // Récupérer les couleurs CSS
   const rootStyles = getComputedStyle(document.documentElement);
   const evaluatedColor = rootStyles.getPropertyValue("--evaluated-project-color").trim() || "#009099";
   const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
   const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
 
-  const titleText = currentLang === "fr" ? "Projets par type de financement ERC" : "Projects by ERC funding type";
+  const titleText = currentLang === "fr" ? "Financements par type de financement MSCA" : "Funding by MSCA funding type";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
@@ -76,10 +63,7 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
     },
     title: {
       text: titleText,
-      style: {
-        fontSize: "14px",
-        fontWeight: "600",
-      },
+      style: { fontSize: "14px", fontWeight: "600" },
     },
     xAxis: {
       categories,
@@ -94,15 +78,14 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
     },
     yAxis: [
       {
-        // Axe principal pour les projets
         title: {
-          text: currentLang === "fr" ? "Nombre de projets" : "Number of projects",
+          text: currentLang === "fr" ? "Financements (M€)" : "Funding (M€)",
           style: { fontSize: "13px" },
         },
         min: 0,
+        labels: { format: "{value} M€" },
       },
       {
-        // Axe secondaire pour le taux de succès
         title: {
           text: currentLang === "fr" ? "Taux de succès (%)" : "Success rate (%)",
           style: { fontSize: "13px", color: successRateColor },
@@ -110,69 +93,45 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
         opposite: true,
         min: 0,
         max: 100,
-        labels: {
-          format: "{value}%",
-          style: { color: successRateColor },
-        },
+        labels: { format: "{value}%", style: { color: successRateColor } },
       },
     ],
-    legend: {
-      enabled: true,
-      align: "center",
-      verticalAlign: "bottom",
-      layout: "horizontal",
-    },
+    legend: { enabled: true, align: "center", verticalAlign: "bottom", layout: "horizontal" },
     tooltip: {
       shared: true,
       useHTML: true,
       formatter: function () {
         const points = this.points;
         if (!points) return "";
-
-        const destinationCode = String(this.x);
-        const destinationName = DESTINATION_NAMES[destinationCode]?.[currentLang] || destinationCode;
-
-        let html = `<strong>${destinationName}</strong><br/>`;
-
+        const code = String(this.x);
+        const name = DESTINATION_NAMES[code]?.[currentLang] || code;
+        let html = `<strong>${name}</strong><br/>`;
         points.forEach((point) => {
-          const seriesName = point.series.name;
           const value = point.y || 0;
-
           if (point.series.type === "scatter") {
-            html += `<span style="color:${point.color}">●</span> ${seriesName}: <strong>${formatToRates(value / 100)}</strong><br/>`;
+            html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatToRates(value / 100)}</strong><br/>`;
           } else {
-            html += `<span style="color:${point.color}">●</span> ${seriesName}: <strong>${formatNumber(value)}</strong><br/>`;
+            html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatCurrency(value * 1_000_000)}</strong><br/>`;
           }
         });
-
         return html;
       },
     },
     plotOptions: {
-      column: {
-        grouping: true,
-        borderWidth: 0,
-        borderRadius: 2,
-      },
-      line: {
-        marker: {
-          enabled: true,
-          radius: 5,
-        },
-        lineWidth: 2,
-      },
+      column: { grouping: true, borderWidth: 0, borderRadius: 2 },
+      line: { marker: { enabled: true, radius: 5 }, lineWidth: 2 },
     },
     series: [
       {
         type: "column",
-        name: currentLang === "fr" ? "Projets évalués" : "Evaluated projects",
+        name: currentLang === "fr" ? "Financements demandés" : "Requested funding",
         color: evaluatedColor,
         data: evaluatedData,
         yAxis: 0,
       },
       {
         type: "column",
-        name: currentLang === "fr" ? "Projets lauréats" : "Successful projects",
+        name: currentLang === "fr" ? "Financements obtenus" : "Obtained funding",
         color: successfulColor,
         data: successfulData,
         yAxis: 0,
@@ -199,7 +158,7 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
           },
         },
         zIndex: 5,
-      },
+      } as any,
     ],
   };
 
