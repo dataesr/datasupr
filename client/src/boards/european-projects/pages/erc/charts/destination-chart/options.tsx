@@ -199,7 +199,7 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
           },
         },
         zIndex: 5,
-      },
+      } as any,
     ],
   };
 

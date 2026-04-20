@@ -204,7 +204,7 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
           },
         },
         zIndex: 5,
-      },
+      } as any,
     ],
   };
 
