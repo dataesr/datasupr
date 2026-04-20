@@ -1,4 +1,4 @@
-import { Button, Col, Row } from "@dataesr/dsfr-plus";
+import { Button, Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { Grid, type GridOptions } from "@highcharts/grid-pro-react";
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -96,12 +96,12 @@ export default function DataTable({ name }: { name: string | undefined }) {
       id: "participationIsCoordinator",
     }, {
       header: { format: "Financement global (présence)" },
-      cells: { formatter: function() { return String(this.value).length > 0 ? `${this.value} €` : ''; }  },
+      cells: { formatter: function () { return String(this.value).length > 0 ? `${this.value} €` : ''; } },
       id: "projectBudgetFinanced",
       sorting: { enabled: true },
     }, {
       header: { format: "Financement perçu (implication)" },
-      cells: { formatter: function() { return String(this.value).length > 0 ? `${this.value} €` : ''; } },
+      cells: { formatter: function () { return String(this.value).length > 0 ? `${this.value} €` : ''; } },
       id: "participationFunding",
       sorting: { enabled: true },
     }],
@@ -133,18 +133,31 @@ export default function DataTable({ name }: { name: string | undefined }) {
   };
 
   return (
-    <Row gutters style={{ clear: "both" }}>
-      <Col>
-        <>
-          <Button className="fr-mb-2w" onClick={(e) => downloadCsv(e)}>
-            Export CSV
+    <>
+      <Row className="fr-grid-row--middle fr-mb-3w">
+        <Col>
+          <Title as="h2" look="h4">Données détaillées</Title>
+          <Text className="fr-text--sm fr-mb-0" style={{ color: "var(--text-mention-grey)" }}>
+            Liste des participations aux projets financés pour la période sélectionnée
+          </Text>
+        </Col>
+        <Col style={{ display: "flex", justifyContent: "flex-end" }}>
+          <Button
+            icon="download-line"
+            iconPosition="left"
+            onClick={(e) => downloadCsv(e)}
+            size="sm"
+            variant="secondary"
+          >
+            Télécharger en CSV
           </Button>
+        </Col>
+      </Row>
+      <Row>
+        <Col>
           <Grid gridRef={gridRef} options={options} />
-          <Button className="fr-mt-2w" onClick={(e) => downloadCsv(e)}>
-            Export CSV
-          </Button>
-        </>
-      </Col>
-    </Row>
+        </Col>
+      </Row>
+    </>
   );
 };

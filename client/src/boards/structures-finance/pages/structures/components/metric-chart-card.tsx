@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { BUDGET_SENSITIVE_METRICS } from "../../../components/budget-warning/budgetIndicators";
 import { getCssColor } from "../../../../../utils/colors";
@@ -39,6 +39,7 @@ export function MetricChartCard({
     evolutionData?.some((item) => item.sanfin_source === "Budget");
 
   const displayTitle = hasBudgetData ? `${title} (budget)` : title;
+  const titleId = useId();
 
   useEffect(() => {
     if (!chartRef.current || !evolutionData || evolutionData.length === 0)
@@ -234,8 +235,8 @@ export function MetricChartCard({
   return (
     <div
       className="fr-card"
-      role="article"
-      aria-label={`${displayTitle}: ${value}${detail ? `, ${detail}` : ""}`}
+      role="group"
+      aria-labelledby={titleId}
       style={{
         height: "100%",
         borderLeft: "none",
@@ -247,15 +248,12 @@ export function MetricChartCard({
         paddingBottom: 0,
       }}
     >
-      <div
-        className="fr-card__body fr-p-2w"
-        style={{
-        }}
-      >
-        <div >
+      <div className="fr-card__body fr-p-2w">
+        <div>
           <Title
             className="fr-card__title fr-text--sm fr-text--bold fr-mb-1v"
             as={titleAs}
+            id={titleId}
             style={{ color: "var(--text-active-blue-france)", textTransform: "uppercase", letterSpacing: "0.5px" }}
           >
             {displayTitle}

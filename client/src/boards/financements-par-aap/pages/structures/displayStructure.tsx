@@ -1,10 +1,11 @@
-import { Alert, Col, Container, Link, Row, Text, Title } from "@dataesr/dsfr-plus";
+import { Alert, Button, Col, Container, Link, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { isInProduction } from "../../../../utils";
 import Breadcrumb from "../../components/breadcrumb";
+import Select from "../../../structures-finance/components/select";
 import { getEsQuery, years } from "../../utils";
 import ClassificationsByStructure from "./charts/classifications-by-structure";
 import Classifications2ByStructure from "./charts/classifications2-by-structure";
@@ -28,6 +29,7 @@ const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.en
 
 export default function DisplayStructure() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const section = searchParams.get("section");
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
@@ -97,62 +99,76 @@ export default function DisplayStructure() {
               ]} />
             </Col>
           </Row>
-          <Row gutters>
-            <Col xs="12" md="8">
-              <Title as="h1" className="fr-mb-1w" look="h4">
+          <Row gutters className="fr-grid-row--middle fr-mb-2w">
+            <Col xs="12" md="6">
+              <Title as="h1" className="fr-mb-1v" look="h4">
                 {name}
               </Title>
-              <Text size="xs">
+              <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
                 {structureInfo?.typologie_2}
               </Text>
-              <Text>
-                <span aria-hidden="true" className="fr-icon-map-pin-2-fill fr-mr-1w"></span>
-                {structureInfo?.region}
+              {structureInfo?.region && (
+                <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
+                  <span aria-hidden="true" className="fr-icon-map-pin-2-fill fr-mr-1w" />
+                  {structureInfo.region}
+                </Text>
+              )}
+              <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
+                <Link href={scanrUrl} target="_blank" size="sm" className="fr-mt-1w fr-text-mention--grey">
+                  <span aria-hidden="true" />
+                  Voir sur scanR
+                </Link>
               </Text>
             </Col>
-            <Col>
-              <Row gutters className="fr-mb-2w">
-                <Link href="/financements-par-aap/etablissement">
-                  <span aria-hidden="true" className="fr-icon-arrow-go-back-line fr-mr-1w" />
-                  Changer d'établissement
-                </Link>
-              </Row>
-              <Row gutters className="fr-mb-4w">
-                <Link href={scanrUrl} target="_blank">
-                  Voir la liste de ces projets sur scanR
-                </Link>
-              </Row>
-              <Row gutters>
-                <Col md="1" style={{ display: "ruby" }}>
-                  <select
-                    className="fr-select"
-                    onChange={(e) => handleYearMinChange(e.target.value)}
-                    style={{ width: "fit-content" }}
-                    value={yearMin}
-                  >
-                    {[...years].sort((a, b) => b - a).map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                  <Text className="fr-mx-1w" style={{ margin: "auto" }}>
-                    à
-                  </Text>
-                  <select
-                    className="fr-select"
-                    onChange={(e) => handleYearMaxChange(e.target.value)}
-                    style={{ width: "fit-content" }}
-                    value={yearMax}
-                  >
-                    {[...years].sort((a, b) => b - a).map((year) => (
-                      <option key={year} value={year}>
-                        {year}
-                      </option>
-                    ))}
-                  </select>
-                </Col>
-              </Row>
+            <Col xs="12" md="6" style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.5rem" }}>
+              <Button
+                variant="tertiary"
+                icon="arrow-go-back-line"
+                iconPosition="left"
+                size="sm"
+                onClick={() => navigate("/financements-par-aap/etablissement")}
+              >
+                Changer d'établissement
+              </Button>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <Select
+                  label={yearMin}
+                  icon="calendar-line"
+                  outline={false}
+                  size="sm"
+                  aria-label="Année de début"
+                >
+                  {[...years].sort((a, b) => b - a).map((year) => (
+                    <Select.Option
+                      key={year}
+                      value={String(year)}
+                      selected={yearMin === String(year)}
+                      onClick={() => handleYearMinChange(String(year))}
+                    >
+                      {year}
+                    </Select.Option>
+                  ))}
+                </Select>
+                <Text className="fr-mb-0">à</Text>
+                <Select
+                  label={yearMax}
+                  icon="calendar-line"
+                  outline={false}
+                  size="sm"
+                  aria-label="Année de fin"
+                >
+                  {[...years].sort((a, b) => b - a).map((year) => (
+                    <Select.Option
+                      key={year}
+                      value={String(year)}
+                      selected={yearMax === String(year)}
+                      onClick={() => handleYearMaxChange(String(year))}
+                    >
+                      {year}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </div>
             </Col>
           </Row>
         </Container>
@@ -192,13 +208,14 @@ export default function DisplayStructure() {
             </nav>
           </Col>
         </Row>
-        {((Number(yearMax) >= 2024) || (Number(yearMin) >= 2024)) &&
-          <div style={{ float: "right" }}>
-            <div>
-              <Alert description="Les sources disponibles ne fournissent que des données provisoires pour 2024 et 2025" size="sm" variant="warning" />
-            </div>
-          </div>
-        }
+        {((Number(yearMax) >= 2024) || (Number(yearMin) >= 2024)) && (
+          <Alert
+            className="fr-mb-4w fr-mt-4w"
+            description="Les sources disponibles ne fournissent que des données provisoires pour 2024 et 2025."
+            size="sm"
+            variant="warning"
+          />
+        )}
         {(yearMax < yearMin) ?
           (<Alert description="Merci de choisir une année de fin supérieure ou égale à l'année de début" title="Erreur dans le choix des années" variant="error" />) :
           (

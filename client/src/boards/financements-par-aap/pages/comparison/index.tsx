@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import Breadcrumb from "../../components/breadcrumb";
+import Select from "../../../structures-finance/components/select";
 import { years } from "../../utils";
 import ClassificationsByComparison from "./charts/classifications-by-comparison";
 import DispersionByComparison from "./charts/dispersion-by-comparison";
@@ -49,7 +50,7 @@ export default function Comparison() {
 
   return (
     <>
-      <Container fluid className="funding-gradient fr-mb-3w">
+      <Container fluid className="funding-gradient">
         <Container as="section">
           <Row gutters>
             <Col>
@@ -59,52 +60,65 @@ export default function Comparison() {
               ]} />
             </Col>
           </Row>
-          <Row gutters>
+          <Row gutters className="fr-grid-row--middle">
             <Col md="9">
-              <Title as="h1" look="h4">
+              <Title as="h1" look="h4" className="fr-mb-1v">
                 Comparaison entre établissements
               </Title>
+              <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
+                {structures.length < 2
+                  ? "Sélectionnez au moins deux établissements ci-dessous pour comparer leurs financements via les appels à projets. Vous pouvez filtrer par région et par typologie."
+                  : `${structures.length} établissements sélectionnés`}
+              </Text>
             </Col>
-            <Col md="3">
-              <div style={{ display: "flex", float: "right" }}>
-                <select
-                  className="fr-select"
-                  onChange={(e) => handleYearMinChange(e.target.value)}
-                  style={{ width: "fit-content" }}
-                  value={yearMin}
-                >
-                  {[...years].sort((a, b) => b - a).map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-                <Text className="fr-mx-1w" style={{ margin: "auto" }}>
-                  à
-                </Text>
-                <select
-                  className="fr-select"
-                  onChange={(e) => handleYearMaxChange(e.target.value)}
-                  style={{ width: "fit-content" }}
-                  value={yearMax}
-                >
-                  {[...years].sort((a, b) => b - a).map((year) => (
-                    <option key={year} value={year}>
-                      {year}
-                    </option>
-                  ))}
-                </select>
-              </div>
+            <Col md="3" style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "0.5rem" }}>
+              <Select
+                label={yearMin}
+                icon="calendar-line"
+                outline={false}
+                size="sm"
+                aria-label="Année de début"
+              >
+                {[...years].sort((a, b) => b - a).map((year) => (
+                  <Select.Option
+                    key={year}
+                    value={String(year)}
+                    selected={yearMin === String(year)}
+                    onClick={() => handleYearMinChange(String(year))}
+                  >
+                    {year}
+                  </Select.Option>
+                ))}
+              </Select>
+              <Text className="fr-mb-0">à</Text>
+              <Select
+                label={yearMax}
+                icon="calendar-line"
+                outline={false}
+                size="sm"
+                aria-label="Année de fin"
+              >
+                {[...years].sort((a, b) => b - a).map((year) => (
+                  <Select.Option
+                    key={year}
+                    value={String(year)}
+                    selected={yearMax === String(year)}
+                    onClick={() => handleYearMaxChange(String(year))}
+                  >
+                    {year}
+                  </Select.Option>
+                ))}
+              </Select>
             </Col>
           </Row>
-          <Row gutters>
+          <Row gutters className="fr-mt-2w fr-mb-2w">
             <Col>
               <StructuresSelector />
             </Col>
           </Row>
         </Container>
       </Container>
-      <Container className="fr-mb-3w">
+      <Container as="section" >
         {(structures && structures.length >= 2) ? (
           <>
             <Row gutters>
@@ -170,12 +184,14 @@ export default function Comparison() {
           <Alert
             description="Sélectionner plusieurs établissements dans la liste déroulante pour visualiser
               leurs financements via les appels à projets. Vous pouvez filtrer par région et par typologie."
-            className="fr-mt-3w"
+            className="fr-mt-3w fr-mb-3w"
             title="Sélectionner plusieurs établissements"
             variant="info"
           />
         )}
+
       </Container>
+
     </>
   )
 }

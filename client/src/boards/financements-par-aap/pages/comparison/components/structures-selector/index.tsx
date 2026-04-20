@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
+import Select from "../../../../../structures-finance/components/select";
 import { getEsQuery } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -13,6 +13,7 @@ const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.en
 export default function StructuresSelector() {
   const [county, setCounty] = useState("*");
   const [typology, setTypology] = useState("*");
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchParams, setSearchParams] = useSearchParams({});
   const selectedStructures: string[] = searchParams.getAll("structure");
 
@@ -108,7 +109,7 @@ export default function StructuresSelector() {
   });
   const structuresAll = (dataStructuresAll?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
     const structureInfo = Object.fromEntries(new URLSearchParams(bucket.key));
-    structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     return structureInfo;
   }) || [];
 
@@ -137,7 +138,7 @@ export default function StructuresSelector() {
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const structureInfo = Object.fromEntries(new URLSearchParams(bucket.key));
-      structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      structureInfo.searchableText = structureInfo.label.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
       return structureInfo;
     }) || [];
 
@@ -162,83 +163,155 @@ export default function StructuresSelector() {
   }
 
   return (
-    <Row gutters>
-      <Col xs="12" sm="3">
-        {isLoadingCounties ? <DefaultSkeleton height="70px" /> : (
-          <div className="fr-select-group">
-            <label className="fr-label">
-              Région
-              <Badge className="fr-ml-1w">
-                {counties.length}
-              </Badge>
-            </label>
-            <select
-              aria-describedby="select-county-messages"
-              className="fr-select"
-              id="select-county"
-              name="select-county"
-              onChange={(e) => setCounty(e.target.value)}
-              value={county}
+    <>
+      <Row gutters className="fr-grid-row--middle">
+        <Col xs="12" sm="3">
+          {isLoadingCounties ? <DefaultSkeleton height="40px" /> : (
+            <Select
+              label={county === "*" ? <>Région <Badge className="fr-ml-1v" size="sm" >{counties.length}</Badge></> : county}
+              icon="map-pin-2-line"
+              size="sm"
+              fullWidth
+              aria-label="Filtrer par région"
             >
-              <option value="*">Toutes les régions</option>
-              {counties.map((county: string) => (
-                <option key={county} value={county}>
-                  {county}
-                </option>
+              <Select.Option
+                value="*"
+                selected={county === "*"}
+                onClick={() => setCounty("*")}
+              >
+                Toutes les régions
+              </Select.Option>
+              {counties.map((c: string) => (
+                <Select.Option
+                  key={c}
+                  value={c}
+                  selected={county === c}
+                  onClick={() => setCounty(c)}
+                >
+                  {c}
+                </Select.Option>
               ))}
-            </select>
-          </div>
-        )}
-      </Col>
-
-      <Col xs="12" sm="3">
-        {isLoadingTypologies ? <DefaultSkeleton height="70px" /> : (
-          <div className="fr-select-group">
-            <label className="fr-label">
-              Typologie
-              <Badge className="fr-ml-1w">
-                {typologies.length}
-              </Badge>
-            </label>
-            <select
-              aria-describedby="select-typology-messages"
-              className="fr-select"
-              id="select-typology"
-              name="select-typology"
-              onChange={(e) => setTypology(e.target.value)}
-              value={typology}
+            </Select>
+          )}
+        </Col>
+        <Col xs="12" sm="3">
+          {isLoadingTypologies ? <DefaultSkeleton height="40px" /> : (
+            <Select
+              label={typology === "*" ? <>Typologie <Badge className="fr-ml-1v" size="sm">{typologies.length}</Badge></> : typology}
+              icon="layout-grid-line"
+              size="sm"
+              fullWidth
+              aria-label="Filtrer par typologie"
             >
-              <option value="*">Toutes les typologies</option>
-              {typologies.map((typology: string) => (
-                <option key={typology} value={typology}>
-                  {typology}
-                </option>
+              <Select.Option
+                value="*"
+                selected={typology === "*"}
+                onClick={() => setTypology("*")}
+              >
+                Toutes les typologies
+              </Select.Option>
+              {typologies.map((t: string) => (
+                <Select.Option
+                  key={t}
+                  value={t}
+                  selected={typology === t}
+                  onClick={() => setTypology(t)}
+                >
+                  {t}
+                </Select.Option>
               ))}
-            </select>
-          </div>
-        )}
-      </Col>
-
-      <Col xs="12" sm="6">
-        {(isLoadingStructures || isLoadingStructuresAll) ? <DefaultSkeleton height="70px" /> : (
-          <>
-            <label className="fr-label">
-              Etablissement
-              <Badge className="fr-ml-1w">
-                {structures.length}
-              </Badge>
-            </label>
-            <div className="fr-mt-1w fr-mb-1w">
-              <SearchableSelect
-                canSelectAll={true}
-                canSelectAllPlaceholder={`Ajouter ${structures.length > 1 ? 'les' : 'l\''} ${structures.length} établissement${structures.length > 1 ? 's' : ''}`}
-                onChange={handleStructureChange}
-                options={structures}
-                placeholder="Ajouter un établissement..."
-                value={selectedStructures}
+            </Select>
+          )}
+        </Col>
+        <Col xs="12" sm="6">
+          {(isLoadingStructures || isLoadingStructuresAll) ? <DefaultSkeleton height="40px" /> : (
+            <Select
+              label={<>Établissement <Badge className="fr-ml-1v" size="sm">{structures.length}</Badge></>}
+              icon="search-line"
+              size="sm"
+              fullWidth
+              multiple
+              aria-label="Rechercher et ajouter un établissement"
+            >
+              <Select.Search
+                placeholder="Rechercher par nom..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
               />
-            </div>
-            <TagGroup>
+              <Select.Content maxHeight="300px">
+                {structures.filter((s) =>
+                  searchQuery
+                    ? s.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
+                    : true
+                ).length > 0 && (
+                    <Select.Checkbox
+                      key="select-all"
+                      value="select-all"
+                      checked={structures
+                        .filter((s) =>
+                          searchQuery
+                            ? s.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
+                            : true
+                        )
+                        .every((s) => selectedStructures.includes(s.id))}
+                      onChange={(checked) => {
+                        const filtered = structures.filter((s) =>
+                          searchQuery
+                            ? s.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
+                            : true
+                        );
+                        if (checked) {
+                          const idsToAdd = filtered.map((s) => s.id).filter((id) => !selectedStructures.includes(id));
+                          idsToAdd.forEach((id) => searchParams.append("structure", id));
+                        } else {
+                          filtered.forEach((s) => searchParams.delete("structure", s.id));
+                        }
+                        setSearchParams(searchParams);
+                      }}
+                    >
+                      <strong>Tout sélectionner</strong>
+                    </Select.Checkbox>
+                  )}
+                {structures
+                  .filter((s) =>
+                    searchQuery
+                      ? s.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
+                      : true
+                  )
+                  .map((s) => (
+                    <Select.Checkbox
+                      key={s.id}
+                      value={s.id}
+                      checked={selectedStructures.includes(s.id)}
+                      onChange={(checked) => {
+                        if (checked) {
+                          handleStructureChange(s.id);
+                        } else {
+                          handleTagClick(s.id);
+                        }
+                      }}
+                    >
+                      {s.label}
+                    </Select.Checkbox>
+                  ))}
+                {structures
+                  .filter((s) =>
+                    searchQuery
+                      ? s.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
+                      : true
+                  )
+                  .length === 0 && (
+                    <Select.Empty>Aucun établissement trouvé</Select.Empty>
+                  )}
+              </Select.Content>
+            </Select>
+          )}
+        </Col>
+      </Row>
+      {selectedStructures.length > 0 && (
+        <Row className="fr-mt-3w">
+          <Col >
+            <TagGroup >
               {selectedStructures.map((selectedStructure) => (
                 <DismissibleTag key={selectedStructure} onClick={() => handleTagClick(selectedStructure)}>
                   {structuresAll.find((item) => item.id === selectedStructure)?.label}
@@ -246,14 +319,14 @@ export default function StructuresSelector() {
               ))}
               {(selectedStructures.length > 1) && (
                 <DismissibleTag color="orange-terre-battue" key="delete-all" onClick={() => handleDeleteAll()}>
-                  <span aria-hidden="true" className="fr-icon-delete-line fr-icon--sm fr-mr-1w"></span>
+                  <span aria-hidden="true" className="fr-icon-delete-line fr-icon--sm fr-mr-1w" />
                   Tout supprimer
                 </DismissibleTag>
               )}
             </TagGroup>
-          </>
-        )}
-      </Col>
-    </Row>
+          </Col>
+        </Row>
+      )}
+    </>
   );
 }

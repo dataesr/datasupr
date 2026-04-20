@@ -1,0 +1,49 @@
+.home-aap {
+  &__hero {
+    background: linear-gradient(
+      135deg,
+      var(--background-contrast-blue-france) 0%,
+      var(--background-default-grey) 100%
+    );
+
+    @media (max-width: 768px) {
+      padding: 2rem 0;
+    }
+  }
+
+  &__hero-content {
+    display: flex;
+    flex-direction: column;
+
+    @media (max-width: 992px) {
+      padding-right: 0;
+    }
+  }
+
+  &__hero-illustration {
+    display: flex;
+    justify-content: center;
+
+    @media (max-width: 992px) {
+      display: none;
+    }
+
+    img {
+      width: 100%;
+      max-width: 280px;
+      height: auto;
+    }
+  }
+
+  &__section {
+    padding: 2rem 0;
+  }
+
+  &__section--alt {
+    background: linear-gradient(
+      135deg,
+      var(--background-contrast-blue-france) 0%,
+      var(--background-default-grey) 100%
+    );
+  }
+}

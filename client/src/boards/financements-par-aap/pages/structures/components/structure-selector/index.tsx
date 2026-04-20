@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import SearchableSelect from "../../../../../../components/searchable-select/index.tsx";
+import Select from "../../../../../structures-finance/components/select";
 import { getEsQuery } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
@@ -13,8 +13,8 @@ const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.en
 export default function StructureSelector({ setStructures }) {
   const [county, setCounty] = useState("*");
   const [searchParams, setSearchParams] = useSearchParams({});
+  const [searchQuery, setSearchQuery] = useState("");
   const [typology, setTypology] = useState("*");
-  const structure = searchParams.get("structure") ?? "";
 
   const bodyCounties: any = {
     ...getEsQuery({}),
@@ -117,7 +117,7 @@ export default function StructureSelector({ setStructures }) {
   const structures =
     (dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
-      structureInfo.searchableText = structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      structureInfo.searchableText = structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
       return structureInfo;
     }) || [];
 
@@ -131,87 +131,114 @@ export default function StructureSelector({ setStructures }) {
   useEffect(() => {
     setStructures((dataStructures?.aggregations?.by_structure?.buckets ?? []).map((bucket) => {
       const structureInfo = Object.fromEntries(new URLSearchParams(bucket?.key ?? ""));
-      structureInfo.searchableText = structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      structureInfo.searchableText = structureInfo.label.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
       return structureInfo;
     }) || []);
   }, [dataStructures])
 
   return (
-    <Row gutters>
+    <Row gutters className="fr-grid-row--middle">
       <Col xs="12" sm="3">
-        {isLoadingCounties ? <DefaultSkeleton height="70px" /> : (
-          <div className="fr-select-group">
-            <label className="fr-label">
-              Région
-              <Badge className="fr-ml-1w">
-                {counties.length}
-              </Badge>
-            </label>
-            <select
-              aria-describedby="select-county-messages"
-              className="fr-select"
-              id="select-county"
-              name="select-county"
-              onChange={(e) => setCounty(e.target.value)}
-              value={county}
+        {isLoadingCounties ? <DefaultSkeleton /> : (
+          <Select
+            label={county === "*" ? <>Région <Badge className="fr-ml-1v" size="sm">{counties.length}</Badge></> : county}
+            icon="map-pin-2-line"
+            size="sm"
+            fullWidth
+            aria-label="Filtrer par région"
+          >
+            <Select.Option
+              value="*"
+              selected={county === "*"}
+              onClick={() => setCounty("*")}
             >
-              <option value="*">Toutes les régions</option>
-              {counties.map((county: string) => (
-                <option key={county} value={county}>
-                  {county}
-                </option>
-              ))}
-            </select>
-          </div>
+              Toutes les régions
+            </Select.Option>
+            {counties.map((c: string) => (
+              <Select.Option
+                key={c}
+                value={c}
+                selected={county === c}
+                onClick={() => setCounty(c)}
+              >
+                {c}
+              </Select.Option>
+            ))}
+          </Select>
         )}
       </Col>
 
       <Col xs="12" sm="3">
-        {isLoadingTypologies ? <DefaultSkeleton height="70px" /> : (
-          <div className="fr-select-group">
-            <label className="fr-label">
-              Typologie
-              <Badge className="fr-ml-1w">
-                {typologies.length}
-              </Badge>
-            </label>
-            <select
-              aria-describedby="select-typology-messages"
-              className="fr-select"
-              id="select-typology"
-              name="select-typology"
-              onChange={(e) => setTypology(e.target.value)}
-              value={typology}
+        {isLoadingTypologies ? <DefaultSkeleton height="40px" /> : (
+          <Select
+            label={typology === "*" ? <>Typologie <Badge className="fr-ml-1v" size="sm">{typologies.length}</Badge></> : typology}
+            icon="layout-grid-line"
+            size="sm"
+            fullWidth
+            aria-label="Filtrer par typologie"
+          >
+            <Select.Option
+              value="*"
+              selected={typology === "*"}
+              onClick={() => setTypology("*")}
             >
-              <option value="*">Toutes les typologies</option>
-              {typologies.map((typology: string) => (
-                <option key={typology} value={typology}>
-                  {typology}
-                </option>
-              ))}
-            </select>
-          </div>
+              Toutes les typologies
+            </Select.Option>
+            {typologies.map((t: string) => (
+              <Select.Option
+                key={t}
+                value={t}
+                selected={typology === t}
+                onClick={() => setTypology(t)}
+              >
+                {t}
+              </Select.Option>
+            ))}
+          </Select>
         )}
       </Col>
 
       <Col xs="12" sm="6">
-        {isLoadingStructures ? <DefaultSkeleton height="70px" /> : (
-          <>
-            <label className="fr-label">
-              Etablissement
-              <Badge className="fr-ml-1w">
-                {structures.length}
-              </Badge>
-            </label>
-            <div className="fr-mt-1w fr-mb-1w">
-              <SearchableSelect
-                onChange={handleStructureChange}
-                options={structures}
-                placeholder="Rechercher un établissement..."
-                value={structure}
-              />
-            </div>
-          </>
+        {isLoadingStructures ? <DefaultSkeleton height="40px" /> : (
+          <Select
+            label={<>Établissement <Badge className="fr-ml-1v" size="sm">{structures.length}</Badge></>}
+            icon="search-line"
+            size="sm"
+            fullWidth
+            aria-label="Rechercher un établissement"
+          >
+            <Select.Search
+              placeholder="Rechercher par nom..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <Select.Content maxHeight="300px">
+              {structures
+                .filter((s) =>
+                  searchQuery
+                    ? s.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
+                    : true
+                )
+                .map((s) => (
+                  <Select.Option
+                    key={s.id}
+                    value={s.id}
+                    onClick={() => handleStructureChange(s.id)}
+                  >
+                    {s.label}
+                  </Select.Option>
+                ))}
+              {structures
+                .filter((s) =>
+                  searchQuery
+                    ? s.searchableText.includes(searchQuery.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase())
+                    : true
+                )
+                .length === 0 && (
+                  <Select.Empty>Aucun établissement trouvé</Select.Empty>
+                )}
+            </Select.Content>
+          </Select>
         )}
       </Col>
     </Row>

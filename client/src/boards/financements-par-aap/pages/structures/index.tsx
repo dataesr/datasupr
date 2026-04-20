@@ -49,7 +49,7 @@ export default function Structures() {
                 </Title>
               </Col>
             </Row>
-            <Row gutters>
+            <Row gutters >
               <Col>
                 <StructureSelector setStructures={setStructures} />
               </Col>

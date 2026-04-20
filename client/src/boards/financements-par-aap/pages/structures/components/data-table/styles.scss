@@ -5,4 +5,15 @@
   --hcg-cell-color: var(--text-default-grey);
   --hcg-row-hover-background: var(--background-contrast-blue-france);
   --hcg-text-align: left;
+
+  .hcg-header-cell {
+    background: var(--background-contrast-grey);
+    font-weight: 700;
+    font-size: 0.875rem;
+  }
+
+  .hcg-cell {
+    font-size: 0.875rem;
+    padding: 0.5rem 0.75rem;
+  }
 }

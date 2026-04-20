@@ -1,4 +1,4 @@
-import { Col, Row } from "@dataesr/dsfr-plus";
+import { Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
@@ -94,30 +94,32 @@ export default function Cards() {
   return (
     <>
       <Row gutters style={{ clear: "both" }}>
+        <Col xs="12" md="2" />
+        {Object.keys(dataFunders).map((funder) => (
+          <Col xs="12" md="2" key={`header-${funder}`}>
+            <Text
+              size="sm"
+              bold
+              className="fr-mb-0"
+              style={{
+                color: getCssColor({ name: funder, prefix: "funder" }),
+                textAlign: "center",
+                textTransform: "uppercase",
+              }}
+            >
+              {funder}
+              <span aria-hidden="true" style={{ display: "block", fontSize: "0.75rem", opacity: 0.5 }}>▼</span>
+            </Text>
+          </Col>
+        ))}
+      </Row>
+      <Row gutters>
         <Col xs="12" md="2" key={`card-projects-intro`}>
-          <div
-            aria-label={`Nombre de projets financés ${getYearRangeLabel({ yearMax, yearMin })} par financeur`}
-            className="fr-card"
-            role="article"
-            style={{
-              borderBottom: "none",
-              borderLeft: "none",
-              borderRight: "none",
-              height: "100%",
-              overflow: "hidden",
-              position: "relative",
-            }}
-          >
-            <div className="fr-card__body fr-p-2w" style={{ pointerEvents: "none", position: "relative" }}>
-              <div className="fr-card__content">
-                <p
-                  className="fr-text--sm fr-text--bold fr-mb-1v"
-                  style={{ letterSpacing: "0.5px", textTransform: "uppercase" }}
-                >
-                  {`Nombre de projets financés auxquels l'établissement participe`}
-                </p>
-              </div>
-            </div>
+          <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
+            <Title as="h2" className="fr-mb-0" style={{ fontSize: "0.8rem", letterSpacing: "0.3px", lineHeight: 1.3, textTransform: "uppercase" }}>
+              Nombre de projets financés auxquels l'établissement participe
+              <span aria-hidden="true" style={{ display: "inline-block", marginLeft: "0.5rem", opacity: 0.4 }}>→</span>
+            </Title>
           </div>
         </Col>
         {Object.keys(dataFunders).map((funder) => (
@@ -128,6 +130,7 @@ export default function Cards() {
                 data={dataFunders[funder].projects}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Projets ${funder}`}
+                titleAs="h3"
                 tooltipFormatter={function (this: any) {
                   return `${this.y} ${this.y > 1 ? "projets" : "projet"} ${funder} en ${this.key}`;
                 }}
@@ -140,29 +143,11 @@ export default function Cards() {
       </Row>
       <Row gutters>
         <Col xs="12" md="2" key={`card-budget-intro`}>
-          <div
-            aria-label={`Financements ${getYearRangeLabel({ yearMax, yearMin })} par financeur`}
-            className="fr-card"
-            role="article"
-            style={{
-              borderBottom: "none",
-              borderLeft: "none",
-              borderRight: "none",
-              height: "100%",
-              overflow: "hidden",
-              position: "relative",
-            }}
-          >
-            <div className="fr-card__body fr-p-2w" style={{ pointerEvents: "none", position: "relative" }}>
-              <div className="fr-card__content">
-                <p
-                  className="fr-text--sm fr-text--bold fr-mb-1v"
-                  style={{ letterSpacing: "0.5px", textTransform: "uppercase" }}
-                >
-                  {`Financements globaux des projets auxquels l'établissement participe`}
-                </p>
-              </div>
-            </div>
+          <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
+            <Title as="h2" className="fr-mb-0" style={{ fontSize: "0.8rem", letterSpacing: "0.3px", lineHeight: 1.3, textTransform: "uppercase" }}>
+              Financements globaux des projets auxquels l'établissement participe
+              <span aria-hidden="true" style={{ display: "inline-block", marginLeft: "0.5rem", opacity: 0.4 }}>→</span>
+            </Title>
           </div>
         </Col>
         {Object.keys(dataFunders).map((funder) => (
@@ -173,6 +158,7 @@ export default function Cards() {
                 data={dataFunders[funder].budget}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Financement global des projets ${funder}`}
+                titleAs="h3"
                 tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y)} € par ${funder} en ${this.key}` }}
                 value={`${formatCompactNumber(dataFunders[funder].budget.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
                 yAxisMax={maxBudget}
@@ -183,29 +169,11 @@ export default function Cards() {
       </Row>
       <Row gutters>
         <Col xs="12" md="2" key={`card-participation-intro`}>
-          <div
-            aria-label={`Financements perçus ${getYearRangeLabel({ yearMax, yearMin })} par financeur`}
-            className="fr-card"
-            role="article"
-            style={{
-              borderBottom: "none",
-              borderLeft: "none",
-              borderRight: "none",
-              height: "100%",
-              overflow: "hidden",
-              position: "relative",
-            }}
-          >
-            <div className="fr-card__body fr-p-2w" style={{ pointerEvents: "none", position: "relative" }}>
-              <div className="fr-card__content">
-                <p
-                  className="fr-text--sm fr-text--bold fr-mb-1v"
-                  style={{ letterSpacing: "0.5px", textTransform: "uppercase" }}
-                >
-                  {`Financements perçus pour les projets auxquels l'établissement participe`}
-                </p>
-              </div>
-            </div>
+          <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
+            <Title as="h2" className="fr-mb-0" style={{ fontSize: "0.8rem", letterSpacing: "0.3px", lineHeight: 1.3, textTransform: "uppercase" }}>
+              Financements perçus pour les projets auxquels l'établissement participe
+              <span aria-hidden="true" style={{ display: "inline-block", marginLeft: "0.5rem", opacity: 0.4 }}>→</span>
+            </Title>
           </div>
         </Col>
         {Object.keys(dataFunders).map((funder) => (
@@ -216,6 +184,7 @@ export default function Cards() {
                 data={dataFunders[funder].participation}
                 detail={getYearRangeLabel({ yearMax, yearMin })}
                 title={`Financements perçus des projets ${funder}`}
+                titleAs="h3"
                 tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y)} € par ${funder} en ${this.key}` }}
                 value={`${formatCompactNumber(dataFunders[funder].participation.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
                 yAxisMax={maxParticipation}

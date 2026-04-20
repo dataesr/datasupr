@@ -1,11 +1,13 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useId, useRef } from "react";
 import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
+import { Title } from "@dataesr/dsfr-plus";
 
 interface ChartCardProps {
   color?: string;
   data?: Array<{ x: number; y: number }>;
   detail?: string;
   title: string;
+  titleAs?: "h2" | "h3" | "h4" | "h5" | "h6";
   tooltipFormatter?: Highcharts.TooltipFormatterCallbackFunction | undefined;
   unit?: string;
   value: string;
@@ -17,6 +19,7 @@ export default function ChartCard({
   data,
   detail,
   title,
+  titleAs = "h2",
   tooltipFormatter = function (this: any) { return `<b>${this.x}</b><br/>${this.y}` },
   unit = "",
   value,
@@ -24,6 +27,7 @@ export default function ChartCard({
 }: ChartCardProps) {
   const chartRef = useRef<HTMLDivElement>(null);
   const chartInstance = useRef<Highcharts.Chart | null>(null);
+  const titleId = useId();
 
   useEffect(() => {
     if (!chartRef.current || !data || data.length === 0)
@@ -41,7 +45,7 @@ export default function ChartCard({
     chartInstance.current = Highcharts.chart({
       accessibility: {
         screenReaderSection: {
-          beforeChartFormat: `<h2>${title}</h2>`,
+          beforeChartFormat: '',
         }
       },
       chart: {
@@ -145,10 +149,9 @@ export default function ChartCard({
 
   return (
     <div
-      className="fr-card fr-enlarge-link"
-      tabIndex={0}
-      role="article"
-      aria-label={`${title}: ${value}${detail ? `, ${detail}` : ""}`}
+      className="fr-card"
+      role="group"
+      aria-labelledby={titleId}
       style={{
         borderBottom: "none",
         borderLeft: "none",
@@ -162,6 +165,7 @@ export default function ChartCard({
         <div
           className="lalilou"
           ref={chartRef}
+          aria-hidden="true"
           style={{
             bottom: "20px",
             height: "110px",
@@ -179,15 +183,17 @@ export default function ChartCard({
         style={{ position: "relative", pointerEvents: "none" }}
       >
         <div className="fr-card__content">
-          <p
+          <Title
             className="fr-text--sm fr-text--bold fr-mb-1v"
+            as={titleAs}
+            id={titleId}
             style={{
               letterSpacing: "0.5px",
               textTransform: "uppercase",
             }}
           >
             {title}
-          </p>
+          </Title>
           <p className="fr-h5 fr-mb-1v">{value}</p>
           {detail && (
             <p
