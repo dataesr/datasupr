@@ -106,10 +106,6 @@ export default function SyntheseContent() {
           </Row>
 
           <Title as="h2" className="fr-mt-5w">
-            {getI18nLabel(i18n, "main-partner-title", currentLang)}
-          </Title>
-
-          <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "pillar-detail-title", currentLang)}
           </Title>
           <Callout className="callout-style">{getI18nLabel(i18n, "pillar-detail-callout", currentLang)}</Callout>
@@ -137,10 +133,6 @@ export default function SyntheseContent() {
               <ProgramsOverview />
             </Col>
           </Row>
-
-          <Title as="h2" className="fr-mt-5w">
-            {getI18nLabel(i18n, "main-partner-title", currentLang)}
-          </Title>
 
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "program-detail-title", currentLang)}
@@ -172,9 +164,6 @@ export default function SyntheseContent() {
             </Col>
           </Row>
 
-          <Title as="h2" className="fr-mt-5w">
-            {getI18nLabel(i18n, "main-partner-title", currentLang)}
-          </Title>
 
           <Title as="h2" className="fr-mt-5w">
             {getI18nLabel(i18n, "thematic-detail-title", currentLang)}
@@ -197,10 +186,6 @@ export default function SyntheseContent() {
         <Container fluid className="fr-pb-3w">
           <SynthesisFocus />
           <DestinationsOverview />
-
-          <Title as="h2" className="fr-mt-5w">
-            {getI18nLabel(i18n, "main-partner-title", currentLang)}
-          </Title>
 
           <BoardsSuggestComponent />
         </Container>
