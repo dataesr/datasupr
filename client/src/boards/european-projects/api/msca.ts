@@ -42,6 +42,23 @@ export interface MscaDestinationData {
   } | null;
 }
 
+export interface MscaPanelData {
+  panel_id: string;
+  panel_name: string;
+  evaluated: {
+    total_funding: number;
+    total_involved: number;
+    total_coordinations: number;
+    total_projects: number;
+  } | null;
+  successful: {
+    total_funding: number;
+    total_involved: number;
+    total_coordinations: number;
+    total_projects: number;
+  } | null;
+}
+
 export interface MscaFiltersResponse {
   years: string[];
   destinations: { code: string; name: string }[];
@@ -78,6 +95,20 @@ export async function getMscaSynthesisByDestination(params?: { country_code?: st
 
   const qs = searchParams.toString();
   return fetchJson(`${VITE_APP_SERVER_URL}/european-projects/msca/synthesis-by-destination${qs ? `?${qs}` : ""}`);
+}
+
+export async function getMscaSynthesisByPanel(params?: {
+  country_code?: string;
+  call_year?: string;
+  destination_code?: string;
+}): Promise<MscaPanelData[]> {
+  const searchParams = new URLSearchParams();
+  if (params?.country_code) searchParams.append("country_code", params.country_code);
+  if (params?.call_year) searchParams.append("call_year", params.call_year);
+  if (params?.destination_code) searchParams.append("destination_code", params.destination_code);
+
+  const qs = searchParams.toString();
+  return fetchJson(`${VITE_APP_SERVER_URL}/european-projects/msca/synthesis-by-panel${qs ? `?${qs}` : ""}`);
 }
 
 export async function getMscaFilters(): Promise<MscaFiltersResponse> {

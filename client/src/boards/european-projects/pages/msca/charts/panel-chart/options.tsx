@@ -1,30 +1,19 @@
 import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { CreateChartOptions } from "../../../../components/chart-ep";
-import type { MscaDestinationChartItem } from "./query";
+import type { MscaPanelChartItem } from "./query";
 import { formatNumber, formatToRates } from "../../../../../../utils/format";
 
-// Noms des destinations MSCA
-const DESTINATION_NAMES: Record<string, { fr: string; en: string }> = {
-  PF: { fr: "Postdoctoral Fellowships", en: "Postdoctoral Fellowships" },
-  DN: { fr: "Doctoral Networks", en: "Doctoral Networks" },
-  SE: { fr: "Staff Exchanges", en: "Staff Exchanges" },
-  COFUND: { fr: "COFUND", en: "COFUND" },
-  ITN: { fr: "Innovative Training Networks", en: "Innovative Training Networks" },
-  RISE: { fr: "RISE", en: "RISE" },
-  IF: { fr: "Individual Fellowships", en: "Individual Fellowships" },
-};
-
 interface OptionsParams {
-  data: MscaDestinationChartItem[];
+  data: MscaPanelChartItem[];
   currentLang?: string;
 }
 
 export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   if (!data || data.length === 0) return null;
 
-  const sortedData = [...data].sort((a, b) => a.destination_code.localeCompare(b.destination_code));
+  const sortedData = [...data].filter((d) => d.panel_id).sort((a, b) => a.panel_id.localeCompare(b.panel_id));
 
-  const categories = sortedData.map((d) => d.destination_code);
+  const categories = sortedData.map((d) => d.panel_id);
   const evaluatedData = sortedData.map((d) => d.evaluated?.total_projects || 0);
   const successfulData = sortedData.map((d) => d.successful?.total_projects || 0);
   const successRates = sortedData.map((d) => {
@@ -38,7 +27,7 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
   const successfulColor = rootStyles.getPropertyValue("--successful-project-color").trim() || "#233e41";
   const successRateColor = rootStyles.getPropertyValue("--averageSuccessRate-color").trim() || "#d75521";
 
-  const titleText = currentLang === "fr" ? "Projets par type de financement MSCA" : "Projects by MSCA funding type";
+  const titleText = currentLang === "fr" ? "Projets par panel scientifique MSCA" : "Projects by MSCA scientific panel";
 
   const newOptions: HighchartsInstance.Options = {
     chart: {
@@ -71,8 +60,7 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
       crosshair: true,
       labels: {
         formatter: function () {
-          const code = this.value as string;
-          return DESTINATION_NAMES[code]?.[currentLang] || code;
+          return String(this.value);
         },
         style: { fontSize: "12px" },
       },
@@ -102,8 +90,8 @@ export default function Options({ data, currentLang = "fr" }: OptionsParams) {
       useHTML: true,
       formatter: function () {
         const index = typeof this.x === "number" ? this.x : 0;
-        const code = categories[index];
-        const name = DESTINATION_NAMES[code]?.[currentLang] || code;
+        const item = sortedData[index];
+        const name = item?.panel_name || item?.panel_id || "";
         let html = `<strong>${name}</strong><br/>`;
         const points = this.points || [];
         points.forEach((point) => {

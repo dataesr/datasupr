@@ -11,6 +11,12 @@
       "en": "Synthesis"
     }
   },
+  "panelFunding": {
+    "sectionTitle": {
+      "fr": "Par panel scientifique",
+      "en": "By scientific panel"
+    }
+  },
   "positioning": {
     "sectionTitle": {
       "fr": "Positionnement",

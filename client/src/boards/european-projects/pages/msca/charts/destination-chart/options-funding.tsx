@@ -101,19 +101,20 @@ export default function OptionsFunding({ data, currentLang = "fr" }: OptionsPara
       shared: true,
       useHTML: true,
       formatter: function () {
-        const points = this.points;
-        if (!points) return "";
-        const code = String(this.x);
+        const index = typeof this.x === "number" ? this.x : 0;
+        const code = categories[index];
         const name = DESTINATION_NAMES[code]?.[currentLang] || code;
         let html = `<strong>${name}</strong><br/>`;
+        const points = this.points || [];
         points.forEach((point) => {
+          if (point.series.type === "scatter") return;
           const value = point.y || 0;
-          if (point.series.type === "scatter") {
-            html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatToRates(value / 100)}</strong><br/>`;
-          } else {
-            html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatCurrency(value * 1_000_000)}</strong><br/>`;
-          }
+          html += `<span style="color:${point.color}">●</span> ${point.series.name}: <strong>${formatCurrency(value * 1_000_000)}</strong><br/>`;
         });
+        const rate = successRates[index];
+        if (rate != null) {
+          html += `<span style="color:${successRateColor}">●</span> ${currentLang === "fr" ? "Taux de succès" : "Success rate"}: <strong>${formatToRates(rate / 100)}</strong><br/>`;
+        }
         return html;
       },
     },

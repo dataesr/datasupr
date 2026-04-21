@@ -170,6 +170,83 @@ router.route("/european-projects/msca/synthesis-by-destination").get(async (req,
 });
 
 /**
+ * Route de synthèse par panel scientifique MSCA
+ * Retourne les données agrégées par panel_id (SOC, CHE, ENV…)
+ */
+router.route("/european-projects/msca/synthesis-by-panel").get(async (req, res) => {
+  const filters = {};
+
+  if (req.query.call_year) {
+    filters.call_year = { $in: req.query.call_year.split(",") };
+  }
+  if (req.query.destination_code) {
+    filters.destination_code = { $in: req.query.destination_code.split(",") };
+  }
+  if (req.query.framework) {
+    filters.framework = req.query.framework;
+  }
+  if (req.query.country_code) {
+    filters.country_code = req.query.country_code.toUpperCase();
+  }
+
+  const data = await db
+    .collection(COLLECTION_NAME)
+    .aggregate([
+      { $match: { ...filters, panel_id: { $ne: null, $exists: true } } },
+      {
+        $group: {
+          _id: {
+            panel_id: "$panel_id",
+            panel_name: "$panel_name",
+            stage: "$stage",
+          },
+          total_funding: { $sum: "$fund_eur" },
+          total_involved: { $sum: "$number_involved" },
+          total_coordinations: {
+            $sum: { $cond: [{ $eq: ["$role_participant", "Coordinator"] }, "$number_involved", 0] },
+          },
+          project_ids: { $addToSet: "$project_id" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          panel_id: "$_id.panel_id",
+          panel_name: "$_id.panel_name",
+          stage: "$_id.stage",
+          total_funding: 1,
+          total_involved: 1,
+          total_coordinations: 1,
+          total_projects: { $size: "$project_ids" },
+        },
+      },
+      { $sort: { panel_id: 1, stage: 1 } },
+    ])
+    .toArray();
+
+  // Restructurer par panel
+  const panels = {};
+  data.forEach((item) => {
+    if (!panels[item.panel_id]) {
+      panels[item.panel_id] = {
+        panel_id: item.panel_id,
+        panel_name: item.panel_name,
+        evaluated: null,
+        successful: null,
+      };
+    }
+    panels[item.panel_id][item.stage] = {
+      total_funding: item.total_funding,
+      total_involved: item.total_involved,
+      total_coordinations: item.total_coordinations,
+      total_projects: item.total_projects,
+    };
+  });
+
+  res.json(Object.values(panels));
+});
+
+/**
  * Route de filtres MSCA - retourne les années disponibles et leur répartition par framework
  */
 router.route("/european-projects/msca/filters").get(async (req, res) => {
