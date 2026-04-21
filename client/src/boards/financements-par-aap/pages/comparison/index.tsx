@@ -189,9 +189,7 @@ export default function Comparison() {
             variant="info"
           />
         )}
-
       </Container>
-
     </>
   )
 }
