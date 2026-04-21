@@ -43,10 +43,10 @@ export default function DisplayStructure() {
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
     { id: "instruments", label: "Instruments" },
+    { id: "regions", label: "Régions" },
   ];
 
   if (!isInProduction()) {
-    sections.push({ id: "regions", label: "Régions" });
     sections.push({ id: "donnees", label: "Données" });
   };
 
