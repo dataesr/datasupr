@@ -45,7 +45,7 @@ export default function Timeline() {
   return (
     <div className="timeline-container">
       <div className="timeline-header">
-        <h3 className="timeline-title">{getI18nLabel(i18n, "timeline-title")}</h3>
+        <h2 className="timeline-title">{getI18nLabel(i18n, "timeline-title")}</h2>
         <p className="timeline-subtitle">{getI18nLabel(i18n, "timeline-subtitle")}</p>
       </div>
 
@@ -65,7 +65,7 @@ export default function Timeline() {
               </div>
 
               <div className="timeline-info">
-                <h4 className="timeline-program">{period.program}</h4>
+                <h3 className="timeline-program">{period.program}</h3>
                 <p className="timeline-description">{period.description}</p>
               </div>
             </div>

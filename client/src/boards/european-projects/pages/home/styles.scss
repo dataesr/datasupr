@@ -1,38 +1,121 @@
-.pillars-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
+// ── Variables ──────────────────────────────────────────────────────────────
+$ep-blue: #003399;
+$ep-teal: #006a6f;
+$ep-purple: #6358a5;
+$ep-orange: #c75000;
 
-.pillar {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
+// ── Hero ───────────────────────────────────────────────────────────────────
+.ep-home {
 
-.programs {
-  display: flex;
-  gap: 0.5rem;
-  max-height: 0;
-  opacity: 0;
-  overflow: hidden;
-  transition: all 0.3s ease-in-out;
-  margin-left: 2rem;
-}
+  &__hero {
+    background: linear-gradient(150deg, #f0f4ff 0%, #eaefff 100%);
+    border-bottom: 3px solid $ep-blue;
+    padding: 3rem 0 2rem;
 
-.programs.active {
-  max-height: 100px;
-  opacity: 1;
-}
+    &-badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #fff;
+      background-color: $ep-blue;
+      padding: 0.2rem 0.65rem;
+      border-radius: 2px;
+      margin-bottom: 0.75rem;
+    }
 
-.programs button {
-  font-size: 0.9em;
-}
+    &-title {
+      color: var(--text-title-grey);
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
 
-.program-modal-content {
-  padding: 1rem;
-}
+    &-description {
+      color: var(--text-mention-grey);
+      font-size: 1.05rem;
+      line-height: 1.65;
+      max-width: 680px;
+    }
 
-.program-modal-content p {
-  margin-bottom: 1rem;
+    &-logo-col {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+
+      @media (max-width: 992px) {
+        justify-content: flex-start;
+        margin-top: 1.5rem;
+      }
+    }
+
+    &-logo {
+      max-width: 220px;
+      opacity: 0.9;
+    }
+  }
+
+  // ── Tuiles de navigation rapide ───────────────────────────────────────────
+  &__stats {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__stat-item {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 150px;
+    padding: 1rem 1.25rem;
+    background: #fff;
+    border-bottom: 3px solid currentColor;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.07);
+    text-decoration: none !important;
+    transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+
+    &:hover {
+      background: #f5f7ff;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+      text-decoration: none !important;
+    }
+
+    &--blue   { color: $ep-blue; }
+    &--teal   { color: $ep-teal; }
+    &--purple { color: $ep-purple; }
+    &--orange { color: $ep-orange; }
+  }
+
+  &__stat-number {
+    font-size: 1.75rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.35rem;
+    color: inherit;
+    margin-right: 4px;
+  }
+
+  &__stat-label {
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--text-default-grey);
+  }
+
+  // ── Sections de contenu ───────────────────────────────────────────────────
+  &__section {
+    padding: 2.5rem 0;
+
+    &--alt {
+      background: color-mix(in srgb, $ep-blue 4%, white);
+    }
+  }
+
+  &__section-title {
+    color: var(--text-title-grey);
+    padding-left: 0.875rem;
+    border-left: 4px solid $ep-blue;
+    margin-bottom: 1.5rem !important;
+  }
 }
