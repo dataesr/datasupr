@@ -32,17 +32,24 @@ function buildPreaggregatedFilters(query) {
 function parseRelativeYears(rawRelativeYears) {
   const parsedRelativeYears = parseListParam(rawRelativeYears)
     .map((value) => Number.parseInt(value, 10))
-    .filter((value) => Number.isInteger(value));
+    .filter(
+      (value) =>
+        Number.isInteger(value) && DEFAULT_RELATIVE_YEARS.includes(value)
+    );
 
-  return parsedRelativeYears.length > 0
-    ? parsedRelativeYears
-    : DEFAULT_RELATIVE_YEARS;
+  if (parsedRelativeYears.length === 0) {
+    return DEFAULT_RELATIVE_YEARS;
+  }
+
+  const maxYear = Math.max(...parsedRelativeYears);
+
+  return DEFAULT_RELATIVE_YEARS.filter((year) => year <= maxYear);
 }
 
 function parseMinValue(rawMinValue) {
   const requestedMinValue = Number.parseInt(rawMinValue, 10);
   return Number.isInteger(requestedMinValue)
-    ? requestedMinValue
+    ? Math.max(0, requestedMinValue)
     : DEFAULT_MIN_VALUE;
 }
 
@@ -102,7 +109,10 @@ function filterPreaggregatedLinks(links, relativeYears, minValue) {
 
   return links
     .map(normalizePreaggregatedLink)
-    .filter((link) => Number.isFinite(link.value) && link.value >= minValue)
+    .filter(
+      (link) =>
+        Number.isFinite(link.value) && link.value > 0 && link.value >= minValue
+    )
     .filter((link) => {
       const sourceRel = link.source_rel;
       const targetRel = link.target_rel;

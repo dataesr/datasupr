@@ -233,18 +233,22 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
 
                     const incomingBreakdown = Array.from((incomingBreakdownByNode.get(nodeId) || new Map()).entries())
                         .sort((a, b) => b[1] - a[1]);
+                    const outgoingBreakdown = Array.from((outgoingBreakdownByNode.get(nodeId) || new Map()).entries())
+                        .sort((a, b) => b[1] - a[1]);
 
-                    const incomingLines = incoming > 0
+                    const hasIncoming = incoming > 0;
+                    const linesTitle = hasIncoming ? "<b>D'où viennent les étudiants :</b>" : "<b>Vers quelles formations vont les étudiants :</b>";
+                    const detailLines = hasIncoming
                         ? incomingBreakdown
                             .map(([sourceId, value]) => `${nodeNames.get(sourceId) || sourceId} : ${formatPercent((value / incoming) * 100)}`)
-                        : ["Aucun étudiant"];
+                        : outgoingBreakdown.map(([targetId, value]) => `${nodeNames.get(targetId) || targetId} : ${formatPercent((value / outgoing) * 100)}`);
 
                     return [
                         `<b>${p.name} - ${yearLabel}</b>`,
                         `<b>Part du total : ${formatPercent(nodePart)}</b>`,
-                        `<b>D'où viennent les étudiants :</b>`,
-                        ...incomingLines,
-                        `<b>Effectif total : ${formatNumber(incoming)}</b>`,
+                        linesTitle,
+                        ...detailLines,
+                        `<b>Effectif total : ${formatNumber(nodeTotal)}</b>`,
                     ].join("<br/>");
                 }
 
