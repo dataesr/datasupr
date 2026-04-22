@@ -13,6 +13,7 @@ const router = new express.Router();
 const COLLECTION = "outcomes-cohortL1";
 const DEFAULT_RELATIVE_YEARS = [0, 1, 2, 3, 4];
 const DEFAULT_MIN_VALUE = 100;
+const MIN_MIN_VALUE = 10;
 
 function getCollection() {
   return db.collection(COLLECTION);
@@ -49,7 +50,7 @@ function parseRelativeYears(rawRelativeYears) {
 function parseMinValue(rawMinValue) {
   const requestedMinValue = Number.parseInt(rawMinValue, 10);
   return Number.isInteger(requestedMinValue)
-    ? Math.max(0, requestedMinValue)
+    ? Math.max(MIN_MIN_VALUE, requestedMinValue)
     : DEFAULT_MIN_VALUE;
 }
 

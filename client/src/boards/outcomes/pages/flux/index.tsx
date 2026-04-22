@@ -11,6 +11,7 @@ import SankeyChart from "./charts/sankey";
 const DEFAULT_COHORT_YEAR = "2019-2020";
 const DEFAULT_COHORT_SITUATION = "L1";
 const DEFAULT_MIN_VALUE = 100;
+const MIN_MIN_VALUE = 10;
 const ALL_RELATIVE_YEARS = [0, 1, 2, 3, 4];
 const DEFAULT_YEAR_END = 4;
 const YEAR_LABELS: Record<number, string> = {
@@ -116,7 +117,10 @@ export default function FluxPage() {
     const cohortYear = searchParams.get("cohorte_annee") || DEFAULT_COHORT_YEAR;
     const cohortSituation = searchParams.get("cohorte_situation") || DEFAULT_COHORT_SITUATION;
 
-    const minValue = Number.parseInt(searchParams.get("min_value") || "", 10) || DEFAULT_MIN_VALUE;
+    const parsedMinValue = Number.parseInt(searchParams.get("min_value") || "", 10);
+    const minValue = Number.isInteger(parsedMinValue)
+        ? Math.max(MIN_MIN_VALUE, parsedMinValue)
+        : DEFAULT_MIN_VALUE;
     const [sliderValue, setSliderValue] = useState(minValue);
     const yearEnd = useMemo(() => {
         const raw = searchParams.get("annee_rel");
@@ -288,7 +292,7 @@ export default function FluxPage() {
                                                 aria-describedby="flux-min-value-range-messages"
                                                 aria-labelledby="flux-min-value-range-label"
                                                 max={1000}
-                                                min={0}
+                                                min={MIN_MIN_VALUE}
                                                 name="flux-min-value-range"
                                                 onChange={(e) => setSliderValue(Number(e.target.value))}
                                                 onMouseUp={() => updateMinValue(sliderValue)}
@@ -297,7 +301,7 @@ export default function FluxPage() {
                                                 type="range"
                                                 value={sliderValue}
                                             />
-                                            <span className="fr-range__min" aria-hidden="true">0</span>
+                                            <span className="fr-range__min" aria-hidden="true">{MIN_MIN_VALUE}</span>
                                             <span className="fr-range__max" aria-hidden="true">1 000</span>
                                         </div>
                                         <div className="fr-messages-group" id="flux-min-value-range-messages" aria-live="polite" />
