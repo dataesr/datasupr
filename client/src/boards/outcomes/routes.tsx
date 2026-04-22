@@ -6,6 +6,7 @@ import { getI18nLabel } from "../../utils";
 import GlobalLayout from "./components/layouts/global-layout.tsx";
 import PlusHautDiplomePage from "./pages/plus-haut-diplome/index.tsx";
 import i18n from "./title-i18n.json";
+import MethodologiePage from "./pages/methodologie/index.tsx";
 
 import "./styles.scss";
 import FluxPage from "./pages/flux/index.tsx";
@@ -25,6 +26,7 @@ export default function OutcomesRoutes() {
         <Route path="flux" element={<RouteWithTitle titleKey="flux" element={<FluxPage />} />} />
         <Route path="repartition" element={<RouteWithTitle titleKey="repartition" element={<RepartitionPage />} />} />
         <Route path="plus-haut-diplome" element={<RouteWithTitle titleKey="plusHautDiplome" element={<PlusHautDiplomePage />} />} />
+        <Route path="methodologie" element={<RouteWithTitle titleKey="methodologie" element={<MethodologiePage />} />} />
       </Route>
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

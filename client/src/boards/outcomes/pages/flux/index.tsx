@@ -11,8 +11,9 @@ import SankeyChart from "./charts/sankey";
 const DEFAULT_COHORT_YEAR = "2019-2020";
 const DEFAULT_COHORT_SITUATION = "L1";
 const DEFAULT_MIN_VALUE = 100;
-const MIN_MIN_VALUE = 10;
+const MIN_MIN_VALUE = 1;
 const ALL_RELATIVE_YEARS = [0, 1, 2, 3, 4];
+const DEFAULT_YEAR_START = 0;
 const DEFAULT_YEAR_END = 4;
 const YEAR_LABELS: Record<number, string> = {
     0: "2019-2020 (N+0)",
@@ -64,9 +65,10 @@ const FILTER_SECTIONS: Array<{
         },
     ];
 
-function buildContiguousYears(endYear: number) {
-    const safeEnd = Math.max(1, Math.min(DEFAULT_YEAR_END, endYear));
-    return ALL_RELATIVE_YEARS.filter((year) => year <= safeEnd);
+function buildContiguousYears(startYear: number, endYear: number) {
+    const safeStart = Math.max(DEFAULT_YEAR_START, Math.min(DEFAULT_YEAR_END, startYear));
+    const safeEnd = Math.max(safeStart, Math.min(DEFAULT_YEAR_END, endYear));
+    return ALL_RELATIVE_YEARS.filter((year) => year >= safeStart && year <= safeEnd);
 }
 
 function FluxFilter({
@@ -122,14 +124,20 @@ export default function FluxPage() {
         ? Math.max(MIN_MIN_VALUE, parsedMinValue)
         : DEFAULT_MIN_VALUE;
     const [sliderValue, setSliderValue] = useState(minValue);
-    const yearEnd = useMemo(() => {
+    const { yearEnd, yearStart } = useMemo(() => {
         const raw = searchParams.get("annee_rel");
-        if (!raw) return DEFAULT_YEAR_END;
+        if (!raw) {
+            return { yearEnd: DEFAULT_YEAR_END, yearStart: DEFAULT_YEAR_START };
+        }
         const parsed = raw.split(",").map(Number).filter((n) => ALL_RELATIVE_YEARS.includes(n));
-        if (parsed.length < 2) return DEFAULT_YEAR_END;
-        return Math.max(1, Math.min(DEFAULT_YEAR_END, Math.max(...parsed)));
+        if (parsed.length < 2) {
+            return { yearEnd: DEFAULT_YEAR_END, yearStart: DEFAULT_YEAR_START };
+        }
+        const minYear = Math.max(DEFAULT_YEAR_START, Math.min(DEFAULT_YEAR_END, Math.min(...parsed)));
+        const maxYear = Math.max(minYear, Math.min(DEFAULT_YEAR_END, Math.max(...parsed)));
+        return { yearEnd: maxYear, yearStart: minYear };
     }, [searchParams]);
-    const relativeYears = useMemo(() => buildContiguousYears(yearEnd), [yearEnd]);
+    const relativeYears = useMemo(() => buildContiguousYears(yearStart, yearEnd), [yearStart, yearEnd]);
 
     const { data, error, isFetching, isLoading } = useOutcomesFlux({
         cohorteAnnee: cohortYear,
@@ -185,11 +193,12 @@ export default function FluxPage() {
         setSearchParams(nextParams);
     };
 
-    const updateYearEnd = (value: number) => {
-        const safeEnd = Math.max(1, Math.min(DEFAULT_YEAR_END, value));
-        const next = buildContiguousYears(safeEnd);
+    const updateYearRange = (start: number, end: number) => {
+        const safeStart = Math.max(DEFAULT_YEAR_START, Math.min(DEFAULT_YEAR_END, start));
+        const safeEnd = Math.max(safeStart, Math.min(DEFAULT_YEAR_END, end));
+        const next = buildContiguousYears(safeStart, safeEnd);
         const nextParams = new URLSearchParams(searchParams);
-        const isAll = safeEnd === DEFAULT_YEAR_END;
+        const isAll = safeStart === DEFAULT_YEAR_START && safeEnd === DEFAULT_YEAR_END;
         if (isAll) {
             nextParams.delete("annee_rel");
         } else {
@@ -223,8 +232,7 @@ export default function FluxPage() {
                 </Col>
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
-
-                        <ChartWrapper.Title config={{ id: "outcomes-flux-sankey", title: { fr: "Parcours des néo-bacheliers inscrits en L1 en 2019", look: "h4" as const } }} />
+                        <ChartWrapper.Title config={{ id: "outcomes-flux-sankey", title: "Parcours des néo-bacheliers inscrits en L1 en 2019" }} />
                         {activeFiltersElement}
                         {(isLoading || (isFetching && !data)) && <DefaultSkeleton height="540px" />}
                         {!isLoading && isFetching && data && (
@@ -250,31 +258,43 @@ export default function FluxPage() {
                             <Title as="h2" look="h5" className="fr-mb-2w">Paramètres pour les flux</Title>
                             <Row gutters>
                                 <Col md={6}>
-                                    <div className="fr-range-group fr-range--sm">
+                                    <div className="fr-range-group">
                                         <label className="fr-label" id="flux-year-range-label">
                                             Année à analyser
                                             <span className="fr-hint-text">
-                                                Sélection continue obligatoire: de {YEAR_LABELS[0]} jusqu'à l'horizon choisi.
+                                                Sélection continue obligatoire entre {YEAR_LABELS[DEFAULT_YEAR_START]} et {YEAR_LABELS[DEFAULT_YEAR_END]}.
                                             </span>
+
                                         </label>
-                                        <div className="fr-range">
-                                            <span className="fr-range__output">{YEAR_LABELS[yearEnd]}</span>
+                                        <div className="fr-range fr-range--double fr-range--sm outcomes-flux-page__year-range">
+                                            <span className="fr-range__output">{yearStart} - {yearEnd}</span>
                                             <input
                                                 aria-describedby="flux-year-range-messages"
                                                 aria-labelledby="flux-year-range-label"
+                                                className="fr-range__input"
                                                 max={DEFAULT_YEAR_END}
-                                                min={1}
-                                                name="flux-year-range"
-                                                onChange={(e) => updateYearEnd(Number(e.target.value))}
+                                                min={DEFAULT_YEAR_START}
+                                                name="flux-year-range-start"
+                                                onChange={(e) => updateYearRange(Number(e.target.value), yearEnd)}
+                                                step={1}
+                                                type="range"
+                                                value={yearStart}
+                                            />
+                                            <input
+                                                aria-describedby="flux-year-range-messages"
+                                                aria-labelledby="flux-year-range-label"
+                                                className="fr-range__input"
+                                                max={DEFAULT_YEAR_END}
+                                                min={DEFAULT_YEAR_START}
+                                                name="flux-year-range-end"
+                                                onChange={(e) => updateYearRange(yearStart, Number(e.target.value))}
                                                 step={1}
                                                 type="range"
                                                 value={yearEnd}
                                             />
-                                            <span className="fr-range__min" aria-hidden="true">{YEAR_LABELS[1]}</span>
-                                            <span className="fr-range__max" aria-hidden="true">{YEAR_LABELS[DEFAULT_YEAR_END]}</span>
                                         </div>
                                         <div className="fr-messages-group" id="flux-year-range-messages" aria-live="polite">
-                                            <p className="fr-message">Période active: {YEAR_LABELS[0]} → {YEAR_LABELS[yearEnd]}</p>
+                                            <p className="fr-message">Période active: {YEAR_LABELS[yearStart]} → {YEAR_LABELS[yearEnd]}</p>
                                         </div>
                                     </div>
                                 </Col>
@@ -286,18 +306,19 @@ export default function FluxPage() {
                                                 Afficher les flux regroupant au minimum {sliderValue} étudiants. Ajustez le seuil pour filtrer les flux les plus faibles et mieux visualiser les parcours majoritaires.
                                             </span>
                                         </label>
-                                        <div className="fr-range">
+                                        <div className="fr-range fr-range--sm">
                                             <span className="fr-range__output">{sliderValue}</span>
                                             <input
                                                 aria-describedby="flux-min-value-range-messages"
                                                 aria-labelledby="flux-min-value-range-label"
+                                                className="fr-range__input"
                                                 max={1000}
                                                 min={MIN_MIN_VALUE}
                                                 name="flux-min-value-range"
                                                 onChange={(e) => setSliderValue(Number(e.target.value))}
                                                 onMouseUp={() => updateMinValue(sliderValue)}
                                                 onTouchEnd={() => updateMinValue(sliderValue)}
-                                                step={10}
+                                                step={1}
                                                 type="range"
                                                 value={sliderValue}
                                             />

@@ -13,7 +13,7 @@ const router = new express.Router();
 const COLLECTION = "outcomes-cohortL1";
 const DEFAULT_RELATIVE_YEARS = [0, 1, 2, 3, 4];
 const DEFAULT_MIN_VALUE = 100;
-const MIN_MIN_VALUE = 10;
+const MIN_MIN_VALUE = 1;
 
 function getCollection() {
   return db.collection(COLLECTION);

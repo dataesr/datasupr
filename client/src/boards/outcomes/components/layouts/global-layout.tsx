@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { key: "flux", labelKey: "flux", to: "/outcomes/flux" },
   { key: "repartition", labelKey: "repartition", to: "/outcomes/repartition" },
   { key: "plus-haut-diplome", labelKey: "plusHautDiplome", to: "/outcomes/plus-haut-diplome" },
-  // { key: "methodologie", labelKey: "methodologie", to: "/outcomes/methodologie" },
+  { key: "methodologie", labelKey: "methodologie", to: "/outcomes/methodologie" },
 ] as const;
 
 export default function GlobalLayout() {

@@ -176,6 +176,11 @@ export const chartsRegistry = {
   projectsByComparison: lazy(
     () => import("../financements-par-aap/pages/comparison/charts/projects-by-comparison")
   ),
+
+  // Outcomes
+  outcomesFluxSankey: lazy(
+    () => import("../outcomes/pages/flux/charts/sankey")
+  ),
 };
 
 export type ChartId = keyof typeof chartsRegistry;
