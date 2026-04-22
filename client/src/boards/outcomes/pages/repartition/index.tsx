@@ -9,7 +9,7 @@ import { type OutcomesFilterField, useOutcomesRepartition } from "../../api";
 import RepartitionChart from "./charts/repartition-column";
 
 const DEFAULT_COHORT_YEAR = "2019-2020";
-const DEFAULT_COHORT_SITUATION = "L1";
+const DEFAULT_COHORT_SITUATION = "SIT01";
 const ALL_RELATIVE_YEARS = [0, 1, 2, 3, 4];
 const YEAR_LABELS: Record<number, string> = {
     0: "2019-2020 (N+0)",
@@ -27,7 +27,7 @@ const FILTER_FIELDS: OutcomesFilterField[] = [
     "bac_mention",
     "retard_scolaire",
     "devenir_en_un_an",
-    "parcours_type",
+    "type_de_trajectoire",
 ];
 
 const FILTER_SECTIONS: Array<{
@@ -57,7 +57,7 @@ const FILTER_SECTIONS: Array<{
             title: "Parcours spécifiques",
             fields: [
                 { field: "devenir_en_un_an", label: "Devenir en un an" },
-                { field: "parcours_type", label: "Parcours types" },
+                { field: "type_de_trajectoire", label: "Parcours types" },
             ],
         },
     ];
@@ -104,7 +104,7 @@ export default function RepartitionPage() {
         bac_mention: searchParams.get("bac_mention"),
         retard_scolaire: searchParams.get("retard_scolaire"),
         devenir_en_un_an: searchParams.get("devenir_en_un_an"),
-        parcours_type: searchParams.get("parcours_type"),
+        type_de_trajectoire: searchParams.get("type_de_trajectoire"),
     };
 
     const cohortYear = searchParams.get("cohorte_annee") || DEFAULT_COHORT_YEAR;

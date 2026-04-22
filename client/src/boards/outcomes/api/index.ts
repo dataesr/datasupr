@@ -10,7 +10,7 @@ export type OutcomesFilterField =
   | "bac_mention"
   | "retard_scolaire"
   | "devenir_en_un_an"
-  | "parcours_type";
+  | "type_de_trajectoire";
 
 export type OutcomesFilterOption = {
   count: number;
@@ -72,7 +72,7 @@ export const useOutcomesFlux = ({
       filters.bac_mention ?? null,
       filters.retard_scolaire ?? null,
       filters.devenir_en_un_an ?? null,
-      filters.parcours_type ?? null,
+      filters.type_de_trajectoire ?? null,
       minValue,
       relativeYears.join(","),
     ],
@@ -146,7 +146,7 @@ export const useOutcomesRepartition = ({
       filters.bac_mention ?? null,
       filters.retard_scolaire ?? null,
       filters.devenir_en_un_an ?? null,
-      filters.parcours_type ?? null,
+      filters.type_de_trajectoire ?? null,
       relativeYears.join(","),
     ],
     queryFn: async () => {
@@ -226,7 +226,7 @@ export const useOutcomesPlusHautDiplome = ({
       filters.bac_mention ?? null,
       filters.retard_scolaire ?? null,
       filters.devenir_en_un_an ?? null,
-      filters.parcours_type ?? null,
+      filters.type_de_trajectoire ?? null,
     ],
     queryFn: async () => {
       const params = new URLSearchParams({

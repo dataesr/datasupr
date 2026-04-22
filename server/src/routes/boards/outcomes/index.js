@@ -1,9 +1,13 @@
 import express from "express";
 
-import overviewRoutes from "./routes/overview.js";
+import fluxRoutes from "./routes/flux.js";
+import plusHautDiplomeRoutes from "./routes/plus-haut-diplome.js";
+import repartitionRoutes from "./routes/repartition.js";
 
 const router = new express.Router();
 
-router.use(overviewRoutes);
+router.use(fluxRoutes);
+router.use(plusHautDiplomeRoutes);
+router.use(repartitionRoutes);
 
 export default router;

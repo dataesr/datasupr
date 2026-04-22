@@ -27,7 +27,7 @@ const FILTER_FIELDS: OutcomesFilterField[] = [
     "bac_mention",
     "retard_scolaire",
     "devenir_en_un_an",
-    "parcours_type",
+    "type_de_trajectoire",
 ];
 
 const FILTER_SECTIONS: Array<{
@@ -57,7 +57,7 @@ const FILTER_SECTIONS: Array<{
             title: "Parcours spécifiques",
             fields: [
                 { field: "devenir_en_un_an", label: "Devenir en un an" },
-                { field: "parcours_type", label: "Parcours types" },
+                { field: "type_de_trajectoire", label: "Parcours types" },
             ],
         },
     ];
@@ -104,7 +104,7 @@ export default function FluxPage() {
         bac_mention: searchParams.get("bac_mention"),
         retard_scolaire: searchParams.get("retard_scolaire"),
         devenir_en_un_an: searchParams.get("devenir_en_un_an"),
-        parcours_type: searchParams.get("parcours_type"),
+        type_de_trajectoire: searchParams.get("type_de_trajectoire"),
     };
 
     const cohortYear = searchParams.get("cohorte_annee") || DEFAULT_COHORT_YEAR;
@@ -129,7 +129,11 @@ export default function FluxPage() {
 
     const activeFiltersElement = (() => {
         const tags = FILTER_SECTIONS.flatMap(s =>
-            s.fields.filter(f => filters[f.field]).map(f => ({ field: f.field, label: f.label, value: filters[f.field]! }))
+            s.fields.filter(f => filters[f.field]).map(f => {
+                const code = filters[f.field]!;
+                const option = data?.filterOptions?.[f.field]?.find((o: { key: string }) => o.key === code);
+                return { field: f.field, label: f.label, value: option?.label || code };
+            })
         );
         if (!tags.length) return null;
         return (

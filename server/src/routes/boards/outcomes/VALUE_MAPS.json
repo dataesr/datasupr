@@ -1,0 +1,71 @@
+{
+    "groupe_disciplinaire": {
+        "DIS00": "Ensemble",
+        "DIS01": "Droit, sciences politiques",
+        "DIS02": "Sciences économiques, gestion, administration économique et sociale",
+        "DIS03": "Arts, lettres, langues, sciences humaines et sociales",
+        "DIS04": "Sciences, santé",
+        "DIS05": "STAPS"
+    },
+    "sexe": {
+        "SEX00": "Ensemble",
+        "SEX01": "Homme",
+        "SEX02": "Femme"
+    },
+    "origine_sociale": {
+        "ORI00": "Ensemble",
+        "ORI01": "Très favorisée",
+        "ORI02": "Favorisée",
+        "ORI03": "Assez défavorisée",
+        "ORI04": "Défavorisée",
+        "ORI05": "Non réponse"
+    },
+    "bac_type": {
+        "BAC00": "Ensemble",
+        "BAC01": "Général",
+        "BAC02": "Technologique",
+        "BAC03": "Professionnel"
+    },
+    "bac_mention": {
+        "MEN00": "Ensemble",
+        "MEN01": "Très bien",
+        "MEN02": "Bien",
+        "MEN03": "Assez bien",
+        "MEN04": "Passable",
+        "MEN05": "Inconnue"
+    },
+    "retard_scolaire": {
+        "RET00": "Ensemble",
+        "RET01": "Bachelier sans retard scolaire ou en avance",
+        "RET02": "Bachelier en retard scolaire d'un an ou plus"
+    },
+    "devenir_en_un_an": {
+        "DEV00": "Ensemble",
+        "DEV03": "Réorientation",
+        "DEV01": "Poursuite en L2 dans la même licence",
+        "DEV02": "Redoublement dans la même licence",
+        "DEV04": "Sortie"
+    },
+    "type_de_trajectoire": {
+        "TRA00": "Ensemble",
+        "TRA02": "Réorientations accomplies",
+        "TRA01": "Parcours linéaire",
+        "TRA03": "Inscriptions récurrentes sans dépasser le niveau BAC+3",
+        "TRA04": "Sorties récurrentes sans dépasser le niveau BAC+2"
+    },
+    "situation": {
+        "SIT01": "L1",
+        "SIT02": "L2",
+        "SIT03": "L3",
+        "SIT04": "M1",
+        "SIT05": "M2",
+        "SIT06": "STS",
+        "SIT07": "CPGE",
+        "SIT08": "IUT",
+        "SIT09": "LP",
+        "SIT10": "Cursus santé",
+        "SIT11": "Écoles d'ingénieur et de commerce",
+        "SIT12": "Autres formations",
+        "SIT13": "Sortants"
+    }
+}

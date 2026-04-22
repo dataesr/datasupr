@@ -24,7 +24,7 @@ const FILTER_FIELDS: OutcomesFilterField[] = [
     "bac_mention",
     "retard_scolaire",
     "devenir_en_un_an",
-    "parcours_type",
+    "type_de_trajectoire",
 ];
 
 const FILTER_SECTIONS: Array<{
@@ -54,7 +54,7 @@ const FILTER_SECTIONS: Array<{
             title: "Parcours spécifiques",
             fields: [
                 { field: "devenir_en_un_an", label: "Devenir en un an" },
-                { field: "parcours_type", label: "Parcours types" },
+                { field: "type_de_trajectoire", label: "Parcours types" },
             ],
         },
     ];
@@ -105,7 +105,7 @@ export default function PlusHautDiplomePage() {
         bac_mention: searchParams.get("bac_mention"),
         retard_scolaire: searchParams.get("retard_scolaire"),
         devenir_en_un_an: searchParams.get("devenir_en_un_an"),
-        parcours_type: searchParams.get("parcours_type"),
+        type_de_trajectoire: searchParams.get("type_de_trajectoire"),
     };
 
     const cohortYear = searchParams.get("cohorte_annee") || DEFAULT_COHORT_YEAR;
@@ -119,7 +119,11 @@ export default function PlusHautDiplomePage() {
 
     const activeFiltersElement = (() => {
         const tags = FILTER_SECTIONS.flatMap(s =>
-            s.fields.filter(f => filters[f.field]).map(f => ({ field: f.field, label: f.label, value: filters[f.field]! }))
+            s.fields.filter(f => filters[f.field]).map(f => {
+                const code = filters[f.field]!;
+                const displayLabel = data?.filterOptions?.[f.field]?.find((o) => o.key === code)?.label || code;
+                return { field: f.field, label: f.label, value: displayLabel };
+            })
         );
         if (!tags.length) return null;
         return (
@@ -148,7 +152,7 @@ export default function PlusHautDiplomePage() {
     };
 
     const lastYearLabel = data ? (YEAR_LABELS[data.lastYear] || `N+${data.lastYear}`) : "2023-2024";
-    const diplomaYearLabel = data ? (YEAR_LABELS[data.lastYear - 1] || "2023").split("-")[0] : "2023";
+    const diplomaYearLabel = lastYearLabel;
 
     return (
         <Container className="outcomes-section-page outcomes-flux-page">
