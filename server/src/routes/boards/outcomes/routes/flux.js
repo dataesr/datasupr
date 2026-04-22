@@ -77,6 +77,26 @@ function normalizePreaggregatedLink(rawLink) {
   };
 }
 
+function computeStudentsTotalFromLinks(rawLinks, fallbackCount = 0) {
+  if (!Array.isArray(rawLinks) || rawLinks.length === 0) {
+    return Number.isFinite(Number(fallbackCount)) ? Number(fallbackCount) : 0;
+  }
+
+  const totalFromYear0 = rawLinks
+    .map(normalizePreaggregatedLink)
+    .filter((link) => link.source_rel === 0)
+    .reduce(
+      (sum, link) => sum + (Number.isFinite(link.value) ? link.value : 0),
+      0
+    );
+
+  if (totalFromYear0 > 0) {
+    return totalFromYear0;
+  }
+
+  return Number.isFinite(Number(fallbackCount)) ? Number(fallbackCount) : 0;
+}
+
 function filterPreaggregatedLinks(links, relativeYears, minValue) {
   const relativeYearSet = new Set(relativeYears);
 
@@ -130,30 +150,23 @@ async function getFilterOptionsFromPreaggregated(
     }
   });
 
-  const results = await collection
-    .aggregate([
-      { $match: match },
-      {
-        $group: {
-          _id: `$filters.${field}`,
-          count: { $sum: "$count" },
-        },
-      },
-      {
-        $project: {
-          _id: 0,
-          count: 1,
-          key: "$_id",
-        },
-      },
-      { $sort: { key: 1 } },
-    ])
+  const docs = await collection
+    .find(match, { projection: { count: 1, data: 1, [`filters.${field}`]: 1 } })
     .toArray();
 
-  return results.map((result) => ({
-    ...result,
-    label: fieldMap[result.key] || result.key,
-  }));
+  return docs
+    .map((doc) => {
+      const key = doc?.filters?.[field];
+      const count = computeStudentsTotalFromLinks(doc?.data, doc?.count);
+
+      return {
+        count,
+        key,
+        label: fieldMap[key] || key,
+      };
+    })
+    .filter((option) => option.key && option.key !== ENSEMBLE_DEFAULTS[field])
+    .sort((a, b) => String(a.key).localeCompare(String(b.key)));
 }
 
 router.route("/outcomes/flux").get(async (req, res) => {
@@ -183,6 +196,10 @@ router.route("/outcomes/flux").get(async (req, res) => {
       selectedRelativeYears,
       selectedMinValue
     );
+    const totalStudents = computeStudentsTotalFromLinks(
+      entry?.data,
+      entry?.count
+    );
 
     return res.json({
       cohort: {
@@ -194,7 +211,7 @@ router.route("/outcomes/flux").get(async (req, res) => {
       links,
       minValue: selectedMinValue,
       relativeYears: selectedRelativeYears,
-      totalStudents: Number(entry?.count) || 0,
+      totalStudents,
     });
   } catch (error) {
     return res.status(500).json({ error: error.message });

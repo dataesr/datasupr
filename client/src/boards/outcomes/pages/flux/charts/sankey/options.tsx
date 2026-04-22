@@ -147,7 +147,7 @@ function formatNumber(value: number) {
     return new Intl.NumberFormat("fr-FR").format(value);
 }
 
-export function createSankeyOptions(links: OutcomesFluxLink[]) {
+export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0) {
     const sorted = sortLinks(links);
     const seriesData = buildSeriesData(sorted);
     const nodes = buildNodes(sorted);
@@ -171,6 +171,7 @@ export function createSankeyOptions(links: OutcomesFluxLink[]) {
     });
 
     const totalVisibleFlow = seriesData.reduce((sum, item) => sum + item.weight, 0);
+    const totalStudentsBase = totalStudents > 0 ? totalStudents : totalVisibleFlow;
 
     return {
         chart: { height: 800, backgroundColor: "transparent" },
@@ -215,11 +216,9 @@ export function createSankeyOptions(links: OutcomesFluxLink[]) {
             formatter() {
                 const p = (this as any).point;
 
-                // Vérifier si c'est un node (les nodes n'ont pas 'from' et 'to')
                 const isNode = !p.from && !p.to;
 
                 if (isNode) {
-                    // Pour la première colonne, afficher juste le nom et l'année
                     if (p.column === 0) {
                         const yearLabel = YEAR_LABELS[p.column as number] || `N+${p.column}`;
                         return `${p.name} - ${yearLabel}`;
@@ -229,7 +228,7 @@ export function createSankeyOptions(links: OutcomesFluxLink[]) {
                     const incoming = incomingByNode.get(nodeId) || 0;
                     const outgoing = outgoingByNode.get(nodeId) || 0;
                     const nodeTotal = Math.max(incoming, outgoing);
-                    const nodePart = totalVisibleFlow > 0 ? (nodeTotal / totalVisibleFlow) * 100 : 0;
+                    const nodePart = totalStudentsBase > 0 ? (nodeTotal / totalStudentsBase) * 100 : 0;
                     const yearLabel = YEAR_LABELS[p.column as number] || `N+${p.column}`;
 
                     const incomingBreakdown = Array.from((incomingBreakdownByNode.get(nodeId) || new Map()).entries())
@@ -249,14 +248,13 @@ export function createSankeyOptions(links: OutcomesFluxLink[]) {
                     ].join("<br/>");
                 }
 
-                // C'est un link
                 const weight = Number(p.weight) || 0;
                 const incoming = incomingByNode.get(String(p.to || "")) || 0;
                 const outgoing = outgoingByNode.get(String(p.from || "")) || 0;
 
                 const shareOfIncoming = incoming > 0 ? (weight / incoming) * 100 : 0;
                 const shareOfOutgoing = outgoing > 0 ? (weight / outgoing) * 100 : 0;
-                const shareOfVisible = totalVisibleFlow > 0 ? (weight / totalVisibleFlow) * 100 : 0;
+                const shareOfVisible = totalStudentsBase > 0 ? (weight / totalStudentsBase) * 100 : 0;
 
                 return [
                     `<b>${p.fromNode.name}</b> → <b>${p.toNode.name}</b>`,

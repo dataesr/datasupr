@@ -45,18 +45,16 @@
   border: 1px solid var(--border-default-grey);
 }
 
-.outcomes-flux-page__slider-labels {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.25rem;
+.outcomes-flux-page__params .fr-range-group {
+  width: 100%;
 }
 
-.outcomes-flux-page__slider-labels .fr-text--bold {
-  padding: 0.125rem 0.5rem;
-  background: var(--blue-france-main-525);
-  color: var(--grey-1000);
-  border-radius: 0.25rem;
+.outcomes-flux-page__params .fr-range {
+  width: 100%;
+}
+
+.outcomes-flux-page__params .fr-range input[type="range"] {
+  width: 100%;
 }
 
 @media (max-width: 61.9375rem) {

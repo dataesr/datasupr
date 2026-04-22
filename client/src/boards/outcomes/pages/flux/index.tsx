@@ -12,6 +12,7 @@ const DEFAULT_COHORT_YEAR = "2019-2020";
 const DEFAULT_COHORT_SITUATION = "L1";
 const DEFAULT_MIN_VALUE = 100;
 const ALL_RELATIVE_YEARS = [0, 1, 2, 3, 4];
+const DEFAULT_YEAR_END = 4;
 const YEAR_LABELS: Record<number, string> = {
     0: "2019-2020 (N+0)",
     1: "2020-2021 (N+1)",
@@ -61,6 +62,11 @@ const FILTER_SECTIONS: Array<{
             ],
         },
     ];
+
+function buildContiguousYears(endYear: number) {
+    const safeEnd = Math.max(1, Math.min(DEFAULT_YEAR_END, endYear));
+    return ALL_RELATIVE_YEARS.filter((year) => year <= safeEnd);
+}
 
 function FluxFilter({
     label,
@@ -112,12 +118,14 @@ export default function FluxPage() {
 
     const minValue = Number.parseInt(searchParams.get("min_value") || "", 10) || DEFAULT_MIN_VALUE;
     const [sliderValue, setSliderValue] = useState(minValue);
-    const relativeYears = useMemo(() => {
+    const yearEnd = useMemo(() => {
         const raw = searchParams.get("annee_rel");
-        if (!raw) return ALL_RELATIVE_YEARS;
+        if (!raw) return DEFAULT_YEAR_END;
         const parsed = raw.split(",").map(Number).filter((n) => ALL_RELATIVE_YEARS.includes(n));
-        return parsed.length >= 2 ? parsed : ALL_RELATIVE_YEARS;
+        if (parsed.length < 2) return DEFAULT_YEAR_END;
+        return Math.max(1, Math.min(DEFAULT_YEAR_END, Math.max(...parsed)));
     }, [searchParams]);
+    const relativeYears = useMemo(() => buildContiguousYears(yearEnd), [yearEnd]);
 
     const { data, error, isFetching, isLoading } = useOutcomesFlux({
         cohorteAnnee: cohortYear,
@@ -173,13 +181,11 @@ export default function FluxPage() {
         setSearchParams(nextParams);
     };
 
-    const toggleYear = (year: number) => {
-        const next = relativeYears.includes(year)
-            ? relativeYears.filter((y) => y !== year)
-            : [...relativeYears, year].sort();
-        if (next.length < 2) return;
+    const updateYearEnd = (value: number) => {
+        const safeEnd = Math.max(1, Math.min(DEFAULT_YEAR_END, value));
+        const next = buildContiguousYears(safeEnd);
         const nextParams = new URLSearchParams(searchParams);
-        const isAll = next.length === ALL_RELATIVE_YEARS.length && ALL_RELATIVE_YEARS.every((y) => next.includes(y));
+        const isAll = safeEnd === DEFAULT_YEAR_END;
         if (isAll) {
             nextParams.delete("annee_rel");
         } else {
@@ -213,12 +219,13 @@ export default function FluxPage() {
                 </Col>
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
+
                         <ChartWrapper.Title config={{ id: "outcomes-flux-sankey", title: { fr: "Parcours des néo-bacheliers inscrits en L1 en 2019", look: "h4" as const } }} />
                         {activeFiltersElement}
                         {(isLoading || (isFetching && !data)) && <DefaultSkeleton height="540px" />}
                         {!isLoading && isFetching && data && (
                             <div style={{ opacity: 0.5, transition: "opacity 0.2s" }}>
-                                <SankeyChart hideTitle links={data.links} />
+                                <SankeyChart hideTitle links={data.links} totalStudents={data.totalStudents} />
                             </div>
                         )}
                         {!isLoading && !isFetching && error && (
@@ -232,59 +239,90 @@ export default function FluxPage() {
                             </Callout>
                         )}
                         {!isLoading && !isFetching && (data?.links?.length ?? 0) > 0 && (
-                            <SankeyChart hideTitle links={data!.links} />
+                            <SankeyChart hideTitle links={data!.links} totalStudents={data!.totalStudents} />
                         )}
 
                         <div className="outcomes-flux-page__params fr-mt-3w fr-mb-3w">
                             <Title as="h2" look="h5" className="fr-mb-2w">Paramètres pour les flux</Title>
                             <Row gutters>
                                 <Col md={6}>
-                                    <Title as="h3" look="h6" className="fr-mb-1w">Année à analyser</Title>
-                                    <p className="fr-text--xs fr-mb-1w">Sélectionner au moins 2 items</p>
-                                    <fieldset className="fr-fieldset">
-                                        {ALL_RELATIVE_YEARS.map((year) => (
-                                            <div className="fr-fieldset__element fr-fieldset__element--inline" key={year}>
-                                                <div className="fr-checkbox-group fr-checkbox-group--sm">
-                                                    <input
-                                                        checked={relativeYears.includes(year)}
-                                                        disabled={relativeYears.includes(year) && relativeYears.length <= 2}
-                                                        id={`year-${year}`}
-                                                        onChange={() => toggleYear(year)}
-                                                        type="checkbox"
-                                                    />
-                                                    <label className="fr-label" htmlFor={`year-${year}`}>
-                                                        {YEAR_LABELS[year]}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </fieldset>
+                                    <div className="fr-range-group fr-range--sm">
+                                        <label className="fr-label" id="flux-year-range-label">
+                                            Année à analyser
+                                            <span className="fr-hint-text">
+                                                Sélection continue obligatoire: de {YEAR_LABELS[0]} jusqu'à l'horizon choisi.
+                                            </span>
+                                        </label>
+                                        <div className="fr-range">
+                                            <span className="fr-range__output">{YEAR_LABELS[yearEnd]}</span>
+                                            <input
+                                                aria-describedby="flux-year-range-messages"
+                                                aria-labelledby="flux-year-range-label"
+                                                max={DEFAULT_YEAR_END}
+                                                min={1}
+                                                name="flux-year-range"
+                                                onChange={(e) => updateYearEnd(Number(e.target.value))}
+                                                step={1}
+                                                type="range"
+                                                value={yearEnd}
+                                            />
+                                            <span className="fr-range__min" aria-hidden="true">{YEAR_LABELS[1]}</span>
+                                            <span className="fr-range__max" aria-hidden="true">{YEAR_LABELS[DEFAULT_YEAR_END]}</span>
+                                        </div>
+                                        <div className="fr-messages-group" id="flux-year-range-messages" aria-live="polite">
+                                            <p className="fr-message">Période active: {YEAR_LABELS[0]} → {YEAR_LABELS[yearEnd]}</p>
+                                        </div>
+                                    </div>
                                 </Col>
                                 <Col md={6}>
-                                    <Title as="h3" look="h6" className="fr-mb-1w">Affichage des flux</Title>
-                                    <p className="fr-text--xs fr-mb-1w">
-                                        Afficher les flux regroupant au minimum {sliderValue} étudiants.
-                                    </p>
                                     <div className="fr-range-group">
-                                        <div className="outcomes-flux-page__slider-labels">
-                                            <span className="fr-text--xs">0</span>
-                                            <span className="fr-text--sm fr-text--bold">{sliderValue}</span>
-                                            <span className="fr-text--xs">1 000</span>
+                                        <label className="fr-label" id="flux-min-value-range-label">
+                                            Affichage des flux
+                                            <span className="fr-hint-text">
+                                                Afficher les flux regroupant au minimum {sliderValue} étudiants. Ajustez le seuil pour filtrer les flux les plus faibles et mieux visualiser les parcours majoritaires.
+                                            </span>
+                                        </label>
+                                        <div className="fr-range">
+                                            <span className="fr-range__output">{sliderValue}</span>
+                                            <input
+                                                aria-describedby="flux-min-value-range-messages"
+                                                aria-labelledby="flux-min-value-range-label"
+                                                max={1000}
+                                                min={0}
+                                                name="flux-min-value-range"
+                                                onChange={(e) => setSliderValue(Number(e.target.value))}
+                                                onMouseUp={() => updateMinValue(sliderValue)}
+                                                onTouchEnd={() => updateMinValue(sliderValue)}
+                                                step={10}
+                                                type="range"
+                                                value={sliderValue}
+                                            />
+                                            <span className="fr-range__min" aria-hidden="true">0</span>
+                                            <span className="fr-range__max" aria-hidden="true">1 000</span>
                                         </div>
-                                        <input
-                                            aria-label="Seuil minimum d'étudiants"
-                                            max={1000}
-                                            min={0}
-                                            onChange={(e) => setSliderValue(Number(e.target.value))}
-                                            onMouseUp={() => updateMinValue(sliderValue)}
-                                            onTouchEnd={() => updateMinValue(sliderValue)}
-                                            step={10}
-                                            type="range"
-                                            value={sliderValue}
-                                        />
+                                        <div className="fr-messages-group" id="flux-min-value-range-messages" aria-live="polite" />
                                     </div>
                                 </Col>
                             </Row>
+                        </div>
+
+                        <div className="outcomes-flux-page__params fr-mt-3w fr-mb-3w">
+                            <Title as="h2" look="h5" className="fr-mb-2w">Commentaires</Title>
+                            <p>
+                                <b>Note : </b>
+                                ce graphique représente les flux de néo-bacheliers inscrits en licence en 2019, d'une année à l'année suivante jusqu'à l'année universitaire 2023-2024.
+                            </p>
+                            <p>
+                                Pour des raisons de confidentialité, certaines données ont été bruitées. Les taux d'inscription présentés peuvent différer des valeurs réelles ; pour consulter les données exactes, veuillez vous référer au second onglet (l'histogramme sur la répartition des inscriptions).
+                            </p>
+                            <p>
+                                <b>Source : </b>
+                                MESRE-SIES, système d'information SISE, enquêtes menées par le SIES auprès des établissements de l'enseignement supérieur. MEN-DEPP, systèmes d'informations SCOLARITE et SIFA, enquêtes menées par la DEPP auprès d'établissements du secondaire et de centres de formation d'apprentis (CFA).
+                            </p>
+                            <p>
+                                <b>Champ : </b>
+                                les néo-bacheliers inscrits en licence en université à la rentrée 2019 en France.
+                            </p>
                         </div>
                     </div>
                 </Col>
