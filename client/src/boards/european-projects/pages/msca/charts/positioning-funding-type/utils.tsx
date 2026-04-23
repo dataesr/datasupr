@@ -65,7 +65,7 @@ export function useGetParams() {
 }
 
 export function processData(
-  data: PositioningByFundingTypeData,
+  data: PositioningByFundingTypeData[],
   countryCode: string,
   currentLang: string = "fr",
   metric: "projects" | "funding" = "projects",

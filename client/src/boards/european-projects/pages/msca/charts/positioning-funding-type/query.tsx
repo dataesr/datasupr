@@ -26,12 +26,9 @@ export interface PositioningByFundingTypeData {
 }
 [];
 
-export async function getData(params: string): Promise<PositioningByFundingTypeData> {
+export async function getData(params: string): Promise<PositioningByFundingTypeData[]> {
   if (params === "") {
-    return {
-      successful: null,
-      evaluated: null,
-    };
+    return [];
   }
 
   // On récupère les données sans filtre pays pour avoir tous les pays
