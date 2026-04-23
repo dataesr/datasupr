@@ -23,7 +23,7 @@ export default function TabsContent() {
 
   return (
     <div>
-      <nav className="fr-nav" role="navigation" aria-label="Menu principal">
+      <nav className="fr-nav" role="navigation" aria-label="Menu secondaire">
         <ul className="fr-nav__list">
           <li className="fr-nav__item">
             <button

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Container } from "@dataesr/dsfr-plus";
+import { Container, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import Breadcrumb from "../../../../components/breadcrumb";
@@ -50,6 +50,9 @@ export default function MSCA() {
       <div className="ep-navigator-wrapper">
         <Container>
           <Breadcrumb config={navigationConfig} />
+          <Title as="h1" look="h6">
+            MSCA Actions Marie Skłodowska-Curie
+          </Title>
           {/* Filtre de sélection des années */}
           {showYearsFilter && !isLoadingFilters && availableYears.length > 0 && (
             <div className="fr-mt-2w years-filter-collapsible">

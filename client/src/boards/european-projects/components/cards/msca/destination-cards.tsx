@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
+import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
 import { getMscaSynthesisByDestination, MscaDestinationData } from "../../../api/msca";
 import { formatCurrency, formatNumber, formatToRates } from "../../../../../utils/format";
 
@@ -35,7 +35,7 @@ export default function MscaDestinationCards({ countryCode, callYear }: MscaDest
   if (isLoading) {
     return (
       <div className="msca-destination-section">
-        <h3>Par type de financement</h3>
+        <h2>Types de financement</h2>
         <div className="msca-stat-cards">
           {[1, 2, 3, 4].map((i) => (
             <MscaStatCardSkeleton key={i} />
@@ -50,7 +50,9 @@ export default function MscaDestinationCards({ countryCode, callYear }: MscaDest
   return (
     <div className="msca-destination-section">
       <div className="section-header">
-        <h3>Par type de financement</h3>
+        <Title as="h2" look="h5">
+          Types de financement
+        </Title>
         <SegmentedControl className="fr-segmented--sm" name="msca-destination-view-mode">
           <SegmentedElement checked={viewMode === "projects"} label="Projets" onClick={() => setViewMode("projects")} value="projects" />
           <SegmentedElement checked={viewMode === "funding"} label="Financements" onClick={() => setViewMode("funding")} value="funding" />
@@ -77,7 +79,9 @@ function MscaStatCard({ data, viewMode }: { data: MscaDestinationData; viewMode:
   return (
     <div className="msca-stat-card">
       <div className="stat-card-header">
-        <h4 className="stat-card-title">{label}</h4>
+        <Title as="h3" className="stat-card-title">
+          {label}
+        </Title>
         <span className="stat-card-code">{data.destination_code}</span>
       </div>
 

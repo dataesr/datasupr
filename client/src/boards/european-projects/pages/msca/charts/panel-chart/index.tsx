@@ -94,7 +94,9 @@ function renderDataTableProjects(data: MscaPanelChartItem[], currentLang: string
   const sortedData = [...data].filter((d) => d.panel_id).sort((a, b) => a.panel_id.localeCompare(b.panel_id));
   return (
     <table className="fr-table">
-      <caption>{currentLang === "fr" ? "Projets par panel scientifique MSCA" : "Projects by MSCA scientific panel"}</caption>
+      <caption>
+        {currentLang === "fr" ? "Données du graphique des projets par panel scientifique MSCA" : "Data from the project graph by scientific panel"}
+      </caption>
       <thead>
         <tr>
           <th>{currentLang === "fr" ? "Panel scientifique" : "Scientific panel"}</th>

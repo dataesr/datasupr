@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { SegmentedControl, SegmentedElement } from "@dataesr/dsfr-plus";
+import { SegmentedControl, SegmentedElement, Title } from "@dataesr/dsfr-plus";
 import { getMscaSynthesisByPanel, MscaPanelData } from "../../../api/msca";
 import { formatNumber, formatCurrency, formatToRates } from "../../../../../utils/format";
 import "./styles.scss";
@@ -43,7 +43,9 @@ export default function MscaPanelCards({ countryCode, callYear }: MscaPanelCards
   return (
     <div className="msca-panel-section">
       <div className="section-header">
-        <h3>Par panel scientifique</h3>
+        <Title as="h2" look="h5">
+          Par panel scientifique
+        </Title>
         <SegmentedControl className="fr-segmented--sm" name="msca-panel-view-mode">
           <SegmentedElement checked={viewMode === "projects"} label="Projets" onClick={() => setViewMode("projects")} value="projects" />
           <SegmentedElement checked={viewMode === "funding"} label="Financements" onClick={() => setViewMode("funding")} value="funding" />
@@ -68,7 +70,9 @@ function MscaPanelCard({ data, viewMode }: { data: MscaPanelData; viewMode: View
   return (
     <div className="msca-stat-card">
       <div className="stat-card-header">
-        <h4 className="stat-card-title">{label}</h4>
+        <Title as="h3" className="stat-card-title">
+          {label}
+        </Title>
         <span className="stat-card-code">{data.panel_id}</span>
       </div>
 
