@@ -159,7 +159,7 @@ export default function PlusHautDiplomePage() {
             <Row gutters>
                 <Col>
                     <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line" title="Avertissement">
-                        Version sous embargo à ne pas diffuse
+                        Version sous embargo à ne pas diffuser
                     </Callout>
                 </Col>
             </Row>
@@ -242,6 +242,17 @@ export default function PlusHautDiplomePage() {
                                 </table>
                             </div>
                         )}
+
+                        <div className="outcomes-flux-page__params fr-mt-3w fr-mb-3w">
+                            <p>
+                                <b>Source : </b>
+                                MESRE-SIES, système d’information SISE, enquêtes menées par le SIES auprès des établissements de l'enseignement supérieur. MEN-DEPP, systèmes d’informations SCOLARITE et SIFA, enquêtes menées par la DEPP auprès d'établissements du secondaire et de centres de formation d'apprentis (CFA).
+                            </p>
+                            <p>
+                                <b>Champ : </b>
+                                Les néo-bacheliers inscrits en licence en université à la rentrée 2019 en France.
+                            </p>
+                        </div>
                     </div>
                 </Col>
             </Row>

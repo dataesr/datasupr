@@ -7,7 +7,7 @@ export default function MethodologiePage() {
             <Row gutters>
                 <Col>
                     <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line" title="Avertissement">
-                        Version sous embargo à ne pas diffuse
+                        Version sous embargo à ne pas diffuser
                     </Callout>
                 </Col>
             </Row>

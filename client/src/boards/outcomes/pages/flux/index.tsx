@@ -165,6 +165,29 @@ export default function FluxPage() {
         );
     })();
 
+    const exportFiltersText = useMemo(() => {
+        const selectedFilters = FILTER_SECTIONS.flatMap((section) =>
+            section.fields
+                .filter(({ field }) => !!filters[field])
+                .map(({ field, label }) => {
+                    const key = filters[field]!;
+                    const optionLabel = data?.filterOptions?.[field]?.find((opt: { key: string; label: string }) => opt.key === key)?.label;
+                    return `${label}: ${optionLabel || key}`;
+                })
+        );
+
+        const meta = [
+            `Période: ${YEAR_LABELS[yearStart]} à ${YEAR_LABELS[yearEnd]}`,
+            `Seuil min: ${minValue}`,
+        ];
+
+        if (!selectedFilters.length) {
+            return [...meta, "Ensemble"].join(" | ");
+        }
+
+        return [...meta, ...selectedFilters].join(" | ");
+    }, [data?.filterOptions, filters, minValue, yearEnd, yearStart]);
+
     const updateFilter = (field: OutcomesFilterField, value: string | null) => {
         const nextParams = new URLSearchParams(searchParams);
         if (value) {
@@ -212,7 +235,7 @@ export default function FluxPage() {
             <Row gutters>
                 <Col>
                     <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line" title="Avertissement">
-                        Version sous embargo à ne pas diffuse
+                        Version sous embargo à ne pas diffuser
                     </Callout>
                 </Col>
             </Row>
@@ -244,7 +267,15 @@ export default function FluxPage() {
                         {(isLoading || (isFetching && !data)) && <DefaultSkeleton height="540px" />}
                         {!isLoading && isFetching && data && (
                             <div style={{ opacity: 0.5, transition: "opacity 0.2s" }}>
-                                <SankeyChart hideTitle links={data.links} totalStudents={data.totalStudents} />
+                                <SankeyChart
+                                    exportMetadata={{
+                                        filtersText: exportFiltersText,
+                                        sourceText: "Source : MESRE-SIES.",
+                                    }}
+                                    hideTitle
+                                    links={data.links}
+                                    totalStudents={data.totalStudents}
+                                />
                             </div>
                         )}
                         {!isLoading && !isFetching && error && (
@@ -258,7 +289,15 @@ export default function FluxPage() {
                             </Callout>
                         )}
                         {!isLoading && !isFetching && (data?.links?.length ?? 0) > 0 && (
-                            <SankeyChart hideTitle links={data!.links} totalStudents={data!.totalStudents} />
+                            <SankeyChart
+                                exportMetadata={{
+                                    filtersText: exportFiltersText,
+                                    sourceText: "Source : MESRE-SIES.",
+                                }}
+                                hideTitle
+                                links={data!.links}
+                                totalStudents={data!.totalStudents}
+                            />
                         )}
 
                         <div className="outcomes-flux-page__params fr-mt-3w fr-mb-3w">

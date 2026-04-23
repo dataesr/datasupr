@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
+import "../../../../outcomes-colors.scss";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import Callout from "../../../../../../components/callout";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
@@ -8,6 +9,10 @@ import { type OutcomesFilterField, type OutcomesFluxLink, useOutcomesFlux } from
 import { createSankeyOptions } from "./options";
 
 interface SankeyChartProps {
+    exportMetadata?: {
+        filtersText?: string;
+        sourceText?: string;
+    };
     hideTitle?: boolean;
     links?: OutcomesFluxLink[];
     totalStudents?: number;
@@ -151,12 +156,53 @@ function SankeyRenderData({ links, totalStudents = 0 }: { links: OutcomesFluxLin
     );
 }
 
-function SankeyChartView({ hideTitle, links, totalStudents = 0 }: Required<Pick<SankeyChartProps, "links">> & Pick<SankeyChartProps, "hideTitle" | "totalStudents">) {
+function SankeyChartView({
+    exportMetadata,
+    hideTitle,
+    links,
+    totalStudents = 0,
+}: Required<Pick<SankeyChartProps, "links">> & Pick<SankeyChartProps, "exportMetadata" | "hideTitle" | "totalStudents">) {
     const [searchParams] = useSearchParams();
     const options = useMemo(() => {
         if (!links?.length) return null;
-        return createSankeyOptions(links, totalStudents);
-    }, [links, totalStudents]);
+        const baseOptions = createSankeyOptions(links, totalStudents);
+        const filtersText = exportMetadata?.filtersText?.trim();
+        const sourceText = exportMetadata?.sourceText?.trim();
+
+        if (!filtersText && !sourceText) {
+            return baseOptions;
+        }
+
+        return {
+            ...baseOptions,
+            exporting: {
+                ...(baseOptions.exporting || {}),
+                chartOptions: {
+                    ...((baseOptions.exporting && (baseOptions.exporting as any).chartOptions) || {}),
+                    subtitle: filtersText
+                        ? {
+                            style: {
+                                color: "#666",
+                                fontSize: "12px",
+                            },
+                            text: sourceText
+                                ? `Filtres : ${filtersText}<br/>${sourceText}`
+                                : `Filtres : ${filtersText}`,
+                            useHTML: true,
+                        }
+                        : sourceText
+                            ? {
+                                style: {
+                                    color: "#666",
+                                    fontSize: "12px",
+                                },
+                                text: sourceText,
+                            }
+                            : undefined,
+                },
+            },
+        };
+    }, [exportMetadata?.filtersText, exportMetadata?.sourceText, links, totalStudents]);
 
     if (!options) return null;
 
@@ -226,9 +272,9 @@ function SankeyChartIntegration({ hideTitle }: Pick<SankeyChartProps, "hideTitle
     return <SankeyChartView hideTitle={hideTitle} links={data.links} totalStudents={data.totalStudents} />;
 }
 
-export default function SankeyChart({ hideTitle, links, totalStudents = 0 }: SankeyChartProps) {
+export default function SankeyChart({ exportMetadata, hideTitle, links, totalStudents = 0 }: SankeyChartProps) {
     if (links) {
-        return <SankeyChartView hideTitle={hideTitle} links={links} totalStudents={totalStudents} />;
+        return <SankeyChartView exportMetadata={exportMetadata} hideTitle={hideTitle} links={links} totalStudents={totalStudents} />;
     }
 
     return <SankeyChartIntegration hideTitle={hideTitle} />;

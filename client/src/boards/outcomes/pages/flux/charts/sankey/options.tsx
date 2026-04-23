@@ -1,6 +1,26 @@
 import { getCssColor } from "../../../../../../utils/colors";
 import { type OutcomesFluxLink } from "../../../../api";
 
+function resolveTokenColor(token: string) {
+    if (typeof window === "undefined" || typeof document === "undefined") {
+        return getCssColor(token);
+    }
+
+    const probe = document.createElement("span");
+    probe.style.color = `var(--${token})`;
+    probe.style.position = "absolute";
+    probe.style.left = "-9999px";
+    probe.style.top = "-9999px";
+    document.body.appendChild(probe);
+    const resolved = window.getComputedStyle(probe).color;
+    document.body.removeChild(probe);
+
+    if (!resolved || resolved === "rgb(0, 0, 0)") {
+        return getCssColor(token);
+    }
+    return resolved;
+}
+
 const SITUATION_LABELS: Record<string, string> = {
     SIT01: "L1",
     SIT02: "L2",
@@ -89,7 +109,7 @@ function buildNodes(links: OutcomesFluxLink[]) {
 
             seen.add(id);
             nodes.push({
-                color: getCssColor(SITUATION_COLOR_KEYS[situation] || "scale-3"),
+                color: resolveTokenColor(SITUATION_COLOR_KEYS[situation] || "scale-3"),
                 column: normalizedRel,
                 id,
                 name: getSituationLabel(situation),
@@ -116,7 +136,7 @@ function buildSeriesData(links: OutcomesFluxLink[]) {
             }
 
             return {
-                color: getCssColor(SITUATION_COLOR_KEYS[link.source_situation] || "scale-3"),
+                color: resolveTokenColor(SITUATION_COLOR_KEYS[link.source_situation] || "scale-3"),
                 from: getNodeId(sourceRel, link.source_situation),
                 to: getNodeId(targetRel, link.target_situation),
                 weight: link.value,
@@ -178,7 +198,7 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
         chart: {
             height: 800,
             backgroundColor: "transparent",
-            spacingBottom: 80,
+            spacingBottom: 120,
             events: {
                 render() {
                     const chart = this as any;
@@ -192,7 +212,9 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
                     if (!sankeySeries?.nodes?.length) return;
 
                     const group = chart.renderer.g("outcomes-year-labels").add();
-                    const y = chart.plotTop + chart.plotHeight + 26;
+                    const y = chart.plotTop + chart.plotHeight + 10;
+                    const minX = chart.plotLeft + 4;
+                    const maxX = chart.plotLeft + chart.plotWidth - 4;
 
                     usedYears.forEach((year) => {
                         const yearNodes = sankeySeries.nodes
@@ -203,15 +225,22 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
 
                         const x = yearNodes.reduce((sum: number, value: number) => sum + value, 0) / yearNodes.length;
 
-                        chart.renderer
+                        const textEl = chart.renderer
                             .text(YEAR_LABELS[year] || `N+${year}`, x, y)
                             .css({
-                                color: getCssColor("text-title-grey"),
+                                color: resolveTokenColor("text-title-grey"),
                                 fontSize: "12px",
                                 fontWeight: "600",
                             })
                             .attr({ align: "center", zIndex: 5 })
                             .add(group);
+
+                        const box = textEl.getBBox();
+                        if (box.x < minX) {
+                            textEl.attr({ x: x + (minX - box.x) });
+                        } else if (box.x + box.width > maxX) {
+                            textEl.attr({ x: x - ((box.x + box.width) - maxX) });
+                        }
                     });
 
                     chart.outcomesYearLabelsGroup = group;
@@ -223,11 +252,20 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
                 valueDescriptionFormat: "{index}. {point.fromNode.name} vers {point.toNode.name}, {point.weight} étudiants.",
             },
         },
+        caption: {
+            align: "left",
+            style: {
+                color: resolveTokenColor("text-mention-grey"),
+                fontSize: "11px",
+            },
+            text: "Source : MESRE-SIES.",
+            verticalAlign: "bottom",
+        },
         credits: { enabled: false },
         exporting: { enabled: false },
         plotOptions: {
             sankey: {
-                borderColor: getCssColor("border-default-grey"),
+                borderColor: resolveTokenColor("border-default-grey"),
                 borderWidth: 1,
                 dataLabels: {
                     enabled: true,
@@ -235,7 +273,7 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
                         return (this as any).point.name;
                     },
                     style: {
-                        color: getCssColor("text-title-grey"),
+                        color: resolveTokenColor("text-title-grey"),
                         fontWeight: "600",
                         textOutline: "none",
                     },
