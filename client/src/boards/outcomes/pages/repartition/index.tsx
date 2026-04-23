@@ -173,6 +173,13 @@ export default function RepartitionPage() {
     return (
         <Container className="outcomes-section-page outcomes-flux-page">
             <Row gutters>
+                <Col>
+                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line" title="Avertissement">
+                        Version sous embargo à ne pas diffuse
+                    </Callout>
+                </Col>
+            </Row>
+            <Row gutters>
                 <Col lg={4}>
                     <aside className="outcomes-flux-page__filters" aria-label="Filtres du graphique de répartition">
                         <Title as="h1" look="h3" className="fr-mb-3w">Filtres à sélectionner</Title>

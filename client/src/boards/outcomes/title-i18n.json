@@ -1,18 +1,18 @@
 {
   "flux": {
-    "fr": "Outcomes - Flux",
+    "fr": "Parcours des néo-bacheliers inscrits en L1 en 2019 - Flux",
     "en": "Outcomes - Flow"
   },
   "repartition": {
-    "fr": "Outcomes - Répartition",
+    "fr": "Parcours des néo-bacheliers inscrits en L1 en 2019 - Répartition",
     "en": "Outcomes - Distribution"
   },
   "plusHautDiplome": {
-    "fr": "Outcomes - Plus haut diplôme",
+    "fr": "Parcours des néo-bacheliers inscrits en L1 en 2019 - Plus haut diplôme",
     "en": "Outcomes - Highest degree"
   },
   "methodologie": {
-    "fr": "Outcomes - Méthodologie",
+    "fr": "Parcours des néo-bacheliers inscrits en L1 en 2019 - Méthodologie",
     "en": "Outcomes - Methodology"
   }
 }

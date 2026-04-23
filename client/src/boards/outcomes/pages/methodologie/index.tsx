@@ -1,8 +1,16 @@
 import { Col, Container, Row, Title } from "@dataesr/dsfr-plus";
+import Callout from "../../../../components/callout";
 
 export default function MethodologiePage() {
     return (
         <Container className="outcomes-section-page outcomes-flux-page">
+            <Row gutters>
+                <Col>
+                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line" title="Avertissement">
+                        Version sous embargo à ne pas diffuse
+                    </Callout>
+                </Col>
+            </Row>
             <Row gutters>
                 <Col lg={12}>
                     <div className="outcomes-flux-page__params fr-mb-3w">
