@@ -30,9 +30,9 @@ router.route("/european-projects/msca/synthesis").get(async (req, res) => {
     {
       $group: {
         _id: "$country_code",
-        total_funding: { $sum: "$fund_eur" },
+        total_funding_project: { $sum: "$fund_eur" },
         total_involved: { $sum: "$number_involved" },
-        total_coordinations: {
+        total_pi: {
           $sum: { $cond: [{ $eq: ["$role_participant", "Coordinator"] }, "$number_involved", 0] },
         },
         project_ids: { $addToSet: "$project_id" },
@@ -46,23 +46,23 @@ router.route("/european-projects/msca/synthesis").get(async (req, res) => {
         country_code: "$_id",
         country_name_fr: 1,
         country_name_en: 1,
-        total_funding: 1,
+        total_funding_project: 1,
         total_involved: 1,
-        total_coordinations: 1,
+        total_pi: 1,
         total_projects: { $size: "$project_ids" },
       },
     },
     {
       $group: {
         _id: null,
-        total_funding: { $sum: "$total_funding" },
+        total_funding_project: { $sum: "$total_funding_project" },
         total_involved: { $sum: "$total_involved" },
-        total_coordinations: { $sum: "$total_coordinations" },
+        total_pi: { $sum: "$total_pi" },
         total_projects: { $sum: "$total_projects" },
         countries: { $push: "$$ROOT" },
       },
     },
-    { $project: { _id: 0, total_funding: 1, total_involved: 1, total_coordinations: 1, total_projects: 1, countries: 1 } },
+    { $project: { _id: 0, total_funding_project: 1, total_involved: 1, total_pi: 1, total_projects: 1, countries: 1 } },
   ];
 
   const [dataSuccessful, dataEvaluated] = await Promise.all([
@@ -73,9 +73,9 @@ router.route("/european-projects/msca/synthesis").get(async (req, res) => {
   const filterByCountry = (record, countryCode) =>
     record
       ? {
-          total_funding: record.total_funding,
+          total_funding_project: record.total_funding_project,
           total_involved: record.total_involved,
-          total_coordinations: record.total_coordinations,
+          total_pi: record.total_pi,
           total_projects: record.total_projects,
           countries: (record.countries || []).filter((c) => c.country_code?.toUpperCase() === countryCode),
         }
@@ -121,11 +121,14 @@ router.route("/european-projects/msca/synthesis-by-destination").get(async (req,
           _id: {
             destination_code: "$destination_code",
             destination_name_en: "$destination_name_en",
+            country_code: "$country_code",
+            country_name_fr: "$country_name_fr",
+            country_name_en: "$country_name_en",
             stage: "$stage",
           },
-          total_funding: { $sum: "$fund_eur" },
+          total_funding_project: { $sum: "$fund_eur" },
           total_involved: { $sum: "$number_involved" },
-          total_coordinations: {
+          total_pi: {
             $sum: { $cond: [{ $eq: ["$role_participant", "Coordinator"] }, "$number_involved", 0] },
           },
           project_ids: { $addToSet: "$project_id" },
@@ -136,10 +139,13 @@ router.route("/european-projects/msca/synthesis-by-destination").get(async (req,
           _id: 0,
           destination_code: "$_id.destination_code",
           destination_name_en: "$_id.destination_name_en",
+          country_code: "$_id.country_code",
+          country_name_fr: "$_id.country_name_fr",
+          country_name_en: "$_id.country_name_en",
           stage: "$_id.stage",
-          total_funding: 1,
+          total_funding_project: 1,
           total_involved: 1,
-          total_coordinations: 1,
+          total_pi: 1,
           total_projects: { $size: "$project_ids" },
         },
       },
@@ -154,16 +160,32 @@ router.route("/european-projects/msca/synthesis-by-destination").get(async (req,
       destinations[item.destination_code] = {
         destination_code: item.destination_code,
         destination_name_en: item.destination_name_en,
-        evaluated: null,
-        successful: null,
+        evaluated: { total_funding_project: 0, total_involved: 0, total_pi: 0, total_projects: 0, countries: [] },
+        successful: { total_funding_project: 0, total_involved: 0, total_pi: 0, total_projects: 0, countries: [] },
       };
     }
-    destinations[item.destination_code][item.stage] = {
-      total_funding: item.total_funding,
+    destinations[item.destination_code][item.stage].countries.push({
+      country_code: item.country_code,
+      country_name_fr: item.country_name_fr,
+      country_name_en: item.country_name_en,
+      total_funding_project: item.total_funding_project,
       total_involved: item.total_involved,
-      total_coordinations: item.total_coordinations,
+      total_pi: item.total_pi,
       total_projects: item.total_projects,
-    };
+    });
+  });
+
+  // Calculer les totaux pour chaque destination
+  Object.values(destinations).forEach((dest) => {
+    dest.evaluated.total_funding_project = dest.evaluated.countries.reduce((sum, c) => sum + c.total_funding_project, 0);
+    dest.evaluated.total_involved = dest.evaluated.countries.reduce((sum, c) => sum + c.total_involved, 0);
+    dest.evaluated.total_pi = dest.evaluated.countries.reduce((sum, c) => sum + c.total_pi, 0);
+    dest.evaluated.total_projects = dest.evaluated.countries.reduce((sum, c) => sum + c.total_projects, 0);
+
+    dest.successful.total_funding_project = dest.successful.countries.reduce((sum, c) => sum + c.total_funding_project, 0);
+    dest.successful.total_involved = dest.successful.countries.reduce((sum, c) => sum + c.total_involved, 0);
+    dest.successful.total_pi = dest.successful.countries.reduce((sum, c) => sum + c.total_pi, 0);
+    dest.successful.total_projects = dest.successful.countries.reduce((sum, c) => sum + c.total_projects, 0);
   });
 
   res.json(Object.values(destinations));
@@ -198,11 +220,14 @@ router.route("/european-projects/msca/synthesis-by-panel").get(async (req, res) 
           _id: {
             panel_id: "$panel_id",
             panel_name: "$panel_name",
+            country_code: "$country_code",
+            country_name_fr: "$country_name_fr",
+            country_name_en: "$country_name_en",
             stage: "$stage",
           },
-          total_funding: { $sum: "$fund_eur" },
+          total_funding_project: { $sum: "$fund_eur" },
           total_involved: { $sum: "$number_involved" },
-          total_coordinations: {
+          total_pi: {
             $sum: { $cond: [{ $eq: ["$role_participant", "Coordinator"] }, "$number_involved", 0] },
           },
           project_ids: { $addToSet: "$project_id" },
@@ -213,10 +238,13 @@ router.route("/european-projects/msca/synthesis-by-panel").get(async (req, res) 
           _id: 0,
           panel_id: "$_id.panel_id",
           panel_name: "$_id.panel_name",
+          country_code: "$_id.country_code",
+          country_name_fr: "$_id.country_name_fr",
+          country_name_en: "$_id.country_name_en",
           stage: "$_id.stage",
-          total_funding: 1,
+          total_funding_project: 1,
           total_involved: 1,
-          total_coordinations: 1,
+          total_pi: 1,
           total_projects: { $size: "$project_ids" },
         },
       },
@@ -231,16 +259,32 @@ router.route("/european-projects/msca/synthesis-by-panel").get(async (req, res) 
       panels[item.panel_id] = {
         panel_id: item.panel_id,
         panel_name: item.panel_name,
-        evaluated: null,
-        successful: null,
+        evaluated: { total_funding_project: 0, total_involved: 0, total_pi: 0, total_projects: 0, countries: [] },
+        successful: { total_funding_project: 0, total_involved: 0, total_pi: 0, total_projects: 0, countries: [] },
       };
     }
-    panels[item.panel_id][item.stage] = {
-      total_funding: item.total_funding,
+    panels[item.panel_id][item.stage].countries.push({
+      country_code: item.country_code,
+      country_name_fr: item.country_name_fr,
+      country_name_en: item.country_name_en,
+      total_funding_project: item.total_funding_project,
       total_involved: item.total_involved,
-      total_coordinations: item.total_coordinations,
+      total_pi: item.total_pi,
       total_projects: item.total_projects,
-    };
+    });
+  });
+
+  // Calculer les totaux pour chaque panel
+  Object.values(panels).forEach((panel) => {
+    panel.evaluated.total_funding_project = panel.evaluated.countries.reduce((sum, c) => sum + c.total_funding_project, 0);
+    panel.evaluated.total_involved = panel.evaluated.countries.reduce((sum, c) => sum + c.total_involved, 0);
+    panel.evaluated.total_pi = panel.evaluated.countries.reduce((sum, c) => sum + c.total_pi, 0);
+    panel.evaluated.total_projects = panel.evaluated.countries.reduce((sum, c) => sum + c.total_projects, 0);
+
+    panel.successful.total_funding_project = panel.successful.countries.reduce((sum, c) => sum + c.total_funding_project, 0);
+    panel.successful.total_involved = panel.successful.countries.reduce((sum, c) => sum + c.total_involved, 0);
+    panel.successful.total_pi = panel.successful.countries.reduce((sum, c) => sum + c.total_pi, 0);
+    panel.successful.total_projects = panel.successful.countries.reduce((sum, c) => sum + c.total_projects, 0);
   });
 
   res.json(Object.values(panels));

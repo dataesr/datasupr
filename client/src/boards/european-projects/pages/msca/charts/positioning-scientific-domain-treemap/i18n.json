@@ -1,0 +1,22 @@
+{
+  "title": {
+    "en": "Positioning by scientific domain - Treemap",
+    "fr": "Positionnement par domaine scientifique - Treemap"
+  },
+  "comment": {
+    "fr": "Ce graphique en treemap présente la répartition des financements MSCA par domaine scientifique pour le pays sélectionné.",
+    "en": "This treemap chart shows the distribution of MSCA funding by scientific domain for the selected country."
+  },
+  "reading-key": {
+    "fr": "La taille des rectangles est proportionnelle au montant des financements dans chaque domaine scientifique.",
+    "en": "The size of the rectangles is proportional to the funding amount in each scientific domain."
+  },
+  "no-data": {
+    "fr": "Aucune donnée disponible.",
+    "en": "No data available."
+  },
+  "chart-title": {
+    "fr": "Répartition des financements MSCA par domaine scientifique",
+    "en": "MSCA funding distribution by scientific domain"
+  }
+}

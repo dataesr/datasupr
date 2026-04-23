@@ -1,0 +1,136 @@
+import { useSearchParams } from "react-router-dom";
+import { rangeOfYearsToApiFormat } from "../../url-utils";
+import type { PositioningByScientificDomainData, CountryData } from "./query";
+
+// Domaines scientifiques MSCA (simplifiés)
+export const SCIENTIFIC_DOMAINS = [
+  { code: "LS", label: { fr: "Sciences de la vie (LS)", en: "Life Sciences (LS)" } },
+  { code: "PE", label: { fr: "Sciences physiques et de l'ingénieur (PE)", en: "Physical Sciences and Engineering (PE)" } },
+  { code: "SH", label: { fr: "Sciences humaines et sociales (SH)", en: "Social Sciences and Humanities (SH)" } },
+] as const;
+
+export type ScientificDomainCode = (typeof SCIENTIFIC_DOMAINS)[number]["code"];
+
+const css = (v: string) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+export function getChartColors(domain: ScientificDomainCode) {
+  return {
+    selectedCountry: css("--selected-country-color"),
+    otherCountries: css(`--msca-domain-${domain.toLowerCase()}-color`),
+    avgTop10: css("--msca-avg-top10-color"),
+    avgAll: css("--msca-avg-all-color"),
+  };
+}
+
+export interface ProcessedPositioningByScientificDomainData {
+  countries: {
+    code: string;
+    name: string;
+    value: number;
+    isSelected: boolean;
+  }[];
+  selectedCountry: CountryData | null;
+  metric: "projects" | "funding";
+  domain: ScientificDomainCode;
+  avgTop10: number;
+  avgAll: number;
+}
+
+export function useGetParams() {
+  const [searchParams] = useSearchParams();
+
+  const params: string[] = [];
+
+  const countryCode = searchParams.get("country_code") || "FRA";
+  params.push(`country_code=${countryCode}`);
+
+  const rangeOfYears = searchParams.get("range_of_years");
+  const callYear = rangeOfYearsToApiFormat(rangeOfYears);
+  if (callYear) {
+    params.push(`call_year=${callYear}`);
+  }
+
+  const framework = searchParams.get("framework");
+  if (framework) {
+    params.push(`framework=${framework}`);
+  }
+
+  const currentLang = searchParams.get("language") || "fr";
+
+  return { params: params.join("&"), currentLang, countryCode };
+}
+
+export function processData(
+  data: PositioningByScientificDomainData,
+  countryCode: string,
+  currentLang: string = "fr",
+  metric: "projects" | "funding" = "projects",
+  domain: ScientificDomainCode,
+): ProcessedPositioningByScientificDomainData {
+  if (!data || !data.successful || !data.successful.countries) {
+    return { countries: [], selectedCountry: null, metric, domain, avgTop10: 0, avgAll: 0 };
+  }
+
+  const countries = data.successful.countries;
+
+  const selectedCountry = countries.find((c) => c.country_code === countryCode) || null;
+
+  const getValue = (c: CountryData) => (metric === "projects" ? c.total_involved : c.total_funding_project);
+
+  const sortedCountries = [...countries].sort((a, b) => getValue(b) - getValue(a));
+
+  const top10 = sortedCountries.slice(0, 10);
+  const avgTop10 = top10.length > 0 ? top10.reduce((sum, c) => sum + getValue(c), 0) / top10.length : 0;
+  const avgAll = countries.length > 0 ? countries.reduce((sum, c) => sum + getValue(c), 0) / countries.length : 0;
+
+  const selectedRank = sortedCountries.findIndex((c) => c.country_code === countryCode);
+
+  let displayCountries = sortedCountries.slice(0, 10);
+  if (selectedRank >= 10 && selectedCountry) {
+    displayCountries = [...displayCountries.slice(0, 9), selectedCountry];
+  }
+
+  const formattedCountries = displayCountries.map((c) => ({
+    code: c.country_code,
+    name: currentLang === "fr" ? c.country_name_fr : c.country_name_en,
+    value: getValue(c),
+    isSelected: c.country_code === countryCode,
+  }));
+
+  formattedCountries.sort((a, b) => b.value - a.value);
+
+  return { countries: formattedCountries, selectedCountry, metric, domain, avgTop10, avgAll };
+}
+
+export function renderDataTable(processedData: ProcessedPositioningByScientificDomainData, currentLang: string = "fr"): JSX.Element {
+  const headers =
+    currentLang === "fr"
+      ? ["Rang", "Pays", processedData.metric === "projects" ? "Nombre de participants" : "Financements (M€)"]
+      : ["Rank", "Country", processedData.metric === "projects" ? "Number of participants" : "Funding (M€)"];
+
+  return (
+    <table className="fr-table">
+      <caption>
+        {currentLang === "fr" ? "Classement des pays par nombre de participants MSCA" : "Country ranking by number of MSCA participants"}
+      </caption>
+      <thead>
+        <tr>
+          {headers.map((header, i) => (
+            <th key={i} scope="col">
+              {header}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {processedData.countries.map((country, index) => (
+          <tr key={country.code} style={country.isSelected ? { fontWeight: "bold" } : {}}>
+            <td>{index + 1}</td>
+            <td>{country.name}</td>
+            <td>{processedData.metric === "funding" ? (country.value / 1_000_000).toFixed(1) : country.value}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
