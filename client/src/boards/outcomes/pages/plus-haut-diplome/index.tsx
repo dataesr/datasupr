@@ -201,35 +201,35 @@ export default function PlusHautDiplomePage() {
                                     <thead>
                                         <tr>
                                             <th scope="col">Plus haut diplôme obtenu en {diplomaYearLabel} dont :</th>
-                                            <th scope="col">Effectif</th>
-                                            <th scope="col">Pourcentage</th>
-                                            <th scope="col">dont inscrits en {lastYearLabel} (%)</th>
-                                            <th scope="col">dont sortants en {lastYearLabel} (%)</th>
+                                            <th scope="col" style={{ textAlign: "right" }}>Effectif</th>
+                                            <th scope="col" style={{ textAlign: "right" }}>Pourcentage</th>
+                                            <th scope="col" style={{ textAlign: "right" }}>dont inscrits en {lastYearLabel} (%)</th>
+                                            <th scope="col" style={{ textAlign: "right" }}>dont sortants en {lastYearLabel} (%)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {data.rows.map((row) => (
                                             <tr key={row.diplome}>
                                                 <td>{row.diplome}</td>
-                                                <td>{formatNumber(row.effectif)}</td>
-                                                <td>{row.pourcentage}</td>
-                                                <td>{row.dontInscrits}</td>
-                                                <td>{row.dontSortants}</td>
+                                                <td style={{ textAlign: "right" }}>{formatNumber(row.effectif)}</td>
+                                                <td style={{ textAlign: "right" }}>{row.pourcentage}</td>
+                                                <td style={{ textAlign: "right" }}>{row.dontInscrits}</td>
+                                                <td style={{ textAlign: "right" }}>{row.dontSortants}</td>
                                             </tr>
                                         ))}
                                         <tr className="fr-text--bold">
                                             <td>Total de diplômés</td>
-                                            <td>{formatNumber(data.totals.diplomes.effectif)}</td>
-                                            <td>{data.totals.diplomes.pourcentage}</td>
-                                            <td>{data.totals.diplomes.dontInscrits}</td>
-                                            <td>{data.totals.diplomes.dontSortants}</td>
+                                            <td style={{ textAlign: "right" }}>{formatNumber(data.totals.diplomes.effectif)}</td>
+                                            <td style={{ textAlign: "right" }}>{data.totals.diplomes.pourcentage}</td>
+                                            <td style={{ textAlign: "right" }}>{data.totals.diplomes.dontInscrits}</td>
+                                            <td style={{ textAlign: "right" }}>{data.totals.diplomes.dontSortants}</td>
                                         </tr>
                                         <tr className="fr-text--bold">
                                             <td>Total de non diplômés</td>
-                                            <td>{formatNumber(data.totals.nonDiplomes.effectif)}</td>
-                                            <td>{data.totals.nonDiplomes.pourcentage}</td>
-                                            <td>{data.totals.nonDiplomes.dontInscrits}</td>
-                                            <td>{data.totals.nonDiplomes.dontSortants}</td>
+                                            <td style={{ textAlign: "right" }}>{formatNumber(data.totals.nonDiplomes.effectif)}</td>
+                                            <td style={{ textAlign: "right" }}>{data.totals.nonDiplomes.pourcentage}</td>
+                                            <td style={{ textAlign: "right" }}>{data.totals.nonDiplomes.dontInscrits}</td>
+                                            <td style={{ textAlign: "right" }}>{data.totals.nonDiplomes.dontSortants}</td>
                                         </tr>
                                     </tbody>
                                 </table>

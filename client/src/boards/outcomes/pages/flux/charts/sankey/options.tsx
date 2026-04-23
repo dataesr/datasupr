@@ -30,7 +30,7 @@ const SITUATION_COLOR_KEYS: Record<string, string> = {
     SIT10: "outcomes-autres",
     SIT11: "outcomes-ecoles",
     SIT12: "outcomes-autres",
-    SIT13: "outcomes-sortants",
+    SIT13: "outcomes-sortants-diplomes",
 };
 
 const SITUATION_ORDER: Record<string, number> = {
@@ -151,6 +151,7 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
     const sorted = sortLinks(links);
     const seriesData = buildSeriesData(sorted);
     const nodes = buildNodes(sorted);
+    const usedYears = Array.from(new Set(nodes.map((node) => node.column))).sort((a, b) => a - b);
     const nodeNames = new Map<string, string>(nodes.map((node) => [node.id, node.name]));
     const incomingByNode = new Map<string, number>();
     const outgoingByNode = new Map<string, number>();
@@ -174,7 +175,49 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
     const totalStudentsBase = totalStudents > 0 ? totalStudents : totalVisibleFlow;
 
     return {
-        chart: { height: 800, backgroundColor: "transparent" },
+        chart: {
+            height: 800,
+            backgroundColor: "transparent",
+            spacingBottom: 80,
+            events: {
+                render() {
+                    const chart = this as any;
+                    const sankeySeries = chart?.series?.find((serie: any) => serie.type === "sankey");
+
+                    if (chart.outcomesYearLabelsGroup) {
+                        chart.outcomesYearLabelsGroup.destroy();
+                        chart.outcomesYearLabelsGroup = null;
+                    }
+
+                    if (!sankeySeries?.nodes?.length) return;
+
+                    const group = chart.renderer.g("outcomes-year-labels").add();
+                    const y = chart.plotTop + chart.plotHeight + 26;
+
+                    usedYears.forEach((year) => {
+                        const yearNodes = sankeySeries.nodes
+                            .filter((node: any) => node?.column === year && node?.shapeArgs)
+                            .map((node: any) => node.shapeArgs.x + node.shapeArgs.width / 2);
+
+                        if (!yearNodes.length) return;
+
+                        const x = yearNodes.reduce((sum: number, value: number) => sum + value, 0) / yearNodes.length;
+
+                        chart.renderer
+                            .text(YEAR_LABELS[year] || `N+${year}`, x, y)
+                            .css({
+                                color: getCssColor("text-title-grey"),
+                                fontSize: "12px",
+                                fontWeight: "600",
+                            })
+                            .attr({ align: "center", zIndex: 5 })
+                            .add(group);
+                    });
+
+                    chart.outcomesYearLabelsGroup = group;
+                },
+            },
+        },
         accessibility: {
             point: {
                 valueDescriptionFormat: "{index}. {point.fromNode.name} vers {point.toNode.name}, {point.weight} étudiants.",
@@ -192,7 +235,8 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
                         return (this as any).point.name;
                     },
                     style: {
-                        color: getCssColor("text-default-grey"),
+                        color: getCssColor("text-title-grey"),
+                        fontWeight: "600",
                         textOutline: "none",
                     },
                 },
