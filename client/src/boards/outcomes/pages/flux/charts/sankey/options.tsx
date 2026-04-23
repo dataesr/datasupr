@@ -92,9 +92,18 @@ function normalizeRelativeYear(value: unknown): number | null {
     return Number.isInteger(parsed) ? parsed : null;
 }
 
-function buildNodes(links: OutcomesFluxLink[]) {
+function buildNodes(
+    links: OutcomesFluxLink[],
+    yearToColumnIndex: Map<number, number>
+) {
     const seen = new Set<string>();
-    const nodes: Array<{ color: string; column: number; id: string; name: string }> = [];
+    const nodes: Array<{
+        color: string;
+        column: number;
+        custom: { relativeYear: number };
+        id: string;
+        name: string;
+    }> = [];
 
     links.forEach((link) => {
         [
@@ -103,6 +112,8 @@ function buildNodes(links: OutcomesFluxLink[]) {
         ].forEach(({ rel, situation }) => {
             const normalizedRel = normalizeRelativeYear(rel);
             if (normalizedRel === null || !situation) return;
+            const visualColumn = yearToColumnIndex.get(normalizedRel);
+            if (visualColumn === undefined) return;
 
             const id = getNodeId(normalizedRel, situation);
             if (seen.has(id)) return;
@@ -110,7 +121,8 @@ function buildNodes(links: OutcomesFluxLink[]) {
             seen.add(id);
             nodes.push({
                 color: resolveTokenColor(SITUATION_COLOR_KEYS[situation] || "scale-3"),
-                column: normalizedRel,
+                column: visualColumn,
+                custom: { relativeYear: normalizedRel },
                 id,
                 name: getSituationLabel(situation),
             });
@@ -170,8 +182,26 @@ function formatNumber(value: number) {
 export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0) {
     const sorted = sortLinks(links);
     const seriesData = buildSeriesData(sorted);
-    const nodes = buildNodes(sorted);
-    const usedYears = Array.from(new Set(nodes.map((node) => node.column))).sort((a, b) => a - b);
+    const usedYears = Array.from(
+        new Set(
+            sorted.flatMap((link) => {
+                const years: number[] = [];
+                const sourceRel = normalizeRelativeYear(link.source_rel);
+                const targetRel = normalizeRelativeYear(link.target_rel);
+                if (sourceRel !== null) years.push(sourceRel);
+                if (targetRel !== null) years.push(targetRel);
+                return years;
+            })
+        )
+    ).sort((a, b) => a - b);
+    const yearToColumnIndex = new Map<number, number>(
+        usedYears.map((year, index) => [year, index])
+    );
+    const columnIndexToYear = new Map<number, number>(
+        usedYears.map((year, index) => [index, year])
+    );
+    const nodes = buildNodes(sorted, yearToColumnIndex);
+    const usedColumns = Array.from(new Set(nodes.map((node) => node.column))).sort((a, b) => a - b);
     const nodeNames = new Map<string, string>(nodes.map((node) => [node.id, node.name]));
     const incomingByNode = new Map<string, number>();
     const outgoingByNode = new Map<string, number>();
@@ -199,6 +229,8 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
             height: 800,
             backgroundColor: "transparent",
             spacingBottom: 120,
+            spacingLeft: 24,
+            spacingRight: 24,
             events: {
                 render() {
                     const chart = this as any;
@@ -213,20 +245,31 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
 
                     const group = chart.renderer.g("outcomes-year-labels").add();
                     const y = chart.plotTop + chart.plotHeight + 10;
-                    const minX = chart.plotLeft + 4;
-                    const maxX = chart.plotLeft + chart.plotWidth - 4;
+                    const viewportPadding = 12;
+                    const minCenterX = chart.plotLeft + 12;
+                    const maxCenterX = chart.plotLeft + chart.plotWidth - 12;
+                    const viewportMinX = viewportPadding;
+                    const viewportMaxX = chart.chartWidth - viewportPadding;
 
-                    usedYears.forEach((year) => {
+                    usedColumns.forEach((columnIndex) => {
                         const yearNodes = sankeySeries.nodes
-                            .filter((node: any) => node?.column === year && node?.shapeArgs)
+                            .filter((node: any) => node?.column === columnIndex && node?.shapeArgs)
                             .map((node: any) => node.shapeArgs.x + node.shapeArgs.width / 2);
 
                         if (!yearNodes.length) return;
 
                         const x = yearNodes.reduce((sum: number, value: number) => sum + value, 0) / yearNodes.length;
+                        const relativeYear = columnIndexToYear.get(columnIndex);
+                        const baseX = Math.max(minCenterX, Math.min(maxCenterX, x));
 
                         const textEl = chart.renderer
-                            .text(YEAR_LABELS[year] || `N+${year}`, x, y)
+                            .text(
+                                typeof relativeYear === "number"
+                                    ? YEAR_LABELS[relativeYear] || `N+${relativeYear}`
+                                    : `N+${columnIndex}`,
+                                baseX,
+                                y
+                            )
                             .css({
                                 color: resolveTokenColor("text-title-grey"),
                                 fontSize: "12px",
@@ -236,10 +279,13 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
                             .add(group);
 
                         const box = textEl.getBBox();
-                        if (box.x < minX) {
-                            textEl.attr({ x: x + (minX - box.x) });
-                        } else if (box.x + box.width > maxX) {
-                            textEl.attr({ x: x - ((box.x + box.width) - maxX) });
+                        const halfWidth = box.width / 2;
+                        const clampedX = Math.max(
+                            viewportMinX + halfWidth,
+                            Math.min(viewportMaxX - halfWidth, baseX)
+                        );
+                        if (Math.abs(clampedX - baseX) > 0.1) {
+                            textEl.attr({ x: clampedX });
                         }
                     });
 
@@ -301,8 +347,14 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
                 const isNode = !p.from && !p.to;
 
                 if (isNode) {
-                    if (p.column === 0) {
-                        const yearLabel = YEAR_LABELS[p.column as number] || `N+${p.column}`;
+                    const relativeYear = Number(
+                        p?.options?.custom?.relativeYear ??
+                        p?.custom?.relativeYear ??
+                        columnIndexToYear.get(Number(p.column))
+                    );
+
+                    if (relativeYear === 0) {
+                        const yearLabel = YEAR_LABELS[relativeYear] || `N+${relativeYear}`;
                         return `${p.name} - ${yearLabel}`;
                     }
 
@@ -311,7 +363,9 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
                     const outgoing = outgoingByNode.get(nodeId) || 0;
                     const nodeTotal = Math.max(incoming, outgoing);
                     const nodePart = totalStudentsBase > 0 ? (nodeTotal / totalStudentsBase) * 100 : 0;
-                    const yearLabel = YEAR_LABELS[p.column as number] || `N+${p.column}`;
+                    const yearLabel = Number.isFinite(relativeYear)
+                        ? YEAR_LABELS[relativeYear] || `N+${relativeYear}`
+                        : `N+${p.column}`;
 
                     const incomingBreakdown = Array.from((incomingBreakdownByNode.get(nodeId) || new Map()).entries())
                         .sort((a, b) => b[1] - a[1]);

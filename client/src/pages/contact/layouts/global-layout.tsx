@@ -26,11 +26,14 @@ export default function GlobalLayout() {
               <div className="fr-header__brand fr-enlarge-link">
                 <div className="fr-header__brand-top">
                   <Logo text={import.meta.env.VITE_MINISTER_NAME} />
-                  <Service
-                    href="/"
-                    name="#dataESR tableaux de bord - Contact"
-                  />
                 </div>
+              </div>
+              <div className="fr-header__service">
+                <Service
+                  href="/"
+                  name="#dataESR tableaux de bord"
+                  tagline="Contact"
+                />
               </div>
             </div>
           </div>

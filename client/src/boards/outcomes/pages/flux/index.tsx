@@ -300,7 +300,7 @@ export default function FluxPage() {
                             />
                         )}
 
-                        <div className="outcomes-flux-page__params fr-mt-3w fr-mb-3w">
+                        <div className="outcomes-flux-page__params outcomes-flux-page__params--after-chart">
                             <Title as="h2" look="h5" className="fr-mb-2w">Paramètres pour les flux</Title>
                             <Row gutters>
                                 <Col md={6}>

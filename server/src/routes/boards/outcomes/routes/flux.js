@@ -42,9 +42,12 @@ function parseRelativeYears(rawRelativeYears) {
     return DEFAULT_RELATIVE_YEARS;
   }
 
+  const minYear = Math.min(...parsedRelativeYears);
   const maxYear = Math.max(...parsedRelativeYears);
 
-  return DEFAULT_RELATIVE_YEARS.filter((year) => year <= maxYear);
+  return DEFAULT_RELATIVE_YEARS.filter(
+    (year) => year >= minYear && year <= maxYear
+  );
 }
 
 function parseMinValue(rawMinValue) {

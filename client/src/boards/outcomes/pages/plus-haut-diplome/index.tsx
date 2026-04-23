@@ -1,4 +1,5 @@
 import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
+import { useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
@@ -94,8 +95,21 @@ function formatNumber(n: number): string {
     return n.toLocaleString("fr-FR");
 }
 
+function formatPercent(n: number): string {
+    return `${n.toLocaleString("fr-FR", {
+        minimumFractionDigits: 1,
+        maximumFractionDigits: 1,
+    })}%`;
+}
+
+function formatCsvCell(value: string | number) {
+    const stringValue = String(value ?? "").replaceAll('"', '""');
+    return `"${stringValue}"`;
+}
+
 export default function PlusHautDiplomePage() {
     const [searchParams, setSearchParams] = useSearchParams();
+    const [barMode, setBarMode] = useState<"percent" | "effectif">("percent");
 
     const filters = {
         groupe_disciplinaire: searchParams.get("groupe_disciplinaire"),
@@ -154,6 +168,81 @@ export default function PlusHautDiplomePage() {
     const lastYearLabel = data ? (YEAR_LABELS[data.lastYear] || `N+${data.lastYear}`) : "2023-2024";
     const diplomaYearLabel = lastYearLabel;
 
+    const visualRows = useMemo(() => {
+        if (!data?.rows?.length) {
+            return [] as Array<{
+                diplome: string;
+                effectif: number;
+                share: number;
+            }>;
+        }
+
+        return data.rows
+            .map((row) => ({
+                diplome: row.diplome,
+                effectif: Number(row.effectif) || 0,
+                share: Number(row.pourcentage) || 0,
+            }))
+            .sort((a, b) => b.effectif - a.effectif);
+    }, [data?.rows]);
+
+    const maxRowEffectif = useMemo(
+        () => visualRows.reduce((max, row) => Math.max(max, row.effectif), 0),
+        [visualRows]
+    );
+
+    const exportCsv = () => {
+        if (!data?.rows?.length) return;
+
+        const header = [
+            `Plus haut diplôme obtenu en ${diplomaYearLabel} dont :`,
+            "Effectif",
+            "Pourcentage",
+            `dont inscrits en ${lastYearLabel} (%)`,
+            `dont sortants en ${lastYearLabel} (%)`,
+        ];
+
+        const rows = data.rows.map((row) => [
+            row.diplome,
+            formatNumber(row.effectif),
+            row.pourcentage,
+            row.dontInscrits,
+            row.dontSortants,
+        ]);
+
+        rows.push([
+            "Total de diplômés",
+            formatNumber(data.totals.diplomes.effectif),
+            data.totals.diplomes.pourcentage,
+            data.totals.diplomes.dontInscrits,
+            data.totals.diplomes.dontSortants,
+        ]);
+
+        rows.push([
+            "Total de non diplômés",
+            formatNumber(data.totals.nonDiplomes.effectif),
+            data.totals.nonDiplomes.pourcentage,
+            data.totals.nonDiplomes.dontInscrits,
+            data.totals.nonDiplomes.dontSortants,
+        ]);
+
+        const csvContent = [
+            header.map((value) => formatCsvCell(value)).join(";"),
+            ...rows.map((row) => row.map((value) => formatCsvCell(value)).join(";")),
+        ].join("\n");
+
+        const blob = new Blob([`\uFEFF${csvContent}`], { type: "text/csv;charset=utf-8;" });
+        const link = document.createElement("a");
+        const url = URL.createObjectURL(blob);
+        link.setAttribute("href", url);
+        link.setAttribute("download", "plus-haut-diplome.csv");
+        link.style.visibility = "hidden";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
     return (
         <Container className="outcomes-section-page outcomes-flux-page">
             <Row gutters>
@@ -189,6 +278,13 @@ export default function PlusHautDiplomePage() {
                         <Title as="h1" look="h3">
                             Le plus haut diplôme obtenu atteint en {diplomaYearLabel}
                         </Title>
+                        {!isLoading && !error && data && data.rows.length > 0 && (
+                            <div className="fr-mb-2w" style={{ textAlign: "right" }}>
+                                <Button icon="file-download-line" onClick={exportCsv}>
+                                    Export des données
+                                </Button>
+                            </div>
+                        )}
                         {activeFiltersElement}
 
                         {isLoading && <DefaultSkeleton height="400px" />}
@@ -202,6 +298,95 @@ export default function PlusHautDiplomePage() {
                                 Aucune donnée disponible avec les filtres actuellement sélectionnés.
                             </Callout>
                         )}
+                        {!isLoading && !error && data && data.rows.length > 0 && (
+                            <div className="outcomes-plus-diplome-visual fr-mb-3w fr-p-2w">
+                                <div className="outcomes-plus-diplome-visual__kpis fr-mb-2w">
+                                    <div className="outcomes-plus-diplome-visual__kpi-card fr-p-2w">
+                                        <p className="outcomes-plus-diplome-visual__kpi-label">Néo-bacheliers inscrits en L1 en 2019</p>
+                                        <p className="outcomes-plus-diplome-visual__kpi-value">{formatNumber(data.totalStudents)}</p>
+                                    </div>
+                                    <div className="outcomes-plus-diplome-visual__kpi-card fr-p-2w">
+                                        <p className="outcomes-plus-diplome-visual__kpi-label">Diplômés en {diplomaYearLabel}</p>
+                                        <p className="outcomes-plus-diplome-visual__kpi-value">{formatNumber(data.totals.diplomes.effectif)}</p>
+                                    </div>
+                                    <div className="outcomes-plus-diplome-visual__kpi-card fr-p-2w">
+                                        <p className="outcomes-plus-diplome-visual__kpi-label">Non diplômés en {diplomaYearLabel}</p>
+                                        <p className="outcomes-plus-diplome-visual__kpi-value">{formatNumber(data.totals.nonDiplomes.effectif)}</p>
+                                    </div>
+                                </div>
+
+                                <div className="outcomes-plus-diplome-visual__split fr-mb-3w" aria-label="Répartition diplômés et non diplômés">
+                                    <div
+                                        className="outcomes-plus-diplome-visual__split-segment outcomes-plus-diplome-visual__split-segment--diplomes fr-p-1w"
+                                        style={{ width: `${Math.max(0, Math.min(100, Number(data.totals.diplomes.pourcentage) || 0))}%` }}
+                                    >
+                                        Diplômés {formatPercent(Number(data.totals.diplomes.pourcentage) || 0)}
+                                    </div>
+                                    <div
+                                        className="outcomes-plus-diplome-visual__split-segment outcomes-plus-diplome-visual__split-segment--non-diplomes fr-p-1w"
+                                        style={{ width: `${Math.max(0, Math.min(100, Number(data.totals.nonDiplomes.pourcentage) || 0))}%` }}
+                                    >
+                                        Non diplômés {formatPercent(Number(data.totals.nonDiplomes.pourcentage) || 0)}
+                                    </div>
+                                </div>
+
+                                <div className="outcomes-plus-diplome-visual__header fr-mb-1w">
+                                    <Title as="h2" look="h6" className="fr-mb-0">Répartition par diplôme</Title>
+                                    <div className="outcomes-plus-diplome-visual__toggle" role="group" aria-label="Mode d'affichage des barres">
+                                        <button
+                                            type="button"
+                                            className={`fr-btn fr-btn--sm ${barMode === "percent" ? "" : "fr-btn--tertiary"}`}
+                                            aria-pressed={barMode === "percent"}
+                                            onClick={() => setBarMode("percent")}
+                                        >
+                                            En %
+                                        </button>
+                                        <button
+                                            type="button"
+                                            className={`fr-btn fr-btn--sm ${barMode === "effectif" ? "" : "fr-btn--tertiary"}`}
+                                            aria-pressed={barMode === "effectif"}
+                                            onClick={() => setBarMode("effectif")}
+                                        >
+                                            En effectifs
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div className="outcomes-plus-diplome-visual__rows">
+                                    {visualRows.map((row) => {
+                                        const width = barMode === "percent"
+                                            ? row.share
+                                            : maxRowEffectif > 0
+                                                ? (row.effectif / maxRowEffectif) * 100
+                                                : 0;
+                                        const safeWidth = Math.max(0, Math.min(100, width));
+                                        const valueLabel = barMode === "percent"
+                                            ? formatPercent(row.share)
+                                            : formatNumber(row.effectif);
+
+                                        return (
+                                            <div key={row.diplome} className="outcomes-plus-diplome-visual__row">
+                                                <div className="outcomes-plus-diplome-visual__row-head">
+                                                    <span className="outcomes-plus-diplome-visual__row-title">{row.diplome}</span>
+                                                    <span className="outcomes-plus-diplome-visual__row-meta">
+                                                        {formatNumber(row.effectif)} ({formatPercent(row.share)})
+                                                    </span>
+                                                </div>
+                                                <div className="outcomes-plus-diplome-visual__bar">
+                                                    <div
+                                                        className="outcomes-plus-diplome-visual__bar-fill"
+                                                        style={{ width: `${safeWidth}%` }}
+                                                    >
+                                                        {valueLabel}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        )}
+
                         {!isLoading && !error && data && data.rows.length > 0 && (
                             <div className="fr-table">
                                 <table>
