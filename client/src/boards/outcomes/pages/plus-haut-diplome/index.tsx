@@ -10,6 +10,7 @@ import {
     useOutcomesPlusHautDiplome,
 } from "../../api";
 import DiplomaDonut from "./charts/diploma-donut";
+import BreakdownRow from "./components/breakdown-row.tsx";
 
 const DEFAULT_COHORT_YEAR = "2019-2020";
 const DEFAULT_COHORT_SITUATION = "L1";
@@ -68,10 +69,6 @@ function formatNumber(n: number): string {
     return Math.round(n).toLocaleString("fr-FR");
 }
 
-function formatPercent(n: number): string {
-    return `${Number(n).toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
-}
-
 function formatCsvCell(value: string | number): string {
     return `"${String(value ?? "").replaceAll('"', '""')}"`;
 }
@@ -104,52 +101,6 @@ function DiplomaFilter({
                     </option>
                 ))}
             </select>
-        </div>
-    );
-}
-
-function BreakdownRow({
-    option,
-    sectionTotal,
-    mode,
-}: {
-    option: OutcomesFilterOption;
-    sectionTotal: number;
-    mode: "percent" | "effectif";
-}) {
-    const dipl = option.dipl ?? 0;
-    const ndipl = option.ndipl ?? 0;
-    const total = dipl + ndipl;
-    if (total <= 0) return null;
-
-    const diplShare = (dipl / total) * 100;
-    const ndiplShare = (ndipl / total) * 100;
-    const populationShare = sectionTotal > 0 ? (total / sectionTotal) * 100 : 0;
-
-    const leftLabel = mode === "percent" ? formatPercent(diplShare) : formatNumber(dipl);
-    const rightLabel = mode === "percent" ? formatPercent(ndiplShare) : formatNumber(ndipl);
-
-    return (
-        <div className="outcomes-phd__row fr-mb-2w">
-            <p className="fr-text--sm fr-mb-1v">
-                <b>{option.label}</b> — {formatNumber(total)} ({formatPercent(populationShare)} de la population observée)
-            </p>
-            <div
-                className="outcomes-phd__bar"
-                role="img"
-                aria-label={`${option.label} : ${formatNumber(dipl)} diplômés, ${formatNumber(ndipl)} non diplômés`}
-            >
-                <div className="outcomes-phd__bar-fill outcomes-phd__bar-fill--dipl" style={{ width: `${diplShare}%` }}>
-                    <span>{leftLabel}</span>
-                </div>
-                <div className="outcomes-phd__bar-fill outcomes-phd__bar-fill--ndipl" style={{ width: `${ndiplShare}%` }}>
-                    <span>{rightLabel}</span>
-                </div>
-            </div>
-            <div className="outcomes-phd__row-footer fr-text--xs fr-mt-1v">
-                <span>{formatNumber(dipl)} diplômés</span>
-                <span>{formatNumber(ndipl)} non diplômés</span>
-            </div>
         </div>
     );
 }
@@ -298,7 +249,51 @@ export default function PlusHautDiplomePage() {
 
                         {hasData && (
                             <>
-                                <div className="outcomes-phd__kpis fr-mb-2w">
+                                <div className="outcomes-phd__table-actions fr-mb-1w">
+                                    <Button icon="file-download-line" onClick={exportCsv} size="sm">
+                                        Export des données
+                                    </Button>
+                                </div>
+                                <div className="fr-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Plus haut diplôme obtenu en {lastYearLabel} dont :</th>
+                                                <th scope="col" className="outcomes-phd__cell--right">Effectif</th>
+                                                <th scope="col" className="outcomes-phd__cell--right">Pourcentage</th>
+                                                <th scope="col" className="outcomes-phd__cell--right">dont inscrits en {lastYearLabel} (%)</th>
+                                                <th scope="col" className="outcomes-phd__cell--right">dont sortants en {lastYearLabel} (%)</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {data.rows.map((row) => (
+                                                <tr key={row.diplome}>
+                                                    <td>{row.diplome}</td>
+                                                    <td className="outcomes-phd__cell--right">{formatNumber(row.effectif)}</td>
+                                                    <td className="outcomes-phd__cell--right">{row.pourcentage}</td>
+                                                    <td className="outcomes-phd__cell--right">{row.dontInscrits}</td>
+                                                    <td className="outcomes-phd__cell--right">{row.dontSortants}</td>
+                                                </tr>
+                                            ))}
+                                            <tr className="fr-text--bold">
+                                                <td>Total de diplômés</td>
+                                                <td className="outcomes-phd__cell--right">{formatNumber(data.totals.diplomes.effectif)}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.diplomes.pourcentage}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.diplomes.dontInscrits}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.diplomes.dontSortants}</td>
+                                            </tr>
+                                            <tr className="fr-text--bold">
+                                                <td>Total de non diplômés</td>
+                                                <td className="outcomes-phd__cell--right">{formatNumber(data.totals.nonDiplomes.effectif)}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.nonDiplomes.pourcentage}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.nonDiplomes.dontInscrits}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.nonDiplomes.dontSortants}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div className="outcomes-phd__kpis fr-mb-2w fr-mt-3w">
                                     <div className="outcomes-phd__kpi fr-p-2w">
                                         <p className="fr-text--sm fr-mb-1v">Néo-bacheliers inscrits en L1 en 2019</p>
                                         <p className="fr-h4 fr-mb-0">{formatNumber(data.totalStudents)}</p>
@@ -343,14 +338,28 @@ export default function PlusHautDiplomePage() {
 
                                 {BREAKDOWN_SECTIONS.map(({ title, field }) => {
                                     const options = data.filterOptions?.[field] || [];
-                                    const withData = options.filter((o) => (o.dipl ?? 0) + (o.ndipl ?? 0) > 0);
+                                    const activeKey = filters[field];
+                                    const filteredOptions = activeKey
+                                        ? options.filter((o) => o.key === activeKey)
+                                        : options;
+                                    const withData = filteredOptions.filter((o) => (o.dipl ?? 0) + (o.ndipl ?? 0) > 0);
                                     if (!withData.length) return null;
                                     const sectionTotal = withData.reduce((sum, o) => sum + (o.dipl ?? 0) + (o.ndipl ?? 0), 0);
+                                    const sectionMax = withData.reduce(
+                                        (max, o) => Math.max(max, (o.dipl ?? 0) + (o.ndipl ?? 0)),
+                                        0,
+                                    );
                                     return (
                                         <section key={field} className="fr-mb-3w">
                                             <Title as="h3" look="h6" className="fr-mb-2w">{title}</Title>
                                             {withData.map((opt) => (
-                                                <BreakdownRow key={opt.key} option={opt} sectionTotal={sectionTotal} mode={barMode} />
+                                                <BreakdownRow
+                                                    key={opt.key}
+                                                    option={opt}
+                                                    sectionTotal={sectionTotal}
+                                                    sectionMax={sectionMax}
+                                                    mode={barMode}
+                                                />
                                             ))}
                                         </section>
                                     );
@@ -359,50 +368,6 @@ export default function PlusHautDiplomePage() {
                                 <div className="outcomes-phd__legend fr-text--xs fr-mb-2w">
                                     <span className="outcomes-phd__legend-dot outcomes-phd__legend-dot--dipl" aria-hidden="true" /> Diplômés
                                     <span className="outcomes-phd__legend-dot outcomes-phd__legend-dot--ndipl" aria-hidden="true" /> Non diplômés
-                                </div>
-
-                                <div className="outcomes-phd__table-actions fr-mb-1w">
-                                    <Button icon="file-download-line" onClick={exportCsv} size="sm">
-                                        Export des données
-                                    </Button>
-                                </div>
-                                <div className="fr-table">
-                                    <table>
-                                        <thead>
-                                            <tr>
-                                                <th scope="col">Plus haut diplôme obtenu en {lastYearLabel} dont :</th>
-                                                <th scope="col" className="outcomes-phd__cell--right">Effectif</th>
-                                                <th scope="col" className="outcomes-phd__cell--right">Pourcentage</th>
-                                                <th scope="col" className="outcomes-phd__cell--right">dont inscrits en {lastYearLabel} (%)</th>
-                                                <th scope="col" className="outcomes-phd__cell--right">dont sortants en {lastYearLabel} (%)</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {data.rows.map((row) => (
-                                                <tr key={row.diplome}>
-                                                    <td>{row.diplome}</td>
-                                                    <td className="outcomes-phd__cell--right">{formatNumber(row.effectif)}</td>
-                                                    <td className="outcomes-phd__cell--right">{row.pourcentage}</td>
-                                                    <td className="outcomes-phd__cell--right">{row.dontInscrits}</td>
-                                                    <td className="outcomes-phd__cell--right">{row.dontSortants}</td>
-                                                </tr>
-                                            ))}
-                                            <tr className="fr-text--bold">
-                                                <td>Total de diplômés</td>
-                                                <td className="outcomes-phd__cell--right">{formatNumber(data.totals.diplomes.effectif)}</td>
-                                                <td className="outcomes-phd__cell--right">{data.totals.diplomes.pourcentage}</td>
-                                                <td className="outcomes-phd__cell--right">{data.totals.diplomes.dontInscrits}</td>
-                                                <td className="outcomes-phd__cell--right">{data.totals.diplomes.dontSortants}</td>
-                                            </tr>
-                                            <tr className="fr-text--bold">
-                                                <td>Total de non diplômés</td>
-                                                <td className="outcomes-phd__cell--right">{formatNumber(data.totals.nonDiplomes.effectif)}</td>
-                                                <td className="outcomes-phd__cell--right">{data.totals.nonDiplomes.pourcentage}</td>
-                                                <td className="outcomes-phd__cell--right">{data.totals.nonDiplomes.dontInscrits}</td>
-                                                <td className="outcomes-phd__cell--right">{data.totals.nonDiplomes.dontSortants}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
                                 </div>
                             </>
                         )}
