@@ -14,6 +14,8 @@ export type OutcomesFilterField =
 
 export type OutcomesFilterOption = {
   count: number;
+  dipl?: number;
+  ndipl?: number;
   key: string;
   label: string;
 };

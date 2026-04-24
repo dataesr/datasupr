@@ -1,10 +1,15 @@
 import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import Callout from "../../../../components/callout.tsx";
-import { type OutcomesFilterField, useOutcomesPlusHautDiplome } from "../../api";
+import {
+    type OutcomesFilterField,
+    type OutcomesFilterOption,
+    useOutcomesPlusHautDiplome,
+} from "../../api";
+import DiplomaDonut from "./charts/diploma-donut";
 
 const DEFAULT_COHORT_YEAR = "2019-2020";
 const DEFAULT_COHORT_SITUATION = "L1";
@@ -16,17 +21,6 @@ const YEAR_LABELS: Record<number, string> = {
     3: "2022-2023",
     4: "2023-2024",
 };
-
-const FILTER_FIELDS: OutcomesFilterField[] = [
-    "groupe_disciplinaire",
-    "sexe",
-    "origine_sociale",
-    "bac_type",
-    "bac_mention",
-    "retard_scolaire",
-    "devenir_en_un_an",
-    "type_de_trajectoire",
-];
 
 const FILTER_SECTIONS: Array<{
     title: string;
@@ -46,7 +40,7 @@ const FILTER_SECTIONS: Array<{
         {
             title: "Informations sur le baccalauréat",
             fields: [
-                { field: "bac_type", label: "Type" },
+                { field: "bac_type", label: "Type de baccalauréat" },
                 { field: "bac_mention", label: "Mention obtenue" },
                 { field: "retard_scolaire", label: "Retard scolaire" },
             ],
@@ -60,6 +54,28 @@ const FILTER_SECTIONS: Array<{
         },
     ];
 
+const FILTER_FIELDS: OutcomesFilterField[] = FILTER_SECTIONS.flatMap((s) => s.fields.map((f) => f.field));
+
+const BREAKDOWN_SECTIONS: Array<{ title: string; field: OutcomesFilterField }> = [
+    { title: "Par groupe disciplinaire", field: "groupe_disciplinaire" },
+    { title: "Par sexe", field: "sexe" },
+    { title: "Par origine sociale", field: "origine_sociale" },
+    { title: "Par type de bac", field: "bac_type" },
+    { title: "Par retard scolaire", field: "retard_scolaire" },
+];
+
+function formatNumber(n: number): string {
+    return Math.round(n).toLocaleString("fr-FR");
+}
+
+function formatPercent(n: number): string {
+    return `${Number(n).toLocaleString("fr-FR", { minimumFractionDigits: 1, maximumFractionDigits: 1 })}%`;
+}
+
+function formatCsvCell(value: string | number): string {
+    return `"${String(value ?? "").replaceAll('"', '""')}"`;
+}
+
 function DiplomaFilter({
     label,
     options,
@@ -67,16 +83,17 @@ function DiplomaFilter({
     onSelect,
 }: {
     label: string;
-    options: Array<{ count: number; key: string; label: string }>;
+    options: OutcomesFilterOption[];
     selectedKey: string | null;
     onSelect: (value: string | null) => void;
 }) {
+    const id = `filter-${label}`;
     return (
         <div className="fr-select-group fr-mb-2w">
-            <label className="fr-label" htmlFor={`filter-${label}`}>{label}</label>
+            <label className="fr-label" htmlFor={id}>{label}</label>
             <select
                 className="fr-select"
-                id={`filter-${label}`}
+                id={id}
                 value={selectedKey || ""}
                 onChange={(e) => onSelect(e.target.value || null)}
             >
@@ -91,36 +108,60 @@ function DiplomaFilter({
     );
 }
 
-function formatNumber(n: number): string {
-    return n.toLocaleString("fr-FR");
-}
+function BreakdownRow({
+    option,
+    sectionTotal,
+    mode,
+}: {
+    option: OutcomesFilterOption;
+    sectionTotal: number;
+    mode: "percent" | "effectif";
+}) {
+    const dipl = option.dipl ?? 0;
+    const ndipl = option.ndipl ?? 0;
+    const total = dipl + ndipl;
+    if (total <= 0) return null;
 
-function formatPercent(n: number): string {
-    return `${n.toLocaleString("fr-FR", {
-        minimumFractionDigits: 1,
-        maximumFractionDigits: 1,
-    })}%`;
-}
+    const diplShare = (dipl / total) * 100;
+    const ndiplShare = (ndipl / total) * 100;
+    const populationShare = sectionTotal > 0 ? (total / sectionTotal) * 100 : 0;
 
-function formatCsvCell(value: string | number) {
-    const stringValue = String(value ?? "").replaceAll('"', '""');
-    return `"${stringValue}"`;
+    const leftLabel = mode === "percent" ? formatPercent(diplShare) : formatNumber(dipl);
+    const rightLabel = mode === "percent" ? formatPercent(ndiplShare) : formatNumber(ndipl);
+
+    return (
+        <div className="outcomes-phd__row fr-mb-2w">
+            <p className="fr-text--sm fr-mb-1v">
+                <b>{option.label}</b> — {formatNumber(total)} ({formatPercent(populationShare)} de la population observée)
+            </p>
+            <div
+                className="outcomes-phd__bar"
+                role="img"
+                aria-label={`${option.label} : ${formatNumber(dipl)} diplômés, ${formatNumber(ndipl)} non diplômés`}
+            >
+                <div className="outcomes-phd__bar-fill outcomes-phd__bar-fill--dipl" style={{ width: `${diplShare}%` }}>
+                    <span>{leftLabel}</span>
+                </div>
+                <div className="outcomes-phd__bar-fill outcomes-phd__bar-fill--ndipl" style={{ width: `${ndiplShare}%` }}>
+                    <span>{rightLabel}</span>
+                </div>
+            </div>
+            <div className="outcomes-phd__row-footer fr-text--xs fr-mt-1v">
+                <span>{formatNumber(dipl)} diplômés</span>
+                <span>{formatNumber(ndipl)} non diplômés</span>
+            </div>
+        </div>
+    );
 }
 
 export default function PlusHautDiplomePage() {
     const [searchParams, setSearchParams] = useSearchParams();
     const [barMode, setBarMode] = useState<"percent" | "effectif">("percent");
 
-    const filters = {
-        groupe_disciplinaire: searchParams.get("groupe_disciplinaire"),
-        sexe: searchParams.get("sexe"),
-        origine_sociale: searchParams.get("origine_sociale"),
-        bac_type: searchParams.get("bac_type"),
-        bac_mention: searchParams.get("bac_mention"),
-        retard_scolaire: searchParams.get("retard_scolaire"),
-        devenir_en_un_an: searchParams.get("devenir_en_un_an"),
-        type_de_trajectoire: searchParams.get("type_de_trajectoire"),
-    };
+    const filters = FILTER_FIELDS.reduce<Partial<Record<OutcomesFilterField, string | null>>>((acc, field) => {
+        acc[field] = searchParams.get(field);
+        return acc;
+    }, {});
 
     const cohortYear = searchParams.get("cohorte_annee") || DEFAULT_COHORT_YEAR;
     const cohortSituation = searchParams.get("cohorte_situation") || DEFAULT_COHORT_SITUATION;
@@ -131,31 +172,10 @@ export default function PlusHautDiplomePage() {
         filters,
     });
 
-    const activeFiltersElement = (() => {
-        const tags = FILTER_SECTIONS.flatMap(s =>
-            s.fields.filter(f => filters[f.field]).map(f => {
-                const code = filters[f.field]!;
-                const displayLabel = data?.filterOptions?.[f.field]?.find((o) => o.key === code)?.label || code;
-                return { field: f.field, label: f.label, value: displayLabel };
-            })
-        );
-        if (!tags.length) return null;
-        return (
-            <TagGroup className="fr-mt-1w fr-mb-1w">
-                {tags.map(({ field, label, value }) => (
-                    <DismissibleTag key={field} size="sm" onClick={() => updateFilter(field, null)}>{label} : {value}</DismissibleTag>
-                ))}
-            </TagGroup>
-        );
-    })();
-
     const updateFilter = (field: OutcomesFilterField, value: string | null) => {
         const nextParams = new URLSearchParams(searchParams);
-        if (value) {
-            nextParams.set(field, value);
-        } else {
-            nextParams.delete(field);
-        }
+        if (value) nextParams.set(field, value);
+        else nextParams.delete(field);
         setSearchParams(nextParams);
     };
 
@@ -165,51 +185,42 @@ export default function PlusHautDiplomePage() {
         setSearchParams(nextParams);
     };
 
-    const lastYearLabel = data ? (YEAR_LABELS[data.lastYear] || `N+${data.lastYear}`) : "2023-2024";
-    const diplomaYearLabel = lastYearLabel;
+    const lastYearLabel = data ? YEAR_LABELS[data.lastYear] || `N+${data.lastYear}` : "2023-2024";
 
-    const visualRows = useMemo(() => {
-        if (!data?.rows?.length) {
-            return [] as Array<{
-                diplome: string;
-                effectif: number;
-                share: number;
-            }>;
-        }
-
-        return data.rows
-            .map((row) => ({
-                diplome: row.diplome,
-                effectif: Number(row.effectif) || 0,
-                share: Number(row.pourcentage) || 0,
-            }))
-            .sort((a, b) => b.effectif - a.effectif);
-    }, [data?.rows]);
-
-    const maxRowEffectif = useMemo(
-        () => visualRows.reduce((max, row) => Math.max(max, row.effectif), 0),
-        [visualRows]
-    );
+    const activeFiltersElement = (() => {
+        const tags = FILTER_SECTIONS.flatMap((s) =>
+            s.fields
+                .filter((f) => !!filters[f.field])
+                .map((f) => {
+                    const code = filters[f.field]!;
+                    const label = data?.filterOptions?.[f.field]?.find((o) => o.key === code)?.label || code;
+                    return { field: f.field, label: f.label, value: label };
+                })
+        );
+        if (!tags.length) return null;
+        return (
+            <TagGroup className="fr-mt-1w fr-mb-1w">
+                {tags.map(({ field, label, value }) => (
+                    <DismissibleTag key={field} size="sm" onClick={() => updateFilter(field, null)}>
+                        {label} : {value}
+                    </DismissibleTag>
+                ))}
+            </TagGroup>
+        );
+    })();
 
     const exportCsv = () => {
         if (!data?.rows?.length) return;
-
         const header = [
-            `Plus haut diplôme obtenu en ${diplomaYearLabel} dont :`,
+            `Plus haut diplôme obtenu en ${lastYearLabel} dont :`,
             "Effectif",
             "Pourcentage",
             `dont inscrits en ${lastYearLabel} (%)`,
             `dont sortants en ${lastYearLabel} (%)`,
         ];
-
-        const rows = data.rows.map((row) => [
-            row.diplome,
-            formatNumber(row.effectif),
-            row.pourcentage,
-            row.dontInscrits,
-            row.dontSortants,
+        const rows: Array<Array<string | number>> = data.rows.map((r) => [
+            r.diplome, formatNumber(r.effectif), r.pourcentage, r.dontInscrits, r.dontSortants,
         ]);
-
         rows.push([
             "Total de diplômés",
             formatNumber(data.totals.diplomes.effectif),
@@ -217,7 +228,6 @@ export default function PlusHautDiplomePage() {
             data.totals.diplomes.dontInscrits,
             data.totals.diplomes.dontSortants,
         ]);
-
         rows.push([
             "Total de non diplômés",
             formatNumber(data.totals.nonDiplomes.effectif),
@@ -225,23 +235,17 @@ export default function PlusHautDiplomePage() {
             data.totals.nonDiplomes.dontInscrits,
             data.totals.nonDiplomes.dontSortants,
         ]);
-
-        const csvContent = [
-            header.map((value) => formatCsvCell(value)).join(";"),
-            ...rows.map((row) => row.map((value) => formatCsvCell(value)).join(";")),
-        ].join("\n");
-
-        const blob = new Blob([`\uFEFF${csvContent}`], { type: "text/csv;charset=utf-8;" });
-        const link = document.createElement("a");
+        const csv = [header, ...rows].map((line) => line.map(formatCsvCell).join(";")).join("\n");
+        const blob = new Blob([`\uFEFF${csv}`], { type: "text/csv;charset=utf-8;" });
         const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", "plus-haut-diplome.csv");
-        link.style.visibility = "hidden";
-        document.body.appendChild(link);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = "plus-haut-diplome.csv";
         link.click();
-        document.body.removeChild(link);
         URL.revokeObjectURL(url);
     };
+
+    const hasData = !isLoading && !error && data && data.rows.length > 0;
 
     return (
         <Container className="outcomes-section-page outcomes-flux-page">
@@ -264,7 +268,7 @@ export default function PlusHautDiplomePage() {
                                         key={field}
                                         label={label}
                                         options={data?.filterOptions?.[field] || []}
-                                        selectedKey={filters[field]}
+                                        selectedKey={filters[field] ?? null}
                                         onSelect={(value) => updateFilter(field, value)}
                                     />
                                 ))}
@@ -276,15 +280,8 @@ export default function PlusHautDiplomePage() {
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
                         <Title as="h1" look="h3">
-                            Le plus haut diplôme obtenu atteint en {diplomaYearLabel}
+                            Le plus haut diplôme obtenu atteint en {lastYearLabel}
                         </Title>
-                        {!isLoading && !error && data && data.rows.length > 0 && (
-                            <div className="fr-mb-2w" style={{ textAlign: "right" }}>
-                                <Button icon="file-download-line" onClick={exportCsv}>
-                                    Export des données
-                                </Button>
-                            </div>
-                        )}
                         {activeFiltersElement}
 
                         {isLoading && <DefaultSkeleton height="400px" />}
@@ -298,41 +295,33 @@ export default function PlusHautDiplomePage() {
                                 Aucune donnée disponible avec les filtres actuellement sélectionnés.
                             </Callout>
                         )}
-                        {!isLoading && !error && data && data.rows.length > 0 && (
-                            <div className="outcomes-plus-diplome-visual fr-mb-3w fr-p-2w">
-                                <div className="outcomes-plus-diplome-visual__kpis fr-mb-2w">
-                                    <div className="outcomes-plus-diplome-visual__kpi-card fr-p-2w">
-                                        <p className="outcomes-plus-diplome-visual__kpi-label">Néo-bacheliers inscrits en L1 en 2019</p>
-                                        <p className="outcomes-plus-diplome-visual__kpi-value">{formatNumber(data.totalStudents)}</p>
+
+                        {hasData && (
+                            <>
+                                <div className="outcomes-phd__kpis fr-mb-2w">
+                                    <div className="outcomes-phd__kpi fr-p-2w">
+                                        <p className="fr-text--sm fr-mb-1v">Néo-bacheliers inscrits en L1 en 2019</p>
+                                        <p className="fr-h4 fr-mb-0">{formatNumber(data.totalStudents)}</p>
                                     </div>
-                                    <div className="outcomes-plus-diplome-visual__kpi-card fr-p-2w">
-                                        <p className="outcomes-plus-diplome-visual__kpi-label">Diplômés en {diplomaYearLabel}</p>
-                                        <p className="outcomes-plus-diplome-visual__kpi-value">{formatNumber(data.totals.diplomes.effectif)}</p>
+                                    <div className="outcomes-phd__kpi fr-p-2w">
+                                        <p className="fr-text--sm fr-mb-1v">Diplômés en {lastYearLabel}</p>
+                                        <p className="fr-h4 fr-mb-0">{formatNumber(data.totals.diplomes.effectif)}</p>
                                     </div>
-                                    <div className="outcomes-plus-diplome-visual__kpi-card fr-p-2w">
-                                        <p className="outcomes-plus-diplome-visual__kpi-label">Non diplômés en {diplomaYearLabel}</p>
-                                        <p className="outcomes-plus-diplome-visual__kpi-value">{formatNumber(data.totals.nonDiplomes.effectif)}</p>
+                                    <div className="outcomes-phd__kpi fr-p-2w">
+                                        <p className="fr-text--sm fr-mb-1v">Non diplômés en {lastYearLabel}</p>
+                                        <p className="fr-h4 fr-mb-0">{formatNumber(data.totals.nonDiplomes.effectif)}</p>
                                     </div>
                                 </div>
 
-                                <div className="outcomes-plus-diplome-visual__split fr-mb-3w" aria-label="Répartition diplômés et non diplômés">
-                                    <div
-                                        className="outcomes-plus-diplome-visual__split-segment outcomes-plus-diplome-visual__split-segment--diplomes fr-p-1w"
-                                        style={{ width: `${Math.max(0, Math.min(100, Number(data.totals.diplomes.pourcentage) || 0))}%` }}
-                                    >
-                                        Diplômés {formatPercent(Number(data.totals.diplomes.pourcentage) || 0)}
-                                    </div>
-                                    <div
-                                        className="outcomes-plus-diplome-visual__split-segment outcomes-plus-diplome-visual__split-segment--non-diplomes fr-p-1w"
-                                        style={{ width: `${Math.max(0, Math.min(100, Number(data.totals.nonDiplomes.pourcentage) || 0))}%` }}
-                                    >
-                                        Non diplômés {formatPercent(Number(data.totals.nonDiplomes.pourcentage) || 0)}
-                                    </div>
-                                </div>
+                                <DiplomaDonut
+                                    rows={data.rows}
+                                    nonDiplomes={data.totals.nonDiplomes}
+                                    lastYearLabel={lastYearLabel}
+                                />
 
-                                <div className="outcomes-plus-diplome-visual__header fr-mb-1w">
-                                    <Title as="h2" look="h6" className="fr-mb-0">Répartition par diplôme</Title>
-                                    <div className="outcomes-plus-diplome-visual__toggle" role="group" aria-label="Mode d'affichage des barres">
+                                <div className="outcomes-phd__header fr-mt-3w fr-mb-2w">
+                                    <Title as="h2" look="h5" className="fr-mb-0">Diplômés vs non diplômés</Title>
+                                    <div className="outcomes-phd__toggle" role="group" aria-label="Mode d'affichage des barres">
                                         <button
                                             type="button"
                                             className={`fr-btn fr-btn--sm ${barMode === "percent" ? "" : "fr-btn--tertiary"}`}
@@ -352,80 +341,70 @@ export default function PlusHautDiplomePage() {
                                     </div>
                                 </div>
 
-                                <div className="outcomes-plus-diplome-visual__rows">
-                                    {visualRows.map((row) => {
-                                        const width = barMode === "percent"
-                                            ? row.share
-                                            : maxRowEffectif > 0
-                                                ? (row.effectif / maxRowEffectif) * 100
-                                                : 0;
-                                        const safeWidth = Math.max(0, Math.min(100, width));
-                                        const valueLabel = barMode === "percent"
-                                            ? formatPercent(row.share)
-                                            : formatNumber(row.effectif);
+                                {BREAKDOWN_SECTIONS.map(({ title, field }) => {
+                                    const options = data.filterOptions?.[field] || [];
+                                    const withData = options.filter((o) => (o.dipl ?? 0) + (o.ndipl ?? 0) > 0);
+                                    if (!withData.length) return null;
+                                    const sectionTotal = withData.reduce((sum, o) => sum + (o.dipl ?? 0) + (o.ndipl ?? 0), 0);
+                                    return (
+                                        <section key={field} className="fr-mb-3w">
+                                            <Title as="h3" look="h6" className="fr-mb-2w">{title}</Title>
+                                            {withData.map((opt) => (
+                                                <BreakdownRow key={opt.key} option={opt} sectionTotal={sectionTotal} mode={barMode} />
+                                            ))}
+                                        </section>
+                                    );
+                                })}
 
-                                        return (
-                                            <div key={row.diplome} className="outcomes-plus-diplome-visual__row">
-                                                <div className="outcomes-plus-diplome-visual__row-head">
-                                                    <span className="outcomes-plus-diplome-visual__row-title">{row.diplome}</span>
-                                                    <span className="outcomes-plus-diplome-visual__row-meta">
-                                                        {formatNumber(row.effectif)} ({formatPercent(row.share)})
-                                                    </span>
-                                                </div>
-                                                <div className="outcomes-plus-diplome-visual__bar">
-                                                    <div
-                                                        className="outcomes-plus-diplome-visual__bar-fill"
-                                                        style={{ width: `${safeWidth}%` }}
-                                                    >
-                                                        {valueLabel}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
+                                <div className="outcomes-phd__legend fr-text--xs fr-mb-2w">
+                                    <span className="outcomes-phd__legend-dot outcomes-phd__legend-dot--dipl" aria-hidden="true" /> Diplômés
+                                    <span className="outcomes-phd__legend-dot outcomes-phd__legend-dot--ndipl" aria-hidden="true" /> Non diplômés
                                 </div>
-                            </div>
-                        )}
 
-                        {!isLoading && !error && data && data.rows.length > 0 && (
-                            <div className="fr-table">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">Plus haut diplôme obtenu en {diplomaYearLabel} dont :</th>
-                                            <th scope="col" style={{ textAlign: "right" }}>Effectif</th>
-                                            <th scope="col" style={{ textAlign: "right" }}>Pourcentage</th>
-                                            <th scope="col" style={{ textAlign: "right" }}>dont inscrits en {lastYearLabel} (%)</th>
-                                            <th scope="col" style={{ textAlign: "right" }}>dont sortants en {lastYearLabel} (%)</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {data.rows.map((row) => (
-                                            <tr key={row.diplome}>
-                                                <td>{row.diplome}</td>
-                                                <td style={{ textAlign: "right" }}>{formatNumber(row.effectif)}</td>
-                                                <td style={{ textAlign: "right" }}>{row.pourcentage}</td>
-                                                <td style={{ textAlign: "right" }}>{row.dontInscrits}</td>
-                                                <td style={{ textAlign: "right" }}>{row.dontSortants}</td>
+                                <div className="outcomes-phd__table-actions fr-mb-1w">
+                                    <Button icon="file-download-line" onClick={exportCsv} size="sm">
+                                        Export des données
+                                    </Button>
+                                </div>
+                                <div className="fr-table">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Plus haut diplôme obtenu en {lastYearLabel} dont :</th>
+                                                <th scope="col" className="outcomes-phd__cell--right">Effectif</th>
+                                                <th scope="col" className="outcomes-phd__cell--right">Pourcentage</th>
+                                                <th scope="col" className="outcomes-phd__cell--right">dont inscrits en {lastYearLabel} (%)</th>
+                                                <th scope="col" className="outcomes-phd__cell--right">dont sortants en {lastYearLabel} (%)</th>
                                             </tr>
-                                        ))}
-                                        <tr className="fr-text--bold">
-                                            <td>Total de diplômés</td>
-                                            <td style={{ textAlign: "right" }}>{formatNumber(data.totals.diplomes.effectif)}</td>
-                                            <td style={{ textAlign: "right" }}>{data.totals.diplomes.pourcentage}</td>
-                                            <td style={{ textAlign: "right" }}>{data.totals.diplomes.dontInscrits}</td>
-                                            <td style={{ textAlign: "right" }}>{data.totals.diplomes.dontSortants}</td>
-                                        </tr>
-                                        <tr className="fr-text--bold">
-                                            <td>Total de non diplômés</td>
-                                            <td style={{ textAlign: "right" }}>{formatNumber(data.totals.nonDiplomes.effectif)}</td>
-                                            <td style={{ textAlign: "right" }}>{data.totals.nonDiplomes.pourcentage}</td>
-                                            <td style={{ textAlign: "right" }}>{data.totals.nonDiplomes.dontInscrits}</td>
-                                            <td style={{ textAlign: "right" }}>{data.totals.nonDiplomes.dontSortants}</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                                        </thead>
+                                        <tbody>
+                                            {data.rows.map((row) => (
+                                                <tr key={row.diplome}>
+                                                    <td>{row.diplome}</td>
+                                                    <td className="outcomes-phd__cell--right">{formatNumber(row.effectif)}</td>
+                                                    <td className="outcomes-phd__cell--right">{row.pourcentage}</td>
+                                                    <td className="outcomes-phd__cell--right">{row.dontInscrits}</td>
+                                                    <td className="outcomes-phd__cell--right">{row.dontSortants}</td>
+                                                </tr>
+                                            ))}
+                                            <tr className="fr-text--bold">
+                                                <td>Total de diplômés</td>
+                                                <td className="outcomes-phd__cell--right">{formatNumber(data.totals.diplomes.effectif)}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.diplomes.pourcentage}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.diplomes.dontInscrits}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.diplomes.dontSortants}</td>
+                                            </tr>
+                                            <tr className="fr-text--bold">
+                                                <td>Total de non diplômés</td>
+                                                <td className="outcomes-phd__cell--right">{formatNumber(data.totals.nonDiplomes.effectif)}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.nonDiplomes.pourcentage}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.nonDiplomes.dontInscrits}</td>
+                                                <td className="outcomes-phd__cell--right">{data.totals.nonDiplomes.dontSortants}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </>
                         )}
 
                         <div className="outcomes-flux-page__params fr-mt-3w fr-mb-3w">

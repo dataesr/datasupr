@@ -74,20 +74,11 @@ async function getFilterOptions(field, query) {
         $project: {
           _id: 0,
           key: `$${field}`,
-          count: {
-            $add: [
-              {
-                $convert: { input: "$dipl", to: "int", onError: 0, onNull: 0 },
-              },
-              {
-                $convert: {
-                  input: "$ndipl",
-                  to: "int",
-                  onError: 0,
-                  onNull: 0,
-                },
-              },
-            ],
+          dipl: {
+            $convert: { input: "$dipl", to: "int", onError: 0, onNull: 0 },
+          },
+          ndipl: {
+            $convert: { input: "$ndipl", to: "int", onError: 0, onNull: 0 },
           },
         },
       },
@@ -96,7 +87,9 @@ async function getFilterOptions(field, query) {
     .toArray();
 
   return results.map((r) => ({
-    count: r.count,
+    count: r.dipl + r.ndipl,
+    dipl: r.dipl,
+    ndipl: r.ndipl,
     key: r.key,
     label: fieldMap[r.key] || r.key,
   }));
