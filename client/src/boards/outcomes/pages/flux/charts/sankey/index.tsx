@@ -167,9 +167,8 @@ function SankeyChartView({
         if (!links?.length) return null;
         const baseOptions = createSankeyOptions(links, totalStudents);
         const filtersText = exportMetadata?.filtersText?.trim();
-        const sourceText = exportMetadata?.sourceText?.trim();
 
-        if (!filtersText && !sourceText) {
+        if (!filtersText) {
             return baseOptions;
         }
 
@@ -179,30 +178,18 @@ function SankeyChartView({
                 ...(baseOptions.exporting || {}),
                 chartOptions: {
                     ...((baseOptions.exporting && (baseOptions.exporting as any).chartOptions) || {}),
-                    subtitle: filtersText
-                        ? {
-                            style: {
-                                color: "#666",
-                                fontSize: "12px",
-                            },
-                            text: sourceText
-                                ? `Filtres : ${filtersText}<br/>${sourceText}`
-                                : `Filtres : ${filtersText}`,
-                            useHTML: true,
-                        }
-                        : sourceText
-                            ? {
-                                style: {
-                                    color: "#666",
-                                    fontSize: "12px",
-                                },
-                                text: sourceText,
-                            }
-                            : undefined,
+                    subtitle: {
+                        style: {
+                            color: "#666",
+                            fontSize: "12px",
+                        },
+                        text: `Filtres : ${filtersText}`,
+                        useHTML: true,
+                    },
                 },
             },
         };
-    }, [exportMetadata?.filtersText, exportMetadata?.sourceText, links, totalStudents]);
+    }, [exportMetadata?.filtersText, links, totalStudents]);
 
     if (!options) return null;
 
