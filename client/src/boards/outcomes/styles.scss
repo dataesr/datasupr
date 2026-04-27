@@ -21,9 +21,38 @@
 .outcomes-flux-page__filters {
   position: sticky;
   top: 1rem;
+  z-index: 100;
   padding: 1.5rem;
   background: var(--background-alt-grey);
   border: 1px solid var(--border-default-grey);
+}
+
+.outcomes-flux-page__filters .fx-select__popover,
+.outcomes-flux-page__filters .fx-dropdown__popover {
+  z-index: 1000;
+}
+
+.outcomes-flux-page__filters .fx-select__popover-inner,
+.outcomes-flux-page__filters .fx-dropdown__popover-inner {
+  background-color: var(--background-default-grey) !important;
+  background-image:
+    linear-gradient(
+      0deg,
+      var(--background-default-grey),
+      var(--background-default-grey)
+    ),
+    linear-gradient(
+      0deg,
+      var(--background-open-blue-france),
+      var(--background-open-blue-france)
+    );
+  background-size:
+    100% 100%,
+    100% 2px;
+  background-position:
+    0 0,
+    0 0;
+  background-repeat: no-repeat, no-repeat;
 }
 
 .outcomes-flux-page__filters-section + .outcomes-flux-page__filters-section {

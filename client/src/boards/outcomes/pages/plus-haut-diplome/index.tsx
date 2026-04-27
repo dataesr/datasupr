@@ -6,9 +6,9 @@ import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import Callout from "../../../../components/callout.tsx";
 import {
     type OutcomesFilterField,
-    type OutcomesFilterOption,
     useOutcomesPlusHautDiplome,
 } from "../../api";
+import OutcomesFilterSelect from "../../components/filter-select";
 import DiplomaDonut from "./charts/diploma-donut";
 import BreakdownRow from "./components/breakdown-row.tsx";
 
@@ -71,38 +71,6 @@ function formatNumber(n: number): string {
 
 function formatCsvCell(value: string | number): string {
     return `"${String(value ?? "").replaceAll('"', '""')}"`;
-}
-
-function DiplomaFilter({
-    label,
-    options,
-    selectedKey,
-    onSelect,
-}: {
-    label: string;
-    options: OutcomesFilterOption[];
-    selectedKey: string | null;
-    onSelect: (value: string | null) => void;
-}) {
-    const id = `filter-${label}`;
-    return (
-        <div className="fr-select-group fr-mb-2w">
-            <label className="fr-label" htmlFor={id}>{label}</label>
-            <select
-                className="fr-select"
-                id={id}
-                value={selectedKey || ""}
-                onChange={(e) => onSelect(e.target.value || null)}
-            >
-                <option value="">Ensemble</option>
-                {options.map((opt) => (
-                    <option key={opt.key} value={opt.key}>
-                        {opt.label} ({opt.count})
-                    </option>
-                ))}
-            </select>
-        </div>
-    );
 }
 
 export default function PlusHautDiplomePage() {
@@ -202,7 +170,7 @@ export default function PlusHautDiplomePage() {
         <Container className="outcomes-section-page outcomes-flux-page">
             <Row gutters>
                 <Col>
-                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line" title="Avertissement">
+                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line">
                         Version sous embargo à ne pas diffuser
                     </Callout>
                 </Col>
@@ -210,12 +178,12 @@ export default function PlusHautDiplomePage() {
             <Row gutters>
                 <Col lg={4}>
                     <aside className="outcomes-flux-page__filters" aria-label="Filtres du tableau plus haut diplôme">
-                        <Title as="h1" look="h3" className="fr-mb-3w">Filtres à sélectionner</Title>
+                        <Title as="h1" look="h4" className="fr-mb-3w">Filtres à sélectionner</Title>
                         {FILTER_SECTIONS.map((section) => (
                             <section key={section.title} className="outcomes-flux-page__filters-section">
                                 <Title as="h2" look="h5" className="fr-mb-2w">{section.title}</Title>
                                 {section.fields.map(({ field, label }) => (
-                                    <DiplomaFilter
+                                    <OutcomesFilterSelect
                                         key={field}
                                         label={label}
                                         options={data?.filterOptions?.[field] || []}

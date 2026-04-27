@@ -6,6 +6,7 @@ import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import Callout from "../../../../components/callout.tsx";
 import { type OutcomesFilterField, useOutcomesRepartition } from "../../api";
+import OutcomesFilterSelect from "../../components/filter-select";
 import RepartitionChart from "./charts/repartition-column";
 
 const DEFAULT_COHORT_YEAR = "2019-2020";
@@ -61,37 +62,6 @@ const FILTER_SECTIONS: Array<{
             ],
         },
     ];
-
-function RepartitionFilter({
-    label,
-    options,
-    selectedKey,
-    onSelect,
-}: {
-    label: string;
-    options: Array<{ count: number; key: string; label: string }>;
-    selectedKey: string | null;
-    onSelect: (value: string | null) => void;
-}) {
-    return (
-        <div className="fr-select-group fr-mb-2w">
-            <label className="fr-label" htmlFor={`filter-${label}`}>{label}</label>
-            <select
-                className="fr-select"
-                id={`filter-${label}`}
-                value={selectedKey || ""}
-                onChange={(e) => onSelect(e.target.value || null)}
-            >
-                <option value="">Ensemble</option>
-                {options.map((opt) => (
-                    <option key={opt.key} value={opt.key}>
-                        {opt.label} ({opt.count})
-                    </option>
-                ))}
-            </select>
-        </div>
-    );
-}
 
 export default function RepartitionPage() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -187,7 +157,7 @@ export default function RepartitionPage() {
                             <section key={section.title} className="outcomes-flux-page__filters-section">
                                 <Title as="h2" look="h5" className="fr-mb-2w">{section.title}</Title>
                                 {section.fields.map(({ field, label }) => (
-                                    <RepartitionFilter
+                                    <OutcomesFilterSelect
                                         key={field}
                                         label={label}
                                         options={data?.filterOptions?.[field] || []}

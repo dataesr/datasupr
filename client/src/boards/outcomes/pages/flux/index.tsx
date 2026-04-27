@@ -6,6 +6,7 @@ import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import Callout from "../../../../components/callout.tsx";
 import { type OutcomesFilterField, useOutcomesFlux } from "../../api";
+import OutcomesFilterSelect from "../../components/filter-select";
 import SankeyChart from "./charts/sankey";
 
 const DEFAULT_COHORT_YEAR = "2019-2020";
@@ -69,37 +70,6 @@ function buildContiguousYears(startYear: number, endYear: number) {
     const safeStart = Math.max(DEFAULT_YEAR_START, Math.min(DEFAULT_YEAR_END, startYear));
     const safeEnd = Math.max(safeStart, Math.min(DEFAULT_YEAR_END, endYear));
     return ALL_RELATIVE_YEARS.filter((year) => year >= safeStart && year <= safeEnd);
-}
-
-function FluxFilter({
-    label,
-    options,
-    selectedKey,
-    onSelect,
-}: {
-    label: string;
-    options: Array<{ count: number; key: string; label: string }>;
-    selectedKey: string | null;
-    onSelect: (value: string | null) => void;
-}) {
-    return (
-        <div className="fr-select-group fr-mb-2w">
-            <label className="fr-label" htmlFor={`filter-${label}`}>{label}</label>
-            <select
-                className="fr-select"
-                id={`filter-${label}`}
-                value={selectedKey || ""}
-                onChange={(e) => onSelect(e.target.value || null)}
-            >
-                <option value="">Ensemble</option>
-                {options.map((opt) => (
-                    <option key={opt.key} value={opt.key}>
-                        {opt.label} ({opt.count})
-                    </option>
-                ))}
-            </select>
-        </div>
-    );
 }
 
 export default function FluxPage() {
@@ -234,7 +204,7 @@ export default function FluxPage() {
         <Container className="outcomes-section-page outcomes-flux-page">
             <Row gutters>
                 <Col>
-                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line" title="Avertissement">
+                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line">
                         Version sous embargo à ne pas diffuser
                     </Callout>
                 </Col>
@@ -242,12 +212,12 @@ export default function FluxPage() {
             <Row gutters>
                 <Col lg={4}>
                     <aside className="outcomes-flux-page__filters" aria-label="Filtres du graphique de flux">
-                        <Title as="h1" look="h3" className="fr-mb-3w">Filtres à sélectionner</Title>
+                        <Title as="h1" look="h4" className="fr-mb-3w">Filtres à sélectionner</Title>
                         {FILTER_SECTIONS.map((section) => (
                             <section key={section.title} className="outcomes-flux-page__filters-section">
                                 <Title as="h2" look="h5" className="fr-mb-2w">{section.title}</Title>
                                 {section.fields.map(({ field, label }) => (
-                                    <FluxFilter
+                                    <OutcomesFilterSelect
                                         key={field}
                                         label={label}
                                         options={data?.filterOptions?.[field] || []}
