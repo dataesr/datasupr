@@ -1,6 +1,6 @@
 import { Container, Row, Col, Button } from "@dataesr/dsfr-plus";
 import Breadcrumb from "../../../components/breadcrumb";
-import Select from "../../../components/select";
+import Select from "../../../../../components/select";
 
 interface NoDataForYearAlertProps {
     etablissementLib: string;

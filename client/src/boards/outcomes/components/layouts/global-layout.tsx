@@ -6,7 +6,7 @@ import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
 
 import "../styles.scss";
-import "../../outcomes-colors.scss";
+import "../../colors.scss";
 
 
 const NAV_ITEMS = [

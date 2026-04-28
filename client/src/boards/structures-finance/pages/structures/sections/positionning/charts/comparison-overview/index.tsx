@@ -12,9 +12,7 @@ import {
   METRIC_TO_PART,
   type MetricKey,
 } from "../../../../../../config/metrics-config";
-import { useMetricLabel } from "../../../../../../hooks/useMetricLabel";
-import { useMetricThreshold } from "../../../../../../hooks/useMetricThreshold";
-import { useMetricSens } from "../../../../../../hooks/useMetricSens";
+import { useMetricLabel, useMetricThreshold, useMetricSens } from "../../../../../../utils/metrics";
 import {
   createComparisonOverviewOptions,
   type ComparisonOverviewConfig,

@@ -1,17 +1,17 @@
 import { useState, useMemo } from "react";
 import { Text, Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../components/chart-wrapper";
-import Select from "../../../../../components/select";
+import Select from "../../../../../../../components/select";
 import {
   createColumnRangeOptions,
   type ColumnRangePoint,
-} from "../../../../../pages/national/sections/analyse/chart/column-range/options";
-import { RenderDataVariation } from "../../../../../pages/national/sections/analyse/chart/column-range/render-data";
+} from "../../../../../pages/national/sections/analyse/charts/column-range/options";
+import { RenderDataVariation } from "../../../../../pages/national/sections/analyse/charts/column-range/render-data";
 import {
   METRICS_CONFIG,
   type MetricKey,
 } from "../../../../../config/metrics-config";
-import { useMetricLabel } from "../../../../../hooks/useMetricLabel";
+import { useMetricLabel } from "../../../../../utils/metrics";
 
 interface Props {
   data: any[];

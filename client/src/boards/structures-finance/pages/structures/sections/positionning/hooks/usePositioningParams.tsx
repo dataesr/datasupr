@@ -1,5 +1,5 @@
 import { useSearchParams } from "react-router-dom";
-import { type PositioningFilters } from "../../../hooks";
+import { type PositioningFilters } from "./usePositioningData";
 import { type AnalysisKey } from "../../../../../config/metrics-config";
 import { type ChartView } from "../charts";
 

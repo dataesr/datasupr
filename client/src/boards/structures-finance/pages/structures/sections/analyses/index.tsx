@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Row, Col } from "@dataesr/dsfr-plus";
 import EvolutionChart from "./charts";
-import { useAnalysesWithData } from "../../../../hooks/useAnalysesWithData";
+import { useAnalysesWithData } from "./useAnalysesWithData";
 import AnalysisFilter from "./analysis-filter";
 import {
   AnalysesSectionWrapper,

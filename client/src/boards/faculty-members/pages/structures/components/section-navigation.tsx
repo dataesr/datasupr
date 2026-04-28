@@ -1,6 +1,6 @@
 import { useMemo } from "react";
-import SecondaryNavigation from "../../../components/secondary-navigation";
-import Select from "../../../components/select";
+import SecondaryNavigation from "../../../../../components/secondary-navigation";
+import Select from "../../../../../components/select";
 import { ViewType } from "../api";
 
 interface SectionNavigationProps {

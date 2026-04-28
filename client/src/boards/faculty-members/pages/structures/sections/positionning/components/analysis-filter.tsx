@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Text } from "@dataesr/dsfr-plus";
-import ItemFilter, { type FilterItem } from "../../../../../components/item-filter";
+import ItemFilter, { type FilterItem } from "../../../../../../../components/item-filter";
 import { FM_ANALYSES } from "../config";
 import { useFacultyCnuList, useFacultyAssimilationList } from "../../../api";
 import type { FmPositioningFilters } from "../hooks/usePositioningParams";

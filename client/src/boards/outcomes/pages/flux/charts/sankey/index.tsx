@@ -1,10 +1,11 @@
 import { useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import "../../../../outcomes-colors.scss";
+import "../../../../colors.scss";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
 import Callout from "../../../../../../components/callout";
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import { getCssColor } from "../../../../../../utils/colors";
 import { type OutcomesFilterField, type OutcomesFluxLink, useOutcomesFlux } from "../../../../api";
 import { createSankeyOptions } from "./options";
 
@@ -180,7 +181,7 @@ function SankeyChartView({
                     ...((baseOptions.exporting && (baseOptions.exporting as any).chartOptions) || {}),
                     subtitle: {
                         style: {
-                            color: "#666",
+                            color: getCssColor("text-mention-grey"),
                             fontSize: "12px",
                         },
                         text: `Filtres : ${filtersText}`,

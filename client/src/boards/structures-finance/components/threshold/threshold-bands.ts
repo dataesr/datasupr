@@ -1,11 +1,3 @@
-/**
- * Création des bandes de seuil (plotBands/plotLines) pour Highcharts.
- *
- * Les seuils (ale_val, vig_min, vig_max) servent exclusivement à la
- * visualisation sur les graphiques : zones colorées de vigilance et d'alerte.
- * Ils ne doivent PAS être utilisés pour calculer un statut (utiliser `getMetricStatus` pour ça).
- */
-
 import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import { getCssColor } from "../../../../utils/colors";
 import type { ThresholdConfig } from "./threshold-legend";

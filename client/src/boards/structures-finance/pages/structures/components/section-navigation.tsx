@@ -1,5 +1,5 @@
-import SecondaryNavigation from "../../../components/secondary-navigation";
-import Select from "../../../components/select";
+import SecondaryNavigation from "../../../../../components/secondary-navigation";
+import Select from "../../../../../components/select";
 
 interface SectionNavigationProps {
   activeSection: string;

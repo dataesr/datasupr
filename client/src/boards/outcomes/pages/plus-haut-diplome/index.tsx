@@ -8,7 +8,7 @@ import {
     type OutcomesFilterField,
     useOutcomesPlusHautDiplome,
 } from "../../api";
-import OutcomesFilterSelect from "../../components/filter-select";
+import OutcomesFilterSelect from "../../../../components/filter-select";
 import DiplomaDonut from "./charts/diploma-donut";
 import BreakdownRow from "./components/breakdown-row.tsx";
 

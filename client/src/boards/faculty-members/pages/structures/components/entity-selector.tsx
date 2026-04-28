@@ -6,7 +6,7 @@ import { ViewType, useFacultyFilters, useFacultyYears } from "../api";
 import Breadcrumb from "../../../components/breadcrumb";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import FranceMap from "./france-map";
-import Select from "../../../components/select";
+import Select from "../../../../../components/select";
 
 const VIEW_CONFIG: Record<ViewType, { title: string; searchLabel: string; searchPlaceholder: string; resultLabel: string }> = {
     structure: {

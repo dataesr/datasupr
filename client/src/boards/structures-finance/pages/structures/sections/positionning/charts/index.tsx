@@ -10,7 +10,7 @@ import ComparisonBarChart from "./comparison-bar";
 import ComparisonOverviewChart from "./comparison-overview";
 import ScatterChart from "./scatter";
 import AnalysisFilter from "../components/analysis-filter";
-import Select from "../../../../../components/select";
+import Select from "../../../../../../../components/select";
 import {
   PREDEFINED_ANALYSES,
   METRICS_CONFIG,
@@ -18,9 +18,7 @@ import {
   type MetricKey,
 } from "../../../../../config/metrics-config";
 import { useComparisonFilters } from "../hooks";
-import { useMetricLabel } from "../../../../../hooks/useMetricLabel";
-import { useMetricThreshold } from "../../../../../hooks/useMetricThreshold";
-import { useMetricSens } from "../../../../../hooks/useMetricSens";
+import { useMetricLabel, useMetricThreshold, useMetricSens } from "../../../../../utils/metrics";
 import { BudgetWarning } from "../../../../../components/budget-warning";
 import PositioningColumnRange from "./column-range";
 
@@ -138,7 +136,7 @@ export default function PositioningCharts({
               data={data}
               currentStructure={currentStructure}
               selectedAnalysis={selectedAnalysis || "ressources-total"}
-              onSelectAnalysis={onSelectAnalysis || (() => {})}
+              onSelectAnalysis={onSelectAnalysis || (() => { })}
             />
           </Col>
           <Col xs="12" md="8">
@@ -164,7 +162,7 @@ export default function PositioningCharts({
               data={data}
               currentStructure={currentStructure}
               selectedAnalysis={selectedAnalysis || "ressources-total"}
-              onSelectAnalysis={onSelectAnalysis || (() => {})}
+              onSelectAnalysis={onSelectAnalysis || (() => { })}
             />
           </Col>
           <Col xs="12" md="8">

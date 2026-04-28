@@ -1,7 +1,5 @@
 import { useMemo } from "react";
-
-export const isRce = (item: any): boolean => item.is_rce === true;
-export const isDevimmo = (item: any): boolean => item.is_devimmo === true;
+import { matchRce, matchDevimmo } from "../../../utils/predicates";
 
 export function useFilteredNationalData(
   allItems: any[],
@@ -12,6 +10,8 @@ export function useFilteredNationalData(
   selectedDevimmo: string = ""
 ) {
   return useMemo(() => {
+    const rce = matchRce(selectedRce);
+    const devimmo = matchDevimmo(selectedDevimmo);
     return allItems.filter((item: any) => {
       if (selectedType && item.type !== selectedType) return false;
       if (
@@ -20,10 +20,8 @@ export function useFilteredNationalData(
       )
         return false;
       if (selectedRegion && item.region !== selectedRegion) return false;
-      if (selectedRce === "rce" && !isRce(item)) return false;
-      if (selectedRce === "non-rce" && isRce(item)) return false;
-      if (selectedDevimmo === "devimmo" && !isDevimmo(item)) return false;
-      if (selectedDevimmo === "non-devimmo" && isDevimmo(item)) return false;
+      if (!rce(item)) return false;
+      if (!devimmo(item)) return false;
       return true;
     });
   }, [

@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { isInProduction } from "../../../../utils";
 import Breadcrumb from "../../components/breadcrumb";
-import Select from "../../../structures-finance/components/select";
+import Select from "../../../../components/select";
 import { getEsQuery, years } from "../../utils";
 import ClassificationsByStructure from "./charts/classifications-by-structure";
 import Classifications2ByStructure from "./charts/classifications2-by-structure";

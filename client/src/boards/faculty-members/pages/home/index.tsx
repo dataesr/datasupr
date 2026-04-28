@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Row, Col, Container, Title } from "@dataesr/dsfr-plus";
 import { useFacultyFilters, useFacultyYears } from "../structures/api";
 import FranceMap from "../structures/components/france-map";
-import Select from "../../components/select";
+import Select from "../../../../components/select";
 import "./styles.scss";
 
 function normalizeString(str: string) {

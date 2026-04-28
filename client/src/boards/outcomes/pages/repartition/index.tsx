@@ -6,7 +6,7 @@ import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import Callout from "../../../../components/callout.tsx";
 import { type OutcomesFilterField, useOutcomesRepartition } from "../../api";
-import OutcomesFilterSelect from "../../components/filter-select";
+import OutcomesFilterSelect from "../../../../components/filter-select";
 import RepartitionChart from "./charts/repartition-column";
 
 const DEFAULT_COHORT_YEAR = "2019-2020";

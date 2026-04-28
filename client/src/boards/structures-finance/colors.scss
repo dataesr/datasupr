@@ -1,0 +1,60 @@
+:root {
+  --section-ressources: var(--blue-france-main-525);
+  --section-sante-financiere: var(--green-emeraude-main-632);
+  --section-moyens-humains: var(--pink-tuile-main-556);
+  --section-diplomes-formations: var(--yellow-moutarde-main-679);
+  --section-erc: var(--orange-terre-battue-main-645);
+
+  --metric-effectifs: var(--blue-cumulus-main-526);
+  --metric-effectifs-licence: var(--blue-cumulus-main-526);
+  --metric-effectifs-master: var(--pink-tuile-main-556);
+  --metric-effectifs-doctorat: var(--orange-terre-battue-main-645);
+  --metric-scsp: var(--blue-cumulus-main-526);
+  --metric-ressources-propres: var(--green-archipel-main-557);
+  --metric-droits-inscription: var(--green-menthe-main-548);
+  --metric-charges-personnel: var(--pink-tuile-main-556);
+  --metric-produits-fonctionnement: var(--orange-terre-battue-main-645);
+  --metric-anr: var(--purple-glycine-main-494);
+  --metric-subventions-ue: var(--blue-cumulus-main-526);
+  --metric-contrats-recherche: var(--blue-ecume-main-400);
+  --metric-taux-encadrement: var(--green-emeraude-main-632);
+  --metric-emploi-etpt: var(--brown-caramel-main-648);
+  --metric-formation-continue: var(--pink-tuile-main-556);
+  --metric-taxe-apprentissage: var(--yellow-moutarde-main-679);
+  --metric-autres-ressources: var(--beige-gris-galet-main-702);
+  --metric-autres-subventions: var(--brown-opera-main-680);
+
+  --ress-groupe-formation: var(--blue-cumulus-main-526);
+  --ress-groupe-recherche: var(--purple-glycine-main-494);
+  --ress-groupe-autres: var(--green-emeraude-main-632);
+  --ress-droits-inscription: var(--blue-cumulus-main-526);
+  --ress-formation-continue: var(--green-emeraude-main-632);
+  --ress-taxe-apprentissage: var(--yellow-moutarde-main-679);
+  --ress-valorisation: var(--purple-glycine-main-494);
+  --ress-anr-hors-ia: var(--pink-tuile-main-556);
+  --ress-anr-ia: var(--orange-terre-battue-main-645);
+  --ress-contrats-recherche: var(--blue-ecume-main-400);
+  --ress-subventions-region: var(--green-bourgeon-main-640);
+  --ress-subventions-ue: var(--green-archipel-main-557);
+  --ress-autres-ressources: var(--brown-caramel-main-648);
+  --ress-autres-subventions: var(--pink-macaron-main-689);
+
+  --threshold-alert-bg: var(--background-contrast-error);
+  --threshold-vigilance-bg: var(--background-contrast-warning);
+  --threshold-alert-line: var(--border-plain-error);
+  --threshold-vigilance-line: var(--border-plain-warning);
+
+  --scale-1: var(--green-tilleul-verveine-main-707);
+  --scale-2: var(--green-bourgeon-main-640);
+  --scale-3: var(--green-emeraude-main-632);
+  --scale-4: var(--green-menthe-main-548);
+  --scale-5: var(--green-archipel-main-557);
+  --scale-6: var(--blue-ecume-main-400);
+  --scale-7: var(--blue-cumulus-main-526);
+  --scale-8: var(--purple-glycine-main-494);
+  --scale-9: var(--pink-macaron-main-689);
+  --scale-10: var(--pink-tuile-main-556);
+  --scale-11: var(--yellow-tournesol-main-731);
+  --scale-12: var(--green-tilleul-verveine-sun-418);
+  --scale-12-dark: var(--green-tilleul-verveine-moon-817);
+}

@@ -3,7 +3,7 @@ import { Row, Col, Container, Title } from "@dataesr/dsfr-plus";
 import { useMemo, useState } from "react";
 import { useFinanceYears } from "../../api";
 import { useFinanceEtablissements } from "./api";
-import Select from "../../components/select";
+import Select from "../../../../components/select";
 import "./styles.scss";
 import { normalizeString } from "../../utils/utils";
 
@@ -134,8 +134,8 @@ function QuickAccessSection() {
                       .filter((opt) =>
                         searchValue
                           ? opt.searchableText.includes(
-                              normalizeString(searchValue)
-                            )
+                            normalizeString(searchValue)
+                          )
                           : true
                       )
                       .map((opt) => (
@@ -150,12 +150,12 @@ function QuickAccessSection() {
                     {etablissementOptions.filter((opt) =>
                       searchValue
                         ? opt.searchableText.includes(
-                            normalizeString(searchValue)
-                          )
+                          normalizeString(searchValue)
+                        )
                         : true
                     ).length === 0 && (
-                      <Select.Empty>Aucun établissement trouvé</Select.Empty>
-                    )}
+                        <Select.Empty>Aucun établissement trouvé</Select.Empty>
+                      )}
                   </Select.Content>
                 </Select>
               </div>

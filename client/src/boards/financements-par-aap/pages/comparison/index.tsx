@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import Breadcrumb from "../../components/breadcrumb";
-import Select from "../../../structures-finance/components/select";
+import Select from "../../../../components/select";
 import { years } from "../../utils";
 import ClassificationsByComparison from "./charts/classifications-by-comparison";
 import DispersionByComparison from "./charts/dispersion-by-comparison";

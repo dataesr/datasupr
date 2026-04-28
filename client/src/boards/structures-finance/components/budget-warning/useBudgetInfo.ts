@@ -1,4 +1,4 @@
-import { BUDGET_SENSITIVE_METRICS } from "../budget-warning/budgetIndicators";
+import { BUDGET_SENSITIVE_METRICS } from "./budgetIndicators";
 import { useMetricEvolution } from "../../pages/structures/api";
 
 export function useBudgetInfo(metrics: string[]) {

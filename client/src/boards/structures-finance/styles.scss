@@ -1,4 +1,4 @@
-@use "./sf-colors.scss";
+@use "./colors.scss";
 
 @media (max-width: 768px) {
   .fr-container {
@@ -20,7 +20,7 @@
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: rgba(0, 0, 0, 0.2);
+      background-color: var(--background-action-low-grey);
       border-radius: 4px;
     }
   }

@@ -4,7 +4,7 @@ import { MetricChartCard } from "../../components/metric-chart-card";
 import RessourcesPropresChart from "./charts/ressources-propres";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
-import { SectionBudgetWarning } from "../../../../components/section-budget-warning";
+import { SectionBudgetWarning } from "../../../../components/budget-warning";
 import { getCssColor } from "../../../../../../utils/colors";
 
 const euro = (n?: number) =>

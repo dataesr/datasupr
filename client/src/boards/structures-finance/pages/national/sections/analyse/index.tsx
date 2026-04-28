@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Row, Col, Title } from "@dataesr/dsfr-plus";
 import { useSearchParams } from "react-router-dom";
-import NationalChart from "./chart";
+import NationalChart from "./charts";
 import AnalysisFilter from "./analysis-filter";
 import { type AnalysisKey } from "../../../../config/metrics-config";
 import { useFinanceYears } from "../../../../api";

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import ItemFilter, { type FilterItem } from "../../../../../../../boards/structures-finance/components/item-filter";
+import ItemFilter, { type FilterItem } from "../../../../../../../components/item-filter";
 import type { FmAnalysisConfig } from "../../../../../config/analyses-config";
 
 interface FmAnalysisFilterProps {

@@ -1,4 +1,4 @@
-import Select from "../../../structures-finance/components/select";
+import Select from "../select";
 
 interface FilterOption {
     count: number;

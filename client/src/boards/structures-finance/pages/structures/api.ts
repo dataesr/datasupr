@@ -3,6 +3,25 @@ import { useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useFinanceEtablissementEvolution } from "../../api";
 
+export function deduplicateEtablissements(items: any[]): any[] {
+  const map = new Map();
+  items.forEach((etab: any) => {
+    const id =
+      etab.etablissement_id_paysage_actuel ||
+      etab.etablissement_id_paysage ||
+      etab.id;
+    if (!id) return;
+    const existing = map.get(id);
+    if (
+      !existing ||
+      etab.etablissement_id_paysage === etab.etablissement_id_paysage_actuel
+    ) {
+      map.set(id, etab);
+    }
+  });
+  return Array.from(map.values());
+}
+
 const { VITE_APP_SERVER_URL } = import.meta.env;
 
 interface MultipleStructuresResponse {

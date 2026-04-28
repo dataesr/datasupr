@@ -1,8 +1,8 @@
 import { Row, Col, Text, DismissibleTag } from "@dataesr/dsfr-plus";
-import type { PositioningFilters } from "../../../../hooks";
+import type { PositioningFilters } from "../../hooks";
 import "../../charts/shared.scss";
 import "./filters.scss";
-import Dropdown from "../../../../../../components/dropdown";
+import Dropdown from "../../../../../../../../components/dropdown";
 
 interface PositioningFiltersProps {
   data: any[];

@@ -1,8 +1,8 @@
 import { useSearchParams } from "react-router-dom";
 import { Col, Container, Row, Text } from "@dataesr/dsfr-plus";
-import { useStructuresFilters } from "../hooks";
+import { useStructuresFilters } from "./useStructuresFilters";
 import { useFinanceYears } from "../../../api";
-import { useFilters } from "../../../hooks/useFilters";
+import { useFilters } from "../../../utils/useFilters";
 import SelectionUI from "./selection-ui";
 import CardSimple from "../../../../../components/card-simple";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";

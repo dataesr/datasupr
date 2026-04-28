@@ -5,7 +5,7 @@ import {
   useFinanceYears,
 } from "../../../../../api";
 import { MetricKey } from "../../../../../config/metrics-config";
-import ColumnRangeChart from "../../../../national/sections/analyse/chart/column-range";
+import ColumnRangeChart from "../../../../national/sections/analyse/charts/column-range";
 
 interface PositioningColumnRangeProps {
   metricKey: MetricKey;

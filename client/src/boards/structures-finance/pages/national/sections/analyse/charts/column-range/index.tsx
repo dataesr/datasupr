@@ -3,10 +3,10 @@ import type Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
 import "../../../../styles.scss";
 import { Text, Row, Col } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper/index.tsx";
-import Select from "../../../../../../components/select/index.tsx";
+import Select from "../../../../../../../../components/select";
 import DefaultSkeleton from "../../../../../../../../components/charts-skeletons/default";
 import MetricDefinitionsTable from "../../../../../../components/metric-definitions/metric-definitions-table.tsx";
-import { useMetricLabel } from "../../../../../../hooks/useMetricLabel";
+import { useMetricLabel } from "../../../../../../utils/metrics";
 import {
   METRICS_CONFIG,
   type MetricKey,

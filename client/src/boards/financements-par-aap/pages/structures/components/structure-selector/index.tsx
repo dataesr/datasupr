@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { useEffect, useState } from "react";
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import Select from "../../../../../structures-finance/components/select";
+import Select from "../../../../../../components/select";
 import { getEsQuery } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;

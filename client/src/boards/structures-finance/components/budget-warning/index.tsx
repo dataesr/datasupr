@@ -6,6 +6,8 @@ import {
 } from "./budgetIndicators";
 
 export { BUDGET_SENSITIVE_METRICS };
+export { SectionBudgetWarning } from "./section";
+export { useBudgetInfo } from "./useBudgetInfo";
 
 interface BudgetWarningProps {
   data: any[] | undefined;

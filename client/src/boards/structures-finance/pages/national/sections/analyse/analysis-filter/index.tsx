@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import ItemFilter, {
   type FilterItem,
-} from "../../../../../components/item-filter";
+} from "../../../../../../../components/item-filter";
 import {
   PREDEFINED_ANALYSES,
   type AnalysisKey,

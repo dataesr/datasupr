@@ -48,7 +48,6 @@
 
 .metric-value {
   font-weight: 700;
-  color: #000;
 }
 
 .metric-description {
@@ -77,11 +76,11 @@
     margin-right: 4px;
 
     &--siege {
-      background: var(--yellow-moutarde);
+      background: var(--yellow-moutarde-main-679);
     }
 
     &--site {
-      background: var(--blue-france);
+      background: var(--blue-france-main-525);
     }
   }
 }

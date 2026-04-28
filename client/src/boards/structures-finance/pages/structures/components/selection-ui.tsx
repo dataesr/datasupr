@@ -1,9 +1,9 @@
 import { useMemo, useState } from "react";
 import { Row, Col, Title, Button } from "@dataesr/dsfr-plus";
-import Select from "../../../components/select";
-import { useFilters } from "../../../hooks/useFilters";
+import Select from "../../../../../components/select";
+import { useFilters } from "../../../utils/useFilters";
 import "../../national/styles.scss";
-import Dropdown from "../../../components/dropdown";
+import Dropdown from "../../../../../components/dropdown";
 import { normalizeString } from "../../../utils/utils";
 
 interface SelectionUIProps {
@@ -65,11 +65,10 @@ export default function SelectionUI({
           return {
             id,
             hasValidPaysageId: !!etab.etablissement_id_paysage,
-            label: `${displayName}${
-              etab.etablissement_actuel_region || etab.region
+            label: `${displayName}${etab.etablissement_actuel_region || etab.region
                 ? ` — ${etab.etablissement_actuel_region || etab.region}`
                 : ""
-            }`,
+              }`,
             searchableText: searchText,
             subtitle: etab.champ_recherche,
             data: etab,
@@ -264,8 +263,8 @@ export default function SelectionUI({
                   ? opt.searchableText.includes(normalizeString(searchQuery))
                   : true
               ).length === 0 && (
-                <Select.Empty>Aucune structure trouvée</Select.Empty>
-              )}
+                  <Select.Empty>Aucune structure trouvée</Select.Empty>
+                )}
             </Select.Content>
           </Select>
         </div>

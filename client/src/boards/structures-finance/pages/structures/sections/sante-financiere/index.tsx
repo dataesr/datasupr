@@ -4,7 +4,7 @@ import StatusIndicator from "../../../../components/status-indicator";
 import { parseMarkdown } from "../../../../../../utils/format";
 import "../styles.scss";
 import MetricDefinitionsTable from "../../../../components/metric-definitions/metric-definitions-table";
-import { useBudgetInfo } from "../../../../components/section-budget-warning/useBudgetInfo";
+import { useBudgetInfo } from "../../../../components/budget-warning";
 import { getCssColor } from "../../../../../../utils/colors";
 import { useMetricEvolution } from "../../api";
 

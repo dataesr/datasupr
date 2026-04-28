@@ -9,11 +9,10 @@ import {
 } from "@dataesr/dsfr-plus";
 import ChartWrapper from "../../../../../../../components/chart-wrapper/index.tsx";
 import { createComparisonBarOptions } from "./options.tsx";
-import Select from "../../../../../components/select/index.tsx";
+import Select from "../../../../../../../components/select";
 import DefaultSkeleton from "../../../../../../../components/charts-skeletons/default";
 import MetricDefinitionsTable from "../../../../../components/metric-definitions/metric-definitions-table.tsx";
-import { useMetricLabel } from "../../../../../hooks/useMetricLabel";
-import { useMetricThreshold } from "../../../../../hooks/useMetricThreshold";
+import { useMetricLabel, useMetricThreshold } from "../../../../../utils/metrics";
 import ColumnRangeChart from "./column-range/index.tsx";
 import {
   PREDEFINED_ANALYSES,
@@ -353,15 +352,15 @@ export default function NationalChart({
                     formatter={
                       metricConfig?.format === "euro"
                         ? (v?: number) =>
-                            v != null
-                              ? (v / 1000000).toFixed(1) + " M\u20AC"
-                              : "\u2014"
+                          v != null
+                            ? (v / 1000000).toFixed(1) + " M\u20AC"
+                            : "\u2014"
                         : metricConfig?.format === "percent"
                           ? (v?: number) =>
-                              v != null ? v.toFixed(1) + " %" : "\u2014"
+                            v != null ? v.toFixed(1) + " %" : "\u2014"
                           : metricConfig?.format === "decimal"
                             ? (v?: number) =>
-                                v != null ? v.toFixed(2) : "\u2014"
+                              v != null ? v.toFixed(2) : "\u2014"
                             : undefined
                     }
                   />

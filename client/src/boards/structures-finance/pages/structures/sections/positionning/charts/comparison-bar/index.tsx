@@ -9,9 +9,7 @@ import {
 import { createPositioningComparisonBarOptions } from "./options";
 import { RenderData } from "./render-data";
 import ChartWrapper from "../../../../../../../../components/chart-wrapper";
-import { useMetricThreshold } from "../../../../../../hooks/useMetricThreshold";
-import { useMetricSens } from "../../../../../../hooks/useMetricSens";
-import { useMetricLabel } from "../../../../../../hooks/useMetricLabel";
+import { useMetricThreshold, useMetricSens, useMetricLabel } from "../../../../../../utils/metrics";
 import {
   METRICS_CONFIG,
   METRIC_TO_PART,

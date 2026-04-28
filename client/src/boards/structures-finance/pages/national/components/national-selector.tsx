@@ -3,11 +3,14 @@ import { useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import { useFinanceYears } from "../../../api";
 import { useFinanceAdvancedComparison } from "../../../api";
-import { useNationalFilters } from "../hooks/useNationalFilters";
+import {
+  useAvailableOptions,
+  sortUniversitiesFirst,
+} from "../../../utils/useAvailableOptions";
 import { useFilteredNationalData } from "../hooks/useFilteredNationalData";
-import { useFilters } from "../../../hooks/useFilters";
+import { useFilters } from "../../../utils/useFilters";
 import "../styles.scss";
-import Dropdown from "../../../components/dropdown";
+import Dropdown from "../../../../../components/dropdown";
 import Breadcrumb from "../../../components/breadcrumb";
 
 const DEFAULT_YEAR = "2024";
@@ -65,13 +68,12 @@ export default function NationalSelector() {
     labels,
   } = useFilters();
 
-  const { availableTypes, availableTypologies, availableRegions } =
-    useNationalFilters(
-      allItems,
-      selectedType,
-      selectedTypologie,
-      selectedRegion
-    );
+  const { types: availableTypes, typologies: availableTypologies, regions: availableRegions } =
+    useAvailableOptions(allItems, [
+      { key: "types", field: "type", selected: selectedType, sort: sortUniversitiesFirst },
+      { key: "typologies", field: "etablissement_categorie", selected: selectedTypologie, sort: sortUniversitiesFirst },
+      { key: "regions", field: "region", selected: selectedRegion },
+    ]);
 
   const filteredItems = useFilteredNationalData(
     allItems,

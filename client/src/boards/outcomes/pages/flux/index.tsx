@@ -6,7 +6,7 @@ import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import Callout from "../../../../components/callout.tsx";
 import { type OutcomesFilterField, useOutcomesFlux } from "../../api";
-import OutcomesFilterSelect from "../../components/filter-select";
+import OutcomesFilterSelect from "../../../../components/filter-select";
 import SankeyChart from "./charts/sankey";
 
 const DEFAULT_COHORT_YEAR = "2019-2020";
