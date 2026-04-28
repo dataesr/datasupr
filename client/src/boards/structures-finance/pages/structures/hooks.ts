@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useFinanceAdvancedComparison } from "../../api";
-import { isRce } from "../../hooks/predicates";
+import { isRce } from "../../utils/predicates";
 
 const match = (a?: string, b?: string) =>
   a?.toLowerCase().trim() === b?.toLowerCase().trim();
