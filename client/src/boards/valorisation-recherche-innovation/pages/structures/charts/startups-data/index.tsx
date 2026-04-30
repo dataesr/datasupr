@@ -1,10 +1,10 @@
-import { useQuery } from '@tanstack/react-query'
-import { useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useQuery } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
-import DefaultSkeleton from '../../../../../../components/charts-skeletons/default.tsx'
-import { getEsQueryStartups } from '../../../../utils.ts'
-import DataTable from './datatable.tsx'
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
+import { getEsQueryStartups } from "../../../../utils.ts";
+import DataTable from "./datatable.tsx";
 
 const { VITE_APP_ES_INDEX_ORGANIZATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -93,8 +93,8 @@ export default function StartupsData() {
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_ORGANIZATIONS}`, {
         body: JSON.stringify(body),
         headers: {
-          "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
         },
         method: "POST",
       }).then((response) => response.json()),

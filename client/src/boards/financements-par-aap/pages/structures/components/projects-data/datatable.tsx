@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { Col, Row } from "@dataesr/dsfr-plus";
+import { useEffect, useState } from "react";
 
-import './datatable.scss'
-import { Col, Row } from '@dataesr/dsfr-plus';
+import "./style.scss";
 
 export default function DataTable({ columns, dataTable, filters, numberOfResults, pagination, setFilters, setPagination, setSorting, sorting }) {
   const inputsTmp = {}
@@ -12,23 +12,46 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
 
   const getSortableIcon = (column) => {
     if (column.isSortable) {
-      if ((column.id === sorting?.id) && (sorting?.order === 'asc')) return <i className="ri-sort-asc" />
-      if ((column.id === sorting?.id) && (sorting?.order === 'desc')) return <i className="ri-sort-desc" />
-      else return <i className="ri-subtract-line" />
+      const id = column?.sortableField ?? column.id;
+      if ((id === sorting?.id) && (sorting?.order === 'asc')) return (
+        <button
+          className="button-action border p-1 rounded"
+          onClick={() => handleSort(column)}
+        >
+          <i className="ri-sort-asc" />
+        </button>
+      )
+      if ((id === sorting?.id) && (sorting?.order === 'desc')) return (
+        <button
+          className="button-action border p-1 rounded"
+          onClick={() => handleSort(column)}
+        >
+          <i className="ri-sort-desc" />
+        </button>
+      )
+      else return (
+        <button
+          className="button-action border p-1 rounded"
+          onClick={() => handleSort(column)}
+        >
+          <i className="ri-subtract-line" />
+        </button>
+      )
     }
     return ''
   }
 
   const handleSort = (column) => {
     if (column.isSortable) {
-      if (column.id === sorting?.id) {
+      const id = column?.sortableField ?? column.id;
+      if (id === sorting?.id) {
         if (sorting.order === 'asc') {
-          setSorting({ id: column.id, order: 'desc' })
+          setSorting({ id, order: 'desc' })
         } else {
           setSorting()
         }
       } else {
-        setSorting({ id: column.id, order: 'asc' })
+        setSorting({ id, order: 'asc' })
       }
     }
   }
@@ -52,7 +75,7 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
 
   return (
     <>
-      <table className="valo-datatable">
+      <table className="fundings-datatable">
         <thead>
           <tr>
             {columns.map((column) => {
@@ -60,7 +83,7 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
                 <th key={column.id}>
                   {column.isPlaceholder ? null : (
                     <>
-                      <div onClick={() => handleSort(column)}>
+                      <div>
                         {column.label}
                         {' '}
                         {column?.isFilterable && <i className="ri-filter-line"></i>}
@@ -111,14 +134,14 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
         </Col>
         <Col style={{ textAlign: 'center' }}>
           <button
-            className="border rounded p-1"
+            className="border p-1 rounded"
             onClick={() => setPagination({ ...pagination, from: 0 })}
             disabled={pagination.from === 0}
           >
             <i className="ri-arrow-left-double-line" />
           </button>
           <button
-            className="border rounded p-1"
+            className="border p-1 rounded"
             onClick={() => setPagination({ ...pagination, from: pagination.from - pagination.size })}
             disabled={pagination.from === 0}
           >
@@ -143,14 +166,14 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
             </strong>
           </span>
           <button
-            className="border rounded p-1"
+            className="border p-1 rounded"
             onClick={() => setPagination({ ...pagination, from: pagination.from + pagination.size })}
             disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
           >
             <i className="ri-arrow-right-s-line" />
           </button>
           <button
-            className="border rounded p-1"
+            className="border p-1 rounded"
             onClick={() => setPagination({ ...pagination, from: Math.floor(numberOfResults / pagination.size) * pagination.size })}
             disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
           >

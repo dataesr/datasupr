@@ -3,9 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
+import Select from "../../../../components/select";
 import { isInProduction } from "../../../../utils";
 import Breadcrumb from "../../components/breadcrumb";
-import Select from "../../../../components/select";
 import { getEsQuery, years } from "../../utils";
 import ClassificationsByStructure from "./charts/classifications-by-structure";
 import Classifications2ByStructure from "./charts/classifications2-by-structure";
@@ -21,7 +21,7 @@ import OverviewByStructure from "./charts/overview-by-structure";
 import ProjectsByStructure from "./charts/projects-by-structure";
 import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
 import Cards from "./components/cards";
-import DataTable from "./components/data-table";
+import ProjectsData from "./components/projects-data";
 
 import "./styles.scss";
 
@@ -313,7 +313,7 @@ export default function DisplayStructure() {
                 </>
               )}
               {(section === "donnees") && (
-                <DataTable name={name} />
+                <ProjectsData name={name} />
               )}
             </>
           )}

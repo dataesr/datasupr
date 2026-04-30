@@ -1,0 +1,37 @@
+.fundings-datatable {
+  border-spacing: 0;
+  width: 100%;
+
+  button.rounded {
+    &.rounded {
+      border-radius: 5px;
+    }
+
+    &.button-action:hover {
+      background-color: var(--background-contrast-grey-hover);
+    }
+  }
+
+  thead tr {
+    background-color: var(--background-alt-grey);
+    text-align: left;
+  }
+
+  thead th,
+  tbody td {
+    padding: 10px;
+  }
+
+  tbody tr {
+    &:nth-child(even) {
+      background-color: var(--background-alt-grey);
+    }
+    &:nth-child(odd) {
+      background-color: var(--background-default-grey-hover);
+    }
+
+    &:hover {
+      background-color: var(--background-contrast-blue-ecume);
+    }
+  }
+}
