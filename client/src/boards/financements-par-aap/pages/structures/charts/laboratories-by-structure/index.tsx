@@ -1,16 +1,16 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
 import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
-import { formatCompactNumber, funders, getCssColor, getYearRangeLabel, pattern } from "../../../../utils.ts";
 import i18n from "../../../../i18n.json";
+import { formatCompactNumber, funders, getCssColor, getYearRangeLabel, pattern } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -33,17 +33,22 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
           { term: { participant_status: "active" } },
           { term: { participant_type: "laboratory" } },
           { terms: { "project_type.keyword": funders } },
-          { term: { "participant_institutions.structure.keyword": structure } }
+          { term: { "participant_institutions.structure.keyword": structure } },
         ],
       },
     },
     aggregations: {
       by_laboratory_project: {
         terms: {
-          field: "participant_encoded_key",
-          size: 25,
+          field: "co_partners_fr_labs.keyword",
+          order: { "by_unique_projects": "desc" },
         },
         aggregations: {
+          by_unique_projects: {
+            cardinality: {
+              field: "project_id.keyword",
+            },
+          },
           by_project_type: {
             terms: {
               field: "project_type.keyword",
@@ -140,8 +145,8 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
-          "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
         },
         method: "POST",
       }).then((response) => response.json()),
