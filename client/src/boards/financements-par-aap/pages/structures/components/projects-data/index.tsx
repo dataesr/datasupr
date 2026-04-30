@@ -36,7 +36,7 @@ type Sort = {
   order: 'asc' | 'desc'
 }
 
-export default function ProjectsData({ name }: { name: string | undefined }) {
+export default function ProjectsData() {
   const [searchParams] = useSearchParams()
   const structure = searchParams.get("structure");
   const yearMax = searchParams.get("yearMax");
@@ -80,6 +80,19 @@ export default function ProjectsData({ name }: { name: string | undefined }) {
       }).then((response) => response.json()),
   });
 
+  const { data: dataAll, isLoading: isLoadingAll } = useQuery({
+    queryKey: ["fundings-data", filters, "all", sorting, structure, yearMax, yearMin],
+    queryFn: () =>
+      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
+        body: JSON.stringify({ ...body, from: 0, size: 10000}),
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+      }).then((response) => response.json()),
+  });
+
   const dataTable: Project[] = (data?.hits?.hits ?? []).map((hit) => ({
     id: hit._source?.project_id,
     instrument: hit._source?.project_instrument,
@@ -91,6 +104,17 @@ export default function ProjectsData({ name }: { name: string | undefined }) {
     year: hit._source?.project_year,
   }))
   const numberOfResults = data?.hits?.total?.value ?? 0
+
+  const dataTableAll: Project[] = (dataAll?.hits?.hits ?? []).map((hit) => ({
+    id: hit._source?.project_id,
+    instrument: hit._source?.project_instrument,
+    label: hit._source?.project_label,
+    participationFunding: hit._source?.participation_funding,
+    participationIsCoordinator: hit._source?.participation_is_coordinator.toString(),
+    projectBudgetFinanced: hit._source?.project_budgetFinanced,
+    type: hit._source?.project_type,
+    year: hit._source?.project_year,
+  }))
 
   const columns = useMemo<Column[]>(() => [
     {
@@ -146,18 +170,18 @@ export default function ProjectsData({ name }: { name: string | undefined }) {
   const downloadCsv = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    if (dataTable.length > 0) {
+    if (dataTableAll.length > 0) {
       // Extract keys from the first object to use as headers
-      const headers = Object.keys(dataTable[0]);
-      const rows = dataTable.map(obj => headers.map(key => obj[key]));
+      const headers = Object.keys(dataTableAll[0]);
+      const rows = dataTableAll.map((row) => headers.map((header) => row?.[header] ? `"${row[header]}"` : ""));
       // Combine headers and rows into a single CSV string
       const csvContent = [
         headers.join(','),
-        ...rows.map(row => row.join(','))
+        ...rows.map((row) => row.join(',')),
       ].join('\n');
       // Create a hidden download link
       const link = document.createElement('a');
-      link.download = `tableaux_financements_par_aap_${name}.csv`;
+      link.download = `tableaux_financements_par_aap_${structure}_${yearMin}_${yearMax}.csv`;
       link.href = URL.createObjectURL(new Blob([csvContent], { type: 'text/csv;charset=utf-8' }));
       link.style.visibility = 'hidden';
       // Append link to DOM, trigger click, and clean up
@@ -179,15 +203,17 @@ export default function ProjectsData({ name }: { name: string | undefined }) {
           </Text>
         </Col>
         <Col style={{ display: "flex", justifyContent: "flex-end" }}>
-          <Button
-            icon="download-line"
-            iconPosition="left"
-            onClick={(e) => downloadCsv(e)}
-            size="sm"
-            variant="secondary"
-          >
-            Télécharger en CSV
-          </Button>
+          {isLoadingAll ? "Chargement..." : (
+            <Button
+              icon="download-line"
+              iconPosition="left"
+              onClick={(e) => downloadCsv(e)}
+              size="sm"
+              variant="secondary"
+            >
+              Télécharger en CSV
+            </Button>
+          )}
         </Col>
       </Row>
       <Row>

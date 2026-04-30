@@ -313,7 +313,7 @@ export default function DisplayStructure() {
                 </>
               )}
               {(section === "donnees") && (
-                <ProjectsData name={name} />
+                <ProjectsData />
               )}
             </>
           )}
