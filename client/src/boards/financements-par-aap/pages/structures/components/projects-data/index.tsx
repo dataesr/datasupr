@@ -57,20 +57,12 @@ export default function ProjectsData({ name }: { name: string | undefined }) {
   }
   if (filters.length > 0) {
     filters.forEach((filter) => {
-      if (filter.id === 'label') {
-        body.query.bool.filter.push({ wildcard: { 'label.fr.keyword': `*${filter.value}*` } })
-      }
-      if (filter.id === 'acronym') {
-        body.query.bool.filter.push({ wildcard: { 'acronym.fr.keyword': `*${filter.value}*` } })
-      }
-      if (filter.id === 'county') {
-        body.query.bool.filter.push({ wildcard: { 'address.region.keyword': `*${filter.value}*` } })
-      }
-      if (filter.id === 'creationYear') {
-        body.query.bool.filter.push({ term: { creationYear: filter.value } })
-      }
-      if (filter.id === 'status') {
-        body.query.bool.filter.push({ term: { status: filter.value } })
+      if (filter.id === 'year') {
+        body.query.bool.filter.push({ term: { project_year: filter.value } })
+      } else if (filter.id === 'type') {
+        body.query.bool.filter.push({ wildcard: { 'project_type.keyword': `*${filter.value}*` } })
+      } else {
+        console.error(`Filter id not supported : ${filter.id}`)
       }
     })
   }
@@ -103,14 +95,14 @@ export default function ProjectsData({ name }: { name: string | undefined }) {
   const columns = useMemo<Column[]>(() => [
     {
       id: 'year',
-      // isFilterable: true,
+      isFilterable: true,
       isSortable: true,
       label: 'Année',
-      // meta: { filterVariant: 'range' },
+      sortableField: 'project_year',
     },
     {
       id: 'type',
-      // isFilterable: true,
+      isFilterable: true,
       isSortable: true,
       label: 'Type',
       sortableField: 'project_type.keyword',
@@ -127,23 +119,27 @@ export default function ProjectsData({ name }: { name: string | undefined }) {
     },
     {
       id: 'instrument',
-      isSortable: false,
+      isSortable: true,
       label: 'Instrument de financement',
+      sortableField: 'project_instrument.keyword',
     },
     {
       id: 'participationIsCoordinator',
-      isSortable: false,
+      isSortable: true,
       label: 'Coordinateur',
+      sortableField: 'participation_is_coordinator',
     },
     {
       id: 'projectBudgetFinanced',
-      isSortable: false,
+      isSortable: true,
       label: 'Financement global (présence)',
+      sortableField: 'project_budgetFinanced',
     },
     {
       id: 'participationFunding',
-      isSortable: false,
+      isSortable: true,
       label: 'Financement perçu (implication)',
+      sortableField: 'participation_funding',
     }
   ], []);
 

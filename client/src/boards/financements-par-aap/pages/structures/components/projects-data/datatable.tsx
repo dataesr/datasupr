@@ -57,11 +57,8 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
   }
 
   const handles = {
-    acronym: (event) => setInputs({ ...inputs, acronym: event.target.value }),
-    county: (event) => setInputs({ ...inputs, county: event.target.value }),
-    creationYear: (event) => setInputs({ ...inputs, creationYear: event.target.value }),
-    label: (event) => setInputs({ ...inputs, label: event.target.value }),
-    status: (event) => setInputs({ ...inputs, status: event.target.value }),
+    type: (event) => setInputs({ ...inputs, type: event.target.value }),
+    year: (event) => setInputs({ ...inputs, year: event.target.value }),
   }
 
   const handleInputChange = (event, column) => handles[column.id](event)
@@ -86,13 +83,14 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
                       <div>
                         {column.label}
                         {' '}
-                        {column?.isFilterable && <i className="ri-filter-line"></i>}
+                        {column?.isFilterable && <i className="ri-filter-line" />}
                         {' '}
                         {getSortableIcon(column)}
                       </div>
                       {column?.isFilterable && (
                         <div>
                           <input
+                            className="border"
                             onChange={(event) => handleInputChange(event, column)}
                             type="text"
                             value={inputs[column.id]}
@@ -121,8 +119,8 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
       <Row className="fr-mt-1w">
         <Col>
           <select
-            value={pagination.size}
             onChange={(e) => setPagination({ from: 0, size: Number(e.target.value) })}
+            value={pagination.size}
           >
             {[10, 20, 30, 40, 50].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
@@ -134,14 +132,14 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
         </Col>
         <Col style={{ textAlign: 'center' }}>
           <button
-            className="border p-1 rounded"
+            className="button-action border p-1 rounded"
             onClick={() => setPagination({ ...pagination, from: 0 })}
             disabled={pagination.from === 0}
           >
             <i className="ri-arrow-left-double-line" />
           </button>
           <button
-            className="border p-1 rounded"
+            className="button-action border p-1 rounded"
             onClick={() => setPagination({ ...pagination, from: pagination.from - pagination.size })}
             disabled={pagination.from === 0}
           >
@@ -166,14 +164,14 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
             </strong>
           </span>
           <button
-            className="border p-1 rounded"
+            className="button-action border p-1 rounded"
             onClick={() => setPagination({ ...pagination, from: pagination.from + pagination.size })}
             disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
           >
             <i className="ri-arrow-right-s-line" />
           </button>
           <button
-            className="border p-1 rounded"
+            className="button-action border p-1 rounded"
             onClick={() => setPagination({ ...pagination, from: Math.floor(numberOfResults / pagination.size) * pagination.size })}
             disabled={(pagination.from / pagination.size) + 1 === Math.ceil(numberOfResults / pagination.size)}
           >
