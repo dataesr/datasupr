@@ -6,12 +6,17 @@ import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import Callout from "../../../../components/callout.tsx";
 import { type OutcomesFilterField, useOutcomesRepartition } from "../../api";
-import OutcomesFilterSelect from "../../../../components/filter-select";
+import OutcomesFilterSelect from "../../components/filter-select/index.tsx";
+import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
+import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 import RepartitionChart from "./charts/repartition-column";
+import YearRangeSlider from "../../components/year-range-slider/index.tsx";
 
 const DEFAULT_COHORT_YEAR = "2019-2020";
 const DEFAULT_COHORT_SITUATION = "SIT01";
 const ALL_RELATIVE_YEARS = [0, 1, 2, 3, 4];
+const DEFAULT_YEAR_START = 0;
+const DEFAULT_YEAR_END = 4;
 const YEAR_LABELS: Record<number, string> = {
     0: "2019-2020 (N+0)",
     1: "2020-2021 (N+1)",
@@ -80,12 +85,21 @@ export default function RepartitionPage() {
     const cohortYear = searchParams.get("cohorte_annee") || DEFAULT_COHORT_YEAR;
     const cohortSituation = searchParams.get("cohorte_situation") || DEFAULT_COHORT_SITUATION;
 
-    const relativeYears = useMemo(() => {
+    const { yearEnd, yearStart } = useMemo(() => {
         const raw = searchParams.get("annee_rel");
-        if (!raw) return ALL_RELATIVE_YEARS;
+        if (!raw) return { yearEnd: DEFAULT_YEAR_END, yearStart: DEFAULT_YEAR_START };
         const parsed = raw.split(",").map(Number).filter((n) => ALL_RELATIVE_YEARS.includes(n));
-        return parsed.length >= 1 ? parsed : ALL_RELATIVE_YEARS;
+        if (parsed.length < 1) return { yearEnd: DEFAULT_YEAR_END, yearStart: DEFAULT_YEAR_START };
+        const minYear = Math.max(DEFAULT_YEAR_START, Math.min(DEFAULT_YEAR_END, Math.min(...parsed)));
+        const maxYear = Math.max(minYear, Math.min(DEFAULT_YEAR_END, Math.max(...parsed)));
+        return { yearEnd: maxYear, yearStart: minYear };
     }, [searchParams]);
+
+    const relativeYears = useMemo(() => {
+        const result: number[] = [];
+        for (let y = yearStart; y <= yearEnd; y += 1) result.push(y);
+        return result;
+    }, [yearStart, yearEnd]);
 
     const { data, error, isLoading } = useOutcomesRepartition({
         cohorteAnnee: cohortYear,
@@ -125,26 +139,25 @@ export default function RepartitionPage() {
         setSearchParams(nextParams);
     };
 
-    const toggleYear = (year: number) => {
-        const next = relativeYears.includes(year)
-            ? relativeYears.filter((y) => y !== year)
-            : [...relativeYears, year].sort();
-        if (next.length < 1) return;
+    const updateYearRange = (start: number, end: number) => {
+        const safeStart = Math.max(DEFAULT_YEAR_START, Math.min(DEFAULT_YEAR_END, start));
+        const safeEnd = Math.max(safeStart, Math.min(DEFAULT_YEAR_END, end));
         const nextParams = new URLSearchParams(searchParams);
-        const isAll = next.length === ALL_RELATIVE_YEARS.length && ALL_RELATIVE_YEARS.every((y) => next.includes(y));
+        const isAll = safeStart === DEFAULT_YEAR_START && safeEnd === DEFAULT_YEAR_END;
         if (isAll) {
             nextParams.delete("annee_rel");
         } else {
-            nextParams.set("annee_rel", next.join(","));
+            const list: number[] = [];
+            for (let y = safeStart; y <= safeEnd; y += 1) list.push(y);
+            nextParams.set("annee_rel", list.join(","));
         }
         setSearchParams(nextParams);
     };
-
     return (
         <Container className="outcomes-section-page outcomes-flux-page">
             <Row gutters>
                 <Col>
-                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line" title="Avertissement">
+                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line">
                         Version sous embargo à ne pas diffuser
                     </Callout>
                 </Col>
@@ -194,33 +207,37 @@ export default function RepartitionPage() {
                             />
                         )}
 
-                        <div className="outcomes-flux-page__params fr-mb-3w">
+                        <div className="fr-mt-1w outcomes-flux-page__params outcomes-flux-page__params--after-chart">
                             <Title as="h2" look="h5" className="fr-mb-2w">Paramètres pour la répartition</Title>
                             <Row gutters>
                                 <Col>
-                                    <Title as="h3" look="h6" className="fr-mb-1w">Année à analyser</Title>
-                                    <p className="fr-text--xs fr-mb-1w">Sélectionner au moins 1 item</p>
-                                    <fieldset className="fr-fieldset">
-                                        {ALL_RELATIVE_YEARS.map((year) => (
-                                            <div className="fr-fieldset__element fr-fieldset__element--inline" key={year}>
-                                                <div className="fr-checkbox-group fr-checkbox-group--sm">
-                                                    <input
-                                                        checked={relativeYears.includes(year)}
-                                                        disabled={relativeYears.includes(year) && relativeYears.length <= 1}
-                                                        id={`rep-year-${year}`}
-                                                        onChange={() => toggleYear(year)}
-                                                        type="checkbox"
-                                                    />
-                                                    <label className="fr-label" htmlFor={`rep-year-${year}`}>
-                                                        {YEAR_LABELS[year]}
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </fieldset>
+                                    <YearRangeSlider
+                                        id="repartition-year-range"
+                                        label="Année à analyser"
+                                        hint={`Sélection continue obligatoire entre ${YEAR_LABELS[DEFAULT_YEAR_START]} et ${YEAR_LABELS[DEFAULT_YEAR_END]}.`}
+                                        min={DEFAULT_YEAR_START}
+                                        max={DEFAULT_YEAR_END}
+                                        start={yearStart}
+                                        end={yearEnd}
+                                        onChange={updateYearRange}
+                                        yearLabels={YEAR_LABELS}
+                                    />
                                 </Col>
                             </Row>
                         </div>
+
+                        <div className="outcomes-flux-page__params fr-mt-3w fr-mb-3w">
+                            <Title as="h2" look="h5" className="fr-mb-2w">Commentaires</Title>
+                            <p>
+                                <b>Source : </b>
+                                MESRE-SIES, système d'information SISE, enquêtes menées par le SIES auprès des établissements de l'enseignement supérieur. MEN-DEPP, systèmes d'informations SCOLARITE et SIFA, enquêtes menées par la DEPP auprès d'établissements du secondaire et de centres de formation d'apprentis (CFA).
+                            </p>
+                            <p>
+                                <b>Champ : </b>
+                                les néo-bacheliers inscrits en licence en université à la rentrée 2019 en France.
+                            </p>
+                        </div>
+                        <OutcomesDefinitionsTable definitions={OUTCOMES_DEFINITIONS} />
                     </div>
                 </Col>
             </Row>

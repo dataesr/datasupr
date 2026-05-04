@@ -23,14 +23,7 @@ export default function RepartitionChart({ hideTitle, distribution, relativeYear
             hideTitle={hideTitle}
             config={{
                 id: "outcomes-repartition",
-                title: { fr: "Répartition selon les inscriptions (en %)", look: "h4" as const },
-                comment: {
-                    fr: <>Note : ce graphique représente la répartition des néo-bacheliers inscrits en licence en 2019 selon leur situation d'inscription pour chaque année universitaire.</>,
-                },
-                sources: [{
-                    label: { fr: <>MESRE-SIES, système d'information SISE</> },
-                    url: { fr: "https://www.enseignementsup-recherche.gouv.fr/" },
-                }],
+                title: "Répartition selon les inscriptions (en %)",
             }}
             options={options}
         />

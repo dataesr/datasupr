@@ -5,7 +5,6 @@ import Footer from "../../../../components/footer";
 import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
 
-import "../styles.scss";
 import "../../colors.scss";
 
 
@@ -13,6 +12,7 @@ const NAV_ITEMS = [
   { key: "flux", labelKey: "flux", to: "/outcomes/flux" },
   { key: "repartition", labelKey: "repartition", to: "/outcomes/repartition" },
   { key: "plus-haut-diplome", labelKey: "plusHautDiplome", to: "/outcomes/plus-haut-diplome" },
+  { key: "croisements", labelKey: "croisements", to: "/outcomes/croisements" },
   { key: "methodologie", labelKey: "methodologie", to: "/outcomes/methodologie" },
 ] as const;
 

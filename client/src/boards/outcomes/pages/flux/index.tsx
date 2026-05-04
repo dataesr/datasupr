@@ -6,8 +6,11 @@ import DefaultSkeleton from "../../../../components/charts-skeletons/default";
 import ChartWrapper from "../../../../components/chart-wrapper";
 import Callout from "../../../../components/callout.tsx";
 import { type OutcomesFilterField, useOutcomesFlux } from "../../api";
-import OutcomesFilterSelect from "../../../../components/filter-select";
+import OutcomesFilterSelect from "../../components/filter-select/index.tsx";
+import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
+import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 import SankeyChart from "./charts/sankey";
+import YearRangeSlider from "../../components/year-range-slider/index.tsx";
 
 const DEFAULT_COHORT_YEAR = "2019-2020";
 const DEFAULT_COHORT_SITUATION = "L1";
@@ -274,45 +277,17 @@ export default function FluxPage() {
                             <Title as="h2" look="h5" className="fr-mb-2w">Paramètres pour les flux</Title>
                             <Row gutters>
                                 <Col md={6}>
-                                    <div className="fr-range-group">
-                                        <label className="fr-label" id="flux-year-range-label">
-                                            Année à analyser
-                                            <span className="fr-hint-text">
-                                                Sélection continue obligatoire entre {YEAR_LABELS[DEFAULT_YEAR_START]} et {YEAR_LABELS[DEFAULT_YEAR_END]}.
-                                            </span>
-
-                                        </label>
-                                        <div className="fr-range fr-range--double fr-range--sm outcomes-flux-page__year-range">
-                                            <span className="fr-range__output">{yearStart} - {yearEnd}</span>
-                                            <input
-                                                aria-describedby="flux-year-range-messages"
-                                                aria-labelledby="flux-year-range-label"
-                                                className="fr-range__input"
-                                                max={DEFAULT_YEAR_END}
-                                                min={DEFAULT_YEAR_START}
-                                                name="flux-year-range-start"
-                                                onChange={(e) => updateYearRange(Number(e.target.value), yearEnd)}
-                                                step={1}
-                                                type="range"
-                                                value={yearStart}
-                                            />
-                                            <input
-                                                aria-describedby="flux-year-range-messages"
-                                                aria-labelledby="flux-year-range-label"
-                                                className="fr-range__input"
-                                                max={DEFAULT_YEAR_END}
-                                                min={DEFAULT_YEAR_START}
-                                                name="flux-year-range-end"
-                                                onChange={(e) => updateYearRange(yearStart, Number(e.target.value))}
-                                                step={1}
-                                                type="range"
-                                                value={yearEnd}
-                                            />
-                                        </div>
-                                        <div className="fr-messages-group" id="flux-year-range-messages" aria-live="polite">
-                                            <p className="fr-message">Période active: {YEAR_LABELS[yearStart]} → {YEAR_LABELS[yearEnd]}</p>
-                                        </div>
-                                    </div>
+                                    <YearRangeSlider
+                                        id="flux-year-range"
+                                        label="Année à analyser"
+                                        hint={`Sélection continue obligatoire entre ${YEAR_LABELS[DEFAULT_YEAR_START]} et ${YEAR_LABELS[DEFAULT_YEAR_END]}.`}
+                                        min={DEFAULT_YEAR_START}
+                                        max={DEFAULT_YEAR_END}
+                                        start={yearStart}
+                                        end={yearEnd}
+                                        onChange={updateYearRange}
+                                        yearLabels={YEAR_LABELS}
+                                    />
                                 </Col>
                                 <Col md={6}>
                                     <div className="fr-range-group">
@@ -365,6 +340,7 @@ export default function FluxPage() {
                                 les néo-bacheliers inscrits en licence en université à la rentrée 2019 en France.
                             </p>
                         </div>
+                        <OutcomesDefinitionsTable definitions={OUTCOMES_DEFINITIONS} />
                     </div>
                 </Col>
             </Row>

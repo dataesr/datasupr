@@ -30,7 +30,7 @@ export type OutcomesFluxLink = {
   value: number;
 };
 
-export type OutcomesFluxResponse = {
+type OutcomesFluxResponse = {
   cohort: {
     annee: string;
     situation: string;
@@ -104,13 +104,13 @@ export const useOutcomesFlux = ({
     placeholderData: keepPreviousData,
   });
 
-export type OutcomesDistributionItem = {
+type OutcomesDistributionItem = {
   annee_rel: number;
   count: number;
   situation: string;
 };
 
-export type OutcomesRepartitionResponse = {
+type OutcomesRepartitionResponse = {
   cohort: { annee: string; situation: string };
   distribution: OutcomesDistributionItem[];
   filterOptions: Record<OutcomesFilterField, OutcomesFilterOption[]>;
@@ -175,7 +175,7 @@ export const useOutcomesRepartition = ({
     enabled: !!cohorteAnnee && !!cohorteSituation,
   });
 
-export type OutcomesDiplomaRow = {
+type OutcomesDiplomaRow = {
   diplome: string;
   dontInscrits: number;
   dontSortants: number;
@@ -183,12 +183,7 @@ export type OutcomesDiplomaRow = {
   pourcentage: number;
 };
 
-export type OutcomesDiplomaTotals = {
-  diplomes: OutcomesDiplomaRow;
-  nonDiplomes: OutcomesDiplomaRow;
-};
-
-export type OutcomesPlusHautDiplomeResponse = {
+type OutcomesPlusHautDiplomeResponse = {
   cohort: { annee: string; situation: string };
   filterOptions: Record<OutcomesFilterField, OutcomesFilterOption[]>;
   filters: Partial<Record<OutcomesFilterField, string>> & {

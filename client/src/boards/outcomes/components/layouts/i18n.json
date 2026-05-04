@@ -15,6 +15,10 @@
     "fr": "Plus haut diplôme",
     "en": "Highest degree"
   },
+  "croisements": {
+    "fr": "Croisements et profils",
+    "en": "Crossings and profiles"
+  },
   "methodologie": {
     "fr": "Méthodologie",
     "en": "Methodology"

@@ -1,3 +1,4 @@
+import { createChartOptions } from "../../../../../../components/chart-wrapper/default-options";
 import { getCssColor } from "../../../../../../utils/colors";
 import { type OutcomesFluxLink } from "../../../../api";
 
@@ -51,6 +52,18 @@ const SITUATION_COLOR_KEYS: Record<string, string> = {
     SIT11: "outcomes-ecoles",
     SIT12: "outcomes-autres",
     SIT13: "outcomes-sortants-diplomes",
+};
+
+const SITUATION_YEAR_LEVEL: Record<string, string> = {
+    SIT01: "1re année",
+    SIT02: "2e année",
+    SIT03: "3e année",
+    SIT04: "4e année",
+    SIT05: "5e année",
+    SIT06: "1re/2e année",
+    SIT07: "1re/2e année",
+    SIT08: "1re/2e année",
+    SIT09: "3e année",
 };
 
 const SITUATION_ORDER: Record<string, number> = {
@@ -203,6 +216,18 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
     const nodes = buildNodes(sorted, yearToColumnIndex);
     const usedColumns = Array.from(new Set(nodes.map((node) => node.column))).sort((a, b) => a - b);
     const nodeNames = new Map<string, string>(nodes.map((node) => [node.id, node.name]));
+    const nodeColors = new Map<string, string>(nodes.map((node) => [node.id, node.color]));
+    const nodeSituations = new Map<string, string>();
+    sorted.forEach((link) => {
+        const sRel = normalizeRelativeYear(link.source_rel);
+        const tRel = normalizeRelativeYear(link.target_rel);
+        if (sRel !== null && link.source_situation) {
+            nodeSituations.set(getNodeId(sRel, link.source_situation), link.source_situation);
+        }
+        if (tRel !== null && link.target_situation) {
+            nodeSituations.set(getNodeId(tRel, link.target_situation), link.target_situation);
+        }
+    });
     const incomingByNode = new Map<string, number>();
     const outgoingByNode = new Map<string, number>();
     const incomingBreakdownByNode = new Map<string, Map<string, number>>();
@@ -224,7 +249,7 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
     const totalVisibleFlow = seriesData.reduce((sum, item) => sum + item.weight, 0);
     const totalStudentsBase = totalStudents > 0 ? totalStudents : totalVisibleFlow;
 
-    return {
+    return createChartOptions("sankey" as any, ({
         chart: {
             height: 800,
             backgroundColor: "transparent",
@@ -341,10 +366,29 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
         ],
         title: { text: undefined },
         tooltip: {
+            useHTML: true,
+            borderRadius: 0,
+            borderWidth: 1,
+            borderColor: resolveTokenColor("border-default-grey"),
+            backgroundColor: resolveTokenColor("background-overlap-grey"),
+            shadow: false,
+            padding: 0,
+            shape: "square",
+            outside: true,
+            style: {
+                color: resolveTokenColor("text-title-grey"),
+                fontSize: "13px",
+                zIndex: 9999,
+            },
             formatter() {
                 const p = (this as any).point;
-
                 const isNode = !p.from && !p.to;
+
+                const colorTitle = resolveTokenColor("text-title-grey");
+                const colorMention = resolveTokenColor("text-mention-grey");
+                const colorBorder = resolveTokenColor("border-default-grey");
+                const colorBgAlt = resolveTokenColor("background-alt-grey");
+                const colorTagBg = resolveTokenColor("background-contrast-grey");
 
                 if (isNode) {
                     const relativeYear = Number(
@@ -352,60 +396,170 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
                         p?.custom?.relativeYear ??
                         columnIndexToYear.get(Number(p.column))
                     );
-
-                    if (relativeYear === 0) {
-                        const yearLabel = YEAR_LABELS[relativeYear] || `N+${relativeYear}`;
-                        return `${p.name} - ${yearLabel}`;
-                    }
+                    const yearLabel = Number.isFinite(relativeYear)
+                        ? YEAR_LABELS[relativeYear] || `N+${relativeYear}`
+                        : `N+${p.column}`;
 
                     const nodeId = String(p.id || "");
+                    const situation = nodeSituations.get(nodeId) || "";
+                    const yearLevelTag = SITUATION_YEAR_LEVEL[situation] || "";
+                    const nodeColor = nodeColors.get(nodeId) || resolveTokenColor("text-title-grey");
+
                     const incoming = incomingByNode.get(nodeId) || 0;
                     const outgoing = outgoingByNode.get(nodeId) || 0;
                     const nodeTotal = Math.max(incoming, outgoing);
                     const nodePart = totalStudentsBase > 0 ? (nodeTotal / totalStudentsBase) * 100 : 0;
-                    const yearLabel = Number.isFinite(relativeYear)
-                        ? YEAR_LABELS[relativeYear] || `N+${relativeYear}`
-                        : `N+${p.column}`;
+
+                    const isSink = !outgoing && incoming > 0;
+                    const isSource = !incoming && outgoing > 0;
+
+                    const buildBreakdown = (
+                        breakdown: Array<[string, number]>,
+                        total: number,
+                        kind: "in" | "out"
+                    ) => {
+                        if (!total) return "";
+                        const MAX_ITEMS = 4;
+                        const top = breakdown.slice(0, MAX_ITEMS);
+                        const rest = breakdown.slice(MAX_ITEMS);
+                        const restSum = rest.reduce((sum, [, value]) => sum + value, 0);
+
+                        const renderRow = (label: string, value: number, color: string) => {
+                            const pct = (value / total) * 100;
+                            const pctClamped = Math.max(0, Math.min(100, pct));
+                            return `
+                                <div style="margin-top:6px;">
+                                    <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:12px;color:${colorTitle};">
+                                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;">${label}</span>
+                                        <span style="font-weight:700;flex-shrink:0;">${formatPercent(pct)}</span>
+                                    </div>
+                                    <div style="margin-top:3px;height:2px;background:${colorBgAlt};">
+                                        <div style="width:${pctClamped}%;height:100%;background:${color};"></div>
+                                    </div>
+                                </div>
+                            `;
+                        };
+
+                        const rows = top
+                            .map(([otherId, value]) => {
+                                const otherSituation = nodeSituations.get(otherId) || "";
+                                const otherColor = nodeColors.get(otherId) || colorTitle;
+                                const sameSituation = otherSituation === situation && otherSituation !== "";
+                                const baseLabel = nodeNames.get(otherId) || otherId;
+                                const shortLabel = otherSituation === "SIT11"
+                                    ? "Écoles ingé./com."
+                                    : baseLabel;
+                                const label = sameSituation
+                                    ? `${baseLabel} redoubl.`
+                                    : kind === "out" && otherSituation === "SIT13"
+                                        ? "Sortants"
+                                        : shortLabel;
+                                return renderRow(label, value, otherColor);
+                            })
+                            .join("");
+
+                        const restRow = rest.length > 0
+                            ? renderRow(`Autres (${rest.length})`, restSum, colorMention)
+                            : "";
+
+                        return rows + restRow;
+                    };
 
                     const incomingBreakdown = Array.from((incomingBreakdownByNode.get(nodeId) || new Map()).entries())
                         .sort((a, b) => b[1] - a[1]);
                     const outgoingBreakdown = Array.from((outgoingBreakdownByNode.get(nodeId) || new Map()).entries())
                         .sort((a, b) => b[1] - a[1]);
 
-                    const hasIncoming = incoming > 0;
-                    const linesTitle = hasIncoming ? "<b>D'où viennent les étudiants :</b>" : "<b>Vers quelles formations vont les étudiants :</b>";
-                    const detailLines = hasIncoming
-                        ? incomingBreakdown
-                            .map(([sourceId, value]) => `${nodeNames.get(sourceId) || sourceId} : ${formatPercent((value / incoming) * 100)}`)
-                        : outgoingBreakdown.map(([targetId, value]) => `${nodeNames.get(targetId) || targetId} : ${formatPercent((value / outgoing) * 100)}`);
+                    const headerTag = yearLevelTag
+                        ? `<span style="background:${colorTagBg};color:${colorTitle};font-size:11px;font-weight:500;padding:2px 8px;line-height:1.4;">${yearLevelTag}</span>`
+                        : "";
 
-                    return [
-                        `<b>${p.name} - ${yearLabel}</b>`,
-                        `<b>Part du total : ${formatPercent(nodePart)}</b>`,
-                        linesTitle,
-                        ...detailLines,
-                        `<b>Effectif total : ${formatNumber(nodeTotal)}</b>`,
-                    ].join("<br/>");
+                    const headerRow = `
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                            <div style="display:flex;align-items:center;gap:8px;">
+                                <span style="display:inline-block;width:10px;height:10px;background:${nodeColor};"></span>
+                                <span style="color:${colorTitle};font-size:13px;font-weight:500;">${p.name}<span style="color:${colorMention};"> · ${yearLabel}</span></span>
+                            </div>
+                            ${headerTag}
+                        </div>
+                    `;
+
+                    const totalRow = `
+                        <div style="margin-top:12px;display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;">
+                            <span style="font-size:22px;font-weight:700;color:${colorTitle};">${formatNumber(nodeTotal)}</span>
+                            <span style="font-size:13px;color:${colorMention};">étudiants</span>
+                            <span style="margin-left:auto;font-size:13px;color:${colorMention};">${formatPercent(nodePart)} de la cohorte</span>
+                        </div>
+                    `;
+
+                    const showIncoming = !isSource && incomingBreakdown.length > 0;
+                    const showOutgoing = !isSink && outgoingBreakdown.length > 0;
+                    const twoCols = showIncoming && showOutgoing;
+
+                    const columnTitleStyle = `font-size:10px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:${colorMention};margin-bottom:4px;`;
+
+                    const columns = `
+                        <div style="margin-top:10px;display:flex;gap:16px;">
+                            ${showIncoming ? `
+                                <div style="flex:1;min-width:0;">
+                                    <div style="${columnTitleStyle}">&#8592; D'où ils viennent</div>
+                                    ${buildBreakdown(incomingBreakdown, incoming, "in")}
+                                </div>
+                            ` : ""}
+                            ${showOutgoing ? `
+                                <div style="flex:1;min-width:0;">
+                                    <div style="${columnTitleStyle}">Où ils vont &#8594;</div>
+                                    ${buildBreakdown(outgoingBreakdown, outgoing, "out")}
+                                </div>
+                            ` : ""}
+                        </div>
+                    `;
+
+                    const tooltipWidth = twoCols ? 360 : 240;
+
+                    return `
+                        <div style="padding:12px 14px;width:${tooltipWidth}px;border-top:3px solid ${nodeColor};box-sizing:border-box;">
+                            ${headerRow}
+                            ${totalRow}
+                            ${(showIncoming || showOutgoing) ? `<div style="margin-top:10px;border-top:1px solid ${colorBorder};"></div>` : ""}
+                            ${columns}
+                        </div>
+                    `;
                 }
 
                 const weight = Number(p.weight) || 0;
                 const incoming = incomingByNode.get(String(p.to || "")) || 0;
                 const outgoing = outgoingByNode.get(String(p.from || "")) || 0;
-
                 const shareOfIncoming = incoming > 0 ? (weight / incoming) * 100 : 0;
                 const shareOfOutgoing = outgoing > 0 ? (weight / outgoing) * 100 : 0;
                 const shareOfVisible = totalStudentsBase > 0 ? (weight / totalStudentsBase) * 100 : 0;
+                const fromColor = nodeColors.get(String(p.from || "")) || colorTitle;
+                const toColor = nodeColors.get(String(p.to || "")) || colorTitle;
 
-                return [
-                    `<b>${p.fromNode.name}</b> → <b>${p.toNode.name}</b>`,
-                    `<b>${formatNumber(weight)}</b> étudiants`,
-                    `<b>Flux sortants</b>`,
-                    `${formatPercent(shareOfOutgoing)} de ${p.fromNode.name} à ${p.toNode.name}`,
-                    `Part totale du flux: <b>${formatPercent(shareOfVisible)}</b>`,
-                    `<b>Flux entrants</b>`,
-                    `${p.fromNode.name} : ${formatPercent(shareOfIncoming)} de ${p.toNode.name}`,
-                ].join("<br/>");
+                return `
+                    <div style="padding:16px;min-width:260px;max-width:380px;">
+                        <div style="display:flex;align-items:center;gap:8px;font-size:13px;color:${colorTitle};">
+                            <span style="display:inline-block;width:10px;height:10px;background:${fromColor};"></span>
+                            <span style="font-weight:600;">${p.fromNode.name}</span>
+                            <span style="color:${colorMention};">&#8594;</span>
+                            <span style="display:inline-block;width:10px;height:10px;background:${toColor};"></span>
+                            <span style="font-weight:600;">${p.toNode.name}</span>
+                        </div>
+                        <div style="margin-top:12px;display:flex;align-items:baseline;gap:8px;">
+                            <span style="font-size:22px;font-weight:700;color:${colorTitle};">${formatNumber(weight)}</span>
+                            <span style="font-size:13px;color:${colorMention};">étudiants</span>
+                        </div>
+                        <div style="margin-top:12px;border-top:1px solid ${colorBorder};padding-top:10px;display:grid;grid-template-columns:1fr auto;gap:6px 16px;font-size:12px;">
+                            <span style="color:${colorMention};">Part des sortants de ${p.fromNode.name}</span>
+                            <span style="color:${colorTitle};font-weight:700;">${formatPercent(shareOfOutgoing)}</span>
+                            <span style="color:${colorMention};">Part des entrants de ${p.toNode.name}</span>
+                            <span style="color:${colorTitle};font-weight:700;">${formatPercent(shareOfIncoming)}</span>
+                            <span style="color:${colorMention};">Part de la cohorte</span>
+                            <span style="color:${colorTitle};font-weight:700;">${formatPercent(shareOfVisible)}</span>
+                        </div>
+                    </div>
+                `;
             },
         },
-    };
+    } as any));
 }

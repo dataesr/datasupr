@@ -38,7 +38,7 @@ export default function BreakdownRow({
     const rightLabel = mode === "percent" ? formatPercent(ndiplShare) : formatNumber(ndipl);
 
     return (
-        <div className="outcomes-phd__row fr-mb-2w">
+        <div className="fr-mb-2w">
             <p className="fr-text--sm fr-mb-1v">
                 <b>{option.label}</b> — {formatNumber(total)} ({formatPercent(populationShare)} de la population observée)
             </p>

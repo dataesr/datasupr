@@ -8,7 +8,9 @@ import {
     type OutcomesFilterField,
     useOutcomesPlusHautDiplome,
 } from "../../api";
-import OutcomesFilterSelect from "../../../../components/filter-select";
+import OutcomesFilterSelect from "../../components/filter-select/index.tsx";
+import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
+import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 import DiplomaDonut from "./charts/diploma-donut";
 import BreakdownRow from "./components/breakdown-row.tsx";
 
@@ -350,6 +352,7 @@ export default function PlusHautDiplomePage() {
                                 Les néo-bacheliers inscrits en licence en université à la rentrée 2019 en France.
                             </p>
                         </div>
+                        <OutcomesDefinitionsTable definitions={OUTCOMES_DEFINITIONS} />
                     </div>
                 </Col>
             </Row>

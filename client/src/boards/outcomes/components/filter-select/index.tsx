@@ -1,7 +1,7 @@
-import Select from "../select";
+import Select from "../../../../components/select";
 
 interface FilterOption {
-    count: number;
+    count?: number;
     key: string;
     label: string;
 }
@@ -31,7 +31,7 @@ export default function OutcomesFilterSelect({
 
     return (
         <div className="fr-select-group fr-mb-2w">
-            <label className="fr-label" htmlFor={groupId}>
+            <label className="fr-label fr-mb-1w" htmlFor={groupId}>
                 {label}
                 {hint ? <span className="fr-hint-text">{hint}</span> : null}
             </label>
@@ -56,7 +56,7 @@ export default function OutcomesFilterSelect({
                         selected={selectedKey === opt.key}
                         onClick={() => onSelect(opt.key)}
                     >
-                        {opt.label} ({opt.count})
+                        {opt.label}{typeof opt.count === "number" && opt.count > 0 ? ` (${opt.count})` : ""}
                     </Select.Option>
                 ))}
             </Select>
