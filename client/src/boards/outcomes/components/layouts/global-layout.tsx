@@ -5,6 +5,8 @@ import Footer from "../../../../components/footer";
 import { getI18nLabel } from "../../../../utils";
 import i18n from "./i18n.json";
 
+import "./styles.scss"
+
 import "../../colors.scss";
 
 
