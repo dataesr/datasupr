@@ -98,7 +98,7 @@ export default function HeatmapTab() {
     const chartOptions = useMemo(() => {
         if (sameAxis || isLoading || labeledValues.length === 0) return null;
         return createHeatmapOptions({
-            vAxisLabel, hAxisLabel, vOptions, hOptions,
+            vAxisLabel, vOptions, hOptions,
             getCell: (vKey, hKey) => dataBySig.get(sigOf({ [vAxis]: vKey, [hAxis]: hKey })) ?? null,
             getRowMargin: (vKey) => dataBySig.get(sigOf({ [vAxis]: vKey })) ?? null,
             getColMargin: (hKey) => dataBySig.get(sigOf({ [hAxis]: hKey })) ?? null,

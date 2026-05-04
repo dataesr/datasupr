@@ -7,7 +7,6 @@ export type HeatmapCell = { pct: number; count: number; dipl: number } | null;
 
 interface CreateHeatmapOptionsParams {
     vAxisLabel: string;
-    hAxisLabel: string;
     vOptions: Array<{ key: string; label: string }>;
     hOptions: Array<{ key: string; label: string }>;
     getCell: (vKey: string, hKey: string) => HeatmapCell;
@@ -20,7 +19,6 @@ const ENSEMBLE_LABEL = "Ensemble";
 
 export function createHeatmapOptions({
     vAxisLabel,
-    hAxisLabel,
     vOptions,
     hOptions,
     getCell,
