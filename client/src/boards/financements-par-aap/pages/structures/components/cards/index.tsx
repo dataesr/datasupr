@@ -67,22 +67,22 @@ export default function Cards() {
 
   const dataFunders = {};
   funders.forEach((funder) => {
-    const dataByFunder = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder);
+    const dataByFunder = (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder);
     dataFunders[funder] = {
       projects: years.map((year) => ({
         x: year,
-        y: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.unique_projects?.value ?? 0,
-        yDisplay: dataByFunder?.by_project_year?.buckets.find((item) => item.key === year)?.unique_projects?.value ?? 0,
+        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0,
       })),
       budget: years.map((year) => ({
         x: year,
-        y: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget?.value ?? 0,
-        yDisplay: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget?.value ?? 0,
+        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget?.value ?? 0,
       })),
       participation: years.map((year) => ({
         x: year,
-        y: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget_participation?.value ?? 0,
-        yDisplay: dataByFunder?.by_project_year?.buckets?.find((item) => item.key === year)?.sum_budget_participation?.value ?? 0,
+        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget_participation?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget_participation?.value ?? 0,
       })),
     };
   });
@@ -134,7 +134,7 @@ export default function Cards() {
                 tooltipFormatter={function (this: any) {
                   return `${this.y} ${this.y > 1 ? "projets" : "projet"} ${funder} en ${this.key}`;
                 }}
-                value={`${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0)} projet${dataFunders[funder].projects.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0) > 1 ? 's' : ''}`}
+                value={`${dataFunders[funder].projects.filter((project) => yearMin && yearMax && project.x >= yearMin && project.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0)} projet${dataFunders[funder].projects.filter((project) => yearMin && yearMax && project.x >= yearMin && project.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0) > 1 ? 's' : ''}`}
                 yAxisMax={maxProjects}
               />
             }
@@ -160,7 +160,7 @@ export default function Cards() {
                 title={`Financement global des projets ${funder}`}
                 titleAs="h3"
                 tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y)} € par ${funder} en ${this.key}` }}
-                value={`${formatCompactNumber(dataFunders[funder].budget.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
+                value={`${formatCompactNumber(dataFunders[funder].budget.filter((budget) => yearMin && yearMax && budget.x >= yearMin && budget.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
                 yAxisMax={maxBudget}
               />
             }
@@ -186,7 +186,7 @@ export default function Cards() {
                 title={`Financements perçus des projets ${funder}`}
                 titleAs="h3"
                 tooltipFormatter={function (this: any) { return `${formatCompactNumber(this.y)} € par ${funder} en ${this.key}` }}
-                value={`${formatCompactNumber(dataFunders[funder].participation.filter((item) => yearMin && yearMax && item.x >= yearMin && item.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
+                value={`${formatCompactNumber(dataFunders[funder].participation.filter((participation) => yearMin && yearMax && participation.x >= yearMin && participation.x <= yearMax).reduce((acc, cur) => acc + cur.yDisplay, 0))} €`}
                 yAxisMax={maxParticipation}
               />
             }

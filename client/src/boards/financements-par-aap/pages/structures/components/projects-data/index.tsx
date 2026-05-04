@@ -97,9 +97,9 @@ export default function ProjectsData() {
     id: hit._source?.project_id,
     instrument: hit._source?.project_instrument,
     label: hit._source?.project_label,
-    participationFunding: hit._source?.participation_funding,
+    participationFunding: hit._source?.participation_funding ? `${hit._source.participation_funding} €` : '',
     participationIsCoordinator: hit._source?.participation_is_coordinator.toString(),
-    projectBudgetFinanced: hit._source?.project_budgetFinanced,
+    projectBudgetFinanced: hit._source?.project_budgetFinanced ? `${hit._source.project_budgetFinanced} €` : '',
     type: hit._source?.project_type,
     year: hit._source?.project_year,
   }))
@@ -109,9 +109,9 @@ export default function ProjectsData() {
     id: hit._source?.project_id,
     instrument: hit._source?.project_instrument,
     label: hit._source?.project_label,
-    participationFunding: hit._source?.participation_funding,
+    participationFunding: hit._source?.participation_funding ? `${hit._source.participation_funding} €` : '',
     participationIsCoordinator: hit._source?.participation_is_coordinator.toString(),
-    projectBudgetFinanced: hit._source?.project_budgetFinanced,
+    projectBudgetFinanced: hit._source?.project_budgetFinanced ? `${hit._source.project_budgetFinanced} €` : '',
     type: hit._source?.project_type,
     year: hit._source?.project_year,
   }))

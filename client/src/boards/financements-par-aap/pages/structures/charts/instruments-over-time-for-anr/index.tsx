@@ -44,9 +44,16 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
                       field: "project_id.keyword",
                     },
                   },
-                  sum_budget: {
-                    sum: {
-                      field: "project_budgetFinanced",
+                  should_ignore: {
+                    terms: {
+                      field: "project_ignore_total_budget",
+                    },
+                    aggregations: {
+                      sum_budget: {
+                        sum: {
+                          field: "project_budgetFinanced",
+                        },
+                      },
                     },
                   },
                   sum_budget_participation: {
@@ -83,37 +90,51 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
   (data?.aggregations?.by_instrument?.buckets ?? []).forEach((instrument) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
-      data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
+      data: years.map((year) => instrument?.by_project_year?.buckets
+        ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesBudget.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
-      data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+      data: years.map((year) => instrument?.by_project_year?.buckets
+        ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
-      data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+      data: years.map((year) => instrument?.by_project_year?.buckets
+        ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
-      data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+      data: years.map((year) => instrument?.by_project_year?.buckets
+        ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
-      data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+      data: years.map((year) => instrument?.by_project_year?.buckets
+        ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
-      data: years.map((year) => instrument?.by_project_year?.buckets.find((item) => item.key === year)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+      data: years.map((year) => instrument?.by_project_year?.buckets
+        ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });

@@ -1,16 +1,11 @@
-button.rounded {
-  &.rounded {
-    border-radius: 5px;
-  }
+.button-action:hover {
+  background-color: var(--background-contrast-grey-hover);
+  border-radius: 5px;
+}
 
-  &.button-action:hover {
-    background-color: var(--background-contrast-grey-hover);
-  }
-
-  &.button-action:disabled,
-  &.button-action[disabled] {
-    background-color: transparent;
-  }
+.button-action:disabled,
+.button-action[disabled] {
+  background-color: transparent;
 }
 
 input.border {

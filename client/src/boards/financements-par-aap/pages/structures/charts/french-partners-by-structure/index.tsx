@@ -78,9 +78,16 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  sum_budget: {
-                    sum: {
-                      field: "project_budgetFinanced",
+                  should_ignore: {
+                    terms: {
+                      field: "project_ignore_total_budget",
+                    },
+                    aggregations: {
+                      sum_budget: {
+                        sum: {
+                          field: "project_budgetFinanced",
+                        },
+                      },
                     },
                   },
                 },
@@ -146,32 +153,46 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   funders.forEach((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: partnersBudget.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
+      data: partnersBudget.map((partner) => partner.by_project_type.buckets
+        ?.find((project) => project.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: partnersBudget.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+      data: partnersBudget.map((partner) => partner.by_project_type.buckets
+        ?.find((project) => project.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: partnersParticipation.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+      data: partnersParticipation.map((partner) => partner.by_project_type.buckets
+        ?.find((project) => project.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: partnersParticipation.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+      data: partnersParticipation.map((partner) => partner.by_project_type.buckets
+        ?.find((project) => project.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+      data: partnersProject.map((partner) => partner.by_project_type.buckets
+        ?.find((project) => project.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+      data: partnersProject.map((partner) => partner.by_project_type.buckets
+        ?.find((project) => project.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
   });
@@ -236,8 +257,10 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
   };
 
   const config = {
-    comment: { "fr": <>Ce graphe montre quels établissements français collaborent le plus avec l'établissement sur les projets financés par AAP.
-Les barres représentent le nombre, les financements globaux et perçus pour les projets auxquels l'établissement participe avec chaque partenaire. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
+    comment: {
+      "fr": <>Ce graphe montre quels établissements français collaborent le plus avec l'établissement sur les projets financés par AAP.
+        Les barres représentent le nombre, les financements globaux et perçus pour les projets auxquels l'établissement participe avec chaque partenaire. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</>
+    },
     id: "frenchPartnersByStructure",
     integrationURL: `/integration?chart_id=frenchPartnersByStructure&${searchParams.toString()}`,
     title,

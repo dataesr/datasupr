@@ -1,8 +1,8 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
 import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
@@ -74,9 +74,16 @@ export default function CountiesByStructure({ name }: { name: string | undefined
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  sum_budget: {
-                    sum: {
-                      field: "project_budgetFinanced",
+                  should_ignore: {
+                    terms: {
+                      field: "project_ignore_total_budget",
+                    },
+                    aggregations: {
+                      sum_budget: {
+                        sum: {
+                          field: "project_budgetFinanced",
+                        },
+                      },
                     },
                   },
                 },
@@ -143,32 +150,46 @@ export default function CountiesByStructure({ name }: { name: string | undefined
   funders.forEach((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: classificationsBudget.map((classification: any) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
+      data: classificationsBudget.map((classification: any) => classification.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: classificationsBudget.map((classification: any) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+      data: classificationsBudget.map((classification: any) => classification.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: classificationsParticipation.map((classification: any) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+      data: classificationsParticipation.map((classification: any) => classification.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: classificationsParticipation.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+      data: classificationsParticipation.map((classification) => classification.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: classificationsProject.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+      data: classificationsProject.map((classification) => classification.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: classificationsProject.map((classification) => classification.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+      data: classificationsProject.map((classification) => classification.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
   });
@@ -224,11 +245,13 @@ export default function CountiesByStructure({ name }: { name: string | undefined
   };
 
   const config = {
-    comment: { "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement selon les grandes classifications disciplinaires.
-Les barres représentent le nombre / le financement global ou perçu des projets rattachés à chaque domaine, permettant d’identifier les champs scientifiques les plus présents dans les projets auxquels l’établissement participe.
-Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
-Les thématiques ont été estimées par IA, à partir du titre, résumé et mots clés des projets.
-</> },
+    comment: {
+      "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement selon les grandes classifications disciplinaires.
+        Les barres représentent le nombre / le financement global ou perçu des projets rattachés à chaque domaine, permettant d’identifier les champs scientifiques les plus présents dans les projets auxquels l’établissement participe.
+        Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
+        Les thématiques ont été estimées par IA, à partir du titre, résumé et mots clés des projets.
+      </>
+    },
     id: "countiesByStructure",
     integrationURL: `/integration?chart_id=countiesByStructure&${searchParams.toString()}`,
     title,

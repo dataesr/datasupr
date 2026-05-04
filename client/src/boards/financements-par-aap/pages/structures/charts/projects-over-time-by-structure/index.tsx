@@ -45,9 +45,16 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
                       field: "project_id.keyword",
                     },
                   },
-                  sum_budget: {
-                    sum: {
-                      field: "project_budgetFinanced",
+                  should_ignore: {
+                    terms: {
+                      field: "project_ignore_total_budget",
+                    },
+                    aggregations: {
+                      sum_budget: {
+                        sum: {
+                          field: "project_budgetFinanced",
+                        },
+                      },
                     },
                   },
                   sum_budget_participation: {
@@ -83,37 +90,57 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   funders.map((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.sum_budget?.value ?? 0),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
+        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
+        .find((bucket) => bucket.key === year)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.sum_budget?.value ?? 0),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
+        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
+        .find((bucket) => bucket.key === year)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.sum_budget_participation?.value ?? 0),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
+        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
+        .find((bucket) => bucket.key === year)?.sum_budget_participation?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.sum_budget_participation?.value ?? 0),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
+        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
+        .find((bucket) => bucket.key === year)?.sum_budget_participation?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
+        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
+        .find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
+        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
+        .find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });

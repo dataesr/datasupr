@@ -42,9 +42,16 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
                   field: "project_id.keyword",
                 },
               },
-              sum_budget: {
-                sum: {
-                  field: "project_budgetFinanced",
+              should_ignore: {
+                terms: {
+                  field: "project_ignore_total_budget",
+                },
+                aggregations: {
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
                 },
               },
               sum_budget_participation: {
@@ -77,11 +84,11 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
   const seriesProject: any[] = [];
   const categories: string[] = [];
   funders.forEach((funder, index) => {
-    const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((item) => item.key === funder)?.is_coordinator?.buckets;
+    const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets;
     const isCoord = funderData?.find((bucket) => bucket.key === 1);
     const isNotCoord = funderData?.find((bucket) => bucket.key === 0);
-    const isCoordBudget = isCoord?.sum_budget?.value ?? 0;
-    const isNotCoordBudget = isNotCoord?.sum_budget?.value ?? 0;
+    const isCoordBudget = isCoord?.should_ignore?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0;
+    const isNotCoordBudget = isNotCoord?.should_ignore?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0;
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: [{ name: funder, x: index, y: isNotCoordBudget, y_perc: isNotCoordBudget === 0 ? 0 : isNotCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: getCssColor({ name: funder, prefix: "funder" }) }],

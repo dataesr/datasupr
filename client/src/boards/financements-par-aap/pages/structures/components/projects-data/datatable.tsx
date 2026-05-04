@@ -119,6 +119,7 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
       <Row className="fr-mt-1w">
         <Col>
           <select
+            className="button-action"
             onChange={(e) => setPagination({ from: 0, size: Number(e.target.value) })}
             value={pagination.size}
           >

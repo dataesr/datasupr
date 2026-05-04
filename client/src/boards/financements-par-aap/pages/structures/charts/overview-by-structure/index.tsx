@@ -60,7 +60,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   const series = funders
     .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder))
     // Filter on not empty item
-    .filter((item) => !!item)
+    .filter((bucket) => !!bucket)
     .map((bucket) => [
       [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.doc_count ?? 0],
       [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
@@ -90,7 +90,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
                   if (!hiddenPoints.includes(point.name)) {
                     hiddenPoints.push(point.name);
                   } else {
-                    hiddenPoints = hiddenPoints.filter((item) => item !== point.name);
+                    hiddenPoints = hiddenPoints.filter((hiddenPoint) => hiddenPoint !== point.name);
                   }
                   point.update({
                     oldY: point.y ? point.y : point.oldY,
