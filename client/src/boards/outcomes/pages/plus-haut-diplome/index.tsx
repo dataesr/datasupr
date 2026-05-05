@@ -201,7 +201,7 @@ export default function PlusHautDiplomePage() {
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
                         <Title as="h1" look="h3">
-                            Le plus haut diplôme obtenu atteint en {lastYearLabel}
+                            Plus haut diplôme obtenu atteint en {lastYearLabel} par les néo-bacheliers inscrits en L1 en 2019
                         </Title>
                         {activeFiltersElement}
 

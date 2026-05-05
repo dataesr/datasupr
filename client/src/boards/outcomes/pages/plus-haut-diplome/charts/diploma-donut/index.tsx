@@ -22,7 +22,7 @@ export default function DiplomaDonut({ rows, nonDiplomes, lastYearLabel }: Diplo
         <ChartWrapper
             config={{
                 id: "outcomes-plus-haut-diplome-donut",
-                title: { fr: title, look: "h5" as const },
+                title,
                 sources: [
                     {
                         label: { fr: <>MESRE-SIES</> },

@@ -96,6 +96,12 @@ export function createRepartitionOptions(
                 valueDescriptionFormat: "{series.name}: {point.percentage:.1f}%",
             },
         },
+        caption: {
+            align: "left",
+            style: { color: "var(--text-mention-grey)", fontSize: "11px" },
+            text: "Source : MESRE-SIES.",
+            verticalAlign: "bottom",
+        },
         chart: {
             type: "column", backgroundColor: "transparent", height: 600,
         },
