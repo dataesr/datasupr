@@ -92,9 +92,16 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  sum_budget: {
-                    sum: {
-                      field: "project_budgetFinanced",
+                  should_ignore: {
+                    terms: {
+                      field: "project_ignore_total_budget",
+                    },
+                    aggregations: {
+                      sum_budget: {
+                        sum: {
+                          field: "project_budgetFinanced",
+                        },
+                      },
                     },
                   },
                 },
@@ -161,32 +168,46 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   funders.forEach((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: laboratoriesBudget.map((bucket) => bucket.by_project_type.buckets.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget?.value ?? 0),
+      data: laboratoriesBudget.map((bucket) => bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesBudget.map((bucket) => bucket.by_project_type.buckets.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+      data: laboratoriesBudget.map((bucket) => bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: laboratoriesParticipation.map((bucket) => bucket.by_project_type.buckets.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+      data: laboratoriesParticipation.map((bucket) => bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesParticipation.map((bucket) => bucket.by_project_type.buckets.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+      data: laboratoriesParticipation.map((bucket) => bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: laboratoriesProject.map((bucket) => bucket.by_project_type.buckets.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
+      data: laboratoriesProject.map((bucket) => bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 1)?.unique_projects?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: laboratoriesProject.map((bucket) => bucket.by_project_type.buckets.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
+      data: laboratoriesProject.map((bucket) => bucket.by_project_type.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
   });
@@ -242,10 +263,12 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   };
 
   const config = {
-    comment: { "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.
-Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, les données au niveau laboratoire ne sont pas disponibles.
-Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
-</> },
+    comment: {
+      "fr": <>Ce graphe présente la répartition des projets financés par appels à projets (AAP) dans lesquels l'établissement est impliqué, ventilée par laboratoire et par financeur.
+        Les sources de données ne donnent pas toujours accès au niveau laboratoire. Pour les projets européens, c'est un travail mené avec 5 organismes pour ajouter ce niveau, avec un délai d'actualisation de un an. Pour le PIA, les données au niveau laboratoire ne sont pas disponibles.
+        Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
+      </>
+    },
     id: "laboratoriesByStructures",
     integrationURL: `/integration?chart_id=laboratoriesByStructures&${searchParams.toString()}`,
     title,

@@ -57,6 +57,10 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
   }
 
   const handles = {
+    id: (event) => setInputs({ ...inputs, id: event.target.value }),
+    instrument: (event) => setInputs({ ...inputs, instrument: event.target.value }),
+    label: (event) => setInputs({ ...inputs, label: event.target.value }),
+    participationIsCoordinator: (event) => setInputs({ ...inputs, participationIsCoordinator: event.target.value }),
     type: (event) => setInputs({ ...inputs, type: event.target.value }),
     year: (event) => setInputs({ ...inputs, year: event.target.value }),
   }

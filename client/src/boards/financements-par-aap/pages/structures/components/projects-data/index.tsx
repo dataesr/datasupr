@@ -61,6 +61,14 @@ export default function ProjectsData() {
         body.query.bool.filter.push({ term: { project_year: filter.value } })
       } else if (filter.id === 'type') {
         body.query.bool.filter.push({ wildcard: { 'project_type.keyword': `*${filter.value}*` } })
+      } else if (filter.id === 'id') {
+        body.query.bool.filter.push({ wildcard: { 'project_id.keyword': `*${filter.value}*` } })
+      } else if (filter.id === 'instrument') {
+        body.query.bool.filter.push({ wildcard: { 'project_instrument.keyword': `*${filter.value}*` } })
+      } else if (filter.id === 'label') {
+        body.query.bool.filter.push({ wildcard: { 'project_label.keyword': `*${filter.value}*` } })
+      } else if (filter.id === 'participationIsCoordinator') {
+        body.query.bool.filter.push({ term: { participation_is_coordinator: filter.value } })
       } else {
         console.error(`Filter id not supported : ${filter.id}`)
       }
@@ -133,22 +141,26 @@ export default function ProjectsData() {
     },
     {
       id: 'id',
+      isFilterable: true,
       isSortable: false,
       label: 'Identifiant',
     },
     {
       id: 'label',
+      isFilterable: true,
       isSortable: false,
       label: 'Nom',
     },
     {
       id: 'instrument',
+      isFilterable: true,
       isSortable: true,
       label: 'Instrument de financement',
       sortableField: 'project_instrument.keyword',
     },
     {
       id: 'participationIsCoordinator',
+      isFilterable: true,
       isSortable: true,
       label: 'Coordinateur',
       sortableField: 'participation_is_coordinator',
