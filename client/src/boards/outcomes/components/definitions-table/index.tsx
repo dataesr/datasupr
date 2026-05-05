@@ -19,7 +19,7 @@ interface OutcomesDefinitionsTableProps {
 
 export default function OutcomesDefinitionsTable({
     definitions,
-    title = "À propos des indicateurs",
+    title = "À propos des indicateurs et des filtres",
 }: OutcomesDefinitionsTableProps) {
     const [isOpen, setIsOpen] = useState(definitions.length < 3);
 

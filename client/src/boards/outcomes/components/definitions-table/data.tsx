@@ -11,6 +11,31 @@ const SOURCE_NODE = (
 
 export const OUTCOMES_DEFINITIONS: OutcomesDefinition[] = [
     {
+        key: "champ",
+        libelle: "Champ et population observée",
+        definition: (
+            <>
+                Les néo-bacheliers inscrits en L1 en 2019 en France. L'observation s'étend sur 5 ans
+                jusqu'en 2023-2024. Les inscriptions et diplomations sont issues du dispositif SISE
+                (MESRE) et des systèmes d'informations SCOLARITE / SCOLEGE / CYCLADES (MEN, MESRE).
+            </>
+        ),
+        source: SOURCE_NODE,
+    },
+    {
+        key: "doubles_inscriptions",
+        libelle: "Gestion des doubles inscriptions",
+        definition: (
+            <>
+                Les étudiants peuvent s'inscrire dans plusieurs formations ou dans une même formation
+                dans différents établissements. Seule la formation « principale » est conservée,
+                c'est-à-dire celle menant au diplôme le plus élevé. Les étudiants inscrits en CPGE
+                et simultanément en licence sont exclus du champ.
+            </>
+        ),
+        source: SOURCE_NODE,
+    },
+    {
         key: "origine_sociale",
         libelle: "Origine sociale",
         definition: (
@@ -75,31 +100,6 @@ export const OUTCOMES_DEFINITIONS: OutcomesDefinition[] = [
                         <b>Sorties récurrentes sans dépasser le niveau BAC+2</b> : non-diplômés qui ne s'inscrivent pas plus de 2 fois dans l'enseignement supérieur durant la période d'observation et ne dépassent jamais le niveau BAC+2.
                     </li>
                 </ul>
-            </>
-        ),
-        source: SOURCE_NODE,
-    },
-    {
-        key: "doubles_inscriptions",
-        libelle: "Gestion des doubles inscriptions",
-        definition: (
-            <>
-                Les étudiants peuvent s'inscrire dans plusieurs formations ou dans une même formation
-                dans différents établissements. Seule la formation « principale » est conservée,
-                c'est-à-dire celle menant au diplôme le plus élevé. Les étudiants inscrits en CPGE
-                et simultanément en licence sont exclus du champ.
-            </>
-        ),
-        source: SOURCE_NODE,
-    },
-    {
-        key: "champ",
-        libelle: "Champ et population observée",
-        definition: (
-            <>
-                Les néo-bacheliers inscrits en L1 en 2019 en France. L'observation s'étend sur 5 ans
-                jusqu'en 2023-2024. Les inscriptions et diplomations sont issues du dispositif SISE
-                (MESRE) et des systèmes d'informations SCOLARITE / SCOLEGE / CYCLADES (MEN, MESRE).
             </>
         ),
         source: SOURCE_NODE,
