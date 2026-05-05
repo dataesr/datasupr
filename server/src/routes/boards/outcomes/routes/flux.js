@@ -10,7 +10,7 @@ import {
 
 const router = new express.Router();
 
-const COLLECTION = "outcomes-cohortL1";
+const COLLECTION = "outcomes_cohortL1";
 const DEFAULT_RELATIVE_YEARS = [0, 1, 2, 3, 4];
 const DEFAULT_MIN_VALUE = 100;
 const MIN_MIN_VALUE = 1;
@@ -253,7 +253,7 @@ router.route("/outcomes/flux_indexes").get(async (req, res) => {
 
     res
       .status(201)
-      .json({ message: "Index outcomes-cohortL1 créés avec succès" });
+      .json({ message: "Index outcomes_cohortL1 créés avec succès" });
   } catch (error) {
     console.error("Erreur lors de la création des index:", error);
     res.status(500).json({ error: "Erreur lors de la création des index" });

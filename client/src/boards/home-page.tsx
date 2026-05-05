@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 
 import Footer from "../components/footer";
 import HeaderDatasupR from "../layout/header.tsx";
+import { isInProduction } from "../utils.tsx";
 
 import "./home-styles.scss";
 
@@ -20,7 +21,16 @@ export default function HomePage() {
     return <div>Loading...</div>;
   }
 
-  const filteredData = data.filter((dashboard) => dashboard.homePageVisible);
+  const filteredData = data
+    .filter((dashboard) => dashboard.homePageVisible)
+    .filter((dashboard) => {
+      if (isInProduction()) return true;
+      const url = dashboard.url || "";
+      return (
+        url.startsWith("/devenir-etudiants")
+        || url.startsWith("/structures-finance") || url.startsWith("/financements-par-aap")
+      );
+    });
 
   return (
     <>

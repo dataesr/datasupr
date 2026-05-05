@@ -5,7 +5,7 @@ import { ENSEMBLE_DEFAULTS, FILTER_FIELDS, VALUE_MAPS } from "./_common.js";
 
 const router = new express.Router();
 
-const COLLECTION = "outcomes-higher-grad";
+const COLLECTION = "outcomes_higher-grad";
 
 const DIPLOMA_ROWS = [
   {
@@ -207,7 +207,7 @@ router.route("/outcomes/plus-haut-diplome_indexes").get(async (req, res) => {
 
     res
       .status(201)
-      .json({ message: "Index outcomes-higher-grad créés avec succès" });
+      .json({ message: "Index outcomes_higher-grad créés avec succès" });
   } catch (error) {
     console.error("Erreur lors de la création des index:", error);
     res.status(500).json({ error: "Erreur lors de la création des index" });

@@ -4,7 +4,7 @@ import { ENSEMBLE_DEFAULTS, FILTER_FIELDS, VALUE_MAPS } from "./_common.js";
 
 const router = new express.Router();
 
-const COLLECTION = "outcomes-repartition";
+const COLLECTION = "outcomes_repartition";
 const DEFAULT_RELATIVE_YEARS = [0, 1, 2, 3, 4];
 
 const TAUX_TO_SITUATION = {

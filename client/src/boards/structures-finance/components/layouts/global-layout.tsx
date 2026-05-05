@@ -30,7 +30,7 @@ export default function GlobalLayout() {
                 <div className="fr-header__brand-top">
                   <Logo text={import.meta.env.VITE_MINISTER_NAME} />
                   <Service
-                    href="/structures-finance/accueil"
+                    href="/"
                     name="#dataESR tableaux de bord"
                     tagline="Financement des établissements d'enseignement supérieur français "
                   />

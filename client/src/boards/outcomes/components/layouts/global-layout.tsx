@@ -11,11 +11,11 @@ import "../../colors.scss";
 
 
 const NAV_ITEMS = [
-  { key: "flux", labelKey: "flux", to: "/outcomes/flux" },
-  { key: "repartition", labelKey: "repartition", to: "/outcomes/repartition" },
-  { key: "plus-haut-diplome", labelKey: "plusHautDiplome", to: "/outcomes/plus-haut-diplome" },
-  { key: "croisements", labelKey: "croisements", to: "/outcomes/croisements" },
-  { key: "methodologie", labelKey: "methodologie", to: "/outcomes/methodologie" },
+  { key: "flux", labelKey: "flux", to: "/devenir-etudiants/flux" },
+  { key: "repartition", labelKey: "repartition", to: "/devenir-etudiants/repartition" },
+  { key: "plus-haut-diplome", labelKey: "plusHautDiplome", to: "/devenir-etudiants/plus-haut-diplome" },
+  { key: "croisements", labelKey: "croisements", to: "/devenir-etudiants/croisements" },
+  { key: "methodologie", labelKey: "methodologie", to: "/devenir-etudiants/methodologie" },
 ] as const;
 
 export default function GlobalLayout() {
@@ -33,7 +33,7 @@ export default function GlobalLayout() {
                 <div className="fr-header__brand-top">
                   <Logo text={import.meta.env.VITE_MINISTER_NAME} />
                   <Service
-                    href="/outcomes/flux"
+                    href="/"
                     name="#dataESR tableaux de bord"
                     tagline={getI18nLabel(i18n, "tagline")}
                   />
@@ -86,7 +86,7 @@ export default function GlobalLayout() {
         </div>
       </header>
       <Outlet />
-      <Footer href="/outcomes/flux" title="#dataESR tableaux de bord" />
+      <Footer href="/devenir-etudiants/flux" title="#dataESR tableaux de bord" />
     </>
   );
 }

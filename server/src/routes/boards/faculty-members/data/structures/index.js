@@ -2,7 +2,7 @@ import { Router } from "express";
 import { db } from "../../../../../services/mongo.js";
 
 const router = Router();
-const COLLECTION = "faculty-members_main_staging";
+const COLLECTION = "faculty-members";
 
 const VALID_VIEWS = ["structure", "discipline", "region", "academie"];
 

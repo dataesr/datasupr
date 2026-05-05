@@ -6,7 +6,7 @@ const router = Router();
 router.get("/faculty-members/geo/map-data", async (req, res) => {
   try {
     const { annee_universitaire, level = "region" } = req.query;
-    const collection = db.collection("faculty-members_main_staging");
+    const collection = db.collection("faculty-members");
 
     const matchStage = {};
     if (annee_universitaire)
@@ -172,6 +172,5 @@ router.get("/faculty-members/geo/map-data", async (req, res) => {
     });
   }
 });
-
 
 export default router;

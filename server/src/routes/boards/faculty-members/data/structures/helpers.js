@@ -1,6 +1,6 @@
 import { db } from "../../../../../services/mongo.js";
 
-export const COLLECTION = "faculty-members_main_staging";
+export const COLLECTION = "faculty-members";
 export const VALID_VIEWS = ["structure", "discipline", "region", "academie"];
 
 export function getCollection() {

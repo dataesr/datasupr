@@ -22,15 +22,7 @@ export default function StructuresFinanceRoutes() {
   return (
     <Routes>
       <Route element={<GlobalLayout />}>
-        <Route
-          index
-          element={
-            <Navigate
-              to="etablissements?year=2024&type=tous&region=toutes&structureId="
-              replace
-            />
-          }
-        />
+        <Route index element={<Navigate to="accueil" replace />} />
         <Route
           path="accueil"
           element={

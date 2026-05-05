@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useTitle } from "../hooks/usePageTitle.tsx";
+import { isInProduction } from "../utils.tsx";
 
 const AdminRoutes = lazy(() => import('../boards/admin/routes.tsx'));
 const AtlasRoutes = lazy(() => import('../boards/atlas/routes.tsx'));
@@ -28,6 +29,34 @@ const RouteWithTitle = ({ titleKey, element }) => {
 };
 
 export default function Router() {
+  if (isInProduction()) {
+    return (
+      <Routes>
+        <Route path="/" element={<RouteWithTitle titleKey="Accueil - dataEsr" element={<Suspense><HomePage /></Suspense>} />} />
+        <Route path="/cookies" element={<Suspense><CookiePolicyPage /></Suspense>} />
+        <Route path="/contact" element={<Suspense><ContactLayout /></Suspense>}>
+          <Route index element={<Suspense><ContactPage /></Suspense>} />
+        </Route>
+        <Route path="/devenir-etudiants" element={<Navigate to="/devenir-etudiants/flux" replace />} />
+        <Route path="/devenir-etudiants/*" element={<Suspense><OutcomesRoutes /></Suspense>} />
+        <Route
+          path="/financements-par-aap"
+          element={<Navigate to="/financements-par-aap/accueil" replace />}
+        />
+        <Route path="/financements-par-aap/*" element={<Suspense><FundingsRoutes /></Suspense>} />
+        <Route
+          path="/structures-finance/accueil"
+          element={<Navigate to="/structures-finance/accueil" replace />}
+        />
+        <Route
+          path="/structures-finance/*"
+          element={<Suspense><StructuresFinanceRoutes /></Suspense>}
+        />
+        <Route path="*" element={<Suspense><NotFoundPage /></Suspense>} />
+      </Routes>
+    );
+  }
+
   return (
     <Routes>
       <Route path="/" element={<RouteWithTitle titleKey="Accueil - dataEsr" element={<Suspense><HomePage /></Suspense>} />} />
@@ -51,8 +80,8 @@ export default function Router() {
       <Route path="/graduates/*" element={<Suspense><GraduatesRoutes /></Suspense>} />
       <Route path="/integration" element={<Suspense><Integration /></Suspense>} />
       <Route path="/open-alex/*" element={<Suspense><OpenAlexRoutes /></Suspense>} />
-      <Route path="/outcomes" element={<Navigate to="/outcomes/flux" replace />} />
-      <Route path="/outcomes/*" element={<Suspense><OutcomesRoutes /></Suspense>} />
+      <Route path="/devenir-etudiants" element={<Navigate to="/devenir-etudiants/flux" replace />} />
+      <Route path="/devenir-etudiants/*" element={<Suspense><OutcomesRoutes /></Suspense>} />
       <Route
         path="/personnel-enseignant"
         element={<Navigate to="/personnel-enseignant/accueil" replace />}
