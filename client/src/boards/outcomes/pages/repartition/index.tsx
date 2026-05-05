@@ -185,7 +185,7 @@ export default function RepartitionPage() {
                 </Col>
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
-                        <ChartWrapper.Title config={{ id: "outcomes-repartition", title: { fr: "Répartition selon les inscriptions (en %)", look: "h4" as const } }} />
+                        <ChartWrapper.Title config={{ id: "outcomes-repartition", title: { fr: "Répartition des néo-bacheliers inscrits en L1 en 2019 selon les inscriptions par année (en %)", look: "h4" as const } }} />
                         {isLoading && <DefaultSkeleton height="540px" />}
                         {!isLoading && error && (
                             <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
@@ -213,7 +213,7 @@ export default function RepartitionPage() {
                                 <Col>
                                     <YearRangeSlider
                                         id="repartition-year-range"
-                                        label="Année à analyser"
+                                        label="Années à analyser"
                                         hint={`Sélection continue obligatoire entre ${YEAR_LABELS[DEFAULT_YEAR_START]} et ${YEAR_LABELS[DEFAULT_YEAR_END]}.`}
                                         min={DEFAULT_YEAR_START}
                                         max={DEFAULT_YEAR_END}

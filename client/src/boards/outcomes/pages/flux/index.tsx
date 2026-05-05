@@ -279,7 +279,7 @@ export default function FluxPage() {
                                 <Col md={6}>
                                     <YearRangeSlider
                                         id="flux-year-range"
-                                        label="Année à analyser"
+                                        label="Années à analyser"
                                         hint={`Sélection continue obligatoire entre ${YEAR_LABELS[DEFAULT_YEAR_START]} et ${YEAR_LABELS[DEFAULT_YEAR_END]}.`}
                                         min={DEFAULT_YEAR_START}
                                         max={DEFAULT_YEAR_END}
