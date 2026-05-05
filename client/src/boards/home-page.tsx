@@ -24,7 +24,7 @@ export default function HomePage() {
   const filteredData = data
     .filter((dashboard) => dashboard.homePageVisible)
     .filter((dashboard) => {
-      if (isInProduction()) return true;
+      if (!isInProduction()) return true;
       const url = dashboard.url || "";
       return (
         url.startsWith("/devenir-etudiants")
