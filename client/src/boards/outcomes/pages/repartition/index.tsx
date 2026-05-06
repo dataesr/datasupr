@@ -204,12 +204,7 @@ export default function RepartitionPage() {
                         )}
                         {activeFiltersElement}
                         {!isLoading && !error && (data?.distribution?.length ?? 0) > 0 && (
-                            <RepartitionChart
-                                hideTitle
-                                distribution={data!.distribution}
-                                relativeYears={relativeYears}
-                                yearLabels={YEAR_LABELS}
-                            />
+                            <RepartitionChart hideTitle />
                         )}
 
                         <div className="fr-mt-1w outcomes-flux-page__params outcomes-flux-page__params--after-chart">

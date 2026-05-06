@@ -55,6 +55,9 @@ export function createDiplomaDonutOptions(
                 return `${p.name} — ${formatPercent(p.percentage)}`;
             },
         },
+        title: {
+            "text": " ",
+        },
         tooltip: {
             pointFormatter() {
                 const p = this as unknown as { y: number; percentage: number };

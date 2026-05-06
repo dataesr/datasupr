@@ -181,6 +181,15 @@ export const chartsRegistry = {
   outcomesFluxSankey: lazy(
     () => import("../outcomes/pages/flux/charts/sankey")
   ),
+  outcomesPhdDonut: lazy(
+    () => import("../outcomes/pages/plus-haut-diplome/charts/diploma-donut")
+  ),
+  outcomesPhdBreakdown: lazy(
+    () => import("../outcomes/pages/plus-haut-diplome/charts/breakdown-bar")
+  ),
+  outcomesRepartition: lazy(
+    () => import("../outcomes/pages/repartition/charts/repartition-column")
+  ),
 };
 
 export type ChartId = keyof typeof chartsRegistry;

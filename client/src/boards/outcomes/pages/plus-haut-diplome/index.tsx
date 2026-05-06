@@ -1,5 +1,4 @@
 import { Button, Col, Container, DismissibleTag, Row, TagGroup, Title } from "@dataesr/dsfr-plus";
-import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default";
@@ -12,7 +11,7 @@ import OutcomesFilterSelect from "../../components/filter-select/index.tsx";
 import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
 import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 import DiplomaDonut from "./charts/diploma-donut";
-import BreakdownRow from "./components/breakdown-row.tsx";
+import BreakdownBar from "./charts/breakdown-bar";
 
 const DEFAULT_COHORT_YEAR = "2019-2020";
 const DEFAULT_COHORT_SITUATION = "L1";
@@ -77,7 +76,6 @@ function formatCsvCell(value: string | number): string {
 
 export default function PlusHautDiplomePage() {
     const [searchParams, setSearchParams] = useSearchParams();
-    const [barMode, setBarMode] = useState<"percent" | "effectif">("percent");
 
     const filters = FILTER_FIELDS.reduce<Partial<Record<OutcomesFilterField, string | null>>>((acc, field) => {
         acc[field] = searchParams.get(field);
@@ -178,12 +176,17 @@ export default function PlusHautDiplomePage() {
                 </Col>
             </Row>
             <Row gutters>
+                <Title>
+                    Plus haut diplôme obtenu en {lastYearLabel} par les néo-bacheliers inscrits en L1 en 2019
+                </Title>
+            </Row>
+            <Row gutters>
                 <Col lg={4}>
                     <aside className="outcomes-flux-page__filters" aria-label="Filtres du tableau plus haut diplôme">
-                        <Title as="h1" look="h4" className="fr-mb-3w">Filtres à sélectionner</Title>
+                        <Title as="h2" look="h4" className="fr-mb-3w">Filtres à sélectionner</Title>
                         {FILTER_SECTIONS.map((section) => (
                             <section key={section.title} className="outcomes-flux-page__filters-section">
-                                <Title as="h2" look="h5" className="fr-mb-2w">{section.title}</Title>
+                                <Title as="h3" look="h5" className="fr-mb-2w">{section.title}</Title>
                                 {section.fields.map(({ field, label }) => (
                                     <OutcomesFilterSelect
                                         key={field}
@@ -200,11 +203,7 @@ export default function PlusHautDiplomePage() {
                 </Col>
                 <Col lg={8}>
                     <div className="outcomes-flux-page__content">
-                        <Title as="h1" look="h3">
-                            Plus haut diplôme obtenu atteint en {lastYearLabel} par les néo-bacheliers inscrits en L1 en 2019
-                        </Title>
                         {activeFiltersElement}
-
                         {isLoading && <DefaultSkeleton height="400px" />}
                         {!isLoading && error && (
                             <Callout colorFamily="pink-macaron" icon="fr-icon-error-warning-line" title="Erreur de chargement">
@@ -278,35 +277,11 @@ export default function PlusHautDiplomePage() {
                                     </div>
                                 </div>
 
-                                <DiplomaDonut
-                                    rows={data.rows}
-                                    nonDiplomes={data.totals.nonDiplomes}
-                                    lastYearLabel={lastYearLabel}
-                                />
+                                <DiplomaDonut />
 
-                                <div className="outcomes-phd__header fr-mt-3w fr-mb-2w">
-                                    <Title as="h2" look="h5" className="fr-mb-0">Diplômés vs non diplômés</Title>
-                                    <div className="outcomes-phd__toggle" role="group" aria-label="Mode d'affichage des barres">
-                                        <button
-                                            type="button"
-                                            className={`fr-btn fr-btn--sm ${barMode === "percent" ? "" : "fr-btn--tertiary"}`}
-                                            aria-pressed={barMode === "percent"}
-                                            onClick={() => setBarMode("percent")}
-                                        >
-                                            En %
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className={`fr-btn fr-btn--sm ${barMode === "effectif" ? "" : "fr-btn--tertiary"}`}
-                                            aria-pressed={barMode === "effectif"}
-                                            onClick={() => setBarMode("effectif")}
-                                        >
-                                            En effectifs
-                                        </button>
-                                    </div>
-                                </div>
+                                <Title as="h2" look="h5" className="fr-mt-3w fr-mb-2w">Diplômés vs non diplômés</Title>
 
-                                {BREAKDOWN_SECTIONS.map(({ title, field }) => {
+                                {BREAKDOWN_SECTIONS.map(({ field }) => {
                                     const options = data.filterOptions?.[field] || [];
                                     const activeKey = filters[field];
                                     const filteredOptions = activeKey
@@ -314,31 +289,8 @@ export default function PlusHautDiplomePage() {
                                         : options;
                                     const withData = filteredOptions.filter((o) => (o.dipl ?? 0) + (o.ndipl ?? 0) > 0);
                                     if (!withData.length) return null;
-                                    const sectionTotal = withData.reduce((sum, o) => sum + (o.dipl ?? 0) + (o.ndipl ?? 0), 0);
-                                    const sectionMax = withData.reduce(
-                                        (max, o) => Math.max(max, (o.dipl ?? 0) + (o.ndipl ?? 0)),
-                                        0,
-                                    );
-                                    return (
-                                        <section key={field} className="fr-mb-3w">
-                                            <Title as="h3" look="h6" className="fr-mb-2w">{title}</Title>
-                                            {withData.map((opt) => (
-                                                <BreakdownRow
-                                                    key={opt.key}
-                                                    option={opt}
-                                                    sectionTotal={sectionTotal}
-                                                    sectionMax={sectionMax}
-                                                    mode={barMode}
-                                                />
-                                            ))}
-                                        </section>
-                                    );
+                                    return <BreakdownBar key={field} field={field} />;
                                 })}
-
-                                <div className="outcomes-phd__legend fr-text--xs fr-mb-2w">
-                                    <span className="outcomes-phd__legend-dot outcomes-phd__legend-dot--dipl" aria-hidden="true" /> Diplômés
-                                    <span className="outcomes-phd__legend-dot outcomes-phd__legend-dot--ndipl" aria-hidden="true" /> Non diplômés
-                                </div>
                             </>
                         )}
 

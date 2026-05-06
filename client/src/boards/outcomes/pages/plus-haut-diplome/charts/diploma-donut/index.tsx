@@ -1,34 +1,49 @@
 import { useMemo } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../../components/chart-wrapper";
+import DefaultSkeleton from "../../../../../../components/charts-skeletons/default";
+import { type OutcomesFilterField, useOutcomesPlusHautDiplome } from "../../../../api";
 import { createDiplomaDonutOptions } from "./options";
 
-interface DiplomaDonutProps {
-    rows: Array<{ diplome: string; effectif: number }>;
-    nonDiplomes: { effectif: number };
-    lastYearLabel: string;
-}
+const FILTER_FIELDS: OutcomesFilterField[] = [
+    "groupe_disciplinaire", "sexe", "origine_sociale",
+    "bac_type", "bac_mention", "retard_scolaire",
+    "devenir_en_un_an", "type_de_trajectoire",
+];
 
-export default function DiplomaDonut({ rows, nonDiplomes, lastYearLabel }: DiplomaDonutProps) {
+const YEAR_LABELS: Record<number, string> = {
+    0: "2019-2020", 1: "2020-2021", 2: "2021-2022", 3: "2022-2023", 4: "2023-2024",
+};
+
+export default function DiplomaDonut() {
+    const [searchParams] = useSearchParams();
+    const filters = FILTER_FIELDS.reduce<Partial<Record<OutcomesFilterField, string | null>>>(
+        (acc, f) => { acc[f] = searchParams.get(f); return acc; }, {},
+    );
+    const { data, isLoading } = useOutcomesPlusHautDiplome({
+        cohorteAnnee: searchParams.get("cohorte_annee") || "2019-2020",
+        cohorteSituation: searchParams.get("cohorte_situation") || "L1",
+        filters,
+    });
+
+    const lastYearLabel = data ? YEAR_LABELS[data.lastYear] || `N+${data.lastYear}` : "";
     const title = `Plus haut diplôme obtenu en ${lastYearLabel}`;
-    const options = useMemo(() => {
-        if (!rows?.length) return null;
-        return createDiplomaDonutOptions(rows, nonDiplomes, title);
-    }, [rows, nonDiplomes.effectif, title]);
 
+    const options = useMemo(() => {
+        if (!data?.rows.length) return null;
+        return createDiplomaDonutOptions(data.rows, data.totals.nonDiplomes, title);
+    }, [data, title]);
+
+    if (isLoading) return <DefaultSkeleton height="320px" />;
     if (!options) return null;
 
     return (
         <ChartWrapper
             config={{
                 id: "outcomes-plus-haut-diplome-donut",
+                integrationURL: `/integration?chart_id=outcomesPhdDonut&${searchParams.toString()}`,
                 title,
-                sources: [
-                    {
-                        label: { fr: <>MESRE-SIES</> },
-                        url: { fr: "https://data.enseignementsup-recherche.gouv.fr" },
-                    },
-                ],
             }}
             options={options}
         />
