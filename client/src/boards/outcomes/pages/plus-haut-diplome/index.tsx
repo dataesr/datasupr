@@ -11,7 +11,6 @@ import OutcomesFilterSelect from "../../components/filter-select/index.tsx";
 import OutcomesDefinitionsTable from "../../components/definitions-table/index.tsx";
 import { OUTCOMES_DEFINITIONS } from "../../components/definitions-table/data.tsx";
 import DiplomaDonut from "./charts/diploma-donut";
-import BreakdownBar from "./charts/breakdown-bar";
 
 const DEFAULT_COHORT_YEAR = "2019-2020";
 const DEFAULT_COHORT_SITUATION = "L1";
@@ -58,13 +57,6 @@ const FILTER_SECTIONS: Array<{
 
 const FILTER_FIELDS: OutcomesFilterField[] = FILTER_SECTIONS.flatMap((s) => s.fields.map((f) => f.field));
 
-const BREAKDOWN_SECTIONS: Array<{ title: string; field: OutcomesFilterField }> = [
-    { title: "Par groupe disciplinaire", field: "groupe_disciplinaire" },
-    { title: "Par sexe", field: "sexe" },
-    { title: "Par origine sociale", field: "origine_sociale" },
-    { title: "Par type de bac", field: "bac_type" },
-    { title: "Par retard scolaire", field: "retard_scolaire" },
-];
 
 function formatNumber(n: number): string {
     return Math.round(n).toLocaleString("fr-FR");
@@ -280,21 +272,6 @@ export default function PlusHautDiplomePage() {
                                 <Row className="fr-mt-3w">
                                     <Col>
                                         <DiplomaDonut />
-                                    </Col>
-                                </Row>
-                                <Row className="fr-mt-3w">
-                                    <Col>
-                                        <Title as="h2" look="h5" className="fr-mt-3w fr-mb-2w">Diplômés vs non diplômés</Title>
-                                        {BREAKDOWN_SECTIONS.map(({ field }) => {
-                                            const options = data.filterOptions?.[field] || [];
-                                            const activeKey = filters[field];
-                                            const filteredOptions = activeKey
-                                                ? options.filter((o) => o.key === activeKey)
-                                                : options;
-                                            const withData = filteredOptions.filter((o) => (o.dipl ?? 0) + (o.ndipl ?? 0) > 0);
-                                            if (!withData.length) return null;
-                                            return <BreakdownBar key={field} field={field} />;
-                                        })}
                                     </Col>
                                 </Row>
                             </>

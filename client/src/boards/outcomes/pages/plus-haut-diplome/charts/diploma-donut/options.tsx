@@ -47,9 +47,9 @@ export function createDiplomaDonutOptions(
         chart: { height: 320, backgroundColor: "transparent" },
         legend: {
             enabled: true,
-            layout: "vertical",
-            align: "right",
-            verticalAlign: "middle",
+            layout: "horizontal",
+            align: "center",
+            verticalAlign: "bottom",
             labelFormatter() {
                 const p = this as unknown as { name: string; percentage: number };
                 return `${p.name} — ${formatPercent(p.percentage)}`;

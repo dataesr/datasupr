@@ -184,9 +184,6 @@ export const chartsRegistry = {
   outcomesPhdDonut: lazy(
     () => import("../outcomes/pages/plus-haut-diplome/charts/diploma-donut")
   ),
-  outcomesPhdBreakdown: lazy(
-    () => import("../outcomes/pages/plus-haut-diplome/charts/breakdown-bar")
-  ),
   outcomesRepartition: lazy(
     () => import("../outcomes/pages/repartition/charts/repartition-column")
   ),

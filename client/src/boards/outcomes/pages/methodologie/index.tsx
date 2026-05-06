@@ -19,6 +19,22 @@ export default function MethodologiePage() {
                         </Title>
 
                         <Title as="h2" look="h5" className="fr-mt-3w fr-mb-2w">
+                            Données
+                        </Title>
+
+                        <p className="fr-mb-2w">
+                            Gestion des doubles inscriptions : les étudiants peuvent s'inscrire dans plusieurs formations ou dans une même formation dans différents établissements. Seule la formation "principale" est conservée, c'est-à-dire celle menant au diplôme le plus élevé. Les étudiants inscrits en CPGE et simultanément en licence sont exclus du champ.
+                        </p>
+
+                        <p className="fr-mb-2w">
+                            Sources : les informations sur les lieux de scolarisation en terminale et les résultats au baccalauréat sont issus du système d'information CYCLADES du ministère de l'éducation nationale (MEN). Les inscriptions et diplomations à l'université et dans les écoles d'ingénieur, de commerce et de la culture sont issues du dispositif SISE du ministère de l'enseignement supérieur, de la recherche et de l'espace (MESRE). Les réorientations et diplomations en BTS ou en CPGE sont retrouvées grâce au système d'information SCOLARITE et SCOLEGE du MEN et du MESRE. Lorsqu'un étudiant qui souhaite se réorienter accepte sur Parcoursup une formation pour laquelle les données individuelles ne sont pas disponibles, on considère qu'il est effectivement inscrit dans cette formation.
+                        </p>
+
+                        <p>
+                            <b>Champ :</b> Les néo-bacheliers inscrits en L1 en 2019
+                        </p>
+
+                        <Title as="h2" look="h5" className="fr-mt-3w fr-mb-2w">
                             Définitions
                         </Title>
 
@@ -61,22 +77,6 @@ export default function MethodologiePage() {
                                 Sorties récurrentes sans dépasser le niveau BAC+2 : non-diplômés qui ne s'inscrivent pas plus de 2 fois dans l'enseignement supérieur durant la période d'observation et ne dépasse jamais le niveau BAC+2.
                             </li>
                         </ul>
-
-                        <Title as="h2" look="h5" className="fr-mt-3w fr-mb-2w">
-                            Données
-                        </Title>
-
-                        <p className="fr-mb-2w">
-                            Gestion des doubles inscriptions : les étudiants peuvent s'inscrire dans plusieurs formations ou dans une même formation dans différents établissements. Seule la formation "principale" est conservée, c'est-à-dire celle menant au diplôme le plus élevé. Les étudiants inscrits en CPGE et simultanément en licence sont exclus du champ.
-                        </p>
-
-                        <p className="fr-mb-2w">
-                            Sources : les informations sur les lieux de scolarisation en terminale et les résultats au baccalauréat sont issus du système d'information CYCLADES du ministère de l'éducation nationale (MEN). Les inscriptions et diplomations à l'université et dans les écoles d'ingénieur, de commerce et de la culture sont issues du dispositif SISE du ministère de l'enseignement supérieur, de la recherche et de l'espace (MESRE). Les réorientations et diplomations en BTS ou en CPGE sont retrouvées grâce au système d'information SCOLARITE et SCOLEGE du MEN et du MESRE. Lorsqu'un étudiant qui souhaite se réorienter accepte sur Parcoursup une formation pour laquelle les données individuelles ne sont pas disponibles, on considère qu'il est effectivement inscrit dans cette formation.
-                        </p>
-
-                        <p>
-                            <b>Champ :</b> Les néo-bacheliers inscrits en L1 en 2019
-                        </p>
                     </div>
                 </Col>
             </Row>

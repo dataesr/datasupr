@@ -17,6 +17,7 @@ const COHORT_YEAR = "2019-2020";
 const COHORT_SITUATION = "L1";
 
 const PROFILE_FIELDS: Array<{ field: OutcomesFilterField; label: string }> = [
+    { field: "groupe_disciplinaire", label: "Groupe disciplinaire" },
     { field: "sexe", label: "Sexe" },
     { field: "origine_sociale", label: "Origine sociale" },
     { field: "bac_type", label: "Type de baccalauréat" },
@@ -275,8 +276,10 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
                         <Col key={i} xs={12} md={colSize}>
                             <div >
                                 <Title as="h3" look="h6" className="fr-mb-1w">Profil {badge}</Title>
-                                {!d || !d.rows?.length ? (
-                                    <Text size="sm" className="fr-mb-0">{queries[i]?.isLoading ? "Chargement…" : "Sélectionnez des critères"}</Text>
+                                {queries[i]?.isLoading ? (
+                                    <DefaultSkeleton height="200px" />
+                                ) : !d || !d.rows?.length ? (
+                                    <Text size="sm" className="fr-mb-0">Sélectionnez des critères</Text>
                                 ) : (
                                     <ChartWrapper
                                         hideTitle
