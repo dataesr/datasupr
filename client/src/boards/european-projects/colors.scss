@@ -40,6 +40,23 @@
   --erc-avg-top10-color: #d75521; // moyenne top 10
   --erc-avg-all-color: #1f8d49;  // moyenne tous pays
 
+  // MSCA domain colors
+  --msca-panel-che-color: var(--scale-1-color); 
+  --msca-panel-eco-color: var(--scale-2-color); 
+  --msca-panel-eng-color: var(--scale-3-color); 
+  --msca-panel-env-color: var(--scale-4-color);
+  --msca-panel-lif-color: var(--scale-5-color);
+  --msca-panel-mat-color: var(--scale-7-color);
+  --msca-panel-phy-color: var(--scale-8-color);
+  --msca-panel-soc-color: var(--scale-9-color);
+
+  // MSCA destination/grant type colors
+  --msca-destination-cofund-color: var(--scale-1-color); 
+  --msca-destination-dn-color: var(--scale-2-color); 
+  --msca-destination-pf-color: var(--scale-3-color); 
+  --msca-destination-se-color: var(--scale-4-color); 
+  --msca-destination-citizens-color: var(--scale-5-color); 
+
   
   --evaluated-project-color: #4dd4db; // projets évalués (plus clair)
   --successful-project-color: #6dd897; // projets lauréats (vert lumineux)

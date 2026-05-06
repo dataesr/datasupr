@@ -328,4 +328,162 @@ router.route("/european-projects/msca/filters").get(async (req, res) => {
   });
 });
 
+/**
+ * Route d'évolution temporelle MSCA
+ * Retourne les données agrégées par année et type de financement
+ * Inclut les données du pays sélectionné ET les totaux globaux pour calculer les poids
+ */
+router.route("/european-projects/msca/evolution").get(async (req, res) => {
+  const baseFilters = {};
+  const countryFilters = {};
+
+  if (req.query.destination_code) {
+    const destinations = req.query.destination_code.split(",");
+    baseFilters.destination_code = { $in: destinations };
+    countryFilters.destination_code = { $in: destinations };
+  }
+  if (req.query.panel_id) {
+    const panels = req.query.panel_id.split(",");
+    baseFilters.panel_id = { $in: panels };
+    countryFilters.panel_id = { $in: panels };
+  }
+  if (req.query.framework) {
+    baseFilters.framework = req.query.framework;
+    countryFilters.framework = req.query.framework;
+  }
+  if (req.query.country_code) {
+    countryFilters.country_code = req.query.country_code.toUpperCase();
+  }
+
+  // Agrégation commune
+  const aggregationPipeline = (filters, stage) => [
+    { $match: { ...filters, stage } },
+    {
+      $group: {
+        _id: {
+          call_year: "$call_year",
+          destination_code: "$destination_code",
+          destination_name_en: "$destination_name_en",
+        },
+        total_funding_project: { $sum: "$fund_eur" },
+        total_involved: { $sum: "$number_involved" },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        call_year: "$_id.call_year",
+        destination_code: "$_id.destination_code",
+        destination_name_en: "$_id.destination_name_en",
+        total_funding_project: 1,
+        total_involved: 1,
+      },
+    },
+    { $sort: { call_year: 1, destination_code: 1 } },
+  ];
+
+  // Données pour le pays sélectionné
+  const [countrySuccessful, countryEvaluated] = await Promise.all([
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "successful")).toArray(),
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "evaluated")).toArray(),
+  ]);
+
+  // Données globales (tous pays) pour calculer les poids
+  const [totalSuccessful, totalEvaluated] = await Promise.all([
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "successful")).toArray(),
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "evaluated")).toArray(),
+  ]);
+
+  res.json({
+    country: {
+      successful: countrySuccessful,
+      evaluated: countryEvaluated,
+    },
+    total: {
+      successful: totalSuccessful,
+      evaluated: totalEvaluated,
+    },
+  });
+});
+
+
+/**
+ * Route d'évolution temporelle MSCA par domaine scientifique (LS, PE, SH)
+ * Retourne les données agrégées par année et domaine scientifique
+ * Inclut les données du pays sélectionné ET les totaux globaux pour calculer les poids
+ */
+router.route("/european-projects/msca/evolution-by-panel").get(async (req, res) => {
+  const baseFilters = {};
+  const countryFilters = {};
+
+  if (req.query.destination_code) {
+    const destinations = req.query.destination_code.split(",");
+    baseFilters.destination_code = { $in: destinations };
+    countryFilters.destination_code = { $in: destinations };
+  }
+  if (req.query.panel_id) {
+    const panels = req.query.panel_id.split(",");
+    baseFilters.panel_id = { $in: panels };
+    countryFilters.panel_id = { $in: panels };
+  }
+  if (req.query.framework) {
+    baseFilters.framework = req.query.framework;
+    countryFilters.framework = req.query.framework;
+  }
+  if (req.query.country_code) {
+    countryFilters.country_code = req.query.country_code.toUpperCase();
+  }
+
+  // Agrégation par domaine scientifique
+  const aggregationPipeline = (filters, stage) => [
+    { $match: { ...filters, stage, "panel_id": {$ne:null}} },
+    {
+      $group: {
+        _id: {
+          call_year: "$call_year",
+          panel_id: "$panel_id",
+          panel_name: "$panel_name",
+        },
+        total_funding: { $sum: "$fund_eur" },
+        total_involved: { $sum: "$number_involved" },
+      },
+    },
+    {
+      $project: {
+        _id: 0,
+        call_year: "$_id.call_year",
+        panel_id: "$_id.panel_id",
+        panel_name: "$_id.panel_name",
+        total_funding: 1,
+        total_involved: 1,
+      },
+    },
+    { $sort: { call_year: 1, panel_name: 1 } },
+  ];
+
+  // Données pour le pays sélectionné
+  const [countrySuccessful, countryEvaluated] = await Promise.all([
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "successful")).toArray(),
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(countryFilters, "evaluated")).toArray(),
+  ]);
+
+  // Données globales (tous pays) pour calculer les poids
+  const [totalSuccessful, totalEvaluated] = await Promise.all([
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "successful")).toArray(),
+    db.collection(COLLECTION_NAME).aggregate(aggregationPipeline(baseFilters, "evaluated")).toArray(),
+  ]);
+
+  res.json({
+    country: {
+      successful: countrySuccessful,
+      evaluated: countryEvaluated,
+    },
+    total: {
+      successful: totalSuccessful,
+      evaluated: totalEvaluated,
+    },
+  });
+});
+
+
 export default router;

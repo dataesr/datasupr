@@ -9,9 +9,7 @@ const client = new MongoClient(mongoUri);
 
 logger.info(`Try to connect to mongo Tableaux... ${mongoUri}`);
 await client.connect().catch((e) => {
-  logger.info(
-    `Connexion to mongo Tableaux instance failed... Terminating... ${e.message}`
-  );
+  logger.info(`Connexion to mongo Tableaux instance failed... Terminating... ${e.message}`);
   process.kill(process.pid, "SIGTERM");
 });
 

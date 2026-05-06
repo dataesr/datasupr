@@ -34,6 +34,10 @@
       "fr": "Évolution de la participation",
       "en": "Evolution of participation"
     },
+    "byFundingType": {
+      "fr": "par type de financement",
+      "en": "by funding type"
+    },
     "noDataAvailable": {
       "fr": "Aucune donnée d'évolution disponible.",
       "en": "No evolution data available."

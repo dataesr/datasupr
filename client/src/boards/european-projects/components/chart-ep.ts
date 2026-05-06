@@ -13,6 +13,7 @@ export function CreateChartOptions(type: NonNullable<HighchartsInstance.Options[
     legend: { enabled: false },
     exporting: { enabled: false },
     credits: { enabled: false },
+    accessibility: { enabled: true },
   };
 
   if (Array.isArray(options.xAxis) && options.xAxis.length > 0) {
