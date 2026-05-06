@@ -7,9 +7,9 @@ on:
 
 env:
   # Must match k8s deployment name
-  DEPLOYMENT: datasupr
-  DEPLOYMENT_NAMESPACE: datasupr
-  DEPLOYMENT_URL: https://datasupr.staging.dataesr.ovh
+  DEPLOYMENT: tableaux
+  DEPLOYMENT_NAMESPACE: tableaux
+  DEPLOYMENT_URL: https://tableaux.staging.dataesr.ovh
   MM_NOTIFICATION_CHANNEL: bots
 
 jobs:
