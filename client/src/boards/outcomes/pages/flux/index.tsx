@@ -213,7 +213,7 @@ export default function FluxPage() {
                 </Col>
             </Row>
             <Row>
-                <Title>
+                <Title as="h1" look="h4" className="fr-mb-3w">
                     Parcours des néo-bacheliers inscrits en L1 en 2019
                 </Title>
             </Row>

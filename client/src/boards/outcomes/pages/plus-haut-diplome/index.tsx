@@ -175,8 +175,8 @@ export default function PlusHautDiplomePage() {
                     </Callout>
                 </Col>
             </Row>
-            <Row gutters>
-                <Title>
+            <Row >
+                <Title as="h1" look="h4" className="fr-mb-3w">
                     Plus haut diplôme obtenu en {lastYearLabel} par les néo-bacheliers inscrits en L1 en 2019
                 </Title>
             </Row>
