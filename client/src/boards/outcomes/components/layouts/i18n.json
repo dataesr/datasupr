@@ -16,8 +16,12 @@
     "en": "Highest degree"
   },
   "croisements": {
-    "fr": "Croisements et profils",
-    "en": "Crossings and profiles"
+    "fr": "Croisements",
+    "en": "Crossings"
+  },
+  "comparaisonProfils": {
+    "fr": "Comparaison de profils",
+    "en": "Profiles comparison"
   },
   "methodologie": {
     "fr": "Méthodologie",

@@ -62,6 +62,7 @@ export default function BreakdownBar({ field: fieldProp }: BreakdownBarProps = {
                 id: `outcomes-phd-breakdown-${field}`,
                 integrationURL: `/integration?chart_id=outcomesPhdBreakdown&${integrationParams.toString()}`,
                 title,
+                sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
             }}
             options={chartOptions}
         />

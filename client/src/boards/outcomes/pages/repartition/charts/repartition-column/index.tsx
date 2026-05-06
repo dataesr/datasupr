@@ -66,6 +66,7 @@ export default function RepartitionChart({ hideTitle }: RepartitionChartProps = 
                 id: "outcomes-repartition",
                 integrationURL: `/integration?chart_id=outcomesRepartition&${searchParams.toString()}`,
                 title: "Répartition des néo-bacheliers inscrits en L1 en 2019 selon les inscriptions par année (en %)",
+                sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
             }}
             options={options}
         />

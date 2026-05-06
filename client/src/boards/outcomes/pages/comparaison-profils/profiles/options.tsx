@@ -21,12 +21,6 @@ interface ProfileSeriesInput {
 export function createProfilesLineOptions(profiles: ProfileSeriesInput[]) {
     return createChartOptions("line", ({
         accessibility: { enabled: false },
-        caption: {
-            align: "left",
-            style: { color: "var(--text-mention-grey)", fontSize: "11px" },
-            text: "Source : MESRE-SIES.",
-            verticalAlign: "bottom",
-        },
         chart: { type: "line", backgroundColor: "transparent", height: 380 },
         title: { text: undefined },
         legend: { enabled: true, itemStyle: { color: getCssColor("text-default-grey") } },
@@ -100,7 +94,7 @@ export function createProfilesDiplomaStackOptions(profiles: ProfileStackInput[])
             verticalAlign: "bottom",
         },
         chart: { type: "column", backgroundColor: "transparent", height: 320 },
-        title: { text: undefined },
+        title: { text: " " },
         legend: { enabled: true, itemStyle: { color: getCssColor("text-default-grey") } },
         xAxis: {
             categories,

@@ -15,6 +15,7 @@ const NAV_ITEMS = [
   { key: "repartition", labelKey: "repartition", to: "/devenir-etudiants/repartition" },
   { key: "plus-haut-diplome", labelKey: "plusHautDiplome", to: "/devenir-etudiants/plus-haut-diplome" },
   { key: "croisements", labelKey: "croisements", to: "/devenir-etudiants/croisements" },
+  { key: "comparaison-profils", labelKey: "comparaisonProfils", to: "/devenir-etudiants/comparaison-profils" },
   { key: "methodologie", labelKey: "methodologie", to: "/devenir-etudiants/methodologie" },
 ] as const;
 

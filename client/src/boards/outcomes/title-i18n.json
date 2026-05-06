@@ -12,8 +12,12 @@
     "en": "Outcomes - Highest degree"
   },
   "croisements": {
-    "fr": "Parcours des néo-bacheliers inscrits en L1 en 2019 - Croisements et profils",
-    "en": "Outcomes - Crossings and profiles"
+    "fr": "Parcours des néo-bacheliers inscrits en L1 en 2019 - Croisements",
+    "en": "Outcomes - Crossings"
+  },
+  "comparaisonProfils": {
+    "fr": "Parcours des néo-bacheliers inscrits en L1 en 2019 - Comparaison de profils",
+    "en": "Outcomes - Profiles comparison"
   },
   "methodologie": {
     "fr": "Parcours des néo-bacheliers inscrits en L1 en 2019 - Méthodologie",

@@ -3,14 +3,32 @@
   background: var(--background-alt-grey);
 }
 
-.outcomes-croisements__card--A { border-top: 4px solid var(--blue-france-main-525); }
-.outcomes-croisements__card--B { border-top: 4px solid var(--orange-terre-battue-main-645); }
-.outcomes-croisements__card--C { border-top: 4px solid var(--green-emeraude-main-632); }
+.outcomes-croisements__card--A {
+  border-top: 4px solid var(--blue-france-main-525);
+}
+.outcomes-croisements__card--B {
+  border-top: 4px solid var(--orange-terre-battue-main-645);
+}
+.outcomes-croisements__card--C {
+  border-top: 4px solid var(--green-emeraude-main-632);
+}
 
-.outcomes-croisements__card--max { border-top: 4px solid var(--green-emeraude-main-632); }
-.outcomes-croisements__card--min { border-top: 4px solid var(--pink-tuile-main-556); }
-.outcomes-croisements__card--gap { border-top: 4px solid var(--blue-france-main-525); }
+.outcomes-croisements__card--max {
+  border-top: 4px solid var(--green-emeraude-main-632);
+}
+.outcomes-croisements__card--min {
+  border-top: 4px solid var(--pink-tuile-main-556);
+}
+.outcomes-croisements__card--gap {
+  border-top: 4px solid var(--blue-france-main-525);
+}
 
-.outcomes-croisements__value--A { color: var(--blue-france-main-525); }
-.outcomes-croisements__value--B { color: var(--orange-terre-battue-main-645); }
-.outcomes-croisements__value--C { color: var(--green-emeraude-main-632); }
+.outcomes-croisements__value--A {
+  color: var(--blue-france-main-525);
+}
+.outcomes-croisements__value--B {
+  color: var(--orange-terre-battue-main-645);
+}
+.outcomes-croisements__value--C {
+  color: var(--green-emeraude-main-632);
+}

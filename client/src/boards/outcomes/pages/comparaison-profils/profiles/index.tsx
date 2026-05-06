@@ -1,6 +1,7 @@
 import { Button, Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useQueries } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import ChartWrapper from "../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
@@ -27,6 +28,32 @@ const RELATIVE_YEARS = [0, 1, 2, 3, 4];
 
 type Profile = Partial<Record<OutcomesFilterField, string | null>>;
 type AxisOptions = Record<OutcomesFilterField, OutcomesFilterOption[]>;
+
+function buildProfileParams(profiles: Profile[]): string {
+    const params = new URLSearchParams();
+    params.set("profiles", String(profiles.length));
+    profiles.forEach((profile, i) => {
+        const prefix = PROFILE_BADGES[i].toLowerCase();
+        PROFILE_FIELDS.forEach(({ field }) => {
+            const val = profile[field];
+            if (val) params.set(`${prefix}_${field}`, val);
+        });
+    });
+    return params.toString();
+}
+
+function parseProfilesFromURL(searchParams: URLSearchParams): Profile[] {
+    const count = Math.min(3, Math.max(2, Number(searchParams.get("profiles")) || 2));
+    return PROFILE_BADGES.slice(0, count).map((badge) => {
+        const prefix = badge.toLowerCase();
+        const profile: Profile = {};
+        PROFILE_FIELDS.forEach(({ field }) => {
+            const val = searchParams.get(`${prefix}_${field}`);
+            if (val) profile[field] = val;
+        });
+        return profile;
+    });
+}
 
 async function fetchProfileData(profile: Profile) {
     const params = new URLSearchParams({
@@ -109,20 +136,24 @@ function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, total, 
                     onSelect={(value) => onChange({ ...profile, [field]: value })}
                 />
             ))}
-            <Text size="sm" className="fr-mb-0" bold>Taux de diplômés du supérieur</Text>
-            <Title as="h3" look="h3" className={`fr-mb-0 outcomes-croisements__value--${badge}`}>
-                {isLoading ? "…" : tauxDipl !== undefined ? `${tauxDipl.toFixed(0)}%` : "n/a"}
-            </Title>
-            {!isLoading && total !== undefined && (
-                <>
-                    <Text size="sm" className="fr-mb-0">
-                        Part de la cohorte : <strong>{sharePct !== null ? `${sharePct.toFixed(1)}%` : "—"}</strong>
-                    </Text>
-                    <Text size="sm" className="fr-mb-0">
-                        Effectif : <strong>{total.toLocaleString("fr-FR")}</strong> étudiants
-                    </Text>
-                </>
-            )}
+            <Row gutters className="fr-mt-2w" >
+                <Col xs={6}>
+                    <Text size="sm" className="fr-mb-0">Taux de diplômés du supérieur</Text>
+                    <p className={`fr-h3 fr-mb-0 outcomes-croisements__value--${badge}`}>
+                        {isLoading ? "…" : tauxDipl !== undefined ? `${tauxDipl.toFixed(0)}%` : "n/a"}
+                    </p>
+                </Col>
+                {!isLoading && total !== undefined && (
+                    <Col xs={6}>
+                        <Text size="sm" className="fr-mb-0">
+                            Part de la cohorte : <strong>{sharePct !== null ? `${sharePct.toFixed(1)}%` : "—"}</strong>
+                        </Text>
+                        <Text size="sm" className="fr-mb-0">
+                            Effectif : <strong>{total.toLocaleString("fr-FR")}</strong> étudiants
+                        </Text>
+                    </Col>
+                )}
+            </Row>
         </div>
     );
 }
@@ -134,7 +165,8 @@ interface ProfilesTabProps {
 }
 
 export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal }: ProfilesTabProps) {
-    const [profiles, setProfiles] = useState<Profile[]>([{}, {}]);
+    const [searchParams] = useSearchParams();
+    const [profiles, setProfiles] = useState<Profile[]>(() => parseProfilesFromURL(searchParams));
 
     const queries = useQueries({
         queries: profiles.map((p, i) => ({
@@ -180,6 +212,8 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
         return <DefaultSkeleton height="320px" />;
     }
 
+    const integrationURL = `/integration?chart_id=outcomesComparaisonProfils&${buildProfileParams(profiles)}`;
+
     return (
         <>
             <Text className="fr-mb-2w">
@@ -218,24 +252,20 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
                 </Row>
             )}
 
-            <Title as="h3" look="h5" className="fr-mt-3w fr-mb-1w">Position au fil des années</Title>
-            <Text size="sm" className="fr-mb-1w">Part de chaque profil encore inscrite en formation supérieure</Text>
+            <Text size="sm" className="fr-mt-3w">Part de chaque profil encore inscrite en formation supérieure</Text>
             <ChartWrapper
-                hideTitle
-                config={{ id: "outcomes-profiles-line", title: "Position au fil des années" }}
+                config={{ id: "outcomes-profiles-line", title: "Position au fil des années", integrationURL, sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }] }}
                 options={lineOptions}
             />
 
-            <Title as="h3" look="h5" className="fr-mt-3w fr-mb-1w">Diplômés du supérieur vs sortants sans diplôme</Title>
-            <Text size="sm" className="fr-mb-1w">Répartition à 5 ans par profil</Text>
+            <Text size="sm" className="fr-mt-3w">Répartition à 5 ans par profil</Text>
             <ChartWrapper
-                hideTitle
-                config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur vs sortants sans diplôme" }}
+                config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur vs sortants sans diplôme", integrationURL, sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }] }}
                 options={stackOptions}
             />
 
             <Title as="h2" look="h5" className="fr-mt-3w fr-mb-1w">Plus haut diplôme obtenu en 2023-2024</Title>
-            <Text size="sm" className="fr-mb-1w">Répartition par type de diplôme pour chaque profil</Text>
+            <Text size="sm" className="fr-mt-3w">Répartition par type de diplôme pour chaque profil</Text>
             <Row gutters>
                 {profiles.map((_, i) => {
                     const d = queries[i]?.data;
@@ -243,14 +273,14 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
                     const colSize = profiles.length === 3 ? 4 : 6;
                     return (
                         <Col key={i} xs={12} md={colSize}>
-                            <div className={`outcomes-croisements__card outcomes-croisements__card--${badge} fr-p-2w`}>
+                            <div >
                                 <Title as="h3" look="h6" className="fr-mb-1w">Profil {badge}</Title>
                                 {!d || !d.rows?.length ? (
                                     <Text size="sm" className="fr-mb-0">{queries[i]?.isLoading ? "Chargement…" : "Sélectionnez des critères"}</Text>
                                 ) : (
                                     <ChartWrapper
                                         hideTitle
-                                        config={{ id: `outcomes-profiles-donut-${badge}`, title: `Plus haut diplôme — Profil ${badge}` }}
+                                        config={{ id: `outcomes-profiles-donut-${badge}`, title: `Plus haut diplôme — Profil ${badge}`, sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }] }}
                                         options={createDiplomaDonutOptions(d.rows, { effectif: d.nonDipl }, `Profil ${badge}`)}
                                     />
                                 )}
@@ -258,7 +288,7 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
                         </Col>
                     );
                 })}
-            </Row>
+            </Row >
         </>
     );
 }

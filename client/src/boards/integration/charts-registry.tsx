@@ -190,6 +190,12 @@ export const chartsRegistry = {
   outcomesRepartition: lazy(
     () => import("../outcomes/pages/repartition/charts/repartition-column")
   ),
+  outcomesCroisementsHeatmap: lazy(
+    () => import("../outcomes/pages/croisements/heatmap")
+  ),
+  outcomesComparaisonProfils: lazy(
+    () => import("../outcomes/pages/comparaison-profils")
+  ),
 };
 
 export type ChartId = keyof typeof chartsRegistry;

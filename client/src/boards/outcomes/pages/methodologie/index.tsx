@@ -6,7 +6,7 @@ export default function MethodologiePage() {
         <Container className="outcomes-section-page outcomes-flux-page">
             <Row gutters>
                 <Col>
-                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line" title="Avertissement">
+                    <Callout className="fr-mb-2w" colorFamily="pink-tuile" icon="fr-icon-alert-line" >
                         Version sous embargo à ne pas diffuser
                     </Callout>
                 </Col>

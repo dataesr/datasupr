@@ -44,6 +44,7 @@ export default function DiplomaDonut() {
                 id: "outcomes-plus-haut-diplome-donut",
                 integrationURL: `/integration?chart_id=outcomesPhdDonut&${searchParams.toString()}`,
                 title,
+                sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
             }}
             options={options}
         />
