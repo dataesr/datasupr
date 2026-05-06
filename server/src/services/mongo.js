@@ -2,20 +2,20 @@ import { MongoClient } from "mongodb";
 
 import logger from "./logger.js";
 
-const mongoDbName = process.env.MONGO_DB_NAME || "datasupr";
+const mongoDbName = process.env.MONGO_DB_NAME || "tableaux-staging";
 const mongoUri = process.env.MONGO_URI || "mongodb://localhost:27017/";
 
 const client = new MongoClient(mongoUri);
 
-logger.info(`Try to connect to mongo DataSupR... ${mongoUri}`);
+logger.info(`Try to connect to mongo Tableaux... ${mongoUri}`);
 await client.connect().catch((e) => {
   logger.info(
-    `Connexion to mongo DataSupR instance failed... Terminating... ${e.message}`
+    `Connexion to mongo Tableaux instance failed... Terminating... ${e.message}`
   );
   process.kill(process.pid, "SIGTERM");
 });
 
-logger.info(`Connected to mongo database - DataSupR... ${mongoDbName}`);
+logger.info(`Connected to mongo database - Tableaux... ${mongoDbName}`);
 const db = client.db(mongoDbName);
 
 export { client, db };

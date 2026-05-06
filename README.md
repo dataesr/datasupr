@@ -1,8 +1,8 @@
-# DATASUPR
+# TABLEAUX
 
 ## Development
 
-DatasupR is fully functional in development.
+TABLEAUX is fully functional in development.
 
 node: 24
 
@@ -15,6 +15,7 @@ To run it locally : `npm start`
 And the project should be available via your favorite browser at http://localhost:5173/.
 
 ## Serve localy
+
 To create build: `npm run build`
 To run local server: `serve -s server/dist` (requirement: install serve. `npm -g serve`)
 
@@ -22,7 +23,6 @@ To run local server: `serve -s server/dist` (requirement: install serve. `npm -g
 
 The react client app is served by the node server in production.
 Vite build creates a build in `/dist` folder. This folder has to be moved into the `/server` folder.
-
 
 ## Deployment
 

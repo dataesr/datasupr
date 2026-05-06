@@ -84,7 +84,7 @@ function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, total, 
         <div className={`outcomes-croisements__card outcomes-croisements__card--${badge} fr-p-2w`}>
             <Row verticalAlign="middle">
                 <Col>
-                    <Title as="h3" look="h6" className="fr-mb-0">Profil {badge}</Title>
+                    <Title as="h2" look="h6" className="fr-mb-0">Profil {badge}</Title>
                 </Col>
                 {canRemove && (
                     <Col className="text-right">
@@ -110,7 +110,7 @@ function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, total, 
                 />
             ))}
             <Text size="sm" className="fr-mb-0" bold>Taux de diplômés du supérieur</Text>
-            <Title as="h4" look="h3" className={`fr-mb-0 outcomes-croisements__value--${badge}`}>
+            <Title as="h3" look="h3" className={`fr-mb-0 outcomes-croisements__value--${badge}`}>
                 {isLoading ? "…" : tauxDipl !== undefined ? `${tauxDipl.toFixed(0)}%` : "n/a"}
             </Title>
             {!isLoading && total !== undefined && (
@@ -234,7 +234,7 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
                 options={stackOptions}
             />
 
-            <Title as="h3" look="h5" className="fr-mt-3w fr-mb-1w">Plus haut diplôme obtenu en 2023-2024</Title>
+            <Title as="h2" look="h5" className="fr-mt-3w fr-mb-1w">Plus haut diplôme obtenu en 2023-2024</Title>
             <Text size="sm" className="fr-mb-1w">Répartition par type de diplôme pour chaque profil</Text>
             <Row gutters>
                 {profiles.map((_, i) => {
@@ -244,7 +244,7 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal
                     return (
                         <Col key={i} xs={12} md={colSize}>
                             <div className={`outcomes-croisements__card outcomes-croisements__card--${badge} fr-p-2w`}>
-                                <Title as="h4" look="h6" className="fr-mb-1w">Profil {badge}</Title>
+                                <Title as="h3" look="h6" className="fr-mb-1w">Profil {badge}</Title>
                                 {!d || !d.rows?.length ? (
                                     <Text size="sm" className="fr-mb-0">{queries[i]?.isLoading ? "Chargement…" : "Sélectionnez des critères"}</Text>
                                 ) : (
