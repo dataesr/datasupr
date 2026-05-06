@@ -10,9 +10,12 @@ import DataTable from "./datatable.tsx";
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 type Column = {
-  id: string
-  isSortable: boolean
-  label: string
+  id: string,
+  isFilterable?: boolean, // Is the column filterable, by default a simple tetx input is displayed. False if omitted
+  isFilterableBySelect?: boolean, // If true and if an aggregation named like the colummn id exists, display a select, feeded by the aggregations buckets
+  isSortable?: boolean, // Is the column sortable. False if omitted
+  label?: string, // Column label as header. If omitted, the column id is displayed instead
+  sortableField?: string, // Is the column sortable
 }
 
 type Filter = {
@@ -54,25 +57,33 @@ export default function ProjectsData() {
     size: pagination?.size ?? 10,
   }
 
+  const aggregations = {
+    county: { terms: { field: 'participant_region_with_labs.keyword' } },
+    instrument: { terms: { field: 'project_instrument.keyword' } },
+    participationIsCoordinator: { terms: { field: 'participation_is_coordinator' } },
+    type: { terms: { field: 'project_type.keyword' } },
+    year: { terms: { field: 'project_year' } },
+  };
+
   if (sorting?.id) {
     body.sort = { [sorting.id]: sorting.order }
   }
   if (filters.length > 0) {
     filters.forEach((filter) => {
       if (filter.id === 'county') {
-        body.query.bool.filter.push({ query_string: { default_field: 'participant_region_with_labs.keyword', query: filter.value } })
+        body.query.bool.filter.push({ match: { 'participant_region_with_labs.keyword': filter.value } })
       } else if (filter.id === 'id') {
         body.query.bool.filter.push({ match: { 'project_id.keyword': filter.value } })
       } else if (filter.id === 'instrument') {
-        body.query.bool.filter.push({ match: { project_instrument: { query: filter.value } }})
+        body.query.bool.filter.push({ match: { 'project_instrument.keyword': filter.value } })
       } else if (filter.id === 'label') {
         body.query.bool.filter.push({ query_string: { default_field: 'project_label.keyword', query: filter.value } })
       } else if (filter.id === 'participationIsCoordinator') {
-        body.query.bool.filter.push({ query_string: { default_field: 'participation_is_coordinator', query: filter.value } })
+        body.query.bool.filter.push({ term: { participation_is_coordinator: filter.value === "1" } })
       } else if (filter.id === 'type') {
-        body.query.bool.filter.push({ wildcard: { 'project_type.keyword': { query: `*${filter.value}*`, case_insensitive: true } }})
+        body.query.bool.filter.push({ match: { 'project_type.keyword': filter.value } })
       } else if (filter.id === 'year') {
-        body.query.bool.filter.push({ query_string: { default_field: 'project_year', query: filter.value } })
+        body.query.bool.filter.push({ match: { project_year: filter.value } })
       } else {
         console.error(`Filter id not supported : ${filter.id}`)
       }
@@ -93,10 +104,10 @@ export default function ProjectsData() {
   });
 
   const { data: dataAll, isLoading: isLoadingAll } = useQuery({
-    queryKey: ["fundings-data", filters, "all", sorting, structure, yearMax, yearMin],
+    queryKey: ["fundings-data-all", structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
-        body: JSON.stringify({ ...body, from: 0, size: 10000}),
+        body: JSON.stringify({ ...body, from: 0, size: 10000, aggregations }),
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
@@ -106,7 +117,7 @@ export default function ProjectsData() {
   });
 
   const dataTable: Project[] = (data?.hits?.hits ?? []).map((hit) => ({
-    county: hit._source?.participant_region_with_labs,
+    county: hit._source?.participant_region_with_labs.join(', '),
     id: hit._source?.project_id,
     instrument: hit._source?.project_instrument,
     label: hit._source?.project_label,
@@ -120,7 +131,7 @@ export default function ProjectsData() {
   const numberOfResults = data?.hits?.total?.value ?? 0
 
   const dataTableAll: Project[] = (dataAll?.hits?.hits ?? []).map((hit) => ({
-    county: hit._source?.participant_region_with_labs,
+    county: hit._source?.participant_region_with_labs.join(', '),
     id: hit._source?.project_id,
     instrument: hit._source?.project_instrument,
     label: hit._source?.project_label,
@@ -136,6 +147,7 @@ export default function ProjectsData() {
     {
       id: 'year',
       isFilterable: true,
+      isFilterableBySelect: true,
       isSortable: true,
       label: 'Année',
       sortableField: 'project_year',
@@ -143,6 +155,7 @@ export default function ProjectsData() {
     {
       id: 'type',
       isFilterable: true,
+      isFilterableBySelect: true,
       isSortable: true,
       label: 'Type',
       sortableField: 'project_type.keyword',
@@ -156,6 +169,7 @@ export default function ProjectsData() {
     {
       id: 'county',
       isFilterable: true,
+      isFilterableBySelect: true,
       isSortable: false,
       label: 'Région',
     },
@@ -168,6 +182,7 @@ export default function ProjectsData() {
     {
       id: 'instrument',
       isFilterable: true,
+      isFilterableBySelect: true,
       isSortable: true,
       label: 'Instrument de financement',
       sortableField: 'project_instrument.keyword',
@@ -175,6 +190,7 @@ export default function ProjectsData() {
     {
       id: 'participationIsCoordinator',
       isFilterable: true,
+      isFilterableBySelect: true,
       isSortable: true,
       label: 'Coordinateur',
       sortableField: 'participation_is_coordinator',
@@ -245,6 +261,7 @@ export default function ProjectsData() {
       <Row>
         <Col>
           <DataTable
+            aggregations={dataAll?.aggregations ?? {}}
             columns={columns}
             dataTable={dataTable}
             filters={filters}

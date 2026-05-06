@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import "./style.scss";
 
-export default function DataTable({ columns, dataTable, filters, numberOfResults, pagination, setFilters, setPagination, setSorting, sorting }) {
+export default function DataTable({ aggregations, columns, dataTable, filters, numberOfResults, pagination, setFilters, setPagination, setSorting, sorting }) {
   const inputsTmp = {}
   filters.forEach((filter) => {
     inputsTmp[filter.id] = filter.value
@@ -56,17 +56,14 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
     }
   }
 
-  const handles = {
-    county: (event) => setInputs({ ...inputs, county: event.target.value }),
-    id: (event) => setInputs({ ...inputs, id: event.target.value }),
-    instrument: (event) => setInputs({ ...inputs, instrument: event.target.value }),
-    label: (event) => setInputs({ ...inputs, label: event.target.value }),
-    participationIsCoordinator: (event) => setInputs({ ...inputs, participationIsCoordinator: event.target.value }),
-    type: (event) => setInputs({ ...inputs, type: event.target.value }),
-    year: (event) => setInputs({ ...inputs, year: event.target.value }),
+  const handleFilter = (column: { id: string }, event) => {
+    if (event.target.value === '') {
+      const { [column.id]: _, ...rest } = inputs;
+      setInputs(rest);
+    } else {
+      setInputs({ ...inputs, [column.id]: event.target.value });
+    }
   }
-
-  const handleInputChange = (event, column) => handles[column.id](event)
 
   useEffect(() => {
     const timeoutId = setTimeout(() => {
@@ -86,21 +83,40 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
                   {column.isPlaceholder ? null : (
                     <>
                       <div>
-                        {column.label}
+                        {column?.label ?? column.id}
                         {' '}
                         {column?.isFilterable && <i className="ri-filter-line" />}
                         {' '}
                         {getSortableIcon(column)}
                       </div>
                       {column?.isFilterable && (
-                        <div>
-                          <input
-                            className="border"
-                            onChange={(event) => handleInputChange(event, column)}
-                            type="text"
+                        column?.isFilterableBySelect && aggregations?.[column.id] ? (
+                          <select
+                            name={`fundings-structure-data-${column.id}`}
+                            id={`fundings-structure-data-${column.id}`}
+                            className="fr-mb-2w fr-select"
                             value={inputs[column.id]}
-                          />
-                        </div>
+                            onChange={(event) => handleFilter(column, event)}
+                          >
+                            <option key='all' value=''>
+                              Tout
+                            </option>
+                            {(aggregations?.[column.id]?.buckets ?? []).map((bucket) => (
+                              <option key={bucket.key} value={bucket.key}>
+                                {bucket.key} ({bucket.doc_count})
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <div>
+                            <input
+                              className="border"
+                              onChange={(event) => handleFilter(column, event)}
+                              type="text"
+                              value={inputs[column.id]}
+                            />
+                          </div>
+                        )
                       )}
                     </>
                   )}
