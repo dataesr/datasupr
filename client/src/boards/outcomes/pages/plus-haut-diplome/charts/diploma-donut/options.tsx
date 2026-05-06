@@ -33,11 +33,17 @@ export function createDiplomaDonutOptions(
         {
             name: "Non diplômés",
             y: nonDiplomes.effectif,
-            color: getCssColor("outcomes-sortants-diplomes"),
+            color: "var(--purple-glycine-main-494)",
         },
     ];
 
     return createChartOptions("pie", {
+        caption: {
+            align: "left",
+            style: { color: "var(--text-mention-grey)", fontSize: "11px" },
+            text: "Source : MESRE-SIES.",
+            verticalAlign: "bottom",
+        },
         chart: { height: 320, backgroundColor: "transparent" },
         legend: {
             enabled: true,

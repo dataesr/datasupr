@@ -6,7 +6,6 @@ import { createChartOptions } from "../../../../../components/chart-wrapper/defa
 export type HeatmapCell = { pct: number; count: number; dipl: number } | null;
 
 interface CreateHeatmapOptionsParams {
-    vAxisLabel: string;
     vOptions: Array<{ key: string; label: string }>;
     hOptions: Array<{ key: string; label: string }>;
     getCell: (vKey: string, hKey: string) => HeatmapCell;
@@ -18,7 +17,6 @@ interface CreateHeatmapOptionsParams {
 const ENSEMBLE_LABEL = "Ensemble";
 
 export function createHeatmapOptions({
-    vAxisLabel,
     vOptions,
     hOptions,
     getCell,
@@ -63,6 +61,12 @@ export function createHeatmapOptions({
     const chartHeight = Math.max(380, yCategories.length * 56 + 100);
 
     return createChartOptions("heatmap" as any, ({
+        caption: {
+            align: "left",
+            style: { color: "var(--text-mention-grey)", fontSize: "11px" },
+            text: "Source : MESRE-SIES.",
+            verticalAlign: "bottom",
+        },
         chart: {
             type: "heatmap",
             height: chartHeight,
@@ -71,10 +75,11 @@ export function createHeatmapOptions({
         },
         xAxis: {
             categories: xCategories,
+            opposite: true,
         },
         yAxis: {
             categories: yCategories,
-            title: { text: vAxisLabel },
+            title: { text: undefined },
             reversed: true,
         },
         colorAxis: {
