@@ -56,9 +56,9 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
     }
   }
 
-  const handleFilter = (column: { id: string }, event) => {
+  const handleFilter = (column, event) => {
     if (event.target.value === '') {
-      const { [column.id]: _, ...rest } = inputs;
+      const { [column.id]: _, ...rest } = inputs as any;
       setInputs(rest);
     } else {
       setInputs({ ...inputs, [column.id]: event.target.value });
