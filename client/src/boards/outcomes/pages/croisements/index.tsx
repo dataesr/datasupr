@@ -80,6 +80,7 @@ export default function CroisementsPage() {
                             <ProfilesTab
                                 axisOptions={baseData?.filterOptions ?? null}
                                 isLoadingOptions={baseLoading}
+                                cohortTotal={baseData?.totalStudents ?? 0}
                             />
                         )}
                     </div>

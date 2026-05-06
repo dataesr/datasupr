@@ -1,3 +1,4 @@
+import { Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useQueries } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
@@ -98,7 +99,8 @@ export default function HeatmapTab() {
     const chartOptions = useMemo(() => {
         if (sameAxis || isLoading || labeledValues.length === 0) return null;
         return createHeatmapOptions({
-            vAxisLabel, vOptions, hOptions,
+            vOptions, hOptions,
+            vAxisLabel, hAxisLabel,
             getCell: (vKey, hKey) => dataBySig.get(sigOf({ [vAxis]: vKey, [hAxis]: hKey })) ?? null,
             getRowMargin: (vKey) => dataBySig.get(sigOf({ [vAxis]: vKey })) ?? null,
             getColMargin: (hKey) => dataBySig.get(sigOf({ [hAxis]: hKey })) ?? null,
@@ -107,31 +109,27 @@ export default function HeatmapTab() {
     }, [sameAxis, isLoading, labeledValues.length, vAxisLabel, hAxisLabel, vOptions, hOptions, dataBySig, vAxis, hAxis, ensembleCell]);
 
     const renderAxisSelect = (
-        title: string,
+        label: string,
         value: OutcomesFilterField,
         excluded: OutcomesFilterField,
         onChange: (next: OutcomesFilterField) => void,
     ) => (
-        <div className="outcomes-croisements__sidebar-section">
-            <span className="outcomes-croisements__sidebar-label">{title}</span>
-            <OutcomesFilterSelect
-                label={title}
-                options={AXIS_FIELDS.filter((f) => f.field !== excluded).map((f) => ({ key: f.field, label: f.label }))}
-                selectedKey={value}
-                emptyLabel="Choisir un axe"
-                onSelect={(v) => { if (v) onChange(v as OutcomesFilterField); }}
-            />
-        </div>
+        <OutcomesFilterSelect
+            label={label}
+            options={AXIS_FIELDS.filter((f) => f.field !== excluded).map((f) => ({ key: f.field, label: f.label }))}
+            selectedKey={value}
+            emptyLabel="Choisir un axe"
+            onSelect={(v) => { if (v) onChange(v as OutcomesFilterField); }}
+        />
     );
 
     return (
-        <div className="outcomes-croisements__layout">
-            <aside className="outcomes-croisements__sidebar" aria-label="Sélection des axes">
+        <Row gutters>
+            <Col xs={12} md={3}>
                 {renderAxisSelect("Axe vertical", vAxis, hAxis, setVAxis)}
                 {renderAxisSelect("Axe horizontal", hAxis, vAxis, setHAxis)}
-            </aside>
-
-            <div className="outcomes-croisements__main">
+            </Col>
+            <Col xs={12} md={9}>
                 {sameAxis && (
                     <Callout colorFamily="pink-macaron" icon="fr-icon-information-line">
                         Sélectionnez deux axes différents pour visualiser le croisement.
@@ -142,42 +140,55 @@ export default function HeatmapTab() {
 
                 {!sameAxis && !isLoading && chartOptions && (
                     <>
-                        <div className="outcomes-croisements__kpi-strip">
+                        <Title as="h2" look="h5" className="fr-mb-1w">
+                            {`${vAxisLabel} × ${hAxisLabel} — taux de diplômés dans le supérieur en 2023-2024 des néo-bacheliers inscrits en L1 en 2019`}
+                        </Title>
+                        <Row gutters>
                             {([
-                                { mod: "max", label: "Taux de diplômés le plus élevé", cell: maxCell },
-                                { mod: "min", label: "Taux de diplômés le plus faible", cell: minCell },
-                            ] as const).map(({ mod, label, cell }) => (
-                                <div key={mod} className={`outcomes-croisements__kpi outcomes-croisements__kpi--${mod}`}>
-                                    <div className="outcomes-croisements__kpi-label">{label}</div>
-                                    <div className="outcomes-croisements__kpi-value">{cell ? `${cell.pct.toFixed(0)}%` : "—"}</div>
-                                    <div className="outcomes-croisements__kpi-detail">{cell ? `${cell.vLabel} × ${cell.hLabel}` : "—"}</div>
+                                { key: "max", label: "Taux de diplômés le plus élevé", cell: maxCell },
+                                { key: "min", label: "Taux de diplômés le plus faible", cell: minCell },
+                            ] as const).map(({ key, label, cell }) => {
+                                const share = cell && ensembleTotal ? (cell.count / ensembleTotal) * 100 : null;
+                                return (
+                                    <Col key={key} xs={12} md={4}>
+                                        <div className={`outcomes-croisements__card outcomes-croisements__card--${key} fr-p-2w`}>
+                                            <Text size="sm" className="fr-mb-0" bold>{label}</Text>
+                                            <Title as="h3" look="h3" className="fr-mb-0">{cell ? `${cell.pct.toFixed(0)}%` : "—"}</Title>
+                                            <Text size="sm" className="fr-mb-0">{cell ? `${cell.vLabel} × ${cell.hLabel}` : "—"}</Text>
+                                            {share !== null && (
+                                                <Text size="sm" className="fr-mb-0">{`${share.toFixed(0)}% des étudiants concernés`}</Text>
+                                            )}
+                                        </div>
+                                    </Col>
+                                );
+                            })}
+                            <Col xs={12} md={4}>
+                                <div className="outcomes-croisements__card outcomes-croisements__card--gap fr-p-2w">
+                                    <Text size="sm" className="fr-mb-0" bold>Plus grand écart</Text>
+                                    <Title as="h3" look="h3" className="fr-mb-0">{minCell && maxCell ? `${Math.round(maxCell.pct - minCell.pct)} pts` : "—"}</Title>
                                 </div>
-                            ))}
-                            <div className="outcomes-croisements__kpi outcomes-croisements__kpi--gap">
-                                <div className="outcomes-croisements__kpi-label">Écart cumulé</div>
-                                <div className="outcomes-croisements__kpi-value">{minCell && maxCell ? `${Math.round(maxCell.pct - minCell.pct)} pts` : "—"}</div>
-                                <div className="outcomes-croisements__kpi-detail">ensemble {ensemblePct.toFixed(0)}%</div>
-                            </div>
-                        </div>
+                            </Col>
+                        </Row>
 
                         <ChartWrapper
+                            hideTitle
                             config={{
                                 id: "outcomes-croisements-heatmap",
-                                title: `${vAxisLabel} × ${hAxisLabel} — taux de diplômés`,
+                                title: `${vAxisLabel} × ${hAxisLabel} — taux de diplômés dans le supérieur en 2023-2024 des néo-bacheliers inscrits en L1 en 2019`,
                                 subtitle: "Néo-bacheliers inscrits en L1 en 2019 · observation à 5 ans (2023-2024)",
                             }}
                             options={chartOptions}
                         />
 
                         {minCell && maxCell && minCell !== maxCell && (
-                            <div className="outcomes-croisements__lecture">
+                            <Callout colorFamily="blue-cumulus" icon="fr-icon-information-line">
                                 <strong>Lecture : </strong>
-                                parmi les néo-bacheliers inscrits en L1 en 2019, l'écart de diplomation à 5 ans entre <strong>{maxCell.vLabel} × {maxCell.hLabel}</strong> ({maxCell.pct.toFixed(0)}%) et <strong>{minCell.vLabel} × {minCell.hLabel}</strong> ({minCell.pct.toFixed(0)}%) atteint <strong>{Math.round(maxCell.pct - minCell.pct)} points</strong>, contre {ensemblePct.toFixed(0)}% pour l'ensemble de la cohorte.
-                            </div>
+                                parmi les néo-bacheliers inscrits en L1 en 2019, l'écart de diplomation dans le supérieur à 5 ans entre <strong>{maxCell.vLabel} × {maxCell.hLabel}</strong> ({maxCell.pct.toFixed(0)}%) et <strong>{minCell.vLabel} × {minCell.hLabel}</strong> ({minCell.pct.toFixed(0)}%) atteint <strong>{Math.round(maxCell.pct - minCell.pct)} points</strong>. Sur l'ensemble de la cohorte, {ensemblePct.toFixed(0)}% sont diplômés de l'enseignement supérieur.
+                            </Callout>
                         )}
                     </>
                 )}
-            </div>
-        </div>
+            </Col>
+        </Row>
     );
 }

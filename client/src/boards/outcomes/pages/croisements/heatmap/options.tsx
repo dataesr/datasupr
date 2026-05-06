@@ -7,7 +7,9 @@ export type HeatmapCell = { pct: number; count: number; dipl: number } | null;
 
 interface CreateHeatmapOptionsParams {
     vOptions: Array<{ key: string; label: string }>;
+    vAxisLabel: string;
     hOptions: Array<{ key: string; label: string }>;
+    hAxisLabel: string;
     getCell: (vKey: string, hKey: string) => HeatmapCell;
     getRowMargin: (vKey: string) => HeatmapCell;
     getColMargin: (hKey: string) => HeatmapCell;

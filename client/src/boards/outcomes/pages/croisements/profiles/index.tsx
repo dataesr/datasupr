@@ -1,4 +1,4 @@
-import { Button } from "@dataesr/dsfr-plus";
+import { Button, Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useQueries } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
@@ -6,6 +6,8 @@ import ChartWrapper from "../../../../../components/chart-wrapper";
 import DefaultSkeleton from "../../../../../components/charts-skeletons/default";
 import OutcomesFilterSelect from "../../../components/filter-select";
 import type { OutcomesFilterField, OutcomesFilterOption } from "../../../api";
+import { createDiplomaDonutOptions } from "../../plus-haut-diplome/charts/diploma-donut/options";
+import { createProfilesDiplomaStackOptions } from "./options";
 import { createProfilesLineOptions, PROFILE_BADGES } from "./options";
 
 const { VITE_APP_SERVER_URL } = import.meta.env;
@@ -42,7 +44,9 @@ async function fetchProfileData(profile: Profile) {
 
     const total = phd?.totalStudents || 0;
     const dipl = phd?.totals?.diplomes?.effectif || 0;
+    const nonDipl = phd?.totals?.nonDiplomes?.effectif || 0;
     const tauxDipl = total ? (dipl / total) * 100 : 0;
+    const rows: Array<{ diplome: string; effectif: number }> = phd?.rows ?? [];
 
     const counts = new Map<number, { stillEnrolled: number; total: number }>();
     (rep.distribution || []).forEach((d: { annee_rel: number; situation: string; count: number }) => {
@@ -58,7 +62,7 @@ async function fetchProfileData(profile: Profile) {
         return (c.stillEnrolled / c.total) * 100;
     });
 
-    return { tauxDipl, total, series };
+    return { tauxDipl, total, dipl, nonDipl, rows, series };
 }
 
 interface ProfileCardProps {
@@ -67,28 +71,35 @@ interface ProfileCardProps {
     axisOptions: AxisOptions;
     canRemove: boolean;
     tauxDipl?: number;
+    total?: number;
+    cohortTotal: number;
     isLoading: boolean;
     onChange: (next: Profile) => void;
     onRemove: () => void;
 }
 
-function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, isLoading, onChange, onRemove }: ProfileCardProps) {
+function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, total, cohortTotal, isLoading, onChange, onRemove }: ProfileCardProps) {
+    const sharePct = total !== undefined && cohortTotal ? (total / cohortTotal) * 100 : null;
     return (
-        <div className={`outcomes-croisements__profile-card outcomes-croisements__profile-card--${badge}`}>
-            <div className="outcomes-croisements__profile-card__head">
-                <div className="outcomes-croisements__profile-card__heading">
-                    <span className={`outcomes-croisements__profile-card__badge outcomes-croisements__profile-card__badge--${badge}`} aria-hidden="true">{badge}</span>
-                    <span className="outcomes-croisements__profile-card__title">Profil {badge}</span>
-                </div>
+        <div className={`outcomes-croisements__card outcomes-croisements__card--${badge} fr-p-2w`}>
+            <Row verticalAlign="middle">
+                <Col>
+                    <Title as="h3" look="h6" className="fr-mb-0">Profil {badge}</Title>
+                </Col>
                 {canRemove && (
-                    <button
-                        type="button"
-                        className="outcomes-croisements__profile-card__remove fr-icon-close-line"
-                        aria-label={`Retirer le profil ${badge}`}
-                        onClick={onRemove}
-                    />
+                    <Col className="text-right">
+                        <Button
+                            icon="close-line"
+                            variant="text"
+                            size="sm"
+                            onClick={onRemove}
+                            title={`Retirer le profil ${badge}`}
+                        >
+                            Retirer
+                        </Button>
+                    </Col>
                 )}
-            </div>
+            </Row>
             {PROFILE_FIELDS.map(({ field, label }) => (
                 <OutcomesFilterSelect
                     key={field}
@@ -98,12 +109,20 @@ function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, isLoadi
                     onSelect={(value) => onChange({ ...profile, [field]: value })}
                 />
             ))}
-            <div className="outcomes-croisements__profile-card__kpi">
-                <span className="outcomes-croisements__profile-card__kpi-label">Taux de diplômés</span>
-                <span className={`outcomes-croisements__profile-card__kpi-value outcomes-croisements__profile-card__kpi-value--${badge}`}>
-                    {isLoading ? "…" : tauxDipl !== undefined ? `${tauxDipl.toFixed(0)}%` : "n/a"}
-                </span>
-            </div>
+            <Text size="sm" className="fr-mb-0" bold>Taux de diplômés du supérieur</Text>
+            <Title as="h4" look="h3" className={`fr-mb-0 outcomes-croisements__value--${badge}`}>
+                {isLoading ? "…" : tauxDipl !== undefined ? `${tauxDipl.toFixed(0)}%` : "n/a"}
+            </Title>
+            {!isLoading && total !== undefined && (
+                <>
+                    <Text size="sm" className="fr-mb-0">
+                        Part de la cohorte : <strong>{sharePct !== null ? `${sharePct.toFixed(1)}%` : "—"}</strong>
+                    </Text>
+                    <Text size="sm" className="fr-mb-0">
+                        Effectif : <strong>{total.toLocaleString("fr-FR")}</strong> étudiants
+                    </Text>
+                </>
+            )}
         </div>
     );
 }
@@ -111,9 +130,10 @@ function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, isLoadi
 interface ProfilesTabProps {
     axisOptions: AxisOptions | null;
     isLoadingOptions: boolean;
+    cohortTotal: number;
 }
 
-export default function ProfilesTab({ axisOptions, isLoadingOptions }: ProfilesTabProps) {
+export default function ProfilesTab({ axisOptions, isLoadingOptions, cohortTotal }: ProfilesTabProps) {
     const [profiles, setProfiles] = useState<Profile[]>([{}, {}]);
 
     const queries = useQueries({
@@ -144,49 +164,101 @@ export default function ProfilesTab({ axisOptions, isLoadingOptions }: ProfilesT
         [profiles, queries],
     );
 
+    const stackOptions = useMemo(
+        () =>
+            createProfilesDiplomaStackOptions(
+                profiles.map((_, i) => ({
+                    badge: PROFILE_BADGES[i],
+                    dipl: queries[i]?.data?.dipl,
+                    nonDipl: queries[i]?.data?.nonDipl,
+                })),
+            ),
+        [profiles, queries],
+    );
+
     if (isLoadingOptions || !axisOptions) {
         return <DefaultSkeleton height="320px" />;
     }
 
     return (
-        <div>
-            <p className="outcomes-croisements__intro">
+        <>
+            <Text className="fr-mb-2w">
                 Sélectionnez 2 ou 3 profils pour comparer leurs trajectoires côte à côte.
-            </p>
+            </Text>
 
-            <div className={`outcomes-croisements__profiles${profiles.length === 3 ? " outcomes-croisements__profiles--three" : ""}`}>
-                {profiles.map((p, i) => (
-                    <ProfileCard
-                        key={i}
-                        badge={PROFILE_BADGES[i]}
-                        profile={p}
-                        axisOptions={axisOptions}
-                        canRemove={profiles.length > 2}
-                        tauxDipl={queries[i]?.data?.tauxDipl}
-                        isLoading={queries[i]?.isLoading ?? false}
-                        onChange={(next) => updateProfile(i, next)}
-                        onRemove={() => removeProfile(i)}
-                    />
-                ))}
-            </div>
+            <Row gutters>
+                {profiles.map((p, i) => {
+                    const colSize = profiles.length === 3 ? 4 : 6;
+                    return (
+                        <Col key={i} xs={12} md={colSize}>
+                            <ProfileCard
+                                badge={PROFILE_BADGES[i]}
+                                profile={p}
+                                axisOptions={axisOptions}
+                                canRemove={profiles.length > 2}
+                                tauxDipl={queries[i]?.data?.tauxDipl}
+                                total={queries[i]?.data?.total}
+                                cohortTotal={cohortTotal}
+                                isLoading={queries[i]?.isLoading ?? false}
+                                onChange={(next) => updateProfile(i, next)}
+                                onRemove={() => removeProfile(i)}
+                            />
+                        </Col>
+                    );
+                })}
+            </Row>
 
             {profiles.length < 3 && (
-                <div className="outcomes-croisements__add-profile">
-                    <Button icon="account-circle-fill" variant="secondary" size="sm" onClick={addProfile}>
-                        Ajouter un troisième profil
-                    </Button>
-                </div>
+                <Row className="fr-mt-2w">
+                    <Col>
+                        <Button icon="account-circle-fill" variant="secondary" size="sm" onClick={addProfile}>
+                            Ajouter un troisième profil
+                        </Button>
+                    </Col>
+                </Row>
             )}
 
-            <div className="outcomes-croisements__chart-card">
-                <div className="outcomes-croisements__chart-card__title">Position au fil des années</div>
-                <div className="outcomes-croisements__chart-card__subtitle">Part de chaque profil encore inscrite en formation supérieure</div>
-                <ChartWrapper
-                    hideTitle
-                    config={{ id: "outcomes-profiles-line", title: "Position au fil des années" }}
-                    options={lineOptions}
-                />
-            </div>
-        </div>
+            <Title as="h3" look="h5" className="fr-mt-3w fr-mb-1w">Position au fil des années</Title>
+            <Text size="sm" className="fr-mb-1w">Part de chaque profil encore inscrite en formation supérieure</Text>
+            <ChartWrapper
+                hideTitle
+                config={{ id: "outcomes-profiles-line", title: "Position au fil des années" }}
+                options={lineOptions}
+            />
+
+            <Title as="h3" look="h5" className="fr-mt-3w fr-mb-1w">Diplômés du supérieur vs sortants sans diplôme</Title>
+            <Text size="sm" className="fr-mb-1w">Répartition à 5 ans par profil</Text>
+            <ChartWrapper
+                hideTitle
+                config={{ id: "outcomes-profiles-stack", title: "Diplômés du supérieur vs sortants sans diplôme" }}
+                options={stackOptions}
+            />
+
+            <Title as="h3" look="h5" className="fr-mt-3w fr-mb-1w">Plus haut diplôme obtenu en 2023-2024</Title>
+            <Text size="sm" className="fr-mb-1w">Répartition par type de diplôme pour chaque profil</Text>
+            <Row gutters>
+                {profiles.map((_, i) => {
+                    const d = queries[i]?.data;
+                    const badge = PROFILE_BADGES[i];
+                    const colSize = profiles.length === 3 ? 4 : 6;
+                    return (
+                        <Col key={i} xs={12} md={colSize}>
+                            <div className={`outcomes-croisements__card outcomes-croisements__card--${badge} fr-p-2w`}>
+                                <Title as="h4" look="h6" className="fr-mb-1w">Profil {badge}</Title>
+                                {!d || !d.rows?.length ? (
+                                    <Text size="sm" className="fr-mb-0">{queries[i]?.isLoading ? "Chargement…" : "Sélectionnez des critères"}</Text>
+                                ) : (
+                                    <ChartWrapper
+                                        hideTitle
+                                        config={{ id: `outcomes-profiles-donut-${badge}`, title: `Plus haut diplôme — Profil ${badge}` }}
+                                        options={createDiplomaDonutOptions(d.rows, { effectif: d.nonDipl }, `Profil ${badge}`)}
+                                    />
+                                )}
+                            </div>
+                        </Col>
+                    );
+                })}
+            </Row>
+        </>
     );
 }
