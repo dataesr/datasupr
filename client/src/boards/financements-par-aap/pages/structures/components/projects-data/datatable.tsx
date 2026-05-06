@@ -92,11 +92,11 @@ export default function DataTable({ aggregations, columns, dataTable, filters, n
                       {column?.isFilterable && (
                         column?.isFilterableBySelect && aggregations?.[column.id] ? (
                           <select
-                            name={`fundings-structure-data-${column.id}`}
+                            className="fr-mb-1w fr-select"
                             id={`fundings-structure-data-${column.id}`}
-                            className="fr-mb-2w fr-select"
-                            value={inputs[column.id]}
+                            name={`fundings-structure-data-${column.id}`}
                             onChange={(event) => handleFilter(column, event)}
+                            value={inputs[column.id]}
                           >
                             <option key='all' value=''>
                               Tout

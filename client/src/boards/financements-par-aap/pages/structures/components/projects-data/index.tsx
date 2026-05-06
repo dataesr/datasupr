@@ -198,13 +198,13 @@ export default function ProjectsData() {
     {
       id: 'projectBudgetFinanced',
       isSortable: true,
-      label: 'Financement global (présence)',
+      label: 'Financement global',
       sortableField: 'project_budgetFinanced',
     },
     {
       id: 'participationFunding',
       isSortable: true,
-      label: 'Financement perçu (implication)',
+      label: 'Financement perçu',
       sortableField: 'participation_funding',
     }
   ], []);
