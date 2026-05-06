@@ -364,7 +364,9 @@ export function createSankeyOptions(links: OutcomesFluxLink[], totalStudents = 0
                 type: "sankey",
             },
         ],
-        title: { text: undefined },
+        title: {
+            text: " ",
+        },
         tooltip: {
             useHTML: true,
             borderRadius: 0,

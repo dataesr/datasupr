@@ -212,13 +212,18 @@ export default function FluxPage() {
                     </Callout>
                 </Col>
             </Row>
+            <Row>
+                <Title>
+                    Parcours des néo-bacheliers inscrits en L1 en 2019
+                </Title>
+            </Row>
             <Row gutters>
                 <Col lg={4}>
                     <aside className="outcomes-flux-page__filters" aria-label="Filtres du graphique de flux">
-                        <Title as="h1" look="h4" className="fr-mb-3w">Filtres à sélectionner</Title>
+                        <Title as="h2" look="h4" className="fr-mb-3w">Filtres à sélectionner</Title>
                         {FILTER_SECTIONS.map((section) => (
                             <section key={section.title} className="outcomes-flux-page__filters-section">
-                                <Title as="h2" look="h5" className="fr-mb-2w">{section.title}</Title>
+                                <Title as="h3" look="h5" className="fr-mb-2w">{section.title}</Title>
                                 {section.fields.map(({ field, label }) => (
                                     <OutcomesFilterSelect
                                         key={field}
