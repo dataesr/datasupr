@@ -10,7 +10,7 @@ import { getI18nLabel } from "../../../../../../utils";
 import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
 import SegmentedControl from "../../../../components/segmented-control";
 import i18n from "../../../../i18n.json";
-import { formatCompactNumber, funders, getCssColor, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
@@ -22,21 +22,8 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
   const yearMin = searchParams.get("yearMin");
   const color = useChartColor();
 
-  // No filter on typology bc some laboratories may have no typology, bc not in Paysage
-  const body = {
-    size: 0,
-    query: {
-      bool: {
-        filter: [
-          { range: { project_year: { gte: yearMin, lte: yearMax } } },
-          { term: { participant_isFrench: true } },
-          { term: { participant_status: "active" } },
-          { term: { participant_type: "laboratory" } },
-          { terms: { "project_type.keyword": funders } },
-          { term: { "participant_institutions.structure.keyword": structure } },
-        ],
-      },
-    },
+const body = {
+    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
     aggregations: {
       by_laboratory_project: {
         terms: {
@@ -72,8 +59,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
       },
       by_laboratory_budget: {
         terms: {
-          field: "participant_encoded_key",
-          size: 25,
+          field: "co_partners_fr_labs.keyword",
           order: { "sum_budget": "desc" },
         },
         aggregations: {
@@ -94,7 +80,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
                 aggregations: {
                   should_ignore: {
                     terms: {
-                      field: "project_ignore_total_budget",
+                      field: "participant_ignore_total_budget",
                     },
                     aggregations: {
                       sum_budget: {
@@ -112,8 +98,7 @@ export default function LaboratoriesByStructure({ name }: { name: string | undef
       },
       by_laboratory_participation: {
         terms: {
-          field: "participant_encoded_key",
-          size: 25,
+          field: "co_partners_fr_labs.keyword",
           order: { "sum_budget_participation": "desc" },
         },
         aggregations: {

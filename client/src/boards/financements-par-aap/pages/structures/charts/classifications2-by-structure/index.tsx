@@ -76,7 +76,7 @@ export default function Classifications2ByStructure({ name }: { name: string | u
                 aggregations: {
                   should_ignore: {
                     terms: {
-                      field: "project_ignore_total_budget",
+                      field: "participant_ignore_total_budget",
                     },
                     aggregations: {
                       sum_budget: {

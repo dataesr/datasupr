@@ -80,7 +80,7 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
                 aggregations: {
                   should_ignore: {
                     terms: {
-                      field: "project_ignore_total_budget",
+                      field: "participant_ignore_total_budget",
                     },
                     aggregations: {
                       sum_budget: {

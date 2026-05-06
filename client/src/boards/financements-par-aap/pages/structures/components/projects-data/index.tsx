@@ -21,6 +21,7 @@ type Filter = {
 }
 
 type Project = {
+  county: string
   id: string
   instrument: string
   label: string
@@ -28,6 +29,7 @@ type Project = {
   participationIsCoordinator: boolean
   projectBudgetFinanced: number
   type: string
+  uniqId: string
   year: number
 }
 
@@ -57,18 +59,20 @@ export default function ProjectsData() {
   }
   if (filters.length > 0) {
     filters.forEach((filter) => {
-      if (filter.id === 'year') {
-        body.query.bool.filter.push({ term: { project_year: filter.value } })
-      } else if (filter.id === 'type') {
-        body.query.bool.filter.push({ wildcard: { 'project_type.keyword': `*${filter.value}*` } })
+      if (filter.id === 'county') {
+        body.query.bool.filter.push({ query_string: { default_field: 'participant_region_with_labs.keyword', query: filter.value } })
       } else if (filter.id === 'id') {
-        body.query.bool.filter.push({ wildcard: { 'project_id.keyword': `*${filter.value}*` } })
+        body.query.bool.filter.push({ match: { 'project_id.keyword': filter.value } })
       } else if (filter.id === 'instrument') {
-        body.query.bool.filter.push({ wildcard: { 'project_instrument.keyword': `*${filter.value}*` } })
+        body.query.bool.filter.push({ match: { project_instrument: { query: filter.value } }})
       } else if (filter.id === 'label') {
-        body.query.bool.filter.push({ wildcard: { 'project_label.keyword': `*${filter.value}*` } })
+        body.query.bool.filter.push({ query_string: { default_field: 'project_label.keyword', query: filter.value } })
       } else if (filter.id === 'participationIsCoordinator') {
-        body.query.bool.filter.push({ term: { participation_is_coordinator: filter.value } })
+        body.query.bool.filter.push({ query_string: { default_field: 'participation_is_coordinator', query: filter.value } })
+      } else if (filter.id === 'type') {
+        body.query.bool.filter.push({ wildcard: { 'project_type.keyword': { query: `*${filter.value}*`, case_insensitive: true } }})
+      } else if (filter.id === 'year') {
+        body.query.bool.filter.push({ query_string: { default_field: 'project_year', query: filter.value } })
       } else {
         console.error(`Filter id not supported : ${filter.id}`)
       }
@@ -102,6 +106,7 @@ export default function ProjectsData() {
   });
 
   const dataTable: Project[] = (data?.hits?.hits ?? []).map((hit) => ({
+    county: hit._source?.participant_region_with_labs,
     id: hit._source?.project_id,
     instrument: hit._source?.project_instrument,
     label: hit._source?.project_label,
@@ -109,11 +114,13 @@ export default function ProjectsData() {
     participationIsCoordinator: hit._source?.participation_is_coordinator.toString(),
     projectBudgetFinanced: hit._source?.project_budgetFinanced ? `${hit._source.project_budgetFinanced} €` : '',
     type: hit._source?.project_type,
+    uniqId: hit._source?.participant_key_id,
     year: hit._source?.project_year,
   }))
   const numberOfResults = data?.hits?.total?.value ?? 0
 
   const dataTableAll: Project[] = (dataAll?.hits?.hits ?? []).map((hit) => ({
+    county: hit._source?.participant_region_with_labs,
     id: hit._source?.project_id,
     instrument: hit._source?.project_instrument,
     label: hit._source?.project_label,
@@ -121,6 +128,7 @@ export default function ProjectsData() {
     participationIsCoordinator: hit._source?.participation_is_coordinator.toString(),
     projectBudgetFinanced: hit._source?.project_budgetFinanced ? `${hit._source.project_budgetFinanced} €` : '',
     type: hit._source?.project_type,
+    uniqId: hit._source?.participant_key_id,
     year: hit._source?.project_year,
   }))
 
@@ -144,6 +152,12 @@ export default function ProjectsData() {
       isFilterable: true,
       isSortable: false,
       label: 'Identifiant',
+    },
+    {
+      id: 'county',
+      isFilterable: true,
+      isSortable: false,
+      label: 'Région',
     },
     {
       id: 'label',

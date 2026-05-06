@@ -57,6 +57,7 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
   }
 
   const handles = {
+    county: (event) => setInputs({ ...inputs, county: event.target.value }),
     id: (event) => setInputs({ ...inputs, id: event.target.value }),
     instrument: (event) => setInputs({ ...inputs, instrument: event.target.value }),
     label: (event) => setInputs({ ...inputs, label: event.target.value }),
@@ -110,7 +111,7 @@ export default function DataTable({ columns, dataTable, filters, numberOfResults
         </thead>
         <tbody>
           {dataTable.map((row) => (
-            <tr key={row.id}>
+            <tr key={row.uniqId}>
               {columns.map((column) => (
                 <td key={`${column.id}-${row.id}`}>
                   {column.getCellValue ? column.getCellValue(row) : row?.[column?.id]}

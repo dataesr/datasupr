@@ -35,9 +35,16 @@ export default function Cards() {
                   field: "project_id.keyword",
                 },
               },
-              sum_budget: {
-                sum: {
-                  field: "project_budgetFinanced",
+              should_ignore: {
+                terms: {
+                  field: "participant_ignore_total_budget",
+                },
+                aggregations: {
+                  sum_budget: {
+                    sum: {
+                      field: "project_budgetFinanced",
+                    },
+                  },
                 },
               },
               sum_budget_participation: {
@@ -76,8 +83,8 @@ export default function Cards() {
       })),
       budget: years.map((year) => ({
         x: year,
-        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget?.value ?? 0,
-        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget?.value ?? 0,
+        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0,
       })),
       participation: years.map((year) => ({
         x: year,

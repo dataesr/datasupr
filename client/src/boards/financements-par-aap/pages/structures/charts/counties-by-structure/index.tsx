@@ -27,7 +27,7 @@ export default function CountiesByStructure({ name }: { name: string | undefined
     aggregations: {
       by_classifications_project: {
         terms: {
-          field: "participant_labo_regions.keyword",
+          field: "co_partners_fr_labs_region.keyword",
           size: 15,
         },
         aggregations: {
@@ -54,7 +54,7 @@ export default function CountiesByStructure({ name }: { name: string | undefined
       },
       by_classifications_budget: {
         terms: {
-          field: "participant_labo_regions.keyword",
+          field: "co_partners_fr_labs_region.keyword",
           order: { "sum_budget": "desc" },
           size: 15,
         },
@@ -76,7 +76,7 @@ export default function CountiesByStructure({ name }: { name: string | undefined
                 aggregations: {
                   should_ignore: {
                     terms: {
-                      field: "project_ignore_total_budget",
+                      field: "participant_ignore_total_budget",
                     },
                     aggregations: {
                       sum_budget: {
@@ -94,7 +94,7 @@ export default function CountiesByStructure({ name }: { name: string | undefined
       },
       by_classifications_participation: {
         terms: {
-          field: "participant_labo_regions.keyword",
+          field: "co_partners_fr_labs_region.keyword",
           order: { "sum_budget_participation": "desc" },
           size: 15,
         },

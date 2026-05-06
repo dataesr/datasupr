@@ -62,7 +62,7 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
             aggregations: {
               should_ignore: {
                 terms: {
-                  field: "project_ignore_total_budget",
+                  field: "participant_ignore_total_budget",
                 },
                 aggregations: {
                   sum_budget: {

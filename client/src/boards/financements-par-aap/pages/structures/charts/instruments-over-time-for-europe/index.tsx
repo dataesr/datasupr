@@ -46,7 +46,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
                   },
                   should_ignore: {
                     terms: {
-                      field: "project_ignore_total_budget",
+                      field: "participant_ignore_total_budget",
                     },
                     aggregations: {
                       sum_budget: {
