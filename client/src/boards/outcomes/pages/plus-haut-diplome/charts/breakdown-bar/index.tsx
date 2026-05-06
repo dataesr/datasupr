@@ -57,14 +57,16 @@ export default function BreakdownBar({ field: fieldProp }: BreakdownBarProps = {
     integrationParams.set("field", field);
 
     return (
-        <ChartWrapper
-            config={{
-                id: `outcomes-phd-breakdown-${field}`,
-                integrationURL: `/integration?chart_id=outcomesPhdBreakdown&${integrationParams.toString()}`,
-                title,
-                sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
-            }}
-            options={chartOptions}
-        />
+        <div className="fr-mb-3w">
+            <ChartWrapper
+                config={{
+                    id: `outcomes-phd-breakdown-${field}`,
+                    integrationURL: `/integration?chart_id=outcomesPhdBreakdown&${integrationParams.toString()}`,
+                    title,
+                    sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
+                }}
+                options={chartOptions}
+            />
+        </div>
     );
 }

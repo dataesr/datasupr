@@ -207,7 +207,7 @@ export default function RepartitionPage() {
                             <RepartitionChart hideTitle />
                         )}
 
-                        <div className="fr-mt-1w outcomes-flux-page__params outcomes-flux-page__params--after-chart">
+                        <div className="fr-mt-3w outcomes-flux-page__params outcomes-flux-page__params--after-chart">
                             <Title as="h2" look="h5" className="fr-mb-2w">Paramètres pour la répartition</Title>
                             <Row gutters>
                                 <Col>

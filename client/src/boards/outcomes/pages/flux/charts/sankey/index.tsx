@@ -201,7 +201,6 @@ function SankeyChartView({
                 id: "outcomes-flux-sankey",
                 integrationURL: `/integration?chart_id=outcomesFluxSankey&${searchParams.toString()}`,
                 title: "Parcours des néo-bacheliers inscrits en L1 en 2019",
-                sources: [{ label: { fr: <>MESRE-SIES</> }, url: { fr: "https://data.enseignementsup-recherche.gouv.fr" } }],
             }}
             options={options}
             renderData={() => <SankeyRenderData links={links} totalStudents={totalStudents} />}

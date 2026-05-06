@@ -277,20 +277,26 @@ export default function PlusHautDiplomePage() {
                                     </div>
                                 </div>
 
-                                <DiplomaDonut />
-
-                                <Title as="h2" look="h5" className="fr-mt-3w fr-mb-2w">Diplômés vs non diplômés</Title>
-
-                                {BREAKDOWN_SECTIONS.map(({ field }) => {
-                                    const options = data.filterOptions?.[field] || [];
-                                    const activeKey = filters[field];
-                                    const filteredOptions = activeKey
-                                        ? options.filter((o) => o.key === activeKey)
-                                        : options;
-                                    const withData = filteredOptions.filter((o) => (o.dipl ?? 0) + (o.ndipl ?? 0) > 0);
-                                    if (!withData.length) return null;
-                                    return <BreakdownBar key={field} field={field} />;
-                                })}
+                                <Row className="fr-mt-3w">
+                                    <Col>
+                                        <DiplomaDonut />
+                                    </Col>
+                                </Row>
+                                <Row className="fr-mt-3w">
+                                    <Col>
+                                        <Title as="h2" look="h5" className="fr-mt-3w fr-mb-2w">Diplômés vs non diplômés</Title>
+                                        {BREAKDOWN_SECTIONS.map(({ field }) => {
+                                            const options = data.filterOptions?.[field] || [];
+                                            const activeKey = filters[field];
+                                            const filteredOptions = activeKey
+                                                ? options.filter((o) => o.key === activeKey)
+                                                : options;
+                                            const withData = filteredOptions.filter((o) => (o.dipl ?? 0) + (o.ndipl ?? 0) > 0);
+                                            if (!withData.length) return null;
+                                            return <BreakdownBar key={field} field={field} />;
+                                        })}
+                                    </Col>
+                                </Row>
                             </>
                         )}
 
