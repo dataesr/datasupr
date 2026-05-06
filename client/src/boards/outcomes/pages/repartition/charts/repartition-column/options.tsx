@@ -126,8 +126,9 @@ export function createRepartitionOptions(
             },
         },
         series,
-        title: { text: undefined },
-        tooltip: {
+        title: {
+            text: " ",
+        }, tooltip: {
             shared: false,
             useHTML: true,
             borderRadius: 0,
