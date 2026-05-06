@@ -23,7 +23,7 @@ export default function RepartitionChart({ hideTitle, distribution, relativeYear
             hideTitle={hideTitle}
             config={{
                 id: "outcomes-repartition",
-                title: "Répartition selon les inscriptions (en %)",
+                title: "Répartition des néo-bacheliers inscrits en L1 en 2019 selon les inscriptions par année (en %)",
             }}
             options={options}
         />
