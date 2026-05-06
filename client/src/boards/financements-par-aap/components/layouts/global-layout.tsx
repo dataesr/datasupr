@@ -96,16 +96,18 @@ export default function GlobalLayout() {
                     {getI18nLabel(i18n, "etablissement")}
                   </Link>
                 </li>
-                <li className="fr-nav__item">
-                  <Link
-                    {...(is("/financements-par-aap/comparaison") && { "aria-current": "page" })}
-                    className="fr-nav__link"
-                    target="_self"
-                    to={`/financements-par-aap/comparaison?${searchParamsFiltered()}`}
-                  >
-                    {getI18nLabel(i18n, "comparaison")}
-                  </Link>
-                </li>
+                {isInProduction() && (
+                  <li className="fr-nav__item">
+                    <Link
+                      {...(is("/financements-par-aap/comparaison") && { "aria-current": "page" })}
+                      className="fr-nav__link"
+                      target="_self"
+                      to={`/financements-par-aap/comparaison?${searchParamsFiltered()}`}
+                    >
+                      {getI18nLabel(i18n, "comparaison")}
+                    </Link>
+                  </li>
+                )}
                 {!isInProduction() && (
                   <li className="fr-nav__item">
                     <Link
