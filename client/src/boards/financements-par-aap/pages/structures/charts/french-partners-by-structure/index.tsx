@@ -137,8 +137,8 @@ export default function FrenchPartnersByStructure({ name }: { name: string | und
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
-          "Access-Control-Allow-Origin": "*",
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
         },
         method: "POST",
       }).then((response) => response.json()),

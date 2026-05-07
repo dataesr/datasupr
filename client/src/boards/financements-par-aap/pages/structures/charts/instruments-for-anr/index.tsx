@@ -111,8 +111,8 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
-          "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
         },
         method: "POST",
       }).then((response) => response.json()),

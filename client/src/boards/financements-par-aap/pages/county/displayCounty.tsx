@@ -1,54 +1,47 @@
-import { Alert, Button, Col, Container, Link, Row, Text, Title } from "@dataesr/dsfr-plus";
-import { useQuery } from "@tanstack/react-query";
+import { Alert, Button, Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Select from "../../../../components/select";
-import { isInProduction } from "../../../../utils";
 import Breadcrumb from "../../components/breadcrumb";
+import { years } from "../../utils";
+// import ClassificationsByStructure from "./charts/classifications-by-structure";
+// import Classifications2ByStructure from "./charts/classifications2-by-structure";
+// import CountiesByStructure from "./charts/counties-by-structure";
+// import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
+// import InstrumentsForAnr from "./charts/instruments-for-anr";
+// import InstrumentsForEurope from "./charts/instruments-for-europe";
+// import InstrumentsOverTimeForAnr from "./charts/instruments-over-time-for-anr";
+// import InstrumentsOverTimeForEurope from "./charts/instruments-over-time-for-europe";
+// import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
+// import LaboratoriesByStructure from "./charts/laboratories-by-structure";
+// import OverviewByStructure from "./charts/overview-by-structure";
+// import ProjectsByStructure from "./charts/projects-by-structure";
+// import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
 import Cards from "../../components/cards";
-import { getEsQuery, years } from "../../utils";
-import ClassificationsByStructure from "./charts/classifications-by-structure";
-import Classifications2ByStructure from "./charts/classifications2-by-structure";
-import CountiesByStructure from "./charts/counties-by-structure";
-import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
-import InstrumentsForAnr from "./charts/instruments-for-anr";
-import InstrumentsForEurope from "./charts/instruments-for-europe";
-import InstrumentsOverTimeForAnr from "./charts/instruments-over-time-for-anr";
-import InstrumentsOverTimeForEurope from "./charts/instruments-over-time-for-europe";
-import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
-import LaboratoriesByStructure from "./charts/laboratories-by-structure";
-import OverviewByStructure from "./charts/overview-by-structure";
-import ProjectsByStructure from "./charts/projects-by-structure";
-import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
-import ProjectsData from "./components/projects-data";
+// import ProjectsData from "./components/projects-data";
 
 import "./styles.scss";
 
-const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
-
-export default function DisplayStructure() {
+export default function DisplayCounty() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const section = searchParams.get("section");
-  const structure = searchParams.get("structure");
+  const county = searchParams.get("region");
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
   const [isOpen, setIsOpen] = useState(false);
   const sections = [
     { id: "apercu", label: "Aperçu" },
-    { id: "financements", label: "Volume et répartition des financements" },
-    { id: "evolution", label: "Evolution temporelle" },
-    { id: "partenaires", label: "Institutions partenaires" },
-    { id: "laboratoires", label: "Laboratoires" },
-    { id: "disciplines", label: "Disciplines" },
-    { id: "instruments", label: "Instruments" },
+    // { id: "financements", label: "Volume et répartition des financements" },
+    // { id: "evolution", label: "Evolution temporelle" },
+    // { id: "partenaires", label: "Institutions partenaires" },
+    // { id: "laboratoires", label: "Laboratoires" },
+    // { id: "disciplines", label: "Disciplines" },
+    // { id: "instruments", label: "Instruments" },,
+    // { id: "regions", label: "Régions" },
+    // { id: "donnees", label: "Données" },
   ];
-
-  if (!isInProduction()) {
-    sections.push({ id: "regions", label: "Régions" });
-    sections.push({ id: "donnees", label: "Données" });
-  };
 
   const handleNavClick = (section: string) => {
     searchParams.set("section", section);
@@ -66,26 +59,6 @@ export default function DisplayStructure() {
     setSearchParams(searchParams);
   };
 
-  const body = {
-    ...getEsQuery({ structures: [structure] }),
-    size: 1,
-  };
-  const { data } = useQuery({
-    queryKey: ["fundings-structure", structure],
-    queryFn: () =>
-      fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
-        body: JSON.stringify(body),
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
-        method: "POST",
-      }).then((response) => response.json()),
-  });
-  const structureInfo = Object.fromEntries(new URLSearchParams(data?.hits?.hits?.[0]?._source?.participant_encoded_key ?? ""));
-  const name = structureInfo?.label ?? "";
-  const scanrUrl = `https://scanr.enseignementsup-recherche.gouv.fr/search/projects?filters=%257B%2522year%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A${yearMin}%257D%252C%257B%2522value%2522%253A${yearMax}%257D%255D%252C%2522type%2522%253A%2522range%2522%257D%252C%2522participants_id_search%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522${structure}%2522%252C%2522label%2522%253A%2522${name}%2522%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%252C%2522type%2522%253A%257B%2522values%2522%253A%255B%257B%2522value%2522%253A%2522Horizon%25202020%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520hors%2520ANR%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522Horizon%2520Europe%2522%252C%2522label%2522%253Anull%257D%252C%257B%2522value%2522%253A%2522PIA%2520ANR%2522%252C%2522label%2522%253Anull%257D%255D%252C%2522type%2522%253A%2522terms%2522%252C%2522operator%2522%253A%2522or%2522%257D%257D`;
-
   return (
     <main>
       <Container fluid className="funding-gradient fr-mb-3w">
@@ -94,41 +67,26 @@ export default function DisplayStructure() {
             <Col>
               <Breadcrumb items={[
                 { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
-                { href: "/financements-par-aap/etablissement", label: "Vue par établissement" },
-                { label: name }
+                { href: "/financements-par-aap/region", label: "Vue par région" },
+                { label: county }
               ]} />
             </Col>
           </Row>
           <Row gutters className="fr-grid-row--middle fr-mb-2w">
             <Col xs="12" md="6">
               <Title as="h1" className="fr-mb-1v" look="h4">
-                {name}
+                {county}
               </Title>
-              <Text size="xs" className="fr-mb-0 fr-text-mention--grey">
-                {structureInfo?.typologie_2}
-              </Text>
-              {structureInfo?.region && (
-                <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
-                  <span aria-hidden="true" className="fr-icon-map-pin-2-fill fr-mr-1w" />
-                  {structureInfo.region}
-                </Text>
-              )}
-              <Text size="sm" className="fr-mb-0 fr-text-mention--grey">
-                <Link href={scanrUrl} target="_blank" size="sm" className="fr-mt-1w fr-text-mention--grey">
-                  <span aria-hidden="true" />
-                  Voir sur scanR
-                </Link>
-              </Text>
             </Col>
             <Col xs="12" md="6" style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.5rem" }}>
               <Button
                 icon="arrow-go-back-line"
                 iconPosition="left"
-                onClick={() => navigate("/financements-par-aap/etablissement")}
+                onClick={() => navigate("/financements-par-aap/region")}
                 size="sm"
                 variant="tertiary"
               >
-                Changer d'établissement
+                Changer de région
               </Button>
               <div style={{ alignItems: "center", display: "flex", gap: "0.5rem" }}>
                 <Select
@@ -220,6 +178,7 @@ export default function DisplayStructure() {
               {(section === "apercu") && (
                 <Cards />
               )}
+              {/*
               {(section === "financements") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
@@ -234,6 +193,8 @@ export default function DisplayStructure() {
                   </Row>
                 </>
               )}
+              */}
+              {/*
               {(section === "evolution") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
@@ -241,6 +202,8 @@ export default function DisplayStructure() {
                   </Col>
                 </Row>
               )}
+              */}
+              {/*
               {(section === "partenaires") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
@@ -255,6 +218,8 @@ export default function DisplayStructure() {
                   </Row>
                 </>
               )}
+              */}
+              {/*
               {(section === "laboratoires") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
@@ -262,6 +227,8 @@ export default function DisplayStructure() {
                   </Col>
                 </Row>
               )}
+              */}
+              {/*
               {(section === "disciplines") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
@@ -276,6 +243,8 @@ export default function DisplayStructure() {
                   </Row>
                 </>
               )}
+              */}
+              {/*
               {(section === "instruments") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
@@ -300,6 +269,8 @@ export default function DisplayStructure() {
                   </Row>
                 </>
               )}
+              */}
+              {/*
               {(section === "regions") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
@@ -309,9 +280,12 @@ export default function DisplayStructure() {
                   </Row>
                 </>
               )}
+              */}
+              {/*
               {(section === "donnees") && (
                 <ProjectsData />
               )}
+              */}
             </>
           )}
       </Container>

@@ -36,8 +36,8 @@ const getCssColor = ({ name, prefix = "" }: { name: string, prefix?: string }): 
   return color;
 };
 
-const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = years[0] }:
-  { structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
+const getEsQuery = ({ counties, structures, yearMax = years[years.length - 1], yearMin = years[0] }:
+  { counties?: (string | null)[], structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
   const query: any = {
     size: 0,
     query: {
@@ -55,8 +55,13 @@ const getEsQuery = ({ structures, yearMax = years[years.length - 1], yearMin = y
       },
     },
   };
-  if (structures?.length ?? 0 > 0) {
-    query.query.bool.filter.push({ terms: { "participant_id.keyword": structures } });
+  const sss = structures?.filter((structure) => structure !== null);
+  if (sss?.length ?? 0 > 0) {
+    query.query.bool.filter.push({ terms: { "participant_id.keyword": sss } });
+  };
+  const ccc = counties?.filter((structure) => structure !== null);
+  if (ccc?.length ?? 0 > 0) {
+    query.query.bool.filter.push({ terms: { "participant_region.keyword": ccc } });
   };
   return query;
 };

@@ -40,8 +40,8 @@ export default function StructuresSelector() {
         {
           body: JSON.stringify(bodyCounties),
           headers: {
-            "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
           },
           method: "POST",
         }
@@ -71,8 +71,8 @@ export default function StructuresSelector() {
         {
           body: JSON.stringify(bodyTypologies),
           headers: {
-            "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
           },
           method: "POST",
         }
@@ -100,8 +100,8 @@ export default function StructuresSelector() {
         {
           body: JSON.stringify(bodyStructuresAll),
           headers: {
-            "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
           },
           method: "POST",
         }
@@ -127,8 +127,8 @@ export default function StructuresSelector() {
         {
           body: JSON.stringify(bodyStructures),
           headers: {
-            "Content-Type": "application/json",
             "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
           },
           method: "POST",
         }

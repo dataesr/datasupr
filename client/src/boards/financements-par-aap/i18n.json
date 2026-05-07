@@ -22,5 +22,8 @@
   },
   "number_of_projects_funded": {
     "fr": "Nombre de projets financés"
+  },
+  "region": {
+    "fr": "Région"
   }
 }

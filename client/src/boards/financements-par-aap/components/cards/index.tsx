@@ -2,21 +2,22 @@ import { Col, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, years } from "../../../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, years } from "../../utils.ts";
 import ChartCard from "../chart-card";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
 export default function Cards() {
-  const [searchParams] = useSearchParams();
-  const structure = searchParams.get("structure");
-  const yearMax = searchParams.get("yearMax");
-  const yearMin = searchParams.get("yearMin");
+  const [searchParams] = useSearchParams()
+  const county = searchParams.get("region")
+  const structure = searchParams.get("structure")
+  const yearMax = searchParams.get("yearMax")
+  const yearMin = searchParams.get("yearMin")
 
   const body = {
-    ...getEsQuery({ structures: [structure] }),
+    ...getEsQuery({ counties: [county], structures: [structure] }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -60,13 +61,13 @@ export default function Cards() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["funding-cards", structure],
+    queryKey: ["funding-cards", structure, county],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
         headers: {
-          "Content-Type": "application/json",
           "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
         },
         method: "POST",
       }).then((response) => response.json()),
@@ -124,7 +125,7 @@ export default function Cards() {
         <Col xs="12" md="2" key={`card-projects-intro`}>
           <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
             <Title as="h2" className="fr-mb-0" style={{ fontSize: "0.8rem", letterSpacing: "0.3px", lineHeight: 1.3, textTransform: "uppercase" }}>
-              Nombre de projets financés auxquels l'établissement participe
+              Nombre de projets financés auxquels {structure ? "l'établissement" : "la région"} participe
               <span aria-hidden="true" style={{ display: "inline-block", marginLeft: "0.5rem", opacity: 0.4 }}>→</span>
             </Title>
           </div>
@@ -152,7 +153,7 @@ export default function Cards() {
         <Col xs="12" md="2" key={`card-budget-intro`}>
           <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
             <Title as="h2" className="fr-mb-0" style={{ fontSize: "0.8rem", letterSpacing: "0.3px", lineHeight: 1.3, textTransform: "uppercase" }}>
-              Financements globaux des projets auxquels l'établissement participe
+              Financements globaux des projets auxquels {structure ? "l'établissement" : "la région"} participe
               <span aria-hidden="true" style={{ display: "inline-block", marginLeft: "0.5rem", opacity: 0.4 }}>→</span>
             </Title>
           </div>
@@ -178,7 +179,7 @@ export default function Cards() {
         <Col xs="12" md="2" key={`card-participation-intro`}>
           <div style={{ height: "100%", display: "flex", alignItems: "center" }}>
             <Title as="h2" className="fr-mb-0" style={{ fontSize: "0.8rem", letterSpacing: "0.3px", lineHeight: 1.3, textTransform: "uppercase" }}>
-              Financements perçus pour les projets auxquels l'établissement participe
+              Financements perçus pour les projets auxquels {structure ? "l'établissement" : "la région"} participe
               <span aria-hidden="true" style={{ display: "inline-block", marginLeft: "0.5rem", opacity: 0.4 }}>→</span>
             </Title>
           </div>

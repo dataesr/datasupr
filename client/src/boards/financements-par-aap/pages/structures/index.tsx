@@ -2,7 +2,7 @@ import { Col, Container, Row, Text, Title } from "@dataesr/dsfr-plus";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import CardSimple from "./components/card-simple";
+import CardSimple from "../../components/card-simple";
 import Breadcrumb from "../../components/breadcrumb";
 import StructureSelector from "./components/structure-selector";
 import DisplayStructure from "./displayStructure";
@@ -49,7 +49,7 @@ export default function Structures() {
                 </Title>
               </Col>
             </Row>
-            <Row gutters >
+            <Row gutters>
               <Col>
                 <StructureSelector setStructures={setStructures} />
               </Col>

@@ -163,9 +163,8 @@ export default function ChartCard({
     >
       {data && data.length > 0 && (
         <div
-          className="lalilou"
-          ref={chartRef}
           aria-hidden="true"
+          ref={chartRef}
           style={{
             bottom: "20px",
             height: "110px",
@@ -184,8 +183,8 @@ export default function ChartCard({
       >
         <div className="fr-card__content">
           <Title
-            className="fr-text--sm fr-text--bold fr-mb-1v"
             as={titleAs}
+            className="fr-text--sm fr-text--bold fr-mb-1v"
             id={titleId}
             style={{
               letterSpacing: "0.5px",
