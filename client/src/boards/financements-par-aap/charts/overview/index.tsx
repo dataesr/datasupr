@@ -3,22 +3,23 @@ import { useSearchParams } from "react-router-dom";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../utils";
-import ChartWrapperFundings from "../../components/chart-wrapper-fundings";
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts";
+import { getI18nLabel } from "../../../../utils.tsx";
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx";
 import i18n from "../../i18n.json";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function OverviewByStructure({ name }: { name: string | undefined }) {
+export default function Overview({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams()
+  const region = searchParams.get("region")
   const structure = searchParams.get("structure")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
 
   const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ regions: [region], structures: [structure], yearMax, yearMin }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -44,7 +45,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-overview-by-structure", structure, yearMax, yearMin],
+    queryKey: ["fundings-overview", region, structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -69,8 +70,8 @@ export default function OverviewByStructure({ name }: { name: string | undefined
 
   const config = {
     comment: { "fr": <>Ce graphique met en regard le volume de projets et les financements perçus associés : la largeur des barres représente le nombre de projets, tandis que leur hauteur correspond au financement perçu. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </> },
-    id: "overviewByStructure",
-    integrationURL: `/integration?chart_id=overviewByStructure&${searchParams.toString()}`,
+    id: "overview",
+    integrationURL: `/integration?chart_id=overview&${searchParams.toString()}`,
     title: `Structure du financement : nombre de projets et financements perçus associés pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
@@ -134,7 +135,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="overview-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="overview">
       {isLoading ? <DefaultSkeleton height="600px" /> : <ChartWrapperFundings config={config} options={options} />}
     </div>
   );

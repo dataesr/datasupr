@@ -15,9 +15,9 @@ import { years } from "../../utils";
 // import InstrumentsOverTimeForEurope from "./charts/instruments-over-time-for-europe";
 // import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
 // import LaboratoriesByStructure from "./charts/laboratories-by-structure";
-import OverviewByStructure from "../../charts/overview-by-structure";
+import Overview from "../../charts/overview";
 import ProjectsByFunder from "../../charts/projects-by-funder";
-// import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
+import ProjectsOverTime from "../../charts/projects-over-time";
 import Cards from "../../components/cards";
 // import ProjectsData from "./components/projects-data";
 
@@ -34,7 +34,7 @@ export default function DisplayRegion() {
   const sections = [
     { id: "apercu", label: "Aperçu" },
     { id: "financements", label: "Volume et répartition des financements" },
-    // { id: "evolution", label: "Evolution temporelle" },
+    { id: "evolution", label: "Evolution temporelle" },
     // { id: "partenaires", label: "Institutions partenaires" },
     // { id: "laboratoires", label: "Laboratoires" },
     // { id: "disciplines", label: "Disciplines" },
@@ -187,31 +187,29 @@ export default function DisplayRegion() {
                   </Row>
                   <Row gutters>
                     <Col>
-                      <OverviewByStructure name={region} />
+                      <Overview name={region} />
                     </Col>
                   </Row>
                 </>
               )}
-              {/*
               {(section === "evolution") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
-                    <ProjectsOverTimeByStructure name={name} />
+                    <ProjectsOverTime name={region} />
                   </Col>
                 </Row>
               )}
-              */}
               {/*
               {(section === "partenaires") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <FrenchPartnersByStructure name={name} />
+                      <FrenchPartnersByStructure name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InternationalPartnersByStructure name={name} />
+                      <InternationalPartnersByStructure name={region} />
                     </Col>
                   </Row>
                 </>
@@ -221,7 +219,7 @@ export default function DisplayRegion() {
               {(section === "laboratoires") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
-                    <LaboratoriesByStructure name={name} />
+                    <LaboratoriesByStructure name={region} />
                   </Col>
                 </Row>
               )}
@@ -231,12 +229,12 @@ export default function DisplayRegion() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <ClassificationsByStructure name={name} />
+                      <ClassificationsByStructure name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <Classifications2ByStructure name={name} />
+                      <Classifications2ByStructure name={region} />
                     </Col>
                   </Row>
                 </>
@@ -247,22 +245,22 @@ export default function DisplayRegion() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <InstrumentsForAnr name={name} />
+                      <InstrumentsForAnr name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsForEurope name={name} />
+                      <InstrumentsForEurope name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsOverTimeForAnr name={name} />
+                      <InstrumentsOverTimeForAnr name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InstrumentsOverTimeForEurope name={name} />
+                      <InstrumentsOverTimeForEurope name={region} />
                     </Col>
                   </Row>
                 </>
@@ -273,7 +271,7 @@ export default function DisplayRegion() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <RegionsByStructure name={name} />
+                      <RegionsByStructure name={region} />
                     </Col>
                   </Row>
                 </>

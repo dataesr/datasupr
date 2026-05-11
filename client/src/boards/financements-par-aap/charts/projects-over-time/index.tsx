@@ -1,27 +1,28 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../../../utils";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
-import SegmentedControl from "../../../../components/segmented-control";
-import i18n from "../../../../i18n.json";
-import { formatCompactNumber, funders, getCssColor, getEsQuery, pattern, years } from "../../../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
+import { useChartColor } from "../../../../hooks/useChartColor.tsx";
+import { getI18nLabel } from "../../../../utils";
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings";
+import SegmentedControl from "../../components/segmented-control";
+import i18n from "../../i18n.json";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, pattern, years } from "../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function ProjectsOverTimeByStructure({ name }: { name: string | undefined }) {
-  const [selectedControl, setSelectedControl] = useState("projects");
-  const [searchParams] = useSearchParams();
-  const structure = searchParams.get("structure");
-  const color = useChartColor();
+export default function ProjectsOverTime({ name }: { name: string | undefined }) {
+  const [selectedControl, setSelectedControl] = useState("projects")
+  const [searchParams] = useSearchParams()
+  const region = searchParams.get("region")
+  const structure = searchParams.get("structure")
+  const color = useChartColor()
 
   const body = {
-    ...getEsQuery({ structures: [structure] }),
+    ...getEsQuery({ regions: [region], structures: [structure] }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -72,7 +73,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["funding-projects-over-time-by-structure", structure],
+    queryKey: ["funding-projects-over-time", region, structure],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -149,35 +150,35 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let series = seriesProject.reverse();
-  let title = `Evolution temporelle du nombre de projets auxquels participe l'établissement (${name})`;
+  let title = `Evolution temporelle du nombre de projets auxquels participe ${structure ? "l'établissement" : "la région"} (${name})`;
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> auxquels prend part <b>${name}</b>`;
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> auxquels prend part ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
   };
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
       axis = getI18nLabel(i18n, 'funding_total');
       series = seriesBudget.reverse();
-      title = `Evolution temporelle des financements globaux pour les projets auxquels participe l'établissement (${name})`;
+      title = `Evolution temporelle des financements globaux pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} (${name})`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
       };
       break;
     // If view by amount by structure
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, 'funding_by_structure');
       series = seriesParticipation.reverse();
-      title = `Evolution temporelle des financements perçus pour les projets auxquels participe l'établissement (${name})`;
+      title = `Evolution temporelle des financements perçus pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} (${name})`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
       };
       break;
   };
 
   const config = {
     comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets, des financements globaux et des financements perçus, ventilée par financeur, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Pour les financements européens, Horizon 2020 couvre la période 2014–2020, tandis que son successeur, Horizon Europe couvre 2021-2027. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).</> },
-    id: "projectsOverTimeByStructure",
-    integrationURL: `/integration?chart_id=projectsOverTimeByStructure&${searchParams.toString()}`,
+    id: "projectsOverTime",
+    integrationURL: `/integration?chart_id=projectsOverTime&${searchParams.toString()}`,
     title,
   };
 
@@ -204,7 +205,7 @@ export default function ProjectsOverTimeByStructure({ name }: { name: string | u
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="projects-over-time-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="projects-over-time">
       <Title as="h2" look="h6">
         {title}
       </Title>

@@ -5,7 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Select from "../../../../components/select";
 import { isInProduction } from "../../../../utils";
-import OverviewByStructure from "../../charts/overview-by-structure";
+import Overview from "../../charts/overview";
 import ProjectsByFunder from "../../charts/projects-by-funder";
 import Breadcrumb from "../../components/breadcrumb";
 import Cards from "../../components/cards";
@@ -229,7 +229,7 @@ export default function DisplayStructure() {
                   </Row>
                   <Row gutters>
                     <Col>
-                      <OverviewByStructure name={name} />
+                      <Overview name={name} />
                     </Col>
                   </Row>
                 </>
