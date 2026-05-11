@@ -1,30 +1,30 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
-import "highcharts/es-modules/masters/modules/pattern-fill.src.js"
 
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../../../utils";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
-import SegmentedControl from "../../../../components/segmented-control";
-import i18n from "../../../../i18n.json";
-import { formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
+import { useChartColor } from "../../../../hooks/useChartColor.tsx";
+import { getI18nLabel } from "../../../../utils.tsx";
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings";
+import SegmentedControl from "../../components/segmented-control/index.tsx";
+import i18n from "../../i18n.json";
+import { formatCompactNumber, formatPercent, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function ProjectsByStructure({ name }: { name: string | undefined }) {
-  const [searchParams] = useSearchParams();
-  const [selectedControl, setSelectedControl] = useState("projects");
-  const structure = searchParams.get("structure");
-  const yearMax = searchParams.get("yearMax");
-  const yearMin = searchParams.get("yearMin");
-  const color = useChartColor();
+export default function ProjectsByFunder({ name }: { name: string | undefined }) {
+  const [searchParams] = useSearchParams()
+  const [selectedControl, setSelectedControl] = useState("projects")
+  const county = searchParams.get("region")
+  const structure = searchParams.get("structure")
+  const yearMax = searchParams.get("yearMax")
+  const yearMin = searchParams.get("yearMin")
+  const color = useChartColor()
 
   const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ counties: [county], structures: [structure], yearMax, yearMin }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -66,8 +66,9 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
     },
   };
 
+
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-projects-by-structure", structure, yearMax, yearMin],
+    queryKey: ["fundings-projects-by-structure", county, structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -150,7 +151,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
-      title = `Montant total des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+      title = `Montant total des projets auxquels ${structure ? "l'établissement" : "la région"} (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
       };
@@ -165,7 +166,7 @@ export default function ProjectsByStructure({ name }: { name: string | undefined
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
-      title = `Financement perçu pour des projets auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+      title = `Financement perçu pour des projets auxquels ${structure ? "l'établissement" : "la région"} (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> perçus ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
       };

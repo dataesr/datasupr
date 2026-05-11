@@ -10,6 +10,7 @@ import "highcharts/es-modules/masters/modules/offline-exporting.src.js";
 import "highcharts/es-modules/masters/modules/variable-pie.src.js";
 import "highcharts/es-modules/masters/modules/sankey.src.js";
 import "highcharts/es-modules/masters/modules/treemap.src.js";
+import "highcharts/es-modules/masters/modules/pattern-fill.src.js"
 
 import "highcharts/es-modules/masters/modules/accessibility.src.js";
 

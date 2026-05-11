@@ -5,6 +5,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Select from "../../../../components/select";
 import { isInProduction } from "../../../../utils";
+import ProjectsByFunder from "../../charts/projects-by-funder";
 import Breadcrumb from "../../components/breadcrumb";
 import Cards from "../../components/cards";
 import { getEsQuery, years } from "../../utils";
@@ -18,8 +19,7 @@ import InstrumentsOverTimeForAnr from "./charts/instruments-over-time-for-anr";
 import InstrumentsOverTimeForEurope from "./charts/instruments-over-time-for-europe";
 import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
 import LaboratoriesByStructure from "./charts/laboratories-by-structure";
-import OverviewByStructure from "./charts/overview-by-structure";
-import ProjectsByStructure from "./charts/projects-by-structure";
+import OverviewByStructure from "../../charts/overview-by-structure";
 import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
 import ProjectsData from "./components/projects-data";
 
@@ -224,7 +224,7 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <ProjectsByStructure name={name} />
+                      <ProjectsByFunder name={name} />
                     </Col>
                   </Row>
                   <Row gutters>

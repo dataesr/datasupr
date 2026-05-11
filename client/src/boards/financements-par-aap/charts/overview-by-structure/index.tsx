@@ -2,21 +2,21 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import "highcharts/es-modules/masters/modules/variwide.src.js";
 
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../../../utils";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
-import i18n from "../../../../i18n.json";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
+import { useChartColor } from "../../../../hooks/useChartColor.tsx";
+import { getI18nLabel } from "../../../../utils";
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts";
+import i18n from "../../i18n.json";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function OverviewByStructure({ name }: { name: string | undefined }) {
-  const [searchParams] = useSearchParams();
-  const structure = searchParams.get("structure");
-  const yearMax = searchParams.get("yearMax");
-  const yearMin = searchParams.get("yearMin");
-  const color = useChartColor();
+  const [searchParams] = useSearchParams()
+  const structure = searchParams.get("structure")
+  const yearMax = searchParams.get("yearMax")
+  const yearMin = searchParams.get("yearMin")
+  const color = useChartColor()
 
   const body = {
     ...getEsQuery({ structures: [structure], yearMax, yearMin }),

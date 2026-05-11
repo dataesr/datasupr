@@ -15,8 +15,8 @@ import { years } from "../../utils";
 // import InstrumentsOverTimeForEurope from "./charts/instruments-over-time-for-europe";
 // import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
 // import LaboratoriesByStructure from "./charts/laboratories-by-structure";
-// import OverviewByStructure from "./charts/overview-by-structure";
-// import ProjectsByStructure from "./charts/projects-by-structure";
+import OverviewByStructure from "../../charts/overview-by-structure";
+import ProjectsByFunder from "../../charts/projects-by-funder";
 // import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
 import Cards from "../../components/cards";
 // import ProjectsData from "./components/projects-data";
@@ -27,13 +27,13 @@ export default function DisplayCounty() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const section = searchParams.get("section");
-  const county = searchParams.get("region");
+  const county = searchParams.get("region") ?? '';
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
   const [isOpen, setIsOpen] = useState(false);
   const sections = [
     { id: "apercu", label: "Aperçu" },
-    // { id: "financements", label: "Volume et répartition des financements" },
+    { id: "financements", label: "Volume et répartition des financements" },
     // { id: "evolution", label: "Evolution temporelle" },
     // { id: "partenaires", label: "Institutions partenaires" },
     // { id: "laboratoires", label: "Laboratoires" },
@@ -178,22 +178,20 @@ export default function DisplayCounty() {
               {(section === "apercu") && (
                 <Cards />
               )}
-              {/*
               {(section === "financements") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <ProjectsByStructure name={name} />
+                      <ProjectsByFunder name={county} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <OverviewByStructure name={name} />
+                      <OverviewByStructure name={county} />
                     </Col>
                   </Row>
                 </>
               )}
-              */}
               {/*
               {(section === "evolution") && (
                 <Row gutters style={{ clear: "both" }}>
