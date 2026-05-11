@@ -4,26 +4,27 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../../../utils";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
-import SegmentedControl from "../../../../components/segmented-control";
-import i18n from "../../../../i18n.json";
-import { formatCompactNumber, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
+import { useChartColor } from "../../../../hooks/useChartColor.tsx";
+import { getI18nLabel } from "../../../../utils.tsx";
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx";
+import SegmentedControl from "../../components/segmented-control/index.tsx";
+import i18n from "../../i18n.json";
+import { formatCompactNumber, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function InstrumentsForAnr({ name }: { name: string | undefined }) {
-  const [selectedControl, setSelectedControl] = useState("projects");
-  const [searchParams] = useSearchParams();
-  const structure = searchParams.get("structure");
-  const yearMax = searchParams.get("yearMax");
-  const yearMin = searchParams.get("yearMin");
-  const color = useChartColor();
+export default function InstrumentsForEurope({ name }: { name: string | undefined }) {
+  const [selectedControl, setSelectedControl] = useState("projects")
+  const [searchParams] = useSearchParams()
+  const region = searchParams.get("region")
+  const structure = searchParams.get("structure")
+  const yearMax = searchParams.get("yearMax")
+  const yearMin = searchParams.get("yearMin")
+  const color = useChartColor()
 
   const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ regions: [region], structures: [structure], yearMax, yearMin }),
     aggregations: {
       by_instrument_project: {
         terms: {
@@ -62,7 +63,8 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
             aggregations: {
               should_ignore: {
                 terms: {
-                  field: "participant_ignore_total_budget",
+                  field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                  missing: false,
                 },
                 aggregations: {
                   sum_budget: {
@@ -103,10 +105,10 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
       },
     },
   };
-  body.query.bool.filter.push({ terms: { "project_type.keyword": ["ANR", "PIA ANR", "PIA hors ANR"] } });
+  body.query.bool.filter.push({ terms: { "project_type.keyword": ["Horizon 2020", "Horizon Europe"] } });
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-instruments-for-anr", structure, yearMax, yearMin],
+    queryKey: ["fundings-instruments-for-europe", region, structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -169,37 +171,36 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
     });
   });
 
-  const title = `Instruments ANR pour les projets auxquels participe ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const title = `Instruments de financement européen pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
   let series = seriesProject.reverse();
   let tooltip = function (this: any) {
-    return `<b>${this.value}</b> projets ANR auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+    return `<b>${this.value}</b> projets européens auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
       series = seriesBudget.reverse();
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.value)} €</b> financés au global pour les projets ANR auxquels participe <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.value)} €</b> financés au global pour les projets européens auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
     // If view by amount by structure
     case 'amount_by_structure':
       series = seriesParticipation.reverse();
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.value)} €</b> perçus par <b>${name}</b> pour les projets ANR au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.value)} €</b> perçus par ${structure ? "l'établissement" : "la région"} <b>${name}</b> pour les projets européens au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
   };
 
   const config = {
     comment: {
-      "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement, par type d'instrument, pour les projets ANR.
-        Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
+      "fr": <>Ce graphe présente la distribution des projets auxquels participe l'établissement, par type d'instrument (action), pour les projets européens. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
       </>
     },
-    id: "instrumentsForAnr",
-    integrationURL: `/integration?chart_id=instrumentsForAnr&${searchParams.toString()}`,
+    id: "instrumentsForEurope",
+    integrationURL: `/integration?chart_id=instrumentsForEurope&${searchParams.toString()}`,
     title,
   };
 
@@ -224,7 +225,7 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="instruments-for-anr">
+    <div className={`chart-container chart-container--${color}`} id="instruments-for-europe">
       <Title as="h2" look="h6">
         {title}
       </Title>

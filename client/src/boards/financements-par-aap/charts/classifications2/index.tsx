@@ -1,29 +1,30 @@
 import { Title } from "@dataesr/dsfr-plus";
 import { useQuery } from "@tanstack/react-query";
+import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.src.js";
 
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../../../utils";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
-import SegmentedControl from "../../../../components/segmented-control";
-import i18n from "../../../../i18n.json";
-import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
+import { useChartColor } from "../../../../hooks/useChartColor.tsx";
+import { getI18nLabel } from "../../../../utils.tsx";
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx";
+import SegmentedControl from "../../components/segmented-control/index.tsx";
+import i18n from "../../i18n.json";
+import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabel, pattern } from "../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function Classifications2ByStructure({ name }: { name: string | undefined }) {
-  const [selectedControl, setSelectedControl] = useState("projects");
-  const [searchParams] = useSearchParams();
-  const structure = searchParams.get("structure");
-  const yearMax = searchParams.get("yearMax");
-  const yearMin = searchParams.get("yearMin");
-  const color = useChartColor();
+export default function Classifications2({ name }: { name: string | undefined }) {
+  const [selectedControl, setSelectedControl] = useState("projects")
+  const [searchParams] = useSearchParams()
+  const region = searchParams.get("region")
+  const structure = searchParams.get("structure")
+  const yearMax = searchParams.get("yearMax")
+  const yearMin = searchParams.get("yearMin")
+  const color = useChartColor()
 
   const body = {
-    ...getEsQuery({ structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ regions: [region], structures: [structure], yearMax, yearMin }),
     aggregations: {
       by_classifications_project: {
         terms: {
@@ -76,7 +77,8 @@ export default function Classifications2ByStructure({ name }: { name: string | u
                 aggregations: {
                   should_ignore: {
                     terms: {
-                      field: "participant_ignore_total_budget",
+                      field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                      missing: false,
                     },
                     aggregations: {
                       sum_budget: {
@@ -129,7 +131,7 @@ export default function Classifications2ByStructure({ name }: { name: string | u
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-classifications2", structure, yearMax, yearMin],
+    queryKey: ["fundings-classifications2", region, structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -198,7 +200,7 @@ export default function Classifications2ByStructure({ name }: { name: string | u
     });
   });
 
-  const title = `Disciplines par financeur de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
+  const title = `Disciplines par financeur de ${structure ? "l'établissement" : "la région"} ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let dataLabel = function (this: any) {
@@ -209,7 +211,7 @@ export default function Classifications2ByStructure({ name }: { name: string | u
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.key}</b> auxquels participe <b>${name}</b> en <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+    return `<b>${this.y}</b> projets <b>${this.key}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> en <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   switch (selectedControl) {
     // If view by global amount
@@ -223,12 +225,12 @@ export default function Classifications2ByStructure({ name }: { name: string | u
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> financés au global pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> en <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> financés au global pour les projets <b>${this.key}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> en <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = getI18nLabel(i18n, 'funding_by_structure');
+      axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
@@ -237,7 +239,7 @@ export default function Classifications2ByStructure({ name }: { name: string | u
         return `${formatCompactNumber(this.total)} €`;
       };
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> perçus pour les projets <b>${this.key}</b> auxquels participe <b>${name}</b> en <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> perçus pour les projets <b>${this.key}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> en <b>${this.series.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
   };
@@ -249,8 +251,8 @@ export default function Classifications2ByStructure({ name }: { name: string | u
         Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). Les thématiques ont été estimées par IA, à partir du titre, résumé et mots clés des projets.
         Les disciplines ont été estimées par IA, à partir du titre, résumé et mots clés des projets.</>
     },
-    id: "classifications2ByStructure",
-    integrationURL: `/integration?chart_id=classifications2ByStructure&${searchParams.toString()}`,
+    id: "classifications2",
+    integrationURL: `/integration?chart_id=classifications2&${searchParams.toString()}`,
     title,
   };
 
@@ -280,7 +282,7 @@ export default function Classifications2ByStructure({ name }: { name: string | u
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="classifications2-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="classifications2">
       <Title as="h2" look="h6">
         {title}
       </Title>

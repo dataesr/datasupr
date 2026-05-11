@@ -3,22 +3,21 @@ import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Select from "../../../../components/select";
-import Breadcrumb from "../../components/breadcrumb";
-import { years } from "../../utils";
-// import ClassificationsByStructure from "./charts/classifications-by-structure";
-// import Classifications2ByStructure from "./charts/classifications2-by-structure";
-// import RegionsByStructure from "./charts/regions-by-structure";
-// import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
-// import InstrumentsForAnr from "./charts/instruments-for-anr";
-// import InstrumentsForEurope from "./charts/instruments-for-europe";
-// import InstrumentsOverTimeForAnr from "./charts/instruments-over-time-for-anr";
-// import InstrumentsOverTimeForEurope from "./charts/instruments-over-time-for-europe";
-// import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
-// import LaboratoriesByStructure from "./charts/laboratories-by-structure";
+import Classifications from "../../charts/classifications";
+import Classifications2 from "../../charts/classifications2";
+import FrenchPartners from "../../charts/french-partners";
+import InstrumentsForAnr from "../../charts/instruments-for-anr";
+import InstrumentsForEurope from "../../charts/instruments-for-europe";
+import InstrumentsOverTimeForAnr from "../../charts/instruments-over-time-for-anr";
+import InstrumentsOverTimeForEurope from "../../charts/instruments-over-time-for-europe";
+import InternationalPartners from "../../charts/international-partners";
+import Laboratories from "../../charts/laboratories";
 import Overview from "../../charts/overview";
 import ProjectsByFunder from "../../charts/projects-by-funder";
 import ProjectsOverTime from "../../charts/projects-over-time";
+import Breadcrumb from "../../components/breadcrumb";
 import Cards from "../../components/cards";
+import { years } from "../../utils";
 // import ProjectsData from "./components/projects-data";
 
 import "./styles.scss";
@@ -35,11 +34,10 @@ export default function DisplayRegion() {
     { id: "apercu", label: "Aperçu" },
     { id: "financements", label: "Volume et répartition des financements" },
     { id: "evolution", label: "Evolution temporelle" },
-    // { id: "partenaires", label: "Institutions partenaires" },
-    // { id: "laboratoires", label: "Laboratoires" },
-    // { id: "disciplines", label: "Disciplines" },
-    // { id: "instruments", label: "Instruments" },,
-    // { id: "regions", label: "Régions" },
+    { id: "partenaires", label: "Institutions partenaires" },
+    { id: "laboratoires", label: "Laboratoires" },
+    { id: "disciplines", label: "Disciplines" },
+    { id: "instruments", label: "Instruments" },,
     // { id: "donnees", label: "Données" },
   ];
 
@@ -199,48 +197,41 @@ export default function DisplayRegion() {
                   </Col>
                 </Row>
               )}
-              {/*
               {(section === "partenaires") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <FrenchPartnersByStructure name={region} />
+                      <FrenchPartners name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InternationalPartnersByStructure name={region} />
+                      <InternationalPartners name={region} />
                     </Col>
                   </Row>
                 </>
               )}
-              */}
-              {/*
               {(section === "laboratoires") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
-                    <LaboratoriesByStructure name={region} />
+                    <Laboratories name={region} />
                   </Col>
                 </Row>
               )}
-              */}
-              {/*
               {(section === "disciplines") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <ClassificationsByStructure name={region} />
+                      <Classifications name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <Classifications2ByStructure name={region} />
+                      <Classifications2 name={region} />
                     </Col>
                   </Row>
                 </>
               )}
-              */}
-              {/*
               {(section === "instruments") && (
                 <>
                   <Row gutters style={{ clear: "both" }}>
@@ -265,18 +256,6 @@ export default function DisplayRegion() {
                   </Row>
                 </>
               )}
-              */}
-              {/*
-              {(section === "regions") && (
-                <>
-                  <Row gutters style={{ clear: "both" }}>
-                    <Col>
-                      <RegionsByStructure name={region} />
-                    </Col>
-                  </Row>
-                </>
-              )}
-              */}
               {/*
               {(section === "donnees") && (
                 <ProjectsData />

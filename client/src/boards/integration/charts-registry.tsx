@@ -144,19 +144,19 @@ export const chartsRegistry = {
     () => import("../financements-par-aap/pages/structures/charts/french-partners-by-structure")
   ),
   instrumentsForAnr: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/instruments-for-anr")
+    () => import("../financements-par-aap/charts/instruments-for-anr")
   ),
   instrumentsForEurope: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/instruments-for-europe")
+    () => import("../financements-par-aap/charts/instruments-for-europe")
   ),
   instrumentsOverTimeForAnr: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/instruments-over-time-for-anr")
+    () => import("../financements-par-aap/charts/instruments-over-time-for-anr")
   ),
   instrumentsOverTimeForEurope: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/instruments-for-europe")
+    () => import("../financements-par-aap/charts/instruments-for-europe")
   ),
   internationalPartnersByStructure: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/international-partners-by-structure")
+    () => import("../financements-par-aap/charts/international-partners")
   ),
   laboratoriesByStructures: lazy(
     () => import("../financements-par-aap/pages/structures/charts/laboratories-by-structure")

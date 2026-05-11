@@ -4,24 +4,25 @@ import type HighchartsInstance from "highcharts/es-modules/masters/highcharts.sr
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
-import DefaultSkeleton from "../../../../../../components/charts-skeletons/default.tsx";
-import { useChartColor } from "../../../../../../hooks/useChartColor.tsx";
-import { getI18nLabel } from "../../../../../../utils";
-import ChartWrapperFundings from "../../../../components/chart-wrapper-fundings";
-import SegmentedControl from "../../../../components/segmented-control";
-import i18n from "../../../../i18n.json";
-import { formatCompactNumber, getCssColor, getEsQuery, pattern, years } from "../../../../utils.ts";
+import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
+import { useChartColor } from "../../../../hooks/useChartColor.tsx";
+import { getI18nLabel } from "../../../../utils.tsx";
+import ChartWrapperFundings from "../../components/chart-wrapper-fundings/index.tsx";
+import SegmentedControl from "../../components/segmented-control/index.tsx";
+import i18n from "../../i18n.json";
+import { formatCompactNumber, getCssColor, getEsQuery, pattern, years } from "../../utils.ts";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 export default function InstrumentsOverTimeForEurope({ name }: { name: string | undefined }) {
-  const [selectedControl, setSelectedControl] = useState("projects");
-  const [searchParams] = useSearchParams();
-  const structure = searchParams.get("structure");
-  const color = useChartColor();
+  const [selectedControl, setSelectedControl] = useState("projects")
+  const [searchParams] = useSearchParams()
+  const region = searchParams.get("region")
+  const structure = searchParams.get("structure")
+  const color = useChartColor()
 
   const body = {
-    ...getEsQuery({ structures: [structure] }),
+    ...getEsQuery({ regions: [region], structures: [structure] }),
     aggregations: {
       by_instrument: {
         terms: {
@@ -46,7 +47,8 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
                   },
                   should_ignore: {
                     terms: {
-                      field: "participant_ignore_total_budget",
+                      field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                      missing: false,
                     },
                     aggregations: {
                       sum_budget: {
@@ -72,7 +74,7 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
   body.query.bool.filter.push({ terms: { "project_type.keyword": ["Horizon 2020", "Horizon Europe"] } });
 
   const { data, isLoading } = useQuery({
-    queryKey: ["funding-instruments-over-time-for-europe", structure],
+    queryKey: ["funding-instruments-over-time-for-europe", region, structure],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -143,34 +145,36 @@ export default function InstrumentsOverTimeForEurope({ name }: { name: string | 
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
   let series = seriesProject.reverse();
-  let title = `Evolution temporelle des instruments européens (actions) dont a bénéficié l'établissement (${name})`;
+  let title = `Evolution temporelle des instruments européens (actions) dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
   let tooltip = function (this: any) {
-    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> dont a bénéficié <b>${name}</b>`;
+    return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
   };
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
       axis = getI18nLabel(i18n, 'funding_total');
       series = seriesBudget.reverse();
-      title = `Evolution temporelle du financement global par instrument européen dont a bénéficié l'établissement (${name})`;
+      title = `Evolution temporelle du financement global par instrument européen dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié <b>${name}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
       };
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = getI18nLabel(i18n, 'funding_by_structure');
+      axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
       series = seriesParticipation.reverse();
-      title = `Evolution temporelle du financement perçu par instrument européen dont a bénéficié l'établissement (${name})`;
+      title = `Evolution temporelle du financement perçu par instrument européen dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
       tooltip = function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié <b>${name}</b>`;
+        return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
       };
       break;
   };
 
   const config = {
-    comment: { "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs financements associés, ventilée par instrument, pour les projets européens, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
-</> },
+    comment: {
+      "fr": <>Ce graphique présente l’évolution temporelle du nombre de projets ou de leurs financements associés, ventilée par instrument, pour les projets européens, à travers des lignes empilées permettant d’apprécier la contribution relative de chacun dans le temps. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement global représente le volume total de financements des projets auxquels participe l'établissement. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA).
+      </>
+    },
     id: "instrumentsOverTimeForEurope",
     integrationURL: `/integration?chart_id=instrumentsOverTimeForEurope&${searchParams.toString()}`,
     title,

@@ -44,7 +44,8 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
               },
               should_ignore: {
                 terms: {
-                  field: "participant_ignore_total_budget",
+                  field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
+                  missing: false,
                 },
                 aggregations: {
                   sum_budget: {
@@ -158,7 +159,7 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      axis = getI18nLabel(i18n, 'funding_by_structure');
+      axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
       };

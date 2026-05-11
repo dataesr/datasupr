@@ -5,22 +5,22 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Select from "../../../../components/select";
 import { isInProduction } from "../../../../utils";
+import Classifications from "../../charts/classifications";
+import Classifications2 from "../../charts/classifications2";
+import FrenchPartners from "../../charts/french-partners";
+import InstrumentsForAnr from "../../charts/instruments-for-anr";
+import InstrumentsForEurope from "../../charts/instruments-for-europe";
+import InstrumentsOverTimeForAnr from "../../charts/instruments-over-time-for-anr";
+import InstrumentsOverTimeForEurope from "../../charts/instruments-over-time-for-europe";
+import InternationalPartners from "../../charts/international-partners";
+import Laboratories from "../../charts/laboratories";
 import Overview from "../../charts/overview";
 import ProjectsByFunder from "../../charts/projects-by-funder";
+import ProjectsOverTimeByStructure from "../../charts/projects-over-time";
+import Regions from "../../charts/regions";
 import Breadcrumb from "../../components/breadcrumb";
 import Cards from "../../components/cards";
 import { getEsQuery, years } from "../../utils";
-import ClassificationsByStructure from "./charts/classifications-by-structure";
-import Classifications2ByStructure from "./charts/classifications2-by-structure";
-import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
-import InstrumentsForAnr from "./charts/instruments-for-anr";
-import InstrumentsForEurope from "./charts/instruments-for-europe";
-import InstrumentsOverTimeForAnr from "./charts/instruments-over-time-for-anr";
-import InstrumentsOverTimeForEurope from "./charts/instruments-over-time-for-europe";
-import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
-import LaboratoriesByStructure from "./charts/laboratories-by-structure";
-import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
-import RegionsByStructure from "./charts/regions-by-structure";
 import ProjectsData from "./components/projects-data";
 
 import "./styles.scss";
@@ -245,12 +245,12 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <FrenchPartnersByStructure name={name} />
+                      <FrenchPartners name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <InternationalPartnersByStructure name={name} />
+                      <InternationalPartners name={name} />
                     </Col>
                   </Row>
                 </>
@@ -258,7 +258,7 @@ export default function DisplayStructure() {
               {(section === "laboratoires") && (
                 <Row gutters style={{ clear: "both" }}>
                   <Col>
-                    <LaboratoriesByStructure name={name} />
+                    <Laboratories name={name} />
                   </Col>
                 </Row>
               )}
@@ -266,12 +266,12 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <ClassificationsByStructure name={name} />
+                      <Classifications name={name} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <Classifications2ByStructure name={name} />
+                      <Classifications2 name={name} />
                     </Col>
                   </Row>
                 </>
@@ -304,7 +304,7 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <RegionsByStructure name={name} />
+                      <Regions name={name} />
                     </Col>
                   </Row>
                 </>
