@@ -37,7 +37,7 @@ export default function DisplayRegion() {
     { id: "partenaires", label: "Institutions partenaires" },
     { id: "laboratoires", label: "Laboratoires" },
     { id: "disciplines", label: "Disciplines" },
-    { id: "instruments", label: "Instruments" },,
+    { id: "instruments", label: "Instruments" },
     // { id: "donnees", label: "Données" },
   ];
 

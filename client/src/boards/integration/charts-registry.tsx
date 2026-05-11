@@ -131,17 +131,17 @@ export const chartsRegistry = {
   ),
 
   // Financements par APP - Fundings
-  projectsByStructure: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/projects-by-structure")
+  projectsByFunder: lazy(
+    () => import("../financements-par-aap/charts/projects-by-funder")
   ),
-  classificationsByStructure: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/classifications-by-structure")
+  classifications: lazy(
+    () => import("../financements-par-aap/charts/classifications")
   ),
-  classifications2ByStructure: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/classifications2-by-structure")
+  classifications2: lazy(
+    () => import("../financements-par-aap/charts/classifications2")
   ),
   frenchPartnersByStructure: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/french-partners-by-structure")
+    () => import("../financements-par-aap/charts/french-partners")
   ),
   instrumentsForAnr: lazy(
     () => import("../financements-par-aap/charts/instruments-for-anr")
@@ -155,17 +155,17 @@ export const chartsRegistry = {
   instrumentsOverTimeForEurope: lazy(
     () => import("../financements-par-aap/charts/instruments-for-europe")
   ),
-  internationalPartnersByStructure: lazy(
+  internationalPartners: lazy(
     () => import("../financements-par-aap/charts/international-partners")
   ),
-  laboratoriesByStructures: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/laboratories-by-structure")
+  laboratories: lazy(
+    () => import("../financements-par-aap/charts/laboratories")
   ),
-  overviewByStructure: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/overview-by-structure")
+  overview: lazy(
+    () => import("../financements-par-aap/charts/overview")
   ),
-  projectsOverTimeByStructure: lazy(
-    () => import("../financements-par-aap/pages/structures/charts/projects-over-time-by-structure")
+  projectsOverTime: lazy(
+    () => import("../financements-par-aap/charts/projects-over-time")
   ),
   classificationsByComparison: lazy(
     () => import("../financements-par-aap/pages/comparison/charts/classifications-by-comparison")
