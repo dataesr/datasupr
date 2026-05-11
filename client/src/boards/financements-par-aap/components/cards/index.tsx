@@ -11,13 +11,13 @@ const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.en
 
 export default function Cards() {
   const [searchParams] = useSearchParams()
-  const county = searchParams.get("region")
+  const region = searchParams.get("region")
   const structure = searchParams.get("structure")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
 
   const body = {
-    ...getEsQuery({ counties: [county], structures: [structure] }),
+    ...getEsQuery({ regions: [region], structures: [structure] }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -61,7 +61,7 @@ export default function Cards() {
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["funding-cards", structure, county],
+    queryKey: ["funding-cards", structure, region],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),

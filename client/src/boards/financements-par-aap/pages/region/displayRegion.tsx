@@ -7,7 +7,7 @@ import Breadcrumb from "../../components/breadcrumb";
 import { years } from "../../utils";
 // import ClassificationsByStructure from "./charts/classifications-by-structure";
 // import Classifications2ByStructure from "./charts/classifications2-by-structure";
-// import CountiesByStructure from "./charts/counties-by-structure";
+// import RegionsByStructure from "./charts/regions-by-structure";
 // import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
 // import InstrumentsForAnr from "./charts/instruments-for-anr";
 // import InstrumentsForEurope from "./charts/instruments-for-europe";
@@ -23,11 +23,11 @@ import Cards from "../../components/cards";
 
 import "./styles.scss";
 
-export default function DisplayCounty() {
+export default function DisplayRegion() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const section = searchParams.get("section");
-  const county = searchParams.get("region") ?? '';
+  const region = searchParams.get("region") ?? '';
   const yearMax = searchParams.get("yearMax") ?? String(years[years.length - 2]);
   const yearMin = searchParams.get("yearMin") ?? String(years[years.length - 2]);
   const [isOpen, setIsOpen] = useState(false);
@@ -68,14 +68,14 @@ export default function DisplayCounty() {
               <Breadcrumb items={[
                 { href: "/financements-par-aap/accueil", label: "Financements par AAP" },
                 { href: "/financements-par-aap/region", label: "Vue par région" },
-                { label: county }
+                { label: region }
               ]} />
             </Col>
           </Row>
           <Row gutters className="fr-grid-row--middle fr-mb-2w">
             <Col xs="12" md="6">
               <Title as="h1" className="fr-mb-1v" look="h4">
-                {county}
+                {region}
               </Title>
             </Col>
             <Col xs="12" md="6" style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.5rem" }}>
@@ -182,12 +182,12 @@ export default function DisplayCounty() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <ProjectsByFunder name={county} />
+                      <ProjectsByFunder name={region} />
                     </Col>
                   </Row>
                   <Row gutters>
                     <Col>
-                      <OverviewByStructure name={county} />
+                      <OverviewByStructure name={region} />
                     </Col>
                   </Row>
                 </>
@@ -273,7 +273,7 @@ export default function DisplayCounty() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <CountiesByStructure name={name} />
+                      <RegionsByStructure name={name} />
                     </Col>
                   </Row>
                 </>

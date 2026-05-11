@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
-import "highcharts/es-modules/masters/modules/variwide.src.js";
 
 import DefaultSkeleton from "../../../../components/charts-skeletons/default.tsx";
 import { useChartColor } from "../../../../hooks/useChartColor.tsx";
@@ -72,7 +71,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     comment: { "fr": <>Ce graphique met en regard le volume de projets et les financements perçus associés : la largeur des barres représente le nombre de projets, tandis que leur hauteur correspond au financement perçu. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </> },
     id: "overviewByStructure",
     integrationURL: `/integration?chart_id=overviewByStructure&${searchParams.toString()}`,
-    title: `Structure du financement : nombre de projets et financements perçus associés pour les projets auxquels participe l'établissement (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,
+    title: `Structure du financement : nombre de projets et financements perçus associés pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   let hiddenPoints: string[] = [];
@@ -123,7 +122,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
     title: { text: "" },
     tooltip: {
       formatter: function (this: any) {
-        return `<b>${formatCompactNumber(this.y)} €</b> financés pour <b>${this.z}</b> projets <b>${this.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
+        return `<b>${formatCompactNumber(this.y)} €</b> financés pour <b>${this.z}</b> projets <b>${this.name}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       },
     },
     xAxis: {
@@ -131,7 +130,7 @@ export default function OverviewByStructure({ name }: { name: string | undefined
       title: { text: "Nombre de projets" },
       type: "category",
     },
-    yAxis: { title: { text: getI18nLabel(i18n, 'funding_by_structure') } },
+    yAxis: { title: { text: getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region') } },
   };
 
   return (

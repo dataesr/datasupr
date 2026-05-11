@@ -11,6 +11,9 @@
   "etablissement": {
     "fr": "Vue par structure - Financements par appels à projets - Tableaux"
   },
+  "funding_by_region": {
+    "fr": "Financement pour cette région (€)"
+  },
   "funding_by_structure": {
     "fr": "Financement pour cet établissement (€)"
   },

@@ -116,7 +116,7 @@ export default function GlobalLayout() {
                       target="_self"
                       to={`/financements-par-aap/region?${searchParamsFiltered()}`}
                     >
-                      {getI18nLabel(i18n, "county")}
+                      {getI18nLabel(i18n, "region")}
                     </Link>
                   </li>
                 )}

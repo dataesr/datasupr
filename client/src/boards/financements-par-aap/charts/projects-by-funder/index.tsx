@@ -17,14 +17,14 @@ const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.en
 export default function ProjectsByFunder({ name }: { name: string | undefined }) {
   const [searchParams] = useSearchParams()
   const [selectedControl, setSelectedControl] = useState("projects")
-  const county = searchParams.get("region")
+  const region = searchParams.get("region")
   const structure = searchParams.get("structure")
   const yearMax = searchParams.get("yearMax")
   const yearMin = searchParams.get("yearMin")
   const color = useChartColor()
 
   const body = {
-    ...getEsQuery({ counties: [county], structures: [structure], yearMax, yearMin }),
+    ...getEsQuery({ regions: [region], structures: [structure], yearMax, yearMin }),
     aggregations: {
       by_project_type: {
         terms: {
@@ -68,7 +68,7 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
 
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-projects-by-structure", county, structure, yearMax, yearMin],
+    queryKey: ["fundings-projects-by-structure", region, structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -136,7 +136,7 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
-  let title = `Nombre de projets financés auxquels l'établissement (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+  let title = `Nombre de projets financés auxquels ${structure ? "l'établissement" : "la région"} (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}, soit ${formatPercent(this.y_perc)} (${this.y} / ${this.total} )`;
   };

@@ -11,16 +11,16 @@ const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.en
 
 
 export default function StructuresSelector() {
-  const [county, setCounty] = useState("*");
+  const [region, setRegion] = useState("*");
   const [typology, setTypology] = useState("*");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchParams, setSearchParams] = useSearchParams({});
   const selectedStructures: string[] = searchParams.getAll("structure");
 
-  const bodyCounties: any = {
+  const bodyRegions: any = {
     ...getEsQuery({}),
     aggregations: {
-      by_county: {
+      by_region: {
         terms: {
           field: "address.region.keyword",
           order: { _key: "asc" },
@@ -30,15 +30,15 @@ export default function StructuresSelector() {
     },
   };
   if (typology && typology !== '*') {
-    bodyCounties.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
+    bodyRegions.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
   }
-  const { data: dataCounties, isLoading: isLoadingCounties } = useQuery({
-    queryKey: ["fundings-counties", typology],
+  const { data: dataRegions, isLoading: isLoadingRegions } = useQuery({
+    queryKey: ["fundings-regions", typology],
     queryFn: () =>
       fetch(
         `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
         {
-          body: JSON.stringify(bodyCounties),
+          body: JSON.stringify(bodyRegions),
           headers: {
             "Access-Control-Allow-Origin": "*",
             "Content-Type": "application/json",
@@ -47,7 +47,7 @@ export default function StructuresSelector() {
         }
       ).then((response) => response.json()),
   });
-  const counties = (dataCounties?.aggregations?.by_county?.buckets ?? []).map((bucket) => bucket.key);
+  const regions = (dataRegions?.aggregations?.by_region?.buckets ?? []).map((bucket) => bucket.key);
 
   const bodyTypologies: any = {
     ...getEsQuery({}),
@@ -60,11 +60,11 @@ export default function StructuresSelector() {
       },
     },
   };
-  if (county && county !== '*') {
-    bodyTypologies.query.bool.filter.push({ term: { "address.region.keyword": county } });
+  if (region && region !== '*') {
+    bodyTypologies.query.bool.filter.push({ term: { "address.region.keyword": region } });
   }
   const { data: dataTypologies, isLoading: isLoadingTypologies } = useQuery({
-    queryKey: ["fundings-typologies", county],
+    queryKey: ["fundings-typologies", region],
     queryFn: () =>
       fetch(
         `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
@@ -113,14 +113,14 @@ export default function StructuresSelector() {
     return structureInfo;
   }) || [];
 
-  if (county && county !== '*') {
-    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": county } });
+  if (region && region !== '*') {
+    bodyStructures.query.bool.filter.push({ wildcard: { "address.region.keyword": region } });
   }
   if (typology && typology !== '*') {
     bodyStructures.query.bool.filter.push({ term: { "participant_typologie_1.keyword": typology } });
   }
   const { data: dataStructures, isLoading: isLoadingStructures } = useQuery({
-    queryKey: ["fundings-structures", county, typology],
+    queryKey: ["fundings-structures", region, typology],
     queryFn: () =>
       fetch(
         `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
@@ -166,9 +166,9 @@ export default function StructuresSelector() {
     <>
       <Row gutters className="fr-grid-row--middle">
         <Col xs="12" sm="3">
-          {isLoadingCounties ? <DefaultSkeleton height="40px" /> : (
+          {isLoadingRegions ? <DefaultSkeleton height="40px" /> : (
             <Select
-              label={county === "*" ? <>Région <Badge className="fr-ml-1v" size="sm" >{counties.length}</Badge></> : county}
+              label={region === "*" ? <>Région <Badge className="fr-ml-1v" size="sm" >{regions.length}</Badge></> : region}
               icon="map-pin-2-line"
               size="sm"
               fullWidth
@@ -176,17 +176,17 @@ export default function StructuresSelector() {
             >
               <Select.Option
                 value="*"
-                selected={county === "*"}
-                onClick={() => setCounty("*")}
+                selected={region === "*"}
+                onClick={() => setRegion("*")}
               >
                 Toutes les régions
               </Select.Option>
-              {counties.map((c: string) => (
+              {regions.map((c: string) => (
                 <Select.Option
                   key={c}
                   value={c}
-                  selected={county === c}
-                  onClick={() => setCounty(c)}
+                  selected={region === c}
+                  onClick={() => setRegion(c)}
                 >
                   {c}
                 </Select.Option>

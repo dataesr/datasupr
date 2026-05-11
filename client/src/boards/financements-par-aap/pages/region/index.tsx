@@ -6,27 +6,27 @@ import { useSearchParams } from "react-router-dom";
 import Breadcrumb from "../../components/breadcrumb";
 import CardSimple from "../../components/card-simple";
 import { getEsQuery } from "../../utils.ts";
-import DisplayCounty from "./displayCounty";
+import DisplayRegion from "./displayRegion.tsx";
 
 import "./styles.scss";
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
 
-export default function Counties() {
+export default function regions() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const county = searchParams.get("region");
-  const [counties, setCounties] = useState([]);
+  const region = searchParams.get("region");
+  const [regions, setRegions] = useState([]);
 
-  const handleCounty = (county) => {
-    searchParams.set("region", county);
+  const handleRegion = (region) => {
+    searchParams.set("region", region);
     setSearchParams(searchParams);
   };
 
   const body: any = {
     ...getEsQuery({}),
     aggregations: {
-      by_county: {
+      by_region: {
         terms: {
           field: "participant_region.keyword",
           size: 1500,
@@ -36,7 +36,7 @@ export default function Counties() {
   };
 
   const { data } = useQuery({
-    queryKey: ["fundings-counties"],
+    queryKey: ["fundings-regions"],
     queryFn: () =>
       fetch(
         `${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`,
@@ -52,7 +52,7 @@ export default function Counties() {
   });
 
   useEffect(() => {
-    setCounties(data?.aggregations?.by_county?.buckets ?? [])
+    setRegions(data?.aggregations?.by_region?.buckets ?? [])
   }, [data])
 
   useEffect(() => {
@@ -63,8 +63,8 @@ export default function Counties() {
   }, [searchParams, setSearchParams]);
 
   return (
-    county ? (
-      <DisplayCounty />
+    region ? (
+      <DisplayRegion />
     ) : (
       <main>
         <Container fluid className="funding-gradient fr-mb-3w">
@@ -89,18 +89,18 @@ export default function Counties() {
         <Container className="fr-mb-3w">
           <Row gutters>
             <Text className="fr-text--sm fr-mb-2w fr-pl-2w">
-              {counties.length} région
-              {counties.length > 1 ? "s" : ""} trouvée
-              {counties.length > 1 ? "s" : ""}
+              {regions.length} région
+              {regions.length > 1 ? "s" : ""} trouvée
+              {regions.length > 1 ? "s" : ""}
             </Text>
           </Row>
           <Row gutters>
-            {counties.map((county: any) => (
-              <Col key={county.key} xs="12" md="6" lg="4">
+            {regions.map((region: any) => (
+              <Col key={region.key} xs="12" md="6" lg="4">
                 <CardSimple
-                  description={`${county.doc_count} participations`}
-                  onClick={() => handleCounty(county.key)}
-                  title={county.key}
+                  description={`${region.doc_count} participations`}
+                  onClick={() => handleRegion(region.key)}
+                  title={region.key}
                 />
               </Col>
             ))}

@@ -14,7 +14,7 @@ import { formatCompactNumber, funders, getCssColor, getEsQuery, getYearRangeLabe
 
 const { VITE_APP_ES_INDEX_PARTICIPATIONS, VITE_APP_SERVER_URL } = import.meta.env;
 
-export default function CountiesByStructure({ name }: { name: string | undefined }) {
+export default function RegionsByStructure({ name }: { name: string | undefined }) {
   const [selectedControl, setSelectedControl] = useState("projects");
   const [searchParams] = useSearchParams();
   const structure = searchParams.get("structure");
@@ -129,7 +129,7 @@ export default function CountiesByStructure({ name }: { name: string | undefined
   };
 
   const { data, isLoading } = useQuery({
-    queryKey: ["fundings-counties-by-structure", structure, yearMax, yearMin],
+    queryKey: ["fundings-regions-by-structure", structure, yearMax, yearMin],
     queryFn: () =>
       fetch(`${VITE_APP_SERVER_URL}/elasticsearch?index=${VITE_APP_ES_INDEX_PARTICIPATIONS}`, {
         body: JSON.stringify(body),
@@ -252,8 +252,8 @@ export default function CountiesByStructure({ name }: { name: string | undefined
         Les thématiques ont été estimées par IA, à partir du titre, résumé et mots clés des projets.
       </>
     },
-    id: "countiesByStructure",
-    integrationURL: `/integration?chart_id=countiesByStructure&${searchParams.toString()}`,
+    id: "regionsByStructure",
+    integrationURL: `/integration?chart_id=regionsByStructure&${searchParams.toString()}`,
     title,
   };
 
@@ -283,7 +283,7 @@ export default function CountiesByStructure({ name }: { name: string | undefined
   };
 
   return (
-    <div className={`chart-container chart-container--${color}`} id="counties-by-structure">
+    <div className={`chart-container chart-container--${color}`} id="regions-by-structure">
       <Title as="h2" look="h6">
         {title}
       </Title>

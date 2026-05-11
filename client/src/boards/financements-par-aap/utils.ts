@@ -36,8 +36,8 @@ const getCssColor = ({ name, prefix = "" }: { name: string, prefix?: string }): 
   return color;
 };
 
-const getEsQuery = ({ counties, structures, yearMax = years[years.length - 1], yearMin = years[0] }:
-  { counties?: (string | null)[], structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
+const getEsQuery = ({ regions, structures, yearMax = years[years.length - 1], yearMin = years[0] }:
+  { regions?: (string | null)[], structures?: (string | null)[], yearMax?: number | string | null, yearMin?: number | string | null }) => {
   const query: any = {
     size: 0,
     query: {
@@ -55,13 +55,13 @@ const getEsQuery = ({ counties, structures, yearMax = years[years.length - 1], y
       },
     },
   };
-  const sss = structures?.filter((structure) => structure !== null);
-  if (sss?.length ?? 0 > 0) {
-    query.query.bool.filter.push({ terms: { "participant_id.keyword": sss } });
+  const structuresNotNull = structures?.filter((structure) => structure !== null);
+  if (structuresNotNull?.length ?? 0 > 0) {
+    query.query.bool.filter.push({ terms: { "participant_id.keyword": structuresNotNull } });
   };
-  const ccc = counties?.filter((structure) => structure !== null);
-  if (ccc?.length ?? 0 > 0) {
-    query.query.bool.filter.push({ terms: { "participant_region.keyword": ccc } });
+  const regionsNotNull = regions?.filter((region) => region !== null);
+  if (regionsNotNull?.length ?? 0 > 0) {
+    query.query.bool.filter.push({ terms: { "participant_region.keyword": regionsNotNull } });
   };
   return query;
 };

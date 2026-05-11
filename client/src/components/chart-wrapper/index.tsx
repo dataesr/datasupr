@@ -1,28 +1,29 @@
-import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Title } from "@dataesr/dsfr-plus";
-import Highcharts from "highcharts/es-modules/masters/highcharts.src.js";
-import HighchartsReact from "highcharts-react-official";
-import "highcharts/es-modules/masters/highcharts-more.src.js";
-import "highcharts/es-modules/masters/modules/exporting.src.js";
-import "highcharts/es-modules/masters/modules/export-data.src.js";
-import "highcharts/es-modules/masters/modules/map.src.js";
-import "highcharts/es-modules/masters/modules/flowmap.src.js";
-import "highcharts/es-modules/masters/modules/offline-exporting.src.js";
-import "highcharts/es-modules/masters/modules/variable-pie.src.js";
-import "highcharts/es-modules/masters/modules/sankey.src.js";
-import "highcharts/es-modules/masters/modules/treemap.src.js";
+import { Button, Col, Container, Modal, ModalContent, ModalTitle, Radio, Row, Title } from "@dataesr/dsfr-plus"
+import Highcharts from "highcharts/es-modules/masters/highcharts.src.js"
+import HighchartsReact from "highcharts-react-official"
+import "highcharts/es-modules/masters/highcharts-more.src.js"
+import "highcharts/es-modules/masters/modules/exporting.src.js"
+import "highcharts/es-modules/masters/modules/export-data.src.js"
+import "highcharts/es-modules/masters/modules/map.src.js"
+import "highcharts/es-modules/masters/modules/flowmap.src.js"
+import "highcharts/es-modules/masters/modules/offline-exporting.src.js"
+import "highcharts/es-modules/masters/modules/variable-pie.src.js"
+import "highcharts/es-modules/masters/modules/sankey.src.js"
+import "highcharts/es-modules/masters/modules/treemap.src.js"
 import "highcharts/es-modules/masters/modules/pattern-fill.src.js"
+import "highcharts/es-modules/masters/modules/variwide.src.js"
 
-import "highcharts/es-modules/masters/modules/accessibility.src.js";
+import "highcharts/es-modules/masters/modules/accessibility.src.js"
 
-import React, { useId, useRef, useState } from "react";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import React, { useId, useRef, useState } from "react"
+import SyntaxHighlighter from "react-syntax-highlighter"
+import { a11yDark } from "react-syntax-highlighter/dist/esm/styles/hljs"
 
-import { useSearchParams } from "react-router-dom";
-import { deepMerge, getI18nLabel } from "../../utils";
-import ChartFooter from "../chart-footer";
-import CopyButton from "../copy-button";
-import i18n from "./i18n.json";
+import { useSearchParams } from "react-router-dom"
+import { deepMerge, getI18nLabel } from "../../utils"
+import ChartFooter from "../chart-footer"
+import CopyButton from "../copy-button"
+import i18n from "./i18n.json"
 
 import "./styles.scss";
 

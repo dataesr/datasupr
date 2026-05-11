@@ -24,13 +24,13 @@ type Filter = {
 }
 
 type Project = {
-  county: string
   id: string
   instrument: string
   label: string
   participationFunding: number
   participationIsCoordinator: boolean
   projectBudgetFinanced: number
+  region: string
   type: string
   uniqId: string
   year: number
@@ -58,9 +58,9 @@ export default function ProjectsData() {
   }
 
   const aggregations = {
-    county: { terms: { field: 'participant_region_with_labs.keyword' } },
     instrument: { terms: { field: 'project_instrument.keyword' } },
     participationIsCoordinator: { terms: { field: 'participation_is_coordinator' } },
+    region: { terms: { field: 'participant_region_with_labs.keyword' } },
     type: { terms: { field: 'project_type.keyword' } },
     year: { terms: { field: 'project_year' } },
   };
@@ -70,7 +70,7 @@ export default function ProjectsData() {
   }
   if (filters.length > 0) {
     filters.forEach((filter) => {
-      if (filter.id === 'county') {
+      if (filter.id === 'region') {
         body.query.bool.filter.push({ match: { 'participant_region_with_labs.keyword': filter.value } })
       } else if (filter.id === 'id') {
         body.query.bool.filter.push({ match: { 'project_id.keyword': filter.value } })
@@ -117,13 +117,13 @@ export default function ProjectsData() {
   });
 
   const dataTable: Project[] = (data?.hits?.hits ?? []).map((hit) => ({
-    county: hit._source?.participant_region_with_labs.join(', '),
     id: hit._source?.project_id,
     instrument: hit._source?.project_instrument,
     label: hit._source?.project_label,
     participationFunding: hit._source?.participation_funding ? `${hit._source.participation_funding} €` : '',
     participationIsCoordinator: hit._source?.participation_is_coordinator.toString(),
     projectBudgetFinanced: hit._source?.project_budgetFinanced ? `${hit._source.project_budgetFinanced} €` : '',
+    region: hit._source?.participant_region_with_labs.join(', '),
     type: hit._source?.project_type,
     uniqId: hit._source?.participant_key_id,
     year: hit._source?.project_year,
@@ -131,13 +131,13 @@ export default function ProjectsData() {
   const numberOfResults = data?.hits?.total?.value ?? 0
 
   const dataTableAll: Project[] = (dataAll?.hits?.hits ?? []).map((hit) => ({
-    county: hit._source?.participant_region_with_labs.join(', '),
     id: hit._source?.project_id,
     instrument: hit._source?.project_instrument,
     label: hit._source?.project_label,
     participationFunding: hit._source?.participation_funding ? `${hit._source.participation_funding} €` : '',
     participationIsCoordinator: hit._source?.participation_is_coordinator.toString(),
     projectBudgetFinanced: hit._source?.project_budgetFinanced ? `${hit._source.project_budgetFinanced} €` : '',
+    region: hit._source?.participant_region_with_labs.join(', '),
     type: hit._source?.project_type,
     uniqId: hit._source?.participant_key_id,
     year: hit._source?.project_year,
@@ -167,7 +167,7 @@ export default function ProjectsData() {
       label: 'Identifiant',
     },
     {
-      id: 'county',
+      id: 'region',
       isFilterable: true,
       isFilterableBySelect: true,
       isSortable: false,

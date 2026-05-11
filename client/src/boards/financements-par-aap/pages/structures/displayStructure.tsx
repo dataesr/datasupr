@@ -5,13 +5,13 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 
 import Select from "../../../../components/select";
 import { isInProduction } from "../../../../utils";
+import OverviewByStructure from "../../charts/overview-by-structure";
 import ProjectsByFunder from "../../charts/projects-by-funder";
 import Breadcrumb from "../../components/breadcrumb";
 import Cards from "../../components/cards";
 import { getEsQuery, years } from "../../utils";
 import ClassificationsByStructure from "./charts/classifications-by-structure";
 import Classifications2ByStructure from "./charts/classifications2-by-structure";
-import CountiesByStructure from "./charts/counties-by-structure";
 import FrenchPartnersByStructure from "./charts/french-partners-by-structure";
 import InstrumentsForAnr from "./charts/instruments-for-anr";
 import InstrumentsForEurope from "./charts/instruments-for-europe";
@@ -19,8 +19,8 @@ import InstrumentsOverTimeForAnr from "./charts/instruments-over-time-for-anr";
 import InstrumentsOverTimeForEurope from "./charts/instruments-over-time-for-europe";
 import InternationalPartnersByStructure from "./charts/international-partners-by-structure";
 import LaboratoriesByStructure from "./charts/laboratories-by-structure";
-import OverviewByStructure from "../../charts/overview-by-structure";
 import ProjectsOverTimeByStructure from "./charts/projects-over-time-by-structure";
+import RegionsByStructure from "./charts/regions-by-structure";
 import ProjectsData from "./components/projects-data";
 
 import "./styles.scss";
@@ -304,7 +304,7 @@ export default function DisplayStructure() {
                 <>
                   <Row gutters style={{ clear: "both" }}>
                     <Col>
-                      <CountiesByStructure name={name} />
+                      <RegionsByStructure name={name} />
                     </Col>
                   </Row>
                 </>
