@@ -388,11 +388,15 @@
     "en": "Participants success rate by country"
   },
   "entities": {
-    "fr": "Entités/porteurs",
-    "en": "Entities/holders"
+    "fr": "Entités",
+    "en": "Entities"
   },
   "country-entities": {
     "fr": "Entités du pays",
     "en": "Country entities"
+  },
+  "pi": {
+    "fr": "Porteurs de projets",
+    "en": "Project holders"
   }
 }

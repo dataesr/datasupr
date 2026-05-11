@@ -5,6 +5,7 @@ import SyntheseContent from "./tabs/SyntheseContent";
 import PositionnementContent from "./tabs/PositionnementContent";
 import EvolutionContent from "./tabs/EvolutionContent";
 import EntitiesContent from "./tabs/EntitiesContent";
+import PiContent from "./tabs/PiContent";
 
 export default function TabsContent() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -17,7 +18,7 @@ export default function TabsContent() {
   }
 
   // Fonction pour changer d'onglet
-  const handleTabChange = (newTab: "synthesis" | "positioning" | "evolution" | "entities") => {
+  const handleTabChange = (newTab: "synthesis" | "positioning" | "evolution" | "entities" | "pi") => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set("section", newTab);
     setSearchParams(newParams);
@@ -68,6 +69,18 @@ export default function TabsContent() {
               className="fr-nav__link"
               onClick={(e) => {
                 e.preventDefault();
+                handleTabChange("pi");
+              }}
+              aria-current={activeTab === "pi" ? "page" : undefined}
+            >
+              {getIntlLabel("pi")}
+            </button>
+          </li>
+          <li className="fr-nav__item">
+            <button
+              className="fr-nav__link"
+              onClick={(e) => {
+                e.preventDefault();
                 handleTabChange("evolution");
               }}
               aria-current={activeTab === "evolution" ? "page" : undefined}
@@ -81,6 +94,7 @@ export default function TabsContent() {
         {activeTab === "synthesis" && <SyntheseContent />}
         {activeTab === "positioning" && <PositionnementContent />}
         {activeTab === "entities" && <EntitiesContent />}
+        {activeTab === "pi" && <PiContent />}
         {activeTab === "evolution" && <EvolutionContent />}
       </div>
     </div>
