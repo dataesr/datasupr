@@ -79,7 +79,7 @@ export default function FrenchPartners({ name }: { name: string | undefined }) {
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  should_ignore: {
+                  should_ignore_budget: {
                     terms: {
                       field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
                       missing: false,
@@ -119,9 +119,17 @@ export default function FrenchPartners({ name }: { name: string | undefined }) {
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  sum_budget_participation: {
-                    sum: {
-                      field: "participation_funding",
+                  should_ignore_funding: {
+                    terms: {
+                      field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                      missing: false,
+                    },
+                    aggregations: {
+                      sum_budget_participation: {
+                        sum: {
+                          field: "participation_funding",
+                        },
+                      },
                     },
                   },
                 },
@@ -147,17 +155,17 @@ export default function FrenchPartners({ name }: { name: string | undefined }) {
   });
 
   const seriesBudget: any = [];
-  const seriesParticipation: any = [];
+  const seriesFunding: any = [];
   const seriesProject: any = [];
   const partnersBudget = data?.aggregations?.by_french_partners_budget?.buckets ?? [];
-  const partnersParticipation = data?.aggregations?.by_french_partners_participation?.buckets ?? [];
+  const partnersFunding = data?.aggregations?.by_french_partners_participation?.buckets ?? [];
   const partnersProject = data?.aggregations?.by_french_partners_project?.buckets ?? [];
   funders.forEach((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: partnersBudget.map((partner) => partner.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -165,21 +173,23 @@ export default function FrenchPartners({ name }: { name: string | undefined }) {
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: partnersBudget.map((partner) => partner.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 0)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
-    seriesParticipation.push({
+    seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: partnersParticipation.map((partner) => partner.by_project_type.buckets
+      data: partnersFunding.map((partner) => partner.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
-    seriesParticipation.push({
+    seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: partnersParticipation.map((partner) => partner.by_project_type.buckets
+      data: partnersFunding.map((partner) => partner.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
@@ -206,7 +216,7 @@ export default function FrenchPartners({ name }: { name: string | undefined }) {
     const structure = Object.fromEntries(new URLSearchParams(partner.key));
     return `${structure.label}`;
   });
-  const categoriesParticipation = partnersParticipation.map((partner) => {
+  const categoriesFunding = partnersFunding.map((partner) => {
     const structure = Object.fromEntries(new URLSearchParams(partner.key));
     return `${structure.label}`;
   });
@@ -244,11 +254,11 @@ export default function FrenchPartners({ name }: { name: string | undefined }) {
     // If view by amount by structure
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
-      categories = categoriesParticipation;
+      categories = categoriesFunding;
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesParticipation.reverse();
+      series = seriesFunding.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };

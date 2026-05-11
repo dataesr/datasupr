@@ -42,7 +42,7 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
                   field: "project_id.keyword",
                 },
               },
-              should_ignore: {
+              should_ignore_budget: {
                 terms: {
                   field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
                   missing: false,
@@ -55,9 +55,17 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
                   },
                 },
               },
-              sum_budget_participation: {
-                sum: {
-                  field: "participation_funding",
+              should_ignore_funding: {
+                terms: {
+                  field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                  missing: false,
+                },
+                aggregations: {
+                  sum_budget_participation: {
+                    sum: {
+                      field: "participation_funding",
+                    },
+                  },
                 },
               },
             },
@@ -82,15 +90,15 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
   });
 
   const seriesBudget: any[] = [];
-  const seriesParticipation: any[] = [];
+  const seriesFunding: any[] = [];
   const seriesProject: any[] = [];
   const categories: string[] = [];
   funders.forEach((funder, index) => {
     const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets;
     const isCoord = funderData?.find((bucket) => bucket.key === 1);
     const isNotCoord = funderData?.find((bucket) => bucket.key === 0);
-    const isCoordBudget = isCoord?.should_ignore?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0;
-    const isNotCoordBudget = isNotCoord?.should_ignore?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0;
+    const isCoordBudget = isCoord?.should_ignore_budget?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0;
+    const isNotCoordBudget = isNotCoord?.should_ignore_budget?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0;
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: [{ name: funder, x: index, y: isNotCoordBudget, y_perc: isNotCoordBudget === 0 ? 0 : isNotCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: getCssColor({ name: funder, prefix: "funder" }) }],
@@ -101,16 +109,16 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
       data: [{ name: funder, x: index, y: isCoordBudget, y_perc: isCoordBudget === 0 ? 0 : isCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
-    const isCoordParticipation = isCoord?.sum_budget_participation?.value ?? 0;
-    const isNotCoordParticipation = isNotCoord?.sum_budget_participation?.value ?? 0;
-    seriesParticipation.push({
+    const isCoordFunding = isCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0;
+    const isNotCoordFunding = isNotCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0;
+    seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: [{ name: funder, x: index, y: isNotCoordParticipation, y_perc: isNotCoordParticipation === 0 ? 0 : isNotCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      data: [{ name: funder, x: index, y: isNotCoordFunding, y_perc: isNotCoordFunding === 0 ? 0 : isNotCoordFunding / (isCoordFunding + isNotCoordFunding), total: isCoordFunding + isNotCoordFunding, color: getCssColor({ name: funder, prefix: "funder" }) }],
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
-    seriesParticipation.push({
+    seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: [{ name: funder, x: index, y: isCoordParticipation, y_perc: isCoordParticipation === 0 ? 0 : isCoordParticipation / (isCoordParticipation + isNotCoordParticipation), total: isCoordParticipation + isNotCoordParticipation, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
+      data: [{ name: funder, x: index, y: isCoordFunding, y_perc: isCoordFunding === 0 ? 0 : isCoordFunding / (isCoordFunding + isNotCoordFunding), total: isCoordFunding + isNotCoordFunding, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     const isCoordProject = isCoord?.unique_projects?.value ?? 0;
@@ -163,7 +171,7 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
       };
-      series = seriesParticipation;
+      series = seriesFunding;
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };

@@ -61,7 +61,7 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
               field: "participation_is_coordinator",
             },
             aggregations: {
-              should_ignore: {
+              should_ignore_budget: {
                 terms: {
                   field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
                   missing: false,
@@ -94,9 +94,17 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
               field: "participation_is_coordinator",
             },
             aggregations: {
-              sum_budget_participation: {
-                sum: {
-                  field: "participation_funding",
+              should_ignore_funding: {
+                terms: {
+                  field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                  missing: false,
+                },
+                aggregations: {
+                  sum_budget_participation: {
+                    sum: {
+                      field: "participation_funding",
+                    },
+                  },
                 },
               },
             },
@@ -121,38 +129,40 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
   });
 
   const seriesBudget: any = [];
-  const seriesParticipation: any = [];
+  const seriesFunding: any = [];
   const seriesProject: any = [];
   const instrumentsBudget = data?.aggregations?.by_instrument_budget?.buckets ?? [];
-  const instrumentsParticipation = data?.aggregations?.by_instrument_participation?.buckets ?? [];
+  const instrumentsFunding = data?.aggregations?.by_instrument_participation?.buckets ?? [];
   const instrumentsProject = data?.aggregations?.by_instrument_project?.buckets ?? [];
   instrumentsBudget.forEach((instrument) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0,
     });
     seriesBudget.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 0)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0,
     });
   });
-  instrumentsParticipation.forEach((instrument) => {
-    seriesParticipation.push({
+  instrumentsFunding.forEach((instrument) => {
+    seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0,
+        ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0,
     });
-    seriesParticipation.push({
+    seriesFunding.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0,
     });
   });
@@ -187,7 +197,7 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      series = seriesParticipation.reverse();
+      series = seriesFunding.reverse();
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.value)} €</b> perçus par ${structure ? "l'établissement" : "la région"} <b>${name}</b> pour les projets ANR au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };

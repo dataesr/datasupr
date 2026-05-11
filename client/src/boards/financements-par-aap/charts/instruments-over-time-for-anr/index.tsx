@@ -45,7 +45,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
                       field: "project_id.keyword",
                     },
                   },
-                  should_ignore: {
+                  should_ignore_budget: {
                     terms: {
                       field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
                       missing: false,
@@ -58,9 +58,17 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
                       },
                     },
                   },
-                  sum_budget_participation: {
-                    sum: {
-                      field: "participation_funding",
+                  should_ignore_funding: {
+                    terms: {
+                      field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                      missing: false,
+                    },
+                    aggregations: {
+                      sum_budget_participation: {
+                        sum: {
+                          field: "participation_funding",
+                        },
+                      },
                     },
                   },
                 },
@@ -87,14 +95,14 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
   });
 
   const seriesBudget: any = [];
-  const seriesParticipation: any = [];
+  const seriesFunding: any = [];
   const seriesProject: any = [];
   (data?.aggregations?.by_instrument?.buckets ?? []).forEach((instrument) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
@@ -103,23 +111,25 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 0)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
-    seriesParticipation.push({
+    seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
-    seriesParticipation.push({
+    seriesFunding.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
@@ -162,7 +172,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
     // If view by amount by structure
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
-      series = seriesParticipation.reverse();
+      series = seriesFunding.reverse();
       title = `Evolution temporelle du financement perçu par instrument de l'ANR dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;

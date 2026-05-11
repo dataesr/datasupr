@@ -75,7 +75,7 @@ export default function Classifications({ name }: { name: string | undefined }) 
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  should_ignore: {
+                  should_ignore_budget: {
                     terms: {
                       field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
                       missing: false,
@@ -116,9 +116,17 @@ export default function Classifications({ name }: { name: string | undefined }) 
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  sum_budget_participation: {
-                    sum: {
-                      field: "participation_funding",
+                  should_ignore_funding: {
+                    terms: {
+                      field: structure ? "participant_ignore_funding" : "region_ignore_funding",
+                      missing: false,
+                    },
+                    aggregations: {
+                      sum_budget_participation: {
+                        sum: {
+                          field: "participation_funding",
+                        },
+                      },
                     },
                   },
                 },
@@ -144,17 +152,17 @@ export default function Classifications({ name }: { name: string | undefined }) 
   });
 
   const seriesBudget: any = [];
-  const seriesParticipation: any = [];
+  const seriesFunding: any = [];
   const seriesProject: any = [];
   const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
-  const classificationsParticipation = data?.aggregations?.by_classifications_participation?.buckets ?? [];
+  const classificationsFunding = data?.aggregations?.by_classifications_participation?.buckets ?? [];
   const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
   funders.forEach((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: classificationsBudget.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -162,21 +170,23 @@ export default function Classifications({ name }: { name: string | undefined }) 
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: classificationsBudget.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 0)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
-    seriesParticipation.push({
+    seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: classificationsParticipation.map((classification) => classification.by_project_type.buckets
+      data: classificationsFunding.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
-    seriesParticipation.push({
+    seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: classificationsParticipation.map((classification) => classification.by_project_type.buckets
+      data: classificationsFunding.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
@@ -197,7 +207,7 @@ export default function Classifications({ name }: { name: string | undefined }) 
   });
   const categoriesProject = classificationsProject.map((classification) => classification.key);
   const categoriesBudget = classificationsBudget.map((classification) => classification.key);
-  const categoriesParticipation = classificationsParticipation.map((classification) => classification.key);
+  const categoriesFunding = classificationsFunding.map((classification) => classification.key);
 
   const title = `Financements par discipline de ${structure ? "l'établissement" : "la région"} ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
@@ -232,11 +242,11 @@ export default function Classifications({ name }: { name: string | undefined }) 
     // If view by amount by structure
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
-      categories = categoriesParticipation;
+      categories = categoriesFunding;
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesParticipation.reverse();
+      series = seriesFunding.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
