@@ -91,11 +91,11 @@ export default function ClassificationsByComparison() {
       by_structure_participation: {
         terms: {
           field: "participant_encoded_key",
-          order: { "sum_budget_participation": "desc" },
+          order: { "sum_budget_funding": "desc" },
           size: structures.length,
         },
         aggregations: {
-          sum_budget_participation: {
+          sum_budget_funding: {
             sum: {
               field: "participation_funding",
             },
@@ -111,7 +111,7 @@ export default function ClassificationsByComparison() {
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  sum_budget_participation: {
+                  sum_budget_funding: {
                     sum: {
                       field: "participation_funding",
                     },
@@ -159,12 +159,12 @@ export default function ClassificationsByComparison() {
   (structuresParticipation?.[0]?.by_classifications?.buckets ?? []).forEach((bucket) => {
     seriesParticipation.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: bucket.key, prefix: "classification" }) } },
-      data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+      data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_funding?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: getCssColor({ name: bucket.key, prefix: "classification" }),
-      data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+      data: structuresParticipation.map((sss) => sss.by_classifications.buckets.find((classification) => classification.key === bucket.key)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       name: [bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
   });

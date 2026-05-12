@@ -65,7 +65,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
                       missing: false,
                     },
                     aggregations: {
-                      sum_budget_participation: {
+                      sum_budget_funding: {
                         sum: {
                           field: "participation_funding",
                         },
@@ -97,13 +97,16 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
   const seriesBudget: any[] = [];
   const seriesFunding: any[] = [];
   const seriesProject: any[] = [];
+  const seriesBudgetRegion: any = [];
+  const seriesFundingRegion: any = [];
+  const seriesProjectRegion: any = [];
   funders.map((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
-        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
-        .find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets
+        ?.find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
@@ -111,56 +114,83 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
     seriesBudget.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
-        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
-        .find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets
+        ?.find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
+    seriesBudgetRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.reduce((acc, curr) => acc + (curr?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0), 0)
+        ?? 0),
+      marker: { enabled: false },
+      name: funder,
+    });
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
-        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
-        .find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets
-        .find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
-        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
-        .find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets
-        .find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesFundingRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.reduce((acc, curr) => acc + (curr?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0), 0)
+        ?? 0),
+      marker: { enabled: false },
+      name: funder,
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
-        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
-        .find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
+        ?.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesProject.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
-        .find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
-        .find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
+        ?.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesProjectRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: years.map((year) => (data?.aggregations?.by_project_type?.buckets ?? [])
+        ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
+        ?.reduce((acc, curr) => acc + (curr?.by_project_year?.buckets.find((bucket) => bucket.key === year)?.unique_projects?.value ?? 0), 0)
+         ?? 0),
+      marker: { enabled: false },
+      name: funder,
     });
   });
 
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
-  let series = seriesProject.reverse();
+  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let title = `Evolution temporelle du nombre de projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`;
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> auxquels prend part ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
@@ -169,7 +199,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
     // If view by global amount
     case 'amount_global':
       axis = getI18nLabel(i18n, 'funding_total');
-      series = seriesBudget.reverse();
+      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       title = `Evolution temporelle des financements globaux pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
@@ -178,7 +208,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
     // If view by amount by structure
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
-      series = seriesFunding.reverse();
+      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       title = `Evolution temporelle des financements perçus pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> pour les projets <b>${this.series.name}</b> auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;

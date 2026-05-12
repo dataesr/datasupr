@@ -64,7 +64,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
                       missing: false,
                     },
                     aggregations: {
-                      sum_budget_participation: {
+                      sum_budget_funding: {
                         sum: {
                           field: "participation_funding",
                         },
@@ -97,6 +97,9 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
   const seriesBudget: any = [];
   const seriesFunding: any = [];
   const seriesProject: any = [];
+  const seriesBudgetRegion: any = [];
+  const seriesFundingRegion: any = [];
+  const seriesProjectRegion: any = [];
   (data?.aggregations?.by_instrument?.buckets ?? []).forEach((instrument) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
@@ -116,12 +119,21 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
+    seriesBudgetRegion.push({
+      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      data: years.map((year) => instrument
+        ?.by_project_year?.buckets?.find((bucket) => bucket.key === year)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_budget?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget?.value ?? 0), 0)
+        ?? 0),
+      marker: { enabled: false },
+      name: instrument.key,
+    });
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -130,9 +142,18 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesFundingRegion.push({
+      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      data: years.map((year) => instrument
+        ?.by_project_year?.buckets?.find((bucket) => bucket.key === year)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget_funding?.value ?? 0), 0)
+        ?? 0),
+      marker: { enabled: false },
+      name: instrument.key,
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: instrument.key, prefix: "instrument" }) } },
@@ -150,11 +171,20 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
+    seriesProjectRegion.push({
+      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      data: years.map((year) => instrument
+        ?.by_project_year?.buckets?.find((bucket) => bucket.key === year)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.unique_projects?.value ?? 0), 0)
+        ?? 0),
+      marker: { enabled: false },
+      name: instrument.key,
+    });
   });
 
   // If view by number of projects
   let axis = getI18nLabel(i18n, 'number_of_projects_funded');
-  let series = seriesProject.reverse();
+  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let title = `Evolution temporelle des instruments ANR dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> projets <b>${this.series.name}</b> en <b>${this.x}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
@@ -163,7 +193,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
     // If view by global amount
     case 'amount_global':
       axis = getI18nLabel(i18n, 'funding_total');
-      series = seriesBudget.reverse();
+      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       title = `Evolution temporelle du financement global par instrument de l'ANR dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été financés en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;
@@ -172,7 +202,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
     // If view by amount by structure
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
-      series = seriesFunding.reverse();
+      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       title = `Evolution temporelle du financement perçu par instrument de l'ANR dont a bénéficié ${structure ? "l'établissement" : "la région"} ${name}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> ont été perçus en <b>${this.x}</b> par l'instrument <b>${this.series.name}</b> dont a bénéficié ${structure ? "l'établissement" : "la région"} <b>${name}</b>`;

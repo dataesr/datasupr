@@ -81,10 +81,10 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
       by_instrument_participation: {
         terms: {
           field: "project_instrument.keyword",
-          order: { "sum_budget_participation": "desc" },
+          order: { "sum_budget_funding": "desc" },
         },
         aggregations: {
-          sum_budget_participation: {
+          sum_budget_funding: {
             sum: {
               field: "participation_funding",
             },
@@ -100,7 +100,7 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
                   missing: false,
                 },
                 aggregations: {
-                  sum_budget_participation: {
+                  sum_budget_funding: {
                     sum: {
                       field: "participation_funding",
                     },
@@ -131,6 +131,9 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
   const seriesBudget: any = [];
   const seriesFunding: any = [];
   const seriesProject: any = [];
+  const seriesBudgetRegion: any = [];
+  const seriesFundingRegion: any = [];
+  const seriesProjectRegion: any = [];
   const instrumentsBudget = data?.aggregations?.by_instrument_budget?.buckets ?? [];
   const instrumentsFunding = data?.aggregations?.by_instrument_participation?.buckets ?? [];
   const instrumentsProject = data?.aggregations?.by_instrument_project?.buckets ?? [];
@@ -149,6 +152,11 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0,
     });
+    seriesBudgetRegion.push({
+      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      name: instrument.key,
+      value: instrument?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_budget?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget?.value ?? 0), 0) ?? 0,
+    });
   });
   instrumentsFunding.forEach((instrument) => {
     seriesFunding.push({
@@ -156,14 +164,19 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0,
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0,
     });
     seriesFunding.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0,
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0,
+    });
+    seriesFundingRegion.push({
+      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      name: instrument.key,
+      value: instrument?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget_funding?.value ?? 0), 0) ?? 0,
     });
   });
   instrumentsProject.forEach((instrument) => {
@@ -179,25 +192,30 @@ export default function InstrumentsForAnr({ name }: { name: string | undefined }
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0,
     });
+    seriesProjectRegion.push({
+      color: getCssColor({ name: instrument.key, prefix: "instrument" }),
+      name: instrument.key,
+      value: instrument?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.unique_projects?.value ?? 0), 0) ?? 0,
+    });
   });
 
   const title = `Instruments ANR pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
-  let series = seriesProject.reverse();
+  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let tooltip = function (this: any) {
     return `<b>${this.value}</b> projets ANR auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
   };
   switch (selectedControl) {
     // If view by global amount
     case 'amount_global':
-      series = seriesBudget.reverse();
+      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.value)} €</b> financés au global pour les projets ANR auxquels participe ${structure ? "l'établissement" : "la région"} <b>${name}</b> au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };
       break;
     // If view by amount by structure
     case 'amount_by_structure':
-      series = seriesFunding.reverse();
+      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.value)} €</b> perçus par ${structure ? "l'établissement" : "la région"} <b>${name}</b> pour les projets ANR au moyen de l'instrument <b>${this.name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}`;
       };

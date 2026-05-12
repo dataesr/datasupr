@@ -61,7 +61,7 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
                   missing: false,
                 },
                 aggregations: {
-                  sum_budget_participation: {
+                  sum_budget_funding: {
                     sum: {
                       field: "participation_funding",
                     },
@@ -92,6 +92,9 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
   const seriesBudget: any[] = [];
   const seriesFunding: any[] = [];
   const seriesProject: any[] = [];
+  const seriesBudgetRegion: any = [];
+  const seriesFundingRegion: any = [];
+  const seriesProjectRegion: any = [];
   const categories: string[] = [];
   funders.forEach((funder, index) => {
     const funderData = (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder)?.is_coordinator?.buckets;
@@ -109,8 +112,13 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
       data: [{ name: funder, x: index, y: isCoordBudget, y_perc: isCoordBudget === 0 ? 0 : isCoordBudget / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
-    const isCoordFunding = isCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0;
-    const isNotCoordFunding = isNotCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0;
+    seriesBudgetRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: [{ name: funder, x: index, y: isCoordBudget + isNotCoordBudget, y_perc: isCoordBudget === 0 ? 0 : (isCoordBudget + isNotCoordBudget) / (isCoordBudget + isNotCoordBudget), total: isCoordBudget + isNotCoordBudget, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      name: funder,
+    })
+    const isCoordFunding = isCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0;
+    const isNotCoordFunding = isNotCoord?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0;
     seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: [{ name: funder, x: index, y: isNotCoordFunding, y_perc: isNotCoordFunding === 0 ? 0 : isNotCoordFunding / (isCoordFunding + isNotCoordFunding), total: isCoordFunding + isNotCoordFunding, color: getCssColor({ name: funder, prefix: "funder" }) }],
@@ -120,6 +128,11 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: [{ name: funder, x: index, y: isCoordFunding, y_perc: isCoordFunding === 0 ? 0 : isCoordFunding / (isCoordFunding + isNotCoordFunding), total: isCoordFunding + isNotCoordFunding, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
+    });
+    seriesFundingRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: [{ name: funder, x: index, y: isCoordFunding + isNotCoordFunding, y_perc: isNotCoordFunding === 0 ? 0 : (isCoordFunding + isNotCoordFunding) / (isCoordFunding + isNotCoordFunding), total: isCoordFunding + isNotCoordFunding, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      name: funder,
     });
     const isCoordProject = isCoord?.unique_projects?.value ?? 0;
     const isNotCoordProject = isNotCoord?.unique_projects?.value ?? 0;
@@ -133,6 +146,11 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
       data: [{ name: funder, x: index, y: isCoordProject, y_perc: isCoordProject === 0 ? 0 : isCoordProject / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } } }],
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
+    seriesProjectRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: [{ name: funder, x: index, y: isCoordProject + isNotCoordProject, y_perc: isNotCoordProject === 0 ? 0 : (isCoordProject + isNotCoordProject) / (isCoordProject + isNotCoordProject), total: isCoordProject + isNotCoordProject, color: getCssColor({ name: funder, prefix: "funder" }) }],
+      name: funder,
+    });
     categories.push(funder);
   });
 
@@ -141,11 +159,11 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''} (${formatPercent(this.y_perc)})`;
   };
-  let series = seriesProject;
+  let series = structure ? seriesProject : seriesProjectRegion;
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
-  let title = `Nombre de projets financés auxquels ${structure ? "l'établissement" : "la région"} (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+  let title = `Nombre de projets financés auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
   let tooltip = function (this: any) {
     return `<b>${this.y}</b> projets <b>${this.series.name}</b> auxquels participe <b>${name}</b> ${getYearRangeLabel({ isBold: true, yearMax, yearMin })}, soit ${formatPercent(this.y_perc)} (${this.y} / ${this.total} )`;
   };
@@ -156,11 +174,11 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
       };
-      series = seriesBudget;
+      series = structure ? seriesBudget : seriesBudgetRegion;
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
-      title = `Montant total des projets auxquels ${structure ? "l'établissement" : "la région"} (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+      title = `Montant total des projets auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> financés ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
       };
@@ -171,11 +189,11 @@ export default function ProjectsByFunder({ name }: { name: string | undefined })
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €  (${formatPercent(this.y_perc)})`;
       };
-      series = seriesFunding;
+      series = structure ? seriesFunding : seriesFundingRegion;
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
-      title = `Financement perçu pour des projets auxquels ${structure ? "l'établissement" : "la région"} (${name}) participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
+      title = `Financement perçu pour des projets auxquels ${structure ? "l'établissement" : "la région"} ${name} participe, réparti par financeur ${getYearRangeLabel({ yearMax, yearMin })}`;
       tooltip = function (this: any) {
         return `<b>${formatCompactNumber(this.y)} €</b> perçus ${getYearRangeLabel({ isBold: true, yearMax, yearMin })} pour les projets <b>${this.series.name}</b> auxquels participe <b>${name}</b>, soit ${formatPercent(this.y_perc)} (${formatCompactNumber(this.y)} € / ${formatCompactNumber(this.total)}  €)`;
       };

@@ -88,11 +88,11 @@ export default function ProjectsByComparison() {
       by_structure_participation: {
         terms: {
           field: "participant_encoded_key",
-          order: { "sum_budget_participation": "desc" },
+          order: { "sum_budget_funding": "desc" },
           size: structures.length,
         },
         aggregations: {
-          sum_budget_participation: {
+          sum_budget_funding: {
             sum: {
               field: "participation_funding",
             },
@@ -107,7 +107,7 @@ export default function ProjectsByComparison() {
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  sum_budget_participation: {
+                  sum_budget_funding: {
                     sum: {
                       field: "participation_funding",
                     },
@@ -153,12 +153,12 @@ export default function ProjectsByComparison() {
     });
     seriesParticipation.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+      data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.sum_budget_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesParticipation.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+      data: structuresParticipation.map((bucket) => bucket.by_project_type.buckets.find((item) => item.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProject.push({

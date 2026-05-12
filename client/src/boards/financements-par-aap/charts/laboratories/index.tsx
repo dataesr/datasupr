@@ -101,10 +101,10 @@ export default function Laboratories({ name }: { name: string | undefined }) {
       by_laboratory_participation: {
         terms: {
           field: "co_partners_fr_labs.keyword",
-          order: { "sum_budget_participation": "desc" },
+          order: { "sum_budget_funding": "desc" },
         },
         aggregations: {
-          sum_budget_participation: {
+          sum_budget_funding: {
             sum: {
               field: "participation_funding",
             },
@@ -125,7 +125,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
                       missing: false,
                     },
                     aggregations: {
-                      sum_budget_participation: {
+                      sum_budget_funding: {
                         sum: {
                           field: "participation_funding",
                         },
@@ -182,7 +182,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
       data: laboratoriesFunding.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesFunding.push({
@@ -190,7 +190,7 @@ export default function Laboratories({ name }: { name: string | undefined }) {
       data: laboratoriesFunding.map((bucket) => bucket.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
     seriesProject.push({

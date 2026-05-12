@@ -74,7 +74,7 @@ export default function Regions({ name }: { name: string | undefined }) {
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  should_ignore: {
+                  should_ignore_budget: {
                     terms: {
                       field: "participant_ignore_total_budget",
                     },
@@ -95,11 +95,11 @@ export default function Regions({ name }: { name: string | undefined }) {
       by_classifications_participation: {
         terms: {
           field: "co_partners_fr_labs_region.keyword",
-          order: { "sum_budget_participation": "desc" },
+          order: { "sum_budget_funding": "desc" },
           size: 15,
         },
         aggregations: {
-          sum_budget_participation: {
+          sum_budget_funding: {
             sum: {
               field: "participation_funding",
             },
@@ -114,7 +114,7 @@ export default function Regions({ name }: { name: string | undefined }) {
                   field: "participation_is_coordinator",
                 },
                 aggregations: {
-                  sum_budget_participation: {
+                  sum_budget_funding: {
                     sum: {
                       field: "participation_funding",
                     },
@@ -142,17 +142,20 @@ export default function Regions({ name }: { name: string | undefined }) {
   });
 
   const seriesBudget: any = [];
-  const seriesParticipation: any = [];
+  const seriesFunding: any = [];
   const seriesProject: any = [];
+  const seriesBudgetRegion: any = [];
+  const seriesFundingRegion: any = [];
+  const seriesProjectRegion: any = [];
   const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
-  const classificationsParticipation = data?.aggregations?.by_classifications_participation?.buckets ?? [];
+  const classificationsFunding = data?.aggregations?.by_classifications_participation?.buckets ?? [];
   const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
   funders.forEach((funder) => {
     seriesBudget.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: classificationsBudget.map((classification: any) => classification.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -160,23 +163,39 @@ export default function Regions({ name }: { name: string | undefined }) {
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: classificationsBudget.map((classification: any) => classification.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 0)?.should_ignore?.buckets
+        ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
-    seriesParticipation.push({
+    seriesBudgetRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: classificationsBudget.map((classification) => classification
+        ?.by_project_type.buckets?.find((project) => project.key === funder)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_budget?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget?.value ?? 0), 0)
+        ?? 0),
+      name: funder,
+    });
+    seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
-      data: classificationsParticipation.map((classification: any) => classification.by_project_type.buckets
+      data: classificationsFunding.map((classification: any) => classification.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 1)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 1)?.sum_budget_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
-    seriesParticipation.push({
+    seriesFunding.push({
       color: getCssColor({ name: funder, prefix: "funder" }),
-      data: classificationsParticipation.map((classification) => classification.by_project_type.buckets
+      data: classificationsFunding.map((classification) => classification.by_project_type.buckets
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesFundingRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: classificationsFunding.map((classification) => classification
+        ?.by_project_type.buckets?.find((project) => project.key === funder)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget_funding?.value ?? 0), 0)
+        ?? 0),
+      name: funder,
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
@@ -192,10 +211,18 @@ export default function Regions({ name }: { name: string | undefined }) {
         ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
+    seriesProjectRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: classificationsProject.map((classification) => classification
+        ?.by_project_type.buckets?.find((project) => project.key === funder)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.unique_projects?.value ?? 0), 0)
+        ?? 0),
+      name: funder,
+    });
   });
-  const categoriesProject = classificationsProject.map((classification) => classification.key);
   const categoriesBudget = classificationsBudget.map((classification) => classification.key);
-  const categoriesParticipation = classificationsParticipation.map((classification) => classification.key);
+  const categoriesFunding = classificationsFunding.map((classification) => classification.key);
+  const categoriesProject = classificationsProject.map((classification) => classification.key);
 
   const title = `Financements par région de ${name} ${getYearRangeLabel({ yearMax, yearMin })}`;
   // If view by number of projects
@@ -204,7 +231,7 @@ export default function Regions({ name }: { name: string | undefined }) {
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  let series = seriesProject.reverse();
+  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
@@ -219,7 +246,7 @@ export default function Regions({ name }: { name: string | undefined }) {
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesBudget.reverse();
+      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
@@ -230,11 +257,11 @@ export default function Regions({ name }: { name: string | undefined }) {
     // If view by amount by structure
     case 'amount_by_structure':
       axis = getI18nLabel(i18n, structure ? 'funding_by_structure' : 'funding_by_region');
-      categories = categoriesParticipation;
+      categories = categoriesFunding;
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesParticipation.reverse();
+      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };

@@ -101,10 +101,10 @@ export default function InternationalPartners({ name }: { name: string | undefin
       by_international_partners_participation: {
         terms: {
           field: "co_partners_foreign_inst.keyword",
-          order: { "sum_budget_participation": "desc" },
+          order: { "sum_budget_funding": "desc" },
         },
         aggregations: {
-          sum_budget_participation: {
+          sum_budget_funding: {
             sum: {
               field: "participation_funding",
             },
@@ -125,7 +125,7 @@ export default function InternationalPartners({ name }: { name: string | undefin
                       missing: false,
                     },
                     aggregations: {
-                      sum_budget_participation: {
+                      sum_budget_funding: {
                         sum: {
                           field: "participation_funding",
                         },
@@ -157,6 +157,9 @@ export default function InternationalPartners({ name }: { name: string | undefin
   const seriesBudget: any = [];
   const seriesFunding: any = [];
   const seriesProject: any = [];
+  const seriesBudgetRegion: any = [];
+  const seriesFundingRegion: any = [];
+  const seriesProjectRegion: any = [];
   const partnersBudget = data?.aggregations?.by_international_partners_budget?.buckets ?? [];
   const partnersFunding = data?.aggregations?.by_international_partners_participation?.buckets ?? [];
   const partnersProject = data?.aggregations?.by_international_partners_project?.buckets ?? [];
@@ -177,12 +180,20 @@ export default function InternationalPartners({ name }: { name: string | undefin
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
+    seriesBudgetRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: partnersBudget.map((partner) => partner
+        ?.by_project_type.buckets?.find((project) => project.key === funder)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_budget?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget?.value ?? 0), 0)
+        ?? 0),
+      name: funder,
+    });
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: partnersFunding.map((partner) => partner.by_project_type.buckets
         .find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesFunding.push({
@@ -190,8 +201,16 @@ export default function InternationalPartners({ name }: { name: string | undefin
       data: partnersFunding.map((partner) => partner.by_project_type.buckets
         .find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesFundingRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: partnersFunding.map((partner) => partner
+        ?.by_project_type.buckets?.find((project) => project.key === funder)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget_funding?.value ?? 0), 0)
+        ?? 0),
+      name: funder,
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
@@ -204,6 +223,14 @@ export default function InternationalPartners({ name }: { name: string | undefin
       color: getCssColor({ name: funder, prefix: "funder" }),
       data: partnersProject.map((partner) => partner.by_project_type.buckets.find((project) => project.key === funder)?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesProjectRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: partnersProject.map((partner) => partner
+        ?.by_project_type.buckets?.find((project) => project.key === funder)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.unique_projects?.value ?? 0), 0)
+        ?? 0),
+      name: funder,
     });
   });
   const categoriesProject = partnersProject?.map((partner) => {
@@ -226,7 +253,7 @@ export default function InternationalPartners({ name }: { name: string | undefin
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  let series = seriesProject.reverse();
+  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
@@ -241,7 +268,7 @@ export default function InternationalPartners({ name }: { name: string | undefin
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesBudget.reverse();
+      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
@@ -256,7 +283,7 @@ export default function InternationalPartners({ name }: { name: string | undefin
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesFunding.reverse();
+      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };

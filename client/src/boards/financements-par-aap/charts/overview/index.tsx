@@ -38,7 +38,7 @@ export default function Overview({ name }: { name: string | undefined }) {
                   missing: false,
                 },
                 aggregations: {
-                  sum_budget_participation: {
+                  sum_budget_funding: {
                     sum: {
                       field: "participation_funding",
                     },
@@ -65,22 +65,31 @@ export default function Overview({ name }: { name: string | undefined }) {
       }).then((response) => response.json()),
   });
 
-  const series = funders
+  const seriesWithCoordinators = funders
     .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder))
     // Filter on not empty bucket
     .filter((bucket) => !!bucket)
     .map((bucket) => [
-      [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.doc_count ?? 0],
-      [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
+      [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.doc_count ?? 0],
+      [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
     ])
     .flat();
-  const colors = funders.map((funder) => [{ pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } }, getCssColor({ name: funder, prefix: "funder" })]).flat();
+  const seriesWithoutCoordinators = funders
+    .map((funder) => (data?.aggregations?.by_project_type?.buckets ?? []).find((bucket) => bucket.key === funder))
+    // Filter on not empty bucket
+    .filter((bucket) => !!bucket)
+    .map((bucket) => [
+      [bucket.key, bucket?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0), 0), bucket?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.doc_count ?? 0), 0)],
+    ])
+    .flat();
+  const colorsWithCoordinators = funders.map((funder) => [{ pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } }, getCssColor({ name: funder, prefix: "funder" })]).flat();
+  const colorsWithoutCoordinators = funders.map((funder) => [getCssColor({ name: funder, prefix: "funder" })]).flat();
 
   const config = {
     comment: { "fr": <>Ce graphique met en regard le volume de projets et les financements perçus associés : la largeur des barres représente le nombre de projets, tandis que leur hauteur correspond au financement perçu. Le type de participation est distingué, en pointillé quand l'établissement est coordinateur, en couleur simple s'il est partenaire non-coordinateur. Le financement perçu approxime la part réelle allouée à chaque établissement partenaire d’un projet (en assimilant consommation et subvention pour le PIA). </> },
     id: "overview",
     integrationURL: `/integration?chart_id=overview&${searchParams.toString()}`,
-    title: `Structure du financement : nombre de projets et financements perçus associés pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} (${name}) ${getYearRangeLabel({ yearMax, yearMin })}`,
+    title: `Structure du financement : nombre de projets et financements perçus associés pour les projets auxquels participe ${structure ? "l'établissement" : "la région"} ${name} ${getYearRangeLabel({ yearMax, yearMin })}`,
   };
 
   let hiddenPoints: string[] = [];
@@ -117,8 +126,8 @@ export default function Overview({ name }: { name: string | undefined }) {
     },
     series: [{
       colorByPoint: true,
-      colors,
-      data: series,
+      colors: structure ? colorsWithCoordinators : colorsWithoutCoordinators,
+      data: structure ? seriesWithCoordinators : seriesWithoutCoordinators,
       dataLabels: {
         enabled: true,
         formatter: function (this: any) {

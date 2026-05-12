@@ -48,7 +48,7 @@ export default function Cards() {
                   },
                 },
               },
-              sum_budget_participation: {
+              sum_budget_funding: {
                 sum: {
                   field: "participation_funding",
                 },
@@ -89,8 +89,8 @@ export default function Cards() {
       })),
       participation: years.map((year) => ({
         x: year,
-        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget_participation?.value ?? 0,
-        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget_participation?.value ?? 0,
+        y: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget_funding?.value ?? 0,
+        yDisplay: dataByFunder?.by_project_year?.buckets?.find((bucket) => bucket.key === year)?.sum_budget_funding?.value ?? 0,
       })),
     };
   });

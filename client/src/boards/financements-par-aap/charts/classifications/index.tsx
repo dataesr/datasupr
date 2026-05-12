@@ -94,14 +94,14 @@ export default function Classifications({ name }: { name: string | undefined }) 
           },
         },
       },
-      by_classifications_participation: {
+      by_classifications_funding: {
         terms: {
           field: "project_classification.primary_field.keyword",
-          order: { "sum_budget_participation": "desc" },
+          order: { "sum_budget_funding": "desc" },
           size: 15,
         },
         aggregations: {
-          sum_budget_participation: {
+          sum_budget_funding: {
             sum: {
               field: "participation_funding",
             },
@@ -122,7 +122,7 @@ export default function Classifications({ name }: { name: string | undefined }) 
                       missing: false,
                     },
                     aggregations: {
-                      sum_budget_participation: {
+                      sum_budget_funding: {
                         sum: {
                           field: "participation_funding",
                         },
@@ -154,8 +154,11 @@ export default function Classifications({ name }: { name: string | undefined }) 
   const seriesBudget: any = [];
   const seriesFunding: any = [];
   const seriesProject: any = [];
+  const seriesBudgetRegion: any = [];
+  const seriesFundingRegion: any = [];
+  const seriesProjectRegion: any = [];
   const classificationsBudget = data?.aggregations?.by_classifications_budget?.buckets ?? [];
-  const classificationsFunding = data?.aggregations?.by_classifications_participation?.buckets ?? [];
+  const classificationsFunding = data?.aggregations?.by_classifications_funding?.buckets ?? [];
   const classificationsProject = data?.aggregations?.by_classifications_project?.buckets ?? [];
   funders.forEach((funder) => {
     seriesBudget.push({
@@ -174,12 +177,20 @@ export default function Classifications({ name }: { name: string | undefined }) 
         ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
+    seriesBudgetRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: classificationsBudget.map((classification) => classification
+        ?.by_project_type.buckets?.find((project) => project.key === funder)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_budget?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget?.value ?? 0), 0)
+        ?? 0),
+      name: funder,
+    });
     seriesFunding.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
       data: classificationsFunding.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
     seriesFunding.push({
@@ -187,8 +198,16 @@ export default function Classifications({ name }: { name: string | undefined }) 
       data: classificationsFunding.map((classification) => classification.by_project_type.buckets
         ?.find((project) => project.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_participation?.value ?? 0),
+        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
+    });
+    seriesFundingRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: classificationsFunding.map((classification) => classification
+        ?.by_project_type.buckets?.find((project) => project.key === funder)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.should_ignore_funding?.buckets?.find((bucket) => bucket.key == 0)?.sum_budget_funding?.value ?? 0), 0)
+        ?? 0),
+      name: funder,
     });
     seriesProject.push({
       color: { pattern: { ...pattern, backgroundColor: getCssColor({ name: funder, prefix: "funder" }) } },
@@ -204,6 +223,14 @@ export default function Classifications({ name }: { name: string | undefined }) 
         ?.find((bucket) => bucket.key === 0)?.unique_projects?.value ?? 0),
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
+    seriesProjectRegion.push({
+      color: getCssColor({ name: funder, prefix: "funder" }),
+      data: classificationsProject.map((classification) => classification
+        ?.by_project_type.buckets?.find((project) => project.key === funder)
+        ?.is_coordinator?.buckets?.reduce((acc, curr) => acc + (curr?.unique_projects?.value ?? 0), 0)
+        ?? 0),
+      name: funder,
+    });
   });
   const categoriesProject = classificationsProject.map((classification) => classification.key);
   const categoriesBudget = classificationsBudget.map((classification) => classification.key);
@@ -216,7 +243,7 @@ export default function Classifications({ name }: { name: string | undefined }) 
   let dataLabel = function (this: any) {
     return `${this.y} projet${this.y > 1 ? 's' : ''}`;
   };
-  let series = seriesProject.reverse();
+  let series = structure ? seriesProject.reverse() : seriesProjectRegion.reverse();
   let stackLabel = function (this: any) {
     return `${this.total} projet${this.total > 1 ? 's' : ''}`;
   };
@@ -231,7 +258,7 @@ export default function Classifications({ name }: { name: string | undefined }) 
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesBudget.reverse();
+      series = structure ? seriesBudget.reverse() : seriesBudgetRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
@@ -246,7 +273,7 @@ export default function Classifications({ name }: { name: string | undefined }) 
       dataLabel = function (this: any) {
         return `${formatCompactNumber(this.y)} €`;
       };
-      series = seriesFunding.reverse();
+      series = structure ? seriesFunding.reverse() : seriesFundingRegion.reverse();
       stackLabel = function (this: any) {
         return `${formatCompactNumber(this.total)} €`;
       };
