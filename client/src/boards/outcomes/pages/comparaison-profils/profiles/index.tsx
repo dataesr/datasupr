@@ -128,15 +128,17 @@ function ProfileCard({ badge, profile, axisOptions, canRemove, tauxDipl, total, 
                     </Col>
                 )}
             </Row>
-            {PROFILE_FIELDS.map(({ field, label }) => (
-                <OutcomesFilterSelect
-                    key={field}
-                    label={label}
-                    options={axisOptions[field] || []}
-                    selectedKey={profile[field] ?? null}
-                    onSelect={(value) => onChange({ ...profile, [field]: value })}
-                />
-            ))}
+            <div className="outcomes-croisements__fields">
+                {PROFILE_FIELDS.map(({ field, label }) => (
+                    <OutcomesFilterSelect
+                        key={field}
+                        label={label}
+                        options={axisOptions[field] || []}
+                        selectedKey={profile[field] ?? null}
+                        onSelect={(value) => onChange({ ...profile, [field]: value })}
+                    />
+                ))}
+            </div>
             <Row gutters className="fr-mt-2w" >
                 <Col xs={6}>
                     <Text size="sm" className="fr-mb-0">Taux de diplômés du supérieur</Text>

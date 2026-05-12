@@ -139,38 +139,41 @@ export default function HeatmapTab() {
                         {renderAxisSelect("Axe horizontal", hAxis, vAxis, setHAxis)}
                     </section>
                 </section>
-
-                {!sameAxis && !isLoading && chartOptions && (
-                    <Row gutters className="fr-mt-2w">
-                        {([
-                            { key: "max", label: "Taux le plus élevé", cell: maxCell },
-                            { key: "min", label: "Taux le plus faible", cell: minCell },
-                        ] as const).map(({ label, cell }) => {
-                            const share = cell && ensembleTotal ? (cell.count / ensembleTotal) * 100 : null;
-                            return (
-                                <Col key={label} xs={12}>
-                                    <div className="fr-tile fr-tile--sm fr-tile--no-icon">
-                                        <div className="fr-tile__body">
-                                            <h3 className="fr-tile__title">{label}</h3>
-                                            <p className="fr-tile__desc">{cell ? `${cell.pct.toFixed(0)}%` : "—"}{cell ? ` — ${cell.vLabel} × ${cell.hLabel}` : ""}{share !== null ? ` (${share.toFixed(0)}% des étudiants)` : ""}</p>
-                                        </div>
-                                    </div>
-                                </Col>
-                            );
-                        })}
-                        <Col xs={12}>
-                            <div className="fr-tile fr-tile--sm fr-tile--no-icon">
-                                <div className="fr-tile__body">
-                                    <h3 className="fr-tile__title">Plus grand écart</h3>
-                                    <p className="fr-tile__desc">{minCell && maxCell ? `${Math.round(maxCell.pct - minCell.pct)} pts` : "—"}</p>
-                                </div>
-                            </div>
-                        </Col>
-                    </Row>
-                )}
             </Col>
             <Col lg={8}>
                 <div className="outcomes-flux-page__content">
+                    {!sameAxis && !isLoading && chartOptions && (
+                        <Row gutters className="fr-mb-2w">
+                            {([
+                                { key: "max", label: "Taux le plus élevé", cell: maxCell },
+                                { key: "min", label: "Taux le plus faible", cell: minCell },
+                            ] as const).map(({ label, cell }) => {
+                                const share = cell && ensembleTotal ? (cell.count / ensembleTotal) * 100 : null;
+                                return (
+                                    <Col key={label} xs={12} sm={4}>
+                                        <div className="fr-tile fr-tile--sm fr-tile--no-icon">
+                                            <div className="fr-tile__body">
+                                                <p className="fr-text--sm fr-mb-0">{label}</p>
+                                                <p className="fr-mb-0 outcomes-heatmap__stat-value">{cell ? `${cell.pct.toFixed(0)}%` : "—"}</p>
+                                                {cell && <p className="fr-text--sm fr-mb-0">{cell.vLabel} × {cell.hLabel}</p>}
+                                                {share !== null && <p className="fr-text--xs fr-mb-0 outcomes-heatmap__stat-note">{share.toFixed(0)}% des étudiants</p>}
+                                            </div>
+                                        </div>
+                                    </Col>
+                                );
+                            })}
+                            <Col xs={12} sm={4}>
+                                <div className="fr-tile fr-tile--no-icon fr-tile--sm">
+                                    <div className="fr-tile__body">
+                                        <p className="fr-text--sm fr-mb-0">Plus grand écart</p>
+                                        <p className="fr-mb-0 outcomes-heatmap__stat-value">{minCell && maxCell ? `${Math.round(maxCell.pct - minCell.pct)} pts` : "—"}</p>
+                                        {minCell && maxCell && <p className="fr-text--xs fr-mb-0 outcomes-heatmap__stat-note">entre {maxCell.vLabel} × {maxCell.hLabel} et {minCell.vLabel} × {minCell.hLabel}</p>}
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
+                    )}
+
                     {sameAxis && (
                         <Callout colorFamily="pink-macaron" icon="fr-icon-information-line">
                             Sélectionnez deux axes différents pour visualiser le croisement.

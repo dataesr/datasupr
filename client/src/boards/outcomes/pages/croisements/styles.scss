@@ -4,6 +4,10 @@
   text-align: center;
 }
 
+.outcomes-croisements__fields {
+  text-align: left;
+}
+
 .outcomes-croisements__card--A {
   border-top: 4px solid var(--blue-france-main-525);
 }
@@ -14,14 +18,15 @@
   border-top: 4px solid var(--green-emeraude-main-632);
 }
 
-.outcomes-croisements__card--max {
-  border-top: 4px solid var(--green-emeraude-main-632);
+.outcomes-heatmap__stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.1;
+  color: var(--text-title-blue-france);
 }
-.outcomes-croisements__card--min {
-  border-top: 4px solid var(--pink-tuile-main-556);
-}
-.outcomes-croisements__card--gap {
-  border-top: 4px solid var(--blue-france-main-525);
+
+.outcomes-heatmap__stat-note {
+  color: var(--text-mention-grey);
 }
 
 .outcomes-croisements__value--A {
