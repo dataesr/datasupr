@@ -258,24 +258,24 @@ export default function PlusHautDiplomePage() {
                                     <Col xs={12} md={4}>
                                         <div className="fr-tile fr-tile--sm fr-tile--no-icon">
                                             <div className="fr-tile__body">
-                                                <h3 className="fr-tile__title">Néo-bacheliers inscrits en L1 en 2019</h3>
-                                                <p className="fr-tile__desc">{formatNumber(data.totalStudents)}</p>
+                                                <p className="fr-text--sm fr-mb-0">Néo-bacheliers inscrits en L1 en 2019</p>
+                                                <p className="fr-mb-0 outcomes-heatmap__stat-value">{formatNumber(data.totalStudents)}</p>
                                             </div>
                                         </div>
                                     </Col>
                                     <Col xs={12} md={4}>
                                         <div className="fr-tile fr-tile--sm fr-tile--no-icon">
                                             <div className="fr-tile__body">
-                                                <h3 className="fr-tile__title">Diplômés en {lastYearLabel}</h3>
-                                                <p className="fr-tile__desc">{formatNumber(data.totals.diplomes.effectif)}</p>
+                                                <p className="fr-text--sm fr-mb-0">Diplômés en {lastYearLabel}</p>
+                                                <p className="fr-mb-0 outcomes-heatmap__stat-value">{formatNumber(data.totals.diplomes.effectif)}</p>
                                             </div>
                                         </div>
                                     </Col>
                                     <Col xs={12} md={4}>
                                         <div className="fr-tile fr-tile--sm fr-tile--no-icon">
                                             <div className="fr-tile__body">
-                                                <h3 className="fr-tile__title" >Non diplômés en {lastYearLabel}</h3>
-                                                <p className="fr-tile__desc">{formatNumber(data.totals.nonDiplomes.effectif)}</p>
+                                                <p className="fr-text--sm fr-mb-0">Non diplômés en {lastYearLabel}</p>
+                                                <p className="fr-mb-0 outcomes-heatmap__stat-value">{formatNumber(data.totals.nonDiplomes.effectif)}</p>
                                             </div>
                                         </div>
                                     </Col>
