@@ -49,7 +49,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
                   should_ignore_budget: {
                     terms: {
                       field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
-                      missing: false,
+                      missing: 0,
                     },
                     aggregations: {
                       sum_budget: {
@@ -62,7 +62,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
                   should_ignore_funding: {
                     terms: {
                       field: structure ? "participant_ignore_funding" : "region_ignore_funding",
-                      missing: false,
+                      missing: 0,
                     },
                     aggregations: {
                       sum_budget_funding: {
@@ -107,7 +107,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -117,7 +117,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.should_ignore_budget?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
@@ -136,7 +136,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -146,7 +146,7 @@ export default function ProjectsOverTime({ name }: { name: string | undefined })
         ?.find((bucket) => bucket.key === funder)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
       marker: { enabled: false },
       name: [funder, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });

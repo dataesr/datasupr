@@ -64,7 +64,7 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
               should_ignore_budget: {
                 terms: {
                   field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
-                  missing: false,
+                  missing: 0,
                 },
                 aggregations: {
                   sum_budget: {
@@ -97,7 +97,7 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
               should_ignore_funding: {
                 terms: {
                   field: structure ? "participant_ignore_funding" : "region_ignore_funding",
-                  missing: false,
+                  missing: 0,
                 },
                 aggregations: {
                   sum_budget_funding: {
@@ -143,14 +143,14 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0,
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0,
     });
     seriesBudget.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0,
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0,
     });
     seriesBudgetRegion.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
@@ -164,14 +164,14 @@ export default function InstrumentsForEurope({ name }: { name: string | undefine
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0,
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0,
     });
     seriesFunding.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
       value: instrument?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0,
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0,
     });
     seriesFundingRegion.push({
       color: getCssColor({ name: instrument.key, prefix: "instrument" }),

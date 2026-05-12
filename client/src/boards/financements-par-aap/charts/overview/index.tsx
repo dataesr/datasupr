@@ -35,7 +35,7 @@ export default function Overview({ name }: { name: string | undefined }) {
               should_ignore_funding: {
                 terms: {
                   field: structure ? "participant_ignore_funding" : "region_ignore_funding",
-                  missing: false,
+                  missing: 0,
                 },
                 aggregations: {
                   sum_budget_funding: {
@@ -70,8 +70,8 @@ export default function Overview({ name }: { name: string | undefined }) {
     // Filter on not empty bucket
     .filter((bucket) => !!bucket)
     .map((bucket) => [
-      [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.doc_count ?? 0],
-      [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
+      [[bucket.key, getI18nLabel(i18n, 'coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 1)?.doc_count ?? 0],
+      [[bucket.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '), bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0, bucket?.is_coordinator?.buckets?.find((bucket) => bucket.key === 0)?.doc_count ?? 0],
     ])
     .flat();
   const seriesWithoutCoordinators = funders

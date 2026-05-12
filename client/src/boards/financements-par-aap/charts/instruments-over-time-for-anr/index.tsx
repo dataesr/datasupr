@@ -48,7 +48,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
                   should_ignore_budget: {
                     terms: {
                       field: structure ? "participant_ignore_total_budget" : "region_ignore_total_budget",
-                      missing: false,
+                      missing: 0,
                     },
                     aggregations: {
                       sum_budget: {
@@ -61,7 +61,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
                   should_ignore_funding: {
                     terms: {
                       field: structure ? "participant_ignore_funding" : "region_ignore_funding",
-                      missing: false,
+                      missing: 0,
                     },
                     aggregations: {
                       sum_budget_funding: {
@@ -106,7 +106,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_budget?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -115,7 +115,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_budget?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
@@ -133,7 +133,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 1)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'coordinator')].join(' - '),
     });
@@ -142,7 +142,7 @@ export default function InstrumentsOverTimeForAnr({ name }: { name: string | und
       data: years.map((year) => instrument?.by_project_year?.buckets
         ?.find((bucket) => bucket.key === year)?.is_coordinator?.buckets
         ?.find((bucket) => bucket.key === 0)?.should_ignore_funding?.buckets
-        ?.find((bucket) => bucket.key === 0)?.sum_budget_funding?.value ?? 0),
+        ?.find((bucket) => bucket.key.toString() === '0')?.sum_budget_funding?.value ?? 0),
       marker: { enabled: false },
       name: [instrument.key, getI18nLabel(i18n, 'not-coordinator')].join(' - '),
     });
